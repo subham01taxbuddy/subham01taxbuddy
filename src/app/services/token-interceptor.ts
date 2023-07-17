@@ -11,12 +11,20 @@ import { catchError, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { UtilsService } from './utils.service';
 import { environment } from '../../environments/environment';
+import {NavbarService} from "./navbar.service";
+import {UserMsService} from "./user-ms.service";
 export const InterceptorSkipHeader = 'X-Skip-Interceptor';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
   userData: any;
-  constructor(private router: Router, public utilsService: UtilsService) { }
+  constructor(private router: Router, public utilsService: UtilsService,
+              private userMsService: UserMsService) { }
+
+  private tokenExpired(token: string) {
+    const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
+    return (Math.floor((new Date).getTime() / 1000)) >= expiry;
+  }
 
   /**
    * intercept all XHR request
@@ -42,6 +50,12 @@ export class TokenInterceptor implements HttpInterceptor {
       })
       .catch((err) => console.log('Auth.currentSession err:', err));
     const TOKEN = this.userData ? this.userData.id_token : null;
+    if (TOKEN && this.tokenExpired(TOKEN)) {
+      // token expired, logout the user
+      this.smeLogout();
+      this.logout();
+      return;
+    }
     if (
       (request.url.startsWith(environment.url) ||
         request.url.startsWith(environment.eri_url)) &&
@@ -125,5 +139,71 @@ export class TokenInterceptor implements HttpInterceptor {
       }
     }
     throw err;
+  }
+
+  logout() {
+    Auth.signOut()
+      .then(data => {
+        (window as any).Kommunicate.logout();
+        (function (d, m) {
+            var kommunicateSettings =
+              {
+                "appId": "3eb13dbd656feb3acdbdf650efbf437d1",
+                "popupWidget": true,
+                "automaticChatOpenOnNavigation": true,
+                "preLeadCollection":
+                  [
+                    {
+                      "field": "Name", // Name of the field you want to add
+                      "required": true, // Set 'true' to make it a mandatory field
+                      "placeholder": "Enter your name" // add whatever text you want to show in the placeholder
+                    },
+                    {
+                      "field": "Email",
+                      "type": "email",
+                      "required": true,
+                      "placeholder": "Enter your email"
+                    },
+                    {
+                      "field": "Phone",
+                      "type": "number",
+                      "required": true,
+                      "element": "input", // Optional field (Possible values: textarea or input)
+                      "placeholder": "Enter your phone number"
+                    }
+                  ],
+
+              };
+
+            var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+            s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
+            var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+            (window as any).kommunicate = m; m._globals = kommunicateSettings;
+          }
+        )(document,  (window as any).kommunicate || {});
+
+        sessionStorage.clear();
+        NavbarService.getInstance().clearAllSessionData();
+        this.router.navigate(['/login']);
+
+      })
+      .catch(err => {
+        console.log(err);
+        this.router.navigate(['/login']);
+      });
+
+  }
+
+  smeLogout(){
+    // 'https://uat-api.taxbuddy.com/user/sme-login?inActivityTime=30&smeUserId=11079'
+    let inActivityTime = environment.idleTimeMins;
+    let smeUserId = this.utilsService.getLoggedInUserID();
+    let param = `/sme-login?inActivityTime=${inActivityTime}&smeUserId=${smeUserId}&selfLogout=false`;
+
+    this.userMsService.postMethod(param, '').subscribe((response:any)=>{
+      //
+    }, (error) => {
+      console.log('error in sme Logout API',error)
+    })
   }
 }
