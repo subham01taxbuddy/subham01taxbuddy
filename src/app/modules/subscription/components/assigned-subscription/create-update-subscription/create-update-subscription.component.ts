@@ -793,6 +793,16 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           this.utilsService.isNonEmpty(this.userSubscription) &&
           this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)
         ) {
+          if(!this.maxEndDate){
+            let myDate = new Date();
+            this.maxEndDate = new Date(
+              myDate.getMonth() <= 2
+                ? myDate.getFullYear()
+                : myDate.getFullYear() + 1,
+              2,
+              31
+            );
+          }
           this.maxEndDate.setDate(
             this.maxEndDate.getDate() +
             this.userSubscription.smeSelectedPlan.validForDays -
