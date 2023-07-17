@@ -6,6 +6,7 @@ import {
   OnInit,
   AfterContentChecked,
   ViewChild,
+  OnDestroy,
 } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -29,6 +30,7 @@ import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-
 import { FormControl } from '@angular/forms';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -36,7 +38,7 @@ declare function we_track(key: string, value: any);
   templateUrl: './filings.component.html',
   styleUrls: ['./filings.component.scss'],
 })
-export class FilingsComponent implements OnInit {
+export class FilingsComponent implements OnInit,OnDestroy {
   loading: boolean = false;
   myItrsGridOptions: GridOptions;
   itrDataList = [];
@@ -74,6 +76,7 @@ export class FilingsComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private activatedRoute: ActivatedRoute,
+    private cacheManager: CacheManager,
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
     this.myItrsGridOptions = <GridOptions>{
@@ -202,10 +205,15 @@ export class FilingsComponent implements OnInit {
     // this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
 
-  myItrsList(pageNo, filingTeamMemberId) {
+  myItrsList(pageNo, filingTeamMemberId,fromPageChange?) {
     // https://uat-api.taxbuddy.com/itr/itr-list?pageSize=10&ownerUserId=7522&financialYear=2022-2023&status=ALL
     // &searchAsCoOwner=true&page=0
     //https://uat-api.taxbuddy.com/report/itr-list?page=0&pageSize=20&ownerUserId=7521&financialYear=2022-2023&status=ALL
+    if(!fromPageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
+
     this.loading = true;
     return new Promise((resolve, reject) => {
       let loggedInId = this.utilsService.getLoggedInUserID();
@@ -282,6 +290,11 @@ export class FilingsComponent implements OnInit {
             this.myItrsGridOptions.api?.setRowData(
               this?.createOnSalaryRowData(this?.itrDataList)
             );
+            this.cacheManager.initializeCache(this?.itrDataList);
+
+            const currentPageNumber = pageNo + 1;
+            this.cacheManager.cachePageContent(currentPageNumber,this?.itrDataList);
+            this.config.currentPage = currentPageNumber;
           } else {
             this.itrDataList = [];
             this.config.totalItems = 0;
@@ -1124,26 +1137,43 @@ export class FilingsComponent implements OnInit {
       console.log('The dialog was closed');
     });
   }
+  // pageChanged(event) {
+  //   this.config.currentPage = event;
+  //   this.selectedPageNo = event - 1;
+  //   if (this.coOwnerToggle.value == true) {
+  //     this.myItrsList(event - 1, true);
+  //   } else {
+  //     this.myItrsList(event - 1, '');
+  //   }
+  //   // this.myItrsList(
+  //   //   // this.selectedFyYear,
+  //   //   this.selectedPageNo,
+  //   //   this.selectedFilingTeamMemberId
+  //   // );
+  // }
+
   pageChanged(event) {
-    this.config.currentPage = event;
-    this.selectedPageNo = event - 1;
-    if (this.coOwnerToggle.value == true) {
-      this.myItrsList(event - 1, true);
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData(pageContent));
+      this.config.currentPage = event;
     } else {
-      this.myItrsList(event - 1, '');
+      this.config.currentPage = event;
+      this.selectedPageNo = event - 1;
+        if (this.coOwnerToggle.value == true) {
+          this.myItrsList(event - 1, true,'fromPageChange');
+        } else {
+          this.myItrsList(event - 1, '','fromPageChange');
+        }
     }
-    // this.myItrsList(
-    //   // this.selectedFyYear,
-    //   this.selectedPageNo,
-    //   this.selectedFilingTeamMemberId
-    // );
   }
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
-    this.searchParams.selectedStatusId = null;
+    this.cacheManager.clearCache();
+    this.searchParams.selectedStatusId = 'ALL';
     this.config.page = 0;
     this.config.itemsPerPage = 10;
     this.searchParams.mobileNumber = null;
@@ -1152,6 +1182,7 @@ export class FilingsComponent implements OnInit {
 
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
+
     if (this.coOwnerDropDown) {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.coOwnerDropDown.resetDropdown();
@@ -1227,5 +1258,8 @@ export class FilingsComponent implements OnInit {
       this.coOwnerCheck = false;
     }
     this.myItrsList(0, true)
+  }
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 }
