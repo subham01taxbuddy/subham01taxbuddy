@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -13,13 +13,14 @@ import { ApproveRejectComponent } from '../approve-reject/approve-reject.compone
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 
 @Component({
   selector: 'app-refund-request',
   templateUrl: './refund-request.component.html',
   styleUrls: ['./refund-request.component.scss']
 })
-export class RefundRequestComponent implements OnInit {
+export class RefundRequestComponent implements OnInit,OnDestroy{
   loading: boolean;
   cancelSubscriptionData: any;
   config = {
@@ -65,6 +66,7 @@ export class RefundRequestComponent implements OnInit {
     private itrService: ItrMsService,
     private router: Router,
     private utilService: UtilsService,
+    private cacheManager: CacheManager,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.refundListGridOptions = <GridOptions>{
@@ -122,6 +124,7 @@ export class RefundRequestComponent implements OnInit {
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
 
   resetFilters() {
+    this.cacheManager.clearCache();
     this.invoiceFormGroup.controls['email'].setValue(null);
     this.invoiceFormGroup.controls['mobile'].setValue(null);
     this.invoiceFormGroup.controls['invoiceNo'].setValue(null);
@@ -156,7 +159,11 @@ export class RefundRequestComponent implements OnInit {
     }
   }
 
-  getRefundRequestList(pageNo, isUserId?, id?) {
+  getRefundRequestList(pageNo, isUserId?, id?,fromPageChange?) {
+    if(!fromPageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     let pagination;
     let param;
 
@@ -213,6 +220,11 @@ export class RefundRequestComponent implements OnInit {
           if (response.data.content instanceof Array && response.data.content.length > 0) {
             this.refundListGridOptions.api?.setRowData(this.createRowData(response.data.content));
             this.config.totalItems = response.data.totalElements;
+            this.cacheManager.initializeCache(response.data.content);
+
+            const currentPageNumber = pageNo + 1;
+            this.cacheManager.cachePageContent(currentPageNumber,response.data.content);
+            this.config.currentPage = currentPageNumber;
           } else {
             this._toastMessageService.alert("error","No Data Found");
             this.refundListGridOptions.api?.setRowData(this.createRowData([]));
@@ -232,9 +244,20 @@ export class RefundRequestComponent implements OnInit {
     );
   }
 
-  pageChanged(event: any) {
-    this.config.currentPage = event;
-    this.getRefundRequestList(event - 1);
+  // pageChanged(event: any) {
+  //   this.config.currentPage = event;
+  //   this.getRefundRequestList(event - 1);
+  // }
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.refundListGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      // this.selectedPageNo = event - 1;
+      this.getRefundRequestList(event - 1,'','','fromPageChange');
+    }
   }
 
   refundCreateColumnDef() {
@@ -568,5 +591,8 @@ export class RefundRequestComponent implements OnInit {
 
   }
 
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
+  }
 
 }
