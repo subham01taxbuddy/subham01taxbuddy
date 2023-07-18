@@ -21,6 +21,8 @@ export class BulkReAssignDialogComponent implements OnInit {
   ownerId2:any;
   filerId1:any;
   filerId2:any;
+  loggedInUserRoles: any;
+  ownerDropDownType = 'ASSIGNED';
 
 
   serviceTypes = [
@@ -52,6 +54,12 @@ export class BulkReAssignDialogComponent implements OnInit {
   ngOnInit() {
 
     this.getMasterStatusList();
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
+    if(this.loggedInUserRoles.includes('ROLE_ADMIN')){
+     this.ownerDropDownType = 'ALL';
+    } else {
+      this.ownerDropDownType = 'ASSIGNED';
+    }
   }
   async getMasterStatusList() {
     this.itrStatus = await this.utilsService.getStoredMasterStatusList();

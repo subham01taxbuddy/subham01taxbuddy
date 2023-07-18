@@ -120,7 +120,7 @@ export class SidebarComponent{
       roles: [],
       submenu: [
         { name: 'Assign Subscription', url: '/subscription/assigned-subscription', roles: [] },
-        { name: 'Cancel Subscription', url: '/subscription/cancel-subscription', roles: ['ROLE_ADMIN', 'ROLE_LEADER', 'ROLE_OWNER'] },
+        { name: 'Cancel Subscription', url: '/subscription/cancel-subscription', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     },
     {
@@ -145,7 +145,8 @@ export class SidebarComponent{
       roles: [],
       submenu: [
         {name:'Payouts',url:'/payouts',roles:[]},
-        {name:'Pay Processing',url:'/payouts/pay-processing',roles:['ROLE_ADMIN', 'ROLE_LEADER']}
+        {name:'Pay Processing',url:'/payouts/pay-processing',roles:['ROLE_ADMIN']},
+        {name:'Payout Adjustment',url:'/payouts/payouts-adjustments',roles:['ROLE_ADMIN']},
       ]
     },
     {

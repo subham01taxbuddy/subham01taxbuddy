@@ -62,6 +62,24 @@ export class UtilsService {
 
   removeNullProperties(obj) {
     for (const key in obj) {
+      //movableAsset
+      if (
+        key === 'movableAsset' &&
+        Array.isArray(obj[key]) &&
+        obj[key]?.length > 0
+      ) {
+        obj[key] = obj[key]?.map((item) => {
+          // Filter out null or undefined keys from each object
+          return Object.entries(item).reduce((acc, [k, v]) => {
+            if (v !== null && v !== undefined) {
+              acc[k] = v;
+            }
+            return acc;
+          }, {});
+        });
+        obj[key] = Object.keys(obj[key][0]).length === 0 ? [] : obj[key];
+        console.log(obj[key]);
+      }
       //profitLossAC
       if (
         key === 'profitLossACIncomes' &&
@@ -1460,7 +1478,7 @@ export class UtilsService {
   getUserDetailsByMobile(loggedInSmeId, mobile) {
     //https://uat-api.taxbuddy.com/user/search/userprofile/query?mobileNumber=3210000078
     const param = `/search/userprofile/query?mobileNumber=${mobile}`;
-    return this.userMsService.getMethod(param);
+    return this.userMsService.getMethodNew(param);
   }
 
   getCgSummary(userId, assessmentYear) {

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -13,6 +13,7 @@ import { JsonToCsvService } from '../../shared/services/json-to-csv.service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
 
 
 export const MY_FORMATS = {
@@ -41,7 +42,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class MissedChatReportComponent implements OnInit {
+export class MissedChatReportComponent implements OnInit,OnDestroy {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
@@ -66,6 +67,7 @@ export class MissedChatReportComponent implements OnInit {
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
+    private cacheManager: CacheManager,
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -129,23 +131,39 @@ export class MissedChatReportComponent implements OnInit {
 
   }
 
-  showReports() {
+  showReports(pageChange?) {
     //https://uat-api.taxbuddy.com/report/calling-report/missed-chat-report?fromDate=2023-04-01&toDate=2023-05-27&page=0&pageSize=20&filerUserId=7523'
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     this.loading = true;
-    let data = this.utilsService.createUrlParams(this.searchParam);
     // let loggedInId = this.utilsService.getLoggedInUserID();
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-
     let param = ''
     let userFilter = '';
-    if (this.ownerId && !this.filerId) {
+    if (this.ownerId && !this.filerId && !pageChange) {
+      userFilter += `&ownerUserId=${this.ownerId}`;
+      this.searchParam.page = 0;
+      this.config.currentPage = 1
+    }
+
+    if (this.ownerId && pageChange) {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
-    if (this.filerId) {
+
+    if (this.filerId && !pageChange) {
+      userFilter += `&filerUserId=${this.filerId}`;
+      this.searchParam.page = 0;
+      this.config.currentPage = 1;
+    }
+
+    if (this.filerId && pageChange) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
+    let data = this.utilsService.createUrlParams(this.searchParam);
 
     param = `/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
@@ -154,6 +172,11 @@ export class MissedChatReportComponent implements OnInit {
         this.missedChatReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
         this.missedChatReportGridOptions.api?.setRowData(this.createRowData(this.missedChatReport));
+        this.cacheManager.initializeCache(this.createRowData(this.missedChatReport));
+
+        const currentPageNumber = pageChange || this.searchParam.page + 1;
+        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.missedChatReport));
+        this.config.currentPage = currentPageNumber;
 
       } else {
         this.loading = false;
@@ -247,10 +270,11 @@ export class MissedChatReportComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
-    this.startDate.setValue('2023-04-01');
+    this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
     this?.smeDropDown?.resetDropdown();
     if (this.roles?.includes('ROLE_OWNER')) {
@@ -266,17 +290,32 @@ export class MissedChatReportComponent implements OnInit {
       this.config.totalItems = 0;
     }
 
-    this.showReports();
+    // this.showReports();
   }
 
+  // pageChanged(event) {
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1;
+  //   this.showReports();
+  // }
   pageChanged(event) {
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    this.showReports();
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.missedChatReportGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      this.showReports(event);
+    }
   }
 
   setToDateValidation(FromDate) {
     console.log('FromDate: ', FromDate);
     this.minEndDate = FromDate;
+  }
+
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 }

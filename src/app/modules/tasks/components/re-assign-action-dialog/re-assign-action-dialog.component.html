@@ -10,9 +10,9 @@ font-weight: bold;">Action with Re-Assignment: </label><button style="float: rig
     </div>
     <div class="col-sm-9">
         <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
-            (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+            (sendFiler)="fromSme($event, false)"  [showOnlyOwnerList]=true ></app-sme-list-drop-down>
     </div>
     <div class="col-sm-3">
-        <button class="tbd-btn save-btn spsTp2" (click)="reAssignment()" [disabled]="loading">Re-Assignment</button>
+        <button class="tbd-btn save-btn spsTp2" (click)="reAssign()" [disabled]="loading">Re-Assignment</button>
     </div>
 </div>

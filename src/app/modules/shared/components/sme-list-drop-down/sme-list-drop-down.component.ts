@@ -19,6 +19,8 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   @Input() checkboxSelection = false;
   @Output() sendFilerList = new EventEmitter<any>();
   @Input() showOwnerList =false;
+  @Input() showOnlyOwnerList =false;
+  @Input() listType = 'ALL';
 
   smeList: any[] = [];
   searchFiler = new FormControl('');
@@ -144,18 +146,34 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   }
 
   getOwners() {
-    const loggedInSmeUserId = this.loggedInSme[0].userId;
-    let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
-      console.log('owner list result -> ', result);
-      this.ownerList = result.data;
-      console.log('ownerlist', this.ownerList);
-      this.ownerNames = this.ownerList.map((item) => {
-        return { name: item.name, userId: item.userId };
+    if(this.listType === 'ALL') {
+      const loggedInSmeUserId = this.loggedInSme[0].userId;
+      let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
+      this.userMsService.getMethodNew(param).subscribe((result: any) => {
+        console.log('owner list result -> ', result);
+        this.ownerList = result.data;
+        console.log('ownerlist', this.ownerList);
+        this.ownerNames = this.ownerList.map((item) => {
+          return {name: item.name, userId: item.userId};
+        });
+        this.options = this.ownerNames;
+        console.log(' ownerName -> ', this.ownerNames);
       });
-      this.options = this.ownerNames;
-      console.log(' ownerName -> ', this.ownerNames);
-    });
+    } else if(this.listType === 'ASSIGNED') {
+      const loggedInSmeUserId = this.loggedInSme[0].userId;
+      let param = `/sme-details-new/${loggedInSmeUserId}?ownersByLeader=true`;
+      this.userMsService.getMethodNew(param).subscribe((result: any) => {
+        console.log('owner list result -> ', result);
+        this.ownerList = result.data;
+        console.log('ownerlist', this.ownerList);
+        this.ownerNames = this.ownerList.map((item) => {
+          return {name: item.name, userId: item.userId};
+        });
+        this.options = this.ownerNames;
+        console.log(' ownerName -> ', this.ownerNames);
+      });
+    }
+
   }
 
   getFilers() {

@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -14,13 +14,14 @@ import { ApproveRejectComponent } from '../approve-reject/approve-reject.compone
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 
 @Component({
   selector: 'app-cancel-subscription',
   templateUrl: './cancel-subscription.component.html',
   styleUrls: ['./cancel-subscription.component.scss']
 })
-export class CancelSubscriptionComponent implements OnInit {
+export class CancelSubscriptionComponent implements OnInit,OnDestroy {
   loading: boolean;
   cancelSubscriptionData: any;
   config = {
@@ -57,6 +58,7 @@ export class CancelSubscriptionComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private utilService: UtilsService,
     private itrService: ItrMsService,
+    private cacheManager: CacheManager,
     @Inject(LOCALE_ID) private locale: string
   ) {
 
@@ -118,6 +120,7 @@ export class CancelSubscriptionComponent implements OnInit {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.cacheManager.clearCache();
     this.invoiceFormGroup.controls['mobile'].setValue(null);
     this.invoiceFormGroup.controls['email'].setValue(null);
     this.smeDropDown?.resetDropdown();
@@ -156,7 +159,11 @@ export class CancelSubscriptionComponent implements OnInit {
     }
   }
 
-  getCancelSubscriptionList(pageNo, isUserId?, id?) {
+  getCancelSubscriptionList(pageNo, isUserId?, id?,fromPageChange?) {
+    if(!fromPageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     const userId = this.utilService.getLoggedInUserID();
     if(this.loggedInUserRoles.includes('ROLE_OWNER')){
       this.ownerId = userId;
@@ -212,6 +219,11 @@ export class CancelSubscriptionComponent implements OnInit {
           if (response?.data?.content instanceof Array && response?.data?.content?.length > 0) {
             this.subscriptionListGridOptions.api?.setRowData(this.createRowData(response.data.content));
             this.config.totalItems = response.data.totalElements;
+            this.cacheManager.initializeCache(response.data.content);
+
+          const currentPageNumber = pageNo + 1;
+          this.cacheManager.cachePageContent(currentPageNumber,response.data.content);
+          this.config.currentPage = currentPageNumber;
           } else {
             this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
             this.config.totalItems = 0;
@@ -231,9 +243,20 @@ export class CancelSubscriptionComponent implements OnInit {
     );
   }
 
-  pageChanged(event: any) {
-    this.config.currentPage = event;
-    this.getCancelSubscriptionList(event - 1);
+  // pageChanged(event: any) {
+  //   this.config.currentPage = event;
+  //   this.getCancelSubscriptionList(event - 1);
+  // }
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.subscriptionListGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      // this.selectedPageNo = event - 1;
+      this.getCancelSubscriptionList(event - 1,'','','fromPageChange');
+    }
   }
 
   subscriptionCreateColumnDef() {
@@ -554,4 +577,7 @@ export class CancelSubscriptionComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
+  }
 }

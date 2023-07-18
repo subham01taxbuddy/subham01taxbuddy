@@ -24,6 +24,7 @@ export class PayProcessingComponent implements OnInit {
   };
   downloadURL:any;
   hideDownload = false;
+  showMessage ='';
 
   constructor(
     private itrMsService: ItrMsService,
@@ -243,6 +244,56 @@ export class PayProcessingComponent implements OnInit {
     }
   }
 
+  getTds(){
+    //https://cihbintebntput6bydyqnksj2a0zykgg.lambda-url.ap-south-1.on.aws/
+    this.showMessage = 'TDS Computation Started - Please Do Not Close the Screen or Move out'
+    // this.utilsService.showSnackBar('TDS Computation Started - Please Do Not Close the Screen or Move out');
+    this.loading = true;
+    let param = '';
+    this.itrMsService.getTdsDetails(param).subscribe((response: any) => {
+      if (response.success) {
+        // this.loading = false;
+        console.log('response', response);
+        // this.utilsService.showSnackBar('CSV Generation Started - Please Do Not Close the Screen or Move out');
+        this.showMessage ='Adjustment Started Please Do Not Close the Screen or Move out'
+        this.addAdjustment();
+      } else {
+        this.loading = false;
+        this.showMessage =''
+        this.utilsService.showSnackBar(response.message);
+      }
+    },
+    (error) => {
+      this.loading = false;
+      this.showMessage =''
+      this.utilsService.showSnackBar('Error in API of TDS Computation');
+    });
+
+  }
+
+  addAdjustment(){
+    this.loading =true;
+    let param = '';
+    this.itrMsService.addAdjustment(param).subscribe((response: any) => {
+      if (response.success) {
+        // this.loading = false;
+        console.log('response', response);
+        // this.utilsService.showSnackBar('CSV Generation Started - Please Do Not Close the Screen or Move out');
+        this.showMessage ='CSV Generation Started - Please Do Not Close the Screen or Move out'
+        this.download();
+      } else {
+        this.loading = false;
+        this.showMessage =''
+        this.utilsService.showSnackBar(response.message);
+      }
+    },
+    (error) => {
+      this.loading = false;
+      this.showMessage =''
+      this.utilsService.showSnackBar('Error in API of Adjustment Computation');
+    });
+  }
+
   download() {
     // https://avamuzavbieadujrkme44yfetq0cxiou.lambda-url.ap-south-1.on.aws/'
     this.loading = true;
@@ -255,6 +306,7 @@ export class PayProcessingComponent implements OnInit {
       if (response.success) {
         this.loading = false;
         console.log('response', response['data']);
+        this.showMessage =''
         this.utilsService.showSnackBar(response.message);
         this.downloadURL = response?.downloadUrl
         window.open(this.downloadURL, '_blank');
@@ -264,13 +316,15 @@ export class PayProcessingComponent implements OnInit {
       } else {
         this.loading = false;
         // this.isUploadTrue = false;
+        this.showMessage =''
         this.hideDownload =false;
         this.utilsService.showSnackBar(response.message);
       }
     },
     (error) => {
       this.loading = false;
-      this.utilsService.showSnackBar('Error in download/generatee CSV ');
+      this.showMessage =''
+      this.utilsService.showSnackBar('Error in download/generate CSV ');
     });
 
   }

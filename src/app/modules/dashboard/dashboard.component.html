@@ -98,7 +98,7 @@
           <span class="TxSm"> Unpaid Invoices</span>
           </div>
           <div class="inBxR">
-          <span class="numTxSm redTx">{{invoiceData?.unpaidAmount || 'NA'}}</span><br>
+          <span class="numTxSm redTx">₹ {{invoiceData?.unpaidAmount || 'NA'}}</span><br>
           <span class="TxSm"> Unpaid Amount</span>
           </div>
           <span class="redtxsm">*Ensure payment of outstanding invoices to earn ₹ {{invoiceData?.unpaidAmount || 'NA'}} more in commission</span>
@@ -112,7 +112,7 @@
           <span class="TxSm">No of Invoices Raised</span>
           </div>
           <div class="inBxR">
-          <span class="numTxSm">{{invoiceData?.revenueGenerated || 'NA'}}</span><br>
+          <span class="numTxSm">₹ {{invoiceData?.revenueGenerated || 'NA'}}</span><br>
           <span class="TxSm">Revenue Generated</span>
           </div>
         </div>
@@ -125,7 +125,7 @@
           <span class="TxSm">Paid Invoices</span>
           </div>
           <div class="inBxR">
-          <span class="numTxSm grTx">{{invoiceData?.paidAmount || 'NA'}}</span><br>
+          <span class="numTxSm grTx">₹ {{invoiceData?.paidAmount || 'NA'}}</span><br>
           <span class="TxSm">Paid Amount</span>
           </div>
         </div>
@@ -144,19 +144,19 @@
     <div class="col-sm-6" *ngIf="!hideCommission">
       <div class="radius">
         <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Commission Earned</span>&nbsp;
-        <span class="numTxBg">{{commissionData?.totalCommissionEarned || 'NA'}}</span>
+        <span class="numTxBg">₹ {{(commissionData?.totalCommissionEarned | number:'1.2-2') || 'NA'}}</span>
 
         <div class="row">
           <div class="col-sm-6">
             <div class="radius1 grBk">
-            <span class="numTxSm grTx">{{commissionData?.totalCommissionReceived || 'NA'}} </span><br>
+            <span class="numTxSm grTx">{{(commissionData?.totalCommissionReceived | number:'1.2-2') || 'NA'}} </span><br>
             <span class="TxSm">Received</span><br>
             <span class="grytx">Amount Approved</span>
           </div>
           </div>
           <div class="col-sm-6">
             <div class="radius1 OrgBk">
-            <span class="numTxSm OrgTx">{{commissionData?.totalCommissionReceivable || 'NA'}}</span><br>
+            <span class="numTxSm OrgTx">{{(commissionData?.totalCommissionReceivable | number:'1.2-2') || 'NA'}}</span><br>
             <span class="TxSm">Receivable</span><br>
             <span class="grytx">Approval in Progress</span>
           </div>
@@ -219,7 +219,7 @@
 <!-- Tables Start -->
 <div class="row">
   <div class="col-sm-6">
-  <div class="radiusTab">
+  <div class="radiusTab scroll">
       <div class="tx">Document Uploaded but filing not yet started</div>
       <button class="proceed" [disabled]="loading" (click)="goTo('myUsers')">Proceed <i class="fa fa-long-arrow-right"></i></button>
     <table class="table table-bordered">

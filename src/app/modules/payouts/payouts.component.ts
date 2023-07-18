@@ -1,4 +1,4 @@
-import {Component, Inject, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {GridOptions} from "ag-grid-community";
 import {UserMsService} from "../../services/user-ms.service";
 import {ToastMessageService} from "../../services/toast-message.service";
@@ -16,13 +16,15 @@ import {environment} from "../../../environments/environment";
 import {RoleBaseAuthGuardService} from "../shared/services/role-base-auth-guard.service";
 import {capitalize} from "lodash";
 import { ConfirmDialogComponent } from '../shared/components/confirm-dialog/confirm-dialog.component';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import { CacheManager } from '../shared/interfaces/cache-manager.interface';
 
 @Component({
   selector: 'app-payouts',
   templateUrl: './payouts.component.html',
   styleUrls: ['./payouts.component.scss']
 })
-export class PayoutsComponent implements OnInit {
+export class PayoutsComponent implements OnInit,OnDestroy {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
 
@@ -45,7 +47,7 @@ export class PayoutsComponent implements OnInit {
     {value: '', name: 'All'},
     {value: 'Paid',name:'Paid'},
     {value: 'Unpaid',name:'Unpaid'},
-    {value: 'processing',name:'Processing'},
+    {value: 'Adjusted',name:'Adjusted'},
     {value: 'initiated',name:'Initiated'},
     {value: 'Failed',name: 'Failed'}
   ];
@@ -60,6 +62,7 @@ export class PayoutsComponent implements OnInit {
   dialogRef: any;
   roles:any;
   dataOnLoad = true;
+  showCsvMessage: boolean;
 
   constructor(private userService: UserMsService,
               private _toastMessageService: ToastMessageService,
@@ -69,6 +72,8 @@ export class PayoutsComponent implements OnInit {
               private dialog: MatDialog,
               private itrMsService: ItrMsService,
               private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+              private genericCsvService: GenericCsvService,
+              private cacheManager: CacheManager,
               @Inject(LOCALE_ID) private locale: string) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
 
@@ -203,7 +208,11 @@ export class PayoutsComponent implements OnInit {
     // this.serviceCall(queryString);
   }
 
-  serviceCall(queryString){
+  serviceCall(queryString,pageChange?){
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     this.loading = true;
     let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
     let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
@@ -223,6 +232,11 @@ export class PayoutsComponent implements OnInit {
         this.usersGridOptions.api?.setRowData(this.createRowData(result.data.content));
         this.userInfo = result.data.content;
         this.config.totalItems = result.data.totalElements;
+        this.cacheManager.initializeCache(result.data.content);
+
+        const currentPageNumber = pageChange || this.config.currentPage;
+        this.cacheManager.cachePageContent(currentPageNumber,result.data.content);
+        this.config.currentPage = currentPageNumber;
       } else {
         this.usersGridOptions.api?.setRowData([]);
         this.userInfo = [];
@@ -238,9 +252,20 @@ export class PayoutsComponent implements OnInit {
     });
   }
 
-  pageChanged(event: any) {
-    this.config.currentPage = event;
-    this.serviceCall('');
+  // pageChanged(event: any) {
+  //   this.config.currentPage = event;
+  //   this.serviceCall('');
+  // }
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.usersGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      // this.searchParam.page = event - 1;
+      this.serviceCall('',event );
+    }
   }
 
   usersCreateColumnDef(list: any, leaderList:any) {
@@ -793,7 +818,30 @@ export class PayoutsComponent implements OnInit {
 
   }
 
+  async downloadReport() {
+    this.loading = true;
+    this.showCsvMessage = true;
+
+    let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
+    let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
+
+    let userFilter = ''
+    if (this.ownerId && !this.filerId) {
+      userFilter = `&ownerUserId=${this.ownerId}`;
+    }
+    if (this.filerId) {
+      userFilter = `&filerUserId=${this.filerId}`;
+    }
+
+    const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11${statusFilter}${payOutStatusFilter}${userFilter}`;
+
+    await this.genericCsvService.downloadReport(environment.url + '/itr', param, 0, 'payout-report','');
+    this.loading = false;
+    this.showCsvMessage = false;
+  }
+
   resetFilters(){
+    this.cacheManager.clearCache();
     this.filerId = null;
     this.ownerId = null;
     this.selectedStatus = this.statusList[2].value;
@@ -813,6 +861,9 @@ export class PayoutsComponent implements OnInit {
       // this.config.currentPage =1;
     }
     // this.serviceCall('');
+  }
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 
 }

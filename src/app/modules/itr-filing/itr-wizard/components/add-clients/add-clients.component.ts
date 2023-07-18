@@ -163,6 +163,13 @@ export class AddClientsComponent implements OnInit, OnDestroy {
         otpSourceFlag: this.selectedOtpOption,
       };
 
+      let headerObj = {
+        panNumber: this.addClientForm.controls['panNumber'].value,
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        userId: this.ITR_JSON.userId.toString(),
+      };
+      sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+
       this.itrService.postMethodForEri(param, request).subscribe(
         (res: any) => {
           this.loading = false;

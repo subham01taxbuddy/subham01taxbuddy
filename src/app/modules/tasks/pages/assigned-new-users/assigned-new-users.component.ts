@@ -2,7 +2,7 @@ import { async } from '@angular/core/testing';
 import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
 import { formatDate } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
@@ -30,13 +30,14 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ItrStatusDialogComponent } from '../../components/itr-status-dialog/itr-status-dialog.component';
 import { AgTooltipComponent } from "../../../shared/components/ag-tooltip/ag-tooltip.component";
 import { ReAssignActionDialogComponent } from '../../components/re-assign-action-dialog/re-assign-action-dialog.component';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-assigned-new-users',
   templateUrl: './assigned-new-users.component.html',
   styleUrls: ['./assigned-new-users.component.scss']
 })
-export class AssignedNewUsersComponent implements OnInit {
+export class AssignedNewUsersComponent implements OnInit,OnDestroy {
   loading!: boolean;
   usersGridOptions: GridOptions;
   config: any;
@@ -72,9 +73,10 @@ export class AssignedNewUsersComponent implements OnInit {
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private activatedRoute: ActivatedRoute,
     private requestManager: RequestManager,
+    private cacheManager: CacheManager,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
-    this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER'));
+    this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColumnDef([]),
@@ -82,7 +84,12 @@ export class AssignedNewUsersComponent implements OnInit {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && rowNode.data.statusId === 18 : false;
+       if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
+          return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && (rowNode.data.statusId === 2 || rowNode.data.statusId === 18)) : false;
+        }
+        else{
+          return  rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' :false;
+        }
       },
       onGridReady: params => {
       },
@@ -153,6 +160,7 @@ export class AssignedNewUsersComponent implements OnInit {
   ngOnDestroy() {
     console.log('unsubscribe');
     this.requestManagerSubscription.unsubscribe();
+    this.cacheManager.clearCache();
   }
 
   LIFECYCLE = 'LIFECYCLE';
@@ -224,9 +232,9 @@ export class AssignedNewUsersComponent implements OnInit {
               //     delete workingItr[key[0]];
               //   }
               // });
+              workingItr.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
               let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
               Object.assign(obj, workingItr);
-              workingItr.filingTeamMemberId = loggedInId;
               console.log('obj:', obj);
               workingItr = JSON.parse(JSON.stringify(obj));
               sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
@@ -290,19 +298,35 @@ export class AssignedNewUsersComponent implements OnInit {
     this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
   }
 
-  pageChanged(event: any) {
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    if (this.coOwnerToggle.value == true) {
-      this.search(event - 1, true);
+  // pageChanged(event: any) {
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1;
+  //   if (this.coOwnerToggle.value == true) {
+  //     this.search(event - 1, true);
+  //   } else {
+  //     this.search(event - 1);
+  //   }
+  // }
+
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.usersGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
     } else {
-      this.search(event - 1);
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      if (this.coOwnerToggle.value == true) {
+        this.search( '', true,event);
+      } else {
+        this.search('','',event );
+      }
     }
   }
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    this.search('serviceType', 'isAgent');
+    // this.search('serviceType', 'isAgent');
 
     if (this.searchParam.serviceType) {
       setTimeout(() => {
@@ -382,7 +406,11 @@ export class AssignedNewUsersComponent implements OnInit {
         hide: !this.showReassignmentBtn.length,
         pinned: 'left',
         checkboxSelection: (params) => {
-          return params.data.statusId === 18 && params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
+          if(this.loggedInUserRoles.includes('ROLE_OWNER')){
+            return (params.data.statusId === 2 || params.data.statusId === 18) && params.data.serviceType === 'ITR' && this.showReassignmentBtn.length;
+          }else{
+            return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
+          }
         },
         cellStyle: function (params: any) {
           return {
@@ -875,7 +903,8 @@ export class AssignedNewUsersComponent implements OnInit {
         itrObjectStatus: userData[i].itrObjectStatus,
         openItrId: userData[i].openItrId,
         lastFiledItrId: userData[i].lastFiledItrId,
-        conversationWithFiler: userData[i].conversationWithFiler
+        conversationWithFiler: userData[i].conversationWithFiler,
+        ownerUserId: userData[i].ownerUserId
       })
       userArray.push(userInfo);
     }
@@ -1242,6 +1271,7 @@ export class AssignedNewUsersComponent implements OnInit {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.cacheManager.clearCache();
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
     this.searchParam.page = 0;
@@ -1266,7 +1296,13 @@ export class AssignedNewUsersComponent implements OnInit {
 
   }
 
-  search(form?, isAgent?) {
+  search(form?, isAgent?,pageChange?) {
+
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
+
     let loggedInId = this.utilsService.getLoggedInUserID();
     if (form == 'mobile') {
       this.searchParam.page = 0;
@@ -1345,6 +1381,12 @@ export class AssignedNewUsersComponent implements OnInit {
             this.usersGridOptions.api.setColumnDefs(this.usersCreateColumnDef(this.itrStatus));
             this.userInfo = result.data['content'];
             this.config.totalItems = result.data.totalElements;
+            this.cacheManager.initializeCache(result.data['content']);
+
+            const currentPageNumber = pageChange || this.searchParam.page + 1;
+            this.cacheManager.cachePageContent(currentPageNumber,result.data['content']);
+            this.config.currentPage = currentPageNumber;
+
           } else {
             this.usersGridOptions.api?.setRowData(this.createRowData([]));
             this.config.totalItems = 0;

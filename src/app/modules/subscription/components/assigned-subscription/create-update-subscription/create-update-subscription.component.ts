@@ -642,7 +642,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   gstUserInfoByUserId(userId) {
     let param = '/search/userprofile/query?userId=' + userId;
-    this.userService.getMethod(param).subscribe(
+    this.userService.getMethodNew(param).subscribe(
       (res: any) => {
         console.log('Get user info by userId: ', res);
         if (res && res.records instanceof Array) {
@@ -793,6 +793,16 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           this.utilsService.isNonEmpty(this.userSubscription) &&
           this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)
         ) {
+          if(!this.maxEndDate){
+            let myDate = new Date();
+            this.maxEndDate = new Date(
+              myDate.getMonth() <= 2
+                ? myDate.getFullYear()
+                : myDate.getFullYear() + 1,
+              2,
+              31
+            );
+          }
           this.maxEndDate.setDate(
             this.maxEndDate.getDate() +
             this.userSubscription.smeSelectedPlan.validForDays -

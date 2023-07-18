@@ -10,12 +10,14 @@ import {MaterialModule} from "../shared/material.module";
 import {PagesModule} from "../../pages/pages.module";
 import {SharedModule} from "../shared/shared.module";
 import { PayProcessingComponent } from './pay-processing/pay-processing.component';
+import { PayoutAdjustmentComponent } from './payout-adjustment/payout-adjustment.component';
 
 
 @NgModule({
   declarations: [
     PayoutsComponent,
-    PayProcessingComponent
+    PayProcessingComponent,
+    PayoutAdjustmentComponent
   ],
   imports: [
     CommonModule,

@@ -1,4 +1,4 @@
-import { result } from 'lodash';
+import { filter, result } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import {
   FormGroup,
@@ -69,6 +69,10 @@ export class HousePropertyComponent implements OnInit {
   activeTenant: number[];
   @Output() saveAndNext = new EventEmitter<any>();
   taxableIncomesHP: any = [];
+  EEStatus: boolean;
+  EAStatus: boolean;
+  storedIndex: any;
+  storedValue: String;
 
   constructor(
     private fb: FormBuilder,
@@ -118,6 +122,7 @@ export class HousePropertyComponent implements OnInit {
   ngOnInit() {
     // this.getItrDocuments();
     // this.getHpDocsUrl(0);
+
     this.housePropertyForm = this.createHousePropertyForm();
     if (
       this.utilsService.isNonEmpty(this.ITR_JSON) &&
@@ -242,7 +247,7 @@ export class HousePropertyComponent implements OnInit {
         ],
         rentPercentage: [{ value: null, disabled: true }],
         propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
-        isEligibleFor80EE: [''],
+        isEligibleFor80EE: [null],
         // isEligibleFor80EEA: [false],
         loans: this.fb.array([
           this.fb.group({
@@ -461,6 +466,7 @@ export class HousePropertyComponent implements OnInit {
     this.housePropertyForm = this.createHousePropertyForm();
     this.housePropertyForm.controls['country'].setValue('91');
     this.defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
+    this.setStoredValues(this.ITR_JSON.houseProperties.length, 'add');
   }
 
   editHouseProperty(index) {
@@ -556,6 +562,18 @@ export class HousePropertyComponent implements OnInit {
     // if (this.housePropertyForm.getRawValue().loans.length > 0) {
     //   this.isHomeLoan.setValue(true);
     // }
+
+    this.setStoredValues(index, 'edit');
+    this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
+      .isEligibleFor80EE
+      ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EE
+      : false;
+    this.EAStatus = this.ITR_JSON.houseProperties[this.storedIndex]
+      .isEligibleFor80EEA
+      ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EEA
+      : false;
+
+    this.EeEaValueChanges();
   }
 
   haveCoOwners() {
@@ -841,6 +859,9 @@ export class HousePropertyComponent implements OnInit {
         'annualRentReceived'
       ].updateValueAndValidity();
     }
+
+    this.EeEaValueChanges();
+
     if (this.housePropertyForm.valid) {
       this.housePropertyForm.controls['country'].setValue('91');
       const hp = this.housePropertyForm.getRawValue();
@@ -867,6 +888,7 @@ export class HousePropertyComponent implements OnInit {
       //   });
       // }
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = true;
+
       if (
         this.housePropertyForm.controls['isEligibleFor80EE'].value === '80EE'
       ) {
@@ -1095,6 +1117,119 @@ export class HousePropertyComponent implements OnInit {
         100;
       this.thirtyPctOfAnnualValue = this.annualValue * 0.3;
       // this.housePropertyForm.controls['annualRentReceived'].setValue(this.annualValue);
+    }
+  }
+
+  // Function to set the stored values
+  setStoredValues(i: any, v: string) {
+    this.storedIndex = i;
+    this.storedValue = v;
+  }
+
+  EeEaValueChanges() {
+    console.log(this.storedIndex, this.storedValue, 'stored');
+    if (!this.storedValue) {
+      this.storedIndex = 0;
+      this.storedValue = 'onInit';
+    }
+
+    if (
+      this.storedValue === 'add' ||
+      this.storedValue === 'onInit' ||
+      this.storedValue === 'edit'
+    ) {
+      // current value of interest amount
+      const currentInterestValue = Number(
+        (
+          (this.housePropertyForm.controls['loans'] as FormArray)
+            .controls[0] as FormGroup
+        ).controls['interestAmount']?.value
+      );
+
+      // interest form control
+      const interestAmountControl = (
+        (this.housePropertyForm.controls['loans'] as FormArray)
+          .controls[0] as FormGroup
+      ).controls['interestAmount'];
+
+      let interestTotal = 0;
+
+      let filteredSop = this.ITR_JSON.houseProperties.filter(
+        (element) => element.propertyType === 'SOP'
+      );
+
+      let filteredArray = filteredSop?.filter(
+        (element, i) => i !== this.storedIndex && element.propertyType === 'SOP'
+      );
+
+      if (filteredSop && filteredSop.length > 0) {
+        if (filteredArray && filteredArray.length > 0) {
+          filteredArray?.forEach((element) => {
+            interestTotal += element?.loans[0]?.interestAmount;
+            console.log(interestTotal);
+          });
+        } else {
+          interestTotal = 0;
+        }
+
+        if (
+          this.ITR_JSON.houseProperties.length > 0 &&
+          interestTotal + currentInterestValue > 200000 &&
+          filteredArray &&
+          filteredArray.length > 0 &&
+          this.housePropertyForm.controls['propertyType']?.value === 'SOP'
+        ) {
+          interestAmountControl?.setValidators(Validators.max(200000));
+          interestAmountControl?.updateValueAndValidity();
+          interestAmountControl?.setErrors({ maxValueExceeded: true });
+        }
+      }
+
+      if (
+        currentInterestValue > 200000 &&
+        this.ITR_JSON.houseProperties?.length > 0
+      ) {
+        this.ITR_JSON.houseProperties?.forEach((element, i) => {
+          if (i != this.storedIndex) {
+            this.EEStatus = !this.EEStatus
+              ? element?.isEligibleFor80EE === true
+              : true;
+            this.EAStatus = !this.EAStatus
+              ? element?.isEligibleFor80EEA === true
+              : true;
+          }
+        });
+      } else {
+        this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
+          ?.isEligibleFor80EE
+          ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EE
+          : false;
+        this.EAStatus = this.ITR_JSON.houseProperties[this.storedIndex]
+          ?.isEligibleFor80EEA
+          ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EEA
+          : false;
+
+        if (this.EEStatus) {
+          this.EAStatus = false;
+        } else if (this.EAStatus) {
+          this.EEStatus = false;
+        }
+      }
+    } else {
+      this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
+        ?.isEligibleFor80EE
+        ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EE
+        : false;
+      this.EAStatus = this.ITR_JSON.houseProperties[this.storedIndex]
+        ?.isEligibleFor80EEA
+        ? this.ITR_JSON.houseProperties[this.storedIndex]?.isEligibleFor80EEA
+        : false;
+
+      if (this.EEStatus) {
+        this.EAStatus = false;
+      } else if (this.EAStatus) {
+        this.EEStatus = false;
+      }
     }
   }
 

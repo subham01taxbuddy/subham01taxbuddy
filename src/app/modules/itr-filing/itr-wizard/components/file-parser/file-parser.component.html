@@ -6,6 +6,7 @@
     hidden
     class="inptfile"
     (change)="uploadFile($event)"
+    accept=".xls, .xlsx"
   />
 
   <div class="">
@@ -23,9 +24,15 @@
       <div class="upload-data">
         <div class="card__col-sm-3">
           <label>{{ broker.label }}</label>
-          <a *ngIf="broker.name === 'Taxbuddy'"
-             (click)="downloadTemplate()">Template</a>
-<!--          <button class="tbd-btn" *ngIf="broker.name === 'Taxbuddy'" (click)="downloadTemplate()">Download Template</button>-->
+          <hr />
+          <div class="temsteps">
+            <a *ngIf="broker.name === 'Taxbuddy'" (click)="downloadTemplate()"
+              >Template</a
+            >
+            <a *ngIf="broker.name !== 'Taxbuddy'" (click)="steps(broker.steps)"
+              >Steps to download Statement</a
+            >
+          </div>
         </div>
         <div class="card__col-sm-9">
           <div class="row">
@@ -51,15 +58,18 @@
             </div>
             <div class="col-sm-9">
               <label *ngFor="let file of broker.filesUploaded" class="filename">
-                <i class="fa fa-check-circle" style="color: green" aria-hidden="true"></i>&nbsp;{{ file }}
+                <i
+                  class="fa fa-check-circle"
+                  style="color: green"
+                  aria-hidden="true"
+                ></i
+                >&nbsp;{{ file }}
               </label>
               <br />
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </div>
-

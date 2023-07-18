@@ -164,7 +164,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
       "eFillingCompleted":true,
       eFillingDate:this.eFillingDate.value,
       ackNumber:this.ackNumber.value,
-      itrType:`ITR${this.itrType.value}`,
+      itrType:`${this.itrType.value}`,
       itrTokenNumber:'',
       "filingTeamMemberId":this.data.callerAgentUserId,
       filingSource:"MANUALLY"

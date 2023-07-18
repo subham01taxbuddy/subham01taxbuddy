@@ -32,6 +32,25 @@ export class ReAssignDialogComponent implements OnInit {
     // this.ownerId=this.data.ownerId;
     // this.filerId=this.data.filerId;
     // this.serviceType=this.data.serviceType;
+    let roles = this.utilsService.getUserRoles();
+    if(roles.includes('ROLE_LEADER')) {
+      this.checkPermission();
+    }
+  }
+
+  checkPermission(){
+    let loggedInSmeUserId = this.utilsService.getLoggedInUserID();
+    let param = `/sme-details-new/${loggedInSmeUserId}?ownersByLeader=true`;
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+      console.log('owner list result -> ', result);
+      let ownerList = result.data;
+      let filteredList = ownerList.filter((item) => item.userId === this.data.userInfo.ownerUserId);
+      if(!filteredList || filteredList.length <= 0){
+        this.utilsService.showSnackBar('You do not have permission to reassign this user.');
+        this.dialogRef.close({ event: 'close', data: 'error' });
+      }
+    });
+
   }
 
   fromSme(event, isOwner) {

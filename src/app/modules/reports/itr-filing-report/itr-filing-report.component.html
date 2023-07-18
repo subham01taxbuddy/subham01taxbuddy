@@ -25,7 +25,7 @@
               <section class="example-section checkbox-right">
                 <div class="checkbox-group ">
                   <mat-checkbox [formControl]="leaderView" [disabled]="disableCheckboxes"
-                    *ngIf="roles.includes('ROLE_ADMIN')" (change)="handleLeaderViewChange()">Leader View</mat-checkbox>
+                    *ngIf="roles.includes('ROLE_ADMIN') || roles.includes('ROLE_LEADER')" (change)="handleLeaderViewChange()">Leader View</mat-checkbox>
                   <mat-checkbox [formControl]="ownerView" [disabled]="disableCheckboxes"
                     *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')"
                     (change)="handleOwnerViewChange()">Owner View</mat-checkbox>

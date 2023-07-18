@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { ReportService } from 'src/app/services/report-service';
@@ -6,13 +6,14 @@ import { GridOptions } from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { environment } from 'src/environments/environment';
+import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
 
 @Component({
   selector: 'app-payout-report',
   templateUrl: './payout-report.component.html',
   styleUrls: ['./payout-report.component.scss']
 })
-export class PayoutReportComponent implements OnInit {
+export class PayoutReportComponent implements OnInit,OnDestroy {
   loading = false;
   payoutReport: any;
   config: any;
@@ -33,6 +34,7 @@ export class PayoutReportComponent implements OnInit {
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
     private genericCsvService: GenericCsvService,
+    private cacheManager: CacheManager,
   ) {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
@@ -85,6 +87,10 @@ export class PayoutReportComponent implements OnInit {
 
   showReports(pageChange?) {
     // http://localhost:9055/report/payout/report?page=0&pageSize=20&ownerUserId=304829
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     this.loading = true;
 
     let param = '';
@@ -121,6 +127,11 @@ export class PayoutReportComponent implements OnInit {
         this.config.totalCommissionEarned = response?.data?.totalCommisionEarned;
         this.config.totalPartnersPaid = response?.data?.totalPartnerPaidOut;
         this.payoutReportGridOptions.api?.setRowData(this.createRowData(this.payoutReport));
+        this.cacheManager.initializeCache(this.createRowData(this.payoutReport));
+
+        const currentPageNumber = pageChange || this.searchParam.page + 1;
+        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.payoutReport));
+        this.config.currentPage = currentPageNumber;
 
 
       } else {
@@ -150,6 +161,7 @@ export class PayoutReportComponent implements OnInit {
         ownerName: payoutData[i].ownerName,
         totalCommissionEarned: payoutData[i].totalCommissionEarned,
         totalCommissionEarnedTds: payoutData[i].totalCommissionEarnedTds,
+        totalTDS : payoutData[i].totalTDS,
         numberOfFiling: payoutData[i].numberOfFiling,
         slabOneCount: payoutData[i].slabOneCount,
         slabOneEarning: payoutData[i].slabOneEarning,
@@ -234,6 +246,18 @@ export class PayoutReportComponent implements OnInit {
         headerName: 'Total Commission Earned-Post TDS',
         field: 'totalCommissionEarnedTds',
         width: 260,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
+      {
+        headerName: 'Total TDS',
+        field: 'totalTDS',
+        width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -356,6 +380,7 @@ export class PayoutReportComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
@@ -365,14 +390,33 @@ export class PayoutReportComponent implements OnInit {
     //  } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
     //    this.filerId = this.loggedInSme[0].userId;
     //  }
-    this.showReports();
+    this.config.totalCommissionEarned = 0;
+    this.config.totalPartnersPaid=0;
+    this.payoutReportGridOptions.api?.setRowData(this.createRowData([]));
+    this.config.totalItems = 0;
+    // this.showReports();
   }
 
+  // pageChanged(event) {
+  //   let pageChange = event
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1;
+  //   this.showReports(pageChange);
+  // }
   pageChanged(event) {
-    let pageChange = event
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    this.showReports(pageChange);
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.payoutReportGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      this.showReports(event);
+    }
+  }
+
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 
 }

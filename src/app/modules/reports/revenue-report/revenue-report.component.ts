@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
@@ -9,13 +9,14 @@ import { GridOptions } from 'ag-grid-community';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
 
 @Component({
   selector: 'app-revenue-report',
   templateUrl: './revenue-report.component.html',
   styleUrls: ['./revenue-report.component.scss']
 })
-export class RevenueReportComponent implements OnInit {
+export class RevenueReportComponent implements OnInit,OnDestroy {
   loading = false;
   leaderView = new FormControl('');
   ownerView = new FormControl('');
@@ -37,6 +38,7 @@ export class RevenueReportComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private genericCsvService: GenericCsvService,
+    private cacheManager: CacheManager,
   ) {
 
     this.revenueReportGridOptions = <GridOptions>{
@@ -108,6 +110,10 @@ export class RevenueReportComponent implements OnInit {
   showReports(pageChange?) {
     // 'http://localhost:9055/report/calling-report/revenue-report?page=0&pageSize=100&filerUserId=1111'
     //'http://localhost:9055/report/calling-report/revenue-report?page=0&pageSize=100&ownerView=true'
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     this.loading = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
 
@@ -173,7 +179,11 @@ export class RevenueReportComponent implements OnInit {
         this.revenueReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
         this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
+        this.cacheManager.initializeCache(this.createRowData(this.revenueReport));
 
+        const currentPageNumber = pageChange || this.searchParam.page + 1;
+        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.revenueReport));
+        this.config.currentPage = currentPageNumber;
 
       } else {
         this.loading = false;
@@ -513,6 +523,7 @@ export class RevenueReportComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
@@ -571,10 +582,25 @@ export class RevenueReportComponent implements OnInit {
     }
   }
 
+  // pageChanged(event) {
+  //   let pageChange = event
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1;
+  //   this.showReports(pageChange);
+  // }
   pageChanged(event) {
-    let pageChange = event
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    this.showReports(pageChange);
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.revenueReportGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      this.showReports(event);
+    }
+  }
+
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 }

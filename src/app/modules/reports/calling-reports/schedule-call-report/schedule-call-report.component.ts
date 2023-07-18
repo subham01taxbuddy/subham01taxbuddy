@@ -1,9 +1,10 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { JsonToCsvService } from 'src/app/modules/shared/services/json-to-csv.service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -39,7 +40,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class ScheduleCallReportComponent implements OnInit {
+export class ScheduleCallReportComponent implements OnInit,OnDestroy {
   loading = false;
   scheduleCallingReport: any;
   config: any;
@@ -59,6 +60,7 @@ export class ScheduleCallReportComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private genericCsvService: GenericCsvService,
+    private cacheManager: CacheManager,
   ) {
     this.scheduleCallingReportGridOptions = <GridOptions>{
       rowData: [],
@@ -122,6 +124,10 @@ export class ScheduleCallReportComponent implements OnInit {
 
   showReports(pageChange?) {
     // https://uat-api.taxbuddy.com/report/calling-report/schedule-call-report?page=0&pageSize=30&leaderUserId=9362'
+    if(!pageChange){
+      this.cacheManager.clearCache();
+      console.log('in clear cache')
+    }
     this.loading = true;
     // let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
@@ -157,6 +163,11 @@ export class ScheduleCallReportComponent implements OnInit {
         this.scheduleCallingReport = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
         this.scheduleCallingReportGridOptions.api?.setRowData(this.createRowData(this.scheduleCallingReport));
+        this.cacheManager.initializeCache(this.createRowData(this.scheduleCallingReport));
+
+        const currentPageNumber = pageChange || this.searchParam.page + 1;
+        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.scheduleCallingReport));
+        this.config.currentPage = currentPageNumber;
 
       } else {
         this.loading = false;
@@ -294,6 +305,7 @@ export class ScheduleCallReportComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
@@ -313,10 +325,28 @@ export class ScheduleCallReportComponent implements OnInit {
     // this.showReports();
   }
 
+  // pageChanged(event) {
+  //   let pageChange = event
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1;
+  //   this.showReports(pageChange);
+  // }
+
   pageChanged(event) {
-    let pageChange = event
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    this.showReports(pageChange);
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.scheduleCallingReportGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      this.showReports(event);
+    }
   }
+
+
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
+  }
+
 }

@@ -1,4 +1,4 @@
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
@@ -17,6 +17,7 @@ import { MY_FORMATS } from '../pages.module';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from "../../../environments/environment";
 import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 
 @Component({
   selector: 'app-bo-partners',
@@ -32,7 +33,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class BoPartnersComponent implements OnInit {
+export class BoPartnersComponent implements OnInit,OnDestroy{
   config: any;
   loading!: boolean;
   partnersGridOptions: GridOptions;
@@ -42,6 +43,7 @@ export class BoPartnersComponent implements OnInit {
   maxDate: any = new Date();
   minToDate: any;
   searchMobileNumber = new FormControl('');
+  searchEmail = new FormControl('');
   fromDateValue =new FormControl('2022-09-01', Validators.required);
   toDateValue = new FormControl(new Date(), Validators.required);
   searchParam: any = {
@@ -57,6 +59,7 @@ export class BoPartnersComponent implements OnInit {
     @Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog,
     private _toastMessageService: ToastMessageService,
+    private cacheManager: CacheManager,
   ) {
 
     this.partnersGridOptions = <GridOptions>{
@@ -98,10 +101,22 @@ export class BoPartnersComponent implements OnInit {
   setToDateValidation(fromDate) {
     this.minToDate = this.fromDateValue.value;
   }
-  pageChanged(event: any) {
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    this.getBoPartners();
+
+  // pageChanged(event: any) {
+  //   this.config.currentPage = event;
+  //   this.searchParam.page = event - 1;
+  //   this.getBoPartners();
+  // }
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.partnersGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      this.getBoPartners('',event);
+    }
   }
 
   boPartnersColumnDef() {
@@ -375,6 +390,29 @@ export class BoPartnersComponent implements OnInit {
         },
       },
       {
+        headerName: 'Update',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        width: 100,
+        pinned: 'right',
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Update Status"
+        style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
+        <i class="fa fa-info-circle" data-action-type="updateInfo"></i>
+         </button>`;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
         headerName: 'Action',
         editable: false,
         suppressMenu: true,
@@ -405,11 +443,53 @@ export class BoPartnersComponent implements OnInit {
     ];
   }
 
-  getBoPartners(mobile?) {
+  clearValue(){
+  this.searchMobileNumber.setValue(null);
+  }
+  clearValue1(){
+    this.searchEmail.setValue(null);
+    }
+
+  advanceSearch(mobile?){
+    if(this.searchEmail.value){
+    //curl --location 'http://localhost:9055/report/partner-details?emailAddress=dinesh1%40gmail.com'
+    this.loading = true;
+    let param = `/partner-details?emailAddress=${this.searchEmail.value}`
+
+    this.userMsService.getMethodNew(param).subscribe(
+      (response: any) => {
+      this.loading = false;
+      if (response) {
+        this.loading = false;
+        this.boPartnersInfo = response;
+        this.config.totalItems = response.totalElements;
+        this.partnersGridOptions.api?.setRowData(
+          this.createRowData(this.boPartnersInfo)
+        );
+      } else {
+        this.loading = false;
+        this.config.totalItems = 0;
+        this.partnersGridOptions.api?.setRowData(this.createRowData([]));
+        this._toastMessageService.alert("error",'No Data Found');
+      }
+      },(error) => {
+        this.loading = false;
+      }
+      )
+
+    }else(
+      this.getBoPartners(mobile)
+    )
+  }
+
+  getBoPartners(mobile?,pageChange?) {
     // 'https://uat-api.taxbuddy.com/user/partner-details?mobileNumber=8055521145'
     if (this.boPartnerDateForm.valid) {
       this.loading = true;
-
+      if(!pageChange){
+        this.cacheManager.clearCache();
+        console.log('in clear cache')
+      }
       const fromDateValue = this.fromDateValue.value;
       const toDateValue = this.toDateValue.value;
 
@@ -420,7 +500,7 @@ export class BoPartnersComponent implements OnInit {
       let param
 
       if (mobile && this.searchMobileNumber.value) {
-        param = `/partner-detail?page=0&size=1&mobileNumber=${this.searchMobileNumber.value}`
+        param = `/partner-detail?page=0&size=10&mobileNumber=${this.searchMobileNumber.value}`
       } else {
         param = `/partner-details?page=${this.config.currentPage - 1}&size=20&from=${fromDate}&to=${toDate}`;
       }
@@ -436,6 +516,14 @@ export class BoPartnersComponent implements OnInit {
             this.partnersGridOptions.api?.setRowData(
               this.createRowData(this.boPartnersInfo)
             );
+            this.cacheManager.initializeCache(response.content);
+
+            const currentPageNumber = pageChange || this.searchParam.page + 1;
+            this.cacheManager.cachePageContent(
+              currentPageNumber,
+              response.content
+            );
+            this.config.currentPage = currentPageNumber;
           } else {
             this.loading = false;
             this.config.totalItems = 0;
@@ -497,6 +585,10 @@ export class BoPartnersComponent implements OnInit {
         }
         case 'sendEmail': {
           this.sendEmail(params.data);
+          break;
+        }
+        case 'updateInfo': {
+          this.updateInfo(params.data);
           break;
         }
       }
@@ -630,10 +722,39 @@ export class BoPartnersComponent implements OnInit {
     });
   }
 
+  updateInfo(partnerData){
+    let disposable = this.dialog.open(UpdateStatusComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        id: partnerData.id,
+        partnerName: partnerData.name,
+        emailAddress: partnerData.emailAddress,
+        mobileNumber: partnerData.mobileNumber,
+        mode: 'Update Information',
+      },
+    });
+    disposable.afterClosed().subscribe((result) => {
+      console.log('updateInfo data:', result);
+      // if (result) {
+      //   if (result.data === 'statusChanged') {
+      //     // this.getBoPartners();
+      //     this.getBoPartners();
+      //   }
+      // }
+    });
+  }
+
   resetFilters() {
+    this.cacheManager.clearCache();
     this.searchMobileNumber.setValue(null);
+    this.searchEmail.setValue(null);
     this.fromDateValue.setValue('2022-09-01');
     this.toDateValue.setValue(new Date());
     this.getBoPartners();
+  }
+
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
   }
 }
