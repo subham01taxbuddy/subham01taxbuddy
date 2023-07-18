@@ -495,7 +495,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     if (this.roles?.includes('ROLE_FILER')) {
       this.filerId = loggedInId;
     }
-    let data = this.utilService.createUrlParams(this.searchParam);
+
     let status = this.status.value;
     console.log('selected status', this.status);
     let fromData =
@@ -533,6 +533,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
       ) &&
       this.invoiceFormGroup.controls['mobile'].valid
     ) {
+      this.searchParam.page = 0 ;
       mobileFilter =
         '&mobile=' + this.invoiceFormGroup.controls['mobile'].value;
     }
@@ -543,6 +544,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
       ) &&
       this.invoiceFormGroup.controls['email'].valid
     ) {
+      this.searchParam.page = 0 ;
       emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value.toLocaleLowerCase();
     }
     let invoiceFilter = '';
@@ -551,10 +553,13 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
         this.invoiceFormGroup.controls['txbdyInvoiceId'].value
       )
     ) {
+      this.searchParam.page = 0 ;
       invoiceFilter =
         '&txbdyInvoiceId=' +
         this.invoiceFormGroup.controls['txbdyInvoiceId'].value;
     }
+
+    let data = this.utilService.createUrlParams(this.searchParam);
     param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}`;
 
     if (this.coOwnerToggle.value == true && isCoOwner) {
@@ -1001,6 +1006,28 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
         },
       },
       {
+        headerName: 'Generate Link',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          if(!params.data.paymentLink){
+            return `<button type="button" class="action_icon add_button" title="By clicking on Generate Link you will be able to create razor pay link."
+            style="border: none;
+            background: transparent; font-size: 16px; cursor:pointer; color: #04a4bc; text-align:center;">
+            <i class="fa-thin fa-link fa-beat" data-action-type="generate-link"></i>
+           </button>`;
+          }else{
+            return '-'
+          }
+
+        },
+        width: 90,
+        pinned: 'right',
+        cellStyle: { textAlign: 'center' },
+      },
+      {
         headerName: 'Download Invoice',
         editable: false,
         suppressMenu: true,
@@ -1084,8 +1111,36 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
           this.showNotes(params.data);
           break;
         }
+        case 'generate-link': {
+          this.generateLink(params.data);
+          break;
+        }
       }
     }
+  }
+
+  generateLink(data){
+    //'https://uat-api.taxbuddy.com/itr/v1/invoice/payment-link/create
+    this.loading =true ;
+    const reqBody = {
+      txbdyInvoiceId : data.txbdyInvoiceId
+     };
+     const param = `/v1/invoice/payment-link/create`;
+     this.itrService.postMethod(param,reqBody).subscribe((result: any) => {
+     this.loading = false;
+     if (result.success) {
+      this.loading = false;
+      this.getInvoice();
+      this._toastMessageService.alert('success','Razor pay link generated successfully');
+      }else{
+        this.loading = false;
+        this._toastMessageService.alert('error', 'there is problem in create Razor pay link');
+      }
+     },(error) => {
+      this.loading = false;
+      this._toastMessageService.alert('error','there is problem in create Razor pay link.');
+    })
+
   }
 
   sendMailReminder(data) {

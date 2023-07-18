@@ -279,7 +279,7 @@ export class ProfileDialogComponent implements OnInit {
     "status": true
   }]
   constructor(public dialogRef: MatDialogRef<ProfileDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder, private thirdPartyService: ThirdPartyService, private _toastMessageService: ToastMessageService, 
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private fb: FormBuilder, private thirdPartyService: ThirdPartyService, private _toastMessageService: ToastMessageService,
     private userService: UserMsService, private utilService: UtilsService) { }
 
   ngOnInit() {
@@ -339,9 +339,11 @@ export class ProfileDialogComponent implements OnInit {
       let param = '/' + ifscCode.value;
       this.thirdPartyService.getBankDetailByIFSCCode(param).subscribe((res: any) => {
         console.log("Bank details by IFSC:", res)
-        let data = JSON.parse(res._body);
-        let bankName = data.BANK ? data.BANK : "";
-        this.bankForm.controls['name'].setValue(bankName);
+        // let data = JSON.parse(res._body);
+        // let bankName = data.BANK ? data.BANK : "";
+        let bankName = res.BANK ? res.BANK : "";
+        this.bankForm.controls['name'].setValue(bankName)
+        // this.bankForm.controls['name'].setValue(bankName);
 
         console.log('Bank Name: ', this.bankForm.controls['name'])
 
@@ -371,7 +373,7 @@ export class ProfileDialogComponent implements OnInit {
       // if(this.utilService.isNonEmpty(stateCode)){
       //   this.addressForm.controls['state'].setValue(stateCode);
       // }
-      
+
       if(this.data.submitBtn === "Add"){
         console.log('this.addressForm -> ',this.addressForm.value)
         let randomId = Math.floor(100000 + Math.random() * 900000);
@@ -396,7 +398,7 @@ export class ProfileDialogComponent implements OnInit {
         console.log('Edit body :-> ',body)
         this.dialogRef.close({ event: 'close', data: body})
       }
-     
+
     }
 
   }
