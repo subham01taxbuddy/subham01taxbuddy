@@ -226,6 +226,9 @@ export class LoginComponent implements OnInit {
   }
 
   public onSubmit() {
+    if(this.isMobileBrowser()){
+      return;
+    }
     this.form.controls['passphrase'].setValidators([Validators.required, Validators.minLength(6)]);
     this.form.controls['passphrase'].updateValueAndValidity();
     if (this.form.valid) {
