@@ -122,7 +122,7 @@ export class AppComponent {
                 }
               })
             } else {
-              // alert("Click the icon to the left of address bar and enable notifications.")
+              alert("Click the icon to the left of address bar and enable notifications.")
             }
           })
         })
