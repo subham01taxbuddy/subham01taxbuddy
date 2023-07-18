@@ -1,124 +1,232 @@
-<div *ngIf="data.type==='balance'">
-    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-    <div>
-        <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Balance sheet Income':'Update Balance sheet Income'}}
-        </div>
-        <form [formGroup]="balanceGridForm" style="margin-top: 20px">
-            <div class="card__row">
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <div class="card__col-xs-12 card__col-sm-6">
-                        <mat-label>Natur of Profession</mat-label>
-                    </div>
-                    <mat-form-field class="input-field-width">
-                        <mat-select placeholder="Natur of Profession" formControlName="natureOfBusiness"
-                            name="natureOfBusiness">
-                            <mat-option *ngFor="let nature of natureOfBusinessDropdownAll" [value]="nature.label"
-                                        matTooltip="{{nature.label}}-{{nature.code}}"
-                                [disabled]="nature.disabled">
-                                {{nature.label}}-{{nature.code}}
-                            </mat-option></mat-select>
-                        <mat-error *ngIf="balanceGridForm.controls['natureOfBusiness'].hasError('required')">Please
-                            select
-                            nature of Business</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <div class="card__col-xs-12 card__col-sm-6">
-                        <mat-label>Business Name</mat-label>
-                    </div>
-                    <mat-form-field class="input-field-width">
-                        <input matInput class="input-field" placeholder="Business Name" formControlName="tradeName"
-                            maxlength="30">
-                        <mat-error *ngIf="balanceGridForm.controls['tradeName'].hasError('required')">Please enter
-                            name of business</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div class="card__col-xs-12 card__col-sm-12">
-                    <div class="card__col-xs-12 card__col-sm-8" style="margin-bottom: 10px; margin-top: 10px;">
-                        <mat-label>Business Description</mat-label>
-                    </div>
-                    <mat-form-field class="input-field-width">
-                        <input matInput class="input-field" placeholder="Business Description"
-                            formControlName="businessDescription" maxlength="14">
-                        <mat-error *ngIf="balanceGridForm.controls['businessDescription'].hasError('pattern')">Please
-                            enter
-                            char only</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div class="card__col-xs-12 card__col-sm-6" style="text-align: center;">
-                    <div class="row dialog-button" >
-                        <div class="sub_btn top-space" >
-                        <button type="submit" class="tbd-btn" [disabled]="balanceGridForm.invalid"
-                            (click)="saveBalanceGridDetails()">Save</button>
-                        <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
+<div *ngIf="data.type === 'balance'">
+  <ngx-loading
+    [show]="loading"
+    [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+  ></ngx-loading>
+  <div>
+    <div style="font-size: 20; font-weight: 600">
+      {{
+        data.mode === "ADD"
+          ? "Add Balance sheet Income"
+          : "Update Balance sheet Income"
+      }}
     </div>
+    <form [formGroup]="balanceGridForm" style="margin-top: 20px">
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-6">
+          <div class="card__col-xs-12 card__col-sm-6">
+            <mat-label>Natur of Profession</mat-label>
+          </div>
+          <mat-form-field class="input-field-width">
+            <mat-select
+              formControlName="natureOfBusiness"
+              name="natureOfBusiness"
+            >
+              <mat-option
+                *ngFor="let nature of natureOfBusinessDropdownAll"
+                [value]="nature.code"
+                matTooltip="{{ nature.label }}-{{ nature.code }}"
+                [disabled]="nature.disabled"
+              >
+                {{ nature.label }}-{{ nature.code }}
+              </mat-option></mat-select
+            >
+            <mat-error
+              *ngIf="
+                balanceGridForm.controls['natureOfBusiness'].hasError(
+                  'required'
+                )
+              "
+              >Please select nature of Business</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-12 card__col-sm-6">
+          <div class="card__col-xs-12 card__col-sm-6">
+            <mat-label>Business Name</mat-label>
+          </div>
+          <mat-form-field class="input-field-width">
+            <input
+              matInput
+              class="input-field"
+              formControlName="tradeName"
+              maxlength="30"
+            />
+            <mat-error
+              *ngIf="balanceGridForm.controls['tradeName'].hasError('required')"
+              >Please enter name of business</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-12 card__col-sm-12">
+          <div
+            class="card__col-xs-12 card__col-sm-8"
+            style="margin-bottom: 10px; margin-top: 10px"
+          >
+            <mat-label>Business Description</mat-label>
+          </div>
+          <mat-form-field class="input-field-width">
+            <input
+              matInput
+              class="input-field"
+              formControlName="businessDescription"
+              maxlength="14"
+            />
+            <mat-error
+              *ngIf="
+                balanceGridForm.controls['businessDescription'].hasError(
+                  'pattern'
+                )
+              "
+              >Please enter char only</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-12 card__col-sm-6" style="text-align: center">
+          <div class="row dialog-button">
+            <div class="sub_btn top-space">
+              <button
+                type="submit"
+                class="tbd-btn"
+                [disabled]="balanceGridForm.invalid"
+                (click)="saveBalanceGridDetails()"
+              >
+                Save
+              </button>
+              <button
+                class="tbd-btn-secondary"
+                (click)="cancel()"
+                mat-dialog-close
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
 
-<div *ngIf="data.type==='depreciation'">
-    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-    <div>
-        <div style="font-size: 20; font-weight: 600;">{{data.mode==='ADD'?'Add Depreciation Details':'Update Depreciation Details'}}
-        </div>
-        <form [formGroup]="depreciationForm" style="margin-top: 20px">
-            <div class="card__row">
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <mat-form-field class="input-field-width">
-                        <input matInput class="input-field" placeholder="description" formControlName="description"
-                            maxlength="30">
-                        <mat-error *ngIf="depreciationForm.controls['description'].hasError('required')">Please enter
-                            description</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <mat-form-field class="input-field-width">
-                        <mat-select placeholder="Asset Type" formControlName="assetType" name="assetType">
-                            <mat-option *ngFor="let type of assetTypeList" [value]="type.key">
-                                {{type.value}}
-                            </mat-option></mat-select>
-                        <mat-error *ngIf="depreciationForm.controls['assetType'].hasError('required')">Please
-                            select
-                            Asset Type</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <mat-form-field class="input-field-width">
-                        <input matInput class="input-field" placeholder="bookValue" formControlName="bookValue"
-                            maxlength="14">
-                        <mat-error *ngIf="depreciationForm.controls['bookValue'].hasError('required')">Please
-                            enter
-                            book value</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div class="card__col-xs-12 card__col-sm-6">
-                    <mat-form-field class="input-field-width">
-                        <mat-select placeholder="Depreciation Rate" formControlName="depreciationRate"
-                            name="depreciationRate">
-                            <mat-option *ngFor="let rate of depreciationRateList" [value]="rate.key">
-                                {{rate.value}} </mat-option></mat-select>
-                        <mat-error *ngIf="depreciationForm.controls['depreciationRate'].hasError('required')">Please
-                            select Depreciation Rate</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div class="row dialog-button">
-                    <div class="sub_btn top-space">
-                        <button type="submit" class="tbd-btn" [disabled]="depreciationForm.invalid"
-                            (click)="saveDepreciationDetails()">Save</button>
-                        <button class="tbd-btn-secondary" (click)="cancel()" mat-dialog-close>Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </form>
+<div *ngIf="data.type === 'depreciation'">
+  <ngx-loading
+    [show]="loading"
+    [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+  ></ngx-loading>
+  <div>
+    <div style="font-size: 20; font-weight: 600">
+      {{
+        data.mode === "ADD"
+          ? "Add Depreciation Details"
+          : "Update Depreciation Details"
+      }}
     </div>
+    <form [formGroup]="depreciationForm" style="margin-top: 20px">
+      <div class="card__row">
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-form-field class="input-field-width">
+            <input
+              matInput
+              class="input-field"
+              placeholder="description"
+              formControlName="description"
+              maxlength="30"
+            />
+            <mat-error
+              *ngIf="
+                depreciationForm.controls['description'].hasError('required')
+              "
+              >Please enter description</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-form-field class="input-field-width">
+            <mat-select
+              placeholder="Asset Type"
+              formControlName="assetType"
+              name="assetType"
+            >
+              <mat-option *ngFor="let type of assetTypeList" [value]="type.key">
+                {{ type.value }}
+              </mat-option></mat-select
+            >
+            <mat-error
+              *ngIf="
+                depreciationForm.controls['assetType'].hasError('required')
+              "
+              >Please select Asset Type</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-form-field class="input-field-width">
+            <input
+              matInput
+              class="input-field"
+              placeholder="bookValue"
+              formControlName="bookValue"
+              maxlength="14"
+            />
+            <mat-error
+              *ngIf="
+                depreciationForm.controls['bookValue'].hasError('required')
+              "
+              >Please enter book value</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="card__col-xs-12 card__col-sm-6">
+          <mat-form-field class="input-field-width">
+            <mat-select
+              placeholder="Depreciation Rate"
+              formControlName="depreciationRate"
+              name="depreciationRate"
+            >
+              <mat-option
+                *ngFor="let rate of depreciationRateList"
+                [value]="rate.key"
+              >
+                {{ rate.value }}
+              </mat-option></mat-select
+            >
+            <mat-error
+              *ngIf="
+                depreciationForm.controls['depreciationRate'].hasError(
+                  'required'
+                )
+              "
+              >Please select Depreciation Rate</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="row dialog-button">
+          <div class="sub_btn top-space">
+            <button
+              type="submit"
+              class="tbd-btn"
+              [disabled]="depreciationForm.invalid"
+              (click)="saveDepreciationDetails()"
+            >
+              Save
+            </button>
+            <button
+              class="tbd-btn-secondary"
+              (click)="cancel()"
+              mat-dialog-close
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
