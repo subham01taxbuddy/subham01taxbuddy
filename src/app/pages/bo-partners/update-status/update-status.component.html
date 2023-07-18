@@ -35,7 +35,7 @@
   </form>
 </mat-dialog-content>
 
-<mat-dialog-content>
+<mat-dialog-content *ngIf="data.mode === 'Update Information'">
   <form [formGroup]="myForm">
     <div class="container">
       <div class="row">

@@ -111,6 +111,7 @@ export class UpdateStatusComponent implements OnInit {
 
   addStatus() {
     if (this.data.mode === 'Update Status') {
+      this.loading = true;
       let param = '/partner-status';
       let param2 = {
         mobileNumber: this.data.mobileNumber,
