@@ -1776,7 +1776,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     console.log('this.summaryToolReliefsForm', this.summaryToolReliefsForm);
 
     this.ITR_JSON.optionForCurrentAY =
-      this.regimeSelectionForm.value.optionForCurrentAY;
+      this.regimeSelectionForm.getRawValue().optionForCurrentAY;
 
     if (this.itrType === '3' || this.itrType === '4') {
       this.ITR_JSON.everOptedOutOfNewRegime =
@@ -1787,7 +1787,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     }
 
     this.ITR_JSON.regime =
-      this.regimeSelectionForm.value.optionForCurrentAY.currentYearRegime;
+      this.regimeSelectionForm.getRawValue().optionForCurrentAY.currentYearRegime;
 
     this.ITR_JSON.section89 = Number(
       this.summaryToolReliefsForm?.value?.section89
