@@ -3,11 +3,11 @@
 font-weight: bold;">Action with Re-Assignment: </label><button style="float: right;" mat-dialog-close tabindex="-1"
     class="tbd-btn-close close"><i class="fa fa-times" aria-hidden="true"></i></button>
 <div class="row spsTp bdrTp">
-    <div class="col-sm-12 ">
+    <!-- <div class="col-sm-12 ">
       <span class="note1" style="margin-left: 33%;;">
         Note : Invoice created User wont be re-assigned* to different filer
       </span>
-    </div>
+    </div> -->
     <div class="col-sm-9">
         <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
             (sendFiler)="fromSme($event, false)"  [showOnlyOwnerList]=true ></app-sme-list-drop-down>
@@ -16,3 +16,4 @@ font-weight: bold;">Action with Re-Assignment: </label><button style="float: rig
         <button class="tbd-btn save-btn spsTp2" (click)="reAssign()" [disabled]="loading">Re-Assignment</button>
     </div>
 </div>
+<span class="loader-text" *ngIf="progressMessage">{{progressMessage}}</span>
