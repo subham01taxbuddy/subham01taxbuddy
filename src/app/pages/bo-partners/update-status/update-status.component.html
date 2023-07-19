@@ -56,20 +56,32 @@
       <div class="row" style="margin-top: 12px;">
         <div class="col-sm-6">
           <mat-label> Contact Id </mat-label>
-          <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Contact Id" formControlName="contactId" class="input-field"/>
+          <mat-form-field appearance="outline" class="class1">
+            <input type="text" matInput placeholder="Contact Id" formControlName="contactId" maxlength="17" class="input-field" />
+            <mat-error *ngIf="myForm.controls['contactId'].hasError('minlength')">
+              Contact Id must be at least 17 characters long.
+            </mat-error>
+            <mat-error *ngIf="myForm.controls['contactId'].hasError('maxlength')">
+              Contact Id must be at most 17 characters long.
+            </mat-error>
           </mat-form-field>
         </div>
         <div class="col-sm-6">
           <mat-label> Fund Id </mat-label>
-          <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Fund Id" formControlName="fundId" class="input-field" />
+          <mat-form-field appearance="outline" class="class1">
+            <input type="text" matInput placeholder="Fund Id" formControlName="fundId" maxlength="17" class="input-field" />
+            <mat-error *ngIf="myForm.controls['fundId'].hasError('minlength')">
+              Fund Id must be at least 17 characters long.
+            </mat-error>
+            <mat-error *ngIf="myForm.controls['fundId'].hasError('maxlength')">
+              Fund Id must be at most 17 characters long.
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
     </div>
   </form>
   <div style="text-align: center;  margin-top: 10px;">
-    <button class="tbd-btn" [disabled]="loading" (click)="updateDetails()">Save </button>
+    <button class="tbd-btn" [disabled]="!myForm.controls['contactId'].valid || !myForm.controls['fundId'].valid" (click)="updateDetails()">Save </button>
   </div>
 </mat-dialog-content>

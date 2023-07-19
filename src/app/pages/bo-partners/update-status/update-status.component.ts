@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ViewDocumentsComponent } from '../view-documents/view-documents.component';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { GstDailyReportService } from 'src/app/services/gst-daily-report.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 declare function we_track(key: string, value: any);
@@ -44,8 +44,8 @@ export class UpdateStatusComponent implements OnInit {
     this.myForm = new FormGroup({
       name: new FormControl(this.data.partnerName),
       mobileNo: new FormControl(this.data.mobileNumber),
-      contactId: new FormControl(''),
-      fundId: new FormControl('')
+      contactId: new FormControl('',[Validators.minLength(17),Validators.maxLength(17)]),
+      fundId: new FormControl('',[Validators.minLength(17),Validators.maxLength(17)])
     });
   }
 
