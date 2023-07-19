@@ -44,7 +44,7 @@ export class TdsOnSalaryComponent implements OnInit {
       id: "salaryPagination",
       itemsPerPage: 2,
       currentPage: 1,
-      totalItems: this.Copy_ITR_JSON.taxPaid?.onSalary.length,
+      totalItems: this.Copy_ITR_JSON.taxPaid?.onSalary?.length,
       // pageCount: this.getSalaryArray.controls.length/this.config.itemsPerPage
     };
     this.salaryForm.markAllAsTouched();
