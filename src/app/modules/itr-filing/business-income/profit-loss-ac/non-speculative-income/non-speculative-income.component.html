@@ -1,197 +1,310 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 <form [formGroup]="nonspecIncomeForm">
-        <div class="row bdrBtm">
-          <div class="col-sm-6">
-            <div class="titTx1">Trading Account </div>
-          </div>
-          <div class="col-sm-6">
-          <button type="button" class="new-add btnRt" (click)="addNonSpecIncomeForm()">+ Add More </button>
+  <div class="row bdrBtm">
+    <div class="col-sm-6">
+      <div class="titTx1">Trading Account</div>
+    </div>
+    <div class="col-sm-6">
+      <button
+        type="button"
+        class="new-add btnRt"
+        (click)="addNonSpecIncomeForm()"
+      >
+        + Add More
+      </button>
+    </div>
+  </div>
+
+  <div formArrayName="nonspecIncomesArray" class="flex flex-col gap-[30px]">
+    <div
+      *ngFor="let income of getIncomeArray.controls; let i = index"
+      [formGroupName]="fieldGlobalIndex(i)"
+    >
+      <div class="row arnd">
+        <div class="col-sm-1">
+          <mat-checkbox
+            color="primary"
+            name="hasEdit[i]"
+            formControlName="hasEdit"
+            class="ml30"
+          >
+          </mat-checkbox>
+
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="brokerName"
+              matInput
+              [disabled]="true"
+              name="brokerName[i]"
+              class="col-sm-1"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-2">
+          <mat-label>Turnover</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="turnOver"
+              matInput
+              [disabled]="true"
+              name="turnOver[i]"
+              required
+              class="input-field"
+              digitsOnly
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-2">
+          <mat-label>Trading Expenses</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="expenditure"
+              matInput
+              name="tradingExpense[i]"
+              class="input-field"
+              required
+              type="number"
+              trim
+              (blur)="calculateIncome(fieldGlobalIndex(i))"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-3">
+          <mat-label>Opening stock for finished goods</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="finishedGoodsOpeningStock"
+              matInput
+              name="finishedGoodsOpeningStock[i]"
+              class="input-field"
+              required
+              type="number"
+              trim
+              (blur)="calculateIncome(fieldGlobalIndex(i))"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-3">
+          <mat-label>Purchases</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="purchase"
+              matInput
+              name="purchase[i]"
+              class="input-field"
+              required
+              type="number"
+              trim
+              (blur)="calculateIncome(fieldGlobalIndex(i))"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-7 spsTp spcLft">
+          <mat-label>Closing stock for finished Goods</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="finishedGoodsClosingStock"
+              matInput
+              name="finishedGoodsClosingStock[i]"
+              class="input-field"
+              required
+              type="number"
+              trim
+              (blur)="calculateIncome(fieldGlobalIndex(i))"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-2 spsTp">
+          <div class="edit-head">
+            <button
+              type="button"
+              class="edit-donation ediTp"
+              (click)="editNonSpecIncomeForm(fieldGlobalIndex(i))"
+            >
+              <mat-icon> edit_square </mat-icon>Edit
+            </button>
           </div>
         </div>
+      </div>
+      <div class="row pLSpc">
+        <div class="col-sm-12">
+          <div class="titTx1">Profit and Loss Account</div>
+        </div>
+        <div class="col-sm-4 spsTp">
+          <mat-label>COGC (Opening Stock + Purchase - Closing Stock)</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              [disabled]="true"
+              formControlName="cogc"
+              name="cogc[i]"
+              matInput
+              class="input-field"
+              required
+              type="number"
+              trim
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4 spsTp">
+          <mat-label>Gross Profit (Turnover - COGC)</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              [disabled]="true"
+              formControlName="grossProfit"
+              name="grossProfit[i]"
+              matInput
+              class="input-field"
+              required
+              type="number"
+              trim
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4 spsTp">
+          <mat-label>Net Profit (Gross Profit - Expenses)</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              [disabled]="true"
+              formControlName="netIncome"
+              name="netIncome[i]"
+              matInput
+              class="input-field"
+              required
+              type="number"
+              trim
+            />
+          </mat-form-field>
+        </div>
 
-          <div formArrayName="nonspecIncomesArray">
-            <div *ngFor="let income of getIncomeArray.controls;let i=index"
-                 [formGroupName]="fieldGlobalIndex(i)">
-              <div class="row arnd">
-                <div class="col-sm-1">
-                  <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
-                  </mat-checkbox>
+        <div class="col-sm-12">
+          <button
+            type="submit"
+            class="delete-btn"
+            (click)="deleteArray()"
+            [disabled]="!nonspecSelected()"
+          >
+            <i class="fa fa-trash" aria-hidden="true"></i> Delete Income
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
 
-                  <mat-form-field appearance="outline">
-                    <input formControlName="brokerName" matInput [disabled]="true"
-                           name="brokerName[i]" class="input-field">
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-2">
-                  <mat-label>Turnover</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input formControlName="turnOver" matInput [disabled]="true"
-                           name="turnOver[i]" required class="input-field" digitsOnly>
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-2">
-                    <mat-label>Trading Expenses</mat-label>
-                    <mat-form-field appearance="outline">
-                      <input
-                        formControlName="tradingExpense"
-                        matInput name="tradingExpense[i]" class="input-field"
-                        required type="number" trim (blur)="calculateIncome(fieldGlobalIndex(i))">
-                    </mat-form-field>
-                  </div>
-                  <div class="col-sm-3">
-                    <mat-label>Opening stock for finished goods</mat-label>
-                    <mat-form-field appearance="outline">
-                      <input
-                        formControlName="finishedGoodsOpeningStock"
-                        matInput name="finishedGoodsOpeningStock[i]" class="input-field"
-                        required type="number" trim (blur)="calculateIncome(fieldGlobalIndex(i))">
-                    </mat-form-field>
-                  </div>
-                  <div class="col-sm-3">
-                    <mat-label>Purchases</mat-label>
-                    <mat-form-field appearance="outline">
-                      <input
-                        formControlName="purchase"
-                        matInput  name="purchase[i]" class="input-field"
-                        required type="number" trim (blur)="calculateIncome(fieldGlobalIndex(i))">
-                    </mat-form-field>
-                  </div>
-                  <div class="col-sm-1"></div>
-                  <div class="col-sm-7 spsTp spcLft">
-                    <mat-label>Closing stock for finished Goods</mat-label>
-                    <mat-form-field appearance="outline">
-                      <input
-                        formControlName="finishedGoodsClosingStock"
-                        matInput name="finishedGoodsClosingStock[i]" class="input-field"
-                        required type="number" trim (blur)="calculateIncome(fieldGlobalIndex(i))">
-                    </mat-form-field>
-                  </div>
-                  <div class="col-sm-2 spsTp">
-                    <div class="edit-head">
-                      <button type="button" class="edit-donation ediTp" (click)="editNonSpecIncomeForm(fieldGlobalIndex(i))"><mat-icon>
-                        edit_square
-                      </mat-icon>Edit </button>
-                    </div>
-                  </div>
+<hr />
 
+<div class="row expAr">
+  <div class="col-sm-12 expBk">
+    <form [formGroup]="profitLossForm">
+      <div class="row bdrBtm">
+        <div class="col-sm-9">
+          <mat-label class="titTx1">Expense</mat-label>
+        </div>
+        <div class="col-sm-3">
+          <button
+            class="new-add btnRt"
+            (click)="addExpenseForm(this.newExpenses)"
+          >
+            Add More&nbsp;
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-1"><mat-label></mat-label></div>
+        <div class="col-sm-6">Expense Type</div>
+        <div class="col-sm-5">Expense Amount</div>
+      </div>
+      <div formArrayName="expenses">
+        <div
+          *ngFor="let expense of expenses?.controls; let i = index"
+          [formGroupName]="i"
+          class="row"
+        >
+          <div class="col-sm-1">
+            <mat-checkbox
+              name="hasExpense[i]"
+              formControlName="hasExpense"
+              class="chkSpc"
+            >
+            </mat-checkbox>
+          </div>
+          <div class="col-sm-6">
+            <mat-form-field appearance="outline">
+              <mat-select
+                placeholder="expense Type"
+                formControlName="expenseType"
+                name="expenseType"
+                (selectionChange)="changed()"
+              >
+                <mat-option
+                  *ngFor="let type of expenseTypeList"
+                  [value]="type.key"
+                  [disabled]="type.disabled"
+                >
+                  {{ type.value }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
 
-              </div>
-              <div class="row pLSpc">
-              <div class="col-sm-12">
-                <div class="titTx1">Profit and Loss Account </div>
-              </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>COGC (Opening Stock + Purchase - Closing Stock)</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input [disabled]="true" formControlName="cogc" name="cogc[i]"
-                      matInput  class="input-field"
-                      required type="number" trim>
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Gross Profit (Turnover - COGC)</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input [disabled]="true" formControlName="grossProfit" name="grossProfit[i]"
-                      matInput class="input-field"
-                      required type="number" trim>
-
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Net Profit (Gross Profit - Expenses)</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input [disabled]="true" formControlName="netIncome" name="netIncome[i]"
-                      matInput class="input-field"
-                      required type="number" trim>
-                  </mat-form-field>
-                </div>
-
-                <div class="col-sm-12">
-                  <button type="submit" class="delete-btn" (click)="deleteArray()" [disabled]="!nonspecSelected()">
-                    <i class="fa fa-trash" aria-hidden="true"></i> Delete Income
-                  </button>
-                </div>
-
-              </div>
-
+          <div class="col-sm-5">
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                class="input-field"
+                digitsOnly
+                (change)="calculateNetProfit()"
+                placeholder="Expense Amount"
+                formControlName="expenseAmount"
+                maxlength="14"
+              />
+              <!-- <mat-error *ngIf="expense.controls[i]['expenseAmount'].hasError('required')">Please
+                                        enter amount</mat-error> -->
+            </mat-form-field>
+            <div *ngIf="expense.get('expenseType').value !== 'OTHER_EXPENSES'">
+              &nbsp;
+            </div>
+            <div *ngIf="expense.get('expenseType').value === 'OTHER_EXPENSES'">
+              <mat-form-field class="input-field-width">
+                <input
+                  matInput
+                  class="input-field"
+                  placeholder="description"
+                  formControlName="description"
+                  maxlength="14"
+                  [required]="
+                    expense.get('expenseType').value === 'OTHER_EXPENSES'
+                  "
+                />
+              </mat-form-field>
             </div>
           </div>
-      </form>
-
-    <div class="row expAr">
-        <div class="col-sm-12 expBk">
-                <form [formGroup]="profitLossForm">
-                    <div class="row bdrBtm">
-                      <div class="col-sm-9">
-                        <mat-label class="titTx1">Expense</mat-label>
-                        </div>
-                        <div class="col-sm-3">
-                            <button class="new-add btnRt" (click)="addExpenseForm(this.newExpenses)">Add
-                                More&nbsp;
-                                <i class="fa fa-plus" aria-hidden="true"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-1"><mat-label></mat-label></div>
-                      <div class="col-sm-6">Expense Type</div>
-                      <div class="col-sm-5">Expense Amount</div>
-                    </div>
-                    <div formArrayName="expenses">
-                      <div *ngFor="let expense of expenses?.controls; let i=index" [formGroupName]="i"
-                            class="row">
-                            <div class="col-sm-1">
-                              <mat-checkbox name="hasExpense[i]" formControlName="hasExpense" class="chkSpc">
-                              </mat-checkbox>
-                            </div>
-                            <div class="col-sm-6">
-                              <mat-form-field appearance="outline">
-                                  <mat-select placeholder="expense Type" formControlName="expenseType"
-                                      name="expenseType" (selectionChange)="changed()">
-                                      <mat-option *ngFor="let type of expenseTypeList" [value]="type.key"
-                                          [disabled]="type.disabled">
-                                          {{type.value}}
-                                      </mat-option>
-                                  </mat-select>
-                              </mat-form-field>
-                            </div>
-
-                            <div class="col-sm-5">
-                                <mat-form-field appearance="outline">
-                                    <input matInput class="input-field" digitsOnly (change)="calculateNetProfit()"
-                                        placeholder="Expense Amount" formControlName="expenseAmount" maxlength="14">
-                                    <!-- <mat-error *ngIf="expense.controls[i]['expenseAmount'].hasError('required')">Please
-                                        enter amount</mat-error> -->
-                                </mat-form-field>
-                              <div *ngIf="expense.get('expenseType').value !=='OTHER_EXPENSES'"> &nbsp;</div>
-                              <div *ngIf="expense.get('expenseType').value ==='OTHER_EXPENSES'">
-                                <mat-form-field class="input-field-width">
-                                  <input matInput class="input-field" placeholder="description"
-                                         formControlName="description" maxlength="14"
-                                         [required]="expense.get('expenseType').value ==='OTHER_EXPENSES'">
-                                </mat-form-field>
-                              </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </form>
-
         </div>
-    </div>
-
-
-
+      </div>
+    </form>
+  </div>
+</div>
 
 <div class="col-sm-12 spsTp bdrTp">
-    <div class="row">
+  <div class="row">
     <div class="col-sm-6">
-      <button class="delete-btn" (click)="deleteExpenseForm()" [disabled]="!expenseSelected()"><i class="fa fa-trash" aria-hidden="true"></i> Delete </button>
+      <button
+        class="delete-btn"
+        (click)="deleteExpenseForm()"
+        [disabled]="!expenseSelected()"
+      >
+        <i class="fa fa-trash" aria-hidden="true"></i> Delete
+      </button>
     </div>
     <div class="col-sm-6">
-    <button class="tbd-btn save-btn mvRth" (click)="onContinue()">&nbsp;&nbsp;Save </button>
+      <button class="tbd-btn save-btn mvRth" (click)="onContinue()">
+        &nbsp;&nbsp;Save
+      </button>
     </div>
   </div>
 </div>
