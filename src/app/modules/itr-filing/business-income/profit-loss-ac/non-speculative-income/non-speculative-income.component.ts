@@ -55,6 +55,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     expenditure: 0,
   };
   loading: boolean = false;
+  totalNetProfit: any;
 
   constructor(
     public matDialog: MatDialog,
@@ -74,6 +75,8 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     };
     this.initForm();
     this.nonspecIncomeFormArray = new FormArray([]);
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
     if (this.Copy_ITR_JSON?.business?.profitLossACIncomes) {
       let data = this.Copy_ITR_JSON?.business?.profitLossACIncomes.filter(
         (item: any) => item.businessType === 'NONSPECULATIVEINCOME'
@@ -92,6 +95,8 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         this.profitLossForm.controls['netProfit'].setValue(
           data[0].netProfitfromNonSpeculativeIncome
         );
+
+        this.totalNetProfit = data[0].netProfitfromNonSpeculativeIncome;
         let expenseList = data[0].expenses;
         expenseList.forEach((element) => {
           this.addExpenseForm(element);
@@ -158,25 +163,6 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     specIncome.enable();
   }
 
-  calculateIncome(index) {
-    let totalExpenses = 0;
-    let specIncome = (
-      this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
-    ).controls[index] as FormGroup;
-    specIncome.controls['cogc'].setValue(
-      specIncome.controls['finishedGoodsOpeningStock'].value +
-        specIncome.controls['purchase'].value -
-        specIncome.controls['finishedGoodsClosingStock'].value
-    );
-    specIncome.controls['grossProfit'].setValue(
-      specIncome.controls['turnOver'].value - specIncome.controls['cogc'].value
-    );
-    specIncome.controls['netIncome'].setValue(
-      specIncome.controls['grossProfit'].value -
-        specIncome.controls['expenditure'].value
-    );
-  }
-
   initForm() {
     this.profitLossForm = this.formBuilder.group({
       grossProfit: [''],
@@ -217,15 +203,53 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.changed();
   }
 
-  calculateNetProfit() {
-    this.profitLossForm.controls['netProfit'].setValue(0);
+  calculateIncome(index) {
+    let totalExpenses = 0;
+    let specIncome = (
+      this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
+    ).controls[index] as FormGroup;
+    specIncome.controls['cogc'].setValue(
+      specIncome.controls['finishedGoodsOpeningStock'].value +
+        specIncome.controls['purchase'].value -
+        specIncome.controls['finishedGoodsClosingStock'].value
+    );
+    specIncome.controls['grossProfit'].setValue(
+      specIncome.controls['turnOver'].value - specIncome.controls['cogc'].value
+    );
+    specIncome.controls['netIncome'].setValue(
+      specIncome.controls['grossProfit'].value -
+        specIncome.controls['expenditure'].value
+    );
+  }
+
+  calculateNetProfit(index?) {
+    let specIncomeArray = this.nonspecIncomeForm.get(
+      'nonspecIncomesArray'
+    ) as FormArray;
+
+    let grossProfit = 0;
+    let netIncome = 0;
+
+    specIncomeArray.controls.forEach((element: FormGroup) => {
+      grossProfit += element.get('grossProfit').value;
+    });
+    console.log(grossProfit, 'totalOfGP');
+
+    specIncomeArray.controls.forEach((element: FormGroup) => {
+      netIncome += element.get('netIncome').value;
+    });
+    console.log(netIncome, 'totalOfNP');
+
+    this.profitLossForm.controls['grossProfit'].setValue(grossProfit);
+    this.profitLossForm.controls['netProfit'].setValue(netIncome);
     const form = this.profitLossForm.getRawValue();
     let allExpenses = 0;
     form.expenses.forEach((element) => {
       allExpenses += parseFloat(element.expenseAmount);
     });
-    const net = form.grossProfit - allExpenses;
+    const net = form.netProfit - allExpenses;
     this.profitLossForm.controls['netProfit'].setValue(net);
+    this.totalNetProfit = net;
   }
 
   changed() {
@@ -245,6 +269,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.loading = true;
+    this.calculateNetProfit();
     const row = this.profitLossForm.getRawValue();
     const profitLossACIncomes = [];
     profitLossACIncomes.push({
