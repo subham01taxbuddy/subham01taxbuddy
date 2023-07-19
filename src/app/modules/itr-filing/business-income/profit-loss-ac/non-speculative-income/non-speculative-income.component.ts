@@ -55,6 +55,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     expenditure: 0,
   };
   loading: boolean = false;
+  totalNetProfit: any;
 
   constructor(
     public matDialog: MatDialog,
@@ -94,6 +95,8 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         this.profitLossForm.controls['netProfit'].setValue(
           data[0].netProfitfromNonSpeculativeIncome
         );
+
+        this.totalNetProfit = data[0].netProfitfromNonSpeculativeIncome;
         let expenseList = data[0].expenses;
         expenseList.forEach((element) => {
           this.addExpenseForm(element);
@@ -246,6 +249,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     });
     const net = form.netProfit - allExpenses;
     this.profitLossForm.controls['netProfit'].setValue(net);
+    this.totalNetProfit = net;
   }
 
   changed() {

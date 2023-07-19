@@ -274,7 +274,7 @@ export interface AssetDetails {
   algorithm: string;
   fmvAsOn31Jan2018: string;
   indexCostOfAcquisition: number;
-  totalFairMarketValueOfCapitalAsset:number;
+  totalFairMarketValueOfCapitalAsset: number;
 }
 
 export interface NewCapitalGain {
@@ -728,6 +728,8 @@ export interface ProfitLossACIncomes {
   netProfitfromNonSpeculativeIncome?: Number;
   incomes: ProfitLossIncomes[];
   expenses?: NewExpenses[];
+  totalgrossProfitFromSpeculativeIncome?: Number;
+  netProfitfromSpeculativeIncome?: Number;
 }
 
 export interface ProfitLossIncomes {
