@@ -85,7 +85,7 @@ export class AssignedNewUsersComponent implements OnInit,OnDestroy {
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
        if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-          return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && (rowNode.data.statusId === 2 || rowNode.data.statusId === 18)) : false;
+          return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && rowNode.data.statusId !=11 ): false;
         }
         else{
           return  rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' :false;
@@ -407,7 +407,7 @@ export class AssignedNewUsersComponent implements OnInit,OnDestroy {
         pinned: 'left',
         checkboxSelection: (params) => {
           if(this.loggedInUserRoles.includes('ROLE_OWNER')){
-            return (params.data.statusId === 2 || params.data.statusId === 18) && params.data.serviceType === 'ITR' && this.showReassignmentBtn.length;
+            return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11 ;
           }else{
             return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
           }

@@ -76,57 +76,98 @@ export class ReAssignActionDialogComponent implements OnInit {
     }
   }
 
-  reAssignment() {
-    if (this.filerId) {
-      let userIdList = [];
-      this.data.data.forEach(item => {
-        userIdList.push(item.userId);
-      });
-      // https://uat-api.taxbuddy.com/user/user-action-with-assignment?toFilerUserId=6999&userIdList=1312,23231,4321
-      let param = '/user-action-with-assignment?toFilerUserId=' + this.filerId + '&userIdList=' + userIdList.toString();
-      this.userMsService.getMethod(param).subscribe((result: any) => {
-        this.loading = false;
-        if (result.success) {
-          this.utilsService.showSnackBar(result.message);
-          this.dialogRef.close({ event: 'close', data: 'success' });
-        } else {
-          this.utilsService.showSnackBar(result.message);
-        }
-      }, error => {
-        this.loading = false;
-        this.utilsService.showSnackBar(error.error.error);
-      });
-    } else {
-      this.utilsService.showSnackBar('Please select Filer Name');
-    }
-  }
+  // reAssignment() {
+  //   if (this.filerId) {
+  //     let userIdList = [];
+  //     this.data.data.forEach(item => {
+  //       userIdList.push(item.userId);
+  //     });
+  //     // https://uat-api.taxbuddy.com/user/user-action-with-assignment?toFilerUserId=6999&userIdList=1312,23231,4321
+  //     let param = '/user-action-with-assignment?toFilerUserId=' + this.filerId + '&userIdList=' + userIdList.toString();
+  //     this.userMsService.getMethod(param).subscribe((result: any) => {
+  //       this.loading = false;
+  //       if (result.success) {
+  //         this.utilsService.showSnackBar(result.message);
+  //         this.dialogRef.close({ event: 'close', data: 'success' });
+  //       } else {
+  //         this.utilsService.showSnackBar(result.message);
+  //       }
+  //     }, error => {
+  //       this.loading = false;
+  //       this.utilsService.showSnackBar(error.error.error);
+  //     });
+  //   } else {
+  //     this.utilsService.showSnackBar('Please select Filer Name');
+  //   }
+  // }
 
-  leaderLevelReassignment(){
+
+progressMessage: string = '';
+
+async reAssignment() {
+  //https://uat-api.taxbuddy.com/user/user-reassignment-new?userId=10604&serviceTypes=ALL&ownerUserId=7522&filerUserId=7522'
+  if (this.filerId) {
+    this.loading=true;
+    const userIdList = this.data.data.map(item => item.userId);
+    const totalUsers = userIdList.length;
+    let completedUsers = 0;
+
+    for (let i = 0; i < totalUsers; i++) {
+      const userId = userIdList[i];
+      let param = `/user-reassignment-new?userId=${userId}&serviceTypes=ITR&ownerUserId=${this.ownerId}&filerUserId=${this.filerId}`
+      try {
+        const result: any = await this.userMsService.getMethod(param).toPromise();
+        completedUsers++;
+        this.updateProgress(completedUsers, totalUsers);
+        this.loading=false;
+        // this.utilsService.showSnackBar(result.message);
+      } catch (error) {
+        this.loading=false;
+        this.utilsService.showSnackBar(error.error.error);
+      }
+    }
+    this.utilsService.showSnackBar('User re-assignment Completed.');
+    this.loading = false;
+    this.dialogRef.close({ event: 'close', data: 'success' });
+  } else {
+    this.utilsService.showSnackBar('Please select Filer Name');
+  }
+}
+
+updateProgress(completedUsers: number, totalUsers: number) {
+  this.progressMessage = `${completedUsers} out of ${totalUsers} re-assignment completed`;
+
+}
+
+async leaderLevelReassignment(){
     // this.utilsService.showSnackBar("into leader assig");
     //https://uat-api.taxbuddy.com/user/user-reassignment-new?userId=10604&serviceTypes=ALL&ownerUserId=7522&filerUserId=7522'
     if(this.ownerId){
-      let userIdList = [];
-      this.data.data.forEach(item => {
-        userIdList.push(item.userId);
-      });
-      userIdList.forEach(userId => {
-        let param = `/user-reassignment-new?userId=${userId}&serviceTypes=ALL&ownerUserId=${this.ownerId}&filerUserId=${this.ownerId}`
-        this.userMsService.getMethod(param).subscribe((result: any) => {
-          this.loading = false;
-          if (result.success) {
-            this.utilsService.showSnackBar('User re assigned successfully.');
-            this.dialogRef.close({ event: 'close', data: 'success' });
-          } else {
-            this.utilsService.showSnackBar(result.message);
-          }
-        },
-        error => {
-          this.loading = false;
-          this.utilsService.showSnackBar(error.error.error);
-        });
-      })
-    }else {
-      this.utilsService.showSnackBar('Please select Owner Name');
+      this.loading=true;
+      const userIdList = this.data.data.map(item => item.userId);
+      const totalUsers = userIdList.length;
+      let completedUsers = 0;
+
+      for (let i = 0; i < totalUsers; i++) {
+      const userId = userIdList[i];
+      const param = `/user-reassignment-new?userId=${userId}&serviceTypes=ALL&ownerUserId=${this.ownerId}&filerUserId=${this.ownerId}`;
+      try {
+        const result: any = await this.userMsService.getMethod(param).toPromise();
+        completedUsers++;
+        this.updateProgress(completedUsers, totalUsers);
+        this.loading=false;
+        // this.utilsService.showSnackBar('User re-assigned successfully.');
+      } catch (error) {
+        this.loading=false;
+        this.utilsService.showSnackBar(error.error.error);
+      }
+      }
+      this.utilsService.showSnackBar('User re-assignment Completed.');
+      this.loading = false;
+      this.dialogRef.close({ event: 'close', data: 'success' });
+    } else {
+    this.utilsService.showSnackBar('Please select Owner Name');
     }
   }
+
 }

@@ -16,3 +16,4 @@ font-weight: bold;">Action with Re-Assignment: </label><button style="float: rig
         <button class="tbd-btn save-btn spsTp2" (click)="reAssign()" [disabled]="loading">Re-Assignment</button>
     </div>
 </div>
+<span class="loader-text" *ngIf="progressMessage">{{progressMessage}}</span>
