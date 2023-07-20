@@ -385,7 +385,7 @@ export class FilingsComponent implements OnInit,OnDestroy {
           debounceMs: 0,
         },
         valueGetter: function (params) {
-          return params.data.fName + ' ' + params.data.lName;
+          return params.data.fName ? params.data.fName : '' + ' ' + params.data.lName;
         },
       },
       /* {
