@@ -596,8 +596,7 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
                   ?.AadhaarCardNo,
 
-              mobileNumber:
-                this.ITR_JSON.contactNumber,
+              mobileNumber: this.ITR_JSON.contactNumber,
 
               resStatus: 'Resident',
 
@@ -1690,8 +1689,7 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
                   ?.PersonalInfo?.AadhaarCardNo,
 
-              mobileNumber:
-                this.ITR_JSON.contactNumber,
+              mobileNumber: this.ITR_JSON.contactNumber,
 
               resStatus:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
@@ -2961,11 +2959,12 @@ export class SummaryComponent implements OnInit {
 
                     itrType: this.ITR_JSON?.itrType,
 
-                    orgAckNumber: this.utilsService.isNonEmpty(
-                      this.ITR_JSON?.ackNumber
-                    )
-                      ? this.ITR_JSON?.ackNumber
-                      : 'NA',
+                    orgAckNumber:
+                      this.ITR_JSON.isRevised === 'Y'
+                        ? this.ITR_JSON.orgITRAckNum
+                        : this.ITR_JSON?.ackNumber
+                        ? this.ITR_JSON?.ackNumber
+                        : 'NA',
 
                     bankAccountNumber: this.ITR_JSON.bankDetails.find(
                       (item) => item.hasRefund === true
@@ -4101,11 +4100,12 @@ export class SummaryComponent implements OnInit {
 
                   itrType: this.ITR_JSON?.itrType,
 
-                  orgAckNumber: this.utilsService.isNonEmpty(
-                    this.ITR_JSON?.ackNumber
-                  )
-                    ? this.ITR_JSON?.ackNumber
-                    : 'NA',
+                  orgAckNumber:
+                    this.ITR_JSON.isRevised === 'Y'
+                      ? this.ITR_JSON.orgITRAckNum
+                      : this.ITR_JSON?.ackNumber
+                      ? this.ITR_JSON?.ackNumber
+                      : 'NA',
 
                   bankAccountNumber: this.ITR_JSON.bankDetails.find(
                     (item) => item.hasRefund === true
