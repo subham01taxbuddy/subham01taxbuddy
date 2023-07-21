@@ -44,7 +44,7 @@ export class UpdateStatusComponent implements OnInit {
     this.myForm = new FormGroup({
       name: new FormControl(this.data.partnerName),
       mobileNo: new FormControl(this.data.mobileNumber),
-      contactId: new FormControl('',[Validators.minLength(17),Validators.maxLength(17)]),
+      contactId: new FormControl('',[Validators.minLength(17),Validators.maxLength(19)]),
       fundId: new FormControl('',[Validators.minLength(17),Validators.maxLength(17)])
     });
   }

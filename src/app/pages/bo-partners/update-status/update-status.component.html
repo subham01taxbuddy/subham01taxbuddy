@@ -57,12 +57,12 @@
         <div class="col-sm-6">
           <mat-label> Contact Id </mat-label>
           <mat-form-field appearance="outline" class="class1">
-            <input type="text" matInput placeholder="Contact Id" formControlName="contactId" maxlength="17" class="input-field" />
+            <input type="text" matInput placeholder="Contact Id" formControlName="contactId" maxlength="19" class="input-field" />
             <mat-error *ngIf="myForm.controls['contactId'].hasError('minlength')">
               Contact Id must be at least 17 characters long.
             </mat-error>
             <mat-error *ngIf="myForm.controls['contactId'].hasError('maxlength')">
-              Contact Id must be at most 17 characters long.
+              Contact Id must be at most 19 characters long.
             </mat-error>
           </mat-form-field>
         </div>
