@@ -96,7 +96,7 @@
           User Details:
         </div>
         <div class="col-sm-5">
-          <button class="tbd-btn spRt aprv mt" *ngIf="showReassignmentBtn.length" (click)="actionWithReassignment()">
+          <button class="tbd-btn spRt aprv mt" *ngIf="showReassignmentBtn.length && config.totalItems > 1" (click)="actionWithReassignment()">
             Action with Re-assignment </button>
         </div>
       </div>

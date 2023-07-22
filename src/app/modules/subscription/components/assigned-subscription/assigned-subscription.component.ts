@@ -385,17 +385,17 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
 
   subscriptionCreateColumnDef(List) {
     return [
-      {
-        field: 'selection',
-        headerName: '',
-        // headerCheckboxSelection: true,
-        checkboxSelection: true,
-        width: 50,
+      // {
+      //   field: 'selection',
+      //   headerName: '',
+      //   // headerCheckboxSelection: true,
+      //   checkboxSelection: true,
+      //   width: 50,
 
-        lockPosition: true,
-        suppressMovable: false,
-        cellRenderer: (params) => { },
-      },
+      //   lockPosition: true,
+      //   suppressMovable: false,
+      //   cellRenderer: (params) => { },
+      // },
       {
         headerName: 'User Id',
         field: 'userId',
@@ -496,7 +496,7 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
       {
         headerName: 'Invoice No',
         field: 'invoiceNo',
-        width: 120,
+        width: 140,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
