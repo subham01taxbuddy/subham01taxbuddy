@@ -3180,8 +3180,8 @@ export class SummaryComponent implements OnInit {
                     },
 
                     businessIncomeTotal:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.presumptiveIncome,
+                      this.finalSummary?.assessment?.summaryIncome
+                        ?.summaryBusinessIncome?.totalBusinessIncome,
                   },
                   capitalGain: {
                     shortTerm: {
@@ -4320,8 +4320,8 @@ export class SummaryComponent implements OnInit {
                   },
 
                   businessIncomeTotal:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.presumptiveIncome,
+                    this.finalSummary?.assessment?.summaryIncome
+                      ?.summaryBusinessIncome?.totalBusinessIncome,
                 },
                 capitalGain: {
                   shortTerm: {
