@@ -478,12 +478,15 @@ export class AssignedSmeComponent implements OnInit,OnDestroy {
       {
         headerName: 'Name',
         field: 'name',
-        width: 110,
+        width: 130,
         suppressMovable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
+        },
+        cellRenderer: function (params) {
+          return `<span title="${params.value}">${params.value}</span>`;
         },
       },
       {

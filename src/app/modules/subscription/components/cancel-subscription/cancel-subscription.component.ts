@@ -261,17 +261,17 @@ export class CancelSubscriptionComponent implements OnInit,OnDestroy {
 
   subscriptionCreateColumnDef() {
     return [
-      {
-        field: 'selection',
-        headerName: '',
-        // headerCheckboxSelection: true,
-        checkboxSelection: true,
-        width: 50,
+      // {
+      //   field: 'selection',
+      //   headerName: '',
+      //   // headerCheckboxSelection: true,
+      //   checkboxSelection: true,
+      //   width: 50,
 
-        lockPosition: true,
-        suppressMovable: false,
-        cellRenderer: (params) => { },
-      },
+      //   lockPosition: true,
+      //   suppressMovable: false,
+      //   cellRenderer: (params) => { },
+      // },
       {
         headerName: 'User Id',
         field: 'userId',
