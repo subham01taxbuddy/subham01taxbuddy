@@ -20,24 +20,24 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
   today: any;
   scheduleCflArray = [
     {
-      hasEdit: '', assessmentPastYear: '2015-16', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
+      hasEdit: '', assessmentPastYear: '2015-16', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
     },
     {
-      hasEdit: '', assessmentPastYear: '2016-17', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
+      hasEdit: '', assessmentPastYear: '2016-17', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
     },
     {
-      hasEdit: '', assessmentPastYear: '2017-18', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
+      hasEdit: '', assessmentPastYear: '2017-18', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
     },
     {
-      hasEdit: '', assessmentPastYear: '2018-19', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
+      hasEdit: '', assessmentPastYear: '2018-19', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
     }, {
-      hasEdit: '', assessmentPastYear: '2019-20', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
+      hasEdit: '', assessmentPastYear: '2019-20', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
     }, {
-      hasEdit: '', assessmentPastYear: '2020-21', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
+      hasEdit: '', assessmentPastYear: '2020-21', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
     }, {
-      hasEdit: '', assessmentPastYear: '2021-22', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
+      hasEdit: '', assessmentPastYear: '2021-22', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
     }, {
-      hasEdit: '', assessmentPastYear: '2022-23', dateofFilling: '', housePropertyLoss: '', broughtForwordBusinessLoss: '', STCGLoss: '', LTCGLoss: '', speculativeBusinessLoss: ''
+      hasEdit: '', assessmentPastYear: '2022-23', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
     }
   ]
   constructor(

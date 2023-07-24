@@ -262,17 +262,17 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
 
   refundCreateColumnDef() {
     return [
-      {
-        field: 'selection',
-        headerName: '',
-        // headerCheckboxSelection: true,
-        checkboxSelection: true,
-        width: 50,
+      // {
+      //   field: 'selection',
+      //   headerName: '',
+      //   // headerCheckboxSelection: true,
+      //   checkboxSelection: true,
+      //   width: 50,
 
-        lockPosition: true,
-        suppressMovable: false,
-        cellRenderer: (params) => { },
-      },
+      //   lockPosition: true,
+      //   suppressMovable: false,
+      //   cellRenderer: (params) => { },
+      // },
       {
         headerName: 'User Id',
         field: 'userId',
@@ -435,14 +435,14 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
         field: 'payableRefundAmount',
         width: 150,
         suppressMovable: true,
-        cellStyle: { textAlign: 'left' },
+        cellStyle: { textAlign: 'center' },
       },
       {
         headerName: 'Amount Paid Updates',
         field: 'refundPaidAmount',
         width: 150,
         suppressMovable: true,
-        cellStyle: { textAlign: 'left' },
+        cellStyle: { textAlign: 'center' },
       },
       {
         headerName: 'Chat',

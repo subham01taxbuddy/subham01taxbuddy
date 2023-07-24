@@ -547,9 +547,11 @@ export class PayoutsComponent implements OnInit,OnDestroy {
           let filer1 = leaderList;
           if (environment.environment === 'UAT' && params?.data?.commissionPaymentApprovedBy === 3000) {
             return 'Admin';
-          } else if (environment.environment === 'PROD' && params?.data?.commissionPaymentApprovedBy === 7002) {
+          } else if (environment.environment === 'PROD' && (params?.data?.commissionPaymentApprovedBy === 7002 || params?.data?.commissionPaymentApprovedBy === 21354) ) {
             return 'Admin';
-          } else {
+          } else if(params?.data?.commissionPaymentApprovedBy === 0){
+            return '-'
+          }else {
             let filer = filer1?.filter((item) => {
               return item.userId === createdUserId;
             }).map((item) => {
