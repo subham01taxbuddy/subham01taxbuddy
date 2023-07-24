@@ -76,9 +76,9 @@ export class PrefillIdComponent implements OnInit {
 
         this.data = {
           userId: this.ITR_JSON.userId,
-          panNumber: this.ITR_JSON.panNumber
-            ? this.ITR_JSON.panNumber
-            : result.panNumber,
+          panNumber: result.panNumber
+            ? result.panNumber
+            : this.ITR_JSON.panNumber,
           assessmentYear: this.ITR_JSON.assessmentYear,
           name: this.utilsService.isNonEmpty(name)
             ? name
@@ -86,6 +86,15 @@ export class PrefillIdComponent implements OnInit {
           itrId: this.ITR_JSON.itrId,
           eriClientValidUpto: result.eriClientValidUpto,
         };
+        if(result.panNumber && result.panNumber !== this.ITR_JSON.panNumber) {
+          this.ITR_JSON.panNumber = result.panNumber
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
+          this.utilsService.showSnackBar('PAN number is updated from profile. Please verify customer profile.');
+          this.jsonUploaded.emit(null);
+        }
       });
   }
 
