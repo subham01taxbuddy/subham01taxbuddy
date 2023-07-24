@@ -168,7 +168,7 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
         slabTwoCount: payoutData[i].slabTwoCount,
         slabTwoEarning: payoutData[i].slabTwoEarning,
         slabThreeCount: payoutData[i].slabThreeCount,
-        slabThreeEarning: payoutData[i].slabThreeCount,
+        slabThreeEarning: payoutData[i].slabThreeEarning,
       })
       payoutRepoInfoArray.push(agentReportInfo);
     }
@@ -350,7 +350,7 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
           {
             headerName: 'Earning',
             field: 'slabThreeEarning',
-            width: 80,
+            width: 130,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
