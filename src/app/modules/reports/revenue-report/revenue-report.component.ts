@@ -386,7 +386,7 @@ export class RevenueReportComponent implements OnInit,OnDestroy {
             headerName: 'No of ITR Up to 50 ITR',
             field: 'no_of_itr_up_to_50',
             sortable: true,
-            width: 160,
+            width: 190,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
           },
@@ -403,7 +403,7 @@ export class RevenueReportComponent implements OnInit,OnDestroy {
             headerName: 'No of ITR from 51 to 100 ITR',
             field: 'no_of_itr_51_to_100',
             sortable: true,
-            width: 190,
+            width: 220,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
 
@@ -412,7 +412,7 @@ export class RevenueReportComponent implements OnInit,OnDestroy {
             headerName: 'Collection from 51 to 100 ITR',
             field: 'collection_51_to_100',
             sortable: true,
-            width: 200,
+            width: 210,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
 
@@ -430,7 +430,7 @@ export class RevenueReportComponent implements OnInit,OnDestroy {
             headerName: 'Collection from above 100 ITR',
             field: 'collection_above_100',
             sortable: true,
-            width: 200,
+            width: 220,
             suppressMovable: true,
             cellStyle: { textAlign: 'center' },
 

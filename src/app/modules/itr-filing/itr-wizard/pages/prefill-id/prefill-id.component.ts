@@ -1,30 +1,25 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, Validators } from '@angular/forms';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { Inject } from '@angular/core';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import {
-  MatDialogRef,
-  MAT_DIALOG_DATA,
   MatDialog,
 } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { OtherIncomeComponent } from '../../../other-income/other-income.component';
 import { AddClientsComponent } from '../../components/add-clients/add-clients.component';
 import { Subscription } from 'rxjs';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
-import { update } from 'lodash';
-import { formatDate } from '@angular/common';
+import {formatDate, TitleCasePipe} from '@angular/common';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
-import { environment } from '../../../../../../environments/environment';
 import { UserMsService } from '../../../../../services/user-ms.service';
+import * as moment from "moment/moment";
 
 @Component({
   selector: 'app-prefill-id',
   templateUrl: './prefill-id.component.html',
   styleUrls: ['./prefill-id.component.scss'],
+  providers: [TitleCasePipe]
 })
 export class PrefillIdComponent implements OnInit {
   downloadPrefillChecked: boolean = false;
@@ -56,7 +51,8 @@ export class PrefillIdComponent implements OnInit {
     private itrMsService: ItrMsService,
     private userService: UserMsService,
     public utilsService: UtilsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private titlecasePipe: TitleCasePipe
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     sessionStorage.setItem(
@@ -76,9 +72,9 @@ export class PrefillIdComponent implements OnInit {
 
         this.data = {
           userId: this.ITR_JSON.userId,
-          panNumber: this.ITR_JSON.panNumber
-            ? this.ITR_JSON.panNumber
-            : result.panNumber,
+          panNumber: result.panNumber
+            ? result.panNumber
+            : this.ITR_JSON.panNumber,
           assessmentYear: this.ITR_JSON.assessmentYear,
           name: this.utilsService.isNonEmpty(name)
             ? name
@@ -86,6 +82,10 @@ export class PrefillIdComponent implements OnInit {
           itrId: this.ITR_JSON.itrId,
           eriClientValidUpto: result.eriClientValidUpto,
         };
+        if(result.panNumber && result.panNumber !== this.ITR_JSON.panNumber) {
+          this.ITR_JSON.panNumber = result.panNumber;
+          this.getUserDetailsByPAN(result.panNumber);
+        }
       });
   }
 
@@ -5582,6 +5582,45 @@ export class PrefillIdComponent implements OnInit {
           JSON.stringify(this.ITR_JSON)
         );
         this.jsonUploaded.emit(null);
+      }
+    });
+  }
+
+  private getUserDetailsByPAN(panNumber) {
+    let param = `/api/getPanDetail?panNumber=${panNumber}`;
+    this.itrMsService.getMethod(param).subscribe((result: any) => {
+      console.log('user data by PAN = ', result);
+      this.ITR_JSON.family[0].fName =
+        this.titlecasePipe.transform(
+          this.utilsService.isNonEmpty(result.firstName)
+            ? result.firstName
+            : ''
+        );
+      this.ITR_JSON.family[0].mName =
+        this.titlecasePipe.transform(
+          this.utilsService.isNonEmpty(result.middleName)
+            ? result.middleName
+            : ''
+        );
+      this.ITR_JSON.family[0].lName = this.titlecasePipe.transform(
+        this.utilsService.isNonEmpty(result.lastName) ? result.lastName : ''
+      );
+
+      //1988-11-28 to DD/MM/YYYY
+      //this.datePipe.transform(dob,"dd/MM/yyyy")
+      let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
+      this.ITR_JSON.family[0].dateOfBirth = moment(result.dateOfBirth, 'YYYY-MM-DD').toDate();
+      this.ITR_JSON.assesseeType = this.utilsService.findAssesseeType(panNumber);
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.ITR_JSON)
+      );
+      this.utilsService.showSnackBar('PAN number is updated from profile. Please verify customer profile.');
+      this.jsonUploaded.emit(null);
+      if (result.isValid !== 'EXISTING AND VALID') {
+        this.utilsService.showSnackBar(
+          'Record (PAN) Not Found in ITD Database/Invalid PAN'
+        );
       }
     });
   }
