@@ -1311,7 +1311,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               },
               {
                 label: 'Income from Business and Profession',
-                old: this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome
+                old: this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
                   .totalBusinessIncome,
                 new: this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
                   .totalBusinessIncome,
