@@ -489,6 +489,7 @@ export class ItrWizardComponent implements OnInit {
           .subscribe((res: any) => {
             this.loading = false;
             console.log(res);
+            this.getCustomerName();
           });
       }
     } else {
@@ -499,6 +500,7 @@ export class ItrWizardComponent implements OnInit {
         .subscribe((res: any) => {
           this.loading = false;
           console.log(res);
+          this.getCustomerName();
         });
     }
   }
