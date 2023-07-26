@@ -3362,13 +3362,17 @@ export class SummaryComponent implements OnInit {
                         houseProperty:
                           this.finalSummary?.assessment?.taxSummary
                             ?.currentYearIFHPSetOff,
-                        businessSetOff: 0,
+                        businessSetOff:
+                          this.finalSummary?.assessment?.taxSummary
+                            ?.currentYearIFBFSetOff,
                         otherThanHpBusiness: 0,
                       },
                     ],
                     totalCurrentYearSetOff:
                       this.finalSummary?.assessment?.taxSummary
-                        ?.currentYearIFHPSetOff,
+                        ?.currentYearIFHPSetOff +
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.currentYearIFBFSetOff,
                   },
                   balanceAfterSetOffCurrentYearLosses:
                     this.finalSummary?.assessment?.taxSummary
@@ -4502,13 +4506,17 @@ export class SummaryComponent implements OnInit {
                       houseProperty:
                         this.finalSummary?.assessment?.taxSummary
                           ?.currentYearIFHPSetOff,
-                      businessSetOff: 0,
+                      businessSetOff:
+                        this.finalSummary?.assessment?.taxSummary
+                          ?.currentYearIFBFSetOff,
                       otherThanHpBusiness: 0,
                     },
                   ],
                   totalCurrentYearSetOff:
                     this.finalSummary?.assessment?.taxSummary
-                      ?.currentYearIFHPSetOff,
+                      ?.currentYearIFHPSetOff +
+                    this.finalSummary?.assessment?.taxSummary
+                      ?.currentYearIFBFSetOff,
                 },
                 balanceAfterSetOffCurrentYearLosses:
                   this.finalSummary?.assessment?.taxSummary
