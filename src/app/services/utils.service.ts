@@ -62,6 +62,101 @@ export class UtilsService {
 
   removeNullProperties(obj) {
     for (const key in obj) {
+      // pastYear Losses
+      if (key === 'pastYearLosses') {
+        if (obj[key].length === 0 || obj[key] === null) {
+          obj[key] = [
+            {
+              id: null,
+              assessmentPastYear: '2015-16',
+              dateofFilling: null,
+              housePropertyLoss: 0,
+              pastYear: 0,
+              speculativeBusinessLoss: 0,
+              broughtForwordBusinessLoss: 0,
+              LTCGLoss: 0,
+              STCGLoss: 0,
+            },
+            {
+              id: null,
+              assessmentPastYear: '2016-17',
+              dateofFilling: null,
+              housePropertyLoss: 0,
+              pastYear: 0,
+              speculativeBusinessLoss: 0,
+              broughtForwordBusinessLoss: 0,
+              LTCGLoss: 0,
+              STCGLoss: 0,
+            },
+            {
+              id: null,
+              assessmentPastYear: '2017-18',
+              dateofFilling: null,
+              housePropertyLoss: 0,
+              pastYear: 0,
+              speculativeBusinessLoss: 0,
+              broughtForwordBusinessLoss: 0,
+              LTCGLoss: 0,
+              STCGLoss: 0,
+            },
+            {
+              id: null,
+              assessmentPastYear: '2018-19',
+              dateofFilling: null,
+              housePropertyLoss: 0,
+              pastYear: 0,
+              speculativeBusinessLoss: 0,
+              broughtForwordBusinessLoss: 0,
+              LTCGLoss: 0,
+              STCGLoss: 0,
+            },
+            {
+              id: null,
+              assessmentPastYear: '2019-20',
+              dateofFilling: null,
+              housePropertyLoss: 0,
+              pastYear: 0,
+              speculativeBusinessLoss: 0,
+              broughtForwordBusinessLoss: 0,
+              LTCGLoss: 0,
+              STCGLoss: 0,
+            },
+            {
+              id: null,
+              assessmentPastYear: '2020-21',
+              dateofFilling: null,
+              housePropertyLoss: 0,
+              pastYear: 0,
+              speculativeBusinessLoss: 0,
+              broughtForwordBusinessLoss: 0,
+              LTCGLoss: 0,
+              STCGLoss: 0,
+            },
+            {
+              id: null,
+              assessmentPastYear: '2021-22',
+              dateofFilling: null,
+              housePropertyLoss: 0,
+              pastYear: 0,
+              speculativeBusinessLoss: 0,
+              broughtForwordBusinessLoss: 0,
+              LTCGLoss: 0,
+              STCGLoss: 0,
+            },
+            {
+              id: null,
+              assessmentPastYear: '2022-23',
+              dateofFilling: null,
+              housePropertyLoss: 0,
+              pastYear: 0,
+              speculativeBusinessLoss: 0,
+              broughtForwordBusinessLoss: 0,
+              LTCGLoss: 0,
+              STCGLoss: 0,
+            },
+          ];
+        }
+      }
       //movableAsset
       if (
         key === 'movableAsset' &&
