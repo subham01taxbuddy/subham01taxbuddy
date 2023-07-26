@@ -4,6 +4,7 @@ import {Schedules} from "../../../../shared/interfaces/schedules";
 import {AppConstants} from "../../../../shared/constants";
 import {ITR_JSON} from "../../../../shared/interfaces/itr-input.interface";
 import {UtilsService} from "../../../../../services/utils.service";
+import {ItrMsService} from "../../../../../services/itr-ms.service";
 
 @Component({
   selector: 'app-source-of-incomes',
@@ -15,16 +16,20 @@ export class SourceOfIncomesComponent implements OnInit {
   sourcesList = [];
   ITR_JSON: ITR_JSON;
   eriClientValidUpto: any;
+  prefillIncomeSources: any;
+  userSelectedSources: any;
 
   @Output() scheduleSelected: EventEmitter<any> = new EventEmitter();
 
   constructor(private schedules: Schedules,
-              private utilsService: UtilsService) {
+              private utilsService: UtilsService,
+              private itrMsService: ItrMsService) {
   }
   ngOnInit(): void {
 
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
 
+    this.getPrefillIncomeSources();
     this.utilsService
       .getUserProfile(this.ITR_JSON.userId)
       .then((result: any) => {
@@ -81,6 +86,10 @@ export class SourceOfIncomesComponent implements OnInit {
     });
   }
 
+  arrayContains(array, schedule){
+    return array?.indexOf(this.schedules.getKey(schedule)) > -1;
+  }
+
   sourcesUpdated(source) {
     let clickedSource = this.sourcesList.filter(item => item.name === source.name)[0];
     clickedSource.selected = !clickedSource.selected;
@@ -90,5 +99,13 @@ export class SourceOfIncomesComponent implements OnInit {
     }
     this.scheduleSelected.emit(event);
     sessionStorage.setItem('incomeSources', JSON.stringify(this.sourcesList));
+  }
+
+  private getPrefillIncomeSources() {
+    const param = `/income-sources?userId=${this.ITR_JSON.userId}&assessmentYear=${this.ITR_JSON.assessmentYear}`;
+    this.itrMsService.getMethod(param).subscribe((res: any) =>{
+      this.prefillIncomeSources = res.prefillIncomeSources;
+      this.userSelectedSources = res.userSelectedSources;
+    });
   }
 }

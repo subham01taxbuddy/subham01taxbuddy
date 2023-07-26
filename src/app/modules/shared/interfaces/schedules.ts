@@ -17,6 +17,7 @@ export class Schedules {
 
   titleMap: any = {};
   pathMap: any = {};
+  keysMap: any = {};
 
   constructor() {
     this.titleMap[this.PERSONAL_INFO] = 'Personal Information';
@@ -44,6 +45,17 @@ export class Schedules {
     this.pathMap[this.CAPITAL_GAIN] = '/itr/capital-gain';
     this.pathMap[this.SPECULATIVE_INCOME] = '/itr/future-options';
     this.pathMap[this.FOREIGN_INCOME] = '/itr/nri';
+
+    this.keysMap[this.SALARY] = 'SALARY';
+    this.keysMap[this.HOUSE_PROPERTY] = 'HOUSE_PROPERTY';
+    this.keysMap[this.BUSINESS_INCOME] = 'BUSINESS_AND_PROFESSION';
+    this.keysMap[this.CAPITAL_GAIN] = 'CAPITAL_GAINS';
+    this.keysMap[this.SPECULATIVE_INCOME] = 'FUTURE_AND_OPTIONS';
+    this.keysMap[this.FOREIGN_INCOME] = 'FOREIGN_INCOME_NRI_EXPAT';
+  }
+
+  public getKey(key) {
+    return this.keysMap[key];
   }
 
   public getTitle(key) {

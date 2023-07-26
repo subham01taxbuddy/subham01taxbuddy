@@ -30,8 +30,8 @@
 
               {{ source.name }}
 
-              <i class="fa fa-user-circle-o" aria-hidden="true" data-action-type="updateStatus"></i>
-              <i class="fa fa-pencil-square-o" aria-hidden="true" data-action-type="updateStatus"></i>
+              <i *ngIf="arrayContains(userSelectedSources, source.schedule)" class="fa fa-user-circle-o" aria-hidden="true" data-action-type="updateStatus"></i>
+              <i *ngIf="arrayContains(prefillIncomeSources, source.schedule)" class="fa fa-pencil-square-o" aria-hidden="true" data-action-type="updateStatus"></i>
             </mat-chip>
           </mat-chip-list>
         </div>
