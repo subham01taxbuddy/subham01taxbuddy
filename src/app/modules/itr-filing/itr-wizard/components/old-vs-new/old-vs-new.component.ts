@@ -1343,8 +1343,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               },
               {
                 label: 'CYLA',
-                old: this.oldSummaryIncome?.taxSummary.currentYearLossIFHP,
-                new: this.newSummaryIncome?.taxSummary.currentYearLossIFHP,
+                old:
+                  this.oldSummaryIncome?.taxSummary.currentYearLossIFHP +
+                  this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
+                new:
+                  this.newSummaryIncome?.taxSummary.currentYearLossIFHP +
+                  this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
               },
               {
                 label: 'BFLA',
@@ -1486,8 +1490,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             },
             {
               label: 'CYLA',
-              old: this.oldSummaryIncome?.taxSummary.currentYearLossIFHP,
-              new: this.newSummaryIncome?.taxSummary.currentYearLossIFHP,
+              old:
+                this.oldSummaryIncome?.taxSummary.currentYearIFHPSetOff +
+                this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
+              new:
+                this.newSummaryIncome?.taxSummary.currentYearIFHPSetOff +
+                this.oldSummaryIncome?.taxSummary.currentYearIFBFSetOff,
             },
             {
               label: 'BFLA',
