@@ -78,6 +78,11 @@
       No JSON Filing
     </button>
   </span>
+  <span *ngIf="data.serviceType === 'ITR' || data.serviceType === 'ITRU'">
+    <button type="button" title="update ITR-U filling" class="tbd-btn-small" (click)="checkSubscription('itr-u-update')">
+      ITR-U Update&nbsp;&nbsp; <i class="fas fa-edit" aria-hidden="true"></i>
+    </button>
+  </span>
   &nbsp;&nbsp;
 
 <div class="card__row" *ngIf="showDetails === 'OPT_SERVICE'">

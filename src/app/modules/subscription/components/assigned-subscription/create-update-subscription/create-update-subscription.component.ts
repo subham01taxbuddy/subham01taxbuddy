@@ -49,7 +49,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   serviceDetail: string = '';
   selectedPlanInfo: any;
   invoiceForm: FormGroup;
-  financialYear = AppConstants.gstFyList;
+  financialYear = AppConstants.subscriptionFyList;
   loading!: boolean;
   userSubscription: any;
   sourcesList = [];
@@ -839,7 +839,17 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     this.invoiceForm.controls['gstin'].updateValueAndValidity();
   }
 
+  filteredFinancialYears: any[] = this.financialYear;
+
   changeService() {
+    if(this.service === 'ITRU'){
+      this.filteredFinancialYears = this.financialYear.filter(
+        (year) => year.financialYear === '2020-2021' || year.financialYear === '2021-2022'
+      );
+
+    }else{
+      this.filteredFinancialYears = this.financialYear;
+    }
     const serviceArray = [
       //   { service: 'ITR Filing', details: 'ITR-1 filing (FY 21-22)/ (AY 2022-23)' },
       // { service: 'ITR Filing', details: 'ITR-2 filing (FY 21-22)/ (AY 2022-23)' },
@@ -1033,6 +1043,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   updateSubscription() {
     this.loading = true;
+    if(this.service ==='ITRU'){
+      if(this.assessmentYear.value === ''){
+        this.loading = false;
+        this.toastMessage.alert('error', 'Please select Financial Year For ITR-U subscription');
+        return;
+      }
+    }
     if (this.userSubscription.smeSelectedPlan != null && this.pin.value) {
       console.log(
         'selectedPlanInfo -> ',
