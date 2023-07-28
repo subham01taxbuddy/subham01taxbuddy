@@ -64,7 +64,7 @@ export class UtilsService {
     for (const key in obj) {
       // pastYear Losses
       if (key === 'pastYearLosses') {
-        if (obj[key].length === 0 || obj[key] === null) {
+        if (obj[key] === null || obj[key].length === 0) {
           obj[key] = [
             {
               id: null,
