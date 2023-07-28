@@ -16,8 +16,7 @@ import { ValidationErrors, AbstractControl } from '@angular/forms';
 })
 export class SharesAndEquityComponent
   extends WizardNavigation
-  implements OnInit
-{
+  implements OnInit {
   step = 1;
   // @Output() onSave = new EventEmitter();
   securitiesForm: FormGroup;
@@ -69,7 +68,7 @@ export class SharesAndEquityComponent
       this.bondType = this.activateRoute.snapshot.queryParams['bondType'];
       this.bondType === 'listed'
         ? (this.title =
-            ' Listed Securities (Equity Shares/ Equity Mutual Funds)')
+          ' Listed Securities (Equity Shares/ Equity Mutual Funds)')
         : (this.title = 'Unlisted Securities (Shares not listed)');
       this.compactView = true;
     }
@@ -272,9 +271,10 @@ export class SharesAndEquityComponent
       this.securitiesForm.get('securitiesArray')
     );
     if (securitiesArray && securitiesArray.length > 0) {
-      // if (securitiesArray.valid) {
-      this.addMoreData();
-      // } else {
+      if (securitiesArray.valid) {
+        this.addMoreData();
+      }
+      //else {
       //   securitiesArray.controls.forEach(element => {
       //     if ((element as FormGroup).invalid) {
       //       element.markAsDirty();
@@ -348,12 +348,12 @@ export class SharesAndEquityComponent
   editSecuritiesForm(i) {
     (
       (this.securitiesForm.controls['securitiesArray'] as FormGroup).controls[
-        i
+      i
       ] as FormGroup
     ).enable();
     (
       (this.securitiesForm.controls['securitiesArray'] as FormGroup).controls[
-        i
+      i
       ] as FormGroup
     ).controls['gainType'].disable();
   }
@@ -378,7 +378,7 @@ export class SharesAndEquityComponent
     );
   }
 
-  deleteBroker(brokerName){
+  deleteBroker(brokerName) {
     this.brokerList = this.brokerList.filter(item => item.brokerName !== brokerName);
     let itrObject = this.Copy_ITR_JSON;
     let data;
@@ -424,9 +424,9 @@ export class SharesAndEquityComponent
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
 
-  checkBuyDateBefore31stJan(securities){
+  checkBuyDateBefore31stJan(securities) {
     return new Date(securities.controls['purchaseDate'].value) <
-    new Date('02/01/2018');
+      new Date('02/01/2018');
   }
 
   calculateGainType(securities) {
@@ -569,7 +569,7 @@ export class SharesAndEquityComponent
     return totalCg;
   }
 
-  getSaleValue(index){
+  getSaleValue(index) {
     const securitiesArray = <FormArray>(
       this.securitiesForm.get('securitiesArray')
     );
@@ -586,7 +586,7 @@ export class SharesAndEquityComponent
     this.calculateTotalCG(fg);
   }
 
-  getPurchaseValue(index){
+  getPurchaseValue(index) {
     const securitiesArray = <FormArray>(
       this.securitiesForm.get('securitiesArray')
     );
@@ -697,8 +697,8 @@ export class SharesAndEquityComponent
       );
     } else if (
       (this.securitiesForm.valid &&
-      this.deduction &&
-      this.deductionForm.valid) || (this.securitiesForm.valid && !this.deduction)
+        this.deduction &&
+        this.deductionForm.valid) || (this.securitiesForm.valid && !this.deduction)
     ) {
       this.loading = true;
       if (!this.Copy_ITR_JSON.capitalGain) {
@@ -754,12 +754,12 @@ export class SharesAndEquityComponent
           //get all other brokers from existing list, append current broker list and then save
           let otherData = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.filter(item => item.brokerName !== this.selectedBroker);
           let sameData = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.filter(item => item.brokerName === this.selectedBroker);
-          if(!sameData){
+          if (!sameData) {
             sameData = [];
           }
-          if(this.selectedBroker === ''){
+          if (this.selectedBroker === '') {
             sameData = securitiesData.assetDetails;
-          }else {
+          } else {
             if (this.isAdd) {
               sameData = sameData.concat(securitiesData.assetDetails);
             } else {
