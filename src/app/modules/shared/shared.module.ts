@@ -58,6 +58,7 @@ import { ViewDocumentsDialogComponent } from './components/view-documents-dialog
 import {
   UpdateNoJsonFilingDialogComponent
 } from "./components/update-no-json-filing-dialog/update-no-json-filing-dialog.component";
+import { UpdateItrUFillingDialogComponent } from './components/update-ItrU-filling-dialog/update-ItrU-filling-dialog.component';
 @NgModule({
   declarations: [
     UpperCaseDirective,
@@ -96,6 +97,7 @@ import {
     TwoDigitDecimaNumberDirective,
     ViewDocumentsDialogComponent,
     UpdateNoJsonFilingDialogComponent,
+    UpdateItrUFillingDialogComponent,
   ],
   imports: [
     CommonModule,

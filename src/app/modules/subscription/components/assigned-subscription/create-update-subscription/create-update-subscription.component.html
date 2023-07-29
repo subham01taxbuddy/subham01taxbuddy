@@ -467,7 +467,7 @@
               <mat-label> Financial Year</mat-label>
               <mat-form-field appearance="outline">
                 <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off">
-                  <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
+                  <mat-option *ngFor="let year of filteredFinancialYears" [value]="year.financialYear">
                     {{ year.financialYear }}
                   </mat-option>
                 </mat-select>

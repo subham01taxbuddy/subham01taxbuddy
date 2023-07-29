@@ -50,9 +50,12 @@ export class AppConstants {
         // { financialYear: '2017-18' },
     ];
     public static subscriptionFyList = [
+        { financialYear: '2023-2024' },
         { financialYear: '2022-2023' },
         { financialYear: '2021-2022' },
         { financialYear: '2020-2021' },
+        { financialYear: '2019-2020' },
+        { financialYear: '2018-2019' },
     ];
 
     public static gstMonthList = [

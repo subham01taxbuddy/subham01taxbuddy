@@ -63,10 +63,8 @@
             <mat-error
               *ngIf="
                 donation.get('amountInCash').hasError('pattern') &&
-                (donation
-                  .get('amountInCash').touched ||
-                  donation
-                    .get('amountInCash').dirty)
+                (donation.get('amountInCash').touched ||
+                  donation.get('amountInCash').dirty)
               "
             >
               Enter positive amount without decimal.</mat-error
@@ -88,9 +86,7 @@
               digitsOnly
             />
             <mat-error
-              *ngIf="
-                donation.get('amountOtherThanCash').hasError('pattern')
-              "
+              *ngIf="donation.get('amountOtherThanCash').hasError('pattern')"
             >
               Enter positive amount without decimal.</mat-error
             >
@@ -110,11 +106,7 @@
               type="text"
               trim
             />
-            <mat-error
-              *ngIf="
-                donation.get('name').hasError('pattern')
-              "
-            >
+            <mat-error *ngIf="donation.get('name').hasError('pattern')">
               Name should be character only</mat-error
             >
           </mat-form-field>
@@ -141,18 +133,10 @@
               trim
               upperCase
             />
-            <mat-error
-              *ngIf="
-                donation.get('panNumber').hasError('pattern')
-              "
-            >
+            <mat-error *ngIf="donation.get('panNumber').hasError('pattern')">
               Enter valid PAN (e.g XXXXX1234X)</mat-error
             >
-            <mat-error
-              *ngIf="
-                donation.get('panNumber').hasError('incorrect')
-              "
-            >
+            <mat-error *ngIf="donation.get('panNumber').hasError('incorrect')">
               Donee PAN can't be same as user PAN.</mat-error
             >
           </mat-form-field>
@@ -175,11 +159,7 @@
               trim
               digitsOnly
               (blur)="
-                getData(
-                  fieldGlobalIndex(i),
-                  donation
-                    .get('pinCode').value
-                )
+                getData(fieldGlobalIndex(i), donation.get('pinCode').value)
               "
             />
             <mat-error
@@ -207,11 +187,7 @@
               type="text"
               trim
             />
-            <mat-error
-              *ngIf="
-                donation.get('city').hasError('pattern')
-              "
-            >
+            <mat-error *ngIf="donation.get('city').hasError('pattern')">
               Enter valid city name.</mat-error
             >
           </mat-form-field>
@@ -256,7 +232,7 @@
           <button
             type="button"
             class="edit-donation edtRthBtn"
-            (click)="editDonationForm(i)"
+            (click)="editDonationForm(fieldGlobalIndex(i))"
           >
             <mat-icon> edit_square </mat-icon>Edit
           </button>

@@ -357,6 +357,18 @@ export class PayoutsComponent implements OnInit,OnDestroy {
         }
       },
       {
+        headerName: 'Service Type',
+        field: 'serviceType',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
         headerName: 'Filing Source',
         field: 'filingSource',
         width: 140,

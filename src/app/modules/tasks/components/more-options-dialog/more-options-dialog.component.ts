@@ -20,6 +20,7 @@ import {
 import {
   UpdateNoJsonFilingDialogComponent
 } from "../../../shared/components/update-no-json-filing-dialog/update-no-json-filing-dialog.component";
+import { UpdateItrUFillingDialogComponent } from 'src/app/modules/shared/components/update-ItrU-filling-dialog/update-ItrU-filling-dialog.component';
 
 @Component({
   selector: 'app-more-options-dialog',
@@ -243,10 +244,10 @@ export class MoreOptionsDialogComponent implements OnInit {
         response.data.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
-          if(smeSelectedPlan && smeSelectedPlan.servicesType === 'ITR'){
+          if(smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR'|| smeSelectedPlan.servicesType === 'ITRU' )){
             itrSubscriptionFound = true;
             return;
-          }else if(userSelectedPlan && userSelectedPlan.servicesType === 'ITR'){
+          }else if(userSelectedPlan && (userSelectedPlan.servicesType === 'ITR' || userSelectedPlan.servicesType === 'ITRU')){
             itrSubscriptionFound = true;
             return;
           }
@@ -259,6 +260,9 @@ export class MoreOptionsDialogComponent implements OnInit {
             case 'update-filing':
               this.updateFilingNoJson();
               break;
+            case 'itr-u-update':
+              this.itruUpdate();
+              break;
           }
         } else {
           this.utilsService.showSnackBar('Please make sure the subscription is created for user.');
@@ -266,6 +270,18 @@ export class MoreOptionsDialogComponent implements OnInit {
       } else {
         this.utilsService.showSnackBar('Please make sure the subscription is created for user.');
       }
+    });
+  }
+
+  itruUpdate(){
+    let disposable = this.dialog.open(UpdateItrUFillingDialogComponent, {
+      width: '60%',
+      height: 'auto',
+      data: this.data,
+    });
+
+    disposable.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
     });
   }
 

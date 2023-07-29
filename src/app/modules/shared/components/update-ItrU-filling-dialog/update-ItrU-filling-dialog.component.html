@@ -1,0 +1,73 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<label style="font-size: 18px;
+font-weight: bold;">Update ITR-U Filing Details for : {{data.name}}</label>
+<button style="float: right;" mat-dialog-close tabindex="-1" class="tbd-btn-close close"><i class="fa fa-times"
+    aria-hidden="true"></i></button>
+
+<div class="row">
+  <span *ngIf="!showDetails" class="note1" style="margin-top: 10px;">select Financial year for ITR-U Update</span>
+  <div style="display: inline;">
+    <span>
+      <button type="button" title="Financial Year" class="tbd-btn-small" (click)="selectedFy('2020-2021')"> FY-2020-2021
+      </button>
+    </span>
+    <span>
+      <button type="button" title="Financial Year" class="tbd-btn-small" (click)="selectedFy('2021-2022')">FY-2021-2022
+      </button>
+    </span>
+  </div>
+</div>
+
+<div *ngIf="showDetails">
+  <div class="card__row" >
+    <div class="card__col-xs-12">
+      <span>User Name: {{ data.name }}</span><br>
+      <span>User PAN: {{ this.userProfile?.panNumber }}</span><br>
+      <span>User mobile: {{ data.mobileNumber }}</span><br>
+      <span>User email: {{ data.email }}</span><br>
+      <span>Filer Name: {{ data.filerName }}</span><br>
+      <span>Assessment Year: {{ data.assessmentYear }}</span><br>
+      <span style="font-weight: bold;">Financial Year: {{ fy.value }}</span><br>
+    </div>
+  </div>
+  <div class="card__row">
+    <div class="card__col-xs-12 card__col-sm-4">
+      <mat-form-field appearance="outline" class="class1">
+        <mat-label>ITR-U Type</mat-label>
+        <mat-select [formControl]="itrType" matInput placeholder="Select ITR-U Type" autocomplete="off" required>
+          <mat-option value="1"> ITR-1 </mat-option>
+          <mat-option value="2"> ITR-2 </mat-option>
+          <mat-option value="3"> ITR-3 </mat-option>
+          <mat-option value="4"> ITR-4 </mat-option>
+          <mat-option value="5"> ITR-5 </mat-option>
+          <mat-option value="6"> ITR-6 </mat-option>
+          <mat-option value="7"> ITR-7 </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="card__col-xs-12 card__col-sm-4">
+      <mat-form-field appearance="outline" class="class1">
+          <mat-label>Ack Number</mat-label>
+          <input matInput placeholder="Ack Number" name="ackNumber" [formControl]="ackNumber" class="input-field"
+              required (blur)="setFilingDate()" maxlength="15" minlength="15">
+          <mat-error *ngIf="ackNumber.hasError('minlength')">Enter 15 digit valid ack number</mat-error>
+          <mat-error *ngIf="ackNumber.hasError('pattern')">Please enter only numbers</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="card__col-xs-12 card__col-sm-4">
+      <mat-form-field appearance="outline" class="class1">
+          <mat-label>E-Filing Date</mat-label>
+          <input matInput [max]="maxDate" [matDatepicker]="picker" class="input-field" placeholder="E-Filing Date"
+              name="e-filling-date" [formControl]="eFillingDate" required>
+          <mat-hint>Format: DD/MM/YYYY</mat-hint>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+  </div>
+  <div class="footer__buttons clearfix" style="margin-top: 25px;">
+    <button class="tbd-btn" (click)="checkPaymentStatus()">Update</button>
+  </div>
+</div>
+
