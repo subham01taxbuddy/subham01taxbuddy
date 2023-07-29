@@ -99,7 +99,6 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
     let itrType = `ITRU-${this.itrType.value}`;
     let req = {
       userId:this.data.userId,
-      "commissionPaid":true,
       email:this.data.email,
       contactNumber:this.data.mobileNumber,
       panNumber: this.userProfile.panNumber,
