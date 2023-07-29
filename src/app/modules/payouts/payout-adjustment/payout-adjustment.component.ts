@@ -4,6 +4,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-payout-adjustment',
@@ -18,6 +19,8 @@ export class PayoutAdjustmentComponent implements OnInit {
   dialogRef: any;
   name: any;
   showAdd = false;
+  downloadURL:any;
+  showMessage ='';
 
   constructor(
     private itrMsService: ItrMsService,
@@ -167,6 +170,43 @@ export class PayoutAdjustmentComponent implements OnInit {
       total += item.adjustmentadditionAmount;
     }
     return total;
+  }
+
+  generateFile(){
+    //https://oejtteophnvpnunmyzoioyksgi0kixmh.lambda-url.ap-south-1.on.aws/'
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Generate CSV!!!!!',
+        message: 'Please Ensure you process this in razorpay after CSV is generated as system will not allow to create CSV again',
+      },
+    });
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result === 'YES') {
+        this.showMessage ='CSV Generation Started - Please Do Not Close the Screen or Move out'
+        this.loading = true;
+        let param = ``;
+        this.itrMsService.getAdjustmentCSV(param).subscribe((response: any) => {
+          if (response.success) {
+            this.loading = false;
+            console.log('response', response['data']);
+            this.showMessage =''
+            this.utilsService.showSnackBar(response.message);
+            this.downloadURL = response?.downloadUrl
+            window.open(this.downloadURL, '_blank');
+
+          } else {
+            this.loading = false;
+            this.showMessage =''
+            this.utilsService.showSnackBar(response.message);
+          }
+        },
+        (error) => {
+          this.loading = false;
+          this.showMessage =''
+          this.utilsService.showSnackBar('Error in download/generate CSV ');
+        });
+      }
+    });
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
