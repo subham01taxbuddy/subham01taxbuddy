@@ -108,6 +108,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
                   console.log(`My ITR by ${param}`, result);
                   if (result == null || result.length == 0) {
                     //no ITR found, error case
+                    this.loading = false;
                     this.utilsService.showErrorMsg(
                       'Something went wrong. Please try again'
                     );
