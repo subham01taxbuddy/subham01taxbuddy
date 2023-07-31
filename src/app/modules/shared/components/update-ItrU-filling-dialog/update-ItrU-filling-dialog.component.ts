@@ -39,6 +39,7 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   loading = false;
   userProfile: any;
   showDetails =false;
+  hideYears =true;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -59,8 +60,8 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
 
   selectedFy(year:any){
     if(year){
-      this.showDetails=true;
       this.fy.setValue(year);
+      this.checkPaymentStatus()
     }
     else{
       this.showDetails=false;
@@ -70,32 +71,36 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   }
 
   checkPaymentStatus(){
-    if (this.eFillingDate.valid && this.ackNumber.valid) {
       this.loading = true;
       const param1 = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITRU&financialYear=${this.fy.value}`;
       this.itrMsService.getMethod(param1).subscribe(
         (res: any) => {
+          this.loading=false;
           if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-            this.updateItrUDetails();
+            this.loading=false;
+            this.hideYears=false;
+            this.showDetails=true;
+            // this.updateItrUDetails();
           }
           else{
+            this.loading=false;
+            this.hideYears=true;
+            this.showDetails=false;
             this.utilsService.showSnackBar(
               'Please make sure that the payment has been made by the user to proceed ahead'
             );
-            this.loading = false;
           }
         }, error => {
+          this.hideYears=true;
+          this.showDetails=false;
           this.utilsService.showSnackBar('Error while checking payment status, Please try again.');
           this.loading = false;
         })
-    }else{
-      this.utilsService.showSnackBar(
-        'Please give E-Filling-Date and Acknowledgment Number'
-      );
-    }
+
   }
 
   updateItrUDetails(){
+    if (this.eFillingDate.valid && this.ackNumber.valid) {
     this.loading=true;
     let itrType = `ITRU-${this.itrType.value}`;
     let req = {
@@ -131,6 +136,11 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
       this.utilsService.showSnackBar('Failed to update ITR-U Filing Details')
       this.loading = false;
     })
+  }else{
+    this.utilsService.showSnackBar(
+      'Please give E-Filling-Date and Acknowledgment Number'
+    );
+  }
 
   }
 
