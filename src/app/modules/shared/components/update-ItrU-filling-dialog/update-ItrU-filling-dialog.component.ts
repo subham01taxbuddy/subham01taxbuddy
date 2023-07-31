@@ -1,7 +1,7 @@
 /* eslint-disable @angular-eslint/component-selector */
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -45,7 +45,8 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
     private itrMsService: ItrMsService,
     private userMsService: UserMsService,
     public utilsService: UtilsService,
-    private router: Router
+    private router: Router,
+    private dialogRef: MatDialogRef<UpdateItrUFillingDialogComponent>
   ) { }
 
   ngOnInit() {
@@ -121,6 +122,7 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
       this.loading = false;
       if(res.success) {
         this.utilsService.showSnackBar('ITR-U Filing Details updated successfully');
+        this.dialogRef.close();
         // this.location.back();
       }else{
         this.utilsService.showSnackBar(res.message);
