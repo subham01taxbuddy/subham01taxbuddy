@@ -6,7 +6,7 @@ font-weight: bold;">Update ITR-U Filing Details for : {{data.name}}</label>
 
 <div class="row">
   <span *ngIf="!showDetails" class="note1" style="margin-top: 10px;">select Financial year for ITR-U Update</span>
-  <div style="display: inline;">
+  <div style="display: inline;" *ngIf="hideYears">
     <span>
       <button type="button" title="Financial Year" class="tbd-btn-small" (click)="selectedFy('2020-2021')"> FY-2020-2021
       </button>
@@ -67,7 +67,7 @@ font-weight: bold;">Update ITR-U Filing Details for : {{data.name}}</label>
 
   </div>
   <div class="footer__buttons clearfix" style="margin-top: 25px;">
-    <button class="tbd-btn" (click)="checkPaymentStatus()">Update</button>
+    <button class="tbd-btn" (click)="updateItrUDetails()">Update</button>
   </div>
 </div>
 
