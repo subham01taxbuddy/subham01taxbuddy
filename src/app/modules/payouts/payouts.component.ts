@@ -49,7 +49,7 @@ export class PayoutsComponent implements OnInit,OnDestroy {
     {value: 'Unpaid',name:'Unpaid'},
     {value: 'Adjusted',name:'Adjusted'},
     {value: 'initiated',name:'Initiated'},
-    {value: 'Failed',name: 'Failed'}
+    {value: 'failed',name: 'Failed'}
   ];
   selectedStatus: any;
   selectedPayoutStatus:any;
