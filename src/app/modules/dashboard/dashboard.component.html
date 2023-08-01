@@ -170,10 +170,11 @@
 
   <div class="col-sm-6">
   <div class="radius">
-    <span class="TxSm"><i class="fa fa-handshake-o"></i> Total ITR Filed(Original Returns)</span>&nbsp;
+    <span class="TxSm"><i class="fa fa-handshake-o"></i> Total ITR Filed</span>&nbsp;
     <span class="numTxBg">{{commissionData?.totalItrFiled || 'NA'}}</span>
     <!-- Inside Row -->
     <div class="row">
+      <span class="TxSm">Original Returns : </span>
       <div class="col-sm-2">
         <div class="radius1">
         <span class="numTxSm">{{commissionData?.itr1 || 'NA'}}</span><br>
@@ -210,6 +211,33 @@
         <span class="TxSm">ITR U</span><br>
       </div>
       </div>
+      </div>
+      <div class="row" style="margin-top: 10px;">
+        <span class="TxHd">Revised Returns : </span>
+        <div class="col-sm-3">
+          <div class="radius1">
+          <span class="numTxSm">{{commissionData?.itr1_revised || 'NA'}}</span><br>
+          <span class="TxSm">ITR1</span><br>
+        </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="radius1">
+          <span class="numTxSm">{{commissionData?.itr2_revised || 'NA'}}</span><br>
+          <span class="TxSm">ITR2</span><br>
+        </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="radius1">
+          <span class="numTxSm">{{commissionData?.itr3_revised || 'NA'}}</span><br>
+          <span class="TxSm">ITR3</span><br>
+        </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="radius1">
+          <span class="numTxSm">{{commissionData?.itr4_revised || 'NA'}}</span><br>
+          <span class="TxSm">ITR4</span><br>
+        </div>
+        </div>
       </div>
     <!-- Inside Row Ends -->
   </div>
