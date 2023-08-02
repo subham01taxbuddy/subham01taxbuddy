@@ -227,10 +227,8 @@ export class TeamReportDashboardComponent implements OnInit {
       (response: any) => {
         if (response.success) {
           this.commissionData = response?.data;
-          this.totalOriginal = this.commissionData.itr1 + this.commissionData.itr2 + this.commissionData.itr3
-                              this.commissionData.itr4 + this.commissionData.other + this.commissionData.itrU ;
-          this.totalRevised = this.commissionData.itr1_revised + this.commissionData.itr2_revised + this.commissionData.itr3_revised
-                              this.commissionData.itr4_revised ;
+          this.totalOriginal = this.commissionData.itr1 + this.commissionData.itr2 + this.commissionData.itr3 + this.commissionData.itr4 + this.commissionData.itrOther + this.commissionData.itrU ;
+          this.totalRevised = this.commissionData.itr1_revised + this.commissionData.itr2_revised + this.commissionData.itr3_revised + this.commissionData.itr4_revised ;
           console.log('original items',this.totalOriginal);
         } else {
           this.loading = false;

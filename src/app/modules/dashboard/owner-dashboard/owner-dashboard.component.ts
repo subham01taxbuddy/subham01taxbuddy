@@ -361,10 +361,8 @@ export class OwnerDashboardComponent implements OnInit {
         this.loading = false;
         if (response.success) {
           this.commissionData = response?.data;
-          this.totalOriginal = this.commissionData.itr1 + this.commissionData.itr2 + this.commissionData.itr3
-                              this.commissionData.itr4 + this.commissionData.other + this.commissionData.itrU ;
-          this.totalRevised = this.commissionData.itr1_revised + this.commissionData.itr2_revised + this.commissionData.itr3_revised
-                              this.commissionData.itr4_revised ;
+          this.totalOriginal = this.commissionData.itr1 + this.commissionData.itr2 + this.commissionData.itr3 + this.commissionData.itr4 + this.commissionData.itrOther + this.commissionData.itrU ;
+          this.totalRevised = this.commissionData.itr1_revised + this.commissionData.itr2_revised + this.commissionData.itr3_revised + this.commissionData.itr4_revised ;
         } else {
           this._toastMessageService.alert('error', response.message);
         }
