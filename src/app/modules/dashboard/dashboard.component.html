@@ -174,7 +174,7 @@
     <span class="numTxBg">{{commissionData?.totalItrFiled || 'NA'}}</span>
     <!-- Inside Row -->
     <div class="row">
-      <span class="TxSm">Original Returns : </span>
+      <span class="TxHd">Original Returns:<span class="numTxBg">{{totalOriginal || 'NA'}}</span></span>
       <div class="col-sm-2">
         <div class="radius1">
         <span class="numTxSm">{{commissionData?.itr1 || 'NA'}}</span><br>
@@ -213,7 +213,7 @@
       </div>
       </div>
       <div class="row" style="margin-top: 10px;">
-        <span class="TxHd">Revised Returns : </span>
+        <span class="TxHd">Revised Returns: <span class="numTxBg">{{totalRevised || 'NA'}}</span></span>
         <div class="col-sm-3">
           <div class="radius1">
           <span class="numTxSm">{{commissionData?.itr1_revised || 'NA'}}</span><br>
