@@ -19,7 +19,148 @@ import { UpdateManualFilingDialogComponent } from '../../shared/components/updat
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.css'],
 })
+
 export class SummaryComponent implements OnInit {
+  scheduleCfl: {
+    LossCFFromPrev13thYearFromAY: {
+      dateOfFiling: any;
+      LossFrmSpecifiedBusCF: Number;
+    };
+    LossCFFromPrev12thYearFromAY: {
+      dateOfFiling: any;
+      LossFrmSpecifiedBusCF: Number;
+    };
+    LossCFFromPrev11thYearFromAY: {
+      dateOfFiling: any;
+      LossFrmSpecifiedBusCF: Number;
+    };
+    LossCFFromPrev10thYearFromAY: {
+      dateOfFiling: any;
+      LossFrmSpecifiedBusCF: Number;
+    };
+    LossCFFromPrev9thYearFromAY: {
+      dateOfFiling: any;
+      LossFrmSpecifiedBusCF: Number;
+    };
+    LossCFFromPrev8thYearFromAY: {
+      dateOfFiling: any;
+      hpLoss: Number;
+      broughtForwardBusLoss: Number;
+      BusLossOthThanSpecifiedLossCF: Number;
+      LossFrmSpecifiedBusCF: Number;
+      stcgLoss: Number;
+      ltcgLoss: Number;
+    };
+    LossCFFromPrev7thYearFromAY: {
+      dateOfFiling: any;
+      hpLoss: Number;
+      broughtForwardBusLoss: Number;
+      BusLossOthThanSpecifiedLossCF: Number;
+      LossFrmSpecifiedBusCF: Number;
+      stcgLoss: Number;
+      ltcgLoss: Number;
+    };
+    LossCFFromPrev6thYearFromAY: {
+      dateOfFiling: any;
+      hpLoss: Number;
+      broughtForwardBusLoss: Number;
+      BusLossOthThanSpecifiedLossCF: Number;
+      LossFrmSpecifiedBusCF: Number;
+      stcgLoss: Number;
+      ltcgLoss: Number;
+    };
+    LossCFFromPrev5thYearFromAY: {
+      dateOfFiling: any;
+      hpLoss: Number;
+      broughtForwardBusLoss: Number;
+      BusLossOthThanSpecifiedLossCF: Number;
+      LossFrmSpecifiedBusCF: Number;
+      stcgLoss: Number;
+      ltcgLoss: Number;
+    };
+    LossCFFromPrev4thYearFromAY: {
+      dateOfFiling: any;
+      hpLoss: Number;
+      broughtForwardBusLoss: Number;
+      BusLossOthThanSpecifiedLossCF: Number;
+      LossFrmSpecifiedBusCF: Number;
+      stcgLoss: Number;
+      ltcgLoss: Number;
+      OthSrcLossRaceHorseCF: Number;
+      lossFromSpeculativeBus: Number;
+    };
+    LossCFFromPrev3rdYearFromAY: {
+      dateOfFiling: any;
+      hpLoss: Number;
+      broughtForwardBusLoss: Number;
+      BusLossOthThanSpecifiedLossCF: Number;
+      LossFrmSpecifiedBusCF: Number;
+      stcgLoss: Number;
+      ltcgLoss: Number;
+      OthSrcLossRaceHorseCF: Number;
+      lossFromSpeculativeBus: Number;
+    };
+    LossCFPrevAssmntYear: {
+      dateOfFiling: any;
+      hpLoss: Number;
+      broughtForwardBusLoss: Number;
+      BusLossOthThanSpecifiedLossCF: Number;
+      LossFrmSpecifiedBusCF: Number;
+      stcgLoss: Number;
+      ltcgLoss: Number;
+      OthSrcLossRaceHorseCF: Number;
+      lossFromSpeculativeBus: Number;
+    };
+    LossCFCurrentAssmntYear: {
+      dateOfFiling: any;
+      hpLoss: Number;
+      broughtForwardBusLoss: Number;
+      BusLossOthThanSpecifiedLossCF: Number;
+      LossFrmSpecifiedBusCF: Number;
+      stcgLoss: Number;
+      ltcgLoss: Number;
+      OthSrcLossRaceHorseCF: Number;
+      lossFromSpeculativeBus: Number;
+    };
+    TotalOfBFLossesEarlierYrs: {
+      totalBroughtForwardHpLoss: Number;
+      totalBroughtForwardBusLoss: Number;
+      totalBroughtForwardBusLossOthThanSpecifiedLossCF: Number;
+      totalBroughtForwardLossFrmSpecifiedBusCF: Number;
+      totalBroughtForwardStcgLoss: Number;
+      totalBroughtForwardLtcgLoss: Number;
+      totalBroughtForwardOthSrcLossRaceHorseCF: Number;
+      totalBroughtForwardLossSpeculativeBus: Number;
+    };
+    AdjTotBFLossInBFLA: {
+      adjInBflHpLoss: Number;
+      adjInBflBusLossOthThanSpecifiedLossCF: Number;
+      adjInBflLossFrmSpecifiedBusCF: Number;
+      adjInBflStcgLoss: Number;
+      adjInBflLtcgLoss: Number;
+      adjInBflOthSrcLossRaceHorseCF: Number;
+      adjInBflSpeculativeBus: Number;
+    };
+    CurrentAYloss: {
+      currentAyHpLoss: Number;
+      currentAyBusLossOthThanSpecifiedLossCF: Number;
+      currentAyLossFrmSpecifiedBusCF: Number;
+      currentAyStcgLoss: Number;
+      currentAyLtcgLoss: Number;
+      currentAyOthSrcLossRaceHorseCF: Number;
+      currentAySpeculativeBus: Number;
+    };
+    TotalLossCFSummary: {
+      totalLossCFHpLoss: Number;
+      totalLossCFBusLossOthThanSpecifiedLossCF: Number;
+      totalLossCFLossFrmSpecifiedBusCF: Number;
+      totalLossCFStcgLoss: Number;
+      totalLossCFLtcgLoss: Number;
+      totalLossCFOthSrcLossRaceHorseCF: Number;
+      totalLossCFSpeculativeBus: Number;
+    };
+    TotalOfAllLossCFSummary: Number;
+  };
   loading: boolean = false;
   disposable: any;
   summaryDetail: any;
