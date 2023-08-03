@@ -55,6 +55,8 @@ export class DashboardComponent implements OnInit {
   today: Date;
   itrOverview: any;
   hideCommission: boolean;
+  totalOriginal:number;
+  totalRevised:number;
 
   constructor(
     private userMsService: UserMsService,
@@ -298,6 +300,8 @@ export class DashboardComponent implements OnInit {
       (response: any) => {
         if (response.success) {
           this.commissionData = response?.data;
+          this.totalOriginal = this.commissionData.itr1 + this.commissionData.itr2 + this.commissionData.itr3 + this.commissionData.itr4 + this.commissionData.itrOther + this.commissionData.itrU ;
+          this.totalRevised = this.commissionData.itr1_revised + this.commissionData.itr2_revised + this.commissionData.itr3_revised + this.commissionData.itr4_revised ;
         } else {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
