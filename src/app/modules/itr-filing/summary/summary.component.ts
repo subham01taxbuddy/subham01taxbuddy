@@ -4249,7 +4249,9 @@ export class SummaryComponent implements OnInit {
                       currentAyHpLoss:
                         this.finalSummary?.assessment?.currentYearLosses
                           ?.housePropertyLoss,
-                      currentAyBusLossOthThanSpecifiedLossCF: 0,
+                      currentAyBusLossOthThanSpecifiedLossCF:
+                        this.finalSummary?.assessment?.currentYearLosses
+                          ?.businessLoss,
                       currentAyLossFrmSpecifiedBusCF: 0,
                       currentAyStcgLoss:
                         this.finalSummary?.assessment?.currentYearLosses
@@ -4267,7 +4269,10 @@ export class SummaryComponent implements OnInit {
                         this.finalSummary?.assessment
                           ?.totalLossCarriedForwardedToFutureYears
                           ?.housePropertyLoss,
-                      totalLossCFBusLossOthThanSpecifiedLossCF: 0,
+                      totalLossCFBusLossOthThanSpecifiedLossCF:
+                        this.finalSummary?.assessment
+                          ?.totalLossCarriedForwardedToFutureYears
+                          ?.broughtForwordBusinessLoss,
                       totalLossCFLossFrmSpecifiedBusCF: 0,
                       totalLossCFStcgLoss:
                         this.finalSummary?.assessment
@@ -4291,7 +4296,10 @@ export class SummaryComponent implements OnInit {
                         ?.totalLossCarriedForwardedToFutureYears?.LTCGLoss +
                       this.finalSummary?.assessment
                         ?.totalLossCarriedForwardedToFutureYears
-                        ?.speculativeBusinessLoss,
+                        ?.speculativeBusinessLoss +
+                      this.finalSummary?.assessment
+                        ?.totalLossCarriedForwardedToFutureYears
+                        ?.broughtForwordBusinessLoss,
                   },
                   totalTax: {
                     taxAtNormalRate:
@@ -5701,7 +5709,9 @@ export class SummaryComponent implements OnInit {
                     currentAyHpLoss:
                       this.finalSummary?.assessment?.currentYearLosses
                         ?.housePropertyLoss,
-                    currentAyBusLossOthThanSpecifiedLossCF: 0,
+                    currentAyBusLossOthThanSpecifiedLossCF:
+                      this.finalSummary?.assessment?.currentYearLosses
+                        ?.businessLoss,
                     currentAyLossFrmSpecifiedBusCF: 0,
                     currentAyStcgLoss:
                       this.finalSummary?.assessment?.currentYearLosses
@@ -5719,7 +5729,10 @@ export class SummaryComponent implements OnInit {
                       this.finalSummary?.assessment
                         ?.totalLossCarriedForwardedToFutureYears
                         ?.housePropertyLoss,
-                    totalLossCFBusLossOthThanSpecifiedLossCF: 0,
+                    totalLossCFBusLossOthThanSpecifiedLossCF:
+                      this.finalSummary?.assessment
+                        ?.totalLossCarriedForwardedToFutureYears
+                        ?.broughtForwordBusinessLoss,
                     totalLossCFLossFrmSpecifiedBusCF: 0,
                     totalLossCFStcgLoss:
                       this.finalSummary?.assessment
@@ -5743,7 +5756,10 @@ export class SummaryComponent implements OnInit {
                       ?.totalLossCarriedForwardedToFutureYears?.LTCGLoss +
                     this.finalSummary?.assessment
                       ?.totalLossCarriedForwardedToFutureYears
-                      ?.speculativeBusinessLoss,
+                      ?.speculativeBusinessLoss +
+                    this.finalSummary?.assessment
+                      ?.totalLossCarriedForwardedToFutureYears
+                      ?.broughtForwordBusinessLoss,
                 },
                 totalTax: {
                   taxAtNormalRate:

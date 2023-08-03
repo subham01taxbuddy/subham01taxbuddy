@@ -491,10 +491,7 @@
                   </mat-expansion-panel>
 
                   <!-- *******************Income from House Property ************************** -->
-                  <mat-expansion-panel
-                    class="color-panel accordion-border"
-                    #HP
-                  >
+                  <mat-expansion-panel class="color-panel accordion-border" #HP>
                     <mat-expansion-panel-header>
                       <div
                         class="font80"
@@ -2865,6 +2862,1009 @@
                     </table>
                   </mat-expansion-panel>
 
+                  <!-- ****************************** Schedule cfl ************************************* -->
+                  <mat-expansion-panel
+                    class="color-panel accordion-border"
+                    [disabled]="[
+                      finalCalculations?.lossesToBeCarriedForward?.cflTotal ===
+                      0
+                        ? true
+                        : false
+                    ]"
+                    #lossCarryFwd
+                  >
+                    <mat-expansion-panel-header>
+                      <div
+                        class="font80"
+                        style="width: 100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                      >
+                        <div class="nav nav-stacked">
+                          <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
+                            17. Losses To Be Carried Forward (CFL)
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="AdjAr1">
+                              <mat-icon *ngIf="!lossCarryFwd.expanded"
+                                >keyboard_arrow_down
+                              </mat-icon>
+                              <mat-icon *ngIf="lossCarryFwd.expanded"
+                                >keyboard_arrow_up
+                              </mat-icon>
+                            </div>
+                            <label class="rtNumb1">
+                              <i class="material-icons icRup">&#8377;</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.scheduleCfl
+                                    ?.TotalOfAllLossCFSummary
+                                    ? finalCalculations?.scheduleCfl
+                                        ?.TotalOfAllLossCFSummary
+                                    : 0
+                                )
+                              }}</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </mat-expansion-panel-header>
+
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      style="margin-top: 20px"
+                    >
+                      <thead>
+                        <tr>
+                          <th>
+                            <b>Assessment Year</b>
+                          </th>
+                          <th>
+                            <b>Date of Filing</b>
+                          </th>
+                          <th>
+                            <b>House property loss</b>
+                          </th>
+                          <th>
+                            <b
+                              >Other than speculative & specified business
+                              loss</b
+                            >
+                          </th>
+                          <th>
+                            <b>Loss from speculative business</b>
+                          </th>
+                          <th>
+                            <b>Loss from specified business</b>
+                          </th>
+                          <th>
+                            <b>Short term capital loss</b>
+                          </th>
+                          <th>
+                            <b>Long term capital loss</b>
+                          </th>
+                          <th>
+                            <b>Loss from owning & maintaining horses</b>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <!-- 13th Assessment Year -->
+                        <tr
+                          *ngIf="
+                            finalCalculations?.scheduleCfl
+                              ?.LossCFFromPrev13thYearFromAY
+                              ?.LossFrmSpecifiedBusCF > 0
+                          "
+                        >
+                          <!-- Assessment year -->
+                          <td>2010-2011</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev13thYearFromAY?.dateOfFiling
+                            }}
+                          </td>
+                          <!-- house property loss -->
+                          <td>0</td>
+                          <!-- Other than speculative and specified business -->
+                          <td>0</td>
+                          <!-- loss from speculative business  -->
+                          <td>0</td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev13thYearFromAY
+                                ?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>0</td>
+                          <!-- long term capital loss  -->
+                          <td>0</td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>0</td>
+                        </tr>
+
+                        <!-- 12th Assessment Year -->
+                        <tr
+                          *ngIf="
+                            finalCalculations?.scheduleCfl
+                              ?.LossCFFromPrev12thYearFromAY
+                              ?.LossFrmSpecifiedBusCF > 0
+                          "
+                        >
+                          <!-- Assessment year -->
+                          <td>2011-2012</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev12thYearFromAY?.dateOfFiling
+                            }}
+                            <!-- house property loss -->
+                          </td>
+
+                          <td>0</td>
+                          <!-- Other than speculative and specified business -->
+                          <td>0</td>
+                          <!-- loss from speculative business  -->
+                          <td>0</td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev12thYearFromAY
+                                ?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>0</td>
+                          <!-- long term capital loss  -->
+                          <td>0</td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>0</td>
+                        </tr>
+
+                        <!-- 11th Assessment Year -->
+                        <tr
+                          *ngIf="
+                            finalCalculations?.scheduleCfl
+                              ?.LossCFFromPrev11thYearFromAY
+                              ?.LossFrmSpecifiedBusCF > 0
+                          "
+                        >
+                          <!-- Assessment year -->
+                          <td>2012-2013</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev11thYearFromAY?.dateOfFiling
+                            }}
+                          </td>
+                          <!-- house property loss -->
+                          <td>0</td>
+                          <!-- Other than speculative and specified business -->
+                          <td>0</td>
+                          <!-- loss from speculative business  -->
+                          <td>0</td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev11thYearFromAY
+                                ?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>0</td>
+                          <!-- long term capital loss  -->
+                          <td>0</td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>0</td>
+                        </tr>
+
+                        <!-- 10th Assessment Year -->
+                        <tr
+                          *ngIf="
+                            finalCalculations?.scheduleCfl
+                              ?.LossCFFromPrev10thYearFromAY
+                              ?.LossFrmSpecifiedBusCF > 0
+                          "
+                        >
+                          <!-- Assessment year -->
+                          <td>2013-2014</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev10thYearFromAY?.dateOfFiling
+                            }}
+                          </td>
+                          <!-- house property loss -->
+                          <td>0</td>
+                          <!-- Other than speculative and specified business -->
+                          <td>0</td>
+                          <!-- loss from speculative business  -->
+                          <td>0</td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev10thYearFromAY
+                                ?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>0</td>
+                          <!-- long term capital loss  -->
+                          <td>0</td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>0</td>
+                        </tr>
+
+                        <!-- 9th Assessment Year -->
+                        <tr
+                          *ngIf="
+                            finalCalculations?.scheduleCfl
+                              ?.LossCFFromPrev9thYearFromAY
+                              ?.LossFrmSpecifiedBusCF > 0
+                          "
+                        >
+                          <!-- Assessment year -->
+                          <td>2014-2015</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev9thYearFromAY?.dateOfFiling
+                            }}
+                          </td>
+                          <!-- house property loss -->
+                          <td>0</td>
+                          <!-- Other than speculative and specified business -->
+                          <td>0</td>
+                          <!-- loss from speculative business  -->
+                          <td>0</td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev9thYearFromAY
+                                ?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>0</td>
+                          <!-- long term capital loss  -->
+                          <td>0</td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>0</td>
+                        </tr>
+
+                        <!-- 8th Assessment Year -->
+                        <tr>
+                          <!-- Assessment year -->
+                          <td>2015-2016</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev8thYearFromAY?.dateOfFiling
+                            }}
+                          </td>
+                          <!-- house property loss -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev8thYearFromAY?.hpLoss
+                            }}
+                          </td>
+                          <!-- Other than speculative and specified business -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev8thYearFromAY
+                                ?.broughtForwardBusLoss
+                            }}
+                          </td>
+                          <!-- loss from speculative business  -->
+                          <td>0</td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev8thYearFromAY
+                                ?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev8thYearFromAY?.stcgLoss
+                            }}
+                          </td>
+                          <!-- long term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev8thYearFromAY?.ltcgLoss
+                            }}
+                          </td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>0</td>
+                        </tr>
+
+                        <!-- 7th Assessment Year -->
+                        <tr>
+                          <!-- Assessment year -->
+                          <td>2016-2017</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev7thYearFromAY?.dateOfFiling
+                            }}
+                          </td>
+                          <!-- house property loss -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev7thYearFromAY?.hpLoss
+                            }}
+                          </td>
+                          <!-- Other than speculative and specified business -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev7thYearFromAY
+                                ?.broughtForwardBusLoss
+                            }}
+                          </td>
+                          <!-- loss from speculative business  -->
+                          <td>0</td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev7thYearFromAY
+                                ?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev7thYearFromAY?.stcgLoss
+                            }}
+                          </td>
+                          <!-- long term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev7thYearFromAY?.ltcgLoss
+                            }}
+                          </td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>0</td>
+                        </tr>
+
+                        <!-- 6th Assessment Year -->
+                        <tr>
+                          <!-- Assessment year -->
+                          <td>2017-2018</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev6thYearFromAY?.dateOfFiling
+                            }}
+                          </td>
+                          <!-- house property loss -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev6thYearFromAY?.hpLoss
+                            }}
+                          </td>
+                          <!-- Other than speculative and specified business -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev6thYearFromAY
+                                ?.broughtForwardBusLoss
+                            }}
+                          </td>
+                          <!-- loss from speculative business  -->
+                          <td>0</td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev6thYearFromAY
+                                ?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev6thYearFromAY?.stcgLoss
+                            }}
+                          </td>
+                          <!-- long term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev6thYearFromAY?.ltcgLoss
+                            }}
+                          </td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>0</td>
+                        </tr>
+
+                        <!-- 5th Assessment Year -->
+                        <tr>
+                          <!-- Assessment year -->
+                          <td>2018-2019</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev5thYearFromAY?.dateOfFiling
+                            }}
+                          </td>
+                          <!-- house property loss -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev5thYearFromAY?.hpLoss
+                            }}
+                          </td>
+                          <!-- Other than speculative and specified business -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev5thYearFromAY
+                                ?.broughtForwardBusLoss
+                            }}
+                          </td>
+                          <!-- loss from speculative business  -->
+                          <td>0</td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev5thYearFromAY
+                                ?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev5thYearFromAY?.stcgLoss
+                            }}
+                          </td>
+                          <!-- long term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev5thYearFromAY?.ltcgLoss
+                            }}
+                          </td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>0</td>
+                        </tr>
+
+                        <!-- 4th Assessment Year -->
+                        <tr>
+                          <!-- Assessment year -->
+                          <td>2019-2020</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev4thYearFromAY?.dateOfFiling
+                            }}
+                          </td>
+                          <!-- house property loss -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev4thYearFromAY?.hpLoss
+                            }}
+                          </td>
+                          <!-- Other than speculative and specified business -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev4thYearFromAY
+                                ?.broughtForwardBusLoss
+                            }}
+                          </td>
+                          <!-- loss from speculative business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev4thYearFromAY
+                                ?.lossFromSpeculativeBus
+                            }}
+                          </td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev4thYearFromAY
+                                ?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev4thYearFromAY?.stcgLoss
+                            }}
+                          </td>
+                          <!-- long term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev4thYearFromAY?.ltcgLoss
+                            }}
+                          </td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev4thYearFromAY
+                                ?.OthSrcLossRaceHorseCF
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- 3rd Assessment Year -->
+                        <tr>
+                          <!-- Assessment year -->
+                          <td>2020-2021</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev3rdYearFromAY?.dateOfFiling
+                            }}
+                          </td>
+                          <!-- house property loss -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev3rdYearFromAY?.hpLoss
+                            }}
+                          </td>
+                          <!-- Other than speculative and specified business -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev3rdYearFromAY
+                                ?.broughtForwardBusLoss
+                            }}
+                          </td>
+                          <!-- loss from speculative business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev3rdYearFromAY
+                                ?.lossFromSpeculativeBus
+                            }}
+                          </td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev3rdYearFromAY
+                                ?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev3rdYearFromAY?.stcgLoss
+                            }}
+                          </td>
+                          <!-- long term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev3rdYearFromAY?.ltcgLoss
+                            }}
+                          </td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFFromPrev3rdYearFromAY
+                                ?.OthSrcLossRaceHorseCF
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- previous Assessment Year -->
+                        <tr>
+                          <!-- Assessment year -->
+                          <td>2021-2022</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFPrevAssmntYear?.dateOfFiling
+                            }}
+                          </td>
+                          <!-- house property loss -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFPrevAssmntYear?.hpLoss
+                            }}
+                          </td>
+                          <!-- Other than speculative and specified business -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFPrevAssmntYear?.broughtForwardBusLoss
+                            }}
+                          </td>
+                          <!-- loss from speculative business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFPrevAssmntYear?.lossFromSpeculativeBus
+                            }}
+                          </td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFPrevAssmntYear?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFPrevAssmntYear?.stcgLoss
+                            }}
+                          </td>
+                          <!-- long term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFPrevAssmntYear?.ltcgLoss
+                            }}
+                          </td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFPrevAssmntYear?.OthSrcLossRaceHorseCF
+                            }}
+                          </td>
+                        </tr>
+
+                        <!--current Assessment Year -->
+                        <tr>
+                          <!-- Assessment year -->
+                          <td>2022-2023</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFCurrentAssmntYear?.dateOfFiling
+                            }}
+                          </td>
+                          <!-- house property loss -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFCurrentAssmntYear?.hpLoss
+                            }}
+                          </td>
+                          <!-- Other than speculative and specified business -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFCurrentAssmntYear?.broughtForwardBusLoss
+                            }}
+                          </td>
+                          <!-- loss from speculative business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFCurrentAssmntYear
+                                ?.lossFromSpeculativeBus
+                            }}
+                          </td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFCurrentAssmntYear?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFCurrentAssmntYear?.stcgLoss
+                            }}
+                          </td>
+                          <!-- long term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFCurrentAssmntYear?.ltcgLoss
+                            }}
+                          </td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.LossCFCurrentAssmntYear?.OthSrcLossRaceHorseCF
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- total of earlier losses brought forward -->
+                        <tr>
+                          <!-- Assessment year -->
+                          <td><strong>Total of earlier losses b/f</strong></td>
+                          <!-- date of filing -->
+                          <td></td>
+                          <!-- house property loss -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.TotalOfBFLossesEarlierYrs
+                                ?.totalBroughtForwardHpLoss
+                            }}
+                          </td>
+                          <!-- Other than speculative and specified business -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.TotalOfBFLossesEarlierYrs
+                                ?.totalBroughtForwardBusLoss
+                            }}
+                          </td>
+                          <!-- loss from speculative business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.TotalOfBFLossesEarlierYrs
+                                ?.totalBroughtForwardLossSpeculativeBus
+                            }}
+                          </td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.TotalOfBFLossesEarlierYrs
+                                ?.totalBroughtForwardLossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.TotalOfBFLossesEarlierYrs
+                                ?.totalBroughtForwardStcgLoss
+                            }}
+                          </td>
+                          <!-- long term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.TotalOfBFLossesEarlierYrs
+                                ?.totalBroughtForwardLtcgLoss
+                            }}
+                          </td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl
+                                ?.TotalOfBFLossesEarlierYrs
+                                ?.totalBroughtForwardOthSrcLossRaceHorseCF
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- adjustment of above losses in bfla -->
+                        <tr>
+                          <!-- Assessment year -->
+                          <td>
+                            <strong>Adjustment of above losses in BFLA</strong>
+                          </td>
+                          <!-- date of filing -->
+                          <td></td>
+                          <!-- house property loss -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.AdjTotBFLossInBFLA
+                                ?.adjInBflHpLoss
+                            }}
+                          </td>
+                          <!-- Other than speculative and specified business -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.AdjTotBFLossInBFLA
+                                ?.adjInBflBusLossOthThanSpecifiedLossCF
+                            }}
+                          </td>
+                          <!-- loss from speculative business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.AdjTotBFLossInBFLA
+                                ?.adjInBflSpeculativeBus
+                            }}
+                          </td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.AdjTotBFLossInBFLA
+                                ?.adjInBflLossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.AdjTotBFLossInBFLA
+                                ?.adjInBflStcgLoss
+                            }}
+                          </td>
+                          <!-- long term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.AdjTotBFLossInBFLA
+                                ?.adjInBflLtcgLoss
+                            }}
+                          </td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.AdjTotBFLossInBFLA
+                                ?.adjInBflOthSrcLossRaceHorseCF
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- current year losses to be carried forward -->
+                        <tr>
+                          <!-- Assessment year -->
+                          <td>
+                            <strong
+                              >Current year losses to be carried forward</strong
+                            >
+                          </td>
+                          <!-- date of filing -->
+                          <td></td>
+                          <!-- house property loss -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.CurrentAYloss
+                                ?.currentAyHpLoss
+                            }}
+                          </td>
+                          <!-- Other than speculative and specified business -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.CurrentAYloss
+                                ?.currentAyBusLossOthThanSpecifiedLossCF
+                            }}
+                          </td>
+                          <!-- loss from speculative business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.CurrentAYloss
+                                ?.currentAySpeculativeBus
+                            }}
+                          </td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.CurrentAYloss
+                                ?.currentAyLossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.CurrentAYloss
+                                ?.currentAyStcgLoss
+                            }}
+                          </td>
+                          <!-- long term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.CurrentAYloss
+                                ?.currentAyLtcgLoss
+                            }}
+                          </td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.CurrentAYloss
+                                ?.currentAyOthSrcLossRaceHorseCF
+                            }}
+                          </td>
+                        </tr>
+
+                         <!-- total loss carried forward to future years -->
+                         <tr>
+                          <!-- Assessment year -->
+                          <td>
+                            <strong
+                              >Total loss carried forward to future years</strong
+                            >
+                          </td>
+                          <!-- date of filing -->
+                          <td></td>
+                          <!-- house property loss -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.TotalLossCFSummary
+                                ?.totalLossCFHpLoss
+                            }}
+                          </td>
+                          <!-- Other than speculative and specified business -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.TotalLossCFSummary
+                                ?.totalLossCFBusLossOthThanSpecifiedLossCF
+                            }}
+                          </td>
+                          <!-- loss from speculative business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.TotalLossCFSummary
+                                ?.totalLossCFSpeculativeBus
+                            }}
+                          </td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.TotalLossCFSummary
+                                ?.totalLossCFLossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.TotalLossCFSummary
+                                ?.totalLossCFStcgLoss
+                            }}
+                          </td>
+                          <!-- long term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.TotalLossCFSummary
+                                ?.totalLossCFLtcgLoss
+                            }}
+                          </td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCfl?.TotalLossCFSummary
+                                ?.totalLossCFOthSrcLossRaceHorseCF
+                            }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-expansion-panel>
                   <!-- *********************** Total Tax (A+B-C) ********************** -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
