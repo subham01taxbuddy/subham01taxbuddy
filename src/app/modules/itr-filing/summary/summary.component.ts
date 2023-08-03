@@ -19,148 +19,7 @@ import { UpdateManualFilingDialogComponent } from '../../shared/components/updat
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.css'],
 })
-
 export class SummaryComponent implements OnInit {
-  scheduleCfl: {
-    LossCFFromPrev13thYearFromAY: {
-      dateOfFiling: any;
-      LossFrmSpecifiedBusCF: Number;
-    };
-    LossCFFromPrev12thYearFromAY: {
-      dateOfFiling: any;
-      LossFrmSpecifiedBusCF: Number;
-    };
-    LossCFFromPrev11thYearFromAY: {
-      dateOfFiling: any;
-      LossFrmSpecifiedBusCF: Number;
-    };
-    LossCFFromPrev10thYearFromAY: {
-      dateOfFiling: any;
-      LossFrmSpecifiedBusCF: Number;
-    };
-    LossCFFromPrev9thYearFromAY: {
-      dateOfFiling: any;
-      LossFrmSpecifiedBusCF: Number;
-    };
-    LossCFFromPrev8thYearFromAY: {
-      dateOfFiling: any;
-      hpLoss: Number;
-      broughtForwardBusLoss: Number;
-      BusLossOthThanSpecifiedLossCF: Number;
-      LossFrmSpecifiedBusCF: Number;
-      stcgLoss: Number;
-      ltcgLoss: Number;
-    };
-    LossCFFromPrev7thYearFromAY: {
-      dateOfFiling: any;
-      hpLoss: Number;
-      broughtForwardBusLoss: Number;
-      BusLossOthThanSpecifiedLossCF: Number;
-      LossFrmSpecifiedBusCF: Number;
-      stcgLoss: Number;
-      ltcgLoss: Number;
-    };
-    LossCFFromPrev6thYearFromAY: {
-      dateOfFiling: any;
-      hpLoss: Number;
-      broughtForwardBusLoss: Number;
-      BusLossOthThanSpecifiedLossCF: Number;
-      LossFrmSpecifiedBusCF: Number;
-      stcgLoss: Number;
-      ltcgLoss: Number;
-    };
-    LossCFFromPrev5thYearFromAY: {
-      dateOfFiling: any;
-      hpLoss: Number;
-      broughtForwardBusLoss: Number;
-      BusLossOthThanSpecifiedLossCF: Number;
-      LossFrmSpecifiedBusCF: Number;
-      stcgLoss: Number;
-      ltcgLoss: Number;
-    };
-    LossCFFromPrev4thYearFromAY: {
-      dateOfFiling: any;
-      hpLoss: Number;
-      broughtForwardBusLoss: Number;
-      BusLossOthThanSpecifiedLossCF: Number;
-      LossFrmSpecifiedBusCF: Number;
-      stcgLoss: Number;
-      ltcgLoss: Number;
-      OthSrcLossRaceHorseCF: Number;
-      lossFromSpeculativeBus: Number;
-    };
-    LossCFFromPrev3rdYearFromAY: {
-      dateOfFiling: any;
-      hpLoss: Number;
-      broughtForwardBusLoss: Number;
-      BusLossOthThanSpecifiedLossCF: Number;
-      LossFrmSpecifiedBusCF: Number;
-      stcgLoss: Number;
-      ltcgLoss: Number;
-      OthSrcLossRaceHorseCF: Number;
-      lossFromSpeculativeBus: Number;
-    };
-    LossCFPrevAssmntYear: {
-      dateOfFiling: any;
-      hpLoss: Number;
-      broughtForwardBusLoss: Number;
-      BusLossOthThanSpecifiedLossCF: Number;
-      LossFrmSpecifiedBusCF: Number;
-      stcgLoss: Number;
-      ltcgLoss: Number;
-      OthSrcLossRaceHorseCF: Number;
-      lossFromSpeculativeBus: Number;
-    };
-    LossCFCurrentAssmntYear: {
-      dateOfFiling: any;
-      hpLoss: Number;
-      broughtForwardBusLoss: Number;
-      BusLossOthThanSpecifiedLossCF: Number;
-      LossFrmSpecifiedBusCF: Number;
-      stcgLoss: Number;
-      ltcgLoss: Number;
-      OthSrcLossRaceHorseCF: Number;
-      lossFromSpeculativeBus: Number;
-    };
-    TotalOfBFLossesEarlierYrs: {
-      totalBroughtForwardHpLoss: Number;
-      totalBroughtForwardBusLoss: Number;
-      totalBroughtForwardBusLossOthThanSpecifiedLossCF: Number;
-      totalBroughtForwardLossFrmSpecifiedBusCF: Number;
-      totalBroughtForwardStcgLoss: Number;
-      totalBroughtForwardLtcgLoss: Number;
-      totalBroughtForwardOthSrcLossRaceHorseCF: Number;
-      totalBroughtForwardLossSpeculativeBus: Number;
-    };
-    AdjTotBFLossInBFLA: {
-      adjInBflHpLoss: Number;
-      adjInBflBusLossOthThanSpecifiedLossCF: Number;
-      adjInBflLossFrmSpecifiedBusCF: Number;
-      adjInBflStcgLoss: Number;
-      adjInBflLtcgLoss: Number;
-      adjInBflOthSrcLossRaceHorseCF: Number;
-      adjInBflSpeculativeBus: Number;
-    };
-    CurrentAYloss: {
-      currentAyHpLoss: Number;
-      currentAyBusLossOthThanSpecifiedLossCF: Number;
-      currentAyLossFrmSpecifiedBusCF: Number;
-      currentAyStcgLoss: Number;
-      currentAyLtcgLoss: Number;
-      currentAyOthSrcLossRaceHorseCF: Number;
-      currentAySpeculativeBus: Number;
-    };
-    TotalLossCFSummary: {
-      totalLossCFHpLoss: Number;
-      totalLossCFBusLossOthThanSpecifiedLossCF: Number;
-      totalLossCFLossFrmSpecifiedBusCF: Number;
-      totalLossCFStcgLoss: Number;
-      totalLossCFLtcgLoss: Number;
-      totalLossCFOthSrcLossRaceHorseCF: Number;
-      totalLossCFSpeculativeBus: Number;
-    };
-    TotalOfAllLossCFSummary: Number;
-  };
   loading: boolean = false;
   disposable: any;
   summaryDetail: any;
@@ -549,6 +408,146 @@ export class SummaryComponent implements OnInit {
       }[];
       lossSetOffDuringYear: Number;
       cflTotal: Number;
+    };
+    scheduleCfl: {
+      LossCFFromPrev13thYearFromAY: {
+        dateOfFiling: any;
+        LossFrmSpecifiedBusCF: Number;
+      };
+      LossCFFromPrev12thYearFromAY: {
+        dateOfFiling: any;
+        LossFrmSpecifiedBusCF: Number;
+      };
+      LossCFFromPrev11thYearFromAY: {
+        dateOfFiling: any;
+        LossFrmSpecifiedBusCF: Number;
+      };
+      LossCFFromPrev10thYearFromAY: {
+        dateOfFiling: any;
+        LossFrmSpecifiedBusCF: Number;
+      };
+      LossCFFromPrev9thYearFromAY: {
+        dateOfFiling: any;
+        LossFrmSpecifiedBusCF: Number;
+      };
+      LossCFFromPrev8thYearFromAY: {
+        dateOfFiling: any;
+        hpLoss: Number;
+        broughtForwardBusLoss: Number;
+        BusLossOthThanSpecifiedLossCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        stcgLoss: Number;
+        ltcgLoss: Number;
+      };
+      LossCFFromPrev7thYearFromAY: {
+        dateOfFiling: any;
+        hpLoss: Number;
+        broughtForwardBusLoss: Number;
+        BusLossOthThanSpecifiedLossCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        stcgLoss: Number;
+        ltcgLoss: Number;
+      };
+      LossCFFromPrev6thYearFromAY: {
+        dateOfFiling: any;
+        hpLoss: Number;
+        broughtForwardBusLoss: Number;
+        BusLossOthThanSpecifiedLossCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        stcgLoss: Number;
+        ltcgLoss: Number;
+      };
+      LossCFFromPrev5thYearFromAY: {
+        dateOfFiling: any;
+        hpLoss: Number;
+        broughtForwardBusLoss: Number;
+        BusLossOthThanSpecifiedLossCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        stcgLoss: Number;
+        ltcgLoss: Number;
+      };
+      LossCFFromPrev4thYearFromAY: {
+        dateOfFiling: any;
+        hpLoss: Number;
+        broughtForwardBusLoss: Number;
+        BusLossOthThanSpecifiedLossCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        stcgLoss: Number;
+        ltcgLoss: Number;
+        OthSrcLossRaceHorseCF: Number;
+        lossFromSpeculativeBus: Number;
+      };
+      LossCFFromPrev3rdYearFromAY: {
+        dateOfFiling: any;
+        hpLoss: Number;
+        broughtForwardBusLoss: Number;
+        BusLossOthThanSpecifiedLossCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        stcgLoss: Number;
+        ltcgLoss: Number;
+        OthSrcLossRaceHorseCF: Number;
+        lossFromSpeculativeBus: Number;
+      };
+      LossCFPrevAssmntYear: {
+        dateOfFiling: any;
+        hpLoss: Number;
+        broughtForwardBusLoss: Number;
+        BusLossOthThanSpecifiedLossCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        stcgLoss: Number;
+        ltcgLoss: Number;
+        OthSrcLossRaceHorseCF: Number;
+        lossFromSpeculativeBus: Number;
+      };
+      LossCFCurrentAssmntYear: {
+        dateOfFiling: any;
+        hpLoss: Number;
+        broughtForwardBusLoss: Number;
+        BusLossOthThanSpecifiedLossCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        stcgLoss: Number;
+        ltcgLoss: Number;
+        OthSrcLossRaceHorseCF: Number;
+        lossFromSpeculativeBus: Number;
+      };
+      TotalOfBFLossesEarlierYrs: {
+        totalBroughtForwardHpLoss: Number;
+        totalBroughtForwardBusLoss: Number;
+        totalBroughtForwardBusLossOthThanSpecifiedLossCF: Number;
+        totalBroughtForwardLossFrmSpecifiedBusCF: Number;
+        totalBroughtForwardStcgLoss: Number;
+        totalBroughtForwardLtcgLoss: Number;
+        totalBroughtForwardOthSrcLossRaceHorseCF: Number;
+        totalBroughtForwardLossSpeculativeBus: Number;
+      };
+      AdjTotBFLossInBFLA: {
+        adjInBflHpLoss: Number;
+        adjInBflBusLossOthThanSpecifiedLossCF: Number;
+        adjInBflLossFrmSpecifiedBusCF: Number;
+        adjInBflStcgLoss: Number;
+        adjInBflLtcgLoss: Number;
+        adjInBflOthSrcLossRaceHorseCF: Number;
+        adjInBflSpeculativeBus: Number;
+      };
+      CurrentAYloss: {
+        currentAyHpLoss: Number;
+        currentAyBusLossOthThanSpecifiedLossCF: Number;
+        currentAyLossFrmSpecifiedBusCF: Number;
+        currentAyStcgLoss: Number;
+        currentAyLtcgLoss: Number;
+        currentAyOthSrcLossRaceHorseCF: Number;
+        currentAySpeculativeBus: Number;
+      };
+      TotalLossCFSummary: {
+        totalLossCFHpLoss: Number;
+        totalLossCFBusLossOthThanSpecifiedLossCF: Number;
+        totalLossCFLossFrmSpecifiedBusCF: Number;
+        totalLossCFStcgLoss: Number;
+        totalLossCFLtcgLoss: Number;
+        totalLossCFOthSrcLossRaceHorseCF: Number;
+        totalLossCFSpeculativeBus: Number;
+      };
+      TotalOfAllLossCFSummary: Number;
     };
     totalTax: {
       taxAtNormalRate: Number;
@@ -1213,6 +1212,146 @@ export class SummaryComponent implements OnInit {
               ],
               lossSetOffDuringYear: 0,
               cflTotal: 0,
+            },
+            scheduleCfl: {
+              LossCFFromPrev13thYearFromAY: {
+                dateOfFiling: 0,
+                LossFrmSpecifiedBusCF: 0,
+              },
+              LossCFFromPrev12thYearFromAY: {
+                dateOfFiling: 0,
+                LossFrmSpecifiedBusCF: 0,
+              },
+              LossCFFromPrev11thYearFromAY: {
+                dateOfFiling: 0,
+                LossFrmSpecifiedBusCF: 0,
+              },
+              LossCFFromPrev10thYearFromAY: {
+                dateOfFiling: 0,
+                LossFrmSpecifiedBusCF: 0,
+              },
+              LossCFFromPrev9thYearFromAY: {
+                dateOfFiling: 0,
+                LossFrmSpecifiedBusCF: 0,
+              },
+              LossCFFromPrev8thYearFromAY: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+              },
+              LossCFFromPrev7thYearFromAY: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+              },
+              LossCFFromPrev6thYearFromAY: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+              },
+              LossCFFromPrev5thYearFromAY: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+              },
+              LossCFFromPrev4thYearFromAY: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+                OthSrcLossRaceHorseCF: 0,
+                lossFromSpeculativeBus: 0,
+              },
+              LossCFFromPrev3rdYearFromAY: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+                OthSrcLossRaceHorseCF: 0,
+                lossFromSpeculativeBus: 0,
+              },
+              LossCFPrevAssmntYear: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+                OthSrcLossRaceHorseCF: 0,
+                lossFromSpeculativeBus: 0,
+              },
+              LossCFCurrentAssmntYear: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+                OthSrcLossRaceHorseCF: 0,
+                lossFromSpeculativeBus: 0,
+              },
+              TotalOfBFLossesEarlierYrs: {
+                totalBroughtForwardHpLoss: 0,
+                totalBroughtForwardBusLoss: 0,
+                totalBroughtForwardBusLossOthThanSpecifiedLossCF: 0,
+                totalBroughtForwardLossFrmSpecifiedBusCF: 0,
+                totalBroughtForwardStcgLoss: 0,
+                totalBroughtForwardLtcgLoss: 0,
+                totalBroughtForwardOthSrcLossRaceHorseCF: 0,
+                totalBroughtForwardLossSpeculativeBus: 0,
+              },
+              AdjTotBFLossInBFLA: {
+                adjInBflHpLoss: 0,
+                adjInBflBusLossOthThanSpecifiedLossCF: 0,
+                adjInBflLossFrmSpecifiedBusCF: 0,
+                adjInBflStcgLoss: 0,
+                adjInBflLtcgLoss: 0,
+                adjInBflOthSrcLossRaceHorseCF: 0,
+                adjInBflSpeculativeBus: 0,
+              },
+              CurrentAYloss: {
+                currentAyHpLoss: 0,
+                currentAyBusLossOthThanSpecifiedLossCF: 0,
+                currentAyLossFrmSpecifiedBusCF: 0,
+                currentAyStcgLoss: 0,
+                currentAyLtcgLoss: 0,
+                currentAyOthSrcLossRaceHorseCF: 0,
+                currentAySpeculativeBus: 0,
+              },
+              TotalLossCFSummary: {
+                totalLossCFHpLoss: 0,
+                totalLossCFBusLossOthThanSpecifiedLossCF: 0,
+                totalLossCFLossFrmSpecifiedBusCF: 0,
+                totalLossCFStcgLoss: 0,
+                totalLossCFLtcgLoss: 0,
+                totalLossCFOthSrcLossRaceHorseCF: 0,
+                totalLossCFSpeculativeBus: 0,
+              },
+              TotalOfAllLossCFSummary: 0,
             },
             totalTax: {
               taxAtNormalRate:
@@ -2539,6 +2678,146 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                   ?.LossesOfCurrentYearCarriedFwd,
             },
+            scheduleCfl: {
+              LossCFFromPrev13thYearFromAY: {
+                dateOfFiling: 0,
+                LossFrmSpecifiedBusCF: 0,
+              },
+              LossCFFromPrev12thYearFromAY: {
+                dateOfFiling: 0,
+                LossFrmSpecifiedBusCF: 0,
+              },
+              LossCFFromPrev11thYearFromAY: {
+                dateOfFiling: 0,
+                LossFrmSpecifiedBusCF: 0,
+              },
+              LossCFFromPrev10thYearFromAY: {
+                dateOfFiling: 0,
+                LossFrmSpecifiedBusCF: 0,
+              },
+              LossCFFromPrev9thYearFromAY: {
+                dateOfFiling: 0,
+                LossFrmSpecifiedBusCF: 0,
+              },
+              LossCFFromPrev8thYearFromAY: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+              },
+              LossCFFromPrev7thYearFromAY: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+              },
+              LossCFFromPrev6thYearFromAY: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+              },
+              LossCFFromPrev5thYearFromAY: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+              },
+              LossCFFromPrev4thYearFromAY: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+                OthSrcLossRaceHorseCF: 0,
+                lossFromSpeculativeBus: 0,
+              },
+              LossCFFromPrev3rdYearFromAY: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+                OthSrcLossRaceHorseCF: 0,
+                lossFromSpeculativeBus: 0,
+              },
+              LossCFPrevAssmntYear: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+                OthSrcLossRaceHorseCF: 0,
+                lossFromSpeculativeBus: 0,
+              },
+              LossCFCurrentAssmntYear: {
+                dateOfFiling: 0,
+                hpLoss: 0,
+                broughtForwardBusLoss: 0,
+                BusLossOthThanSpecifiedLossCF: 0,
+                LossFrmSpecifiedBusCF: 0,
+                stcgLoss: 0,
+                ltcgLoss: 0,
+                OthSrcLossRaceHorseCF: 0,
+                lossFromSpeculativeBus: 0,
+              },
+              TotalOfBFLossesEarlierYrs: {
+                totalBroughtForwardHpLoss: 0,
+                totalBroughtForwardBusLoss: 0,
+                totalBroughtForwardBusLossOthThanSpecifiedLossCF: 0,
+                totalBroughtForwardLossFrmSpecifiedBusCF: 0,
+                totalBroughtForwardStcgLoss: 0,
+                totalBroughtForwardLtcgLoss: 0,
+                totalBroughtForwardOthSrcLossRaceHorseCF: 0,
+                totalBroughtForwardLossSpeculativeBus: 0,
+              },
+              AdjTotBFLossInBFLA: {
+                adjInBflHpLoss: 0,
+                adjInBflBusLossOthThanSpecifiedLossCF: 0,
+                adjInBflLossFrmSpecifiedBusCF: 0,
+                adjInBflStcgLoss: 0,
+                adjInBflLtcgLoss: 0,
+                adjInBflOthSrcLossRaceHorseCF: 0,
+                adjInBflSpeculativeBus: 0,
+              },
+              CurrentAYloss: {
+                currentAyHpLoss: 0,
+                currentAyBusLossOthThanSpecifiedLossCF: 0,
+                currentAyLossFrmSpecifiedBusCF: 0,
+                currentAyStcgLoss: 0,
+                currentAyLtcgLoss: 0,
+                currentAyOthSrcLossRaceHorseCF: 0,
+                currentAySpeculativeBus: 0,
+              },
+              TotalLossCFSummary: {
+                totalLossCFHpLoss: 0,
+                totalLossCFBusLossOthThanSpecifiedLossCF: 0,
+                totalLossCFLossFrmSpecifiedBusCF: 0,
+                totalLossCFStcgLoss: 0,
+                totalLossCFLtcgLoss: 0,
+                totalLossCFOthSrcLossRaceHorseCF: 0,
+                totalLossCFSpeculativeBus: 0,
+              },
+              TotalOfAllLossCFSummary: 0,
+            },
             totalTax: {
               taxAtNormalRate:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
@@ -3695,6 +3974,325 @@ export class SummaryComponent implements OnInit {
                         0
                       ),
                   },
+                  scheduleCfl: {
+                    LossCFFromPrev13thYearFromAY: {
+                      dateOfFiling: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                    },
+                    LossCFFromPrev12thYearFromAY: {
+                      dateOfFiling: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                    },
+                    LossCFFromPrev11thYearFromAY: {
+                      dateOfFiling: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                    },
+                    LossCFFromPrev10thYearFromAY: {
+                      dateOfFiling: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                    },
+                    LossCFFromPrev9thYearFromAY: {
+                      dateOfFiling: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                    },
+                    LossCFFromPrev8thYearFromAY: {
+                      dateOfFiling:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2015-16'
+                        )?.dateOfFiling,
+                      hpLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2015-16'
+                        )?.housePropertyLoss,
+                      broughtForwardBusLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2015-16'
+                        )?.broughtForwordBusinessLoss,
+                      BusLossOthThanSpecifiedLossCF: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                      stcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2015-16'
+                        )?.STCGLoss,
+                      ltcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2015-16'
+                        )?.LTCGLoss,
+                    },
+                    LossCFFromPrev7thYearFromAY: {
+                      dateOfFiling:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2016-17'
+                        )?.dateOfFiling,
+                      hpLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2016-17'
+                        )?.housePropertyLoss,
+                      broughtForwardBusLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2016-17'
+                        )?.broughtForwordBusinessLoss,
+                      BusLossOthThanSpecifiedLossCF: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                      stcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2016-17'
+                        )?.STCGLoss,
+                      ltcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2016-17'
+                        )?.LTCGLoss,
+                    },
+                    LossCFFromPrev6thYearFromAY: {
+                      dateOfFiling:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2017-18'
+                        )?.dateOfFiling,
+                      hpLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2017-18'
+                        )?.housePropertyLoss,
+                      broughtForwardBusLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2017-18'
+                        )?.broughtForwordBusinessLoss,
+                      BusLossOthThanSpecifiedLossCF: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                      stcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2017-18'
+                        )?.STCGLoss,
+                      ltcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2017-18'
+                        )?.LTCGLoss,
+                    },
+                    LossCFFromPrev5thYearFromAY: {
+                      dateOfFiling:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2018-19'
+                        )?.dateOfFiling,
+                      hpLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2018-19'
+                        )?.housePropertyLoss,
+                      broughtForwardBusLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2018-19'
+                        )?.broughtForwordBusinessLoss,
+                      BusLossOthThanSpecifiedLossCF: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                      stcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2018-19'
+                        )?.STCGLoss,
+                      ltcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2018-19'
+                        )?.LTCGLoss,
+                    },
+                    LossCFFromPrev4thYearFromAY: {
+                      dateOfFiling:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2019-20'
+                        )?.dateOfFiling,
+                      hpLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2019-20'
+                        )?.housePropertyLoss,
+                      broughtForwardBusLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2019-20'
+                        )?.broughtForwordBusinessLoss,
+                      BusLossOthThanSpecifiedLossCF: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                      stcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2019-20'
+                        )?.STCGLoss,
+                      ltcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2019-20'
+                        )?.LTCGLoss,
+                      OthSrcLossRaceHorseCF: 0,
+                      lossFromSpeculativeBus:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2019-20'
+                        )?.speculativeBusinessLoss,
+                    },
+                    LossCFFromPrev3rdYearFromAY: {
+                      dateOfFiling:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2020-21'
+                        )?.dateOfFiling,
+                      hpLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2020-21'
+                        )?.housePropertyLoss,
+                      broughtForwardBusLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2020-21'
+                        )?.broughtForwordBusinessLoss,
+                      BusLossOthThanSpecifiedLossCF: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                      stcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2020-21'
+                        )?.STCGLoss,
+                      ltcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2020-21'
+                        )?.LTCGLoss,
+                      OthSrcLossRaceHorseCF: 0,
+                      lossFromSpeculativeBus:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2020-21'
+                        )?.speculativeBusinessLoss,
+                    },
+                    LossCFPrevAssmntYear: {
+                      dateOfFiling:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2021-22'
+                        )?.dateOfFiling,
+                      hpLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2021-22'
+                        )?.housePropertyLoss,
+                      broughtForwardBusLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2021-22'
+                        )?.broughtForwordBusinessLoss,
+                      BusLossOthThanSpecifiedLossCF: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                      stcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2021-22'
+                        )?.STCGLoss,
+                      ltcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2021-22'
+                        )?.LTCGLoss,
+                      OthSrcLossRaceHorseCF: 0,
+                      lossFromSpeculativeBus:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2021-22'
+                        )?.speculativeBusinessLoss,
+                    },
+                    LossCFCurrentAssmntYear: {
+                      dateOfFiling:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2022-23'
+                        )?.dateOfFiling,
+                      hpLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2022-23'
+                        )?.housePropertyLoss,
+                      broughtForwardBusLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2022-23'
+                        )?.broughtForwordBusinessLoss,
+                      BusLossOthThanSpecifiedLossCF: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                      stcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2022-23'
+                        )?.STCGLoss,
+                      ltcgLoss:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2022-23'
+                        )?.LTCGLoss,
+                      OthSrcLossRaceHorseCF: 0,
+                      lossFromSpeculativeBus:
+                        this.finalSummary?.assessment?.pastYearLosses?.find(
+                          (year) => year.assessmentPastYear === '2022-23'
+                        )?.speculativeBusinessLoss,
+                    },
+                    TotalOfBFLossesEarlierYrs: {
+                      totalBroughtForwardHpLoss:
+                        this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                          ?.housePropertyLoss,
+                      totalBroughtForwardBusLoss:
+                        this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                          ?.broughtForwordBusinessLoss,
+                      totalBroughtForwardBusLossOthThanSpecifiedLossCF: 0,
+                      totalBroughtForwardLossFrmSpecifiedBusCF: 0,
+                      totalBroughtForwardStcgLoss:
+                        this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                          ?.STCGLoss,
+                      totalBroughtForwardLtcgLoss:
+                        this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                          ?.LTCGLoss,
+                      totalBroughtForwardOthSrcLossRaceHorseCF: 0,
+                      totalBroughtForwardLossSpeculativeBus:
+                        this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                          ?.speculativeBusinessLoss,
+                    },
+                    AdjTotBFLossInBFLA: {
+                      adjInBflHpLoss:
+                        this.finalSummary?.assessment
+                          ?.adjustmentofLossesInScheduleBFLA?.housePropertyLoss,
+                      adjInBflBusLossOthThanSpecifiedLossCF: 0,
+                      adjInBflLossFrmSpecifiedBusCF: 0,
+                      adjInBflStcgLoss:
+                        this.finalSummary?.assessment
+                          ?.adjustmentofLossesInScheduleBFLA?.STCGLoss,
+                      adjInBflLtcgLoss:
+                        this.finalSummary?.assessment
+                          ?.adjustmentofLossesInScheduleBFLA?.LTCGLoss,
+                      adjInBflOthSrcLossRaceHorseCF: 0,
+                      adjInBflSpeculativeBus:
+                        this.finalSummary?.assessment
+                          ?.adjustmentofLossesInScheduleBFLA
+                          ?.speculativeBusinessLoss,
+                    },
+                    CurrentAYloss: {
+                      currentAyHpLoss:
+                        this.finalSummary?.assessment?.currentYearLosses
+                          ?.housePropertyLoss,
+                      currentAyBusLossOthThanSpecifiedLossCF: 0,
+                      currentAyLossFrmSpecifiedBusCF: 0,
+                      currentAyStcgLoss:
+                        this.finalSummary?.assessment?.currentYearLosses
+                          ?.STCGLoss,
+                      currentAyLtcgLoss:
+                        this.finalSummary?.assessment?.currentYearLosses
+                          ?.LTCGLoss,
+                      currentAyOthSrcLossRaceHorseCF: 0,
+                      currentAySpeculativeBus:
+                        this.finalSummary?.assessment?.currentYearLosses
+                          ?.speculativeLoss,
+                    },
+                    TotalLossCFSummary: {
+                      totalLossCFHpLoss:
+                        this.finalSummary?.assessment
+                          ?.totalLossCarriedForwardedToFutureYears
+                          ?.housePropertyLoss,
+                      totalLossCFBusLossOthThanSpecifiedLossCF: 0,
+                      totalLossCFLossFrmSpecifiedBusCF: 0,
+                      totalLossCFStcgLoss:
+                        this.finalSummary?.assessment
+                          ?.totalLossCarriedForwardedToFutureYears?.STCGLoss,
+                      totalLossCFLtcgLoss:
+                        this.finalSummary?.assessment
+                          ?.totalLossCarriedForwardedToFutureYears?.LTCGLoss,
+                      totalLossCFOthSrcLossRaceHorseCF: 0,
+                      totalLossCFSpeculativeBus:
+                        this.finalSummary?.assessment
+                          ?.totalLossCarriedForwardedToFutureYears
+                          ?.speculativeBusinessLoss,
+                    },
+                    TotalOfAllLossCFSummary:
+                      this.finalSummary?.assessment
+                        ?.totalLossCarriedForwardedToFutureYears
+                        ?.housePropertyLoss +
+                      this.finalSummary?.assessment
+                        ?.totalLossCarriedForwardedToFutureYears?.STCGLoss +
+                      this.finalSummary?.assessment
+                        ?.totalLossCarriedForwardedToFutureYears?.LTCGLoss +
+                      this.finalSummary?.assessment
+                        ?.totalLossCarriedForwardedToFutureYears
+                        ?.speculativeBusinessLoss,
+                  },
                   totalTax: {
                     taxAtNormalRate:
                       this.finalSummary?.assessment?.taxSummary
@@ -4835,6 +5433,317 @@ export class SummaryComponent implements OnInit {
                       (total, item) => total + item.totalLoss,
                       0
                     ),
+                },
+                scheduleCfl: {
+                  LossCFFromPrev13thYearFromAY: {
+                    dateOfFiling: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                  },
+                  LossCFFromPrev12thYearFromAY: {
+                    dateOfFiling: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                  },
+                  LossCFFromPrev11thYearFromAY: {
+                    dateOfFiling: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                  },
+                  LossCFFromPrev10thYearFromAY: {
+                    dateOfFiling: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                  },
+                  LossCFFromPrev9thYearFromAY: {
+                    dateOfFiling: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                  },
+                  LossCFFromPrev8thYearFromAY: {
+                    dateOfFiling:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2015-16'
+                      )?.dateOfFiling,
+                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2015-16'
+                    )?.housePropertyLoss,
+                    broughtForwardBusLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2015-16'
+                      )?.broughtForwordBusinessLoss,
+                    BusLossOthThanSpecifiedLossCF: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                    stcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2015-16'
+                      )?.STCGLoss,
+                    ltcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2015-16'
+                      )?.LTCGLoss,
+                  },
+                  LossCFFromPrev7thYearFromAY: {
+                    dateOfFiling:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2016-17'
+                      )?.dateOfFiling,
+                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2016-17'
+                    )?.housePropertyLoss,
+                    broughtForwardBusLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2016-17'
+                      )?.broughtForwordBusinessLoss,
+                    BusLossOthThanSpecifiedLossCF: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                    stcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2016-17'
+                      )?.STCGLoss,
+                    ltcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2016-17'
+                      )?.LTCGLoss,
+                  },
+                  LossCFFromPrev6thYearFromAY: {
+                    dateOfFiling:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2017-18'
+                      )?.dateOfFiling,
+                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2017-18'
+                    )?.housePropertyLoss,
+                    broughtForwardBusLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2017-18'
+                      )?.broughtForwordBusinessLoss,
+                    BusLossOthThanSpecifiedLossCF: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                    stcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2017-18'
+                      )?.STCGLoss,
+                    ltcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2017-18'
+                      )?.LTCGLoss,
+                  },
+                  LossCFFromPrev5thYearFromAY: {
+                    dateOfFiling:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2018-19'
+                      )?.dateOfFiling,
+                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2018-19'
+                    )?.housePropertyLoss,
+                    broughtForwardBusLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2018-19'
+                      )?.broughtForwordBusinessLoss,
+                    BusLossOthThanSpecifiedLossCF: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                    stcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2018-19'
+                      )?.STCGLoss,
+                    ltcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2018-19'
+                      )?.LTCGLoss,
+                  },
+                  LossCFFromPrev4thYearFromAY: {
+                    dateOfFiling:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2019-20'
+                      )?.dateOfFiling,
+                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2019-20'
+                    )?.housePropertyLoss,
+                    broughtForwardBusLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2019-20'
+                      )?.broughtForwordBusinessLoss,
+                    BusLossOthThanSpecifiedLossCF: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                    stcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2019-20'
+                      )?.STCGLoss,
+                    ltcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2019-20'
+                      )?.LTCGLoss,
+                    OthSrcLossRaceHorseCF: 0,
+                    lossFromSpeculativeBus:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2019-20'
+                      )?.speculativeBusinessLoss,
+                  },
+                  LossCFFromPrev3rdYearFromAY: {
+                    dateOfFiling:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2020-21'
+                      )?.dateOfFiling,
+                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2020-21'
+                    )?.housePropertyLoss,
+                    broughtForwardBusLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2020-21'
+                      )?.broughtForwordBusinessLoss,
+                    BusLossOthThanSpecifiedLossCF: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                    stcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2020-21'
+                      )?.STCGLoss,
+                    ltcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2020-21'
+                      )?.LTCGLoss,
+                    OthSrcLossRaceHorseCF: 0,
+                    lossFromSpeculativeBus:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2020-21'
+                      )?.speculativeBusinessLoss,
+                  },
+                  LossCFPrevAssmntYear: {
+                    dateOfFiling:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2021-22'
+                      )?.dateOfFiling,
+                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2021-22'
+                    )?.housePropertyLoss,
+                    broughtForwardBusLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2021-22'
+                      )?.broughtForwordBusinessLoss,
+                    BusLossOthThanSpecifiedLossCF: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                    stcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2021-22'
+                      )?.STCGLoss,
+                    ltcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2021-22'
+                      )?.LTCGLoss,
+                    OthSrcLossRaceHorseCF: 0,
+                    lossFromSpeculativeBus:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2021-22'
+                      )?.speculativeBusinessLoss,
+                  },
+                  LossCFCurrentAssmntYear: {
+                    dateOfFiling:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2022-23'
+                      )?.dateOfFiling,
+                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2022-23'
+                    )?.housePropertyLoss,
+                    broughtForwardBusLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2022-23'
+                      )?.broughtForwordBusinessLoss,
+                    BusLossOthThanSpecifiedLossCF: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                    stcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2022-23'
+                      )?.STCGLoss,
+                    ltcgLoss:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2022-23'
+                      )?.LTCGLoss,
+                    OthSrcLossRaceHorseCF: 0,
+                    lossFromSpeculativeBus:
+                      this.finalSummary?.assessment?.pastYearLosses?.find(
+                        (year) => year.assessmentPastYear === '2022-23'
+                      )?.speculativeBusinessLoss,
+                  },
+                  TotalOfBFLossesEarlierYrs: {
+                    totalBroughtForwardHpLoss:
+                      this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                        ?.housePropertyLoss,
+                    totalBroughtForwardBusLoss:
+                      this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                        ?.broughtForwordBusinessLoss,
+                    totalBroughtForwardBusLossOthThanSpecifiedLossCF: 0,
+                    totalBroughtForwardLossFrmSpecifiedBusCF: 0,
+                    totalBroughtForwardStcgLoss:
+                      this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                        ?.STCGLoss,
+                    totalBroughtForwardLtcgLoss:
+                      this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                        ?.LTCGLoss,
+                    totalBroughtForwardOthSrcLossRaceHorseCF: 0,
+                    totalBroughtForwardLossSpeculativeBus:
+                      this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                        ?.speculativeBusinessLoss,
+                  },
+                  AdjTotBFLossInBFLA: {
+                    adjInBflHpLoss:
+                      this.finalSummary?.assessment
+                        ?.adjustmentofLossesInScheduleBFLA?.housePropertyLoss,
+                    adjInBflBusLossOthThanSpecifiedLossCF: 0,
+                    adjInBflLossFrmSpecifiedBusCF: 0,
+                    adjInBflStcgLoss:
+                      this.finalSummary?.assessment
+                        ?.adjustmentofLossesInScheduleBFLA?.STCGLoss,
+                    adjInBflLtcgLoss:
+                      this.finalSummary?.assessment
+                        ?.adjustmentofLossesInScheduleBFLA?.LTCGLoss,
+                    adjInBflOthSrcLossRaceHorseCF: 0,
+                    adjInBflSpeculativeBus:
+                      this.finalSummary?.assessment
+                        ?.adjustmentofLossesInScheduleBFLA
+                        ?.speculativeBusinessLoss,
+                  },
+                  CurrentAYloss: {
+                    currentAyHpLoss:
+                      this.finalSummary?.assessment?.currentYearLosses
+                        ?.housePropertyLoss,
+                    currentAyBusLossOthThanSpecifiedLossCF: 0,
+                    currentAyLossFrmSpecifiedBusCF: 0,
+                    currentAyStcgLoss:
+                      this.finalSummary?.assessment?.currentYearLosses
+                        ?.STCGLoss,
+                    currentAyLtcgLoss:
+                      this.finalSummary?.assessment?.currentYearLosses
+                        ?.LTCGLoss,
+                    currentAyOthSrcLossRaceHorseCF: 0,
+                    currentAySpeculativeBus:
+                      this.finalSummary?.assessment?.currentYearLosses
+                        ?.speculativeLoss,
+                  },
+                  TotalLossCFSummary: {
+                    totalLossCFHpLoss:
+                      this.finalSummary?.assessment
+                        ?.totalLossCarriedForwardedToFutureYears
+                        ?.housePropertyLoss,
+                    totalLossCFBusLossOthThanSpecifiedLossCF: 0,
+                    totalLossCFLossFrmSpecifiedBusCF: 0,
+                    totalLossCFStcgLoss:
+                      this.finalSummary?.assessment
+                        ?.totalLossCarriedForwardedToFutureYears?.STCGLoss,
+                    totalLossCFLtcgLoss:
+                      this.finalSummary?.assessment
+                        ?.totalLossCarriedForwardedToFutureYears?.LTCGLoss,
+                    totalLossCFOthSrcLossRaceHorseCF: 0,
+                    totalLossCFSpeculativeBus:
+                      this.finalSummary?.assessment
+                        ?.totalLossCarriedForwardedToFutureYears
+                        ?.speculativeBusinessLoss,
+                  },
+                  TotalOfAllLossCFSummary:
+                    this.finalSummary?.assessment
+                      ?.totalLossCarriedForwardedToFutureYears
+                      ?.housePropertyLoss +
+                    this.finalSummary?.assessment
+                      ?.totalLossCarriedForwardedToFutureYears?.STCGLoss +
+                    this.finalSummary?.assessment
+                      ?.totalLossCarriedForwardedToFutureYears?.LTCGLoss +
+                    this.finalSummary?.assessment
+                      ?.totalLossCarriedForwardedToFutureYears
+                      ?.speculativeBusinessLoss,
                 },
                 totalTax: {
                   taxAtNormalRate:
