@@ -70,6 +70,8 @@ export class ItrStatusDialogComponent implements OnInit {
   showAdharEriOtp: boolean;
   showBankEvcEriOtp: boolean;
   showDematEvcEriOtp: boolean;
+  showDueDate: boolean;
+  showLastFilingDate: boolean;
 
   constructor(
     public dialogRef: MatDialogRef<ItrStatusDialogComponent>,
@@ -142,8 +144,17 @@ export class ItrStatusDialogComponent implements OnInit {
       if (response.success) {
         this.itrFilingDueDate = moment(response.data.itrFilingDueDate).format('DD-MM-YYYY');
         let currentDate = moment(new Date()).format("MM/DD/YYYY");
-        let itrFilingDueDate = moment(response.data.itrFilingDueDate,);
-        this.noOFDueDays = itrFilingDueDate.diff(currentDate, 'days')
+        let itrFilingDueDate = moment(response.data.itrFilingDueDate);
+        let lateItrFilingDueDate = moment(response.data.lateItrFilingDueDate);
+        if (itrFilingDueDate > moment(new Date())) {
+          this.showDueDate = true;
+          this.noOFDueDays = itrFilingDueDate.diff(currentDate, 'days');
+        } else if (lateItrFilingDueDate > moment(new Date())) {
+          this.showLastFilingDate = true;
+          this.noOFDueDays = lateItrFilingDueDate.diff(currentDate, 'days');
+        } else if ((moment(response.data.itrFilingDueDate).format("MM/DD/YYYY") === currentDate) || (moment(response.data.lateItrFilingDueDate).format("MM/DD/YYYY") === currentDate)) {
+          this.noOFDueDays = 1;
+        }
         sessionStorage.setItem('itrFilingDueDate', this.itrFilingDueDate);
       } else {
         this.loading = false;

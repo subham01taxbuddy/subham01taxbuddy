@@ -2,73 +2,81 @@
     data.clientName }}</span></label>
 
 <button mat-dialog-close tabindex="-1" (click)="close()" style="float: right" class="tbd-btn-close">
-      <i class="fa fa-times" aria-hidden="true"></i>
+  <i class="fa fa-times" aria-hidden="true"></i>
 </button>
 <div>
   <div class="itr-progress">
     <div class="col-12">
-        <div class="row">
-            <div class="col-xl-7 col-lg-4 col-md-7 col-sm-5 col-4 mt-2 lftTx">
-                Your ITR is<br><b>{{progressPerCentage}}% complete</b>
-            </div>
-            <div class="col-xl-4 col-lg-8 col-md-5 col-sm-7 col-8 mt-3 mb-3 header-btn">
-                <mat-icon class="active-clock">schedule</mat-icon>
-                <span>ITR due date - {{noOFDueDays}} days away</span>
-            </div>
+      <div class="row">
+        <div class="col-xl-7 col-lg-4 col-md-7 col-sm-5 col-4 mt-2 lftTx">
+          Your ITR is<br><b>{{progressPerCentage}}% complete</b>
         </div>
+        <div class="col-xl-4 col-lg-8 col-md-5 col-sm-7 col-8 mt-3 mb-3 header-btn">
+          <mat-icon class="active-clock">schedule</mat-icon>
+          <span *ngIf="showDueDate">ITR due date - {{noOFDueDays}} days away</span>
+          <span *ngIf="showLastFilingDate">ITR last date - {{noOFDueDays}} days away </span>
+          <span *ngIf="noOFDueDays===1">ITR last date - {{noOFDueDays}} day away </span>
+        </div>
+      </div>
     </div>
   </div>
 
   <mat-progress-bar [value]="progressPerCentage"></mat-progress-bar>
   <mat-stepper orientation="vertical" #stepper [selectedIndex]="activeIndex"
-        [ngClass]="showTPANavigation?'container itr-stepper formBase-height-tpa':'container itr-stepper formBase-height'">
-        <ng-template matStepperIcon="edit">
-          <mat-icon>done</mat-icon>
-      </ng-template>
-        <div *ngFor="let itrFlow of itrLifeCycleSummaryList; let i=index">
-          <mat-step *ngIf="itrFlow.showTaskGroupOnUI"
-          [aria-labelledby]="itrFlow.completed ? 'step-complete':'step-not-complete'">
-            <ng-template matStepLabel>{{itrFlow.taskGroupTitle}}</ng-template>
-            <ng-template matStepContent>
-              <div *ngFor="let subItrFlow of itrFlow?.data" class="mt-2">
-                <div *ngIf="subItrFlow.showTaskGroupOnUI">
-                  <div *ngIf="subItrFlow.uiAction !=='NotRequired'">
+    [ngClass]="showTPANavigation?'container itr-stepper formBase-height-tpa':'container itr-stepper formBase-height'">
+    <ng-template matStepperIcon="edit">
+      <mat-icon>done</mat-icon>
+    </ng-template>
+    <div *ngFor="let itrFlow of itrLifeCycleSummaryList; let i=index">
+      <mat-step *ngIf="itrFlow.showTaskGroupOnUI"
+        [aria-labelledby]="itrFlow.completed ? 'step-complete':'step-not-complete'">
+        <ng-template matStepLabel>{{itrFlow.taskGroupTitle}}</ng-template>
+        <ng-template matStepContent>
+          <div *ngFor="let subItrFlow of itrFlow?.data" class="mt-2">
+            <div *ngIf="subItrFlow.showTaskGroupOnUI">
+              <div *ngIf="subItrFlow.uiAction !=='NotRequired'">
+                <div class="disFlex" style="position: relative;">
+                  <mat-icon style="margin-top: 7px;" *ngIf="subItrFlow.taskStatus==='Completed'"
+                    class="schedule-done">done</mat-icon>
+                  <mat-icon style="margin-top: 7px;"
+                    *ngIf="subItrFlow.taskStatus==='InProgress' || subItrFlow.taskStatus==='Pending'"
+                    [ngClass]="(subItrFlow.taskStatus==='InProgress')? 'schedule-inProgress':'schedule-todo' ">schedule
+                  </mat-icon>
+                  <span class="sub-title mt-1">{{ subItrFlow.taskTitleDescription}}</span>
+                </div>
+
+                <div *ngIf="subItrFlow.taskTitle==='ADD_INCOME_SOURCES'">
+                  <div
+                    *ngFor="let uploadSection of subItrFlow.customAttributes?.userSelectedIncomeSources; let i=index">
                     <div class="disFlex" style="position: relative;">
-                      <mat-icon style="margin-top: 7px;" *ngIf="subItrFlow.taskStatus==='Completed'" class="schedule-done">done</mat-icon>
-                      <mat-icon style="margin-top: 7px;" *ngIf="subItrFlow.taskStatus==='InProgress' || subItrFlow.taskStatus==='Pending'"
-                                [ngClass]="(subItrFlow.taskStatus==='InProgress')? 'schedule-inProgress':'schedule-todo' ">schedule
-                      </mat-icon>
-                        <span class="sub-title mt-1">{{ subItrFlow.taskTitleDescription}}</span>
+                      <span style="margin-left: 20px;"><i class="fa fa-circle" style="font-size:8px"></i>
+                        {{uploadSection}}</span>
                     </div>
-
-                    <div *ngIf="subItrFlow.taskTitle==='ADD_INCOME_SOURCES'">
-                    <div *ngFor="let uploadSection of subItrFlow.customAttributes?.userSelectedIncomeSources; let i=index">
-                        <div class="disFlex" style="position: relative;">
-                        <span style="margin-left: 20px;"><i class="fa fa-circle" style="font-size:8px"></i> {{uploadSection}}</span>
-                        </div>
-                    </div>
-                    </div>
-                    <div *ngIf="subItrFlow.taskTitle==='PLAN_SELECTION'">
-                      <div *ngIf="eligiblePlan?.name">
-                        <span style="margin-left: 20px;"><i class="fa fa-circle" style="font-size:8px"></i> {{eligiblePlan?.name}}</span>
-                        <!-- <span class="input-header margine-left:10px">{{subItrFlow.uiPrompt}}</span> -->
-                      </div>
-                    </div>
-
-                    <div *ngIf="subItrFlow.taskTitle==='DOCUMENTS_UPLOADED'">
-                      <div *ngFor="let uploadSection of subItrFlow.customAttributes?.documents; let i=index">
-                          <div class="disFlex" style="position: relative;" *ngIf="uploadSection.isDocumentUploaded">
-                          <span style="margin-left: 20px;"><i class="fa fa-circle" style="font-size:8px"></i> {{uploadSection.documentTitle}}</span>
-                          </div>
-                      </div>
-                    </div>
-
                   </div>
                 </div>
+                <div *ngIf="subItrFlow.taskTitle==='PLAN_SELECTION'">
+                  <div *ngIf="eligiblePlan?.name">
+                    <span style="margin-left: 20px;"><i class="fa fa-circle" style="font-size:8px"></i>
+                      {{eligiblePlan?.name}}</span>
+                    <!-- <span class="input-header margine-left:10px">{{subItrFlow.uiPrompt}}</span> -->
+                  </div>
+                </div>
+
+                <div *ngIf="subItrFlow.taskTitle==='DOCUMENTS_UPLOADED'">
+                  <div *ngFor="let uploadSection of subItrFlow.customAttributes?.documents; let i=index">
+                    <div class="disFlex" style="position: relative;" *ngIf="uploadSection.isDocumentUploaded">
+                      <span style="margin-left: 20px;"><i class="fa fa-circle" style="font-size:8px"></i>
+                        {{uploadSection.documentTitle}}</span>
+                    </div>
+                  </div>
+                </div>
+
               </div>
-            </ng-template>
-          </mat-step>
-        </div>
+            </div>
+          </div>
+        </ng-template>
+      </mat-step>
+    </div>
 
   </mat-stepper>
 
