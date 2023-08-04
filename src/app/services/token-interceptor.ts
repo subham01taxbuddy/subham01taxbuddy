@@ -98,7 +98,7 @@ export class TokenInterceptor implements HttpInterceptor {
     } else if (request.url.startsWith(environment.ITR_LIFECYCLE)) {
       request = request.clone({
         setHeaders: {
-          // Authorization: `Bearer ` + TOKEN,
+          Authorization: `Bearer ` + TOKEN,
           environment: environment.lifecycleEnv
         },
       });

@@ -37,7 +37,7 @@ declare function we_track(key: string, value: any);
   templateUrl: './assigned-new-users.component.html',
   styleUrls: ['./assigned-new-users.component.scss']
 })
-export class AssignedNewUsersComponent implements OnInit,OnDestroy {
+export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   loading!: boolean;
   usersGridOptions: GridOptions;
   config: any;
@@ -84,11 +84,11 @@ export class AssignedNewUsersComponent implements OnInit,OnDestroy {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-       if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-          return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && rowNode.data.statusId !=11 ): false;
+        if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
+          return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && rowNode.data.statusId != 11) : false;
         }
-        else{
-          return  rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' :false;
+        else {
+          return rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' : false;
         }
       },
       onGridReady: params => {
@@ -146,9 +146,9 @@ export class AssignedNewUsersComponent implements OnInit,OnDestroy {
       }
       else {
         //check user roles here and do not load all data for admin/leaders
-        if(!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')){
+        if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
           this.search();
-        } else{
+        } else {
           this.dataOnLoad = false;
         }
 
@@ -317,9 +317,9 @@ export class AssignedNewUsersComponent implements OnInit,OnDestroy {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
       if (this.coOwnerToggle.value == true) {
-        this.search( '', true,event);
+        this.search('', true, event);
       } else {
-        this.search('','',event );
+        this.search('', '', event);
       }
     }
   }
@@ -406,9 +406,9 @@ export class AssignedNewUsersComponent implements OnInit,OnDestroy {
         hide: !this.showReassignmentBtn.length,
         pinned: 'left',
         checkboxSelection: (params) => {
-          if(this.loggedInUserRoles.includes('ROLE_OWNER')){
-            return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11 ;
-          }else{
+          if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
+            return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
+          } else {
             return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
           }
         },
@@ -1005,10 +1005,12 @@ export class AssignedNewUsersComponent implements OnInit,OnDestroy {
       taskKeyName: 'itrFilingComences',
       taskStatus: 'Completed'
     };
+    const userData = JSON.parse(localStorage.getItem('UMD') || '');
+    const TOKEN = userData ? userData.id_token : null;
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
     headers = headers.append('environment', environment.lifecycleEnv);
-
+    headers = headers.append('Authorization', 'Bearer ' + TOKEN);
     this.rowData = data;
     this.requestManager.addRequest(this.LIFECYCLE,
       this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
@@ -1285,7 +1287,7 @@ export class AssignedNewUsersComponent implements OnInit,OnDestroy {
       this.coOwnerDropDown.resetDropdown();
       this.search('', true);
     } else {
-      if(this.dataOnLoad) {
+      if (this.dataOnLoad) {
         this.search();
       } else {
         //clear grid for loaded data
@@ -1296,9 +1298,9 @@ export class AssignedNewUsersComponent implements OnInit,OnDestroy {
 
   }
 
-  search(form?, isAgent?,pageChange?) {
+  search(form?, isAgent?, pageChange?) {
 
-    if(!pageChange){
+    if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
@@ -1384,7 +1386,7 @@ export class AssignedNewUsersComponent implements OnInit,OnDestroy {
             this.cacheManager.initializeCache(result.data['content']);
 
             const currentPageNumber = pageChange || this.searchParam.page + 1;
-            this.cacheManager.cachePageContent(currentPageNumber,result.data['content']);
+            this.cacheManager.cachePageContent(currentPageNumber, result.data['content']);
             this.config.currentPage = currentPageNumber;
 
           } else {
