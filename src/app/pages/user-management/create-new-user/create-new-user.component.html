@@ -104,8 +104,8 @@
         </div>
         <div class="col-sm-3 spsTp">
           <mat-form-field appearance="outline" class="class1">
-            <mat-label>Select Service Type</mat-label>
-            <mat-select placeholder="Select Service Type" formControlName="serviceType"
+            <mat-label>Service Type</mat-label>
+            <mat-select placeholder="Service Type" formControlName="serviceType"
               (selectionChange)="changeServiceType()" required>
               <mat-option *ngFor="let service of services" [value]="service">
                 {{service}}
