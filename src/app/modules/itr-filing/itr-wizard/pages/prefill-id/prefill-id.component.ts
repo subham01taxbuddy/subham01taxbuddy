@@ -3,23 +3,21 @@ import { Router } from '@angular/router';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import {
-  MatDialog,
-} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { AddClientsComponent } from '../../components/add-clients/add-clients.component';
 import { Subscription } from 'rxjs';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
-import {formatDate, TitleCasePipe} from '@angular/common';
+import { formatDate, TitleCasePipe } from '@angular/common';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { UserMsService } from '../../../../../services/user-ms.service';
-import * as moment from "moment/moment";
+import * as moment from 'moment/moment';
 
 @Component({
   selector: 'app-prefill-id',
   templateUrl: './prefill-id.component.html',
   styleUrls: ['./prefill-id.component.scss'],
-  providers: [TitleCasePipe]
+  providers: [TitleCasePipe],
 })
 export class PrefillIdComponent implements OnInit {
   downloadPrefillChecked: boolean = false;
@@ -82,7 +80,7 @@ export class PrefillIdComponent implements OnInit {
           itrId: this.ITR_JSON.itrId,
           eriClientValidUpto: result.eriClientValidUpto,
         };
-        if(result.panNumber && result.panNumber !== this.ITR_JSON.panNumber) {
+        if (result.panNumber && result.panNumber !== this.ITR_JSON.panNumber) {
           this.ITR_JSON.panNumber = result.panNumber;
           this.getUserDetailsByPAN(result.panNumber);
         }
@@ -1166,6 +1164,7 @@ export class PrefillIdComponent implements OnInit {
           JSONData.ITR.hasOwnProperty('ITR2') ||
           JSONData.ITR.hasOwnProperty('ITR3')
         ) {
+          this.ITR_JSON.itrSummaryJson = JSONData;
           this.itrSummaryJson = JSONData;
           this.uploadedJson = JSONData.ITR;
           if (this.uploadedJson) {
@@ -5590,18 +5589,12 @@ export class PrefillIdComponent implements OnInit {
     let param = `/api/getPanDetail?panNumber=${panNumber}`;
     this.itrMsService.getMethod(param).subscribe((result: any) => {
       console.log('user data by PAN = ', result);
-      this.ITR_JSON.family[0].fName =
-        this.titlecasePipe.transform(
-          this.utilsService.isNonEmpty(result.firstName)
-            ? result.firstName
-            : ''
-        );
-      this.ITR_JSON.family[0].mName =
-        this.titlecasePipe.transform(
-          this.utilsService.isNonEmpty(result.middleName)
-            ? result.middleName
-            : ''
-        );
+      this.ITR_JSON.family[0].fName = this.titlecasePipe.transform(
+        this.utilsService.isNonEmpty(result.firstName) ? result.firstName : ''
+      );
+      this.ITR_JSON.family[0].mName = this.titlecasePipe.transform(
+        this.utilsService.isNonEmpty(result.middleName) ? result.middleName : ''
+      );
       this.ITR_JSON.family[0].lName = this.titlecasePipe.transform(
         this.utilsService.isNonEmpty(result.lastName) ? result.lastName : ''
       );
@@ -5609,13 +5602,19 @@ export class PrefillIdComponent implements OnInit {
       //1988-11-28 to DD/MM/YYYY
       //this.datePipe.transform(dob,"dd/MM/yyyy")
       let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
-      this.ITR_JSON.family[0].dateOfBirth = moment(result.dateOfBirth, 'YYYY-MM-DD').toDate();
-      this.ITR_JSON.assesseeType = this.utilsService.findAssesseeType(panNumber);
+      this.ITR_JSON.family[0].dateOfBirth = moment(
+        result.dateOfBirth,
+        'YYYY-MM-DD'
+      ).toDate();
+      this.ITR_JSON.assesseeType =
+        this.utilsService.findAssesseeType(panNumber);
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
         JSON.stringify(this.ITR_JSON)
       );
-      this.utilsService.showSnackBar('PAN number is updated from profile. Please verify customer profile.');
+      this.utilsService.showSnackBar(
+        'PAN number is updated from profile. Please verify customer profile.'
+      );
       this.jsonUploaded.emit(null);
       if (result.isValid !== 'EXISTING AND VALID') {
         this.utilsService.showSnackBar(
