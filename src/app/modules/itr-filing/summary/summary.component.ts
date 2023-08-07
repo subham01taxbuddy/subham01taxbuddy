@@ -3861,8 +3861,13 @@ export class SummaryComponent implements OnInit {
                     this.finalSummary?.assessment?.taxSummary
                       ?.specialIncomeAfterAdjBaseLimit,
                   netAgricultureIncome:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.agricultureIncome,
+                    this.finalSummary?.itr?.exemptIncomes?.find(
+                      (agri) => agri.natureDesc === 'AGRI'
+                    )?.amount > 5000
+                      ? this.finalSummary?.itr?.exemptIncomes?.find(
+                          (agri) => agri.natureDesc === 'AGRI'
+                        )?.amount
+                      : 0,
                   aggregateIncome:
                     this.finalSummary?.assessment?.taxSummary
                       ?.aggregateIncomeXml,
@@ -5332,7 +5337,13 @@ export class SummaryComponent implements OnInit {
                   this.finalSummary?.assessment?.taxSummary
                     ?.specialIncomeAfterAdjBaseLimit,
                 netAgricultureIncome:
-                  this.finalSummary?.assessment?.taxSummary?.agricultureIncome,
+                  this.finalSummary?.itr?.exemptIncomes?.find(
+                    (agri) => agri.natureDesc === 'AGRI'
+                  )?.amount > 5000
+                    ? this.finalSummary?.itr?.exemptIncomes?.find(
+                        (agri) => agri.natureDesc === 'AGRI'
+                      )?.amount
+                    : 0,
                 aggregateIncome:
                   this.finalSummary?.assessment?.taxSummary?.aggregateIncomeXml,
                 lossesToBeCarriedForward: {
