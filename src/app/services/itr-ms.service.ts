@@ -9,7 +9,7 @@ export class ItrMsService {
   headers: any;
   userObj: any;
   microService: string = '/itr';
-  constructor(private httpClient: HttpClient, private http: HttpClient) {}
+  constructor(private httpClient: HttpClient, private http: HttpClient) { }
 
   getMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
@@ -25,7 +25,6 @@ export class ItrMsService {
   getItrLifeCycle<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');
-    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.get<T>(
       environment.ITR_LIFECYCLE + this.microService + param[0],
       { headers: this.headers }
@@ -49,7 +48,7 @@ export class ItrMsService {
     this.headers.append('Content-Type', 'application/json');
 
     return this.httpClient.post<T>(
-      environment.download_file + param[0],param[1],
+      environment.download_file + param[0], param[1],
       { headers: this.headers }
     );
     // .map(response => response.json())
@@ -60,7 +59,7 @@ export class ItrMsService {
     this.headers.append('Content-Type', 'application/json');
 
     return this.httpClient.post<T>(
-      environment.upload_file + param[0],param[1],
+      environment.upload_file + param[0], param[1],
       { headers: this.headers }
     );
     // .map(response => response.json())
@@ -111,7 +110,7 @@ export class ItrMsService {
     this.headers.append('Content-Type', 'application/json');
 
     return this.httpClient.post<T>(
-      environment.add_adjustment + param[0],param[1],
+      environment.add_adjustment + param[0], param[1],
       { headers: this.headers }
     );
     // .map(response => response.json())
@@ -122,7 +121,7 @@ export class ItrMsService {
     this.headers.append('Content-Type', 'application/json');
     // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     return this.httpClient.put<T>(
-      environment.update_id + param[0],param[1],{ headers: this.headers });
+      environment.update_id + param[0], param[1], { headers: this.headers });
     // .map(response => response.json())
   }
 
@@ -149,14 +148,14 @@ export class ItrMsService {
     console.log(
       'url',
       (environment.production ? environment.url : environment.eri_url) +
-        this.microService +
-        param[0],
+      this.microService +
+      param[0],
       param[1]
     );
     return this.httpClient.post<T>(
       (environment.production ? environment.url : environment.eri_url) +
-        this.microService +
-        param[0],
+      this.microService +
+      param[0],
       param[1],
       { headers: this.headers }
     );

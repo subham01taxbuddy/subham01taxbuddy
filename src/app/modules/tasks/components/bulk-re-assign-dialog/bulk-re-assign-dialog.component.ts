@@ -55,7 +55,7 @@ export class BulkReAssignDialogComponent implements OnInit {
 
     this.getMasterStatusList();
     this.loggedInUserRoles = this.utilsService.getUserRoles();
-    if(this.loggedInUserRoles.includes('ROLE_ADMIN')){
+    if(this.loggedInUserRoles.includes('ROLE_ADMIN') || this.loggedInUserRoles.includes('ROLE_LEADER')){
      this.ownerDropDownType = 'ALL';
     } else {
       this.ownerDropDownType = 'ASSIGNED';

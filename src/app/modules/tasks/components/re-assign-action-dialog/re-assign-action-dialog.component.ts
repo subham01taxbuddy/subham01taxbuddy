@@ -27,9 +27,11 @@ export class ReAssignActionDialogComponent implements OnInit {
     console.log('data from selected rows',this.data)
     this.loggedInUserRoles = this.utilsService.getUserRoles();
 
-     if(this.loggedInUserRoles.includes('ROLE_LEADER')) {
-      this.checkPermission();
-    }
+    //Ashwini: This was used to control the owner list shown to leaders.
+    //We are commenting this code to enable leaders to see all owners irrepspective of the assignment.
+    // if(this.loggedInUserRoles.includes('ROLE_LEADER')) {
+    //   this.checkPermission();
+    // }
   }
 
   checkPermission(){

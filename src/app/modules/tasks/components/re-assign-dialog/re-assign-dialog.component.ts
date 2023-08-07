@@ -33,9 +33,11 @@ export class ReAssignDialogComponent implements OnInit {
     // this.filerId=this.data.filerId;
     // this.serviceType=this.data.serviceType;
     let roles = this.utilsService.getUserRoles();
-    if(roles.includes('ROLE_LEADER')) {
-      this.checkPermission();
-    }
+    //Ashwini: This was used to control the owner list shown to leaders.
+    //We are commenting this code to enable leaders to see all owners irrepspective of the assignment.
+    // if(roles.includes('ROLE_LEADER')) {
+    //   this.checkPermission();
+    // }
   }
 
   checkPermission(){
