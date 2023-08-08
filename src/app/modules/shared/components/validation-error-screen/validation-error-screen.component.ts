@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ValidationErrorScreenComponent implements OnInit {
   errors: any;
+  itrType: any;
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
@@ -15,6 +16,7 @@ export class ValidationErrorScreenComponent implements OnInit {
     this.route.paramMap.subscribe((params) => {
       const state = window.history.state;
       this.errors = state.validationErrors;
+      this.itrType = this.errors[0].itrType;
     });
     console.log(this.errors, 'errors to be displayed');
   }

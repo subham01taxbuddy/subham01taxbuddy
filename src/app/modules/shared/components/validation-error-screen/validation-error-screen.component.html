@@ -1,10 +1,52 @@
-<div class="card__col-xs-12">
-  <p>Validation error component works</p>
-  <h1>Validation Errors</h1>
-  <h2>Please resolve the following errors before proceeding ahead</h2>
-  <div *ngIf="errors">
-    <ul>
-      <li *ngFor="let error of errors">{{ error.errorMsgToBeDisplayed }}</li>
-    </ul>
+<ngx-loading
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+
+<div class="spc-blw">
+  <div class="com_model perBx">
+    <div class="container">
+      <div
+        class="alert alert-danger"
+        role="alert"
+        style="display: inline-block"
+      >
+        <strong style="font-size: 18px">
+          Validation Errors - {{ errors.length }} found</strong
+        >
+        <div>To rectify the below errors, simply click on error hyperlink.</div>
+      </div>
+      <div style="font-size: 24px">
+        <strong> ITR Type : {{ itrType }} </strong>
+      </div>
+      <div class="cardRect">
+        <table
+          class="table table-bordered table-hover"
+          style="margin-top: 10px"
+        >
+          <thead>
+            <tr>
+              <th>Sr. No</th>
+              <th>Error Description</th>
+              <th>Error Code</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let error of errors; let i = index">
+              <tr>
+                <td>
+                  {{ i + 1 }}
+                </td>
+                <td>
+                  {{ error.errorMsgToBeDisplayed }}
+                </td>
+                <td>
+                  {{ error.errorCode }}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>

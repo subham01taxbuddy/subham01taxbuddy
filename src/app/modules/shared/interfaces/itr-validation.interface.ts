@@ -3,6 +3,7 @@ export interface ItrValidation {
   message: String;
   errorMsgToBeDisplayed: String;
   relatedSchedule: String;
+  itrType: any;
 }
 
 export interface Schedules {

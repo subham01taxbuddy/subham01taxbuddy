@@ -18,6 +18,7 @@ export class ItrValidationService {
         message: 'The ITR type is missing',
         errorMsgToBeDisplayed: 'The ITR type is missing',
         relatedSchedule: 'CustomerProfile',
+        itrType: itrType ? itrType : 'ITR Type is missing',
       });
     }
 
