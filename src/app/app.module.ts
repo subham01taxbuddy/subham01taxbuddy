@@ -17,6 +17,7 @@ import { AuthGuard } from './services/auth.guard';
 
 import { appRoutes } from './app-routing.module';
 import { UtilsService } from './services/utils.service';
+import { ItrValidationService } from './services/itr-validation.service';
 
 import { TokenInterceptor } from './services/token-interceptor';
 
@@ -58,6 +59,7 @@ import { SpeedTestModule } from 'ng-speed-test';
     ToastMessageService,
     AuthGuard,
     UtilsService,
+    ItrValidationService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

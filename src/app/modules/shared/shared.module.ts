@@ -51,14 +51,13 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { ServiceDropDownComponent } from './components/service-drop-down/service-drop-down.component';
 import { CoOwnerListDropDownComponent } from './components/co-owner-list-drop-down/co-owner-list-drop-down.component';
-import { RequestManager } from "./services/request-manager";
+import { RequestManager } from './services/request-manager';
 import { LeaderListDropdownComponent } from './components/leader-list-dropdown/leader-list-dropdown.component';
-import {AddAffiliateIdComponent} from "./components/add-affiliate-id/add-affiliate-id.component";
+import { AddAffiliateIdComponent } from './components/add-affiliate-id/add-affiliate-id.component';
 import { ViewDocumentsDialogComponent } from './components/view-documents-dialog/view-documents-dialog.component';
-import {
-  UpdateNoJsonFilingDialogComponent
-} from "./components/update-no-json-filing-dialog/update-no-json-filing-dialog.component";
+import { UpdateNoJsonFilingDialogComponent } from './components/update-no-json-filing-dialog/update-no-json-filing-dialog.component';
 import { UpdateItrUFillingDialogComponent } from './components/update-ItrU-filling-dialog/update-ItrU-filling-dialog.component';
+import { ValidationErrorScreenComponent } from './components/validation-error-screen/validation-error-screen.component';
 @NgModule({
   declarations: [
     UpperCaseDirective,
@@ -98,6 +97,7 @@ import { UpdateItrUFillingDialogComponent } from './components/update-ItrU-filli
     ViewDocumentsDialogComponent,
     UpdateNoJsonFilingDialogComponent,
     UpdateItrUFillingDialogComponent,
+    ValidationErrorScreenComponent,
   ],
   imports: [
     CommonModule,

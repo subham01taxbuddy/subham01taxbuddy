@@ -1,0 +1,10 @@
+<div class="card__col-xs-12">
+  <p>Validation error component works</p>
+  <h1>Validation Errors</h1>
+  <h2>Please resolve the following errors before proceeding ahead</h2>
+  <div *ngIf="errors">
+    <ul>
+      <li *ngFor="let error of errors">{{ error.errorMsgToBeDisplayed }}</li>
+    </ul>
+  </div>
+</div>
