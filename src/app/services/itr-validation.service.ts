@@ -211,6 +211,50 @@ export class ItrValidationService {
           }
         }
       }
+
+      if (itrType === '2' || itrType === '3') {
+        // salary
+        {
+          if (key === 'employers') {
+            if (obj[key] && obj[key]?.length > 0) {
+              const missingDetails: { [employerName: string]: String[] } = {};
+              const employerDetails = obj[key]?.forEach((element, index) => {
+                const missingProps: string[] = [];
+
+                if (!element?.address) missingProps?.push('address');
+                if (!element?.city) missingProps?.push('city');
+                if (!element?.employerName) missingProps?.push('employerName');
+                if (!element?.pinCode) missingProps?.push('pinCode');
+                if (!element?.state) missingProps?.push('state');
+
+                if (missingProps?.length > 0) {
+                  missingDetails[
+                    element?.employerName ? element?.employerName : index
+                  ] = missingProps;
+                }
+              });
+
+              if (Object?.keys(missingDetails)?.length === 0) {
+                console.log('all employer details are present');
+              } else {
+                const employerNamesWithMissingDetails =
+                  Object.keys(missingDetails);
+
+                error?.push({
+                  errorCode: 'E16',
+                  message: 'Employer details are missing',
+                  errorMsgToBeDisplayed: `Employer details are missing for ${employerNamesWithMissingDetails.join(
+                    ', '
+                  )}`,
+                  relatedSchedule: 'salary',
+                  itrType: itrType ? itrType : 'ITR Type is missing',
+                });
+                console.log('missing employer details');
+              }
+            }
+          }
+        }
+      }
     }
 
     console.log(error, 'List of validation errors');

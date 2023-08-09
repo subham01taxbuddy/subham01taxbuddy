@@ -56,4 +56,5 @@ export interface itrValidationErrorCode {
   E13: 'missing city';
   E14: 'missing bank details';
   E15: 'not nominated for refund';
+  E16: 'Employer details are missing';
 }
