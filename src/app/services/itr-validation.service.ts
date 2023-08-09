@@ -212,6 +212,91 @@ export class ItrValidationService {
         }
       }
 
+      // houseProperty
+      {
+        if (key === 'houseProperties') {
+          if (obj[key] && obj[key]?.length > 0) {
+            const missingCoOwnerDetails = [];
+            const missingTenantDetails = [];
+            const missingRentsForLOP = [];
+            obj[key]?.forEach((element, index) => {
+              // coOwner name and percentage
+              if (element?.coOwners && element?.coOwners.length > 0) {
+                element?.coOwners?.forEach((element, index) => {
+                  let missingCoOwnerDetail: boolean =
+                    !element?.name || !element?.percentage;
+
+                  if (missingCoOwnerDetail) {
+                    missingCoOwnerDetails?.push(index + 1);
+                  }
+                });
+              }
+
+              let propType = element?.propertyType;
+              if (propType === 'LOP' || propType === 'DLOP') {
+                // tenantName
+                if (element?.tenant && element?.tenant.length > 0) {
+                  element?.tenant?.forEach((element, index) => {
+                    let missingTenantDetail: boolean = !element?.name;
+                    if (missingTenantDetail) {
+                      missingTenantDetails?.push(index + 1);
+                    }
+                  });
+                }
+
+                // grossRent
+                let missingRentForLOP =
+                  !element?.grossAnnualRentReceived ||
+                  !element?.grossAnnualRentReceivedTotal;
+
+                if (missingRentForLOP) {
+                  missingRentsForLOP?.push(index + 1);
+                }
+              }
+            });
+
+            // coOwner
+            if (missingCoOwnerDetails?.length > 0) {
+              error?.push({
+                errorCode: 'E18',
+                message: 'co-owner details are missing',
+                errorMsgToBeDisplayed: `Provide the co-owner name & percentage for the house property - ${missingCoOwnerDetails?.join(
+                  ', '
+                )}`,
+                relatedSchedule: 'houseProperty',
+                itrType: itrType ? itrType : 'ITR Type is missing',
+              });
+            }
+
+            // tenant
+            if (missingTenantDetails?.length > 0) {
+              error?.push({
+                errorCode: 'E19',
+                message: 'tenant details are missing',
+                errorMsgToBeDisplayed: `Provide atleast the tenant name for the house property - ${missingTenantDetails?.join(
+                  ', '
+                )}`,
+                relatedSchedule: 'houseProperty',
+                itrType: itrType ? itrType : 'ITR Type is missing',
+              });
+            }
+
+            // tenant
+            if (missingRentsForLOP?.length > 0) {
+              error?.push({
+                errorCode: 'E20',
+                message: 'gross rent required if LOP or DLOP',
+                errorMsgToBeDisplayed: `Gross rent / letable value is required if House property is LOP or DLOP - ${missingRentsForLOP?.join(
+                  ', '
+                )}`,
+                relatedSchedule: 'houseProperty',
+                itrType: itrType ? itrType : 'ITR Type is missing',
+              });
+            }
+          }
+        }
+      }
+
       if (itrType === '2' || itrType === '3') {
         // salary
         {
@@ -242,7 +327,7 @@ export class ItrValidationService {
 
                 error?.push({
                   errorCode: 'E16',
-                  message: 'Employer details are missing',
+                  message: 'employer details are missing',
                   errorMsgToBeDisplayed: `Employer details are missing for ${employerNamesWithMissingDetails.join(
                     ', '
                   )}`,
@@ -250,6 +335,41 @@ export class ItrValidationService {
                   itrType: itrType ? itrType : 'ITR Type is missing',
                 });
                 console.log('missing employer details');
+              }
+            }
+          }
+        }
+
+        // house property
+        {
+          if (key === 'houseProperties') {
+            if (obj[key] && obj[key]?.length > 0) {
+              const hpDetailsMissing = [];
+              obj[key]?.forEach((element, index) => {
+                // address
+                let missingHpDetails: boolean =
+                  !element?.address ||
+                  !element?.city ||
+                  !element?.state ||
+                  !element?.country ||
+                  !element?.pinCode;
+                console.log(missingHpDetails, 'missingHpDetails');
+
+                if (missingHpDetails) {
+                  hpDetailsMissing?.push(index + 1);
+                }
+              });
+
+              if (hpDetailsMissing?.length > 0) {
+                error?.push({
+                  errorCode: 'E17',
+                  message: 'house property address details are missing',
+                  errorMsgToBeDisplayed: `Provide the address for the house property - ${hpDetailsMissing?.join(
+                    ', '
+                  )}`,
+                  relatedSchedule: 'houseProperty',
+                  itrType: itrType ? itrType : 'ITR Type is missing',
+                });
               }
             }
           }

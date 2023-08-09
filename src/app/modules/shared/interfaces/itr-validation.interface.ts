@@ -56,5 +56,9 @@ export interface itrValidationErrorCode {
   E13: 'missing city';
   E14: 'missing bank details';
   E15: 'not nominated for refund';
-  E16: 'Employer details are missing';
+  E16: 'employer details are missing';
+  E17: 'house property address details are missing';
+  E18: 'co-owner details are missing'
+  E19: 'tenant details are missing'
+  E20: 'gross rent required if LOP or DLOP'
 }
