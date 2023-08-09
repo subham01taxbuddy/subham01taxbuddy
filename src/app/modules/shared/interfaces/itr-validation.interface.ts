@@ -1,8 +1,8 @@
 export interface ItrValidation {
-  errorCode: any;
-  message: String;
+  errorCode: keyof itrValidationErrorCode;
+  message: itrValidationErrorCode[ItrValidation['errorCode']];
   errorMsgToBeDisplayed: String;
-  relatedSchedule: String;
+  relatedSchedule: keyof Schedules;
   itrType: any;
 }
 
@@ -37,8 +37,23 @@ export interface Schedules {
   tcsDetails: any;
   advSelfAssessmentTax: any;
   declaration: any;
+  other: any;
 }
 
 export interface itrValidationErrorCode {
-  E1: 'ITR Type Error';
+  E1: 'itr type error';
+  E2: 'missing date of Birth';
+  E3: 'missing gender';
+  E4: 'missing father name';
+  E5: 'missing pan number';
+  E6: 'missing contact number';
+  E7: 'missing email address';
+  E8: 'missing last name';
+  E9: 'missing employer category';
+  E10: 'missing pincode';
+  E11: 'missing country';
+  E12: 'missing state';
+  E13: 'missing city';
+  E14: 'missing bank details';
+  E15: 'not nominated for refund';
 }

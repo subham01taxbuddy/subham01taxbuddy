@@ -1,5 +1,14 @@
-.center {
-  padding: 10px;
-  height: 25px;
-  font-size: 25px;
+a {
+  color: #000;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #000;
+  color: blue;
+  text-decoration: underline;
+}
+
+.lgtBtn {
+  padding: 0px 35px !important;
 }

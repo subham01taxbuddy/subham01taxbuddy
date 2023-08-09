@@ -2,7 +2,10 @@
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
 
-<div class="spc-blw">
+<div
+  class="spc-blw"
+  style="margin: 15px 25px; background-color: white; padding: 25px"
+>
   <div class="com_model perBx">
     <div class="container">
       <div
@@ -11,7 +14,7 @@
         style="display: inline-block"
       >
         <strong style="font-size: 18px">
-          Validation Errors - {{ errors.length }} found</strong
+          Validation Errors - {{ errors?.length }} found</strong
         >
         <div>To rectify the below errors, simply click on error hyperlink.</div>
       </div>
@@ -27,6 +30,7 @@
             <tr>
               <th>Sr. No</th>
               <th>Error Description</th>
+              <th>Schedule</th>
               <th>Error Code</th>
             </tr>
           </thead>
@@ -37,10 +41,13 @@
                   {{ i + 1 }}
                 </td>
                 <td>
-                  {{ error.errorMsgToBeDisplayed }}
+                  <a href="#">
+                    {{ error?.errorMsgToBeDisplayed }}
+                  </a>
                 </td>
+                <td>{{ error?.relatedSchedule }}</td>
                 <td>
-                  {{ error.errorCode }}
+                  {{ error?.errorCode }}
                 </td>
               </tr>
             </ng-container>
@@ -48,5 +55,9 @@
         </table>
       </div>
     </div>
+  </div>
+  <!-- action-buttons  -->
+  <div class="flex justify-between p-[30px] back-foot">
+    <button (click)="goBack()" class="lgtBtn">Go Back</button>
   </div>
 </div>
