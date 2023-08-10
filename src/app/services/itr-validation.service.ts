@@ -375,6 +375,98 @@ export class ItrValidationService {
           }
         }
       }
+
+      if (itrType === '3') {
+        if (key === 'business') {
+          const nonSpecIncome = obj[key]?.profitLossACIncomes?.find(
+            (key) => key?.businessType === 'NONSPECULATIVEINCOME'
+          );
+
+          const specIncome = obj[key]?.profitLossACIncomes?.find(
+            (key) => key?.businessType === 'SPECULATIVEINCOME'
+          );
+
+          const natOfBusiness = obj[key]?.businessDescription;
+
+          // Business decription - nature of business required if some business income is present and itr type is 3
+          if (
+            obj[key]?.profitLossACIncomes?.length > 0 ||
+            obj[key]?.presumptiveIncomes?.length > 0
+          ) {
+            if (natOfBusiness?.length === 0) {
+              // if there is nothing present then below error will be pushed
+              error?.push({
+                errorCode: 'E23',
+                message: 'missing nature of business',
+                errorMsgToBeDisplayed:
+                  'Nature of Business details are required',
+                relatedSchedule: 'natOfBusiness',
+                itrType: itrType ? itrType : 'ITR Type is missing',
+              });
+            } else {
+              const natOfBusinessDetails: boolean = natOfBusiness?.some(
+                (element) => {
+                  return !element?.tradeName || !element?.natureOfBusiness;
+                }
+              );
+
+              // if any one of the array has error then below error will be pushed
+              if (natOfBusinessDetails) {
+                error?.push({
+                  errorCode: 'E24',
+                  message: 'incorrect nature of business details',
+                  errorMsgToBeDisplayed:
+                    'Nature of Business details seem to be incorrect',
+                  relatedSchedule: 'natOfBusiness',
+                  itrType: itrType ? itrType : 'ITR Type is missing',
+                });
+              }
+            }
+          }
+
+          // speculative and non-speculative errors
+          if (
+            obj[key]?.profitLossACIncomes &&
+            obj[key]?.profitLossACIncomes.length > 0
+          ) {
+            // non-speculative income
+            if (nonSpecIncome && nonSpecIncome?.incomes?.length > 0) {
+              const netAndGrossNonSpec: boolean =
+                !nonSpecIncome?.netProfitfromNonSpeculativeIncome ||
+                !nonSpecIncome?.totalgrossProfitFromNonSpeculativeIncome;
+
+              if (netAndGrossNonSpec) {
+                error?.push({
+                  errorCode: 'E21',
+                  message: 'missing nonSpec income details',
+                  errorMsgToBeDisplayed:
+                    'There was some error with the Non-Speculative Income details',
+                  relatedSchedule: 'nonSpecIncome',
+                  itrType: itrType ? itrType : 'ITR Type is missing',
+                });
+              }
+            }
+
+            // speculative income
+            if (specIncome && specIncome?.incomes?.length > 0) {
+              const netAndGrossSpec: boolean =
+                !specIncome?.netProfitfromSpeculativeIncome ||
+                !specIncome?.totalgrossProfitFromSpeculativeIncome;
+
+              if (netAndGrossSpec) {
+                error?.push({
+                  errorCode: 'E22',
+                  message: 'missing spec income details',
+                  errorMsgToBeDisplayed:
+                    'There was some error with the Speculative Income details',
+                  relatedSchedule: 'specIncome',
+                  itrType: itrType ? itrType : 'ITR Type is missing',
+                });
+              }
+            }
+          }
+        }
+      }
     }
 
     console.log(error, 'List of validation errors');

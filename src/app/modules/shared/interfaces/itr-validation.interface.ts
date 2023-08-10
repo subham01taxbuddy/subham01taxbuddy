@@ -58,7 +58,11 @@ export interface itrValidationErrorCode {
   E15: 'not nominated for refund';
   E16: 'employer details are missing';
   E17: 'house property address details are missing';
-  E18: 'co-owner details are missing'
-  E19: 'tenant details are missing'
-  E20: 'gross rent required if LOP or DLOP'
+  E18: 'co-owner details are missing';
+  E19: 'tenant details are missing';
+  E20: 'gross rent required if LOP or DLOP';
+  E21: 'missing nonSpec income details';
+  E22: 'missing spec income details';
+  E23: 'missing nature of business';
+  E24: 'incorrect nature of business details'
 }
