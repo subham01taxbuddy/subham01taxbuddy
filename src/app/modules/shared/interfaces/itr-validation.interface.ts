@@ -64,5 +64,7 @@ export interface itrValidationErrorCode {
   E21: 'missing nonSpec income details';
   E22: 'missing spec income details';
   E23: 'missing nature of business';
-  E24: 'incorrect nature of business details'
+  E24: 'incorrect nature of business details';
+  E25: 'dividend income cannot be negative';
+  E26: 'other income cannot be negative';
 }

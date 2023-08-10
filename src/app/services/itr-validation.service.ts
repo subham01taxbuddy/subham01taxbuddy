@@ -28,47 +28,55 @@ export class ItrValidationService {
       {
         // pan number
         if (key === 'panNumber') {
-          error?.push({
-            errorCode: 'E5',
-            message: 'missing pan number',
-            errorMsgToBeDisplayed: 'PAN number is not present',
-            relatedSchedule: 'customerProfile',
-            itrType: itrType ? itrType : 'ITR Type is missing',
-          });
+          if (!obj[key]) {
+            error?.push({
+              errorCode: 'E5',
+              message: 'missing pan number',
+              errorMsgToBeDisplayed: 'PAN number is not present',
+              relatedSchedule: 'customerProfile',
+              itrType: itrType ? itrType : 'ITR Type is missing',
+            });
+          }
         }
 
         // contactNumber
         if (key === 'contactNumber') {
-          error?.push({
-            errorCode: 'E6',
-            message: 'missing contact number',
-            errorMsgToBeDisplayed: 'Mobile number of the user is not present',
-            relatedSchedule: 'customerProfile',
-            itrType: itrType ? itrType : 'ITR Type is missing',
-          });
+          if (!obj[key]) {
+            error?.push({
+              errorCode: 'E6',
+              message: 'missing contact number',
+              errorMsgToBeDisplayed: 'Mobile number of the user is not present',
+              relatedSchedule: 'customerProfile',
+              itrType: itrType ? itrType : 'ITR Type is missing',
+            });
+          }
         }
 
         // email
         if (key === 'email') {
-          error?.push({
-            errorCode: 'E7',
-            message: 'missing email address',
-            errorMsgToBeDisplayed: 'Email address of the user is not present',
-            relatedSchedule: 'customerProfile',
-            itrType: itrType ? itrType : 'ITR Type is missing',
-          });
+          if (!obj[key]) {
+            error?.push({
+              errorCode: 'E7',
+              message: 'missing email address',
+              errorMsgToBeDisplayed: 'Email address of the user is not present',
+              relatedSchedule: 'customerProfile',
+              itrType: itrType ? itrType : 'ITR Type is missing',
+            });
+          }
         }
 
         // employerCategory
         if (key === 'employerCategory') {
-          error?.push({
-            errorCode: 'E9',
-            message: 'missing employer category',
-            errorMsgToBeDisplayed:
-              'Employer category of the user is not present',
-            relatedSchedule: 'customerProfile',
-            itrType: itrType ? itrType : 'ITR Type is missing',
-          });
+          if (!obj[key]) {
+            error?.push({
+              errorCode: 'E9',
+              message: 'missing employer category',
+              errorMsgToBeDisplayed:
+                'Employer category of the user is not present',
+              relatedSchedule: 'customerProfile',
+              itrType: itrType ? itrType : 'ITR Type is missing',
+            });
+          }
         }
 
         if (key === 'family') {
@@ -179,35 +187,39 @@ export class ItrValidationService {
               relatedSchedule: 'personalInformation',
               itrType: itrType ? itrType : 'ITR Type is missing',
             });
-          } else if (key?.length > 0) {
-            obj[key]?.forEach((element) => {
-              const allValuesPresent = this.checkAllValuesPresent(element);
-              if (!allValuesPresent) {
+          } else if (obj[key]?.length > 0) {
+            const allValuesNotPresent: boolean = obj[key]?.every((element) => {
+              !element.accountNumber ||
+                !element.hasRefund ||
+                !element.ifsCode ||
+                !element.name;
+            });
+
+            if (allValuesNotPresent) {
+              error?.push({
+                errorCode: 'E14',
+                message: 'missing bank details',
+                errorMsgToBeDisplayed:
+                  'Bank account number or bank name or bank account number is missing',
+                relatedSchedule: 'personalInformation',
+                itrType: itrType ? itrType : 'ITR Type is missing',
+              });
+            } else {
+              const nominatedForRefund = obj[key]?.some(
+                (element) => element?.hasRefund === true
+              );
+
+              if (!nominatedForRefund) {
                 error?.push({
-                  errorCode: 'E14',
-                  message: 'missing bank details',
+                  errorCode: 'E15',
+                  message: 'not nominated for refund',
                   errorMsgToBeDisplayed:
-                    'Bank account number or bank name or bank account number is missing',
+                    'Atleast one bank account has to be nominated for refund',
                   relatedSchedule: 'personalInformation',
                   itrType: itrType ? itrType : 'ITR Type is missing',
                 });
-              } else {
-                const nominatedForRefund = obj[key]?.some(
-                  (element) => element?.hasRefund
-                );
-
-                if (!nominatedForRefund) {
-                  error?.push({
-                    errorCode: 'E15',
-                    message: 'not nominated for refund',
-                    errorMsgToBeDisplayed:
-                      'Atleast one bank account has to be nominated for refund',
-                    relatedSchedule: 'personalInformation',
-                    itrType: itrType ? itrType : 'ITR Type is missing',
-                  });
-                }
               }
-            });
+            }
           }
         }
       }
@@ -290,6 +302,53 @@ export class ItrValidationService {
                   ', '
                 )}`,
                 relatedSchedule: 'houseProperty',
+                itrType: itrType ? itrType : 'ITR Type is missing',
+              });
+            }
+          }
+        }
+      }
+
+      // other income
+      {
+        // dividend incomes
+        if (key === 'dividendIncomes') {
+          if (obj[key] && obj[key]?.length > 0) {
+            const dividendIncomesStat: boolean = obj[key]?.every(
+              (element) =>
+                element?.income === null ||
+                (element?.income !== null && element?.income >= 0)
+            );
+
+            if (!dividendIncomesStat) {
+              error?.push({
+                errorCode: 'E25',
+                message: 'dividend income cannot be negative',
+                errorMsgToBeDisplayed:
+                  'Dividend income should be greater than zero',
+                relatedSchedule: 'otherIncomes',
+                itrType: itrType ? itrType : 'ITR Type is missing',
+              });
+            }
+          }
+        }
+
+        // other incomes
+        if (key === 'incomes') {
+          if (obj[key] && obj[key]?.length > 0) {
+            const incomesStat: boolean = obj[key]?.every(
+              (element) =>
+                element?.amount === null ||
+                (element?.amount !== null && element?.amount >= 0)
+            );
+
+            if (!incomesStat) {
+              error?.push({
+                errorCode: 'E26',
+                message: 'other income cannot be negative',
+                errorMsgToBeDisplayed:
+                  'Other income should be greater than zero',
+                relatedSchedule: 'otherIncomes',
                 itrType: itrType ? itrType : 'ITR Type is missing',
               });
             }
@@ -812,12 +871,5 @@ export class ItrValidationService {
     }
 
     return obj;
-  }
-
-  // Function to check if all values are present within an object
-  checkAllValuesPresent(obj: any): boolean {
-    return Object?.values(obj).every(
-      (value) => value !== undefined && value !== null && value !== ''
-    );
   }
 }
