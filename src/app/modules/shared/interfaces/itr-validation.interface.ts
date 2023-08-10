@@ -67,4 +67,10 @@ export interface itrValidationErrorCode {
   E24: 'incorrect nature of business details';
   E25: 'dividend income cannot be negative';
   E26: 'other income cannot be negative';
+  E27: 'exempt income is more than 5000, incorrect ITR type';
+  E28: 'incorrect tax paid salary details';
+  E29: 'incorrect tax paid other than salary details';
+  E30: 'incorrect tax paid other than salary pan based details';
+  E31: 'incorrect tcs details';
+  E32: 'incorrect advance or SAT details';
 }

@@ -8,8 +8,10 @@ export class ItrValidationService {
   constructor() {}
 
   validateItrObj(obj) {
+    // IF TOTAL INCOME IS MORE THAN 50 LAKHS THEN HAVE TO MARK MOVABLE AND IMMOVABLE ASSETS MANDATORY. NEED TO CALL TAX API HERE SO THAT WE GET THE TOTAL INCOME FOR THAT AND APPLY LOGIC ACCORDING TO THAT.
+    let totalIncome = obj?.totalIncome;
+
     let itrType = obj?.itrType;
-    console.log(itrType);
 
     const error: ItrValidation[] = [];
 
@@ -349,6 +351,156 @@ export class ItrValidationService {
                 errorMsgToBeDisplayed:
                   'Other income should be greater than zero',
                 relatedSchedule: 'otherIncomes',
+                itrType: itrType ? itrType : 'ITR Type is missing',
+              });
+            }
+          }
+        }
+      }
+
+      // exempt income agri - needs to be tested
+      {
+        if (key === 'exemptIncomes') {
+          if (obj[key]?.length > 0) {
+            const agricultureExempt = obj[key]?.find(
+              (element) => element?.natureDesc === 'AGRI'
+            );
+
+            if (agricultureExempt) {
+              if (
+                agricultureExempt?.amount > 5000 &&
+                (itrType === '1' || itrType === '4')
+              ) {
+                error?.push({
+                  errorCode: 'E27',
+                  message:
+                    'exempt income is more than 5000, incorrect ITR type',
+                  errorMsgToBeDisplayed: `Exempt income is more than 5000, incorrect ITR type ${itrType}`,
+                  relatedSchedule: 'exemptIncomes',
+                  itrType: itrType ? itrType : 'ITR Type is missing',
+                });
+              }
+            }
+          }
+        }
+      }
+
+      // tax paid
+      {
+        if (key === 'taxPaid') {
+          // on salary
+          if (obj[key]?.onSalary?.length > 0) {
+            const onSalaryStat: boolean = obj[key]?.onSalary?.some(
+              (element) =>
+                !element?.deductorName ||
+                !element?.deductorTAN ||
+                !element?.totalAmountCredited ||
+                !element?.totalTdsDeposited
+            );
+
+            if (onSalaryStat) {
+              error?.push({
+                errorCode: 'E28',
+                message: 'incorrect tax paid salary details',
+                errorMsgToBeDisplayed:
+                  'TDS deducted details under salary is/are incorrect',
+                relatedSchedule: 'tdsOnSalary',
+                itrType: itrType ? itrType : 'ITR Type is missing',
+              });
+            }
+          }
+
+          // other than salary
+          if (obj[key]?.otherThanSalary16A?.length > 0) {
+            const otherThanSalaryStat: boolean = obj[
+              key
+            ]?.otherThanSalary16A?.some(
+              (element) =>
+                !element?.deductorName ||
+                !element?.deductorTAN ||
+                !element?.totalAmountCredited ||
+                !element?.totalTdsDeposited ||
+                !element?.headOfIncome
+            );
+
+            if (otherThanSalaryStat) {
+              error?.push({
+                errorCode: 'E29',
+                message: 'incorrect tax paid other than salary details',
+                errorMsgToBeDisplayed:
+                  'TDS deducted details under other than salary is/are incorrect',
+                relatedSchedule: 'tdsOtherThanSalary',
+                itrType: itrType ? itrType : 'ITR Type is missing',
+              });
+            }
+          }
+
+          // other than salary 26qb
+          if (obj[key]?.otherThanSalary26QB?.length > 0) {
+            const otherThanSalary26QbStat: boolean = obj[
+              key
+            ]?.otherThanSalary26QB?.some(
+              (element) =>
+                !element?.deductorName ||
+                !element?.deductorTAN ||
+                !element?.totalAmountCredited ||
+                !element?.totalTdsDeposited ||
+                !element?.headOfIncome
+            );
+
+            if (otherThanSalary26QbStat) {
+              error?.push({
+                errorCode: 'E30',
+                message:
+                  'incorrect tax paid other than salary pan based details',
+                errorMsgToBeDisplayed:
+                  'TDS deducted details under other than salary (PAN based) is/are incorrect',
+                relatedSchedule: 'tdsOtherThanSalaryPanBased',
+                itrType: itrType ? itrType : 'ITR Type is missing',
+              });
+            }
+          }
+
+          // TCS
+          if (obj[key]?.tcs?.length > 0) {
+            const tcsStat: boolean = obj[key]?.tcs?.some(
+              (element) =>
+                !element?.collectorName ||
+                !element?.collectorTAN ||
+                !element?.totalAmountPaid ||
+                !element?.totalTcsDeposited
+            );
+
+            if (tcsStat) {
+              error?.push({
+                errorCode: 'E31',
+                message: 'incorrect tcs details',
+                errorMsgToBeDisplayed: 'TCS deducted details is/are incorrect',
+                relatedSchedule: 'tcsDetails',
+                itrType: itrType ? itrType : 'ITR Type is missing',
+              });
+            }
+          }
+
+          // TAdvance or SAT
+          if (obj[key]?.otherThanTDSTCS?.length > 0) {
+            const otherThanTDSTCSStat: boolean = obj[
+              key
+            ]?.otherThanTDSTCS?.some(
+              (element) =>
+                !element?.bsrCode ||
+                !element?.challanNumber ||
+                !element?.dateOfDeposit ||
+                !element?.totalTax
+            );
+
+            if (otherThanTDSTCSStat) {
+              error?.push({
+                errorCode: 'E32',
+                message: 'incorrect advance or SAT details',
+                errorMsgToBeDisplayed:
+                  'incorrect Advance tax paid or self assessment tax paid detail',
+                relatedSchedule: 'advSelfAssessmentTax',
                 itrType: itrType ? itrType : 'ITR Type is missing',
               });
             }
