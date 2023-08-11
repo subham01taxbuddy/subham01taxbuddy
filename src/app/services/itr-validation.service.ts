@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import {
   ItrValidationObject,
-  ErrorMsgsSchedule,
+  ItrValidations
 } from '../modules/shared/interfaces/itr-validation.interface';
 
 @Injectable()
 export class ItrValidationService {
-  constructor(private errorMsgsSchedule: ErrorMsgsSchedule) {}
+  constructor(private itrValidations: ItrValidations) {}
 
   getErrorMessages(errorCode: string) {
-    const errorDetails = this.errorMsgsSchedule[errorCode];
+    const errorDetails: any = this.itrValidations.getErrorSchedule(errorCode);
     if (errorDetails) {
       const { message, relatedSchedule } = errorDetails;
       console.log('message', message);
