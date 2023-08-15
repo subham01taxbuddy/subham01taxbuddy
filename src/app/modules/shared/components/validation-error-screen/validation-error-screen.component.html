@@ -19,7 +19,9 @@
         <div>To rectify the below errors, simply click on error hyperlink.</div>
       </div>
       <div style="font-size: 24px">
-        <strong> ITR Type : {{ itrType }} </strong>
+        <strong>
+          ITR Type : {{ itrType ? itrType : "ITR Type is missing" }}
+        </strong>
       </div>
       <div class="cardRect">
         <table
@@ -42,7 +44,7 @@
                 </td>
                 <td>
                   <a href="#">
-                    {{ error?.errorMsgToBeDisplayed }}
+                    {{ error?.message }}
                   </a>
                 </td>
                 <td>{{ error?.relatedSchedule }}</td>
