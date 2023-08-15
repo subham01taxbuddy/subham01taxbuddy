@@ -1,8 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Schedules } from '../../interfaces/schedules';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-validation-error-screen',
@@ -12,9 +10,9 @@ import { Router } from '@angular/router';
 export class ValidationErrorScreenComponent implements OnInit {
   errors: any;
   itrType: any;
+  @Output() saveAndNext = new EventEmitter<any>();
   constructor(
     private route: ActivatedRoute,
-    private location: Location,
     private schedules: Schedules,
     private router: Router
   ) {}
@@ -37,6 +35,6 @@ export class ValidationErrorScreenComponent implements OnInit {
   }
 
   goBack() {
-    this.location.back();
+    this.saveAndNext.emit(false);
   }
 }
