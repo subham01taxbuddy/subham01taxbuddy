@@ -6,7 +6,9 @@ import {
 
 @Injectable()
 export class ItrValidationService {
-  constructor(private itrValidations: ItrValidations) {}
+  constructor(
+    private itrValidations: ItrValidations
+  ) {}
 
   getErrorMessages(errorCode: string) {
     const errorDetails: any = this.itrValidations.getErrorSchedule(errorCode);
