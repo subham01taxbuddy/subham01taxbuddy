@@ -503,36 +503,84 @@ export class ItrValidationService {
       // capital gain
       {
         if (key === 'capitalGain') {
+          let capitalGainDetails = obj[key];
           // for basic details that are required in cg object
-          if (obj[key] && obj[key]?.length > 0) {
+          if (capitalGainDetails && capitalGainDetails?.length > 0) {
             this.getCurrentFinancialYear();
-            const capitalGainBasicDetails: boolean =
-              obj[key][0]?.assessmentYear !== this.currentAssessmentYear ||
-              obj[key][0]?.assesseeType !== 'INDIVIDUAL' ||
-              obj[key][0]?.residentialStatus !== 'RESIDENT' ||
-              !obj[key][0]?.assetType;
+            capitalGainDetails?.forEach((element, index) => {
+              const capitalGainBasicDetails: boolean =
+                element?.assessmentYear !== this.currentAssessmentYear ||
+                element?.assesseeType !== 'INDIVIDUAL' ||
+                element?.residentialStatus !== 'RESIDENT' ||
+                !element?.assetType;
 
-            if (capitalGainBasicDetails) {
-              const error = this.getErrorMessages('E34');
-              errorList.push(error);
-            }
-          }
+              if (capitalGainBasicDetails) {
+                const error = this.getErrorMessages('E34');
+                errorList?.push(error);
+              }
 
-          // for deduction array
-          const deductionArray = obj[key]?.[0]?.deduction;
-          if (deductionArray && deductionArray.length > 0) {
-            const deductionDetails: boolean = deductionArray.some((element) => {
-              !element.costOfNewAssets ||
-                !element.purchaseDate ||
-                !element.srn ||
-                !element.underSection ||
-                !element.totalDeductionClaimed;
+              // for deduction array
+              const deductionArray = element?.deduction;
+              if (deductionArray && deductionArray?.length > 0) {
+                const deductionDetails: boolean = deductionArray?.some(
+                  (deduction) =>
+                    !deduction?.costOfNewAssets ||
+                    !deduction?.purchaseDate ||
+                    !deduction?.underSection ||
+                    !deduction?.totalDeductionClaimed ||
+                    deduction?.srn === null ||
+                    deduction?.srn === undefined 
+                );
+
+                if (deductionDetails) {
+                  const error = this.getErrorMessages('E35');
+                  errorList?.push(error);
+                }
+              }
+
+              // for improvement array
+              const improvementArray = element?.improvement;
+              if (improvementArray && improvementArray?.length > 0) {
+                const improvementArrayDetails: boolean = improvementArray?.some(
+                  (improvement) =>
+                    !improvement?.dateOfImprovement ||
+                    !improvement?.costOfImprovement ||
+                    !improvement?.indexCostOfImprovement ||
+                    improvement?.srn === null ||
+                    improvement?.srn === undefined
+                );
+
+                if (improvementArrayDetails) {
+                  const error = this.getErrorMessages('E36');
+                  errorList?.push(error);
+                }
+              }
+
+              // for buyerDetails array
+              const buyersDetailsArray = element?.buyersDetails;
+              if (buyersDetailsArray && buyersDetailsArray?.length > 0) {
+                const buyersDetailsArrayStat: boolean =
+                  buyersDetailsArray?.some(
+                    (buyerDetails) =>
+                      !buyerDetails?.name ||
+                      !buyerDetails?.pan ||
+                      !buyerDetails?.share ||
+                      !buyerDetails?.country ||
+                      !buyerDetails?.state ||
+                      !buyerDetails?.aadhaarNumber ||
+                      !buyerDetails?.pin ||
+                      !buyerDetails?.address ||
+                      !buyerDetails?.amount ||
+                      buyerDetails?.srn === null ||
+                      buyerDetails?.srn === undefined
+                  );
+
+                if (buyersDetailsArrayStat) {
+                  const error = this.getErrorMessages('E37');
+                  errorList?.push(error);
+                }
+              }
             });
-
-            if (deductionDetails) {
-              const error = this.getErrorMessages('E35');
-              errorList.push(error);
-            }
           }
         }
       }

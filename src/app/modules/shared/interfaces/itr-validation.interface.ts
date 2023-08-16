@@ -174,17 +174,27 @@ export const ErrorMsgsSchedule = {
     message: 'Bank account number or bank name is missing',
     relatedSchedule: 'personalInfo',
   },
-
   E34: {
     code: 'E34',
     message: 'Capital gain details are missing. Please contact your developer',
     relatedSchedule: 'capitalGain',
   },
-
   E35: {
     code: 'E35',
     message:
       'There is some issue with the deduction details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
+  E36: {
+    code: 'E36',
+    message:
+      'There is some issue with the cost of improvement details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
+  E37: {
+    code: 'E37',
+    message:
+      'There is some issue with the buyer details under capital gain schedule',
     relatedSchedule: 'capitalGain',
   },
 };
