@@ -1,5 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, ElementRef, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { GridOptions } from 'ag-grid-community';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
@@ -25,6 +26,9 @@ export class PayProcessingComponent implements OnInit {
   downloadURL:any;
   hideDownload = false;
   showMessage ='';
+  accountType = new FormControl('current')
+  currentAccountNumber: string = '333005001704';
+  razorpayXAccountNumber: string = '3434696314924813';
 
   constructor(
     private itrMsService: ItrMsService,
@@ -295,13 +299,27 @@ export class PayProcessingComponent implements OnInit {
   }
 
   download() {
+    // new endpoint given by kamaru(10-08-23) https://avamuzavbieadujrkme44yfetq0cxiou.lambda-url.ap-south-1.on.aws/partner/payout/generate-csv' \
     // https://avamuzavbieadujrkme44yfetq0cxiou.lambda-url.ap-south-1.on.aws/'
     this.loading = true;
     let userId = this.utilsService.getLoggedInUserID();
+    let accountNumber=''
+    if (this.accountType.value === 'current') {
+      console.log('Generating CSV for Current account');
+      console.log('Account Number:', this.currentAccountNumber);
+      accountNumber = this.currentAccountNumber;
+    } else if (this.accountType.value === 'razorpayX') {
+      console.log('Generating CSV for RazorpayX account');
+      console.log('Account Number:', this.razorpayXAccountNumber);
+      accountNumber = this.razorpayXAccountNumber;
+    }
+
     const request = {
-      userId: userId
+      userId: userId,
+      accountNumber:accountNumber
     };
-    let param = '';
+
+    let param = 'partner/payout/generate-csv';
     this.itrMsService.downloadLambda(param,request).subscribe((response: any) => {
       if (response.success) {
         this.loading = false;

@@ -35,6 +35,7 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   eFillingDate = new FormControl('', Validators.required);
   itrType = new FormControl('', Validators.required);
   fy = new FormControl('');
+  ay = new FormControl('');
   maxDate = new Date();
   loading = false;
   userProfile: any;
@@ -62,6 +63,11 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
     if(year){
       this.fy.setValue(year);
       this.checkPaymentStatus()
+      if(year === "2020-2021" ){
+        this.ay.setValue('2021-2022');
+      }else if(year === "2021-2022"){
+        this.ay.setValue('2022-2023');
+      }
     }
     else{
       this.showDetails=false;

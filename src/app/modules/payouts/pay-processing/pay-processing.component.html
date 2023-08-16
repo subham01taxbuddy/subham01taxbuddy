@@ -16,7 +16,14 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-4" *ngIf="!isUploadTrue && hideDownload" >
+        <div class="col-sm-4" *ngIf="!isUploadTrue && hideDownload">
+          <mat-label style="margin-left: 110px; font-size: 14px;font-weight: bold;"> Select Account Type </mat-label>
+            <div class="radio-group">
+              <mat-radio-group [formControl]="accountType">
+                <mat-radio-button value="current">Current account</mat-radio-button>&nbsp; &nbsp;
+                <mat-radio-button value="razorpayX">RazorpayX</mat-radio-button>
+              </mat-radio-group>
+            </div>
           <button class="tbd-btn spRt aprv" [disabled]="loading" (click)="getTds()"> Generate CSV File </button>
           <span class="txblw1">Generate CSV file.</span>
         </div>

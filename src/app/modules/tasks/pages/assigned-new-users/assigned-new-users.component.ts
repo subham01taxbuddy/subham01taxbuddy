@@ -731,7 +731,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
-        width: 160,
+        width: 170,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {

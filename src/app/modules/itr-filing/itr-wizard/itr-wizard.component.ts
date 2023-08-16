@@ -12,6 +12,7 @@ import {
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { ItrValidationService } from 'src/app/services/itr-validation.service';
 import { Schedules } from '../../shared/interfaces/schedules';
 import { NavigationEnd, Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -23,7 +24,7 @@ import { UserNotesComponent } from '../../shared/components/user-notes/user-note
 import { MatDialog } from '@angular/material/dialog';
 import { ChatOptionsDialogComponent } from '../../tasks/components/chat-options/chat-options-dialog.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
-import {ReviewService} from "../../review/services/review.service";
+import { ReviewService } from '../../review/services/review.service';
 
 @Component({
   selector: 'app-itr-wizard',
@@ -46,9 +47,10 @@ export class ItrWizardComponent implements OnInit {
   componentsList = [];
   navigationData: any;
   customerName = '';
+  validationErrors = [];
 
   constructor(
-    private reviewService:ReviewService,
+    private reviewService: ReviewService,
     private itrMsService: ItrMsService,
     private userMsService: UserMsService,
     public utilsService: UtilsService,
@@ -56,7 +58,8 @@ export class ItrWizardComponent implements OnInit {
     private location: Location,
     private cdRef: ChangeDetectorRef,
     public schedules: Schedules,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private itrValidationService: ItrValidationService
   ) {
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
   }
@@ -186,21 +189,36 @@ export class ItrWizardComponent implements OnInit {
   gotoSummary() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // if (this.jsonUploaded) {
-    this.ITR_JSON = this.utilsService.removeNullProperties(this.ITR_JSON);
-    sessionStorage.setItem(
-      AppConstants.ITR_JSON,
-      JSON.stringify(this.ITR_JSON)
+    this.validationErrors = this.itrValidationService.validateItrObj(
+      this.ITR_JSON
     );
-    // }
 
-    this.breadcrumb = null;
-    this.showIncomeSources = false;
-    this.selectedSchedule = 'Comparison of New v/s Old Regime';
-    this.router.navigate(['/itr-filing/itr/old-vs-new']);
-    // this.breadcrumb = null;
-    // this.showIncomeSources = false;
-    // this.selectedSchedule = 'Summary';
-    // this.router.navigate(['/itr-filing/itr/summary']);
+    if (this.validationErrors.length > 0) {
+      this.breadcrumb = null;
+      this.showIncomeSources = false;
+      this.selectedSchedule = 'Validation Errors';
+      this.router.navigate(['/itr-filing/itr/validation-errors'], {
+        state: { validationErrors: this.validationErrors },
+      });
+    } else {
+      this.ITR_JSON = this.itrValidationService.removeNullProperties(
+        this.ITR_JSON
+      );
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.ITR_JSON)
+      );
+      // }
+
+      this.breadcrumb = null;
+      this.showIncomeSources = false;
+      this.selectedSchedule = 'Comparison of New v/s Old Regime';
+      this.router.navigate(['/itr-filing/itr/old-vs-new']);
+      // this.breadcrumb = null;
+      // this.showIncomeSources = false;
+      // this.selectedSchedule = 'Summary';
+      // this.router.navigate(['/itr-filing/itr/summary']);
+    }
   }
 
   validateItrObj() {
@@ -414,7 +432,7 @@ export class ItrWizardComponent implements OnInit {
         clientName:
           this.ITR_JSON.family[0].fName + ' ' + this.ITR_JSON.family[0].lName,
         serviceType: 'ITR',
-        clientMobileNumber:this.ITR_JSON.contactNumber
+        clientMobileNumber: this.ITR_JSON.contactNumber,
       },
     });
 
