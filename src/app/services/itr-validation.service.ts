@@ -6,9 +6,9 @@ import {
 
 @Injectable()
 export class ItrValidationService {
-  constructor(
-    private itrValidations: ItrValidations
-  ) {}
+  currentAssessmentYear: any;
+  currentFinancialYear: any;
+  constructor(private itrValidations: ItrValidations) {}
 
   getErrorMessages(errorCode: string) {
     const errorDetails: any = this.itrValidations.getErrorSchedule(errorCode);
@@ -499,6 +499,43 @@ export class ItrValidationService {
           }
         }
       }
+
+      // capital gain
+      {
+        if (key === 'capitalGain') {
+          // for basic details that are required in cg object
+          if (obj[key] && obj[key]?.length > 0) {
+            this.getCurrentFinancialYear();
+            const capitalGainBasicDetails: boolean =
+              obj[key][0]?.assessmentYear !== this.currentAssessmentYear ||
+              obj[key][0]?.assesseeType !== 'INDIVIDUAL' ||
+              obj[key][0]?.residentialStatus !== 'RESIDENT' ||
+              !obj[key][0]?.assetType;
+
+            if (capitalGainBasicDetails) {
+              const error = this.getErrorMessages('E34');
+              errorList.push(error);
+            }
+          }
+
+          // for deduction array
+          const deductionArray = obj[key]?.[0]?.deduction;
+          if (deductionArray && deductionArray.length > 0) {
+            const deductionDetails: boolean = deductionArray.some((element) => {
+              !element.costOfNewAssets ||
+                !element.purchaseDate ||
+                !element.srn ||
+                !element.underSection ||
+                !element.totalDeductionClaimed;
+            });
+
+            if (deductionDetails) {
+              const error = this.getErrorMessages('E35');
+              errorList.push(error);
+            }
+          }
+        }
+      }
     }
 
     console.log(errorList, 'List of validation errors');
@@ -844,5 +881,28 @@ export class ItrValidationService {
     }
 
     return obj;
+  }
+
+  getCurrentFinancialYear(): string {
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    const currentYear = today.getFullYear();
+
+    const financialYearStartMonth = 4; // April
+    const financialYear =
+      currentMonth < financialYearStartMonth ? currentYear - 1 : currentYear;
+
+    this.currentFinancialYear = financialYear - 1 + '-' + financialYear;
+    this.getCurrentAssessmentYear(this.currentFinancialYear);
+    return financialYear - 1 + '-' + financialYear; // Format: 2022-2023 for FY 2022-23
+  }
+
+  getCurrentAssessmentYear(financialYear: string): string {
+    const startYear = parseInt(financialYear.split('-')[0]);
+    const endYear = parseInt(financialYear.split('-')[1]);
+    const assessmentYearStart = endYear; // Assessment year starts from the end of the financial year. Its basically +1 of financial year
+    this.currentAssessmentYear =
+      assessmentYearStart + '-' + (assessmentYearStart + 1);
+    return assessmentYearStart + '-' + (assessmentYearStart + 1); // Format: 2023-2024 for AY 2023-24
   }
 }
