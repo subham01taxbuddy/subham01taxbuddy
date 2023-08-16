@@ -189,36 +189,56 @@ export class ItrWizardComponent implements OnInit {
   gotoSummary() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // if (this.jsonUploaded) {
-    this.validationErrors = this.itrValidationService.validateItrObj(
+
+    this.ITR_JSON = this.itrValidationService.removeNullProperties(
       this.ITR_JSON
     );
+    sessionStorage.setItem(
+      AppConstants.ITR_JSON,
+      JSON.stringify(this.ITR_JSON)
+    );
+    // }
 
-    if (this.validationErrors.length > 0) {
-      this.breadcrumb = null;
-      this.showIncomeSources = false;
-      this.selectedSchedule = 'Validation Errors';
-      this.router.navigate(['/itr-filing/itr/validation-errors'], {
-        state: { validationErrors: this.validationErrors },
-      });
-    } else {
-      this.ITR_JSON = this.itrValidationService.removeNullProperties(
-        this.ITR_JSON
-      );
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.ITR_JSON)
-      );
-      // }
+    this.breadcrumb = null;
+    this.showIncomeSources = false;
+    this.selectedSchedule = 'Comparison of New v/s Old Regime';
+    this.router.navigate(['/itr-filing/itr/old-vs-new']);
+    // this.breadcrumb = null;
+    // this.showIncomeSources = false;
+    // this.selectedSchedule = 'Summary';
+    // this.router.navigate(['/itr-filing/itr/summary']);
 
-      this.breadcrumb = null;
-      this.showIncomeSources = false;
-      this.selectedSchedule = 'Comparison of New v/s Old Regime';
-      this.router.navigate(['/itr-filing/itr/old-vs-new']);
-      // this.breadcrumb = null;
-      // this.showIncomeSources = false;
-      // this.selectedSchedule = 'Summary';
-      // this.router.navigate(['/itr-filing/itr/summary']);
-    }
+    // VALIDATION ERROR SCREEN - HIDDEN FOR NOW TESTING
+    // this.validationErrors = this.itrValidationService.validateItrObj(
+    //   this.ITR_JSON
+    // );
+
+    // if (this.validationErrors.length > 0) {
+    //   this.breadcrumb = null;
+    //   this.showIncomeSources = false;
+    //   this.selectedSchedule = 'Validation Errors';
+    //   this.router.navigate(['/itr-filing/itr/validation-errors'], {
+    //     state: { validationErrors: this.validationErrors },
+    //   });
+    // } else {
+    //   this.ITR_JSON = this.itrValidationService.removeNullProperties(
+    //     this.ITR_JSON
+    //   );
+    //   sessionStorage.setItem(
+    //     AppConstants.ITR_JSON,
+    //     JSON.stringify(this.ITR_JSON)
+    //   );
+    //   // }
+
+    //   this.breadcrumb = null;
+    //   this.showIncomeSources = false;
+    //   this.selectedSchedule = 'Comparison of New v/s Old Regime';
+    //   this.router.navigate(['/itr-filing/itr/old-vs-new']);
+    //   // this.breadcrumb = null;
+    //   // this.showIncomeSources = false;
+    //   // this.selectedSchedule = 'Summary';
+    //   // this.router.navigate(['/itr-filing/itr/summary']);
+    // }
   }
 
   validateItrObj() {
