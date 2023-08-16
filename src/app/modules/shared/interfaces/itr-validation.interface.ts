@@ -197,6 +197,24 @@ export const ErrorMsgsSchedule = {
       'There is some issue with the buyer details under capital gain schedule',
     relatedSchedule: 'capitalGain',
   },
+  E38: {
+    code: 'E38',
+    message:
+      'There is some issue with the land and building asset details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
+  E39: {
+    code: 'E39',
+    message:
+      'There is some issue with the Equity listed asset details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
+  E40: {
+    code: 'E40',
+    message:
+      'There is some issue with the Equity unlisted asset details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
 };
 export interface Schedules {
   personalInfo: String;

@@ -319,7 +319,7 @@ export class ItrValidationService {
             ]?.otherThanSalary26QB?.some(
               (element) =>
                 !element?.deductorName ||
-                !element?.deductorTAN ||
+                !element?.deductorPAN ||
                 !element?.totalAmountCredited ||
                 !element?.totalTdsDeposited ||
                 !element?.headOfIncome
@@ -529,7 +529,7 @@ export class ItrValidationService {
                     !deduction?.underSection ||
                     !deduction?.totalDeductionClaimed ||
                     deduction?.srn === null ||
-                    deduction?.srn === undefined 
+                    deduction?.srn === undefined
                 );
 
                 if (deductionDetails) {
@@ -578,6 +578,124 @@ export class ItrValidationService {
                 if (buyersDetailsArrayStat) {
                   const error = this.getErrorMessages('E37');
                   errorList?.push(error);
+                }
+              }
+
+              // const assetDetails for different type gains
+              let assetType = element?.assetType;
+
+              // for land and building
+              if (assetType === 'PLOT_OF_LAND') {
+                const assetDetailsArray = element?.assetDetails;
+                if (assetDetailsArray && assetDetailsArray?.length > 0) {
+                  const landAndBuildingStat: boolean = assetDetailsArray?.some(
+                    (lb) =>
+                      !lb?.gainType ||
+                      lb?.algorithm === 'cgProperty' ||
+                      !lb?.sellDate ||
+                      !lb?.valueInConsideration ||
+                      !lb?.purchaseDate ||
+                      !lb?.purchaseCost ||
+                      !lb?.indexCostOfAcquisition ||
+                      !lb?.capitalGain
+                  );
+
+                  if (landAndBuildingStat) {
+                    const error = this.getErrorMessages('E38');
+                    errorList?.push(error);
+                  }
+                }
+              }
+
+              // for equity and shares listed
+              if (assetType === 'EQUITY_SHARES_LISTED') {
+                const assetDetailsArray = element?.assetDetails;
+                if (assetDetailsArray && assetDetailsArray?.length > 0) {
+                  // const hasMissingProperties = (equity) => {
+                  //   const commonConditions = [
+                  //     !equity.gainType,
+                  //     equity.algorithm === 'cgSharesMF',
+                  //     !equity.sellDate,
+                  //     !equity.sellOrBuyQuantity,
+                  //     !equity.sellValuePerUnit,
+                  //     !equity.sellValue,
+                  //     !equity.purchaseDate,
+                  //     !equity.purchaseValuePerUnit,
+                  //     !equity.purchaseCost,
+                  //   ];
+
+                  //   if (equity?.gainType === 'LONG') {
+                  //     commonConditions.push(
+                  //       !equity.isinCode,
+                  //       !equity.fmvAsOn31Jan2018,
+                  //       !equity.grandFatheredValue,
+                  //       !equity.totalFairMarketValueOfCapitalAsset,
+                  //       !equity.capitalGain
+                  //     );
+                  //   }
+
+                  //   return commonConditions.some((condition) => condition);
+                  // };
+
+                  // const equityStatus: boolean =
+                  //   assetDetailsArray.some(hasMissingProperties);
+
+                  const equityStat: boolean = assetDetailsArray?.some(
+                    (equity) =>
+                      equity?.gainType === 'LONG'
+                        ? !equity?.gainType ||
+                          equity?.algorithm !== 'cgSharesMF' ||
+                          !equity?.sellDate ||
+                          !equity?.sellOrBuyQuantity ||
+                          !equity?.sellValuePerUnit ||
+                          !equity?.sellValue ||
+                          !equity?.purchaseDate ||
+                          !equity?.purchaseValuePerUnit ||
+                          !equity?.purchaseCost ||
+                          !equity?.isinCode ||
+                          !equity?.fmvAsOn31Jan2018 ||
+                          !equity?.grandFatheredValue ||
+                          !equity?.totalFairMarketValueOfCapitalAsset ||
+                          !equity?.capitalGain
+                        : !equity?.gainType ||
+                          equity?.algorithm !== 'cgSharesMF' ||
+                          !equity?.sellDate ||
+                          !equity?.sellOrBuyQuantity ||
+                          !equity?.sellValuePerUnit ||
+                          !equity?.sellValue ||
+                          !equity?.purchaseDate ||
+                          !equity?.purchaseValuePerUnit ||
+                          !equity?.purchaseCost
+                  );
+
+                  if (equityStat) {
+                    const error = this.getErrorMessages('E39');
+                    errorList?.push(error);
+                  }
+                }
+              }
+
+              // for equity and shares unlisted
+              if (assetType === 'EQUITY_SHARES_UNLISTED') {
+                const assetDetailsArray = element?.assetDetails;
+                if (assetDetailsArray && assetDetailsArray?.length > 0) {
+                  const equityUnlistedStat: boolean = assetDetailsArray?.some(
+                    (equity) =>
+                      !equity?.gainType ||
+                      equity?.algorithm !== 'cgSharesMF' ||
+                      !equity?.sellDate ||
+                      !equity?.sellOrBuyQuantity ||
+                      !equity?.sellValuePerUnit ||
+                      !equity?.sellValue ||
+                      !equity?.purchaseDate ||
+                      !equity?.purchaseValuePerUnit ||
+                      !equity?.purchaseCost
+                  );
+
+                  if (equityUnlistedStat) {
+                    const error = this.getErrorMessages('E40');
+                    errorList?.push(error);
+                  }
                 }
               }
             });
