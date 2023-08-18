@@ -119,4 +119,10 @@ export class EVerificationDialogComponent implements OnInit {
       event: 'close', data: 'MANUAL'
     })
   }
+
+  markAsProcessed(){
+    this.dialogRef.close({
+      event: 'close', data: 'itrProcessed'
+    })
+  }
 }
