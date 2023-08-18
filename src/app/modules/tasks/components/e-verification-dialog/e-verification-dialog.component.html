@@ -1,11 +1,13 @@
 <h1 mat-dialog-title>
-  E-Verification For: {{ data.name }} ({{ data.pan }})
+  <span *ngIf="data.title === 'eVerify'">E-Verification For:</span>
+  <span *ngIf="data.title === 'itrProcessed'">ITR Status For:</span>
+   {{ data.name }} ({{ data.pan }})
   <button style="float: right" mat-raised-button mat-dialog-close tabindex="-1">
     <i class="fa fa-close"></i>
   </button>
 </h1>
 
-<mat-tab-group>
+<mat-tab-group *ngIf="data.title === 'eVerify' ">
   <mat-tab label="Online E-Verify">
     <form [formGroup]="eVerifyForm">
       <mat-dialog-content>
@@ -113,3 +115,23 @@
     </button>
   </mat-tab>
 </mat-tab-group>
+
+<ng-container *ngIf="data.title === 'itrProcessed' " >
+  <mat-tab-group>
+    <mat-tab label="Manually Update">
+      <p>
+        Mark as ITR Processed done, Only in case when it is actually processed on Income Tax Portal.
+        It will only update here as ITR Processed for the user and for our future reference
+      </p>
+      <br />
+      <button
+      type="submit"
+      class="tbd-btn"
+      [disabled]="loading"
+      (click)="markAsProcessed()"
+    >
+      Mark as Processed
+    </button>
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>
