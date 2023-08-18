@@ -78,7 +78,7 @@
       No JSON Filing
     </button>
   </span>
-  <span *ngIf="(data.serviceType === 'ITR' || data.serviceType === 'ITRU') && isApplicable(['ROLE_ADMIN'])">
+  <span *ngIf="(data.serviceType === 'ITR' || data.serviceType === 'ITRU') && isApplicable(['ROLE_ADMIN','ROLE_LEADER','ROLE_OWNER'])">
     <button type="button" title="update ITR-U filling" class="tbd-btn-small" (click)="checkSubscription('itr-u-update')">
       ITR-U Update&nbsp;&nbsp; <i class="fas fa-edit" aria-hidden="true"></i>
     </button>
