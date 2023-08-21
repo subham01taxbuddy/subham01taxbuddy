@@ -698,6 +698,48 @@ export class ItrValidationService {
                   }
                 }
               }
+
+              // for bonds
+              if (assetType === 'BONDS') {
+                const assetDetailsArray = element?.assetDetails;
+                if (assetDetailsArray && assetDetailsArray?.length > 0) {
+                  const bondsStat: boolean = assetDetailsArray?.some(
+                    (bonds) =>
+                      !bonds?.gainType ||
+                      bonds?.algorithm !== 'cgProperty' ||
+                      !bonds?.sellDate ||
+                      !bonds?.valueInConsideration ||
+                      !bonds?.purchaseDate ||
+                      !bonds?.purchaseCost
+                  );
+
+                  if (bondsStat) {
+                    const error = this.getErrorMessages('E41');
+                    errorList?.push(error);
+                  }
+                }
+              }
+
+              // for debentures
+              if (assetType === 'ZERO_COUPON_BONDS') {
+                const assetDetailsArray = element?.assetDetails;
+                if (assetDetailsArray && assetDetailsArray?.length > 0) {
+                  const ZCBStat: boolean = assetDetailsArray?.some(
+                    (zcb) =>
+                      !zcb?.gainType ||
+                      zcb?.algorithm !== 'cgProperty' ||
+                      !zcb?.sellDate ||
+                      !zcb?.valueInConsideration ||
+                      !zcb?.purchaseDate ||
+                      !zcb?.purchaseCost
+                  );
+
+                  if (ZCBStat) {
+                    const error = this.getErrorMessages('E42');
+                    errorList?.push(error);
+                  }
+                }
+              }
             });
           }
         }
