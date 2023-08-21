@@ -8,6 +8,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ItrLifecycleDialogComponent implements OnInit {
   otherData = []
+  itrLifecycleNonEri =[]
   constructor(public dialogRef: MatDialogRef<ItrLifecycleDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,) { }
 
@@ -19,6 +20,12 @@ export class ItrLifecycleDialogComponent implements OnInit {
       { key: 'Return Type', value: this.data?.itrsFiled?.filingTypeCd === 'O' ? 'Original' : 'Revised' },
       { key: 'Acknowledgement Number', value: this.data?.itrsFiled?.ackNum },
       { key: 'Acknowledgement Date', value: this.data?.itrsFiled?.ackDt },
+    ]
+
+    this.itrLifecycleNonEri  =[
+      { key: 'ITR Filed on :', value: this.data?.itrsFiled?.taskCompletionDateTime },
+      { key: 'E-verification done on :', value: this.data?.eVerification?.taskCompletionDateTime },
+      { key: 'ITR processed on :', value: this.data?.itrProcessed?.taskCompletionDateTime },
     ]
   }
 
