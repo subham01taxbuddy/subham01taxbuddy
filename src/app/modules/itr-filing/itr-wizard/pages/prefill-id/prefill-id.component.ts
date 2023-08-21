@@ -5103,20 +5103,8 @@ export class PrefillIdComponent implements OnInit {
                 }
 
                 // Function to filter and map OtherIncDtls to create expenses
-                function getExpenses(
-                  OtherIncDtls?,
-                  DirectExpensesTotal?,
-                  TotExciseCustomsVAT?
-                ) {
+                function getExpenses(OtherIncDtls?, TotExciseCustomsVAT?) {
                   const expenses = [];
-                  if (DirectExpensesTotal > 0) {
-                    expenses.push({
-                      hasExpense: false,
-                      expenseType: 'OTHER_EXPENSES',
-                      expenseAmount: DirectExpensesTotal,
-                      description: 'DirectExpensesTotal',
-                    });
-                  }
 
                   if (TotExciseCustomsVAT > 0) {
                     expenses.push({
@@ -5189,7 +5177,6 @@ export class PrefillIdComponent implements OnInit {
                       ?.TotExciseCustomsVAT > 0
                       ? getExpenses(
                           TradingAc?.OtherIncDtls,
-                          TradingAc?.DirectExpensesTotal,
                           TradingAc?.DutyTaxPay?.ExciseCustomsVAT
                             ?.TotExciseCustomsVAT
                         )
