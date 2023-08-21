@@ -215,18 +215,18 @@ export class ShowUserDocumnetsComponent implements OnInit {
     }
   }
 
-  async downloadAll(){
+  async downloadAll(folders){
+    this.loading = true;
     const zip = new JSZip();
     const name = this.userId + '.zip';
     // tslint:disable-next-line:prefer-for-of
 
-    for(let counter = 0; counter < this.folders.length; counter++) {
-      let document = this.folders[counter];
+    for(let counter = 0; counter < folders.length; counter++) {
+      let document = folders[counter];
       let fileUrl;
       if (document.isPasswordProtected) {
-        // location.href = document.passwordProtectedFileUrl;
+        // fileUrl = document.passwordProtectedFileUrl;
         fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
-        return;
       } else {
         fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
       }
@@ -234,6 +234,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
       const b: any = new Blob([fileData], { type: '' + fileData.type + '' });
       zip.file(fileUrl.substring(fileUrl.lastIndexOf('/') + 1), b);
     }
+    this.loading = false;
     zip.generateAsync({ type: 'blob' }).then((content) => {
       if (content) {
         FileSaver.saveAs(content, name);
@@ -248,6 +249,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
     };
     const res = await this.httpClient.get(url, httpOptions).toPromise().catch((err: HttpErrorResponse) => {
       const error = err.error;
+      console.log(error);
       return error;
     });
     return res;

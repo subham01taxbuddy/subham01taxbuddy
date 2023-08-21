@@ -7,7 +7,7 @@
         <app-document-upload (uploadDocument)="afterUploadDocs($event)" [userId]="userId"></app-document-upload>
         <div class="card__title" style="padding: 20px;">Document Cloud
           <span *ngIf="isFile" style="float: right;">
-            <button *ngIf="isDownloadAllowed" (click)="downloadAll()">
+            <button *ngIf="isDownloadAllowed" (click)="downloadAll(folders)">
               <i class="fa fa-download" aria-hidden="true"
                  style="font-size: 18px; padding: inherit; cursor: pointer;"></i>Download All
             </button>
