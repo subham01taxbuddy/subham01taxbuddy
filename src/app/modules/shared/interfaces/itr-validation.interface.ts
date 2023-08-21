@@ -227,6 +227,12 @@ export const ErrorMsgsSchedule = {
       'There is some issue with the Zero Coupon Bonds details under capital gain schedule',
     relatedSchedule: 'capitalGain',
   },
+  E43: {
+    code: 'E43',
+    message:
+      'There is some issue with the Gold details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
 };
 export interface Schedules {
   personalInfo: String;

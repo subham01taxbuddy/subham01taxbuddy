@@ -740,6 +740,27 @@ export class ItrValidationService {
                   }
                 }
               }
+
+              // for other Assets
+              if (assetType === 'GOLD') {
+                const assetDetailsArray = element?.assetDetails;
+                if (assetDetailsArray && assetDetailsArray?.length > 0) {
+                  const goldStat: boolean = assetDetailsArray?.some(
+                    (gold) =>
+                      !gold?.gainType ||
+                      gold?.algorithm !== 'cgProperty' ||
+                      !gold?.sellDate ||
+                      !gold?.sellValue ||
+                      !gold?.purchaseDate ||
+                      !gold?.purchaseCost
+                  );
+
+                  if (goldStat) {
+                    const error = this.getErrorMessages('E43');
+                    errorList?.push(error);
+                  }
+                }
+              }
             });
           }
         }
