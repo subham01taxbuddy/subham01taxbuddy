@@ -1283,27 +1283,60 @@ export class FilingsComponent implements OnInit,OnDestroy {
         if (res.hasOwnProperty('errors')) {
           if (res.errors instanceof Array && res.errors.length > 0)
             this.utilsService.showSnackBar(res.errors[0].desc);
-
-            let disposable = this.dialog.open(EVerificationDialogComponent, {
-              data: {
-                title: "itrProcessed",
-                pan: data.panNumber,
-                ay: data.assessmentYear.substring(0, 4),
-                ackNum: data.ackNumber,
-                formCode: data.itrType,
-                name: data.fName + ' ' + data.lName,
-                userId: data.userId,
-                assessmentYear: data.assessmentYear,
-              },
-            });
-            disposable.afterClosed().subscribe((result) => {
-              if (result?.data === 'itrProcessed') {
-                this.markAsProcessed(data);
-              }
-            })
+            this.getItrLifeCycleStatus(data)
         }
       }
     });
+  }
+
+  getItrLifeCycleStatus(data) {
+    this.loading = true;
+    let param = '/life-cycle-status?userId=' + data.userId + '&assessmentYear=' + data.assessmentYear;
+    this.itrMsService.getItrLifeCycle(param).subscribe((response: any) => {
+      if (response.success) {
+        this.loading = false
+        console.log('res of itr status of non-eri',response)
+        if (response.data.itrProcessedSuccessfully.taskStatus === 'Completed') {
+          let input = {
+            title: 'itrLifecycleNonEri',
+            name: data.fName + ' ' + data.lName,
+            pan: data.panNumber,
+            itrsFiled: response.data.itrFiledStatus,
+            eVerification : response.data.eVerificationStatus,
+            itrProcessed : response.data.itrProcessedSuccessfully,
+          };
+          this.openLifeCycleDialog(input);
+        }else{
+          let disposable = this.dialog.open(EVerificationDialogComponent, {
+            data: {
+              title: "itrProcessed",
+              pan: data.panNumber,
+              ay: data.assessmentYear.substring(0, 4),
+              ackNum: data.ackNumber,
+              formCode: data.itrType,
+              name: data.fName + ' ' + data.lName,
+              userId: data.userId,
+              assessmentYear: data.assessmentYear,
+            },
+          });
+          disposable.afterClosed().subscribe((result) => {
+            if (result?.data === 'itrProcessed') {
+              this.markAsProcessed(data);
+            }
+          })
+        }
+      } else {
+        this.loading = false
+        this.utilsService.showSnackBar(response.message);
+      }
+    },
+      error => {
+        console.log('error ==> ', error)
+        this.loading = false
+        this.utilsService.showSnackBar('Failed to Save the ITR Details');
+
+      });
+
   }
 
   openLifeCycleDialog(data) {

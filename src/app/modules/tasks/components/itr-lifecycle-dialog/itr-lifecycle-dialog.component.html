@@ -4,7 +4,7 @@
   </button>
 </h1>
 
-<div class="card__row">
+<div class="card__row" *ngIf="data.title !== 'itrLifecycleNonEri'">
   <div class=" card__col-sm-6">
     <div class="card__row" style="padding-bottom: 15px;" *ngFor="let i of data?.itrsFiled?.itrPanDetlList">
       <div class=" card__col-sm-2">
@@ -25,6 +25,22 @@
       </div>
       <div class=" card__col-sm-6">
         <div style="float: right;">{{i.value}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card__row" *ngIf="data.title === 'itrLifecycleNonEri'">
+  <div class=" card__col-sm-6">
+    <div class="card__row" style="padding-bottom: 8px;" *ngFor="let i of itrLifecycleNonEri">
+      <div class=" card__col-sm-2">
+        <i class="fa fa-check-circle" style="color: green; font-size:24px;"></i>
+      </div>
+      <div class=" card__col-sm-6">
+        <div>{{i.key}}</div>
+      </div>
+      <div class=" card__col-sm-4">
+        <div>{{i.value | date: 'dd MMM yyyy'}}</div>
       </div>
     </div>
   </div>
