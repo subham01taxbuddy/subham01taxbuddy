@@ -221,6 +221,8 @@ export class ShowUserDocumnetsComponent implements OnInit {
     const name = this.userId + '.zip';
     // tslint:disable-next-line:prefer-for-of
 
+    let completed = [];
+    let repeat = 1;
     for(let counter = 0; counter < folders.length; counter++) {
       let document = folders[counter];
       let fileUrl;
@@ -232,7 +234,12 @@ export class ShowUserDocumnetsComponent implements OnInit {
       }
       const fileData: any = await this.getFile(fileUrl);
       const b: any = new Blob([fileData], { type: '' + fileData.type + '' });
-      zip.file(fileUrl.substring(fileUrl.lastIndexOf('/') + 1), b);
+      let fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
+      if(completed.includes(fileName)){
+        fileName = fileName.substring(0, fileName.lastIndexOf('.')) + "_" + repeat + fileName.substring(fileName.lastIndexOf('.'));
+      }
+      completed.push(fileName);
+      zip.file(fileName, b);
     }
     this.loading = false;
     zip.generateAsync({ type: 'blob' }).then((content) => {
