@@ -37,6 +37,7 @@
     "file-saver": "^2.0.5",
     "jquery": "^3.6.4",
     "json2csv": "~5.0.6",
+    "jszip": "^3.10.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "ng-speed-test": "^2.3.2",
