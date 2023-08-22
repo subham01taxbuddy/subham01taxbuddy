@@ -353,7 +353,7 @@ export class PrefillIdComponent implements OnInit {
           ]?.TaxExmpIntIncDtls?.OthersInc?.OthersIncDtls?.find(
             (jsonAllowance) => jsonAllowance.NatureDesc === type
           );
-        } else if (this.ITR_Type === 'ITR2') {
+        } else if (this.ITR_Type === 'ITR2' || this.ITR_Type === 'ITR3') {
           JsonDetail = this.uploadedJson[
             ITR_Type
           ]?.ScheduleEI?.OthersInc?.OthersIncDtls?.find(
@@ -368,8 +368,6 @@ export class PrefillIdComponent implements OnInit {
               amount: JsonDetail.OthAmount,
               othNatOfInc: null,
             });
-          } else {
-            console.log(`Exempt Income - ${type} not found`);
           }
         }
       } catch (error) {
@@ -423,6 +421,17 @@ export class PrefillIdComponent implements OnInit {
           this.ITR_Obj.exemptIncomes.push({
             natureDesc: 'OTH',
             amount: othExemptDiff2,
+            othNatOfInc: null,
+          });
+        }
+      } else if(this.ITR_Type === 'ITR3'){
+        const othExemptDiff3 =
+          this.uploadedJson[this.ITR_Type].ScheduleEI?.TotalExemptInc -
+          totalOtherExemptAmount;
+        if (othExemptDiff3 > 0) {
+          this.ITR_Obj.exemptIncomes.push({
+            natureDesc: 'OTH',
+            amount: othExemptDiff3,
             othNatOfInc: null,
           });
         }
@@ -3641,26 +3650,17 @@ export class PrefillIdComponent implements OnInit {
           // EXEMPT INCOME
           {
             if (
+              this.ITR_Obj.exemptIncomes &&
               this.uploadedJson[this.ITR_Type]?.ScheduleEI?.OthersInc
                 ?.OthersIncDtls
             ) {
-              if (this.ITR_Obj.exemptIncomes) {
-                //getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
-                const availableExemptIncomes = this.uploadedJson[
-                  this.ITR_Type
-                ].ScheduleEI?.OthersInc?.OthersIncDtls?.map(
-                  (value) => value.NatureDesc
-                );
-                this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
-              } else {
-                console.log(
-                  'ITROBJECT => Exempt Incomes => ITR1 => Exempt Incomes There are no details under exemptIncomes in the ITR Obj'
-                );
-              }
-            } else {
-              console.log(
-                'ITRJSON => EXEMPT INCOME DETAILS => ITR2/3, this.uploadedJson[this.ITR_Type]?.ScheduleEI?.OthersInc?.OthersIncDtls'
+              // getting all the exempt income keys from the JSON and passing it to the updateExemptIncomes function
+              const availableExemptIncomes = this.uploadedJson[
+                this.ITR_Type
+              ].ScheduleEI?.OthersInc?.OthersIncDtls?.map(
+                (value) => value.NatureDesc
               );
+              this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
             }
 
             sessionStorage.setItem(
