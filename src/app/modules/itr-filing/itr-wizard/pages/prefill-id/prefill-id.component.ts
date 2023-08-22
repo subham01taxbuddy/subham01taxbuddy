@@ -12,6 +12,7 @@ import { formatDate, TitleCasePipe } from '@angular/common';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { UserMsService } from '../../../../../services/user-ms.service';
 import * as moment from 'moment/moment';
+import { NonNullExpression } from 'typescript';
 
 @Component({
   selector: 'app-prefill-id',
@@ -424,7 +425,7 @@ export class PrefillIdComponent implements OnInit {
             othNatOfInc: null,
           });
         }
-      } else if(this.ITR_Type === 'ITR3'){
+      } else if (this.ITR_Type === 'ITR3') {
         const othExemptDiff3 =
           this.uploadedJson[this.ITR_Type].ScheduleEI?.TotalExemptInc -
           totalOtherExemptAmount;
@@ -1096,16 +1097,23 @@ export class PrefillIdComponent implements OnInit {
               }
             }
 
-            // There is some issue in this, need to fix later
-            // if (newName === 'POLITICAL') {
-            //   const donation80ggc = this.ITR_Obj.donations.find(
-            //     (donation) => donation.donationType === 'POLITICAL'
-            //   );
-
-            //   const donation80ggcAmount = (donation80ggc.amountOtherThanCash =
-            //     investments[i][1]);
-            //   console.log('POLITICAL80GGC', donation80ggcAmount);
-            // }
+            // For 80GGC POLITICAL donations
+            if (newName === 'POLITICAL') {
+              this.ITR_Obj?.donations?.push({
+                details: '',
+                donationType: 'POLITICAL',
+                amountInCash: 0,
+                amountOtherThanCash: investments[i][1],
+                identifier: '',
+                schemeCode: '',
+                name: '',
+                address: '',
+                city: '',
+                pinCode: '',
+                state: '',
+                panNumber: '',
+              });
+            }
 
             // All the other Deductions here
             try {
