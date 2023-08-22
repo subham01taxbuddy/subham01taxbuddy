@@ -393,27 +393,7 @@ export class SummaryComponent implements OnInit {
     specialRateChargeable: Number;
     netAgricultureIncome: Number;
     aggregateIncome: Number;
-    lossesToBeCarriedForward: {
-      cflDtls: {
-        assessmentPastYear: any;
-        housePropertyLoss: Number;
-        STCGLoss: Number;
-        LTCGLoss: Number;
-        BusLossOthThanSpecLossCF: Number;
-        LossFrmSpecBusCF: Number;
-        LossFrmSpecifiedBusCF: Number;
-        OthSrcLoss: Number;
-        pastYear: Number;
-        totalLoss: Number;
-      }[];
-      lossSetOffDuringYear: Number;
-      cflTotal: Number;
-    };
-    scheduleCfl: {
-      LossCFFromPrev13thYearFromAY: {
-        dateOfFiling: any;
-        LossFrmSpecifiedBusCF: Number;
-      };
+    scheduleCflDetails: {
       LossCFFromPrev12thYearFromAY: {
         dateOfFiling: any;
         LossFrmSpecifiedBusCF: Number;
@@ -1195,29 +1175,7 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.ITR14IncomeDeductions
               ]?.TotalIncome,
-            lossesToBeCarriedForward: {
-              cflDtls: [
-                {
-                  assessmentPastYear: 0,
-                  housePropertyLoss: 0,
-                  STCGLoss: 0,
-                  LTCGLoss: 0,
-                  BusLossOthThanSpecLossCF: 0,
-                  LossFrmSpecBusCF: 0,
-                  LossFrmSpecifiedBusCF: 0,
-                  OthSrcLoss: 0,
-                  pastYear: 0,
-                  totalLoss: 0,
-                },
-              ],
-              lossSetOffDuringYear: 0,
-              cflTotal: 0,
-            },
-            scheduleCfl: {
-              LossCFFromPrev13thYearFromAY: {
-                dateOfFiling: 0,
-                LossFrmSpecifiedBusCF: 0,
-              },
+            scheduleCflDetails: {
               LossCFFromPrev12thYearFromAY: {
                 dateOfFiling: 0,
                 LossFrmSpecifiedBusCF: 0,
@@ -2595,228 +2553,493 @@ export class SummaryComponent implements OnInit {
             aggregateIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                 ?.AggregateIncome,
-            lossesToBeCarriedForward: {
-              cflDtls: [
-                {
-                  assessmentPastYear: 0,
-
-                  housePropertyLoss: this.ITR_JSON.itrSummaryJson['ITR'][
-                    this.itrType
-                  ]?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                    ?.TotalHPPTILossCF
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                        ?.TotalHPPTILossCF
-                    : 0,
-
-                  STCGLoss: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                    ?.TotalSTCGPTILossCF
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                        ?.TotalSTCGPTILossCF
-                    : 0,
-
-                  LTCGLoss: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                    ?.TotalLTCGPTILossCF
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                        ?.TotalLTCGPTILossCF
-                    : 0,
-
-                  BusLossOthThanSpecLossCF:
-                    this.itrType === 'ITR3'
-                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                          ?.BusLossOthThanSpecLossCF
-                        ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                            ?.BusLossOthThanSpecLossCF
-                        : 0
-                      : 0,
-
-                  LossFrmSpecBusCF:
-                    this.itrType === 'ITR3'
-                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                          ?.LossFrmSpecBusCF
-                        ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                            ?.LossFrmSpecBusCF
-                        : 0
-                      : 0,
-
-                  LossFrmSpecifiedBusCF:
-                    this.itrType === 'ITR3'
-                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                          ?.LossFrmSpecifiedBusCF
-                        ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                            ?.LossFrmSpecifiedBusCF
-                        : 0
-                      : 0,
-
-                  OthSrcLoss: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                    ?.OthSrcLossRaceHorseCF
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleCFL?.TotalLossCFSummary?.LossSummaryDetail
-                        ?.OthSrcLossRaceHorseCF
-                    : 0,
-
-                  pastYear: 0,
-
-                  totalLoss: 0,
-                },
-              ],
-              lossSetOffDuringYear:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-                  ?.CurrentYearLoss,
-              cflTotal:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
-                  ?.LossesOfCurrentYearCarriedFwd,
-            },
-            scheduleCfl: {
-              LossCFFromPrev13thYearFromAY: {
-                dateOfFiling: 0,
-                LossFrmSpecifiedBusCF: 0,
-              },
+            scheduleCflDetails: {
               LossCFFromPrev12thYearFromAY: {
-                dateOfFiling: 0,
-                LossFrmSpecifiedBusCF: 0,
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev9thYearFromAY?.CarryFwdLossDetail
+                    ?.DateOfFiling,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev9thYearFromAY?.CarryFwdLossDetail
+                    ?.DateOfFiling,
               },
               LossCFFromPrev11thYearFromAY: {
-                dateOfFiling: 0,
-                LossFrmSpecifiedBusCF: 0,
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev8thYearFromAY?.CarryFwdLossDetail
+                    ?.DateOfFiling,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev8thYearFromAY?.CarryFwdLossDetail
+                    ?.DateOfFiling,
               },
               LossCFFromPrev10thYearFromAY: {
-                dateOfFiling: 0,
-                LossFrmSpecifiedBusCF: 0,
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev7thYearFromAY?.CarryFwdLossDetail
+                    ?.DateOfFiling,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev7thYearFromAY?.CarryFwdLossDetail
+                    ?.DateOfFiling,
               },
               LossCFFromPrev9thYearFromAY: {
-                dateOfFiling: 0,
-                LossFrmSpecifiedBusCF: 0,
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev6thYearFromAY?.CarryFwdLossDetail
+                    ?.DateOfFiling,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev6thYearFromAY?.CarryFwdLossDetail
+                    ?.DateOfFiling,
               },
               LossCFFromPrev8thYearFromAY: {
-                dateOfFiling: 0,
-                hpLoss: 0,
-                broughtForwardBusLoss: 0,
-                BusLossOthThanSpecifiedLossCF: 0,
-                LossFrmSpecifiedBusCF: 0,
-                stcgLoss: 0,
-                ltcgLoss: 0,
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
+                    ?.DateOfFiling,
+                hpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
+                    ?.TotalHPPTILossCF,
+                broughtForwardBusLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
+                    ?.BrtFwdBusLoss,
+                BusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
+                    ?.BusLossOthThanSpecLossCF,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
+                    ?.LossFrmSpecifiedBusCF,
+                stcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
+                    ?.TotalSTCGPTILossCF,
+                ltcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev5thYearFromAY?.CarryFwdLossDetail
+                    ?.TotalLTCGPTILossCF,
               },
               LossCFFromPrev7thYearFromAY: {
-                dateOfFiling: 0,
-                hpLoss: 0,
-                broughtForwardBusLoss: 0,
-                BusLossOthThanSpecifiedLossCF: 0,
-                LossFrmSpecifiedBusCF: 0,
-                stcgLoss: 0,
-                ltcgLoss: 0,
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.DateOfFiling,
+                hpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.TotalHPPTILossCF,
+                broughtForwardBusLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.BrtFwdBusLoss,
+                BusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.BusLossOthThanSpecLossCF,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.LossFrmSpecifiedBusCF,
+                stcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.TotalSTCGPTILossCF,
+                ltcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev4thYearFromAY?.CarryFwdLossDetail
+                    ?.TotalLTCGPTILossCF,
               },
               LossCFFromPrev6thYearFromAY: {
-                dateOfFiling: 0,
-                hpLoss: 0,
-                broughtForwardBusLoss: 0,
-                BusLossOthThanSpecifiedLossCF: 0,
-                LossFrmSpecifiedBusCF: 0,
-                stcgLoss: 0,
-                ltcgLoss: 0,
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.DateOfFiling,
+                hpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.TotalHPPTILossCF,
+                broughtForwardBusLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.BrtFwdBusLoss,
+                BusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.BusLossOthThanSpecLossCF,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.LossFrmSpecifiedBusCF,
+                stcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.TotalSTCGPTILossCF,
+                ltcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev3rdYearFromAY?.CarryFwdLossDetail
+                    ?.TotalLTCGPTILossCF,
               },
               LossCFFromPrev5thYearFromAY: {
-                dateOfFiling: 0,
-                hpLoss: 0,
-                broughtForwardBusLoss: 0,
-                BusLossOthThanSpecifiedLossCF: 0,
-                LossFrmSpecifiedBusCF: 0,
-                stcgLoss: 0,
-                ltcgLoss: 0,
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.DateOfFiling,
+                hpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.TotalHPPTILossCF,
+                broughtForwardBusLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.BrtFwdBusLoss,
+                BusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.BusLossOthThanSpecLossCF,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.LossFrmSpecifiedBusCF,
+                stcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.TotalSTCGPTILossCF,
+                ltcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrev2ndYearFromAY?.CarryFwdLossDetail
+                    ?.TotalLTCGPTILossCF,
               },
               LossCFFromPrev4thYearFromAY: {
-                dateOfFiling: 0,
-                hpLoss: 0,
-                broughtForwardBusLoss: 0,
-                BusLossOthThanSpecifiedLossCF: 0,
-                LossFrmSpecifiedBusCF: 0,
-                stcgLoss: 0,
-                ltcgLoss: 0,
-                OthSrcLossRaceHorseCF: 0,
-                lossFromSpeculativeBus: 0,
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail?.DateOfFiling,
+                hpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.TotalHPPTILossCF,
+                broughtForwardBusLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail?.BrtFwdBusLoss,
+                BusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.BusLossOthThanSpecLossCF,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossFrmSpecifiedBusCF,
+                stcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.TotalSTCGPTILossCF,
+                ltcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.TotalLTCGPTILossCF,
+                OthSrcLossRaceHorseCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.OthSrcLossRaceHorseCF,
+                lossFromSpeculativeBus:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFFromPrevYrToAY?.CarryFwdLossDetail
+                    ?.LossFrmSpecBusCF,
               },
               LossCFFromPrev3rdYearFromAY: {
-                dateOfFiling: 0,
-                hpLoss: 0,
-                broughtForwardBusLoss: 0,
-                BusLossOthThanSpecifiedLossCF: 0,
-                LossFrmSpecifiedBusCF: 0,
-                stcgLoss: 0,
-                ltcgLoss: 0,
-                OthSrcLossRaceHorseCF: 0,
-                lossFromSpeculativeBus: 0,
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail?.DateOfFiling,
+                hpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.TotalHPPTILossCF,
+                broughtForwardBusLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.BrtFwdBusLoss,
+                BusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.BusLossOthThanSpecLossCF,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossFrmSpecifiedBusCF,
+                stcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.TotalSTCGPTILossCF,
+                ltcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.TotalLTCGPTILossCF,
+                OthSrcLossRaceHorseCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.OthSrcLossRaceHorseCF,
+                lossFromSpeculativeBus:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear?.CarryFwdLossDetail
+                    ?.LossFrmSpecBusCF,
               },
               LossCFPrevAssmntYear: {
-                dateOfFiling: 0,
-                hpLoss: 0,
-                broughtForwardBusLoss: 0,
-                BusLossOthThanSpecifiedLossCF: 0,
-                LossFrmSpecifiedBusCF: 0,
-                stcgLoss: 0,
-                ltcgLoss: 0,
-                OthSrcLossRaceHorseCF: 0,
-                lossFromSpeculativeBus: 0,
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.DateOfFiling,
+                hpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.TotalHPPTILossCF,
+                broughtForwardBusLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.BrtFwdBusLoss,
+                BusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.BusLossOthThanSpecLossCF,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossFrmSpecifiedBusCF,
+                stcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.TotalSTCGPTILossCF,
+                ltcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.TotalLTCGPTILossCF,
+                OthSrcLossRaceHorseCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.OthSrcLossRaceHorseCF,
+                lossFromSpeculativeBus:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2021?.CarryFwdLossDetail
+                    ?.LossFrmSpecBusCF,
               },
               LossCFCurrentAssmntYear: {
-                dateOfFiling: 0,
-                hpLoss: 0,
-                broughtForwardBusLoss: 0,
-                BusLossOthThanSpecifiedLossCF: 0,
-                LossFrmSpecifiedBusCF: 0,
-                stcgLoss: 0,
-                ltcgLoss: 0,
-                OthSrcLossRaceHorseCF: 0,
-                lossFromSpeculativeBus: 0,
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.DateOfFiling,
+                hpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.TotalHPPTILossCF,
+                broughtForwardBusLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.BrtFwdBusLoss,
+                BusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.BusLossOthThanSpecLossCF,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossFrmSpecifiedBusCF,
+                stcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.TotalSTCGPTILossCF,
+                ltcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.TotalLTCGPTILossCF,
+                OthSrcLossRaceHorseCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.OthSrcLossRaceHorseCF,
+                lossFromSpeculativeBus:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossFrmSpecBusCF,
               },
               TotalOfBFLossesEarlierYrs: {
-                totalBroughtForwardHpLoss: 0,
+                // HP Loss
+                totalBroughtForwardHpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalOfBFLossesEarlierYrs?.LossSummaryDetail
+                    ?.TotalHPPTILossCF,
+
+                // Used in ITR Object
                 totalBroughtForwardBusLoss: 0,
-                totalBroughtForwardBusLossOthThanSpecifiedLossCF: 0,
-                totalBroughtForwardLossFrmSpecifiedBusCF: 0,
-                totalBroughtForwardStcgLoss: 0,
-                totalBroughtForwardLtcgLoss: 0,
-                totalBroughtForwardOthSrcLossRaceHorseCF: 0,
-                totalBroughtForwardLossSpeculativeBus: 0,
+
+                // other than specified business loss
+                totalBroughtForwardBusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalOfBFLossesEarlierYrs?.LossSummaryDetail
+                    ?.BusLossOthThanSpecLossCF,
+
+                // loss from specified business
+                totalBroughtForwardLossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalOfBFLossesEarlierYrs?.LossSummaryDetail
+                    ?.LossFrmSpecifiedBusCF,
+
+                // STCG Loss
+                totalBroughtForwardStcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalOfBFLossesEarlierYrs?.LossSummaryDetail
+                    ?.TotalSTCGPTILossCF,
+
+                // LTCG Loss
+                totalBroughtForwardLtcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalOfBFLossesEarlierYrs?.LossSummaryDetail
+                    ?.TotalLTCGPTILossCF,
+
+                // Other source horse race
+                totalBroughtForwardOthSrcLossRaceHorseCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalOfBFLossesEarlierYrs?.LossSummaryDetail
+                    ?.OthSrcLossRaceHorseCF,
+
+                // speculative business loss
+                totalBroughtForwardLossSpeculativeBus:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalOfBFLossesEarlierYrs?.LossSummaryDetail
+                    ?.LossFrmSpecBusCF,
               },
               AdjTotBFLossInBFLA: {
-                adjInBflHpLoss: 0,
-                adjInBflBusLossOthThanSpecifiedLossCF: 0,
-                adjInBflLossFrmSpecifiedBusCF: 0,
-                adjInBflStcgLoss: 0,
-                adjInBflLtcgLoss: 0,
-                adjInBflOthSrcLossRaceHorseCF: 0,
-                adjInBflSpeculativeBus: 0,
+                // HP Loss
+                adjInBflHpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.AdjTotBFLossInBFLA?.LossSummaryDetail?.TotalHPPTILossCF,
+
+                // other than specified business loss
+                adjInBflBusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.AdjTotBFLossInBFLA?.LossSummaryDetail
+                    ?.BusLossOthThanSpecLossCF,
+
+                // loss from specified business
+                adjInBflLossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.AdjTotBFLossInBFLA?.LossSummaryDetail
+                    ?.LossFrmSpecifiedBusCF,
+
+                // STCG Loss
+                adjInBflStcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.AdjTotBFLossInBFLA?.LossSummaryDetail?.TotalSTCGPTILossCF,
+
+                // LTCG Loss
+                adjInBflLtcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.AdjTotBFLossInBFLA?.LossSummaryDetail?.TotalLTCGPTILossCF,
+                adjInBflOthSrcLossRaceHorseCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.AdjTotBFLossInBFLA?.LossSummaryDetail
+                    ?.OthSrcLossRaceHorseCF,
+
+                // loss from speculative business
+                adjInBflSpeculativeBus:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.AdjTotBFLossInBFLA?.LossSummaryDetail?.LossFrmSpecBusCF,
               },
               CurrentAYloss: {
-                currentAyHpLoss: 0,
-                currentAyBusLossOthThanSpecifiedLossCF: 0,
-                currentAyLossFrmSpecifiedBusCF: 0,
-                currentAyStcgLoss: 0,
-                currentAyLtcgLoss: 0,
-                currentAyOthSrcLossRaceHorseCF: 0,
-                currentAySpeculativeBus: 0,
+                // HP Loss
+                currentAyHpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.CurrentAYloss?.LossSummaryDetail?.TotalHPPTILossCF,
+
+                // Other than specified business loss
+                currentAyBusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.CurrentAYloss?.LossSummaryDetail
+                    ?.BusLossOthThanSpecLossCF,
+
+                // loss from pecified business
+                currentAyLossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.CurrentAYloss?.LossSummaryDetail?.LossFrmSpecifiedBusCF,
+
+                // STCG Loss
+                currentAyStcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.CurrentAYloss?.LossSummaryDetail?.TotalSTCGPTILossCF,
+
+                // LTCG Loss
+                currentAyLtcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.CurrentAYloss?.LossSummaryDetail?.TotalLTCGPTILossCF,
+
+                // Other source race horse
+                currentAyOthSrcLossRaceHorseCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.CurrentAYloss?.LossSummaryDetail?.OthSrcLossRaceHorseCF,
+
+                // Speculative business loss
+                currentAySpeculativeBus:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.CurrentAYloss?.LossSummaryDetail?.LossFrmSpecBusCF,
               },
               TotalLossCFSummary: {
-                totalLossCFHpLoss: 0,
-                totalLossCFBusLossOthThanSpecifiedLossCF: 0,
-                totalLossCFLossFrmSpecifiedBusCF: 0,
-                totalLossCFStcgLoss: 0,
-                totalLossCFLtcgLoss: 0,
-                totalLossCFOthSrcLossRaceHorseCF: 0,
-                totalLossCFSpeculativeBus: 0,
+                // HP Loss
+                totalLossCFHpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalLossCFSummary?.LossSummaryDetail?.TotalHPPTILossCF,
+
+                // Other than specified business loss
+                totalLossCFBusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalLossCFSummary?.LossSummaryDetail
+                    ?.BusLossOthThanSpecLossCF,
+
+                // specified business loss
+                totalLossCFLossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalLossCFSummary?.LossSummaryDetail
+                    ?.LossFrmSpecifiedBusCF,
+
+                // STCG Loss
+                totalLossCFStcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalLossCFSummary?.LossSummaryDetail?.TotalSTCGPTILossCF,
+
+                // LTCG Loss
+                totalLossCFLtcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalLossCFSummary?.LossSummaryDetail?.TotalLTCGPTILossCF,
+
+                // Other source race horse
+                totalLossCFOthSrcLossRaceHorseCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalLossCFSummary?.LossSummaryDetail
+                    ?.OthSrcLossRaceHorseCF,
+
+                // Loss from speculative business
+                totalLossCFSpeculativeBus:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.TotalLossCFSummary?.LossSummaryDetail?.LossFrmSpecBusCF,
               },
-              TotalOfAllLossCFSummary: 0,
+              TotalOfAllLossCFSummary:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                  ?.TotalLossCFSummary?.LossSummaryDetail?.TotalHPPTILossCF +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                  ?.TotalLossCFSummary?.LossSummaryDetail
+                  ?.BusLossOthThanSpecLossCF +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                  ?.TotalLossCFSummary?.LossSummaryDetail
+                  ?.LossFrmSpecifiedBusCF +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                  ?.TotalLossCFSummary?.LossSummaryDetail?.TotalSTCGPTILossCF +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                  ?.TotalLossCFSummary?.LossSummaryDetail?.TotalLTCGPTILossCF +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                  ?.TotalLossCFSummary?.LossSummaryDetail
+                  ?.OthSrcLossRaceHorseCF +
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                  ?.TotalLossCFSummary?.LossSummaryDetail?.LossFrmSpecBusCF,
             },
             totalTax: {
               taxAtNormalRate:
@@ -3871,119 +4094,7 @@ export class SummaryComponent implements OnInit {
                   aggregateIncome:
                     this.finalSummary?.assessment?.taxSummary
                       ?.aggregateIncomeXml,
-                  lossesToBeCarriedForward: {
-                    cflDtls: Object.entries(
-                      this.finalSummary?.assessment?.carryForwordLosses
-                    )?.map(([key, item]) => ({
-                      assessmentPastYear: (
-                        item as {
-                          assessmentPastYear: any;
-                          housePropertyLoss: Number;
-                          STCGLoss: Number;
-                          LTCGLoss: Number;
-                          BusLossOthThanSpecLossCF: Number;
-                          LossFrmSpecBusCF: Number;
-                          LossFrmSpecifiedBusCF: Number;
-                          OthSrcLoss: Number;
-                          pastYear: Number;
-                          totalLoss: Number;
-                        }
-                      ).assessmentPastYear,
-                      housePropertyLoss: (
-                        item as {
-                          assessmentPastYear: any;
-                          housePropertyLoss: Number;
-                          STCGLoss: Number;
-                          LTCGLoss: Number;
-                          BusLossOthThanSpecLossCF: Number;
-                          LossFrmSpecBusCF: Number;
-                          LossFrmSpecifiedBusCF: Number;
-                          OthSrcLoss: Number;
-                          pastYear: Number;
-                          totalLoss: Number;
-                        }
-                      ).housePropertyLoss,
-                      STCGLoss: (
-                        item as {
-                          assessmentPastYear: any;
-                          housePropertyLoss: Number;
-                          STCGLoss: Number;
-                          LTCGLoss: Number;
-                          BusLossOthThanSpecLossCF: Number;
-                          LossFrmSpecBusCF: Number;
-                          LossFrmSpecifiedBusCF: Number;
-                          OthSrcLoss: Number;
-                          pastYear: Number;
-                          totalLoss: Number;
-                        }
-                      ).STCGLoss,
-                      LTCGLoss: (
-                        item as {
-                          assessmentPastYear: any;
-                          housePropertyLoss: Number;
-                          STCGLoss: Number;
-                          LTCGLoss: Number;
-                          BusLossOthThanSpecLossCF: Number;
-                          LossFrmSpecBusCF: Number;
-                          LossFrmSpecifiedBusCF: Number;
-                          OthSrcLoss: Number;
-                          pastYear: Number;
-                          totalLoss: Number;
-                        }
-                      ).LTCGLoss,
-                      pastYear: (
-                        item as {
-                          assessmentPastYear: any;
-                          housePropertyLoss: Number;
-                          STCGLoss: Number;
-                          LTCGLoss: Number;
-                          BusLossOthThanSpecLossCF: Number;
-                          LossFrmSpecBusCF: Number;
-                          LossFrmSpecifiedBusCF: Number;
-                          OthSrcLoss: Number;
-                          pastYear: Number;
-                          totalLoss: Number;
-                        }
-                      ).pastYear,
-                      totalLoss: (
-                        item as {
-                          assessmentPastYear: any;
-                          housePropertyLoss: Number;
-                          STCGLoss: Number;
-                          LTCGLoss: Number;
-                          BusLossOthThanSpecLossCF: Number;
-                          LossFrmSpecBusCF: Number;
-                          LossFrmSpecifiedBusCF: Number;
-                          OthSrcLoss: Number;
-                          pastYear: Number;
-                          totalLoss: Number;
-                        }
-                      ).totalLoss,
-                    })) as {
-                      assessmentPastYear: any;
-                      housePropertyLoss: Number;
-                      STCGLoss: Number;
-                      LTCGLoss: Number;
-                      BusLossOthThanSpecLossCF: Number;
-                      LossFrmSpecBusCF: Number;
-                      LossFrmSpecifiedBusCF: Number;
-                      OthSrcLoss: Number;
-                      pastYear: Number;
-                      totalLoss: Number;
-                    }[],
-                    lossSetOffDuringYear: 0,
-
-                    cflTotal:
-                      this.finalSummary?.assessment?.carryForwordLosses?.reduce(
-                        (total, item) => total + item.totalLoss,
-                        0
-                      ),
-                  },
-                  scheduleCfl: {
-                    LossCFFromPrev13thYearFromAY: {
-                      dateOfFiling: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                    },
+                  scheduleCflDetails: {
                     LossCFFromPrev12thYearFromAY: {
                       dateOfFiling: 0,
                       LossFrmSpecifiedBusCF: 0,
@@ -5346,118 +5457,7 @@ export class SummaryComponent implements OnInit {
                     : 0,
                 aggregateIncome:
                   this.finalSummary?.assessment?.taxSummary?.aggregateIncomeXml,
-                lossesToBeCarriedForward: {
-                  cflDtls: Object.entries(
-                    this.finalSummary?.assessment?.carryForwordLosses
-                  )?.map(([key, item]) => ({
-                    assessmentPastYear: (
-                      item as {
-                        assessmentPastYear: any;
-                        housePropertyLoss: Number;
-                        STCGLoss: Number;
-                        LTCGLoss: Number;
-                        BusLossOthThanSpecLossCF: Number;
-                        LossFrmSpecBusCF: Number;
-                        LossFrmSpecifiedBusCF: Number;
-                        OthSrcLoss: Number;
-                        pastYear: Number;
-                        totalLoss: Number;
-                      }
-                    ).assessmentPastYear,
-                    housePropertyLoss: (
-                      item as {
-                        assessmentPastYear: any;
-                        housePropertyLoss: Number;
-                        STCGLoss: Number;
-                        LTCGLoss: Number;
-                        BusLossOthThanSpecLossCF: Number;
-                        LossFrmSpecBusCF: Number;
-                        LossFrmSpecifiedBusCF: Number;
-                        OthSrcLoss: Number;
-                        pastYear: Number;
-                        totalLoss: Number;
-                      }
-                    ).housePropertyLoss,
-                    STCGLoss: (
-                      item as {
-                        assessmentPastYear: any;
-                        housePropertyLoss: Number;
-                        STCGLoss: Number;
-                        LTCGLoss: Number;
-                        BusLossOthThanSpecLossCF: Number;
-                        LossFrmSpecBusCF: Number;
-                        LossFrmSpecifiedBusCF: Number;
-                        OthSrcLoss: Number;
-                        pastYear: Number;
-                        totalLoss: Number;
-                      }
-                    ).STCGLoss,
-                    LTCGLoss: (
-                      item as {
-                        assessmentPastYear: any;
-                        housePropertyLoss: Number;
-                        STCGLoss: Number;
-                        LTCGLoss: Number;
-                        BusLossOthThanSpecLossCF: Number;
-                        LossFrmSpecBusCF: Number;
-                        LossFrmSpecifiedBusCF: Number;
-                        OthSrcLoss: Number;
-                        pastYear: Number;
-                        totalLoss: Number;
-                      }
-                    ).LTCGLoss,
-                    pastYear: (
-                      item as {
-                        assessmentPastYear: any;
-                        housePropertyLoss: Number;
-                        STCGLoss: Number;
-                        LTCGLoss: Number;
-                        BusLossOthThanSpecLossCF: Number;
-                        LossFrmSpecBusCF: Number;
-                        LossFrmSpecifiedBusCF: Number;
-                        OthSrcLoss: Number;
-                        pastYear: Number;
-                        totalLoss: Number;
-                      }
-                    ).pastYear,
-                    totalLoss: (
-                      item as {
-                        assessmentPastYear: any;
-                        housePropertyLoss: Number;
-                        STCGLoss: Number;
-                        LTCGLoss: Number;
-                        BusLossOthThanSpecLossCF: Number;
-                        LossFrmSpecBusCF: Number;
-                        LossFrmSpecifiedBusCF: Number;
-                        OthSrcLoss: Number;
-                        pastYear: Number;
-                        totalLoss: Number;
-                      }
-                    ).totalLoss,
-                  })) as {
-                    assessmentPastYear: any;
-                    housePropertyLoss: Number;
-                    STCGLoss: Number;
-                    LTCGLoss: Number;
-                    BusLossOthThanSpecLossCF: Number;
-                    LossFrmSpecBusCF: Number;
-                    LossFrmSpecifiedBusCF: Number;
-                    OthSrcLoss: Number;
-                    pastYear: Number;
-                    totalLoss: Number;
-                  }[],
-                  lossSetOffDuringYear: 0,
-                  cflTotal:
-                    this.finalSummary?.assessment?.carryForwordLosses?.reduce(
-                      (total, item) => total + item.totalLoss,
-                      0
-                    ),
-                },
-                scheduleCfl: {
-                  LossCFFromPrev13thYearFromAY: {
-                    dateOfFiling: 0,
-                    LossFrmSpecifiedBusCF: 0,
-                  },
+                scheduleCflDetails: {
                   LossCFFromPrev12thYearFromAY: {
                     dateOfFiling: 0,
                     LossFrmSpecifiedBusCF: 0,
