@@ -1798,7 +1798,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.dueDateOver = true;
       return;
     } else {
-      this.dueDateOver = true;
+      this.dueDateOver = false;
       return;
     }
   }
