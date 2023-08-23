@@ -174,6 +174,65 @@ export const ErrorMsgsSchedule = {
     message: 'Bank account number or bank name is missing',
     relatedSchedule: 'personalInfo',
   },
+  E34: {
+    code: 'E34',
+    message: 'Capital gain details are missing. Please contact your developer',
+    relatedSchedule: 'capitalGain',
+  },
+  E35: {
+    code: 'E35',
+    message:
+      'There is some issue with the deduction details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
+  E36: {
+    code: 'E36',
+    message:
+      'There is some issue with the cost of improvement details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
+  E37: {
+    code: 'E37',
+    message:
+      'There is some issue with the buyer details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
+  E38: {
+    code: 'E38',
+    message:
+      'There is some issue with the land and building asset details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
+  E39: {
+    code: 'E39',
+    message:
+      'There is some issue with the Equity listed asset details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
+  E40: {
+    code: 'E40',
+    message:
+      'There is some issue with the Equity unlisted asset details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
+  E41: {
+    code: 'E41',
+    message:
+      'There is some issue with the Bonds details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
+  E42: {
+    code: 'E42',
+    message:
+      'There is some issue with the Zero Coupon Bonds details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
+  E43: {
+    code: 'E43',
+    message:
+      'There is some issue with the Gold details under capital gain schedule',
+    relatedSchedule: 'capitalGain',
+  },
 };
 export interface Schedules {
   personalInfo: String;

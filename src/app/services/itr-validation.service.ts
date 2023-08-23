@@ -6,9 +6,9 @@ import {
 
 @Injectable()
 export class ItrValidationService {
-  constructor(
-    private itrValidations: ItrValidations
-  ) {}
+  currentAssessmentYear: any;
+  currentFinancialYear: any;
+  constructor(private itrValidations: ItrValidations) {}
 
   getErrorMessages(errorCode: string) {
     const errorDetails: any = this.itrValidations.getErrorSchedule(errorCode);
@@ -319,7 +319,7 @@ export class ItrValidationService {
             ]?.otherThanSalary26QB?.some(
               (element) =>
                 !element?.deductorName ||
-                !element?.deductorTAN ||
+                !element?.deductorPAN ||
                 !element?.totalAmountCredited ||
                 !element?.totalTdsDeposited ||
                 !element?.headOfIncome
@@ -496,6 +496,276 @@ export class ItrValidationService {
                 errorList.push(error);
               }
             }
+          }
+        }
+      }
+
+      // capital gain
+      {
+        if (key === 'capitalGain') {
+          let capitalGainDetails = obj[key];
+          // for basic details that are required in cg object
+          if (capitalGainDetails && capitalGainDetails?.length > 0) {
+            this.getCurrentFinancialYear();
+            capitalGainDetails?.forEach((element, index) => {
+              const capitalGainBasicDetails: boolean =
+                element?.assessmentYear !== this.currentAssessmentYear ||
+                element?.assesseeType !== 'INDIVIDUAL' ||
+                element?.residentialStatus !== 'RESIDENT' ||
+                !element?.assetType;
+
+              if (capitalGainBasicDetails) {
+                const error = this.getErrorMessages('E34');
+                errorList?.push(error);
+              }
+
+              // for deduction array
+              // const deductionArray = element?.deduction;
+              // if (deductionArray && deductionArray?.length > 0) {
+              //   const deductionDetails: boolean = deductionArray?.some(
+              //     (deduction) =>
+              //       !deduction?.costOfNewAssets ||
+              //       !deduction?.purchaseDate ||
+              //       !deduction?.underSection ||
+              //       !deduction?.totalDeductionClaimed ||
+              //       deduction?.srn === null ||
+              //       deduction?.srn === undefined
+              //   );
+
+              //   if (deductionDetails) {
+              //     const error = this.getErrorMessages('E35');
+              //     errorList?.push(error);
+              //   }
+              // }
+
+              // for improvement array
+              // const improvementArray = element?.improvement;
+              // if (improvementArray && improvementArray?.length > 0) {
+              //   const improvementArrayDetails: boolean = improvementArray?.some(
+              //     (improvement) =>
+              //       !improvement?.dateOfImprovement ||
+              //       !improvement?.costOfImprovement ||
+              //       !improvement?.indexCostOfImprovement ||
+              //       improvement?.srn === null ||
+              //       improvement?.srn === undefined
+              //   );
+
+              //   if (improvementArrayDetails) {
+              //     const error = this.getErrorMessages('E36');
+              //     errorList?.push(error);
+              //   }
+              // }
+
+              // for buyerDetails array
+              const buyersDetailsArray = element?.buyersDetails;
+              if (buyersDetailsArray && buyersDetailsArray?.length > 0) {
+                const buyersDetailsArrayStat: boolean =
+                  buyersDetailsArray?.some(
+                    (buyerDetails) =>
+                      !buyerDetails?.name ||
+                      !buyerDetails?.pan ||
+                      !buyerDetails?.share ||
+                      !buyerDetails?.country ||
+                      !buyerDetails?.state ||
+                      !buyerDetails?.aadhaarNumber ||
+                      !buyerDetails?.pin ||
+                      !buyerDetails?.address ||
+                      !buyerDetails?.amount ||
+                      buyerDetails?.srn === null ||
+                      buyerDetails?.srn === undefined
+                  );
+
+                if (buyersDetailsArrayStat) {
+                  const error = this.getErrorMessages('E37');
+                  errorList?.push(error);
+                }
+              }
+
+              // const assetDetails for different type gains
+              let assetType = element?.assetType;
+
+              // for land and building
+              if (assetType === 'PLOT_OF_LAND') {
+                const assetDetailsArray = element?.assetDetails;
+                if (assetDetailsArray && assetDetailsArray?.length > 0) {
+                  const landAndBuildingStat: boolean = assetDetailsArray?.some(
+                    (lb) =>
+                      !lb?.gainType ||
+                      lb?.algorithm === 'cgProperty' ||
+                      !lb?.sellDate ||
+                      !lb?.valueInConsideration ||
+                      !lb?.purchaseDate ||
+                      !lb?.purchaseCost ||
+                      !lb?.indexCostOfAcquisition ||
+                      !lb?.capitalGain
+                  );
+
+                  if (landAndBuildingStat) {
+                    const error = this.getErrorMessages('E38');
+                    errorList?.push(error);
+                  }
+                }
+              }
+
+              // for equity and shares listed
+              if (assetType === 'EQUITY_SHARES_LISTED') {
+                const assetDetailsArray = element?.assetDetails;
+                if (assetDetailsArray && assetDetailsArray?.length > 0) {
+                  // const hasMissingProperties = (equity) => {
+                  //   const commonConditions = [
+                  //     !equity.gainType,
+                  //     equity.algorithm === 'cgSharesMF',
+                  //     !equity.sellDate,
+                  //     !equity.sellOrBuyQuantity,
+                  //     !equity.sellValuePerUnit,
+                  //     !equity.sellValue,
+                  //     !equity.purchaseDate,
+                  //     !equity.purchaseValuePerUnit,
+                  //     !equity.purchaseCost,
+                  //   ];
+
+                  //   if (equity?.gainType === 'LONG') {
+                  //     commonConditions.push(
+                  //       !equity.isinCode,
+                  //       !equity.fmvAsOn31Jan2018,
+                  //       !equity.grandFatheredValue,
+                  //       !equity.totalFairMarketValueOfCapitalAsset,
+                  //       !equity.capitalGain
+                  //     );
+                  //   }
+
+                  //   return commonConditions.some((condition) => condition);
+                  // };
+
+                  // const equityStatus: boolean =
+                  //   assetDetailsArray.some(hasMissingProperties);
+
+                  const equityStat: boolean = assetDetailsArray?.some(
+                    (equity) =>
+                      equity?.gainType === 'LONG'
+                        ? !equity?.gainType ||
+                          equity?.algorithm !== 'cgSharesMF' ||
+                          !equity?.sellDate ||
+                          !equity?.sellOrBuyQuantity ||
+                          !equity?.sellValuePerUnit ||
+                          !equity?.sellValue ||
+                          !equity?.purchaseDate ||
+                          !equity?.purchaseValuePerUnit ||
+                          !equity?.purchaseCost ||
+                          equity?.isinCode === null ||
+                          equity?.isinCode === undefined ||
+                          equity?.fmvAsOn31Jan2018 === null ||
+                          equity?.fmvAsOn31Jan2018 === undefined ||
+                          !equity?.grandFatheredValue ||
+                          equity?.totalFairMarketValueOfCapitalAsset === null ||
+                          equity?.totalFairMarketValueOfCapitalAsset ===
+                            undefined ||
+                          !equity?.capitalGain
+                        : !equity?.gainType ||
+                          equity?.algorithm !== 'cgSharesMF' ||
+                          !equity?.sellDate ||
+                          !equity?.sellOrBuyQuantity ||
+                          !equity?.sellValuePerUnit ||
+                          !equity?.sellValue ||
+                          !equity?.purchaseDate ||
+                          !equity?.purchaseValuePerUnit ||
+                          !equity?.purchaseCost
+                  );
+
+                  if (equityStat) {
+                    const error = this.getErrorMessages('E39');
+                    errorList?.push(error);
+                  }
+                }
+              }
+
+              // for equity and shares unlisted
+              if (assetType === 'EQUITY_SHARES_UNLISTED') {
+                const assetDetailsArray = element?.assetDetails;
+                if (assetDetailsArray && assetDetailsArray?.length > 0) {
+                  const equityUnlistedStat: boolean = assetDetailsArray?.some(
+                    (equity) =>
+                      !equity?.gainType ||
+                      equity?.algorithm !== 'cgSharesMF' ||
+                      !equity?.sellDate ||
+                      !equity?.sellOrBuyQuantity ||
+                      !equity?.sellValuePerUnit ||
+                      !equity?.sellValue ||
+                      !equity?.purchaseDate ||
+                      !equity?.purchaseValuePerUnit ||
+                      !equity?.purchaseCost
+                  );
+
+                  if (equityUnlistedStat) {
+                    const error = this.getErrorMessages('E40');
+                    errorList?.push(error);
+                  }
+                }
+              }
+
+              // for bonds
+              if (assetType === 'BONDS') {
+                const assetDetailsArray = element?.assetDetails;
+                if (assetDetailsArray && assetDetailsArray?.length > 0) {
+                  const bondsStat: boolean = assetDetailsArray?.some(
+                    (bonds) =>
+                      !bonds?.gainType ||
+                      bonds?.algorithm !== 'cgProperty' ||
+                      !bonds?.sellDate ||
+                      !bonds?.valueInConsideration ||
+                      !bonds?.purchaseDate ||
+                      !bonds?.purchaseCost
+                  );
+
+                  if (bondsStat) {
+                    const error = this.getErrorMessages('E41');
+                    errorList?.push(error);
+                  }
+                }
+              }
+
+              // for debentures
+              if (assetType === 'ZERO_COUPON_BONDS') {
+                const assetDetailsArray = element?.assetDetails;
+                if (assetDetailsArray && assetDetailsArray?.length > 0) {
+                  const ZCBStat: boolean = assetDetailsArray?.some(
+                    (zcb) =>
+                      !zcb?.gainType ||
+                      zcb?.algorithm !== 'cgProperty' ||
+                      !zcb?.sellDate ||
+                      !zcb?.valueInConsideration ||
+                      !zcb?.purchaseDate ||
+                      !zcb?.purchaseCost
+                  );
+
+                  if (ZCBStat) {
+                    const error = this.getErrorMessages('E42');
+                    errorList?.push(error);
+                  }
+                }
+              }
+
+              // for other Assets
+              if (assetType === 'GOLD') {
+                const assetDetailsArray = element?.assetDetails;
+                if (assetDetailsArray && assetDetailsArray?.length > 0) {
+                  const goldStat: boolean = assetDetailsArray?.some(
+                    (gold) =>
+                      !gold?.gainType ||
+                      gold?.algorithm !== 'cgProperty' ||
+                      !gold?.sellDate ||
+                      !gold?.sellValue ||
+                      !gold?.purchaseDate ||
+                      !gold?.purchaseCost
+                  );
+
+                  if (goldStat) {
+                    const error = this.getErrorMessages('E43');
+                    errorList?.push(error);
+                  }
+                }
+              }
+            });
           }
         }
       }
@@ -844,5 +1114,28 @@ export class ItrValidationService {
     }
 
     return obj;
+  }
+
+  getCurrentFinancialYear(): string {
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    const currentYear = today.getFullYear();
+
+    const financialYearStartMonth = 4; // April
+    const financialYear =
+      currentMonth < financialYearStartMonth ? currentYear - 1 : currentYear;
+
+    this.currentFinancialYear = financialYear - 1 + '-' + financialYear;
+    this.getCurrentAssessmentYear(this.currentFinancialYear);
+    return financialYear - 1 + '-' + financialYear; // Format: 2022-2023 for FY 2022-23
+  }
+
+  getCurrentAssessmentYear(financialYear: string): string {
+    const startYear = parseInt(financialYear.split('-')[0]);
+    const endYear = parseInt(financialYear.split('-')[1]);
+    const assessmentYearStart = endYear; // Assessment year starts from the end of the financial year. Its basically +1 of financial year
+    this.currentAssessmentYear =
+      assessmentYearStart + '-' + (assessmentYearStart + 1);
+    return assessmentYearStart + '-' + (assessmentYearStart + 1); // Format: 2023-2024 for AY 2023-24
   }
 }

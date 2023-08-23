@@ -66,6 +66,7 @@
                       [value]="'NEW'"
                       style="margin-left: 0px; margin-right: 2px"
                       labelPosition="before"
+                      [disabled]="dueDateOver"
                     >
                       Yes
                     </mat-radio-button>
@@ -76,10 +77,9 @@
 
                   <mat-error
                     *ngIf="
-                      regimeSelectionForm.controls[
-                        'optionForCurrentAY'
-                      ].get('currentYearRegime').hasError('required') &&
-                      submitted
+                      regimeSelectionForm.controls['optionForCurrentAY']
+                        .get('currentYearRegime')
+                        .hasError('required') && submitted
                     "
                   >
                     Please select an option to continue
@@ -120,9 +120,9 @@
                   </mat-radio-group>
                   <mat-error
                     *ngIf="
-                      regimeSelectionForm.controls[
-                        'everOptedNewRegime'
-                      ].get('everOptedNewRegime').hasError('required') &&
+                      regimeSelectionForm.controls['everOptedNewRegime']
+                        .get('everOptedNewRegime')
+                        .hasError('required') &&
                       (this.ITR_JSON.itrType === '3' ||
                         this.ITR_JSON.itrType === '4') &&
                       submitted
@@ -160,10 +160,9 @@
                     </mat-select>
                     <mat-error
                       *ngIf="
-                        regimeSelectionForm.controls[
-                          'everOptedNewRegime'
-                        ].get('assessmentYear').hasError('required') ||
-                        submitted
+                        regimeSelectionForm.controls['everOptedNewRegime']
+                          .get('assessmentYear')
+                          .hasError('required') || submitted
                       "
                     >
                       This field is required
@@ -191,11 +190,9 @@
                     />
                     <mat-error
                       *ngIf="
-                        regimeSelectionForm.controls[
-                          'everOptedNewRegime'
-                        ].get('acknowledgementNumber').hasError(
-                          'required'
-                        ) || submitted
+                        regimeSelectionForm.controls['everOptedNewRegime']
+                          .get('acknowledgementNumber')
+                          .hasError('required') || submitted
                       "
                     >
                       This field is required
@@ -227,9 +224,9 @@
                     <mat-datepicker #picker1></mat-datepicker>
                     <mat-error
                       *ngIf="
-                        regimeSelectionForm.controls[
-                          'everOptedNewRegime'
-                        ].get('date').hasError('required') || submitted
+                        regimeSelectionForm.controls['everOptedNewRegime']
+                          .get('date')
+                          .hasError('required') || submitted
                       "
                     >
                       This field is required
@@ -276,11 +273,9 @@
 
                   <mat-error
                     *ngIf="
-                      regimeSelectionForm.controls[
-                        'everOptedOutOfNewRegime'
-                      ].get('everOptedOutOfNewRegime').hasError(
-                        'required'
-                      ) && submitted
+                      regimeSelectionForm.controls['everOptedOutOfNewRegime']
+                        .get('everOptedOutOfNewRegime')
+                        .hasError('required') && submitted
                     "
                   >
                     Please select an option to continue
@@ -290,8 +285,9 @@
               <div
                 class="card__row"
                 *ngIf="
-                  (regimeSelectionForm.controls['everOptedOutOfNewRegime'])
-                    .get('everOptedOutOfNewRegime').value === true
+                  regimeSelectionForm.controls['everOptedOutOfNewRegime'].get(
+                    'everOptedOutOfNewRegime'
+                  ).value === true
                 "
               >
                 <div class="card__col-xs-4">
@@ -315,10 +311,9 @@
 
                     <mat-error
                       *ngIf="
-                        regimeSelectionForm.controls[
-                          'everOptedOutOfNewRegime'
-                        ].get('assessmentYear').hasError('required') ||
-                        submitted
+                        regimeSelectionForm.controls['everOptedOutOfNewRegime']
+                          .get('assessmentYear')
+                          .hasError('required') || submitted
                       "
                     >
                       This field is required
@@ -347,11 +342,9 @@
 
                     <mat-error
                       *ngIf="
-                        regimeSelectionForm.controls[
-                          'everOptedOutOfNewRegime'
-                        ].get('acknowledgementNumber').hasError(
-                          'required'
-                        ) || submitted
+                        regimeSelectionForm.controls['everOptedOutOfNewRegime']
+                          .get('acknowledgementNumber')
+                          .hasError('required') || submitted
                       "
                     >
                       This field is required
@@ -384,9 +377,9 @@
 
                     <mat-error
                       *ngIf="
-                        regimeSelectionForm.controls[
-                          'everOptedOutOfNewRegime'
-                        ].get('date').hasError('required') || submitted
+                        regimeSelectionForm.controls['everOptedOutOfNewRegime']
+                          .get('date')
+                          .hasError('required') || submitted
                       "
                     >
                       This field is required
@@ -423,6 +416,7 @@
                       [value]="'NEW'"
                       style="margin-left: 0px; margin-right: 2px"
                       labelPosition="before"
+                      [disabled]="dueDateOver"
                       >{{ newRegimeLabel }}
                     </mat-radio-button>
                     <mat-radio-button [value]="'OLD'" labelPosition="before">{{
@@ -431,10 +425,9 @@
                   </mat-radio-group>
                   <mat-error
                     *ngIf="
-                      regimeSelectionForm.controls[
-                        'optionForCurrentAY'
-                      ].get('currentYearRegime').hasError('required') &&
-                      submitted
+                      regimeSelectionForm.controls['optionForCurrentAY']
+                        .get('currentYearRegime')
+                        .hasError('required') && submitted
                     "
                   >
                     Please select an option to continue
