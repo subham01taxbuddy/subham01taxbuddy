@@ -393,7 +393,27 @@ export class SummaryComponent implements OnInit {
     specialRateChargeable: Number;
     netAgricultureIncome: Number;
     aggregateIncome: Number;
+    lossesToBeCarriedForward: {
+      cflDtls: {
+        assessmentPastYear: any;
+        housePropertyLoss: Number;
+        STCGLoss: Number;
+        LTCGLoss: Number;
+        BusLossOthThanSpecLossCF: Number;
+        LossFrmSpecBusCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        OthSrcLoss: Number;
+        pastYear: Number;
+        totalLoss: Number;
+      }[];
+      lossSetOffDuringYear: Number;
+      cflTotal: Number;
+    };
     scheduleCflDetails: {
+      LossCFFromPrev13thYearFromAY: {
+        dateOfFiling: any;
+        LossFrmSpecifiedBusCF: Number;
+      };
       LossCFFromPrev12thYearFromAY: {
         dateOfFiling: any;
         LossFrmSpecifiedBusCF: Number;
@@ -1175,7 +1195,29 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.ITR14IncomeDeductions
               ]?.TotalIncome,
+            lossesToBeCarriedForward: { //TODO:Shrikant
+              cflDtls: [
+                {
+                  assessmentPastYear: 0,
+                  housePropertyLoss: 0,
+                  STCGLoss: 0,
+                  LTCGLoss: 0,
+                  BusLossOthThanSpecLossCF: 0,
+                  LossFrmSpecBusCF: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                  OthSrcLoss: 0,
+                  pastYear: 0,
+                  totalLoss: 0,
+                },
+              ],
+              lossSetOffDuringYear: 0,
+              cflTotal: 0,
+            },
             scheduleCflDetails: {
+              LossCFFromPrev13thYearFromAY: { //TODO:Shrikant
+                dateOfFiling: 0,
+                LossFrmSpecifiedBusCF: 0,
+              },
               LossCFFromPrev12thYearFromAY: {
                 dateOfFiling: 0,
                 LossFrmSpecifiedBusCF: 0,
@@ -2553,7 +2595,30 @@ export class SummaryComponent implements OnInit {
             aggregateIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                 ?.AggregateIncome,
+            lossesToBeCarriedForward: {//TODO:Shrikant remove the placeholder object
+              cflDtls: [
+                {
+                  assessmentPastYear: 0,
+                  housePropertyLoss: 0,
+                  STCGLoss: 0,
+                  LTCGLoss: 0,
+                  BusLossOthThanSpecLossCF: 0,
+                  LossFrmSpecBusCF: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                  OthSrcLoss: 0,
+                  pastYear: 0,
+                  totalLoss: 0,
+                },
+              ],
+              lossSetOffDuringYear: 0,
+              cflTotal: 0,
+            },
             scheduleCflDetails: {
+              //TODO:Shrikant remove the placeholder object
+              LossCFFromPrev13thYearFromAY: {
+                dateOfFiling: null,
+                LossFrmSpecifiedBusCF: 0
+              },
               LossCFFromPrev12thYearFromAY: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
@@ -4094,7 +4159,30 @@ export class SummaryComponent implements OnInit {
                   aggregateIncome:
                     this.finalSummary?.assessment?.taxSummary
                       ?.aggregateIncomeXml,
-                  scheduleCflDetails: {
+                  //TODO:Shrikant remove the placeholder object
+                  lossesToBeCarriedForward: {
+                    cflDtls: [
+                      {
+                        assessmentPastYear: 0,
+                        housePropertyLoss: 0,
+                        STCGLoss: 0,
+                        LTCGLoss: 0,
+                        BusLossOthThanSpecLossCF: 0,
+                        LossFrmSpecBusCF: 0,
+                        LossFrmSpecifiedBusCF: 0,
+                        OthSrcLoss: 0,
+                        pastYear: 0,
+                        totalLoss: 0,
+                      },
+                    ],
+                    lossSetOffDuringYear: 0,
+                    cflTotal: 0,
+                  },
+                  scheduleCflDetails: { //TODO:Shrikant remove the placeholder object
+                    LossCFFromPrev13thYearFromAY: {
+                      dateOfFiling: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                    },
                     LossCFFromPrev12thYearFromAY: {
                       dateOfFiling: 0,
                       LossFrmSpecifiedBusCF: 0,
@@ -5457,7 +5545,30 @@ export class SummaryComponent implements OnInit {
                     : 0,
                 aggregateIncome:
                   this.finalSummary?.assessment?.taxSummary?.aggregateIncomeXml,
+                lossesToBeCarriedForward: {//TODO:Shrikant remove the placeholder object
+                  cflDtls: [
+                    {
+                      assessmentPastYear: 0,
+                      housePropertyLoss: 0,
+                      STCGLoss: 0,
+                      LTCGLoss: 0,
+                      BusLossOthThanSpecLossCF: 0,
+                      LossFrmSpecBusCF: 0,
+                      LossFrmSpecifiedBusCF: 0,
+                      OthSrcLoss: 0,
+                      pastYear: 0,
+                      totalLoss: 0,
+                    },
+                  ],
+                  lossSetOffDuringYear: 0,
+                  cflTotal: 0,
+                },
+                //TODO:Shrikant remove the placeholder object
                 scheduleCflDetails: {
+                  LossCFFromPrev13thYearFromAY: {
+                    dateOfFiling: 0,
+                    LossFrmSpecifiedBusCF: 0,
+                  },
                   LossCFFromPrev12thYearFromAY: {
                     dateOfFiling: 0,
                     LossFrmSpecifiedBusCF: 0,
