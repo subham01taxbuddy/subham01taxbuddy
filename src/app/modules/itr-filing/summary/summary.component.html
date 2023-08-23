@@ -1824,7 +1824,9 @@
                   <!-- ************************** Income from Crypto ****************************** -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="finalCalculations?.Crypto?.totalCryptoIncome === 0"
+                    [disabled]="
+                      finalCalculations?.Crypto?.totalCryptoIncome === 0
+                    "
                     #crypto
                   >
                     <mat-expansion-panel-header class="newclass">
@@ -1923,7 +1925,9 @@
                   <!-- ***************************** Income from Other Source ***************************** -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="finalCalculations?.otherIncome?.otherIncomeTotal === 0"
+                    [disabled]="
+                      finalCalculations?.otherIncome?.otherIncomeTotal === 0
+                    "
                     #otherIncome
                   >
                     <mat-expansion-panel-header>
@@ -2150,7 +2154,10 @@
                   <!-- **************************** Losses of Current Year Set Off *************************** -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="finalCalculations?.currentYearLosses?.totalCurrentYearSetOff === 0"
+                    [disabled]="
+                      finalCalculations?.currentYearLosses
+                        ?.totalCurrentYearSetOff === 0
+                    "
                     #setOff
                   >
                     <mat-expansion-panel-header>
@@ -2286,7 +2293,10 @@
                   <!-- ********************** Brought Forward Losses Set Off  ********************** -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="finalCalculations?.BroughtFwdLossesSetoff?.BroughtFwdLossesSetoffTotal === 0"
+                    [disabled]="
+                      finalCalculations?.BroughtFwdLossesSetoff
+                        ?.BroughtFwdLossesSetoffTotal === 0
+                    "
                     #bflSetOff
                   >
                     <mat-expansion-panel-header>
@@ -2659,7 +2669,10 @@
                   <!-- ************************ Losses To Be Carried Forward  ************************ -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="finalCalculations?.lossesToBeCarriedForward?.cflTotal === 0"
+                    [disabled]="
+                      finalCalculations?.lossesToBeCarriedForward?.cflTotal ===
+                      0
+                    "
                     #lossCarryFwd
                   >
                     <mat-expansion-panel-header>
@@ -2842,7 +2855,10 @@
                   <!-- ****************************** Schedule cfl ************************************* -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="finalCalculations?.lossesToBeCarriedForward?.cflTotal === 0"
+                    [disabled]="
+                      finalCalculations?.scheduleCflDetails
+                        ?.TotalOfAllLossCFSummary === 0
+                    "
                     #lossCarryFwd
                   >
                     <mat-expansion-panel-header>
@@ -2921,45 +2937,6 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <!-- 13th Assessment Year -->
-                        <tr
-                          *ngIf="
-                            finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev13thYearFromAY
-                              ?.LossFrmSpecifiedBusCF > 0
-                          "
-                        >
-                          <!-- Assessment year -->
-                          <td>2010-2011</td>
-                          <!-- date of filing -->
-                          <td>
-                            {{
-                              finalCalculations?.scheduleCflDetails
-                                ?.LossCFFromPrev13thYearFromAY?.dateOfFiling
-                            }}
-                          </td>
-                          <!-- house property loss -->
-                          <td>0</td>
-                          <!-- Other than speculative and specified business -->
-                          <td>0</td>
-                          <!-- loss from speculative business  -->
-                          <td>0</td>
-                          <!-- loss from specified business  -->
-                          <td>
-                            {{
-                              finalCalculations?.scheduleCflDetails
-                                ?.LossCFFromPrev13thYearFromAY
-                                ?.LossFrmSpecifiedBusCF
-                            }}
-                          </td>
-                          <!-- short term capital loss  -->
-                          <td>0</td>
-                          <!-- long term capital loss  -->
-                          <td>0</td>
-                          <!-- loss from maintaining and owning horses  -->
-                          <td>0</td>
-                        </tr>
-
                         <!-- 12th Assessment Year -->
                         <tr
                           *ngIf="
@@ -3665,49 +3642,52 @@
                           <!-- house property loss -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.AdjTotBFLossInBFLA
-                                ?.adjInBflHpLoss
+                              finalCalculations?.scheduleCflDetails
+                                ?.AdjTotBFLossInBFLA?.adjInBflHpLoss
                             }}
                           </td>
                           <!-- Other than speculative and specified business -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.AdjTotBFLossInBFLA
+                              finalCalculations?.scheduleCflDetails
+                                ?.AdjTotBFLossInBFLA
                                 ?.adjInBflBusLossOthThanSpecifiedLossCF
                             }}
                           </td>
                           <!-- loss from speculative business  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.AdjTotBFLossInBFLA
-                                ?.adjInBflSpeculativeBus
+                              finalCalculations?.scheduleCflDetails
+                                ?.AdjTotBFLossInBFLA?.adjInBflSpeculativeBus
                             }}
                           </td>
                           <!-- loss from specified business  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.AdjTotBFLossInBFLA
+                              finalCalculations?.scheduleCflDetails
+                                ?.AdjTotBFLossInBFLA
                                 ?.adjInBflLossFrmSpecifiedBusCF
                             }}
                           </td>
                           <!-- short term capital loss  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.AdjTotBFLossInBFLA
-                                ?.adjInBflStcgLoss
+                              finalCalculations?.scheduleCflDetails
+                                ?.AdjTotBFLossInBFLA?.adjInBflStcgLoss
                             }}
                           </td>
                           <!-- long term capital loss  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.AdjTotBFLossInBFLA
-                                ?.adjInBflLtcgLoss
+                              finalCalculations?.scheduleCflDetails
+                                ?.AdjTotBFLossInBFLA?.adjInBflLtcgLoss
                             }}
                           </td>
                           <!-- loss from maintaining and owning horses  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.AdjTotBFLossInBFLA
+                              finalCalculations?.scheduleCflDetails
+                                ?.AdjTotBFLossInBFLA
                                 ?.adjInBflOthSrcLossRaceHorseCF
                             }}
                           </td>
@@ -3726,60 +3706,62 @@
                           <!-- house property loss -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.CurrentAYloss
-                                ?.currentAyHpLoss
+                              finalCalculations?.scheduleCflDetails
+                                ?.CurrentAYloss?.currentAyHpLoss
                             }}
                           </td>
                           <!-- Other than speculative and specified business -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.CurrentAYloss
+                              finalCalculations?.scheduleCflDetails
+                                ?.CurrentAYloss
                                 ?.currentAyBusLossOthThanSpecifiedLossCF
                             }}
                           </td>
                           <!-- loss from speculative business  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.CurrentAYloss
-                                ?.currentAySpeculativeBus
+                              finalCalculations?.scheduleCflDetails
+                                ?.CurrentAYloss?.currentAySpeculativeBus
                             }}
                           </td>
                           <!-- loss from specified business  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.CurrentAYloss
-                                ?.currentAyLossFrmSpecifiedBusCF
+                              finalCalculations?.scheduleCflDetails
+                                ?.CurrentAYloss?.currentAyLossFrmSpecifiedBusCF
                             }}
                           </td>
                           <!-- short term capital loss  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.CurrentAYloss
-                                ?.currentAyStcgLoss
+                              finalCalculations?.scheduleCflDetails
+                                ?.CurrentAYloss?.currentAyStcgLoss
                             }}
                           </td>
                           <!-- long term capital loss  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.CurrentAYloss
-                                ?.currentAyLtcgLoss
+                              finalCalculations?.scheduleCflDetails
+                                ?.CurrentAYloss?.currentAyLtcgLoss
                             }}
                           </td>
                           <!-- loss from maintaining and owning horses  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.CurrentAYloss
-                                ?.currentAyOthSrcLossRaceHorseCF
+                              finalCalculations?.scheduleCflDetails
+                                ?.CurrentAYloss?.currentAyOthSrcLossRaceHorseCF
                             }}
                           </td>
                         </tr>
 
-                         <!-- total loss carried forward to future years -->
-                         <tr>
+                        <!-- total loss carried forward to future years -->
+                        <tr>
                           <!-- Assessment year -->
                           <td>
                             <strong
-                              >Total loss carried forward to future years</strong
+                              >Total loss carried forward to future
+                              years</strong
                             >
                           </td>
                           <!-- date of filing -->
@@ -3787,49 +3769,52 @@
                           <!-- house property loss -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.TotalLossCFSummary
-                                ?.totalLossCFHpLoss
+                              finalCalculations?.scheduleCflDetails
+                                ?.TotalLossCFSummary?.totalLossCFHpLoss
                             }}
                           </td>
                           <!-- Other than speculative and specified business -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.TotalLossCFSummary
+                              finalCalculations?.scheduleCflDetails
+                                ?.TotalLossCFSummary
                                 ?.totalLossCFBusLossOthThanSpecifiedLossCF
                             }}
                           </td>
                           <!-- loss from speculative business  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.TotalLossCFSummary
-                                ?.totalLossCFSpeculativeBus
+                              finalCalculations?.scheduleCflDetails
+                                ?.TotalLossCFSummary?.totalLossCFSpeculativeBus
                             }}
                           </td>
                           <!-- loss from specified business  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.TotalLossCFSummary
+                              finalCalculations?.scheduleCflDetails
+                                ?.TotalLossCFSummary
                                 ?.totalLossCFLossFrmSpecifiedBusCF
                             }}
                           </td>
                           <!-- short term capital loss  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.TotalLossCFSummary
-                                ?.totalLossCFStcgLoss
+                              finalCalculations?.scheduleCflDetails
+                                ?.TotalLossCFSummary?.totalLossCFStcgLoss
                             }}
                           </td>
                           <!-- long term capital loss  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.TotalLossCFSummary
-                                ?.totalLossCFLtcgLoss
+                              finalCalculations?.scheduleCflDetails
+                                ?.TotalLossCFSummary?.totalLossCFLtcgLoss
                             }}
                           </td>
                           <!-- loss from maintaining and owning horses  -->
                           <td>
                             {{
-                              finalCalculations?.scheduleCflDetails?.TotalLossCFSummary
+                              finalCalculations?.scheduleCflDetails
+                                ?.TotalLossCFSummary
                                 ?.totalLossCFOthSrcLossRaceHorseCF
                             }}
                           </td>
@@ -4198,7 +4183,10 @@
                   <!-- *********************** Interest and Fee Payable ************************ -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="finalCalculations?.interestAndFee?.totalInterestAndFee === 0"
+                    [disabled]="
+                      finalCalculations?.interestAndFee?.totalInterestAndFee ===
+                      0
+                    "
                     #interestFee
                   >
                     <mat-expansion-panel-header class="newclass">
@@ -4436,7 +4424,9 @@
                   <!-- *********************** Tax Paid ************************ -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="finalCalculations?.taxPaid?.totalTaxesPaid === 0"
+                    [disabled]="
+                      finalCalculations?.taxPaid?.totalTaxesPaid === 0
+                    "
                     #taxPaid
                   >
                     <mat-expansion-panel-header class="newclass">

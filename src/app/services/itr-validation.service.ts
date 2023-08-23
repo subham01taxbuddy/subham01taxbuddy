@@ -86,10 +86,10 @@ export class ItrValidationService {
           }
 
           // gender
-          if (!obj[key][0]?.gender) {
-            const error = this.getErrorMessages('E3');
-            errorList.push(error);
-          }
+          // if (!obj[key][0]?.gender) {
+          //   const error = this.getErrorMessages('E3');
+          //   errorList.push(error);
+          // }
 
           // fatherName
           if (!obj[key][0]?.fatherName) {

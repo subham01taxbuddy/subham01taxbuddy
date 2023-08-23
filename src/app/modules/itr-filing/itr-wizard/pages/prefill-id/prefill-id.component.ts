@@ -1547,6 +1547,8 @@ export class PrefillIdComponent implements OnInit {
                   this.ITR_Obj.employerCategory = 'OTHER';
                 } else if (jsonEmployerCategory === 'NA') {
                   this.ITR_Obj.employerCategory = 'NA';
+                } else {
+                  this.ITR_Obj.employerCategory = 'OTHER';
                 }
               }
 
@@ -2815,6 +2817,8 @@ export class PrefillIdComponent implements OnInit {
                   this.ITR_Obj.employerCategory = 'OTHER';
                 } else if (jsonEmployerCategory === 'NA') {
                   this.ITR_Obj.employerCategory = 'NA';
+                } else {
+                  this.ITR_Obj.employerCategory = 'OTHER';
                 }
               }
 

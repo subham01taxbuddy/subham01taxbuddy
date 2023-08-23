@@ -233,8 +233,8 @@ export class SummaryComponent implements OnInit {
               businessSection: String;
               natureOfBusinessCode: any;
               tradeName: String;
-              grossTurnover: Number;
-              TaxableIncome: Number;
+              grossTurnover: number;
+              TaxableIncome: number;
             }
           ];
           cash: [
@@ -242,8 +242,8 @@ export class SummaryComponent implements OnInit {
               businessSection: String;
               natureOfBusinessCode: any;
               tradeName: String;
-              grossTurnover: Number;
-              TaxableIncome: Number;
+              grossTurnover: number;
+              TaxableIncome: number;
             }
           ];
         };
@@ -252,8 +252,8 @@ export class SummaryComponent implements OnInit {
             businessSection: String;
             natureOfBusinessCode: any;
             tradeName: String;
-            grossTurnover: Number;
-            TaxableIncome: Number;
+            grossTurnover: number;
+            TaxableIncome: number;
           }
         ];
         nonSpecIncome: {
@@ -385,9 +385,9 @@ export class SummaryComponent implements OnInit {
     deductions: {
       deductionDtls: {
         name: String;
-        amount: Number;
+        amount: number;
       }[];
-      deductionTotal: Number;
+      deductionTotal: number;
     };
     totalIncome: Number;
     specialRateChargeable: Number;
@@ -401,7 +401,7 @@ export class SummaryComponent implements OnInit {
         LTCGLoss: Number;
         BusLossOthThanSpecLossCF: Number;
         LossFrmSpecBusCF: Number;
-        LossFrmSpecifiedBusCF: Number;
+        LossFrmSpecifiedBusCF: number;
         OthSrcLoss: Number;
         pastYear: Number;
         totalLoss: Number;
@@ -410,25 +410,21 @@ export class SummaryComponent implements OnInit {
       cflTotal: Number;
     };
     scheduleCflDetails: {
-      LossCFFromPrev13thYearFromAY: {
-        dateOfFiling: any;
-        LossFrmSpecifiedBusCF: Number;
-      };
       LossCFFromPrev12thYearFromAY: {
         dateOfFiling: any;
-        LossFrmSpecifiedBusCF: Number;
+        LossFrmSpecifiedBusCF: number;
       };
       LossCFFromPrev11thYearFromAY: {
         dateOfFiling: any;
-        LossFrmSpecifiedBusCF: Number;
+        LossFrmSpecifiedBusCF: number;
       };
       LossCFFromPrev10thYearFromAY: {
         dateOfFiling: any;
-        LossFrmSpecifiedBusCF: Number;
+        LossFrmSpecifiedBusCF: number;
       };
       LossCFFromPrev9thYearFromAY: {
         dateOfFiling: any;
-        LossFrmSpecifiedBusCF: Number;
+        LossFrmSpecifiedBusCF: number;
       };
       LossCFFromPrev8thYearFromAY: {
         dateOfFiling: any;
@@ -569,11 +565,11 @@ export class SummaryComponent implements OnInit {
     netTaxLiability: Number;
     interestAndFee: {
       interest234C: {
-        q1: Number;
-        q2: Number;
-        q3: Number;
-        q4: Number;
-        q5: Number;
+        q1: number;
+        q2: number;
+        q3: number;
+        q4: number;
+        q5: number;
       };
       total234A: Number;
       total234B: Number;
@@ -620,8 +616,8 @@ export class SummaryComponent implements OnInit {
       totalOtherThanTDSTCS: Number;
       totalTaxesPaid: Number;
     };
-    amountPayable: Number;
-    amountRefund: Number;
+    amountPayable: number;
+    amountRefund: number;
   };
 
   constructor(
@@ -1176,7 +1172,7 @@ export class SummaryComponent implements OnInit {
                     amount: Number(item),
                   })) as {
                     name: String;
-                    amount: Number;
+                    amount: number;
                   }[])
                 : [],
               deductionTotal:
@@ -1195,7 +1191,8 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                 this.ITR14IncomeDeductions
               ]?.TotalIncome,
-            lossesToBeCarriedForward: { //TODO:Shrikant
+            lossesToBeCarriedForward: {
+              //TODO:Shrikant
               cflDtls: [
                 {
                   assessmentPastYear: 0,
@@ -1214,10 +1211,6 @@ export class SummaryComponent implements OnInit {
               cflTotal: 0,
             },
             scheduleCflDetails: {
-              LossCFFromPrev13thYearFromAY: { //TODO:Shrikant
-                dateOfFiling: 0,
-                LossFrmSpecifiedBusCF: 0,
-              },
               LossCFFromPrev12thYearFromAY: {
                 dateOfFiling: 0,
                 LossFrmSpecifiedBusCF: 0,
@@ -2570,7 +2563,7 @@ export class SummaryComponent implements OnInit {
                       amount: Number(item),
                     })) as {
                     name: String;
-                    amount: Number;
+                    amount: number;
                   }[])
                 : [],
               deductionTotal:
@@ -2595,7 +2588,8 @@ export class SummaryComponent implements OnInit {
             aggregateIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                 ?.AggregateIncome,
-            lossesToBeCarriedForward: {//TODO:Shrikant remove the placeholder object
+            lossesToBeCarriedForward: {
+              //TODO:Shrikant remove the placeholder object
               cflDtls: [
                 {
                   assessmentPastYear: 0,
@@ -2614,11 +2608,6 @@ export class SummaryComponent implements OnInit {
               cflTotal: 0,
             },
             scheduleCflDetails: {
-              //TODO:Shrikant remove the placeholder object
-              LossCFFromPrev13thYearFromAY: {
-                dateOfFiling: null,
-                LossFrmSpecifiedBusCF: 0
-              },
               LossCFFromPrev12thYearFromAY: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
@@ -2627,7 +2616,7 @@ export class SummaryComponent implements OnInit {
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
                     ?.LossCFFromPrev9thYearFromAY?.CarryFwdLossDetail
-                    ?.DateOfFiling,
+                    ?.LossFrmSpecifiedBusCF,
               },
               LossCFFromPrev11thYearFromAY: {
                 dateOfFiling:
@@ -2637,7 +2626,7 @@ export class SummaryComponent implements OnInit {
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
                     ?.LossCFFromPrev8thYearFromAY?.CarryFwdLossDetail
-                    ?.DateOfFiling,
+                    ?.LossFrmSpecifiedBusCF,
               },
               LossCFFromPrev10thYearFromAY: {
                 dateOfFiling:
@@ -2647,7 +2636,7 @@ export class SummaryComponent implements OnInit {
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
                     ?.LossCFFromPrev7thYearFromAY?.CarryFwdLossDetail
-                    ?.DateOfFiling,
+                    ?.LossFrmSpecifiedBusCF,
               },
               LossCFFromPrev9thYearFromAY: {
                 dateOfFiling:
@@ -2657,7 +2646,7 @@ export class SummaryComponent implements OnInit {
                 LossFrmSpecifiedBusCF:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
                     ?.LossCFFromPrev6thYearFromAY?.CarryFwdLossDetail
-                    ?.DateOfFiling,
+                    ?.LossFrmSpecifiedBusCF,
               },
               LossCFFromPrev8thYearFromAY: {
                 dateOfFiling:
@@ -4136,7 +4125,7 @@ export class SummaryComponent implements OnInit {
                             ).eligibleAmount,
                           })) as {
                           name: String;
-                          amount: Number;
+                          amount: number;
                         }[])
                       : [],
                     deductionTotal:
@@ -4178,11 +4167,7 @@ export class SummaryComponent implements OnInit {
                     lossSetOffDuringYear: 0,
                     cflTotal: 0,
                   },
-                  scheduleCflDetails: { //TODO:Shrikant remove the placeholder object
-                    LossCFFromPrev13thYearFromAY: {
-                      dateOfFiling: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                    },
+                  scheduleCflDetails: {
                     LossCFFromPrev12thYearFromAY: {
                       dateOfFiling: 0,
                       LossFrmSpecifiedBusCF: 0,
@@ -5523,7 +5508,7 @@ export class SummaryComponent implements OnInit {
                           ).eligibleAmount,
                         })) as {
                         name: String;
-                        amount: Number;
+                        amount: number;
                       }[])
                     : [],
                   deductionTotal:
@@ -5545,7 +5530,8 @@ export class SummaryComponent implements OnInit {
                     : 0,
                 aggregateIncome:
                   this.finalSummary?.assessment?.taxSummary?.aggregateIncomeXml,
-                lossesToBeCarriedForward: {//TODO:Shrikant remove the placeholder object
+                lossesToBeCarriedForward: {
+                  //TODO:Shrikant remove the placeholder object
                   cflDtls: [
                     {
                       assessmentPastYear: 0,
@@ -5565,10 +5551,6 @@ export class SummaryComponent implements OnInit {
                 },
                 //TODO:Shrikant remove the placeholder object
                 scheduleCflDetails: {
-                  LossCFFromPrev13thYearFromAY: {
-                    dateOfFiling: 0,
-                    LossFrmSpecifiedBusCF: 0,
-                  },
                   LossCFFromPrev12thYearFromAY: {
                     dateOfFiling: 0,
                     LossFrmSpecifiedBusCF: 0,
