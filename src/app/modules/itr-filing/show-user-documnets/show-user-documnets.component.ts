@@ -6,6 +6,9 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
 import { GoogleDriveService } from "../../../services/google-drive.service";
+import * as FileSaver from 'file-saver';
+import * as JSZip from "jszip";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-show-user-documnets',
@@ -29,6 +32,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
 
   constructor(private itrMsService: ItrMsService, private activatedRoute: ActivatedRoute, public utilsService: UtilsService,
     private datePipe: DatePipe, private toastMessageService: ToastMessageService,
+    private httpClient: HttpClient,
     private gdriveService: GoogleDriveService) { }
 
   ngOnInit() {
@@ -209,6 +213,53 @@ export class ShowUserDocumnetsComponent implements OnInit {
     } else {
       return "";
     }
+  }
+
+  async downloadAll(folders){
+    this.loading = true;
+    const zip = new JSZip();
+    const name = this.userId + '.zip';
+    // tslint:disable-next-line:prefer-for-of
+
+    let completed = [];
+    let repeat = 1;
+    for(let counter = 0; counter < folders.length; counter++) {
+      let document = folders[counter];
+      let fileUrl;
+      if (document.isPasswordProtected) {
+        // fileUrl = document.passwordProtectedFileUrl;
+        fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
+      } else {
+        fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
+      }
+      const fileData: any = await this.getFile(fileUrl);
+      const b: any = new Blob([fileData], { type: '' + fileData.type + '' });
+      let fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
+      if(completed.includes(fileName)){
+        fileName = fileName.substring(0, fileName.lastIndexOf('.')) + "_" + repeat + fileName.substring(fileName.lastIndexOf('.'));
+      }
+      completed.push(fileName);
+      zip.file(fileName, b);
+    }
+    this.loading = false;
+    zip.generateAsync({ type: 'blob' }).then((content) => {
+      if (content) {
+        FileSaver.saveAs(content, name);
+      }
+    });
+
+  }
+
+  async getFile(url: string) {
+    const httpOptions = {
+      responseType: 'blob' as 'json'
+    };
+    const res = await this.httpClient.get(url, httpOptions).toPromise().catch((err: HttpErrorResponse) => {
+      const error = err.error;
+      console.log(error);
+      return error;
+    });
+    return res;
   }
 
   downloadFile(document) {

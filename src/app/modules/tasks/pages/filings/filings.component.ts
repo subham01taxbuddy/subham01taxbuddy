@@ -31,6 +31,8 @@ import { FormControl } from '@angular/forms';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { RequestManager } from 'src/app/modules/shared/services/request-manager';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -47,6 +49,7 @@ export class FilingsComponent implements OnInit,OnDestroy {
   config: any;
   selectedPageNo = 0;
   itrStatus: any = [];
+  eriStatus:any = [];
   roles: any;
   loggedInSme: any;
   coOwnerToggle = new FormControl('');
@@ -77,6 +80,7 @@ export class FilingsComponent implements OnInit,OnDestroy {
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private activatedRoute: ActivatedRoute,
     private cacheManager: CacheManager,
+    private http: HttpClient,
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
     this.myItrsGridOptions = <GridOptions>{
@@ -926,6 +930,7 @@ export class FilingsComponent implements OnInit,OnDestroy {
     console.log(data);
     let disposable = this.dialog.open(EVerificationDialogComponent, {
       data: {
+        title: "eVerify",
         pan: data.panNumber,
         ay: data.assessmentYear.substring(0, 4),
         ackNum: data.ackNumber,
@@ -995,6 +1000,52 @@ export class FilingsComponent implements OnInit,OnDestroy {
         this.loading = false;
         this.utilsService.showSnackBar(
           'Failed to update E-Verification status'
+        );
+      }
+    );
+  }
+
+  markAsProcessed(data){
+    // 'https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status'
+    this.loading = true;
+    var workingItr = this.itrDataList.filter(
+      (item: any) => item.itrId === data.itrId
+    )[0];
+    let reqData = {
+      userId:  workingItr.userId,
+      taskKeyName: 'itrProcessedSuccessfully',
+      uiAction:"NotRequired",
+      taskStatus: 'Completed',
+      assessmentYear: workingItr.assessmentYear,
+    };
+    const userData = JSON.parse(localStorage.getItem('UMD') || '');
+    const TOKEN = userData ? userData.id_token : null;
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/json');
+    headers = headers.append('environment', environment.lifecycleEnv);
+    headers = headers.append('Authorization', 'Bearer ' + TOKEN);
+
+    this.http.put(environment.lifecycleUrl, reqData, { headers: headers })
+    .subscribe(
+      (result: any) => {
+        this.loading = false;
+        if(result.success){
+          this.utilsService.showSnackBar(
+            'ITR Processed status updated successfully'
+          );
+          this.myItrsList(this.selectedPageNo,this.selectedFilingTeamMemberId
+          );
+        }else{
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Failed to update ITR Processed status'
+          );
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'Failed to update ITR Processed status'
         );
       }
     );
@@ -1216,7 +1267,7 @@ export class FilingsComponent implements OnInit,OnDestroy {
 
     this.itrMsService.postMethodForEri(param, req).subscribe((res: any) => {
       console.log(res);
-      if (res && res.successFlag) {
+      if ((res && res.successFlag) || res.httpStatus != 'REJECTED') {
         if (res.hasOwnProperty('itrsFiled') && res.itrsFiled instanceof Array) {
           let input = {
             name: data.fName + ' ' + data.lName,
@@ -1232,14 +1283,65 @@ export class FilingsComponent implements OnInit,OnDestroy {
         if (res.hasOwnProperty('errors')) {
           if (res.errors instanceof Array && res.errors.length > 0)
             this.utilsService.showSnackBar(res.errors[0].desc);
+            this.getItrLifeCycleStatus(data)
         }
       }
     });
   }
 
+  getItrLifeCycleStatus(data) {
+    this.loading = true;
+    let param = '/life-cycle-status?userId=' + data.userId + '&assessmentYear=' + data.assessmentYear;
+    this.itrMsService.getItrLifeCycle(param).subscribe((response: any) => {
+      if (response.success) {
+        this.loading = false
+        console.log('res of itr status of non-eri',response)
+        if (response.data.itrProcessedSuccessfully.taskStatus === 'Completed') {
+          let input = {
+            title: 'itrLifecycleNonEri',
+            name: data.fName + ' ' + data.lName,
+            pan: data.panNumber,
+            itrsFiled: response.data.itrFiledStatus,
+            eVerification : response.data.eVerificationStatus,
+            itrProcessed : response.data.itrProcessedSuccessfully,
+          };
+          this.openLifeCycleDialog(input);
+        }else{
+          let disposable = this.dialog.open(EVerificationDialogComponent, {
+            data: {
+              title: "itrProcessed",
+              pan: data.panNumber,
+              ay: data.assessmentYear.substring(0, 4),
+              ackNum: data.ackNumber,
+              formCode: data.itrType,
+              name: data.fName + ' ' + data.lName,
+              userId: data.userId,
+              assessmentYear: data.assessmentYear,
+            },
+          });
+          disposable.afterClosed().subscribe((result) => {
+            if (result?.data === 'itrProcessed') {
+              this.markAsProcessed(data);
+            }
+          })
+        }
+      } else {
+        this.loading = false
+        this.utilsService.showSnackBar(response.message);
+      }
+    },
+      error => {
+        console.log('error ==> ', error)
+        this.loading = false
+        this.utilsService.showSnackBar('Failed to Save the ITR Details');
+
+      });
+
+  }
+
   openLifeCycleDialog(data) {
     let disposable = this.dialog.open(ItrLifecycleDialogComponent, {
-      width: '50%',
+      width: '70%',
       height: 'auto',
       data: data,
     });

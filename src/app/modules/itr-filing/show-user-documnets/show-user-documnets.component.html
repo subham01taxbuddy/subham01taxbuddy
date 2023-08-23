@@ -5,7 +5,15 @@
         <button class="btn" style="float: right;" (click)="closeComponent()">Close</button>
       </div>
         <app-document-upload (uploadDocument)="afterUploadDocs($event)" [userId]="userId"></app-document-upload>
-        <div class="card__title" style="padding: 20px;">Document Cloud </div>
+        <div class="card__title" style="padding: 20px;">Document Cloud
+          <span *ngIf="isFile" style="float: right;">
+            <button *ngIf="isDownloadAllowed" (click)="downloadAll(folders)">
+              <i class="fa fa-download" aria-hidden="true"
+                 style="font-size: 18px; padding: inherit; cursor: pointer;"></i>Download All
+            </button>
+          </span>
+        </div>
+
         <!-- <div style="padding-left: 30px;"><span *ngFor="let docs of commonDocuments; let i=index">
                 <a href="javascript:;" (click)="getCommonDocsUrl(i)">{{docs.fileName}}</a> &nbsp;&nbsp;
             </span> &nbsp;
