@@ -64,6 +64,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
   showCurrentAYOptions = false;
   submitted: boolean = false;
+  dueDateOver: boolean = false;
   constructor(
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
@@ -1573,6 +1574,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         }
       );
     }
+
+    this.dueDateCheck();
   }
 
   getITRType() {
@@ -1771,6 +1774,32 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           this.ITR_JSON.acknowledgementDate91
         );
       }
+    }
+  }
+
+  dueDateCheck() {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentDay = currentDate.getDate();
+
+    const july = 6;
+    const july31 = 31;
+
+    if (
+      currentMonth > july ||
+      (this.ITR_JSON?.isRevised === 'Y' && this.ITR_JSON?.regime === 'OLD')
+    ) {
+      this.dueDateOver = true;
+      return;
+    } else if (
+      (currentMonth === july && currentDay > july31) ||
+      (this.ITR_JSON?.isRevised === 'Y' && this.ITR_JSON?.regime === 'OLD')
+    ) {
+      this.dueDateOver = true;
+      return;
+    } else {
+      this.dueDateOver = true;
+      return;
     }
   }
 

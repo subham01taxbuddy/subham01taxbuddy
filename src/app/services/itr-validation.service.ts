@@ -520,41 +520,41 @@ export class ItrValidationService {
               }
 
               // for deduction array
-              const deductionArray = element?.deduction;
-              if (deductionArray && deductionArray?.length > 0) {
-                const deductionDetails: boolean = deductionArray?.some(
-                  (deduction) =>
-                    !deduction?.costOfNewAssets ||
-                    !deduction?.purchaseDate ||
-                    !deduction?.underSection ||
-                    !deduction?.totalDeductionClaimed ||
-                    deduction?.srn === null ||
-                    deduction?.srn === undefined
-                );
+              // const deductionArray = element?.deduction;
+              // if (deductionArray && deductionArray?.length > 0) {
+              //   const deductionDetails: boolean = deductionArray?.some(
+              //     (deduction) =>
+              //       !deduction?.costOfNewAssets ||
+              //       !deduction?.purchaseDate ||
+              //       !deduction?.underSection ||
+              //       !deduction?.totalDeductionClaimed ||
+              //       deduction?.srn === null ||
+              //       deduction?.srn === undefined
+              //   );
 
-                if (deductionDetails) {
-                  const error = this.getErrorMessages('E35');
-                  errorList?.push(error);
-                }
-              }
+              //   if (deductionDetails) {
+              //     const error = this.getErrorMessages('E35');
+              //     errorList?.push(error);
+              //   }
+              // }
 
               // for improvement array
-              const improvementArray = element?.improvement;
-              if (improvementArray && improvementArray?.length > 0) {
-                const improvementArrayDetails: boolean = improvementArray?.some(
-                  (improvement) =>
-                    !improvement?.dateOfImprovement ||
-                    !improvement?.costOfImprovement ||
-                    !improvement?.indexCostOfImprovement ||
-                    improvement?.srn === null ||
-                    improvement?.srn === undefined
-                );
+              // const improvementArray = element?.improvement;
+              // if (improvementArray && improvementArray?.length > 0) {
+              //   const improvementArrayDetails: boolean = improvementArray?.some(
+              //     (improvement) =>
+              //       !improvement?.dateOfImprovement ||
+              //       !improvement?.costOfImprovement ||
+              //       !improvement?.indexCostOfImprovement ||
+              //       improvement?.srn === null ||
+              //       improvement?.srn === undefined
+              //   );
 
-                if (improvementArrayDetails) {
-                  const error = this.getErrorMessages('E36');
-                  errorList?.push(error);
-                }
-              }
+              //   if (improvementArrayDetails) {
+              //     const error = this.getErrorMessages('E36');
+              //     errorList?.push(error);
+              //   }
+              // }
 
               // for buyerDetails array
               const buyersDetailsArray = element?.buyersDetails;
@@ -652,10 +652,14 @@ export class ItrValidationService {
                           !equity?.purchaseDate ||
                           !equity?.purchaseValuePerUnit ||
                           !equity?.purchaseCost ||
-                          !equity?.isinCode ||
-                          !equity?.fmvAsOn31Jan2018 ||
+                          equity?.isinCode === null ||
+                          equity?.isinCode === undefined ||
+                          equity?.fmvAsOn31Jan2018 === null ||
+                          equity?.fmvAsOn31Jan2018 === undefined ||
                           !equity?.grandFatheredValue ||
-                          !equity?.totalFairMarketValueOfCapitalAsset ||
+                          equity?.totalFairMarketValueOfCapitalAsset === null ||
+                          equity?.totalFairMarketValueOfCapitalAsset ===
+                            undefined ||
                           !equity?.capitalGain
                         : !equity?.gainType ||
                           equity?.algorithm !== 'cgSharesMF' ||
