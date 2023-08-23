@@ -386,7 +386,7 @@
                   This field is required</mat-error> -->
                 </mat-form-field>
               </div>
-              <div class="col-sm-4" *ngIf="(loggedInSmeRoles?.includes('ROLE_LEADER') || loggedInSmeRoles?.includes('ROLE_ADMIN')) && !checkRoles?.includes('ROLE_OWNER') && !checkRoles?.includes('ROLE_LEADER') && !checkRoles?.includes('ROLE_ADMIN')">
+              <div class="col-sm-4" *ngIf="(loggedInSmeRoles?.includes('ROLE_LEADER') || loggedInSmeRoles?.includes('ROLE_ADMIN'))  && !checkRoles?.includes('ROLE_LEADER') && !checkRoles?.includes('ROLE_ADMIN')">
                 <mat-label> Resigning Date  </mat-label>
                 <mat-form-field appearance="outline">
                   <input matInput placeholder="Resigning Date" [formControl]="resigningDate" [min]="minDate"
