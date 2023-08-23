@@ -569,7 +569,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.loading = false;
         this.utilsService.showSnackBar(result.message);
       }
-    },(error)=>{
+    }, (error)=>{
       this.loading = false;
       this.utilsService.showSnackBar(error.error.message);
       console.log(error);
