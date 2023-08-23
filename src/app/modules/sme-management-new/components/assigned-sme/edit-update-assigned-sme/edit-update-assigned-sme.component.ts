@@ -561,11 +561,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     }
     this.userMsService.postMethod(param, request).subscribe((result: any) => {
       console.log('updated resigned status  -> ', result);
-      this.loading = false;
       if(result.success){
-        this.utilsService.showSnackBar(result.message);
+        this.loading = false;
+        this.utilsService.showSnackBar(result.data.message);
         this.location.back();
       } else {
+        this.loading = false;
         this.utilsService.showSnackBar(result.message);
       }
     }, (error)=>{
@@ -589,6 +590,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
       if(ResigningDate){
         //mark SME as resigned
+        this.loading=true;
         this.updateResignedStatus();
         return;
       }
