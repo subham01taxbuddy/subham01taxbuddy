@@ -205,6 +205,15 @@ export class EditUpdateResignedSmeComponent implements OnInit {
 
     // this.admin.seValue(data.admin)
     // this.callingNumber.setValue(data.callingNumber)
+    if(data.joiningDate !== null){
+      let joiningDate = data.joiningDate;
+      this.joiningDate.setValue(moment(joiningDate, 'DD/MM/YYYY').toDate())
+    }
+
+    if(data.resigningDate !== null){
+      let resigningDate = data.resigningDate;
+      this.resigningDate.setValue(moment(resigningDate, 'DD/MM/YYYY').toDate())
+    }
   }
 
   roles: FormGroup = this.fb.group({
@@ -564,6 +573,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('sme record by service  -> ', result);
       this.smeRecords = result.data;
+      this.setFormValues(this.smeRecords[0]);
       this.smeServices = this.smeRecords.map((item) => {
         return {
           serviceType: item.serviceType,
