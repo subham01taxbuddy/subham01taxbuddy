@@ -389,6 +389,16 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
     this.requestManager.addRequest(this.SME_INFO, this.userMsService.getMethodNew(param));
+    this.requestManager.requestCompleted.subscribe((event) => {
+      if (event.api === this.SME_INFO) {
+        if (event.error) {
+          console.log('Error:', event.error);
+          this._toastMessageService.alert("error", event.error.error.error);
+        }else {
+          console.log('Success:', event.result);
+        }
+      }
+    })
   }
 
   InitChat() {
