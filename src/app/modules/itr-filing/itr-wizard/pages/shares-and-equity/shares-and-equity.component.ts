@@ -412,7 +412,7 @@ export class SharesAndEquityComponent
     }
     if (data.length > 0) {
       data.forEach((obj) => {
-        let assetDetails = obj.assetDetails.filter((security: any) => !brokerNames.includes(security.brokerName));
+        let assetDetails = obj.assetDetails.filter((security: any) => brokerNames.includes(security.brokerName));
         obj.assetDetails = assetDetails;
       });
     }
