@@ -314,6 +314,11 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     // this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
   }
 
+  saveAll(){
+    this.saveCg();
+    this.saveAndNext.emit(false);
+  }
+
   // calculating cg after deduction
   // calculateCg() {
   //   this.loading = true;
