@@ -687,6 +687,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
       finalReq.admin = this.admin.value;
       finalReq.filer = this.filer.value;
       finalReq.coOwnerUserId = this.smeObj.coOwnerUserId;
+      finalReq.resigningDate = rejoin ? null : this.smeObj.resigningDate;
       // console.log('requestData', requestData);
       this.userMsService.putMethod(param, finalReq).subscribe(
         (res: any) => {
@@ -739,6 +740,8 @@ export class EditUpdateResignedSmeComponent implements OnInit {
       this.smeObj.active = true;
     } else {
       this.smeObj.active = false;
+      let resigningDate = this.smeRecords[0].resigningDate;
+      this.resigningDate.setValue(moment(resigningDate, 'DD/MM/YYYY').toDate())
     }
   }
 
