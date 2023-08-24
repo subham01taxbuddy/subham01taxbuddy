@@ -539,5 +539,6 @@ export class ZeroCouponBondsComponent
 
   saveAll() {
     this.save('bonds');
+    this.saveAndNext.emit(false);
   }
 }

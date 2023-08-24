@@ -928,5 +928,6 @@ export class SharesAndEquityComponent
 
   saveAll() {
     this.save();
+    this.saveAndNext.emit(false);
   }
 }
