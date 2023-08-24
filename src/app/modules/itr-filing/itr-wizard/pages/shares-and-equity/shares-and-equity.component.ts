@@ -101,7 +101,14 @@ export class SharesAndEquityComponent
     );
 
     if (equitySharesListed?.deduction?.length > 0) {
-      this.deduction = true;
+      const deductionStat: boolean = equitySharesListed?.deduction?.some(
+        (element) => element?.purchaseDate
+      );
+      if (deductionStat) {
+        this.deduction = true;
+      } else {
+        this.deduction = false;
+      }
     } else {
       this.deduction = false;
     }
@@ -305,39 +312,30 @@ export class SharesAndEquityComponent
   }
 
   createForm(srn, item?): FormGroup {
-    let validators = this.bondType === 'listed' ? [
-      Validators.required,
-      Validators.pattern(AppConstants.amountWithDecimal),
-    ] : [
-      Validators.required,
-      Validators.pattern(AppConstants.amountWithoutDecimal),
-    ];
+    let validators =
+      this.bondType === 'listed'
+        ? [
+            Validators.required,
+            Validators.pattern(AppConstants.amountWithDecimal),
+          ]
+        : [
+            Validators.required,
+            Validators.pattern(AppConstants.amountWithoutDecimal),
+          ];
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       brokerName: [item ? item.brokerName : ''],
       srn: [item ? item.srn : srn],
-      sellOrBuyQuantity: [
-        item ? item.sellOrBuyQuantity : null,
-        validators,
-      ],
+      sellOrBuyQuantity: [item ? item.sellOrBuyQuantity : null, validators],
       sellDate: [item ? item.sellDate : null, [Validators.required]],
-      sellValuePerUnit: [
-        item ? item.sellValuePerUnit : null,
-        validators,
-      ],
-      sellValue: [
-        item ? item.sellValue : null,
-        validators,
-      ],
+      sellValuePerUnit: [item ? item.sellValuePerUnit : null, validators],
+      sellValue: [item ? item.sellValue : null, validators],
       purchaseDate: [item ? item.purchaseDate : null, [Validators.required]],
       purchaseValuePerUnit: [
         item ? item.purchaseValuePerUnit : null,
         validators,
       ],
-      purchaseCost: [
-        item ? item.purchaseCost : null,
-        validators,
-      ],
+      purchaseCost: [item ? item.purchaseCost : null, validators],
       sellExpense: [item ? item.sellExpense : null],
       isinCode: [item ? item.isinCode : ''],
       nameOfTheUnits: [item ? item.nameOfTheUnits : ''],
@@ -351,19 +349,21 @@ export class SharesAndEquityComponent
       stampDutyValue: [item ? item.stampDutyValue : null],
       valueInConsideration: [item ? item.valueInConsideration : null],
       capitalGain: [item ? item.capitalGain : null],
-      totalFairMarketValueOfCapitalAsset: [item ? item.totalFairMarketValueOfCapitalAsset : null],
+      totalFairMarketValueOfCapitalAsset: [
+        item ? item.totalFairMarketValueOfCapitalAsset : null,
+      ],
     });
   }
 
   editSecuritiesForm(i) {
     (
       (this.securitiesForm.controls['securitiesArray'] as FormGroup).controls[
-      i
+        i
       ] as FormGroup
     ).enable();
     (
       (this.securitiesForm.controls['securitiesArray'] as FormGroup).controls[
-      i
+        i
       ] as FormGroup
     ).controls['gainType'].disable();
   }
@@ -380,7 +380,9 @@ export class SharesAndEquityComponent
   }
 
   equitySelected() {
-    const securitiesArray = <FormArray>this.securitiesForm.controls['securitiesArray'];
+    const securitiesArray = <FormArray>(
+      this.securitiesForm.controls['securitiesArray']
+    );
     return (
       securitiesArray.controls.filter(
         (item: FormGroup) => item.controls['hasEdit'].value === true
@@ -442,8 +444,10 @@ export class SharesAndEquityComponent
   }
 
   checkBuyDateBefore31stJan(securities) {
-    return new Date(securities.controls['purchaseDate'].value) <
-      new Date('02/01/2018');
+    return (
+      new Date(securities.controls['purchaseDate'].value) <
+      new Date('02/01/2018')
+    );
   }
 
   calculateGainType(securities) {
@@ -592,7 +596,8 @@ export class SharesAndEquityComponent
     );
     const i = this.fieldGlobalIndex(index);
     const fg = securitiesArray.controls[i] as FormGroup;
-    let saleValue = parseFloat(fg.controls['sellValuePerUnit'].value) *
+    let saleValue =
+      parseFloat(fg.controls['sellValuePerUnit'].value) *
       parseFloat(fg.controls['sellOrBuyQuantity'].value);
     fg.controls['sellValue'].setValue(saleValue.toFixed());
     // if(this.bondType === 'listed') {
@@ -609,7 +614,8 @@ export class SharesAndEquityComponent
     );
     const i = this.fieldGlobalIndex(index);
     const fg = securitiesArray.controls[i] as FormGroup;
-    let purchaseValue = parseFloat(fg.controls['purchaseValuePerUnit'].value) *
+    let purchaseValue =
+      parseFloat(fg.controls['purchaseValuePerUnit'].value) *
       parseFloat(fg.controls['sellOrBuyQuantity'].value);
     fg.controls['purchaseCost'].setValue(purchaseValue.toFixed());
     // if(this.bondType === 'listed') {
@@ -684,9 +690,11 @@ export class SharesAndEquityComponent
 
       if (securitiesIndex >= 0) {
         if (securitiesData.assetDetails.length > 0) {
-          this.Copy_ITR_JSON.capitalGain[securitiesIndex].deduction = securitiesData.deduction;
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex].deduction =
+            securitiesData.deduction;
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].improvement.concat(securitiesData.improvement);
-          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = securitiesData.assetDetails;
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails =
+            securitiesData.assetDetails;
         } else {
           this.Copy_ITR_JSON.capitalGain.splice(securitiesIndex, 1);
         }
@@ -700,7 +708,9 @@ export class SharesAndEquityComponent
           this.ITR_JSON = result;
           this.loading = false;
           sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          this.utilsService.showSnackBar('Securities data updated successfully');
+          this.utilsService.showSnackBar(
+            'Securities data updated successfully'
+          );
           this.utilsService.smoothScrollToTop();
         },
         (error) => {
@@ -715,7 +725,8 @@ export class SharesAndEquityComponent
     } else if (
       (this.securitiesForm.valid &&
         this.deduction &&
-        this.deductionForm.valid) || (this.securitiesForm.valid && !this.deduction)
+        this.deductionForm.valid) ||
+      (this.securitiesForm.valid && !this.deduction)
     ) {
       this.loading = true;
       if (!this.Copy_ITR_JSON.capitalGain) {
@@ -764,13 +775,22 @@ export class SharesAndEquityComponent
 
       if (securitiesIndex >= 0) {
         if (securitiesData.assetDetails.length > 0) {
-          this.Copy_ITR_JSON.capitalGain[securitiesIndex].deduction = securitiesData.deduction;
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex].deduction =
+            securitiesData.deduction;
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].improvement.concat(securitiesData.improvement);
 
           //single broker edit view is displayed here
           //get all other brokers from existing list, append current broker list and then save
-          let otherData = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.filter(item => item.brokerName !== this.selectedBroker);
-          let sameData = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.filter(item => item.brokerName === this.selectedBroker);
+          let otherData = this.Copy_ITR_JSON.capitalGain[
+            securitiesIndex
+          ].assetDetails.filter(
+            (item) => item.brokerName !== this.selectedBroker
+          );
+          let sameData = this.Copy_ITR_JSON.capitalGain[
+            securitiesIndex
+          ].assetDetails.filter(
+            (item) => item.brokerName === this.selectedBroker
+          );
           if (!sameData) {
             sameData = [];
           }
@@ -783,11 +803,17 @@ export class SharesAndEquityComponent
               sameData = securitiesData.assetDetails;
             }
           }
-          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = otherData.concat(sameData);
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails =
+            otherData.concat(sameData);
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
         } else {
-          let otherData = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.filter(item => item.brokerName !== this.selectedBroker);
-          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = otherData;
+          let otherData = this.Copy_ITR_JSON.capitalGain[
+            securitiesIndex
+          ].assetDetails.filter(
+            (item) => item.brokerName !== this.selectedBroker
+          );
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails =
+            otherData;
         }
       } else {
         if (securitiesData.assetDetails.length > 0) {
@@ -799,7 +825,9 @@ export class SharesAndEquityComponent
           this.ITR_JSON = result;
           this.loading = false;
           sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          this.utilsService.showSnackBar('Securities data updated successfully');
+          this.utilsService.showSnackBar(
+            'Securities data updated successfully'
+          );
           this.utilsService.smoothScrollToTop();
         },
         (error) => {
@@ -912,5 +940,6 @@ export class SharesAndEquityComponent
 
   saveAll() {
     this.save();
+    this.saveAndNext.emit(false);
   }
 }

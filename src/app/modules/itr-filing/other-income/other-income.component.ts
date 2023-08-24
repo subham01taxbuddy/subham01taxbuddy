@@ -240,6 +240,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   saveAll() {
     this.saveOtherIncome();
     this.saveExemptIncomes();
+    this.saveAndNext.emit(false);
   }
 
   saveOtherIncome() {
