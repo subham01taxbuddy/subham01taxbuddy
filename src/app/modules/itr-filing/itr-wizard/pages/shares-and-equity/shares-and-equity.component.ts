@@ -42,6 +42,7 @@ export class SharesAndEquityComponent
 
   selectedBroker = '';
   brokerList = [];
+  brokerSelected = [];
   allSecurities = [];
   compactView = true;
   isAdd = false;
@@ -209,6 +210,7 @@ export class SharesAndEquityComponent
               LTCG: gainType === 'LONG' ? capitalGain : 0,
               STCG: gainType === 'SHORT' ? capitalGain : 0,
             });
+            this.brokerSelected.push(false);
           }
         });
         if (obj.deduction) {
@@ -231,6 +233,14 @@ export class SharesAndEquityComponent
         this.addMoreData();
       }
     }
+  }
+
+  isBrokerSelected(){
+    return this.brokerSelected.filter(value => value === true).length > 0;
+  }
+
+  changeSelection(i){
+    this.brokerSelected[i] = !this.brokerSelected[i];
   }
 
   showBroker(brokerName) {
@@ -378,8 +388,15 @@ export class SharesAndEquityComponent
     );
   }
 
-  deleteBroker(brokerName) {
-    this.brokerList = this.brokerList.filter(item => item.brokerName !== brokerName);
+  deleteBroker() {
+    let brokerNames = [];
+    for (let i=0; i < this.brokerSelected.length; i++){
+      if(this.brokerSelected[i] === false){
+        brokerNames.push(this.brokerList[i].brokerName);
+      }
+      this.brokerSelected[i] = false;
+    }
+    this.brokerList = this.brokerList.filter(value => brokerNames.includes(value.brokerName));
     let itrObject = this.Copy_ITR_JSON;
     let data;
     if (this.bondType === 'listed') {
@@ -393,7 +410,7 @@ export class SharesAndEquityComponent
     }
     if (data.length > 0) {
       data.forEach((obj) => {
-        let assetDetails = obj.assetDetails.filter((security: any) => security.brokerName !== brokerName);
+        let assetDetails = obj.assetDetails.filter((security: any) => !brokerNames.includes(security.brokerName));
         obj.assetDetails = assetDetails;
       });
     }
