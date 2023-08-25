@@ -1354,6 +1354,9 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     if (this.coOwnerToggle.value == true && isAgent) {
       param = param + '&searchAsCoOwner=true';
     }
+    if(this.filerId === this.agentId){
+        param= param + `&filerUserId=${this.filerId}`
+      }
     if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
       param = `/${this.agentId}/user-list-new?${data}`;
     }
