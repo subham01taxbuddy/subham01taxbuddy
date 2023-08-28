@@ -450,4 +450,32 @@ export class MoreOptionsDialogComponent implements OnInit {
       console.log('The dialog was closed');
     });
   }
+
+  linkToFinbingo() {
+    const userId = this.data.userId;
+    const param = `/partner/create-user`;
+    const request = {
+      userId: userId
+    }
+    this.loading = true;
+    this.userMsService.postMethod(param, request).subscribe((res: any) => {
+      console.log('Link To Finbingo Response: ', res);
+      this.loading = false;
+      if (res.success) {
+        if (res.data.isFnbVirtualUser) {
+          this.utilsService.showSnackBar('User is already linked with FinBingo partner, please check under virtual users.');
+        } else if (res.data.isFnbUser) {
+          this.utilsService.showSnackBar('This user is already FinBingo user, please check under FinBingo users.');
+        } else {
+          this.utilsService.showSnackBar('User successfully linked with FinBingo partner, please check under virtual users.');
+        }
+        this.dialogRef.close({ event: 'close', data: 'success' });
+      } else {
+        this.utilsService.showSnackBar(res.message)
+      }
+    }, error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('There is some problem while linking user to Finbingo')
+    })
+  }
 }
