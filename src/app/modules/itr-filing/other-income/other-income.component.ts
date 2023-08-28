@@ -156,8 +156,6 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   otherIncomesFormArray: FormArray;
   exemptIncomeFormGroup: FormGroup;
   exemptIncomesFormArray: FormArray;
-  private isEditOtherIncome: boolean = false;
-  private isEditExemptIncome: boolean = false;
   constructor(
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
@@ -187,13 +185,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       famPenDeduction: [],
       totalFamPenDeduction: [],
     });
-    this.otherIncomeFormGroup.disable();
 
     this.exemptIncomesFormArray = this.createExemptIncomeForm();
     this.exemptIncomeFormGroup = this.fb.group({
       exemptIncomes: this.exemptIncomesFormArray,
     });
-    this.exemptIncomeFormGroup.disable();
     this.setOtherIncomeValues();
     this.setExemptIncomeValues();
   }
@@ -335,7 +331,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         );
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
-        this.utilsService.showSnackBar('Other Income updated successfully.');
+        this.utilsService.showSnackBar('Other sources of Income updated successfully.');
         // this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
       },
       (error) => {
@@ -375,7 +371,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         );
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
-        this.utilsService.showSnackBar('Other Income updated successfully.');
+        this.utilsService.showSnackBar('Other sources of Income updated successfully.');
         // this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
       },
       (error) => {
@@ -554,15 +550,5 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       }
     }
     return total;
-  }
-
-  editForm(type) {
-    if (type === 'otherIncome') {
-      this.isEditOtherIncome = true;
-      this.otherIncomeFormGroup.enable();
-    } else if (type === 'exemptIncome') {
-      this.isEditExemptIncome = true;
-      this.exemptIncomeFormGroup.enable();
-    }
   }
 }

@@ -275,16 +275,6 @@
                     (pageChange)="pageChanged($event)"
                   ></pagination-controls>
                 </div>
-                <div class="col-sm-3">
-                  <button
-                    type="submit"
-                    class="tbd-btn save-btn mvRth"
-                    [disabled]="immovableAssetForm.invalid"
-                    (click)="saveImmovableAssets()"
-                  >
-                    Save
-                  </button>
-                </div>
               </div>
             </div>
           </div>
@@ -460,27 +450,6 @@
               </mat-form-field>
             </div>
           </div>
-
-          <div class="edit-head edit-head1 edit-assets">
-            <button
-              type="button"
-              class="edit-donation"
-              (click)="movableAssetsForm.enable()"
-            >
-              <mat-icon> edit_square </mat-icon>Edit
-            </button>
-          </div>
-        </div>
-
-        <div class="col-sm-12 spsTp bdrTp">
-          <button
-            type="submit"
-            class="tbd-btn save-btn mvRth"
-            [disabled]="movableAssetsForm?.invalid"
-            (click)="saveMovableAssets()"
-          >
-            Save
-          </button>
         </div>
       </form>
     </div>
@@ -494,8 +463,8 @@
       >
     </button>
 
-    <button class="saveBtnIn">
-      <span class="font-semibold" (click)="saveAll()">Save All</span>
+    <button class="saveBtnIn" id="saveBtnIn" (click)="saveAll()">
+      <span class="font-semibold">Save All</span>
     </button>
   </div>
 </div>

@@ -178,8 +178,6 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
         (this.immovableAssetForm?.controls['immovableAssetArray'] as FormGroup)
           .controls[i] as FormGroup
       ).enable();
-    } else if (type === 'movable') {
-      this.movableAssetsForm.enable();
     }
   }
 
@@ -218,6 +216,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
 
   saveImmovableAssets() {
     if (this.immovableAssetForm.valid) {
+      console.log(this.immovableAssetForm, 'Immovable asset form');
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
       const immovableAssetArray = <FormArray>(
@@ -253,6 +252,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
 
   saveMovableAssets() {
     if (this.movableAssetsForm) {
+      console.log(this.movableAssetsForm, 'movable asset form');
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
