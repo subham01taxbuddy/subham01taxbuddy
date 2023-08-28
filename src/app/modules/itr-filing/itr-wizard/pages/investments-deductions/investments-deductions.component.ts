@@ -1,5 +1,5 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, OnInit, DoCheck } from '@angular/core';
+import { Component, OnInit, DoCheck, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -10,6 +10,7 @@ import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes
 import { Router } from '@angular/router';
 import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 declare let $: any;
+import { MedicalExpensesComponent } from '../../components/medical-expenses/medical-expenses.component';
 
 @Component({
   selector: 'app-investments-deductions',
@@ -20,6 +21,10 @@ export class InvestmentsDeductionsComponent
   extends WizardNavigation
   implements OnInit
 {
+  @ViewChild('medicalExpensesComponentRef', { static: false })
+  MedicalExpensesComponent!: MedicalExpensesComponent;
+  medicalExpensesSaved: boolean;
+  investmentsSaved: boolean;
   step = 0;
   isAddDonation: Number;
   loading: boolean = false;
@@ -638,7 +643,6 @@ export class InvestmentsDeductionsComponent
       status: true,
     },
   ];
-  isEditMedicalExpenses: boolean;
 
   constructor(
     private router: Router,
@@ -814,11 +818,29 @@ export class InvestmentsDeductionsComponent
           }
         }
       );
-
       this.serviceCall('NEXT', this.ITR_JSON);
-      this.saveAndNext.emit(false);
     } else {
       $('input.ng-invalid').first().focus();
+    }
+
+    this.MedicalExpensesComponent.saveInvestmentDeductions();
+    this.saveAll();
+  }
+
+  saveAll() {
+    if (this.investmentsSaved && this.medicalExpensesSaved) {
+      this.utilsService.showSnackBar('Investment / Deduction details are saved successfully');
+      this.saveAndNext.emit(false);
+    } else {
+      if (!this.investmentsSaved) {
+        this.utilsService.showSnackBar(
+          'Failed to update Investment Deductions details'
+        );
+      }
+
+      if (!this.medicalExpensesSaved) {
+        this.utilsService.showSnackBar('Failed to update Medical Expenses.');
+      }
     }
   }
 
@@ -934,9 +956,7 @@ export class InvestmentsDeductionsComponent
           JSON.stringify(this.ITR_JSON)
         );
         this.loading = false;
-        this.utilsService.showSnackBar(
-          'Investment Deductions updated successfully'
-        );
+        this.investmentsSaved = true;
         if (val === 'NEXT') {
           // this.saveAndNext.emit(true);
         }
@@ -944,9 +964,7 @@ export class InvestmentsDeductionsComponent
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
-        this.utilsService.showSnackBar(
-          'Failed to update Investment Deductions details'
-        );
+        this.investmentsSaved = false;
       }
     );
   }
@@ -966,6 +984,10 @@ export class InvestmentsDeductionsComponent
     });
 
     disposable.afterClosed().subscribe((result) => {});
+  }
+
+  onMedicalExpensesSaved(event) {
+    this.medicalExpensesSaved = event;
   }
 
   setStep(index: number) {

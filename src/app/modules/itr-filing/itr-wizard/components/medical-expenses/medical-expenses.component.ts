@@ -21,6 +21,7 @@ declare let $: any;
 })
 export class MedicalExpensesComponent implements OnInit, DoCheck {
   @Output() saveAndNext = new EventEmitter<any>();
+  @Output() medicalExpensesSaved = new EventEmitter<boolean>();
 
   loading: boolean = false;
   investmentDeductionForm: FormGroup;
@@ -403,6 +404,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         this.utilsService.showSnackBar(
           'Medical expenses for parents cannot exceed 50000'
         );
+        this.medicalExpensesSaved.emit(false);
         return;
       }
     } else {
@@ -420,6 +422,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         this.utilsService.showSnackBar(
           'Medical expenses for parents cannot exceed 25000'
         );
+        this.medicalExpensesSaved.emit(false);
         return;
       }
     }
@@ -438,6 +441,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.utilsService.showSnackBar(
         'Medical expenses for self cannot exceed 25000'
       );
+      this.medicalExpensesSaved.emit(false);
       return;
     }
 
@@ -582,14 +586,15 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_JSON)
           );
+
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
           this.loading = false;
-          this.utilsService.showSnackBar('Medical Expenses successfully.');
+          this.medicalExpensesSaved.emit(true);
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          this.utilsService.showSnackBar('Failed to update Medical Expenses.');
           this.loading = false;
+          this.medicalExpensesSaved.emit(false);
         }
       );
     } else {

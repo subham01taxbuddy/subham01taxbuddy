@@ -145,15 +145,6 @@
                 >
               </mat-form-field>
             </div>
-            <div class="col-sm-12 spsTp bdrTp">
-              <button
-                class="tbd-btn save-btn mvRth"
-                [disabled]="investmentDeductionForm.invalid"
-                (click)="saveInvestmentDeductions()"
-              >
-                Save
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -205,7 +196,10 @@
             Medical Expenses (u/s 80D)
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-medical-expenses></app-medical-expenses>
+        <app-medical-expenses
+          #medicalExpensesComponentRef
+          (medicalExpensesSaved)="onMedicalExpensesSaved($event)"
+        ></app-medical-expenses>
       </mat-expansion-panel>
     </mat-accordion>
   </div>
