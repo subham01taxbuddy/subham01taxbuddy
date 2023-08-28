@@ -1,6 +1,10 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Schedules } from '../../interfaces/schedules';
+import { ITR_JSON } from '../../interfaces/itr-input.interface';
+import { UpdateManualFilingDialogComponent } from '../update-manual-filing-dialog/update-manual-filing-dialog.component';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-validation-error-screen',
@@ -11,10 +15,13 @@ export class ValidationErrorScreenComponent implements OnInit {
   errors: any;
   itrType: any;
   @Output() saveAndNext = new EventEmitter<any>();
+  ITR_JSON: ITR_JSON;
+
   constructor(
     private route: ActivatedRoute,
     private schedules: Schedules,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +39,26 @@ export class ValidationErrorScreenComponent implements OnInit {
     const navigationPath = this.schedules?.getNavigationPath(schedule);
     console.log(navigationPath, 'navigation Path');
     this.router.navigate(['/itr-filing/' + navigationPath]);
+  }
+
+  updateManually() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    console.log('UPDATE MANUALLY', this.ITR_JSON);
+    let disposable = this.dialog.open(UpdateManualFilingDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: this.ITR_JSON,
+    });
+
+    disposable.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
+
+    sessionStorage.setItem(
+      AppConstants.ITR_JSON,
+      JSON.stringify(this.ITR_JSON)
+    );
+    console.log('UPDATE MANUALLY', this.ITR_JSON);
   }
 
   goBack() {

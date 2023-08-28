@@ -18,10 +18,23 @@
         >
         <div>To rectify the below errors, simply click on error hyperlink.</div>
       </div>
-      <div style="font-size: 24px">
+      <div style="font-size: 24px" class="updateManually">
         <strong>
           ITR Type : {{ itrType ? itrType : "ITR Type is missing" }}
         </strong>
+        <button
+          type="button"
+          (click)="updateManually()"
+          class="btn grBut"
+          style="
+            background-color: #bfea94;
+            font-size: 15px;
+            border: 1px solid black;
+            text-transform: none;
+          "
+        >
+          <strong> Manual Update </strong>
+        </button>
       </div>
       <div class="cardRect">
         <table
