@@ -1,5 +1,11 @@
 import {
-  Component, OnInit, Input, Output, EventEmitter, DoCheck, SimpleChanges,
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  DoCheck,
+  SimpleChanges,
 } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -14,7 +20,6 @@ declare let $: any;
   styleUrls: ['./medical-expenses.component.scss'],
 })
 export class MedicalExpensesComponent implements OnInit, DoCheck {
-  @Input() isEditMedicalExpenses = false;
   @Output() saveAndNext = new EventEmitter<any>();
 
   loading: boolean = false;
@@ -72,39 +77,36 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   ngOnInit(): void {
     this.initForm();
     this.setInvestmentsDeductionsValues();
-    this.isEditable();
   }
 
   initForm() {
     // let maxPremium = this.userAge >= 60 ? 50000 : 25000;
     this.investmentDeductionForm = this.fb.group({
       selfPremium: [null, [Validators.pattern(AppConstants.numericRegex)]],
-      selfPreventiveCheckUp: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],],
-      selfMedicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex),],
+      selfPreventiveCheckUp: [
+        null,
+        [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],
+      ],
+      selfMedicalExpenditure: [
+        null,
+        Validators.pattern(AppConstants.numericRegex),
+      ],
       premium: [null, [Validators.pattern(AppConstants.numericRegex)]],
-      preventiveCheckUp: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],],
+      preventiveCheckUp: [
+        null,
+        [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],
+      ],
       medicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ggc: [null, Validators.pattern(AppConstants.numericRegex)],
-      us80eeb: [null, [Validators.pattern(AppConstants.numericRegex), Validators.max(150000)],],
+      us80eeb: [
+        null,
+        [Validators.pattern(AppConstants.numericRegex), Validators.max(150000)],
+      ],
       us80u: [null, Validators.pattern(AppConstants.numericRegex)],
       us80dd: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ddb: [null, Validators.pattern(AppConstants.numericRegex)],
       hasParentOverSixty: [null],
     });
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    setTimeout(() => {
-      this.isEditable();
-    }, 1000);
-  }
-
-  isEditable() {
-    if (this.isEditMedicalExpenses) {
-      this.investmentDeductionForm.enable();
-    } else {
-      this.investmentDeductionForm.disable();
-    }
   }
 
   max5000Limit(val) {
@@ -150,8 +152,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       ].updateValueAndValidity();
     }
   }
-
-
 
   setInvestmentsDeductionsValues() {
     for (let i = 0; i < this.ITR_JSON.insurances?.length; i++) {
@@ -287,7 +287,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.maxLimit80u = 0;
     }
     // if (setDefault)
-      this.investmentDeductionForm.controls['us80u'].setValue(this.maxLimit80u);
+    this.investmentDeductionForm.controls['us80u'].setValue(this.maxLimit80u);
   }
   radioChange80dd(setDefault) {
     if (this.selected80dd === 'DEPENDENT_PERSON_WITH_DISABILITY') {
@@ -300,9 +300,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.maxLimit80dd = 0;
     }
     // if (setDefault)
-      this.investmentDeductionForm.controls['us80dd'].setValue(
-        this.maxLimit80dd
-      );
+    this.investmentDeductionForm.controls['us80dd'].setValue(this.maxLimit80dd);
   }
   radioChange80ddb(setDefault) {
     if (this.selected80ddb === 'SELF_OR_DEPENDENT') {
@@ -385,36 +383,61 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
     } else {
       this.investmentDeductionForm.controls['us80ddb'].disable();
     }
-
   }
 
   saveInvestmentDeductions() {
-
     let isParentOverSixty = this.Copy_ITR_JSON.systemFlags.hasParentOverSixty;
 
-    if(isParentOverSixty){
-      let totalExpenses = this.utilsService.getInt(this.investmentDeductionForm.controls['premium'].value) +
-        this.utilsService.getInt(this.investmentDeductionForm.controls['preventiveCheckUp'].value) +
-        this.utilsService.getInt(this.investmentDeductionForm.controls['medicalExpenditure'].value);
-      if(totalExpenses > 50000) {
-        this.utilsService.showSnackBar('Medical expenses for parents cannot exceed 50000');
+    if (isParentOverSixty) {
+      let totalExpenses =
+        this.utilsService.getInt(
+          this.investmentDeductionForm.controls['premium'].value
+        ) +
+        this.utilsService.getInt(
+          this.investmentDeductionForm.controls['preventiveCheckUp'].value
+        ) +
+        this.utilsService.getInt(
+          this.investmentDeductionForm.controls['medicalExpenditure'].value
+        );
+      if (totalExpenses > 50000) {
+        this.utilsService.showSnackBar(
+          'Medical expenses for parents cannot exceed 50000'
+        );
         return;
       }
     } else {
-      let totalExpenses = this.utilsService.getInt(this.investmentDeductionForm.controls['premium'].value) +
-        this.utilsService.getInt(this.investmentDeductionForm.controls['preventiveCheckUp'].value) +
-        this.utilsService.getInt(this.investmentDeductionForm.controls['medicalExpenditure'].value);
-      if(totalExpenses > 25000) {
-        this.utilsService.showSnackBar('Medical expenses for parents cannot exceed 25000');
+      let totalExpenses =
+        this.utilsService.getInt(
+          this.investmentDeductionForm.controls['premium'].value
+        ) +
+        this.utilsService.getInt(
+          this.investmentDeductionForm.controls['preventiveCheckUp'].value
+        ) +
+        this.utilsService.getInt(
+          this.investmentDeductionForm.controls['medicalExpenditure'].value
+        );
+      if (totalExpenses > 25000) {
+        this.utilsService.showSnackBar(
+          'Medical expenses for parents cannot exceed 25000'
+        );
         return;
       }
     }
     let maxExpenseLimit = this.userAge >= 60 ? 50000 : 25000;
-    let totalExpenses = this.utilsService.getInt(this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value) +
-      this.utilsService.getInt(this.investmentDeductionForm.controls['selfPremium'].value) +
-      this.utilsService.getInt(this.investmentDeductionForm.controls['selfMedicalExpenditure'].value);
-    if(totalExpenses > maxExpenseLimit) {
-      this.utilsService.showSnackBar('Medical expenses for self cannot exceed 25000');
+    let totalExpenses =
+      this.utilsService.getInt(
+        this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value
+      ) +
+      this.utilsService.getInt(
+        this.investmentDeductionForm.controls['selfPremium'].value
+      ) +
+      this.utilsService.getInt(
+        this.investmentDeductionForm.controls['selfMedicalExpenditure'].value
+      );
+    if (totalExpenses > maxExpenseLimit) {
+      this.utilsService.showSnackBar(
+        'Medical expenses for self cannot exceed 25000'
+      );
       return;
     }
 
@@ -437,7 +460,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
           ) {
             this.addAndUpdateInvestment(item);
           }
-
         }
       );
       this.Copy_ITR_JSON.insurances = this.Copy_ITR_JSON.insurances?.filter(
@@ -467,10 +489,10 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
           medicalExpenditure:
             this.userAge >= 60
               ? Number(
-                this.investmentDeductionForm.controls[
-                  'selfMedicalExpenditure'
-                ].value
-              )
+                  this.investmentDeductionForm.controls[
+                    'selfMedicalExpenditure'
+                  ].value
+                )
               : 0,
           preventiveCheckUp: Number(
             this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value
@@ -549,18 +571,27 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         });
       }
 
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
-      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: ITR_JSON) => {
-        this.ITR_JSON = result;
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        this.loading = false;
-        this.utilsService.showSnackBar('Medical Expenses successfully.');
-      }, error => {
-        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        this.utilsService.showSnackBar('Failed to update Medical Expenses.');
-        this.loading = false;
-      });
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.Copy_ITR_JSON)
+      );
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+        (result: ITR_JSON) => {
+          this.ITR_JSON = result;
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+          this.loading = false;
+          this.utilsService.showSnackBar('Medical Expenses successfully.');
+        },
+        (error) => {
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+          this.utilsService.showSnackBar('Failed to update Medical Expenses.');
+          this.loading = false;
+        }
+      );
     } else {
       $('input.ng-invalid').first().focus();
     }

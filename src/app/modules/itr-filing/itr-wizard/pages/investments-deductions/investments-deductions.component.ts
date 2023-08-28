@@ -718,7 +718,6 @@ export class InvestmentsDeductionsComponent
       hasParentOverSixty: [null],
     });
     this.setInvestmentsDeductionsValues();
-    this.investmentDeductionForm.disable();
   }
 
   saveInvestmentDeductions() {
@@ -971,14 +970,6 @@ export class InvestmentsDeductionsComponent
 
   setStep(index: number) {
     this.step = index;
-  }
-
-  editForm(type) {
-    if (type === 'medicalExpenses') {
-      this.isEditMedicalExpenses = true;
-    } else if (type === 'investment') {
-      this.investmentDeductionForm.enable();
-    }
   }
 
   goBack() {
