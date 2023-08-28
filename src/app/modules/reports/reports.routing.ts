@@ -9,6 +9,7 @@ import { ItrFilingReportComponent } from './itr-filing-report/itr-filing-report.
 import { MissedChatReportComponent } from './missed-chat-report/missed-chat-report.component';
 import { RevenueReportComponent } from './revenue-report/revenue-report.component';
 import { PayoutReportComponent } from './payout-report/payout-report.component';
+import { UsersItrPaymentDoneComponent } from './users-itr-payment-done/users-itr-payment-done.component';
 
 
 const routes: Routes = [
@@ -59,6 +60,10 @@ const routes: Routes = [
       {
         path:'payout-report',
         component: PayoutReportComponent,
+      },
+      {
+        path:'users-itr-payment-done',
+        component:UsersItrPaymentDoneComponent,
       }
     ],
 
