@@ -41,10 +41,16 @@ export class RequestManager {
           this.processing = false;
           this.requestCompleted.emit({
             api:req.api,
-            result:res
+            result:res,
+            error: null
           });
         }, error =>{
           this.processing = false;
+          this.requestCompleted.emit({
+            api: req.api,
+            result: null,
+            error: error
+          });
         });
       }
     }

@@ -82,6 +82,41 @@ float: left;
   }
 }
 
+.broker-card {
+  border-bottom-width: thin;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  margin-left: 5px;
+}
+
+.broker-view-title {
+  color: #858383;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 22.50px;
+  word-wrap: break-word
+}
+
+.broker-view-value {
+  color: black;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+  word-wrap: break-word
+}
+
+.broker-view-icon {
+  color: #00AECA;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+  word-wrap: break-word
+}
+
+.broker-view-btn {
+  text-align: right;
+}
+
 .card__col-sm-3 {
   padding: 10px !important;
 }
