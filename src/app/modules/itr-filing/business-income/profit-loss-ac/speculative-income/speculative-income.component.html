@@ -1,95 +1,132 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-    <form [formGroup]="specIncomeForm">
-        <div class="row bdrBtm">
-            <div class="col-sm-6">
-                <div class="titTx1">Speculative Activity </div>
-            </div>
-            <div class="col-sm-6">
-              <button type="button" class="new-add btnRt" (click)="addSpecIncomeForm()">+ Add More </button>
-            </div>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+<form [formGroup]="specIncomeForm">
+  <div class="row bdrBtm">
+    <div class="col-sm-6">
+      <div class="titTx1">Speculative Activity</div>
+    </div>
+    <div class="col-sm-6">
+      <button type="button" class="new-add btnRt" (click)="addSpecIncomeForm()">
+        + Add More
+      </button>
+    </div>
+  </div>
 
-        </div>
-
-
-          <div formArrayName="specIncomesArray" style="height: 100%; padding-top: 5px; box-sizing: border-box;">
-            <div *ngFor="let income of getIncomeArray.controls | paginate:config ;let i=index"
-                 [formGroupName]="fieldGlobalIndex(i)">
-              <div class="row specBk">
-                <div class="col-sm-1 spsTp">
-                  <mat-checkbox name="hasEdit[i]" formControlName="hasEdit" class="tpBtn1">
-                  </mat-checkbox>
-<!--                    <mat-label>{{}}</mat-label>-->
-                  <!-- <mat-form-field appearance="outline">
+  <div
+    formArrayName="specIncomesArray"
+    style="height: 100%; padding-top: 5px; box-sizing: border-box"
+  >
+    <div
+      *ngFor="
+        let income of getIncomeArray.controls | paginate : config;
+        let i = index
+      "
+      [formGroupName]="fieldGlobalIndex(i)"
+    >
+      <div class="row specBk">
+        <div class="col-sm-1 spsTp">
+          <mat-checkbox
+            name="hasEdit[i]"
+            formControlName="hasEdit"
+            class="tpBtn1"
+          >
+          </mat-checkbox>
+          <!--                    <mat-label>{{}}</mat-label>-->
+          <!-- <mat-form-field appearance="outline">
                     <input formControlName="brokerName" matInput disabled
                            name="brokerName[i]" class="input-field">
                   </mat-form-field> -->
-                </div>
-                <div class="col-sm-3">
-                    <mat-label>Net income from speculative income</mat-label>
-                    <mat-label>Gross Profit - Expenditure</mat-label>
-                    <!--                    <mat-label>10000</mat-label>-->
-                    <mat-form-field appearance="outline">
-                      <input formControlName="netIncome" matInput readonly
-                             name="netIncome[i]" required class="input-field" maxlength="14" digitsOnly>
-                    </mat-form-field>
-                  </div>
+        </div>
+        <div class="col-sm-3">
+          <mat-label>Net income from speculative income</mat-label>
+          <mat-label>Gross Profit - Expenditure</mat-label>
+          <!--                    <mat-label>10000</mat-label>-->
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="netIncome"
+              matInput
+              readonly
+              name="netIncome[i]"
+              required
+              class="input-field"
+              maxlength="14"
+              digitsOnly
+            />
+          </mat-form-field>
+        </div>
 
-
-                <div class="col-sm-3 spsTp">
-                  <mat-label>Turnover from speculative activity</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      formControlName="turnOver"
-                      matInput name="turnOver[i]" class="input-field"
-                      required type="number" trim (blur)="calculateNetIncome(fieldGlobalIndex(i))">
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-2 spsTp">
-                  <mat-label>Gross Profit</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      formControlName="grossProfit"
-                      matInput  name="grossProfit[i]" class="input-field"
-                      required type="number" trim (blur)="calculateNetIncome(fieldGlobalIndex(i))">
-
-                  </mat-form-field>
-                </div>
-                 <div class="col-sm-2 spsTp">
-                  <mat-label>Expenditure, if any</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      formControlName="expenditure"
-                      matInput name="expenditure[i]" class="input-field"
-                      required type="number" trim (blur)="calculateNetIncome(fieldGlobalIndex(i))">
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-1 spsTp">
-                    <button type="button" class="edit-donation" (click)="editSpecIncomeForm(fieldGlobalIndex(i))"><mat-icon>
-                      edit_square
-                    </mat-icon>Edit </button>
-                </div>
-
-              </div>
-              </div>
-            </div>
-      </form>
-
-
-    <div class="row spsTp bdrTp">
-      <div class="col-sm-3">
-        <button type="submit" class="delete-btn" (click)="deleteArray()" [disabled]="!specSelected()">
-          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-        </button>
-      </div>
-      <div class="col-sm-6 txt-center">
-        <table>
-          <tr *ngFor="let item of getIncomeArray.controls | paginate:config"></tr>
-        </table>
-        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-      </div>
-      <div class="col-sm-3">
-          <button class="tbd-btn save-btn mvRth" (click)="onContinue()"> Save </button>
+        <div class="col-sm-3 spsTp">
+          <mat-label>Turnover from speculative activity</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="turnOver"
+              matInput
+              name="turnOver[i]"
+              class="input-field"
+              required
+              type="number"
+              trim
+              (blur)="calculateNetIncome(fieldGlobalIndex(i))"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-2 spsTp">
+          <mat-label>Gross Profit</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="grossProfit"
+              matInput
+              name="grossProfit[i]"
+              class="input-field"
+              required
+              type="number"
+              trim
+              (blur)="calculateNetIncome(fieldGlobalIndex(i))"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-sm-2 spsTp">
+          <mat-label>Expenditure, if any</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="expenditure"
+              matInput
+              name="expenditure[i]"
+              class="input-field"
+              required
+              type="number"
+              trim
+              (blur)="calculateNetIncome(fieldGlobalIndex(i))"
+            />
+          </mat-form-field>
+        </div>
       </div>
     </div>
+  </div>
+</form>
 
-
+<div class="row spsTp bdrTp">
+  <div class="col-sm-3">
+    <button
+      type="submit"
+      class="delete-btn"
+      (click)="deleteArray()"
+      [disabled]="!specSelected()"
+    >
+      <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+    </button>
+  </div>
+  <div class="col-sm-6 txt-center">
+    <table>
+      <tr *ngFor="let item of getIncomeArray.controls | paginate : config"></tr>
+    </table>
+    <pagination-controls
+      (pageChange)="pageChanged($event)"
+    ></pagination-controls>
+  </div>
+  <div class="col-sm-3">
+    <button class="tbd-btn save-btn mvRth" (click)="onContinue()">Save</button>
+  </div>
+</div>
