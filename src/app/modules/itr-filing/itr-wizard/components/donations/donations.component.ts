@@ -25,7 +25,8 @@ export class DonationsComponent implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
-  @Output() onSave = new EventEmitter();
+  @Output() save = new EventEmitter();
+  @Output() donationsSaved = new EventEmitter<boolean>();
 
   otherDonationToDropdown = [
     {
@@ -786,19 +787,17 @@ export class DonationsComponent implements OnInit {
           );
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
           this.loading = false;
-          this.utilsService.showSnackBar(
-            'Donations data updated successfully.'
-          );
+          return this.donationsSaved.emit(true);
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          this.utilsService.showSnackBar('Failed to update Donation data.');
           this.loading = false;
+          return this.donationsSaved.emit(false);
         }
       );
     } else {
       this.loading = false;
-      this.utilsService.showSnackBar('Failed to save Donation data.');
+      return this.donationsSaved.emit(false);
     }
   }
 

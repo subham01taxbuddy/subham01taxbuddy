@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 declare let $: any;
 import { MedicalExpensesComponent } from '../../components/medical-expenses/medical-expenses.component';
+import { DonationsComponent } from '../../components/donations/donations.component';
 
 @Component({
   selector: 'app-investments-deductions',
@@ -23,8 +24,11 @@ export class InvestmentsDeductionsComponent
 {
   @ViewChild('medicalExpensesComponentRef', { static: false })
   MedicalExpensesComponent!: MedicalExpensesComponent;
+  @ViewChild('donationsComponentRef', { static: false })
+  DonationsComponent!: DonationsComponent;
   medicalExpensesSaved: boolean;
   investmentsSaved: boolean;
+  donationsSaved: boolean;
   step = 0;
   isAddDonation: Number;
   loading: boolean = false;
@@ -821,15 +825,29 @@ export class InvestmentsDeductionsComponent
       this.serviceCall('NEXT', this.ITR_JSON);
     } else {
       $('input.ng-invalid').first().focus();
+      this.investmentsSaved = false;
     }
 
     this.MedicalExpensesComponent.saveInvestmentDeductions();
+    this.DonationsComponent.saveGeneralDonation();
     this.saveAll();
   }
 
   saveAll() {
-    if (this.investmentsSaved && this.medicalExpensesSaved) {
-      this.utilsService.showSnackBar('Investment / Deduction details are saved successfully');
+    console.log(
+      'saveAll:',
+      this.investmentsSaved,
+      this.medicalExpensesSaved,
+      this.donationsSaved
+    );
+    if (
+      this.investmentsSaved &&
+      this.medicalExpensesSaved &&
+      this.donationsSaved
+    ) {
+      this.utilsService.showSnackBar(
+        'Investment / Deduction details are saved successfully'
+      );
       this.saveAndNext.emit(false);
     } else {
       if (!this.investmentsSaved) {
@@ -840,6 +858,10 @@ export class InvestmentsDeductionsComponent
 
       if (!this.medicalExpensesSaved) {
         this.utilsService.showSnackBar('Failed to update Medical Expenses.');
+      }
+
+      if (!this.donationsSaved) {
+        this.utilsService.showSnackBar('Failed to update Donations.');
       }
     }
   }
@@ -988,6 +1010,10 @@ export class InvestmentsDeductionsComponent
 
   onMedicalExpensesSaved(event) {
     this.medicalExpensesSaved = event;
+  }
+
+  onDonationsSaved(event) {
+    this.donationsSaved = event;
   }
 
   setStep(index: number) {

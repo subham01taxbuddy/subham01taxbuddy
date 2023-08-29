@@ -180,8 +180,10 @@
           </div>
         </mat-expansion-panel-header>
         <app-donations
+          #donationsComponentRef
           [isAddDonation]="isAddDonation"
-          (onSave)="saveInvestmentDeductions()"
+          (save)="saveInvestmentDeductions()"
+          (donationsSaved)="onDonationsSaved($event)"
         ></app-donations>
       </mat-expansion-panel>
 
