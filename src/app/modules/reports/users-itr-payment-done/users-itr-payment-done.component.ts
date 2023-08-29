@@ -6,7 +6,8 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
 import { environment } from 'src/environments/environment';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
-import { GridOptions} from 'ag-grid-community';
+import { GridOptions, ICellRendererParams} from 'ag-grid-community';
+import { AgTooltipComponent } from '../../shared/components/ag-tooltip/ag-tooltip.component';
 
 @Component({
   selector: 'app-users-itr-payment-done',
@@ -42,6 +43,13 @@ export class UsersItrPaymentDoneComponent implements OnInit {
         onGridReady: (params) => { },
         sortable: true,
         filter: true,
+        defaultColDef: {
+          resizable: true,
+          cellRendererFramework: AgTooltipComponent,
+          cellRendererParams: (params: ICellRendererParams) => {
+            this.formatToolTip(params.data);
+          },
+        },
       };
 
       this.config = {
@@ -49,6 +57,12 @@ export class UsersItrPaymentDoneComponent implements OnInit {
         currentPage: 1,
         totalItems: null,
       };
+    }
+
+    formatToolTip(params: any) {
+      let temp = params.value;
+      const lineBreak = false;
+      return { temp, lineBreak };
     }
 
   ngOnInit() {
@@ -188,7 +202,7 @@ export class UsersItrPaymentDoneComponent implements OnInit {
       {
         headerName: 'Owner Name',
         field: 'ownerName',
-        width: 150,
+        width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -200,7 +214,7 @@ export class UsersItrPaymentDoneComponent implements OnInit {
       {
         headerName: 'Latest Status',
         field: 'latestStatus',
-        width: 150,
+        width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -224,7 +238,7 @@ export class UsersItrPaymentDoneComponent implements OnInit {
       {
         headerName: 'Plan Name',
         field: 'planName',
-        width: 200,
+        width: 260,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
