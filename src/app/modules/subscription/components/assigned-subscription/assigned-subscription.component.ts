@@ -168,13 +168,16 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     this.queryParam = `?subscriptionAssigneeId=${this.agentId}`;
     console.log('this.queryParam:', this.queryParam);
-    // alert(this.queryParam)
     let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     if (this.utilsService.isNonEmpty(this.queryParam)) {
       pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     }
 
     var param = `/subscription-dashboard-new/${this.agentId}?${pagination}`;
+
+    if((this.ownerId || this.filerId) && (loggedInSmeUserId != this.ownerId || this.filerId) ){
+      param = param + '&filter=true'
+    }
 
     if (this.coOwnerToggle.value == true && isAgent) {
       param = param + '&searchAsCoOwner=true';
@@ -184,7 +187,7 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
     }
 
     this.loading = true;
-    this.itrService.getMethod(param).subscribe(
+    this.userMsService.getMethodNew(param).subscribe(
       (response: any) => {
         console.log('SUBSCRIPTION RESPONSE:', response);
         this.allSubscriptions = response;
@@ -291,7 +294,7 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
 
       this.loading = true;
       let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + number;
-      this.itrService.getMethod(param).subscribe((response: any) => {
+      this.userMsService.getMethodNew(param).subscribe((response: any) => {
         this.loading = false;
         console.log('Get user  by mobile number responce: ', response);
         let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER' || item === 'ROLE_FILER');
