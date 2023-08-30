@@ -3,28 +3,12 @@
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
 
-<form [formGroup]="OtherAsssetImprovementForm" style="padding: 0 40px">
+<form [formGroup]="assetsForm" style="padding: 0 40px">
   <!-- otherAssets details  -->
-  <div formArrayName="otherAssets">
-    <div
-      *ngFor="
-        let otherAsset of getOtherAssets?.controls | paginate : config;
-        let i = index
-      "
-      [formGroupName]="fieldGlobalIndex(i)"
-    >
+  <div>
+    <div>
       <!-- otherAssets  -->
-      <div formGroupName="otherAssetsArray">
-        <div>
-          <mat-checkbox
-            color="primary"
-            name="hasEdit[i]"
-            formControlName="hasEdit"
-            class="ml130"
-            (click)="index = i"
-          >
-          </mat-checkbox>
-        </div>
+      <div >
 
         <div class="row cardClr">
           <div class="col-sm-4">
@@ -36,13 +20,13 @@
                 name="sellDate"
                 [matDatepicker]="sellDate"
                 placeholder="Sale Date/Date of Transfer"
-                (blur)="calculateGainType(i)"
+                (blur)="calculateGainType()"
                 (dateChange)="
-                  calculateGainType(i);
+                  calculateGainType();
                   calMaxPurchaseDate(
-                    getOtherAssetsArray.get('sellDate')?.value,
+                    assetsForm.get('sellDate')?.value,
                     this.OtherAsssetImprovementForm,
-                    i
+                    assetIndex
                   )
                 "
                 [min]="minDate"
@@ -65,8 +49,8 @@
                 name="purchaseDate"
                 [matDatepicker]="purchaseDate"
                 placeholder="Buy Date / Date of Acquisition"
-                (blur)="calculateGainType(i)"
-                (dateChange)="calculateGainType(i)"
+                (blur)="calculateGainType()"
+                (dateChange)="calculateGainType()"
                 [max]="maxPurchaseDate"
               />
               <mat-datepicker-toggle
@@ -90,7 +74,7 @@
                 class="input-field"
                 maxlength="14"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                (blur)="calculateCg(fieldGlobalIndex(i))"
+                (blur)="calculateCg()"
               />
 
               <!-- <mat-error
@@ -116,7 +100,7 @@
                 class="input-field"
                 maxlength="14"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                (blur)="calculateCg(fieldGlobalIndex(i))"
+                (blur)="calculateCg()"
               />
 
               <!-- <mat-error
@@ -144,7 +128,7 @@
                 class="input-field"
                 maxlength="14"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                (blur)="calculateCg(fieldGlobalIndex(i))"
+                (blur)="calculateCg()"
               />
               <!-- <mat-error
                 *ngIf="
@@ -190,20 +174,10 @@
               />
             </mat-form-field>
           </div>
-          <!-- edit Other Assets  -->
-          <div class="col-sm-4 spsTp">
-            <button
-              type="button"
-              class="edit-donation"
-              (click)="editOtherAsset(fieldGlobalIndex(i))"
-              (click)="index = i"
-            >
-              <mat-icon> edit_square </mat-icon>Edit
-            </button>
-          </div>
+
           <hr class="linSps" />
           <!-- cost-of-improvement  -->
-          <div formGroupName="improvementsArray">
+          <div>
             <!-- co-owner yes-no selection  -->
             <div class="row linSps">
               <div class="col-sm-9">
@@ -282,7 +256,7 @@
                       class="input-field"
                       maxlength="14"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                      (blur)="calculateIndexCost(i)"
+                      (blur)="calculateIndexCost()"
                       readonly
                     />
                   </mat-form-field>
@@ -297,25 +271,17 @@
     </div>
 
     <div class="row spsTp bdrTp">
-      <div class="col-sm-3">
-        <button
-          type="submit"
-          class="delete-btn"
-          (click)="deleteOtherAsset(index)"
-          [disabled]="!assetSelected()"
-        >
-          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-        </button>
-      </div>
+<!--      <div class="col-sm-3">-->
+<!--        <button-->
+<!--          type="submit"-->
+<!--          class="delete-btn"-->
+<!--          (click)="deleteOtherAsset(index)"-->
+<!--          [disabled]="!assetSelected()"-->
+<!--        >-->
+<!--          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete-->
+<!--        </button>-->
+<!--      </div>-->
       <div class="col-sm-6">
-        <table>
-          <tr
-            *ngFor="let item of getOtherAssets.controls | paginate : config"
-          ></tr>
-        </table>
-        <pagination-controls
-          (pageChange)="pageChanged($event)"
-        ></pagination-controls>
       </div>
       <div class="col-sm-3">
         <button class="tbd-btn save-btn mvRth" (click)="saveCg()">Save</button>

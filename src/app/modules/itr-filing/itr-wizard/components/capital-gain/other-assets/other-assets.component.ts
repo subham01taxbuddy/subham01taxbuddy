@@ -1,21 +1,19 @@
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import {
-  Improvement,
   ITR_JSON,
   NewCapitalGain,
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
-import { InvestmentDialogComponent } from '../investment-dialog/investment-dialog.component';
-import { OtherAssetsDialogComponent } from './other-assets-dialog/other-assets-dialog.component';
-import { OtherImprovementDialogComponent } from './other-improvement-dialog/other-improvement-dialog.component';
 import { Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormArray } from '@angular/forms';
 import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
+import {OtherAssetImprovementComponent} from "./other-asset-improvement/other-asset-improvement.component";
+import {formatDate} from "@angular/common";
 
 @Component({
   selector: 'app-other-assets',
@@ -23,53 +21,85 @@ import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
   styleUrls: ['./other-assets.component.scss'],
 })
 export class OtherAssetsComponent extends WizardNavigation implements OnInit {
-  // public otherAssetsGridOptions: GridOptions;
-  // public improvementGridOptions: GridOptions;
-  // public deductionGridOptions: GridOptions;
+
   loading = false;
   @Input() goldCg: NewCapitalGain;
   ITR_JSON: ITR_JSON;
   totalCg = 0;
-  canAddDeductions = false;
   step = 0;
   isAddOtherAssetsImprovement: Number;
   deductionForm!: FormGroup;
   config: any;
   index: number;
+  gridOptions: GridOptions;
+  assetList: any;
 
   constructor(
     public matDialog: MatDialog,
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    @Inject(LOCALE_ID) private locale: string
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // let listedData = this.ITR_JSON.capitalGain?.filter(
-    //   (item) => item.assetType === 'GOLD'
-    // );
+    let listedData = this.ITR_JSON.capitalGain?.filter(
+      (item) => item.assetType === 'GOLD'
+    );
+    if (listedData?.length > 0) {
+      this.goldCg = listedData[0];
+      console.log(listedData);
+      // this.clearNullImprovements();
+      // this.calculateTotalCg();
+    } else {
+      this.goldCg = {
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        assesseeType: this.ITR_JSON.assesseeType,
+        residentialStatus: this.ITR_JSON.residentialStatus,
+        assetType: 'GOLD',
+        assetDetails: [],
+        improvement: [],
+        deduction: [],
+        buyersDetails: [],
+      };
+      console.log(this.goldCg);
+    }
+    this.gridOptions = <GridOptions>{
+      rowData: this.createRowData(),
+      columnDefs: this.otherAssetsCreateColumnDef(),
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      rowSelection: 'multiple',
+      onGridReady: params => {
+      },
+      onSelectionChanged: (event) =>{
+        event.api.getSelectedRows().forEach(row=>{
+          row.hasEdit = true;
+        });
+        if(event.api.getSelectedRows().length === 0){
+          this.assetList.forEach((asset: any) => {
+            asset.hasEdit = false;
+          });
+        }
+        // this.sel();
+      },
+      sortable: true,
+      pagination: true,
+      paginationPageSize:20
+    };
+    this.gridOptions.api?.setRowData(this.assetList);
 
-    // if (listedData?.length > 0) {
-    //   this.goldCg = listedData[0];
-    //   console.log(listedData);
-    //   // this.clearNullImprovements();
-    //   // this.calculateTotalCg();
-    // } else {
-    //   this.goldCg = {
-    //     assessmentYear: this.ITR_JSON.assessmentYear,
-    //     assesseeType: this.ITR_JSON.assesseeType,
-    //     residentialStatus: this.ITR_JSON.residentialStatus,
-    //     assetType: 'GOLD',
-    //     assetDetails: [],
-    //     improvement: [],
-    //     deduction: [],
-    //     buyersDetails: [],
-    //   };
-    //   console.log(this.goldCg);
-    // }
-    // this.otherAssetsCallInConstructor();
-    // this.improvementCallInConstructor();
-    // this.deductionCallInConstructor();
+  }
+
+  createRowData(){
+    this.assetList = [];
+    this.goldCg.assetDetails.forEach(asset=>{
+      let copy:any = {};
+      Object.assign(copy, asset);
+      copy.hasEdit = false;
+      this.assetList.push(copy);
+    });
+    return this.assetList;
   }
 
   ngOnInit() {
@@ -272,10 +302,18 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   }
 
   // add event that allows the form to be looped
-  addOtherAssets(type) {
-    if (type === 'otherAssets') {
-      this.isAddOtherAssetsImprovement = Math.random();
-    }
+  addOtherAssets(isEdit, index?) {
+
+    this.isAddOtherAssetsImprovement = Math.random();
+
+    this.matDialog.open(OtherAssetImprovementComponent, {
+      width: '70%',
+      height: 'auto',
+      data: {
+        isAddOtherAssetsImprovement: this.isAddOtherAssetsImprovement,
+        assetIndex: index,
+      }
+    });
     // this.goldCg.deduction.push(result.deduction);
   }
 
@@ -291,27 +329,32 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
   closed() {}
 
-  deleteAsset(i) {
+  isAssetSelected(){
+    return this.assetList.filter(asset => asset.hasEdit === true).length > 0;
+  }
+
+  deleteAsset() {
+    let selected = this.assetList.filter(asset => asset.hasEdit === true).map(asset => asset.srn);
     //delete improvement for asset
     this.goldCg.improvement.forEach((imp) => {
-      if (imp.srn == this.goldCg.assetDetails[i].srn) {
+      if (selected.includes(imp.srn)) {
         this.goldCg.improvement.splice(this.goldCg.improvement.indexOf(imp), 1);
       }
     });
     this.goldCg.deduction.forEach((ded) => {
-      if (ded.srn == this.goldCg.assetDetails[i].srn) {
+      if (selected.includes(ded.srn)) {
         this.goldCg.deduction.splice(this.goldCg.deduction.indexOf(ded), 1);
       }
     });
-    this.goldCg.assetDetails.splice(i, 1);
+    this.goldCg.assetDetails = this.goldCg.assetDetails.filter(asset => !selected.includes(asset.srn));
+    this.assetList = this.assetList.filter(asset => asset.hasEdit != true);
+
     if (this.goldCg.assetDetails.length === 0) {
       //remove deductions
       this.goldCg.deduction = [];
       this.goldCg.improvement = [];
     }
-    // this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
-    // this.improvementGridOptions.api?.setRowData(this.goldCg.improvement);
-    // this.deductionGridOptions.api?.setRowData(this.goldCg.deduction);
+    this.gridOptions.api?.setRowData(this.createRowData());
   }
 
   saveAll(){
@@ -319,251 +362,144 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     this.saveAndNext.emit(false);
   }
 
-  // calculating cg after deduction
-  // calculateCg() {
-  //   this.loading = true;
-  //   const param = '/singleCgCalculate';
-  //   let request = {
-  //     assessmentYear: '2022-2023',
-  //     assesseeType: 'INDIVIDUAL',
-  //     residentialStatus: 'RESIDENT',
-  //     assetType: 'GOLD',
-  //     assetDetails: [] || this.ITR_JSON.capitalGain[0].assetDetails,
-  //     improvement: [] || this.ITR_JSON.capitalGain[0].improvement,
-  //     deduction: [] || this.ITR_JSON.capitalGain[0].deduction,
-  //   };
-  //   this.goldCg.assetDetails.forEach((asset) => {
-  //     //find improvement
-  //     let improvements = this.goldCg.improvement.filter(
-  //       (imp) => imp.srn == asset.srn
-  //     );
-  //     if (!improvements || improvements.length == 0) {
-  //       let improvement = {
-  //         indexCostOfImprovement: 0,
-  //         id: asset.srn,
-  //         dateOfImprovement: '',
-  //         costOfImprovement: 0,
-  //         financialYearOfImprovement: null,
-  //         srn: asset.srn,
-  //       };
-  //       request.improvement.push(improvement);
-  //     } else {
-  //       request.improvement = this.ITR_JSON.capitalGain[0].improvement;
-  //     }
-  //   });
+  otherAssetsCreateColumnDef() {
+    return [
+      {
+        field: '',
+        headerCheckboxSelection: true,
+        width: 80,
+        pinned: 'left',
+        checkboxSelection:(params) => {
+          return true;
+        },
+        // valueGetter: function nameFromCode(params) {
+        //   return params.data.hasEdit;
+        // },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      // {
+      //   headerName: 'Sr. No.',
+      //   field: 'srn',
+      //   width: 80,
+      //   editable: false,
+      //   suppressMovable: true,
+      // },
+      {
+        headerName: 'Buy Date / Date of Acquisition',
+        field: 'purchaseDate',
+        width: 120,
+        editable: false,
+        suppressMovable: true,
+        cellRenderer: (params) => {
+          return params.data.purchaseDate
+            ? new Date(params.data.purchaseDate).toLocaleDateString('en-IN')
+            : '';
+        },
+      },
+      {
+        headerName: 'Sale Date / Date of Transfer',
+        field: 'sellDate',
+        width: 120,
+        editable: false,
+        suppressMovable: true,
+        cellRenderer: (params) => {
+          return params.data.sellDate
+            ? new Date(params.data.sellDate).toLocaleDateString('en-IN')
+            : '';
+        },
+      },
+      {
+        headerName: 'Buy Value',
+        field: 'purchaseCost',
+        width: 100,
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Sale Value',
+        field: 'sellValue',
+        width: 100,
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Expenses',
+        field: 'sellExpense',
+        width: 100,
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Type of Gain',
+        field: 'gainType',
+        width: 100,
+        editable: false,
+        suppressMovable: true,
+        valueGetter: function nameFromCode(params) {
+          return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
+        },
+      },
+      {
+        headerName: 'Gain Amount',
+        field: 'capitalGain',
+        width: 100,
+        editable: false,
+        suppressMovable: true,
+        valueGetter: function nameFromCode(params) {
+          return params.data.capitalGain
+            ? params.data.capitalGain.toLocaleString('en-IN')
+            : 0;
+        },
+      },
+      {
+        headerName: 'Edit',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Edit"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa-solid fa-pencil" data-action-type="edit"></i>
+           </button>`;
+        },
+        width: 60,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+    ];
+  }
 
-  //   this.itrMsService.postMethod(param, request).subscribe(
-  //     (res: any) => {
-  //       this.loading = false;
-  //       console.log('Single CG result:', res);
-  //       this.ITR_JSON.capitalGain[0].assetDetails = res.assetDetails;
-  //       this.ITR_JSON.capitalGain[0].improvement = res.deduction;
-  //       // this.goldCg.improvement = res.improvement;
-  //       // this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
-  //       this.calculateTotalCg();
-  //     },
-  //     (error) => {
-  //       this.loading = false;
-  //     }
-  //   );
-  // }
-
-  //  calculating the cg for all the number of assets
-  // calculateTotalCg() {
-  //   this.totalCg = 0;
-  //   this.goldCg.assetDetails.forEach((item) => {
-  //     this.totalCg += item.capitalGain;
-  //   });
-  //   this.canAddDeductions =
-  //     this.totalCg > 0 && this.goldCg.deduction?.length === 0;
-  // }
-
-  // clearNullImprovements() {
-  //   this.goldCg.improvement.forEach((imp) => {
-  //     if (
-  //       imp.financialYearOfImprovement == null ||
-  //       !this.utilsService.isNonEmpty(imp.financialYearOfImprovement)
-  //     ) {
-  //       this.goldCg.improvement.splice(this.goldCg.improvement.indexOf(imp), 1);
-  //     }
-  //   });
-  // }
-
-  // addMore(mode, type, rowIndex, assetDetails?) {
-  //   const dialogRef = this.matDialog.open(OtherAssetsDialogComponent, {
-  //     data: {
-  //       mode: mode,
-  //       assetType: type,
-  //       rowIndex: rowIndex,
-  //       assetDetails: assetDetails,
-  //     },
-  //     closeOnNavigation: true,
-  //     disableClose: false,
-  //     width: '700px',
-  //   });
-
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     console.log('Result add CG=', result);
-  //     if (result !== undefined) {
-  //       if (mode === 'ADD') {
-  //         this.goldCg.assetDetails.push(result.cgObject);
-  //         // this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
-  //       } else {
-  //         this.goldCg.assetDetails.splice(result.rowIndex, 1, result.cgObject);
-  //         // this.otherAssetsGridOptions.api?.setRowData(this.goldCg.assetDetails);
-  //       }
-  //       this.calculateCg();
-  //     }
-  //   });
-  // }
-
-  // otherAssetsCallInConstructor() {
-  //   this.otherAssetsGridOptions = <GridOptions>{
-  //     rowData: this.otherAssetsCreateRowData(),
-  //     columnDefs: this.otherAssetsCreateColumnDef(),
-  //     onGridReady: () => {
-  //       this.otherAssetsGridOptions.api.sizeColumnsToFit();
-  //     },
-  //     suppressDragLeaveHidesColumns: true,
-  //     enableCellChangeFlash: true,
-  //     defaultColDef: {
-  //       resizable: true,
-  //     },
-  //     suppressRowTransform: true,
-  //   };
-  // }
-
-  // otherAssetsCreateRowData() {
-  //   return this.goldCg.assetDetails;
-  // }
-
-  // otherAssetsCreateColumnDef() {
-  //   return [
-  //     {
-  //       headerName: 'Sr. No.',
-  //       field: 'srn',
-  //       editable: false,
-  //       suppressMovable: true,
-  //     },
-  //     {
-  //       headerName: 'Buy Date / Date of Acquisition',
-  //       field: 'purchaseDate',
-  //       editable: false,
-  //       suppressMovable: true,
-  //       cellRenderer: (params) => {
-  //         return params.data.purchaseDate
-  //           ? new Date(params.data.purchaseDate).toLocaleDateString('en-IN')
-  //           : '';
-  //       },
-  //     },
-  //     {
-  //       headerName: 'Sale Date / Date of Transfer',
-  //       field: 'sellDate',
-  //       editable: false,
-  //       suppressMovable: true,
-  //       cellRenderer: (params) => {
-  //         return params.data.sellDate
-  //           ? new Date(params.data.sellDate).toLocaleDateString('en-IN')
-  //           : '';
-  //       },
-  //     },
-  //     {
-  //       headerName: 'Buy Value',
-  //       field: 'purchaseCost',
-  //       editable: false,
-  //       suppressMovable: true,
-  //     },
-  //     {
-  //       headerName: 'Sale Value',
-  //       field: 'sellValue',
-  //       editable: false,
-  //       suppressMovable: true,
-  //     },
-  //     {
-  //       headerName: 'Expenses',
-  //       field: 'sellExpense',
-  //       editable: false,
-  //       suppressMovable: true,
-  //     },
-  //     {
-  //       headerName: 'Type of Gain',
-  //       field: 'gainType',
-  //       editable: false,
-  //       suppressMovable: true,
-  //       valueGetter: function nameFromCode(params) {
-  //         return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
-  //       },
-  //     },
-  //     {
-  //       headerName: 'Gain Amount',
-  //       field: 'capitalGain',
-  //       editable: false,
-  //       suppressMovable: true,
-  //       valueGetter: function nameFromCode(params) {
-  //         return params.data.capitalGain
-  //           ? params.data.capitalGain.toLocaleString('en-IN')
-  //           : 0;
-  //       },
-  //     },
-  //     {
-  //       headerName: 'Edit',
-  //       editable: false,
-  //       suppressMovable: true,
-  //       suppressMenu: true,
-  //       sortable: true,
-  //       width: 70,
-  //       pinned: 'right',
-  //       cellRenderer: function (params) {
-  //         return `<button type="button" class="action_icon add_button" title="Edit">
-  //         <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
-  //        </button>`;
-  //       },
-  //       cellStyle: {
-  //         textAlign: 'center',
-  //         display: 'flex',
-  //         'align-items': 'center',
-  //         'justify-content': 'center',
-  //       },
-  //     },
-  //     {
-  //       headerName: 'Delete',
-  //       editable: false,
-  //       suppressMenu: true,
-  //       sortable: true,
-  //       suppressMovable: true,
-  //       width: 70,
-  //       pinned: 'right',
-  //       cellRenderer: function (params) {
-  //         return `<button type="button" class="action_icon add_button" title="Delete">
-  //         <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-  //        </button>`;
-  //       },
-  //       cellStyle: {
-  //         textAlign: 'center',
-  //         display: 'flex',
-  //         'align-items': 'center',
-  //         'justify-content': 'center',
-  //       },
-  //     },
-  //   ];
-  // }
-
-  // public onOtherAssetsRowClicked(params) {
-  //   if (params.event.target !== undefined) {
-  //     const actionType = params.event.target.getAttribute('data-action-type');
-  //     switch (actionType) {
-  //       case 'remove': {
-  //         console.log('DATA FOR DELETE Asset:', params.data);
-  //         this.deleteAsset(params.rowIndex);
-  //         break;
-  //       }
-  //       case 'edit': {
-  //         this.addMore('EDIT', 'GOLD', params.rowIndex, params.data);
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
+  public onOtherAssetsRowClicked(params) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'remove': {
+          console.log('DATA FOR DELETE Asset:', params.data);
+          this.deleteAsset();
+          break;
+        }
+        case 'edit': {
+          this.addOtherAssets('EDIT', params.rowIndex);
+          break;
+        }
+      }
+    }
+  }
 
   // addImprovement(mode, improvement?) {
   //   if (this.goldCg.assetDetails.length <= 0) {
