@@ -76,14 +76,10 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
     this.profIncomeFormArray = new FormArray([]);
     if (profBusiness && profBusiness.length > 0) {
-      let index = 0;
-      for (let income of profBusiness) {
-        income.incomes.forEach((element) => {
-          let form = this.createProfIncomeForm(index++, income);
-          this.profIncomeFormArray.push(form);
-        });
-      }
-      // this.speculativeIncome = specBusiness?.incomes[0];
+      profBusiness.forEach((element, index) => {
+        let form = this.createProfIncomeForm(index, element);
+        this.profIncomeFormArray.push(form);
+      });
     } else {
       let form = this.createProfIncomeForm(0, null);
       this.profIncomeFormArray.push(form);
@@ -93,37 +89,37 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     });
 
     ///// OLD CODE
-    if (this.Copy_ITR_JSON.business?.presumptiveIncomes) {
-      let incomeDetails;
-      let data = this.Copy_ITR_JSON.business?.presumptiveIncomes?.filter(
-        (item: any) => item.businessType === 'PROFESSIONAL'
-      );
-      if (data.length > 0) {
-        let businessArray = [];
-        data.forEach((obj: any) => {
-          incomeDetails = obj.incomes;
-          for (let i = 0; i < obj.incomes.length; i++) {
-            incomeDetails[i].natureOfBusiness = obj.natureOfBusiness;
-            incomeDetails[i].tradeName = obj.tradeName;
-            businessArray.push(incomeDetails[i]);
-          }
-        });
-        // this.getProfessionalTableData(businessArray);
-        this.dataSource = new MatTableDataSource(businessArray);
-      } else {
-        // this.getProfessionalTableData([]);
-        // localStorage.setItem('data',JSON.stringify(professionalData));
-        // var parsedData = JSON.parse(localStorage.getItem('data'));
-        // this.dataSource = new MatTableDataSource(parsedData);
-        this.dataSource = new MatTableDataSource(data);
-      }
-    } else {
-      // this.getProfessionalTableData([]);
-      // localStorage.setItem('data',JSON.stringify(professionalData));
-      // var parsedData = JSON.parse(localStorage.getItem('data'));
-      // this.dataSource = new MatTableDataSource(parsedData);
-      this.dataSource = new MatTableDataSource([]);
-    }
+    // if (this.Copy_ITR_JSON.business?.presumptiveIncomes) {
+    //   let incomeDetails;
+    //   let data = this.Copy_ITR_JSON.business?.presumptiveIncomes?.filter(
+    //     (item: any) => item.businessType === 'PROFESSIONAL'
+    //   );
+    //   if (data.length > 0) {
+    //     let businessArray = [];
+    //     data.forEach((obj: any) => {
+    //       incomeDetails = obj.incomes;
+    //       for (let i = 0; i < obj.incomes.length; i++) {
+    //         incomeDetails[i].natureOfBusiness = obj.natureOfBusiness;
+    //         incomeDetails[i].tradeName = obj.tradeName;
+    //         businessArray.push(incomeDetails[i]);
+    //       }
+    //     });
+    // this.getProfessionalTableData(businessArray);
+    //   this.dataSource = new MatTableDataSource(businessArray);
+    // } else {
+    // this.getProfessionalTableData([]);
+    // localStorage.setItem('data',JSON.stringify(professionalData));
+    // var parsedData = JSON.parse(localStorage.getItem('data'));
+    // this.dataSource = new MatTableDataSource(parsedData);
+    //     this.dataSource = new MatTableDataSource(data);
+    //   }
+    // } else {
+    // this.getProfessionalTableData([]);
+    // localStorage.setItem('data',JSON.stringify(professionalData));
+    // var parsedData = JSON.parse(localStorage.getItem('data'));
+    // this.dataSource = new MatTableDataSource(parsedData);
+    //   this.dataSource = new MatTableDataSource([]);
+    // }
   }
 
   get getProfIncomeArray() {
@@ -131,6 +127,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   createProfIncomeForm(index, income) {
+    console.log(income?.incomes[index]?.receipts);
+    console.log(income?.incomes[index]?.presumptiveIncome);
+
     return this.fb.group({
       id: null,
       index: [index],
@@ -140,12 +139,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         [Validators.required],
       ],
       tradeName: [income?.tradeName || null, [Validators.required]],
-      receipts: [
-        income?.incomes[index]?.receipts || null,
-        [Validators.required],
-      ],
+      receipts: [income?.incomes[0]?.receipts || null, [Validators.required]],
       presumptiveIncome: [
-        income?.incomes[index]?.presumptiveIncome || null,
+        income?.incomes[0]?.presumptiveIncome || null,
         [Validators.required],
       ],
     });
@@ -169,7 +165,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
   profSelected() {
     const profIncomeFormArray = <FormArray>(
-      this.profIncomeForm.get('profIncomeFormArray')
+      this.profIncomeForm?.get('profIncomeFormArray')
     );
     return (
       profIncomeFormArray.controls.filter(
@@ -440,23 +436,21 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    // all the arrays with type professional under presumptive income
-    let profBusiness = this.ITR_JSON.business?.presumptiveIncomes?.filter(
-      (acIncome) => acIncome.businessType === 'PROFESSIONAL'
-    );
-
-    // form values
-    let profBusinessFormIncome =
-      this.profIncomeForm.controls['profIncomeFormArray'].value;
-
-    // array that will be stored unde presumptive income
-    let presBusinessIncome = [];
-
-    // IF PROF INCOME FORM IS VALID
     if (this.profIncomeForm.valid) {
-      profBusinessFormIncome.forEach((element) => {
+      // all the arrays with type professional under presumptive income
+      let profBusiness = this.ITR_JSON.business?.presumptiveIncomes;
+
+      // form values
+      let profBusinessFormIncome =
+        this.profIncomeForm.controls['profIncomeFormArray'].value;
+
+      // array that will be stored unde presumptive income
+      let presBusinessIncome = [];
+
+      // IF PROF INCOME FORM IS VALID
+      profBusinessFormIncome?.forEach((element) => {
         let isAdded = false;
-        profBusiness.forEach((data) => {
+        presBusinessIncome.forEach((data) => {
           if (data.natureOfBusiness == element.natureOfBusiness) {
             isAdded = true;
             data.incomes.push({
@@ -499,31 +493,34 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
           });
         }
       });
+      console.log('presBusinessIncome', presBusinessIncome);
+      console.log(this.Copy_ITR_JSON);
 
-      // IF PRESUMPTIVE INCOME IS NOT PRESENT IN ITR OBJECT, PUSH IT AS EMPTY
+      // check if business is present
+      if (!this.Copy_ITR_JSON.business) {
+        this.Copy_ITR_JSON.business = {
+          presumptiveIncomes: [],
+          profitLossACIncomes: [],
+          financialParticulars: null,
+          fixedAssetsDetails: [],
+          businessDescription: [],
+        };
+        this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
+      } else if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
+        this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
+      }
+
+      // check if presumptive income is present under business
       if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
         this.Copy_ITR_JSON.business.presumptiveIncomes = [];
       }
 
-      // IF PROFESSIONAL INCOME IS NOT PRESENT UNDER PRESUMPTIVE INCOME, INCOMES PUSH OUR DATA INTO PRESUMPTIVE INCOMES ARRAY
-      // if (!profBusiness || profBusiness.length === 0) {
-      //   this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
-      // }
-
-      // console.log('presBusinessIncome', presBusinessIncome);
-      // if (!this.Copy_ITR_JSON.business) {
-      //   this.Copy_ITR_JSON.business = {
-      //     presumptiveIncomes: [],
-      //     profitLossACIncomes: [],
-      //     financialParticulars: null,
-      //     fixedAssetsDetails: [],
-      //     businessDescription: [],
-      //   };
-      //   this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
-      // } else if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
-      //   this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
-      // }
-      // console.log(this.Copy_ITR_JSON);
+      // if presumptive is present then check the length of presumptive
+      if (!profBusiness || profBusiness.length === 0) {
+        this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
+      } else {
+        this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
+      }
 
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
         (result: any) => {
@@ -544,52 +541,57 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
           this.utilsService.smoothScrollToTop();
         }
       );
-
-      // let presBusinessIncome = [];
-      // this.dataSource.data.forEach((element) => {
-      //   let isAdded = false;
-      //   presBusinessIncome.forEach((data) => {
-      //     if (data.natureOfBusiness == element.natureOfBusiness) {
-      //       isAdded = true;
-      //       data.incomes.push({
-      //         id: null,
-      //         incomeType: 'PROFESSIONAL',
-      //         receipts: element.receipts,
-      //         presumptiveIncome: element.presumptiveIncome,
-      //         periodOfHolding: null,
-      //         minimumPresumptiveIncome: null,
-      //         registrationNo: null,
-      //         ownership: null,
-      //         tonnageCapacity: null,
-      //       });
-      //     }
-      //   });
-      //   if (!isAdded) {
-      //     presBusinessIncome.push({
-      //       id: null,
-      //       businessType: 'PROFESSIONAL',
-      //       natureOfBusiness: element.natureOfBusiness,
-      //       label: null,
-      //       tradeName: element.tradeName,
-      //       salaryInterestAmount: null,
-      //       taxableIncome: null,
-      //       exemptIncome: null,
-      //       incomes: [
-      //         {
-      //           id: null,
-      //           incomeType: 'PROFESSIONAL',
-      //           receipts: element.receipts,
-      //           presumptiveIncome: element.presumptiveIncome,
-      //           periodOfHolding: null,
-      //           minimumPresumptiveIncome: null,
-      //           registrationNo: null,
-      //           ownership: null,
-      //           tonnageCapacity: null,
-      //         },
-      //       ],
-      //     });
-      //   }
-      // });
+    } else {
+      this.utilsService.showSnackBar(
+        'Please check if all the professional income details are correct'
+      );
+      this.loading = false;
     }
+
+    // let presBusinessIncome = [];
+    // this.dataSource.data.forEach((element) => {
+    //   let isAdded = false;
+    //   presBusinessIncome.forEach((data) => {
+    //     if (data.natureOfBusiness == element.natureOfBusiness) {
+    //       isAdded = true;
+    //       data.incomes.push({
+    //         id: null,
+    //         incomeType: 'PROFESSIONAL',
+    //         receipts: element.receipts,
+    //         presumptiveIncome: element.presumptiveIncome,
+    //         periodOfHolding: null,
+    //         minimumPresumptiveIncome: null,
+    //         registrationNo: null,
+    //         ownership: null,
+    //         tonnageCapacity: null,
+    //       });
+    //     }
+    //   });
+    //   if (!isAdded) {
+    //     presBusinessIncome.push({
+    //       id: null,
+    //       businessType: 'PROFESSIONAL',
+    //       natureOfBusiness: element.natureOfBusiness,
+    //       label: null,
+    //       tradeName: element.tradeName,
+    //       salaryInterestAmount: null,
+    //       taxableIncome: null,
+    //       exemptIncome: null,
+    //       incomes: [
+    //         {
+    //           id: null,
+    //           incomeType: 'PROFESSIONAL',
+    //           receipts: element.receipts,
+    //           presumptiveIncome: element.presumptiveIncome,
+    //           periodOfHolding: null,
+    //           minimumPresumptiveIncome: null,
+    //           registrationNo: null,
+    //           ownership: null,
+    //           tonnageCapacity: null,
+    //         },
+    //       ],
+    //     });
+    //   }
+    // });
   }
 }
