@@ -40,6 +40,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   loading: boolean;
   natureOfBusinessList: any;
   config: any;
+  amountFifty: number = 0;
+  amountFiftyMax: number = 0;
+  submitted = false;
 
   constructor(
     public matDialog: MatDialog,
@@ -142,7 +145,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       receipts: [income?.incomes[0]?.receipts || null, [Validators.required]],
       presumptiveIncome: [
         income?.incomes[0]?.presumptiveIncome || null,
-        [Validators.required],
+        [Validators.required, Validators.min(this.amountFifty)],
       ],
     });
   }
@@ -156,11 +159,16 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   addProfIncomeForm() {
-    let form = this.createProfIncomeForm(0, null);
-    (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).insert(
-      0,
-      form
-    );
+    if (this.profIncomeForm.valid) {
+      this.submitted = false;
+      let form = this.createProfIncomeForm(0, null);
+      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).insert(
+        0,
+        form
+      );
+    } else {
+      this.submitted = true;
+    }
   }
 
   profSelected() {
@@ -183,6 +191,44 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         profIncomeFormArray.removeAt(index);
       }
     });
+  }
+
+  calculatePresumptive(event, index) {
+    this.amountFifty = 0;
+    this.amountFiftyMax = 0;
+
+    this.amountFifty = (
+      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
+        .controls[index] as FormGroup
+    ).controls['receipts'].value;
+
+    this.amountFiftyMax = Number(
+      (
+        (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['receipts'].value
+    );
+
+    this.amountFifty = Math.round(Number((this.amountFifty / 100) * 50));
+
+    (
+      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
+        .controls[index] as FormGroup
+    ).controls['presumptiveIncome'].setValue(this.amountFifty);
+
+    (
+      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
+        .controls[index] as FormGroup
+    ).controls['presumptiveIncome'].setValidators([
+      Validators.required,
+      Validators.min(this.amountFifty),
+      Validators.max(this.amountFiftyMax),
+    ]);
+
+    (
+      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
+        .controls[index] as FormGroup
+    ).controls['presumptiveIncome'].updateValueAndValidity();
   }
 
   ////// OLD CODE
@@ -433,10 +479,13 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
   onContinue() {
     this.loading = true;
+    this.submitted = true;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     if (this.profIncomeForm.valid) {
+      this.submitted = false;
+
       // all the arrays with type professional under presumptive income
       let profBusiness = this.ITR_JSON.business?.presumptiveIncomes;
 

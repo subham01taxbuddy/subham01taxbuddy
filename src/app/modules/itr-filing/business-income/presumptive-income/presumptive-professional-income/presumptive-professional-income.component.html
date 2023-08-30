@@ -56,6 +56,17 @@
                 </mat-option></mat-select
               >
             </mat-form-field>
+            <mat-error
+              *ngIf="
+                (profIncomeFormArray.controls[i].get('natureOfBusiness')
+                  .touched ||
+                  submitted) &&
+                profIncomeFormArray.controls[i]
+                  .get('natureOfBusiness')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            >
           </div>
 
           <div class="col-sm-2">
@@ -69,6 +80,16 @@
                 required
               />
             </mat-form-field>
+            <mat-error
+              *ngIf="
+                (profIncomeFormArray.controls[i].get('tradeName').touched ||
+                  submitted) &&
+                profIncomeFormArray.controls[i]
+                  .get('tradeName')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            >
           </div>
           <div class="col-sm-2">
             <mat-label>Gross Receipt</mat-label>
@@ -80,11 +101,22 @@
                 class="input-field"
                 required
                 digitsOnly
+                (change)="calculatePresumptive($event, i)"
               />
             </mat-form-field>
+            <mat-error
+              *ngIf="
+                (profIncomeFormArray.controls[i].get('receipts').touched ||
+                  submitted) &&
+                profIncomeFormArray.controls[i]
+                  .get('receipts')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            >
           </div>
           <div class="col-sm-3">
-            <mat-label>Presumptive Inomce Min(50%)</mat-label>
+            <mat-label>Presumptive Income Min(50%)</mat-label>
             <mat-form-field appearance="outline">
               <input
                 formControlName="presumptiveIncome"
@@ -95,6 +127,39 @@
                 digitsOnly
               />
             </mat-form-field>
+            <mat-error
+              *ngIf="
+                (profIncomeFormArray.controls[i].get('presumptiveIncome')
+                  .touched ||
+                  submitted) &&
+                profIncomeFormArray.controls[i]
+                  .get('presumptiveIncome')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            >
+            <mat-error
+              *ngIf="
+                (profIncomeFormArray.controls[i].get('presumptiveIncome')
+                  .touched ||
+                  submitted) &&
+                profIncomeFormArray.controls[i]
+                  .get('presumptiveIncome')
+                  .hasError('min')
+              "
+              >Amount should be greater than {{ amountFifty }}
+            </mat-error>
+            <mat-error
+              *ngIf="
+                (profIncomeFormArray.controls[i].get('presumptiveIncome')
+                  .touched ||
+                  submitted) &&
+                profIncomeFormArray.controls[i]
+                  .get('presumptiveIncome')
+                  .hasError('max')
+              "
+              >Amount cannot be greater than {{ amountFiftyMax }}
+            </mat-error>
           </div>
         </div>
       </div>
