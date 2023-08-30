@@ -27,7 +27,9 @@
           Professional Income
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <app-presumptive-professional-income></app-presumptive-professional-income>
+      <app-presumptive-professional-income
+        #PresumptiveBusinessIncomeComponentRef
+      ></app-presumptive-professional-income>
     </mat-expansion-panel>
   </mat-accordion>
 
@@ -35,6 +37,9 @@
     <button class="lgtBtn" (click)="goBack()">
       <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
       <span class="font-semibold">&nbsp;Back to Source Page</span>
+    </button>
+    <button class="saveBtnIn" (click)="saveAll()">
+      <span class="font-semibold">Save All</span>
     </button>
   </div>
 </div>

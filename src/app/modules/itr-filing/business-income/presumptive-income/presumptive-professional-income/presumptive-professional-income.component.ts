@@ -3,46 +3,61 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { GridOptions } from 'ag-grid-community';
-import { ITR_JSON, professionalIncome } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import {
+  ITR_JSON,
+  professionalIncome,
+} from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ProfessionalDialogComponent } from './professional-dialog/professional-dialog.component';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-const professionalData: professionalIncome[] = [{
-  natureOfBusiness: null,
-  tradeName: null,
-  receipts: null,
-  presumptiveIncome: null,
-}]
+const professionalData: professionalIncome[] = [
+  {
+    natureOfBusiness: null,
+    tradeName: null,
+    receipts: null,
+    presumptiveIncome: null,
+  },
+];
 @Component({
   selector: 'app-presumptive-professional-income',
   templateUrl: './presumptive-professional-income.component.html',
-  styleUrls: ['./presumptive-professional-income.component.scss']
+  styleUrls: ['./presumptive-professional-income.component.scss'],
 })
 export class PresumptiveProfessionalIncomeComponent implements OnInit {
   public professionalGridOptions: GridOptions;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
+  profIncomeForm: FormGroup;
+  profIncomeFormArray: FormArray;
   professionalData: professionalIncome = {
     natureOfBusiness: null,
     tradeName: null,
     receipts: null,
     presumptiveIncome: null,
-  }
+  };
   loading: boolean;
-  natureOfBusinessList: [];
+  natureOfBusinessList: any;
+  config: any;
 
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
-    public utilsService: UtilsService
+    public utilsService: UtilsService,
+    private fb: FormBuilder
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    let natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
+    let natureOfBusiness = JSON.parse(
+      sessionStorage.getItem('NATURE_OF_BUSINESS')
+    );
     if (natureOfBusiness) {
-      this.natureOfBusinessList = natureOfBusiness.filter((item: any) => item.section === '44ADA');
+      this.natureOfBusinessList = natureOfBusiness.filter(
+        (item: any) => item.section === '44ADA'
+      );
+      console.log(this.natureOfBusinessList, 'natureOfbusinessList');
     } else {
       // this.getMastersData();
       // this.dataSource;
@@ -50,9 +65,39 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.config = {
+      itemsPerPage: 2,
+      currentPage: 1,
+    };
+
+    let profBusiness = this.ITR_JSON.business?.presumptiveIncomes?.filter(
+      (acIncome) => acIncome.businessType === 'PROFESSIONAL'
+    );
+
+    this.profIncomeFormArray = new FormArray([]);
+    if (profBusiness && profBusiness.length > 0) {
+      let index = 0;
+      for (let income of profBusiness) {
+        income.incomes.forEach((element) => {
+          let form = this.createProfIncomeForm(index++, income);
+          this.profIncomeFormArray.push(form);
+        });
+      }
+      // this.speculativeIncome = specBusiness?.incomes[0];
+    } else {
+      let form = this.createProfIncomeForm(0, null);
+      this.profIncomeFormArray.push(form);
+    }
+    this.profIncomeForm = this.fb.group({
+      profIncomeFormArray: this.profIncomeFormArray,
+    });
+
+    ///// OLD CODE
     if (this.Copy_ITR_JSON.business?.presumptiveIncomes) {
       let incomeDetails;
-      let data = this.Copy_ITR_JSON.business?.presumptiveIncomes?.filter((item: any) => item.businessType === "PROFESSIONAL");
+      let data = this.Copy_ITR_JSON.business?.presumptiveIncomes?.filter(
+        (item: any) => item.businessType === 'PROFESSIONAL'
+      );
       if (data.length > 0) {
         let businessArray = [];
         data.forEach((obj: any) => {
@@ -64,9 +109,8 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
           }
         });
         // this.getProfessionalTableData(businessArray);
-        this.dataSource = new MatTableDataSource(businessArray)
-      }
-      else {
+        this.dataSource = new MatTableDataSource(businessArray);
+      } else {
         // this.getProfessionalTableData([]);
         // localStorage.setItem('data',JSON.stringify(professionalData));
         // var parsedData = JSON.parse(localStorage.getItem('data'));
@@ -82,12 +126,84 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     }
   }
 
+  get getProfIncomeArray() {
+    return <FormArray>this.profIncomeForm.get('profIncomeFormArray');
+  }
+
+  createProfIncomeForm(index, income) {
+    return this.fb.group({
+      id: null,
+      index: [index],
+      hasEdit: [false],
+      natureOfBusiness: [
+        income?.natureOfBusiness || null,
+        [Validators.required],
+      ],
+      tradeName: [income?.tradeName || null, [Validators.required]],
+      receipts: [
+        income?.incomes[index]?.receipts || null,
+        [Validators.required],
+      ],
+      presumptiveIncome: [
+        income?.incomes[index]?.presumptiveIncome || null,
+        [Validators.required],
+      ],
+    });
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+  }
+
+  fieldGlobalIndex(index) {
+    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
+  }
+
+  addProfIncomeForm() {
+    let form = this.createProfIncomeForm(0, null);
+    (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).insert(
+      0,
+      form
+    );
+  }
+
+  profSelected() {
+    const profIncomeFormArray = <FormArray>(
+      this.profIncomeForm.get('profIncomeFormArray')
+    );
+    return (
+      profIncomeFormArray.controls.filter(
+        (element) => (element as FormGroup).controls['hasEdit'].value === true
+      ).length > 0
+    );
+  }
+
+  deleteArray() {
+    const profIncomeFormArray = <FormArray>(
+      this.profIncomeForm.get('profIncomeFormArray')
+    );
+    profIncomeFormArray.controls.forEach((element, index) => {
+      if ((element as FormGroup).controls['hasEdit'].value) {
+        profIncomeFormArray.removeAt(index);
+      }
+    });
+  }
+
+  ////// OLD CODE
   getBusinessName(data) {
-    let business = this.natureOfBusinessList?.filter((item: any) => item.code === data.natureOfBusiness);
+    let business = this.natureOfBusinessList?.filter(
+      (item: any) => item.code === data.natureOfBusiness
+    );
     return business && business[0] ? (business[0] as any).label : null;
   }
 
-  displayedColumns: string[] = ['select', 'natureOfBusiness', 'tradeName', 'receipts', 'presumptiveIncome'];
+  displayedColumns: string[] = [
+    'select',
+    'natureOfBusiness',
+    'tradeName',
+    'receipts',
+    'presumptiveIncome',
+  ];
   dataSource = new MatTableDataSource<professionalIncome>();
   selection = new SelectionModel<professionalIncome>(true, []);
 
@@ -98,17 +214,19 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.data.forEach((row) => this.selection.select(row));
   }
   removeSelectedRows() {
-    this.selection.selected.forEach(item => {
-      let index: number = this.dataSource.data.findIndex(d => d === item);
-      console.log(this.dataSource.data.findIndex(d => d === item));
+    this.selection.selected.forEach((item) => {
+      let index: number = this.dataSource.data.findIndex((d) => d === item);
+      console.log(this.dataSource.data.findIndex((d) => d === item));
       this.dataSource.data.splice(index, 1);
 
-      this.dataSource = new MatTableDataSource<professionalIncome>(this.dataSource.data);
+      this.dataSource = new MatTableDataSource<professionalIncome>(
+        this.dataSource.data
+      );
     });
     this.selection = new SelectionModel<professionalIncome>(true, []);
   }
@@ -116,24 +234,36 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   getMastersData() {
     this.loading = true;
     const param = '/itrmaster';
-    this.itrMsService.getMethod(param).subscribe((result: any) => {
-      let natureOfBusinessAll = result.natureOfBusiness;
-      this.loading = false;
-      sessionStorage.setItem('NATURE_OF_BUSINESS', JSON.stringify(natureOfBusinessAll));
-      this.natureOfBusinessList = natureOfBusinessAll.filter((item: any) => item.section === '44ADA');
-      sessionStorage.setItem('MASTER', JSON.stringify(result));
-    }, error => {
-      this.loading = false;
-      this.utilsService.showSnackBar('Failed to get nature of Business list, please try again.');
-      this.utilsService.smoothScrollToTop();
-
-    });
+    this.itrMsService.getMethod(param).subscribe(
+      (result: any) => {
+        let natureOfBusinessAll = result.natureOfBusiness;
+        this.loading = false;
+        sessionStorage.setItem(
+          'NATURE_OF_BUSINESS',
+          JSON.stringify(natureOfBusinessAll)
+        );
+        this.natureOfBusinessList = natureOfBusinessAll.filter(
+          (item: any) => item.section === '44ADA'
+        );
+        sessionStorage.setItem('MASTER', JSON.stringify(result));
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'Failed to get nature of Business list, please try again.'
+        );
+        this.utilsService.smoothScrollToTop();
+      }
+    );
   }
 
   getProfessionalTableData(rowsData) {
     this.professionalGridOptions = <GridOptions>{
       rowData: rowsData,
-      columnDefs: this.createProfessionalColumnDef(this.natureOfBusinessList, rowsData),
+      columnDefs: this.createProfessionalColumnDef(
+        this.natureOfBusinessList,
+        rowsData
+      ),
       onGridReady: () => {
         this.professionalGridOptions.api.sizeColumnsToFit();
       },
@@ -141,9 +271,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       enableCellChangeFlash: true,
       defaultColDef: {
         resizable: true,
-        editable: false
+        editable: false,
       },
-      suppressRowTransform: true
+      suppressRowTransform: true,
     };
   }
 
@@ -157,7 +287,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         width: 400,
         valueGetter: function nameFromCode(params) {
           console.log(natureOfBusinessList.length);
-          let business = natureOfBusinessList.filter(item => item.code === params.data.natureOfBusiness);
+          let business = natureOfBusinessList.filter(
+            (item) => item.code === params.data.natureOfBusiness
+          );
           return business[0] ? business[0].label : null;
         },
       },
@@ -169,7 +301,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         suppressMovable: true,
         width: 290,
         valueGetter: function nameFromCode(params) {
-          return params.data.tradeName ? params.data.tradeName.toLocaleString('en-IN') : params.data.tradeName;
+          return params.data.tradeName
+            ? params.data.tradeName.toLocaleString('en-IN')
+            : params.data.tradeName;
         },
       },
 
@@ -180,7 +314,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         width: 250,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.receipts ? params.data.receipts.toLocaleString('en-IN') : params.data.receipts;
+          return params.data.receipts
+            ? params.data.receipts.toLocaleString('en-IN')
+            : params.data.receipts;
         },
       },
 
@@ -191,7 +327,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         width: 250,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.presumptiveIncome ? params.data.presumptiveIncome.toLocaleString('en-IN') : params.data.presumptiveIncome;
+          return params.data.presumptiveIncome
+            ? params.data.presumptiveIncome.toLocaleString('en-IN')
+            : params.data.presumptiveIncome;
         },
       },
 
@@ -218,7 +356,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     ];
   }
 
-
   // public onProfessionalRowClicked(params) {
   //   if (params.event.target !== undefined) {
   //     const actionType = params.event.target.getAttribute('data-action-type');
@@ -237,7 +374,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
   deleteProfession(index) {
     this.professionalGridOptions.rowData.splice(index, 1);
-    this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
+    this.professionalGridOptions.api.setRowData(
+      this.professionalGridOptions.rowData
+    );
   }
 
   addProfessionalRow(mode, data: any, index?) {
@@ -252,20 +391,19 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       },
       closeOnNavigation: true,
       disableClose: false,
-      width: '700px'
+      width: '700px',
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'ADD') {
-          this.dataSource.data.push(result)
-          this.dataSource = new MatTableDataSource(this.dataSource.data)
+          this.dataSource.data.push(result);
+          this.dataSource = new MatTableDataSource(this.dataSource.data);
           // this.professionalGridOptions.rowData.push(result);
           // this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
         }
       }
     });
-
   }
 
   editProfessionalRow(mode, data: any, index?) {
@@ -277,105 +415,181 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       },
       closeOnNavigation: true,
       disableClose: false,
-      width: '700px'
+      width: '700px',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('Result add CG=', result);
       if (result !== undefined) {
         if (mode === 'EDIT') {
-          let itemIndex = this.dataSource.data.findIndex(item => item.tradeName == this.selection.selected[0].tradeName)
+          let itemIndex = this.dataSource.data.findIndex(
+            (item) => item.tradeName == this.selection.selected[0].tradeName
+          );
           this.dataSource.data[itemIndex] = result;
-          this.dataSource = new MatTableDataSource(this.dataSource.data)
+          this.dataSource = new MatTableDataSource(this.dataSource.data);
           this.selection.clear();
           // this.professionalGridOptions.rowData[index] = result;
           // this.professionalGridOptions.api.setRowData(this.professionalGridOptions.rowData);
         }
       }
     });
-
   }
 
   onContinue() {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
     this.loading = true;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    // all the arrays with type professional under presumptive income
+    let profBusiness = this.ITR_JSON.business?.presumptiveIncomes?.filter(
+      (acIncome) => acIncome.businessType === 'PROFESSIONAL'
+    );
+
+    // form values
+    let profBusinessFormIncome =
+      this.profIncomeForm.controls['profIncomeFormArray'].value;
+
+    // array that will be stored unde presumptive income
     let presBusinessIncome = [];
-    this.dataSource.data.forEach(element => {
-      let isAdded = false;
-      presBusinessIncome.forEach(data => {
-        if (data.natureOfBusiness == element.natureOfBusiness) {
-          isAdded = true;
-          data.incomes.push({
-            "id": null,
-            "incomeType": "PROFESSIONAL",
-            "receipts": element.receipts,
-            "presumptiveIncome": element.presumptiveIncome,
-            "periodOfHolding": null,
-            "minimumPresumptiveIncome": null,
-            "registrationNo": null,
-            "ownership": null,
-            "tonnageCapacity": null
+
+    // IF PROF INCOME FORM IS VALID
+    if (this.profIncomeForm.valid) {
+      profBusinessFormIncome.forEach((element) => {
+        let isAdded = false;
+        profBusiness.forEach((data) => {
+          if (data.natureOfBusiness == element.natureOfBusiness) {
+            isAdded = true;
+            data.incomes.push({
+              id: null,
+              incomeType: 'PROFESSIONAL',
+              receipts: element.receipts,
+              presumptiveIncome: element.presumptiveIncome,
+              periodOfHolding: null,
+              minimumPresumptiveIncome: null,
+              registrationNo: null,
+              ownership: null,
+              tonnageCapacity: null,
+            });
+          }
+        });
+
+        if (!isAdded) {
+          presBusinessIncome.push({
+            id: null,
+            businessType: 'PROFESSIONAL',
+            natureOfBusiness: element.natureOfBusiness,
+            label: null,
+            tradeName: element.tradeName,
+            salaryInterestAmount: null,
+            taxableIncome: null,
+            exemptIncome: null,
+            incomes: [
+              {
+                id: null,
+                incomeType: 'PROFESSIONAL',
+                receipts: element.receipts,
+                presumptiveIncome: element.presumptiveIncome,
+                periodOfHolding: null,
+                minimumPresumptiveIncome: null,
+                registrationNo: null,
+                ownership: null,
+                tonnageCapacity: null,
+              },
+            ],
           });
         }
       });
-      if (!isAdded) {
-        presBusinessIncome.push({
-          "id": null,
-          "businessType": "PROFESSIONAL",
-          "natureOfBusiness": element.natureOfBusiness,
-          "label": null,
-          "tradeName": element.tradeName,
-          "salaryInterestAmount": null,
-          "taxableIncome": null,
-          "exemptIncome": null,
-          "incomes": [{
-            "id": null,
-            "incomeType": "PROFESSIONAL",
-            "receipts": element.receipts,
-            "presumptiveIncome": element.presumptiveIncome,
-            "periodOfHolding": null,
-            "minimumPresumptiveIncome": null,
-            "registrationNo": null,
-            "ownership": null,
-            "tonnageCapacity": null
-          }]
-        });
-      };
-    });
-    console.log("presBusinessIncome", presBusinessIncome)
-    if (!this.Copy_ITR_JSON.business) {
-      this.Copy_ITR_JSON.business = {
-        presumptiveIncomes: [],
-        profitLossACIncomes: [],
-        financialParticulars: null,
-        fixedAssetsDetails: [],
-        businessDescription: []
-      };
-      this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome
-    } else if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
-      this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome
-    } else {
-      let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter((item: any) => item.businessType != "PROFESSIONAL");
-      this.Copy_ITR_JSON.business.presumptiveIncomes = (data).concat(presBusinessIncome)
-    }
-    console.log(this.Copy_ITR_JSON);
 
-    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
-      this.ITR_JSON = result;
-      this.loading = false;
-      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-      this.utilsService.showSnackBar('professional income added successfully');
-      this.utilsService.smoothScrollToTop();
-    }, error => {
-      this.loading = false;
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      this.utilsService.showSnackBar('Failed to add professional income, please try again.');
-      this.utilsService.smoothScrollToTop();
-    });
+      // IF PRESUMPTIVE INCOME IS NOT PRESENT IN ITR OBJECT, PUSH IT AS EMPTY
+      if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
+        this.Copy_ITR_JSON.business.presumptiveIncomes = [];
+      }
+
+      // IF PROFESSIONAL INCOME IS NOT PRESENT UNDER PRESUMPTIVE INCOME, INCOMES PUSH OUR DATA INTO PRESUMPTIVE INCOMES ARRAY
+      // if (!profBusiness || profBusiness.length === 0) {
+      //   this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
+      // }
+
+      // console.log('presBusinessIncome', presBusinessIncome);
+      // if (!this.Copy_ITR_JSON.business) {
+      //   this.Copy_ITR_JSON.business = {
+      //     presumptiveIncomes: [],
+      //     profitLossACIncomes: [],
+      //     financialParticulars: null,
+      //     fixedAssetsDetails: [],
+      //     businessDescription: [],
+      //   };
+      //   this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
+      // } else if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
+      //   this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
+      // }
+      // console.log(this.Copy_ITR_JSON);
+
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+        (result: any) => {
+          this.ITR_JSON = result;
+          this.loading = false;
+          sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+          this.utilsService.showSnackBar(
+            'professional income added successfully'
+          );
+          this.utilsService.smoothScrollToTop();
+        },
+        (error) => {
+          this.loading = false;
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+          this.utilsService.showSnackBar(
+            'Failed to add professional income, please try again.'
+          );
+          this.utilsService.smoothScrollToTop();
+        }
+      );
+
+      // let presBusinessIncome = [];
+      // this.dataSource.data.forEach((element) => {
+      //   let isAdded = false;
+      //   presBusinessIncome.forEach((data) => {
+      //     if (data.natureOfBusiness == element.natureOfBusiness) {
+      //       isAdded = true;
+      //       data.incomes.push({
+      //         id: null,
+      //         incomeType: 'PROFESSIONAL',
+      //         receipts: element.receipts,
+      //         presumptiveIncome: element.presumptiveIncome,
+      //         periodOfHolding: null,
+      //         minimumPresumptiveIncome: null,
+      //         registrationNo: null,
+      //         ownership: null,
+      //         tonnageCapacity: null,
+      //       });
+      //     }
+      //   });
+      //   if (!isAdded) {
+      //     presBusinessIncome.push({
+      //       id: null,
+      //       businessType: 'PROFESSIONAL',
+      //       natureOfBusiness: element.natureOfBusiness,
+      //       label: null,
+      //       tradeName: element.tradeName,
+      //       salaryInterestAmount: null,
+      //       taxableIncome: null,
+      //       exemptIncome: null,
+      //       incomes: [
+      //         {
+      //           id: null,
+      //           incomeType: 'PROFESSIONAL',
+      //           receipts: element.receipts,
+      //           presumptiveIncome: element.presumptiveIncome,
+      //           periodOfHolding: null,
+      //           minimumPresumptiveIncome: null,
+      //           registrationNo: null,
+      //           ownership: null,
+      //           tonnageCapacity: null,
+      //         },
+      //       ],
+      //     });
+      //   }
+      // });
+    }
   }
 }

@@ -1,24 +1,31 @@
-import { Component, OnInit } from '@angular/core';
-import {Subscription} from "rxjs";
-import {WizardNavigation} from "../../../itr-shared/WizardNavigation";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { WizardNavigation } from '../../../itr-shared/WizardNavigation';
+import { PresumptiveBusinessIncomeComponent } from './presumptive-business-income/presumptive-business-income.component';
 
 @Component({
   selector: 'app-presumptive-income',
   templateUrl: './presumptive-income.component.html',
-  styleUrls: ['./presumptive-income.component.scss']
+  styleUrls: ['./presumptive-income.component.scss'],
 })
-export class PresumptiveIncomeComponent extends WizardNavigation implements OnInit {
+export class PresumptiveIncomeComponent
+  extends WizardNavigation
+  implements OnInit
+{
   step = 0;
   hide: boolean = true;
   isEditCustomer: boolean;
   isEditOther: boolean;
   isEditPersonal: boolean;
+  @ViewChild('PresumptiveBusinessIncomeComponentRef', { static: false })
+  PresumptiveBusinessIncomeComponent!: PresumptiveBusinessIncomeComponent;
 
   constructor() {
     super();
   }
 
   ngOnInit(): void {
+    console.log();
   }
   setStep(index: number) {
     this.step = index;
@@ -44,21 +51,25 @@ export class PresumptiveIncomeComponent extends WizardNavigation implements OnIn
     }
   }
 
-  subscription: Subscription
+  subscription: Subscription;
 
-  subscribeToEmitter(componentRef){
+  subscribeToEmitter(componentRef) {
     //this may not be needed for us
     // if (!(componentRef instanceof OtherIncomeComponent)){
     //   return;
     // }
-    const child : WizardNavigation = componentRef;
-    child.saveAndNext.subscribe( () => {
+    const child: WizardNavigation = componentRef;
+    child.saveAndNext.subscribe(() => {
       //this.gotoSources();
     });
   }
 
-  unsubscribe(){
-    if (this.subscription){
+  saveAll() {
+    this.PresumptiveBusinessIncomeComponent.onContinue();
+  }
+
+  unsubscribe() {
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
