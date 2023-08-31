@@ -3,7 +3,264 @@
     [show]="loading"
     [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
   ></ngx-loading>
-  <div
+
+  <form [formGroup]="busIncomeForm" style="margin: 0px 20px">
+    <div class="row bdrBtm" style="align-items: center">
+      <div class="col-sm-6">
+        <div class="titTx1">Professional Income 44ADA</div>
+      </div>
+      <div class="col-sm-6">
+        <button
+          type="button"
+          class="new-add btnRt"
+          (click)="addBusIncomeForm()"
+        >
+          + Add More
+        </button>
+      </div>
+    </div>
+
+    <div
+      formArrayName="busIncomeFormArray"
+      style="height: 100%; padding-top: 5px; box-sizing: border-box"
+    >
+      <div
+        *ngFor="
+          let income of busIncomeFormArray.controls | paginate : config;
+          let i = index
+        "
+        [formGroupName]="fieldGlobalIndex(i)"
+      >
+        <div class="row specBk">
+          <div class="col-sm-1">
+            <mat-checkbox
+              name="hasEdit[i]"
+              formControlName="hasEdit"
+              class="tpBtn1"
+            >
+            </mat-checkbox>
+          </div>
+          <div class="col-sm-3">
+            <mat-label>Nature of Business</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select
+                formControlName="natureOfBusiness"
+                name="natureOfBusiness[i]"
+              >
+                <mat-option
+                  *ngFor="let nature of natureOfBusinessList"
+                  [value]="nature.code"
+                  matTooltip="{{ nature.label }}-{{ nature.code }}"
+                  [disabled]="nature.disabled"
+                >
+                  {{ nature.label }}-{{ nature.code }}
+                </mat-option></mat-select
+              >
+            </mat-form-field>
+            <!-- <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('natureOfBusiness')
+                  .touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('natureOfBusiness')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            > -->
+          </div>
+
+          <div class="col-sm-3">
+            <mat-label>Trade Name</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                formControlName="tradeName"
+                matInput
+                name="tradeName[i]"
+                class="input-field"
+                required
+              />
+            </mat-form-field>
+            <!-- <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('tradeName').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('tradeName')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            > -->
+          </div>
+          <div class="col-sm-3">
+            <mat-label>Bank Receipts</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                formControlName="bankReceipts"
+                matInput
+                name="bankReceipts[i]"
+                class="input-field"
+                required
+                digitsOnly
+                (change)="calculatePresumptive($event, i)"
+              />
+            </mat-form-field>
+            <!-- <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('receipts').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('receipts')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            > -->
+          </div>
+          <div class="col-sm-3">
+            <mat-label>Presumptive Income @6%</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                formControlName="bankPreIncome"
+                matInput
+                name="bankPreIncome[i]"
+                class="input-field"
+                required
+                digitsOnly
+              />
+            </mat-form-field>
+            <!-- <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('bankPreIncome').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('bankPreIncome')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            > -->
+            <!-- <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('bankPreIncome')
+                  .touched ||
+                  submitted) &&
+                  busIncomeFormArray.controls[i]
+                  .get('bankPreIncome')
+                  .hasError('min')
+              "
+              >Amount should be greater than {{}}
+            </mat-error> -->
+            <!-- <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('presumptiveIncome')
+                  .touched ||
+                  submitted) &&
+                  busIncomeFormArray.controls[i]
+                  .get('presumptiveIncome')
+                  .hasError('max')
+              "
+              >Amount cannot be greater than {{ amountFiftyMax }}
+            </mat-error> -->
+          </div>
+          <div class="col-sm-3">
+            <mat-label>Cash Receipts</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                formControlName="cashReceipts"
+                matInput
+                name="cashReceipts[i]"
+                class="input-field"
+                required
+                digitsOnly
+                (change)="calculatePresumptive($event, i)"
+              />
+            </mat-form-field>
+            <!-- <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('cashReceipts').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('cashReceipts')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            > -->
+          </div>
+          <div class="col-sm-3">
+            <mat-label>Presumptive Income @8%</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                formControlName="cashPreIncome"
+                matInput
+                name="cashPreIncome[i]"
+                class="input-field"
+                required
+                digitsOnly
+              />
+            </mat-form-field>
+            <!-- <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('cashPreIncome').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('cashPreIncome')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            > -->
+            <!-- <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('cashPreIncome')
+                  .touched ||
+                  submitted) &&
+                  busIncomeFormArray.controls[i]
+                  .get('cashPreIncome')
+                  .hasError('min')
+              "
+              >Amount should be greater than {{}}
+            </mat-error> -->
+            <!-- <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('cashPreIncome')
+                  .touched ||
+                  submitted) &&
+                  busIncomeFormArray.controls[i]
+                  .get('cashPreIncome')
+                  .hasError('max')
+              "
+              >Amount cannot be greater than {{ amountFiftyMax }}
+            </mat-error> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="row spsTp bdrTp" style="margin: 0px 20px">
+    <div class="col-sm-3">
+      <button
+        type="submit"
+        class="delete-btn"
+        (click)="deleteArray()"
+        [disabled]="!busSelected()"
+      >
+        <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+      </button>
+    </div>
+    <div class="col-sm-6 txt-center">
+      <table>
+        <tr
+          *ngFor="let item of getBusIncomeArray.controls | paginate : config"
+        ></tr>
+      </table>
+      <pagination-controls
+        (pageChange)="pageChanged($event)"
+      ></pagination-controls>
+    </div>
+    <button (click)="onContinue()">Save</button>
+  </div>
+
+  <!-- //// OLD CODE -->
+  <!-- <div
     class="card__row"
     style="
       margin-bottom: 10px;
@@ -14,97 +271,118 @@
   >
     <div class="row">
       <div class="col-sm-9">
-        <div class="txtTitle">Business Income 44AD </div>
+        <div class="txtTitle">Business Income 44AD</div>
       </div>
       <div class="col-sm-3">
-        <button class="new-add btnRt" (click)="addBusinessRow('ADD', businessData)">
+        <button
+          class="new-add btnRt"
+          (click)="addBusinessRow('ADD', businessData)"
+        >
           <i class="fa fa-plus" aria-hidden="true"></i>
-          Add More Business</button>
-      </div>      
+          Add More Business
+        </button>
+      </div>
     </div>
     <div class="row">
       <div class="col-sm-12">
-        <button class="edit-donation mvRthA" (click)="editBusinessRow('EDIT', businessData)" [disabled]="this.selection.selected.length > 1 ||
-          this.selection.selected.length === 0">
-          <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font"> edit_square </mat-icon> Edit
-      </button>
+        <button
+          class="edit-donation mvRthA"
+          (click)="editBusinessRow('EDIT', businessData)"
+          [disabled]="
+            this.selection.selected.length > 1 ||
+            this.selection.selected.length === 0
+          "
+        >
+          <mat-icon
+            role="img"
+            class="mat-icon notranslate material-icons mat-icon-no-color"
+            aria-hidden="true"
+            data-mat-icon-type="font"
+          >
+            edit_square
+          </mat-icon>
+          Edit
+        </button>
       </div>
     </div>
     <div class="row">
-    <div class="col-sm-12">
-      <table class="table-income">
-        <thead>
-          <tr>
-            <th
-              class="regular-td"
-              [colSpan]="3"
-              style="text-align: center"
-            ></th>
-            <th class="regular-td" [colSpan]="2" style="text-align: center">
-              Gross turnover of the year- Received in Bank
-            </th>
-            <th class="regular-td" [colSpan]="2" style="text-align: center">
-              Gross turnover of the year- Received in Other Mode
-            </th>
-          </tr>
-          <tr>
-            <th class="regular-td">
-              <mat-checkbox
-                (change)="$event ? masterToggle() : null"
-                [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()"
-              >
-              </mat-checkbox>
-            </th>
-            <th class="regular-td">Nature Of Business</th>
-            <th class="regular-td">Trade Name</th>
-            <th class="regular-td">Receipt In Bank</th>
-            <th class="regular-td">Presumptive Income (6%)</th>
-            <th class="regular-td">Receipt In Other Mode</th>
-            <th class="regular-td">Presumptive Income (8%)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let business of businessArray; let i = index">
-            <td class="regular-td">
-              <mat-checkbox
-                (click)="$event.stopPropagation()"
-                (change)="$event ? selection.toggle(business) : null"
-                [checked]="selection.isSelected(business)"
-              >
-              </mat-checkbox>
-            </td>
-            <td class="label-td">{{ getBusinessName(business) }}</td>
-            <td class="regular-td">{{ business.tradeName }}</td>
-            <td class="regular-td">
-              {{ getByBank(business, "BANK", "receipts") }}
-            </td>
-            <td class="regular-td">
-              {{ getByBank(business, "BANK", "presumptiveIncome") }}
-            </td>
-            <td class="regular-td">
-              {{ getByCash(business, "CASH", "receipts") }}
-            </td>
-            <td class="regular-td">
-              {{ getByCash(business, "CASH", "presumptiveIncome") }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="col-sm-12">
+        <table class="table-income">
+          <thead>
+            <tr>
+              <th
+                class="regular-td"
+                [colSpan]="3"
+                style="text-align: center"
+              ></th>
+              <th class="regular-td" [colSpan]="2" style="text-align: center">
+                Gross turnover of the year- Received in Bank
+              </th>
+              <th class="regular-td" [colSpan]="2" style="text-align: center">
+                Gross turnover of the year- Received in Other Mode
+              </th>
+            </tr>
+            <tr>
+              <th class="regular-td">
+                <mat-checkbox
+                  (change)="$event ? masterToggle() : null"
+                  [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()"
+                >
+                </mat-checkbox>
+              </th>
+              <th class="regular-td">Nature Of Business</th>
+              <th class="regular-td">Trade Name</th>
+              <th class="regular-td">Receipt In Bank</th>
+              <th class="regular-td">Presumptive Income (6%)</th>
+              <th class="regular-td">Receipt In Other Mode</th>
+              <th class="regular-td">Presumptive Income (8%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let business of businessArray; let i = index">
+              <td class="regular-td">
+                <mat-checkbox
+                  (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(business) : null"
+                  [checked]="selection.isSelected(business)"
+                >
+                </mat-checkbox>
+              </td>
+              <td class="label-td">{{ getBusinessName(business) }}</td>
+              <td class="regular-td">{{ business.tradeName }}</td>
+              <td class="regular-td">
+                {{ getByBank(business, "BANK", "receipts") }}
+              </td>
+              <td class="regular-td">
+                {{ getByBank(business, "BANK", "presumptiveIncome") }}
+              </td>
+              <td class="regular-td">
+                {{ getByCash(business, "CASH", "receipts") }}
+              </td>
+              <td class="regular-td">
+                {{ getByCash(business, "CASH", "presumptiveIncome") }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-      
         <div class="col-sm-12 spsTp bdrTp">
-          <button mat-raised-button color="warn" (click)="removeSelectedRows()" style="margin-top: 1%">
+          <button
+            mat-raised-button
+            color="warn"
+            (click)="removeSelectedRows()"
+            style="margin-top: 1%"
+          >
             Delete
           </button>
           <button (click)="onContinue()" class="tbd-btn save-btn mvRth">
             Save
           </button>
         </div>
-  
+      </div>
     </div>
-  </div>
-  </div>
+  </div> -->
 </div>
 <!-- <div style="text-align: center"> -->
 <!-- <button class="tbd-btn-secondary" (click)="this.location.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
