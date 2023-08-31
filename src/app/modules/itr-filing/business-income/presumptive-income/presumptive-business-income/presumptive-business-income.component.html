@@ -57,7 +57,7 @@
                 </mat-option></mat-select
               >
             </mat-form-field>
-            <!-- <mat-error
+            <mat-error
               *ngIf="
                 (busIncomeFormArray.controls[i].get('natureOfBusiness')
                   .touched ||
@@ -66,8 +66,8 @@
                   .get('natureOfBusiness')
                   .hasError('required')
               "
-              >Please enter the amount</mat-error
-            > -->
+              >Please select</mat-error
+            >
           </div>
 
           <div class="col-sm-3">
@@ -81,7 +81,7 @@
                 required
               />
             </mat-form-field>
-            <!-- <mat-error
+            <mat-error
               *ngIf="
                 (busIncomeFormArray.controls[i].get('tradeName').touched ||
                   submitted) &&
@@ -89,8 +89,8 @@
                   .get('tradeName')
                   .hasError('required')
               "
-              >Please enter the amount</mat-error
-            > -->
+              >Please enter the trade name</mat-error
+            >
           </div>
           <div class="col-sm-3">
             <mat-label>Bank Receipts</mat-label>
@@ -102,19 +102,19 @@
                 class="input-field"
                 required
                 digitsOnly
-                (change)="calculatePresumptive($event, i)"
+                (change)="calculatePresumptive($event, i, 'bank')"
               />
             </mat-form-field>
-            <!-- <mat-error
+            <mat-error
               *ngIf="
-                (busIncomeFormArray.controls[i].get('receipts').touched ||
+                (busIncomeFormArray.controls[i].get('bankReceipts').touched ||
                   submitted) &&
                 busIncomeFormArray.controls[i]
-                  .get('receipts')
+                  .get('bankReceipts')
                   .hasError('required')
               "
               >Please enter the amount</mat-error
-            > -->
+            >
           </div>
           <div class="col-sm-3">
             <mat-label>Presumptive Income @6%</mat-label>
@@ -128,7 +128,7 @@
                 digitsOnly
               />
             </mat-form-field>
-            <!-- <mat-error
+            <mat-error
               *ngIf="
                 (busIncomeFormArray.controls[i].get('bankPreIncome').touched ||
                   submitted) &&
@@ -137,29 +137,27 @@
                   .hasError('required')
               "
               >Please enter the amount</mat-error
-            > -->
-            <!-- <mat-error
+            >
+            <mat-error
               *ngIf="
-                (busIncomeFormArray.controls[i].get('bankPreIncome')
-                  .touched ||
+                (busIncomeFormArray.controls[i].get('bankPreIncome').touched ||
                   submitted) &&
-                  busIncomeFormArray.controls[i]
+                busIncomeFormArray.controls[i]
                   .get('bankPreIncome')
                   .hasError('min')
               "
-              >Amount should be greater than {{}}
-            </mat-error> -->
-            <!-- <mat-error
+              >Amount should be greater than {{ amountSix }}
+            </mat-error>
+            <mat-error
               *ngIf="
-                (busIncomeFormArray.controls[i].get('presumptiveIncome')
-                  .touched ||
+                (busIncomeFormArray.controls[i].get('bankPreIncome').touched ||
                   submitted) &&
-                  busIncomeFormArray.controls[i]
-                  .get('presumptiveIncome')
+                busIncomeFormArray.controls[i]
+                  .get('bankPreIncome')
                   .hasError('max')
               "
-              >Amount cannot be greater than {{ amountFiftyMax }}
-            </mat-error> -->
+              >Amount cannot be greater than {{ maxSixAmt }}
+            </mat-error>
           </div>
           <div class="col-sm-3">
             <mat-label>Cash Receipts</mat-label>
@@ -171,10 +169,10 @@
                 class="input-field"
                 required
                 digitsOnly
-                (change)="calculatePresumptive($event, i)"
+                (change)="calculatePresumptive($event, i, 'cash')"
               />
             </mat-form-field>
-            <!-- <mat-error
+            <mat-error
               *ngIf="
                 (busIncomeFormArray.controls[i].get('cashReceipts').touched ||
                   submitted) &&
@@ -183,7 +181,7 @@
                   .hasError('required')
               "
               >Please enter the amount</mat-error
-            > -->
+            >
           </div>
           <div class="col-sm-3">
             <mat-label>Presumptive Income @8%</mat-label>
@@ -197,7 +195,7 @@
                 digitsOnly
               />
             </mat-form-field>
-            <!-- <mat-error
+            <mat-error
               *ngIf="
                 (busIncomeFormArray.controls[i].get('cashPreIncome').touched ||
                   submitted) &&
@@ -206,29 +204,27 @@
                   .hasError('required')
               "
               >Please enter the amount</mat-error
-            > -->
-            <!-- <mat-error
+            >
+            <mat-error
               *ngIf="
-                (busIncomeFormArray.controls[i].get('cashPreIncome')
-                  .touched ||
+                (busIncomeFormArray.controls[i].get('cashPreIncome').touched ||
                   submitted) &&
-                  busIncomeFormArray.controls[i]
+                busIncomeFormArray.controls[i]
                   .get('cashPreIncome')
                   .hasError('min')
               "
-              >Amount should be greater than {{}}
-            </mat-error> -->
-            <!-- <mat-error
+              >Amount should be greater than {{ amountEight }}
+            </mat-error>
+            <mat-error
               *ngIf="
-                (busIncomeFormArray.controls[i].get('cashPreIncome')
-                  .touched ||
+                (busIncomeFormArray.controls[i].get('cashPreIncome').touched ||
                   submitted) &&
-                  busIncomeFormArray.controls[i]
+                busIncomeFormArray.controls[i]
                   .get('cashPreIncome')
                   .hasError('max')
               "
-              >Amount cannot be greater than {{ amountFiftyMax }}
-            </mat-error> -->
+              >Amount cannot be greater than {{ maxEightAmt }}
+            </mat-error>
           </div>
         </div>
       </div>

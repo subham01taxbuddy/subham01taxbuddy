@@ -28,6 +28,10 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   busIncomeForm: FormGroup;
   busIncomeFormArray: FormArray;
   submitted: boolean = false;
+  amountSix: number = 0;
+  maxSixAmt: number = 0;
+  amountEight: number = 0;
+  maxEightAmt: number = 0;
   config: any;
 
   constructor(
@@ -76,8 +80,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       busIncomeFormArray: this.busIncomeFormArray,
     });
 
-    console.log(this.busIncomeFormArray);
-
     // if (this.Copy_ITR_JSON.business?.presumptiveIncomes) {
     //   let data = this.Copy_ITR_JSON.business?.presumptiveIncomes?.filter(
     //     (item: any) => item.businessType === 'BUSINESS'
@@ -90,7 +92,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   get getBusIncomeArray() {
-    console.log(this.busIncomeForm.get('busIncomeFormArray'));
     return <FormArray>this.busIncomeForm.get('busIncomeFormArray');
   }
 
@@ -169,7 +170,69 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     });
   }
 
-  calculatePresumptive(event, index) {}
+  calculatePresumptive(event, index, incomeType) {
+    if (incomeType === 'cash') {
+      this.amountSix = (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['cashReceipts'].value;
+
+      this.maxSixAmt = (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['cashReceipts'].value;
+
+      this.amountSix = Math.round(Number((this.amountSix / 100) * 6));
+
+      (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['cashPreIncome'].setValue(this.amountSix);
+
+      (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['cashPreIncome'].setValidators([
+        Validators.min(this.amountSix),
+        Validators.max(this.maxSixAmt),
+      ]);
+
+      (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['cashPreIncome'].updateValueAndValidity();
+    } else {
+      this.amountEight = (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['bankReceipts'].value;
+
+      this.maxEightAmt = (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['bankReceipts'].value;
+
+      this.amountEight = Math.round(Number((this.amountEight / 100) * 6));
+
+      (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['bankPreIncome'].setValue(this.amountEight);
+
+      (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['bankPreIncome'].setValidators([
+        Validators.min(this.amountEight),
+        Validators.max(this.maxEightAmt),
+      ]);
+
+      (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['bankPreIncome'].updateValueAndValidity();
+    }
+  }
 
   // OLD CODE
   getBusinessName(data) {
