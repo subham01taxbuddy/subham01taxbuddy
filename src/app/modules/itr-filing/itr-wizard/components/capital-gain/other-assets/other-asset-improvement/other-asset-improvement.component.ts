@@ -92,7 +92,7 @@ export class OtherAssetImprovementComponent implements OnInit {
 
   }
 
-  calMaxPurchaseDate(sellDate, formGroupName, index) {
+  calMaxPurchaseDate(sellDate) {
     if (this.utilsService.isNonEmpty(sellDate)) {
       this.maxPurchaseDate = sellDate;
     }
