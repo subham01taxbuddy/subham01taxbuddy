@@ -9,9 +9,9 @@ import { GridOptions, GridApi } from 'ag-grid-community';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { Router } from '@angular/router';
 import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
-declare let $: any;
 import { MedicalExpensesComponent } from '../../components/medical-expenses/medical-expenses.component';
 import { DonationsComponent } from '../../components/donations/donations.component';
+declare let $: any;
 
 @Component({
   selector: 'app-investments-deductions',
@@ -827,10 +827,6 @@ export class InvestmentsDeductionsComponent
       $('input.ng-invalid').first().focus();
       this.investmentsSaved = false;
     }
-
-    this.MedicalExpensesComponent.saveInvestmentDeductions();
-    this.DonationsComponent.saveGeneralDonation();
-    this.saveAll();
   }
 
   saveAll() {
@@ -979,9 +975,14 @@ export class InvestmentsDeductionsComponent
         );
         this.loading = false;
         this.investmentsSaved = true;
-        if (val === 'NEXT') {
-          // this.saveAndNext.emit(true);
+
+        if (this.investmentsSaved) {
+          this.MedicalExpensesComponent.saveInvestmentDeductions();
         }
+
+        // if (val === 'NEXT') {
+        // this.saveAndNext.emit(true);
+        // }
       },
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -1010,10 +1011,15 @@ export class InvestmentsDeductionsComponent
 
   onMedicalExpensesSaved(event) {
     this.medicalExpensesSaved = event;
+
+    if (this.medicalExpensesSaved) {
+      this.DonationsComponent.saveGeneralDonation();
+    }
   }
 
   onDonationsSaved(event) {
     this.donationsSaved = event;
+    this.saveAll();
   }
 
   setStep(index: number) {

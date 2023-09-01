@@ -5,7 +5,7 @@
 <div class="spc-blw mrgArd">
   <form [formGroup]="investmentDeductionForm">
     <div class="card__row display-flex">
-      <div class="col-sm-6 cardBdr">
+      <div class="col-sm-12 cardBdr">
         <div class="row">
           <div class="col-sm-10">Investment/Deduction Details:</div>
         </div>
@@ -148,8 +148,9 @@
           </div>
         </div>
       </div>
-      <div class="space-in"></div>
+      <div class="space-in" *ngIf="false"></div>
       <div
+        *ngIf="false"
         class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6"
       >
         <app-upload-doc [userId]="ITR_JSON.userId"></app-upload-doc>
