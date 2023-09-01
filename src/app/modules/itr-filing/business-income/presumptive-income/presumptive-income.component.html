@@ -17,7 +17,10 @@
           Business Income
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <app-presumptive-business-income></app-presumptive-business-income>
+      <app-presumptive-business-income
+        #PresumptiveBusinessIncomeComponentRef
+        (presBusinessSaved)="onPresBusinessSaved($event)"
+      ></app-presumptive-business-income>
     </mat-expansion-panel>
 
     <mat-expansion-panel hideToggle>
@@ -28,7 +31,8 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <app-presumptive-professional-income
-        #PresumptiveBusinessIncomeComponentRef
+        #PresumptiveProfessinalIncomeComponentRef
+        (presProfessionalSaved)="onPresProfessionalSaved($event)"
       ></app-presumptive-professional-income>
     </mat-expansion-panel>
   </mat-accordion>

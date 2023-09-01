@@ -1,5 +1,5 @@
 import { NewPresumptiveIncomes } from './../../../../shared/interfaces/itr-input.interface';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import {
@@ -33,6 +33,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   amountEight: number = 0;
   maxEightAmt: number = 0;
   config: any;
+  @Output() presBusinessSaved = new EventEmitter<boolean>();
 
   constructor(
     public matDialog: MatDialog,
@@ -389,7 +390,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       BusinessFormIncome?.forEach((element) => {
         let isAdded = false;
         presBusinessIncome.forEach((data) => {
-          if (data.natureOfBusiness == element.natureOfBusiness) {
+          if (data.natureOfBusiness === element.natureOfBusiness) {
             isAdded = true;
 
             data.incomes.push({
@@ -458,30 +459,14 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       console.log('presBusinessIncome', presBusinessIncome);
       console.log(this.Copy_ITR_JSON);
 
-      // check if business is present
-      if (!this.Copy_ITR_JSON.business) {
-        this.Copy_ITR_JSON.business = {
-          presumptiveIncomes: [],
-          profitLossACIncomes: [],
-          financialParticulars: null,
-          fixedAssetsDetails: [],
-          businessDescription: [],
-        };
-        this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
-      } else if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
-        this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
-      }
-
-      // check if presumptive income is present under business
-      if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
-        this.Copy_ITR_JSON.business.presumptiveIncomes = [];
-      }
-
-      // if presumptive is present then check the length of presumptive
-      if (!presBusinessArray || presBusinessArray.length === 0) {
+      if (!this.Copy_ITR_JSON?.business?.presumptiveIncomes) {
         this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
       } else {
-        this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
+        let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter(
+          (item: any) => item.businessType !== 'BUSINESS'
+        );
+        this.Copy_ITR_JSON.business.presumptiveIncomes =
+          data.concat(presBusinessIncome);
       }
 
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
@@ -489,25 +474,19 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
           this.ITR_JSON = result;
           this.loading = false;
           sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          this.utilsService.showSnackBar(
-            'Presumptive business income added successfully'
-          );
           this.utilsService.smoothScrollToTop();
+          this.presBusinessSaved.emit(true);
         },
         (error) => {
           this.loading = false;
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          this.utilsService.showSnackBar(
-            'Failed to add presumptive business income, please try again.'
-          );
           this.utilsService.smoothScrollToTop();
+          this.presBusinessSaved.emit(false);
         }
       );
     } else {
-      this.utilsService.showSnackBar(
-        'Please check if all the presumptive business income details are correct'
-      );
       this.loading = false;
+      this.presBusinessSaved.emit(false);
     }
 
     // let presBusinessIncome = [];
