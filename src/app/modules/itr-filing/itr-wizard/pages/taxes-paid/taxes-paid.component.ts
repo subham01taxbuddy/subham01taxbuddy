@@ -15,6 +15,11 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import * as moment from 'moment';
 import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 import { TdsOtherThanSalaryComponent } from '../../components/tds-other-than-salary/tds-other-than-salary.component';
+import { TdsOnSalaryComponent } from '../../components/tds-on-salary/tds-on-salary.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { data } from 'jquery';
+
 @Component({
   selector: 'app-taxes-paid',
   templateUrl: './taxes-paid.component.html',
@@ -39,13 +44,23 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   isAddPanBased: number;
   isAddTcs: number;
   isAddAdvance: number;
+  taxesPaidGridOptions: GridOptions;
 
   constructor(
     public utilsService: UtilsService,
-    private itrMsService: ItrMsService
+    private itrMsService: ItrMsService,
+    private matDialog: MatDialog
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.taxesPaidGridOptions = <GridOptions>{
+      rowData: [],
+      columnDefs: this.taxesPaidColumnDef(),
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      onGridReady: (params) => {},
+      sortable: true,
+    };
   }
 
   ngOnInit() {
@@ -181,6 +196,93 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     this.saveAndNext.emit(false);
     //this.router.navigate(['/itr-filing/itr']);
   }
+
+  taxesPaidColumnDef() {
+    return [
+      {
+        field: '',
+        headerCheckboxSelection: true,
+        width: 80,
+        pinned: 'left',
+        checkboxSelection: (params) => {
+          return true;
+        },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['hasEdit'].value;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
+        headerName: 'TAN / PAN',
+        field: 'tanPan',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['nameOfTheUnits'].value;
+        },
+      },
+      {
+        headerName: 'Name',
+        field: 'name',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['sellOrBuyQuantity'].value;
+        },
+      },
+      {
+        headerName: 'Total amount credited',
+        field: 'amountCredited',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['sellDate'].value;
+        },
+      },
+      {
+        headerName: 'Total Tax Deducted',
+        field: 'totalTaxDeducted',
+        width: 200,
+        textAlign: 'center',
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['sellValuePerUnit'].value;
+        },
+      },
+      {
+        headerName: 'Select Head of Income',
+        field: 'headOfIncome',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['sellValue'].value;
+        },
+      },
+    ];
+  }
+
+  addMoreTaxesPaid(mode) {
+    const dialogRef = this.matDialog.open(TdsOnSalaryComponent, {
+      data: {
+        mode: mode,
+        data: '',
+      },
+      closeOnNavigation: true,
+      disableClose: false,
+      width: '700px',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('Result add CG=', result);
+    });
+  }
+  editSecuritiesForm(event) {}
 }
 
 function extractValues(mappings) {

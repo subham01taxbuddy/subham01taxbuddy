@@ -1,16 +1,21 @@
 <div class="spc-blw mrgArd">
-  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+  <ngx-loading
+    [show]="loading"
+    [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+  ></ngx-loading>
 
   <div class="card__row display-flex">
-    <div class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6">
+    <div
+      class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12"
+    >
       <app-tds-on-salary (onSave)="saveAll()"></app-tds-on-salary>
     </div>
-    <div class="space-in"></div>
+    <!-- <div class="space-in"></div>
     <div
       class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6"
     >
       <app-upload-doc [userId]="ITR_JSON.userId"></app-upload-doc>
-    </div>
+    </div> -->
   </div>
   <div class="card__row">
     <mat-accordion class="headers-align">
@@ -122,6 +127,20 @@
     </mat-accordion>
   </div>
 
+  <!-- ag-grid table -->
+  <div>
+    <ag-grid-angular
+      class="ag-theme-balham topSps"
+      [gridOptions]="taxesPaidGridOptions"
+      (rowClicked)="editSecuritiesForm($event)"
+    >
+    </ag-grid-angular>
+    <button type="button" class="edit_btn" (click)="addMoreTaxesPaid('ADD')">
+      + Add more
+    </button>
+  </div>
+
+  <!-- navigation buttons -->
   <div class="flex justify-between p-[30px] back-foot">
     <button class="lgtBtn">
       <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
