@@ -4,6 +4,7 @@ import {
   Output,
   EventEmitter,
   ViewChild,
+  Input,
 } from '@angular/core';
 import { GridOptions, ValueSetterParams } from 'ag-grid-community';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -19,6 +20,22 @@ import { TdsOnSalaryComponent } from '../../components/tds-on-salary/tds-on-sala
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { data } from 'jquery';
+import {
+  ColDef,
+  GridReadyEvent,
+  ICellRendererParams,
+  RowGroupingDisplayType,
+} from 'ag-grid-community';
+
+export interface tdsDetails {
+  edit: boolean;
+  tdsDetail: string;
+  tanPan: string;
+  name: string;
+  totalAmountCredited: number;
+  totalTdsDeposited: number;
+  headOfIncome: string;
+}
 
 @Component({
   selector: 'app-taxes-paid',
@@ -44,7 +61,23 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   isAddPanBased: number;
   isAddTcs: number;
   isAddAdvance: number;
-  taxesPaidGridOptions: GridOptions;
+  public columnDefs: ColDef[] = [
+    { field: 'edit' },
+    { field: 'tdsDetail', rowGroup: true, hide: true },
+    { field: 'tanPan' },
+    { field: 'name' },
+    { field: 'totalAmountCredited' },
+    { field: 'totalTdsDeposited' },
+    { field: 'headOfIncome' },
+  ];
+  public defaultColDef: ColDef = {
+    flex: 1,
+    minWidth: 100,
+    sortable: true,
+    resizable: true,
+  };
+  public groupDisplayType: RowGroupingDisplayType = 'groupRows';
+  public rowData!: tdsDetails[];
 
   constructor(
     public utilsService: UtilsService,
@@ -53,18 +86,125 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
-    this.taxesPaidGridOptions = <GridOptions>{
-      rowData: [],
-      columnDefs: this.taxesPaidColumnDef(),
-      enableCellChangeFlash: true,
-      enableCellTextSelection: true,
-      onGridReady: (params) => {},
-      sortable: true,
-    };
+    // this.taxesPaidGridOptions = <GridOptions>{
+    //   rowData: [],
+    //   columnDefs: this.taxesPaidColumnDef(),
+    //   enableCellChangeFlash: true,
+    //   enableCellTextSelection: true,
+    //   onGridReady: (params) => {},
+    //   sortable: true,
+    // };
   }
 
   ngOnInit() {
     this.getItrDocuments();
+  }
+
+  addMoreTaxesPaid(mode) {
+    const dialogRef = this.matDialog.open(TdsOnSalaryComponent, {
+      data: {
+        mode: mode,
+      },
+      closeOnNavigation: true,
+      disableClose: false,
+      width: '700px',
+    });
+    dialogRef.componentInstance.formDataSubmitted.subscribe((result) => {
+      let mappedDatas: tdsDetails[] = [];
+      result.forEach((element, i) => {
+        let mappedData: tdsDetails = {
+          edit: result[i].hasEdit || false,
+          tdsDetail: 'TDS On Salary',
+          tanPan: result[i].deductorTAN || '',
+          name: result[i].deductorName || '',
+          totalAmountCredited: result[i].totalAmountCredited || 0,
+          totalTdsDeposited: result[i].totalTdsDeposited || 0,
+          headOfIncome: '', // You need to provide a value for this property based on your data source
+        };
+
+        mappedDatas.push(mappedData);
+      });
+      this.rowData = mappedDatas;
+      console.log('Result add CG=', this.rowData, result);
+    });
+  }
+
+  onGridReady(params: GridReadyEvent) {
+    this.rowData;
+    console.log(this.rowData, 'rowData');
+  }
+
+  editSecuritiesForm(event) {}
+
+  taxesPaidColumnDef() {
+    return [
+      {
+        field: '',
+        headerCheckboxSelection: true,
+        width: 80,
+        pinned: 'left',
+        checkboxSelection: (params) => {
+          return true;
+        },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['hasEdit'].value;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
+        headerName: 'TAN / PAN',
+        field: 'tanPan',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['nameOfTheUnits'].value;
+        },
+      },
+      {
+        headerName: 'Name',
+        field: 'name',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['sellOrBuyQuantity'].value;
+        },
+      },
+      {
+        headerName: 'Total amount credited',
+        field: 'amountCredited',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['sellDate'].value;
+        },
+      },
+      {
+        headerName: 'Total Tax Deducted',
+        field: 'totalTaxDeducted',
+        width: 200,
+        textAlign: 'center',
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['sellValuePerUnit'].value;
+        },
+      },
+      {
+        headerName: 'Select Head of Income',
+        field: 'headOfIncome',
+        width: 200,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['sellValue'].value;
+        },
+      },
+    ];
   }
 
   saveAll() {
@@ -196,93 +336,6 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     this.saveAndNext.emit(false);
     //this.router.navigate(['/itr-filing/itr']);
   }
-
-  taxesPaidColumnDef() {
-    return [
-      {
-        field: '',
-        headerCheckboxSelection: true,
-        width: 80,
-        pinned: 'left',
-        checkboxSelection: (params) => {
-          return true;
-        },
-        valueGetter: function nameFromCode(params) {
-          return params.data.controls['hasEdit'].value;
-        },
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
-        },
-      },
-      {
-        headerName: 'TAN / PAN',
-        field: 'tanPan',
-        width: 200,
-        cellStyle: { textAlign: 'center' },
-        valueGetter: function nameFromCode(params) {
-          return params.data.controls['nameOfTheUnits'].value;
-        },
-      },
-      {
-        headerName: 'Name',
-        field: 'name',
-        width: 200,
-        cellStyle: { textAlign: 'center' },
-        valueGetter: function nameFromCode(params) {
-          return params.data.controls['sellOrBuyQuantity'].value;
-        },
-      },
-      {
-        headerName: 'Total amount credited',
-        field: 'amountCredited',
-        width: 200,
-        cellStyle: { textAlign: 'center' },
-        valueGetter: function nameFromCode(params) {
-          return params.data.controls['sellDate'].value;
-        },
-      },
-      {
-        headerName: 'Total Tax Deducted',
-        field: 'totalTaxDeducted',
-        width: 200,
-        textAlign: 'center',
-        cellStyle: { textAlign: 'center' },
-        valueGetter: function nameFromCode(params) {
-          return params.data.controls['sellValuePerUnit'].value;
-        },
-      },
-      {
-        headerName: 'Select Head of Income',
-        field: 'headOfIncome',
-        width: 200,
-        cellStyle: { textAlign: 'center' },
-        valueGetter: function nameFromCode(params) {
-          return params.data.controls['sellValue'].value;
-        },
-      },
-    ];
-  }
-
-  addMoreTaxesPaid(mode) {
-    const dialogRef = this.matDialog.open(TdsOnSalaryComponent, {
-      data: {
-        mode: mode,
-        data: '',
-      },
-      closeOnNavigation: true,
-      disableClose: false,
-      width: '700px',
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('Result add CG=', result);
-    });
-  }
-  editSecuritiesForm(event) {}
 }
 
 function extractValues(mappings) {

@@ -130,11 +130,15 @@
   <!-- ag-grid table -->
   <div>
     <ag-grid-angular
+      style="width: 100%; height: 150%"
       class="ag-theme-balham topSps"
-      [gridOptions]="taxesPaidGridOptions"
-      (rowClicked)="editSecuritiesForm($event)"
-    >
-    </ag-grid-angular>
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [groupDisplayType]="groupDisplayType"
+      [animateRows]="true"
+      [rowData]="rowData"
+      (gridReady)="onGridReady($event)"
+    ></ag-grid-angular>
     <button type="button" class="edit_btn" (click)="addMoreTaxesPaid('ADD')">
       + Add more
     </button>
