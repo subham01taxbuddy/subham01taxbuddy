@@ -5,7 +5,7 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-10 tds-title">TDS On Salary</div>
-    <div class="edit clearfix notes col-lg-2">
+    <!-- <div class="edit clearfix notes col-lg-2">
       <button
         type="button"
         class="edit_btn"
@@ -14,7 +14,7 @@
       >
         <i class="fa fa-plus"></i>Add
       </button>
-    </div>
+    </div> -->
     <hr />
     <div class="head-title mb-3">
       This is TDS on salary deducted by your employer. Enter the amount form 16
@@ -31,13 +31,13 @@
         "
         [formGroupName]="fieldGlobalIndex(i)"
       >
-        <mat-checkbox
+        <!-- <mat-checkbox
           color="primary"
           name="hasEdit[i]"
           formControlName="hasEdit"
           class="chkSp"
         >
-        </mat-checkbox>
+        </mat-checkbox> -->
         <div class="row">
           <div class="col-sm-3">
             <mat-label>TAN of Employer*</mat-label>
@@ -127,7 +127,7 @@
             </mat-form-field>
           </div>
         </div>
-
+        <!-- 
         <div class="edit-head">
           <button
             type="button"
@@ -136,9 +136,14 @@
           >
             <mat-icon> edit_square </mat-icon>Edit
           </button>
-        </div>
+        </div> -->
       </div>
       <hr />
+      <div class="col-sm-3">
+        <button class="tbd-btn save-btn mvRth" (click)="save()">Save</button>
+      </div>
+      <!-- <hr /> 
+        
       <div class="container">
         <div class="row">
           <div class="col-sm-3">
@@ -162,13 +167,9 @@
               class="pgNmbr"
             ></pagination-controls>
           </div>
-          <div class="col-sm-3">
-            <button class="tbd-btn save-btn mvRth" (click)="save()">
-              Save
-            </button>
-          </div>
+          
         </div>
-      </div>
+      </div> -->
     </div>
   </form>
 </div>

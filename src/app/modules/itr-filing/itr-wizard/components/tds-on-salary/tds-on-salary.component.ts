@@ -1,8 +1,9 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 declare let $: any;
 @Component({
   selector: 'app-tds-on-salary',
@@ -19,7 +20,12 @@ export class TdsOnSalaryComponent implements OnInit {
   loading: boolean = false;
   config: any;
 
-  constructor(private fb: FormBuilder, public utilsService: UtilsService) {}
+  constructor(
+    private fb: FormBuilder,
+    public utilsService: UtilsService,
+    public dialogRef: MatDialogRef<TdsOnSalaryComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -38,7 +44,7 @@ export class TdsOnSalaryComponent implements OnInit {
     } else {
       this.addMore();
     }
-    this.salaryForm.disable();
+    // this.salaryForm.disable();
 
     this.config = {
       id: 'salaryPagination',
@@ -76,13 +82,13 @@ export class TdsOnSalaryComponent implements OnInit {
     });
   }
 
-  editDonationForm(i) {
-    (
-      (this.salaryForm.controls['salaryArray'] as FormGroup).controls[
-        i
-      ] as FormGroup
-    ).enable();
-  }
+  // editDonationForm(i) {
+  //   (
+  //     (this.salaryForm.controls['salaryArray'] as FormGroup).controls[
+  //       i
+  //     ] as FormGroup
+  //   ).enable();
+  // }
 
   save() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -109,6 +115,13 @@ export class TdsOnSalaryComponent implements OnInit {
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)
       );
+
+      let result = {
+        cgObject: this.salaryForm.value,
+        rowIndex: this.data.rowIndex,
+      };
+      this.dialogRef.close(result);
+
       this.formDataSubmitted.emit(this.Copy_ITR_JSON.taxPaid['onSalary']);
       this.onSave.emit();
       this.loading = false;
