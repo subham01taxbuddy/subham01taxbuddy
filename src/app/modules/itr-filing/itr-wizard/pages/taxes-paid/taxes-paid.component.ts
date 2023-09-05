@@ -25,6 +25,7 @@ import * as moment from 'moment';
 import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 import { TdsOtherThanSalaryComponent } from '../../components/tds-other-than-salary/tds-other-than-salary.component';
 import { TdsOnSalaryComponent } from '../../components/tds-on-salary/tds-on-salary.component';
+import { SelectionComponent } from './selection-component/selection-component.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { data } from 'jquery';
@@ -34,6 +35,8 @@ import {
   ICellRendererParams,
   RowGroupingDisplayType,
 } from 'ag-grid-community';
+import { TcsComponent } from '../../components/tcs/tcs.component';
+import { AdvanceTaxPaidComponent } from '../../components/advance-tax-paid/advance-tax-paid.component';
 
 export interface tdsDetails {
   edit: boolean;
@@ -89,41 +92,88 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   }
 
   addMoreTaxesPaid(mode, type, rowIndex, assetDetails?) {
-    const dialogRef = this.matDialog.open(TdsOnSalaryComponent, {
-      data: {
-        mode: mode,
-        assetType: type,
-        rowIndex: rowIndex,
-        assetDetails: assetDetails,
-      },
+    const dialogRefSelect = this.matDialog.open(SelectionComponent, {
+      data: {},
       closeOnNavigation: true,
       disableClose: false,
       width: '700px',
     });
+    dialogRefSelect.afterClosed().subscribe((result) => {
+      if (result === 'tdsOnSalary') {
+        const dialogRef = this.matDialog.open(TdsOnSalaryComponent, {
+          data: {
+            mode: mode,
+            assetType: type,
+            rowIndex: rowIndex,
+            assetDetails: assetDetails,
+          },
+          closeOnNavigation: true,
+          disableClose: false,
+          width: '700px',
+        });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('Result add CG=', result);
-      this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
-      this.onSalary = this.ITR_JSON?.taxPaid?.onSalary;
+        dialogRef.afterClosed().subscribe((result) => {
+          console.log('Result add CG=', result);
+          this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+          this.onSalary = this.ITR_JSON?.taxPaid?.onSalary;
 
-      if (result !== undefined) {
-        if (mode === 'ADD') {
-          this.onSalary.push(result.cgObject.salaryArray[rowIndex]);
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.Copy_ITR_JSON)
-          );
+          if (result !== undefined) {
+            if (mode === 'ADD') {
+              this.onSalary.push(result.cgObject.salaryArray[rowIndex]);
+              sessionStorage.setItem(
+                AppConstants.ITR_JSON,
+                JSON.stringify(this.Copy_ITR_JSON)
+              );
 
-          setTimeout(() => {
-            this.allTdsDetails.api?.setRowData(this.onSalary);
-          }, 0);
-        } else {
-          this.onSalary.splice(rowIndex, 1, result[rowIndex]);
-          setTimeout(() => {
-            this.allTdsDetails.api?.setRowData(this.onSalary);
-          }, 0);
-        }
-        // this.calculateCg();
+              setTimeout(() => {
+                this.allTdsDetails.api?.setRowData(this.onSalary);
+              }, 0);
+            } else {
+              this.onSalary.splice(rowIndex, 1, result[rowIndex]);
+              setTimeout(() => {
+                this.allTdsDetails.api?.setRowData(this.onSalary);
+              }, 0);
+            }
+            // this.calculateCg();
+          }
+        });
+      } else if (result === 'tdsOtherThanSalary16A') {
+        const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
+          data: {
+            mode: mode,
+            assetType: type,
+            rowIndex: rowIndex,
+            assetDetails: assetDetails,
+          },
+          closeOnNavigation: true,
+          disableClose: false,
+          width: '700px',
+        });
+      } else if (result === 'tdsOtherThanSalaryPanBased') {
+      } else if (result === 'tcs') {
+        const dialogRef = this.matDialog.open(TcsComponent, {
+          data: {
+            mode: mode,
+            assetType: type,
+            rowIndex: rowIndex,
+            assetDetails: assetDetails,
+          },
+          closeOnNavigation: true,
+          disableClose: false,
+          width: '700px',
+        });
+      } else if (result === 'selfAssessment') {
+        const dialogRef = this.matDialog.open(AdvanceTaxPaidComponent, {
+          data: {
+            mode: mode,
+            assetType: type,
+            rowIndex: rowIndex,
+            assetDetails: assetDetails,
+          },
+          closeOnNavigation: true,
+          disableClose: false,
+          width: '700px',
+        });
       }
     });
   }

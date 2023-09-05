@@ -1,0 +1,63 @@
+<div class="card">
+  <mat-panel-title>
+    <strong> Please select from the following </strong>
+  </mat-panel-title>
+  <br />
+  <mat-radio-group [(ngModel)]="selectedValue">
+    <div class="customradiobtn bdr_btm">
+      <mat-radio-button
+        style="margin: 0"
+        [value]="'tdsOnSalary'"
+        class="right-mrgn"
+        >TDS on salary</mat-radio-button
+      >
+    </div>
+    <div class="customradiobtn bdr_btm">
+      <mat-radio-button
+        style="margin: 0"
+        [value]="'tdsOtherThanSalary16A'"
+        class="right-mrgn"
+        >TDS other than salary 16A</mat-radio-button
+      >
+    </div>
+    <div class="customradiobtn">
+      <mat-radio-button
+        style="margin: 0"
+        [value]="'tdsOtherThanSalaryPanBased'"
+        class="right-mrgn"
+        [disabled]=""
+        >TDS other than salary pan based deductions (26QB, 26QC,
+        26QD)</mat-radio-button
+      >
+    </div>
+    <div class="customradiobtn">
+      <mat-radio-button
+        style="margin: 0"
+        [value]="'tcs'"
+        class="right-mrgn"
+        [disabled]=""
+        >TCS Details</mat-radio-button
+      >
+    </div>
+    <div class="customradiobtn">
+      <mat-radio-button
+        style="margin: 0"
+        [value]="'selfAssessment'"
+        class="right-mrgn"
+        [disabled]=""
+        >Self Assessment or Advance Tax Paid
+      </mat-radio-button>
+    </div>
+  </mat-radio-group>
+  <br />
+  <div class="card__row edit clearfix">
+    <button
+      type="submit"
+      class="lgtBtn"
+      style="margin: 0px"
+      (click)="continue()"
+    >
+      Continue
+    </button>
+  </div>
+</div>
