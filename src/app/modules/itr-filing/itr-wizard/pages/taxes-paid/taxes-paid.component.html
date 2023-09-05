@@ -131,15 +131,16 @@
   <div>
     <ag-grid-angular
       style="width: 100%; height: 150%"
-      class="ag-theme-balham topSps"
-      [columnDefs]="columnDefs"
-      [defaultColDef]="defaultColDef"
+      class="ag-theme-balham spsTp"
+      [gridOptions]="allTdsDetails"
       [groupDisplayType]="groupDisplayType"
       [animateRows]="true"
-      [rowData]="rowData"
-      (gridReady)="onGridReady($event)"
     ></ag-grid-angular>
-    <button type="button" class="edit_btn" (click)="addMoreTaxesPaid('ADD')">
+    <button
+      type="button"
+      class="edit_btn"
+      (click)="addMoreTaxesPaid('ADD', 'onSalary', onSalary.length)"
+    >
       + Add more
     </button>
   </div>

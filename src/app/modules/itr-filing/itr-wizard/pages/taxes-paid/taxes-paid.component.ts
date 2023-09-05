@@ -7,7 +7,15 @@ import {
   Input,
 } from '@angular/core';
 import { GridOptions, ValueSetterParams } from 'ag-grid-community';
-import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import {
+  ITR_JSON,
+  OnSalary,
+  OtherThanSalary16A,
+  OtherThanSalary26QB,
+  OtherThanTDSTCS,
+  TCS,
+  TaxPaid,
+} from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { AgGridMaterialSelectEditorComponent } from 'src/app/modules/shared/dropdown.component';
@@ -46,11 +54,6 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   loading: boolean = false;
   @ViewChild('other') private tdsOtherThanSalaryComponent;
   @ViewChild('panBased') private tdsOtherThanSalaryComponent1;
-  onSalaryGridOptions: GridOptions;
-  tdsOtherThanSalary16AGridOptions: GridOptions;
-  tdsOtherThanSalary26QBGridOptions: GridOptions;
-  tcsGridOptions: GridOptions;
-  otherThanTdsTcsGridOptions: GridOptions;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   itrDocuments = [];
@@ -61,23 +64,15 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   isAddPanBased: number;
   isAddTcs: number;
   isAddAdvance: number;
-  public columnDefs: ColDef[] = [
-    { field: 'edit' },
-    { field: 'tdsDetail', rowGroup: true, hide: true },
-    { field: 'tanPan' },
-    { field: 'name' },
-    { field: 'totalAmountCredited' },
-    { field: 'totalTdsDeposited' },
-    { field: 'headOfIncome' },
-  ];
-  public defaultColDef: ColDef = {
-    flex: 1,
-    minWidth: 100,
-    sortable: true,
-    resizable: true,
-  };
+  onSalaryGridOptions: GridOptions;
+  tdsOtherThanSalary16AGridOptions: GridOptions;
+  tdsOtherThanSalary26QBGridOptions: GridOptions;
+  tcsGridOptions: GridOptions;
+  otherThanTdsTcsGridOptions: GridOptions;
+
+  allTdsDetails: GridOptions;
   public groupDisplayType: RowGroupingDisplayType = 'groupRows';
-  public rowData!: tdsDetails[];
+  onSalary: any = [];
 
   constructor(
     public utilsService: UtilsService,
@@ -86,122 +81,163 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
-    // this.taxesPaidGridOptions = <GridOptions>{
-    //   rowData: [],
-    //   columnDefs: this.taxesPaidColumnDef(),
-    //   enableCellChangeFlash: true,
-    //   enableCellTextSelection: true,
-    //   onGridReady: (params) => {},
-    //   sortable: true,
-    // };
+    this.tdsDetailsCallInConstructor();
   }
 
   ngOnInit() {
     this.getItrDocuments();
   }
 
-  addMoreTaxesPaid(mode) {
+  addMoreTaxesPaid(mode, type, rowIndex, assetDetails?) {
     const dialogRef = this.matDialog.open(TdsOnSalaryComponent, {
       data: {
         mode: mode,
+        assetType: type,
+        rowIndex: rowIndex,
+        assetDetails: assetDetails,
       },
       closeOnNavigation: true,
       disableClose: false,
       width: '700px',
     });
-    dialogRef.componentInstance.formDataSubmitted.subscribe((result) => {
-      let mappedDatas: tdsDetails[] = [];
-      result.forEach((element, i) => {
-        let mappedData: tdsDetails = {
-          edit: result[i].hasEdit || false,
-          tdsDetail: 'TDS On Salary',
-          tanPan: result[i].deductorTAN || '',
-          name: result[i].deductorName || '',
-          totalAmountCredited: result[i].totalAmountCredited || 0,
-          totalTdsDeposited: result[i].totalTdsDeposited || 0,
-          headOfIncome: '', // You need to provide a value for this property based on your data source
-        };
 
-        mappedDatas.push(mappedData);
-      });
-      this.rowData = mappedDatas;
-      console.log('Result add CG=', this.rowData, result);
+    dialogRef.componentInstance.formDataSubmitted.subscribe((result) => {
+      console.log('Result add CG=', result);
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+      this.onSalary = this.ITR_JSON?.taxPaid?.onSalary;
+
+      if (result !== undefined) {
+        if (mode === 'ADD') {
+          result.forEach((element) => {
+            this.onSalary.push(element);
+          });
+          setTimeout(() => {
+            this.allTdsDetails.api?.setRowData(this.onSalary);
+          }, 0);
+        } else {
+          this.onSalary.splice(result.rowIndex, 1, result);
+          setTimeout(() => {
+            this.allTdsDetails.api?.setRowData(this.onSalary);
+          }, 0);
+        }
+        // this.calculateCg();
+      }
     });
   }
 
-  onGridReady(params: GridReadyEvent) {
-    this.rowData;
-    console.log(this.rowData, 'rowData');
+  tdsDetailsCallInConstructor() {
+    this.allTdsDetails = <GridOptions>{
+      rowData: this.tdsDetailCreateRowData(),
+      columnDefs: this.tdsDetailCreateColumnDef(),
+      onGridReady: () => {
+        this.allTdsDetails.api.sizeColumnsToFit();
+      },
+      suppressDragLeaveHidesColumns: true,
+      enableCellChangeFlash: true,
+      defaultColDef: {
+        resizable: true,
+      },
+      suppressRowTransform: true,
+      rowGroup: true,
+      autoGroupColumnDef: {
+        headerName: 'TDS Type',
+        field: 'deductorTAN',
+      },
+    };
   }
 
-  editSecuritiesForm(event) {}
+  tdsDetailCreateRowData() {
+    return this.ITR_JSON.taxPaid.onSalary;
+  }
 
-  taxesPaidColumnDef() {
+  tdsDetailCreateColumnDef() {
     return [
       {
-        field: '',
-        headerCheckboxSelection: true,
-        width: 80,
-        pinned: 'left',
-        checkboxSelection: (params) => {
-          return true;
-        },
-        valueGetter: function nameFromCode(params) {
-          return params.data.controls['hasEdit'].value;
-        },
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
-        },
+        headerName: 'TDS Type',
+        field: 'deductorTAN',
+        rowGroup: true,
+        hide: true,
       },
       {
         headerName: 'TAN / PAN',
-        field: 'tanPan',
-        width: 200,
-        cellStyle: { textAlign: 'center' },
+        field: 'deductorTAN',
+        editable: false,
+        suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.controls['nameOfTheUnits'].value;
+          return params.data.deductorTAN;
         },
       },
       {
         headerName: 'Name',
-        field: 'name',
-        width: 200,
-        cellStyle: { textAlign: 'center' },
+        field: 'deductorName',
+        editable: false,
+        suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.controls['sellOrBuyQuantity'].value;
+          return params.data.deductorName;
         },
       },
       {
-        headerName: 'Total amount credited',
-        field: 'amountCredited',
-        width: 200,
-        cellStyle: { textAlign: 'center' },
+        headerName: 'Total Amount Creditsed',
+        field: 'totalAmountCredited',
+        editable: false,
+        suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.controls['sellDate'].value;
+          return params.data.totalAmountCredited;
         },
       },
       {
-        headerName: 'Total Tax Deducted',
-        field: 'totalTaxDeducted',
-        width: 200,
-        textAlign: 'center',
-        cellStyle: { textAlign: 'center' },
+        headerName: 'Total TDS deposited',
+        field: 'totalTdsDeposited',
+        editable: false,
+        suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          return params.data.controls['sellValuePerUnit'].value;
+          return params.data.totalTdsDeposited;
         },
       },
       {
-        headerName: 'Select Head of Income',
+        headerName: 'Head of Income',
         field: 'headOfIncome',
-        width: 200,
-        cellStyle: { textAlign: 'center' },
-        valueGetter: function nameFromCode(params) {
-          return params.data.controls['sellValue'].value;
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Edit',
+        editable: false,
+        suppressMovable: true,
+        suppressMenu: true,
+        sortable: true,
+        width: 70,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Edit">
+          <i class="fa fa-pencil" aria-hidden="true" data-action-type="edit"></i>
+         </button>`;
+        },
+        cellStyle: {
+          textAlign: 'center',
+          display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
+        },
+      },
+      {
+        headerName: 'Delete',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        width: 70,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Delete">
+          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
+         </button>`;
+        },
+        cellStyle: {
+          textAlign: 'center',
+          display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
         },
       },
     ];
