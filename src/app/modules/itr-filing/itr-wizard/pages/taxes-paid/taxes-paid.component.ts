@@ -101,21 +101,24 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       width: '700px',
     });
 
-    dialogRef.componentInstance.formDataSubmitted.subscribe((result) => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('Result add CG=', result);
       this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
       this.onSalary = this.ITR_JSON?.taxPaid?.onSalary;
 
       if (result !== undefined) {
         if (mode === 'ADD') {
-          result.forEach((element) => {
-            this.onSalary.push(element);
-          });
+          this.onSalary.push(result.cgObject.salaryArray[rowIndex]);
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.Copy_ITR_JSON)
+          );
+
           setTimeout(() => {
             this.allTdsDetails.api?.setRowData(this.onSalary);
           }, 0);
         } else {
-          this.onSalary.splice(result.rowIndex, 1, result);
+          this.onSalary.splice(rowIndex, 1, result[rowIndex]);
           setTimeout(() => {
             this.allTdsDetails.api?.setRowData(this.onSalary);
           }, 0);
@@ -157,6 +160,23 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         field: 'deductorTAN',
         rowGroup: true,
         hide: true,
+      },
+      {
+        field: '',
+        headerCheckboxSelection: true,
+        width: 80,
+        pinned: 'left',
+        checkboxSelection: (params) => {
+          return true;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
       },
       {
         headerName: 'TAN / PAN',
@@ -241,6 +261,34 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         },
       },
     ];
+  }
+
+  public onTdsDetailRowClicked(params) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'remove': {
+          console.log('DATA FOR DELETE Asset:', params.data);
+          this.deleteAsset(params.rowIndex);
+          break;
+        }
+        case 'edit': {
+          this.addMoreTaxesPaid(
+            'EDIT',
+            'onSalary',
+            params.rowIndex,
+            params.data
+          );
+          break;
+        }
+      }
+    }
+  }
+
+  deleteAsset(i) {
+    //delete improvement for asset
+    this.onSalary.splice(i, 1);
+    this.allTdsDetails.api?.setRowData(this.onSalary);
   }
 
   saveAll() {

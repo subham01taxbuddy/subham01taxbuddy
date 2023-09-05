@@ -135,6 +135,7 @@
       [gridOptions]="allTdsDetails"
       [groupDisplayType]="groupDisplayType"
       [animateRows]="true"
+      (rowClicked)="onTdsDetailRowClicked($event)"
     ></ag-grid-angular>
     <button
       type="button"
