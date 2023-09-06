@@ -518,14 +518,14 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
     if (this.leaderView.value) {
       this.ownerView.disable();
       this.showReports();
+      this.itrFillingReportGridOptions.api?.setColumnDefs(this.reportsCodeColumnDef('leader'))
       this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
-      this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef('leader'))
       // this.reportsCodeColumnDef('leader');
     } else {
       this.ownerView.enable();
       this.showReports();
+      this.itrFillingReportGridOptions.api?.setColumnDefs(this.reportsCodeColumnDef(''))
       this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
-      this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
     }
   }
 
@@ -533,14 +533,15 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
     if (this.ownerView.value) {
       this.leaderView.disable();
       this.showReports();
+      this.itrFillingReportGridOptions.api?.setColumnDefs(this.reportsCodeColumnDef('owner'))
       this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
-      this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef('owner'))
+
       // this.reportsCodeColumnDef('owner')
     } else {
       this.leaderView.enable();
       this.showReports();
+      this.itrFillingReportGridOptions.api?.setColumnDefs(this.reportsCodeColumnDef(''))
       this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
-      this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
     }
   }
 

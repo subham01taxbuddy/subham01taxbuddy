@@ -239,7 +239,7 @@ export class RevenueReportComponent implements OnInit,OnDestroy {
         headerName: (view === 'leader' ? 'Leader Name' : (view === 'owner' ? 'Owner Name And Team' : 'Filer Name')),
         field: (view === 'leader' ? 'leaderName' : (view === 'owner' ? 'ownerName' : 'filerName')),
         sortable: true,
-        width: 150,
+        width: 170,
         pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -556,14 +556,15 @@ export class RevenueReportComponent implements OnInit,OnDestroy {
     if (this.leaderView.value) {
       this.ownerView.disable();
       this.showReports();
-      this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
       this.revenueReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef('leader'))
       this.reportsCodeColumnDef('leader');
+      this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
+
     } else {
       this.ownerView.enable();
       this.showReports();
-      this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
       this.revenueReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
+      this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
     }
   }
 
@@ -571,14 +572,15 @@ export class RevenueReportComponent implements OnInit,OnDestroy {
     if (this.ownerView.value) {
       this.leaderView.disable();
       this.showReports();
-      this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
       this.revenueReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef('owner'))
       this.reportsCodeColumnDef('owner')
+      this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
+
     } else {
       this.leaderView.enable();
       this.showReports();
-      this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
       this.revenueReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
+      this.revenueReportGridOptions.api?.setRowData(this.createRowData(this.revenueReport));
     }
   }
 
