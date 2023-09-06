@@ -15,6 +15,7 @@ import { MaterialModule } from "src/app/modules/shared/material.module";
 import { AgGridModule } from "ag-grid-angular";
 import { RoleUpdateComponent } from './role-update/role-update.component';
 import { TasksModule } from "src/app/modules/tasks/tasks.module";
+import {PagesModule} from "../pages.module";
 
 @NgModule({
     declarations: [UserManagementComponent, UserListComponent, UserProfileComponent, ProfileDialogComponent, CreateNewUserComponent,
@@ -30,7 +31,8 @@ import { TasksModule } from "src/app/modules/tasks/tasks.module";
         NgxLoadingModule.forRoot({}),
         UserManagementRoutingModule,
         NgxPaginationModule,
-        TasksModule
+        TasksModule,
+        PagesModule
     ],
     entryComponents: [ProfileDialogComponent,
         RoleUpdateComponent]

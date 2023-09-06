@@ -363,10 +363,7 @@ export class CustomerProfileComponent implements OnInit {
       ) {
         this.requestManager.addRequest(
           this.PAN_INFO,
-          this.httpClient.get(
-            `${environment.url}/itr/api/getPanDetail?panNumber=${pan}`,
-            httpOptions
-          )
+          this.utilsService.getPanDetails(pan, this.ITR_JSON.userId)
         );
       }
     }

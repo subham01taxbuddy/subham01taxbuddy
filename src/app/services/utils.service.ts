@@ -1235,6 +1235,16 @@ export class UtilsService {
     return this.userMsService.getMethodNew(param);
   }
 
+  /**
+   * API call to get pan details with user id
+   * @param panNumber PAN number for which details to be checked
+   * @param userId The user with which the PAN is associated, user id is optional when creating when user
+   */
+  getPanDetails(panNumber, userId?) {
+    const param = userId ? `/itr/api/getPanDetail?panNumber=${panNumber}&userId=${userId}` : `/itr/api/getPanDetail?panNumber=${panNumber}`;
+    return this.userMsService.getMethodInfo(param);
+  }
+
   getCgSummary(userId, assessmentYear) {
     const param = '/cg-summary';
     let request = {
