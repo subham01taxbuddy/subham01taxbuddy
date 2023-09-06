@@ -1,0 +1,22 @@
+<div class="sortBy">Sort By : </div>
+<div class="row">
+    <div class="col-sm-5">
+        <label class="input__label" for="attr">Select attribute </label>
+        <select class="select__box ogp_select" [(ngModel)]="sortName" (change)="changeInput(true)">
+            <option *ngFor="let drop of sortingParameter" class="un-select-list" [value]="drop.value">
+                {{drop.name}}</option>
+        </select>
+    </div>
+
+    <div class="col-sm-4">
+        <label class="input__label" for="attr">Sorting Order </label>
+        <select class="select__box ogp_select" [(ngModel)]="sortOrder" (change)="changeInput(true)">
+            <option *ngFor="let level of sortLevel" class="un-select-list" [value]="level.value">
+                {{level.name}}</option>
+        </select>
+    </div>
+    <div class="col-sm-3">
+        <button class="clrLnk mvRth clearSort" [disabled]="loading" (click)="clear()">Clear Sort
+            Parameters</button>
+    </div>
+</div>

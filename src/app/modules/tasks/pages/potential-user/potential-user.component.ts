@@ -22,7 +22,7 @@ declare function we_track(key: string, value: any);
   templateUrl: './potential-user.component.html',
   styleUrls: ['./potential-user.component.scss']
 })
-export class PotentialUserComponent implements OnInit,OnDestroy {
+export class PotentialUserComponent implements OnInit, OnDestroy {
   loading = false;
   agents = [];
   agentId = null;
@@ -49,6 +49,12 @@ export class PotentialUserComponent implements OnInit,OnDestroy {
   showCsvMessage: boolean;
   dataOnLoad = true;
   userInfoLength: any;
+  sortMenus = [
+    { value: 'name', name: 'Name' },
+    { value: 'createdDate', name: 'Creation Date' }
+  ];
+  sortBy: any = {};
+
 
 
   constructor(
@@ -91,6 +97,10 @@ export class PotentialUserComponent implements OnInit,OnDestroy {
     }
     this.getAgentList();
     this.getMasterStatusList();
+  }
+
+  sortByObject(object) {
+    this.sortBy = object;
   }
 
   async getMasterStatusList() {
@@ -170,8 +180,8 @@ export class PotentialUserComponent implements OnInit,OnDestroy {
     }
   }
 
-  search(form?, isAgent?,pageChange?) {
-    if(!pageChange){
+  search(form?, isAgent?, pageChange?) {
+    if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
@@ -217,13 +227,16 @@ export class PotentialUserComponent implements OnInit,OnDestroy {
     // https://uat-api.taxbuddy.com/user/3000/user-list-new?statusId=16&page=0&pageSize=20&active=false
     // 'https://uat-api.taxbuddy.com/user/7522/user-list-new?page=0&searchAsCoOwner=true&pageSize=100&active=false'
     let param = `/${this.agentId}/user-list-new?${data}&active=false`;
-
-    if (this.coOwnerToggle.value == true && isAgent) {
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
+    if (this.coOwnerToggle.value && isAgent) {
       param = param + '&searchAsCoOwner=true';
     }
-    if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
-      param = `/${this.agentId}/user-list-new?${data}&active=false`;
-    }
+    // if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
+    //   param = `/${this.agentId}/user-list-new?${data}&active=false`;
+    // }
     else {
       param;
     }
@@ -246,7 +259,7 @@ export class PotentialUserComponent implements OnInit,OnDestroy {
             this.cacheManager.initializeCache(this.createRowData(result.data['content']));
 
             const currentPageNumber = pageChange || this.searchParam.page + 1;
-            this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(result.data['content']));
+            this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(result.data['content']));
             this.config.currentPage = currentPageNumber;
 
           } else {
@@ -261,6 +274,7 @@ export class PotentialUserComponent implements OnInit,OnDestroy {
 
   async downloadReport() {
     this.loading = true;
+
     this.showCsvMessage = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
     let param = `/${this.agentId}/user-list-new?active=false`;
@@ -283,7 +297,7 @@ export class PotentialUserComponent implements OnInit,OnDestroy {
     else {
       param;
     }
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'potential-user', '');
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'potential-user', '', this.sortBy);
     this.loading = false;
     this.showCsvMessage = false;
   }
@@ -318,6 +332,8 @@ export class PotentialUserComponent implements OnInit,OnDestroy {
     }
     return userArray;
   }
+
+
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
@@ -746,9 +762,9 @@ export class PotentialUserComponent implements OnInit,OnDestroy {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
       if (this.coOwnerToggle.value == true) {
-        this.search( '', true,event);
+        this.search('', true, event);
       } else {
-        this.search('','',event );
+        this.search('', '', event);
       }
     }
   }
