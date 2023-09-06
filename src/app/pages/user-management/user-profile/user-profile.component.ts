@@ -420,8 +420,7 @@ export class UserProfileComponent implements OnInit {
 
   getUserInfoByPan(pan: any) {
     if (pan.valid) {
-      const param = '/itr/api/getPanDetail?panNumber=' + pan.value;
-      this.userService.getMethodInfo(param).subscribe((result: any) => {
+      this.utilsService.getPanDetails(pan.value, this.userId).subscribe((result: any) => {
         console.log('userData from PAN: ', result)
         this.userProfileForm.controls['fName'].setValue(result.firstName ? result.firstName : '');
         this.userProfileForm.controls['mName'].setValue(result.middleName ? result.middleName : '');

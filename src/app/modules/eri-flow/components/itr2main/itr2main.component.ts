@@ -4641,8 +4641,7 @@ export class Itr2mainComponent implements OnInit, OnChanges {
 
   getUserInfoByPan(pan) {
     if (pan.valid) {
-      const param = '/itr/api/getPanDetail?panNumber=' + pan.value;
-      this.userService.getMethodInfo(param).subscribe(
+      this.utilsService.getPanDetails(pan.value, this.currentUserId).subscribe(
         (result: any) => {
           console.log('userInfo by Pan number: ', result);
 

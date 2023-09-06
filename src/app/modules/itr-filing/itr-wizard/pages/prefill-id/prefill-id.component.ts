@@ -5585,8 +5585,7 @@ export class PrefillIdComponent implements OnInit {
   }
 
   private getUserDetailsByPAN(panNumber) {
-    let param = `/api/getPanDetail?panNumber=${panNumber}`;
-    this.itrMsService.getMethod(param).subscribe((result: any) => {
+    this.utilsService.getPanDetails(panNumber, this.ITR_JSON.userId).subscribe((result: any) => {
       console.log('user data by PAN = ', result);
       this.ITR_JSON.family[0].fName = this.titlecasePipe.transform(
         this.utilsService.isNonEmpty(result.firstName) ? result.firstName : ''

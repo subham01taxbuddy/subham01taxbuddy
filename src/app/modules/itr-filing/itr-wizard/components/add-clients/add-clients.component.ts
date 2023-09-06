@@ -128,8 +128,7 @@ export class AddClientsComponent implements OnInit, OnDestroy {
   }
 
   getUserDataByPan(pan) {
-    let param = `/api/getPanDetail?panNumber=${pan}`;
-    this.itrService.getMethod(param).subscribe((result: any) => {
+    this.utilsService.getPanDetails(pan.value, this.ITR_JSON.userId).subscribe((result: any) => {
       // let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
       // this.addClientForm.controls['dateOfBirth'].setValue(
       //   moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()

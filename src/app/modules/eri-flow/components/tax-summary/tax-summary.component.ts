@@ -3671,8 +3671,7 @@ export class TaxSummaryComponent implements OnInit, OnChanges {
 
   getUserInfoByPan(pan: any, dob?: any, personalInfo?: any) {
     if (pan.valid) {
-      const param = '/itr/api/getPanDetail?panNumber=' + pan.value;
-      this.userService.getMethodInfo(param).subscribe(
+      this.utilsService.getPanDetails(pan.value, this.currentUserId).subscribe(
         (result: any) => {
           const userData = <FormArray>(
             this.itrSummaryForm.controls['assesse'].get('family')

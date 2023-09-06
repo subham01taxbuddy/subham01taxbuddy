@@ -2409,11 +2409,7 @@ export class PersonalInformationComponent implements OnInit {
           this.customerProfileForm.controls['panNumber']
         )
       ) {
-        this.httpClient
-          .get(
-            `${environment.url}/itr/api/getPanDetail?panNumber=${pan}`,
-            httpOptions
-          )
+        this.utilsService.getPanDetails(pan, this.ITR_JSON.userId)
           .subscribe((result: any) => {
             console.log('user data by PAN = ', result);
             this.customerProfileForm.controls['firstName'].setValue(

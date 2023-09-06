@@ -44,7 +44,6 @@ export class CreateNewUserComponent implements OnInit {
   filerName: any;
   constructor(
     private fb: FormBuilder,
-    private utilSerive: UtilsService,
     private userService: UserMsService,
     private utilsService: UtilsService
   ) { }
@@ -232,7 +231,7 @@ export class CreateNewUserComponent implements OnInit {
         });
         if (res.status === 406) {
           this.loading = false;
-          this.utilSerive.showSnackBar(res.message);
+          this.utilsService.showSnackBar(res.message);
           return;
         }
         this.assignUser(res.userId, this.signUpForm.controls['agentUserId'].value, this.signUpForm.controls['serviceType'].value);
@@ -240,7 +239,7 @@ export class CreateNewUserComponent implements OnInit {
       }, (error) => {
         this.loading = false;
         console.log("Error when creating user: ", error);
-        this.utilSerive.showSnackBar("Some issue to create user.");
+        this.utilsService.showSnackBar("Some issue to create user.");
       }
       );
     }
@@ -253,28 +252,35 @@ export class CreateNewUserComponent implements OnInit {
     this.userService.getMethod(param).subscribe((res: any) => {
       if (res.success == true) {
         this.loading = false;
-        this.utilSerive.showSnackBar("User created succesfully.");
+        this.utilsService.showSnackBar("User created succesfully.");
       } else {
         this.loading = false;
-        this.utilSerive.showSnackBar("Error while assigning user!!! Please select Owner or Filer Name ");
+        this.utilsService.showSnackBar("Error while assigning user!!! Please select Owner or Filer Name ");
       }
 
     }, error => {
       this.loading = false;
-      this.utilSerive.showSnackBar("Error while assigning user!!!");
+      this.utilsService.showSnackBar("Error while assigning user!!!");
     })
   }
 
-  getUserInfoByPan(pan: FormControl) {
-    if (pan.valid) {
-      const param = '/itr/api/getPanDetail?panNumber=' + pan.value;
-      this.userService.getMethodInfo(param).subscribe((result: any) => {
-        console.log('userData from PAN: ', result)
-        this.signUpForm.patchValue(result);
-        // this.signUpForm.controls['fName'].setValue(result.firstName ? result.firstName : '');
-        // this.userProfileForm.controls['mName'].setValue(result.middleName ? result.middleName : '');
-        // this.userProfileForm.controls['lName'].setValue(result.lastName ? result.lastName : '');
-        // this.userProfileForm.controls['fatherName'].setValue(result.middleName ? result.middleName : '');
+  getUserInfoByPan() {
+    let pan = this.signUpForm.controls['panNumber'];
+    if (this.utilsService.isNonEmpty(pan.value) && pan.valid) {
+      this.utilsService.getPanDetails(pan.value).subscribe((result: any) => {
+        console.log('userData from PAN: ', result);
+        if(result.isValid && result.isValid === 'INVALID PAN'){
+          this.utilsService.showSnackBar('The PAN number is invalid');
+          this.signUpForm.patchValue({
+              firstName: '',
+            lastName: '',
+            middleName: ''
+              });
+        } else if(result.isValid && result.isValid === 'EXISTING AND VALID'){
+          this.signUpForm.patchValue(result);
+        } else {
+          this.utilsService.showSnackBar(result.isValid);
+        }
       }, error => {
         console.log('Error during fetching data using PAN number: ', error)
       })
@@ -318,9 +324,9 @@ export class CreateNewUserComponent implements OnInit {
     const selectedServiceType = this.signUpForm.controls['serviceType'].value;
     if (this.smeServices.every(service => service.serviceType !== selectedServiceType)) {
       if (this.filerId || this.coFilerId) {
-        this.utilSerive.showSnackBar("Selected filer doesn't have this service type ");
+        this.utilsService.showSnackBar("Selected filer doesn't have this service type ");
       } else {
-        this.utilSerive.showSnackBar("Selected owner doesn't have this service type ");
+        this.utilsService.showSnackBar("Selected owner doesn't have this service type ");
       }
       this.disableUserSignUp = true;
     } else {
