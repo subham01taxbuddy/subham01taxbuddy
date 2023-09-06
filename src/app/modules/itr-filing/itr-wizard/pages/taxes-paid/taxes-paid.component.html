@@ -137,11 +137,7 @@
       [animateRows]="true"
       (rowClicked)="onTdsDetailRowClicked($event)"
     ></ag-grid-angular>
-    <button
-      type="button"
-      class="edit_btn"
-      (click)="addMoreTaxesPaid('ADD', 'onSalary', onSalary.length)"
-    >
+    <button type="button" class="edit_btn" (click)="addTaxesPaid(false)">
       + Add more
     </button>
   </div>
