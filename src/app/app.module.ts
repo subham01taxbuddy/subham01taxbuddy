@@ -23,12 +23,12 @@ import { TokenInterceptor } from './services/token-interceptor';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
-import {initializeApp, provideFirebaseApp} from "@angular/fire/app";
-import {getMessaging, provideMessaging} from '@angular/fire/messaging';
-import {AngularFireModule} from "@angular/fire/compat";
-import {environment} from "../environments/environment";
-import {AngularFireMessagingModule, SERVICE_WORKER} from "@angular/fire/compat/messaging";
-import {ServiceWorkerModule} from "@angular/service-worker";
+import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
+import { getMessaging, provideMessaging } from '@angular/fire/messaging';
+import { AngularFireModule } from "@angular/fire/compat";
+import { environment } from "../environments/environment";
+import { AngularFireMessagingModule, SERVICE_WORKER } from "@angular/fire/compat/messaging";
+import { ServiceWorkerModule } from "@angular/service-worker";
 import { SpeedTestModule } from 'ng-speed-test';
 
 @NgModule({
