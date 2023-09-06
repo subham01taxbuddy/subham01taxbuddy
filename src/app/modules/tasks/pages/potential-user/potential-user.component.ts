@@ -234,9 +234,12 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     if (this.coOwnerToggle.value && isAgent) {
       param = param + '&searchAsCoOwner=true';
     }
-    // if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
-    //   param = `/${this.agentId}/user-list-new?${data}&active=false`;
-    // }
+    if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
+      param = `/${this.agentId}/user-list-new?${data}&active=false`;
+      if (Object.keys(this.sortBy).length) {
+        param = param + sortByJson;
+      }
+    }
     else {
       param;
     }
