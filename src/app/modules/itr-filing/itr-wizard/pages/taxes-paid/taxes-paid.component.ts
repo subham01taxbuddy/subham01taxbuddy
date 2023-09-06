@@ -6,6 +6,7 @@ import {
   ViewChild,
   Input,
 } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { GridOptions, ValueSetterParams } from 'ag-grid-community';
 import {
   ITR_JSON,
@@ -37,16 +38,6 @@ import {
 } from 'ag-grid-community';
 import { TcsComponent } from '../../components/tcs/tcs.component';
 import { AdvanceTaxPaidComponent } from '../../components/advance-tax-paid/advance-tax-paid.component';
-
-export interface tdsDetails {
-  edit: boolean;
-  tdsDetail: string;
-  tanPan: string;
-  name: string;
-  totalAmountCredited: number;
-  totalTdsDeposited: number;
-  headOfIncome: string;
-}
 
 @Component({
   selector: 'app-taxes-paid',
@@ -83,7 +74,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   constructor(
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private datePipe: DatePipe
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -203,7 +195,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           console.log('Result of advanceTax:', result);
           if (result !== undefined) {
             if (!isEdit) {
-              // this.taxPaid.otherThanSalary16A.push(result.cgObject.salaryArray[index]);
+              this.taxPaid.otherThanTDSTCS.push(
+                result.cgObject.salaryArray[index]
+              );
             }
           }
         });
@@ -217,26 +211,53 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       let copy: any = {};
       Object.assign(copy, asset);
       copy.hasEdit = false;
+      // set tds Type
+      copy.tdsType = 'TDS On Salary';
       this.assetList.push(copy);
     });
+
     this.taxPaid.otherThanSalary16A.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
       copy.hasEdit = false;
+      // set tds Type
+      copy.tdsType = 'TDS Other than Salary';
       this.assetList.push(copy);
     });
+
     this.taxPaid.otherThanSalary26QB.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
       copy.hasEdit = false;
+
+      // set tds Type
+      copy.tdsType = 'TDS other than salary (panBased) 26QB';
       this.assetList.push(copy);
     });
+
     this.taxPaid.otherThanTDSTCS.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
       copy.hasEdit = false;
+
+      // Rename specific properties
+      copy.deductorName = copy.bsrCode;
+      copy.deductorTAN = copy.challanNumber;
+      copy.totalAmountCredited = this.datePipe.transform(
+        new Date(copy.dateOfDeposit),
+        'dd/MM/yyyy'
+      );
+      copy.totalTdsDeposited = copy.totalTax;
+
+      delete copy.bsrCode;
+      delete copy.challanNumber;
+      delete copy.dateOfDeposit;
+      delete copy.totalTax;
+      // set tds Type
+      copy.tdsType = 'Self assessment or Advance tax';
       this.assetList.push(copy);
     });
+
     this.taxPaid.tcs.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
@@ -246,6 +267,10 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       copy.deductorTAN = copy.collectorTAN;
       copy.totalAmountCredited = copy.totalAmountPaid;
       copy.totalTdsDeposited = copy.totalTcsDeposited;
+
+      // set tds Type
+      copy.tdsType = 'TCS';
+
       delete copy.collectorName;
       delete copy.collectorTAN;
       delete copy.totalAmountPaid;
@@ -259,7 +284,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     return [
       {
         headerName: 'TDS Type',
-        field: 'deductorTAN',
+        field: 'tdsType',
         rowGroup: true,
       },
       {
