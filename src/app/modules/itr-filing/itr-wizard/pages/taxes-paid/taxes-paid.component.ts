@@ -137,7 +137,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           console.log('Result of tdsOnSalary:', result);
           if (result !== undefined) {
             if (!isEdit) {
-              this.taxPaid.onSalary.push(result.cgObject.salaryArray[index]);
+              this.taxPaid?.onSalary?.push(result.cgObject.salaryArray[index]);
             }
           }
         });
@@ -157,8 +157,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           console.log('Result of tdsOtherThanSalary16A:', result);
           if (result !== undefined) {
             if (!isEdit) {
-              this.taxPaid.otherThanSalary16A.push(
-                result.cgObject.salaryArray[index]
+              this.taxPaid?.otherThanSalary16A?.push(
+                result?.cgObject?.salaryArray[index]
               );
             }
           }
@@ -179,8 +179,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           console.log('Result of tdsOtherThanSalary16A:', result);
           if (result !== undefined) {
             if (!isEdit) {
-              this.taxPaid.otherThanSalary26QB.push(
-                result.cgObject.salaryArray[index]
+              this.taxPaid?.otherThanSalary26QB?.push(
+                result?.cgObject?.salaryArray[index]
               );
             }
           }
@@ -200,7 +200,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           console.log('Result of tcs:', result);
           if (result !== undefined) {
             if (!isEdit) {
-              this.taxPaid.tcs.push(result.cgObject.salaryArray[index]);
+              this.taxPaid?.tcs?.push(result?.cgObject?.salaryArray[index]);
             }
           }
         });
@@ -219,19 +219,20 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           console.log('Result of advanceTax:', result);
           if (result !== undefined) {
             if (!isEdit) {
-              this.taxPaid.otherThanTDSTCS.push(
-                result.cgObject.salaryArray[index]
+              this.taxPaid?.otherThanTDSTCS?.push(
+                result?.cgObject?.salaryArray[index]
               );
             }
           }
         });
       }
     });
+    this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
   }
 
   tdsDetailCreateRowData() {
     this.assetList = [];
-    this.taxPaid.onSalary.forEach((asset) => {
+    this.taxPaid?.onSalary?.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
       copy.hasEdit = false;
@@ -240,7 +241,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       this.assetList.push(copy);
     });
 
-    this.taxPaid.otherThanSalary16A.forEach((asset) => {
+    this.taxPaid?.otherThanSalary16A?.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
       copy.hasEdit = false;
@@ -249,7 +250,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       this.assetList.push(copy);
     });
 
-    this.taxPaid.otherThanSalary26QB.forEach((asset) => {
+    this.taxPaid?.otherThanSalary26QB?.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
       copy.hasEdit = false;
@@ -264,7 +265,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       this.assetList.push(copy);
     });
 
-    this.taxPaid.otherThanTDSTCS.forEach((asset) => {
+    this.taxPaid?.otherThanTDSTCS?.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
       copy.hasEdit = false;
@@ -287,7 +288,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       this.assetList.push(copy);
     });
 
-    this.taxPaid.tcs.forEach((asset) => {
+    this.taxPaid?.tcs?.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
       copy.hasEdit = false;
@@ -334,7 +335,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         },
       },
       {
-        headerName: 'TAN / PAN',
+        headerName: 'TAN / PAN / Challan Number',
         field: 'deductorTAN',
         editable: false,
         suppressMovable: true,
@@ -343,7 +344,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         },
       },
       {
-        headerName: 'Name',
+        headerName: 'Name / BSR Code',
         field: 'deductorName',
         editable: false,
         suppressMovable: true,
@@ -352,7 +353,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         },
       },
       {
-        headerName: 'Total Amount Creditsed',
+        headerName: 'Total Amount Credited / Date of Deposit',
         field: 'totalAmountCredited',
         editable: false,
         suppressMovable: true,
@@ -435,9 +436,66 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     }
   }
 
+  isAssetSelected() {
+    return this.assetList.filter((asset) => asset.hasEdit === true).length > 0;
+  }
+
   deleteAsset() {
     //delete improvement for asset
-    this.taxPaid = this.assetList.filter((asset) => asset.hasEdit != true);
+    let filteredArray = this.assetList.filter(
+      (asset) => asset.hasEdit === true
+    );
+
+    if (filteredArray && filteredArray.length > 0) {
+      filteredArray.forEach((element, index) => {
+        if (element.tdsType === 'TDS On Salary') {
+          this.taxPaid.onSalary.filter((onSalary, i) => {
+            if (element.deductorTAN === onSalary.deductorTAN) {
+              this.taxPaid.onSalary.splice(i, 1);
+            }
+          });
+        }
+
+        if (element.tdsType === 'TDS Other than Salary') {
+          this.taxPaid.otherThanSalary16A.filter((otherThanSalary, i) => {
+            if (element.deductorTAN === otherThanSalary.deductorTAN) {
+              this.taxPaid.otherThanSalary16A.splice(i, 1);
+            }
+          });
+        }
+
+        if (element.tdsType === 'TDS other than salary (panBased) 26QB') {
+          this.taxPaid.otherThanSalary26QB.filter((otherThanSalary, i) => {
+            if (element.deductorTAN === otherThanSalary.deductorPAN) {
+              this.taxPaid.otherThanSalary26QB.splice(i, 1);
+            }
+          });
+        }
+
+        if (element.tdsType === 'Self assessment or Advance tax') {
+          this.taxPaid.otherThanTDSTCS.filter((otherThanTDSTCS, i) => {
+            if (element.deductorTAN === otherThanTDSTCS.challanNumber) {
+              this.taxPaid.otherThanTDSTCS.splice(i, 1);
+            }
+          });
+        }
+
+        if (element.tdsType === 'TCS') {
+          this.taxPaid.tcs.filter((TCS, i) => {
+            if (element.deductorTAN === TCS.collectorTAN) {
+              this.taxPaid.tcs.splice(i, 1);
+            }
+          });
+        }
+      });
+    }
+
+    console.log(this.taxPaid);
+    this.ITR_JSON.taxPaid = this.taxPaid;
+    sessionStorage.setItem(
+      AppConstants.ITR_JSON,
+      JSON.stringify(this.ITR_JSON)
+    );
     this.assetList = this.assetList.filter((asset) => asset.hasEdit != true);
     this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
 

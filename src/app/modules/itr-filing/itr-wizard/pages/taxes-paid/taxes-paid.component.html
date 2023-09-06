@@ -129,6 +129,9 @@
 
   <!-- ag-grid table -->
   <div>
+    <button type="button" class="edit_btn" (click)="addTaxesPaid(false)">
+      + Add more
+    </button>
     <ag-grid-angular
       style="width: 100%; height: 150%"
       class="ag-theme-balham spsTp"
@@ -137,8 +140,12 @@
       [animateRows]="true"
       (rowClicked)="onTdsDetailRowClicked($event)"
     ></ag-grid-angular>
-    <button type="button" class="edit_btn" (click)="addTaxesPaid(false)">
-      + Add more
+    <button
+      class="delete-btn delete-icon"
+      (click)="$event.stopPropagation(); deleteAsset()"
+      [disabled]="!isAssetSelected()"
+    >
+      <i class="fa fa-trash" aria-hidden="true"></i> Delete
     </button>
   </div>
 
