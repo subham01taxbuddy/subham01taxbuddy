@@ -146,6 +146,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           data: {
             isTaxesPaid: this.isTaxesPaid,
             assetIndex: index,
+            showHeadOfIncome: 'TDTS',
           },
           closeOnNavigation: true,
           disableClose: false,
@@ -156,11 +157,34 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           console.log('Result of tdsOtherThanSalary16A:', result);
           if (result !== undefined) {
             if (!isEdit) {
-              // this.taxPaid.otherThanSalary16A.push(result.cgObject.salaryArray[index]);
+              this.taxPaid.otherThanSalary16A.push(
+                result.cgObject.salaryArray[index]
+              );
             }
           }
         });
       } else if (result === 'tdsOtherThanSalaryPanBased') {
+        const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
+          data: {
+            isTaxesPaid: this.isTaxesPaid,
+            assetIndex: index,
+            showHeadOfIncome: 'TDTSP',
+          },
+          closeOnNavigation: true,
+          disableClose: false,
+          width: '100%',
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+          console.log('Result of tdsOtherThanSalary16A:', result);
+          if (result !== undefined) {
+            if (!isEdit) {
+              this.taxPaid.otherThanSalary26QB.push(
+                result.cgObject.salaryArray[index]
+              );
+            }
+          }
+        });
       } else if (result === 'tcs') {
         const dialogRef = this.matDialog.open(TcsComponent, {
           data: {
@@ -232,6 +256,11 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
 
       // set tds Type
       copy.tdsType = 'TDS other than salary (panBased) 26QB';
+
+      // Rename specific properties
+      copy.deductorTAN = copy.deductorPAN;
+      delete copy.deductorPAN;
+
       this.assetList.push(copy);
     });
 
