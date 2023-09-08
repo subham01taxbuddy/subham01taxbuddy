@@ -34,17 +34,11 @@ export class TdsOnSalaryComponent implements OnInit {
     );
 
     this.salaryForm = this.inItForm();
-    if (
-      this.Copy_ITR_JSON.taxPaid?.onSalary &&
-      this.Copy_ITR_JSON.taxPaid?.onSalary.length > 0
-    ) {
-      this.Copy_ITR_JSON.taxPaid?.onSalary.forEach((item) => {
-        this.addMore(item);
-      });
+    if (this.data.assetIndex !== null) {
+      this.addMore(this.Copy_ITR_JSON.taxPaid?.onSalary[this.data.assetIndex]);
     } else {
       this.addMore();
     }
-    // this.salaryForm.disable();
 
     this.config = {
       id: 'salaryPagination',

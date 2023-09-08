@@ -28,14 +28,7 @@ import { TdsOtherThanSalaryComponent } from '../../components/tds-other-than-sal
 import { TdsOnSalaryComponent } from '../../components/tds-on-salary/tds-on-salary.component';
 import { SelectionComponent } from './selection-component/selection-component.component';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
-import { data } from 'jquery';
-import {
-  ColDef,
-  GridReadyEvent,
-  ICellRendererParams,
-  RowGroupingDisplayType,
-} from 'ag-grid-community';
+import {RowGroupingDisplayType,} from 'ag-grid-community';
 import { TcsComponent } from '../../components/tcs/tcs.component';
 import { AdvanceTaxPaidComponent } from '../../components/advance-tax-paid/advance-tax-paid.component';
 
@@ -58,12 +51,6 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   isAddPanBased: number;
   isAddTcs: number;
   isAddAdvance: number;
-  onSalaryGridOptions: GridOptions;
-  tdsOtherThanSalary16AGridOptions: GridOptions;
-  tdsOtherThanSalary26QBGridOptions: GridOptions;
-  tcsGridOptions: GridOptions;
-  otherThanTdsTcsGridOptions: GridOptions;
-
   allTdsDetails: GridOptions;
   public groupDisplayType: RowGroupingDisplayType = 'groupRows';
   onSalary: any = [];
@@ -112,6 +99,107 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     this.getItrDocuments();
   }
 
+  editTaxesPaid(type, index?){
+    if (type === 'tdsOnSalary') {
+      const dialogRef = this.matDialog.open(TdsOnSalaryComponent, {
+        data: {
+          isTaxesPaid: this.isTaxesPaid,
+          assetIndex: index,
+        },
+        closeOnNavigation: true,
+        disableClose: false,
+        width: '100%',
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log('Result of tdsOnSalary:', result);
+        if (result !== undefined) {
+          if (index != null) {
+            this.taxPaid?.onSalary?.push(result.cgObject.salaryArray[index]);
+          }
+        }
+      });
+    } else if (type === 'tdsOtherThanSalary16A') {
+      const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
+        data: {
+          isTaxesPaid: this.isTaxesPaid,
+          assetIndex: index,
+          showHeadOfIncome: 'TDTS',
+        },
+        closeOnNavigation: true,
+        disableClose: false,
+        width: '100%',
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log('Result of tdsOtherThanSalary16A:', result);
+        if (result !== undefined) {
+          if (index != null) {
+            this.taxPaid?.otherThanSalary16A?.push(result?.cgObject?.salaryArray[index]);
+          }
+        }
+      });
+    } else if (type === 'tdsOtherThanSalaryPanBased') {
+      const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
+        data: {
+          isTaxesPaid: this.isTaxesPaid,
+          assetIndex: index,
+          showHeadOfIncome: 'TDTSP',
+        },
+        closeOnNavigation: true,
+        disableClose: false,
+        width: '100%',
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log('Result of tdsOtherThanSalary16A:', result);
+        if (result !== undefined) {
+          if (index != null) {
+            this.taxPaid?.otherThanSalary26QB?.push(result?.cgObject?.salaryArray[index]);
+          }
+        }
+      });
+    } else if (type === 'tcs') {
+      const dialogRef = this.matDialog.open(TcsComponent, {
+        data: {
+          isTaxesPaid: this.isTaxesPaid,
+          assetIndex: index,
+        },
+        closeOnNavigation: true,
+        disableClose: false,
+        width: '100%',
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log('Result of tcs:', result);
+        if (result !== undefined) {
+          if (index != null) {
+            this.taxPaid?.tcs?.push(result?.cgObject?.salaryArray[index]);
+          }
+        }
+      });
+    } else if (type === 'selfAssessment') {
+      const dialogRef = this.matDialog.open(AdvanceTaxPaidComponent, {
+        data: {
+          isTaxesPaid: this.isTaxesPaid,
+          assetIndex: index,
+        },
+        closeOnNavigation: true,
+        disableClose: false,
+        width: '100%',
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log('Result of advanceTax:', result);
+        if (result !== undefined) {
+          if (index != null) {
+            this.taxPaid?.otherThanTDSTCS?.push(result?.cgObject?.salaryArray[index]);
+          }
+        }
+      });
+    }
+  }
+
   addTaxesPaid(isEdit, index?) {
     this.isTaxesPaid = Math.random();
     const dialogRefSelect = this.matDialog.open(SelectionComponent, {
@@ -122,110 +210,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     dialogRefSelect.afterClosed().subscribe((result) => {
-      if (result === 'tdsOnSalary') {
-        const dialogRef = this.matDialog.open(TdsOnSalaryComponent, {
-          data: {
-            isTaxesPaid: this.isTaxesPaid,
-            assetIndex: index,
-          },
-          closeOnNavigation: true,
-          disableClose: false,
-          width: '100%',
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {
-          console.log('Result of tdsOnSalary:', result);
-          if (result !== undefined) {
-            if (!isEdit) {
-              this.taxPaid?.onSalary?.push(result.cgObject.salaryArray[index]);
-            }
-          }
-        });
-      } else if (result === 'tdsOtherThanSalary16A') {
-        const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
-          data: {
-            isTaxesPaid: this.isTaxesPaid,
-            assetIndex: index,
-            showHeadOfIncome: 'TDTS',
-          },
-          closeOnNavigation: true,
-          disableClose: false,
-          width: '100%',
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {
-          console.log('Result of tdsOtherThanSalary16A:', result);
-          if (result !== undefined) {
-            if (!isEdit) {
-              this.taxPaid?.otherThanSalary16A?.push(
-                result?.cgObject?.salaryArray[index]
-              );
-            }
-          }
-        });
-      } else if (result === 'tdsOtherThanSalaryPanBased') {
-        const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
-          data: {
-            isTaxesPaid: this.isTaxesPaid,
-            assetIndex: index,
-            showHeadOfIncome: 'TDTSP',
-          },
-          closeOnNavigation: true,
-          disableClose: false,
-          width: '100%',
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {
-          console.log('Result of tdsOtherThanSalary16A:', result);
-          if (result !== undefined) {
-            if (!isEdit) {
-              this.taxPaid?.otherThanSalary26QB?.push(
-                result?.cgObject?.salaryArray[index]
-              );
-            }
-          }
-        });
-      } else if (result === 'tcs') {
-        const dialogRef = this.matDialog.open(TcsComponent, {
-          data: {
-            isTaxesPaid: this.isTaxesPaid,
-            assetIndex: index,
-          },
-          closeOnNavigation: true,
-          disableClose: false,
-          width: '100%',
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {
-          console.log('Result of tcs:', result);
-          if (result !== undefined) {
-            if (!isEdit) {
-              this.taxPaid?.tcs?.push(result?.cgObject?.salaryArray[index]);
-            }
-          }
-        });
-      } else if (result === 'selfAssessment') {
-        const dialogRef = this.matDialog.open(AdvanceTaxPaidComponent, {
-          data: {
-            isTaxesPaid: this.isTaxesPaid,
-            assetIndex: index,
-          },
-          closeOnNavigation: true,
-          disableClose: false,
-          width: '100%',
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {
-          console.log('Result of advanceTax:', result);
-          if (result !== undefined) {
-            if (!isEdit) {
-              this.taxPaid?.otherThanTDSTCS?.push(
-                result?.cgObject?.salaryArray[index]
-              );
-            }
-          }
-        });
-      }
+      this.editTaxesPaid(result, index);
     });
     this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
   }
@@ -238,6 +223,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       copy.hasEdit = false;
       // set tds Type
       copy.tdsType = 'TDS On Salary';
+      copy.tdsCode = 'tdsOnSalary';
       this.assetList.push(copy);
     });
 
@@ -247,6 +233,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       copy.hasEdit = false;
       // set tds Type
       copy.tdsType = 'TDS Other than Salary';
+      copy.tdsCode = 'tdsOtherThanSalary16A';
       this.assetList.push(copy);
     });
 
@@ -257,6 +244,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
 
       // set tds Type
       copy.tdsType = 'TDS other than salary (panBased) 26QB';
+      copy.tdsCode = 'tdsOtherThanSalaryPanBased';
 
       // Rename specific properties
       copy.deductorTAN = copy.deductorPAN;
@@ -285,6 +273,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       delete copy.totalTax;
       // set tds Type
       copy.tdsType = 'Self assessment or Advance tax';
+      copy.tdsCode = 'selfAssessment';
       this.assetList.push(copy);
     });
 
@@ -300,6 +289,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
 
       // set tds Type
       copy.tdsType = 'TCS';
+      copy.tdsCode = 'tcs';
 
       delete copy.collectorName;
       delete copy.collectorTAN;
@@ -396,26 +386,6 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           'justify-content': 'center',
         },
       },
-      {
-        headerName: 'Delete',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        width: 70,
-        pinned: 'right',
-        cellRenderer: function (params) {
-          return `<button type="button" class="action_icon add_button" title="Delete">
-          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
-         </button>`;
-        },
-        cellStyle: {
-          textAlign: 'center',
-          display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center',
-        },
-      },
     ];
   }
 
@@ -429,7 +399,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           break;
         }
         case 'edit': {
-          this.addTaxesPaid('EDIT', params.rowIndex);
+          this.editTaxesPaid(params.data.tdsCode, params.rowIndex);
           break;
         }
       }

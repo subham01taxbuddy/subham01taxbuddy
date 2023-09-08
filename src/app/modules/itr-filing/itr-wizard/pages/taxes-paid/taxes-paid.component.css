@@ -44,3 +44,16 @@ tr:nth-child(even) {
   border: 1px solid gray;
   margin: 10px;
 }
+
+.subTitle {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 150%;
+  /* identical to box height, or 27px */
+
+  letter-spacing: -0.022em;
+
+  color: #1E1E1E;
+}
