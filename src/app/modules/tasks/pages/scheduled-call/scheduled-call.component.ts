@@ -17,6 +17,7 @@ import { FormControl } from '@angular/forms';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -24,7 +25,7 @@ declare function we_track(key: string, value: any);
   templateUrl: './scheduled-call.component.html',
   styleUrls: ['./scheduled-call.component.css'],
 })
-export class ScheduledCallComponent implements OnInit,OnDestroy {
+export class ScheduledCallComponent implements OnInit, OnDestroy {
   loading!: boolean;
   selectedAgent: any;
   searchMobNo: any;
@@ -53,7 +54,11 @@ export class ScheduledCallComponent implements OnInit,OnDestroy {
     email: null,
   };
   dataOnLoad = true;
-
+  showCsvMessage: boolean;
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'userName', name: 'Name' },
+  ];
   constructor(
     private reviewService: ReviewService,
     private toastMsgService: ToastMessageService,
@@ -65,6 +70,7 @@ export class ScheduledCallComponent implements OnInit,OnDestroy {
     private route: Router,
     private activatedRoute: ActivatedRoute,
     private cacheManager: CacheManager,
+    private genericCsvService: GenericCsvService,
   ) {
     this.config = {
       itemsPerPage: this.searchParam.size,
@@ -111,9 +117,9 @@ export class ScheduledCallComponent implements OnInit,OnDestroy {
         this.search('status');
       }
       else {
-        if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+        if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
           this.search();
-        } else{
+        } else {
           this.dataOnLoad = false;
         }
       }
@@ -144,7 +150,9 @@ export class ScheduledCallComponent implements OnInit,OnDestroy {
   // showScheduleCallList() {
   //   this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage);
   // }
-
+  sortByObject(object) {
+    this.sortBy = object;
+  }
   ownerId: number;
   filerId: number;
   agentId = null;
@@ -190,42 +198,6 @@ export class ScheduledCallComponent implements OnInit,OnDestroy {
     //  this.search('agent');
   }
 
-
-  // getScheduledCallsInfo(id, page) {
-  //   this.loading = true;
-  //   var param2 = `/dashboard/schedule-call-details/${id}?&page=${this.config.currentPage - 1
-  //     }&size=${this.searchParam.size}`;
-  //   this.userMsService.getMethodNew(param2).subscribe(
-  //     (result: any) => {
-  //       if (result.success == false) {
-  //         this.toastMsgService.alert('error', result.message);
-  //         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
-  //         this.config.totalItems = 0;
-  //       }
-  //       if (result?.data?.content instanceof Array && result?.data?.content?.length > 0) {
-  //         this.scheduleCallsData = result.data.content;
-  //         this.config.totalItems = result.data.totalElements;
-  //         this.config.pageCount = result.data.totalPages;
-  //         this.scheduleCallGridOptions.api?.setRowData(this.createRowData(result.data.content));
-  //       } else {
-  //         // this.scheduleCallsData = [];
-  //         this.loading = false;
-  //         this.toastMsgService.alert('error', 'No Data Found');
-  //         this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
-  //         this.config.totalItems = 0;
-  //       }
-  //       this.loading = false;
-  //     },
-  //     (error) => {
-  //       this.loading = false;
-  //       console.log(error);
-  //       this.toastMsgService.alert(
-  //         'error',
-  //         this.utilsService.showErrorMsg(error.error.status)
-  //       );
-  //     }
-  //   );
-  // }
 
   createRowData(scheduleCalls) {
     // console.log('scheduleCalls -> ', scheduleCalls);
@@ -632,32 +604,6 @@ export class ScheduledCallComponent implements OnInit,OnDestroy {
 
   }
 
-  // openChat(client) {
-  //   console.log('client: ', client);
-  //   this.loading = true;
-  //   let param = `/kommunicate/chat-link?userId=${client.userId}&serviceType=${client.serviceType}`;
-  //   this.userMsService.getMethod(param).subscribe(
-  //     (response: any) => {
-  //       console.log('open chat link res: ', response);
-  //       this.loading = false;
-  //       if (response.success) {
-  //         window.open(response.data.chatLink);
-  //       } else {
-  //         this.toastMsgService.alert(
-  //           'error',
-  //           'User has not initiated chat on kommunicate'
-  //         );
-  //       }
-  //     },
-  //     (error) => {
-  //       this.toastMsgService.alert(
-  //         'error',
-  //         'Error during fetching chat, try after some time.'
-  //       );
-  //       this.loading = false;
-  //     }
-  //   );
-  // }
 
   openChat(client) {
     console.log('client:', client);
@@ -726,18 +672,6 @@ export class ScheduledCallComponent implements OnInit,OnDestroy {
     );
   }
 
-  // pageChanged(event) {
-  //   this.config.currentPage = event;
-  //   this.searchParam.page = event - 1;
-  //   if (this.coOwnerToggle.value == true) {
-  //     this.search(event - 1, true);
-  //   } else {
-  //     this.search(event - 1);
-  //   }
-  //   // this.showScheduleCallList();
-  //   // this.search();
-  // }
-
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
@@ -747,9 +681,9 @@ export class ScheduledCallComponent implements OnInit,OnDestroy {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
       if (this.coOwnerToggle.value == true) {
-        this.search( '', true,event);
+        this.search('', true, event);
       } else {
-        this.search('','',event );
+        this.search('', '', event);
       }
     }
   }
@@ -771,7 +705,7 @@ export class ScheduledCallComponent implements OnInit,OnDestroy {
       this.coOwnerDropDown.resetDropdown();
       this.search('', true);
     } else {
-      if(this.dataOnLoad) {
+      if (this.dataOnLoad) {
         this.search();
       } else {
         //clear grid for loaded data
@@ -781,8 +715,8 @@ export class ScheduledCallComponent implements OnInit,OnDestroy {
     }
   }
 
-  search(form?, isAgent?,pageChange?) {
-    if(!pageChange){
+  search(form?, isAgent?, pageChange?) {
+    if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
@@ -820,12 +754,18 @@ export class ScheduledCallComponent implements OnInit,OnDestroy {
     // https://uat-api.taxbuddy.com/user/schedule-call-details/7523?page=0&pageSize=30&searchAsCoOwner=true
 
     var param = `/dashboard/schedule-call-details/${this.agentId}?${data}`;
-
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
     if (this.coOwnerToggle.value == true && isAgent) {
       param = param + '&searchAsCoOwner=true';
     }
     if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
       param = `/dashboard/schedule-call-details/${this.agentId}?${data}`;
+      if (Object.keys(this.sortBy).length) {
+        param = param + sortByJson;
+      }
     }
     else {
       param;
@@ -850,7 +790,7 @@ export class ScheduledCallComponent implements OnInit,OnDestroy {
         this.cacheManager.initializeCache(this.createRowData(this.scheduleCallsData));
 
         const currentPageNumber = pageChange || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.scheduleCallsData));
+        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.scheduleCallsData));
         this.config.currentPage = currentPageNumber;
 
       } else {
@@ -862,6 +802,36 @@ export class ScheduledCallComponent implements OnInit,OnDestroy {
       }
       this.loading = false;
     });
+  }
+
+  async downloadReport() {
+    this.loading = true;
+
+    this.showCsvMessage = true;
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    let param = `/dashboard/schedule-call-details/${this.agentId}?`;
+
+    if (this.coOwnerToggle.value) {
+      param = param + 'searchAsCoOwner=true&';
+    }
+    if (this.coOwnerToggle.value && loggedInId !== this.agentId) {
+      param = `/dashboard/schedule-call-details/${this.agentId}?`;
+    }
+    if (this.searchParam.email) {
+      param = param + 'email=' + this.searchParam.email.toLocaleLowerCase() + '&';
+    }
+    if (this.searchParam.mobileNumber) {
+      param = param + 'mobileNumber=' + this.searchParam.mobileNumber + '&';
+    }
+    if (this.searchParam.statusId) {
+      param = param + 'statusId=' + this.searchParam.statusId + '&';
+    }
+    else {
+      param;
+    }
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'schedule-call-list', '', this.sortBy);
+    this.loading = false;
+    this.showCsvMessage = false;
   }
 
   getToggleValue() {

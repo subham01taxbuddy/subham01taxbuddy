@@ -14,7 +14,7 @@ export class GenericCsvService {
   size = 100;
   data = [];
   count: number;
-  roles:any;
+  roles: any;
   constructor(
     private httpClient: HttpClient,
     private jsonToCsvService: JsonToCsvService,
@@ -22,9 +22,11 @@ export class GenericCsvService {
     private utilsService: UtilsService,
   ) {
     this.roles = this.utilsService.getUserRoles();
-   }
+  }
 
-  async downloadReport(baseUrl: string, param: string, page: number, name: any, fields?: any) {
+  async downloadReport(baseUrl: string, param: string, page: number, name: any, fields?: any, sortBy?: any) {
+    debugger
+    let sortJson = encodeURI(JSON.stringify(sortBy));
     // var subject = new Subject<boolean>();
     let paramUrl = param;
     if (page == 0) {
@@ -38,12 +40,12 @@ export class GenericCsvService {
     } else {
       addOn = '&';
     }
-    paramUrl = `${param}${addOn}page=${page}&size=${this.size}&pageSize=${this.pageSize}`;
+    paramUrl = Object.keys(sortBy).length ? `${param}${addOn}sortBy=${sortJson}&page=${page}&size=${this.size}&pageSize=${this.pageSize}` : `${param}${addOn}page=${page}&size=${this.size}&pageSize=${this.pageSize}`;
     this.count = 0;
     await this.getData(baseUrl, paramUrl).then((data: number) => { this.count = data });
     page += 1;
     for (; page < this.count; page++) {
-      paramUrl = `${param}${addOn}page=${page}&size=${this.size}&pageSize=${this.pageSize}`;
+      paramUrl =  Object.keys(sortBy).length ? `${param}${addOn}sortBy=${sortJson}&page=${page}&size=${this.size}&pageSize=${this.pageSize}` : `${param}${addOn}page=${page}&size=${this.size}&pageSize=${this.pageSize}`;
       await this.getData(baseUrl, paramUrl).then((data: number) => { this.count = data });
     }
     if (this.data.length) {
@@ -64,7 +66,7 @@ export class GenericCsvService {
         .then((result: any) => {
           if (result.success) {
             // if (result?.data?.content.length) {
-            if(param.includes('status-wise-report')){
+            if (param.includes('status-wise-report')) {
               if (result?.data?.content.length > 0 && result?.data?.content[0].statusWiseData && result?.data?.content[0].total) {
                 this.data = [...result?.data?.content[0].statusWiseData];
                 const columnTotal = this.calculateColumnTotal(this.data);
@@ -121,11 +123,11 @@ export class GenericCsvService {
     }
 
     if (data.length > 0) {
-      if(data[0].filerName){
+      if (data[0].filerName) {
         delete totalRow['ownerName'];
         totalRow.filerName = data[0].filerName ? 'Grand Total' : '';
       }
-      else{
+      else {
         delete totalRow['filerName'];
         totalRow.ownerName = data[0].ownerName ? 'Grand Total' : '';
       }

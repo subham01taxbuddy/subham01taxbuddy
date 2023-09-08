@@ -1137,8 +1137,7 @@ export class SumaryDialogComponent implements OnInit {
   }
 
   getUserInfoFromPan(panNum: any) {
-    const param = '/itr/api/getPanDetail?panNumber=' + panNum;
-    this.userService.getMethodInfo(param).subscribe((result: any) => {
+    this.utilService.getPanDetails(panNum, this.data.userObject.userId).subscribe((result: any) => {
       // this.summaryDialogForm.controls['dneeName'].setValue(result.firstName ? result.firstName : '');
       (this.summaryDialogForm.controls['donations'] as FormGroup).controls['name'].setValue(result.firstName ? result.firstName : '');
     }, error => {

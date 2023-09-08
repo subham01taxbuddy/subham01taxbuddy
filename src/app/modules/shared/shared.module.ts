@@ -58,6 +58,7 @@ import { ViewDocumentsDialogComponent } from './components/view-documents-dialog
 import { UpdateNoJsonFilingDialogComponent } from './components/update-no-json-filing-dialog/update-no-json-filing-dialog.component';
 import { UpdateItrUFillingDialogComponent } from './components/update-ItrU-filling-dialog/update-ItrU-filling-dialog.component';
 import { ValidationErrorScreenComponent } from './components/validation-error-screen/validation-error-screen.component';
+import { GenericSortingComponent } from './components/generic-sorting/generic-sorting.component';
 @NgModule({
   declarations: [
     UpperCaseDirective,
@@ -98,6 +99,7 @@ import { ValidationErrorScreenComponent } from './components/validation-error-sc
     UpdateNoJsonFilingDialogComponent,
     UpdateItrUFillingDialogComponent,
     ValidationErrorScreenComponent,
+    GenericSortingComponent
   ],
   imports: [
     CommonModule,
@@ -157,6 +159,7 @@ import { ValidationErrorScreenComponent } from './components/validation-error-sc
     LeaderListDropdownComponent,
     TwoDigitDecimaNumberDirective,
     ViewDocumentsDialogComponent,
+    GenericSortingComponent
   ],
   providers: [StorageService, Schedules, RequestManager],
   entryComponents: [
