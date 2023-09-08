@@ -40,7 +40,7 @@ declare function we_track(key: string, value: any);
   templateUrl: './filings.component.html',
   styleUrls: ['./filings.component.scss'],
 })
-export class FilingsComponent implements OnInit,OnDestroy {
+export class FilingsComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   myItrsGridOptions: GridOptions;
   itrDataList = [];
@@ -49,7 +49,7 @@ export class FilingsComponent implements OnInit,OnDestroy {
   config: any;
   selectedPageNo = 0;
   itrStatus: any = [];
-  eriStatus:any = [];
+  eriStatus: any = [];
   roles: any;
   loggedInSme: any;
   coOwnerToggle = new FormControl('');
@@ -67,7 +67,13 @@ export class FilingsComponent implements OnInit,OnDestroy {
   };
 
   allFilerList: any;
-
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'fName', name: 'Name' },
+    { value: 'eFillingDate', name: 'Date of Filing ' },
+    { value: 'itrType', name: 'ITR Type' },
+    { value: 'isRevised', name: 'Return Type' },
+  ];
   constructor(
     private reviewService: ReviewService,
     private itrMsService: ItrMsService,
@@ -196,6 +202,10 @@ export class FilingsComponent implements OnInit,OnDestroy {
     this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
 
+  sortByObject(object) {
+    this.sortBy = object;
+  }
+
   coOwnerId: number;
   coFilerId: number;
   agentId: number;
@@ -209,11 +219,11 @@ export class FilingsComponent implements OnInit,OnDestroy {
     // this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
 
-  myItrsList(pageNo, filingTeamMemberId,fromPageChange?) {
+  myItrsList(pageNo, filingTeamMemberId, fromPageChange?) {
     // https://uat-api.taxbuddy.com/itr/itr-list?pageSize=10&ownerUserId=7522&financialYear=2022-2023&status=ALL
     // &searchAsCoOwner=true&page=0
     //https://uat-api.taxbuddy.com/report/itr-list?page=0&pageSize=20&ownerUserId=7521&financialYear=2022-2023&status=ALL
-    if(!fromPageChange){
+    if (!fromPageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
@@ -232,6 +242,10 @@ export class FilingsComponent implements OnInit,OnDestroy {
       }
 
       let param = `/itr-list?page=${pageNo}&pageSize=20`;
+      let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+      if (Object.keys(this.sortBy).length) {
+        param = param + sortByJson;
+      }
       if (this.utilsService.isNonEmpty(this.searchParams.filerUserId)) {
         param = param + `&filerUserId=${this.searchParams.filerUserId}`;
       }
@@ -242,11 +256,17 @@ export class FilingsComponent implements OnInit,OnDestroy {
       if (this.utilsService.isNonEmpty(this.coOwnerId)) {
         param = `/itr-list?page=${pageNo}&pageSize=20`;
         param = param + `&ownerUserId=${this.coOwnerId}`;
+        if (Object.keys(this.sortBy).length) {
+          param = param + sortByJson;
+        }
       }
 
       if (this.utilsService.isNonEmpty(this.coFilerId)) {
         // param = `/itr-list?page=${pageNo}&pageSize=20`;
         param = param + `&filerUserId=${this.coFilerId}`;
+        if (Object.keys(this.sortBy).length) {
+          param = param + sortByJson;
+        }
       }
 
       if (this.utilsService.isNonEmpty(this.searchParams.selectedFyYear)) {
@@ -297,7 +317,7 @@ export class FilingsComponent implements OnInit,OnDestroy {
             this.cacheManager.initializeCache(this?.itrDataList);
 
             const currentPageNumber = pageNo + 1;
-            this.cacheManager.cachePageContent(currentPageNumber,this?.itrDataList);
+            this.cacheManager.cachePageContent(currentPageNumber, this?.itrDataList);
             this.config.currentPage = currentPageNumber;
           } else {
             this.itrDataList = [];
@@ -1005,16 +1025,16 @@ export class FilingsComponent implements OnInit,OnDestroy {
     );
   }
 
-  markAsProcessed(data){
+  markAsProcessed(data) {
     // 'https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status'
     this.loading = true;
     var workingItr = this.itrDataList.filter(
       (item: any) => item.itrId === data.itrId
     )[0];
     let reqData = {
-      userId:  workingItr.userId,
+      userId: workingItr.userId,
       taskKeyName: 'itrProcessedSuccessfully',
-      uiAction:"NotRequired",
+      uiAction: "NotRequired",
       taskStatus: 'Completed',
       assessmentYear: workingItr.assessmentYear,
     };
@@ -1026,29 +1046,29 @@ export class FilingsComponent implements OnInit,OnDestroy {
     headers = headers.append('Authorization', 'Bearer ' + TOKEN);
 
     this.http.put(environment.lifecycleUrl, reqData, { headers: headers })
-    .subscribe(
-      (result: any) => {
-        this.loading = false;
-        if(result.success){
-          this.utilsService.showSnackBar(
-            'ITR Processed status updated successfully'
-          );
-          this.myItrsList(this.selectedPageNo,this.selectedFilingTeamMemberId
-          );
-        }else{
+      .subscribe(
+        (result: any) => {
+          this.loading = false;
+          if (result.success) {
+            this.utilsService.showSnackBar(
+              'ITR Processed status updated successfully'
+            );
+            this.myItrsList(this.selectedPageNo, this.selectedFilingTeamMemberId
+            );
+          } else {
+            this.loading = false;
+            this.utilsService.showSnackBar(
+              'Failed to update ITR Processed status'
+            );
+          }
+        },
+        (error) => {
           this.loading = false;
           this.utilsService.showSnackBar(
             'Failed to update ITR Processed status'
           );
         }
-      },
-      (error) => {
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Failed to update ITR Processed status'
-        );
-      }
-    );
+      );
   }
 
   interestedForNextYearTpa(data) {
@@ -1211,11 +1231,11 @@ export class FilingsComponent implements OnInit,OnDestroy {
     } else {
       this.config.currentPage = event;
       this.selectedPageNo = event - 1;
-        if (this.coOwnerToggle.value == true) {
-          this.myItrsList(event - 1, true,'fromPageChange');
-        } else {
-          this.myItrsList(event - 1, '','fromPageChange');
-        }
+      if (this.coOwnerToggle.value == true) {
+        this.myItrsList(event - 1, true, 'fromPageChange');
+      } else {
+        this.myItrsList(event - 1, '', 'fromPageChange');
+      }
     }
   }
 
@@ -1283,7 +1303,7 @@ export class FilingsComponent implements OnInit,OnDestroy {
         if (res.hasOwnProperty('errors')) {
           if (res.errors instanceof Array && res.errors.length > 0)
             this.utilsService.showSnackBar(res.errors[0].desc);
-            this.getItrLifeCycleStatus(data)
+          this.getItrLifeCycleStatus(data)
         }
       }
     });
@@ -1295,18 +1315,18 @@ export class FilingsComponent implements OnInit,OnDestroy {
     this.itrMsService.getItrLifeCycle(param).subscribe((response: any) => {
       if (response.success) {
         this.loading = false
-        console.log('res of itr status of non-eri',response)
+        console.log('res of itr status of non-eri', response)
         if (response.data.itrProcessedSuccessfully.taskStatus === 'Completed') {
           let input = {
             title: 'itrLifecycleNonEri',
             name: data.fName + ' ' + data.lName,
             pan: data.panNumber,
             itrsFiled: response.data.itrFiledStatus,
-            eVerification : response.data.eVerificationStatus,
-            itrProcessed : response.data.itrProcessedSuccessfully,
+            eVerification: response.data.eVerificationStatus,
+            itrProcessed: response.data.itrProcessedSuccessfully,
           };
           this.openLifeCycleDialog(input);
-        }else{
+        } else {
           let disposable = this.dialog.open(EVerificationDialogComponent, {
             data: {
               title: "itrProcessed",
