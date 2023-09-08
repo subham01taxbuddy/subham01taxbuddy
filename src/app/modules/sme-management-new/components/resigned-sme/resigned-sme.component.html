@@ -3,23 +3,43 @@
 <!-- Table Below -->
 <div class="tableSpc">
   <div class="row">
-  <div class="col-sm-8">
-    <div class="txTit">
-      Resigned SME Details:
+    <div class="col-sm-8">
+      <div class="txTit">
+        Resigned SME Details:
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="count1">Total Count: <span class="txClr1">{{this.config.totalItems }}</span></div>
     </div>
   </div>
-  <div class="col-sm-4">
-  <div class="count1">Total Count: <span class="txClr1">{{this.config.totalItems }}</span></div> 
+  <div class="rowClr">
+    <div class="surround">
+      <div class="row spsTp">
+        <div class="col-6">
+          <app-generic-sorting [sortingParameter]="sortMenus" (onChange)="sortByObject($event)"></app-generic-sorting>
+        </div>
+        <div class="col-sm-6">
+          <div class="col-sm-12">
+            <button class="srch-btn mvRth" [disabled]="loading" (click)="search()">
+              <i class="fa fa-search" aria-hidden="true"></i> Search
+            </button>
+          </div>
+          <div class="col-sm-12 row">
+            <span class="note1 note">
+              Note : Please select required filters above and click on search to get information
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  </div>
-
   <table>
-  <tr *ngFor="let item of smeInfo | paginate : config"></tr>
+    <tr *ngFor="let item of smeInfo | paginate : config"></tr>
   </table>
 
-   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="smeListGridOptions" [rowSelection]="rowSelection"
-        (rowClicked)="onSmeRowClicked($event)">
-   </ag-grid-angular>
-      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="smeListGridOptions" [rowSelection]="rowSelection"
+    (rowClicked)="onSmeRowClicked($event)">
+  </ag-grid-angular>
+  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
 
 </div>
