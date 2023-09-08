@@ -92,6 +92,7 @@ import { OtherAssetImprovementComponent } from './itr-wizard/components/capital-
 import { ScheduleCflComponent } from './itr-wizard/pages/schedule-cfl/schedule-cfl.component';
 import { OldVsNewComponent } from './itr-wizard/components/old-vs-new/old-vs-new.component';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
+import { SelectionComponent } from './itr-wizard/pages/taxes-paid/selection-component/selection-component.component';
 
 @NgModule({
   imports: [
@@ -203,6 +204,7 @@ import { NgxImageZoomModule } from 'ngx-image-zoom';
     FileParserComponent,
     ScheduleCflComponent,
     OldVsNewComponent,
+    SelectionComponent,
   ],
 
   exports: [CustomerProfileComponent],
