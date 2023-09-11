@@ -12,28 +12,34 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './unassigned-sme.component.html',
   styleUrls: ['./unassigned-sme.component.scss']
 })
-export class UnassignedSmeComponent implements OnInit,OnDestroy {
+export class UnassignedSmeComponent implements OnInit, OnDestroy {
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'name', name: 'Name' },
+    { value: 'roles', name: 'Roles' },
+    { value: 'parentName', name: 'Parent Name' },
+  ];
   smeListGridOptions: GridOptions;
   loading = false;
   smeList: any = [];
-  smeInfo:any;
-  config:any;
-  loggedInSme:any;
+  smeInfo: any;
+  config: any;
+  loggedInSme: any;
   searchParam: any = {
     statusId: null,
     page: 0,
     size: 20,
-    assigned:false,
+    assigned: false,
     // owner:true,
     mobileNumber: null,
     emailId: null
   };
   searchMenus = [{
     value: 'mobileNumber', name: 'Mobile Number'
-  },{
+  }, {
     value: 'name', name: 'Name'
-  },{
-    value:'smeOriginalEmail',name:'Email ID'
+  }, {
+    value: 'smeOriginalEmail', name: 'Email ID'
   },];
   searchVal: any;
   key: any;
@@ -47,26 +53,30 @@ export class UnassignedSmeComponent implements OnInit,OnDestroy {
     private matDialog: MatDialog,
     private cacheManager: CacheManager,
     @Inject(LOCALE_ID) private locale: string
-    ) {
-      this.smeListGridOptions = <GridOptions>{
-        rowData: [],
-        columnDefs: this.smeCreateColumnDef(),
-        enableCellChangeFlash: true,
-        enableCellTextSelection: true,
-        onGridReady: params => {
-        },
+  ) {
+    this.smeListGridOptions = <GridOptions>{
+      rowData: [],
+      columnDefs: this.smeCreateColumnDef(),
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      onGridReady: params => {
+      },
 
-        sortable: true,
-      };this.config = {
-        itemsPerPage: 20,
-        currentPage: 1,
-        totalItems: null
-      };
-     }
+      sortable: true,
+    }; this.config = {
+      itemsPerPage: 20,
+      currentPage: 1,
+      totalItems: null
+    };
+  }
 
   ngOnInit() {
-    this.loggedInSme =JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.getSmeList();
+  }
+
+  sortByObject(object) {
+    this.sortBy = object;
   }
 
   clearValue() {
@@ -76,9 +86,9 @@ export class UnassignedSmeComponent implements OnInit,OnDestroy {
   advanceSearch(key: any) {
     if (!this.key || !this.searchVal) {
       this.showError = true;
-      this._toastMessageService.alert('error','Please select attribute and also enter search value.');
+      this._toastMessageService.alert('error', 'Please select attribute and also enter search value.');
       return;
-    }else{
+    } else {
       this.showError = false;
       this.getSmeSearchList(key, this.searchVal);
     }
@@ -93,36 +103,39 @@ export class UnassignedSmeComponent implements OnInit,OnDestroy {
 
   getSmeSearchList(key: any, searchValue: any) {
     this.loading = true;
-    const loggedInSmeUserId=this.loggedInSme[0].userId;
+    const loggedInSmeUserId = this.loggedInSme[0].userId;
 
-    if(this.searchParam.emailId){
+    if (this.searchParam.emailId) {
       this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
     }
-    if(searchValue){
+    if (searchValue) {
       searchValue = searchValue.toLocaleLowerCase();
     }
 
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}&${key}=${searchValue}`
-
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
-        this.loading = false;
-        console.log("Search result:", result)
-        if(Array.isArray(result?.data?.content) && result?.data?.content?.length > 0) {
-          this.loading = false;
-          this.smeInfo = result.data.content;
-          this.config.totalItems = result.data.totalElements;
-          this.smeListGridOptions.api?.setRowData(this.createRowData(this.smeInfo));
-        }else{
-          this.loading = false;
-          this._toastMessageService.alert('error','No Lead Data Found .');
-          this.smeListGridOptions.api?.setRowData(this.createRowData([]));
-          this.config.totalItems = 0;
-          // this.getSmeList();
-        }
-     },(error) => {
       this.loading = false;
-      this._toastMessageService.alert('error','No Lead Data Found .');
+      console.log("Search result:", result)
+      if (Array.isArray(result?.data?.content) && result?.data?.content?.length > 0) {
+        this.loading = false;
+        this.smeInfo = result.data.content;
+        this.config.totalItems = result.data.totalElements;
+        this.smeListGridOptions.api?.setRowData(this.createRowData(this.smeInfo));
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert('error', 'No Lead Data Found .');
+        this.smeListGridOptions.api?.setRowData(this.createRowData([]));
+        this.config.totalItems = 0;
+        // this.getSmeList();
+      }
+    }, (error) => {
+      this.loading = false;
+      this._toastMessageService.alert('error', 'No Lead Data Found .');
       this.smeListGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
     });
@@ -131,34 +144,34 @@ export class UnassignedSmeComponent implements OnInit,OnDestroy {
 
   getSmeList(pageChange?) {
     // ${this.config.currentPage - 1}
-    if(!pageChange){
+    if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
-    const loggedInSmeUserId=this.loggedInSme[0].userId;
-    if(this.searchParam.emailId){
+    const loggedInSmeUserId = this.loggedInSme[0].userId;
+    if (this.searchParam.emailId) {
       this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
     }
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
     this.userMsService.getMethodNew(param).subscribe((result: any) => {
       console.log('sme list result -> ', result);
-       if (Array.isArray(result.data.content) && result.data.content.length > 0) {
-          this.loading = false;
-          this.smeInfo =result.data.content
-          console.log("smelist",this.smeList)
-          this.config.totalItems = result.data.totalElements;
-          this.smeListGridOptions.api?.setRowData(this.createRowData(this.smeInfo));
-          this.cacheManager.initializeCache(this.createRowData(this.smeInfo));
+      if (Array.isArray(result.data.content) && result.data.content.length > 0) {
+        this.loading = false;
+        this.smeInfo = result.data.content
+        console.log("smelist", this.smeList)
+        this.config.totalItems = result.data.totalElements;
+        this.smeListGridOptions.api?.setRowData(this.createRowData(this.smeInfo));
+        this.cacheManager.initializeCache(this.createRowData(this.smeInfo));
 
-          const currentPageNumber = pageChange || this.searchParam.page + 1;
-          this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.smeInfo));
-          this.config.currentPage = currentPageNumber;
-        } else {
-          this.loading = false;
-          console.log("in else")
-          this.smeListGridOptions.api?.setRowData(this.createRowData(result.data.content));
-        }
+        const currentPageNumber = pageChange || this.searchParam.page + 1;
+        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.smeInfo));
+        this.config.currentPage = currentPageNumber;
+      } else {
+        this.loading = false;
+        console.log("in else")
+        this.smeListGridOptions.api?.setRowData(this.createRowData(result.data.content));
+      }
 
 
       // if (result.data['content'] instanceof Array) {
@@ -185,7 +198,7 @@ export class UnassignedSmeComponent implements OnInit,OnDestroy {
         width: 50,
         pinned: 'left',
         lockPosition: true,
-        suppressMovable:false,
+        suppressMovable: false,
         cellRenderer: (params) => {
 
         }
@@ -194,7 +207,7 @@ export class UnassignedSmeComponent implements OnInit,OnDestroy {
         headerName: 'Mobile No',
         field: 'mobileNumber',
         width: 120,
-        suppressMovable:true,
+        suppressMovable: true,
         pinned: 'left',
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -225,7 +238,7 @@ export class UnassignedSmeComponent implements OnInit,OnDestroy {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
         },
-        cellRenderer: function(params) {
+        cellRenderer: function (params) {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
@@ -302,7 +315,7 @@ export class UnassignedSmeComponent implements OnInit,OnDestroy {
           style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#2199e8;">
           <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="edit"> Edit</i>
            </button>`;
-          },
+        },
 
       },
 
@@ -313,7 +326,7 @@ export class UnassignedSmeComponent implements OnInit,OnDestroy {
   public rowSelection: 'single';
   rowMultiSelectWithClick: false;
 
-  createRowData(data:any) {
+  createRowData(data: any) {
     var smeArray = [];
     // for (let i = 0; i < data.length; i++) {
     //   let smeInfo: any = Object.assign({}, smeArray[i], {
@@ -327,7 +340,7 @@ export class UnassignedSmeComponent implements OnInit,OnDestroy {
     //     state:data[i].state,
 
     //   });
-      // smeArray.push(smeInfo);
+    // smeArray.push(smeInfo);
     // }
     return data;
   }
@@ -339,7 +352,7 @@ export class UnassignedSmeComponent implements OnInit,OnDestroy {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'edit': {
-          this.editAddSme( params.data)
+          this.editAddSme(params.data)
           break;
         }
 
@@ -347,47 +360,47 @@ export class UnassignedSmeComponent implements OnInit,OnDestroy {
     }
   }
 
-  editAddSme(sme){
+  editAddSme(sme) {
     let smeData = {
-      type:'edit',
-      data:sme
+      type: 'edit',
+      data: sme
     };
-    sessionStorage.setItem('smeObject',JSON.stringify(smeData))
+    sessionStorage.setItem('smeObject', JSON.stringify(smeData))
     this.router.navigate(['/sme-management-new/edit-unassignedsme'])
   }
 
 
-//   pageChanged(event: any) {
-//     this.config.currentPage = event;
-//     this.searchParam.page = event - 1
-//     this.getSmeList();
-// }
+  //   pageChanged(event: any) {
+  //     this.config.currentPage = event;
+  //     this.searchParam.page = event - 1
+  //     this.getSmeList();
+  // }
 
-pageChanged(event) {
-  let pageContent = this.cacheManager.getPageContent(event);
-  if (pageContent) {
-    this.smeListGridOptions.api?.setRowData(this.createRowData(pageContent));
-    this.config.currentPage = event;
-  } else {
-    this.config.currentPage = event;
-    this.searchParam.page = event - 1;
-    this.getSmeList(event);
+  pageChanged(event) {
+    let pageContent = this.cacheManager.getPageContent(event);
+    if (pageContent) {
+      this.smeListGridOptions.api?.setRowData(this.createRowData(pageContent));
+      this.config.currentPage = event;
+    } else {
+      this.config.currentPage = event;
+      this.searchParam.page = event - 1;
+      this.getSmeList(event);
+    }
   }
-}
 
-resetFilters() {
-  this.cacheManager.clearCache();
-  this.searchParam.page = 0;
-  this.searchParam.size = 20;
-  this.config.currentPage = 1;
-  this.key = null;
-  this.searchVal = null;
+  resetFilters() {
+    this.cacheManager.clearCache();
+    this.searchParam.page = 0;
+    this.searchParam.size = 20;
+    this.config.currentPage = 1;
+    this.key = null;
+    this.searchVal = null;
 
-  this.getSmeList();
+    this.getSmeList();
 
-}
-ngOnDestroy() {
-  this.cacheManager.clearCache();
-}
+  }
+  ngOnDestroy() {
+    this.cacheManager.clearCache();
+  }
 
 }

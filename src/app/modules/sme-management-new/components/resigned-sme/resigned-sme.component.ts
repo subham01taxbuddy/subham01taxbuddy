@@ -13,7 +13,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './resigned-sme.component.html',
   styleUrls: ['./resigned-sme.component.scss'],
 })
-export class ResignedSmeComponent implements OnInit,OnDestroy {
+export class ResignedSmeComponent implements OnInit, OnDestroy {
   smeListGridOptions: GridOptions;
   loading = false;
   smeList: any = [];
@@ -30,7 +30,12 @@ export class ResignedSmeComponent implements OnInit,OnDestroy {
     mobileNumber: null,
     emailId: null,
   };
-
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'name', name: 'Name' },
+    { value: 'roles', name: 'Roles' },
+    { value: 'parentName', name: 'Parent Name' },
+  ];
   constructor(
     private userService: UserMsService,
     private userMsService: UserMsService,
@@ -62,14 +67,27 @@ export class ResignedSmeComponent implements OnInit,OnDestroy {
     this.getSmeList();
   }
 
+  sortByObject(object) {
+    this.sortBy = object;
+  }
+
+  search() {
+    this.getSmeList();
+  }
+
   getSmeList(pageChange?) {
-    if(!pageChange){
+    if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
     const loggedInSmeUserId = this.loggedInSme[0].userId
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
+
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
 
     this.userMsService.getMethodNew(param).subscribe(
       (result: any) => {
@@ -86,7 +104,7 @@ export class ResignedSmeComponent implements OnInit,OnDestroy {
           this.cacheManager.initializeCache(this.createRowData(this.smeInfo));
 
           const currentPageNumber = pageChange || this.searchParam.page + 1;
-          this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.smeInfo));
+          this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.smeInfo));
           this.config.currentPage = currentPageNumber;
         } else {
           this.loading = false;
@@ -166,7 +184,7 @@ export class ResignedSmeComponent implements OnInit,OnDestroy {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        cellRenderer: function(params) {
+        cellRenderer: function (params) {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },

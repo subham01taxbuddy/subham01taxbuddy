@@ -61,6 +61,11 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   agentId = null;
   loggedInUserRoles: any;
   showReassignmentBtn: any;
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'name', name: 'Name' },
+    { value: 'createdDate', name: 'Creation Date' }
+  ];
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -161,6 +166,10 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     console.log('unsubscribe');
     this.requestManagerSubscription.unsubscribe();
     this.cacheManager.clearCache();
+  }
+
+  sortByObject(object) {
+    this.sortBy = object;
   }
 
   LIFECYCLE = 'LIFECYCLE';
@@ -1350,15 +1359,22 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     // if(this.filerUserId){
     //   param= param + `&filerUserId=${this.filerUserId}`
     // }
-
-    if (this.coOwnerToggle.value == true && isAgent) {
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
+    if (this.coOwnerToggle.value && isAgent) {
       param = param + '&searchAsCoOwner=true';
     }
-    if(this.filerId === this.agentId){
-        param= param + `&filerUserId=${this.filerId}`
-      }
-    if (this.coOwnerToggle.value == true && isAgent && loggedInId !== this.agentId) {
+    if (this.filerId === this.agentId) {
+      param = param + `&filerUserId=${this.filerId}`
+    }
+    if (this.coOwnerToggle.value && isAgent && loggedInId !== this.agentId) {
       param = `/${this.agentId}/user-list-new?${data}`;
+      let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+      if (Object.keys(this.sortBy).length) {
+        param = param + sortByJson;
+      }
     }
     else {
       param;
