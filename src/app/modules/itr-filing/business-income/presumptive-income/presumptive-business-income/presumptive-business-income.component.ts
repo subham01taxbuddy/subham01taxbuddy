@@ -115,16 +115,10 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         [Validators.required],
       ],
       tradeName: [income?.tradeName || null, [Validators.required]],
-      bankReceipts: [bank ? bank.receipts : null, [Validators.required]],
-      bankPreIncome: [
-        bank ? bank.presumptiveIncome : null,
-        [Validators.required],
-      ],
-      cashReceipts: [cash ? cash.receipts : null, [Validators.required]],
-      cashPreIncome: [
-        cash ? cash.presumptiveIncome : null,
-        [Validators.required],
-      ],
+      bankReceipts: [bank ? bank.receipts : 0, [Validators.required]],
+      bankPreIncome: [bank ? bank.presumptiveIncome : 0, [Validators.required]],
+      cashReceipts: [cash ? cash.receipts : 0, [Validators.required]],
+      cashPreIncome: [cash ? cash.presumptiveIncome : 0, [Validators.required]],
     });
   }
 
