@@ -151,6 +151,7 @@ export class CustomerProfileComponent implements OnInit {
   filePath = 'ITR/';
   loggedInUserRoles: any;
   requestManagerSubscription = null;
+  @Output() customerProfileSaved = new EventEmitter<boolean>();
 
   constructor(
     public fb: FormBuilder,
@@ -450,6 +451,7 @@ export class CustomerProfileComponent implements OnInit {
             this.utilsService.showSnackBar(
               'Customer profile updated successfully.'
             );
+            this.customerProfileSaved.emit(true);
           }
           // if (ref === "CONTINUE") {
           // if (this.customerProfileForm.controls['itrType'].value === '1'
