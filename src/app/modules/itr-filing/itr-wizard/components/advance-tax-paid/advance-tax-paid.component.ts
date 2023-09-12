@@ -48,16 +48,20 @@ export class AdvanceTaxPaidComponent implements OnInit {
     };
 
     this.salaryForm = this.inItForm();
-    if (
-      this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS &&
-      this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS.length > 0
-    ) {
-      this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS.forEach((item) => {
-        this.addMoreSalary(item);
-      });
+    // if (
+    //   this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS &&
+    //   this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS.length > 0
+    // ) {
+    //   this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS.forEach((item) => {
+    //     this.addMoreSalary(item);
+    //   });
+    // } else {
+    if (this.data.assetIndex !== null) {
+      this.addMoreSalary(this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS[this.data.assetIndex]);
     } else {
       this.addMoreSalary();
     }
+    // }
     // this.salaryForm.disable();
 
     // Set the minimum to financial year and max to current date
@@ -135,6 +139,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
       let result = {
         cgObject: this.salaryForm.value,
         rowIndex: this.data.rowIndex,
+        type:'selfAssessment'
       };
       this.dialogRef.close(result);
       // (this.salaryForm.controls['salaryArray'] as FormGroup).disable();

@@ -50,14 +50,20 @@
     </div>
   </mat-radio-group>
   <br />
-  <div class="card__row edit clearfix">
-    <button
-      type="submit"
-      class="lgtBtn"
-      style="margin: 0px"
-      (click)="continue()"
-    >
-      Continue
-    </button>
+
+  <div *ngIf="selectedValue === 'tdsOnSalary'">
+    <app-tds-on-salary></app-tds-on-salary>
+  </div>
+  <div *ngIf="selectedValue === 'tdsOtherThanSalary16A'">
+    <app-tds-other-than-salary #other [showHeadOfIncome]="'TDTS'"></app-tds-other-than-salary>
+  </div>
+  <div *ngIf="selectedValue === 'tdsOtherThanSalaryPanBased'">
+    <app-tds-other-than-salary #panBased [showHeadOfIncome]="'TDTSP'"></app-tds-other-than-salary>
+  </div>
+  <div *ngIf="selectedValue === 'tcs'">
+    <app-tcs></app-tcs>
+  </div>
+  <div *ngIf="selectedValue === 'selfAssessment'">
+    <app-advance-tax-paid></app-advance-tax-paid>
   </div>
 </div>
