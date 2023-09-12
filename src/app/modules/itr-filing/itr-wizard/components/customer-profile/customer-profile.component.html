@@ -181,7 +181,9 @@
           matInput
           placeholder="Father's name"
           name="mobile"
-          [formControl]="customerProfileForm.controls['fatherName'] | formControlType"
+          [formControl]="
+            customerProfileForm.controls['fatherName'] | formControlType
+          "
           [pattern]="charRegex"
           class="input-field"
           maxlength="125"
@@ -213,7 +215,9 @@
               customerProfileForm.controls['residentialStatus'].value
             )
           "
-          [formControl]="customerProfileForm.controls['residentialStatus'] | formControlType"
+          [formControl]="
+            customerProfileForm.controls['residentialStatus'] | formControlType
+          "
           required
         >
           <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
@@ -367,7 +371,9 @@
           class="input-field"
           placeholder="Date of birth"
           name="dateOfBirth"
-          [formControl]="customerProfileForm.controls['dateOfBirth'] | formControlType"
+          [formControl]="
+            customerProfileForm.controls['dateOfBirth'] | formControlType
+          "
           required
         />
         <mat-hint>Format: DD/MM/YYYY</mat-hint>
@@ -396,7 +402,7 @@
       </mat-radio-group>
     </div>
 
-    <div class="col-sm-12 spsTp bdrTp">
+    <!-- <div class="col-sm-12 spsTp bdrTp">
       <button
         class="tbd-btn save-btn mvRth"
         [disabled]="!isEditCustomer && customerProfileForm.invalid"
@@ -404,6 +410,6 @@
       >
         Save
       </button>
-    </div>
+    </div> -->
   </div>
 </form>

@@ -479,8 +479,41 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         }
       );
     } else {
-      this.loading = false;
-      this.presBusinessSaved.emit(false);
+      const busIncomeArray = this.getBusIncomeArray;
+
+      // check if any recipt or presumptive income is 0 and remove that
+      busIncomeArray.controls.forEach((element, index) => {
+        if (
+          (element.value.bankReceipts === 0 ||
+            element.value.bankReceipts === '0') &&
+          (element.value.bankPreIncome === 0 ||
+            element.value.bankPreIncome === '0') &&
+          (element.value.cashReceipts === 0 ||
+            element.value.cashReceipts === '0') &&
+          (element.value.cashPreIncome === 0 ||
+            element.value.cashPreIncome === '0')
+        ) {
+          busIncomeArray.removeAt(index);
+        }
+      });
+
+      // once removed check if all are not 0
+      const allNonZero = busIncomeArray.controls.every((element) => {
+        return (
+          element.value.receipts !== 0 || element.value.presumptiveIncome !== 0
+        );
+      });
+
+      //  if every value is non-zero then call function again
+      if (allNonZero && this.busIncomeForm.valid) {
+        this.onContinue();
+        this.loading = false;
+        this.presBusinessSaved.emit(false);
+        this.utilsService.smoothScrollToTop();
+      } else {
+        this.loading = false;
+        this.presBusinessSaved.emit(false);
+      }
     }
 
     // let presBusinessIncome = [];

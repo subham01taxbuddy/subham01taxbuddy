@@ -28,7 +28,7 @@ import { TdsOtherThanSalaryComponent } from '../../components/tds-other-than-sal
 import { TdsOnSalaryComponent } from '../../components/tds-on-salary/tds-on-salary.component';
 import { SelectionComponent } from './selection-component/selection-component.component';
 import { MatDialog } from '@angular/material/dialog';
-import {RowGroupingDisplayType,} from 'ag-grid-community';
+import { RowGroupingDisplayType } from 'ag-grid-community';
 import { TcsComponent } from '../../components/tcs/tcs.component';
 import { AdvanceTaxPaidComponent } from '../../components/advance-tax-paid/advance-tax-paid.component';
 
@@ -52,11 +52,11 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   isAddTcs: number;
   isAddAdvance: number;
   allTdsDetails: GridOptions;
-  public groupDisplayType: RowGroupingDisplayType = 'groupRows';
   onSalary: any = [];
   isTaxesPaid: Number;
   @Input() taxPaid: TaxPaid;
   assetList: any;
+  public groupDisplayType: RowGroupingDisplayType = 'groupRows';
 
   constructor(
     public utilsService: UtilsService,
@@ -75,8 +75,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       rowData: this.tdsDetailCreateRowData(),
       columnDefs: this.tdsDetailCreateColumnDef(),
       enableCellChangeFlash: true,
-      enableCellTextSelection: true,
-      rowSelection: 'multiple',
+      // enableCellTextSelection: true,
+      // rowSelection: 'multiple',
       onGridReady: (params) => {},
       onSelectionChanged: (event) => {
         event.api.getSelectedRows().forEach((row) => {
@@ -91,6 +91,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       sortable: true,
       pagination: true,
       paginationPageSize: 20,
+      groupDisplayType: 'singleColumn',
     };
     this.allTdsDetails.api?.setRowData(this.assetList);
   }
@@ -99,7 +100,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     this.getItrDocuments();
   }
 
-  editTaxesPaid(type, index?){
+  editTaxesPaid(type, index?) {
     if (type === 'tdsOnSalary') {
       const dialogRef = this.matDialog.open(TdsOnSalaryComponent, {
         data: {
@@ -135,7 +136,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         console.log('Result of tdsOtherThanSalary16A:', result);
         if (result !== undefined) {
           if (index != null) {
-            this.taxPaid?.otherThanSalary16A?.push(result?.cgObject?.salaryArray[index]);
+            this.taxPaid?.otherThanSalary16A?.push(
+              result?.cgObject?.salaryArray[index]
+            );
           }
         }
       });
@@ -155,7 +158,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         console.log('Result of tdsOtherThanSalary16A:', result);
         if (result !== undefined) {
           if (index != null) {
-            this.taxPaid?.otherThanSalary26QB?.push(result?.cgObject?.salaryArray[index]);
+            this.taxPaid?.otherThanSalary26QB?.push(
+              result?.cgObject?.salaryArray[index]
+            );
           }
         }
       });
@@ -193,7 +198,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         console.log('Result of advanceTax:', result);
         if (result !== undefined) {
           if (index != null) {
-            this.taxPaid?.otherThanTDSTCS?.push(result?.cgObject?.salaryArray[index]);
+            this.taxPaid?.otherThanTDSTCS?.push(
+              result?.cgObject?.salaryArray[index]
+            );
           }
         }
       });
@@ -311,7 +318,6 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         field: '',
         headerCheckboxSelection: true,
         width: 80,
-        pinned: 'left',
         checkboxSelection: (params) => {
           return true;
         },
