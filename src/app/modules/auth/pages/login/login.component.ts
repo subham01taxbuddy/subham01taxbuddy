@@ -86,9 +86,6 @@ export class LoginComponent implements OnInit {
       we_setAttribute('we_first_name', res.data[0].name);
       we_setAttribute('User Id', parseInt(res.data[0].userId));
 
-      setTimeout(() => {
-        this.InitChat();
-      }, 2000);
       //get logged in userID
       let userId = this.utilsService.getLoggedInUserID();
       //register sme login
@@ -399,87 +396,6 @@ export class LoginComponent implements OnInit {
         }
       }
     })
-  }
-
-  InitChat() {
-    if ((window as any).Kommunicate) {
-      (window as any).Kommunicate.logout();
-    }
-    const data = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
-    const loginSMEInfo = data[0];
-
-    (function (d, m) {
-      var kommunicateSettings =
-      {
-        "appId": "3eb13dbd656feb3acdbdf650efbf437d1",
-        "popupWidget": true,
-        "automaticChatOpenOnNavigation": true,
-        'userId': loginSMEInfo['userId'],
-
-        "onInit": function () {
-          var chatContext = {
-            'userName': loginSMEInfo['name'],
-            'email': loginSMEInfo['email'],
-            'contactNumber': loginSMEInfo['mobileNumber'],
-          };
-
-          const userDetail = {
-            email: loginSMEInfo['email'],
-            phoneNumber: loginSMEInfo['mobileNumber'],
-            displayName: loginSMEInfo['name'],
-            userId: loginSMEInfo.userId,
-            password: '',
-            metadata: {
-              userId: loginSMEInfo.userId,
-              contactNumber: loginSMEInfo.mobileNumber,
-              email: loginSMEInfo['email'],
-              Platform: 'Website',
-            },
-          };
-          (window as any).Kommunicate.updateChatContext(chatContext);
-
-          (window as any).Kommunicate.updateUser(userDetail);
-        },
-      };
-      var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
-      s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
-      var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
-      (window as any).kommunicate = m; m._globals = kommunicateSettings;
-    })(document, (window as any).kommunicate || {});
-
-    setTimeout(() => {
-      this.loadChat();
-    }, 2000);
-  }
-
-  loadChat() {
-    const waitForGlobal = function (key, callback) {
-      if (window[key]) {
-        callback();
-      } else {
-        setTimeout(function () {
-          waitForGlobal(key, callback);
-        }, 1000);
-      }
-    };
-
-    waitForGlobal('Kommunicate', function () {
-      var defaultSettings = {
-        defaultBotIds: '3eb13dbd656feb3acdbdf650efbf437d1',
-        skipRouting: true,
-      };
-
-      (window as any).Kommunicate.displayKommunicateWidget(true);
-      const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-      const loginSMEInfo = data[0];
-      var css = '#km-faq{display:none!important;}';
-      (window as any).Kommunicate.customizeWidgetCss(css);
-
-      (window as any).Kommunicate.updateSettings(defaultSettings);
-      // (window as any).Kommunicate.startConversation(defaultSettings, function (response) {
-      //         console.log("new conversation created");
-      //     });
-    });
   }
 
   mode: string = 'SIGN_IN';
