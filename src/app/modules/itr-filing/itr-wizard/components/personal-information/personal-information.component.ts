@@ -61,6 +61,7 @@ export const MY_FORMATS = {
 export class PersonalInformationComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
   @Input() isEditPersonal = false;
+  @Output() personalInfoSaved = new EventEmitter<boolean>();
 
   customerProfileForm: FormGroup;
   ITR_JSON: ITR_JSON;
@@ -2265,7 +2266,7 @@ export class PersonalInformationComponent implements OnInit {
     });
   }
 
-  get addressForm(){
+  get addressForm() {
     return this.customerProfileForm.controls['address'] as FormGroup;
   }
   createBankDetailsForm(
@@ -2409,7 +2410,8 @@ export class PersonalInformationComponent implements OnInit {
           this.customerProfileForm.controls['panNumber']
         )
       ) {
-        this.utilsService.getPanDetails(pan, this.ITR_JSON.userId)
+        this.utilsService
+          .getPanDetails(pan, this.ITR_JSON.userId)
           .subscribe((result: any) => {
             console.log('user data by PAN = ', result);
             this.customerProfileForm.controls['firstName'].setValue(
@@ -2634,6 +2636,8 @@ export class PersonalInformationComponent implements OnInit {
           this.utilsService.showSnackBar(
             'Customer profile updated successfully.'
           );
+          this.personalInfoSaved.emit(true);
+
           if (!ref) {
             this.saveAndNext.emit({ subTab: true, tabName: 'OTHER' });
           }

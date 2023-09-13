@@ -18,7 +18,6 @@ import { UtilsService } from '../../../../../services/utils.service';
 })
 export class AllPersonalInformationComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
-
   @ViewChild(CustomerProfileComponent) private customerProfileComponent;
   @ViewChild(PersonalInformationComponent) private personalInfoComponent;
   @ViewChild(OtherInformationComponent) private otherInfoComponent;
@@ -29,6 +28,9 @@ export class AllPersonalInformationComponent implements OnInit {
   isEditOther: boolean;
   isEditPersonal: boolean;
   navigationData: any;
+  customerProfileSaved: boolean;
+  personalInfoSaved: boolean;
+  otherInfoSaved: boolean;
 
   constructor(private utilService: UtilsService) {
     this.navigationData = history.state;
@@ -90,7 +92,8 @@ export class AllPersonalInformationComponent implements OnInit {
   }
 
   saveCount = 0;
-  saveAll() {
+
+  saveAllInfo() {
     //check validations
     if (!this.customerProfileComponent.customerProfileForm.valid) {
       this.utilService.showSnackBar(
@@ -111,12 +114,38 @@ export class AllPersonalInformationComponent implements OnInit {
       );
       return;
     }
+  }
 
+  saveAll() {
     this.saveCount = 0;
-    if (this.isEditCustomer) {
-      this.customerProfileComponent.saveProfile();
-    }
+    this.customerProfileComponent.saveProfile('CONTINUE');
+    this.saveAllInfo();
+  }
 
-    this.saveAndNext.emit(false);
+  onCustomerProfileSaved(event) {
+    this.customerProfileSaved = event;
+    if (this.customerProfileSaved) {
+      this.personalInfoComponent.saveProfile('NEXT');
+      this.saveAllInfo();
+    }
+  }
+
+  onPersonalInfoSaved(event) {
+    this.personalInfoSaved = event;
+    if (this.personalInfoSaved) {
+      this.otherInfoComponent.saveAndContinue();
+      this.saveAllInfo();
+    }
+  }
+
+  onotherInfoSaved(event) {
+    this.otherInfoSaved = event;
+    if (this.otherInfoSaved) {
+      this.saveAndNext.emit(false);
+      this.saveAllInfo();
+      this.utilService.showSnackBar(
+        'Personal information updated successfully.'
+      );
+    }
   }
 }

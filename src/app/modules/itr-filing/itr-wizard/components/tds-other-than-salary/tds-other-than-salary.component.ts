@@ -61,7 +61,9 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.showHeadOfIncome = this.data.showHeadOfIncome;
+    if(this.data.showHeadOfIncome) {
+      this.showHeadOfIncome = this.data.showHeadOfIncome;
+    }
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.COPY_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
@@ -72,26 +74,26 @@ export class TdsOtherThanSalaryComponent implements OnInit {
       currentPage: 1,
     };
     this.salaryForm = this.initForm();
-    if (
-      this.showHeadOfIncome === 'TDTS' &&
-      this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A &&
-      this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A.length > 0
-    ) {
-      this.COPY_ITR_JSON.taxPaid.otherThanSalary16A.forEach((item) => {
-        this.addMoreSalary(item);
-      });
-      // this.addSalary();
-    } else if (
-      this.showHeadOfIncome === 'TDTSP' &&
-      this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB &&
-      this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB.length > 0
-    ) {
-      this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB.forEach((item) => {
-        this.addMoreSalary(item);
-      });
-    } else {
+    // if (
+    //   this.showHeadOfIncome === 'TDTS' &&
+    //   this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A &&
+    //   this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A.length > 0
+    // ) {
+    //   this.COPY_ITR_JSON.taxPaid.otherThanSalary16A.forEach((item) => {
+    //     this.addMoreSalary(item);
+    //   });
+    //   // this.addSalary();
+    // } else if (
+    //   this.showHeadOfIncome === 'TDTSP' &&
+    //   this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB &&
+    //   this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB.length > 0
+    // ) {
+    //   this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB.forEach((item) => {
+    //     this.addMoreSalary(item);
+    //   });
+    // } else {
       this.addMoreSalary();
-    }
+    // }
     // this.salaryForm.disable();
   }
 
@@ -106,11 +108,11 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   addSalary() {
     // const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     // if (salaryArray.valid) {
-    setTimeout(() => {
+    // setTimeout(() => {
       // if (this.addData) {
       this.addMoreSalary();
       // }
-    }, 1000);
+    // }, 1000);
     // } else {
     //   salaryArray.controls.forEach(element => {
     //     if ((element as FormGroup).invalid) {
@@ -226,6 +228,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
         let result = {
           cgObject: this.salaryForm.value,
           rowIndex: this.data.rowIndex,
+          type: 'tdsOtherThanSalary16A'
         };
         this.dialogRef.close(result);
 
@@ -244,6 +247,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
         let result = {
           cgObject: this.salaryForm.value,
           rowIndex: this.data.rowIndex,
+          type: 'tdsOtherThanSalaryPanBased'
         };
         this.dialogRef.close(result);
 

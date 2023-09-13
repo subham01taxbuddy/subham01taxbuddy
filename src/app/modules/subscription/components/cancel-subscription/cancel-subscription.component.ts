@@ -476,7 +476,9 @@ export class CancelSubscriptionComponent implements OnInit,OnDestroy {
         userName: this.utilService.isNonEmpty(subscriptionData[i].userName) ? subscriptionData[i].userName : '-',
         reminderMobileNumber: this.utilService.isNonEmpty(subscriptionData[i].reminderMobileNumber) ? subscriptionData[i].reminderMobileNumber : '-',
         reminderEmail: this.utilService.isNonEmpty(subscriptionData[i].reminderEmail) ? subscriptionData[i].reminderEmail : '-',
-        userSelected: this.utilService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.name + '  ' + subscriptionData[i].userSelectedPlan.description.toString()
+        userSelected: this.utilService.isNonEmpty(subscriptionData[i].userSelectedPlan) ?
+          this.utilService.isNonEmpty(subscriptionData[i].userSelectedPlan.description) ? subscriptionData[i].userSelectedPlan.name + '  ' + subscriptionData[i].userSelectedPlan.description?.toString()
+            : subscriptionData[i].userSelectedPlan.name
           : this.utilService.isNonEmpty(subscriptionData[i].smeSelectedPlan) ? subscriptionData[i].smeSelectedPlan.name + '  ' + subscriptionData[i].smeSelectedPlan.description.toString()
             : '-',
         servicesType: this.utilService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.servicesType :

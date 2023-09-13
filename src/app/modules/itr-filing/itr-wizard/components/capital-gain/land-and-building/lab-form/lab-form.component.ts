@@ -222,25 +222,42 @@ export class LabFormComponent implements OnInit {
       // this.amount = cgOutPut.cgIncome;
       this.immovableForm.patchValue(this.data.assetSelected);
 
+      // IMPROVEMENTS SECTION
       this.improvements = dataToPatch[0].improvement.filter(
         (imp) =>
           imp.srn == this.data.assetSelected.srn &&
           this.utilsService.isNonEmpty(imp.dateOfImprovement)
       );
 
-      if (this.improvements instanceof Array && this.improvements.length > 0) {
-        this.isImprovements.setValue(true);
-        const improvement = <FormArray>this.immovableForm.get('improvement');
-        this.improvements.forEach((obj) => {
-          let improvementForm = this.createImprovementForm(obj);
-          improvement.push(improvementForm);
-          this.isImprovementValid(
-            this.immovableForm,
-            this.improvements.indexOf(obj)
-          );
-        });
-        console.log('Immovable Form===', this.immovableForm);
+      let isCostOfImprovementPresent = false;
+      this.improvements.forEach((element, index) => {
+        const costOfImprovementPresent: boolean = !element.costOfImprovement;
+        if (!costOfImprovementPresent) {
+          isCostOfImprovementPresent = true;
+        }
+      });
+
+      if (isCostOfImprovementPresent) {
+        if (
+          this.improvements instanceof Array &&
+          this.improvements.length > 0
+        ) {
+          this.isImprovements.setValue(true);
+          const improvement = <FormArray>this.immovableForm.get('improvement');
+          this.improvements.forEach((obj) => {
+            let improvementForm = this.createImprovementForm(obj);
+            improvement.push(improvementForm);
+            this.isImprovementValid(
+              this.immovableForm,
+              this.improvements.indexOf(obj)
+            );
+          });
+          console.log('Immovable Form===', this.immovableForm);
+        } else {
+          this.isImprovements.setValue(false);
+        }
       }
+
       if (this.deductions instanceof Array && this.deductions.length > 0) {
         this.isDeductions.setValue(true);
         const deductions = <FormArray>this.immovableForm.get('deductions');
@@ -253,6 +270,8 @@ export class LabFormComponent implements OnInit {
           );
         });
         console.log('Immovable Form===', this.immovableForm);
+      } else {
+        this.isDeductions.setValue(false);
       }
       this.buyers = dataToPatch[0].buyersDetails.filter(
         (buyer) => buyer.srn == this.data.assetSelected.srn
@@ -365,7 +384,7 @@ export class LabFormComponent implements OnInit {
       algorithm: 'cgProperty',
       capitalGain: 0,
       grandFatheredValue: 0,
-      totalFairMarketValueOfCapitalAsset: 0
+      totalFairMarketValueOfCapitalAsset: 0,
     };
     if (cgObject.assetDetails && cgObject.assetDetails.length > 0) {
       Object.assign(assetDetails, cgObject.assetDetails[this.currentCgIndex]);
@@ -1551,9 +1570,15 @@ export class LabFormComponent implements OnInit {
           this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
         );
         console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
-        if(this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1)) >= 0){
+        if (
+          this.improvementYears.indexOf(
+            purchaseYear + '-' + (purchaseYear + 1)
+          ) >= 0
+        ) {
           this.improvementYears = this.improvementYears.splice(
-            this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
+            this.improvementYears.indexOf(
+              purchaseYear + '-' + (purchaseYear + 1)
+            )
           );
         }
 

@@ -1,6 +1,9 @@
 import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import {
+  ITR_JSON,
+  OnSalary,
+} from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -34,6 +37,7 @@ export class TdsOnSalaryComponent implements OnInit {
     );
 
     this.salaryForm = this.inItForm();
+
     if (this.data.assetIndex !== null) {
       this.addMore(this.Copy_ITR_JSON.taxPaid?.onSalary[this.data.assetIndex]);
     } else {
@@ -102,15 +106,20 @@ export class TdsOnSalaryComponent implements OnInit {
           paidRefund: [],
         };
       }
-      this.Copy_ITR_JSON.taxPaid['onSalary'] = (
+
+      const salaryArray = (
         this.salaryForm.controls['salaryArray'] as FormArray
       ).getRawValue();
+
+      this.Copy_ITR_JSON.taxPaid.onSalary.push(salaryArray[0]);
+
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)
       );
 
       let result = {
+        type: 'tdsOnSalary',
         cgObject: this.salaryForm.value,
         rowIndex: this.data.rowIndex,
       };
@@ -135,8 +144,12 @@ export class TdsOnSalaryComponent implements OnInit {
   }
 
   addMore(item?) {
+    const salaryJsonArray = this.ITR_JSON.taxPaid?.onSalary;
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    salaryArray.push(this.createForm(item));
+
+    if (salaryJsonArray?.length > 0) {
+      salaryArray.push(this.createForm(item));
+    }
   }
 
   deleteSalaryArray() {

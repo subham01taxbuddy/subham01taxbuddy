@@ -143,9 +143,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         [Validators.required],
       ],
       tradeName: [income?.tradeName || null, [Validators.required]],
-      receipts: [income?.incomes[0]?.receipts || null, [Validators.required]],
+      receipts: [income?.incomes[0]?.receipts || 0, [Validators.required]],
       presumptiveIncome: [
-        income?.incomes[0]?.presumptiveIncome || null,
+        income?.incomes[0]?.presumptiveIncome || 0,
         [Validators.required, Validators.min(this.amountFifty)],
       ],
     });
@@ -572,8 +572,36 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         }
       );
     } else {
-      this.loading = false;
-      this.presProfessionalSaved.emit(false);
+      const profIncomeArray = this.getProfIncomeArray;
+
+      // check if any recipt or presumptive income is 0 and remove that
+      profIncomeArray.controls.forEach((element, index) => {
+        if (
+          (element.value.receipts === 0 || element.value.receipts === '0') &&
+          (element.value.presumptiveIncome === 0 ||
+            element.value.presumptiveIncome === '0')
+        ) {
+          profIncomeArray.removeAt(index);
+        }
+      });
+
+      // once removed check if all are not 0
+      const allNonZero = profIncomeArray.controls.every((element) => {
+        return (
+          element.value.receipts !== 0 || element.value.presumptiveIncome !== 0
+        );
+      });
+
+      //  if every value is non-zero then call function again
+      if (allNonZero && this.profIncomeForm.valid) {
+        this.onContinue();
+        this.loading = false;
+        this.utilsService.smoothScrollToTop();
+        this.presProfessionalSaved.emit(true);
+      } else {
+        this.presProfessionalSaved.emit(false);
+        this.loading = false;
+      }
     }
 
     // let presBusinessIncome = [];

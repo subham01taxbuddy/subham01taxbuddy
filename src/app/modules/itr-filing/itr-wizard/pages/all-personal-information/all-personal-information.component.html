@@ -13,7 +13,8 @@
           Customer Profile
         </mat-panel-title>
         <div class="card__row edit clearfix isShow">
-          <button *ngIf="false"
+          <button
+            *ngIf="false"
             class="edit_btn"
             (click)="$event.stopPropagation(); editForm('customer')"
           >
@@ -21,9 +22,11 @@
           </button>
         </div>
       </mat-expansion-panel-header>
-      <app-customer-profile (saveAndNext)="checkSuccess(0)"
+      <app-customer-profile
+        (saveAndNext)="checkSuccess(0)"
         [navigationData]="navigationData"
         [isEditCustomer]="isEditCustomer"
+        (customerProfileSaved)="onCustomerProfileSaved($event)"
       ></app-customer-profile>
     </mat-expansion-panel>
 
@@ -39,7 +42,8 @@
           Personal Details
         </mat-panel-title>
         <div class="card__row edit clearfix isShow">
-          <button *ngIf="false"
+          <button
+            *ngIf="false"
             class="edit_btn"
             (click)="$event.stopPropagation(); editForm('personal')"
           >
@@ -47,8 +51,10 @@
           </button>
         </div>
       </mat-expansion-panel-header>
-      <app-personal-information (saveAndNext)="checkSuccess(1)"
+      <app-personal-information
+        (saveAndNext)="checkSuccess(1)"
         [isEditPersonal]="isEditPersonal"
+        (personalInfoSaved)="onPersonalInfoSaved($event)"
       ></app-personal-information>
     </mat-expansion-panel>
 
@@ -64,7 +70,8 @@
           Other Information
         </mat-panel-title>
         <div class="card__row edit clearfix isShow">
-          <button *ngIf="false"
+          <button
+            *ngIf="false"
             class="edit_btn"
             (click)="$event.stopPropagation(); editForm('other')"
           >
@@ -72,8 +79,10 @@
           </button>
         </div>
       </mat-expansion-panel-header>
-      <app-other-information (saveAndNext)="checkSuccess(2)"
+      <app-other-information
+        (saveAndNext)="checkSuccess(2)"
         [isEditOther]="isEditOther"
+        (otherInfoSaved)="onotherInfoSaved($event)"
       ></app-other-information>
     </mat-expansion-panel>
   </mat-accordion>
