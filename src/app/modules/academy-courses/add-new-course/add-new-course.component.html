@@ -8,7 +8,7 @@
     <form [formGroup]="courseForm">
       <div class="row">
         <div class="col-sm-6">
-          <mat-label>Course Name</mat-label>
+          <mat-label>Course Name <span class="text-danger">*</span></mat-label>
           <mat-form-field appearance="outline" class="class1">
             <input matInput placeholder="Enter Course Name" formControlName="courseName" required>
             <mat-error *ngIf="courseForm.controls['courseName'].hasError('required')"> Please Enter Course
@@ -16,10 +16,10 @@
           </mat-form-field>
         </div>
         <div class="col-sm-6">
-          <mat-label>Topics</mat-label>
+          <mat-label>Topics <span class="text-danger">*</span></mat-label>
           <mat-form-field appearance="outline" class="class1">
             <input matInput placeholder="Enter topics" formControlName="topics" required>
-            <mat-error *ngIf="courseForm.controls['courseName'].hasError('required')"> Please Enter Topics</mat-error>
+            <mat-error *ngIf="courseForm.controls['topics'].hasError('required')"> Please Enter Topics</mat-error>
           </mat-form-field>
         </div>
 
@@ -27,7 +27,7 @@
       </div>
       <div class="row">
         <div class="col-sm-6">
-          <mat-label>Start Date</mat-label>
+          <mat-label>Start Date <span class="text-danger">*</span></mat-label>
           <mat-form-field appearance="outline" class="class1">
             <input matInput formControlName="startDate" [min]="today" [matDatepicker]="picker1" autocomplete="off">
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -37,26 +37,27 @@
           </mat-form-field>
         </div>
         <div class="col-sm-6">
-          <mat-label>Time</mat-label>
+          <mat-label>Time <span class="text-danger">*</span></mat-label>
           <mat-form-field appearance="outline">
             <input matInput [ngxTimepicker]="picker2" id="timepicker-example-1" #timeInput
               placeholder="Please select time..." name="time-1" formControlName="time" required [disableClick]="false">
             <ngx-material-timepicker-toggle matSuffix [for]="picker2">
             </ngx-material-timepicker-toggle>
             <ngx-material-timepicker #picker2 [format]="12" [enableKeyboardInput]="false"></ngx-material-timepicker>
+            <mat-error *ngIf="courseForm.controls['time'].hasError('required')">please Select time </mat-error>
           </mat-form-field>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12">
-          <mat-label>WhatsApp Link</mat-label>
+          <mat-label>WhatsApp Link <span class="text-danger">*</span></mat-label>
           <mat-form-field appearance="outline" class="class1">
             <input matInput placeholder="Enter WhatsApp Link" formControlName="whatsAppLink" required>
             <mat-error *ngIf="courseForm.controls['whatsAppLink'].hasError('required')">Enter WhatsApp Link</mat-error>
           </mat-form-field>
         </div>
         <div class="col-sm-12">
-          <mat-label>Zoom Link</mat-label>
+          <mat-label>Zoom Link <span class="text-danger">*</span></mat-label>
           <mat-form-field appearance="outline" class="class1">
             <input matInput placeholder="Enter Zoom Call Link" formControlName="zoomLink" required>
             <mat-error *ngIf="courseForm.controls['zoomLink'].hasError('required')">Enter Zoom call Link</mat-error>
@@ -66,14 +67,14 @@
       </div>
       <div class="row">
         <div class="col-sm-6">
-          <mat-label>Meeting ID</mat-label>
+          <mat-label>Meeting ID <span class="text-danger">*</span></mat-label>
           <mat-form-field appearance="outline" class="class1">
             <input matInput placeholder="Enter Meeting Id" formControlName="meetingId" required>
             <mat-error *ngIf="courseForm.controls['meetingId'].hasError('required')">Enter Meeting Id</mat-error>
           </mat-form-field>
         </div>
         <div class="col-sm-6">
-          <mat-label>Pass Code</mat-label>
+          <mat-label>Pass Code <span class="text-danger">*</span></mat-label>
           <mat-form-field appearance="outline" class="class1">
             <input matInput placeholder="Enter Pass Code" formControlName="passCode" required>
             <mat-error *ngIf="courseForm.controls['passCode'].hasError('required')">Enter Pass Code</mat-error>
