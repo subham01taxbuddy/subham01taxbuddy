@@ -1,0 +1,32 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
+<div class="mrgArdTog">
+  <div>
+    <button class="new-add mvRth1 new-add-tp-spc width-1" (click)="addCourse()"><i aria-hidden="true"
+        class="fa fa-plus"></i> Add Course </button>
+  </div>
+</div>
+
+<div class="main clearfix">
+  <!-- Table Below -->
+  <div class="tableSpc">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="txTit">
+          Academy Course Details:
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="count1"> Total Count: <span class="txClr1">{{totalCount}}</span></div>
+      </div>
+    </div>
+    <table>
+      <tr *ngFor="let item of courseInfo | paginate : config"></tr>
+    </table>
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="academyCoursesGridOptions">
+    </ag-grid-angular>
+    <div *ngIf="totalCount > 1">
+      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    </div>
+  </div>
+</div>
