@@ -31,6 +31,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { RowGroupingDisplayType } from 'ag-grid-community';
 import { TcsComponent } from '../../components/tcs/tcs.component';
 import { AdvanceTaxPaidComponent } from '../../components/advance-tax-paid/advance-tax-paid.component';
+import {TdsTypeCellRenderer} from "./tds-type-cell-renderer";
+import {param} from "jquery";
 
 @Component({
   selector: 'app-taxes-paid',
@@ -52,11 +54,11 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   isAddTcs: number;
   isAddAdvance: number;
   allTdsDetails: GridOptions;
+  public groupDisplayType: RowGroupingDisplayType = 'groupRows';
   onSalary: any = [];
   isTaxesPaid: Number;
   @Input() taxPaid: TaxPaid;
   assetList: any;
-  public groupDisplayType: RowGroupingDisplayType = 'groupRows';
 
   constructor(
     public utilsService: UtilsService,
@@ -75,9 +77,18 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       rowData: this.tdsDetailCreateRowData(),
       columnDefs: this.tdsDetailCreateColumnDef(),
       enableCellChangeFlash: true,
-      // enableCellTextSelection: true,
-      // rowSelection: 'multiple',
+      enableCellTextSelection: true,
+      rowSelection: 'multiple',
+      isRowSelectable: (params) => {
+        return !params.data.isFullWidth;
+      },
       onGridReady: (params) => {},
+      isFullWidthRow: (params) => {
+        // return isFullWidth(params.rowNode.data);
+        return params.rowNode.data.isFullWidth;
+      },
+      // see AG Grid docs cellRenderer for details on how to build cellRenderers
+      fullWidthCellRenderer: TdsTypeCellRenderer,
       onSelectionChanged: (event) => {
         event.api.getSelectedRows().forEach((row) => {
           row.hasEdit = true;
@@ -91,7 +102,6 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       sortable: true,
       pagination: true,
       paginationPageSize: 20,
-      groupDisplayType: 'singleColumn',
     };
     this.allTdsDetails.api?.setRowData(this.assetList);
   }
@@ -100,7 +110,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     this.getItrDocuments();
   }
 
-  editTaxesPaid(type, index?) {
+  editTaxesPaid(type, index?){
     if (type === 'tdsOnSalary') {
       const dialogRef = this.matDialog.open(TdsOnSalaryComponent, {
         data: {
@@ -118,6 +128,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           if (index != null) {
             this.taxPaid?.onSalary?.push(result.cgObject.salaryArray[index]);
           }
+          this.tdsDetailCreateRowData();
         }
       });
     } else if (type === 'tdsOtherThanSalary16A') {
@@ -139,6 +150,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
             this.taxPaid?.otherThanSalary16A?.push(
               result?.cgObject?.salaryArray[index]
             );
+            this.tdsDetailCreateRowData();
           }
         }
       });
@@ -161,6 +173,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
             this.taxPaid?.otherThanSalary26QB?.push(
               result?.cgObject?.salaryArray[index]
             );
+            this.tdsDetailCreateRowData();
           }
         }
       });
@@ -180,6 +193,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         if (result !== undefined) {
           if (index != null) {
             this.taxPaid?.tcs?.push(result?.cgObject?.salaryArray[index]);
+            this.tdsDetailCreateRowData();
           }
         }
       });
@@ -201,6 +215,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
             this.taxPaid?.otherThanTDSTCS?.push(
               result?.cgObject?.salaryArray[index]
             );
+            this.tdsDetailCreateRowData();
           }
         }
       });
@@ -217,23 +232,57 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     dialogRefSelect.afterClosed().subscribe((result) => {
-      this.editTaxesPaid(result, index);
+
+        if (result !== undefined) {
+          if (result.type === 'tdsOnSalary') {
+            this.taxPaid?.onSalary?.push(result.cgObject.salaryArray[0]);
+          }
+          if (result.type === 'tdsOtherThanSalary16A') {
+            this.taxPaid?.otherThanSalary16A?.push(result.cgObject.salaryArray[0]);
+          }
+          if (result.type === 'tdsOtherThanSalaryPanBased') {
+            this.taxPaid?.otherThanSalary26QB?.push(result.cgObject.onSalary[0]);
+          }
+          if (result.type === 'tcs') {
+            this.taxPaid?.tcs?.push(result.cgObject.salaryArray[0]);
+          }
+          if (result.type === 'selfAssessment') {
+            this.taxPaid?.otherThanTDSTCS?.push(result.cgObject.salaryArray[0]);
+          }
+          this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
+        }
     });
     this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
   }
 
   tdsDetailCreateRowData() {
+    let counter = 0;
     this.assetList = [];
+    if(this.taxPaid?.onSalary.length > 0) {
+      this.assetList.push({
+        isFullWidth: true,
+        tdsType: 'TDS On Salary'
+      });
+    }
     this.taxPaid?.onSalary?.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
+      copy.isFullWidth = false;
       copy.hasEdit = false;
       // set tds Type
       copy.tdsType = 'TDS On Salary';
       copy.tdsCode = 'tdsOnSalary';
       this.assetList.push(copy);
+      copy.index = counter++;
     });
 
+    counter = 0;
+    if(this.taxPaid?.otherThanSalary16A.length > 0) {
+      this.assetList.push({
+        isFullWidth: true,
+        tdsType: 'TDS Other than Salary'
+      });
+    }
     this.taxPaid?.otherThanSalary16A?.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
@@ -242,8 +291,16 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       copy.tdsType = 'TDS Other than Salary';
       copy.tdsCode = 'tdsOtherThanSalary16A';
       this.assetList.push(copy);
+      copy.index = counter++;
     });
 
+    counter = 0;
+    if(this.taxPaid?.otherThanSalary26QB.length > 0) {
+      this.assetList.push({
+        isFullWidth: true,
+        tdsType: 'TDS other than salary (panBased) 26QB'
+      });
+    }
     this.taxPaid?.otherThanSalary26QB?.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
@@ -258,8 +315,16 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       delete copy.deductorPAN;
 
       this.assetList.push(copy);
+      copy.index = counter++;
     });
 
+    counter = 0;
+    if(this.taxPaid?.otherThanTDSTCS.length > 0) {
+      this.assetList.push({
+        isFullWidth: true,
+        tdsType: 'Self assessment or Advance tax'
+      });
+    }
     this.taxPaid?.otherThanTDSTCS?.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
@@ -282,8 +347,16 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       copy.tdsType = 'Self assessment or Advance tax';
       copy.tdsCode = 'selfAssessment';
       this.assetList.push(copy);
+      copy.index = counter++;
     });
 
+    counter = 0;
+    if(this.taxPaid?.tcs.length > 0) {
+      this.assetList.push({
+        isFullWidth: true,
+        tdsType: 'TCS'
+      });
+    }
     this.taxPaid?.tcs?.forEach((asset) => {
       let copy: any = {};
       Object.assign(copy, asset);
@@ -303,21 +376,23 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       delete copy.totalAmountPaid;
       delete copy.totalTcsDeposited;
       this.assetList.push(copy);
+      copy.index = counter++;
     });
     return this.assetList;
   }
 
   tdsDetailCreateColumnDef() {
     return [
-      {
-        headerName: 'TDS Type',
-        field: 'tdsType',
-        rowGroup: true,
-      },
+      // {
+      //   headerName: 'TDS Type',
+      //   field: 'tdsType',
+      //   rowGroup: true,
+      // },
       {
         field: '',
         headerCheckboxSelection: true,
         width: 80,
+        pinned: 'left',
         checkboxSelection: (params) => {
           return true;
         },
@@ -342,6 +417,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       {
         headerName: 'Name / BSR Code',
         field: 'deductorName',
+        width: 120,
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
@@ -351,6 +427,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       {
         headerName: 'Total Amount Credited / Date of Deposit',
         field: 'totalAmountCredited',
+        width: 120,
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
@@ -360,6 +437,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       {
         headerName: 'Total TDS deposited',
         field: 'totalTdsDeposited',
+        width: 120,
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
@@ -405,7 +483,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           break;
         }
         case 'edit': {
-          this.editTaxesPaid(params.data.tdsCode, params.rowIndex);
+          this.editTaxesPaid(params.data.tdsCode, params.data.index);
           break;
         }
       }

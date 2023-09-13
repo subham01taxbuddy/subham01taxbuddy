@@ -130,6 +130,7 @@ export class TcsComponent implements OnInit {
       let result = {
         cgObject: this.salaryForm.value,
         rowIndex: this.data.rowIndex,
+        type:'tcs'
       };
       this.dialogRef.close(result);
 
