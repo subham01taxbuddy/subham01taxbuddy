@@ -62,13 +62,13 @@ export class AddNewCourseComponent implements OnInit {
     console.log('data from add button', this.data);
     this.courseForm = this.fb.group({
       courseName: ['', Validators.required],
-      topics: [''],
-      whatsAppLink: [''],
+      topics: ['',Validators.required],
+      whatsAppLink: ['',Validators.required],
       startDate: [new Date(), Validators.required],
-      time: [''],
-      zoomLink: [''],
-      meetingId: [''],
-      passCode: [''],
+      time: ['',Validators.required],
+      zoomLink: ['',Validators.required],
+      meetingId: ['',Validators.required],
+      passCode: ['',Validators.required],
     });
   }
 
@@ -107,6 +107,8 @@ export class AddNewCourseComponent implements OnInit {
           this.utilsService.showSnackBar('Error in API of get course list');
         }
       );
+    }else {
+      this._toastMessageService.alert("error", "Please add all required values")
     }
   }
 }
