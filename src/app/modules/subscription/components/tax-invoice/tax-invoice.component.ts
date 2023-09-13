@@ -6,7 +6,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { GridApi, GridOptions } from 'ag-grid-community';
+import { GridApi, GridOptions, ICellRendererParams } from 'ag-grid-community';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,6 +17,7 @@ import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { ActivatedRoute } from "@angular/router";
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
@@ -128,12 +129,25 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
         this.gridApi = params.api;
       },
       sortable: true,
+      defaultColDef: {
+        resizable: true,
+        cellRendererFramework: AgTooltipComponent,
+        cellRendererParams: (params: ICellRendererParams) => {
+          this.formatToolTip(params.data);
+        },
+      },
     };
     this.config = {
       itemsPerPage: this.searchParam.pageSize,
       currentPage: 1,
       totalItems: null,
     };
+  }
+
+  formatToolTip(params: any) {
+    let temp = params.value;
+    const lineBreak = false;
+    return { temp, lineBreak };
   }
 
   cardTitle: any;
@@ -657,7 +671,8 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
           inovicePreparedBy: userInvoices[i].inovicePreparedBy,
           invoiceAssignedTo: userInvoices[i].invoiceAssignedTo,
           ifaLeadClient: userInvoices[i].ifaLeadClient,
-          total: userInvoices[i].total
+          total: userInvoices[i].total,
+          razorpayReferenceId: this.utilService.isNonEmpty(userInvoices[i].razorpayReferenceId) ? userInvoices[i].razorpayReferenceId : '-',
         })
       invoices.push(updateInvoice)
     }
@@ -904,6 +919,14 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
           return filer;
         }
 
+      },
+
+      {
+        headerName: 'Payment Gateway Receipt ID',
+        field: 'razorpayReferenceId',
+        width: 250,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
       },
 
       {
