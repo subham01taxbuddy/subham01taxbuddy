@@ -111,7 +111,7 @@ export class TdsOnSalaryComponent implements OnInit {
         this.salaryForm.controls['salaryArray'] as FormArray
       ).getRawValue();
 
-      this.Copy_ITR_JSON.taxPaid.onSalary.push(salaryArray[0]);
+      // this.Copy_ITR_JSON.taxPaid.onSalary.push(salaryArray[0]);
 
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
