@@ -544,7 +544,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   }
 
   onContinue() {
-    if (this.assetLiabilitiesForm.valid && this.natOfBusinessDtlForm.valid) {
+    if (this.assetLiabilitiesForm.valid || this.natOfBusinessDtlForm.valid) {
       this.loading = true;
       this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
