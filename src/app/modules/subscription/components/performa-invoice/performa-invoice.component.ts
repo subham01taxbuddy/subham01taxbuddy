@@ -1096,6 +1096,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
       switch (actionType) {
         case 'mail-reminder': {
           this.sendMailReminder(params.data);
+          this.sendWhatsAppReminder(params.data);
           break;
         }
         case 'download-invoice': {
@@ -1164,6 +1165,32 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
         this._toastMessageService.alert(
           'error',
           'Failed to send Mail Reminder.'
+        );
+      }
+    );
+  }
+
+  sendWhatsAppReminder(data){
+    // https://api.taxbuddy.com/itr/invoice/send-invoice-whatsapp?txbdyInvoiceId=60429
+    this.loading = true;
+    const param =`/invoice/send-invoice-whatsapp?txbdyInvoiceId=${data.txbdyInvoiceId}`
+    this.itrService.getMethod(param).subscribe(
+      (result: any) => {
+        this.loading = false;
+        we_track('Send Reminder', {
+          'User number ': data.phone,
+        });
+        console.log('WhatsAPP sent response: ', result);
+        this._toastMessageService.alert(
+          'success',
+          'WhatsApp Reminder sent successfully.'
+        );
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert(
+          'error',
+          'Failed to send WhatsApp Reminder.'
         );
       }
     );

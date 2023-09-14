@@ -181,6 +181,14 @@ export class SidebarComponent{
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
+    {
+      name: 'Academy Courses',
+      // iconClass: 'fa fa-code',
+      active: true,
+      url: '/academy-courses',
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+      submenu: []
+    },
 
     {
       name: 'Reports',

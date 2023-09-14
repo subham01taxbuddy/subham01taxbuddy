@@ -9963,3 +9963,7 @@ body[dir=rtl] .checkbox[checked=true] {
   font-weight: 600;
   border-radius: 5px;
 }
+
+.timepicker-overlay{
+  z-index : 9999 !important;
+}

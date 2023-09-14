@@ -46,6 +46,7 @@
     "ngx-doc-viewer": "2.1.2",
     "ngx-image-zoom": "~1.0.1",
     "ngx-loading": "^13.0.0",
+    "ngx-material-timepicker": "^13.1.1",
     "ngx-pagination": "^5.1.1",
     "pdfjs-dist": "~2.11.338",
     "rxjs": "~7.4.0",
