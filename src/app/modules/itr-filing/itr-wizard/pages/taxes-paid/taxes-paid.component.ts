@@ -73,6 +73,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(
+      sessionStorage.getItem(AppConstants.ITR_JSON)
+    );
     let taxPaidData = this.ITR_JSON.taxPaid;
     if (taxPaidData) {
       this.taxPaid = taxPaidData;
@@ -147,6 +150,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         if (result !== undefined) {
           if (index != null) {
             this.taxPaid.onSalary[index] = result.cgObject.salaryArray[0];
+            this.Copy_ITR_JSON.taxPaid = this.taxPaid;
           }
           this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
           this.saveAll();
@@ -169,6 +173,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         if (result !== undefined) {
           if (index != null) {
             this.taxPaid.otherThanSalary16A[index] = result?.cgObject?.salaryArray[0];
+            this.Copy_ITR_JSON.taxPaid = this.taxPaid;
             this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
             this.saveAll();
           }
@@ -191,6 +196,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         if (result !== undefined) {
           if (index != null) {
             this.taxPaid.otherThanSalary26QB[index] = result?.cgObject?.salaryArray[0];
+            this.Copy_ITR_JSON.taxPaid = this.taxPaid;
             this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
             this.saveAll();
           }
@@ -212,6 +218,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         if (result !== undefined) {
           if (index != null) {
             this.taxPaid.tcs[index] = result?.cgObject?.salaryArray[0];
+            this.Copy_ITR_JSON.taxPaid = this.taxPaid;
             this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
             this.saveAll();
           }
@@ -233,6 +240,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         if (result !== undefined) {
           if (index != null) {
             this.taxPaid.otherThanTDSTCS[index] = result?.cgObject?.salaryArray[0];
+            this.Copy_ITR_JSON.taxPaid = this.taxPaid;
             this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
             this.saveAll();
           }
@@ -293,6 +301,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       copy.tdsCode = 'tdsOnSalary';
       this.assetList.push(copy);
       copy.index = counter++;
+      copy.srNo = copy.index;
     });
 
     counter = 0;
@@ -311,6 +320,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       copy.tdsCode = 'tdsOtherThanSalary16A';
       this.assetList.push(copy);
       copy.index = counter++;
+      copy.srNo = copy.index;
     });
 
     counter = 0;
@@ -335,6 +345,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
 
       this.assetList.push(copy);
       copy.index = counter++;
+      copy.srNo = copy.index;
     });
 
     counter = 0;
@@ -367,6 +378,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       copy.tdsCode = 'selfAssessment';
       this.assetList.push(copy);
       copy.index = counter++;
+      copy.srNo = copy.index;
     });
 
     counter = 0;
@@ -396,6 +408,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       delete copy.totalTcsDeposited;
       this.assetList.push(copy);
       copy.index = counter++;
+      copy.srNo = copy.index;
     });
     return this.assetList;
   }
@@ -529,27 +542,26 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     );
 
     if (filteredArray && filteredArray.length > 0) {
-      filteredArray.forEach((element, index) => {
-        if (element.tdsType === 'TDS On Salary') {
-          this.taxPaid.onSalary.splice(element.index, 1);
-        }
+      let filtered = this.taxPaid.onSalary.filter(item => !filteredArray.filter(element => element.tdsType === 'TDS On Salary').map(element => element.srNo).includes(parseInt(item.srNo)));
+      console.log(filtered);
+      this.taxPaid.onSalary = filtered;
 
-        if (element.tdsType === 'TDS Other than Salary') {
-          this.taxPaid.otherThanSalary16A.splice(element.index, 1);
-        }
+      let filtered1 = this.taxPaid.otherThanSalary16A.filter(item => !filteredArray.filter(element => element.tdsType === 'TDS Other than Salary').map(element => element.srNo).includes(parseInt(item.srNo)));
+      console.log(filtered1);
+      this.taxPaid.otherThanSalary16A = filtered1;
 
-        if (element.tdsType === 'TDS other than salary (panBased) 26QB') {
-          this.taxPaid.otherThanSalary26QB.splice(element.index, 1);
-        }
+      let filtered2 = this.taxPaid.otherThanSalary26QB.filter(item => !filteredArray.filter(element => element.tdsType === 'TDS other than salary (panBased) 26QB').map(element => element.srNo).includes(parseInt(item.srNo)));
+      console.log(filtered2);
+      this.taxPaid.otherThanSalary26QB = filtered2;
 
-        if (element.tdsType === 'Self assessment or Advance tax') {
-          this.taxPaid.otherThanTDSTCS.splice(element.index, 1);
-        }
+      let filtered3 = this.taxPaid.otherThanTDSTCS.filter(item => !filteredArray.filter(element => element.tdsType === 'Self assessment or Advance tax').map(element => element.srNo).includes(parseInt(item.srNo)));
+      console.log(filtered3);
+      this.taxPaid.otherThanTDSTCS = filtered3;
 
-        if (element.tdsType === 'TCS') {
-          this.taxPaid.tcs.splice(element.index, 1);
-        }
-      });
+      let filtered4 = this.taxPaid.tcs.filter(item => !filteredArray.filter(element => element.tdsType === 'TCS').map(element => element.srNo).includes(parseInt(item.srNo)));
+      console.log(filtered4);
+      this.taxPaid.tcs = filtered4;
+
     }
 
     console.log(this.taxPaid);
@@ -564,10 +576,6 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
 
   saveAll() {
     this.loading = true;
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(
-      sessionStorage.getItem(AppConstants.ITR_JSON)
-    );
 
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
       (result: ITR_JSON) => {

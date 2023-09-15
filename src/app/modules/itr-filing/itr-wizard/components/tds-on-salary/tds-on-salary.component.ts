@@ -62,8 +62,12 @@ export class TdsOnSalaryComponent implements OnInit {
   }
 
   createForm(item?): FormGroup {
+    if(this.data.assetIndex !== null && item){
+      item.srNo = this.data.assetIndex;
+    }
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
+      srNo: [item ? item.srNo : this.Copy_ITR_JSON.taxPaid?.onSalary.length],
       deductorTAN: [
         item ? item.deductorTAN : '',
         [Validators.required, Validators.pattern(AppConstants.tanNumberRegex)],
