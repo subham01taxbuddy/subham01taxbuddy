@@ -2412,31 +2412,30 @@ export class PersonalInformationComponent implements OnInit {
         this.utilsService.getPanDetails(pan, this.ITR_JSON.userId)
           .subscribe((result: any) => {
             console.log('user data by PAN = ', result);
-            this.customerProfileForm.controls['firstName'].setValue(
-              this.titlecasePipe.transform(
-                this.utilsService.isNonEmpty(result.firstName)
-                  ? result.firstName
-                  : ''
-              )
-            );
-            this.customerProfileForm.controls['lastName'].setValue(
-              this.titlecasePipe.transform(
-                this.utilsService.isNonEmpty(result.lastName)
-                  ? result.lastName
-                  : ''
-              )
-            );
-            this.customerProfileForm.controls['middleName'].setValue(
-              this.titlecasePipe.transform(
-                this.utilsService.isNonEmpty(result.middleName)
-                  ? result.middleName
-                  : ''
-              )
-            );
-            if (result.isValid !== 'EXISTING AND VALID') {
-              this.utilsService.showSnackBar(
-                'Record (PAN) Not Found in ITD Database/Invalid PAN'
+            if(result.isValid && result.isValid === 'EXISTING AND VALID') {
+              this.customerProfileForm.controls['firstName'].setValue(
+                this.titlecasePipe.transform(
+                  this.utilsService.isNonEmpty(result.firstName)
+                    ? result.firstName
+                    : ''
+                )
               );
+              this.customerProfileForm.controls['lastName'].setValue(
+                this.titlecasePipe.transform(
+                  this.utilsService.isNonEmpty(result.lastName)
+                    ? result.lastName
+                    : ''
+                )
+              );
+              this.customerProfileForm.controls['middleName'].setValue(
+                this.titlecasePipe.transform(
+                  this.utilsService.isNonEmpty(result.middleName)
+                    ? result.middleName
+                    : ''
+                )
+              );
+            } else {
+              this.utilsService.showSnackBar(result.isValid);
             }
           });
       }
