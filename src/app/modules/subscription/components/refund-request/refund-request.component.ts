@@ -14,6 +14,7 @@ import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import { ReviewService } from 'src/app/modules/review/services/review.service';
 
 @Component({
   selector: 'app-refund-request',
@@ -67,11 +68,17 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
     private router: Router,
     private utilService: UtilsService,
     private cacheManager: CacheManager,
+    private reviewService: ReviewService,
     @Inject(LOCALE_ID) private locale: string
   ) {
+    let roles = this.utilsService.getUserRoles();
+    let show : boolean;
+    if(roles.includes('ROLE_LEADER')){
+      show =true;
+    }
     this.refundListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.refundCreateColumnDef(),
+      columnDefs: show ? this.refundCreateColumnDef('leader') : this.refundCreateColumnDef('reg'),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -260,7 +267,8 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
     }
   }
 
-  refundCreateColumnDef() {
+  refundCreateColumnDef(view) {
+    console.log('view=',view)
     return [
       // {
       //   field: 'selection',
@@ -490,6 +498,35 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
           };
         },
       },
+      {
+        headerName: 'Initiate refund',
+        hide: view === 'leader' ? false : true,
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          if(params.data.status === 'IN_PROGRESS'){
+            return `<button type="button" class="action_icon add_button" title="Initiate refund for this user"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;">
+              <i class="fa fa-undo" aria-hidden="true" data-action-type="initiate-refund"></i>
+             </button>`;
+          }else{
+            return '-'
+          }
+
+        },
+        width: 85,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
     ];
   }
    public rowSelection: 'single';
@@ -514,6 +551,7 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
         invoiceAmount: this.utilsService.isNonEmpty(subscriptionData[i].invoiceAmount) ? subscriptionData[i].invoiceAmount : '-',
         payableRefundAmount: this.utilsService.isNonEmpty(subscriptionData[i].payableRefundAmount) ? subscriptionData[i].payableRefundAmount : '-',
         refundPaidAmount: this.utilsService.isNonEmpty(subscriptionData[i].refundPaidAmount) ? subscriptionData[i].refundPaidAmount : '-',
+        status : this.utilsService.isNonEmpty(subscriptionData[i].status) ? subscriptionData[i].status : '-',
       });
     }
     return newData;
@@ -529,6 +567,10 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
         }
         case 'open-chat': {
           this.openChat(params.data);
+          break;
+        }
+        case 'initiate-refund': {
+          this.initiateRefund(params.data);
           break;
         }
       }
@@ -589,6 +631,32 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
     disposable.afterClosed().subscribe(result => {
     });
 
+  }
+
+  initiateRefund(data){
+    //https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/payment/razorpay/refund'
+    this.loading = true;
+    let param = `payment/razorpay/refund`;
+
+    const request = {
+      invoiceNo:data.invoiceNo
+    };
+    this.reviewService.postMethod(param, request).subscribe(
+      (response: any) => {
+        if (response.success) {
+          this.loading = false;
+          console.log('response', response);
+          this.utilsService.showSnackBar(response.message);
+        } else {
+          this.utilsService.showSnackBar(response.message);
+          this.loading = false;
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Error in API of Initiate Refund ');
+      }
+    );
   }
 
   ngOnDestroy() {
