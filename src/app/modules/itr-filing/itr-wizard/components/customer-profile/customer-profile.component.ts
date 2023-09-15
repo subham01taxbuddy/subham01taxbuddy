@@ -491,39 +491,39 @@ export class CustomerProfileComponent implements OnInit {
       case this.PAN_INFO: {
         let result = res.result;
         console.log('user data by PAN = ', result);
-        this.customerProfileForm.controls['firstName'].setValue(
-          this.titlecasePipe.transform(
-            this.utilsService.isNonEmpty(result.firstName)
-              ? result.firstName
-              : ''
-          )
-        );
-        this.customerProfileForm.controls['lastName'].setValue(
-          this.titlecasePipe.transform(
-            this.utilsService.isNonEmpty(result.lastName) ? result.lastName : ''
-          )
-        );
-        this.customerProfileForm.controls['middleName'].setValue(
-          this.titlecasePipe.transform(
-            this.utilsService.isNonEmpty(result.middleName)
-              ? result.middleName
-              : ''
-          )
-        );
-        //1988-11-28 to DD/MM/YYYY
-        //this.datePipe.transform(dob,"dd/MM/yyyy")
-        let pan = this.customerProfileForm.controls['panNumber'].value;
-        let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
-        this.customerProfileForm.controls['dateOfBirth'].setValue(
-          moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()
-        );
-        this.customerProfileForm.controls['assesseeType'].setValue(
-          this.utilsService.findAssesseeType(pan)
-        );
-        if (result.isValid !== 'EXISTING AND VALID') {
-          this.utilsService.showSnackBar(
-            'Record (PAN) Not Found in ITD Database/Invalid PAN'
+        if(result.isValid && result.isValid === 'EXISTING AND VALID'){
+
+          this.customerProfileForm.controls['firstName'].setValue(
+            this.titlecasePipe.transform(
+              this.utilsService.isNonEmpty(result.firstName)
+                ? result.firstName
+                : ''
+            )
           );
+          this.customerProfileForm.controls['lastName'].setValue(
+            this.titlecasePipe.transform(
+              this.utilsService.isNonEmpty(result.lastName) ? result.lastName : ''
+            )
+          );
+          this.customerProfileForm.controls['middleName'].setValue(
+            this.titlecasePipe.transform(
+              this.utilsService.isNonEmpty(result.middleName)
+                ? result.middleName
+                : ''
+            )
+          );
+          //1988-11-28 to DD/MM/YYYY
+          //this.datePipe.transform(dob,"dd/MM/yyyy")
+          let pan = this.customerProfileForm.controls['panNumber'].value;
+          let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
+          this.customerProfileForm.controls['dateOfBirth'].setValue(
+            moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()
+          );
+          this.customerProfileForm.controls['assesseeType'].setValue(
+            this.utilsService.findAssesseeType(pan)
+          );
+        } else {
+          this.utilsService.showSnackBar(result.isValid);
         }
       }
     }
