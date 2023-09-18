@@ -567,64 +567,65 @@
             </mat-form-field>
           </div>
           <div *ngIf="checkBuyDateBefore31stJan(selectedFormGroup) && this.bondType === 'listed'">
-            <div class="col-sm-4 spsTp">
-              <mat-label>ISIN Code</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  formControlName="isinCode"
-                  placeholder="ISIN Code"
-                  name="isinCode"
-                  (blur)="calculateFMV(selectedFormGroup)"
-                  (change)="calculateFMV(selectedFormGroup)"
-                />
-                <mat-hint style="font-size: 75%"
-                >If ISIN Code is not available, you can enter
-                  INNOTREQUIRD</mat-hint
-                >
-              </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-              <mat-label>FMV Per Unit as on 31st Jan 2018</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  formControlName="fmvAsOn31Jan2018"
-                  placeholder="FMV"
-                  name="fmvAsOn31Jan2018"
-                  (change)="calculateTotalCG(selectedFormGroup)"
-                />
-              </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-              <mat-label>Cost of acquisition </mat-label>
+            <div class="row">
+              <div class="col-sm-4 spsTp">
+                <mat-label>ISIN Code</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    formControlName="isinCode"
+                    placeholder="ISIN Code"
+                    name="isinCode"
+                    (blur)="calculateFMV(selectedFormGroup)"
+                    (change)="calculateFMV(selectedFormGroup)"
+                  />
+                  <mat-hint style="font-size: 75%"
+                  >If ISIN Code is not available, you can enter
+                    INNOTREQUIRD</mat-hint
+                  >
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
+                <mat-label>FMV Per Unit as on 31st Jan 2018</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    formControlName="fmvAsOn31Jan2018"
+                    placeholder="FMV"
+                    name="fmvAsOn31Jan2018"
+                    (change)="calculateTotalCG(selectedFormGroup)"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
+                <mat-label>Cost of acquisition </mat-label>
 
-              <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  formControlName="grandFatheredValue"
-                  placeholder="GrandFathered Value "
-                  name="grandFatheredValue"
-                  maxlength="14"
-                  matTooltip="Cost of acquisition(as per grandfathering)"
-                  matTooltipClass="tab-tooltip"
-                  matTooltipPosition="above"
-                  readonly
-                  (change)="calculateTotalCG(selectedFormGroup)"
-                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                />
-                <mat-hint style="font-size: 75%"
-                >As per grandfathering</mat-hint
-                >
-                <mat-error
-                  *ngIf="
-                          selectedFormGroup.get('grandFatheredValue').hasError('pattern')
-                        "
-                >Enter valid amount.</mat-error
-                >
-              </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    formControlName="grandFatheredValue"
+                    placeholder="GrandFathered Value "
+                    name="grandFatheredValue"
+                    maxlength="14"
+                    matTooltip="Cost of acquisition(as per grandfathering)"
+                    matTooltipClass="tab-tooltip"
+                    matTooltipPosition="above"
+                    readonly
+                    (change)="calculateTotalCG(selectedFormGroup)"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  />
+                  <mat-hint style="font-size: 75%"
+                  >As per grandfathering</mat-hint
+                  >
+                  <mat-error
+                    *ngIf="
+                            selectedFormGroup.get('grandFatheredValue').hasError('pattern')
+                          "
+                  >Enter valid amount.</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
               <mat-label>Gain Amount*</mat-label>
               <mat-form-field appearance="outline">
                 <input
@@ -644,6 +645,7 @@
                 >
               </mat-form-field>
             </div>
+            </div>
           </div>
         </div>
       </div>
@@ -653,7 +655,7 @@
           <button
             type="submit"
             class="tbd-btn save-btn mvRth"
-            (click)="save()">
+            (click)="addDialogRef.close(this.selectedFormGroup.value)">
             Save
           </button>
         </div>
