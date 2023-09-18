@@ -446,7 +446,8 @@ export class ItrValidationService {
 
           // Business decription - nature of business required if some business income is present and itr type is 3
           if (
-            obj[key]?.profitLossACIncomes?.length > 0 ||
+            //Ashwini: this condition needs to be changed
+            // obj[key]?.profitLossACIncomes?.length > 0 ||
             obj[key]?.presumptiveIncomes?.length > 0
           ) {
             if (natOfBusiness?.length === 0) {
