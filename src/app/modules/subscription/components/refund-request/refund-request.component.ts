@@ -15,6 +15,7 @@ import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-refund-request',
@@ -39,6 +40,7 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
   loggedInUserRoles: any;
   isOwner: boolean;
   dataOnLoad = true;
+  dialogRef: any;
 
   invoiceFormGroup: FormGroup = this.fb.group({
 
@@ -635,27 +637,39 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
 
   initiateRefund(data){
     //https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/payment/razorpay/refund'
-    this.loading = true;
-    let param = `payment/razorpay/refund`;
 
-    const request = {
-      invoiceNo:data.invoiceNo
-    };
-    this.reviewService.postMethod(param, request).subscribe(
-      (response: any) => {
-        if (response.success) {
-          this.loading = false;
-          console.log('response', response);
-          this.utilsService.showSnackBar(response.message);
-        } else {
-          this.utilsService.showSnackBar(response.message);
-          this.loading = false;
-        }
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Initiate Refund Request!',
+        message: 'Are you sure you want to Initiate Refund Request for this invoice ?',
       },
-      (error) => {
-        this.loading = false;
-        this.utilsService.showSnackBar('Error in API of Initiate Refund ');
+    });
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result === 'YES') {
+        this.loading = true;
+        let param = `payment/razorpay/refund`;
+
+        const request = {
+          invoiceNo:data.invoiceNo
+        };
+        this.reviewService.postMethod(param, request).subscribe(
+          (response: any) => {
+            if (response.success) {
+              this.loading = false;
+              console.log('response', response);
+              this.utilsService.showSnackBar(response.message);
+            } else {
+              this.utilsService.showSnackBar(response.message);
+              this.loading = false;
+            }
+          },
+          (error) => {
+            this.loading = false;
+            this.utilsService.showSnackBar('Error in API of Initiate Refund ');
+          }
+        );
       }
+    }
     );
   }
 
