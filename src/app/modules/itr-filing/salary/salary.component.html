@@ -258,11 +258,41 @@
                   {{ income.value.label }}
                 </td>
 
-                <td>
+                <td *ngIf="income.value.allowType === 'COMPENSATION_ON_VRS'">
+                  <div>
+                    Whether Exemption u/s 10(10C) is taken in Previous Assessment Year ??<br>
+                    <mat-radio-group [formControl]="allowanceFormGroup.get('vrsLastYear') | formControlType"
+                    (change)="updateVrsExemptionTaken()">
+                      <mat-radio-button [value]="true">Yes</mat-radio-button>
+                      <mat-radio-button [value]="false">No</mat-radio-button>
+                    </mat-radio-group><br>
+                    Where any relief u/s 89 has been allowed to an assessee for any assessment year<br>
+                    in respect of any amount on his voluntary retirement or termination of service?<br>
+                    <mat-radio-group [formControl]="allowanceFormGroup.get('sec89') | formControlType"
+                    (change)="updateVrsExemptionTaken()">
+                      <mat-radio-button [value]="true">Yes</mat-radio-button>
+                      <mat-radio-button [value]="false">No</mat-radio-button>
+                    </mat-radio-group><br>
+                  </div>
                   <mat-form-field
                     class="input-field-width"
-                    style="width: 90% !important"
-                  >
+                    style="width: 90% !important">
+                    <input
+                      type="number"
+                      trim
+                      matInput
+                      placeholder=""
+                      name="allowValue[i]"
+                      formControlName="allowValue"
+                      class="input-field"
+                      [disabled]="isVrsExemptionTaken"
+                    />
+                  </mat-form-field>
+                </td>
+                <td *ngIf="income.value.allowType !== 'COMPENSATION_ON_VRS'">
+                  <mat-form-field
+                    class="input-field-width"
+                    style="width: 90% !important">
                     <input
                       type="text"
                       trim

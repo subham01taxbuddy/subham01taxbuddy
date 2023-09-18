@@ -98,6 +98,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     {
       id: null,
       seqNum: 10,
+      value: 'COMPENSATION_ON_VRS',
+      label: 'Voluntary Retirement/ Termination u/s 10(10C)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 11,
       value: 'ANY_OTHER',
       label: 'Any Other Allowance',
       detailed: false,
@@ -211,6 +218,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     }
   }
 
+  isVrsExemptionTaken = false;
+
+  updateVrsExemptionTaken(){
+    this.isVrsExemptionTaken = this.allowanceFormGroup.controls['vrsLastYear'].value || this.allowanceFormGroup.controls['sec89'].value;
+    this.allowanceFormGroup.updateValueAndValidity();
+  }
+
   tabChanged() {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -294,13 +308,27 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       if (this.allowanceDropdown[i].value === 'CHILDREN_EDUCATION') {
         validators = Validators.max(2400);
       }
-      data.push(
-        this.fb.group({
-          label: this.allowanceDropdown[i].label,
-          allowType: this.allowanceDropdown[i].value,
-          allowValue: [null, validators],
-        })
-      );
+      if (this.allowanceDropdown[i].value === 'COMPENSATION_ON_VRS') {
+        validators = Validators.max(500000);
+      }
+      let allowedEmpTypes = ['CENTRAL_GOVT', 'GOVERNMENT', 'PRIVATE']
+      if(allowedEmpTypes.includes(this.ITR_JSON.employerCategory) && this.allowanceDropdown[i].value === 'COMPENSATION_ON_VRS') {
+        data.push(
+          this.fb.group({
+            label: this.allowanceDropdown[i].label,
+            allowType: this.allowanceDropdown[i].value,
+            allowValue: [null, validators],
+          })
+        );
+      } else if(this.allowanceDropdown[i].value !== 'COMPENSATION_ON_VRS') {
+        data.push(
+          this.fb.group({
+            label: this.allowanceDropdown[i].label,
+            allowType: this.allowanceDropdown[i].value,
+            allowValue: [null, validators],
+          })
+        );
+      }
     }
     return this.fb.array(data);
   }
@@ -311,10 +339,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     let allowanceArray = this.createAllowanceArray();
     if (type === 2 || type === 3) {
       return this.fb.group({
+        vrsLastYear: [false],
+        sec89: [false],
         allowances: allowanceArray,
       });
     } else {
       return this.fb.group({
+        vrsLastYear: [false],
+        sec89: [false],
         allowances: allowanceArray,
       });
     }
