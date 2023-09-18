@@ -90,6 +90,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     },
     {
       id: null,
+      seqNum: 9,
+      value: 'NON_MONETARY_PERQUISITES',
+      label: 'Non Monetary Perquisites u/s10(10C)',
+      detailed: false,
+    },
+    {
+      id: null,
       seqNum: 10,
       value: 'ANY_OTHER',
       label: 'Any Other Allowance',
@@ -398,6 +405,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         'salaryDetails'
       ] as FormArray;
 
+      let perquisitesAmount = 0;
       for (let i = 0; i < salaryDetails.controls.length; i++) {
         let salary = salaryDetails.controls[i] as FormGroup;
         if (
@@ -412,6 +420,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             // totalSalExempt = totalSalExempt + Number(this.salaryGridOptions.rowData[i].exemptAmount);
           }
           if (salary.controls['salaryType'].value === 'SEC17_2') {
+            perquisitesAmount = salary.controls['salaryValue'].value;
             this.localEmployer.perquisites.push({
               perquisiteType: 'SEC17_2',
               taxableAmount: Number(salary.controls['salaryValue'].value),
@@ -441,6 +450,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           this.allowanceFormGroup.controls['allowances'] as FormArray
         ).controls[i] as FormGroup;
         if (this.utilsService.isNonZero(allowance.value.allowValue)) {
+          if(allowance.controls['allowType'].value === 'NON_MONETARY_PERQUISITES' &&
+            (allowance.controls['allowValue'].value !== 0 && perquisitesAmount === 0)){
+            this.utilsService.showSnackBar(
+              'Non Monetary Perquisites u/s10(10C) is allowed only for Perquisites - Salary 17(2)');
+            return;
+          }
           this.localEmployer.allowance.push({
             allowanceType: allowance.controls['allowType'].value,
             taxableAmount: 0,
