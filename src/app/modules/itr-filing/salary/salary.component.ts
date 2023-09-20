@@ -90,7 +90,21 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     },
     {
       id: null,
+      seqNum: 9,
+      value: 'NON_MONETARY_PERQUISITES',
+      label: 'Non Monetary Perquisites u/s10(10C)',
+      detailed: false,
+    },
+    {
+      id: null,
       seqNum: 10,
+      value: 'COMPENSATION_ON_VRS',
+      label: 'Voluntary Retirement/ Termination u/s 10(10C)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 11,
       value: 'ANY_OTHER',
       label: 'Any Other Allowance',
       detailed: false,
@@ -204,6 +218,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     }
   }
 
+  isVrsExemptionTaken = false;
+
+  updateVrsExemptionTaken(){
+    this.isVrsExemptionTaken = this.allowanceFormGroup.controls['vrsLastYear'].value || this.allowanceFormGroup.controls['sec89'].value;
+    this.allowanceFormGroup.updateValueAndValidity();
+  }
+
   tabChanged() {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -287,13 +308,27 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       if (this.allowanceDropdown[i].value === 'CHILDREN_EDUCATION') {
         validators = Validators.max(2400);
       }
-      data.push(
-        this.fb.group({
-          label: this.allowanceDropdown[i].label,
-          allowType: this.allowanceDropdown[i].value,
-          allowValue: [null, validators],
-        })
-      );
+      if (this.allowanceDropdown[i].value === 'COMPENSATION_ON_VRS') {
+        validators = Validators.max(500000);
+      }
+      let allowedEmpTypes = ['CENTRAL_GOVT', 'GOVERNMENT', 'PRIVATE']
+      if(allowedEmpTypes.includes(this.ITR_JSON.employerCategory) && this.allowanceDropdown[i].value === 'COMPENSATION_ON_VRS') {
+        data.push(
+          this.fb.group({
+            label: this.allowanceDropdown[i].label,
+            allowType: this.allowanceDropdown[i].value,
+            allowValue: [null, validators],
+          })
+        );
+      } else if(this.allowanceDropdown[i].value !== 'COMPENSATION_ON_VRS') {
+        data.push(
+          this.fb.group({
+            label: this.allowanceDropdown[i].label,
+            allowType: this.allowanceDropdown[i].value,
+            allowValue: [null, validators],
+          })
+        );
+      }
     }
     return this.fb.array(data);
   }
@@ -304,10 +339,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     let allowanceArray = this.createAllowanceArray();
     if (type === 2 || type === 3) {
       return this.fb.group({
+        vrsLastYear: [false],
+        sec89: [false],
         allowances: allowanceArray,
       });
     } else {
       return this.fb.group({
+        vrsLastYear: [false],
+        sec89: [false],
         allowances: allowanceArray,
       });
     }
@@ -398,6 +437,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         'salaryDetails'
       ] as FormArray;
 
+      let perquisitesAmount = 0;
       for (let i = 0; i < salaryDetails.controls.length; i++) {
         let salary = salaryDetails.controls[i] as FormGroup;
         if (
@@ -412,6 +452,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             // totalSalExempt = totalSalExempt + Number(this.salaryGridOptions.rowData[i].exemptAmount);
           }
           if (salary.controls['salaryType'].value === 'SEC17_2') {
+            perquisitesAmount = salary.controls['salaryValue'].value;
             this.localEmployer.perquisites.push({
               perquisiteType: 'SEC17_2',
               taxableAmount: Number(salary.controls['salaryValue'].value),
@@ -441,6 +482,19 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           this.allowanceFormGroup.controls['allowances'] as FormArray
         ).controls[i] as FormGroup;
         if (this.utilsService.isNonZero(allowance.value.allowValue)) {
+          if(allowance.controls['allowType'].value === 'NON_MONETARY_PERQUISITES' &&
+            (allowance.controls['allowValue'].value !== 0 && perquisitesAmount === 0)){
+            this.utilsService.showSnackBar(
+              'Non Monetary Perquisites u/s10(10C) is allowed only for Perquisites - Salary 17(2)');
+            return;
+          }
+          if(allowance.controls['allowType'].value === 'COMPENSATION_ON_VRS' &&
+            (allowance.controls['allowValue'].value !== 0
+              && (this.allowanceFormGroup.controls['vrsLastYear'].value === true || this.allowanceFormGroup.controls['sec89'].value === true))){
+            this.utilsService.showSnackBar(
+              'VRS exemption cannot be claimed again in this year');
+            return;
+          }
           this.localEmployer.allowance.push({
             allowanceType: allowance.controls['allowType'].value,
             taxableAmount: 0,
