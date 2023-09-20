@@ -488,6 +488,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
               'Non Monetary Perquisites u/s10(10C) is allowed only for Perquisites - Salary 17(2)');
             return;
           }
+          if(allowance.controls['allowType'].value === 'COMPENSATION_ON_VRS' &&
+            (allowance.controls['allowValue'].value !== 0
+              && (this.allowanceFormGroup.controls['vrsLastYear'].value === true || this.allowanceFormGroup.controls['sec89'].value === true))){
+            this.utilsService.showSnackBar(
+              'VRS exemption cannot be claimed again in this year');
+            return;
+          }
           this.localEmployer.allowance.push({
             allowanceType: allowance.controls['allowType'].value,
             taxableAmount: 0,
