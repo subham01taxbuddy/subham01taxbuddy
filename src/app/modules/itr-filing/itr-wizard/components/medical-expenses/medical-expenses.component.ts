@@ -1,11 +1,7 @@
 import {
   Component,
   OnInit,
-  Input,
-  Output,
-  EventEmitter,
   DoCheck,
-  SimpleChanges,
 } from '@angular/core';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -20,8 +16,6 @@ declare let $: any;
   styleUrls: ['./medical-expenses.component.scss'],
 })
 export class MedicalExpensesComponent implements OnInit, DoCheck {
-  @Output() saveAndNext = new EventEmitter<any>();
-  @Output() medicalExpensesSaved = new EventEmitter<boolean>();
 
   loading: boolean = false;
   investmentDeductionForm: FormGroup;
@@ -404,7 +398,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         this.utilsService.showSnackBar(
           'Medical expenses for parents cannot exceed 50000'
         );
-        this.medicalExpensesSaved.emit(false);
         return;
       }
     } else {
@@ -422,7 +415,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         this.utilsService.showSnackBar(
           'Medical expenses for parents cannot exceed 25000'
         );
-        this.medicalExpensesSaved.emit(false);
         return;
       }
     }
@@ -441,7 +433,6 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       this.utilsService.showSnackBar(
         'Medical expenses for self cannot exceed 25000'
       );
-      this.medicalExpensesSaved.emit(false);
       return;
     }
 
@@ -579,26 +570,9 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)
       );
-      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-        (result: ITR_JSON) => {
-          this.ITR_JSON = result;
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_JSON)
-          );
-
-          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          this.loading = false;
-          this.medicalExpensesSaved.emit(true);
-        },
-        (error) => {
-          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          this.loading = false;
-          this.medicalExpensesSaved.emit(false);
-        }
-      );
     } else {
       $('input.ng-invalid').first().focus();
     }
+    this.loading = false;
   }
 }
