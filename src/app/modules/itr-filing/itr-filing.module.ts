@@ -94,6 +94,7 @@ import { OldVsNewComponent } from './itr-wizard/components/old-vs-new/old-vs-new
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { SelectionComponent } from './itr-wizard/pages/taxes-paid/selection-component/selection-component.component';
 import {TdsTypeCellRenderer} from "./itr-wizard/pages/taxes-paid/tds-type-cell-renderer";
+import { ScheduleFsiComponent } from './itr-wizard/pages/schedule-fsi/schedule-fsi.component';
 
 @NgModule({
   imports: [
@@ -206,7 +207,8 @@ import {TdsTypeCellRenderer} from "./itr-wizard/pages/taxes-paid/tds-type-cell-r
     ScheduleCflComponent,
     OldVsNewComponent,
     SelectionComponent,
-    TdsTypeCellRenderer
+    TdsTypeCellRenderer,
+    ScheduleFsiComponent
   ],
 
   exports: [CustomerProfileComponent],

@@ -47,6 +47,7 @@ import { ProfitLossAcComponent } from './business-income/profit-loss-ac/profit-l
 import { ScheduleCflComponent } from './itr-wizard/pages/schedule-cfl/schedule-cfl.component';
 import { OldVsNewComponent } from './itr-wizard/components/old-vs-new/old-vs-new.component';
 import { ValidationErrorScreenComponent } from '../shared/components/validation-error-screen/validation-error-screen.component';
+import { ScheduleFsiComponent } from './itr-wizard/pages/schedule-fsi/schedule-fsi.component';
 
 const routes: Routes = [
   {
@@ -108,6 +109,9 @@ const routes: Routes = [
         children: [
           { path: 'schedule-al', component: ScheduleALComponent },
           { path: 'schedule-cfl', component: ScheduleCflComponent },
+          { path: 'schedule-fsi', component: ScheduleFsiComponent },
+          { path: 'schedule-tr', component: ScheduleCflComponent },
+          { path: 'schedule-fa', component: ScheduleCflComponent },
         ],
       },
       { path: 'nri', component: ForeignIncomeComponent },

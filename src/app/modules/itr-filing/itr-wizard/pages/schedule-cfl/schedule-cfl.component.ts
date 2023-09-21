@@ -2,14 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { ITR_JSON, PastYearLosses } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import {
+  ITR_JSON,
+  PastYearLosses,
+} from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-schedule-cfl',
   templateUrl: './schedule-cfl.component.html',
-  styleUrls: ['./schedule-cfl.component.scss']
+  styleUrls: ['./schedule-cfl.component.scss'],
 })
 export class ScheduleCflComponent extends WizardNavigation implements OnInit {
   loading = false;
@@ -20,32 +23,92 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
   today: any;
   scheduleCflArray = [
     {
-      hasEdit: '', assessmentPastYear: '2015-16', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
+      hasEdit: '',
+      assessmentPastYear: '2015-16',
+      dateofFilling: '',
+      housePropertyLoss: 0,
+      broughtForwordBusinessLoss: 0,
+      STCGLoss: 0,
+      LTCGLoss: 0,
+      speculativeBusinessLoss: 0,
     },
     {
-      hasEdit: '', assessmentPastYear: '2016-17', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
+      hasEdit: '',
+      assessmentPastYear: '2016-17',
+      dateofFilling: '',
+      housePropertyLoss: 0,
+      broughtForwordBusinessLoss: 0,
+      STCGLoss: 0,
+      LTCGLoss: 0,
+      speculativeBusinessLoss: 0,
     },
     {
-      hasEdit: '', assessmentPastYear: '2017-18', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
+      hasEdit: '',
+      assessmentPastYear: '2017-18',
+      dateofFilling: '',
+      housePropertyLoss: 0,
+      broughtForwordBusinessLoss: 0,
+      STCGLoss: 0,
+      LTCGLoss: 0,
+      speculativeBusinessLoss: 0,
     },
     {
-      hasEdit: '', assessmentPastYear: '2018-19', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
-    }, {
-      hasEdit: '', assessmentPastYear: '2019-20', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
-    }, {
-      hasEdit: '', assessmentPastYear: '2020-21', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
-    }, {
-      hasEdit: '', assessmentPastYear: '2021-22', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
-    }, {
-      hasEdit: '', assessmentPastYear: '2022-23', dateofFilling: '', housePropertyLoss: 0, broughtForwordBusinessLoss: 0, STCGLoss: 0, LTCGLoss: 0, speculativeBusinessLoss: 0
-    }
-  ]
+      hasEdit: '',
+      assessmentPastYear: '2018-19',
+      dateofFilling: '',
+      housePropertyLoss: 0,
+      broughtForwordBusinessLoss: 0,
+      STCGLoss: 0,
+      LTCGLoss: 0,
+      speculativeBusinessLoss: 0,
+    },
+    {
+      hasEdit: '',
+      assessmentPastYear: '2019-20',
+      dateofFilling: '',
+      housePropertyLoss: 0,
+      broughtForwordBusinessLoss: 0,
+      STCGLoss: 0,
+      LTCGLoss: 0,
+      speculativeBusinessLoss: 0,
+    },
+    {
+      hasEdit: '',
+      assessmentPastYear: '2020-21',
+      dateofFilling: '',
+      housePropertyLoss: 0,
+      broughtForwordBusinessLoss: 0,
+      STCGLoss: 0,
+      LTCGLoss: 0,
+      speculativeBusinessLoss: 0,
+    },
+    {
+      hasEdit: '',
+      assessmentPastYear: '2021-22',
+      dateofFilling: '',
+      housePropertyLoss: 0,
+      broughtForwordBusinessLoss: 0,
+      STCGLoss: 0,
+      LTCGLoss: 0,
+      speculativeBusinessLoss: 0,
+    },
+    {
+      hasEdit: '',
+      assessmentPastYear: '2022-23',
+      dateofFilling: '',
+      housePropertyLoss: 0,
+      broughtForwordBusinessLoss: 0,
+      STCGLoss: 0,
+      LTCGLoss: 0,
+      speculativeBusinessLoss: 0,
+    },
+  ];
   constructor(
     public fb: FormBuilder,
     private utilsService: UtilsService,
-    private itrMsService: ItrMsService,
+    private itrMsService: ItrMsService
   ) {
-    super()
+    super();
     this.today = new Date();
   }
 
@@ -53,19 +116,17 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-
     this.cflForm = this.initForm();
-
 
     this.pastYearLosses = this.ITR_JSON.pastYearLosses;
     if (this.pastYearLosses) {
-      this.pastYearLosses.forEach(obj => {
+      this.pastYearLosses.forEach((obj) => {
         this.addMore(obj);
       });
     }
     if (!this.pastYearLosses || this.pastYearLosses.length == 0) {
       this.pastYearLosses = [];
-      this.scheduleCflArray.forEach(obj => {
+      this.scheduleCflArray.forEach((obj) => {
         this.addMore(obj);
       });
     }
@@ -76,10 +137,17 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
   disableSILoss() {
     const cflArray = <FormArray>this.cflForm.get('cflArray');
     cflArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['assessmentPastYear'].value === '2015-16' || (element as FormGroup).controls['assessmentPastYear'].value === '2016-17' || (element as FormGroup).controls['assessmentPastYear'].value === '2017-18') {
+      if (
+        (element as FormGroup).controls['assessmentPastYear'].value ===
+          '2015-16' ||
+        (element as FormGroup).controls['assessmentPastYear'].value ===
+          '2016-17' ||
+        (element as FormGroup).controls['assessmentPastYear'].value ===
+          '2017-18'
+      ) {
         (element as FormGroup).controls['speculativeBusinessLoss'].disable();
       }
-    })
+    });
   }
 
   initForm() {
@@ -89,7 +157,7 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
       totalSIBusinessLoss: [0],
       totalSTCGLoss: [0],
       totalLTCGLoss: [0],
-      cflArray: this.fb.array([])
+      cflArray: this.fb.array([]),
     });
   }
 
@@ -100,33 +168,53 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
       assessmentPastYear: [item ? item.assessmentPastYear : ''],
       dateofFilling: [item ? item.dateofFilling : null],
       housePropertyLoss: [item ? item.housePropertyLoss : null],
-      broughtForwordBusinessLoss: [item ? item.broughtForwordBusinessLoss : null],
+      broughtForwordBusinessLoss: [
+        item ? item.broughtForwordBusinessLoss : null,
+      ],
       STCGLoss: [item ? item.STCGLoss : null],
       LTCGLoss: [item ? item.LTCGLoss : null],
       speculativeBusinessLoss: [item ? item.speculativeBusinessLoss : 0],
-      setOffWithCurrentYearSpeculativeBusinessIncome: [item ? item.setOffWithCurrentYearSpeculativeBusinessIncome : null],
-      setOffWithCurrentYearBroughtForwordBusinessIncome: [item ? item.setOffWithCurrentYearBroughtForwordBusinessIncome : null],
-      setOffWithCurrentYearHPIncome: [item ? item.setOffWithCurrentYearHPIncome : null],
-      setOffWithCurrentYearSTCGIncome: [item ? item.setOffWithCurrentYearSTCGIncome : null],
-      setOffWithCurrentYearLTCGIncome: [item ? item.setOffWithCurrentYearLTCGIncome : null],
-      carryForwardAmountBusiness: [item ? item.carryForwardAmountBusiness : null],
-      carryForwardAmountSpeculative: [item ? item.carryForwardAmountSpeculative : null],
+      setOffWithCurrentYearSpeculativeBusinessIncome: [
+        item ? item.setOffWithCurrentYearSpeculativeBusinessIncome : null,
+      ],
+      setOffWithCurrentYearBroughtForwordBusinessIncome: [
+        item ? item.setOffWithCurrentYearBroughtForwordBusinessIncome : null,
+      ],
+      setOffWithCurrentYearHPIncome: [
+        item ? item.setOffWithCurrentYearHPIncome : null,
+      ],
+      setOffWithCurrentYearSTCGIncome: [
+        item ? item.setOffWithCurrentYearSTCGIncome : null,
+      ],
+      setOffWithCurrentYearLTCGIncome: [
+        item ? item.setOffWithCurrentYearLTCGIncome : null,
+      ],
+      carryForwardAmountBusiness: [
+        item ? item.carryForwardAmountBusiness : null,
+      ],
+      carryForwardAmountSpeculative: [
+        item ? item.carryForwardAmountSpeculative : null,
+      ],
       carryForwardAmountHP: [item ? item.carryForwardAmountHP : null],
-      carryForwardAmountSTCGIncome: [item ? item.carryForwardAmountSTCGIncome : null],
-      carryForwardAmountLTCGIncome: [item ? item.carryForwardAmountLTCGIncome : null],
-      totalLoss: [item ? item.totalLoss : null]
+      carryForwardAmountSTCGIncome: [
+        item ? item.carryForwardAmountSTCGIncome : null,
+      ],
+      carryForwardAmountLTCGIncome: [
+        item ? item.carryForwardAmountLTCGIncome : null,
+      ],
+      totalLoss: [item ? item.totalLoss : null],
     });
   }
 
-
   editForm(i) {
-    ((this.cflForm.controls['cflArray'] as FormGroup).controls[i] as FormGroup).enable();
+    (
+      (this.cflForm.controls['cflArray'] as FormGroup).controls[i] as FormGroup
+    ).enable();
   }
 
   get getCflArray() {
     return <FormArray>this.cflForm.get('cflArray');
   }
-
 
   addMore(item?) {
     const cflArray = <FormArray>this.cflForm.get('cflArray');
@@ -137,11 +225,15 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     const cflArray = <FormArray>this.cflForm.get('cflArray');
     cflArray.controls.forEach((element, index) => {
       if ((element as FormGroup).controls['hasEdit'].value) {
-        let assessmentPastYear = (element as FormGroup).controls['assessmentPastYear'].value;
+        let assessmentPastYear = (element as FormGroup).controls[
+          'assessmentPastYear'
+        ].value;
         (element as FormGroup).reset();
-        (element as FormGroup).controls['assessmentPastYear'].setValue(assessmentPastYear);
+        (element as FormGroup).controls['assessmentPastYear'].setValue(
+          assessmentPastYear
+        );
       }
-    })
+    });
     this.calculateTotalLosses();
   }
 
@@ -153,24 +245,32 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     let totalLTCGLoss = 0;
 
     const cflArray = this.cflForm.get('cflArray').value;
-    cflArray.forEach(element => {
+    cflArray.forEach((element) => {
       totalHPLoss += Number(element.housePropertyLoss);
       totalBFBusinessLoss += Number(element.broughtForwordBusinessLoss);
       totalSTCGLoss += Number(element.STCGLoss);
 
-      if (element.assessmentPastYear === '2018-19' || element.assessmentPastYear === '2019-20' || element.assessmentPastYear === '2020-21' || element.assessmentPastYear === '2021-22') {
-       totalSIBusinessLoss += Number(element.speculativeBusinessLoss);
+      if (
+        element.assessmentPastYear === '2018-19' ||
+        element.assessmentPastYear === '2019-20' ||
+        element.assessmentPastYear === '2020-21' ||
+        element.assessmentPastYear === '2021-22'
+      ) {
+        totalSIBusinessLoss += Number(element.speculativeBusinessLoss);
       } else {
-        totalSIBusinessLoss = 0
+        totalSIBusinessLoss = 0;
       }
       totalLTCGLoss += Number(element.LTCGLoss);
       this.cflForm.controls['totalHPLoss'].setValue(totalHPLoss);
-      this.cflForm.controls['totalBFBusinessLoss'].setValue(totalBFBusinessLoss);
-      this.cflForm.controls['totalSIBusinessLoss'].setValue(totalSIBusinessLoss);
+      this.cflForm.controls['totalBFBusinessLoss'].setValue(
+        totalBFBusinessLoss
+      );
+      this.cflForm.controls['totalSIBusinessLoss'].setValue(
+        totalSIBusinessLoss
+      );
       this.cflForm.controls['totalSTCGLoss'].setValue(totalSTCGLoss);
       this.cflForm.controls['totalLTCGLoss'].setValue(totalLTCGLoss);
-    })
-
+    });
   }
 
   save() {
@@ -182,12 +282,21 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     const cflArrays = this.cflForm.get('cflArray').value;
 
     cflArrays.forEach((element) => {
-      if (element.dateofFilling && (element.LTCGLoss == 0 && element.STCGLoss == 0 && element.broughtForwordBusinessLoss == 0 && element.housePropertyLoss == 0 && element.speculativeBusinessLoss == 0)) {
+      if (
+        element.dateofFilling &&
+        element.LTCGLoss == 0 &&
+        element.STCGLoss == 0 &&
+        element.broughtForwordBusinessLoss == 0 &&
+        element.housePropertyLoss == 0 &&
+        element.speculativeBusinessLoss == 0
+      ) {
         isError = true;
       }
     });
     if (isError) {
-      this.utilsService.showSnackBar('If date of filing is present then any one of the loss should be required.');
+      this.utilsService.showSnackBar(
+        'If date of filing is present then any one of the loss should be required.'
+      );
       this.utilsService.smoothScrollToTop();
       return;
     }
@@ -196,20 +305,24 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     this.Copy_ITR_JSON.pastYearLosses = [];
     this.Copy_ITR_JSON.pastYearLosses = cflArray.getRawValue();
     this.loading = true;
-    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe((result: any) => {
-      this.ITR_JSON = result;
-      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-      this.loading = false;
-      this.utilsService.showSnackBar('Schedule CFL updated successfully');
-      console.log('Schedule CFL=', result);
-      this.utilsService.smoothScrollToTop();
-    }, error => {
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      this.loading = false;
-      this.utilsService.showSnackBar('Failed to add schedule CFL, please try again.');
-      this.utilsService.smoothScrollToTop();
-    });
-
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+      (result: any) => {
+        this.ITR_JSON = result;
+        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+        this.utilsService.showSnackBar('Schedule CFL updated successfully');
+        console.log('Schedule CFL=', result);
+        this.utilsService.smoothScrollToTop();
+      },
+      (error) => {
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'Failed to add schedule CFL, please try again.'
+        );
+        this.utilsService.smoothScrollToTop();
+      }
+    );
   }
 
   goBack() {
@@ -220,5 +333,4 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     this.save();
     this.saveAndNext.emit(true);
   }
-
 }
