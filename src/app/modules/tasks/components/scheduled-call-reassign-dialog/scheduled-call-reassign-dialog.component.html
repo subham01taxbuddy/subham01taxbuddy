@@ -1,0 +1,16 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<label style="font-size: 18px;
+font-weight: bold;">Re-Assign Scheduled Call for: {{data.allData.userName}}</label><button style="float: right;"
+  mat-dialog-close tabindex="-1" class="tbd-btn-close close"><i class="fa fa-times" aria-hidden="true"></i></button>
+<div>Scheduled call time : {{data.allData.scheduleCallTime | date:'d/M/yy,  h:mm a':'UTC'}}</div>
+  <div class="row spsTp bdrTp">
+  <!-- <label style="font-size: 14px;font-weight:normal; color:red;"> * Please select Both Owner And filer Name </label> -->
+  <div class="col-sm-9">
+    <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL"
+    [showOnlyOwnerList]=true>
+    </app-sme-list-drop-down>
+  </div>
+  <div class="col-sm-3">
+    <button class="tbd-btn save-btn spsTp2" (click)="reAssign()" [disabled]="loading || disableReAssign">Re-Assign Call</button>
+  </div>
+</div>
