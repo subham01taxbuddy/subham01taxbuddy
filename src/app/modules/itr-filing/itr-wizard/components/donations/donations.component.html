@@ -193,6 +193,22 @@
             >
           </mat-form-field>
         </div>
+
+        <div class="col-sm-3 spsTp" *ngIf="type === '80g' && donation.get('schemeCode').value === 'FND_SEC80G'">
+          <mat-label>Donation Reference Number</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="identifier"
+              matInput
+              currencyMask
+              placeholder="Donation Reference Number"
+              name="identifier[i]"
+              class="input-field"
+              type="text"
+              trim/>
+          </mat-form-field>
+        </div>
+
         <div class="col-sm-3 spsTp">
           <mat-label>City of Donee*</mat-label>
           <mat-form-field appearance="outline">
