@@ -48,6 +48,7 @@ import { ScheduleCflComponent } from './itr-wizard/pages/schedule-cfl/schedule-c
 import { OldVsNewComponent } from './itr-wizard/components/old-vs-new/old-vs-new.component';
 import { ValidationErrorScreenComponent } from '../shared/components/validation-error-screen/validation-error-screen.component';
 import { ScheduleFsiComponent } from './itr-wizard/pages/schedule-fsi/schedule-fsi.component';
+import { ScheduleTrComponent } from './itr-wizard/pages/schedule-tr/schedule-tr.component';
 
 const routes: Routes = [
   {
@@ -110,7 +111,7 @@ const routes: Routes = [
           { path: 'schedule-al', component: ScheduleALComponent },
           { path: 'schedule-cfl', component: ScheduleCflComponent },
           { path: 'schedule-fsi', component: ScheduleFsiComponent },
-          { path: 'schedule-tr', component: ScheduleCflComponent },
+          { path: 'schedule-tr', component: ScheduleTrComponent },
           { path: 'schedule-fa', component: ScheduleCflComponent },
         ],
       },

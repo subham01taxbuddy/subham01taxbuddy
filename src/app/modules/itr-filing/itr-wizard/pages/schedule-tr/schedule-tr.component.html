@@ -1,0 +1,135 @@
+<form [formGroup]="scheduleTrForm">
+  <div class="mrgArdSpcBlw">
+    <div class="txtTitle">
+      Schedule TR - Summary of tax relief claimed for taxes paid outside India
+      (Only for residents)
+    </div>
+    <div class="row cardBack">
+      <div class="table-responsive">
+        <table class="table" style="border: 1px solid #bdc3c7">
+          <thead class="table-header">
+            <tr class="table-head">
+              <th>Sr. No</th>
+              <th>Details of tax relief claimed</th>
+            </tr>
+          </thead>
+          <thead class="table-header">
+            <tr class="table-head">
+              <th>Country Code</th>
+              <th>Tax Identification Number</th>
+              <th>Total taxes paid outside India</th>
+              <th>Total tax relief available</th>
+              <th>Section under which relief claimed</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="trArray">
+            <tr
+              class="tds-on"
+              *ngFor="let fsi of getTrArray.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-select
+                    name="countryCode[i]"
+                    formControlName="countryCode"
+                    maxlength="55"
+                    minlength="1"
+                    placeholder="Country Code"
+                    readOnly
+                  >
+                  </mat-select>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="tinNumber[i]"
+                    formControlName="tinNumber"
+                    placeholder="Tax Identification Number"
+                    readOnly
+                  />
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="totalTxsPaidOutInd[i]"
+                    formControlName="totalTxsPaidOutInd"
+                    placeholder="Total Tax paid outside India"
+                    readOnly
+                  />
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="totalTxsRlfAvlbl[i]"
+                    formControlName="totalTxsRlfAvlbl"
+                    placeholder="Total tax relief available"
+                    readOnly
+                  />
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="section[i]"
+                    formControlName="section"
+                    placeholder="Section"
+                  />
+                </mat-form-field>
+              </td>
+            </tr>
+          </tbody>
+          <thead class="table-header">
+            <tr class="table-head">
+              <th>Total</th>
+              <th>Total taxes paid</th>
+              <th>Total tax relief</th>
+            </tr>
+          </thead>
+          <hr />
+          <thead class="table-header">
+            <tr class="table-head">
+              2. Total tax relief available in respect of country where DTAA is
+              applicable (section 90/90A)
+            </tr>
+          </thead>
+          <hr />
+          <thead class="table-header">
+            <tr class="table-head">
+              3. Total tax relief available in respect of country where DTAA is
+              not applicable (section 91)
+            </tr>
+          </thead>
+          <hr />
+          <thead class="table-header">
+            <tr class="table-head">
+              4. Whether any tax paid outside India, on which tax relief was
+              allowed in India, has been refunded/credited by the foreign tax
+              authority during the year?
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+
+    <div class="flex justify-between p-[30px] back-foot">
+      <button class="lgtBtn">
+        <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
+        <span class="font-semibold" (click)="goBack()"
+          >&nbsp;Back to More Info List</span
+        >
+      </button>
+
+      <button class="saveBtnIn">
+        <span class="font-semibold" (click)="saveAll()">Save All</span>
+      </button>
+    </div>
+  </div>
+</form>
