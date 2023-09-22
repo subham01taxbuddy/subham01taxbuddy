@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-schedule-tr',
   templateUrl: './schedule-tr.component.html',
@@ -8,12 +8,14 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 })
 export class ScheduleTrComponent implements OnInit {
   scheduleTrForm: FormGroup;
+  selectedOption: string;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private location: Location) {}
 
   ngOnInit(): void {
     this.scheduleTrForm = this.initForm();
     this.add();
+    this.selectedOption = 'no';
   }
 
   initForm() {
@@ -38,8 +40,20 @@ export class ScheduleTrComponent implements OnInit {
       totalTxsPaidOutInd: [item ? item.totalTxsPaidOutInd : null],
       totalTxsRlfAvlbl: [item ? item.totalTxsRlfAvlbl : null],
       section: [item ? item.section : null],
+      amtOfTaxRef: [item ? item.amtOfTaxRef : null],
+      assYr: [item ? item.assYr : null],
     });
 
     return formGroup;
   }
+
+  handleSelectionChange(event) {
+    this.selectedOption = event;
+  }
+
+  goBack() {
+    this.location.back();
+  }
+
+  saveAll() {}
 }

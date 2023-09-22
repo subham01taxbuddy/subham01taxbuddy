@@ -1,12 +1,12 @@
 <form [formGroup]="scheduleTrForm">
   <div class="mrgArdSpcBlw">
-    <div class="txtTitle">
-      Schedule TR - Summary of tax relief claimed for taxes paid outside India
-      (Only for residents)
-    </div>
     <div class="row cardBack">
+      <div class="txtTitle" style="background-color: #bdc3c7">
+        Schedule TR - Summary of tax relief claimed for taxes paid outside India
+        (Only for residents)
+      </div>
       <div class="table-responsive">
-        <table class="table" style="border: 1px solid #bdc3c7">
+        <table class="table table-bordered" style="border: 1px solid #bdc3c7">
           <thead class="table-header">
             <tr class="table-head">
               <th>Sr. No</th>
@@ -15,11 +15,12 @@
           </thead>
           <thead class="table-header">
             <tr class="table-head">
+              <th>1</th>
               <th>Country Code</th>
               <th>Tax Identification Number</th>
               <th>Total taxes paid outside India</th>
               <th>Total tax relief available</th>
-              <th>Section under which relief claimed</th>
+              <th>Section</th>
             </tr>
           </thead>
           <tbody formArrayName="trArray">
@@ -28,6 +29,7 @@
               *ngFor="let fsi of getTrArray.controls; let i = index"
               [formGroupName]="i"
             >
+              <td>{{ i + 1 }}</td>
               <td>
                 <mat-form-field appearance="outline">
                   <mat-select
@@ -85,36 +87,93 @@
                 </mat-form-field>
               </td>
             </tr>
-          </tbody>
-          <thead class="table-header">
-            <tr class="table-head">
+            <!-- Total -->
+            <tr class="table-header">
+              <th></th>
               <th>Total</th>
-              <th>Total taxes paid</th>
-              <th>Total tax relief</th>
+              <th></th>
+              <th>{{ 0 }}</th>
+              <th>{{ 0 }}</th>
             </tr>
-          </thead>
-          <hr />
-          <thead class="table-header">
-            <tr class="table-head">
-              2. Total tax relief available in respect of country where DTAA is
-              applicable (section 90/90A)
+
+            <!-- 2nd question -->
+            <tr class="table-header">
+              <th>2</th>
+              <th colspan="4">
+                Total tax relief available in respect of country where DTAA is
+                applicable (section 90/90A)
+              </th>
+              <th>{{ 0 }}</th>
             </tr>
-          </thead>
-          <hr />
-          <thead class="table-header">
-            <tr class="table-head">
-              3. Total tax relief available in respect of country where DTAA is
-              not applicable (section 91)
+            <!-- 3rd Question -->
+            <tr class="table-header">
+              <th>3</th>
+              <th colspan="4">
+                Total tax relief available in respect of country where DTAA is
+                not applicable (section 91)
+              </th>
+              <th>{{ 0 }}</th>
             </tr>
-          </thead>
-          <hr />
-          <thead class="table-header">
-            <tr class="table-head">
-              4. Whether any tax paid outside India, on which tax relief was
-              allowed in India, has been refunded/credited by the foreign tax
-              authority during the year?
+            <!-- 4th Question -->
+            <tr class="table-header">
+              <th>4</th>
+              <th colspan="4">
+                Whether any tax paid outside India, on which tax relief was
+                allowed in India, has been refunded/credited
+                <br />
+                by the foreign tax authority during the year?
+              </th>
+              <th>
+                <mat-radio-group
+                  [(ngModel)]="selectedOption"
+                  name="options"
+                  (change)="handleSelectionChange($event.value)"
+                >
+                  <mat-radio-button value="yes" style="margin-right: 10px"
+                    >Yes</mat-radio-button
+                  >
+                  <mat-radio-button value="no">No</mat-radio-button>
+                </mat-radio-group>
+              </th>
             </tr>
-          </thead>
+
+            <!-- 4th question yes, questions to be asked -->
+            <tr class="table-header" *ngIf="selectedOption === 'yes'">
+              <th></th>
+              <th colspan="1">a</th>
+              <th colspan="3">Amount of tax refunded</th>
+              <th>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="amtOfTaxRef[i]"
+                    formControlName="amtOfTaxRef"
+                    placeholder="Amount of tax refuned"
+                    required
+                  />
+                </mat-form-field>
+              </th>
+            </tr>
+
+            <tr class="table-header" *ngIf="selectedOption === 'yes'">
+              <th></th>
+              <th colspan="1">b</th>
+              <th colspan="3">
+                Assessment year in which tax relief allowed in India
+              </th>
+              <th>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="assYr[i]"
+                    formControlName="assYr"
+                    placeholder="Year"
+                    required
+                  />
+                </mat-form-field>
+              </th>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>
