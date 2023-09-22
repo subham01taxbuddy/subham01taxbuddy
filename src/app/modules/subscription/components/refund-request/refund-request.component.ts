@@ -75,12 +75,12 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
   ) {
     let roles = this.utilsService.getUserRoles();
     let show : boolean;
-    if(roles.includes('ROLE_LEADER')){
+    if(roles.includes('ROLE_ADMIN')){
       show =true;
     }
     this.refundListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: show ? this.refundCreateColumnDef('leader') : this.refundCreateColumnDef('reg'),
+      columnDefs: show ? this.refundCreateColumnDef('admin') : this.refundCreateColumnDef('reg'),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -502,7 +502,7 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
       },
       {
         headerName: 'Initiate refund',
-        hide: view === 'leader' ? false : true,
+        hide: view === 'admin' ? false : true,
         editable: false,
         suppressMenu: true,
         sortable: true,
