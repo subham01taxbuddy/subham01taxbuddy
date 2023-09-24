@@ -39,7 +39,10 @@ export class ScheduleFsiComponent implements OnInit {
             outsideIncome: element.outsideIncome,
             outsideTaxPaid: element.outsideTaxPaid,
             taxPayable: element.taxPayable,
-            taxRelief: element.taxRelief,
+            taxRelief:
+              element.outsideTaxPaid <= element.taxPayable
+                ? element.outsideTaxPaid
+                : element.taxPayable,
             claimedDTAA: trElement.claimedDTAA,
           })
         );
@@ -185,12 +188,17 @@ export class ScheduleFsiComponent implements OnInit {
             outsideIncome: element.get('incFromOutInd').value,
             outsideTaxPaid: element.get('taxPaidOutInd').value,
             taxPayable: element.get('taxPayableNrmlProv').value,
-            taxRelief: 0,
+            taxRelief:
+              element.get('taxPaidOutInd').value <=
+              element.get('taxPayableNrmlProv').value
+                ? element.get('taxPaidOutInd').value
+                : element.get('taxPayableNrmlProv').value,
             claimedDTAA: element.get('offeredForTaxInd').value,
           }));
           console.log(headOfIncomeArray, 'Final headOfIncomeArray');
 
           // TO-DO need to fix for edit (similar to business)
+          this.Copy_ITR_JSON.taxReliefClaimed = [];
           this.Copy_ITR_JSON.taxReliefClaimed.push({
             id: null,
             reliefClaimedUsSection: relArticle,
@@ -248,5 +256,6 @@ export class ScheduleFsiComponent implements OnInit {
         fsiArray.removeAt(index);
       }
     });
+    this.saveAll();
   }
 }

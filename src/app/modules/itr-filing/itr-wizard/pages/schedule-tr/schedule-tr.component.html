@@ -126,6 +126,7 @@
               <th>
                 <mat-radio-group
                   [(ngModel)]="selectedOption"
+                  [ngModelOptions]="{ standalone: true }"
                   name="options"
                   (change)="handleSelectionChange($event.value)"
                 >
@@ -141,7 +142,7 @@
             <tr class="table-header" *ngIf="selectedOption === 'yes'">
               <th></th>
               <th colspan="1">a</th>
-              <th colspan="3">Amount of tax refunded</th>
+              <th colspan="3">Amount of tax refunded*</th>
               <th>
                 <mat-form-field appearance="outline">
                   <input
@@ -159,7 +160,7 @@
               <th></th>
               <th colspan="1">b</th>
               <th colspan="3">
-                Assessment year in which tax relief allowed in India
+                Assessment year in which tax relief allowed in India*
               </th>
               <th>
                 <mat-form-field appearance="outline">

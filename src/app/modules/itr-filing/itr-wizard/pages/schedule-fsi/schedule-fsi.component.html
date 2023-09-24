@@ -152,15 +152,13 @@
     </div>
 
     <div class="flex justify-between p-[30px] back-foot">
-      <button class="lgtBtn">
+      <button class="lgtBtn" (click)="goBack()">
         <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-        <span class="font-semibold" (click)="goBack()"
-          >&nbsp;Back to More Info List</span
-        >
+        <span class="font-semibold">&nbsp;Back to More Info List</span>
       </button>
 
-      <button class="saveBtnIn">
-        <span class="font-semibold" (click)="saveAll()">Save All</span>
+      <button class="saveBtnIn" (click)="saveAll()">
+        <span class="font-semibold">Save All</span>
       </button>
     </div>
   </div>
