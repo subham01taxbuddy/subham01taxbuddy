@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -9,6 +9,8 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./schedule-fsi.component.scss'],
 })
 export class ScheduleFsiComponent implements OnInit {
+  @Output() saveAndNext = new EventEmitter<any>();
+  loading = false;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   scheduleFsiForm: FormGroup;
@@ -19,13 +21,43 @@ export class ScheduleFsiComponent implements OnInit {
     'Capital Gains',
     'Other Sources',
   ];
-  loading = false;
 
   constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
 
   ngOnInit(): void {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
     this.scheduleFsiForm = this.initForm();
-    this.add();
+
+    if (this.ITR_JSON.taxReliefClaimed.length > 0) {
+      this.ITR_JSON.taxReliefClaimed.forEach((trElement, trIndex) => {
+        const headOfIncomeArray = trElement.headOfIncome.map(
+          (element, index) => ({
+            id: 0,
+            incomeType: element.incomeType,
+            outsideIncome: element.outsideIncome,
+            outsideTaxPaid: element.outsideTaxPaid,
+            taxPayable: element.taxPayable,
+            taxRelief: element.taxRelief,
+            claimedDTAA: trElement.claimedDTAA,
+          })
+        );
+
+        const formGroup = {
+          hasEdit: false,
+          countryCode: trElement.countryCode,
+          tinNumber: trElement.taxPayerID,
+          headOfIncomes: headOfIncomeArray,
+          reliefClaimedUsSection: trElement.reliefClaimedUsSection,
+        };
+
+        console.log(formGroup, 'formGroup');
+        this.add(formGroup);
+      });
+    } else {
+      this.add();
+    }
   }
 
   initForm() {
@@ -50,13 +82,41 @@ export class ScheduleFsiComponent implements OnInit {
       tinNumber: [item ? item.tinNumber : null],
       headOfIncomes: this.fb.array([]),
     });
-    this.headOfIncomess.forEach((element) => {
-      (formGroup.get('headOfIncomes') as FormArray).push(
-        this.createHeadOfIncome(element, item)
-      );
-    });
+
+    if (item && item.headOfIncomes) {
+      item.headOfIncomes.forEach((element) => {
+        (formGroup.get('headOfIncomes') as FormArray).push(
+          this.createHeadOfIncomes(element, item)
+        );
+      });
+    } else {
+      this.headOfIncomess.forEach((element) => {
+        (formGroup.get('headOfIncomes') as FormArray).push(
+          this.createHeadOfIncome(element, item)
+        );
+      });
+    }
 
     return formGroup;
+  }
+
+  createHeadOfIncomes(headOfIncome?, item?): FormGroup {
+    return this.fb.group({
+      headOfIncome: [headOfIncome.incomeType ? headOfIncome.incomeType : null],
+      incFromOutInd: [
+        headOfIncome.outsideIncome ? headOfIncome.outsideIncome : null,
+      ],
+      taxPaidOutInd: [
+        headOfIncome.outsideTaxPaid ? headOfIncome.outsideTaxPaid : null,
+      ],
+      taxPayableNrmlProv: [
+        headOfIncome.taxPayable ? headOfIncome.taxPayable : null,
+      ],
+      offeredForTaxInd: [
+        headOfIncome.claimedDTAA ? headOfIncome.claimedDTAA : '',
+      ],
+      relevantArticle: [item ? item.reliefClaimedUsSection : null],
+    });
   }
 
   createHeadOfIncome(headOfIncome?, item?): FormGroup {
@@ -77,7 +137,7 @@ export class ScheduleFsiComponent implements OnInit {
   }
 
   goBack() {
-    // this.saveAndNext.emit(false);
+    this.saveAndNext.emit(false);
   }
 
   saveAll() {
@@ -85,21 +145,14 @@ export class ScheduleFsiComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     const fsiArray = <FormArray>this.scheduleFsiForm.get('fsiArray');
-    console.log(fsiArray, 'fsiArray');
-
-    // const headOfIncomes = (this.getFsiArray.controls[0] as FormGroup).controls[
-    //   'headOfIncomes'
-    // ] as FormArray;
-    // console.log(headOfIncomes, 'headOfIncomes');
 
     if (this.scheduleFsiForm.valid) {
       this.loading = true;
 
-      fsiArray?.controls.forEach((fsiArrayElement) => {
+      fsiArray?.controls.forEach((fsiArrayElement, index) => {
         const headOfIncomesArray = (
           fsiArrayElement.get('headOfIncomes') as FormArray
         ).controls;
-        console.log(headOfIncomesArray, 'headOfIncomesArray');
 
         // setting the taxPaidOutsideIndiaFlag if it exists
         const hastaxPaidOutIndValue = headOfIncomesArray.some(
@@ -113,6 +166,7 @@ export class ScheduleFsiComponent implements OnInit {
 
         // pushing fsi income in taxReliefClaimed
         const checkIfValid: boolean =
+          // fsiArrayElement.get('countryCode').value &&
           fsiArrayElement.get('tinNumber').value &&
           fsiArrayElement.get('headOfIncomes').value.length > 0;
 
@@ -120,56 +174,65 @@ export class ScheduleFsiComponent implements OnInit {
           if (!this.Copy_ITR_JSON.taxReliefClaimed) {
             this.Copy_ITR_JSON.taxReliefClaimed = [];
           }
-          headOfIncomesArray.forEach((element) => {
-            this.Copy_ITR_JSON.taxReliefClaimed.push({
-              id: null,
-              reliefClaimedUsSection: element.get('relevantArticle').value,
-              countryCode: fsiArrayElement.get('countryCode').value,
-              countryName: fsiArrayElement.get('countryCode').value,
-              taxPayerID: fsiArrayElement.get('tinNumber').value,
-              claimedDTAA: element.get('offeredForTaxInd').value,
-              headOfIncome: [
-                {
-                  id: 0,
-                  incomeType: element.get('headOfIncome').value,
-                  outsideIncome: element.get('incFromOutInd').value,
-                  outsideTaxPaid: element.get('taxPaidOutInd').value,
-                  taxPayable: element.get('taxPayableNrmlProv').value,
-                  taxRelief: 0,
-                  claimedDTAA: element.get('offeredForTaxInd').value,
-                },
-              ],
-            });
+
+          // relArticle is different for each headOfIncome but backend does not have that key under headOfIncome array for now taking the article for whatever index we are iterating over
+          const relArticle =
+            headOfIncomesArray[index].get('relevantArticle').value;
+
+          const headOfIncomeArray = headOfIncomesArray.map((element) => ({
+            id: 0,
+            incomeType: element.get('headOfIncome').value,
+            outsideIncome: element.get('incFromOutInd').value,
+            outsideTaxPaid: element.get('taxPaidOutInd').value,
+            taxPayable: element.get('taxPayableNrmlProv').value,
+            taxRelief: 0,
+            claimedDTAA: element.get('offeredForTaxInd').value,
+          }));
+          console.log(headOfIncomeArray, 'Final headOfIncomeArray');
+
+          // TO-DO need to fix for edit (similar to business)
+          this.Copy_ITR_JSON.taxReliefClaimed.push({
+            id: null,
+            reliefClaimedUsSection: relArticle,
+            countryCode: fsiArrayElement.get('countryCode').value,
+            countryName: fsiArrayElement.get('countryCode').value,
+            taxPayerID: fsiArrayElement.get('tinNumber').value,
+            claimedDTAA: headOfIncomeArray[index].claimedDTAA,
+            headOfIncome: headOfIncomeArray,
           });
+
+          console.log(this.Copy_ITR_JSON.taxReliefClaimed, 'taxreliefClaimed');
+
+          this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+            (result: any) => {
+              // have to set the ITR_JSON to result once it is fixed from backend
+              this.ITR_JSON = this.Copy_ITR_JSON;
+              sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+              this.loading = false;
+              this.utilsService.showSnackBar(
+                'Schedule FSI updated successfully'
+              );
+              console.log(
+                'Schedule FSI (still needs to be fixed from backend)=',
+                result
+              );
+              this.utilsService.smoothScrollToTop();
+            },
+            (error) => {
+              this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+              this.loading = false;
+              this.utilsService.showSnackBar(
+                'Failed to add schedule FSI, please try again.'
+              );
+              this.utilsService.smoothScrollToTop();
+            }
+          );
         } else {
           this.utilsService.showSnackBar(
             'Please make sure tin Number or head of incomes details and country code are correctly entered'
           );
         }
-
-        console.log(this.Copy_ITR_JSON.taxReliefClaimed);
-        console.log(headOfIncomesArray, 'headOfIncomesArray for saving');
-        console.log(hastaxPaidOutIndValue, 'hasIncFromOutIndValue for saving');
       });
-
-      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-        (result: any) => {
-          this.ITR_JSON = this.Copy_ITR_JSON;
-          sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          this.loading = false;
-          this.utilsService.showSnackBar('Schedule FSI updated successfully');
-          console.log('Schedule FSI=', result);
-          this.utilsService.smoothScrollToTop();
-        },
-        (error) => {
-          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          this.loading = false;
-          this.utilsService.showSnackBar(
-            'Failed to add schedule FSI, please try again.'
-          );
-          this.utilsService.smoothScrollToTop();
-        }
-      );
     } else {
       this.loading = false;
       this.utilsService.showSnackBar(
@@ -178,5 +241,12 @@ export class ScheduleFsiComponent implements OnInit {
     }
   }
 
-  deleteFsiArray() {}
+  deleteFsiArray() {
+    const fsiArray = <FormArray>this.scheduleFsiForm.get('fsiArray');
+    fsiArray.controls.forEach((element, index) => {
+      if ((element as FormGroup).controls['hasEdit'].value) {
+        fsiArray.removeAt(index);
+      }
+    });
+  }
 }

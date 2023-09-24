@@ -25,6 +25,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ChatOptionsDialogComponent } from '../../tasks/components/chat-options/chat-options-dialog.component';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ReviewService } from '../../review/services/review.service';
+import { MoreInformationComponent } from './pages/more-information/more-information.component';
 
 @Component({
   selector: 'app-itr-wizard',
@@ -325,6 +326,9 @@ export class ItrWizardComponent implements OnInit {
       ) {
         this.gotoSchedule(this.schedules.BUSINESS_INCOME);
         (this.breadcrumbComponent as AllBusinessIncomeComponent).initList();
+      } else if (this.breadcrumbComponent instanceof MoreInformationComponent) {
+        this.gotoSchedule(this.schedules.MORE_INFORMATION);
+        (this.breadcrumbComponent as MoreInformationComponent).initList();
       }
     }
   }
