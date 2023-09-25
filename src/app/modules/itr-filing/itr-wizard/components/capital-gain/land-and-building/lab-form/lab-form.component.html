@@ -631,7 +631,6 @@
                           class="input-field"
                           maxlength="10"
                           upperCase
-                          required
                           trim
                           (keyup)="
                             makePanUppercase(
@@ -683,7 +682,6 @@
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           maxlength="12"
                           onkeypress=" event.charCode >= 48 && event.charCode <= 57"
-                          required
                         />
                       </mat-form-field>
                     </div>
