@@ -104,6 +104,7 @@ export class LabFormComponent implements OnInit {
     this.minSellDate = thisYearStartDate;
     this.maxSellDate = nextYearEndDate;
     this.maxPurchaseDate = nextYearEndDate;
+    this.minPurchaseDate = new Date(2001, 3, 1); // April 1st of the current year
 
     this.indexCostOfAcquisition.disable();
     this.calculateCGRequest = {
@@ -1227,8 +1228,6 @@ export class LabFormComponent implements OnInit {
     // if (investDetails.length > 0) {
     //   this.calMinPurchaseDate.setMonth(this.calMinPurchaseDate.getMonth() - investDetails[0].minInvestmentDate);
     // }
-
-    this.minPurchaseDate = this.calMinPurchaseDate.toISOString().slice(0, 10);
 
     /* this.calMaxPurchaseDate = new Date(this.data.assetSelected.sellDate)
     if (investDetails.length > 0)
