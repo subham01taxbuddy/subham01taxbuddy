@@ -33,14 +33,20 @@
               <td>
                 <mat-form-field appearance="outline">
                   <mat-select
-                    name="countryCode[i]"
                     formControlName="countryCode"
-                    maxlength="55"
-                    minlength="1"
+                    name="countryCode[i]"
                     placeholder="Country Code"
                     readOnly
                   >
-                  </mat-select>
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
               </td>
               <td>
@@ -83,7 +89,7 @@
                     name="section[i]"
                     formControlName="section"
                     placeholder="Section"
-                    (change)="handleSectionChange($event, i)"
+                    (change)="handleSectionChange($event)"
                   />
                 </mat-form-field>
               </td>

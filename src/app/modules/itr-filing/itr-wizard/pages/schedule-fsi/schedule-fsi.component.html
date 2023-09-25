@@ -46,12 +46,18 @@
               <td>
                 <mat-form-field appearance="outline">
                   <mat-select
-                    name="countryCode[i]"
                     formControlName="countryCode"
-                    maxlength="55"
-                    minlength="1"
+                    name="countryCode[i]"
                   >
-                  </mat-select>
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
               </td>
               <td>

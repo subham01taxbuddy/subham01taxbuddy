@@ -47,7 +47,7 @@ export interface ITR_JSON {
   capitalGain: NewCapitalGain[];
   business: NewBusiness;
   pastYearLosses: PastYearLosses[];
-  foreignIncome: null;
+  foreignIncome: foreignIncome;
   incomes: OtherIncome[];
   investments: OtherInvestment[];
   donations: Donations[];
@@ -102,7 +102,10 @@ export interface ITR_JSON {
 
   itrSummaryJson: any;
   isItrSummaryJsonEdited: boolean;
+}
 
+export interface foreignIncome {
+  id: any;
   taxPaidOutsideIndiaFlag: any;
   taxReliefAssessmentYear: any;
   taxAmountRefunded: any;

@@ -427,7 +427,26 @@ export class UtilsService {
         profitLossACIncomes: [],
       },
       pastYearLosses: [],
-      foreignIncome: null,
+      foreignIncome: {
+        id: 1,
+        taxPaidOutsideIndiaFlag: null,
+        taxReliefAssessmentYear: null,
+        taxAmountRefunded: null,
+        taxReliefClaimed: [],
+        foreignAssets: {
+          id: null,
+          depositoryAccounts: [],
+          custodialAccounts: [],
+          equityAndDebtInterest: [],
+          cashValueInsurance: [],
+          financialInterestDetails: [],
+          immovablePropertryDetails: [],
+          capitalAssetsDetails: [],
+          signingAuthorityDetails: [],
+          trustsDetails: [],
+          otherIncomeDetails: [],
+        },
+      },
       incomes: [
         // {
         //   incomeType: 'SAVING_INTEREST',
@@ -647,24 +666,6 @@ export class UtilsService {
 
       itrSummaryJson: null,
       isItrSummaryJsonEdited: false,
-
-      taxPaidOutsideIndiaFlag: null,
-      taxReliefAssessmentYear: null,
-      taxAmountRefunded: null,
-      taxReliefClaimed: [],
-      foreignAssets: {
-        id: null,
-        depositoryAccounts: [],
-        custodialAccounts: [],
-        equityAndDebtInterest: [],
-        cashValueInsurance: [],
-        financialInterestDetails: [],
-        immovablePropertryDetails: [],
-        capitalAssetsDetails: [],
-        signingAuthorityDetails: [],
-        trustsDetails: [],
-        otherIncomeDetails: [],
-      },
     };
 
     return ITR_JSON;
