@@ -188,7 +188,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-sm-4 spsTp">
+              <div class="col-sm-4 spsTp" *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'">
                 <mat-label>Cost of acquisition with indexation</mat-label>
                 <mat-form-field class="input-field-width" appearance="outline">
                   <input
