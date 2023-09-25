@@ -37,9 +37,9 @@ export class ScheduleTrComponent implements OnInit {
           id: 0,
           incomeType: element.incomeType,
           outsideIncome: element.outsideIncome,
-          outsideTaxPaid: parseFloat(element.outsideTaxPaid || 0), // Convert to number, default to 0 if undefined
-          taxPayable: parseFloat(element.taxPayable || 0), // Convert to number, default to 0 if undefined
-          taxRelief: parseFloat(element.taxRelief || 0), // Convert to number, default to 0 if undefined
+          outsideTaxPaid: parseFloat(element.outsideTaxPaid || 0),
+          taxPayable: parseFloat(element.taxPayable || 0),
+          taxRelief: parseFloat(element.taxRelief || 0),
           claimedDTAA: trElement.claimedDTAA,
         }));
 
@@ -50,23 +50,27 @@ export class ScheduleTrComponent implements OnInit {
           hasEdit: false,
           countryCode: trElement.countryCode,
           tinNumber: trElement.taxPayerID,
-          totalTxsPaidOutInd: 0, // Initialize to 0
-          totalTxsRlfAvlbl: 0, // Initialize to 0
-          section: trElement.reliefClaimedUsSection,
+          totalTxsPaidOutInd: 0,
+          totalTxsRlfAvlbl: 0,
+          section: trElement.reliefClaimedUsSection
+            ? trElement.reliefClaimedUsSection
+            : '',
         };
+
+        this.sectionValue = trElement.reliefClaimedUsSection
+          ? trElement.reliefClaimedUsSection
+          : '';
 
         console.log(formGroup, 'formGroup');
         this.add(formGroup);
 
         headOfIncomeArray.forEach((element, i) => {
           outsideTaxPaid += element.outsideTaxPaid;
-          console.log(outsideTaxPaid, i, 'outsideTaxPaid');
           this.getTrArray.controls[trIndex]
             .get('totalTxsPaidOutInd')
             .setValue(outsideTaxPaid);
 
           taxRelief += element.taxRelief;
-          console.log(taxRelief, i, 'taxRelief');
           this.getTrArray.controls[trIndex]
             .get('totalTxsRlfAvlbl')
             .setValue(taxRelief);
@@ -79,6 +83,14 @@ export class ScheduleTrComponent implements OnInit {
           this.getTrArray.controls[trIndex]
             .get('selectedOption')
             .setValue('yes');
+
+          this.getTrArray.controls[trIndex]
+            .get('assYr')
+            .setValue(this.ITR_JSON.taxReliefAssessmentYear);
+
+          this.getTrArray.controls[trIndex]
+            .get('amtOfTaxRef')
+            .setValue(this.ITR_JSON.taxAmountRefunded);
         }
 
         // Update individual totals
