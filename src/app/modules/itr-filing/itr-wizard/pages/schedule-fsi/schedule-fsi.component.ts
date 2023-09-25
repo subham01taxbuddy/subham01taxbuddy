@@ -43,7 +43,7 @@ export class ScheduleFsiComponent implements OnInit {
               element.outsideTaxPaid <= element.taxPayable
                 ? element.outsideTaxPaid
                 : element.taxPayable,
-            claimedDTAA: trElement.claimedDTAA,
+            claimedDTAA: element.claimedDTAA,
           })
         );
 
@@ -115,10 +115,8 @@ export class ScheduleFsiComponent implements OnInit {
       taxPayableNrmlProv: [
         headOfIncome.taxPayable ? headOfIncome.taxPayable : null,
       ],
-      offeredForTaxInd: [
-        headOfIncome.claimedDTAA ? headOfIncome.claimedDTAA : '',
-      ],
-      relevantArticle: [item ? item.reliefClaimedUsSection : null],
+      offeredForTaxInd: [headOfIncome.taxRelief ? headOfIncome.taxRelief : ''],
+      relevantArticle: [headOfIncome ? headOfIncome.claimedDTAA : null],
     });
   }
 
@@ -178,10 +176,6 @@ export class ScheduleFsiComponent implements OnInit {
             this.Copy_ITR_JSON.taxReliefClaimed = [];
           }
 
-          // relArticle is different for each headOfIncome but backend does not have that key under headOfIncome array for now taking the article for whatever index we are iterating over
-          const relArticle =
-            headOfIncomesArray[index].get('relevantArticle').value;
-
           const headOfIncomeArray = headOfIncomesArray.map((element) => ({
             id: 0,
             incomeType: element.get('headOfIncome').value,
@@ -193,15 +187,15 @@ export class ScheduleFsiComponent implements OnInit {
               element.get('taxPayableNrmlProv').value
                 ? element.get('taxPaidOutInd').value
                 : element.get('taxPayableNrmlProv').value,
-            claimedDTAA: element.get('offeredForTaxInd').value,
+            claimedDTAA: element.get('relevantArticle').value,
           }));
           console.log(headOfIncomeArray, 'Final headOfIncomeArray');
 
           // TO-DO need to fix for edit (similar to business)
-          this.Copy_ITR_JSON.taxReliefClaimed = [];
+
           this.Copy_ITR_JSON.taxReliefClaimed.push({
             id: null,
-            reliefClaimedUsSection: relArticle,
+            reliefClaimedUsSection: null,
             countryCode: fsiArrayElement.get('countryCode').value,
             countryName: fsiArrayElement.get('countryCode').value,
             taxPayerID: fsiArrayElement.get('tinNumber').value,

@@ -83,6 +83,7 @@
                     name="section[i]"
                     formControlName="section"
                     placeholder="Section"
+                    (change)="handleSectionChange($event, i)"
                   />
                 </mat-form-field>
               </td>
@@ -92,8 +93,8 @@
               <th></th>
               <th>Total</th>
               <th></th>
-              <th>{{ 0 }}</th>
-              <th>{{ 0 }}</th>
+              <th>{{ totalOutsideTaxPaid }}</th>
+              <th>{{ totalTaxRelief }}</th>
             </tr>
 
             <!-- 2nd question -->
@@ -103,7 +104,9 @@
                 Total tax relief available in respect of country where DTAA is
                 applicable (section 90/90A)
               </th>
-              <th>{{ 0 }}</th>
+              <th *ngIf="sectionValue === '90' || sectionValue === '90A'">
+                {{ totalTaxRelief ? totalTaxRelief : 0 }}
+              </th>
             </tr>
             <!-- 3rd Question -->
             <tr class="table-header">
@@ -112,68 +115,84 @@
                 Total tax relief available in respect of country where DTAA is
                 not applicable (section 91)
               </th>
-              <th>{{ 0 }}</th>
+              <th *ngIf="sectionValue === '91'">
+                {{ totalTaxRelief ? totalTaxRelief : 0 }}
+              </th>
             </tr>
             <!-- 4th Question -->
-            <tr class="table-header">
-              <th>4</th>
-              <th colspan="4">
-                Whether any tax paid outside India, on which tax relief was
-                allowed in India, has been refunded/credited
-                <br />
-                by the foreign tax authority during the year?
-              </th>
-              <th>
-                <mat-radio-group
-                  [(ngModel)]="selectedOption"
-                  [ngModelOptions]="{ standalone: true }"
-                  name="options"
-                  (change)="handleSelectionChange($event.value)"
-                >
-                  <mat-radio-button value="yes" style="margin-right: 10px"
-                    >Yes</mat-radio-button
+            <ng-container
+              *ngFor="let fsi of getTrArray.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <tr class="table-header">
+                <th>4</th>
+                <th colspan="4">
+                  Whether any tax paid outside India, on which tax relief was
+                  allowed in India, has been refunded/credited
+                  <br />
+                  by the foreign tax authority during the year?
+                </th>
+                <th>
+                  <mat-radio-group
+                    formControlName="selectedOption"
+                    name="options"
+                    (change)="handleSelectionChange($event.value)"
                   >
-                  <mat-radio-button value="no">No</mat-radio-button>
-                </mat-radio-group>
-              </th>
-            </tr>
+                    <mat-radio-button value="yes" style="margin-right: 10px"
+                      >Yes</mat-radio-button
+                    >
+                    <mat-radio-button value="no">No</mat-radio-button>
+                  </mat-radio-group>
+                </th>
+              </tr>
 
-            <!-- 4th question yes, questions to be asked -->
-            <tr class="table-header" *ngIf="selectedOption === 'yes'">
-              <th></th>
-              <th colspan="1">a</th>
-              <th colspan="3">Amount of tax refunded*</th>
-              <th>
-                <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="amtOfTaxRef[i]"
-                    formControlName="amtOfTaxRef"
-                    placeholder="Amount of tax refuned"
-                    required
-                  />
-                </mat-form-field>
-              </th>
-            </tr>
+              <!-- 4th question yes, questions to be asked -->
+              <tr
+                class="table-header"
+                *ngIf="
+                  getTrArray.controls[0].get('selectedOption').value === 'yes'
+                "
+              >
+                <th></th>
+                <th colspan="1">a</th>
+                <th colspan="3">Amount of tax refunded*</th>
+                <th>
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      name="amtOfTaxRef[i]"
+                      formControlName="amtOfTaxRef"
+                      placeholder="Amount of tax refuned"
+                      required
+                    />
+                  </mat-form-field>
+                </th>
+              </tr>
 
-            <tr class="table-header" *ngIf="selectedOption === 'yes'">
-              <th></th>
-              <th colspan="1">b</th>
-              <th colspan="3">
-                Assessment year in which tax relief allowed in India*
-              </th>
-              <th>
-                <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="assYr[i]"
-                    formControlName="assYr"
-                    placeholder="Year"
-                    required
-                  />
-                </mat-form-field>
-              </th>
-            </tr>
+              <tr
+                class="table-header"
+                *ngIf="
+                  getTrArray.controls[0].get('selectedOption').value === 'yes'
+                "
+              >
+                <th></th>
+                <th colspan="1">b</th>
+                <th colspan="3">
+                  Assessment year in which tax relief allowed in India*
+                </th>
+                <th>
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      name="assYr[i]"
+                      formControlName="assYr"
+                      placeholder="Year"
+                      required
+                    />
+                  </mat-form-field>
+                </th>
+              </tr>
+            </ng-container>
           </tbody>
         </table>
       </div>
