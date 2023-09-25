@@ -49,6 +49,7 @@ import { OldVsNewComponent } from './itr-wizard/components/old-vs-new/old-vs-new
 import { ValidationErrorScreenComponent } from '../shared/components/validation-error-screen/validation-error-screen.component';
 import { ScheduleFsiComponent } from './itr-wizard/pages/schedule-fsi/schedule-fsi.component';
 import { ScheduleTrComponent } from './itr-wizard/pages/schedule-tr/schedule-tr.component';
+import { ScheduleFaComponent } from './itr-wizard/pages/schedule-fa/schedule-fa.component';
 
 const routes: Routes = [
   {
@@ -112,7 +113,7 @@ const routes: Routes = [
           { path: 'schedule-cfl', component: ScheduleCflComponent },
           { path: 'schedule-fsi', component: ScheduleFsiComponent },
           { path: 'schedule-tr', component: ScheduleTrComponent },
-          { path: 'schedule-fa', component: ScheduleCflComponent },
+          { path: 'schedule-fa', component: ScheduleFaComponent },
         ],
       },
       { path: 'nri', component: ForeignIncomeComponent },

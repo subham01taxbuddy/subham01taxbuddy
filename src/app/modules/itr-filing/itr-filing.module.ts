@@ -96,6 +96,7 @@ import { SelectionComponent } from './itr-wizard/pages/taxes-paid/selection-comp
 import { TdsTypeCellRenderer } from './itr-wizard/pages/taxes-paid/tds-type-cell-renderer';
 import { ScheduleFsiComponent } from './itr-wizard/pages/schedule-fsi/schedule-fsi.component';
 import { ScheduleTrComponent } from './itr-wizard/pages/schedule-tr/schedule-tr.component';
+import { ScheduleFaComponent } from './itr-wizard/pages/schedule-fa/schedule-fa.component';
 
 @NgModule({
   imports: [
@@ -211,6 +212,7 @@ import { ScheduleTrComponent } from './itr-wizard/pages/schedule-tr/schedule-tr.
     TdsTypeCellRenderer,
     ScheduleFsiComponent,
     ScheduleTrComponent,
+    ScheduleFaComponent,
   ],
 
   exports: [CustomerProfileComponent],

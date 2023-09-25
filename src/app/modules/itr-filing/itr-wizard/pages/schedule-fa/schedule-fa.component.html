@@ -1,0 +1,27 @@
+<form [formGroup]="scheduleFaForm">
+  <div class="mrgArdSpcBlw">
+    <div class="txtTitle">
+      <strong> Schedule FA </strong>
+      <br />
+      Details of foreign assets and income from any source outside India
+    </div>
+
+    <div class="qstnCard">
+      <div class="txtTitle">
+        Click the below button to add details of foreign assets owned by you
+      </div>
+      <button class="lgtBtn" (click)="add()">+ Add</button>
+    </div>
+  </div>
+
+  <div class="flex justify-between p-[30px] back-foot">
+    <button class="lgtBtn" (click)="goBack()">
+      <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
+      <span class="font-semibold">&nbsp;Back to More Info List</span>
+    </button>
+
+    <button class="saveBtnIn" (click)="saveAll()">
+      <span class="font-semibold">Save All</span>
+    </button>
+  </div>
+</form>
