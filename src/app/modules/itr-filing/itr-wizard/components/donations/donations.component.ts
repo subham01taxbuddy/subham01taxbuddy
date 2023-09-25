@@ -497,7 +497,7 @@ export class DonationsComponent implements OnInit {
       identifier: [item ? item.identifier : ''],
       donationType: this.type === '80gga' ? 'SCIENTIFIC' : 'OTHER',
       amountInCash: [
-        item ? item.amountInCash : null,
+        item ? item.amountInCash : 0,
         [Validators.required, Validators.max(2000)],
       ],
       amountOtherThanCash: [
