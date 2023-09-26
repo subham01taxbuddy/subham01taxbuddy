@@ -5,8 +5,9 @@ import {
   EventEmitter,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Form } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-schedule-fa',
@@ -15,6 +16,7 @@ import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface'
 })
 export class ScheduleFaComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
+  loading = false;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   topicList = [
@@ -69,41 +71,122 @@ export class ScheduleFaComponent implements OnInit {
       code: 'G',
     },
   ];
-  frgnDpstryAcct: FormGroup;
+  scheduleFa: FormGroup;
+  frgnDpstryAcct: FormArray;
   accountControls: any;
   isPanelOpen: boolean = false;
 
-  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
+    private utilsService: UtilsService
+  ) {}
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
-    // Parsing drpository details, if it exists
-    if (
-      this.ITR_JSON?.foreignIncome?.foreignAssets?.depositoryAccounts?.length >
-      0
-    ) {
-      this.ITR_JSON?.foreignIncome?.foreignAssets?.depositoryAccounts?.forEach(
-        (dpstry) => {
-          this.createfrgnDpstryAcctForm(dpstry);
-        }
-      );
-    } else {
-      this.frgnDpstryAcct = this.createfrgnDpstryAcctForm();
-    }
+    this.scheduleFa = this.createfrgnDpstryAcctForm();
   }
 
   createfrgnDpstryAcctForm(dpstryItem?) {
-    // console.log(dpstryItem);
+    // const depositoryAct =
+    //   this.ITR_JSON.foreignIncome.foreignAssets.depositoryAccounts;
 
-    return (this.frgnDpstryAcct = this.fb.group({
-      countryName: dpstryItem ? dpstryItem.countryName : '',
-      countryCode: dpstryItem ? dpstryItem.countryCode : '',
-      nameOfInstitution: dpstryItem ? dpstryItem.nameOfInstitution : '',
-      addressOfInstitution: dpstryItem ? dpstryItem.addressOfInstitution : '',
-      zipCode: dpstryItem ? dpstryItem.zipCode : '',
-      account: this.fb.array([
+    // if (depositoryAct.length > 0) {
+    //   console.log(depositoryAct, 'depositoryAct');
+    //   let i: any = '';
+    //   let accountArray: any = [];
+
+    //   depositoryAct.forEach((element, index) => {
+    //     accountArray.push({
+    //       hasEdit: false,
+    //       accountNumber: element.accountNumber,
+    //       status: element.status,
+    //       accountOpeningDate: element.accountOpeningDate,
+    //       peakBalance: element.peakBalance,
+    //       closingBalance: element.closingBalance,
+    //       grossInterestPaid: element.grossInterestPaid,
+    //     });
+    //     this.frgnDpstryAcct = this.fb.array([
+    //       {
+    //         countryName: depositoryAct[i].countryName,
+    //         countryCode: depositoryAct[i].countryCode,
+    //         nameOfInstitution: depositoryAct[i].nameOfInstitution,
+    //         addressOfInstitution: depositoryAct[i].addressOfInstitution,
+    //         zipCode: depositoryAct[i].zipCode,
+    //         account: accountArray,
+    //       },
+    //     ]);
+    //   });
+
+    //   console.log(
+    //     accountArray,
+    //     'accountArray',
+    //     this.frgnDpstryAcct,
+    //     'frgnDpstryAcct'
+    //   );
+    // } else {
+    //   return (this.frgnDpstryAcct = this.fb.array([
+    //     this.fb.group({
+    //       countryName: null,
+    //       countryCode: null,
+    //       nameOfInstitution: null,
+    //       addressOfInstitution: null,
+    //       zipCode: null,
+    //       account: this.fb.array([
+    //         this.fb.group({
+    //           hasEdit: null,
+    //           accountNumber: null,
+    //           status: null,
+    //           accountOpeningDate: null,
+    //           peakBalance: null,
+    //           closingBalance: null,
+    //           grossInterestPaid: null,
+    //         }),
+    //       ]),
+    //     }),
+    //   ]));
+    // }
+
+    return this.fb.group({
+      frgnDpstryAcct: this.fb.array([
+        this.fb.group({
+          countryName: null,
+          countryCode: null,
+          nameOfInstitution: null,
+          addressOfInstitution: null,
+          zipCode: null,
+          account: this.fb.array([
+            this.fb.group({
+              hasEdit: null,
+              accountNumber: null,
+              status: null,
+              accountOpeningDate: null,
+              peakBalance: null,
+              closingBalance: null,
+              grossInterestPaid: null,
+            }),
+          ]),
+        }),
+      ]),
+    });
+  }
+
+  gotoSection(topicCode) {
+    if (topicCode === 'A1' && this.isPanelOpen === true) {
+      this.scheduleFa = this.createfrgnDpstryAcctForm();
+    }
+  }
+
+  onExpandedChange(event) {
+    console.log(event, 'expanded change');
+    this.isPanelOpen = event;
+  }
+
+  add(dpstryItem?) {
+    const accountControls = this.frgnDpstryAcct?.get('account') as FormArray;
+    if (accountControls.valid) {
+      accountControls.push(
         this.fb.group({
           hasEdit: dpstryItem ? dpstryItem.hasEdit : false,
           accountNumber: dpstryItem ? dpstryItem.accountNumber : '',
@@ -112,26 +195,14 @@ export class ScheduleFaComponent implements OnInit {
           peakBalance: dpstryItem ? dpstryItem.peakBalance : '',
           closingBalance: dpstryItem ? dpstryItem.closingBalance : '',
           grossInterestPaid: dpstryItem ? dpstryItem.grossInterestPaid : '',
-        }),
-      ]),
-    }));
-  }
-
-  get getAccountControls() {
-    return <FormArray>this.frgnDpstryAcct?.get('account');
-  }
-
-  gotoSection(topicCode) {
-    if (topicCode === 'A1' && this.isPanelOpen === true) {
-      this.frgnDpstryAcct = this.createfrgnDpstryAcctForm();
+        })
+      );
+    } else {
+      this.utilsService.showSnackBar(
+        'Please make sure you have filled all the details correctly to proceed ahead'
+      );
     }
   }
-
-  onExpandedChange(event) {
-    console.log(event, 'expanded change');
-    this.isPanelOpen = event;
-  }
-  add() {}
 
   goBack() {
     this.saveAndNext.emit(false);
@@ -141,12 +212,62 @@ export class ScheduleFaComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
     console.log(this.frgnDpstryAcct);
-    if (this.frgnDpstryAcct.valid) {
-      const values = this.frgnDpstryAcct.getRawValue();
-      this.Copy_ITR_JSON.foreignIncome?.foreignAssets?.depositoryAccounts.push(
-        values
+
+    const values = this.frgnDpstryAcct.getRawValue();
+    console.log(values, 'values');
+
+    let objToSave = [];
+
+    values[0].account.forEach((element) => {
+      objToSave.push({
+        countryName: values[0].countryName,
+        countryCode: values[0].countryCode,
+        nameOfInstitution: values[0].countryName,
+        addressOfInstitution: values[0].addressOfInstitution,
+        zipCode: values[0].zipCode,
+        accountNumber: element.accountNumber,
+        status: element.status,
+        accountOpeningDate: element.accountOpeningDate,
+        peakBalance: element.peakBalance,
+        closingBalance: element.closingBalance,
+        grossInterestPaid: element.grossInterestPaid,
+      });
+    });
+    console.log(objToSave, 'objToSave');
+
+    if (this.scheduleFa.valid) {
+      objToSave.forEach((element) =>
+        this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.depositoryAccounts?.push(
+          element
+        )
       );
     }
     console.log(this.Copy_ITR_JSON.foreignIncome);
+
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+      (result: any) => {
+        this.ITR_JSON = result;
+        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+        this.utilsService.showSnackBar('Schedule FA saved successfully');
+        this.saveAndNext.emit(false);
+      },
+      (error) => {
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'Failed to add schedule FA, please try again.'
+        );
+        this.utilsService.smoothScrollToTop();
+      }
+    );
+  }
+
+  get getfrgnDpstryAcct() {
+    return this.scheduleFa.get('frgnDpstryAcct') as FormArray;
+  }
+
+  get getAccountControls() {
+    return (this.scheduleFa.get('frgnDpstryAcct') as FormArray).get('account');
   }
 }
