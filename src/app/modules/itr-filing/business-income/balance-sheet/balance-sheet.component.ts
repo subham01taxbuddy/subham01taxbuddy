@@ -17,15 +17,6 @@ import { DepreciationDialogComponent } from './depreciation-dialog/depreciation-
 import { Location } from '@angular/common';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 
-const balanceSheetData: BusinessDescription[] = [
-  {
-    id: null,
-    natureOfBusiness: null,
-    tradeName: null,
-    businessDescription: null,
-  },
-];
-
 @Component({
   selector: 'app-balance-sheet',
   templateUrl: './balance-sheet.component.html',
@@ -35,13 +26,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   public balanceSheetGridOptions: GridOptions;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
-  balanceSheetData: BusinessDescription = {
-    id: null,
-    natureOfBusiness: null,
-    tradeName: null,
-    businessDescription: null,
-  };
-
   natureOfBusinessDropdownAll: any;
   assetLiabilitiesForm: FormGroup;
   natOfBusinessDtlForm: FormGroup;
@@ -579,5 +563,9 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     } else {
       $('input.ng-invalid').first().focus();
     }
+  }
+
+  businessClicked(event, index){
+    (this.natOfBusinessDtlsArray.controls[index] as FormGroup).controls['natureOfBusiness'].setValue(event);
   }
 }
