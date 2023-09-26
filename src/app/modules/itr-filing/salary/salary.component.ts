@@ -92,7 +92,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       id: null,
       seqNum: 9,
       value: 'NON_MONETARY_PERQUISITES',
-      label: 'Non Monetary Perquisites u/s10(10C)',
+      label: 'Non Monetary Perquisites u/s10(10CC)',
       detailed: false,
     },
     {
