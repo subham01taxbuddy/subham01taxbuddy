@@ -72,8 +72,6 @@ export class ScheduleFaComponent implements OnInit {
     },
   ];
   scheduleFa: FormGroup;
-  frgnDpstryAcct: FormArray;
-  accountControls: any;
   isPanelOpen: boolean = false;
 
   constructor(
@@ -184,7 +182,17 @@ export class ScheduleFaComponent implements OnInit {
   }
 
   add(dpstryItem?) {
-    const accountControls = this.frgnDpstryAcct?.get('account') as FormArray;
+    if (dpstryItem === 'fda') {
+      const fdaArray = this.scheduleFa.get('frgnDpstryAcct') as FormArray;
+      if (fdaArray.valid) {
+        fdaArray.push(this.createfrgnDpstryAcctForm());
+      }
+    }
+
+    const accountControls = (this.scheduleFa.get('frgnDpstryAcct') as FormArray)
+      .at(0)
+      .get('account') as FormArray;
+
     if (accountControls.valid) {
       accountControls.push(
         this.fb.group({
@@ -211,9 +219,11 @@ export class ScheduleFaComponent implements OnInit {
   saveAll() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    console.log(this.frgnDpstryAcct);
+    console.log(this.scheduleFa);
 
-    const values = this.frgnDpstryAcct.getRawValue();
+    const values = (
+      this.scheduleFa.controls['frgnDpstryAcct'] as FormArray
+    ).getRawValue();
     console.log(values, 'values');
 
     let objToSave = [];
@@ -268,6 +278,8 @@ export class ScheduleFaComponent implements OnInit {
   }
 
   get getAccountControls() {
-    return (this.scheduleFa.get('frgnDpstryAcct') as FormArray).get('account');
+    return (this.scheduleFa.get('frgnDpstryAcct') as FormArray)
+      .at(0)
+      .get('account') as FormArray;
   }
 }
