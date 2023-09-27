@@ -575,10 +575,10 @@ export class LabFormComponent implements OnInit {
       buyersDetails.value
     );
     let userPanExist = [];
-    let failedCases = [];
+    // let failedCases = [];
     if (buyersDetails.value instanceof Array) {
-      failedCases = buyersDetails.value.filter(item =>
-        !this.utilsService.isNonEmpty(item.pan) && !this.utilsService.isNonEmpty(item.aadhaarNumber));
+      // failedCases = buyersDetails.value.filter(item =>
+      //   !this.utilsService.isNonEmpty(item.pan) && !this.utilsService.isNonEmpty(item.aadhaarNumber));
       userPanExist = buyersDetails.value.filter(
         (item) => item.pan === this.ITR_JSON.panNumber
       );
@@ -594,12 +594,12 @@ export class LabFormComponent implements OnInit {
         'Buyers Details PAN can not be same with user PAN.'
       );
       panRepeat = true;
-    } else if(failedCases.length > 0){
+    } /*else if(failedCases.length > 0){
       panRepeat = true;
       this.utilsService.showSnackBar(
         'Please provide PAN or AADHAR for buyer details'
       );
-    }
+    }*/
     console.log('Form + buyersDetails=', this.immovableForm.valid);
     return panRepeat;
   }
