@@ -11,7 +11,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { MaterialModule } from '../shared/material.module';
 import { SubscriptionRoutingModule } from './subscription-routing.module';
 import { SharedModule } from '../shared/shared.module';
-import { HttpClientModule } from '@angular/common/http';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PerformaInvoiceComponent } from './components/performa-invoice/performa-invoice.component';
 import { TaxInvoiceComponent } from './components/tax-invoice/tax-invoice.component';
@@ -29,8 +28,6 @@ import { RefundRequestComponent } from './components/refund-request/refund-reque
     FormsModule,
     ReactiveFormsModule,
     NgxLoadingModule.forRoot({}),
-    // SharedModule,
-    HttpClientModule,
     AgGridModule,
     MaterialModule,
     NgxPaginationModule,

@@ -8,7 +8,9 @@ import { environment } from 'src/environments/environment';
 import { GoogleDriveService } from "../../../services/google-drive.service";
 import * as FileSaver from 'file-saver';
 import * as JSZip from "jszip";
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
+import { saveAs } from "file-saver/dist/FileSaver";
+
 declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-show-user-documnets',
@@ -215,7 +217,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
     }
   }
 
-  async downloadAll(folders){
+  async downloadAll(folders) {
     this.loading = true;
     const zip = new JSZip();
     const name = this.userId + '.zip';
@@ -223,7 +225,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
 
     let completed = [];
     let repeat = 1;
-    for(let counter = 0; counter < folders.length; counter++) {
+    for (let counter = 0; counter < folders.length; counter++) {
       let document = folders[counter];
       let fileUrl;
       if (document.isPasswordProtected) {
@@ -235,7 +237,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
       const fileData: any = await this.getFile(fileUrl);
       const b: any = new Blob([fileData], { type: '' + fileData.type + '' });
       let fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
-      if(completed.includes(fileName)){
+      if (completed.includes(fileName)) {
         fileName = fileName.substring(0, fileName.lastIndexOf('.')) + "_" + repeat + fileName.substring(fileName.lastIndexOf('.'));
       }
       completed.push(fileName);
@@ -263,21 +265,24 @@ export class ShowUserDocumnetsComponent implements OnInit {
   }
 
   downloadFile(document) {
-    let fileUrl;
     console.log('filePath: ', this.filePath)
     console.log('Href path is: ', environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName)
-    if (document.isPasswordProtected) {
-      // location.href = document.passwordProtectedFileUrl;
-      location.href = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
-      fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
-      return;
-    } else {
-      location.href = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
-      fileUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
-    }
+    let signedUrl = environment.url + '/itr/cloud/download?filePath=' + this.userId + this.filePath + '/' + document.fileName;
+    this.loading = true;
+    this.httpClient.get(signedUrl, { responseType: "arraybuffer" }).subscribe(
+      pdf => {
+        this.loading = false;
+        const blob = new Blob([pdf], { type: "application/pdf" });
+        saveAs(blob, document.fileName);
+      },
+      err => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to download document');
+      }
+    );
     we_track('Cloud Download', {
       'User Number': this.mobileNumber,
-      'File URL': fileUrl,
+      'File URL': signedUrl,
     });
   }
 
