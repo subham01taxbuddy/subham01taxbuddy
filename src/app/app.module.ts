@@ -40,7 +40,6 @@ import { SpeedTestModule } from 'ng-speed-test';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    HttpClientModule,
     RouterModule.forRoot(appRoutes),
     PagesModule,
     BrowserAnimationsModule,

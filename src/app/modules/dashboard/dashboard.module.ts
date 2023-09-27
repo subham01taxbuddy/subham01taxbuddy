@@ -8,7 +8,6 @@ import { MainDashboardComponent } from './main-dashboard/main-dashboard.componen
 import { AttendanceReportComponent } from './attendance-report/attendance-report.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { AgGridModule } from 'ag-grid-angular';
 import { NgxLoadingModule } from 'ngx-loading';
@@ -43,7 +42,6 @@ import { LeaderStatuswiseReportComponent } from './leader-statuswise-report/lead
     ReactiveFormsModule,
     NgxLoadingModule.forRoot({}),
     SharedModule,
-    HttpClientModule,
     AgGridModule,
     MaterialModule,
     NgxPaginationModule,

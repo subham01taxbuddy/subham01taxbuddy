@@ -25,7 +25,6 @@ export class GenericCsvService {
   }
 
   async downloadReport(baseUrl: string, param: string, page: number, name: any, fields?: any, sortBy?: any) {
-    debugger
     let sortJson = encodeURI(JSON.stringify(sortBy));
     // var subject = new Subject<boolean>();
     let paramUrl = param;
