@@ -901,6 +901,208 @@
             </div>
           </form>
         </div>
+
+        <!-- Capital assets details -->
+        <div *ngIf="topic.code === 'F'">
+          <form formArrayName="trustsDetails" style="padding: 20px">
+            <div class="flex justify-content-end align-items-center">
+              <button
+                class="flex lgtBtn justify-content-end align-items-center"
+                style="height: 100%"
+                (click)="addMore('td')"
+              >
+                + Add More
+              </button>
+            </div>
+            <div
+              *ngFor="
+                let trustsDetails of getTrustsDetails.controls;
+                let i = index
+              "
+              [formGroupName]="i"
+            >
+              <br />
+              <!-- Country Name Input -->
+              <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Name</mat-label>
+                  <input
+                    matInput
+                    name="countryName[i]"
+                    formControlName="countryName"
+                  />
+                </mat-form-field>
+
+                <!-- Country Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Code</mat-label>
+                  <input
+                    matInput
+                    name="countryCode[i]"
+                    formControlName="countryCode"
+                  />
+                </mat-form-field>
+
+                <!-- Zip Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Zip Code</mat-label>
+                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                </mat-form-field>
+              </div>
+
+              <div class="flex gap-[25px]" style="margin-bottom: 15px">
+                <!-- trust Name -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Name of the trust</mat-label>
+                  <input
+                    matInput
+                    name="trustName[i]"
+                    formControlName="trustName"
+                  />
+                </mat-form-field>
+
+                <!-- trust address -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Address of the trust</mat-label>
+                  <input
+                    matInput
+                    name="trustAddress[i]"
+                    formControlName="trustAddress"
+                  />
+                </mat-form-field>
+
+                <!-- trustee Name -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Name of the trustee</mat-label>
+                  <input
+                    matInput
+                    name="trusteesName[i]"
+                    formControlName="trusteesName"
+                  />
+                </mat-form-field>
+
+                <!-- trustees Address -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Address of the trustee </mat-label>
+                  <input
+                    matInput
+                    name="trusteesAddress[i]"
+                    formControlName="trusteesAddress"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div
+                class="flex gap-[25px] align-items-center"
+                style="margin-bottom: 10px"
+              >
+                <!-- settlor Name -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Name of the settlor</mat-label>
+                  <input
+                    matInput
+                    name="settlorName[i]"
+                    formControlName="settlorName"
+                  />
+                </mat-form-field>
+
+                <!-- settlor Address -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Address of the settlor</mat-label>
+                  <input
+                    matInput
+                    name="settlorAddress[i]"
+                    formControlName="settlorAddress"
+                  />
+                </mat-form-field>
+
+                <!-- beneficiariesName -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Name of the beneficiaries</mat-label>
+                  <input
+                    matInput
+                    name="beneficiariesName[i]"
+                    formControlName="beneficiariesName"
+                  />
+                </mat-form-field>
+
+                <!-- beneficiariesAddress -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Address of the beneficiaries</mat-label>
+                  <input
+                    matInput
+                    name="beneficiariesAddress[i]"
+                    formControlName="beneficiariesAddress"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div
+                class="flex gap-[25px] align-items-center"
+                style="margin-bottom: 10px"
+              >
+                <!-- date -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Date since position held * </mat-label>
+                  <input matInput name="date[i]" formControlName="date" />
+                </mat-form-field>
+
+                <!-- isTaxableinYourHand -->
+                <mat-form-field appearance="outline">
+                  <mat-label
+                    >Whether income derived is taxable in your hands? *
+                  </mat-label>
+                  <input
+                    matInput
+                    name="isTaxableinYourHand[i]"
+                    formControlName="isTaxableinYourHand"
+                  />
+                </mat-form-field>
+
+                <!-- derivedIncome -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Income derived in the account</mat-label>
+                  <input
+                    matInput
+                    name="derivedIncome[i]"
+                    formControlName="derivedIncome"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div
+                class="flex gap-[25px] align-items-center"
+                style="margin-bottom: 10px"
+              >
+                <!-- amount -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Amount</mat-label>
+                  <input matInput name="amount[i]" formControlName="amount" />
+                </mat-form-field>
+
+                <!-- scheduleOfferd -->
+                <mat-form-field appearance="outline">
+                  <mat-label>schedule Offerd</mat-label>
+                  <input
+                    matInput
+                    name="scheduleOfferd[i]"
+                    formControlName="scheduleOfferd"
+                  />
+                </mat-form-field>
+
+                <!-- numberOfSchedule -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Number of Schedule</mat-label>
+                  <input
+                    matInput
+                    name="numberOfSchedule[i]"
+                    formControlName="numberOfSchedule"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

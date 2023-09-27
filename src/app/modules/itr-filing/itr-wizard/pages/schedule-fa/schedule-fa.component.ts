@@ -115,6 +115,12 @@ export class ScheduleFaComponent implements OnInit {
     if (cad?.length > 0) {
       this.createForm();
     }
+
+    // trust details
+    const td = this.ITR_JSON?.foreignIncome?.foreignAssets?.trustsDetails;
+    if (td?.length > 0) {
+      this.createForms();
+    }
   }
 
   //FORMS SECTION
@@ -213,6 +219,27 @@ export class ScheduleFaComponent implements OnInit {
           totalInvestments: null,
           derivedIncome: null,
           natureOfIncome: null,
+          amount: null,
+          scheduleOfferd: null,
+          numberOfSchedule: 0,
+        }),
+      ]),
+      trustsDetails: this.fb.array([
+        this.fb.group({
+          countryName: null,
+          countryCode: null,
+          zipCode: null,
+          trustName: null,
+          trustAddress: null,
+          trusteesName: null,
+          trusteesAddress: null,
+          settlorName: null,
+          settlorAddress: null,
+          beneficiariesName: null,
+          beneficiariesAddress: null,
+          date: null,
+          isTaxableinYourHand: null,
+          derivedIncome: null,
           amount: null,
           scheduleOfferd: null,
           numberOfSchedule: 0,
@@ -319,6 +346,28 @@ export class ScheduleFaComponent implements OnInit {
       totalInvestments: null,
       derivedIncome: null,
       natureOfIncome: null,
+      amount: null,
+      scheduleOfferd: null,
+      numberOfSchedule: 0,
+    });
+  }
+
+  initTdForm() {
+    return this.fb.group({
+      countryName: null,
+      countryCode: null,
+      zipCode: null,
+      trustName: null,
+      trustAddress: null,
+      trusteesName: null,
+      trusteesAddress: null,
+      settlorName: null,
+      settlorAddress: null,
+      beneficiariesName: null,
+      beneficiariesAddress: null,
+      date: null,
+      isTaxableinYourHand: null,
+      derivedIncome: null,
       amount: null,
       scheduleOfferd: null,
       numberOfSchedule: 0,
@@ -570,7 +619,49 @@ export class ScheduleFaComponent implements OnInit {
     }
   }
 
-  createForms() {}
+  createForms() {
+    // trust details
+    {
+      const trustsDetails =
+        this.ITR_JSON?.foreignIncome?.foreignAssets?.trustsDetails;
+
+      const tdIntForm = this.scheduleFa.controls['trustsDetails'] as FormArray;
+
+      // Clear existing controls in the FormArray.
+      // ========================This is not working properly======================================
+      while (tdIntForm.length !== 0) {
+        tdIntForm.clear();
+      }
+
+      // Add new controls based on the length of equityAndDebtInterest
+      trustsDetails.forEach((item, i) => {
+        // console.log(item);
+        tdIntForm.push(
+          this.fb.group({
+            countryName: item.countryName,
+            countryCode: item.countryCode,
+            zipCode: item.zipCode,
+            trustName: item.trustName,
+            trustAddress: item.trustAddress,
+            trusteesName: item.trusteesName,
+            trusteesAddress: item.trusteesAddress,
+            settlorName: item.settlorName,
+            settlorAddress: item.settlorAddress,
+            beneficiariesName: item.beneficiariesName,
+            beneficiariesAddress: item.beneficiariesAddress,
+            date: item.date,
+            isTaxableinYourHand: item.isTaxableinYourHand,
+            derivedIncome: item.derivedIncome,
+            amount: item.amount,
+            scheduleOfferd: item.scheduleOfferd,
+            numberOfSchedule: item.numberOfSchedule,
+          })
+        );
+      });
+
+      // console.log(ipdIntForm.value, 'ipdIntForm');
+    }
+  }
 
   // ADD SECTION
   // adding whole section
@@ -609,6 +700,11 @@ export class ScheduleFaComponent implements OnInit {
       if (cadArray.valid) {
         cadArray.push(this.initCadForm());
       }
+    } else if (section === 'td') {
+      const tdArray = this.scheduleFa.get('trustsDetails') as FormArray;
+      if (tdArray.valid) {
+        tdArray.push(this.initTdForm());
+      }
     }
   }
 
@@ -641,6 +737,22 @@ export class ScheduleFaComponent implements OnInit {
   saves() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    // trust details
+    {
+      const tdValues = (
+        this.scheduleFa.controls['capitalAssetsDetails'] as FormArray
+      ).getRawValue();
+      // console.log(ipdValues, 'values');
+
+      if (this.scheduleFa.valid) {
+        tdValues.forEach((element) => {
+          this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.trustsDetails?.push(
+            element
+          );
+        });
+      }
+    }
 
     console.log(this.Copy_ITR_JSON.foreignIncome);
 
@@ -836,6 +948,10 @@ export class ScheduleFaComponent implements OnInit {
 
   get getCapitalAssetsDetails() {
     return this.scheduleFa.get('capitalAssetsDetails') as FormArray;
+  }
+
+  get getTrustsDetails() {
+    return this.scheduleFa.get('trustsDetails') as FormArray;
   }
 
   // OTHER SECTION
