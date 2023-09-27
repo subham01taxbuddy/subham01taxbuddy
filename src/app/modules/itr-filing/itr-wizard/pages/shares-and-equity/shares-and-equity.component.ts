@@ -180,13 +180,13 @@ export class SharesAndEquityComponent
       this.addMoreData();
     }
 
-    if (!this.securitiesForm.valid) {
-      this.loading = false;
-      this.securitiesForm.markAllAsTouched();
-      this.securitiesForm.markAsDirty();
-      $('input.ng-invalid').first().focus();
-      this.utilsService.showSnackBar('Please verify securities data and try again.');
-    }
+    // if (!this.securitiesForm.valid) {
+    //   this.loading = false;
+    //   this.securitiesForm.markAllAsTouched();
+    //   this.securitiesForm.markAsDirty();
+    //   $('input.ng-invalid').first().focus();
+    //   this.utilsService.showSnackBar('Please verify securities data and try again.');
+    // }
   }
 
   valueGetter(controls, name) {
@@ -528,8 +528,9 @@ export class SharesAndEquityComponent
             (item: any) => item.assetType !== 'EQUITY_SHARES_UNLISTED'
           );
         }
-        otherData.pushAll(otherData, data)
-        this.Copy_ITR_JSON.capitalGain = otherData;
+        let completeData = []
+        completeData = otherData.concat(otherData, data);
+        this.Copy_ITR_JSON.capitalGain = completeData;
         this.initBrokerList(this.Copy_ITR_JSON);
         this.selectedFormGroup.controls['hasEdit'].setValue(null);
         if(!this.compactView){
