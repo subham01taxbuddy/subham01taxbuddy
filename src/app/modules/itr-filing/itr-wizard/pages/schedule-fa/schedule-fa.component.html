@@ -621,6 +621,144 @@
             </div>
           </form>
         </div>
+
+        <!-- financial interest in any entity -->
+        <div *ngIf="topic.code === 'C'">
+          <form formArrayName="immovablePropertryDetails" style="padding: 20px">
+            <div class="flex justify-content-end align-items-center">
+              <button
+                class="flex lgtBtn justify-content-end align-items-center"
+                style="height: 100%"
+                (click)="addMore('ipd')"
+              >
+                + Add More
+              </button>
+            </div>
+            <div
+              *ngFor="
+                let immovablePropertryDetails of getImmovablePropertryDetails.controls;
+                let i = index
+              "
+              [formGroupName]="i"
+            >
+              <br />
+              <!-- Country Name Input -->
+              <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Name</mat-label>
+                  <input
+                    matInput
+                    name="countryName[i]"
+                    formControlName="countryName"
+                  />
+                </mat-form-field>
+
+                <!-- Country Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Code</mat-label>
+                  <input
+                    matInput
+                    name="countryCode[i]"
+                    formControlName="countryCode"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="flex gap-[25px]" style="margin-bottom: 15px">
+                <!-- Address of Institution -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Address of Entity</mat-label>
+                  <input matInput name="address[i]" formControlName="address" />
+                </mat-form-field>
+
+                <!-- Zip Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Zip Code</mat-label>
+                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                </mat-form-field>
+
+                <!-- Ownership -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Ownership</mat-label>
+                  <input
+                    matInput
+                    name="ownerShip[i]"
+                    formControlName="ownerShip"
+                  />
+                </mat-form-field>
+
+                <!-- Date of contract -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Date since held</mat-label>
+                  <input matInput name="date[i]" formControlName="date" />
+                </mat-form-field>
+              </div>
+
+              <div
+                class="flex gap-[25px] align-items-center"
+                style="margin-bottom: 10px"
+              >
+                <!-- total Investments -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Total Investment (at cost) * </mat-label>
+                  <input
+                    matInput
+                    name="totalInvestments[i]"
+                    formControlName="totalInvestments"
+                  />
+                </mat-form-field>
+
+                <!-- nature of Interest -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Derived Income</mat-label>
+                  <input
+                    matInput
+                    name="derivedIncome[i]"
+                    formControlName="derivedIncome"
+                  />
+                </mat-form-field>
+
+                <!-- nature of Income -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Nature of income</mat-label>
+                  <input
+                    matInput
+                    name="natureOfIncome[i]"
+                    formControlName="natureOfIncome"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="flex gap-[25px]">
+                <!-- Amount -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Amount</mat-label>
+                  <input matInput name="amount[i]" formControlName="amount" />
+                </mat-form-field>
+
+                <!-- schedule Offerd -->
+                <mat-form-field appearance="outline">
+                  <mat-label>schedule Offerd</mat-label>
+                  <input
+                    matInput
+                    name="scheduleOfferd[i]"
+                    formControlName="scheduleOfferd"
+                  />
+                </mat-form-field>
+
+                <!-- number of schedule -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Number of schedule</mat-label>
+                  <input
+                    matInput
+                    name="numberOfSchedule[i]"
+                    formControlName="numberOfSchedule"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
       </mat-expansion-panel>
     </mat-accordion>
   </div>
