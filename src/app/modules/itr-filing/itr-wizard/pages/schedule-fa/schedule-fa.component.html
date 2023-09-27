@@ -34,6 +34,15 @@
         <!-- Depository Accounts  -->
         <div *ngIf="topic.code === 'A1'">
           <form formArrayName="frgnDpstryAcct" style="padding: 20px">
+            <div class="flex justify-content-end align-items-center">
+              <button
+                class="flex lgtBtn justify-content-end align-items-center"
+                style="height: 100%"
+                (click)="addMore('fda')"
+              >
+                + Add More
+              </button>
+            </div>
             <div
               *ngFor="
                 let frgnDpstryAcct of getfrgnDpstryAcct.controls;
@@ -41,16 +50,7 @@
               "
               [formGroupName]="i"
             >
-              <div class="flex justify-content-end align-items-center">
-                <button
-                  class="flex lgtBtn justify-content-end align-items-center"
-                  style="height: 100%"
-                  (click)="addMore('fda')"
-                >
-                  + Add More
-                </button>
-              </div>
-
+              <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
                 <mat-form-field appearance="outline">
@@ -207,23 +207,20 @@
         <!-- foreign equity debt -->
         <div *ngIf="topic.code === 'A3'">
           <form formArrayName="eqtyDbtInt" style="padding: 20px">
+            <div class="flex justify-content-end align-items-center">
+              <button
+                class="flex lgtBtn justify-content-end align-items-center"
+                style="height: 100%"
+                (click)="addMore('edt')"
+              >
+                + Add More
+              </button>
+            </div>
             <div
-              *ngFor="
-                let getEqtyDbtInt of getEqtyDbtInt.controls;
-                let i = index
-              "
+              *ngFor="let eqtyDbtInt of getEqtyDbtInt.controls; let i = index"
               [formGroupName]="i"
             >
-              <div class="flex justify-content-end align-items-center">
-                <button
-                  class="flex lgtBtn justify-content-end align-items-center"
-                  style="height: 100%"
-                  (click)="addMore('edt')"
-                >
-                  + Add More
-                </button>
-              </div>
-
+              <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
                 <mat-form-field appearance="outline">
@@ -360,23 +357,23 @@
         <!-- foreign cash value insurance -->
         <div *ngIf="topic.code === 'A4'">
           <form formArrayName="cashValueInsurance" style="padding: 20px">
+            <div class="flex justify-content-end align-items-center">
+              <button
+                class="flex lgtBtn justify-content-end align-items-center"
+                style="height: 100%"
+                (click)="addMore('cvi')"
+              >
+                + Add More
+              </button>
+            </div>
             <div
               *ngFor="
-                let getCashValueInsurance of getCashValueInsurance.controls;
+                let CashValueInsurance of getCashValueInsurance.controls;
                 let i = index
               "
               [formGroupName]="i"
             >
-              <div class="flex justify-content-end align-items-center">
-                <button
-                  class="flex lgtBtn justify-content-end align-items-center"
-                  style="height: 100%"
-                  (click)="addMore('cvi')"
-                >
-                  + Add More
-                </button>
-              </div>
-
+              <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
                 <mat-form-field appearance="outline">
@@ -460,6 +457,164 @@
                     matInput
                     name="totalGrossAmountPaid[i]"
                     formControlName="totalGrossAmountPaid"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- financial interest in any entity -->
+        <div *ngIf="topic.code === 'B'">
+          <form formArrayName="financialInterestDetails" style="padding: 20px">
+            <div class="flex justify-content-end align-items-center">
+              <button
+                class="flex lgtBtn justify-content-end align-items-center"
+                style="height: 100%"
+                (click)="addMore('fid')"
+              >
+                + Add More
+              </button>
+            </div>
+            <div
+              *ngFor="
+                let financialInterestDetails of getFinancialInterestDetails.controls;
+                let i = index
+              "
+              [formGroupName]="i"
+            >
+              <br />
+              <!-- Country Name Input -->
+              <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Name</mat-label>
+                  <input
+                    matInput
+                    name="countryName[i]"
+                    formControlName="countryName"
+                  />
+                </mat-form-field>
+
+                <!-- Country Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Code</mat-label>
+                  <input
+                    matInput
+                    name="countryCode[i]"
+                    formControlName="countryCode"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="flex gap-[25px]" style="margin-bottom: 15px">
+                <!-- Nature of Entity -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Nature of entity</mat-label>
+                  <input
+                    matInput
+                    name="natureOfEntity[i]"
+                    formControlName="natureOfEntity"
+                  />
+                </mat-form-field>
+
+                <!-- Name of Entity -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Name of entity</mat-label>
+                  <input
+                    matInput
+                    name="nameOfEntity[i]"
+                    formControlName="nameOfEntity"
+                  />
+                </mat-form-field>
+
+                <!-- Address of Institution -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Address of Entity</mat-label>
+                  <input matInput name="address[i]" formControlName="address" />
+                </mat-form-field>
+
+                <!-- Zip Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Zip Code</mat-label>
+                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                </mat-form-field>
+              </div>
+
+              <div
+                class="flex gap-[25px] align-items-center"
+                style="margin-bottom: 10px"
+              >
+                <!-- nature of Interest -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Nature of interest</mat-label>
+                  <input
+                    matInput
+                    name="natureOfInterest[i]"
+                    formControlName="natureOfInterest"
+                  />
+                </mat-form-field>
+
+                <!-- Date of contract -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Date since held</mat-label>
+                  <input matInput name="date[i]" formControlName="date" />
+                </mat-form-field>
+
+                <!-- total Investments -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Total Investment (at cost) * </mat-label>
+                  <input
+                    matInput
+                    name="totalInvestments[i]"
+                    formControlName="totalInvestments"
+                  />
+                </mat-form-field>
+
+                <!-- accrued Income -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Accrued income</mat-label>
+                  <input
+                    matInput
+                    name="accruedIncome[i]"
+                    formControlName="accruedIncome"
+                  />
+                </mat-form-field>
+
+                <!-- nature of Income -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Nature of income</mat-label>
+                  <input
+                    matInput
+                    name="natureOfIncome[i]"
+                    formControlName="natureOfIncome"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="flex gap-[25px]">
+                <!-- Amount -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Amount</mat-label>
+                  <input matInput name="amount[i]" formControlName="amount" />
+                </mat-form-field>
+
+                <!-- schedule Offerd -->
+                <mat-form-field appearance="outline">
+                  <mat-label>schedule Offerd</mat-label>
+                  <input
+                    matInput
+                    name="scheduleOfferd[i]"
+                    formControlName="scheduleOfferd"
+                  />
+                </mat-form-field>
+
+                <!-- number of schedule -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Number of schedule</mat-label>
+                  <input
+                    matInput
+                    name="numberOfSchedule[i]"
+                    formControlName="numberOfSchedule"
                   />
                 </mat-form-field>
               </div>

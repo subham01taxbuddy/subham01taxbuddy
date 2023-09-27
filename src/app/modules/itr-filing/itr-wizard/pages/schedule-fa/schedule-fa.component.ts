@@ -86,13 +86,20 @@ export class ScheduleFaComponent implements OnInit {
     const eqtyDbtInt =
       this.ITR_JSON?.foreignIncome?.foreignAssets?.equityAndDebtInterest;
     if (eqtyDbtInt?.length > 0) {
-      this.createForms();
+      this.createForm();
     }
 
     // cash value insurance
     const cvi = this.ITR_JSON?.foreignIncome?.foreignAssets?.cashValueInsurance;
     if (cvi?.length > 0) {
-      this?.createForms();
+      this.createForm();
+    }
+
+    // financial interest details
+    const fid =
+      this.ITR_JSON?.foreignIncome?.foreignAssets?.financialInterestDetails;
+    if (fid?.length > 0) {
+      this.createForm();
     }
   }
 
@@ -147,6 +154,24 @@ export class ScheduleFaComponent implements OnInit {
           totalGrossAmountPaid: null,
         }),
       ]),
+      financialInterestDetails: this.fb.array([
+        this.fb.group({
+          countryCode: null,
+          countryName: null,
+          natureOfEntity: null,
+          nameOfEntity: null,
+          address: null,
+          zipCode: null,
+          natureOfInterest: null,
+          date: null,
+          totalInvestments: null,
+          accruedIncome: null,
+          natureOfIncome: null,
+          amount: null,
+          scheduleOfferd: null,
+          numberOfSchedule: 0,
+        }),
+      ]),
     });
   }
 
@@ -198,6 +223,25 @@ export class ScheduleFaComponent implements OnInit {
       dateOfContract: null,
       cashValue: null,
       totalGrossAmountPaid: null,
+    });
+  }
+
+  initFdiForm() {
+    return this.fb.group({
+      countryName: null,
+      countryCode: null,
+      natureOfEntity: null,
+      nameOfEntity: null,
+      address: null,
+      zipCode: null,
+      natureOfInterest: null,
+      date: null,
+      totalInvestments: null,
+      accruedIncome: null,
+      natureOfIncome: null,
+      amount: null,
+      scheduleOfferd: null,
+      numberOfSchedule: 0,
     });
   }
 
@@ -322,7 +366,49 @@ export class ScheduleFaComponent implements OnInit {
         );
       });
 
-      console.log(cviIntForm.value, 'setCviIntForm');
+      // console.log(cviIntForm.value, 'setCviIntForm');
+    }
+
+    // financial interest details
+    {
+      const financialInterestDetails =
+        this.ITR_JSON?.foreignIncome?.foreignAssets?.financialInterestDetails;
+
+      const fidIntForm = this.scheduleFa.controls[
+        'financialInterestDetails'
+      ] as FormArray;
+
+      // Clear existing controls in the FormArray.
+      // ========================This is not working properly======================================
+      while (fidIntForm.length !== 0) {
+        fidIntForm.clear();
+      }
+
+      // Add new controls based on the length of equityAndDebtInterest
+      financialInterestDetails.forEach((item, i) => {
+        console.log(item);
+        fidIntForm.push(
+          this.fb.group({
+            id: item.id,
+            countryCode: item.countryCode,
+            countryName: item.countryName,
+            natureOfEntity: item.natureOfEntity,
+            nameOfEntity: item.nameOfEntity,
+            address: item.address,
+            zipCode: item.zipCode,
+            natureOfInterest: item.natureOfInterest,
+            date: item.date,
+            totalInvestments: item.totalInvestments,
+            accruedIncome: item.accruedIncome,
+            natureOfIncome: item.natureOfIncome,
+            amount: item.amount,
+            scheduleOfferd: item.scheduleOfferd,
+            numberOfSchedule: item.numberOfSchedule,
+          })
+        );
+      });
+
+      console.log(fidIntForm.value, 'setCviIntForm');
     }
   }
 
@@ -345,6 +431,13 @@ export class ScheduleFaComponent implements OnInit {
       const cviArray = this.scheduleFa.get('cashValueInsurance') as FormArray;
       if (cviArray.valid) {
         cviArray.push(this.initCviForm());
+      }
+    } else if (section === 'fid') {
+      const fidArray = this.scheduleFa.get(
+        'financialInterestDetails'
+      ) as FormArray;
+      if (fidArray.valid) {
+        fidArray.push(this.initFdiForm());
       }
     }
   }
@@ -474,6 +567,22 @@ export class ScheduleFaComponent implements OnInit {
       }
     }
 
+    // financial interest details
+    {
+      const fidValues = (
+        this.scheduleFa.controls['financialInterestDetails'] as FormArray
+      ).getRawValue();
+      console.log(fidValues, 'values');
+
+      if (this.scheduleFa.valid) {
+        fidValues.forEach((element) => {
+          this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.financialInterestDetails?.push(
+            element
+          );
+        });
+      }
+    }
+
     console.log(this.Copy_ITR_JSON.foreignIncome);
 
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
@@ -495,7 +604,7 @@ export class ScheduleFaComponent implements OnInit {
     );
   }
 
-  // GET SECTION
+  // GET FUNCTIONS SECTION
   get getfrgnDpstryAcct() {
     return this.scheduleFa.get('frgnDpstryAcct') as FormArray;
   }
@@ -513,6 +622,10 @@ export class ScheduleFaComponent implements OnInit {
 
   get getCashValueInsurance() {
     return this.scheduleFa.get('cashValueInsurance') as FormArray;
+  }
+
+  get getFinancialInterestDetails() {
+    return this.scheduleFa.get('financialInterestDetails') as FormArray;
   }
 
   // OTHER SECTION
