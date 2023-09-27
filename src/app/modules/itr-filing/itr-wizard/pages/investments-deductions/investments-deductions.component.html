@@ -168,6 +168,26 @@
         <mat-expansion-panel-header>
           <mat-panel-title>
             <mat-icon> arrow_forward_ios </mat-icon>
+            Medical Expenses (u/s 80D)
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-medical-expenses
+          #medicalExpensesComponentRef
+        ></app-medical-expenses>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <div class="card__row mb-2">
+    <mat-accordion class="headers-align">
+      <mat-expansion-panel
+        [expanded]="step === 1"
+        (opened)="setStep(1)"
+        hideToggle
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon> arrow_forward_ios </mat-icon>
             General Donations under sec 80G
           </mat-panel-title>
           <div class="card__row edit clearfix isShow">
@@ -193,8 +213,8 @@
   <div class="card__row mb-2">
     <mat-accordion class="headers-align">
       <mat-expansion-panel
-        [expanded]="step === 1"
-        (opened)="setStep(1)"
+        [expanded]="step === 2"
+        (opened)="setStep(2)"
         hideToggle
       >
         <mat-expansion-panel-header>
@@ -217,26 +237,6 @@
           [type]="'80gga'"
           [isAddDonation]="isAddDonation"
         ></app-donations>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </div>
-
-  <div class="card__row mb-2">
-    <mat-accordion class="headers-align">
-      <mat-expansion-panel
-        [expanded]="step === 2"
-        (opened)="setStep(2)"
-        hideToggle
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-icon> arrow_forward_ios </mat-icon>
-            Medical Expenses (u/s 80D)
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <app-medical-expenses
-          #medicalExpensesComponentRef
-        ></app-medical-expenses>
       </mat-expansion-panel>
     </mat-accordion>
   </div>
