@@ -356,6 +356,116 @@
             </div>
           </form>
         </div>
+
+        <!-- foreign cash value insurance -->
+        <div *ngIf="topic.code === 'A4'">
+          <form formArrayName="cashValueInsurance" style="padding: 20px">
+            <div
+              *ngFor="
+                let getCashValueInsurance of getCashValueInsurance.controls;
+                let i = index
+              "
+              [formGroupName]="i"
+            >
+              <div class="flex justify-content-end align-items-center">
+                <button
+                  class="flex lgtBtn justify-content-end align-items-center"
+                  style="height: 100%"
+                  (click)="addMore('cvi')"
+                >
+                  + Add More
+                </button>
+              </div>
+
+              <!-- Country Name Input -->
+              <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Name</mat-label>
+                  <input
+                    matInput
+                    name="countryName[i]"
+                    formControlName="countryName"
+                  />
+                </mat-form-field>
+
+                <!-- Country Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Code</mat-label>
+                  <input
+                    matInput
+                    name="countryCode[i]"
+                    formControlName="countryCode"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="flex gap-[25px]" style="margin-bottom: 15px">
+                <!-- Name of Institution -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Name of Institution</mat-label>
+                  <input
+                    matInput
+                    name="nameOfInstitution[i]"
+                    formControlName="nameOfInstitution"
+                  />
+                </mat-form-field>
+
+                <!-- Address of Institution -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Address of Entity</mat-label>
+                  <input
+                    matInput
+                    name="addressOfInstitution[i]"
+                    formControlName="addressOfInstitution"
+                  />
+                </mat-form-field>
+
+                <!-- Zip Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Zip Code</mat-label>
+                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                </mat-form-field>
+              </div>
+
+              <div
+                class="flex gap-[25px] align-items-center"
+                style="margin-bottom: 10px"
+              >
+                <!-- Date f contract -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Date of contract</mat-label>
+                  <input
+                    matInput
+                    name="dateOfContract[i]"
+                    formControlName="dateOfContract"
+                  />
+                </mat-form-field>
+
+                <!-- cash Value -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Cash Value</mat-label>
+                  <input
+                    matInput
+                    name="cashValue[i]"
+                    formControlName="cashValue"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="flex gap-[25px]">
+                <!-- Gross Amount Paid -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Total Gross Amount Paid / Credited</mat-label>
+                  <input
+                    matInput
+                    name="totalGrossAmountPaid[i]"
+                    formControlName="totalGrossAmountPaid"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

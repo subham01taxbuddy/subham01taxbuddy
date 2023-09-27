@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Output,
-  EventEmitter,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Form } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -74,26 +68,31 @@ export class ScheduleFaComponent implements OnInit {
   scheduleFa: FormGroup;
   isPanelOpen: boolean = false;
 
-  constructor(
-    private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
-    private utilsService: UtilsService
-  ) {}
+  constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
     this.scheduleFa = this.initForm();
+
+    // depository account
     const depositoryAct =
       this.ITR_JSON?.foreignIncome?.foreignAssets?.depositoryAccounts;
-    if (depositoryAct.length > 0) {
+    if (depositoryAct?.length > 0) {
       this.createForm();
     }
 
+    // equity and debt
     const eqtyDbtInt =
       this.ITR_JSON?.foreignIncome?.foreignAssets?.equityAndDebtInterest;
-    if (eqtyDbtInt.length > 0) {
+    if (eqtyDbtInt?.length > 0) {
       this.createForms();
+    }
+
+    // cash value insurance
+    const cvi = this.ITR_JSON?.foreignIncome?.foreignAssets?.cashValueInsurance;
+    if (cvi?.length > 0) {
+      this?.createForms();
     }
   }
 
@@ -136,6 +135,18 @@ export class ScheduleFaComponent implements OnInit {
           totalGrossProceedsFromSale: null,
         }),
       ]),
+      cashValueInsurance: this.fb.array([
+        this.fb.group({
+          countryName: null,
+          countryCode: null,
+          nameOfInstitution: null,
+          addressOfInstitution: null,
+          zipCode: null,
+          dateOfContract: null,
+          cashValue: null,
+          totalGrossAmountPaid: null,
+        }),
+      ]),
     });
   }
 
@@ -174,6 +185,19 @@ export class ScheduleFaComponent implements OnInit {
       closingValue: null,
       totalGrossAmountPaid: null,
       totalGrossProceedsFromSale: null,
+    });
+  }
+
+  initCviForm() {
+    return this.fb.group({
+      countryCode: null,
+      countryName: null,
+      nameOfInstitution: null,
+      addressOfInstitution: null,
+      zipCode: null,
+      dateOfContract: null,
+      cashValue: null,
+      totalGrossAmountPaid: null,
     });
   }
 
@@ -265,6 +289,41 @@ export class ScheduleFaComponent implements OnInit {
 
       console.log(eqtyDbtIntForm.value, 'seteqtyDbtIntForm');
     }
+
+    // cash value insurance
+    {
+      const cashValueInsurance =
+        this.ITR_JSON?.foreignIncome?.foreignAssets?.cashValueInsurance;
+
+      const cviIntForm = this.scheduleFa.controls[
+        'cashValueInsurance'
+      ] as FormArray;
+
+      // Clear existing controls in the FormArray.
+      // ========================This is not working properly======================================
+      while (cviIntForm.length !== 0) {
+        cviIntForm.clear();
+      }
+
+      // Add new controls based on the length of equityAndDebtInterest
+      cashValueInsurance.forEach((item, i) => {
+        console.log(item);
+        cviIntForm.push(
+          this.fb.group({
+            countryCode: item.countryCode,
+            countryName: item.countryName,
+            nameOfInstitution: item.nameOfInstitution,
+            addressOfInstitution: item.addressOfInstitution,
+            zipCode: item.zipCode,
+            dateOfContract: item.dateOfContract,
+            cashValue: item.cashValue,
+            totalGrossAmountPaid: item.totalGrossAmountPaid,
+          })
+        );
+      });
+
+      console.log(cviIntForm.value, 'setCviIntForm');
+    }
   }
 
   createForms() {}
@@ -281,6 +340,11 @@ export class ScheduleFaComponent implements OnInit {
       const edtArray = this.scheduleFa.get('eqtyDbtInt') as FormArray;
       if (edtArray.valid) {
         edtArray.push(this.initEdtForm());
+      }
+    } else if (section === 'cvi') {
+      const cviArray = this.scheduleFa.get('cashValueInsurance') as FormArray;
+      if (cviArray.valid) {
+        cviArray.push(this.initCviForm());
       }
     }
   }
@@ -394,6 +458,22 @@ export class ScheduleFaComponent implements OnInit {
       }
     }
 
+    // cash value insurance
+    {
+      const cviValues = (
+        this.scheduleFa.controls['cashValueInsurance'] as FormArray
+      ).getRawValue();
+      console.log(cviValues, 'values');
+
+      if (this.scheduleFa.valid) {
+        cviValues.forEach((element) => {
+          this.Copy_ITR_JSON.foreignIncome.foreignAssets.cashValueInsurance.push(
+            element
+          );
+        });
+      }
+    }
+
     console.log(this.Copy_ITR_JSON.foreignIncome);
 
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
@@ -431,6 +511,10 @@ export class ScheduleFaComponent implements OnInit {
     return this.scheduleFa.get('eqtyDbtInt') as FormArray;
   }
 
+  get getCashValueInsurance() {
+    return this.scheduleFa.get('cashValueInsurance') as FormArray;
+  }
+
   // OTHER SECTION
   gotoSection(topicCode) {
     if (topicCode === 'A1' && this.isPanelOpen === true) {
@@ -446,3 +530,7 @@ export class ScheduleFaComponent implements OnInit {
     this.saveAndNext.emit(false);
   }
 }
+
+// TO-DO
+// 1. PROVIDE CHECKBOS AND DELETE OPTION FOR EACH NON NESTED
+// 2. clear form check while auto-populating on init. maybe i can clear itrObj array and then push new ones so this will automatically work
