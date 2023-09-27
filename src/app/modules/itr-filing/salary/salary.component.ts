@@ -92,7 +92,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       id: null,
       seqNum: 9,
       value: 'NON_MONETARY_PERQUISITES',
-      label: 'Non Monetary Perquisites u/s10(10C)',
+      label: 'Non Monetary Perquisites u/s10(10CC)',
       detailed: false,
     },
     {
@@ -482,6 +482,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           this.allowanceFormGroup.controls['allowances'] as FormArray
         ).controls[i] as FormGroup;
         if (this.utilsService.isNonZero(allowance.value.allowValue)) {
+          if(allowance.controls['allowType'].value === 'NON_MONETARY_PERQUISITES' &&
+            (allowance.controls['allowValue'].value !== 0 && allowance.controls['allowValue'].value > perquisitesAmount)){
+            this.utilsService.showSnackBar(
+              'Non Monetary Perquisites u/s10(10C) cannot exceed the amount of Perquisites - Salary 17(2)');
+            return;
+          }
           if(allowance.controls['allowType'].value === 'NON_MONETARY_PERQUISITES' &&
             (allowance.controls['allowValue'].value !== 0 && perquisitesAmount === 0)){
             this.utilsService.showSnackBar(

@@ -40,22 +40,11 @@
             </mat-checkbox>
           </div>
           <div class="col-sm-3">
-            <mat-label>Nature of Profession</mat-label>
-            <mat-form-field appearance="outline">
-              <mat-select
-                formControlName="natureOfBusiness"
-                name="natureOfBusiness[i]"
-              >
-                <mat-option
-                  *ngFor="let nature of natureOfBusinessList"
-                  [value]="nature.code"
-                  matTooltip="{{ nature.label }}-{{ nature.code }}"
-                  [disabled]="nature.disabled"
-                >
-                  {{ nature.label }}-{{ nature.code }}
-                </mat-option></mat-select
-              >
-            </mat-form-field>
+            <app-business-input-autocomplete
+              [businessType]="'44ADA'"
+              [selectedInput]="profIncomeFormArray.controls[i].get('natureOfBusiness').value"
+              (businessSelected)="businessClicked($event, i)">
+            </app-business-input-autocomplete>
             <mat-error
               *ngIf="
                 (profIncomeFormArray.controls[i].get('natureOfBusiness')

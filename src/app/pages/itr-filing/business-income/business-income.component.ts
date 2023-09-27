@@ -11,6 +11,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './business-income.component.html',
   styleUrls: ['./business-income.component.scss']
 })
+//Ashwini: This is unused
 export class BusinessIncomeComponent implements OnInit {
   loading = false;
   ITR_JSON: ITR_JSON;
@@ -31,7 +32,7 @@ export class BusinessIncomeComponent implements OnInit {
   tabChanged() {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    
+
   }
   canDeactivate() {
     return true;
