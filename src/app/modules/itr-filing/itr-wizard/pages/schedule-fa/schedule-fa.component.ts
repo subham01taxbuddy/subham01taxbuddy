@@ -106,7 +106,14 @@ export class ScheduleFaComponent implements OnInit {
     const ipd =
       this.ITR_JSON?.foreignIncome?.foreignAssets?.immovablePropertryDetails;
     if (ipd?.length > 0) {
-      this.createForms();
+      this.createForm();
+    }
+
+    // capital asset details
+    const cad =
+      this.ITR_JSON?.foreignIncome?.foreignAssets?.capitalAssetsDetails;
+    if (cad?.length > 0) {
+      this.createForm();
     }
   }
 
@@ -185,6 +192,22 @@ export class ScheduleFaComponent implements OnInit {
           countryCode: null,
           address: null,
           zipCode: null,
+          ownerShip: null,
+          date: null,
+          totalInvestments: null,
+          derivedIncome: null,
+          natureOfIncome: null,
+          amount: null,
+          scheduleOfferd: null,
+          numberOfSchedule: 0,
+        }),
+      ]),
+      capitalAssetsDetails: this.fb.array([
+        this.fb.group({
+          countryName: null,
+          countryCode: null,
+          zipCode: null,
+          natureOfAsstes: null,
           ownerShip: null,
           date: null,
           totalInvestments: null,
@@ -274,6 +297,23 @@ export class ScheduleFaComponent implements OnInit {
       countryCode: null,
       address: null,
       zipCode: null,
+      ownerShip: null,
+      date: null,
+      totalInvestments: null,
+      derivedIncome: null,
+      natureOfIncome: null,
+      amount: null,
+      scheduleOfferd: null,
+      numberOfSchedule: 0,
+    });
+  }
+
+  initCadForm() {
+    return this.fb.group({
+      countryName: null,
+      countryCode: null,
+      zipCode: null,
+      natureOfAsstes: null,
       ownerShip: null,
       date: null,
       totalInvestments: null,
@@ -489,6 +529,45 @@ export class ScheduleFaComponent implements OnInit {
 
       // console.log(ipdIntForm.value, 'ipdIntForm');
     }
+
+    // capital assets details
+    {
+      const capitalAssetsDetails =
+        this.ITR_JSON?.foreignIncome?.foreignAssets?.capitalAssetsDetails;
+
+      const cadIntForm = this.scheduleFa.controls[
+        'capitalAssetsDetails'
+      ] as FormArray;
+
+      // Clear existing controls in the FormArray.
+      // ========================This is not working properly======================================
+      while (cadIntForm.length !== 0) {
+        cadIntForm.clear();
+      }
+
+      // Add new controls based on the length of equityAndDebtInterest
+      capitalAssetsDetails.forEach((item, i) => {
+        // console.log(item);
+        cadIntForm.push(
+          this.fb.group({
+            countryName: item.countryName,
+            countryCode: item.countryCode,
+            zipCode: item.zipCode,
+            natureOfAsstes: item.natureOfAsstes,
+            ownerShip: item.ownerShip,
+            date: item.date,
+            totalInvestments: item.totalInvestments,
+            derivedIncome: item.derivedIncome,
+            natureOfIncome: item.natureOfIncome,
+            amount: item.amount,
+            scheduleOfferd: item.scheduleOfferd,
+            numberOfSchedule: item.numberOfSchedule,
+          })
+        );
+      });
+
+      // console.log(ipdIntForm.value, 'ipdIntForm');
+    }
   }
 
   createForms() {}
@@ -524,6 +603,11 @@ export class ScheduleFaComponent implements OnInit {
       ) as FormArray;
       if (ipdArray.valid) {
         ipdArray.push(this.initIpdForm());
+      }
+    } else if (section === 'cad') {
+      const cadArray = this.scheduleFa.get('capitalAssetsDetails') as FormArray;
+      if (cadArray.valid) {
+        cadArray.push(this.initCadForm());
       }
     }
   }
@@ -685,6 +769,22 @@ export class ScheduleFaComponent implements OnInit {
       }
     }
 
+    // capital assets details
+    {
+      const cadValues = (
+        this.scheduleFa.controls['capitalAssetsDetails'] as FormArray
+      ).getRawValue();
+      // console.log(ipdValues, 'values');
+
+      if (this.scheduleFa.valid) {
+        cadValues.forEach((element) => {
+          this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.capitalAssetsDetails?.push(
+            element
+          );
+        });
+      }
+    }
+
     console.log(this.Copy_ITR_JSON.foreignIncome);
 
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
@@ -732,6 +832,10 @@ export class ScheduleFaComponent implements OnInit {
 
   get getImmovablePropertryDetails() {
     return this.scheduleFa.get('immovablePropertryDetails') as FormArray;
+  }
+
+  get getCapitalAssetsDetails() {
+    return this.scheduleFa.get('capitalAssetsDetails') as FormArray;
   }
 
   // OTHER SECTION
