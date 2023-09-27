@@ -31,6 +31,7 @@
             <mat-icon> arrow_forward_ios </mat-icon>
           </div>
         </mat-expansion-panel-header>
+        <!-- Depository Accounts  -->
         <div *ngIf="topic.code === 'A1'">
           <form formArrayName="frgnDpstryAcct" style="padding: 20px">
             <div
@@ -44,7 +45,7 @@
                 <button
                   class="flex lgtBtn justify-content-end align-items-center"
                   style="height: 100%"
-                  (click)="add('fda')"
+                  (click)="addMore('fda')"
                 >
                   + Add More
                 </button>
@@ -202,6 +203,159 @@
             </div>
           </form>
         </div>
+
+        <!-- foreign equity debt -->
+        <div *ngIf="topic.code === 'A3'">
+          <form formArrayName="eqtyDbtInt" style="padding: 20px">
+            <div
+              *ngFor="
+                let getEqtyDbtInt of getEqtyDbtInt.controls;
+                let i = index
+              "
+              [formGroupName]="i"
+            >
+              <div class="flex justify-content-end align-items-center">
+                <button
+                  class="flex lgtBtn justify-content-end align-items-center"
+                  style="height: 100%"
+                  (click)="addMore('edt')"
+                >
+                  + Add More
+                </button>
+              </div>
+
+              <!-- Country Name Input -->
+              <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Name</mat-label>
+                  <input
+                    matInput
+                    name="countryName[i]"
+                    formControlName="countryName"
+                  />
+                </mat-form-field>
+
+                <!-- Country Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Code</mat-label>
+                  <input
+                    matInput
+                    name="countryCode[i]"
+                    formControlName="countryCode"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="flex gap-[25px]" style="margin-bottom: 15px">
+                <!-- Name of Institution Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Name of Entity</mat-label>
+                  <input
+                    matInput
+                    name="nameOfEntity[i]"
+                    formControlName="nameOfEntity"
+                  />
+                </mat-form-field>
+
+                <!-- Address of Institution Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Address of Entity</mat-label>
+                  <input
+                    matInput
+                    name="addressOfEntity[i]"
+                    formControlName="addressOfEntity"
+                  />
+                </mat-form-field>
+
+                <!-- Zip Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Zip Code</mat-label>
+                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                </mat-form-field>
+              </div>
+
+              <div
+                class="flex gap-[25px] align-items-center"
+                style="margin-bottom: 10px"
+              >
+                <!-- Nature of entity -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Nature Of Entity</mat-label>
+                  <input
+                    matInput
+                    name="natureOfEntity[i]"
+                    formControlName="natureOfEntity"
+                  />
+                </mat-form-field>
+
+                <!-- Date of interest -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Date of interest</mat-label>
+                  <input
+                    matInput
+                    name="dateOfInterest[i]"
+                    formControlName="dateOfInterest"
+                  />
+                </mat-form-field>
+
+                <!-- Initial Value -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Account Opening Date</mat-label>
+                  <input
+                    matInput
+                    name="initialValue[i]"
+                    formControlName="initialValue"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="flex gap-[25px]">
+                <!-- Peak Value  -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Peak Balance</mat-label>
+                  <input
+                    matInput
+                    name="peakValue[i]"
+                    formControlName="peakValue"
+                  />
+                </mat-form-field>
+
+                <!-- Closing Value -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Closing Value</mat-label>
+                  <input
+                    matInput
+                    name="closingValue[i]"
+                    formControlName="closingValue"
+                  />
+                </mat-form-field>
+
+                <!-- Gross Amount Paid -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Gross Amount Paid / Credited</mat-label>
+                  <input
+                    matInput
+                    name="totalGrossAmountPaid[i]"
+                    formControlName="totalGrossAmountPaid"
+                  />
+                </mat-form-field>
+
+                <!-- Gross Amount Paid -->
+                <mat-form-field appearance="outline">
+                  <mat-label
+                    >Total gross proceeds from sale or redemption of investment
+                    during the period *
+                  </mat-label>
+                  <input
+                    matInput
+                    name="totalGrossProceedsFromSale[i]"
+                    formControlName="totalGrossProceedsFromSale"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
       </mat-expansion-panel>
     </mat-accordion>
   </div>
@@ -212,7 +366,7 @@
       <span class="font-semibold">&nbsp;Back to More Info List</span>
     </button>
 
-    <button class="saveBtnIn" (click)="saveAll()">
+    <button class="saveBtnIn" (click)="saves()">
       <span class="font-semibold">Save All</span>
     </button>
   </div>
