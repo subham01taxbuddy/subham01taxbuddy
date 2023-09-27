@@ -508,7 +508,7 @@ export class SharesAndEquityComponent
           let cg:NewCapitalGain = {
             assesseeType: this.Copy_ITR_JSON.assesseeType,
             assessmentYear: this.Copy_ITR_JSON.assessmentYear,
-            assetType: "EQUITY_SHARES_LISTED",
+            assetType: this.bondType === 'listed' ? "EQUITY_SHARES_LISTED" : 'EQUITY_SHARES_UNLISTED',
             buyersDetails: [],
             improvement: [],
             residentialStatus: this.Copy_ITR_JSON.residentialStatus
