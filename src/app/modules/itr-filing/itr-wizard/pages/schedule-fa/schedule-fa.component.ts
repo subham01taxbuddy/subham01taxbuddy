@@ -83,69 +83,16 @@ export class ScheduleFaComponent implements OnInit {
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    this.scheduleFa = this.createfrgnDpstryAcctForm();
+    this.scheduleFa = this.initForm();
+    const depositoryAct =
+      this.ITR_JSON?.foreignIncome?.foreignAssets?.depositoryAccounts;
+
+    if (depositoryAct.length > 0) {
+      this.createfrgnDpstryAcctForm();
+    }
   }
 
-  createfrgnDpstryAcctForm(dpstryItem?) {
-    // const depositoryAct =
-    //   this.ITR_JSON.foreignIncome.foreignAssets.depositoryAccounts;
-
-    // if (depositoryAct.length > 0) {
-    //   console.log(depositoryAct, 'depositoryAct');
-    //   let i: any = '';
-    //   let accountArray: any = [];
-
-    //   depositoryAct.forEach((element, index) => {
-    //     accountArray.push({
-    //       hasEdit: false,
-    //       accountNumber: element.accountNumber,
-    //       status: element.status,
-    //       accountOpeningDate: element.accountOpeningDate,
-    //       peakBalance: element.peakBalance,
-    //       closingBalance: element.closingBalance,
-    //       grossInterestPaid: element.grossInterestPaid,
-    //     });
-    //     this.frgnDpstryAcct = this.fb.array([
-    //       {
-    //         countryName: depositoryAct[i].countryName,
-    //         countryCode: depositoryAct[i].countryCode,
-    //         nameOfInstitution: depositoryAct[i].nameOfInstitution,
-    //         addressOfInstitution: depositoryAct[i].addressOfInstitution,
-    //         zipCode: depositoryAct[i].zipCode,
-    //         account: accountArray,
-    //       },
-    //     ]);
-    //   });
-
-    //   console.log(
-    //     accountArray,
-    //     'accountArray',
-    //     this.frgnDpstryAcct,
-    //     'frgnDpstryAcct'
-    //   );
-    // } else {
-    //   return (this.frgnDpstryAcct = this.fb.array([
-    //     this.fb.group({
-    //       countryName: null,
-    //       countryCode: null,
-    //       nameOfInstitution: null,
-    //       addressOfInstitution: null,
-    //       zipCode: null,
-    //       account: this.fb.array([
-    //         this.fb.group({
-    //           hasEdit: null,
-    //           accountNumber: null,
-    //           status: null,
-    //           accountOpeningDate: null,
-    //           peakBalance: null,
-    //           closingBalance: null,
-    //           grossInterestPaid: null,
-    //         }),
-    //       ]),
-    //     }),
-    //   ]));
-    // }
-
+  initForm() {
     return this.fb.group({
       frgnDpstryAcct: this.fb.array([
         this.fb.group({
@@ -170,9 +117,65 @@ export class ScheduleFaComponent implements OnInit {
     });
   }
 
+  createfrgnDpstryAcctForm(dpstryItem?) {
+    const depositoryAct =
+      this.ITR_JSON?.foreignIncome?.foreignAssets?.depositoryAccounts;
+
+    console.log(depositoryAct, 'depositoryAct');
+
+    const result = depositoryAct.reduce((acc, element) => {
+      const existingEntry = acc.find(
+        (entry) =>
+          entry.countryCode === element.countryCode &&
+          entry.nameOfInstitution === element.nameOfInstitution
+      );
+
+      console.log(existingEntry, 'existingEntry');
+
+      if (existingEntry) {
+        existingEntry?.account.push({
+          hasEdit: false,
+          accountNumber: element.accountNumber,
+          status: element.status,
+          accountOpeningDate: element.accountOpeningDate,
+          peakBalance: element.peakBalance,
+          closingBalance: element.closingBalance,
+          grossInterestPaid: element.grossInterestPaid,
+        });
+      } else {
+        acc.push({
+          countryName: element.countryCode,
+          countryCode: element.countryCode,
+          nameOfInstitution: element.nameOfInstitution,
+          addressOfInstitution: element.addressOfInstitution,
+          zipCode: element.zipCode,
+          account: [
+            {
+              hasEdit: false,
+              accountNumber: element.accountNumber,
+              status: element.status,
+              accountOpeningDate: element.accountOpeningDate,
+              peakBalance: element.peakBalance,
+              closingBalance: element.closingBalance,
+              grossInterestPaid: element.grossInterestPaid,
+            },
+          ],
+        });
+      }
+
+      return acc;
+    }, []);
+
+    console.log(result, 'result');
+    const form = (
+      this.scheduleFa.controls['frgnDpstryAcct'] as FormArray
+    ).setValue(result);
+
+    console.log(form, 'setForm');
+  }
+
   gotoSection(topicCode) {
     if (topicCode === 'A1' && this.isPanelOpen === true) {
-      this.scheduleFa = this.createfrgnDpstryAcctForm();
     }
   }
 
@@ -185,7 +188,7 @@ export class ScheduleFaComponent implements OnInit {
     if (dpstryItem === 'fda') {
       const fdaArray = this.scheduleFa.get('frgnDpstryAcct') as FormArray;
       if (fdaArray.valid) {
-        fdaArray.push(this.createfrgnDpstryAcctForm());
+        fdaArray.push(this.initForm());
       }
     }
 
