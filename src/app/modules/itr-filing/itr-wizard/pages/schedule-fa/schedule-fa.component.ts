@@ -121,6 +121,12 @@ export class ScheduleFaComponent implements OnInit {
     if (td?.length > 0) {
       this.createForm();
     }
+
+    // other income details
+    const oid = this.ITR_JSON?.foreignIncome?.foreignAssets?.otherIncomeDetails;
+    if (oid?.length > 0) {
+      this.createForm();
+    }
   }
 
   //FORMS SECTION
@@ -189,7 +195,7 @@ export class ScheduleFaComponent implements OnInit {
           natureOfIncome: null,
           amount: null,
           scheduleOfferd: null,
-          numberOfSchedule: 0,
+          numberOfSchedule: null,
         }),
       ]),
       immovablePropertryDetails: this.fb.array([
@@ -205,7 +211,7 @@ export class ScheduleFaComponent implements OnInit {
           natureOfIncome: null,
           amount: null,
           scheduleOfferd: null,
-          numberOfSchedule: 0,
+          numberOfSchedule: null,
         }),
       ]),
       capitalAssetsDetails: this.fb.array([
@@ -221,7 +227,7 @@ export class ScheduleFaComponent implements OnInit {
           natureOfIncome: null,
           amount: null,
           scheduleOfferd: null,
-          numberOfSchedule: 0,
+          numberOfSchedule: null,
         }),
       ]),
       trustsDetails: this.fb.array([
@@ -242,7 +248,22 @@ export class ScheduleFaComponent implements OnInit {
           derivedIncome: null,
           amount: null,
           scheduleOfferd: null,
-          numberOfSchedule: 0,
+          numberOfSchedule: null,
+        }),
+      ]),
+      otherIncomeDetails: this.fb.array([
+        this.fb.group({
+          countryName: null,
+          countryCode: null,
+          zipCode: null,
+          name: null,
+          address: null,
+          natureOfIncome: null,
+          isTaxableinYourHand: null,
+          derivedIncome: null,
+          amount: null,
+          scheduleOfferd: null,
+          numberOfSchedule: null,
         }),
       ]),
     });
@@ -314,7 +335,7 @@ export class ScheduleFaComponent implements OnInit {
       natureOfIncome: null,
       amount: null,
       scheduleOfferd: null,
-      numberOfSchedule: 0,
+      numberOfSchedule: null,
     });
   }
 
@@ -331,7 +352,7 @@ export class ScheduleFaComponent implements OnInit {
       natureOfIncome: null,
       amount: null,
       scheduleOfferd: null,
-      numberOfSchedule: 0,
+      numberOfSchedule: null,
     });
   }
 
@@ -348,7 +369,7 @@ export class ScheduleFaComponent implements OnInit {
       natureOfIncome: null,
       amount: null,
       scheduleOfferd: null,
-      numberOfSchedule: 0,
+      numberOfSchedule: null,
     });
   }
 
@@ -370,7 +391,23 @@ export class ScheduleFaComponent implements OnInit {
       derivedIncome: null,
       amount: null,
       scheduleOfferd: null,
-      numberOfSchedule: 0,
+      numberOfSchedule: null,
+    });
+  }
+
+  initOidForm() {
+    return this.fb.group({
+      countryName: null,
+      countryCode: null,
+      zipCode: null,
+      name: null,
+      address: null,
+      natureOfIncome: null,
+      isTaxableinYourHand: null,
+      derivedIncome: null,
+      amount: null,
+      scheduleOfferd: null,
+      numberOfSchedule: null,
     });
   }
 
@@ -659,6 +696,44 @@ export class ScheduleFaComponent implements OnInit {
 
       // console.log(ipdIntForm.value, 'ipdIntForm');
     }
+
+    // otherincome details
+    {
+      const otherIncomeDetails =
+        this.ITR_JSON?.foreignIncome?.foreignAssets?.otherIncomeDetails;
+
+      const oidIntForm = this.scheduleFa.controls[
+        'otherIncomeDetails'
+      ] as FormArray;
+
+      // Clear existing controls in the FormArray.
+      // ========================This is not working properly======================================
+      while (oidIntForm.length !== 0) {
+        oidIntForm.clear();
+      }
+
+      // Add new controls based on the length of equityAndDebtInterest
+      otherIncomeDetails.forEach((item, i) => {
+        // console.log(item);
+        oidIntForm.push(
+          this.fb.group({
+            countryName: item.countryName,
+            countryCode: item.countryCode,
+            zipCode: item.zipCode,
+            name: item.name,
+            address: item.address,
+            natureOfIncome: item.natureOfIncome,
+            isTaxableinYourHand: item.isTaxableinYourHand,
+            derivedIncome: item.derivedIncome,
+            amount: item.amount,
+            scheduleOfferd: item.scheduleOfferd,
+            numberOfSchedule: item.numberOfSchedule,
+          })
+        );
+      });
+
+      // console.log(ipdIntForm.value, 'ipdIntForm');
+    }
   }
 
   createForms() {}
@@ -704,6 +779,11 @@ export class ScheduleFaComponent implements OnInit {
       const tdArray = this.scheduleFa.get('trustsDetails') as FormArray;
       if (tdArray.valid) {
         tdArray.push(this.initTdForm());
+      }
+    } else if (section === 'oid') {
+      const oidArray = this.scheduleFa.get('otherIncomeDetails') as FormArray;
+      if (oidArray.valid) {
+        oidArray.push(this.initOidForm());
       }
     }
   }
@@ -897,6 +977,22 @@ export class ScheduleFaComponent implements OnInit {
       }
     }
 
+    // other income details
+    {
+      const oidValues = (
+        this.scheduleFa.controls['otherIncomeDetails'] as FormArray
+      ).getRawValue();
+      // console.log(ipdValues, 'values');
+
+      if (this.scheduleFa.valid) {
+        oidValues.forEach((element) => {
+          this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.otherIncomeDetails?.push(
+            element
+          );
+        });
+      }
+    }
+
     console.log(this.Copy_ITR_JSON.foreignIncome);
 
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
@@ -952,6 +1048,10 @@ export class ScheduleFaComponent implements OnInit {
 
   get getTrustsDetails() {
     return this.scheduleFa.get('trustsDetails') as FormArray;
+  }
+
+  get getOtherIncomeDetails() {
+    return this.scheduleFa.get('otherIncomeDetails') as FormArray;
   }
 
   // OTHER SECTION
