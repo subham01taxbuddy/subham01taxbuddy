@@ -81,7 +81,7 @@ export class ScheduleFaComponent implements OnInit {
     'Other income',
     'No Amount Paid/Credited',
   ];
-  natureOfInterest = ['Direct', 'Beneficial Owner', 'Beneficiary'];
+  natureOfInterestOwnership = ['Direct', 'Beneficial Owner', 'Beneficiary'];
   scheduleFa: FormGroup;
   isPanelOpen: boolean = false;
 
