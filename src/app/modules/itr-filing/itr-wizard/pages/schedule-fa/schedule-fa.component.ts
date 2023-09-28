@@ -119,7 +119,7 @@ export class ScheduleFaComponent implements OnInit {
     // trust details
     const td = this.ITR_JSON?.foreignIncome?.foreignAssets?.trustsDetails;
     if (td?.length > 0) {
-      this.createForms();
+      this.createForm();
     }
   }
 
@@ -617,9 +617,7 @@ export class ScheduleFaComponent implements OnInit {
 
       // console.log(ipdIntForm.value, 'ipdIntForm');
     }
-  }
 
-  createForms() {
     // trust details
     {
       const trustsDetails =
@@ -662,6 +660,8 @@ export class ScheduleFaComponent implements OnInit {
       // console.log(ipdIntForm.value, 'ipdIntForm');
     }
   }
+
+  createForms() {}
 
   // ADD SECTION
   // adding whole section
@@ -737,22 +737,6 @@ export class ScheduleFaComponent implements OnInit {
   saves() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
-    // trust details
-    {
-      const tdValues = (
-        this.scheduleFa.controls['capitalAssetsDetails'] as FormArray
-      ).getRawValue();
-      // console.log(ipdValues, 'values');
-
-      if (this.scheduleFa.valid) {
-        tdValues.forEach((element) => {
-          this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.trustsDetails?.push(
-            element
-          );
-        });
-      }
-    }
 
     console.log(this.Copy_ITR_JSON.foreignIncome);
 
@@ -891,6 +875,22 @@ export class ScheduleFaComponent implements OnInit {
       if (this.scheduleFa.valid) {
         cadValues.forEach((element) => {
           this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.capitalAssetsDetails?.push(
+            element
+          );
+        });
+      }
+    }
+
+    // trust details
+    {
+      const tdValues = (
+        this.scheduleFa.controls['trustsDetails'] as FormArray
+      ).getRawValue();
+      // console.log(ipdValues, 'values');
+
+      if (this.scheduleFa.valid) {
+        tdValues.forEach((element) => {
+          this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.trustsDetails?.push(
             element
           );
         });
