@@ -194,6 +194,182 @@
           </form>
         </div>
 
+        <!-- custodial Accounts  -->
+        <div *ngIf="topic.code === 'A2'">
+          <form formArrayName="custodialAccounts" style="padding: 20px">
+            <div class="flex justify-content-end align-items-center">
+              <button
+                class="flex lgtBtn justify-content-end align-items-center"
+                style="height: 100%"
+                (click)="addMore('custodialAccounts')"
+              >
+                + Add More
+              </button>
+            </div>
+            <div
+              *ngFor="
+                let custodialAccounts of getCustodialAccounts.controls;
+                let i = index
+              "
+              [formGroupName]="i"
+            >
+              <br />
+              <!-- Country Name Input -->
+              <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Name</mat-label>
+                  <input
+                    matInput
+                    name="countryName[i]"
+                    formControlName="countryName"
+                  />
+                </mat-form-field>
+
+                <!-- Country Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Code</mat-label>
+                  <input
+                    matInput
+                    name="countryCode[i]"
+                    formControlName="countryCode"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="flex gap-[25px]" style="margin-bottom: 15px">
+                <!-- Name of Institution Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Name of Institution</mat-label>
+                  <input
+                    matInput
+                    name="nameOfInstitution[i]"
+                    formControlName="nameOfInstitution"
+                  />
+                </mat-form-field>
+
+                <!-- Address of Institution Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Address of Institution</mat-label>
+                  <input
+                    matInput
+                    name="addressOfInstitution[i]"
+                    formControlName="addressOfInstitution"
+                  />
+                </mat-form-field>
+
+                <!-- Zip Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Zip Code</mat-label>
+                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                </mat-form-field>
+              </div>
+
+              <div class="flex justify-content-end align-items-center">
+                <button
+                  class="flex lgtBtn justify-content-end align-items-center"
+                  style="height: 100%"
+                  (click)="add('custodialAccounts')"
+                >
+                  + Add
+                </button>
+              </div>
+
+              <!-- Account Array Input -->
+              <div
+                formArrayName="account"
+                class="surround"
+                style="margin-top: 0px"
+              >
+                <div
+                  *ngFor="
+                    let accountCtrl of getCustodialAccountControls.controls;
+                    let i = index
+                  "
+                  [formGroupName]="i"
+                >
+                  <div
+                    class="flex gap-[25px] align-items-center"
+                    style="margin-bottom: 10px"
+                  >
+                    <!-- Account Number Input -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Account Number</mat-label>
+                      <input
+                        matInput
+                        name="accountNumber[i]"
+                        formControlName="accountNumber"
+                      />
+                    </mat-form-field>
+
+                    <!-- Status -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Status</mat-label>
+                      <input
+                        matInput
+                        name="status[i]"
+                        formControlName="status"
+                      />
+                    </mat-form-field>
+
+                    <!-- acount opening date -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Account opening date</mat-label>
+                      <input
+                        matInput
+                        name="accountOpeningDate[i]"
+                        formControlName="accountOpeningDate"
+                      />
+                    </mat-form-field>
+
+                    <!-- Peak Balance Input -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Peak Balance</mat-label>
+                      <input
+                        matInput
+                        name="peakBalance[i]"
+                        formControlName="peakBalance"
+                      />
+                    </mat-form-field>
+                  </div>
+
+                  <div class="flex gap-[25px]">
+                    <!-- closing balance -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Income accrued in the account * </mat-label>
+                      <input
+                        matInput
+                        name="closingBalance[i]"
+                        formControlName="closingBalance"
+                      />
+                    </mat-form-field>
+
+                    <!-- grossAmountNature -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Gross Amount Nature </mat-label>
+                      <input
+                        matInput
+                        name="grossAmountNature[i]"
+                        formControlName="grossAmountNature"
+                      />
+                    </mat-form-field>
+
+                    <!-- grossInterestPaid -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Gross Interest Paid </mat-label>
+                      <input
+                        matInput
+                        name="grossInterestPaid[i]"
+                        formControlName="grossInterestPaid"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <br />
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
         <!-- foreign equity debt -->
         <div *ngIf="topic.code === 'A3'">
           <form formArrayName="equityAndDebtInterest" style="padding: 20px">
@@ -895,7 +1071,7 @@
           </form>
         </div>
 
-        <!-- Depository Accounts  -->
+        <!-- signing Authority Accounts  -->
         <div *ngIf="topic.code === 'E'">
           <form formArrayName="signingAuthorityDetails" style="padding: 20px">
             <div class="flex justify-content-end align-items-center">

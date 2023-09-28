@@ -86,6 +86,7 @@ export class ScheduleFaComponent implements OnInit {
       'trustsDetails',
       'otherIncomeDetails',
       'signingAuthorityDetails',
+      'custodialAccounts',
     ];
 
     assetTypes.forEach((assetType) => {
@@ -132,6 +133,30 @@ export class ScheduleFaComponent implements OnInit {
                 peakBalance: null,
                 closingBalance: null,
                 grossInterestPaid: null,
+              }),
+            ]),
+          }),
+        ]);
+      case 'custodialAccounts':
+        return this.fb.array([
+          this.fb.group({
+            countryName: null,
+            countryCode: null,
+            nameOfInstitution: null,
+            addressOfInstitution: null,
+            zipCode: null,
+            account: this.fb.array([
+              this.fb.group({
+                accountNumber: null,
+                status: null,
+                accountOpeningDate: null,
+                peakBalance: null,
+                closingBalance: null,
+                grossAmountNature: null,
+                grossInterestPaid: null,
+                dateOfContract: null,
+                cashValue: null,
+                totalGrossAmountPaid: null,
               }),
             ]),
           }),
@@ -462,6 +487,29 @@ export class ScheduleFaComponent implements OnInit {
         //   ]),
         // });
         // formArray.push(formGroup);
+      } else if (assetType === 'custodialAccounts') {
+        // const formGroup = this.fb.group({
+        //   countryName: item.countryName,
+        //   countryCode: item.countryCode,
+        //   nameOfInstitution: item.nameOfInstitution,
+        //   addressOfInstitution: item.addressOfInstitution,
+        //   zipCode: item.zipCode,
+        //   account: this.fb.array([
+        //     this.fb.group({
+        //       accountNumber: item.accountNumber,
+        //       status: item.status,
+        //       accountOpeningDate: item.accountOpeningDate,
+        //       peakBalance: item.peakBalance,
+        //       closingBalance: item.closingBalance,
+        //       grossAmountNature: item.grossAmountNature,
+        //       grossInterestPaid: item.grossInterestPaid,
+        //       dateOfContract: null,
+        //       cashValue: null,
+        //       totalGrossAmountPaid: null,
+        //     }),
+        //   ]),
+        // });
+        // formArray.push(formGroup);
       }
     });
   }
@@ -514,11 +562,26 @@ export class ScheduleFaComponent implements OnInit {
             numberOfSchedule: null,
           })
         );
+      } else if (section === 'custodialAccounts') {
+        accountControls.push(
+          this.fb.group({
+            accountNumber: null,
+            status: null,
+            accountOpeningDate: null,
+            peakBalance: null,
+            closingBalance: null,
+            grossAmountNature: null,
+            grossInterestPaid: null,
+            dateOfContract: null,
+            cashValue: null,
+            totalGrossAmountPaid: null,
+          })
+        );
+      } else {
+        this.utilsService.showSnackBar(
+          'Please make sure you have filled all the details correctly to proceed ahead'
+        );
       }
-    } else {
-      this.utilsService.showSnackBar(
-        'Please make sure you have filled all the details correctly to proceed ahead'
-      );
     }
   }
 
@@ -550,7 +613,11 @@ export class ScheduleFaComponent implements OnInit {
       }
     });
 
-    const otherObjToSave = ['depositoryAccounts', 'signingAuthorityDetails'];
+    const otherObjToSave = [
+      'depositoryAccounts',
+      'signingAuthorityDetails',
+      'custodialAccounts',
+    ];
 
     otherObjToSave.forEach((section) => {
       const accountsFormArray = (
@@ -605,6 +672,28 @@ export class ScheduleFaComponent implements OnInit {
 
             console.log(formGroup);
             // I can empty foreign assets before starting to push, this way only the new daat will be pushed from start
+            this.Copy_ITR_JSON.foreignIncome.foreignAssets[section].push(
+              formGroup
+            );
+          } else if (section === 'custodialAccounts') {
+            const formGroup = {
+              countryName: sectionForm.countryName,
+              countryCode: sectionForm.countryCode,
+              nameOfInstitution: sectionForm.nameOfInstitution,
+              addressOfInstitution: sectionForm.addressOfInstitution,
+              zipCode: sectionForm.zipCode,
+              accountNumber: account.accountNumber,
+              status: account.status,
+              accountOpeningDate: account.accountOpeningDate,
+              peakBalance: account.peakBalance,
+              closingBalance: account.closingBalance,
+              grossAmountNature: account.grossAmountNature,
+              grossInterestPaid: account.grossInterestPaid,
+              dateOfContract: null,
+              cashValue: null,
+              totalGrossAmountPaid: null,
+            };
+
             this.Copy_ITR_JSON.foreignIncome.foreignAssets[section].push(
               formGroup
             );
@@ -681,6 +770,17 @@ export class ScheduleFaComponent implements OnInit {
   // TO-DO =================pass index of edit, allow one edit only
   get getSigningAuthAccountControls() {
     return (this.scheduleFa.get('signingAuthorityDetails') as FormArray)
+      .at(0)
+      .get('account') as FormArray;
+  }
+
+  get getCustodialAccounts() {
+    return this.scheduleFa?.get('custodialAccounts') as FormArray;
+  }
+
+  // TO-DO =================pass index of edit, allow one edit only
+  get getCustodialAccountControls() {
+    return (this.scheduleFa.get('custodialAccounts') as FormArray)
       .at(0)
       .get('account') as FormArray;
   }
