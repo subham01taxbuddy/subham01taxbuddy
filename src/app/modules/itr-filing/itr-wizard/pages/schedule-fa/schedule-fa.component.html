@@ -56,6 +56,7 @@
                     matInput
                     name="countryName[i]"
                     formControlName="countryName"
+                    required
                   />
                 </mat-form-field>
 
@@ -66,6 +67,7 @@
                     matInput
                     name="countryCode[i]"
                     formControlName="countryCode"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -73,28 +75,35 @@
               <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Name of Institution Input -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Name of Institution</mat-label>
+                  <mat-label>Name of the financial institution</mat-label>
                   <input
                     matInput
                     name="nameOfInstitution[i]"
                     formControlName="nameOfInstitution"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Address of Institution Input -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Address of Institution</mat-label>
+                  <mat-label>Address of the financial Institution</mat-label>
                   <input
                     matInput
                     name="addressOfInstitution[i]"
                     formControlName="addressOfInstitution"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Zip Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Zip Code</mat-label>
-                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                  <input
+                    matInput
+                    name="zipCode[i]"
+                    formControlName="zipCode"
+                    required
+                  />
                 </mat-form-field>
               </div>
 
@@ -132,6 +141,7 @@
                         matInput
                         name="accountNumber[i]"
                         formControlName="accountNumber"
+                        required
                       />
                     </mat-form-field>
 
@@ -142,6 +152,7 @@
                         matInput
                         name="status[i]"
                         formControlName="status"
+                        required
                       />
                     </mat-form-field>
 
@@ -152,6 +163,7 @@
                         matInput
                         name="accountOpeningDate[i]"
                         formControlName="accountOpeningDate"
+                        required
                       />
                     </mat-form-field>
                   </div>
@@ -159,11 +171,12 @@
                   <div class="flex gap-[25px]">
                     <!-- Peak Balance Input -->
                     <mat-form-field appearance="outline">
-                      <mat-label>Peak Balance</mat-label>
+                      <mat-label>Peak Balance during the period</mat-label>
                       <input
                         matInput
                         name="peakBalance[i]"
                         formControlName="peakBalance"
+                        required
                       />
                     </mat-form-field>
 
@@ -174,16 +187,21 @@
                         matInput
                         name="closingBalance[i]"
                         formControlName="closingBalance"
+                        required
                       />
                     </mat-form-field>
 
                     <!-- Gross Interest Paid Input -->
                     <mat-form-field appearance="outline">
-                      <mat-label>Gross Interest Paid</mat-label>
+                      <mat-label
+                        >Gross Interest paid/credited to the account during the
+                        period
+                      </mat-label>
                       <input
                         matInput
                         name="grossInterestPaid[i]"
                         formControlName="grossInterestPaid"
+                        required
                       />
                     </mat-form-field>
                   </div>
@@ -222,6 +240,7 @@
                     matInput
                     name="countryName[i]"
                     formControlName="countryName"
+                    required
                   />
                 </mat-form-field>
 
@@ -232,6 +251,7 @@
                     matInput
                     name="countryCode[i]"
                     formControlName="countryCode"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -239,28 +259,35 @@
               <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Name of Institution Input -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Name of Institution</mat-label>
+                  <mat-label>Name of financial Institution</mat-label>
                   <input
                     matInput
                     name="nameOfInstitution[i]"
                     formControlName="nameOfInstitution"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Address of Institution Input -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Address of Institution</mat-label>
+                  <mat-label>Address of the financial Institution</mat-label>
                   <input
                     matInput
                     name="addressOfInstitution[i]"
                     formControlName="addressOfInstitution"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Zip Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Zip Code</mat-label>
-                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                  <input
+                    matInput
+                    name="zipCode[i]"
+                    formControlName="zipCode"
+                    required
+                  />
                 </mat-form-field>
               </div>
 
@@ -298,6 +325,7 @@
                         matInput
                         name="accountNumber[i]"
                         formControlName="accountNumber"
+                        required
                       />
                     </mat-form-field>
 
@@ -308,6 +336,7 @@
                         matInput
                         name="status[i]"
                         formControlName="status"
+                        required
                       />
                     </mat-form-field>
 
@@ -318,16 +347,18 @@
                         matInput
                         name="accountOpeningDate[i]"
                         formControlName="accountOpeningDate"
+                        required
                       />
                     </mat-form-field>
 
                     <!-- Peak Balance Input -->
                     <mat-form-field appearance="outline">
-                      <mat-label>Peak Balance</mat-label>
+                      <mat-label>Peak Balance during the period</mat-label>
                       <input
                         matInput
                         name="peakBalance[i]"
                         formControlName="peakBalance"
+                        required
                       />
                     </mat-form-field>
                   </div>
@@ -335,31 +366,41 @@
                   <div class="flex gap-[25px]">
                     <!-- closing balance -->
                     <mat-form-field appearance="outline">
-                      <mat-label>Income accrued in the account * </mat-label>
+                      <mat-label>Closing balance</mat-label>
                       <input
                         matInput
                         name="closingBalance[i]"
                         formControlName="closingBalance"
+                        required
                       />
                     </mat-form-field>
 
                     <!-- grossAmountNature -->
                     <mat-form-field appearance="outline">
-                      <mat-label>Gross Amount Nature </mat-label>
-                      <input
+                      <mat-label>Nature of Amount</mat-label>
+                      <mat-select
                         matInput
                         name="grossAmountNature[i]"
                         formControlName="grossAmountNature"
-                      />
+                        required
+                      >
+                        <mat-option
+                          *ngFor="let option of natureOfIncome"
+                          [value]="option"
+                        >
+                          {{ option }}
+                        </mat-option>
+                      </mat-select>
                     </mat-form-field>
 
                     <!-- grossInterestPaid -->
                     <mat-form-field appearance="outline">
-                      <mat-label>Gross Interest Paid </mat-label>
+                      <mat-label>Amount</mat-label>
                       <input
                         matInput
                         name="grossInterestPaid[i]"
                         formControlName="grossInterestPaid"
+                        required
                       />
                     </mat-form-field>
                   </div>
@@ -398,6 +439,7 @@
                     matInput
                     name="countryName[i]"
                     formControlName="countryName"
+                    required
                   />
                 </mat-form-field>
 
@@ -408,6 +450,7 @@
                     matInput
                     name="countryCode[i]"
                     formControlName="countryCode"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -420,6 +463,7 @@
                     matInput
                     name="nameOfEntity[i]"
                     formControlName="nameOfEntity"
+                    required
                   />
                 </mat-form-field>
 
@@ -430,13 +474,19 @@
                     matInput
                     name="addressOfEntity[i]"
                     formControlName="addressOfEntity"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Zip Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Zip Code</mat-label>
-                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                  <input
+                    matInput
+                    name="zipCode[i]"
+                    formControlName="zipCode"
+                    required
+                  />
                 </mat-form-field>
               </div>
 
@@ -446,31 +496,34 @@
               >
                 <!-- Nature of entity -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Nature Of Entity</mat-label>
+                  <mat-label>Nature of Entity</mat-label>
                   <input
                     matInput
                     name="natureOfEntity[i]"
                     formControlName="natureOfEntity"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Date of interest -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Date of interest</mat-label>
+                  <mat-label>Date of acquiring the interest</mat-label>
                   <input
                     matInput
                     name="dateOfInterest[i]"
                     formControlName="dateOfInterest"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Initial Value -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Account Opening Date</mat-label>
+                  <mat-label>Initial value of the Investment</mat-label>
                   <input
                     matInput
                     name="initialValue[i]"
                     formControlName="initialValue"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -478,11 +531,14 @@
               <div class="flex gap-[25px]">
                 <!-- Peak Value  -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Peak Balance</mat-label>
+                  <mat-label
+                    >Peak value of investment during the Period</mat-label
+                  >
                   <input
                     matInput
                     name="peakValue[i]"
                     formControlName="peakValue"
+                    required
                   />
                 </mat-form-field>
 
@@ -493,16 +549,21 @@
                     matInput
                     name="closingValue[i]"
                     formControlName="closingValue"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Gross Amount Paid -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Gross Amount Paid / Credited</mat-label>
+                  <mat-label
+                    >Total gross amount paid/credited with respect to the
+                    holding during the period</mat-label
+                  >
                   <input
                     matInput
                     name="totalGrossAmountPaid[i]"
                     formControlName="totalGrossAmountPaid"
+                    required
                   />
                 </mat-form-field>
 
@@ -510,12 +571,13 @@
                 <mat-form-field appearance="outline">
                   <mat-label
                     >Total gross proceeds from sale or redemption of investment
-                    during the period *
-                  </mat-label>
+                    during the period</mat-label
+                  >
                   <input
                     matInput
                     name="totalGrossProceedsFromSale[i]"
                     formControlName="totalGrossProceedsFromSale"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -523,7 +585,7 @@
           </form>
         </div>
 
-        <!-- foreign cash value insurance -->
+        <!-- cash value insurance -->
         <div *ngIf="topic.code === 'A4'">
           <form formArrayName="cashValueInsurance" style="padding: 20px">
             <div class="flex justify-content-end align-items-center">
@@ -551,6 +613,7 @@
                     matInput
                     name="countryName[i]"
                     formControlName="countryName"
+                    required
                   />
                 </mat-form-field>
 
@@ -561,6 +624,7 @@
                     matInput
                     name="countryCode[i]"
                     formControlName="countryCode"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -568,21 +632,26 @@
               <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Name of Institution -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Name of Institution</mat-label>
+                  <mat-label
+                    >Name of Financial Institution in which insurance contract
+                    held</mat-label
+                  >
                   <input
                     matInput
                     name="nameOfInstitution[i]"
                     formControlName="nameOfInstitution"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Address of Institution -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Address of Entity</mat-label>
+                  <mat-label>Address of financial institution</mat-label>
                   <input
                     matInput
                     name="addressOfInstitution[i]"
                     formControlName="addressOfInstitution"
+                    required
                   />
                 </mat-form-field>
 
@@ -597,7 +666,7 @@
                 class="flex gap-[25px] align-items-center"
                 style="margin-bottom: 10px"
               >
-                <!-- Date f contract -->
+                <!-- Date of contract -->
                 <mat-form-field appearance="outline">
                   <mat-label>Date of contract</mat-label>
                   <input
@@ -609,11 +678,14 @@
 
                 <!-- cash Value -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Cash Value</mat-label>
+                  <mat-label
+                    >The Cash / Surrender value of the contract</mat-label
+                  >
                   <input
                     matInput
                     name="cashValue[i]"
                     formControlName="cashValue"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -621,11 +693,15 @@
               <div class="flex gap-[25px]">
                 <!-- Gross Amount Paid -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Total Gross Amount Paid / Credited</mat-label>
+                  <mat-label
+                    >Total gross amount paid/credited with respect to the
+                    contract during the period</mat-label
+                  >
                   <input
                     matInput
                     name="totalGrossAmountPaid[i]"
                     formControlName="totalGrossAmountPaid"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -661,6 +737,7 @@
                     matInput
                     name="countryName[i]"
                     formControlName="countryName"
+                    required
                   />
                 </mat-form-field>
 
@@ -671,6 +748,7 @@
                     matInput
                     name="countryCode[i]"
                     formControlName="countryCode"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -683,6 +761,7 @@
                     matInput
                     name="natureOfEntity[i]"
                     formControlName="natureOfEntity"
+                    required
                   />
                 </mat-form-field>
 
@@ -693,19 +772,30 @@
                     matInput
                     name="nameOfEntity[i]"
                     formControlName="nameOfEntity"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Address of Institution -->
                 <mat-form-field appearance="outline">
                   <mat-label>Address of Entity</mat-label>
-                  <input matInput name="address[i]" formControlName="address" />
+                  <input
+                    matInput
+                    name="address[i]"
+                    formControlName="address"
+                    required
+                  />
                 </mat-form-field>
 
                 <!-- Zip Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Zip Code</mat-label>
-                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                  <input
+                    matInput
+                    name="zipCode[i]"
+                    formControlName="zipCode"
+                    required
+                  />
                 </mat-form-field>
               </div>
 
@@ -720,32 +810,40 @@
                     matInput
                     name="natureOfInterest[i]"
                     formControlName="natureOfInterest"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Date of contract -->
                 <mat-form-field appearance="outline">
                   <mat-label>Date since held</mat-label>
-                  <input matInput name="date[i]" formControlName="date" />
+                  <input
+                    matInput
+                    name="date[i]"
+                    formControlName="date"
+                    required
+                  />
                 </mat-form-field>
 
                 <!-- total Investments -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Total Investment (at cost) * </mat-label>
+                  <mat-label>Total Investment (at cost)*</mat-label>
                   <input
                     matInput
                     name="totalInvestments[i]"
                     formControlName="totalInvestments"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- accrued Income -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Accrued income</mat-label>
+                  <mat-label>Income Accrued from such interest</mat-label>
                   <input
                     matInput
                     name="accruedIncome[i]"
                     formControlName="accruedIncome"
+                    required
                   />
                 </mat-form-field>
 
@@ -756,6 +854,7 @@
                     matInput
                     name="natureOfIncome[i]"
                     formControlName="natureOfIncome"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -764,26 +863,40 @@
                 <!-- Amount -->
                 <mat-form-field appearance="outline">
                   <mat-label>Amount</mat-label>
-                  <input matInput name="amount[i]" formControlName="amount" />
+                  <input
+                    matInput
+                    name="amount[i]"
+                    formControlName="amount"
+                    required
+                  />
                 </mat-form-field>
 
                 <!-- schedule Offerd -->
                 <mat-form-field appearance="outline">
-                  <mat-label>schedule Offerd</mat-label>
-                  <input
+                  <mat-label>Schedule where offered</mat-label>
+                  <mat-select
                     matInput
                     name="scheduleOfferd[i]"
                     formControlName="scheduleOfferd"
-                  />
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let option of scheduleWhereOffered"
+                      [value]="option"
+                    >
+                      {{ option }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
 
                 <!-- number of schedule -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Number of schedule</mat-label>
+                  <mat-label>Item number of schedule</mat-label>
                   <input
                     matInput
                     name="numberOfSchedule[i]"
                     formControlName="numberOfSchedule"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -819,6 +932,7 @@
                     matInput
                     name="countryName[i]"
                     formControlName="countryName"
+                    required
                   />
                 </mat-form-field>
 
@@ -829,6 +943,7 @@
                     matInput
                     name="countryCode[i]"
                     formControlName="countryCode"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -837,29 +952,52 @@
                 <!-- Address of Institution -->
                 <mat-form-field appearance="outline">
                   <mat-label>Address of Entity</mat-label>
-                  <input matInput name="address[i]" formControlName="address" />
+                  <input
+                    matInput
+                    name="address[i]"
+                    formControlName="address"
+                    required
+                  />
                 </mat-form-field>
 
                 <!-- Zip Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Zip Code</mat-label>
-                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                  <input
+                    matInput
+                    name="zipCode[i]"
+                    formControlName="zipCode"
+                    required
+                  />
                 </mat-form-field>
 
                 <!-- Ownership -->
                 <mat-form-field appearance="outline">
                   <mat-label>Ownership</mat-label>
-                  <input
+                  <mat-select
                     matInput
                     name="ownerShip[i]"
                     formControlName="ownerShip"
-                  />
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let option of natureOfInterestOwnership"
+                      [value]="option"
+                    >
+                      {{ option }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
 
                 <!-- Date of contract -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Date since held</mat-label>
-                  <input matInput name="date[i]" formControlName="date" />
+                  <mat-label>Date of acquisition</mat-label>
+                  <input
+                    matInput
+                    name="date[i]"
+                    formControlName="date"
+                    required
+                  />
                 </mat-form-field>
               </div>
 
@@ -869,21 +1007,23 @@
               >
                 <!-- total Investments -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Total Investment (at cost) * </mat-label>
+                  <mat-label>Total Investment (at cost)</mat-label>
                   <input
                     matInput
                     name="totalInvestments[i]"
                     formControlName="totalInvestments"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- nature of Interest -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Derived Income</mat-label>
+                  <mat-label>Income dervied from property</mat-label>
                   <input
                     matInput
                     name="derivedIncome[i]"
                     formControlName="derivedIncome"
+                    required
                   />
                 </mat-form-field>
 
@@ -894,6 +1034,7 @@
                     matInput
                     name="natureOfIncome[i]"
                     formControlName="natureOfIncome"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -902,26 +1043,40 @@
                 <!-- Amount -->
                 <mat-form-field appearance="outline">
                   <mat-label>Amount</mat-label>
-                  <input matInput name="amount[i]" formControlName="amount" />
+                  <input
+                    matInput
+                    name="amount[i]"
+                    formControlName="amount"
+                    required
+                  />
                 </mat-form-field>
 
                 <!-- schedule Offerd -->
                 <mat-form-field appearance="outline">
-                  <mat-label>schedule Offerd</mat-label>
-                  <input
+                  <mat-label>Schedule where offered</mat-label>
+                  <mat-select
                     matInput
                     name="scheduleOfferd[i]"
                     formControlName="scheduleOfferd"
-                  />
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let option of scheduleWhereOffered"
+                      [value]="option"
+                    >
+                      {{ option }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
 
                 <!-- number of schedule -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Number of schedule</mat-label>
+                  <mat-label>Item number of schedule</mat-label>
                   <input
                     matInput
                     name="numberOfSchedule[i]"
                     formControlName="numberOfSchedule"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -957,6 +1112,7 @@
                     matInput
                     name="countryName[i]"
                     formControlName="countryName"
+                    required
                   />
                 </mat-form-field>
 
@@ -967,6 +1123,7 @@
                     matInput
                     name="countryCode[i]"
                     formControlName="countryCode"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -975,7 +1132,12 @@
                 <!-- Zip Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Zip Code</mat-label>
-                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                  <input
+                    matInput
+                    name="zipCode[i]"
+                    formControlName="zipCode"
+                    required
+                  />
                 </mat-form-field>
 
                 <!-- nature of interest -->
@@ -985,23 +1147,37 @@
                     matInput
                     name="natureOfAsstes[i]"
                     formControlName="natureOfAsstes"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Ownership -->
                 <mat-form-field appearance="outline">
                   <mat-label>Ownership</mat-label>
-                  <input
+                  <mat-select
                     matInput
                     name="ownerShip[i]"
                     formControlName="ownerShip"
-                  />
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let option of natureOfInterestOwnership"
+                      [value]="option"
+                    >
+                      {{ option }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
 
                 <!-- Date of contract -->
                 <mat-form-field appearance="outline">
                   <mat-label>Date of acquisition</mat-label>
-                  <input matInput name="date[i]" formControlName="date" />
+                  <input
+                    matInput
+                    name="date[i]"
+                    formControlName="date"
+                    required
+                  />
                 </mat-form-field>
               </div>
 
@@ -1011,21 +1187,23 @@
               >
                 <!-- total Investments -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Total Investment (at cost) * </mat-label>
+                  <mat-label>Total Investment (at cost)</mat-label>
                   <input
                     matInput
                     name="totalInvestments[i]"
                     formControlName="totalInvestments"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- derived income -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Derived Income</mat-label>
+                  <mat-label>Income derived from the asset</mat-label>
                   <input
                     matInput
                     name="derivedIncome[i]"
                     formControlName="derivedIncome"
+                    required
                   />
                 </mat-form-field>
 
@@ -1036,6 +1214,7 @@
                     matInput
                     name="natureOfIncome[i]"
                     formControlName="natureOfIncome"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -1044,26 +1223,40 @@
                 <!-- Amount -->
                 <mat-form-field appearance="outline">
                   <mat-label>Amount</mat-label>
-                  <input matInput name="amount[i]" formControlName="amount" />
+                  <input
+                    matInput
+                    name="amount[i]"
+                    formControlName="amount"
+                    required
+                  />
                 </mat-form-field>
 
                 <!-- schedule Offerd -->
                 <mat-form-field appearance="outline">
-                  <mat-label>schedule Offerd</mat-label>
-                  <input
+                  <mat-label>Schedule where offered</mat-label>
+                  <mat-select
                     matInput
                     name="scheduleOfferd[i]"
                     formControlName="scheduleOfferd"
-                  />
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let option of scheduleWhereOffered"
+                      [value]="option"
+                    >
+                      {{ option }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
 
                 <!-- number of schedule -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Number of schedule</mat-label>
+                  <mat-label>Item number of schedule</mat-label>
                   <input
                     matInput
                     name="numberOfSchedule[i]"
                     formControlName="numberOfSchedule"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -1099,6 +1292,7 @@
                     matInput
                     name="countryName[i]"
                     formControlName="countryName"
+                    required
                   />
                 </mat-form-field>
 
@@ -1109,6 +1303,7 @@
                     matInput
                     name="countryCode[i]"
                     formControlName="countryCode"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -1116,24 +1311,38 @@
               <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Name of Institution Input -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Name of Institution</mat-label>
+                  <mat-label
+                    >Name of the Institution in which the account is
+                    held</mat-label
+                  >
                   <input
                     matInput
                     name="institutionName[i]"
                     formControlName="institutionName"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Address of Institution Input -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Address of Institution</mat-label>
-                  <input matInput name="address[i]" formControlName="address" />
+                  <mat-label>Address of the Institution</mat-label>
+                  <input
+                    matInput
+                    name="address[i]"
+                    formControlName="address"
+                    required
+                  />
                 </mat-form-field>
 
                 <!-- Zip Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Zip Code</mat-label>
-                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                  <input
+                    matInput
+                    name="zipCode[i]"
+                    formControlName="zipCode"
+                    required
+                  />
                 </mat-form-field>
               </div>
 
@@ -1166,11 +1375,12 @@
                   >
                     <!-- Account holder name -->
                     <mat-form-field appearance="outline">
-                      <mat-label>Account Holder Name</mat-label>
+                      <mat-label>Name of the account holder</mat-label>
                       <input
                         matInput
                         name="accountHolderName[i]"
                         formControlName="accountHolderName"
+                        required
                       />
                     </mat-form-field>
 
@@ -1181,26 +1391,18 @@
                         matInput
                         name="accountNumber[i]"
                         formControlName="accountNumber"
+                        required
                       />
                     </mat-form-field>
 
                     <!-- Peak Balance Input -->
                     <mat-form-field appearance="outline">
-                      <mat-label>Peak Balance</mat-label>
+                      <mat-label>Peak Balance during the year</mat-label>
                       <input
                         matInput
                         name="peakBalance[i]"
                         formControlName="peakBalance"
-                      />
-                    </mat-form-field>
-
-                    <!-- accruedIncome -->
-                    <mat-form-field appearance="outline">
-                      <mat-label>Income accrued in the account * </mat-label>
-                      <input
-                        matInput
-                        name="accruedIncome[i]"
-                        formControlName="accruedIncome"
+                        required
                       />
                     </mat-form-field>
                   </div>
@@ -1215,6 +1417,18 @@
                         matInput
                         name="isTaxableinYourHand[i]"
                         formControlName="isTaxableinYourHand"
+                        required
+                      />
+                    </mat-form-field>
+
+                    <!-- accruedIncome -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Income accrued in the account * </mat-label>
+                      <input
+                        matInput
+                        name="accruedIncome[i]"
+                        formControlName="accruedIncome"
+                        required
                       />
                     </mat-form-field>
 
@@ -1225,26 +1439,38 @@
                         matInput
                         name="amount[i]"
                         formControlName="amount"
+                        required
                       />
                     </mat-form-field>
+                  </div>
 
-                    <!-- scheduleOfferd -->
+                  <div class="flex gap-[25px]">
+                    <!-- schedule Offerd -->
                     <mat-form-field appearance="outline">
-                      <mat-label>Schedule where Offerd </mat-label>
-                      <input
+                      <mat-label>Schedule where offered</mat-label>
+                      <mat-select
                         matInput
                         name="scheduleOfferd[i]"
                         formControlName="scheduleOfferd"
-                      />
+                        required
+                      >
+                        <mat-option
+                          *ngFor="let option of scheduleWhereOffered"
+                          [value]="option"
+                        >
+                          {{ option }}
+                        </mat-option>
+                      </mat-select>
                     </mat-form-field>
 
                     <!-- numberOfSchedule -->
                     <mat-form-field appearance="outline">
-                      <mat-label>Number of Schedule </mat-label>
+                      <mat-label>Item number of Schedule </mat-label>
                       <input
                         matInput
                         name="numberOfSchedule[i]"
                         formControlName="numberOfSchedule"
+                        required
                       />
                     </mat-form-field>
                   </div>
@@ -1283,6 +1509,7 @@
                     matInput
                     name="countryName[i]"
                     formControlName="countryName"
+                    required
                   />
                 </mat-form-field>
 
@@ -1293,13 +1520,19 @@
                     matInput
                     name="countryCode[i]"
                     formControlName="countryCode"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Zip Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Zip Code</mat-label>
-                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                  <input
+                    matInput
+                    name="zipCode[i]"
+                    formControlName="zipCode"
+                    required
+                  />
                 </mat-form-field>
               </div>
 
@@ -1311,6 +1544,7 @@
                     matInput
                     name="trustName[i]"
                     formControlName="trustName"
+                    required
                   />
                 </mat-form-field>
 
@@ -1321,6 +1555,7 @@
                     matInput
                     name="trustAddress[i]"
                     formControlName="trustAddress"
+                    required
                   />
                 </mat-form-field>
 
@@ -1331,6 +1566,7 @@
                     matInput
                     name="trusteesName[i]"
                     formControlName="trusteesName"
+                    required
                   />
                 </mat-form-field>
 
@@ -1341,6 +1577,7 @@
                     matInput
                     name="trusteesAddress[i]"
                     formControlName="trusteesAddress"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -1356,6 +1593,7 @@
                     matInput
                     name="settlorName[i]"
                     formControlName="settlorName"
+                    required
                   />
                 </mat-form-field>
 
@@ -1366,6 +1604,7 @@
                     matInput
                     name="settlorAddress[i]"
                     formControlName="settlorAddress"
+                    required
                   />
                 </mat-form-field>
 
@@ -1376,6 +1615,7 @@
                     matInput
                     name="beneficiariesName[i]"
                     formControlName="beneficiariesName"
+                    required
                   />
                 </mat-form-field>
 
@@ -1386,6 +1626,7 @@
                     matInput
                     name="beneficiariesAddress[i]"
                     formControlName="beneficiariesAddress"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -1396,8 +1637,13 @@
               >
                 <!-- date -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Date since position held * </mat-label>
-                  <input matInput name="date[i]" formControlName="date" />
+                  <mat-label>Date since position held</mat-label>
+                  <input
+                    matInput
+                    name="date[i]"
+                    formControlName="date"
+                    required
+                  />
                 </mat-form-field>
 
                 <!-- isTaxableinYourHand -->
@@ -1409,6 +1655,7 @@
                     matInput
                     name="isTaxableinYourHand[i]"
                     formControlName="isTaxableinYourHand"
+                    required
                   />
                 </mat-form-field>
 
@@ -1419,6 +1666,7 @@
                     matInput
                     name="derivedIncome[i]"
                     formControlName="derivedIncome"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -1430,26 +1678,40 @@
                 <!-- amount -->
                 <mat-form-field appearance="outline">
                   <mat-label>Amount</mat-label>
-                  <input matInput name="amount[i]" formControlName="amount" />
+                  <input
+                    matInput
+                    name="amount[i]"
+                    formControlName="amount"
+                    required
+                  />
                 </mat-form-field>
 
-                <!-- scheduleOfferd -->
+                <!-- schedule Offerd -->
                 <mat-form-field appearance="outline">
-                  <mat-label>schedule Offerd</mat-label>
-                  <input
+                  <mat-label>Schedule where offered</mat-label>
+                  <mat-select
                     matInput
                     name="scheduleOfferd[i]"
                     formControlName="scheduleOfferd"
-                  />
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let option of scheduleWhereOffered"
+                      [value]="option"
+                    >
+                      {{ option }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
 
                 <!-- numberOfSchedule -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Number of Schedule</mat-label>
+                  <mat-label>Item number of Schedule</mat-label>
                   <input
                     matInput
                     name="numberOfSchedule[i]"
                     formControlName="numberOfSchedule"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -1486,6 +1748,7 @@
                     matInput
                     name="countryName[i]"
                     formControlName="countryName"
+                    required
                   />
                 </mat-form-field>
 
@@ -1496,48 +1759,64 @@
                     matInput
                     name="countryCode[i]"
                     formControlName="countryCode"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- Zip Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Zip Code</mat-label>
-                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                  <input
+                    matInput
+                    name="zipCode[i]"
+                    formControlName="zipCode"
+                    required
+                  />
                 </mat-form-field>
               </div>
 
               <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Name -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Name of the person from whom derived *</mat-label>
-                  <input matInput name="name[i]" formControlName="name" />
+                  <mat-label>Name of the person from whom derived</mat-label>
+                  <input
+                    matInput
+                    name="name[i]"
+                    formControlName="name"
+                    required
+                  />
                 </mat-form-field>
 
                 <!-- address -->
                 <mat-form-field appearance="outline">
-                  <mat-label
-                    >Address of the person from whom derived *</mat-label
-                  >
-                  <input matInput name="address[i]" formControlName="address" />
+                  <mat-label>Address of the person from whom derived</mat-label>
+                  <input
+                    matInput
+                    name="address[i]"
+                    formControlName="address"
+                    required
+                  />
                 </mat-form-field>
 
                 <!-- nature of income -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Nature of income * </mat-label>
+                  <mat-label>Nature of income</mat-label>
                   <input
                     matInput
                     name="natureOfIncome[i]"
                     formControlName="natureOfIncome"
+                    required
                   />
                 </mat-form-field>
 
                 <!-- derivedIncome -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Income derived in the account</mat-label>
+                  <mat-label>Income derived</mat-label>
                   <input
                     matInput
                     name="derivedIncome[i]"
                     formControlName="derivedIncome"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -1549,12 +1828,13 @@
                 <!-- isTaxableinYourHand -->
                 <mat-form-field appearance="outline">
                   <mat-label
-                    >Whether income derived is taxable in your hands? *
-                  </mat-label>
+                    >Whether income derived is taxable in your hands?</mat-label
+                  >
                   <input
                     matInput
                     name="isTaxableinYourHand[i]"
                     formControlName="isTaxableinYourHand"
+                    required
                   />
                 </mat-form-field>
               </div>
@@ -1566,26 +1846,40 @@
                 <!-- amount -->
                 <mat-form-field appearance="outline">
                   <mat-label>Amount</mat-label>
-                  <input matInput name="amount[i]" formControlName="amount" />
+                  <input
+                    matInput
+                    name="amount[i]"
+                    formControlName="amount"
+                    required
+                  />
                 </mat-form-field>
 
-                <!-- scheduleOfferd -->
+                <!-- schedule Offerd -->
                 <mat-form-field appearance="outline">
-                  <mat-label>schedule Offerd</mat-label>
-                  <input
+                  <mat-label>Schedule where offered</mat-label>
+                  <mat-select
                     matInput
                     name="scheduleOfferd[i]"
                     formControlName="scheduleOfferd"
-                  />
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let option of scheduleWhereOffered"
+                      [value]="option"
+                    >
+                      {{ option }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
 
                 <!-- numberOfSchedule -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Number of Schedule</mat-label>
+                  <mat-label>Item number of Schedule</mat-label>
                   <input
                     matInput
                     name="numberOfSchedule[i]"
                     formControlName="numberOfSchedule"
+                    required
                   />
                 </mat-form-field>
               </div>

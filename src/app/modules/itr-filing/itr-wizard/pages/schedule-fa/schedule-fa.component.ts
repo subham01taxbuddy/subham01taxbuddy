@@ -65,7 +65,23 @@ export class ScheduleFaComponent implements OnInit {
       code: 'G',
     },
   ];
-
+  scheduleWhereOffered = [
+    'Salary',
+    'House Property',
+    'Capital Gains',
+    'Business',
+    'Other Sources',
+    'Exempt Income',
+    'No Income during the year',
+  ];
+  natureOfIncome = [
+    'Interest',
+    'Dividend',
+    'Proceeds from sale or redemption of financial assets',
+    'Other income',
+    'No Amount Paid/Credited',
+  ];
+  natureOfInterest = ['Direct', 'Beneficial Owner', 'Beneficiary'];
   scheduleFa: FormGroup;
   isPanelOpen: boolean = false;
 
@@ -704,23 +720,29 @@ export class ScheduleFaComponent implements OnInit {
 
     console.log(this.Copy_ITR_JSON.foreignIncome);
 
-    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-      (result: any) => {
-        this.ITR_JSON = result;
-        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-        this.loading = false;
-        this.utilsService.showSnackBar('Schedule FA saved successfully');
-        this.saveAndNext.emit(false);
-      },
-      (error) => {
-        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Failed to add schedule FA, please try again.'
-        );
-        this.utilsService.smoothScrollToTop();
-      }
-    );
+    if (this.scheduleFa.valid) {
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+        (result: any) => {
+          this.ITR_JSON = result;
+          sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+          this.loading = false;
+          this.utilsService.showSnackBar('Schedule FA saved successfully');
+          this.saveAndNext.emit(false);
+        },
+        (error) => {
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Failed to add schedule FA, please try again.'
+          );
+          this.utilsService.smoothScrollToTop();
+        }
+      );
+    } else {
+      this.utilsService.showSnackBar(
+        'Failed to add schedule FA, please try again.'
+      );
+    }
   }
 
   // GET FUNCTIONS SECTION
