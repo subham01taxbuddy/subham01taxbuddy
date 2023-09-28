@@ -102,7 +102,7 @@
                 <button
                   class="flex lgtBtn justify-content-end align-items-center"
                   style="height: 100%"
-                  (click)="add()"
+                  (click)="add('depositoryAccounts')"
                 >
                   + Add
                 </button>
@@ -187,6 +187,7 @@
                       />
                     </mat-form-field>
                   </div>
+                  <br />
                 </div>
               </div>
             </div>
@@ -889,6 +890,190 @@
                     formControlName="numberOfSchedule"
                   />
                 </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Depository Accounts  -->
+        <div *ngIf="topic.code === 'E'">
+          <form formArrayName="signingAuthorityDetails" style="padding: 20px">
+            <div class="flex justify-content-end align-items-center">
+              <button
+                class="flex lgtBtn justify-content-end align-items-center"
+                style="height: 100%"
+                (click)="addMore('signingAuthorityDetails')"
+              >
+                + Add More
+              </button>
+            </div>
+            <div
+              *ngFor="
+                let signingAuthorityDetails of getSigningAuthorityDetails.controls;
+                let i = index
+              "
+              [formGroupName]="i"
+            >
+              <br />
+              <!-- Country Name Input -->
+              <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Name</mat-label>
+                  <input
+                    matInput
+                    name="countryName[i]"
+                    formControlName="countryName"
+                  />
+                </mat-form-field>
+
+                <!-- Country Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Country Code</mat-label>
+                  <input
+                    matInput
+                    name="countryCode[i]"
+                    formControlName="countryCode"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="flex gap-[25px]" style="margin-bottom: 15px">
+                <!-- Name of Institution Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Name of Institution</mat-label>
+                  <input
+                    matInput
+                    name="institutionName[i]"
+                    formControlName="institutionName"
+                  />
+                </mat-form-field>
+
+                <!-- Address of Institution Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Address of Institution</mat-label>
+                  <input matInput name="address[i]" formControlName="address" />
+                </mat-form-field>
+
+                <!-- Zip Code Input -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Zip Code</mat-label>
+                  <input matInput name="zipCode[i]" formControlName="zipCode" />
+                </mat-form-field>
+              </div>
+
+              <div class="flex justify-content-end align-items-center">
+                <button
+                  class="flex lgtBtn justify-content-end align-items-center"
+                  style="height: 100%"
+                  (click)="add('signingAuthorityDetails')"
+                >
+                  + Add
+                </button>
+              </div>
+
+              <!-- Account Array Input -->
+              <div
+                formArrayName="account"
+                class="surround"
+                style="margin-top: 0px"
+              >
+                <div
+                  *ngFor="
+                    let accountCtrl of getSigningAuthAccountControls.controls;
+                    let i = index
+                  "
+                  [formGroupName]="i"
+                >
+                  <div
+                    class="flex gap-[25px] align-items-center"
+                    style="margin-bottom: 10px"
+                  >
+                    <!-- Account holder name -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Account Holder Name</mat-label>
+                      <input
+                        matInput
+                        name="accountHolderName[i]"
+                        formControlName="accountHolderName"
+                      />
+                    </mat-form-field>
+
+                    <!-- Account Number Input -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Account Number</mat-label>
+                      <input
+                        matInput
+                        name="accountNumber[i]"
+                        formControlName="accountNumber"
+                      />
+                    </mat-form-field>
+
+                    <!-- Peak Balance Input -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Peak Balance</mat-label>
+                      <input
+                        matInput
+                        name="peakBalance[i]"
+                        formControlName="peakBalance"
+                      />
+                    </mat-form-field>
+
+                    <!-- accruedIncome -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Income accrued in the account * </mat-label>
+                      <input
+                        matInput
+                        name="accruedIncome[i]"
+                        formControlName="accruedIncome"
+                      />
+                    </mat-form-field>
+                  </div>
+
+                  <div class="flex gap-[25px]">
+                    <!-- isTaxableinYourHand -->
+                    <mat-form-field appearance="outline">
+                      <mat-label
+                        >Whether income accrued is taxable in your hands? *
+                      </mat-label>
+                      <input
+                        matInput
+                        name="isTaxableinYourHand[i]"
+                        formControlName="isTaxableinYourHand"
+                      />
+                    </mat-form-field>
+
+                    <!-- amount -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Amount </mat-label>
+                      <input
+                        matInput
+                        name="amount[i]"
+                        formControlName="amount"
+                      />
+                    </mat-form-field>
+
+                    <!-- scheduleOfferd -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Schedule where Offerd </mat-label>
+                      <input
+                        matInput
+                        name="scheduleOfferd[i]"
+                        formControlName="scheduleOfferd"
+                      />
+                    </mat-form-field>
+
+                    <!-- numberOfSchedule -->
+                    <mat-form-field appearance="outline">
+                      <mat-label>Number of Schedule </mat-label>
+                      <input
+                        matInput
+                        name="numberOfSchedule[i]"
+                        formControlName="numberOfSchedule"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <br />
+                </div>
               </div>
             </div>
           </form>
