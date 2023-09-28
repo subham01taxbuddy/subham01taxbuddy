@@ -65,6 +65,7 @@ export class ScheduleFaComponent implements OnInit {
       code: 'G',
     },
   ];
+
   scheduleFa: FormGroup;
   isPanelOpen: boolean = false;
 
@@ -73,724 +74,330 @@ export class ScheduleFaComponent implements OnInit {
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    this.scheduleFa = this.initForm();
+    this.scheduleFa = this.fb.group({});
 
-    // depository account
-    const depositoryAct =
-      this.ITR_JSON?.foreignIncome?.foreignAssets?.depositoryAccounts;
-    if (depositoryAct?.length > 0) {
-      this.createForm();
-    }
+    const assetTypes = [
+      'depositoryAccounts',
+      'equityAndDebtInterest',
+      'cashValueInsurance',
+      'financialInterestDetails',
+      'immovablePropertryDetails',
+      'capitalAssetsDetails',
+      'trustsDetails',
+      'otherIncomeDetails',
+    ];
 
-    // equity and debt
-    const eqtyDbtInt =
-      this.ITR_JSON?.foreignIncome?.foreignAssets?.equityAndDebtInterest;
-    if (eqtyDbtInt?.length > 0) {
-      this.createForm();
-    }
+    assetTypes.forEach((assetType) => {
+      const asset = this.ITR_JSON?.foreignIncome?.foreignAssets?.[assetType];
 
-    // cash value insurance
-    const cvi = this.ITR_JSON?.foreignIncome?.foreignAssets?.cashValueInsurance;
-    if (cvi?.length > 0) {
-      this.createForm();
-    }
+      //  TODO =========> Only add a control if asset is empty
+      // if ((!asset || asset.length === 0) && !this.scheduleFa.get(assetType)) {
+      //   this.scheduleFa.addControl(assetType, this.initForms(assetType));
+      // }
 
-    // financial interest details
-    const fid =
-      this.ITR_JSON?.foreignIncome?.foreignAssets?.financialInterestDetails;
-    if (fid?.length > 0) {
-      this.createForm();
-    }
+      this.scheduleFa.addControl(assetType, this.initForms(assetType));
 
-    // immovable property details
-    const ipd =
-      this.ITR_JSON?.foreignIncome?.foreignAssets?.immovablePropertryDetails;
-    if (ipd?.length > 0) {
-      this.createForm();
-    }
-
-    // capital asset details
-    const cad =
-      this.ITR_JSON?.foreignIncome?.foreignAssets?.capitalAssetsDetails;
-    if (cad?.length > 0) {
-      this.createForm();
-    }
-
-    // trust details
-    const td = this.ITR_JSON?.foreignIncome?.foreignAssets?.trustsDetails;
-    if (td?.length > 0) {
-      this.createForm();
-    }
-
-    // other income details
-    const oid = this.ITR_JSON?.foreignIncome?.foreignAssets?.otherIncomeDetails;
-    if (oid?.length > 0) {
-      this.createForm();
-    }
-  }
-
-  //FORMS SECTION
-  initForm() {
-    return this.fb.group({
-      frgnDpstryAcct: this.fb.array([
-        this.fb.group({
-          countryName: null,
-          countryCode: null,
-          nameOfInstitution: null,
-          addressOfInstitution: null,
-          zipCode: null,
-          account: this.fb.array([
-            this.fb.group({
-              hasEdit: null,
-              accountNumber: null,
-              status: null,
-              accountOpeningDate: null,
-              peakBalance: null,
-              closingBalance: null,
-              grossInterestPaid: null,
-            }),
-          ]),
-        }),
-      ]),
-      eqtyDbtInt: this.fb.array([
-        this.fb.group({
-          countryName: null,
-          countryCode: null,
-          nameOfEntity: null,
-          addressOfEntity: null,
-          zipCode: null,
-          natureOfEntity: null,
-          dateOfInterest: null,
-          initialValue: null,
-          peakValue: null,
-          closingValue: null,
-          totalGrossAmountPaid: null,
-          totalGrossProceedsFromSale: null,
-        }),
-      ]),
-      cashValueInsurance: this.fb.array([
-        this.fb.group({
-          countryName: null,
-          countryCode: null,
-          nameOfInstitution: null,
-          addressOfInstitution: null,
-          zipCode: null,
-          dateOfContract: null,
-          cashValue: null,
-          totalGrossAmountPaid: null,
-        }),
-      ]),
-      financialInterestDetails: this.fb.array([
-        this.fb.group({
-          countryCode: null,
-          countryName: null,
-          natureOfEntity: null,
-          nameOfEntity: null,
-          address: null,
-          zipCode: null,
-          natureOfInterest: null,
-          date: null,
-          totalInvestments: null,
-          accruedIncome: null,
-          natureOfIncome: null,
-          amount: null,
-          scheduleOfferd: null,
-          numberOfSchedule: null,
-        }),
-      ]),
-      immovablePropertryDetails: this.fb.array([
-        this.fb.group({
-          countryName: null,
-          countryCode: null,
-          address: null,
-          zipCode: null,
-          ownerShip: null,
-          date: null,
-          totalInvestments: null,
-          derivedIncome: null,
-          natureOfIncome: null,
-          amount: null,
-          scheduleOfferd: null,
-          numberOfSchedule: null,
-        }),
-      ]),
-      capitalAssetsDetails: this.fb.array([
-        this.fb.group({
-          countryName: null,
-          countryCode: null,
-          zipCode: null,
-          natureOfAsstes: null,
-          ownerShip: null,
-          date: null,
-          totalInvestments: null,
-          derivedIncome: null,
-          natureOfIncome: null,
-          amount: null,
-          scheduleOfferd: null,
-          numberOfSchedule: null,
-        }),
-      ]),
-      trustsDetails: this.fb.array([
-        this.fb.group({
-          countryName: null,
-          countryCode: null,
-          zipCode: null,
-          trustName: null,
-          trustAddress: null,
-          trusteesName: null,
-          trusteesAddress: null,
-          settlorName: null,
-          settlorAddress: null,
-          beneficiariesName: null,
-          beneficiariesAddress: null,
-          date: null,
-          isTaxableinYourHand: null,
-          derivedIncome: null,
-          amount: null,
-          scheduleOfferd: null,
-          numberOfSchedule: null,
-        }),
-      ]),
-      otherIncomeDetails: this.fb.array([
-        this.fb.group({
-          countryName: null,
-          countryCode: null,
-          zipCode: null,
-          name: null,
-          address: null,
-          natureOfIncome: null,
-          isTaxableinYourHand: null,
-          derivedIncome: null,
-          amount: null,
-          scheduleOfferd: null,
-          numberOfSchedule: null,
-        }),
-      ]),
-    });
-  }
-
-  initFdaForm() {
-    return this.fb.group({
-      countryName: null,
-      countryCode: null,
-      nameOfInstitution: null,
-      addressOfInstitution: null,
-      zipCode: null,
-      account: this.fb.array([
-        this.fb.group({
-          hasEdit: null,
-          accountNumber: null,
-          status: null,
-          accountOpeningDate: null,
-          peakBalance: null,
-          closingBalance: null,
-          grossInterestPaid: null,
-        }),
-      ]),
-    });
-  }
-
-  initEdtForm() {
-    return this.fb.group({
-      countryName: null,
-      countryCode: null,
-      nameOfEntity: null,
-      addressOfEntity: null,
-      zipCode: null,
-      natureOfEntity: null,
-      dateOfInterest: null,
-      initialValue: null,
-      peakValue: null,
-      closingValue: null,
-      totalGrossAmountPaid: null,
-      totalGrossProceedsFromSale: null,
-    });
-  }
-
-  initCviForm() {
-    return this.fb.group({
-      countryCode: null,
-      countryName: null,
-      nameOfInstitution: null,
-      addressOfInstitution: null,
-      zipCode: null,
-      dateOfContract: null,
-      cashValue: null,
-      totalGrossAmountPaid: null,
-    });
-  }
-
-  initFdiForm() {
-    return this.fb.group({
-      countryName: null,
-      countryCode: null,
-      natureOfEntity: null,
-      nameOfEntity: null,
-      address: null,
-      zipCode: null,
-      natureOfInterest: null,
-      date: null,
-      totalInvestments: null,
-      accruedIncome: null,
-      natureOfIncome: null,
-      amount: null,
-      scheduleOfferd: null,
-      numberOfSchedule: null,
-    });
-  }
-
-  initIpdForm() {
-    return this.fb.group({
-      countryName: null,
-      countryCode: null,
-      address: null,
-      zipCode: null,
-      ownerShip: null,
-      date: null,
-      totalInvestments: null,
-      derivedIncome: null,
-      natureOfIncome: null,
-      amount: null,
-      scheduleOfferd: null,
-      numberOfSchedule: null,
-    });
-  }
-
-  initCadForm() {
-    return this.fb.group({
-      countryName: null,
-      countryCode: null,
-      zipCode: null,
-      natureOfAsstes: null,
-      ownerShip: null,
-      date: null,
-      totalInvestments: null,
-      derivedIncome: null,
-      natureOfIncome: null,
-      amount: null,
-      scheduleOfferd: null,
-      numberOfSchedule: null,
-    });
-  }
-
-  initTdForm() {
-    return this.fb.group({
-      countryName: null,
-      countryCode: null,
-      zipCode: null,
-      trustName: null,
-      trustAddress: null,
-      trusteesName: null,
-      trusteesAddress: null,
-      settlorName: null,
-      settlorAddress: null,
-      beneficiariesName: null,
-      beneficiariesAddress: null,
-      date: null,
-      isTaxableinYourHand: null,
-      derivedIncome: null,
-      amount: null,
-      scheduleOfferd: null,
-      numberOfSchedule: null,
-    });
-  }
-
-  initOidForm() {
-    return this.fb.group({
-      countryName: null,
-      countryCode: null,
-      zipCode: null,
-      name: null,
-      address: null,
-      natureOfIncome: null,
-      isTaxableinYourHand: null,
-      derivedIncome: null,
-      amount: null,
-      scheduleOfferd: null,
-      numberOfSchedule: null,
-    });
-  }
-
-  createForm() {
-    // // Depository Account
-    // const depositoryAct =
-    //   this.ITR_JSON?.foreignIncome?.foreignAssets?.depositoryAccounts;
-    // console.log(depositoryAct, 'depositoryAct');
-    // const dpstryResult = depositoryAct.reduce((acc, element) => {
-    //   const existingEntry = acc.find(
-    //     (entry) =>
-    //       entry.countryCode === element.countryCode &&
-    //       entry.nameOfInstitution === element.nameOfInstitution
-    //   );
-    //   console.log(existingEntry, 'existingEntry');
-    //   if (existingEntry) {
-    //     existingEntry?.account.push({
-    //       hasEdit: false,
-    //       accountNumber: element.accountNumber,
-    //       status: element.status,
-    //       accountOpeningDate: element.accountOpeningDate,
-    //       peakBalance: element.peakBalance,
-    //       closingBalance: element.closingBalance,
-    //       grossInterestPaid: element.grossInterestPaid,
-    //     });
-    //   } else {
-    //     acc.push({
-    //       countryName: element.countryCode,
-    //       countryCode: element.countryCode,
-    //       nameOfInstitution: element.nameOfInstitution,
-    //       addressOfInstitution: element.addressOfInstitution,
-    //       zipCode: element.zipCode,
-    //       account: [
-    //         {
-    //           hasEdit: false,
-    //           accountNumber: element.accountNumber,
-    //           status: element.status,
-    //           accountOpeningDate: element.accountOpeningDate,
-    //           peakBalance: element.peakBalance,
-    //           closingBalance: element.closingBalance,
-    //           grossInterestPaid: element.grossInterestPaid,
-    //         },
-    //       ],
-    //     });
-    //   }
-    //   return acc;
-    // }, []);
-    // console.log(dpstryResult, 'result');
-    // const dpstryForm = (
-    //   this.scheduleFa.controls['frgnDpstryAcct'] as FormArray
-    // ).setValue(dpstryResult);
-    // console.log(dpstryForm, 'setdpstryForm');
-
-    // Equity and debt
-    {
-      const equityAndDebtInterest =
-        this.ITR_JSON?.foreignIncome?.foreignAssets?.equityAndDebtInterest;
-
-      const eqtyDbtIntForm = this.scheduleFa.controls[
-        'eqtyDbtInt'
-      ] as FormArray;
-
-      // Clear existing controls in the FormArray.
-      // ========================This is not working properly======================================
-      while (eqtyDbtIntForm.length !== 0) {
-        eqtyDbtIntForm.removeAt(0);
+      if (asset?.length > 0) {
+        this.createForms(assetType, asset);
       }
+    });
+  }
 
-      // Add new controls based on the length of equityAndDebtInterest
-      equityAndDebtInterest.forEach((item, i) => {
-        // console.log(item);
-        eqtyDbtIntForm.push(
+  initForms(assetType) {
+    switch (assetType) {
+      case 'depositoryAccounts':
+        return this.fb.array([
           this.fb.group({
-            countryName: item.countryName ? item.countryName : item.countryCode,
-            countryCode: item.countryCode,
-            nameOfEntity: item.nameOfEntity,
-            addressOfEntity: item.addressOfEntity,
-            zipCode: item.zipCode,
-            natureOfEntity: item.natureOfEntity,
-            dateOfInterest: item.dateOfInterest,
-            initialValue: item.initialValue,
-            peakValue: item.peakValue,
-            closingValue: item.closingValue,
-            totalGrossAmountPaid: item.totalGrossAmountPaid,
-            totalGrossProceedsFromSale: item.totalGrossProceedsFromSale,
-          })
-        );
-      });
-
-      // console.log(eqtyDbtIntForm.value, 'seteqtyDbtIntForm');
-    }
-
-    // cash value insurance
-    {
-      const cashValueInsurance =
-        this.ITR_JSON?.foreignIncome?.foreignAssets?.cashValueInsurance;
-
-      const cviIntForm = this.scheduleFa.controls[
-        'cashValueInsurance'
-      ] as FormArray;
-
-      // Clear existing controls in the FormArray.
-      // ========================This is not working properly======================================
-      while (cviIntForm.length !== 0) {
-        cviIntForm.clear();
-      }
-
-      // Add new controls based on the length of equityAndDebtInterest
-      cashValueInsurance.forEach((item, i) => {
-        // console.log(item);
-        cviIntForm.push(
+            countryName: null,
+            countryCode: null,
+            nameOfInstitution: null,
+            addressOfInstitution: null,
+            zipCode: null,
+            account: this.fb.array([
+              this.fb.group({
+                hasEdit: null,
+                accountNumber: null,
+                status: null,
+                accountOpeningDate: null,
+                peakBalance: null,
+                closingBalance: null,
+                grossInterestPaid: null,
+              }),
+            ]),
+          }),
+        ]);
+      case 'equityAndDebtInterest':
+        return this.fb.array([
           this.fb.group({
-            countryCode: item.countryCode,
-            countryName: item.countryName,
-            nameOfInstitution: item.nameOfInstitution,
-            addressOfInstitution: item.addressOfInstitution,
-            zipCode: item.zipCode,
-            dateOfContract: item.dateOfContract,
-            cashValue: item.cashValue,
-            totalGrossAmountPaid: item.totalGrossAmountPaid,
-          })
-        );
-      });
-
-      // console.log(cviIntForm.value, 'setCviIntForm');
-    }
-
-    // financial interest details
-    {
-      const financialInterestDetails =
-        this.ITR_JSON?.foreignIncome?.foreignAssets?.financialInterestDetails;
-
-      const fidIntForm = this.scheduleFa.controls[
-        'financialInterestDetails'
-      ] as FormArray;
-
-      // Clear existing controls in the FormArray.
-      // ========================This is not working properly======================================
-      while (fidIntForm.length !== 0) {
-        fidIntForm.clear();
-      }
-
-      // Add new controls based on the length of equityAndDebtInterest
-      financialInterestDetails.forEach((item, i) => {
-        // console.log(item);
-        fidIntForm.push(
+            countryName: null,
+            countryCode: null,
+            nameOfEntity: null,
+            addressOfEntity: null,
+            zipCode: null,
+            natureOfEntity: null,
+            dateOfInterest: null,
+            initialValue: null,
+            peakValue: null,
+            closingValue: null,
+            totalGrossAmountPaid: null,
+            totalGrossProceedsFromSale: null,
+          }),
+        ]);
+      case 'cashValueInsurance':
+        return this.fb.array([
           this.fb.group({
-            id: item.id,
-            countryCode: item.countryCode,
-            countryName: item.countryName,
-            natureOfEntity: item.natureOfEntity,
-            nameOfEntity: item.nameOfEntity,
-            address: item.address,
-            zipCode: item.zipCode,
-            natureOfInterest: item.natureOfInterest,
-            date: item.date,
-            totalInvestments: item.totalInvestments,
-            accruedIncome: item.accruedIncome,
-            natureOfIncome: item.natureOfIncome,
-            amount: item.amount,
-            scheduleOfferd: item.scheduleOfferd,
-            numberOfSchedule: item.numberOfSchedule,
-          })
-        );
-      });
-
-      // console.log(fidIntForm.value, 'setCviIntForm');
-    }
-
-    // financial interest details
-    {
-      const immovablePropertryDetails =
-        this.ITR_JSON?.foreignIncome?.foreignAssets?.immovablePropertryDetails;
-
-      const ipdIntForm = this.scheduleFa.controls[
-        'immovablePropertryDetails'
-      ] as FormArray;
-
-      // Clear existing controls in the FormArray.
-      // ========================This is not working properly======================================
-      while (ipdIntForm.length !== 0) {
-        ipdIntForm.clear();
-      }
-
-      // Add new controls based on the length of equityAndDebtInterest
-      immovablePropertryDetails.forEach((item, i) => {
-        // console.log(item);
-        ipdIntForm.push(
+            countryName: null,
+            countryCode: null,
+            nameOfInstitution: null,
+            addressOfInstitution: null,
+            zipCode: null,
+            dateOfContract: null,
+            cashValue: null,
+            totalGrossAmountPaid: null,
+          }),
+        ]);
+      case 'financialInterestDetails':
+        return this.fb.array([
           this.fb.group({
-            countryName: item.countryName,
-            countryCode: item.countryCode,
-            address: item.address,
-            zipCode: item.zipCode,
-            ownerShip: item.ownerShip,
-            date: item.date,
-            totalInvestments: item.totalInvestments,
-            derivedIncome: item.derivedIncome,
-            natureOfIncome: item.natureOfIncome,
-            amount: item.amount,
-            scheduleOfferd: item.scheduleOfferd,
-            numberOfSchedule: item.numberOfSchedule,
-          })
-        );
-      });
-
-      // console.log(ipdIntForm.value, 'ipdIntForm');
-    }
-
-    // capital assets details
-    {
-      const capitalAssetsDetails =
-        this.ITR_JSON?.foreignIncome?.foreignAssets?.capitalAssetsDetails;
-
-      const cadIntForm = this.scheduleFa.controls[
-        'capitalAssetsDetails'
-      ] as FormArray;
-
-      // Clear existing controls in the FormArray.
-      // ========================This is not working properly======================================
-      while (cadIntForm.length !== 0) {
-        cadIntForm.clear();
-      }
-
-      // Add new controls based on the length of equityAndDebtInterest
-      capitalAssetsDetails.forEach((item, i) => {
-        // console.log(item);
-        cadIntForm.push(
+            countryCode: null,
+            countryName: null,
+            natureOfEntity: null,
+            nameOfEntity: null,
+            address: null,
+            zipCode: null,
+            natureOfInterest: null,
+            date: null,
+            totalInvestments: null,
+            accruedIncome: null,
+            natureOfIncome: null,
+            amount: null,
+            scheduleOfferd: null,
+            numberOfSchedule: null,
+          }),
+        ]);
+      case 'immovablePropertryDetails':
+        return this.fb.array([
           this.fb.group({
-            countryName: item.countryName,
-            countryCode: item.countryCode,
-            zipCode: item.zipCode,
-            natureOfAsstes: item.natureOfAsstes,
-            ownerShip: item.ownerShip,
-            date: item.date,
-            totalInvestments: item.totalInvestments,
-            derivedIncome: item.derivedIncome,
-            natureOfIncome: item.natureOfIncome,
-            amount: item.amount,
-            scheduleOfferd: item.scheduleOfferd,
-            numberOfSchedule: item.numberOfSchedule,
-          })
-        );
-      });
-
-      // console.log(ipdIntForm.value, 'ipdIntForm');
-    }
-
-    // trust details
-    {
-      const trustsDetails =
-        this.ITR_JSON?.foreignIncome?.foreignAssets?.trustsDetails;
-
-      const tdIntForm = this.scheduleFa.controls['trustsDetails'] as FormArray;
-
-      // Clear existing controls in the FormArray.
-      // ========================This is not working properly======================================
-      while (tdIntForm.length !== 0) {
-        tdIntForm.clear();
-      }
-
-      // Add new controls based on the length of equityAndDebtInterest
-      trustsDetails.forEach((item, i) => {
-        // console.log(item);
-        tdIntForm.push(
+            countryName: null,
+            countryCode: null,
+            address: null,
+            zipCode: null,
+            ownerShip: null,
+            date: null,
+            totalInvestments: null,
+            derivedIncome: null,
+            natureOfIncome: null,
+            amount: null,
+            scheduleOfferd: null,
+            numberOfSchedule: null,
+          }),
+        ]);
+      case 'capitalAssetsDetails':
+        return this.fb.array([
           this.fb.group({
-            countryName: item.countryName,
-            countryCode: item.countryCode,
-            zipCode: item.zipCode,
-            trustName: item.trustName,
-            trustAddress: item.trustAddress,
-            trusteesName: item.trusteesName,
-            trusteesAddress: item.trusteesAddress,
-            settlorName: item.settlorName,
-            settlorAddress: item.settlorAddress,
-            beneficiariesName: item.beneficiariesName,
-            beneficiariesAddress: item.beneficiariesAddress,
-            date: item.date,
-            isTaxableinYourHand: item.isTaxableinYourHand,
-            derivedIncome: item.derivedIncome,
-            amount: item.amount,
-            scheduleOfferd: item.scheduleOfferd,
-            numberOfSchedule: item.numberOfSchedule,
-          })
-        );
-      });
-
-      // console.log(ipdIntForm.value, 'ipdIntForm');
-    }
-
-    // otherincome details
-    {
-      const otherIncomeDetails =
-        this.ITR_JSON?.foreignIncome?.foreignAssets?.otherIncomeDetails;
-
-      const oidIntForm = this.scheduleFa.controls[
-        'otherIncomeDetails'
-      ] as FormArray;
-
-      // Clear existing controls in the FormArray.
-      // ========================This is not working properly======================================
-      while (oidIntForm.length !== 0) {
-        oidIntForm.clear();
-      }
-
-      // Add new controls based on the length of equityAndDebtInterest
-      otherIncomeDetails.forEach((item, i) => {
-        // console.log(item);
-        oidIntForm.push(
+            countryName: null,
+            countryCode: null,
+            zipCode: null,
+            natureOfAsstes: null,
+            ownerShip: null,
+            date: null,
+            totalInvestments: null,
+            derivedIncome: null,
+            natureOfIncome: null,
+            amount: null,
+            scheduleOfferd: null,
+            numberOfSchedule: null,
+          }),
+        ]);
+      case 'trustsDetails':
+        return this.fb.array([
           this.fb.group({
-            countryName: item.countryName,
-            countryCode: item.countryCode,
-            zipCode: item.zipCode,
-            name: item.name,
-            address: item.address,
-            natureOfIncome: item.natureOfIncome,
-            isTaxableinYourHand: item.isTaxableinYourHand,
-            derivedIncome: item.derivedIncome,
-            amount: item.amount,
-            scheduleOfferd: item.scheduleOfferd,
-            numberOfSchedule: item.numberOfSchedule,
-          })
-        );
-      });
-
-      // console.log(ipdIntForm.value, 'ipdIntForm');
+            countryName: null,
+            countryCode: null,
+            zipCode: null,
+            trustName: null,
+            trustAddress: null,
+            trusteesName: null,
+            trusteesAddress: null,
+            settlorName: null,
+            settlorAddress: null,
+            beneficiariesName: null,
+            beneficiariesAddress: null,
+            date: null,
+            isTaxableinYourHand: null,
+            derivedIncome: null,
+            amount: null,
+            scheduleOfferd: null,
+            numberOfSchedule: null,
+          }),
+        ]);
+      case 'otherIncomeDetails':
+        return this.fb.array([
+          this.fb.group({
+            countryName: null,
+            countryCode: null,
+            zipCode: null,
+            name: null,
+            address: null,
+            natureOfIncome: null,
+            isTaxableinYourHand: null,
+            derivedIncome: null,
+            amount: null,
+            scheduleOfferd: null,
+            numberOfSchedule: null,
+          }),
+        ]);
+      default:
+        return this.fb.array([]);
     }
   }
 
-  createForms() {}
+  createForms(assetType: string, asset: any[]) {
+    const formArray = this.scheduleFa.controls[assetType] as FormArray;
+    asset.forEach((item) => {
+      if (assetType === 'depositoryAccounts') {
+        const formGroup = this.fb.group({});
+        formArray.push(formGroup);
+      } else if (assetType === 'equityAndDebtInterest') {
+        const formGroup = this.fb.group({
+          countryName: item.countryName ? item.countryName : item.countryCode,
+          countryCode: item.countryCode,
+          nameOfEntity: item.nameOfEntity,
+          addressOfEntity: item.addressOfEntity,
+          zipCode: item.zipCode,
+          natureOfEntity: item.natureOfEntity,
+          dateOfInterest: item.dateOfInterest,
+          initialValue: item.initialValue,
+          peakValue: item.peakValue,
+          closingValue: item.closingValue,
+          totalGrossAmountPaid: item.totalGrossAmountPaid,
+          totalGrossProceedsFromSale: item.totalGrossProceedsFromSale,
+        });
+        formArray.push(formGroup);
+      } else if (assetType === 'cashValueInsurance') {
+        const formGroup = this.fb.group({
+          countryCode: item.countryCode,
+          countryName: item.countryName,
+          nameOfInstitution: item.nameOfInstitution,
+          addressOfInstitution: item.addressOfInstitution,
+          zipCode: item.zipCode,
+          dateOfContract: item.dateOfContract,
+          cashValue: item.cashValue,
+          totalGrossAmountPaid: item.totalGrossAmountPaid,
+        });
+        formArray.push(formGroup);
+      } else if (assetType === 'financialInterestDetails') {
+        const formGroup = this.fb.group({
+          id: item.id,
+          countryCode: item.countryCode,
+          countryName: item.countryName,
+          natureOfEntity: item.natureOfEntity,
+          nameOfEntity: item.nameOfEntity,
+          address: item.address,
+          zipCode: item.zipCode,
+          natureOfInterest: item.natureOfInterest,
+          date: item.date,
+          totalInvestments: item.totalInvestments,
+          accruedIncome: item.accruedIncome,
+          natureOfIncome: item.natureOfIncome,
+          amount: item.amount,
+          scheduleOfferd: item.scheduleOfferd,
+          numberOfSchedule: item.numberOfSchedule,
+        });
+        formArray.push(formGroup);
+      } else if (assetType === 'immovablePropertryDetails') {
+        const formGroup = this.fb.group({
+          countryName: item.countryName,
+          countryCode: item.countryCode,
+          address: item.address,
+          zipCode: item.zipCode,
+          ownerShip: item.ownerShip,
+          date: item.date,
+          totalInvestments: item.totalInvestments,
+          derivedIncome: item.derivedIncome,
+          natureOfIncome: item.natureOfIncome,
+          amount: item.amount,
+          scheduleOfferd: item.scheduleOfferd,
+          numberOfSchedule: item.numberOfSchedule,
+        });
+        formArray.push(formGroup);
+      } else if (assetType === 'capitalAssetsDetails') {
+        const formGroup = this.fb.group({
+          countryName: item.countryName,
+          countryCode: item.countryCode,
+          zipCode: item.zipCode,
+          natureOfAsstes: item.natureOfAsstes,
+          ownerShip: item.ownerShip,
+          date: item.date,
+          totalInvestments: item.totalInvestments,
+          derivedIncome: item.derivedIncome,
+          natureOfIncome: item.natureOfIncome,
+          amount: item.amount,
+          scheduleOfferd: item.scheduleOfferd,
+          numberOfSchedule: item.numberOfSchedule,
+        });
+        formArray.push(formGroup);
+      } else if (assetType === 'trustsDetails') {
+        const formGroup = this.fb.group({
+          countryName: item.countryName,
+          countryCode: item.countryCode,
+          zipCode: item.zipCode,
+          trustName: item.trustName,
+          trustAddress: item.trustAddress,
+          trusteesName: item.trusteesName,
+          trusteesAddress: item.trusteesAddress,
+          settlorName: item.settlorName,
+          settlorAddress: item.settlorAddress,
+          beneficiariesName: item.beneficiariesName,
+          beneficiariesAddress: item.beneficiariesAddress,
+          date: item.date,
+          isTaxableinYourHand: item.isTaxableinYourHand,
+          derivedIncome: item.derivedIncome,
+          amount: item.amount,
+          scheduleOfferd: item.scheduleOfferd,
+          numberOfSchedule: item.numberOfSchedule,
+        });
+        formArray.push(formGroup);
+      } else if (assetType === 'otherIncomeDetails') {
+        const formGroup = this.fb.group({
+          countryName: item.countryName,
+          countryCode: item.countryCode,
+          zipCode: item.zipCode,
+          name: item.name,
+          address: item.address,
+          natureOfIncome: item.natureOfIncome,
+          isTaxableinYourHand: item.isTaxableinYourHand,
+          derivedIncome: item.derivedIncome,
+          amount: item.amount,
+          scheduleOfferd: item.scheduleOfferd,
+          numberOfSchedule: item.numberOfSchedule,
+        });
+        formArray.push(formGroup);
+      }
+    });
+  }
 
-  // ADD SECTION
   // adding whole section
   addMore(section) {
-    if (section === 'fda') {
-      const fdaArray = this.scheduleFa.get('frgnDpstryAcct') as FormArray;
-      if (fdaArray.valid) {
-        fdaArray.push(this.initFdaForm());
-      }
-    } else if (section === 'edt') {
-      const edtArray = this.scheduleFa.get('eqtyDbtInt') as FormArray;
-      if (edtArray.valid) {
-        edtArray.push(this.initEdtForm());
-      }
-    } else if (section === 'cvi') {
-      const cviArray = this.scheduleFa.get('cashValueInsurance') as FormArray;
-      if (cviArray.valid) {
-        cviArray.push(this.initCviForm());
-      }
-    } else if (section === 'fid') {
-      const fidArray = this.scheduleFa.get(
-        'financialInterestDetails'
-      ) as FormArray;
-      if (fidArray.valid) {
-        fidArray.push(this.initFdiForm());
-      }
-    } else if (section === 'ipd') {
-      const ipdArray = this.scheduleFa.get(
-        'immovablePropertryDetails'
-      ) as FormArray;
-      if (ipdArray.valid) {
-        ipdArray.push(this.initIpdForm());
-      }
-    } else if (section === 'cad') {
-      const cadArray = this.scheduleFa.get('capitalAssetsDetails') as FormArray;
-      if (cadArray.valid) {
-        cadArray.push(this.initCadForm());
-      }
-    } else if (section === 'td') {
-      const tdArray = this.scheduleFa.get('trustsDetails') as FormArray;
-      if (tdArray.valid) {
-        tdArray.push(this.initTdForm());
-      }
-    } else if (section === 'oid') {
-      const oidArray = this.scheduleFa.get('otherIncomeDetails') as FormArray;
-      if (oidArray.valid) {
-        oidArray.push(this.initOidForm());
+    const newFormGroup = this.initForms(section);
+
+    if (newFormGroup) {
+      const formArray = this.scheduleFa.get(section) as FormArray;
+      if (formArray.valid) {
+        formArray.push(newFormGroup);
+      } else {
+        this.utilsService.showSnackBar(
+          'Please make sure that all the existing details are entered correctly'
+        );
       }
     }
   }
 
   // adding nested form array
   add(topic?) {
-    const accountControls = (this.scheduleFa.get('frgnDpstryAcct') as FormArray)
+    const accountControls = (
+      this.scheduleFa.get('depositoryAccounts') as FormArray
+    )
       .at(0)
       .get('account') as FormArray;
 
@@ -813,185 +420,33 @@ export class ScheduleFaComponent implements OnInit {
     }
   }
 
-  // SAVING SECTION
-  saves() {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
-    console.log(this.Copy_ITR_JSON.foreignIncome);
-
-    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-      (result: any) => {
-        this.ITR_JSON = result;
-        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-        this.loading = false;
-        this.utilsService.showSnackBar('Schedule FA saved successfully');
-        this.saveAndNext.emit(false);
-      },
-      (error) => {
-        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Failed to add schedule FA, please try again.'
-        );
-        this.utilsService.smoothScrollToTop();
-      }
-    );
-  }
-
   saveAll() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    console.log(this.scheduleFa);
+    const objToSave = [
+      'equityAndDebtInterest',
+      'cashValueInsurance',
+      'financialInterestDetails',
+      'immovablePropertryDetails',
+      'capitalAssetsDetails',
+      'trustsDetails',
+      'otherIncomeDetails',
+    ];
 
-    // Depository account
-    {
-      const fdaValues = (
-        this.scheduleFa.controls['frgnDpstryAcct'] as FormArray
-      ).getRawValue();
-      // console.log(fdaValues, 'values');
+    objToSave.forEach((section) => {
+      const formArray = this.scheduleFa.get(section) as FormArray;
 
-      let objToSave = [];
-      // TO-DO =================
-      fdaValues[0].account.forEach((element) => {
-        objToSave.push({
-          countryName: fdaValues[0].countryName,
-          countryCode: fdaValues[0].countryCode,
-          nameOfInstitution: fdaValues[0].countryName,
-          addressOfInstitution: fdaValues[0].addressOfInstitution,
-          zipCode: fdaValues[0].zipCode,
-          accountNumber: element.accountNumber,
-          status: element.status,
-          accountOpeningDate: element.accountOpeningDate,
-          peakBalance: element.peakBalance,
-          closingBalance: element.closingBalance,
-          grossInterestPaid: element.grossInterestPaid,
-        });
-      });
-      console.log(objToSave, 'objToSave');
+      if (formArray.valid) {
+        const formValueToSave = (
+          this.scheduleFa.controls[section] as FormArray
+        ).getRawValue();
 
-      if (this.scheduleFa.valid) {
-        objToSave.forEach((element) =>
-          this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.depositoryAccounts?.push(
-            element
-          )
-        );
-      }
-    }
-
-    // Equity and debt
-    {
-      // Equity debt interest
-      const edtValues = (
-        this.scheduleFa.controls['eqtyDbtInt'] as FormArray
-      ).getRawValue();
-      // console.log(edtValues, 'values');
-
-      if (this.scheduleFa.valid) {
-        edtValues.forEach((element) => {
-          this.Copy_ITR_JSON.foreignIncome.foreignAssets.equityAndDebtInterest.push(
-            element
-          );
+        formValueToSave.forEach((element) => {
+          this.Copy_ITR_JSON.foreignIncome.foreignAssets[section].push(element);
         });
       }
-    }
-
-    // cash value insurance
-    {
-      const cviValues = (
-        this.scheduleFa.controls['cashValueInsurance'] as FormArray
-      ).getRawValue();
-      // console.log(cviValues, 'values');
-
-      if (this.scheduleFa.valid) {
-        cviValues.forEach((element) => {
-          this.Copy_ITR_JSON.foreignIncome.foreignAssets.cashValueInsurance.push(
-            element
-          );
-        });
-      }
-    }
-
-    // financial interest details
-    {
-      const fidValues = (
-        this.scheduleFa.controls['financialInterestDetails'] as FormArray
-      ).getRawValue();
-      // console.log(fidValues, 'values');
-
-      if (this.scheduleFa.valid) {
-        fidValues.forEach((element) => {
-          this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.financialInterestDetails?.push(
-            element
-          );
-        });
-      }
-    }
-
-    // immovable property details
-    {
-      const ipdValues = (
-        this.scheduleFa.controls['immovablePropertryDetails'] as FormArray
-      ).getRawValue();
-      // console.log(ipdValues, 'values');
-
-      if (this.scheduleFa.valid) {
-        ipdValues.forEach((element) => {
-          this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.immovablePropertryDetails?.push(
-            element
-          );
-        });
-      }
-    }
-
-    // capital assets details
-    {
-      const cadValues = (
-        this.scheduleFa.controls['capitalAssetsDetails'] as FormArray
-      ).getRawValue();
-      // console.log(ipdValues, 'values');
-
-      if (this.scheduleFa.valid) {
-        cadValues.forEach((element) => {
-          this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.capitalAssetsDetails?.push(
-            element
-          );
-        });
-      }
-    }
-
-    // trust details
-    {
-      const tdValues = (
-        this.scheduleFa.controls['trustsDetails'] as FormArray
-      ).getRawValue();
-      // console.log(ipdValues, 'values');
-
-      if (this.scheduleFa.valid) {
-        tdValues.forEach((element) => {
-          this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.trustsDetails?.push(
-            element
-          );
-        });
-      }
-    }
-
-    // other income details
-    {
-      const oidValues = (
-        this.scheduleFa.controls['otherIncomeDetails'] as FormArray
-      ).getRawValue();
-      // console.log(ipdValues, 'values');
-
-      if (this.scheduleFa.valid) {
-        oidValues.forEach((element) => {
-          this.Copy_ITR_JSON?.foreignIncome?.foreignAssets?.otherIncomeDetails?.push(
-            element
-          );
-        });
-      }
-    }
+    });
 
     console.log(this.Copy_ITR_JSON.foreignIncome);
 
@@ -1015,19 +470,19 @@ export class ScheduleFaComponent implements OnInit {
   }
 
   // GET FUNCTIONS SECTION
-  get getfrgnDpstryAcct() {
-    return this.scheduleFa.get('frgnDpstryAcct') as FormArray;
+  get getDepositoryAccounts() {
+    return this.scheduleFa.get('depositoryAccounts') as FormArray;
   }
 
   // TO-DO =================pass index of edit, allow one edit only
   get getAccountControls() {
-    return (this.scheduleFa.get('frgnDpstryAcct') as FormArray)
+    return (this.scheduleFa.get('depositoryAccounts') as FormArray)
       .at(0)
       .get('account') as FormArray;
   }
 
-  get getEqtyDbtInt() {
-    return this.scheduleFa.get('eqtyDbtInt') as FormArray;
+  get getEquityAndDebtInterest() {
+    return this.scheduleFa.get('equityAndDebtInterest') as FormArray;
   }
 
   get getCashValueInsurance() {
@@ -1055,11 +510,6 @@ export class ScheduleFaComponent implements OnInit {
   }
 
   // OTHER SECTION
-  gotoSection(topicCode) {
-    if (topicCode === 'A1' && this.isPanelOpen === true) {
-    }
-  }
-
   onExpandedChange(event) {
     // console.log(event, 'expanded change');
     this.isPanelOpen = event;
@@ -1071,5 +521,5 @@ export class ScheduleFaComponent implements OnInit {
 }
 
 // TO-DO
-// 1. PROVIDE CHECKBOS AND DELETE OPTION FOR EACH NON NESTED
+// 1. PROVIDE CHECKBOS AND DELETE OPTION FOR EACH NON NESTED - AJAY HAS TO ADD hasEdit key
 // 2. clear form check while auto-populating on init. maybe i can clear itrObj array and then push new ones so this will automatically work

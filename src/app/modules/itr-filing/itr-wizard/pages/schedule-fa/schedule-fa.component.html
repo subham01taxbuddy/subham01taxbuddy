@@ -20,10 +20,7 @@
         (expandedChange)="onExpandedChange($event)"
         hideToggle
       >
-        <mat-expansion-panel-header
-          class="flex align-items-center"
-          (click)="gotoSection(topic.code)"
-        >
+        <mat-expansion-panel-header class="flex align-items-center">
           <div class="flex justify-between align-items-center">
             <mat-panel-title style="padding: 20px">
               {{ topic.label }}
@@ -33,19 +30,19 @@
         </mat-expansion-panel-header>
         <!-- Depository Accounts  -->
         <div *ngIf="topic.code === 'A1'">
-          <form formArrayName="frgnDpstryAcct" style="padding: 20px">
+          <form formArrayName="depositoryAccounts" style="padding: 20px">
             <div class="flex justify-content-end align-items-center">
               <button
                 class="flex lgtBtn justify-content-end align-items-center"
                 style="height: 100%"
-                (click)="addMore('fda')"
+                (click)="addMore('depositoryAccounts')"
               >
                 + Add More
               </button>
             </div>
             <div
               *ngFor="
-                let frgnDpstryAcct of getfrgnDpstryAcct.controls;
+                let depositoryAccounts of getDepositoryAccounts.controls;
                 let i = index
               "
               [formGroupName]="i"
@@ -128,14 +125,6 @@
                     class="flex gap-[25px] align-items-center"
                     style="margin-bottom: 10px"
                   >
-                    <!-- has edit checkbox  -->
-                    <mat-checkbox
-                      color="primary"
-                      name="hasEdit[i]"
-                      formControlName="hasEdit"
-                      class=""
-                    >
-                    </mat-checkbox>
                     <!-- Account Number Input -->
                     <mat-form-field appearance="outline">
                       <mat-label>Account Number</mat-label>
@@ -206,18 +195,21 @@
 
         <!-- foreign equity debt -->
         <div *ngIf="topic.code === 'A3'">
-          <form formArrayName="eqtyDbtInt" style="padding: 20px">
+          <form formArrayName="equityAndDebtInterest" style="padding: 20px">
             <div class="flex justify-content-end align-items-center">
               <button
                 class="flex lgtBtn justify-content-end align-items-center"
                 style="height: 100%"
-                (click)="addMore('edt')"
+                (click)="addMore('equityAndDebtInterest')"
               >
                 + Add More
               </button>
             </div>
             <div
-              *ngFor="let eqtyDbtInt of getEqtyDbtInt.controls; let i = index"
+              *ngFor="
+                let equityAndDebtInterest of getEquityAndDebtInterest.controls;
+                let i = index
+              "
               [formGroupName]="i"
             >
               <br />
@@ -361,7 +353,7 @@
               <button
                 class="flex lgtBtn justify-content-end align-items-center"
                 style="height: 100%"
-                (click)="addMore('cvi')"
+                (click)="addMore('cashValueInsurance')"
               >
                 + Add More
               </button>
@@ -471,7 +463,7 @@
               <button
                 class="flex lgtBtn justify-content-end align-items-center"
                 style="height: 100%"
-                (click)="addMore('fid')"
+                (click)="addMore('financialInterestDetails')"
               >
                 + Add More
               </button>
@@ -629,7 +621,7 @@
               <button
                 class="flex lgtBtn justify-content-end align-items-center"
                 style="height: 100%"
-                (click)="addMore('ipd')"
+                (click)="addMore('immovablePropertryDetails')"
               >
                 + Add More
               </button>
@@ -767,7 +759,7 @@
               <button
                 class="flex lgtBtn justify-content-end align-items-center"
                 style="height: 100%"
-                (click)="addMore('cad')"
+                (click)="addMore('capitalAssetsDetails')"
               >
                 + Add More
               </button>
@@ -909,7 +901,7 @@
               <button
                 class="flex lgtBtn justify-content-end align-items-center"
                 style="height: 100%"
-                (click)="addMore('td')"
+                (click)="addMore('trustsDetails')"
               >
                 + Add More
               </button>
@@ -1111,7 +1103,7 @@
               <button
                 class="flex lgtBtn justify-content-end align-items-center"
                 style="height: 100%"
-                (click)="addMore('oid')"
+                (click)="addMore('otherIncomeDetails')"
               >
                 + Add More
               </button>
@@ -1126,15 +1118,6 @@
               <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
-                <!-- checkbox -->
-                <mat-checkbox
-                  color="primary"
-                  name="hasEdit[i]"
-                  formControlName="hasEdit"
-                  class=""
-                >
-                </mat-checkbox>
-
                 <!-- country Name -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Name</mat-label>
@@ -1266,7 +1249,7 @@
       <span class="font-semibold">&nbsp;Back to More Info List</span>
     </button>
 
-    <button class="saveBtnIn" (click)="saves()">
+    <button class="saveBtnIn" (click)="saveAll()">
       <span class="font-semibold">Save All</span>
     </button>
   </div>
