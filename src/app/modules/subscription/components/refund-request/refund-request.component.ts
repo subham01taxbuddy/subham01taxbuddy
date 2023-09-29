@@ -554,6 +554,7 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
         payableRefundAmount: this.utilsService.isNonEmpty(subscriptionData[i].payableRefundAmount) ? subscriptionData[i].payableRefundAmount : '-',
         refundPaidAmount: this.utilsService.isNonEmpty(subscriptionData[i].refundPaidAmount) ? subscriptionData[i].refundPaidAmount : '-',
         status : this.utilsService.isNonEmpty(subscriptionData[i].status) ? subscriptionData[i].status : '-',
+        id: this.utilsService.isNonEmpty(subscriptionData[i].id) ? subscriptionData[i].id : '-',
       });
     }
     return newData;
@@ -650,7 +651,8 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
         let param = `payment/razorpay/refund`;
 
         const request = {
-          invoiceNo:data.invoiceNo
+            id:data.id,
+          // invoiceNo:data.invoiceNo
         };
         this.reviewService.postMethod(param, request).subscribe(
           (response: any) => {
