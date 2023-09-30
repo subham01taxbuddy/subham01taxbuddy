@@ -42,8 +42,11 @@
           <div class="col-sm-3">
             <app-business-input-autocomplete
               [businessType]="'44ADA'"
-              [selectedInput]="profIncomeFormArray.controls[i].get('natureOfBusiness').value"
-              (businessSelected)="businessClicked($event, i)">
+              [selectedInput]="
+                profIncomeFormArray.controls[i].get('natureOfBusiness').value
+              "
+              (businessSelected)="businessClicked($event, i)"
+            >
             </app-business-input-autocomplete>
             <mat-error
               *ngIf="
@@ -103,6 +106,14 @@
               "
               >Please enter the amount</mat-error
             >
+            <mat-error
+              *ngIf="
+                (profIncomeFormArray.controls[i].get('receipts').touched ||
+                  submitted) &&
+                profIncomeFormArray.controls[i].get('receipts').hasError('max')
+              "
+              >Gross receipts amount cannot be more than 50,00,000
+            </mat-error>
           </div>
           <div class="col-sm-3">
             <mat-label>Presumptive Income Min(50%)</mat-label>

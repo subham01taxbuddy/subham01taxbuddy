@@ -91,7 +91,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     this.profIncomeForm = this.fb.group({
       profIncomeFormArray: this.profIncomeFormArray,
     });
-
   }
 
   get getProfIncomeArray() {
@@ -111,13 +110,18 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         [Validators.required],
       ],
       tradeName: [income?.tradeName || null, [Validators.required]],
-      receipts: [income?.incomes[0]?.receipts || 0, [Validators.required]],
+      receipts: [
+        income?.incomes[0]?.receipts || 0,
+        [Validators.required, Validators.max(5000000)],
+      ],
       presumptiveIncome: [
         income?.incomes[0]?.presumptiveIncome || 0,
         [Validators.required, Validators.min(this.amountFifty)],
       ],
     });
-    form.controls['natureOfBusiness'].setValue(income?.natureOfBusiness || null);
+    form.controls['natureOfBusiness'].setValue(
+      income?.natureOfBusiness || null
+    );
     return form;
   }
 
@@ -555,7 +559,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     }
   }
 
-  businessClicked(event, index){
+  businessClicked(event, index) {
     //this.profIncomeForm.controls['profIncomeFormArray'].controls[0].controls['natureOfBusiness'].value
     (
       (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
