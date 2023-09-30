@@ -53,6 +53,7 @@
                   <mat-select
                     formControlName="countryCode"
                     name="countryCode[i]"
+                    required
                   >
                     <mat-option
                       *ngFor="let nature of countryCodeList"
@@ -71,6 +72,7 @@
                     matInput
                     name="tinNumber[i]"
                     formControlName="tinNumber"
+                    required
                   />
                 </mat-form-field>
               </td>

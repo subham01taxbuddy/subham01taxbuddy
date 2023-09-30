@@ -99,6 +99,7 @@
                     formControlName="section"
                     placeholder="Section"
                     (change)="handleSectionChange($event)"
+                    required
                   />
                 </mat-form-field>
               </td>
@@ -201,17 +202,19 @@
                   <th colspan="3">
                     Assessment year in which tax relief allowed in India*
                   </th>
-                  <th>
+                  <th class="flex">
                     <mat-form-field appearance="outline">
                       <input
                         matInput
                         name="assYr[i]"
                         formControlName="assYr"
                         placeholder="Year"
+                        maxlength="7"
                         required
                       />
                     </mat-form-field>
                   </th>
+                  <mat-label>E.g 2022-23</mat-label>
                 </tr>
               </ng-container>
             </ng-container>

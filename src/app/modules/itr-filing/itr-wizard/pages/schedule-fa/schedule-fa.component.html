@@ -63,12 +63,20 @@
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
-                  <input
-                    matInput
-                    name="countryCode[i]"
+                  <mat-select
                     formControlName="countryCode"
+                    name="countryCode[i]"
                     required
-                  />
+                  >
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
               </div>
 
@@ -161,10 +169,18 @@
                       <mat-label>Account Opening Date</mat-label>
                       <input
                         matInput
+                        placeholder="DD/MM/YYYY"
                         name="accountOpeningDate[i]"
+                        [matDatepicker]="dateofFilling"
+                        autocomplete="off"
                         formControlName="accountOpeningDate"
                         required
                       />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="dateofFilling"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #dateofFilling></mat-datepicker>
                     </mat-form-field>
                   </div>
 
@@ -247,12 +263,20 @@
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
-                  <input
-                    matInput
-                    name="countryCode[i]"
+                  <mat-select
                     formControlName="countryCode"
+                    name="countryCode[i]"
                     required
-                  />
+                  >
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
               </div>
 
@@ -342,13 +366,21 @@
 
                     <!-- acount opening date -->
                     <mat-form-field appearance="outline">
-                      <mat-label>Account opening date</mat-label>
+                      <mat-label>Account Opening Date</mat-label>
                       <input
                         matInput
+                        placeholder="DD/MM/YYYY"
                         name="accountOpeningDate[i]"
+                        [matDatepicker]="dateofFilling"
+                        autocomplete="off"
                         formControlName="accountOpeningDate"
                         required
                       />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="dateofFilling"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #dateofFilling></mat-datepicker>
                     </mat-form-field>
 
                     <!-- Peak Balance Input -->
@@ -446,12 +478,20 @@
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
-                  <input
-                    matInput
-                    name="countryCode[i]"
+                  <mat-select
                     formControlName="countryCode"
+                    name="countryCode[i]"
                     required
-                  />
+                  >
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
               </div>
 
@@ -510,10 +550,18 @@
                   <mat-label>Date of acquiring the interest</mat-label>
                   <input
                     matInput
+                    placeholder="DD/MM/YYYY"
                     name="dateOfInterest[i]"
+                    [matDatepicker]="dateofFilling"
+                    autocomplete="off"
                     formControlName="dateOfInterest"
                     required
                   />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="dateofFilling"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #dateofFilling></mat-datepicker>
                 </mat-form-field>
 
                 <!-- Initial Value -->
@@ -620,12 +668,20 @@
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
-                  <input
-                    matInput
-                    name="countryCode[i]"
+                  <mat-select
                     formControlName="countryCode"
+                    name="countryCode[i]"
                     required
-                  />
+                  >
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
               </div>
 
@@ -671,9 +727,18 @@
                   <mat-label>Date of contract</mat-label>
                   <input
                     matInput
+                    placeholder="DD/MM/YYYY"
                     name="dateOfContract[i]"
+                    [matDatepicker]="dateofFilling"
+                    autocomplete="off"
                     formControlName="dateOfContract"
+                    required
                   />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="dateofFilling"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #dateofFilling></mat-datepicker>
                 </mat-form-field>
 
                 <!-- cash Value -->
@@ -744,12 +809,20 @@
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
-                  <input
-                    matInput
-                    name="countryCode[i]"
+                  <mat-select
                     formControlName="countryCode"
+                    name="countryCode[i]"
                     required
-                  />
+                  >
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
               </div>
 
@@ -819,10 +892,18 @@
                   <mat-label>Date since held</mat-label>
                   <input
                     matInput
+                    placeholder="DD/MM/YYYY"
                     name="date[i]"
+                    [matDatepicker]="dateofFilling"
+                    autocomplete="off"
                     formControlName="date"
                     required
                   />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="dateofFilling"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #dateofFilling></mat-datepicker>
                 </mat-form-field>
 
                 <!-- total Investments -->
@@ -939,12 +1020,20 @@
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
-                  <input
-                    matInput
-                    name="countryCode[i]"
+                  <mat-select
                     formControlName="countryCode"
+                    name="countryCode[i]"
                     required
-                  />
+                  >
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
               </div>
 
@@ -989,15 +1078,24 @@
                   </mat-select>
                 </mat-form-field>
 
-                <!-- Date of contract -->
+                <!-- Date of acquisition -->
+
                 <mat-form-field appearance="outline">
                   <mat-label>Date of acquisition</mat-label>
                   <input
                     matInput
+                    placeholder="DD/MM/YYYY"
                     name="date[i]"
+                    [matDatepicker]="dateofFilling"
+                    autocomplete="off"
                     formControlName="date"
                     required
                   />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="dateofFilling"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #dateofFilling></mat-datepicker>
                 </mat-form-field>
               </div>
 
@@ -1119,12 +1217,20 @@
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
-                  <input
-                    matInput
-                    name="countryCode[i]"
+                  <mat-select
                     formControlName="countryCode"
+                    name="countryCode[i]"
                     required
-                  />
+                  >
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
               </div>
 
@@ -1174,10 +1280,18 @@
                   <mat-label>Date of acquisition</mat-label>
                   <input
                     matInput
+                    placeholder="DD/MM/YYYY"
                     name="date[i]"
+                    [matDatepicker]="dateofFilling"
+                    autocomplete="off"
                     formControlName="date"
                     required
                   />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="dateofFilling"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #dateofFilling></mat-datepicker>
                 </mat-form-field>
               </div>
 
@@ -1299,12 +1413,20 @@
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
-                  <input
-                    matInput
-                    name="countryCode[i]"
+                  <mat-select
                     formControlName="countryCode"
+                    name="countryCode[i]"
                     required
-                  />
+                  >
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
               </div>
 
@@ -1409,70 +1531,79 @@
 
                   <div class="flex gap-[25px]">
                     <!-- isTaxableinYourHand -->
-                    <mat-form-field appearance="outline">
-                      <mat-label
-                        >Whether income accrued is taxable in your hands? *
-                      </mat-label>
-                      <input
-                        matInput
-                        name="isTaxableinYourHand[i]"
-                        formControlName="isTaxableinYourHand"
-                        required
-                      />
-                    </mat-form-field>
-
-                    <!-- accruedIncome -->
-                    <mat-form-field appearance="outline">
-                      <mat-label>Income accrued in the account * </mat-label>
-                      <input
-                        matInput
-                        name="accruedIncome[i]"
-                        formControlName="accruedIncome"
-                        required
-                      />
-                    </mat-form-field>
-
-                    <!-- amount -->
-                    <mat-form-field appearance="outline">
-                      <mat-label>Amount </mat-label>
-                      <input
-                        matInput
-                        name="amount[i]"
-                        formControlName="amount"
-                        required
-                      />
-                    </mat-form-field>
-                  </div>
-
-                  <div class="flex gap-[25px]">
-                    <!-- schedule Offerd -->
-                    <mat-form-field appearance="outline">
-                      <mat-label>Schedule where offered</mat-label>
-                      <mat-select
-                        matInput
-                        name="scheduleOfferd[i]"
-                        formControlName="scheduleOfferd"
-                        required
+                    <mat-label
+                      >Whether income accrued is taxable in your hands? *
+                    </mat-label>
+                    <mat-radio-group
+                      name="isTaxableinYourHand[i]"
+                      formControlName="isTaxableinYourHand"
+                      required
+                      (change)="handleSelectionChange($event.value)"
+                    >
+                      <mat-radio-button value="Y" style="margin-right: 10px"
+                        >Yes</mat-radio-button
                       >
-                        <mat-option
-                          *ngFor="let option of scheduleWhereOffered"
-                          [value]="option"
-                        >
-                          {{ option }}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
+                      <mat-radio-button value="N">No</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                  <br />
+                  <div
+                    *ngIf="accountCtrl.get('isTaxableinYourHand').value === 'Y'"
+                  >
+                    <div class="flex gap-[25px]">
+                      <!-- accruedIncome -->
+                      <mat-form-field appearance="outline">
+                        <mat-label>Income accrued in the account * </mat-label>
+                        <input
+                          matInput
+                          name="accruedIncome[i]"
+                          formControlName="accruedIncome"
+                          required
+                        />
+                      </mat-form-field>
 
-                    <!-- numberOfSchedule -->
-                    <mat-form-field appearance="outline">
-                      <mat-label>Item number of Schedule </mat-label>
-                      <input
-                        matInput
-                        name="numberOfSchedule[i]"
-                        formControlName="numberOfSchedule"
-                        required
-                      />
-                    </mat-form-field>
+                      <!-- amount -->
+                      <mat-form-field appearance="outline">
+                        <mat-label>Amount </mat-label>
+                        <input
+                          matInput
+                          name="amount[i]"
+                          formControlName="amount"
+                          required
+                        />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="flex gap-[25px]">
+                      <!-- schedule Offerd -->
+                      <mat-form-field appearance="outline">
+                        <mat-label>Schedule where offered</mat-label>
+                        <mat-select
+                          matInput
+                          name="scheduleOfferd[i]"
+                          formControlName="scheduleOfferd"
+                          required
+                        >
+                          <mat-option
+                            *ngFor="let option of scheduleWhereOffered"
+                            [value]="option"
+                          >
+                            {{ option }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <!-- numberOfSchedule -->
+                      <mat-form-field appearance="outline">
+                        <mat-label>Item number of Schedule </mat-label>
+                        <input
+                          matInput
+                          name="numberOfSchedule[i]"
+                          formControlName="numberOfSchedule"
+                          required
+                        />
+                      </mat-form-field>
+                    </div>
                   </div>
                   <br />
                 </div>
@@ -1516,12 +1647,20 @@
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
-                  <input
-                    matInput
-                    name="countryCode[i]"
+                  <mat-select
                     formControlName="countryCode"
+                    name="countryCode[i]"
                     required
-                  />
+                  >
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
 
                 <!-- Zip Code Input -->
@@ -1640,25 +1779,46 @@
                   <mat-label>Date since position held</mat-label>
                   <input
                     matInput
+                    placeholder="DD/MM/YYYY"
                     name="date[i]"
+                    [matDatepicker]="dateofFilling"
+                    autocomplete="off"
                     formControlName="date"
                     required
                   />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="dateofFilling"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #dateofFilling></mat-datepicker>
                 </mat-form-field>
+              </div>
 
+              <!-- isTaxableinYourHand -->
+              <div class="flex gap-[25px]">
                 <!-- isTaxableinYourHand -->
-                <mat-form-field appearance="outline">
-                  <mat-label
-                    >Whether income derived is taxable in your hands? *
-                  </mat-label>
-                  <input
-                    matInput
-                    name="isTaxableinYourHand[i]"
-                    formControlName="isTaxableinYourHand"
-                    required
-                  />
-                </mat-form-field>
+                <mat-label
+                  >Whether income accrued is taxable in your hands? *
+                </mat-label>
+                <mat-radio-group
+                  name="isTaxableinYourHand[i]"
+                  formControlName="isTaxableinYourHand"
+                  required
+                  (change)="handleSelectionChange($event.value)"
+                >
+                  <mat-radio-button value="Y" style="margin-right: 10px"
+                    >Yes</mat-radio-button
+                  >
+                  <mat-radio-button value="N">No</mat-radio-button>
+                </mat-radio-group>
+              </div>
+              <br />
 
+              <div
+                class="flex gap-[25px] align-items-center"
+                style="margin-bottom: 10px"
+                *ngIf="trustsDetails.get('isTaxableinYourHand').value === 'Y'"
+              >
                 <!-- derivedIncome -->
                 <mat-form-field appearance="outline">
                   <mat-label>Income derived in the account</mat-label>
@@ -1669,12 +1829,7 @@
                     required
                   />
                 </mat-form-field>
-              </div>
 
-              <div
-                class="flex gap-[25px] align-items-center"
-                style="margin-bottom: 10px"
-              >
                 <!-- amount -->
                 <mat-form-field appearance="outline">
                   <mat-label>Amount</mat-label>
@@ -1755,12 +1910,20 @@
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
-                  <input
-                    matInput
-                    name="countryCode[i]"
+                  <mat-select
                     formControlName="countryCode"
+                    name="countryCode[i]"
                     required
-                  />
+                  >
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
 
                 <!-- Zip Code Input -->
@@ -1821,27 +1984,32 @@
                 </mat-form-field>
               </div>
 
-              <div
-                class="flex gap-[25px] align-items-center"
-                style="margin-bottom: 10px"
-              >
+              <!-- isTaxableinYourHand -->
+              <div class="flex gap-[25px]">
                 <!-- isTaxableinYourHand -->
-                <mat-form-field appearance="outline">
-                  <mat-label
-                    >Whether income derived is taxable in your hands?</mat-label
+                <mat-label
+                  >Whether income accrued is taxable in your hands? *
+                </mat-label>
+                <mat-radio-group
+                  name="isTaxableinYourHand[i]"
+                  formControlName="isTaxableinYourHand"
+                  required
+                  (change)="handleSelectionChange($event.value)"
+                >
+                  <mat-radio-button value="Y" style="margin-right: 10px"
+                    >Yes</mat-radio-button
                   >
-                  <input
-                    matInput
-                    name="isTaxableinYourHand[i]"
-                    formControlName="isTaxableinYourHand"
-                    required
-                  />
-                </mat-form-field>
+                  <mat-radio-button value="N">No</mat-radio-button>
+                </mat-radio-group>
               </div>
+              <br />
 
               <div
                 class="flex gap-[25px] align-items-center"
                 style="margin-bottom: 10px"
+                *ngIf="
+                  otherIncomeDetails.get('isTaxableinYourHand').value === 'Y'
+                "
               >
                 <!-- amount -->
                 <mat-form-field appearance="outline">

@@ -325,7 +325,9 @@ export class ScheduleFsiComponent implements OnInit {
 
   add(item?) {
     const fsiArray = <FormArray>this.scheduleFsiForm.get('fsiArray');
-    fsiArray.push(this.createFsiForm(item));
+    if (this.scheduleFsiForm.valid) {
+      fsiArray.push(this.createFsiForm(item));
+    }
   }
 
   createFsiForm(item?): FormGroup {
@@ -399,6 +401,10 @@ export class ScheduleFsiComponent implements OnInit {
 
     if (this.scheduleFsiForm.valid) {
       this.loading = true;
+
+      if (this.Copy_ITR_JSON.foreignIncome?.taxReliefClaimed) {
+        this.Copy_ITR_JSON.foreignIncome.taxReliefClaimed = [];
+      }
 
       fsiArray?.controls.forEach((fsiArrayElement, index) => {
         const headOfIncomesArray = (
@@ -493,6 +499,5 @@ export class ScheduleFsiComponent implements OnInit {
         fsiArray.removeAt(index);
       }
     });
-    this.saveAll();
   }
 }
