@@ -446,7 +446,8 @@ export class ItrValidationService {
 
           // Business decription - nature of business required if some business income is present and itr type is 3
           if (
-            obj[key]?.profitLossACIncomes?.length > 0 ||
+            //Ashwini: this condition needs to be changed
+            // obj[key]?.profitLossACIncomes?.length > 0 ||
             obj[key]?.presumptiveIncomes?.length > 0
           ) {
             if (natOfBusiness?.length === 0) {
@@ -556,33 +557,34 @@ export class ItrValidationService {
               //   }
               // }
 
-              // for buyerDetails array
-              const buyersDetailsArray = element?.buyersDetails;
-              if (buyersDetailsArray && buyersDetailsArray?.length > 0) {
-                const buyersDetailsArrayStat: boolean =
-                  buyersDetailsArray?.some(
-                    (buyerDetails) =>
-                      !buyerDetails?.name ||
-                      !buyerDetails?.pan ||
-                      !buyerDetails?.share ||
-                      !buyerDetails?.country ||
-                      !buyerDetails?.state ||
-                      !buyerDetails?.aadhaarNumber ||
-                      !buyerDetails?.pin ||
-                      !buyerDetails?.address ||
-                      !buyerDetails?.amount ||
-                      buyerDetails?.srn === null ||
-                      buyerDetails?.srn === undefined
-                  );
-
-                if (buyersDetailsArrayStat) {
-                  const error = this.getErrorMessages('E37');
-                  errorList?.push(error);
-                }
-              }
-
               // const assetDetails for different type gains
               let assetType = element?.assetType;
+              // for buyerDetails array
+              if(assetType === 'PLOT_OF_LAND') {
+                const buyersDetailsArray = element?.buyersDetails;
+                if (buyersDetailsArray && buyersDetailsArray?.length > 0) {
+                  const buyersDetailsArrayStat: boolean =
+                    buyersDetailsArray?.some(
+                      (buyerDetails) =>
+                        !buyerDetails?.name ||
+                        !buyerDetails?.pan ||
+                        !buyerDetails?.share ||
+                        !buyerDetails?.country ||
+                        !buyerDetails?.state ||
+                        !buyerDetails?.aadhaarNumber ||
+                        !buyerDetails?.pin ||
+                        !buyerDetails?.address ||
+                        !buyerDetails?.amount ||
+                        buyerDetails?.srn === null ||
+                        buyerDetails?.srn === undefined
+                    );
+
+                  if (buyersDetailsArrayStat) {
+                    const error = this.getErrorMessages('E37');
+                    errorList?.push(error);
+                  }
+                }
+              }
 
               // for land and building
               if (assetType === 'PLOT_OF_LAND') {

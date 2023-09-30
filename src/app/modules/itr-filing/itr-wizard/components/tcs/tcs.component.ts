@@ -89,8 +89,12 @@ export class TcsComponent implements OnInit {
   }
 
   createForm(item?): FormGroup {
+    if(this.data.assetIndex !== null && item){
+      item.srNo = this.data.assetIndex;
+    }
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
+      srNo: [item ? item.srNo : this.Copy_ITR_JSON.taxPaid?.tcs.length],
       collectorTAN: [
         item ? item.collectorTAN : '',
         [Validators.required, Validators.pattern(AppConstants.tanNumberRegex)],

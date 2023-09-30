@@ -104,6 +104,7 @@ export class LabFormComponent implements OnInit {
     this.minSellDate = thisYearStartDate;
     this.maxSellDate = nextYearEndDate;
     this.maxPurchaseDate = nextYearEndDate;
+    this.minPurchaseDate = new Date(2001, 3, 1); // April 1st of the current year
 
     this.indexCostOfAcquisition.disable();
     this.calculateCGRequest = {
@@ -574,7 +575,10 @@ export class LabFormComponent implements OnInit {
       buyersDetails.value
     );
     let userPanExist = [];
+    // let failedCases = [];
     if (buyersDetails.value instanceof Array) {
+      // failedCases = buyersDetails.value.filter(item =>
+      //   !this.utilsService.isNonEmpty(item.pan) && !this.utilsService.isNonEmpty(item.aadhaarNumber));
       userPanExist = buyersDetails.value.filter(
         (item) => item.pan === this.ITR_JSON.panNumber
       );
@@ -590,7 +594,12 @@ export class LabFormComponent implements OnInit {
         'Buyers Details PAN can not be same with user PAN.'
       );
       panRepeat = true;
-    }
+    } /*else if(failedCases.length > 0){
+      panRepeat = true;
+      this.utilsService.showSnackBar(
+        'Please provide PAN or AADHAR for buyer details'
+      );
+    }*/
     console.log('Form + buyersDetails=', this.immovableForm.valid);
     return panRepeat;
   }
@@ -613,12 +622,11 @@ export class LabFormComponent implements OnInit {
       ],
       pan: [
         obj?.pan || null,
-        [Validators.required, Validators.pattern(AppConstants.panIndHUFRegex)],
+        [Validators.pattern(AppConstants.panIndHUFRegex)],
       ],
       aadhaarNumber: [
         obj?.aadhaarNumber || '',
         Validators.compose([
-          Validators.required,
           Validators.pattern(AppConstants.numericRegex),
           Validators.minLength(12),
           Validators.maxLength(12),
@@ -1221,8 +1229,6 @@ export class LabFormComponent implements OnInit {
     //   this.calMinPurchaseDate.setMonth(this.calMinPurchaseDate.getMonth() - investDetails[0].minInvestmentDate);
     // }
 
-    this.minPurchaseDate = this.calMinPurchaseDate.toISOString().slice(0, 10);
-
     /* this.calMaxPurchaseDate = new Date(this.data.assetSelected.sellDate)
     if (investDetails.length > 0)
       this.calMaxPurchaseDate.setMonth(this.calMaxPurchaseDate.getMonth() + investDetails[0].maxInvestmentDate);
@@ -1565,21 +1571,30 @@ export class LabFormComponent implements OnInit {
         let purchaseDate = (assetDetails.controls[0] as FormGroup).getRawValue()
           .purchaseDate;
         let purchaseYear = new Date(purchaseDate).getFullYear();
+        let purchaseMonth = new Date(purchaseDate).getMonth();
 
         console.log(
           this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
         );
         console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
-        if (
-          this.improvementYears.indexOf(
-            purchaseYear + '-' + (purchaseYear + 1)
-          ) >= 0
-        ) {
-          this.improvementYears = this.improvementYears.splice(
-            this.improvementYears.indexOf(
-              purchaseYear + '-' + (purchaseYear + 1)
-            )
-          );
+        if(purchaseMonth > 2) {
+          if (
+            this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1)) >= 0
+          ) {
+            this.improvementYears = this.improvementYears.splice(
+              this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1)
+              )
+            );
+          }
+        } else {
+          if (
+            this.improvementYears.indexOf((purchaseYear-1) + '-' + (purchaseYear)) >= 0
+          ) {
+            this.improvementYears = this.improvementYears.splice(
+              this.improvementYears.indexOf((purchaseYear - 1) + '-' + (purchaseYear)
+              )
+            );
+          }
         }
 
         // sessionStorage.setItem('improvementYears', res.data)

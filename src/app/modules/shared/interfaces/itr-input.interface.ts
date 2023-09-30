@@ -795,7 +795,7 @@ export interface TaxPaid {
 }
 
 export interface OnSalary {
-  srNo: number;
+  srNo: string;
   deductorName: string;
   deductorTAN: string;
   totalAmountCredited: number;
@@ -808,7 +808,7 @@ export interface OnSalary {
 }
 
 export interface OtherThanSalary16A {
-  srNo: number;
+  srNo: string;
   deductorName: string;
   deductorTAN: string;
   totalAmountCredited: number;
@@ -823,7 +823,7 @@ export interface OtherThanSalary16A {
 }
 
 export interface OtherThanSalary26QB {
-  srNo: number;
+  srNo: string;
   deductorName: string;
   deductorPAN: string;
   totalAmountCredited: number;
@@ -838,7 +838,7 @@ export interface OtherThanSalary26QB {
 }
 
 export interface TCS {
-  srNo: number;
+  srNo: string;
   collectorName: string;
   collectorTAN: string;
   totalAmountPaid: number;
@@ -848,7 +848,7 @@ export interface TCS {
 }
 
 export interface OtherThanTDSTCS {
-  srNo: number;
+  srNo: string;
   totalTax: number;
   bsrCode: string;
   dateOfDeposit: string; // date

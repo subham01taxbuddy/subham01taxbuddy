@@ -272,9 +272,15 @@ export class CustomerProfileComponent implements OnInit {
       aadharNumber: [
         '',
         Validators.compose([
-          Validators.required,
           Validators.minLength(12),
           Validators.maxLength(12),
+        ]),
+      ],
+      aadhaarEnrolmentId: [
+        '',
+        Validators.compose([
+          Validators.minLength(14),
+          Validators.maxLength(14),
         ]),
       ],
       assesseeType: ['', Validators.required],
@@ -402,6 +408,14 @@ export class CustomerProfileComponent implements OnInit {
     this.findAssesseeType();
     // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
     if (this.customerProfileForm.valid) {
+      let aadhaarEnrolmentId = this.customerProfileForm.controls['aadhaarEnrolmentId'].value;
+      let aadhaarNumber = this.customerProfileForm.controls['aadharNumber'].value;
+
+      if((!this.utilsService.isNonEmpty(aadhaarNumber) && !this.utilsService.isNonEmpty(aadhaarEnrolmentId)) || (this.utilsService.isNonEmpty(aadhaarNumber) && this.utilsService.isNonEmpty(aadhaarEnrolmentId))){
+        this.utilsService.showSnackBar('Please provide aadhar number or enrollment ID');
+        return;
+      }
+
       this.loading = true;
       const ageCalculated = this.calAge(
         this.customerProfileForm.controls['dateOfBirth'].value
@@ -491,39 +505,39 @@ export class CustomerProfileComponent implements OnInit {
       case this.PAN_INFO: {
         let result = res.result;
         console.log('user data by PAN = ', result);
-        this.customerProfileForm.controls['firstName'].setValue(
-          this.titlecasePipe.transform(
-            this.utilsService.isNonEmpty(result.firstName)
-              ? result.firstName
-              : ''
-          )
-        );
-        this.customerProfileForm.controls['lastName'].setValue(
-          this.titlecasePipe.transform(
-            this.utilsService.isNonEmpty(result.lastName) ? result.lastName : ''
-          )
-        );
-        this.customerProfileForm.controls['middleName'].setValue(
-          this.titlecasePipe.transform(
-            this.utilsService.isNonEmpty(result.middleName)
-              ? result.middleName
-              : ''
-          )
-        );
-        //1988-11-28 to DD/MM/YYYY
-        //this.datePipe.transform(dob,"dd/MM/yyyy")
-        let pan = this.customerProfileForm.controls['panNumber'].value;
-        let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
-        this.customerProfileForm.controls['dateOfBirth'].setValue(
-          moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()
-        );
-        this.customerProfileForm.controls['assesseeType'].setValue(
-          this.utilsService.findAssesseeType(pan)
-        );
-        if (result.isValid !== 'EXISTING AND VALID') {
-          this.utilsService.showSnackBar(
-            'Record (PAN) Not Found in ITD Database/Invalid PAN'
+        if(result.isValid && result.isValid === 'EXISTING AND VALID'){
+
+          this.customerProfileForm.controls['firstName'].setValue(
+            this.titlecasePipe.transform(
+              this.utilsService.isNonEmpty(result.firstName)
+                ? result.firstName
+                : ''
+            )
           );
+          this.customerProfileForm.controls['lastName'].setValue(
+            this.titlecasePipe.transform(
+              this.utilsService.isNonEmpty(result.lastName) ? result.lastName : ''
+            )
+          );
+          this.customerProfileForm.controls['middleName'].setValue(
+            this.titlecasePipe.transform(
+              this.utilsService.isNonEmpty(result.middleName)
+                ? result.middleName
+                : ''
+            )
+          );
+          //1988-11-28 to DD/MM/YYYY
+          //this.datePipe.transform(dob,"dd/MM/yyyy")
+          let pan = this.customerProfileForm.controls['panNumber'].value;
+          let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
+          this.customerProfileForm.controls['dateOfBirth'].setValue(
+            moment(result.dateOfBirth, 'YYYY-MM-DD').toDate()
+          );
+          this.customerProfileForm.controls['assesseeType'].setValue(
+            this.utilsService.findAssesseeType(pan)
+          );
+        } else {
+          this.utilsService.showSnackBar(result.isValid);
         }
       }
     }
@@ -708,6 +722,7 @@ export class CustomerProfileComponent implements OnInit {
       contactNumber: this.customerProfileForm.controls['contactNumber'].value,
       panNumber: this.customerProfileForm.controls['panNumber'].value,
       aadharNumber: this.customerProfileForm.controls['aadharNumber'].value,
+      aadhaarEnrolmentId: this.customerProfileForm.controls['aadhaarEnrolmentId'].value,
       assesseeType: this.customerProfileForm.controls['assesseeType'].value,
       assessmentYear: this.ITR_JSON.assessmentYear,
       financialYear: this.ITR_JSON.financialYear,

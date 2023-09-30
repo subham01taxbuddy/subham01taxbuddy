@@ -18,6 +18,7 @@ import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import { ScheduledCallReassignDialogComponent } from '../../components/scheduled-call-reassign-dialog/scheduled-call-reassign-dialog.component';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -78,9 +79,14 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       totalItems: null,
       pageCount: null,
     };
+    let roles = this.utilsService.getUserRoles();
+    let show : boolean;
+    if(roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN') ){
+      show =true;
+    }
     this.scheduleCallGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.createColumnDef(),
+      columnDefs:show ?  this.createColumnDef('leader') :this.createColumnDef('reg') ,
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => { },
@@ -236,7 +242,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     return callDateTime.substring(firstPoint + 1, secondPoint - 1);
   }
 
-  createColumnDef() {
+  createColumnDef(view) {
     return [
       {
         headerName: 'User Id',
@@ -388,6 +394,36 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         }
       },
       {
+        headerName: 'Re-Assign',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        hide: view === 'leader' ? false : true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          if (params.data.statusId === 17 || params.data.statusId === 19 ) {
+            return `<button type="button" class="action_icon add_button" title="Re-Assign Scheduled Call"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;">
+              <i class="fa fa-refresh" aria-hidden="true" data-action-type="reAssignCall"></i>
+             </button>`;
+          }else{
+            return '-'
+          }
+
+
+        },
+        width: 95,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
         headerName: 'Chat',
         editable: false,
         suppressMenu: true,
@@ -522,8 +558,25 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           this.openWhatsappChat(params.data);
           break;
         }
+        case 'reAssignCall' : {
+          this.reAssignCall(params.data);
+          break;
+        }
       }
     }
+  }
+
+  reAssignCall(data){
+    let disposable = this.dialog.open(ScheduledCallReassignDialogComponent, {
+      width: '60%',
+      height: 'auto',
+      data: {
+        allData : data,
+      },
+    });
+    disposable.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
   }
 
   openWhatsappChat(client) {

@@ -41,6 +41,7 @@
                   <input
                     matInput
                     [max]="maxPurchaseDate"
+                    [min]="minPurchaseDate"
                     formControlName="purchaseDate"
                     name="asset[i]"
                     readonly
@@ -187,7 +188,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-sm-4 spsTp">
+              <div class="col-sm-4 spsTp" *ngIf="cgArrayElement?.assetDetails[currentCgIndex]?.gainType === 'LONG'">
                 <mat-label>Cost of acquisition with indexation</mat-label>
                 <mat-form-field class="input-field-width" appearance="outline">
                   <input
@@ -631,7 +632,6 @@
                           class="input-field"
                           maxlength="10"
                           upperCase
-                          required
                           trim
                           (keyup)="
                             makePanUppercase(
@@ -683,7 +683,6 @@
                           oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           maxlength="12"
                           onkeypress=" event.charCode >= 48 && event.charCode <= 57"
-                          required
                         />
                       </mat-form-field>
                     </div>

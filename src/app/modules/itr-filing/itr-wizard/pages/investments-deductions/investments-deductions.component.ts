@@ -1,5 +1,5 @@
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { Component, OnInit, DoCheck, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -25,10 +25,10 @@ export class InvestmentsDeductionsComponent
   @ViewChild('medicalExpensesComponentRef', { static: false })
   MedicalExpensesComponent!: MedicalExpensesComponent;
   @ViewChild('donationsComponentRef', { static: false })
-  DonationsComponent!: DonationsComponent;
-  medicalExpensesSaved: boolean;
-  investmentsSaved: boolean;
-  donationsSaved: boolean;
+  sec80gDonationsComponent!: DonationsComponent;
+
+  @ViewChild('donations80ggaComponentRef', { static: false })
+  sec80ggaDonationsComponent!: DonationsComponent;
   step = 0;
   isAddDonation: Number;
   loading: boolean = false;
@@ -779,7 +779,7 @@ export class InvestmentsDeductionsComponent
                   noOfMonths: 0,
                 });
               }
-            } else if (item === 'us80ggc') {
+            } else if (item === 'us80ggc' && this.investmentDeductionForm.controls['us80ggc'].value > 0) {
               this.ITR_JSON.donations = this.ITR_JSON.donations?.filter(
                 (item: any) => item.donationType !== 'POLITICAL'
               );
@@ -822,44 +822,17 @@ export class InvestmentsDeductionsComponent
           }
         }
       );
-      this.serviceCall('NEXT', this.ITR_JSON);
     } else {
       $('input.ng-invalid').first().focus();
-      this.investmentsSaved = false;
     }
   }
 
   saveAll() {
-    console.log(
-      'saveAll:',
-      this.investmentsSaved,
-      this.medicalExpensesSaved,
-      this.donationsSaved
-    );
-    if (
-      this.investmentsSaved &&
-      this.medicalExpensesSaved &&
-      this.donationsSaved
-    ) {
-      this.utilsService.showSnackBar(
-        'Investment / Deduction details are saved successfully'
-      );
-      this.saveAndNext.emit(false);
-    } else {
-      if (!this.investmentsSaved) {
-        this.utilsService.showSnackBar(
-          'Failed to update Investment Deductions details'
-        );
-      }
-
-      if (!this.medicalExpensesSaved) {
-        this.utilsService.showSnackBar('Failed to update Medical Expenses.');
-      }
-
-      if (!this.donationsSaved) {
-        this.utilsService.showSnackBar('Failed to update Donations.');
-      }
-    }
+    this.saveInvestmentDeductions();
+    this.sec80gDonationsComponent.saveGeneralDonation();
+    this.sec80ggaDonationsComponent.saveGeneralDonation();
+    this.MedicalExpensesComponent.saveInvestmentDeductions();
+    this.serviceCall();
   }
 
   setInvestmentsDeductionsValues() {
@@ -963,9 +936,11 @@ export class InvestmentsDeductionsComponent
     }
   }
 
-  serviceCall(val, ITR_JSON) {
+  serviceCall() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
-    this.utilsService.saveItrObject(ITR_JSON).subscribe(
+    this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
       (result: any) => {
         this.ITR_JSON = result;
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -974,20 +949,16 @@ export class InvestmentsDeductionsComponent
           JSON.stringify(this.ITR_JSON)
         );
         this.loading = false;
-        this.investmentsSaved = true;
-
-        if (this.investmentsSaved) {
-          this.MedicalExpensesComponent.saveInvestmentDeductions();
-        }
-
-        // if (val === 'NEXT') {
-        // this.saveAndNext.emit(true);
-        // }
+        this.utilsService.showSnackBar(
+          'Investment / Deduction details saved successfully'
+        );
+        this.saveAndNext.emit(false);
       },
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
-        this.investmentsSaved = false;
+        console.log(error);
+        this.utilsService.showSnackBar('Error saving investment/deduction details');
       }
     );
   }
@@ -1007,19 +978,6 @@ export class InvestmentsDeductionsComponent
     });
 
     disposable.afterClosed().subscribe((result) => {});
-  }
-
-  onMedicalExpensesSaved(event) {
-    this.medicalExpensesSaved = event;
-
-    if (this.medicalExpensesSaved) {
-      this.DonationsComponent.saveGeneralDonation();
-    }
-  }
-
-  onDonationsSaved(event) {
-    this.donationsSaved = event;
-    this.saveAll();
   }
 
   setStep(index: number) {

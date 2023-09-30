@@ -1,5 +1,4 @@
 import { CommonModule } from "@angular/common";
-import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgxLoadingModule } from "ngx-loading";
@@ -24,7 +23,6 @@ import {PagesModule} from "../pages.module";
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        HttpClientModule,
         SharedModule,
         AgGridModule,
         MaterialModule,

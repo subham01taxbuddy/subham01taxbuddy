@@ -39,23 +39,6 @@
                            name="brokerName[i]" class="input-field">
                   </mat-form-field> -->
         </div>
-        <div class="col-sm-3">
-          <mat-label>Net income from speculative income</mat-label>
-          <mat-label>Gross Profit - Expenditure</mat-label>
-          <!--                    <mat-label>10000</mat-label>-->
-          <mat-form-field appearance="outline">
-            <input
-              formControlName="netIncome"
-              matInput
-              readonly
-              name="netIncome[i]"
-              required
-              class="input-field"
-              maxlength="14"
-              digitsOnly
-            />
-          </mat-form-field>
-        </div>
 
         <div class="col-sm-3 spsTp">
           <mat-label>Turnover from speculative activity</mat-label>
@@ -99,6 +82,24 @@
               type="number"
               trim
               (blur)="calculateNetIncome(fieldGlobalIndex(i))"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="col-sm-3">
+          <mat-label>Net income from speculative income</mat-label>
+          <mat-label>Gross Profit - Expenditure</mat-label>
+          <!--                    <mat-label>10000</mat-label>-->
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="netIncome"
+              matInput
+              readonly
+              name="netIncome[i]"
+              required
+              class="input-field"
+              maxlength="14"
+              digitsOnly
             />
           </mat-form-field>
         </div>

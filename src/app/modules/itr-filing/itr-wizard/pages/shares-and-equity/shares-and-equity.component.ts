@@ -1,15 +1,15 @@
 import {Component, Inject, LOCALE_ID, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { AppConstants } from 'src/app/modules/shared/constants';
-import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { UtilsService } from 'src/app/services/utils.service';
-import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
+import {AppConstants} from 'src/app/modules/shared/constants';
+import {ITR_JSON, NewCapitalGain} from 'src/app/modules/shared/interfaces/itr-input.interface';
+import {ItrMsService} from 'src/app/services/itr-ms.service';
+import {ToastMessageService} from 'src/app/services/toast-message.service';
+import {UtilsService} from 'src/app/services/utils.service';
+import {WizardNavigation} from '../../../../itr-shared/WizardNavigation';
 import {GridOptions} from "ag-grid-community";
 import {formatDate} from "@angular/common";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-shares-and-equity',
@@ -20,7 +20,6 @@ export class SharesAndEquityComponent
   extends WizardNavigation
   implements OnInit {
   step = 1;
-  // @Output() onSave = new EventEmitter();
   securitiesForm: FormGroup;
   deductionForm: FormGroup;
   Copy_ITR_JSON: ITR_JSON;
@@ -34,8 +33,8 @@ export class SharesAndEquityComponent
   maxPurchaseDate: Date;
 
   gainTypeList = [
-    { name: 'STCG', value: 'SHORT' },
-    { name: 'LTCG', value: 'LONG' },
+    {name: 'STCG', value: 'SHORT'},
+    {name: 'LTCG', value: 'LONG'},
   ];
   isDisable: boolean;
   bondType: any;
@@ -45,7 +44,6 @@ export class SharesAndEquityComponent
   selectedBroker = '';
   brokerList = [];
   brokerSelected = [];
-  allSecurities = [];
   compactView = true;
   isAdd = false;
   equityGridOptions: GridOptions;
@@ -100,7 +98,6 @@ export class SharesAndEquityComponent
     this.deductionForm = this.initDeductionForm();
 
     if (this.Copy_ITR_JSON.capitalGain) {
-      //this.initDetailedForm(this.Copy_ITR_JSON);
       this.initBrokerList(this.Copy_ITR_JSON);
     } else {
       this.addMoreData();
@@ -183,15 +180,13 @@ export class SharesAndEquityComponent
       this.addMoreData();
     }
 
-    if (!this.securitiesForm.valid) {
-      this.loading = false;
-      this.securitiesForm.markAllAsTouched();
-      this.securitiesForm.markAsDirty();
-      $('input.ng-invalid').first().focus();
-      this.utilsService.showSnackBar(
-        'Please verify securities data and try again.'
-      );
-    }
+    // if (!this.securitiesForm.valid) {
+    //   this.loading = false;
+    //   this.securitiesForm.markAllAsTouched();
+    //   this.securitiesForm.markAsDirty();
+    //   $('input.ng-invalid').first().focus();
+    //   this.utilsService.showSnackBar('Please verify securities data and try again.');
+    // }
   }
 
   valueGetter(controls, name) {
@@ -205,7 +200,7 @@ export class SharesAndEquityComponent
         headerCheckboxSelection: true,
         width: 80,
         pinned: 'left',
-        checkboxSelection:(params) => {
+        checkboxSelection: (params) => {
           return true;
         },
         valueGetter: function nameFromCode(params) {
@@ -224,7 +219,7 @@ export class SharesAndEquityComponent
         headerName: 'Scrip Name',
         field: 'nameOfTheUnits',
         width: 100,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {textAlign: 'center'},
         valueGetter: function nameFromCode(params) {
           return params.data.controls['nameOfTheUnits'].value;
         },
@@ -233,7 +228,7 @@ export class SharesAndEquityComponent
         headerName: 'Buy/Sell Quantity',
         field: 'sellOrBuyQuantity',
         width: 100,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {textAlign: 'center'},
         valueGetter: function nameFromCode(params) {
           return params.data.controls['sellOrBuyQuantity'].value;
         },
@@ -242,7 +237,7 @@ export class SharesAndEquityComponent
         headerName: 'Sale Date',
         field: 'sellDate',
         width: 100,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {textAlign: 'center'},
         cellRenderer: (data: any) => {
           if (data.value) {
             return formatDate(data.value, 'dd/MM/yyyy', this.locale);
@@ -259,7 +254,7 @@ export class SharesAndEquityComponent
         field: 'sellValuePerUnit',
         width: 100,
         textAlign: 'center',
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {textAlign: 'center'},
         valueGetter: function nameFromCode(params) {
           return params.data.controls['sellValuePerUnit'].value;
         },
@@ -268,7 +263,7 @@ export class SharesAndEquityComponent
         headerName: 'Sale Value',
         field: 'sellValue',
         width: 100,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {textAlign: 'center'},
         valueGetter: function nameFromCode(params) {
           return params.data.controls['sellValue'].value;
         },
@@ -277,7 +272,7 @@ export class SharesAndEquityComponent
         headerName: 'Buy Date',
         field: 'purchaseDate',
         width: 100,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {textAlign: 'center'},
         cellRenderer: (data: any) => {
           if (data.value) {
             return formatDate(data.value, 'dd/MM/yyyy', this.locale);
@@ -294,7 +289,7 @@ export class SharesAndEquityComponent
         field: 'purchaseValuePerUnit',
         width: 100,
         textAlign: 'center',
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {textAlign: 'center'},
         valueGetter: function nameFromCode(params) {
           return params.data.controls['purchaseValuePerUnit'].value;
         },
@@ -303,7 +298,7 @@ export class SharesAndEquityComponent
         headerName: 'Buy Value',
         field: 'purchaseCost',
         width: 100,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {textAlign: 'center'},
         valueGetter: function nameFromCode(params) {
           return params.data.controls['purchaseCost'].value;
         },
@@ -312,7 +307,7 @@ export class SharesAndEquityComponent
         headerName: 'Expenses',
         field: 'sellExpense',
         width: 100,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {textAlign: 'center'},
         valueGetter: function nameFromCode(params) {
           return params.data.controls['sellExpense'].value;
         },
@@ -321,7 +316,7 @@ export class SharesAndEquityComponent
         headerName: 'Type of Capital Gain*',
         field: 'gainType',
         width: 100,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {textAlign: 'center'},
         valueGetter: function nameFromCode(params) {
           return params.data.controls['gainType'].value;
         },
@@ -330,7 +325,7 @@ export class SharesAndEquityComponent
         headerName: 'Gain Amount*',
         field: 'capitalGain',
         width: 100,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {textAlign: 'center'},
         valueGetter: function nameFromCode(params) {
           return params.data.controls['capitalGain'].value;
         },
@@ -423,11 +418,11 @@ export class SharesAndEquityComponent
     }
   }
 
-  isBrokerSelected(){
+  isBrokerSelected() {
     return this.brokerSelected.filter(value => value === true).length > 0;
   }
 
-  changeSelection(i){
+  changeSelection(i) {
     this.brokerSelected[i] = !this.brokerSelected[i];
   }
 
@@ -444,11 +439,11 @@ export class SharesAndEquityComponent
       rowSelection: 'multiple',
       onGridReady: params => {
       },
-      onSelectionChanged: (event) =>{
-        event.api.getSelectedRows().forEach(row=>{
+      onSelectionChanged: (event) => {
+        event.api.getSelectedRows().forEach(row => {
           row.controls['hasEdit'].setValue(true);
         });
-        if(event.api.getSelectedRows().length === 0){
+        if (event.api.getSelectedRows().length === 0) {
           this.getSecuritiesArray.controls.forEach((formGroup: FormGroup) => {
             formGroup.controls['hasEdit'].setValue(false);
           });
@@ -457,9 +452,9 @@ export class SharesAndEquityComponent
       },
       sortable: true,
       pagination: true,
-      paginationPageSize:20
+      paginationPageSize: 20
     };
-    this.equityGridOptions.api.setRowData(this.getSecuritiesArray.controls);
+    this.equityGridOptions.api?.setRowData(this.getSecuritiesArray.controls);
   }
 
   showCompactView() {
@@ -483,31 +478,71 @@ export class SharesAndEquityComponent
     }
   }
 
+  addDialogRef: MatDialogRef<any>;
   addMore() {
-    // if(!this.securitiesForm.enabled){
-    //   this.securitiesForm.enable();
-    // }
     this.compactView = false;
     this.isAdd = true;
     const securitiesArray = <FormArray>(
       this.securitiesForm.get('securitiesArray')
     );
-    if (securitiesArray && securitiesArray.length > 0) {
-      if (securitiesArray.valid) {
-        this.addMoreData();
+    this.selectedFormGroup = this.createForm(securitiesArray.length);
+    this.addDialogRef = this.dialog.open(this.editEquity);
+    this.addDialogRef.afterClosed().subscribe((result) => {
+      if(result) {
+        let data;
+        let itrObject = this.Copy_ITR_JSON;
+        if (this.bondType === 'listed') {
+          data = itrObject.capitalGain.filter(
+            (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
+          );
+        } else if (this.bondType === 'unlisted') {
+          data = itrObject.capitalGain.filter(
+            (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
+          );
+        }
+        if (data.length > 0) {
+          data.forEach((obj) => {
+            obj.assetDetails.push(result);
+          });
+        } else {
+          let cg:NewCapitalGain = {
+            assesseeType: this.Copy_ITR_JSON.assesseeType,
+            assessmentYear: this.Copy_ITR_JSON.assessmentYear,
+            assetType: this.bondType === 'listed' ? "EQUITY_SHARES_LISTED" : 'EQUITY_SHARES_UNLISTED',
+            buyersDetails: [],
+            improvement: [],
+            residentialStatus: this.Copy_ITR_JSON.residentialStatus
+          };
+          cg.assetDetails = [];
+          cg.assetDetails.push(result);
+          data.push(cg);
+        }
+        //append data to rest cg data
+        let otherData:any;
+        if (this.bondType === 'listed') {
+          otherData = itrObject.capitalGain.filter(
+            (item: any) => item.assetType !== 'EQUITY_SHARES_LISTED'
+          );
+        } else if (this.bondType === 'unlisted') {
+          otherData = itrObject.capitalGain.filter(
+            (item: any) => item.assetType !== 'EQUITY_SHARES_UNLISTED'
+          );
+        }
+        let completeData = []
+        completeData = otherData.concat(otherData, data);
+        this.Copy_ITR_JSON.capitalGain = completeData;
+        this.initBrokerList(this.Copy_ITR_JSON);
+        this.selectedFormGroup.controls['hasEdit'].setValue(null);
+        if(!this.compactView){
+          this.initDetailedForm(this.Copy_ITR_JSON);
+          this.equityGridOptions.api?.setRowData(this.getSecuritiesArray.controls);
+        } else {
+          this.initDetailedForm(this.Copy_ITR_JSON);
+        }
+        // this.compactView = true;
       }
-      //else {
-      //   securitiesArray.controls.forEach(element => {
-      //     if ((element as FormGroup).invalid) {
-      //       element.markAsDirty();
-      //       element.markAllAsTouched();
-      //     }
-      //   });
-      // }
-    } else {
-      this.securitiesForm.enable();
-      this.addMoreData();
-    }
+    });
+
   }
 
   initForm() {
@@ -520,13 +555,13 @@ export class SharesAndEquityComponent
     let validators =
       this.bondType === 'listed'
         ? [
-            Validators.required,
-            Validators.pattern(AppConstants.amountWithDecimal),
-          ]
+          Validators.required,
+          Validators.pattern(AppConstants.amountWithDecimal),
+        ]
         : [
-            Validators.required,
-            Validators.pattern(AppConstants.amountWithoutDecimal),
-          ];
+          Validators.required,
+          Validators.pattern(AppConstants.amountWithoutDecimal),
+        ];
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       brokerName: [item ? item.brokerName : ''],
@@ -560,25 +595,27 @@ export class SharesAndEquityComponent
     });
   }
 
-  @ViewChild('editEquity', { static: true }) editEquity: TemplateRef<any>;
-  selectedFormGroup:FormGroup;
+  @ViewChild('editEquity', {static: true}) editEquity: TemplateRef<any>;
+  selectedFormGroup: FormGroup;
 
-  editSecuritiesForm(params:any) {
+  editSecuritiesForm(params: any) {
     console.log(event);
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'edit':
           this.selectedFormGroup = params.data;
-          this.dialog.open(this.editEquity);
-          this.dialog.afterAllClosed.subscribe(()=>{
-            this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-            this.Copy_ITR_JSON = JSON.parse(
-              sessionStorage.getItem(AppConstants.ITR_JSON)
-            );
-            this.initBrokerList(this.Copy_ITR_JSON);
-            this.selectedFormGroup.controls['hasEdit'].setValue(null);
-            this.equityGridOptions.api?.setRowData(this.getSecuritiesArray.controls);
+          this.addDialogRef = this.dialog.open(this.editEquity);
+          this.addDialogRef.afterClosed().subscribe((result) => {
+            if(result) {
+              // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+              // this.Copy_ITR_JSON = JSON.parse(
+              //   sessionStorage.getItem(AppConstants.ITR_JSON)
+              // );
+              this.initBrokerList(this.Copy_ITR_JSON);
+              this.selectedFormGroup.controls['hasEdit'].setValue(null);
+              this.equityGridOptions.api?.setRowData(this.getSecuritiesArray.controls);
+            }
           });
           break;
       }
@@ -623,8 +660,8 @@ export class SharesAndEquityComponent
 
   deleteBroker() {
     let brokerNames = [];
-    for (let i=0; i < this.brokerSelected.length; i++){
-      if(this.brokerSelected[i] === false){
+    for (let i = 0; i < this.brokerSelected.length; i++) {
+      if (this.brokerSelected[i] === false) {
         brokerNames.push(this.brokerList[i].brokerName);
       }
       this.brokerSelected[i] = false;
@@ -1004,12 +1041,12 @@ export class SharesAndEquityComponent
           //get all other brokers from existing list, append current broker list and then save
           let otherData = this.Copy_ITR_JSON.capitalGain[
             securitiesIndex
-          ].assetDetails.filter(
+            ].assetDetails.filter(
             (item) => item.brokerName !== this.selectedBroker
           );
           let sameData = this.Copy_ITR_JSON.capitalGain[
             securitiesIndex
-          ].assetDetails.filter(
+            ].assetDetails.filter(
             (item) => item.brokerName === this.selectedBroker
           );
           if (!sameData) {
@@ -1030,7 +1067,7 @@ export class SharesAndEquityComponent
         } else {
           let otherData = this.Copy_ITR_JSON.capitalGain[
             securitiesIndex
-          ].assetDetails.filter(
+            ].assetDetails.filter(
             (item) => item.brokerName !== this.selectedBroker
           );
           this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails =

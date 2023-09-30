@@ -24,6 +24,7 @@ import { BulkReAssignDialogComponent } from './components/bulk-re-assign-dialog/
 import { ItrStatusDialogComponent } from './components/itr-status-dialog/itr-status-dialog.component';
 import { ReAssignActionDialogComponent } from './components/re-assign-action-dialog/re-assign-action-dialog.component';
 import { ChatOptionsDialogComponent } from './components/chat-options/chat-options-dialog.component';
+import { ScheduledCallReassignDialogComponent } from './components/scheduled-call-reassign-dialog/scheduled-call-reassign-dialog.component';
 
 @NgModule({
     imports: [
@@ -54,7 +55,8 @@ import { ChatOptionsDialogComponent } from './components/chat-options/chat-optio
         BulkReAssignDialogComponent,
         ItrStatusDialogComponent,
         ChatOptionsDialogComponent,
-        ReAssignActionDialogComponent
+        ReAssignActionDialogComponent,
+        ScheduledCallReassignDialogComponent,
     ],
     entryComponents: [
         ReAssignDialogComponent,

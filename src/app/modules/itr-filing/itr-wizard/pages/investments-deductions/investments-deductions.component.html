@@ -168,6 +168,26 @@
         <mat-expansion-panel-header>
           <mat-panel-title>
             <mat-icon> arrow_forward_ios </mat-icon>
+            Medical Expenses (u/s 80D)
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-medical-expenses
+          #medicalExpensesComponentRef
+        ></app-medical-expenses>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <div class="card__row mb-2">
+    <mat-accordion class="headers-align">
+      <mat-expansion-panel
+        [expanded]="step === 1"
+        (opened)="setStep(1)"
+        hideToggle
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon> arrow_forward_ios </mat-icon>
             General Donations under sec 80G
           </mat-panel-title>
           <div class="card__row edit clearfix isShow">
@@ -182,27 +202,41 @@
         </mat-expansion-panel-header>
         <app-donations
           #donationsComponentRef
+          [type]="'80g'"
           [isAddDonation]="isAddDonation"
-          (save)="saveInvestmentDeductions()"
-          (donationsSaved)="onDonationsSaved($event)"
         ></app-donations>
       </mat-expansion-panel>
 
+    </mat-accordion>
+  </div>
+
+  <div class="card__row mb-2">
+    <mat-accordion class="headers-align">
       <mat-expansion-panel
-        [expanded]="step === 1"
-        (opened)="setStep(1)"
+        [expanded]="step === 2"
+        (opened)="setStep(2)"
         hideToggle
       >
         <mat-expansion-panel-header>
           <mat-panel-title>
             <mat-icon> arrow_forward_ios </mat-icon>
-            Medical Expenses (u/s 80D)
+            General Donations under sec 80GGA
           </mat-panel-title>
+          <div class="card__row edit clearfix isShow">
+            <button
+              type="button"
+              class="edit_btn"
+              (click)="$event.stopPropagation(); addDonation('donation')"
+            >
+              <i class="fa fa-plus"></i>Add
+            </button>
+          </div>
         </mat-expansion-panel-header>
-        <app-medical-expenses
-          #medicalExpensesComponentRef
-          (medicalExpensesSaved)="onMedicalExpensesSaved($event)"
-        ></app-medical-expenses>
+        <app-donations
+          #donations80ggaComponentRef
+          [type]="'80gga'"
+          [isAddDonation]="isAddDonation"
+        ></app-donations>
       </mat-expansion-panel>
     </mat-accordion>
   </div>
@@ -213,7 +247,7 @@
       <span class="font-semibold">&nbsp;Back to Main Page</span>
     </button>
 
-    <button class="saveBtnIn" (click)="saveInvestmentDeductions()">
+    <button class="saveBtnIn" (click)="saveAll()">
       <span class="font-semibold">Save All</span>
     </button>
   </div>

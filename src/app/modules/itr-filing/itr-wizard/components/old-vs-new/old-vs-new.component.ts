@@ -19,6 +19,7 @@ import {
   ValidationErrors,
   AbstractControl,
 } from '@angular/forms';
+import {environment} from "../../../../../../environments/environment";
 
 @Component({
   selector: 'app-old-vs-new',
@@ -65,6 +66,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   showCurrentAYOptions = false;
   submitted: boolean = false;
   dueDateOver: boolean = false;
+
+  allowNewRegime = false;
   constructor(
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
@@ -1790,15 +1793,18 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       (this.ITR_JSON?.isRevised === 'Y' && this.ITR_JSON?.regime === 'OLD')
     ) {
       this.dueDateOver = true;
+      this.allowNewRegime = environment.environment === 'UAT' ? true : !this.dueDateOver;
       return;
     } else if (
       (currentMonth === july && currentDay > july31) ||
       (this.ITR_JSON?.isRevised === 'Y' && this.ITR_JSON?.regime === 'OLD')
     ) {
       this.dueDateOver = true;
+      this.allowNewRegime = environment.environment === 'UAT' ? true : !this.dueDateOver;
       return;
     } else {
       this.dueDateOver = false;
+      this.allowNewRegime = environment.environment === 'UAT' ? true : !this.dueDateOver;
       return;
     }
   }

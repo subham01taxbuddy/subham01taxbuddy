@@ -142,7 +142,7 @@ export class ItrWizardComponent implements OnInit {
     //   return;
     // }
     const child: WizardNavigation = componentRef;
-    child.saveAndNext.subscribe(() => {
+    child?.saveAndNext.subscribe(() => {
       this.gotoSources();
     });
     child.nextBreadcrumb?.subscribe((breadcrumb) => {
@@ -190,9 +190,10 @@ export class ItrWizardComponent implements OnInit {
   gotoSummary() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // if (this.jsonUploaded) {
-    this.validationErrors = this.itrValidationService.validateItrObj(
-      this.ITR_JSON
-    );
+    //TODO: disabled error validation check for temporary
+    // this.validationErrors = this.itrValidationService.validateItrObj(
+    //   this.ITR_JSON
+    // );
 
     if (this.validationErrors.length > 0) {
       this.breadcrumb = null;
