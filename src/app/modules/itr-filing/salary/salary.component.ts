@@ -474,7 +474,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
       if(this.deductionsFormGroup.controls['entertainmentAllow'].value > Math.min(basicSalaryAmount/5, this.maxEA)){
         this.utilsService.showSnackBar(
-          'Entertainment allowance is exceeding the allowed value');
+          'Deduction of entertainment allowance cannot exceed 1/5 of salary as per salary 17(1) or 5000 whichever is lower');
         return;
       }
 
