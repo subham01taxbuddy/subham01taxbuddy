@@ -822,6 +822,8 @@ export class InvestmentsDeductionsComponent
           }
         }
       );
+
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
     } else {
       $('input.ng-invalid').first().focus();
     }
