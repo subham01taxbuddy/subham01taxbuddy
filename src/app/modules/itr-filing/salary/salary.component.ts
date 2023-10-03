@@ -438,12 +438,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       ] as FormArray;
 
       let perquisitesAmount = 0;
+      let basicSalaryAmount = 0;
       for (let i = 0; i < salaryDetails.controls.length; i++) {
         let salary = salaryDetails.controls[i] as FormGroup;
         if (
           this.utilsService.isNonEmpty(salary.controls['salaryValue'].value)
         ) {
           if (salary.controls['salaryType'].value === 'SEC17_1') {
+            basicSalaryAmount = salary.controls['salaryValue'].value;
             this.localEmployer.salary.push({
               salaryType: 'SEC17_1',
               taxableAmount: Number(salary.controls['salaryValue'].value),
@@ -486,6 +488,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             (allowance.controls['allowValue'].value !== 0 && allowance.controls['allowValue'].value > perquisitesAmount)){
             this.utilsService.showSnackBar(
               'Non Monetary Perquisites u/s10(10C) cannot exceed the amount of Perquisites - Salary 17(2)');
+            return;
+          }
+          if(allowance.controls['allowType'].value === 'HOUSE_RENT' &&
+             allowance.controls['allowValue'].value > basicSalaryAmount/2){
+            this.utilsService.showSnackBar(
+              'HRA cannot be more than 50% of Salary u/s 17(1).');
             return;
           }
           if(allowance.controls['allowType'].value === 'NON_MONETARY_PERQUISITES' &&
