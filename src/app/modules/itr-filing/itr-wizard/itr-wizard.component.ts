@@ -190,10 +190,9 @@ export class ItrWizardComponent implements OnInit {
   gotoSummary() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // if (this.jsonUploaded) {
-    //TODO: disabled error validation check for temporary
-    // this.validationErrors = this.itrValidationService.validateItrObj(
-    //   this.ITR_JSON
-    // );
+    this.validationErrors = this.itrValidationService.validateItrObj(
+      this.ITR_JSON
+    );
 
     if (this.validationErrors.length > 0) {
       this.breadcrumb = null;
