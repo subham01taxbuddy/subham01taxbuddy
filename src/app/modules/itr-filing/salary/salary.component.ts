@@ -9,6 +9,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { WizardNavigation } from '../../itr-shared/WizardNavigation';
 import { AllSalaryIncomeComponent } from '../itr-wizard/pages/all-salary-income/all-salary-income.component';
+import {min} from "rxjs";
 declare let $: any;
 
 @Component({
@@ -471,6 +472,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         }
       }
 
+      if(this.deductionsFormGroup.controls['entertainmentAllow'].value > Math.min(basicSalaryAmount/5, this.maxEA)){
+        this.utilsService.showSnackBar(
+          'Entertainment allowance is exceeding the allowed value');
+        return;
+      }
+
       this.localEmployer.allowance = [];
       let totalAllowExempt = 0;
       for (
@@ -873,7 +880,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       Number(this.deductionsFormGroup.controls['entertainmentAllow'].value);
     if (
       this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
-      this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT'
+      this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+      this.ITR_JSON.employerCategory !== 'PRIVATE'
     ) {
       this.deductionsFormGroup.controls['entertainmentAllow'].disable();
     } else {
