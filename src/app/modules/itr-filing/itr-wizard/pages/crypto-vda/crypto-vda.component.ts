@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-crypto-vda',
@@ -7,16 +9,19 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
   styleUrls: ['./crypto-vda.component.scss'],
 })
 export class CryptoVdaComponent implements OnInit {
+  @Output() saveAndNext = new EventEmitter<any>();
   scheduleVda: FormGroup;
   headOfIncomes: any;
   capitalGainTotal: any;
   businessTotal: any;
+  ITR_JSON: ITR_JSON;
+  Copy_ITR_JSON: ITR_JSON;
+  loading = false;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
 
   ngOnInit(): void {
     this.scheduleVda = this.initForm();
-    this.add();
     this.headOfIncomes = ['Business or Profession', 'Capital Gain'];
   }
 
@@ -36,15 +41,6 @@ export class CryptoVdaComponent implements OnInit {
     });
   }
 
-  get getVdaArray() {
-    return this.scheduleVda.get('vdaArray') as FormArray;
-  }
-
-  add(item?) {
-    const vdaArray = <FormArray>this.scheduleVda.get('vdaArray');
-    vdaArray.push(this.createVdaForm(item));
-  }
-
   createVdaForm(item?): FormGroup {
     const formGroup = this.fb.group({
       hasEdit: [item ? item.hasEdit : null],
@@ -58,21 +54,31 @@ export class CryptoVdaComponent implements OnInit {
     return formGroup;
   }
 
-  goBack() {}
+  add(item?) {
+    const vdaArray = <FormArray>this.scheduleVda.get('vdaArray');
+    if (this.scheduleVda.valid) {
+      vdaArray.push(this.createVdaForm(item));
+    }
+  }
 
-  saveAll() {
-    const savedDetails = this.scheduleVda.getRawValue();
-    console.log(savedDetails);
+  deleteVdaArray() {
+    const vdaArray = <FormArray>this.scheduleVda.get('vdaArray');
+    vdaArray.controls.forEach((element, index) => {
+      if ((element as FormGroup).controls['hasEdit'].value) {
+        vdaArray.removeAt(index);
+      }
+    });
+  }
+
+  getInputValue(index: number, controlName: string) {
+    return (this.scheduleVda.get('vdaArray') as FormArray)
+      .at(index)
+      .get(controlName).value;
   }
 
   calcInc(index: number) {
-    const saleValue = (this.scheduleVda.get('vdaArray') as FormArray)
-      .at(index)
-      .get('considerationReceived').value;
-
-    const buyValue = (this.scheduleVda.get('vdaArray') as FormArray)
-      .at(index)
-      .get('costOfAcquisition').value;
+    const saleValue = this.getInputValue(index, 'considerationReceived');
+    const buyValue = this.getInputValue(index, 'costOfAcquisition');
 
     const income = saleValue - buyValue;
     const incomeInput = (this.scheduleVda.get('vdaArray') as FormArray)
@@ -82,13 +88,95 @@ export class CryptoVdaComponent implements OnInit {
     incomeInput.setValue(income);
 
     const allValues = this.scheduleVda.getRawValue();
-    console.log(allValues);
+
+    // calculating the total of capital gain and setting it as 0 if it is less than 0
     this.capitalGainTotal = allValues.vdaArray
       .filter((item) => item.headOfIncome === 'Capital Gain')
       .reduce((total, item) => total + item.income, 0);
 
+    if (this.capitalGainTotal < 0) {
+      this.capitalGainTotal = 0;
+    }
+
+    // calculating the total of business and setting it as 0 if it is less than 0
     this.businessTotal = allValues.vdaArray
       .filter((item) => item.headOfIncome === 'Business or Profession')
       .reduce((total, item) => total + item.income, 0);
+
+    if (this.businessTotal < 0) {
+      this.businessTotal = 0;
+    }
+  }
+
+  saveAll() {
+    if (this.scheduleVda.valid) {
+      this.loading = true;
+      const savedDetails = this.scheduleVda.getRawValue();
+
+      const toSave = {
+        assessmentYear: '2023-2024',
+        assesseeType: 'INDIVIDUAL',
+        residentialStatus: 'RESIDENT',
+        assetType: 'VDA',
+        assetDetails: savedDetails?.vdaArray.map((item, index) => ({
+          srn: index ? index : 0,
+          sellOrBuyQuantity: 1,
+          sellValuePerUnit: item ? item.considerationReceived : 0,
+          sellValue: item ? item.considerationReceived : 0,
+          purchaseDate: item
+            ? new Date(item.dateOfAcquisition).toISOString()
+            : null,
+          sellDate: item ? new Date(item.dateOfTransfer).toISOString() : null,
+          algorithm: 'vdaCrypto',
+          purchaseValuePerUnit: item ? item.costOfAcquisition : 0,
+          purchaseCost: item ? item.costOfAcquisition : 0,
+          headOfIncome: item
+            ? item.headOfIncome === ' Capital Gain'
+              ? 'CG'
+              : 'BI'
+            : null,
+          capitalGain: item ? (item.income > 0 ? item.income : 0) : 0,
+        })),
+        improvement: [],
+        buyersDetails: [],
+      };
+
+      console.log(toSave, 'tosave');
+
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+      // If capital gain is not present we assign it as empty
+      if (!this.Copy_ITR_JSON?.capitalGain) {
+        this.Copy_ITR_JSON.capitalGain = [];
+      }
+
+      // setting the capital gain array to the filtered result that does not contain VDA
+      this.Copy_ITR_JSON.capitalGain = this.Copy_ITR_JSON?.capitalGain?.filter(
+        (item) => {
+          return item.assetType !== 'VDA';
+        }
+      );
+
+      // Pusing all the vda details in the capital gain array
+      this.Copy_ITR_JSON?.capitalGain?.push(toSave);
+
+      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.Copy_ITR_JSON));
+      this.utilsService.showSnackBar('Schedule VDA saved successfully');
+      this.saveAndNext.emit(false);
+      this.loading = false;
+    } else {
+      this.utilsService.showSnackBar(
+        'Please make sure all the details are entered correctly'
+      );
+    }
+  }
+
+  get getVdaArray() {
+    return this.scheduleVda.get('vdaArray') as FormArray;
+  }
+
+  goBack() {
+    this.saveAndNext.emit(false);
   }
 }

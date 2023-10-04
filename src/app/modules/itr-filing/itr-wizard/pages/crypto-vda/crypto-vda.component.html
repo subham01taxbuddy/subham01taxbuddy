@@ -1,5 +1,6 @@
 <form [formGroup]="scheduleVda">
   <div class="mrgArdSpcBlw">
+    <!-- header and sub header -->
     <div class="flex justify-between align-items-center">
       <div>
         <div class="txtTitle" style="margin-bottom: 0px">
@@ -7,15 +8,17 @@
         </div>
         <div>Income from transfer of Virtual Digital Assets</div>
       </div>
+      <button class="lgtBtn" (click)="add()">+ Add</button>
     </div>
     <br />
 
+    <!-- table -->
     <div class="row cardBack">
       <div class="table-responsive">
         <table class="table table-bordered" style="border: 1px solid #bdc3c7">
           <thead class="table-header">
             <tr class="table-head">
-              <th>Sr. No (1)</th>
+              <th></th>
               <th>Date of acquisition (2)</th>
               <th>Date of transfer (3)</th>
               <th>
@@ -124,6 +127,7 @@
                     placeholder="costOfAcquisition"
                     (change)="calcInc(i)"
                     readOnly
+                    required
                   />
                 </mat-form-field>
               </td>
@@ -159,8 +163,7 @@
 
             <!-- 2nd question -->
             <tr class="table-header">
-              <th>2</th>
-              <th colspan="5">
+              <th colspan="6">
                 Total (Sum of all Positive Incomes of Business Income in Col. 7)
               </th>
               <th>
@@ -169,8 +172,7 @@
             </tr>
             <!-- 3rd Question -->
             <tr class="table-header">
-              <th>3</th>
-              <th colspan="5">
+              <th colspan="6">
                 Total (Sum of all Positive Incomes of Capital Gain in Col. 7)
               </th>
               <th>
@@ -182,6 +184,16 @@
       </div>
     </div>
 
+    <!-- delete button for the table -->
+    <div class="row">
+      <div class="col-sm-6" style="margin: 15px">
+        <button type="submit" class="delete-btn" (click)="deleteVdaArray()">
+          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i> Delete
+        </button>
+      </div>
+    </div>
+
+    <!-- navigation buttons -->
     <div class="flex justify-between p-[30px] back-foot">
       <button class="lgtBtn">
         <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
