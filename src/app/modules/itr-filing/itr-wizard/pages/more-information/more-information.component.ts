@@ -53,24 +53,25 @@ export class MoreInformationComponent
         path: 'schedule-cfl',
         type: 'scheduleCfl',
       },
-      {
-        label:
-          'Details of income from outside India and tax relief (Schedule FSI)',
-        path: 'schedule-fsi',
-        type: 'scheduleFsi',
-      },
-      {
-        label:
-          'Details Summary of tax relief claimed for taxes paid outside India (Schedule TR)',
-        path: 'schedule-tr',
-        type: 'scheduleTr',
-      },
-      {
-        label:
-          'Details of foreign assets and income from any source outside India (Schedule FA)',
-        path: 'schedule-fa',
-        type: 'scheduleFa',
-      },
+      //Ashwini: Commented schedule FSI/TR/FA
+      // {
+      //   label:
+      //     'Details of income from outside India and tax relief (Schedule FSI)',
+      //   path: 'schedule-fsi',
+      //   type: 'scheduleFsi',
+      // },
+      // {
+      //   label:
+      //     'Details Summary of tax relief claimed for taxes paid outside India (Schedule TR)',
+      //   path: 'schedule-tr',
+      //   type: 'scheduleTr',
+      // },
+      // {
+      //   label:
+      //     'Details of foreign assets and income from any source outside India (Schedule FA)',
+      //   path: 'schedule-fa',
+      //   type: 'scheduleFa',
+      // },
     ];
   }
 
