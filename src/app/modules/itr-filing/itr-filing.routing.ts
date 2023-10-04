@@ -50,6 +50,7 @@ import { ValidationErrorScreenComponent } from '../shared/components/validation-
 import { ScheduleFsiComponent } from './itr-wizard/pages/schedule-fsi/schedule-fsi.component';
 import { ScheduleTrComponent } from './itr-wizard/pages/schedule-tr/schedule-tr.component';
 import { ScheduleFaComponent } from './itr-wizard/pages/schedule-fa/schedule-fa.component';
+import { CryptoVdaComponent } from './itr-wizard/pages/crypto-vda/crypto-vda.component';
 
 const routes: Routes = [
   {
@@ -105,6 +106,7 @@ const routes: Routes = [
           { path: 'other', component: OtherAssetsComponent },
         ],
       },
+      { path: 'crypto', component: CryptoVdaComponent },
       {
         path: 'more-info',
         component: MoreInformationComponent,
