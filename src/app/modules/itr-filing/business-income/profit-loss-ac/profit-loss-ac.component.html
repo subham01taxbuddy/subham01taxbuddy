@@ -9,7 +9,9 @@
         Non-Speculative Income
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-non-speculative-income></app-non-speculative-income>
+    <app-non-speculative-income
+      #NonSpeculativeIncomeComponentRef
+    ></app-non-speculative-income>
   </mat-expansion-panel>
   <mat-expansion-panel hideToggle>
     <mat-expansion-panel-header>
@@ -18,12 +20,17 @@
         Speculative Income
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <app-speculative-income></app-speculative-income>
+    <app-speculative-income
+      #SpeculativeIncomeComponentRef
+    ></app-speculative-income>
   </mat-expansion-panel>
 </mat-accordion>
 <div class="flex justify-between p-[30px] back-foot">
   <button class="lgtBtn" (click)="goBack()">
     <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
     <span class="font-semibold">&nbsp;Back to Source Page</span>
+  </button>
+  <button class="saveBtnIn" (click)="saveAll()">
+    <span class="font-semibold">Save All</span>
   </button>
 </div>

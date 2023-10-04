@@ -3,19 +3,11 @@
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
 <div class="spc-blw mrgArd">
-
   <form [formGroup]="investmentDeductionForm">
     <div class="card__row display-flex">
-      <div class="col-sm-6 cardBdr">
+      <div class="col-sm-12 cardBdr">
         <div class="row">
-          <div class="col-sm-10">
-          Investment/Deduction Details:
-          </div>
-          <div class="col-sm-2">
-            <button class="edit-donation mvRthEdt" (click)="editForm('investment')">
-              <mat-icon> edit_square </mat-icon>Edit
-            </button>
-          </div>
+          <div class="col-sm-10">Investment/Deduction Details:</div>
         </div>
         <div class="row grup">
           <div class="col-lg-6 spsTp">
@@ -114,7 +106,6 @@
         </div>
 
         <div style="padding-top: 20px">
-      
           <div class="row grup">
             <div class="col-lg-12">Other Deductions:</div>
             <div class="col-lg-8">
@@ -130,7 +121,9 @@
                 />
                 <mat-hint></mat-hint>
               </mat-form-field>
-              <mat-label class="hinTx">Non-cash donations are accepted</mat-label>
+              <mat-label class="hinTx"
+                >Non-cash donations are accepted</mat-label
+              >
             </div>
             <div class="col-lg-4">
               <mat-label>Under sec. 80EEB</mat-label>
@@ -152,20 +145,12 @@
                 >
               </mat-form-field>
             </div>
-            <div class="col-sm-12 spsTp bdrTp">
-              <button
-                class="tbd-btn save-btn mvRth"
-                [disabled]="investmentDeductionForm.invalid"
-                (click)="saveInvestmentDeductions()"
-              >
-                Save
-              </button>
-            </div>
           </div>
         </div>
       </div>
-      <div class="space-in"></div>
+      <div class="space-in" *ngIf="false"></div>
       <div
+        *ngIf="false"
         class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6"
       >
         <app-upload-doc [userId]="ITR_JSON.userId"></app-upload-doc>
@@ -178,6 +163,26 @@
       <mat-expansion-panel
         [expanded]="step === 0"
         (opened)="setStep(0)"
+        hideToggle
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon> arrow_forward_ios </mat-icon>
+            Medical Expenses (u/s 80D)
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-medical-expenses
+          #medicalExpensesComponentRef
+        ></app-medical-expenses>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <div class="card__row mb-2">
+    <mat-accordion class="headers-align">
+      <mat-expansion-panel
+        [expanded]="step === 1"
+        (opened)="setStep(1)"
         hideToggle
       >
         <mat-expansion-panel-header>
@@ -196,33 +201,42 @@
           </div>
         </mat-expansion-panel-header>
         <app-donations
+          #donationsComponentRef
+          [type]="'80g'"
           [isAddDonation]="isAddDonation"
-          (onSave)="saveInvestmentDeductions()"
         ></app-donations>
       </mat-expansion-panel>
 
+    </mat-accordion>
+  </div>
+
+  <div class="card__row mb-2">
+    <mat-accordion class="headers-align">
       <mat-expansion-panel
-        [expanded]="step === 1"
-        (opened)="setStep(1)"
+        [expanded]="step === 2"
+        (opened)="setStep(2)"
         hideToggle
       >
         <mat-expansion-panel-header>
           <mat-panel-title>
             <mat-icon> arrow_forward_ios </mat-icon>
-            Medical Expenses (u/s 80D)
+            General Donations under sec 80GGA
           </mat-panel-title>
           <div class="card__row edit clearfix isShow">
             <button
+              type="button"
               class="edit_btn"
-              (click)="$event.stopPropagation(); editForm('medicalExpenses')"
+              (click)="$event.stopPropagation(); addDonation('donation')"
             >
-              <mat-icon> edit_square </mat-icon>Edit
+              <i class="fa fa-plus"></i>Add
             </button>
           </div>
         </mat-expansion-panel-header>
-        <app-medical-expenses
-          [isEditMedicalExpenses]="isEditMedicalExpenses"
-        ></app-medical-expenses>
+        <app-donations
+          #donations80ggaComponentRef
+          [type]="'80gga'"
+          [isAddDonation]="isAddDonation"
+        ></app-donations>
       </mat-expansion-panel>
     </mat-accordion>
   </div>
@@ -233,7 +247,7 @@
       <span class="font-semibold">&nbsp;Back to Main Page</span>
     </button>
 
-    <button class="saveBtnIn" (click)="saveInvestmentDeductions()">
+    <button class="saveBtnIn" (click)="saveAll()">
       <span class="font-semibold">Save All</span>
     </button>
   </div>

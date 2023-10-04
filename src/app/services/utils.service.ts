@@ -427,7 +427,26 @@ export class UtilsService {
         profitLossACIncomes: [],
       },
       pastYearLosses: [],
-      foreignIncome: null,
+      foreignIncome: {
+        id: 1,
+        taxPaidOutsideIndiaFlag: null,
+        taxReliefAssessmentYear: null,
+        taxAmountRefunded: null,
+        taxReliefClaimed: [],
+        foreignAssets: {
+          id: null,
+          depositoryAccounts: [],
+          custodialAccounts: [],
+          equityAndDebtInterest: [],
+          cashValueInsurance: [],
+          financialInterestDetails: [],
+          immovablePropertryDetails: [],
+          capitalAssetsDetails: [],
+          signingAuthorityDetails: [],
+          trustsDetails: [],
+          otherIncomeDetails: [],
+        },
+      },
       incomes: [
         // {
         //   incomeType: 'SAVING_INTEREST',
@@ -1204,7 +1223,7 @@ export class UtilsService {
   }
 
   uploadInitialItrObject(itrObject: ITR_JSON): Observable<any> {
-    if(itrObject.itrSummaryJson) {
+    if (itrObject.itrSummaryJson) {
       itrObject.isItrSummaryJsonEdited = false;
       const param =
         '/itr/' +
@@ -1241,7 +1260,9 @@ export class UtilsService {
    * @param userId The user with which the PAN is associated, user id is optional when creating when user
    */
   getPanDetails(panNumber, userId?) {
-    const param = userId ? `/itr/api/getPanDetail?panNumber=${panNumber}&userId=${userId}` : `/itr/api/getPanDetail?panNumber=${panNumber}`;
+    const param = userId
+      ? `/itr/api/getPanDetail?panNumber=${panNumber}&userId=${userId}`
+      : `/itr/api/getPanDetail?panNumber=${panNumber}`;
     return this.userMsService.getMethodInfo(param);
   }
 

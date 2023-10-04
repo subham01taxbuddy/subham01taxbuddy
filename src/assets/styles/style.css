@@ -1430,3 +1430,13 @@ ul {
   padding: 15px 12px;
 }
 
+.sortBy {
+  color: #f18203;
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.note {
+  max-width: none;
+}

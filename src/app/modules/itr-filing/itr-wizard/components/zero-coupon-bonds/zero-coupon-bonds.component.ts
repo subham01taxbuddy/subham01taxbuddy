@@ -408,9 +408,9 @@ export class ZeroCouponBondsComponent
         this.deductionForm.value([]);
       }
       const bondData = {
-        assessmentYear: '',
-        assesseeType: '',
-        residentialStatus: '',
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        assesseeType: this.ITR_JSON.assesseeType,
+        residentialStatus: this.ITR_JSON.residentialStatus,
         assetType: this.bondType === 'bonds' ? 'BONDS' : 'ZERO_COUPON_BONDS',
         deduction:
           this.deductionForm.invalid || this.getBondsCg() <= 0
@@ -539,5 +539,6 @@ export class ZeroCouponBondsComponent
 
   saveAll() {
     this.save('bonds');
+    this.saveAndNext.emit(false);
   }
 }

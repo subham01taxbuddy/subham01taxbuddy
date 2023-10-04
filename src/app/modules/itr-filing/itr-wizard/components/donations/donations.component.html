@@ -24,7 +24,7 @@
         <div class="col-sm-3">
           <mat-label>Donation Type*</mat-label>
           <mat-form-field appearance="outline">
-            <mat-select
+            <mat-select *ngIf="type === '80g'"
               (selectionChange)="displayTooltip(i); changed()"
               matTooltip="{{ donationToolTip }}"
               matTooltipClass="tab-tooltip"
@@ -36,6 +36,26 @@
             >
               <mat-option
                 *ngFor="let dropdown of otherDonationToDropdown"
+                [value]="dropdown.value"
+                matTooltip="{{ dropdown.label }}"
+                matTooltipClass="tab-tooltip"
+                matTooltipPosition="above"
+              >
+                {{ dropdown.label }}
+              </mat-option>
+            </mat-select>
+            <mat-select *ngIf="type === '80gga'"
+                        (selectionChange)="displayTooltip(i); changed()"
+                        matTooltip="{{ donationToolTip }}"
+                        matTooltipClass="tab-tooltip"
+                        matTooltipPosition="above"
+                        placeholder="Type of donee"
+                        formControlName="schemeCode"
+                        name="schemeCode[i]"
+                        required
+            >
+              <mat-option
+                *ngFor="let dropdown of scientificDonationDropdown"
                 [value]="dropdown.value"
                 matTooltip="{{ dropdown.label }}"
                 matTooltipClass="tab-tooltip"
@@ -173,6 +193,22 @@
             >
           </mat-form-field>
         </div>
+
+        <div class="col-sm-3 spsTp" *ngIf="type === '80g' && donation.get('schemeCode').value === 'FND_SEC80G'">
+          <mat-label>Donation Reference Number</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="identifier"
+              matInput
+              currencyMask
+              placeholder="Donation Reference Number"
+              name="identifier[i]"
+              class="input-field"
+              type="text"
+              trim/>
+          </mat-form-field>
+        </div>
+
         <div class="col-sm-3 spsTp">
           <mat-label>City of Donee*</mat-label>
           <mat-form-field appearance="outline">
@@ -212,7 +248,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-sm-9 spsTp">
+        <div class="col-sm-6 spsTp">
           <mat-label>Address*</mat-label>
           <mat-form-field appearance="outline">
             <textarea
@@ -228,14 +264,13 @@
             ></textarea>
           </mat-form-field>
         </div>
-        <div class="col-sm-3 edit-head">
-          <button
-            type="button"
-            class="edit-donation edtRthBtn"
-            (click)="editDonationForm(fieldGlobalIndex(i))"
-          >
-            <mat-icon> edit_square </mat-icon>Edit
-          </button>
+        <div *ngIf="type === '80gga'" class="col-sm-3">
+          <mat-label>Total Donations</mat-label>
+          <mat-label>{{ getTotalAmount(i) }}</mat-label>
+        </div>
+        <div *ngIf="type === '80gga'" class="col-sm-3">
+          <mat-label>Eligible Amount</mat-label>
+          <mat-label>{{ getEligibleAmount(i)}}</mat-label>
         </div>
       </div>
       <!-- Row Ends -->
@@ -260,11 +295,6 @@
         <pagination-controls
           (pageChange)="pageChanged($event)"
         ></pagination-controls>
-      </div>
-      <div class="col-sm-3">
-        <button class="tbd-btn save-btn mvRth" (click)="saveGeneralDonation()">
-          Save
-        </button>
       </div>
     </div>
   </div>

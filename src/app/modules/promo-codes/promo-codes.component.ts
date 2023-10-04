@@ -1,5 +1,5 @@
-import { Component,Inject,LOCALE_ID,OnDestroy,OnInit, ViewChild } from '@angular/core';
-import { GridOptions} from 'ag-grid-community';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { GridOptions } from 'ag-grid-community';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,6 +14,7 @@ import { formatDate } from '@angular/common';
 import { AddEditPromoCodeComponent } from './add-edit-promo-code/add-edit-promo-code.component';
 import { ServiceDropDownComponent } from '../shared/components/service-drop-down/service-drop-down.component';
 import { CacheManager } from '../shared/interfaces/cache-manager.interface';
+import { ReportService } from 'src/app/services/report-service';
 
 export const MY_FORMATS = {
   parse: {
@@ -41,14 +42,14 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class PromoCodesComponent implements OnInit,OnDestroy{
+export class PromoCodesComponent implements OnInit, OnDestroy {
   config: any;
   loading!: boolean;
   serviceType = new FormControl('');
   searchValue = new FormControl('');
   promoCodeGridOptions: GridOptions;
-  PromoCodeInfo:any;
-  totalCount=0
+  PromoCodeInfo: any;
+  totalCount = 0
   searchParam: any = {
     page: 0,
     pageSize: 20,
@@ -65,6 +66,7 @@ export class PromoCodesComponent implements OnInit,OnDestroy{
     private itrService: ItrMsService,
     private router: Router,
     private cacheManager: CacheManager,
+    private reportService: ReportService,
     @Inject(LOCALE_ID) private locale: string,
   ) {
     this.promoCodeGridOptions = <GridOptions>{
@@ -74,7 +76,7 @@ export class PromoCodesComponent implements OnInit,OnDestroy{
       enableCellTextSelection: true,
       onGridReady: (params) => { },
       sortable: true,
-      filter:true,
+      filter: true,
     };
 
     this.config = {
@@ -88,9 +90,9 @@ export class PromoCodesComponent implements OnInit,OnDestroy{
     this.getPromoCodeList();
   }
 
-  getPromoCodeList(pageChange?){
+  getPromoCodeList(pageChange?) {
     //'http://uat-api.taxbuddy.com/itr/promocodes?page=0&pageSize=30&code=earlybird30&serviceType=ITR'
-    if(!pageChange){
+    if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
@@ -98,23 +100,23 @@ export class PromoCodesComponent implements OnInit,OnDestroy{
     this.loading = true;
     let data = this.utileService.createUrlParams(this.searchParam);
 
-    let param='';
-    let searchFilter='';
-    if(this.searchValue.value){
+    let param = '';
+    let searchFilter = '';
+    if (this.searchValue.value) {
       // param = '&code=' + this.searchValue.value;
-      this.searchParam.page=0
-      data=this.utileService.createUrlParams(this.searchParam);
+      this.searchParam.page = 0
+      data = this.utileService.createUrlParams(this.searchParam);
       searchFilter += `&code=${this.searchValue.value}`;
     }
-    let serviceFilter='';
-    if(this.serviceType.value){
-      this.searchParam.page=0
-      data=this.utileService.createUrlParams(this.searchParam);
+    let serviceFilter = '';
+    if (this.serviceType.value) {
+      this.searchParam.page = 0
+      data = this.utileService.createUrlParams(this.searchParam);
       serviceFilter += `&serviceType=${this.serviceType.value}`;
     }
 
     param = `/promocodes?${data}${searchFilter}${serviceFilter}`;
-    this.itrService.getMethod(param).subscribe((result: any) => {
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('Promo codes data: ', result);
       this.loading = false;
       this.PromoCodeInfo = result?.content;
@@ -129,9 +131,9 @@ export class PromoCodesComponent implements OnInit,OnDestroy{
         result.content
       );
       this.config.currentPage = currentPageNumber;
-      if(result?.content.length == 0){
+      if (result?.content.length == 0) {
         this.promoCodeGridOptions.api?.setRowData(this.createRowData([]));
-        this._toastMessageService.alert("error",'No Data Found');
+        this._toastMessageService.alert("error", 'No Data Found');
       }
 
     }, error => {
@@ -164,172 +166,172 @@ export class PromoCodesComponent implements OnInit,OnDestroy{
   }
 
 
-  promoCodeColumnDef(){
-   return[
-    {
-      headerName: 'Code',
-      field: 'code',
-      width: 140,
-      pinned: 'left',
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      }
-    },
-    {
-      headerName: 'Title',
-      field: 'title',
-      width: 200,
-      pinned: 'left',
-      suppressMovable: true,
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      }
-    },
-    {
-      headerName: 'Description',
-      field: 'description',
-      width: 250,
-      // pinned: 'left',
-      suppressMovable: true,
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      }
-    },
-    {
-      headerName: 'Start Date',
-      field: 'startDate',
-      width: 100,
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      cellRenderer: (data) => {
-        if(data?.value != '-'){
-          return formatDate(data?.value, 'dd MMM yyyy', this?.locale);
-        }else {
-          return '-';
+  promoCodeColumnDef() {
+    return [
+      {
+        headerName: 'Code',
+        field: 'code',
+        width: 140,
+        pinned: 'left',
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         }
-
       },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      }
-    },
-    {
-      headerName: 'End Date',
-      field: 'endDate',
-      width: 100,
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      cellRenderer: (data) => {
-        if(data?.value != '-'){
-          return formatDate(data?.value, 'dd MMM yyyy', this?.locale);
-        }else{
-          return '-';
+      {
+        headerName: 'Title',
+        field: 'title',
+        width: 200,
+        pinned: 'left',
+        suppressMovable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
         }
-
       },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      }
-    },
-    {
-      headerName: 'Discount Type',
-      field: 'discountType',
-      width: 130,
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      }
-    },
-    {
-      headerName: 'Discount Amount',
-      field: 'discountAmount',
-      width: 120,
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center' },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      }
-    },
-    {
-      headerName: 'Discount Percent',
-      field: 'discountPercent',
-      width: 120,
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center' },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      }
-    },
-    {
-      headerName: 'Minimum Order Amount',
-      field: 'minimumOrderAmnt',
-      width: 150,
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center' },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      }
-    },
-    {
-      headerName: 'Max Discount Amount',
-      field: 'maxDiscountAmount',
-      width: 150,
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center' },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      }
-    },
-    {
-      headerName: 'User Count',
-      field: 'userCount',
-      width: 100,
-      suppressMovable: true,
-      cellStyle: { textAlign: 'center' },
-      filter: "agTextColumnFilter",
-      filterParams: {
-        filterOptions: ["contains", "notContains"],
-        debounceMs: 0
-      }
-    },
-    {
+      {
+        headerName: 'Description',
+        field: 'description',
+        width: 250,
+        // pinned: 'left',
+        suppressMovable: true,
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Start Date',
+        field: 'startDate',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellRenderer: (data) => {
+          if (data?.value != '-') {
+            return formatDate(data?.value, 'dd MMM yyyy', this?.locale);
+          } else {
+            return '-';
+          }
+
+        },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'End Date',
+        field: 'endDate',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellRenderer: (data) => {
+          if (data?.value != '-') {
+            return formatDate(data?.value, 'dd MMM yyyy', this?.locale);
+          } else {
+            return '-';
+          }
+
+        },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Discount Type',
+        field: 'discountType',
+        width: 130,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Discount Amount',
+        field: 'discountAmount',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Discount Percent',
+        field: 'discountPercent',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Minimum Order Amount',
+        field: 'minimumOrderAmnt',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Max Discount Amount',
+        field: 'maxDiscountAmount',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'User Count',
+        field: 'userCount',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
         headerName: 'Edit',
         width: 80,
         editable: false,
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
-        cellRenderer: function (params:any) {
+        cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click to Edit Promo" data-action-type="editPromo"
           style="border: none; background: transparent; font-size: 14px; cursor:pointer;color:#2199e8;">
           <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="editPromo"> Edit</i>
            </button>`;
         },
         pinned: 'right',
-        cellStyle: function (params:any) {
+        cellStyle: function (params: any) {
           return {
             textAlign: 'center', display: 'flex',
             'align-items': 'center',
@@ -340,11 +342,11 @@ export class PromoCodesComponent implements OnInit,OnDestroy{
     ]
   }
 
-  searchPromoCode(){
+  searchPromoCode() {
     this.getPromoCodeList();
   }
 
-  addPromoCode(title, key, data){
+  addPromoCode(title, key, data) {
     let disposable = this.dialog.open(AddEditPromoCodeComponent, {
       width: '65%',
       height: 'auto',
@@ -365,12 +367,12 @@ export class PromoCodesComponent implements OnInit,OnDestroy{
 
   }
 
-  fromServiceType(event){
+  fromServiceType(event) {
     this.serviceType.setValue(event)
   }
 
 
-  onPromoCodeRowClicked(params){
+  onPromoCodeRowClicked(params) {
     console.log(params)
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
@@ -383,8 +385,8 @@ export class PromoCodesComponent implements OnInit,OnDestroy{
     }
   }
 
-  editPromo(params){
-    console.log('data for edit ',params)
+  editPromo(params) {
+    console.log('data for edit ', params)
     let disposable = this.dialog.open(AddEditPromoCodeComponent, {
       width: '65%',
       height: 'auto',
@@ -423,8 +425,8 @@ export class PromoCodesComponent implements OnInit,OnDestroy{
     }
   }
 
- @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
-  resetFilters(){
+  @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
+  resetFilters() {
     this.cacheManager.clearCache();
     // this.searchParam.page = 0;
     this?.serviceDropDown?.resetService();

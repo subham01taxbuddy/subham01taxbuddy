@@ -1,11 +1,8 @@
-import { ItrMsService } from 'src/app/services/itr-ms.service';
 import {
   Component,
   OnInit,
   Input,
   SimpleChanges,
-  EventEmitter,
-  Output,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -20,12 +17,12 @@ declare let $: any;
 })
 export class DonationsComponent implements OnInit {
   @Input() isAddDonation: Number;
+  @Input() type: string;
   generalDonationForm: FormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
-  @Output() onSave = new EventEmitter();
 
   otherDonationToDropdown = [
     {
@@ -59,271 +56,74 @@ export class DonationsComponent implements OnInit {
       label: '50% deduction subject to qualifying limit',
       description: 'NA',
       active: true,
+    }
+  ];
+
+  scientificDonationDropdown = [
+    {
+      id: null,
+      donationType: 'SCIENTIFIC',
+      value: 'FND_SEC80GGA_A',
+      label: 'Sum paid to research Association or University, college or other institution for scientific research',
+      description: 'NA',
+      active: true,
     },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'PM_NAT_REL_FUND',
-    //   label: 'Prime Minister.s National Relief Fund',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'NAT_FONDTN_COMM_HARMONY',
-    //   label: 'National Foundation for Communal Harmony',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'APPR_UNIV_INSTI',
-    //   label:
-    //     'An approved university/educational institution of National eminence',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'ZILA_SAK_SAMITI',
-    //   label:
-    //     'Zila Saksharta Samiti constituted in any district under the chairmanship of the Collector of that district',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'MEDI_RELIF_STAT_GOVT',
-    //   label:
-    //     'Fund set up by a State Government for the medical relief to the poor',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'NAT_ILLNESS_FND',
-    //   label: 'National Illness Assistance Fund',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'NAT_BLD_TRANFSN',
-    //   label:
-    //     'National Blood Transfusion Council or to any State Blood Transfusion Council',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'NAT_TRST_FOR_AUTI',
-    //   label:
-    //     'National Trust for Welfare of Persons with Autism, Cerebral Palsy, Mental Retardation and Multiple Disabilities',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'NAT_SPRTS_FND',
-    //   label: 'National Sports Fund',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'NAT_CLT_FND',
-    //   label: 'National Cultural Fund',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'TCH_DEV_FND',
-    //   label: 'Fund for Technology Development and Application',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'NAT_CHLD_FND',
-    //   label: "National Children's Fund",
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'CM_RELF_FND',
-    //   label:
-    //     "Chief Minister's Relief Fund or Lieutenant Governor.s Relief Fund with respect to any State or Union Territory",
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'ARMY_CNTRL_FND',
-    //   label:
-    //     "The Army Central Welfare Fund or the Indian Naval Benevolent Fund or the Air Force Central Welfare Fund, Andhra Pradesh Chief Minister's Cyclone Relief Fund, 1996",
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'MAH_CM_RELF_FND',
-    //   label:
-    //     "The Maharashtra Chief Minister's Relief Fund during October 1, 1993 and October 6, 1993",
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'MAN_CM_ERTHQK_FND',
-    //   label: "Chief Minister's Earthquake Relief Fund, Maharashtra",
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'GUJ_ST_GOV_CM_ERTHQK_FND',
-    //   label:
-    //     'Any fund set up by the State Government of Gujarat exclusively for providing relief to the victims of earthquake in Gujarat',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'GUJ_CM_ERTHQK_FND',
-    //   label:
-    //     'Any trust, institution or fund to which Section 80G(5C) applies for providing relief to the victims of earthquake in Gujarat (contribution made during January 26, 2001 and September 30, 2001) or',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'PM_ARM_RELF_FND',
-    //   label: "Prime Minister's Armenia Earthquake Relief Fund",
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'AFR_FND',
-    //   label: 'Africa (Public Contributions - India) Fund',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'SWACHH_BHARAT_KOSH',
-    //   label: 'Swachh Bharat Kosh (applicable from FY 2014-15)',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'CLEAN_GANGA_FND',
-    //   label: 'Clean Ganga Fund (applicable from FY 2014-15)',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'FND_DRG_ABUSE',
-    //   label:
-    //     'National Fund for Control of Drug Abuse (applicable from FY 2015-16)',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'JN_MEM_FND',
-    //   label: 'Jawaharlal Nehru Memorial Fund',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'IG_MEM_TRST',
-    //   label: 'Indira Gandhi Memorial Trust',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'RG_FNDTN',
-    //   label: 'Rajiv Gandhi Foundation',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'DOTN_FOR_SPRTS',
-    //   label:
-    //     'Donation by a Company to the Indian Olympic Association or to any other notified association or institution established in India for the development of infrastructure for sports and games in India or the sponsorship of sports and games in India.',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'DOTN_FOR_CHARITY_PURPOSE',
-    //   label:
-    //     'Government or any local authority to be utilised for any charitable purpose other than the purpose of promoting family planning',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'DOTN_HSG_ACCOMODATION',
-    //   label:
-    //     'Any authority constituted in India for the purpose of dealing with and satisfying the need for housing accommodation or for the purpose of planning, development or improvement of cities, towns, villages or both',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'DOTN_MIN_COMMUNITY',
-    //   label:
-    //     'Any corporation referred in Section 10(26BB) for promoting interest of minority community',
-    //   description: 'NA',
-    //   active: true,
-    // },
-    // {
-    //   id: null,
-    //   donationType: 'OTHER',
-    //   value: 'DOTN_REPAIRS_RELIG_PLACE',
-    //   label:
-    //     'For repairs or renovation of any notified temple, mosque, gurudwara, church or other place',
-    //   description: 'NA',
-    //   active: true,
-    // },
+    {
+      id: null,
+      donationType: 'SCIENTIFIC',
+      value: 'FND_SEC80GGA_AA',
+      label: 'Sum paid to research Association or University, college or other institution for social science or statistical research',
+      description: 'NA',
+      active: true,
+    },
+    {
+      id: null,
+      donationType: 'SCIENTIFIC',
+      value: 'FND_SEC80GGA_B',
+      label: 'Sum paid to an association or institution for Rural Development',
+      description: 'NA',
+      active: true,
+    },
+    {
+      id: null,
+      donationType: 'SCIENTIFIC',
+      value: 'FND_SEC80GGA_BB',
+      label: 'Sum paid to PSU or local authority or an association institution approved by a national committee for carrying out any eligible project.',
+      description: 'NA',
+      active: true,
+    },
+    {
+      id: null,
+      donationType: 'SCIENTIFIC',
+      value: 'FND_SEC80GGA_C',
+      label: 'Sum paid to an association or institution for conservation of natural resources or for afforestation',
+      description: 'NA',
+      active: true,
+    },
+    {
+      id: null,
+      donationType: 'SCIENTIFIC',
+      value: 'FND_SEC80GGA_CC',
+      label: 'Sum paid for afforestation, to the fund, which is notified by Central Govt.',
+      description: 'NA',
+      active: true,
+    },
+    {
+      id: null,
+      donationType: 'SCIENTIFIC',
+      value: 'FND_SEC80GGA_D',
+      label: 'Sum paid for Rural Development to the funds, which are notified by the central Govt.',
+      description: 'NA',
+      active: true,
+    },
+    {
+      id: null,
+      donationType: 'SCIENTIFIC',
+      value: 'FND_SEC80GGA_E',
+      label: 'Sum Paid to National Urban Poverty Eradication Fund as set up and notified by central govt',
+      description: 'NA',
+      active: true,
+    }
   ];
   stateDropdown = [
     {
@@ -648,12 +448,17 @@ export class DonationsComponent implements OnInit {
       this.Copy_ITR_JSON.donations.length > 0
     ) {
       this.Copy_ITR_JSON.donations.forEach((item) => {
-        this.addMoreDonations(item);
+        if(this.type === '80g' && item.donationType === 'OTHER') {
+          this.addMoreDonations(item);
+        }
+        if(this.type === '80gga' && item.donationType === 'SCIENTIFIC') {
+          this.addMoreDonations(item);
+        }
       });
     } else {
       this.addMoreDonations();
     }
-    this.generalDonationForm.disable();
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -690,9 +495,9 @@ export class DonationsComponent implements OnInit {
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       identifier: [item ? item.identifier : ''],
-      donationType: 'OTHER',
+      donationType: this.type === '80gga' ? 'SCIENTIFIC' : 'OTHER',
       amountInCash: [
-        item ? item.amountInCash : null,
+        item ? item.amountInCash : 0,
         [Validators.required, Validators.max(2000)],
       ],
       amountOtherThanCash: [
@@ -744,15 +549,47 @@ export class DonationsComponent implements OnInit {
   }
 
   displayTooltip(i) {
-    const donationLabel: any = this.otherDonationToDropdown.filter(
-      (item: any) =>
-        item.value ===
-        (
-          (this.generalDonationForm.controls['donationArray'] as FormGroup)
-            .controls[i] as FormGroup
-        ).controls['schemeCode'].value
-    );
-    this.donationToolTip = donationLabel[0].label;
+    if(this.type === '80g') {
+      const donationLabel: any = this.otherDonationToDropdown.filter(
+        (item: any) =>
+          item.value ===
+          (
+            (this.generalDonationForm.controls['donationArray'] as FormGroup)
+              .controls[i] as FormGroup
+          ).controls['schemeCode'].value
+      );
+      this.donationToolTip = donationLabel[0].label;
+    } else if(this.type === '80gga') {
+      const donationLabel: any = this.scientificDonationDropdown.filter(
+        (item: any) =>
+          item.value ===
+          (
+            (this.generalDonationForm.controls['donationArray'] as FormGroup)
+              .controls[i] as FormGroup
+          ).controls['schemeCode'].value
+      );
+      this.donationToolTip = donationLabel[0].label;
+    }
+  }
+
+  getEligibleAmount(i) {
+    let formGroup = (this.generalDonationForm.controls['donationArray'] as FormGroup)
+      .controls[i] as FormGroup;
+    let amountInCash = parseInt(formGroup.controls['amountInCash'].value);
+    let amountOtherThanCash = parseInt(formGroup.controls['amountOtherThanCash'].value);
+    if(amountInCash > 2000){
+      return amountOtherThanCash;
+    } else {
+      return amountInCash + amountOtherThanCash;
+    }
+  }
+
+  getTotalAmount(i) {
+    let formGroup = (this.generalDonationForm.controls['donationArray'] as FormGroup)
+      .controls[i] as FormGroup;
+    let amountInCash = parseInt(formGroup.controls['amountInCash'].value);
+    let amountOtherThanCash = parseInt(formGroup.controls['amountOtherThanCash'].value);
+    return amountInCash + amountOtherThanCash;
   }
 
   editDonationForm(i) {
@@ -764,42 +601,26 @@ export class DonationsComponent implements OnInit {
 
   saveGeneralDonation() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(
-      sessionStorage.getItem(AppConstants.ITR_JSON)
-    );
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
 
     if (this.generalDonationForm.valid) {
-      this.Copy_ITR_JSON.donations = [];
-      this.Copy_ITR_JSON.donations =
-        this.generalDonationForm.value.donationArray;
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.Copy_ITR_JSON)
-      );
-      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-        (result: ITR_JSON) => {
-          this.ITR_JSON = result;
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_JSON)
-          );
-          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          this.loading = false;
-          this.utilsService.showSnackBar(
-            'Donations data updated successfully.'
-          );
-        },
-        (error) => {
-          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          this.utilsService.showSnackBar('Failed to update Donation data.');
-          this.loading = false;
+      if (this.type === '80gga') {
+        this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.filter(item => item.donationType !== 'SCIENTIFIC');
+        if(this.generalDonationForm.value.donationArray.length > 0) {
+          this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.concat(this.generalDonationForm.value.donationArray);
         }
-      );
+      } else if (this.type === '80g') {
+        this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.filter(item => item.donationType !== 'OTHER');
+        if(this.generalDonationForm.value.donationArray.length > 0) {
+          this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.concat(this.generalDonationForm.value.donationArray);
+        }
+      }
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
     } else {
-      this.loading = false;
-      this.utilsService.showSnackBar('Failed to save Donation data.');
+      $('input.ng-invalid').first().focus();
     }
+    this.loading = false;
   }
 
   checkDoneePAN(i, donation) {

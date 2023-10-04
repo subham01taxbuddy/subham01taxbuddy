@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { DeleteUserRoutingModule } from './delete-user-routing.module';
 import { DeleteUserListComponent } from './delete-user-list/delete-user-list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '../shared/shared.module';
 import { AgGridModule } from 'ag-grid-angular';
 import { MaterialModule } from '../shared/material.module';
@@ -21,7 +20,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
     DeleteUserRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
     SharedModule,
     AgGridModule,
     MaterialModule,

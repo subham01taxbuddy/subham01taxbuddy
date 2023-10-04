@@ -5,11 +5,13 @@ import {
   SimpleChanges,
   Output,
   EventEmitter,
+  Inject,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 declare let $: any;
 @Component({
   selector: 'app-advance-tax-paid',
@@ -28,7 +30,12 @@ export class AdvanceTaxPaidComponent implements OnInit {
   minDate: Date;
   maxDate: Date;
 
-  constructor(private fb: FormBuilder, public utilsService: UtilsService) {}
+  constructor(
+    private fb: FormBuilder,
+    public utilsService: UtilsService,
+    public dialogRef: MatDialogRef<AdvanceTaxPaidComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   ngOnInit() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -41,17 +48,21 @@ export class AdvanceTaxPaidComponent implements OnInit {
     };
 
     this.salaryForm = this.inItForm();
-    if (
-      this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS &&
-      this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS.length > 0
-    ) {
-      this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS.forEach((item) => {
-        this.addMoreSalary(item);
-      });
+    // if (
+    //   this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS &&
+    //   this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS.length > 0
+    // ) {
+    //   this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS.forEach((item) => {
+    //     this.addMoreSalary(item);
+    //   });
+    // } else {
+    if (this.data.assetIndex !== null) {
+      this.addMoreSalary(this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS[this.data.assetIndex]);
     } else {
       this.addMoreSalary();
     }
-    this.salaryForm.disable();
+    // }
+    // this.salaryForm.disable();
 
     // Set the minimum to financial year and max to current date
     const currentYear = new Date().getFullYear() - 1;
@@ -74,7 +85,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
 
   addSalary() {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    if (salaryArray.valid || salaryArray.disabled) {
+    if (salaryArray.valid) {
       this.addMoreSalary();
     } else {
       salaryArray.controls.forEach((element) => {
@@ -93,8 +104,12 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
 
   createForm(item?): FormGroup {
+    if(this.data.assetIndex !== null && item){
+      item.srNo = this.data.assetIndex;
+    }
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
+      srNo: [item ? item.srNo : this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS.length],
       bsrCode: [item ? item.bsrCode : null, [Validators.required]],
       dateOfDeposit: [item ? item.dateOfDeposit : '', [Validators.required]],
       challanNumber: [item ? item.challanNumber : null, Validators.required],
@@ -103,11 +118,11 @@ export class AdvanceTaxPaidComponent implements OnInit {
   }
 
   editSalaryForm(i) {
-    (
-      (this.salaryForm.controls['salaryArray'] as FormGroup).controls[
-        i
-      ] as FormGroup
-    ).enable();
+    // (
+    //   (this.salaryForm.controls['salaryArray'] as FormGroup).controls[
+    //     i
+    //   ] as FormGroup
+    // ).enable();
   }
 
   save() {
@@ -118,16 +133,6 @@ export class AdvanceTaxPaidComponent implements OnInit {
     this.loading = true;
     console.log('salary form', this.salaryForm);
     if (this.salaryForm.valid) {
-      if (!this.Copy_ITR_JSON.taxPaid) {
-        this.Copy_ITR_JSON.taxPaid = {
-          onSalary: [],
-          otherThanSalary16A: [],
-          otherThanSalary26QB: [],
-          otherThanTDSTCS: [],
-          tcs: [],
-          paidRefund: [],
-        };
-      }
       this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS = (
         this.salaryForm.controls['salaryArray'] as FormGroup
       ).getRawValue();
@@ -135,7 +140,13 @@ export class AdvanceTaxPaidComponent implements OnInit {
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)
       );
-      (this.salaryForm.controls['salaryArray'] as FormGroup).disable();
+      let result = {
+        cgObject: this.salaryForm.value,
+        rowIndex: this.data.rowIndex,
+        type:'selfAssessment'
+      };
+      this.dialogRef.close(result);
+      // (this.salaryForm.controls['salaryArray'] as FormGroup).disable();
       this.onSave.emit();
       this.loading = false;
       this.utilsService.showSnackBar(
@@ -170,7 +181,7 @@ export class AdvanceTaxPaidComponent implements OnInit {
       const item = salaryArray.at(i) as FormGroup;
       if (item.controls['hasEdit'].value) {
         salaryArray.removeAt(i);
-        (this.salaryForm.controls['salaryArray'] as FormGroup).enable();
+        // (this.salaryForm.controls['salaryArray'] as FormGroup).enable();
       }
     }
   }

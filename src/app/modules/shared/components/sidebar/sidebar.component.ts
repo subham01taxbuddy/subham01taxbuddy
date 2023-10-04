@@ -39,6 +39,8 @@ export class SidebarComponent{
       if (element.url) {
         if (this.currentPath.includes(element.url)) {
           element.active = true;
+        } else {
+          element.active = false;
         }
       } else {
         element.submenu.forEach(data => {

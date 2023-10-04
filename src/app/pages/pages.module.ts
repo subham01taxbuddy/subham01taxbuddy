@@ -1,6 +1,5 @@
 import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { NgxLoadingModule } from 'ngx-loading';
 
@@ -104,7 +103,6 @@ export const MY_FORMATS = {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
     RouterModule.forChild(routes),
     NgxLoadingModule.forRoot({}),
     ModalModule.forRoot(),
@@ -127,6 +125,6 @@ export const MY_FORMATS = {
 
   exports: [CalendarComponent, BacktipsDatePipe, AgGridModule, AgGridCheckboxComponent, FormsModule,
     ReactiveFormsModule,
-    HttpClientModule, InputSelectObjectComponent, NgxLoadingModule, InputUploadComponent, /*NgxExtendedPdfViewerModule,*/ NeedHelpComponent, FormControlTypePipe]
+     InputSelectObjectComponent, NgxLoadingModule, InputUploadComponent, /*NgxExtendedPdfViewerModule,*/ NeedHelpComponent, FormControlTypePipe]
 })
 export class PagesModule { }

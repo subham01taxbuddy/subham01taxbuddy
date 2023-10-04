@@ -1,127 +1,38 @@
 <div class="spc-blw mrgArd">
-  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+  <ngx-loading
+    [show]="loading"
+    [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+  ></ngx-loading>
 
-  <div class="card__row display-flex">
-    <div class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6">
-      <app-tds-on-salary (onSave)="saveAll()"></app-tds-on-salary>
+  <!-- ag-grid table -->
+  <div>
+    <div>
+      <span class="subTitle">Taxes Paid Details:</span>
+      <button type="button" class="new-add btnRt" (click)="addTaxesPaid(false)">
+        + Add more
+      </button>
     </div>
-    <div class="space-in"></div>
-    <div
-      class="card card__col-sm-12 card__col-md-12 card__col-lg-6 card__col-xl-6"
+    <div>
+
+    </div>
+    <ag-grid-angular
+      style="width: 100%; height: 150%"
+      class="ag-theme-balham spsTp"
+      [gridOptions]="allTdsDetails"
+      [groupDisplayType]="groupDisplayType"
+      [animateRows]="true"
+      (rowClicked)="onTdsDetailRowClicked($event)"
+    ></ag-grid-angular>
+    <button
+      class="delete-btn delete-icon"
+      (click)="$event.stopPropagation(); deleteAsset()"
+      [disabled]="!isAssetSelected()"
     >
-      <app-upload-doc [userId]="ITR_JSON.userId"></app-upload-doc>
-    </div>
-  </div>
-  <div class="card__row">
-    <mat-accordion class="headers-align">
-      <mat-expansion-panel
-        [expanded]="step === 1"
-        (opened)="setStep(1)"
-        hideToggle
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-icon> arrow_forward_ios </mat-icon>
-            TDS Other Than Salary
-          </mat-panel-title>
-          <div class="card__row edit clearfix isShow">
-            <button
-              type="button"
-              class="edit_btn"
-              (click)="$event.stopPropagation(); addMore('other')"
-            >
-              <i class="fa fa-plus"></i>Add
-            </button>
-          </div>
-        </mat-expansion-panel-header>
-        <app-tds-other-than-salary
-          #other
-          [addData]="isAddOther"
-          [showHeadOfIncome]="'TDTS'"
-          (onSave)="saveAll()"
-        ></app-tds-other-than-salary>
-      </mat-expansion-panel>
-
-      <mat-expansion-panel
-        [expanded]="step === 2"
-        (opened)="setStep(2)"
-        hideToggle
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-icon> arrow_forward_ios </mat-icon>
-            TDS other than salary PAN based deductions (26QB, 26QC, 26QD)
-          </mat-panel-title>
-          <div class="card__row edit clearfix isShow">
-            <button
-              type="button"
-              class="edit_btn"
-              (click)="$event.stopPropagation(); addMore('panBased')"
-            >
-              <i class="fa fa-plus"></i>Add
-            </button>
-          </div>
-        </mat-expansion-panel-header>
-        <app-tds-other-than-salary
-          #panBased
-          [addData]="isAddPanBased"
-          [showHeadOfIncome]="'TDTSP'"
-          (onSave)="saveAll()"
-        ></app-tds-other-than-salary>
-      </mat-expansion-panel>
-
-      <mat-expansion-panel
-        [expanded]="step === 3"
-        (opened)="setStep(3)"
-        hideToggle
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-icon> arrow_forward_ios </mat-icon>
-            TCS
-          </mat-panel-title>
-          <div class="card__row edit clearfix isShow">
-            <button
-              type="button"
-              class="add_btn"
-              (click)="$event.stopPropagation(); addMore('tcs')"
-            >
-              <i class="fa fa-plus"></i>Add
-            </button>
-          </div>
-        </mat-expansion-panel-header>
-        <app-tcs [isAddTcs]="isAddTcs" (onSave)="saveAll()"></app-tcs>
-      </mat-expansion-panel>
-
-      <mat-expansion-panel
-        [expanded]="step === 4"
-        (opened)="setStep(4)"
-        hideToggle
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-icon> arrow_forward_ios </mat-icon>
-            Advance and self assessment tax
-          </mat-panel-title>
-          <div class="card__row edit clearfix isShow">
-            <button
-              type="button"
-              class="edit_btn"
-              (click)="$event.stopPropagation(); addMore('advance')"
-            >
-              <i class="fa fa-plus"></i>Add
-            </button>
-          </div>
-        </mat-expansion-panel-header>
-
-        <app-advance-tax-paid
-          [isAddAdvance]="isAddAdvance"
-          (onSave)="saveAll()"
-        ></app-advance-tax-paid>
-      </mat-expansion-panel>
-    </mat-accordion>
+      <i class="fa fa-trash" aria-hidden="true"></i> Delete
+    </button>
   </div>
 
+  <!-- navigation buttons -->
   <div class="flex justify-between p-[30px] back-foot">
     <button class="lgtBtn">
       <mat-icon class="icoAdj">keyboard_backspace</mat-icon>

@@ -294,8 +294,7 @@
 
           <td class="kids-age-td">
             <mat-form-field class="input-field-width">
-              <input matInput formControlName="pan" name="buyer[i]" class="input-field" maxlength="10" upperCase
-                required trim
+              <input matInput formControlName="pan" name="buyer[i]" class="input-field" maxlength="10" upperCase trim
                 (keyup)="makePanUppercase(immovableForm.controls['buyersDetails'].controls[i].controls['pan'])">
               <mat-error
                 *ngIf="immovableForm.controls['buyersDetails'].controls[i].controls['pan'].hasError('pattern')">
@@ -317,7 +316,7 @@
             <mat-form-field class="input-field-width">
               <input matInput formControlName="aadhaarNumber" name="buyer[i]" type="number" class="input-field"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                maxlength="12" onkeypress=" event.charCode >= 48 && event.charCode <= 57" required>
+                maxlength="12" onkeypress=" event.charCode >= 48 && event.charCode <= 57">
             </mat-form-field>
           </td>
           <td class="kids-name-td table-first-td">

@@ -1,24 +1,37 @@
-import { Component, OnInit } from '@angular/core';
-import {Subscription} from "rxjs";
-import {WizardNavigation} from "../../../itr-shared/WizardNavigation";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { WizardNavigation } from '../../../itr-shared/WizardNavigation';
+import { PresumptiveBusinessIncomeComponent } from './presumptive-business-income/presumptive-business-income.component';
+import { PresumptiveProfessionalIncomeComponent } from './presumptive-professional-income/presumptive-professional-income.component';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-presumptive-income',
   templateUrl: './presumptive-income.component.html',
-  styleUrls: ['./presumptive-income.component.scss']
+  styleUrls: ['./presumptive-income.component.scss'],
 })
-export class PresumptiveIncomeComponent extends WizardNavigation implements OnInit {
+export class PresumptiveIncomeComponent
+  extends WizardNavigation
+  implements OnInit
+{
   step = 0;
   hide: boolean = true;
   isEditCustomer: boolean;
   isEditOther: boolean;
   isEditPersonal: boolean;
+  @ViewChild('PresumptiveBusinessIncomeComponentRef', { static: false })
+  PresumptiveBusinessIncomeComponent!: PresumptiveBusinessIncomeComponent;
+  @ViewChild('PresumptiveProfessinalIncomeComponentRef', { static: false })
+  PresumptiveProfessionalIncomeComponent!: PresumptiveProfessionalIncomeComponent;
+  presProfessionalSaved: boolean;
+  presBusinessSaved: boolean;
 
-  constructor() {
+  constructor(private utilsService: UtilsService) {
     super();
   }
 
   ngOnInit(): void {
+    console.log();
   }
   setStep(index: number) {
     this.step = index;
@@ -44,21 +57,66 @@ export class PresumptiveIncomeComponent extends WizardNavigation implements OnIn
     }
   }
 
-  subscription: Subscription
+  subscription: Subscription;
 
-  subscribeToEmitter(componentRef){
+  subscribeToEmitter(componentRef) {
     //this may not be needed for us
     // if (!(componentRef instanceof OtherIncomeComponent)){
     //   return;
     // }
-    const child : WizardNavigation = componentRef;
-    child.saveAndNext.subscribe( () => {
+    const child: WizardNavigation = componentRef;
+    child.saveAndNext.subscribe(() => {
       //this.gotoSources();
     });
   }
 
-  unsubscribe(){
-    if (this.subscription){
+  save() {
+    if (this.presProfessionalSaved && this.presBusinessSaved) {
+      this.utilsService.showSnackBar(
+        'Presumptive Income details were saved successfully'
+      );
+      this.saveAndNext.emit(false);
+    } else {
+      if (!this.presProfessionalSaved) {
+        // this.utilsService.showSnackBar(
+        //   'There was some error while saving professional presumptive income details, please check if all the details are correct'
+        // );
+      }
+
+      if (!this.presBusinessSaved) {
+        // this.utilsService.showSnackBar(
+        //   'There was some error while saving business presumptive income details, please check if all the details are correct'
+        // );
+      }
+    }
+  }
+
+  onPresProfessionalSaved(event) {
+    this.presProfessionalSaved = event;
+
+    if (this.presProfessionalSaved) {
+      this.PresumptiveBusinessIncomeComponent.onContinue();
+    }
+  }
+
+  onPresBusinessSaved(event) {
+    this.presBusinessSaved = event;
+
+    if (this.presBusinessSaved) {
+      this.save();
+    } else {
+      // this.utilsService.showSnackBar(
+      //   'There was some error while saving business presumptive income details, please check if all the details are correct'
+      // );
+    }
+  }
+
+  saveAll() {
+    this.PresumptiveProfessionalIncomeComponent.onContinue();
+  }
+
+  unsubscribe() {
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }

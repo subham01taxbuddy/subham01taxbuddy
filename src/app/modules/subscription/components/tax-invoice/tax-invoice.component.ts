@@ -673,6 +673,7 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
           ifaLeadClient: userInvoices[i].ifaLeadClient,
           total: userInvoices[i].total,
           razorpayReferenceId: this.utilService.isNonEmpty(userInvoices[i].razorpayReferenceId) ? userInvoices[i].razorpayReferenceId : '-',
+          paymentId:this.utilService.isNonEmpty(userInvoices[i].paymentId) ? userInvoices[i].paymentId : '-'
         })
       invoices.push(updateInvoice)
     }
@@ -922,9 +923,9 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
       },
 
       {
-        headerName: 'Payment Gateway Receipt ID',
-        field: 'razorpayReferenceId',
-        width: 250,
+        headerName: 'Payment ID',
+        field: 'paymentId',
+        width: 220,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
       },

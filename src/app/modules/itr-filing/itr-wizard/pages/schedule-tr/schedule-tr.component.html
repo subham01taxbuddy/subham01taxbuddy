@@ -1,0 +1,239 @@
+<form [formGroup]="scheduleTrForm">
+  <div class="mrgArdSpcBlw">
+    <div class="flex justify-between align-items-center">
+      <div>
+        <div class="txtTitle" style="margin-bottom: 0px">
+          <strong> Schedule TR </strong>
+        </div>
+        <div>
+          Summary of tax relief claimed for taxes paid outside India (Only for
+          residents)
+        </div>
+      </div>
+    </div>
+    <br />
+
+    <div class="row cardBack">
+      <div class="table-responsive">
+        <table class="table table-bordered" style="border: 1px solid #bdc3c7">
+          <thead class="table-header">
+            <tr class="table-head">
+              <th>Sr. No</th>
+              <th>Details of tax relief claimed</th>
+            </tr>
+          </thead>
+          <thead class="table-header">
+            <tr class="table-head">
+              <th>1</th>
+              <th>Country Code</th>
+              <th>Tax Identification Number</th>
+              <th>Total taxes paid outside India</th>
+              <th>Total tax relief available</th>
+              <th>Section</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="trArray">
+            <tr
+              class="tds-on"
+              *ngFor="let fsi of getTrArray.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <td>{{ i + 1 }}</td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-select
+                    formControlName="countryCode"
+                    name="countryCode[i]"
+                    placeholder="Country Code"
+                    readOnly
+                  >
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="tinNumber[i]"
+                    formControlName="tinNumber"
+                    placeholder="Tax Identification Number"
+                    readOnly
+                  />
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="totalTxsPaidOutInd[i]"
+                    formControlName="totalTxsPaidOutInd"
+                    placeholder="Total Tax paid outside India"
+                    readOnly
+                  />
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="totalTxsRlfAvlbl[i]"
+                    formControlName="totalTxsRlfAvlbl"
+                    placeholder="Total tax relief available"
+                    readOnly
+                  />
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="section[i]"
+                    formControlName="section"
+                    placeholder="Section"
+                    (change)="handleSectionChange($event)"
+                    required
+                  />
+                </mat-form-field>
+              </td>
+            </tr>
+            <!-- Total -->
+            <tr class="table-header">
+              <th></th>
+              <th>Total</th>
+              <th></th>
+              <th>{{ totalOutsideTaxPaid }}</th>
+              <th>{{ totalTaxRelief }}</th>
+            </tr>
+
+            <!-- 2nd question -->
+            <tr class="table-header">
+              <th>2</th>
+              <th colspan="4">
+                Total tax relief available in respect of country where DTAA is
+                applicable (section 90/90A)
+              </th>
+              <th *ngIf="sectionValue === '90' || sectionValue === '90A'">
+                {{ totalTaxRelief ? totalTaxRelief : 0 }}
+              </th>
+            </tr>
+            <!-- 3rd Question -->
+            <tr class="table-header">
+              <th>3</th>
+              <th colspan="4">
+                Total tax relief available in respect of country where DTAA is
+                not applicable (section 91)
+              </th>
+              <th *ngIf="sectionValue === '91'">
+                {{ totalTaxRelief ? totalTaxRelief : 0 }}
+              </th>
+            </tr>
+
+            <!-- 4th Question -->
+            <ng-container
+              *ngFor="let fsi of getTrArray.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <ng-container *ngIf="i === 0">
+                <tr class="table-header">
+                  <th>4</th>
+                  <th colspan="4">
+                    Whether any tax paid outside India, on which tax relief was
+                    allowed in India, has been refunded/credited
+                    <br />
+                    by the foreign tax authority during the year?
+                  </th>
+                  <th>
+                    <mat-radio-group
+                      formControlName="selectedOption"
+                      name="options"
+                      (change)="handleSelectionChange($event.value)"
+                    >
+                      <mat-radio-button value="yes" style="margin-right: 10px"
+                        >Yes</mat-radio-button
+                      >
+                      <mat-radio-button value="no">No</mat-radio-button>
+                    </mat-radio-group>
+                  </th>
+                </tr>
+              </ng-container>
+
+              <!-- 4th question yes, questions to be asked -->
+              <ng-container *ngIf="i === 0">
+                <tr
+                  class="table-header"
+                  *ngIf="
+                    getTrArray.controls[0].get('selectedOption').value === 'yes'
+                  "
+                >
+                  <th></th>
+                  <th colspan="1">a</th>
+                  <th colspan="3">Amount of tax refunded*</th>
+                  <th>
+                    <mat-form-field appearance="outline">
+                      <input
+                        matInput
+                        name="amtOfTaxRef[i]"
+                        formControlName="amtOfTaxRef"
+                        placeholder="Amount of tax refuned"
+                        required
+                      />
+                    </mat-form-field>
+                  </th>
+                </tr>
+              </ng-container>
+
+              <ng-container *ngIf="i === 0">
+                <tr
+                  class="table-header"
+                  *ngIf="
+                    getTrArray.controls[0].get('selectedOption').value === 'yes'
+                  "
+                >
+                  <th></th>
+                  <th colspan="1">b</th>
+                  <th colspan="3">
+                    Assessment year in which tax relief allowed in India*
+                  </th>
+                  <th class="flex">
+                    <mat-form-field appearance="outline">
+                      <input
+                        matInput
+                        name="assYr[i]"
+                        formControlName="assYr"
+                        placeholder="Year"
+                        maxlength="7"
+                        required
+                      />
+                    </mat-form-field>
+                  </th>
+                  <mat-label>E.g 2022-23</mat-label>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="flex justify-between p-[30px] back-foot">
+      <button class="lgtBtn">
+        <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
+        <span class="font-semibold" (click)="goBack()"
+          >&nbsp;Back to More Info List</span
+        >
+      </button>
+
+      <button class="saveBtnIn">
+        <span class="font-semibold" (click)="saveAll()">Save All</span>
+      </button>
+    </div>
+  </div>
+</form>

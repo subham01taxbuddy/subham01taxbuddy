@@ -181,7 +181,9 @@
           matInput
           placeholder="Father's name"
           name="mobile"
-          [formControl]="customerProfileForm.controls['fatherName'] | formControlType"
+          [formControl]="
+            customerProfileForm.controls['fatherName'] | formControlType
+          "
           [pattern]="charRegex"
           class="input-field"
           maxlength="125"
@@ -213,7 +215,9 @@
               customerProfileForm.controls['residentialStatus'].value
             )
           "
-          [formControl]="customerProfileForm.controls['residentialStatus'] | formControlType"
+          [formControl]="
+            customerProfileForm.controls['residentialStatus'] | formControlType
+          "
           required
         >
           <mat-option *ngFor="let res of residentialStatus" [value]="res.value">
@@ -328,7 +332,6 @@
           class="input-field"
           maxlength="12"
           digitsOnly
-          required
         />
         <mat-error
           *ngIf="
@@ -354,6 +357,45 @@
       </mat-form-field>
     </div>
     <div class="col-sm-4 spsTp">
+      <mat-label>Aadhaar Enrollment ID</mat-label>
+      <mat-form-field appearance="outline">
+        <input
+          matTooltip="Aadhar Enrollment ID should be 14 digit."
+          matTooltipClass="tab-tooltip"
+          matTooltipPosition="above"
+          matInput
+          currencyMask
+          placeholder="Aadhaar"
+          name="aadhaarEnrolmentId"
+          formControlName="aadhaarEnrolmentId"
+          class="input-field"
+          maxlength="14"
+          digitsOnly
+        />
+        <mat-error
+          *ngIf="
+            customerProfileForm.controls['aadhaarEnrolmentId'].hasError('required')
+          "
+        >
+          Enter Aadhar Enrollment ID</mat-error
+        >
+        <mat-error
+          *ngIf="
+            customerProfileForm.controls['aadhaarEnrolmentId'].hasError('maxlength')
+          "
+        >
+          Enter 14 digit Aadhar Enrollment ID</mat-error
+        >
+        <mat-error
+          *ngIf="
+            customerProfileForm.controls['aadhaarEnrolmentId'].hasError('minlength')
+          "
+        >
+          Enter 14 digit Aadhar Enrollment ID</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div class="col-sm-4 spsTp">
       <mat-label>Date Of Birth</mat-label>
       <mat-form-field appearance="outline">
         <input
@@ -367,7 +409,9 @@
           class="input-field"
           placeholder="Date of birth"
           name="dateOfBirth"
-          [formControl]="customerProfileForm.controls['dateOfBirth'] | formControlType"
+          [formControl]="
+            customerProfileForm.controls['dateOfBirth'] | formControlType
+          "
           required
         />
         <mat-hint>Format: DD/MM/YYYY</mat-hint>
@@ -396,7 +440,7 @@
       </mat-radio-group>
     </div>
 
-    <div class="col-sm-12 spsTp bdrTp">
+    <!-- <div class="col-sm-12 spsTp bdrTp">
       <button
         class="tbd-btn save-btn mvRth"
         [disabled]="!isEditCustomer && customerProfileForm.invalid"
@@ -404,6 +448,6 @@
       >
         Save
       </button>
-    </div>
+    </div> -->
   </div>
 </form>

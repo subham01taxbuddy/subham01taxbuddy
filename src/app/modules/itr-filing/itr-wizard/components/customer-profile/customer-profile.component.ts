@@ -151,6 +151,7 @@ export class CustomerProfileComponent implements OnInit {
   filePath = 'ITR/';
   loggedInUserRoles: any;
   requestManagerSubscription = null;
+  @Output() customerProfileSaved = new EventEmitter<boolean>();
 
   constructor(
     public fb: FormBuilder,
@@ -271,9 +272,15 @@ export class CustomerProfileComponent implements OnInit {
       aadharNumber: [
         '',
         Validators.compose([
-          Validators.required,
           Validators.minLength(12),
           Validators.maxLength(12),
+        ]),
+      ],
+      aadhaarEnrolmentId: [
+        '',
+        Validators.compose([
+          Validators.minLength(14),
+          Validators.maxLength(14),
         ]),
       ],
       assesseeType: ['', Validators.required],
@@ -401,6 +408,14 @@ export class CustomerProfileComponent implements OnInit {
     this.findAssesseeType();
     // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
     if (this.customerProfileForm.valid) {
+      let aadhaarEnrolmentId = this.customerProfileForm.controls['aadhaarEnrolmentId'].value;
+      let aadhaarNumber = this.customerProfileForm.controls['aadharNumber'].value;
+
+      if((!this.utilsService.isNonEmpty(aadhaarNumber) && !this.utilsService.isNonEmpty(aadhaarEnrolmentId)) || (this.utilsService.isNonEmpty(aadhaarNumber) && this.utilsService.isNonEmpty(aadhaarEnrolmentId))){
+        this.utilsService.showSnackBar('Please provide aadhar number or enrollment ID');
+        return;
+      }
+
       this.loading = true;
       const ageCalculated = this.calAge(
         this.customerProfileForm.controls['dateOfBirth'].value
@@ -450,6 +465,7 @@ export class CustomerProfileComponent implements OnInit {
             this.utilsService.showSnackBar(
               'Customer profile updated successfully.'
             );
+            this.customerProfileSaved.emit(true);
           }
           // if (ref === "CONTINUE") {
           // if (this.customerProfileForm.controls['itrType'].value === '1'
@@ -706,6 +722,7 @@ export class CustomerProfileComponent implements OnInit {
       contactNumber: this.customerProfileForm.controls['contactNumber'].value,
       panNumber: this.customerProfileForm.controls['panNumber'].value,
       aadharNumber: this.customerProfileForm.controls['aadharNumber'].value,
+      aadhaarEnrolmentId: this.customerProfileForm.controls['aadhaarEnrolmentId'].value,
       assesseeType: this.customerProfileForm.controls['assesseeType'].value,
       assessmentYear: this.ITR_JSON.assessmentYear,
       financialYear: this.ITR_JSON.financialYear,

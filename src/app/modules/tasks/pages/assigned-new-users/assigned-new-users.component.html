@@ -48,8 +48,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>Mobile Number: </mat-label>
                 <input matInput placeholder="Enter Mobile Number" [(ngModel)]="searchParam.mobileNumber" type="text"
-                  digitsOnly
-                  onkeypress=" event.charCode >= 48 && event.charCode <= 57">
+                  digitsOnly onkeypress=" event.charCode >= 48 && event.charCode <= 57">
               </mat-form-field>
             </div>
 
@@ -59,19 +58,26 @@
                 <input matInput placeholder="Enter Email Address" [(ngModel)]="searchParam.emailId" maxlength="50">
               </mat-form-field>
             </div>
-            <div class="col-sm-12 spsTp bdrTp">
-              <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
-                Clear form
-              </button>
+            <div class="row spsTp bdrTp">
+              <div class="col-6">
+                <app-generic-sorting [sortingParameter]="sortMenus"
+                  (onChange)="sortByObject($event)"></app-generic-sorting>
+              </div>
+              <div class="col-sm-6">
+                <div class="col-sm-12">
+                  <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
+                    Clear form
+                  </button>
 
-              <button class="srch-btn mvRth" [disabled]="loading" (click)="this.search('mobile','isAgent')"><i
-                  class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
-              <span class="note1">
-<!--                <div class="col-sm-12 note1">-->
-              Note :  Please select required filters above and click on search to get information
-<!--            </div>-->
-              </span>
-
+                  <button class="srch-btn mvRth" [disabled]="loading" (click)="this.search('mobile','isAgent')"><i
+                      class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
+                </div>
+                <div class="col-sm-12 row">
+                  <span class="note1 note">
+                    Note : Please select required filters above and click on search to get information
+                  </span>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -96,7 +102,8 @@
           User Details:
         </div>
         <div class="col-sm-5">
-          <button class="tbd-btn spRt aprv mt" *ngIf="showReassignmentBtn.length && config.totalItems > 1" (click)="actionWithReassignment()">
+          <button class="tbd-btn spRt aprv mt" *ngIf="showReassignmentBtn.length && config.totalItems > 1"
+            (click)="actionWithReassignment()">
             Action with Re-assignment </button>
         </div>
       </div>

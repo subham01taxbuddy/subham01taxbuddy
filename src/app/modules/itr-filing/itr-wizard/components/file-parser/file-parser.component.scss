@@ -9,6 +9,15 @@
     color: #07070c;
   }
 
+  .left-label {
+    // Upload Capital Gain/F&O statement here:
+    color: #1E1E1E;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 27px;
+    word-wrap: break-word
+  }
+
   .upload {
     border: 1px solid #00aeca;
     color: #00aeca;
@@ -18,11 +27,10 @@
   }
 
   .download {
-    border: 1px solid #00aeca;
-    color: #00aeca;
-    border-radius: 4px;
+    color: #087586;
     padding: 5px;
-    font-size: 10px;
+    font-size: 14px;
+    text-decoration: none;
   }
 
   .filename {

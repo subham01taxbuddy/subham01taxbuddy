@@ -85,7 +85,6 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         let index = 0;
         data[0].incomes.forEach((item) => {
           let form = this.createNonSpecIncomeForm(index, item);
-          form.disable();
           this.nonspecIncomeFormArray.push(form);
         });
 
@@ -154,13 +153,6 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     (
       this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
     ).insert(0, form);
-  }
-
-  editNonSpecIncomeForm(index) {
-    let specIncome = (
-      this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
-    ).controls[index] as FormGroup;
-    specIncome.enable();
   }
 
   initForm() {

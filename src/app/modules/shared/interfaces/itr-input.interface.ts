@@ -47,7 +47,7 @@ export interface ITR_JSON {
   capitalGain: NewCapitalGain[];
   business: NewBusiness;
   pastYearLosses: PastYearLosses[];
-  foreignIncome: null;
+  foreignIncome: foreignIncome;
   incomes: OtherIncome[];
   investments: OtherInvestment[];
   donations: Donations[];
@@ -102,6 +102,221 @@ export interface ITR_JSON {
 
   itrSummaryJson: any;
   isItrSummaryJsonEdited: boolean;
+}
+
+export interface foreignIncome {
+  id: any;
+  taxPaidOutsideIndiaFlag: any;
+  taxReliefAssessmentYear: any;
+  taxAmountRefunded: any;
+  taxReliefClaimed: taxReliefClaimed[];
+  foreignAssets: foreignAssets;
+}
+
+export interface taxReliefClaimed {
+  id: any;
+  reliefClaimedUsSection: any;
+  countryCode: any;
+  countryName: any;
+  taxPayerID: any;
+  claimedDTAA: any;
+  headOfIncome: headOfIncome[];
+}
+
+export interface headOfIncome {
+  id: any;
+  incomeType: any;
+  outsideIncome: any;
+  outsideTaxPaid: any;
+  taxPayable: any;
+  taxRelief: any;
+  claimedDTAA: any;
+}
+
+export interface depositoryAccounts {
+  countryCode: any;
+  nameOfInstitution: any;
+  addressOfInstitution: any;
+  zipCode: any;
+  countryName: any;
+  accountNumber: any;
+  status: any;
+  accountOpeningDate: any;
+  peakBalance: any;
+  closingBalance: any;
+  grossAmountNature: any;
+  grossInterestPaid: any;
+  dateOfContract: any;
+  cashValue: any;
+  totalGrossAmountPaid: any;
+}
+
+export interface custodialAccounts {
+  countryCode: any;
+  nameOfInstitution: any;
+  addressOfInstitution: any;
+  zipCode: any;
+  countryName: any;
+  accountNumber: any;
+  status: any;
+  accountOpeningDate: any;
+  peakBalance: any;
+  closingBalance: any;
+  grossAmountNature: any;
+  grossInterestPaid: any;
+  dateOfContract: any;
+  cashValue: any;
+  totalGrossAmountPaid: any;
+}
+
+export interface equityAndDebtInterest {
+  countryCode: any;
+  zipCode: any;
+  addressOfEntity: any;
+  nameOfEntity: any;
+  natureOfEntity: any;
+  dateOfInterest: any;
+  initialValue: any;
+  peakValue: any;
+  closingValue: any;
+  totalGrossAmountPaid: any;
+  totalGrossProceedsFromSale: any;
+  countryName: any;
+}
+
+export interface cashValueInsurance {
+  countryCode: any;
+  nameOfInstitution: any;
+  addressOfInstitution: any;
+  zipCode: any;
+  countryName: any;
+  accountNumber: any;
+  status: any;
+  accountOpeningDate: any;
+  peakBalance: any;
+  closingBalance: any;
+  grossAmountNature: any;
+  grossInterestPaid: any;
+  dateOfContract: any;
+  cashValue: any;
+  totalGrossAmountPaid: any;
+}
+
+export interface financialInterestDetails {
+  id: any;
+  countryCode: any;
+  zipCode: any;
+  natureOfEntity: any;
+  nameOfEntity: any;
+  address: any;
+  natureOfInterest: any;
+  date: any;
+  totalInvestments: any;
+  accruedIncome: any;
+  natureOfIncome: any;
+  amount: any;
+  scheduleOfferd: any;
+  numberOfSchedule: any;
+  countryName: any;
+}
+
+export interface immovablePropertryDetails {
+  id: any;
+  countryCode: any;
+  address: any;
+  ownerShip: any;
+  zipCode: any;
+  date: any;
+  totalInvestments: any;
+  derivedIncome: any;
+  natureOfIncome: any;
+  amount: any;
+  scheduleOfferd: any;
+  numberOfSchedule: any;
+  countryName: any;
+}
+
+export interface capitalAssetsDetails {
+  id: any;
+  countryCode: any;
+  zipCode: any;
+  natureOfAsstes: any;
+  ownerShip: any;
+  date: any;
+  totalInvestments: any;
+  derivedIncome: any;
+  natureOfIncome: any;
+  amount: any;
+  scheduleOfferd: any;
+  numberOfSchedule: any;
+  countryName: any;
+}
+
+export interface signingAuthorityDetails {
+  id: any;
+  institutionName: any;
+  countryCode: any;
+  zipCode: any;
+  address: any;
+  accountHolderName: any;
+  accountNumber: any;
+  peakBalance: any;
+  isTaxableinYourHand: any;
+  accruedIncome: any;
+  amount: any;
+  scheduleOfferd: any;
+  numberOfSchedule: any;
+  countryName: any;
+}
+
+export interface trustsDetails {
+  id: any;
+  countryCode: any;
+  zipCode: any;
+  trustName: any;
+  trustAddress: any;
+  trusteesName: any;
+  trusteesAddress: any;
+  settlorName: any;
+  settlorAddress: any;
+  beneficiariesName: any;
+  beneficiariesAddress: any;
+  date: any;
+  isTaxableinYourHand: any;
+  derivedIncome: any;
+  amount: any;
+  scheduleOfferd: any;
+  numberOfSchedule: any;
+  countryName: any;
+}
+
+export interface otherIncomeDetails {
+  id: any;
+  countryCode: any;
+  zipCode: any;
+  name: any;
+  address: any;
+  natureOfIncome: any;
+  isTaxableinYourHand: any;
+  derivedIncome: any;
+  amount: any;
+  scheduleOfferd: any;
+  numberOfSchedule: any;
+  countryName: any;
+}
+
+export interface foreignAssets {
+  id: null;
+  depositoryAccounts: depositoryAccounts[];
+  custodialAccounts: custodialAccounts[];
+  equityAndDebtInterest: equityAndDebtInterest[];
+  cashValueInsurance: cashValueInsurance[];
+  financialInterestDetails: financialInterestDetails[];
+  immovablePropertryDetails: immovablePropertryDetails[];
+  capitalAssetsDetails: capitalAssetsDetails[];
+  signingAuthorityDetails: signingAuthorityDetails[];
+  trustsDetails: trustsDetails[];
+  otherIncomeDetails: otherIncomeDetails[];
 }
 
 export interface CurrentNewRegime {
@@ -580,7 +795,7 @@ export interface TaxPaid {
 }
 
 export interface OnSalary {
-  srNo: number;
+  srNo: string;
   deductorName: string;
   deductorTAN: string;
   totalAmountCredited: number;
@@ -593,7 +808,7 @@ export interface OnSalary {
 }
 
 export interface OtherThanSalary16A {
-  srNo: number;
+  srNo: string;
   deductorName: string;
   deductorTAN: string;
   totalAmountCredited: number;
@@ -608,7 +823,7 @@ export interface OtherThanSalary16A {
 }
 
 export interface OtherThanSalary26QB {
-  srNo: number;
+  srNo: string;
   deductorName: string;
   deductorPAN: string;
   totalAmountCredited: number;
@@ -623,7 +838,7 @@ export interface OtherThanSalary26QB {
 }
 
 export interface TCS {
-  srNo: number;
+  srNo: string;
   collectorName: string;
   collectorTAN: string;
   totalAmountPaid: number;
@@ -633,7 +848,7 @@ export interface TCS {
 }
 
 export interface OtherThanTDSTCS {
-  srNo: number;
+  srNo: string;
   totalTax: number;
   bsrCode: string;
   dateOfDeposit: string; // date

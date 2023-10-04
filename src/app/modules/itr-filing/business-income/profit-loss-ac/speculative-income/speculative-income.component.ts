@@ -67,7 +67,6 @@ export class SpeculativeIncomeComponent implements OnInit {
       let index = 0;
       for (let income of specBusiness.incomes) {
         let form = this.createSpecIncomeForm(index++, income);
-        form.disable();
         this.specIncomeFormArray.push(form);
       }
       // this.speculativeIncome = specBusiness?.incomes[0];
@@ -123,13 +122,6 @@ export class SpeculativeIncomeComponent implements OnInit {
     );
   }
 
-  editSpecIncomeForm(index) {
-    let specIncome = (
-      this.specIncomeForm.controls['specIncomesArray'] as FormArray
-    ).controls[index] as FormGroup;
-    specIncome.enable();
-  }
-
   onContinue() {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -138,7 +130,7 @@ export class SpeculativeIncomeComponent implements OnInit {
     let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter(
       (acIncome) => acIncome?.businessType === 'SPECULATIVEINCOME'
     );
-    if (this.specIncomeForm.valid || this.specIncomeForm.disabled) {
+    if (this.specIncomeForm.valid) {
       let specBusinessIncome = {
         id: null,
         businessType: 'SPECULATIVEINCOME',

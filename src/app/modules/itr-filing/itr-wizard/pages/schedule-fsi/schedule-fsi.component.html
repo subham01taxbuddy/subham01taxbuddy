@@ -1,0 +1,178 @@
+<form [formGroup]="scheduleFsiForm">
+  <div class="mrgArdSpcBlw">
+    <div class="flex justify-between align-items-center">
+      <div>
+        <div class="txtTitle" style="margin-bottom: 0px">
+          <strong> Schedule FSI </strong>
+        </div>
+        <div>
+          Details of income from outside India and tax relief (available only in
+          case of resident)
+        </div>
+      </div>
+      <button class="lgtBtn" (click)="add()">+ Add</button>
+    </div>
+    <div class="row cardBack">
+      <div class="table-responsive">
+        <table class="table" style="border: 1px solid #bdc3c7">
+          <thead class="table-header">
+            <tr class="table-head">
+              <th>Action</th>
+              <th>Country Code</th>
+              <th>Tax Identification Number</th>
+              <th>Heads of Income (a)</th>
+              <th>Income from outside India (b)</th>
+              <th>Tax paid outside India (c)</th>
+              <th>
+                Tax payable on such income under normal provisions in India (d)
+              </th>
+              <th>
+                Tax relief available in India (e) <br />
+                *lower of c & d
+              </th>
+              <th>Relevant article of DTAA if relief claimed u/s 90 or 90A</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="fsiArray">
+            <tr
+              class="tds-on"
+              *ngFor="let fsi of getFsiArray.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <td>
+                <mat-checkbox
+                  color="primary"
+                  name="hasEdit[i]"
+                  formControlName="hasEdit"
+                  class=""
+                >
+                </mat-checkbox>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-select
+                    formControlName="countryCode"
+                    name="countryCode[i]"
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let nature of countryCodeList"
+                      [value]="nature"
+                      matTooltip="{{ nature }}"
+                      [disabled]="nature.disabled"
+                    >
+                      {{ nature }}
+                    </mat-option></mat-select
+                  >
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    name="tinNumber[i]"
+                    formControlName="tinNumber"
+                    required
+                  />
+                </mat-form-field>
+              </td>
+              <td>
+                <ng-container formArrayName="headOfIncomes">
+                  <ng-container
+                    *ngFor="
+                      let headOfIncomeGroup of headOfIncomesArray.controls;
+                      let i = index
+                    "
+                    [formGroupName]="i"
+                  >
+                    <tr>
+                      <td>
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            formControlName="headOfIncome"
+                            name="headOfIncome[i]"
+                          />
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            class="input-field"
+                            name="incFromOutInd[i]"
+                            formControlName="incFromOutInd"
+                          />
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            class="input-field"
+                            name="taxPaidOutInd[i]"
+                            formControlName="taxPaidOutInd"
+                          />
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            class="input-field"
+                            name="taxPayableNrmlProv[i]"
+                            formControlName="taxPayableNrmlProv"
+                          />
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            class="input-field"
+                            name="offeredForTaxInd[i]"
+                            formControlName="offeredForTaxInd"
+                          />
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            class="input-field"
+                            name="relevantArticle[i]"
+                            formControlName="relevantArticle"
+                          />
+                        </mat-form-field>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+              </td>
+            </tr>
+            <hr />
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <button type="submit" class="clr-btn" (click)="deleteFsiArray()">
+          <i class="fa fa-close" aria-hidden="true">&nbsp;</i> Delete
+        </button>
+      </div>
+    </div>
+
+    <div class="flex justify-between p-[30px] back-foot">
+      <button class="lgtBtn" (click)="goBack()">
+        <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
+        <span class="font-semibold">&nbsp;Back to More Info List</span>
+      </button>
+
+      <button class="saveBtnIn" (click)="saveAll()">
+        <span class="font-semibold">Save All</span>
+      </button>
+    </div>
+  </div>
+</form>

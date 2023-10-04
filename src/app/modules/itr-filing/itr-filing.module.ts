@@ -92,6 +92,12 @@ import { OtherAssetImprovementComponent } from './itr-wizard/components/capital-
 import { ScheduleCflComponent } from './itr-wizard/pages/schedule-cfl/schedule-cfl.component';
 import { OldVsNewComponent } from './itr-wizard/components/old-vs-new/old-vs-new.component';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
+import { SelectionComponent } from './itr-wizard/pages/taxes-paid/selection-component/selection-component.component';
+import { TdsTypeCellRenderer } from './itr-wizard/pages/taxes-paid/tds-type-cell-renderer';
+import { ScheduleFsiComponent } from './itr-wizard/pages/schedule-fsi/schedule-fsi.component';
+import { ScheduleTrComponent } from './itr-wizard/pages/schedule-tr/schedule-tr.component';
+import { ScheduleFaComponent } from './itr-wizard/pages/schedule-fa/schedule-fa.component';
+import { BusinessInputAutocompleteComponent } from './components/business-input-autocomplete/business-input-autocomplete.component';
 
 @NgModule({
   imports: [
@@ -203,6 +209,12 @@ import { NgxImageZoomModule } from 'ngx-image-zoom';
     FileParserComponent,
     ScheduleCflComponent,
     OldVsNewComponent,
+    SelectionComponent,
+    TdsTypeCellRenderer,
+    BusinessInputAutocompleteComponent,
+    ScheduleFsiComponent,
+    ScheduleTrComponent,
+    ScheduleFaComponent,
   ],
 
   exports: [CustomerProfileComponent],

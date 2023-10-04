@@ -64,6 +64,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
+//Ashwini: This is not being used
 export class LabFormComponent implements OnInit {
   @Output() cancelForm = new EventEmitter<any>();
 
@@ -478,7 +479,10 @@ export class LabFormComponent implements OnInit {
       buyersDetails.value
     );
     let userPanExist = [];
+    let failedCases = [];
     if (buyersDetails.value instanceof Array) {
+      failedCases = buyersDetails.value.filter(item =>
+        !this.utilsService.isNonEmpty(item.pan) && !this.utilsService.isNonEmpty(item.aadharNumber));
       userPanExist = buyersDetails.value.filter(
         (item) => item.pan === this.ITR_JSON.panNumber
       );
@@ -494,6 +498,10 @@ export class LabFormComponent implements OnInit {
         'Buyers Details PAN can not be same with user PAN.'
       );
       panRepeat = true;
+    } else if(failedCases.length > 0){
+      this.utilsService.showSnackBar(
+        'Please provide PAN or AADHAR for buyer details'
+      );
     }
     console.log('Form + buyersDetails=', this.immovableForm.valid);
     return panRepeat;
@@ -516,12 +524,11 @@ export class LabFormComponent implements OnInit {
       ],
       pan: [
         obj?.pan || null,
-        [Validators.required, Validators.pattern(AppConstants.panIndHUFRegex)],
+        [Validators.pattern(AppConstants.panIndHUFRegex)],
       ],
       aadhaarNumber: [
         obj?.aadhaarNumber || '',
         Validators.compose([
-          Validators.required,
           Validators.pattern(AppConstants.numericRegex),
           Validators.minLength(12),
           Validators.maxLength(12),
