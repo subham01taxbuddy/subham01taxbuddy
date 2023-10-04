@@ -266,7 +266,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
             this.taxPaid?.otherThanSalary16A?.push(result.cgObject.salaryArray[0]);
           }
           if (result.type === 'tdsOtherThanSalaryPanBased') {
-            this.taxPaid?.otherThanSalary26QB?.push(result.cgObject.onSalary[0]);
+            this.taxPaid?.otherThanSalary26QB?.push(result.cgObject.salaryArray[0]);
           }
           if (result.type === 'tcs') {
             this.taxPaid?.tcs?.push(result.cgObject.salaryArray[0]);
