@@ -233,6 +233,26 @@ export const ErrorMsgsSchedule = {
       'There is some issue with the Gold details under capital gain schedule',
     relatedSchedule: 'capitalGain',
   },
+  E44: {
+    code: 'E44',
+    message: 'Leave Encashment earned on retirement cannot be claimed for more than one employer.',
+    relatedSchedule: 'salary',
+  },
+  E45: {
+    code: 'E45',
+    message: 'Leave Encashment earned on retirement has a maximum limit of 3,00,000 RS for deduction.',
+    relatedSchedule: 'salary',
+  },
+  E46: {
+    code: 'E46',
+    message: 'Gratuity exemption cannot be claimed for more than one employer.',
+    relatedSchedule: 'salary',
+  },
+  E47: {
+    code: 'E47',
+    message: 'The maximum limit for Gratuity exemption for other than central/ state govt employees is 20 lakh',
+    relatedSchedule: 'salary',
+  },
 };
 export interface Schedules {
   personalInfo: String;

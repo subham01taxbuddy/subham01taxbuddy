@@ -107,10 +107,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   max5000Limit(val) {
     if (
       val === 'SELF' &&
-      this.investmentDeductionForm.controls['selfPreventiveCheckUp'].valid &&
-      this.utilsService.isNonZero(
-        this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value
-      )
+      this.investmentDeductionForm.controls['selfPreventiveCheckUp'].valid
     ) {
       const applicable =
         5000 -
@@ -126,10 +123,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       ].updateValueAndValidity();
     } else if (
       val === 'PARENTS' &&
-      this.investmentDeductionForm.controls['preventiveCheckUp'].valid &&
-      this.utilsService.isNonZero(
-        this.investmentDeductionForm.controls['preventiveCheckUp'].value
-      )
+      this.investmentDeductionForm.controls['preventiveCheckUp'].valid
     ) {
       const applicable =
         5000 -

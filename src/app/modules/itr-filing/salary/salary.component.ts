@@ -9,6 +9,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { WizardNavigation } from '../../itr-shared/WizardNavigation';
 import { AllSalaryIncomeComponent } from '../itr-wizard/pages/all-salary-income/all-salary-income.component';
+import {min} from "rxjs";
 declare let $: any;
 
 @Component({
@@ -438,12 +439,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       ] as FormArray;
 
       let perquisitesAmount = 0;
+      let basicSalaryAmount = 0;
       for (let i = 0; i < salaryDetails.controls.length; i++) {
         let salary = salaryDetails.controls[i] as FormGroup;
         if (
           this.utilsService.isNonEmpty(salary.controls['salaryValue'].value)
         ) {
           if (salary.controls['salaryType'].value === 'SEC17_1') {
+            basicSalaryAmount = salary.controls['salaryValue'].value;
             this.localEmployer.salary.push({
               salaryType: 'SEC17_1',
               taxableAmount: Number(salary.controls['salaryValue'].value),
@@ -469,6 +472,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         }
       }
 
+      if(this.deductionsFormGroup.controls['entertainmentAllow'].value > Math.min(basicSalaryAmount/5, this.maxEA)){
+        this.utilsService.showSnackBar(
+          'Deduction of entertainment allowance cannot exceed 1/5 of salary as per salary 17(1) or 5000 whichever is lower');
+        return;
+      }
+
       this.localEmployer.allowance = [];
       let totalAllowExempt = 0;
       for (
@@ -486,6 +495,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             (allowance.controls['allowValue'].value !== 0 && allowance.controls['allowValue'].value > perquisitesAmount)){
             this.utilsService.showSnackBar(
               'Non Monetary Perquisites u/s10(10C) cannot exceed the amount of Perquisites - Salary 17(2)');
+            return;
+          }
+          if(allowance.controls['allowType'].value === 'HOUSE_RENT' &&
+             allowance.controls['allowValue'].value > basicSalaryAmount/2){
+            this.utilsService.showSnackBar(
+              'HRA cannot be more than 50% of Salary u/s 17(1).');
             return;
           }
           if(allowance.controls['allowType'].value === 'NON_MONETARY_PERQUISITES' &&
@@ -865,7 +880,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       Number(this.deductionsFormGroup.controls['entertainmentAllow'].value);
     if (
       this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
-      this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT'
+      this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+      this.ITR_JSON.employerCategory !== 'PRIVATE'
     ) {
       this.deductionsFormGroup.controls['entertainmentAllow'].disable();
     } else {

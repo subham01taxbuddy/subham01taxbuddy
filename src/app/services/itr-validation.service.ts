@@ -3,12 +3,14 @@ import {
   ItrValidationObject,
   ItrValidations,
 } from '../modules/shared/interfaces/itr-validation.interface';
+import {UtilsService} from "./utils.service";
 
 @Injectable()
 export class ItrValidationService {
   currentAssessmentYear: any;
   currentFinancialYear: any;
-  constructor(private itrValidations: ItrValidations) {}
+  constructor(private itrValidations: ItrValidations,
+              private utilService: UtilsService) {}
 
   getErrorMessages(errorCode: string) {
     const errorDetails: any = this.itrValidations.getErrorSchedule(errorCode);
@@ -29,6 +31,7 @@ export class ItrValidationService {
     // IF TOTAL INCOME IS MORE THAN 50 LAKHS THEN HAVE TO MARK MOVABLE AND IMMOVABLE ASSETS MANDATORY. NEED TO CALL TAX API HERE SO THAT WE GET THE TOTAL INCOME FOR THAT AND APPLY LOGIC ACCORDING TO THAT.
     let totalIncome = obj?.totalIncome;
     let itrType = obj?.itrType;
+    let employerCategory;
 
     const errorList: ItrValidationObject[] = [];
 
@@ -69,6 +72,8 @@ export class ItrValidationService {
           if (!obj[key]) {
             const error = this.getErrorMessages('E9');
             errorList.push(error);
+          } else {
+            employerCategory = obj[key];
           }
         }
 
@@ -373,7 +378,11 @@ export class ItrValidationService {
           if (key === 'employers') {
             if (obj[key] && obj[key]?.length > 0) {
               const missingDetails: { [employerName: string]: String[] } = {};
-              const employerDetails = obj[key]?.forEach((element, index) => {
+              let leavesEncashTaken = 0;
+              let leavesEncashAmount = 0;
+              let gratuityTaken = 0;
+              let gratuityAmount = 0;
+              obj[key]?.forEach((element, index) => {
                 const missingProps: string[] = [];
 
                 if (!element?.address) missingProps?.push('address');
@@ -387,8 +396,54 @@ export class ItrValidationService {
                     element?.employerName ? element?.employerName : index
                   ] = missingProps;
                 }
+
+                //check allowances
+                if(employerCategory === 'GOVERNMENT' ||
+                  employerCategory === 'CENTRAL_GOVT' ||
+                  employerCategory === 'PRIVATE'){
+                  //leave encashment allowed
+                  element?.allowance?.forEach(allowance =>{
+                    if(allowance.allowanceType === 'LEAVE_ENCASHMENT' &&
+                      this.utilService.isNonZero(allowance.exemptAmount)){
+                      leavesEncashTaken ++;
+                    }
+                    if(allowance.allowanceType === 'GRATUITY' &&
+                      this.utilService.isNonZero(allowance.exemptAmount)){
+                      gratuityTaken ++;
+                    }
+                  });
+                } else {
+                  element?.allowance?.forEach(allowance =>{
+                    if(allowance.allowanceType === 'LEAVE_ENCASHMENT' &&
+                      this.utilService.isNonZero(allowance.exemptAmount)){
+                        leavesEncashAmount += allowance.exemptAmount;
+                        leavesEncashTaken ++;
+                      }
+                    if(allowance.allowanceType === 'GRATUITY' &&
+                      this.utilService.isNonZero(allowance.exemptAmount)){
+                        gratuityAmount += allowance.exemptAmount;
+                        gratuityTaken ++;
+                      }
+                  });
+                }
+                if(leavesEncashAmount > 300000){
+                  const error = this.getErrorMessages('E45');
+                  errorList.push(error);
+                }
+                if(gratuityAmount > 2000000){
+                  const error = this.getErrorMessages('E47');
+                  errorList.push(error);
+                }
               });
 
+              if(leavesEncashTaken > 1){
+                const error = this.getErrorMessages('E44');
+                errorList.push(error);
+              }
+              if(gratuityTaken > 1){
+                const error = this.getErrorMessages('E46');
+                errorList.push(error);
+              }
               if (Object?.keys(missingDetails)?.length === 0) {
                 console.log('all employer details are present');
               } else {
