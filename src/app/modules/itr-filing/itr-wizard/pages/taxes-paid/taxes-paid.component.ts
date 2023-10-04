@@ -73,9 +73,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(
-      sessionStorage.getItem(AppConstants.ITR_JSON)
-    );
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     let taxPaidData = this.ITR_JSON.taxPaid;
     if (taxPaidData) {
       this.taxPaid = taxPaidData;
@@ -276,6 +274,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           if (result.type === 'selfAssessment') {
             this.taxPaid?.otherThanTDSTCS?.push(result.cgObject.salaryArray[0]);
           }
+          this.Copy_ITR_JSON.taxPaid = this.taxPaid;
           this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
         }
     });
