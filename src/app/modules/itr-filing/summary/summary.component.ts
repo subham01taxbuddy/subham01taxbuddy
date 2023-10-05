@@ -4041,7 +4041,7 @@ export class SummaryComponent implements OnInit {
                       .filter((item) => item.assetType === 'VDA')
                       .map((gain) => {
                         return gain.assetDetails.map((element, index) => ({
-                          srNo: index + 1, // Increment index here
+                          srNo: index + 1,
                           buyDate: element.purchaseDate,
                           sellDate: element.sellDate,
                           headOfIncome:
@@ -4053,7 +4053,7 @@ export class SummaryComponent implements OnInit {
                           income: element.capitalGain,
                         }));
                       })
-                      .flat(), // Flatten the array
+                      .flat(),
                     totalCryptoIncome: this.finalSummary?.itr?.capitalGain
                       .filter((item) => item.assetType === 'VDA')
                       .map((gain) =>
@@ -5438,7 +5438,7 @@ export class SummaryComponent implements OnInit {
                     .filter((item) => item.assetType === 'VDA')
                     .map((gain) => {
                       return gain.assetDetails.map((element, index) => ({
-                        srNo: index + 1, // Increment index here
+                        srNo: index + 1,
                         buyDate: element.purchaseDate,
                         sellDate: element.sellDate,
                         headOfIncome:
@@ -5450,7 +5450,7 @@ export class SummaryComponent implements OnInit {
                         income: element.capitalGain,
                       }));
                     })
-                    .flat(), // Flatten the array
+                    .flat(),
                   totalCryptoIncome: this.finalSummary?.itr?.capitalGain
                     .filter((item) => item.assetType === 'VDA')
                     .map((gain) =>
