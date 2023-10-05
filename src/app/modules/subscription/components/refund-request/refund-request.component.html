@@ -15,75 +15,80 @@
           <div class="row">
 
             <div class="col-sm-12 bckClr">
-            <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event, true)" (sendFiler)="fromOwner($event, false)"></app-sme-list-drop-down>
-             </div>
+              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event, true)"
+                (sendFiler)="fromOwner($event, false)"></app-sme-list-drop-down>
+            </div>
 
             <div class="col-sm-4 spsTp">
-             <mat-label> Mobile Number </mat-label>
+              <mat-label> Mobile Number </mat-label>
               <mat-form-field appearance="outline">
-              <input [numbersOnly]="true" maxlength="10" matInput [formControl]="mobile" />
+                <input [numbersOnly]="true" maxlength="10" matInput [formControl]="mobile" />
               </mat-form-field>
-             </div>
+            </div>
 
-             <div class="col-sm-5 spsTp">
-             <mat-label> Email Address: </mat-label>
-             <mat-form-field appearance="outline">
-             <input type="text" matInput [formControl]="email" />
-             </mat-form-field>
-             </div>
+            <div class="col-sm-5 spsTp">
+              <mat-label> Email Address: </mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" matInput [formControl]="email" />
+              </mat-form-field>
+            </div>
 
-             <div class="col-sm-3 spsTp">
-             <mat-label> Invoice No: </mat-label>
-             <mat-form-field appearance="outline">
-             <input matInput [formControl]="invoiceNo" />
-             </mat-form-field>
-             </div>
-             <div class="col-sm-12 spsTp bdrTp">
-              <button class="clrLnk mvRth" [disabled]="loading" (click)="resetFilters()">
-                Clear form
-              </button>
+            <div class="col-sm-3 spsTp">
+              <mat-label> Invoice No: </mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput [formControl]="invoiceNo" />
+              </mat-form-field>
+            </div>
+            <div class="row spsTp bdrTp">
+              <div class="col-6">
+                <app-generic-sorting [sortingParameter]="sortMenus"
+                  (onChange)="sortByObject($event)"></app-generic-sorting>
+              </div>
+              <div class="col-sm-6">
+                <div class="col-sm-12">
+                  <button class="clrLnk mvRth" [disabled]="loading" (click)="resetFilters()">
+                    Clear form
+                  </button>
 
-             <button class="srch-btn mvRth" [disabled]="loading" (click)="applyFilter()">
-             <i class="fas fa-search" aria-hidden="true"></i> Search
-             </button>
+                  <button class="srch-btn mvRth" [disabled]="loading" (click)="applyFilter()">
+                    <i class="fas fa-search" aria-hidden="true"></i> Search
+                  </button>
 
-
-             </div>
-
-        </div>
-        <div class="row">
-          <div class="col-sm-12 ">
-            <span class="note1">
-              Note :  Please select required filters above and click on search to get information
-            </span>
+                </div>
+                <div class="col-sm-12 row">
+                  <span class="note1 note">
+                    Note : Please select required filters above and click on search to get information
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-</div>
-</div>
-
+      </div>
     </mat-expansion-panel>
-   </mat-accordion>
+  </mat-accordion>
 </div>
 <!-- New Open Close Filter Ends -->
 
 <!-- Table Below -->
 <div class="tableSpc">
-    <div class="row">
+  <div class="row">
     <div class="col-sm-8">
       <div class="txTit">
         Refund Request Details:
       </div>
     </div>
     <div class="col-sm-4">
-    <!-- <div class="count"> Total Invoice Count: <b>{{ totalInvoice }}</b></div>  -->
+      <!-- <div class="count"> Total Invoice Count: <b>{{ totalInvoice }}</b></div>  -->
     </div>
-    </div>
+  </div>
 
-    <table>
+  <table>
     <tr *ngFor="let item of userInfo | paginate : config"></tr>
-    </table>
-    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="refundListGridOptions" [rowSelection]="rowSelection" (rowClicked)="onRefundRowClicked($event)">
-    </ag-grid-angular>
-    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  </table>
+  <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="refundListGridOptions" [rowSelection]="rowSelection"
+    (rowClicked)="onRefundRowClicked($event)">
+  </ag-grid-angular>
+  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
 
 </div>
