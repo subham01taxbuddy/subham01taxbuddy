@@ -372,120 +372,119 @@ export class ItrValidationService {
         }
       }
 
-      if (itrType === '2' || itrType === '3') {
-        // salary
-        {
-          if (key === 'employers') {
-            if (obj[key] && obj[key]?.length > 0) {
-              const missingDetails: { [employerName: string]: String[] } = {};
-              let leavesEncashTaken = 0;
-              let leavesEncashAmount = 0;
-              let gratuityTaken = 0;
-              let gratuityAmount = 0;
-              obj[key]?.forEach((element, index) => {
-                const missingProps: string[] = [];
 
-                if (!element?.address) missingProps?.push('address');
-                if (!element?.city) missingProps?.push('city');
-                if (!element?.employerName) missingProps?.push('employerName');
-                if (!element?.pinCode) missingProps?.push('pinCode');
-                if (!element?.state) missingProps?.push('state');
+      // salary
+      {
+        if (key === 'employers') {
+          if (obj[key] && obj[key]?.length > 0) {
+            const missingDetails: { [employerName: string]: String[] } = {};
+            let leavesEncashTaken = 0;
+            let leavesEncashAmount = 0;
+            let gratuityTaken = 0;
+            let gratuityAmount = 0;
+            obj[key]?.forEach((element, index) => {
+              const missingProps: string[] = [];
 
-                if (missingProps?.length > 0) {
-                  missingDetails[
-                    element?.employerName ? element?.employerName : index
-                  ] = missingProps;
-                }
+              if (!element?.address) missingProps?.push('address');
+              if (!element?.city) missingProps?.push('city');
+              if (!element?.employerName) missingProps?.push('employerName');
+              if (!element?.pinCode) missingProps?.push('pinCode');
+              if (!element?.state) missingProps?.push('state');
 
-                //check allowances
-                if(employerCategory === 'GOVERNMENT' ||
-                  employerCategory === 'CENTRAL_GOVT' ||
-                  employerCategory === 'PRIVATE'){
-                  //leave encashment allowed
-                  element?.allowance?.forEach(allowance =>{
-                    if(allowance.allowanceType === 'LEAVE_ENCASHMENT' &&
-                      this.utilService.isNonZero(allowance.exemptAmount)){
+              if (missingProps?.length > 0) {
+                missingDetails[
+                  element?.employerName ? element?.employerName : index
+                ] = missingProps;
+              }
+
+              //check allowances
+              if(employerCategory === 'GOVERNMENT' ||
+                employerCategory === 'CENTRAL_GOVT'){
+                //leave encashment allowed
+                element?.allowance?.forEach(allowance =>{
+                  if(allowance.allowanceType === 'LEAVE_ENCASHMENT' &&
+                    this.utilService.isNonZero(allowance.exemptAmount)){
+                    leavesEncashTaken ++;
+                  }
+                  if(allowance.allowanceType === 'GRATUITY' &&
+                    this.utilService.isNonZero(allowance.exemptAmount)){
+                    gratuityTaken ++;
+                  }
+                });
+              } else {
+                element?.allowance?.forEach(allowance =>{
+                  if(allowance.allowanceType === 'LEAVE_ENCASHMENT' &&
+                    this.utilService.isNonZero(allowance.exemptAmount)){
+                      leavesEncashAmount += allowance.exemptAmount;
                       leavesEncashTaken ++;
                     }
-                    if(allowance.allowanceType === 'GRATUITY' &&
-                      this.utilService.isNonZero(allowance.exemptAmount)){
+                  if(allowance.allowanceType === 'GRATUITY' &&
+                    this.utilService.isNonZero(allowance.exemptAmount)){
+                      gratuityAmount += allowance.exemptAmount;
                       gratuityTaken ++;
                     }
-                  });
-                } else {
-                  element?.allowance?.forEach(allowance =>{
-                    if(allowance.allowanceType === 'LEAVE_ENCASHMENT' &&
-                      this.utilService.isNonZero(allowance.exemptAmount)){
-                        leavesEncashAmount += allowance.exemptAmount;
-                        leavesEncashTaken ++;
-                      }
-                    if(allowance.allowanceType === 'GRATUITY' &&
-                      this.utilService.isNonZero(allowance.exemptAmount)){
-                        gratuityAmount += allowance.exemptAmount;
-                        gratuityTaken ++;
-                      }
-                  });
-                }
-                if(leavesEncashAmount > 300000){
-                  const error = this.getErrorMessages('E45');
-                  errorList.push(error);
-                }
-                if(gratuityAmount > 2000000){
-                  const error = this.getErrorMessages('E47');
-                  errorList.push(error);
-                }
-              });
+                });
+              }
+              if(leavesEncashAmount > 300000){
+                const error = this.getErrorMessages('E45');
+                errorList.push(error);
+              }
+              if(gratuityAmount > 2000000){
+                const error = this.getErrorMessages('E47');
+                errorList.push(error);
+              }
+            });
 
-              if(leavesEncashTaken > 1){
-                const error = this.getErrorMessages('E44');
-                errorList.push(error);
-              }
-              if(gratuityTaken > 1){
-                const error = this.getErrorMessages('E46');
-                errorList.push(error);
-              }
-              if (Object?.keys(missingDetails)?.length === 0) {
-                console.log('all employer details are present');
-              } else {
-                const employerNamesWithMissingDetails =
-                  Object.keys(missingDetails);
-
-                const error = this.getErrorMessages('E16');
-                errorList.push(error);
-                console.log('missing employer details');
-              }
+            if(leavesEncashTaken > 1){
+              const error = this.getErrorMessages('E44');
+              errorList.push(error);
             }
-          }
-        }
+            if(gratuityTaken > 1){
+              const error = this.getErrorMessages('E46');
+              errorList.push(error);
+            }
+            if (Object?.keys(missingDetails)?.length === 0) {
+              console.log('all employer details are present');
+            } else if(itrType === '2' || itrType === '3'){
+              const employerNamesWithMissingDetails =
+                Object.keys(missingDetails);
 
-        // house property
-        {
-          if (key === 'houseProperties') {
-            if (obj[key] && obj[key]?.length > 0) {
-              const hpDetailsMissing = [];
-              obj[key]?.forEach((element, index) => {
-                // address
-                let missingHpDetails: boolean =
-                  !element?.address ||
-                  !element?.city ||
-                  !element?.state ||
-                  !element?.country ||
-                  !element?.pinCode;
-                console.log(missingHpDetails, 'missingHpDetails');
-
-                if (missingHpDetails) {
-                  hpDetailsMissing?.push(index + 1);
-                }
-              });
-
-              if (hpDetailsMissing?.length > 0) {
-                const error = this.getErrorMessages('E17');
-                errorList.push(error);
-              }
+              const error = this.getErrorMessages('E16');
+              errorList.push(error);
+              console.log('missing employer details');
             }
           }
         }
       }
+
+      // house property
+      {
+        if (key === 'houseProperties') {
+          if (obj[key] && obj[key]?.length > 0) {
+            const hpDetailsMissing = [];
+            obj[key]?.forEach((element, index) => {
+              // address
+              let missingHpDetails: boolean =
+                !element?.address ||
+                !element?.city ||
+                !element?.state ||
+                !element?.country ||
+                !element?.pinCode;
+              console.log(missingHpDetails, 'missingHpDetails');
+
+              if (missingHpDetails) {
+                hpDetailsMissing?.push(index + 1);
+              }
+            });
+
+            if (hpDetailsMissing?.length > 0 && (itrType === '2' || itrType === '3')) {
+              const error = this.getErrorMessages('E17');
+              errorList.push(error);
+            }
+          }
+        }
+      }
+
 
       if (itrType === '3') {
         if (key === 'business') {

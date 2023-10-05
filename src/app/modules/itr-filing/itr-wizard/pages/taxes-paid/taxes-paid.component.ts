@@ -73,9 +73,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(
-      sessionStorage.getItem(AppConstants.ITR_JSON)
-    );
+    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     let taxPaidData = this.ITR_JSON.taxPaid;
     if (taxPaidData) {
       this.taxPaid = taxPaidData;
@@ -268,7 +266,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
             this.taxPaid?.otherThanSalary16A?.push(result.cgObject.salaryArray[0]);
           }
           if (result.type === 'tdsOtherThanSalaryPanBased') {
-            this.taxPaid?.otherThanSalary26QB?.push(result.cgObject.onSalary[0]);
+            this.taxPaid?.otherThanSalary26QB?.push(result.cgObject.salaryArray[0]);
           }
           if (result.type === 'tcs') {
             this.taxPaid?.tcs?.push(result.cgObject.salaryArray[0]);
@@ -276,6 +274,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           if (result.type === 'selfAssessment') {
             this.taxPaid?.otherThanTDSTCS?.push(result.cgObject.salaryArray[0]);
           }
+          this.Copy_ITR_JSON.taxPaid = this.taxPaid;
           this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
         }
     });
@@ -285,7 +284,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   tdsDetailCreateRowData() {
     let counter = 0;
     this.assetList = [];
-    if(this.taxPaid?.onSalary.length > 0) {
+    if(this.taxPaid?.onSalary?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
         tdsType: 'TDS On Salary'
@@ -305,7 +304,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     counter = 0;
-    if(this.taxPaid?.otherThanSalary16A.length > 0) {
+    if(this.taxPaid?.otherThanSalary16A?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
         tdsType: 'TDS Other than Salary'
@@ -324,7 +323,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     counter = 0;
-    if(this.taxPaid?.otherThanSalary26QB.length > 0) {
+    if(this.taxPaid?.otherThanSalary26QB?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
         tdsType: 'TDS other than salary (panBased) 26QB'
@@ -349,7 +348,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     counter = 0;
-    if(this.taxPaid?.otherThanTDSTCS.length > 0) {
+    if(this.taxPaid?.otherThanTDSTCS?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
         tdsType: 'Self assessment or Advance tax'
@@ -382,7 +381,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     counter = 0;
-    if(this.taxPaid?.tcs.length > 0) {
+    if(this.taxPaid?.tcs?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
         tdsType: 'TCS'

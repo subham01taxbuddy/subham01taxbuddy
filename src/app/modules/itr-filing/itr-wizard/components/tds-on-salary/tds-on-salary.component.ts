@@ -38,7 +38,7 @@ export class TdsOnSalaryComponent implements OnInit {
 
     this.salaryForm = this.inItForm();
 
-    if (this.data.assetIndex !== null) {
+    if (this.data?.assetIndex) {
       this.addMore(this.Copy_ITR_JSON.taxPaid?.onSalary[this.data.assetIndex]);
     } else {
       this.addMore();
@@ -151,9 +151,9 @@ export class TdsOnSalaryComponent implements OnInit {
     const salaryJsonArray = this.ITR_JSON.taxPaid?.onSalary;
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
 
-    if (salaryJsonArray?.length > 0) {
+    // if (salaryJsonArray?.length > 0) {
       salaryArray.push(this.createForm(item));
-    }
+    // }
   }
 
   deleteSalaryArray() {
