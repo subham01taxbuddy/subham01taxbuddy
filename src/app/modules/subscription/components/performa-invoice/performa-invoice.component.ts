@@ -118,7 +118,12 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
       endDate: new Date('2021-03-31'),
     },
   ];
-
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'billTo', name: 'Name' },
+    { value: 'invoiceDate', name: 'Invoice Date' },
+    { value: 'total', name: 'Amount Payable' },
+  ];
   dataOnLoad = true;
   constructor(
     private reviewService: ReviewService,
@@ -239,6 +244,9 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
   ownerId: number;
   filerId: number;
 
+  sortByObject(object) {
+    this.sortBy = object;
+  }
 
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
@@ -571,6 +579,11 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     }
     else {
       param;
+    }
+
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
     }
 
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
