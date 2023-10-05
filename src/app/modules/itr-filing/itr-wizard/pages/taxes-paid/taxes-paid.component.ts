@@ -116,7 +116,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     { name: 'Income from business and Profession', code: 'BP', disabled: false },
     { name: 'Income from House Property', code: 'HP', disabled: false },
     { name: 'Income from Other Source', code: 'OS', disabled: false },
-    { name: 'Exempt Income', code: 'EI', disabled: false }
+    { name: 'Exempt Income', code: 'EI', disabled: false },
+    { name: 'Not Applicable(194N)', code: 'NA', disabled: false }
+
   ];
 
   headOfIncomeDropdownTDS3 = [
@@ -124,7 +126,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     { name: 'Income from House Property', code: 'HP', disabled: false },
     { name: 'Income from Capital Gains', code: 'CG', disabled: false },
     { name: 'Income from Other Source', code: 'OS', disabled: false },
-    { name: 'Exempt Income', code: 'EI', disabled: false }
+    { name: 'Exempt Income', code: 'EI', disabled: false },
+    { name: 'Not Applicable(194N)', code: 'NA', disabled: false }
+
   ];
 
   ngOnInit() {
@@ -284,7 +288,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   tdsDetailCreateRowData() {
     let counter = 0;
     this.assetList = [];
-    if(this.taxPaid?.onSalary.length > 0) {
+    if(this.taxPaid?.onSalary?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
         tdsType: 'TDS On Salary'
@@ -304,7 +308,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     counter = 0;
-    if(this.taxPaid?.otherThanSalary16A.length > 0) {
+    if(this.taxPaid?.otherThanSalary16A?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
         tdsType: 'TDS Other than Salary'
@@ -323,7 +327,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     counter = 0;
-    if(this.taxPaid?.otherThanSalary26QB.length > 0) {
+    if(this.taxPaid?.otherThanSalary26QB?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
         tdsType: 'TDS other than salary (panBased) 26QB'
@@ -348,7 +352,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     counter = 0;
-    if(this.taxPaid?.otherThanTDSTCS.length > 0) {
+    if(this.taxPaid?.otherThanTDSTCS?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
         tdsType: 'Self assessment or Advance tax'
@@ -381,7 +385,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     counter = 0;
-    if(this.taxPaid?.tcs.length > 0) {
+    if(this.taxPaid?.tcs?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
         tdsType: 'TCS'
