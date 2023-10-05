@@ -23,21 +23,52 @@ export class CryptoVdaComponent implements OnInit {
   ngOnInit(): void {
     this.scheduleVda = this.initForm();
     this.headOfIncomes = ['Business or Profession', 'Capital Gain'];
+
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    // setting the capital gain array to the filtered result that does not contain VDA
+    this.Copy_ITR_JSON.capitalGain = this.Copy_ITR_JSON?.capitalGain?.filter(
+      (item) => {
+        return item.assetType === 'VDA';
+      }
+    );
+
+    if (this.Copy_ITR_JSON.capitalGain.length > 0) {
+      const vdaCgArray = this.Copy_ITR_JSON.capitalGain;
+      const modifiedArray = vdaCgArray.map((item) => {
+        return item.assetDetails.map((assetDetail: any) => {
+          return {
+            hasEdit: false,
+            dateOfAcquisition: assetDetail ? assetDetail.purchaseDate : null,
+            dateOfTransfer: assetDetail ? assetDetail.sellDate : null,
+            headOfIncome: assetDetail
+              ? assetDetail.headOfIncome === 'BI'
+                ? 'Business or Profession'
+                : 'Capital Gain'
+              : null,
+            costOfAcquisition: assetDetail ? assetDetail.purchaseCost : '0',
+            considerationReceived: assetDetail ? assetDetail.sellValue : '0',
+            income: assetDetail ? assetDetail.capitalGain : '0',
+          };
+        });
+      });
+
+      console.log(modifiedArray);
+      modifiedArray[0].forEach((array) => {
+        this.add(array);
+        // const formArray = this.scheduleVda.controls['vdaArray'] as FormArray;
+        // const form = this.createVdaForm(array);
+        // formArray.push(form);
+      });
+    } else {
+      this.add('addEmpty');
+    }
   }
 
-  initForm() {
+  initForm(state?) {
     return this.fb.group({
-      vdaArray: this.fb.array([
-        this.fb.group({
-          hasEdit: null,
-          dateOfAcquisition: null,
-          dateOfTransfer: null,
-          headOfIncome: null,
-          costOfAcquisition: null,
-          considerationReceived: null,
-          income: null,
-        }),
-      ]),
+      vdaArray: this.fb.array([]),
     });
   }
 
@@ -49,15 +80,28 @@ export class CryptoVdaComponent implements OnInit {
       headOfIncome: [item ? item.headOfIncome : null],
       costOfAcquisition: [item ? item.costOfAcquisition : null],
       considerationReceived: [item ? item.considerationReceived : null],
-      income: [item ? item.Income : null],
+      income: [item ? item.income : null],
     });
     return formGroup;
   }
 
-  add(item?) {
+  add(item) {
     const vdaArray = <FormArray>this.scheduleVda.get('vdaArray');
-    if (this.scheduleVda.valid) {
-      vdaArray.push(this.createVdaForm(item));
+    if (item === 'addEmpty') {
+      const formGroup = this.fb.group({
+        hasEdit: null,
+        dateOfAcquisition: null,
+        dateOfTransfer: null,
+        headOfIncome: null,
+        costOfAcquisition: null,
+        considerationReceived: null,
+        income: null,
+      });
+      vdaArray.push(this.createVdaForm(formGroup));
+    } else {
+      if (this.scheduleVda.valid) {
+        vdaArray.push(this.createVdaForm(item));
+      }
     }
   }
 
@@ -113,58 +157,69 @@ export class CryptoVdaComponent implements OnInit {
       this.loading = true;
       const savedDetails = this.scheduleVda.getRawValue();
 
-      const toSave = {
-        assessmentYear: '2023-2024',
-        assesseeType: 'INDIVIDUAL',
-        residentialStatus: 'RESIDENT',
-        assetType: 'VDA',
-        assetDetails: savedDetails?.vdaArray.map((item, index) => ({
-          srn: index ? index : 0,
-          sellOrBuyQuantity: 1,
-          sellValuePerUnit: item ? item.considerationReceived : 0,
-          sellValue: item ? item.considerationReceived : 0,
-          purchaseDate: item
-            ? new Date(item.dateOfAcquisition).toISOString()
-            : null,
-          sellDate: item ? new Date(item.dateOfTransfer).toISOString() : null,
-          algorithm: 'vdaCrypto',
-          purchaseValuePerUnit: item ? item.costOfAcquisition : 0,
-          purchaseCost: item ? item.costOfAcquisition : 0,
-          headOfIncome: item
-            ? item.headOfIncome === ' Capital Gain'
-              ? 'CG'
-              : 'BI'
-            : null,
-          capitalGain: item ? (item.income > 0 ? item.income : 0) : 0,
-        })),
-        improvement: [],
-        buyersDetails: [],
-      };
+      if (savedDetails.vdaArray.length > 0) {
+        const toSave = {
+          assessmentYear: '2023-2024',
+          assesseeType: 'INDIVIDUAL',
+          residentialStatus: 'RESIDENT',
+          assetType: 'VDA',
+          assetDetails: savedDetails?.vdaArray.map((item, index) => ({
+            srn: index ? index : 0,
+            sellOrBuyQuantity: 1,
+            sellValuePerUnit: item ? item.considerationReceived : 0,
+            sellValue: item ? item.considerationReceived : 0,
+            purchaseDate: item
+              ? new Date(item.dateOfAcquisition).toISOString()
+              : null,
+            sellDate: item ? new Date(item.dateOfTransfer).toISOString() : null,
+            algorithm: 'vdaCrypto',
+            purchaseValuePerUnit: item ? item.costOfAcquisition : 0,
+            purchaseCost: item ? item.costOfAcquisition : 0,
+            headOfIncome: item
+              ? item.headOfIncome === ' Capital Gain'
+                ? 'CG'
+                : 'BI'
+              : null,
+            capitalGain: item ? (item.income > 0 ? item.income : 0) : 0,
+          })),
+          improvement: [],
+          buyersDetails: [],
+        };
 
-      console.log(toSave, 'tosave');
+        console.log(toSave, 'tosave');
 
-      this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
-      this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-      // If capital gain is not present we assign it as empty
-      if (!this.Copy_ITR_JSON?.capitalGain) {
-        this.Copy_ITR_JSON.capitalGain = [];
-      }
-
-      // setting the capital gain array to the filtered result that does not contain VDA
-      this.Copy_ITR_JSON.capitalGain = this.Copy_ITR_JSON?.capitalGain?.filter(
-        (item) => {
-          return item.assetType !== 'VDA';
+        // If capital gain is not present we assign it as empty
+        if (!this.Copy_ITR_JSON?.capitalGain) {
+          this.Copy_ITR_JSON.capitalGain = [];
         }
-      );
 
-      // Pusing all the vda details in the capital gain array
-      this.Copy_ITR_JSON?.capitalGain?.push(toSave);
+        // setting the capital gain array to the filtered result that does not contain VDA
+        this.Copy_ITR_JSON.capitalGain =
+          this.Copy_ITR_JSON?.capitalGain?.filter((item) => {
+            return item.assetType !== 'VDA';
+          });
 
-      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.Copy_ITR_JSON));
-      this.utilsService.showSnackBar('Schedule VDA saved successfully');
-      this.saveAndNext.emit(false);
-      this.loading = false;
+        // Pusing all the vda details in the capital gain array
+        this.Copy_ITR_JSON?.capitalGain?.push(toSave);
+
+        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.Copy_ITR_JSON));
+        this.utilsService.showSnackBar('Schedule VDA saved successfully');
+        this.saveAndNext.emit(false);
+        this.loading = false;
+      } else {
+        this.loading = true;
+        this.Copy_ITR_JSON.capitalGain =
+          this.Copy_ITR_JSON?.capitalGain?.filter((item) => {
+            return item.assetType !== 'VDA';
+          });
+        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.Copy_ITR_JSON));
+        this.utilsService.showSnackBar('Schedule VDA saved successfully');
+        this.saveAndNext.emit(false);
+        this.loading = false;
+      }
     } else {
       this.utilsService.showSnackBar(
         'Please make sure all the details are entered correctly'
