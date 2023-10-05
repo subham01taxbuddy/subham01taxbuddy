@@ -176,11 +176,12 @@ export class CryptoVdaComponent implements OnInit {
             purchaseValuePerUnit: item ? item.costOfAcquisition : 0,
             purchaseCost: item ? item.costOfAcquisition : 0,
             headOfIncome: item
-              ? item.headOfIncome === ' Capital Gain'
+              ? item.headOfIncome === 'Capital Gain'
                 ? 'CG'
                 : 'BI'
               : null,
             capitalGain: item ? (item.income > 0 ? item.income : 0) : 0,
+            gainType: 'NA',
           })),
           improvement: [],
           buyersDetails: [],

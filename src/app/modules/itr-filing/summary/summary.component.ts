@@ -4037,18 +4037,32 @@ export class SummaryComponent implements OnInit {
                         }, 0),
                   },
                   Crypto: {
-                    cryptoDetails: [
-                      {
-                        srNo: null,
-                        buyDate: null,
-                        sellDate: null,
-                        headOfIncome: null,
-                        buyValue: null,
-                        SaleValue: null,
-                        income: 0,
-                      },
-                    ],
-                    totalCryptoIncome: 0,
+                    cryptoDetails: this.finalSummary?.itr?.capitalGain
+                      .filter((item) => item.assetType === 'VDA')
+                      .map((gain) => {
+                        return gain.assetDetails.map((element, index) => ({
+                          srNo: index + 1, // Increment index here
+                          buyDate: element.purchaseDate,
+                          sellDate: element.sellDate,
+                          headOfIncome:
+                            element.headOfIncome === 'BI'
+                              ? 'Business or Profession'
+                              : 'Capital Gain',
+                          buyValue: element.purchaseCost,
+                          SaleValue: element.sellValue,
+                          income: element.capitalGain,
+                        }));
+                      })
+                      .flat(), // Flatten the array
+                    totalCryptoIncome: this.finalSummary?.itr?.capitalGain
+                      .filter((item) => item.assetType === 'VDA')
+                      .map((gain) =>
+                        gain.assetDetails.reduce(
+                          (total, element) => total + element.capitalGain,
+                          0
+                        )
+                      )
+                      .reduce((total, income) => total + income, 0),
                   },
                   totalHeadWiseIncome:
                     this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -5420,18 +5434,32 @@ export class SummaryComponent implements OnInit {
                       }, 0),
                 },
                 Crypto: {
-                  cryptoDetails: [
-                    {
-                      srNo: null,
-                      buyDate: null,
-                      sellDate: null,
-                      headOfIncome: null,
-                      buyValue: null,
-                      SaleValue: null,
-                      income: 0,
-                    },
-                  ],
-                  totalCryptoIncome: 0,
+                  cryptoDetails: this.finalSummary?.itr?.capitalGain
+                    .filter((item) => item.assetType === 'VDA')
+                    .map((gain) => {
+                      return gain.assetDetails.map((element, index) => ({
+                        srNo: index + 1, // Increment index here
+                        buyDate: element.purchaseDate,
+                        sellDate: element.sellDate,
+                        headOfIncome:
+                          element.headOfIncome === 'BI'
+                            ? 'Business or Profession'
+                            : 'Capital Gain',
+                        buyValue: element.purchaseCost,
+                        SaleValue: element.sellValue,
+                        income: element.capitalGain,
+                      }));
+                    })
+                    .flat(), // Flatten the array
+                  totalCryptoIncome: this.finalSummary?.itr?.capitalGain
+                    .filter((item) => item.assetType === 'VDA')
+                    .map((gain) =>
+                      gain.assetDetails.reduce(
+                        (total, element) => total + element.capitalGain,
+                        0
+                      )
+                    )
+                    .reduce((total, income) => total + income, 0),
                 },
                 totalHeadWiseIncome:
                   this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -6296,9 +6324,19 @@ export class SummaryComponent implements OnInit {
               console.log(
                 this.finalCalculations,
                 'finalCalculations',
-                this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain?.filter(
-                  (item: any) => item?.taxRate === 15
-                )
+                this.finalSummary?.itr?.capitalGain
+                  .filter((item) => item.assetType === 'VDA')
+                  .forEach((gain) => {
+                    gain.assetDetails.map((element, index) => ({
+                      srNo: index++,
+                      buyDate: element.purchaseDate,
+                      sellDate: element.sellDate,
+                      headOfIncome: element.headOfIncome,
+                      buyValue: element.purchaseCost,
+                      SaleValue: element.sellValue,
+                      income: element.capitalGain,
+                    }));
+                  })
               );
             } else {
               this.loading = false;
