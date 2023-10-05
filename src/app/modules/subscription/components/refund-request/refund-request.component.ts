@@ -22,7 +22,7 @@ import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confir
   templateUrl: './refund-request.component.html',
   styleUrls: ['./refund-request.component.scss']
 })
-export class RefundRequestComponent implements OnInit,OnDestroy{
+export class RefundRequestComponent implements OnInit, OnDestroy {
   loading: boolean;
   cancelSubscriptionData: any;
   config = {
@@ -41,7 +41,15 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
   isOwner: boolean;
   dataOnLoad = true;
   dialogRef: any;
-
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'name', name: 'Name' },
+    { value: 'refundRequestType', name: 'Request Type' },
+    { value: 'serviceType', name: 'Service Type' },
+    { value: 'invoiceAmount', name: 'Invoice amount' },
+    { value: 'payableRefundAmount', name: 'Amount to refund' },
+    { value: 'refundPaidAmount', name: 'Amount Paid Updates' },
+  ];
   invoiceFormGroup: FormGroup = this.fb.group({
 
     mobile: new FormControl(''),
@@ -74,9 +82,9 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
     @Inject(LOCALE_ID) private locale: string
   ) {
     let roles = this.utilsService.getUserRoles();
-    let show : boolean;
-    if(roles.includes('ROLE_ADMIN')){
-      show =true;
+    let show: boolean;
+    if (roles.includes('ROLE_ADMIN')) {
+      show = true;
     }
     this.refundListGridOptions = <GridOptions>{
       rowData: [],
@@ -97,6 +105,10 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
         },
       },
     };
+  }
+
+  sortByObject(object) {
+    this.sortBy = object;
   }
 
   formatToolTip(params: any) {
@@ -122,9 +134,9 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
   ngOnInit(): void {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
-    if(!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')){
+    if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
       this.getRefundRequestList(0);
-    } else{
+    } else {
       this.dataOnLoad = false;
     }
     // this.resetFilters();
@@ -147,7 +159,7 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
     if (this.isOwner) {
       this.getRefundRequestList(0, 'ownerUserId', loginSMEInfo.userId);
     } else {
-      if(this.dataOnLoad) {
+      if (this.dataOnLoad) {
         this.getRefundRequestList(0);
       } else {
         //clear grid for loaded data
@@ -168,8 +180,8 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
     }
   }
 
-  getRefundRequestList(pageNo, isUserId?, id?,fromPageChange?) {
-    if(!fromPageChange){
+  getRefundRequestList(pageNo, isUserId?, id?, fromPageChange?) {
+    if (!fromPageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
@@ -220,6 +232,10 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
       pagination = `?page=${pageNo}&size=${this.config.itemsPerPage}${mobileFilter}${emailFilter}${invoiceFilter}`;
       param = '/v1/invoice/refund/requests' + pagination + userParam;
     }
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
     this.loading = true;
     this.itrService.getMethod(param).subscribe(
       (response: any) => {
@@ -232,10 +248,10 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
             this.cacheManager.initializeCache(response.data.content);
 
             const currentPageNumber = pageNo + 1;
-            this.cacheManager.cachePageContent(currentPageNumber,response.data.content);
+            this.cacheManager.cachePageContent(currentPageNumber, response.data.content);
             this.config.currentPage = currentPageNumber;
           } else {
-            this._toastMessageService.alert("error","No Data Found");
+            this._toastMessageService.alert("error", "No Data Found");
             this.refundListGridOptions.api?.setRowData(this.createRowData([]));
             this.config.totalItems = 0;
           }
@@ -265,12 +281,12 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
     } else {
       this.config.currentPage = event;
       // this.selectedPageNo = event - 1;
-      this.getRefundRequestList(event - 1,'','','fromPageChange');
+      this.getRefundRequestList(event - 1, '', '', 'fromPageChange');
     }
   }
 
   refundCreateColumnDef(view) {
-    console.log('view=',view)
+    console.log('view=', view)
     return [
       // {
       //   field: 'selection',
@@ -329,8 +345,8 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        cellRenderer: function(params) {
-          if(params.value) {
+        cellRenderer: function (params) {
+          if (params.value) {
             return `<a href="mailto:${params.value}">${params.value}</a>`
           } else {
             return 'NA';
@@ -515,12 +531,12 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          if(params.data.status === 'IN_PROGRESS'){
+          if (params.data.status === 'IN_PROGRESS') {
             return `<button type="button" class="action_icon add_button" title="Initiate refund for this user"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;">
               <i class="fa fa-undo" aria-hidden="true" data-action-type="initiate-refund"></i>
              </button>`;
-          }else{
+          } else {
             return '-'
           }
 
@@ -538,7 +554,7 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
       },
     ];
   }
-   public rowSelection: 'single';
+  public rowSelection: 'single';
   rowMultiSelectWithClick: false;
 
   createRowData(subscriptionData) {
@@ -560,9 +576,9 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
         invoiceAmount: this.utilsService.isNonEmpty(subscriptionData[i].invoiceAmount) ? subscriptionData[i].invoiceAmount : '-',
         payableRefundAmount: this.utilsService.isNonEmpty(subscriptionData[i].payableRefundAmount) ? subscriptionData[i].payableRefundAmount : '-',
         refundPaidAmount: this.utilsService.isNonEmpty(subscriptionData[i].refundPaidAmount) ? subscriptionData[i].refundPaidAmount : '-',
-        status : this.utilsService.isNonEmpty(subscriptionData[i].status) ? subscriptionData[i].status : '-',
+        status: this.utilsService.isNonEmpty(subscriptionData[i].status) ? subscriptionData[i].status : '-',
         id: this.utilsService.isNonEmpty(subscriptionData[i].id) ? subscriptionData[i].id : '-',
-        paymentId:this.utilService.isNonEmpty(subscriptionData[i].paymentId) ? subscriptionData[i].paymentId : '-'
+        paymentId: this.utilService.isNonEmpty(subscriptionData[i].paymentId) ? subscriptionData[i].paymentId : '-'
 
       });
     }
@@ -645,7 +661,7 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
 
   }
 
-  initiateRefund(data){
+  initiateRefund(data) {
     //https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/payment/razorpay/refund'
 
     this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -660,7 +676,7 @@ export class RefundRequestComponent implements OnInit,OnDestroy{
         let param = `payment/razorpay/refund`;
 
         const request = {
-            id:data.id,
+          id: data.id,
           // invoiceNo:data.invoiceNo
         };
         this.reviewService.postMethod(param, request).subscribe(

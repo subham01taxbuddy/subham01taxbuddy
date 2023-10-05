@@ -1,67 +1,91 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-
-<div class="main clearfix">
-    <div class="content content_full">
-        <div class="content__container">
-            <div class="card">
-
-                <div class="card__row">
-                    <div class="card__col-xs-12 card__col-sm-12">
-                        <div class="filter__col card__col-sm-2 card__col-xs-10">
-                            <div class="input">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>Mobile Number</mat-label>
-                                    <input matInput [(ngModel)]="mobileNumber" name="mobileNumber" autocomplete="off">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="filter__col card__col-sm-2 card__col-xs-10">
-                            <div class="input">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>From Date</mat-label>
-                                    <input readonly matInput [(ngModel)]="fromDate" name="fromDate"
-                                        [matDatepicker]="picker1" [max]="toDate" autocomplete="off">
-                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker1></mat-datepicker>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="filter__col card__col-sm-2 card__col-xs-10">
-                            <div class="input">
-                                <mat-form-field appearance="outline">
-                                    <mat-label>To Date</mat-label>
-                                    <input readonly matInput [(ngModel)]="toDate" name="toDate"
-                                        [matDatepicker]="picker2" [mn]="startDate" autocomplete="off">
-                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker2></mat-datepicker>
-                                </mat-form-field>
-                            </div>
-                        </div>
-
-                        <div class="card__col-md-2 card__col-xs-12">
-                            <a class="btn btn_stroke filter__add-link" style="margin-top: 5px;" (click)="getUserSearchList(0)"><i class="fa fa-search" aria-hidden="true"
-                                    style="color: #2ed13b;"></i>&nbsp;Search</a>
-                        </div>
-                        <div class="card__col-md-2 card__col-xs-12">
-                            <a class="btn btn_stroke filter__add-link" style="margin-top: 5px;border-color: red;"
-                                (click)="clearValue()"><i class="fa fa-close" aria-hidden="true"
-                                    style="color: red;"></i>&nbsp;Reset</a>
-                        </div>
-                    </div>
-                </div><br><br>
-
-                <div class="card__row">
-                    <table>
-                        <tr *ngFor="let item of deleteUserData | paginate:config"></tr>
-                    </table>
-
-                    <ag-grid-angular class="ag-theme-balham" [gridOptions]="usersGridOptions"
-                        (rowClicked)="onUsersRowClicked($event)">
-                    </ag-grid-angular>
-
-                    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-                </div>
+<!-- New Open Close Filter Starts -->
+<div class="mrgArdTog">
+  <mat-accordion class="headers-align">
+    <mat-expansion-panel [expanded]=true>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon> arrow_forward_ios </mat-icon>
+          Filter - Delete-User:
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="rowClr">
+        <div class="surround">
+          <div class="row">
+            <div class="col-sm-4">
+              <mat-label>Search By Mobile Number: </mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput placeholder="Enter Mobile Number" [formControl]="mobileNumber" (change)="clearValue1()"
+                  type="text" digitsOnly
+                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  onkeypress=" event.charCode >= 48 && event.charCode <= 57" maxlength="10">
+              </mat-form-field>
             </div>
+            <div class="col-sm-4">
+              <mat-label>From Date</mat-label>
+              <mat-form-field class="input-field-width" appearance="outline">
+                <input matInput placeholder="DD/MM/YYYY" [formControl]="fromDate" [max]="maxDate"
+                  (dateChange)="setToDateValidation(this.fromDate.value)" [matDatepicker]="picker1"
+                  autocomplete="off" />
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <!-- <mat-error *ngIf="fromDateValue.hasError('required')">Select From date</mat-error> -->
+              </mat-form-field>
+            </div>
+
+            <div class="col-sm-4">
+              <mat-label>To Date</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput placeholder="DD/MM/YYYY" [formControl]="toDate" [max]="maxDate" [min]="minToDate"
+                  [matDatepicker]="picker2" autocomplete="off" />
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <!-- <mat-error *ngIf="toDateValue.hasError('required')">Select To date</mat-error>
+                <mat-error *ngIf="toDateValue.hasError('min')">To date always greater than from
+                  date</mat-error> -->
+              </mat-form-field>
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-sm-12 spsTp text-end">
+              <button class="srch-btn" style=" cursor: pointer" [disabled]="loading" (click)="getUserSearchList(0)">
+                <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
+              </button>
+              <button class="clrLnk movLf" [disabled]="loading" (click)="clearValue()">
+                Clear form
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+<!-- New Open Close Filter Ends -->
+<div class="main clearfix">
+  <!-- Table -->
+  <div class="tableSpc">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="txTit">
+          Delete User Details:
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
+      </div>
     </div>
+    <table>
+      <tr *ngFor="let item of deleteUserData | paginate : config"></tr>
+    </table>
+
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
+      (rowClicked)="onUsersRowClicked($event)">
+    </ag-grid-angular>
+
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  </div>
+
 </div>
