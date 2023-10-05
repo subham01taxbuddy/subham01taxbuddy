@@ -206,7 +206,14 @@ export class SidebarComponent{
         { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN'] },
         { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN','ROLE_LEADER','ROLE_OWNER']},
       ]
-    }
+    },
+    {
+      name: 'Delete User Request',
+      active: false,
+      url: '/delete-user',
+      roles: ['ROLE_ADMIN','ROLE_LEADER'],
+      submenu: []
+    },
   ];
 
   // ngDoCheck() {
