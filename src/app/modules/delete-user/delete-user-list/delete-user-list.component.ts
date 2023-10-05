@@ -1,4 +1,4 @@
-import { formatDate } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid-community';
@@ -9,11 +9,36 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ConfirmationModalComponent } from 'src/app/additional-components/confirmation-popup/confirmation-popup.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 @Component({
   selector: 'app-delete-user-list',
   templateUrl: './delete-user-list.component.html',
-  styleUrls: ['./delete-user-list.component.scss']
+  styleUrls: ['./delete-user-list.component.scss'],
+  providers: [
+    DatePipe,
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
 
 export class DeleteUserListComponent implements OnInit {
@@ -21,19 +46,25 @@ export class DeleteUserListComponent implements OnInit {
   loading!: boolean;
   usersGridOptions: GridOptions;
   config: any;
-  mobileNumber: string = "";
-  fromDate: any;
-  toDate: any;
+  mobileNumber =new FormControl('');
+  fromDate=new FormControl('');
+  toDate=new FormControl('');
   deleteUserData: any = [];
   modalRef!: BsModalRef;
+  maxDate: any = new Date();
+  minToDate: any;
+  dialogRef: any;
 
   constructor(
+    private datePipe: DatePipe,
     private modalService: BsModalService,
     private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private http: HttpClient,
-    @Inject(LOCALE_ID) private locale: string) {
+    @Inject(LOCALE_ID) private locale: string,
+    private dialog: MatDialog,
+    ) {
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColumnDef(),
@@ -46,7 +77,7 @@ export class DeleteUserListComponent implements OnInit {
     };
 
     this.config = {
-      itemsPerPage: 5,
+      itemsPerPage: 20,
       currentPage: 1,
       totalItems: 0
     };
@@ -56,29 +87,58 @@ export class DeleteUserListComponent implements OnInit {
   }
 
   clearValue() {
-    this.mobileNumber = "";
-    this.fromDate = "";
-    this.toDate = "";
+    this.mobileNumber.setValue('');
+    this.fromDate.setValue('');
+    this.toDate.setValue('');
+    this.usersGridOptions.api?.setRowData(this.createRowData([]));
+    this.config.currentPage = 1;
+  }
+
+  clearValue1(){
+    this.fromDate.setValue('');
+    this.toDate.setValue('');
+  }
+
+  setToDateValidation(fromDate) {
+    this.minToDate = this.fromDate.value;
   }
 
   getUserSearchList(pageNo) {
+    const fromDateValue = this.fromDate.value;
+    const toDateValue = this.toDate.value;
+
+    let fromDate = this.datePipe.transform(fromDateValue,'yyyy-MM-dd');
+    let toDate = this.datePipe.transform(toDateValue,'yyyy-MM-dd');
+
+    if(fromDate && ! toDate){
+      return this._toastMessageService.alert("error",'Please Select To Date ');
+    }
+
     this.deleteUserData = [];
     this.loading = true;
     return new Promise((resolve, reject) => {
       this.deleteUserData = [];
       let dynamicUrl: string = "";
-      if (this.mobileNumber) {
-        dynamicUrl += "mobileNumber=" + this.mobileNumber
+      if (this.mobileNumber.value) {
+        dynamicUrl += "mobileNumber=" + this.mobileNumber.value
       }
-      if (this.fromDate) {
-        dynamicUrl += "&from=" + this.fromDate.toISOString()
-      } if (this.toDate) {
-        dynamicUrl += "&to=" + this.toDate.toISOString()
+      if (fromDate) {
+        dynamicUrl += "from=" +fromDate
+      } if (toDate) {
+        dynamicUrl += "&to=" + toDate
       }
-      dynamicUrl += '&page=' + pageNo + '&pageSize=5'
+      if(!dynamicUrl){
+        dynamicUrl += 'page=' + pageNo + '&pageSize=20'
+      }else{
+        dynamicUrl += '&page=' + pageNo + '&pageSize=20'
+      }
+
+      console.log('url' ,dynamicUrl)
+
       NavbarService.getInstance(this.http).getDeleteUserList(dynamicUrl).subscribe(res => {
         if (Array.isArray(res.content)) {
           this.deleteUserData = res.content;
+          console.log('list of delete req',this.deleteUserData)
           this.usersGridOptions.api?.setRowData(this.createRowData(this.deleteUserData));
           this.config.totalItems = res.totalElements;
         }
@@ -142,7 +202,7 @@ export class DeleteUserListComponent implements OnInit {
       {
         headerName: 'Mobile No',
         field: 'mobileNumber',
-        width: 150,
+        width: 180,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -154,7 +214,7 @@ export class DeleteUserListComponent implements OnInit {
       {
         headerName: 'Email',
         field: 'emailAddress',
-        width: 250,
+        width: 260,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -209,37 +269,35 @@ export class DeleteUserListComponent implements OnInit {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
         case 'delete': {
-          this.getDeleteConfirmation(params.data)
+          this.deleteUser(params.data)
           break;
         }
       }
     }
   }
 
-  getDeleteConfirmation(data) {
-    this.modalRef = this.modalService.show(ConfirmationModalComponent, {});
-    this.modalRef.content.isProceed = false;
-    this.modalRef.content.confirmation_text = "Are you sure to delete this user?";
-    this.modalRef.content.confirmation_popup_type = 'delete_invoice';
-    const unsubscribe = this.modalService.onHide.subscribe(() => {
-      if (this.modalRef.content.isProceed) {
-        this.deleteUser(data)
-        unsubscribe.unsubscribe();
-      }
-    });
-  }
 
   deleteUser(data) {
-    const param = `/user/account/delete/` + data.mobileNumber + `?reason=Test`;
-    this.userService.deleteMethod(param).subscribe((res: any) => {
-      if (res.success) {
-        this.utilsService.showSnackBar(`User deleted successfully!`);
-        this.getUserSearchList(0);
-      } else {
-        this.utilsService.showSnackBar(res.message);
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete User!',
+        message: 'Are you sure to delete this user ?',
+      },
+    });
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result === 'YES') {
+        const param = `/user/account/delete/` + data.mobileNumber + `?reason=Test`;
+        this.userService.deleteMethod(param).subscribe((res: any) => {
+          if (res.success) {
+            this.utilsService.showSnackBar(`User deleted successfully!`);
+            this.getUserSearchList(0);
+          } else {
+            this.utilsService.showSnackBar(res.message);
+          }
+        }, error => {
+          this.utilsService.showSnackBar(error.message);
+        })
       }
-    }, error => {
-      this.utilsService.showSnackBar(error.message);
     })
   }
 }
