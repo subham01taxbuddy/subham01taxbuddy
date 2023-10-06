@@ -728,10 +728,11 @@ export class ItrValidationService {
                           !equity?.purchaseCost
                   );
 
-                  if (equityStat) {
-                    const error = this.getErrorMessages('E39');
-                    errorList?.push(error);
-                  }
+                  //Ashwini: commented the error code. Looks invalid. Need to check again
+                  // if (equityStat) {
+                  //   const error = this.getErrorMessages('E39');
+                  //   errorList?.push(error);
+                  // }
                 }
               }
 
