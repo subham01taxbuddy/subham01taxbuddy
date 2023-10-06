@@ -33,6 +33,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   index: number;
   gridOptions: GridOptions;
   assetList: any;
+  deduction = false;
+  isDisable: boolean;
 
   constructor(
     public matDialog: MatDialog,
@@ -93,12 +95,15 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
   createRowData(){
     this.assetList = [];
+    let totalCg = 0;
     this.goldCg.assetDetails.forEach(asset=>{
       let copy:any = {};
       Object.assign(copy, asset);
       copy.hasEdit = false;
       this.assetList.push(copy);
+      totalCg += asset.capitalGain;
     });
+    this.isDisable = totalCg <= 0;
     return this.assetList;
   }
 
@@ -116,9 +121,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
     // adding a form on startup
     this.addDeductionForm();
-
-    //disabling the form at first
-    this.getDeductions.disable();
   }
 
   // adding deduction form at the end of the array

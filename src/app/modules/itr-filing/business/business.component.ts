@@ -397,6 +397,7 @@ export class BusinessComponent implements OnInit {
         businessType: this.businessType.value,
         natureOfBusiness: this.natureCode,
         tradeName: this.tradeName.value,
+        description: null,
         incomes: [],
         taxableIncome: null,
         exemptIncome: null
@@ -572,6 +573,7 @@ export class BusinessComponent implements OnInit {
       businessType: '',
       natureOfBusiness: '',
       tradeName: '',
+      description: '',
       incomes: [],
       taxableIncome: null,
       exemptIncome: null

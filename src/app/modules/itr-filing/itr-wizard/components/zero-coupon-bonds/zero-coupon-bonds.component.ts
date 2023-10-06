@@ -122,12 +122,13 @@ export class ZeroCouponBondsComponent
         });
       } else {
         this.addMoreBondsData();
+        this.isDisable = true;
       }
     } else {
       this.addMoreBondsData();
+      this.isDisable = true;
     }
     this.bondsForm.disable();
-    this.deductionForm.disable();
 
     // setting deduction
     const bondsDeben = this.ITR_JSON.capitalGain?.find(

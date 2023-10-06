@@ -39,6 +39,7 @@ export const appRoutes: Routes = [
   { path: 'payouts', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/payouts/payouts.module').then(m => m.PayoutsModule) },
   { path: 'promo-code', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/promo-codes/promo-codes.module').then(m => m.PromoCodesModule)},
   { path: 'academy-courses', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/academy-courses/academy-courses.module').then(m => m.AcademyCoursesModule)},
+  { path: 'delete-user', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/delete-user/delete-user.module').then(m => m.DeleteUserModule)},
 
   {
     path: 'reports', component: LayoutComponent, canActivate: [AuthGuard], loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule)

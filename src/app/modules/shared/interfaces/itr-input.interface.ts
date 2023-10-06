@@ -424,6 +424,7 @@ export interface HouseProperties {
 export interface PresumptiveIncomes {
   businessType: string;
   natureOfBusiness: string;
+  description: string;
   tradeName: string;
   incomes: Incomes[];
   taxableIncome: number;
