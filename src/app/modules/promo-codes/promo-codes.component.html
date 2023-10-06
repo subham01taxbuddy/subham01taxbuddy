@@ -15,7 +15,7 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-3 mt-41">
               <mat-label> Enter Promo-Code </mat-label>
               <mat-form-field appearance="outline">
                 <input type="text" matInput placeholder="Enter Promo-Code" [formControl]="searchValue" class="input-field" name="promoCode" />
@@ -23,7 +23,13 @@
                   This field is required</mat-error>
               </mat-form-field>
             </div>
-            <div class="col-sm-3">
+            <!-- <div class="row spsTp bdrTp"> -->
+              <div class="col-6">
+                <app-generic-sorting [sortingParameter]="sortMenus"
+                  (onChange)="sortByObject($event)"></app-generic-sorting>
+              </div>
+            <!-- </div> -->
+            <div class="col-sm-3  mt-41">
               <button class="srch-btn srchSpcTp" [disabled]="loading" (click)="searchPromoCode()">
                 <i class="fa fa-search" aria-hidden="true"></i> Search
               </button>
