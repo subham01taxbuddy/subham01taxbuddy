@@ -1,4 +1,4 @@
-import { FormArray, FormControl } from '@angular/forms';
+import {FormArray, FormControl, Validators} from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -201,7 +201,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         this.fb.group({
           label: this.otherIncomeDropdown[i].label,
           incomeType: this.otherIncomeDropdown[i].value,
-          incomeValue: [],
+          incomeValue: [null, Validators.min(0)],
         })
       );
     }
