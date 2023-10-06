@@ -118,6 +118,9 @@ export class LabFormComponent implements OnInit {
     this.getImprovementYears();
   }
 
+  reset(control){
+    control.setValue(null);
+  }
   get getImprovementsArrayForImmovable() {
     return <FormArray>this.immovableForm.get('improvement');
   }

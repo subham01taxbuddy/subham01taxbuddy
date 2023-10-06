@@ -240,6 +240,7 @@
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     (blur)="calculateCapitalGain(this.immovableForm, '', i)"
                     (change)="calculateCapitalGain(this.immovableForm, '', i)"
+                    (focusin)="reset(asset.get('sellExpense'))"
                   />
                   <mat-error
                     *ngIf="asset.get('sellExpense').hasError('pattern')"
