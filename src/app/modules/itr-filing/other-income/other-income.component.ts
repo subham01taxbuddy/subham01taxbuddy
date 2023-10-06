@@ -214,7 +214,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         this.fb.group({
           label: this.exemptIncomesDropdown[i].label,
           incomeType: this.exemptIncomesDropdown[i].value,
-          incomeValue: [],
+          incomeValue: [null, Validators.min(0)],
         })
       );
     }
