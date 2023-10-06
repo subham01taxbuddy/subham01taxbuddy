@@ -94,10 +94,14 @@ export class SourceOfIncomesComponent implements OnInit {
               : false,
           schedule: this.schedules.CRYPTO_VDA,
         },
-
-        // {
-        //   name: 'Foreign Income / NRI', selected: false, schedule: this.schedules.FOREIGN_INCOME
-        // }
+        {
+          name: 'Foreign Income',
+          selected:
+            this.ITR_JSON.foreignIncome && this.ITR_JSON.foreignIncome != null
+              ? true
+              : false,
+          schedule: this.schedules.FOREIGN_INCOME,
+        },
       ];
       sessionStorage.setItem('incomeSources', JSON.stringify(this.sourcesList));
     } else {
