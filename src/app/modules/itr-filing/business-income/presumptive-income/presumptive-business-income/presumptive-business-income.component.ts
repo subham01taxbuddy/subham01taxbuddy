@@ -70,6 +70,10 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       busIncomeFormArray: this.busIncomeFormArray,
     });
 
+    this.busIncomeFormArray.controls.forEach((formgroup, index) => {
+      this.calculatePresumptive(index, 'cash');
+      this.calculatePresumptive(index, 'bank');
+    });
   }
 
   get getBusIncomeArray() {
@@ -148,7 +152,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     });
   }
 
-  calculatePresumptive(event, index, incomeType) {
+  calculatePresumptive(index, incomeType) {
     if (incomeType === 'cash') {
       this.amountSix = (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
