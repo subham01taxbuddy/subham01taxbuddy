@@ -855,6 +855,35 @@ export class LabFormComponent implements OnInit {
           tempImprovements.push(improvement);
         } else {
           tempImprovements = tempImprovements.concat(improvements);
+
+          // Temporary fix for not allowing to push same financial year improvement but have to disable on UI only
+          // console.log(improvements);
+          // improvements = improvements.filter(
+          //   (item) => !!item.dateOfImprovement
+          // );
+
+          // tempImprovements = tempImprovements.concat(improvements);
+          // console.log(tempImprovements);
+
+          // if (tempImprovements.length > 0) {
+          //   const uniqueYears = new Set(
+          //     tempImprovements.map(
+          //       (improvement) => improvement.dateOfImprovement
+          //     )
+          //   );
+
+          //   uniqueYears.forEach((year) => {
+          //     const improvementsWithYear = tempImprovements.filter(
+          //       (improvement) => improvement.dateOfImprovement === year
+          //     );
+          //     const latestImprovement =
+          //       improvementsWithYear[improvementsWithYear.length - 1];
+          //     tempImprovements = tempImprovements.filter(
+          //       (improvement) => improvement.dateOfImprovement !== year
+          //     );
+          //     tempImprovements.push(latestImprovement);
+          //   });
+          // }
         }
       });
       this.cgArrayElement.improvement = tempImprovements;
@@ -1577,21 +1606,27 @@ export class LabFormComponent implements OnInit {
           this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
         );
         console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
-        if(purchaseMonth > 2) {
+        if (purchaseMonth > 2) {
           if (
-            this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1)) >= 0
+            this.improvementYears.indexOf(
+              purchaseYear + '-' + (purchaseYear + 1)
+            ) >= 0
           ) {
             this.improvementYears = this.improvementYears.splice(
-              this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1)
+              this.improvementYears.indexOf(
+                purchaseYear + '-' + (purchaseYear + 1)
               )
             );
           }
         } else {
           if (
-            this.improvementYears.indexOf((purchaseYear-1) + '-' + (purchaseYear)) >= 0
+            this.improvementYears.indexOf(
+              purchaseYear - 1 + '-' + purchaseYear
+            ) >= 0
           ) {
             this.improvementYears = this.improvementYears.splice(
-              this.improvementYears.indexOf((purchaseYear - 1) + '-' + (purchaseYear)
+              this.improvementYears.indexOf(
+                purchaseYear - 1 + '-' + purchaseYear
               )
             );
           }
