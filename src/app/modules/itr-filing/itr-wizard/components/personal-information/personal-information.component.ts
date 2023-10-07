@@ -2254,9 +2254,20 @@ export class PersonalInformationComponent implements OnInit {
         ],
       }),
       seventhProviso139: this.fb.group({
-        depAmtAggAmtExcd1CrPrYrFlg: [null],
-        incrExpAggAmt2LkTrvFrgnCntryFlg: [null],
-        incrExpAggAmt1LkElctrctyPrYrFlg: [null],
+        seventhProvisio139: 'Y',
+        strDepAmtAggAmtExcd1CrPrYrFlg: 'Y',
+        depAmtAggAmtExcd1CrPrYrFlg: 23423342,
+        strIncrExpAggAmt2LkTrvFrgnCntryFlg: 'Y',
+        incrExpAggAmt2LkTrvFrgnCntryFlg: 234234,
+        strIncrExpAggAmt1LkElctrctyPrYrFlg: 'Y',
+        incrExpAggAmt1LkElctrctyPrYrFlg: null,
+        clauseiv7provisio139i: 'Y',
+        clauseiv7provisio139iDtls: this.fb.array([
+          this.fb.group({
+            nature: '',
+            amount: null,
+          }),
+        ]),
       }),
       bankDetails: this.fb.array([
         this.createBankDetailsForm({ hasRefund: true }),
@@ -2414,7 +2425,7 @@ export class PersonalInformationComponent implements OnInit {
           .getPanDetails(pan, this.ITR_JSON.userId)
           .subscribe((result: any) => {
             console.log('user data by PAN = ', result);
-            if(result.isValid && result.isValid === 'EXISTING AND VALID') {
+            if (result.isValid && result.isValid === 'EXISTING AND VALID') {
               this.customerProfileForm.controls['firstName'].setValue(
                 this.titlecasePipe.transform(
                   this.utilsService.isNonEmpty(result.firstName)

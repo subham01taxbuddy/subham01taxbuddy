@@ -308,6 +308,110 @@
     </tbody>
   </table>
 
+  <hr class="spsTp" />
+  <div formGroupName="seventhProviso139">
+    <div>
+      <div class="sub-heading">Filing Section</div>
+    </div>
+
+    <div class="flex align-items-center">
+      <mat-label style="margin: 0px 75px 0px 15px" class="custom"
+        >Are you filing return of income under Seventh proviso to section 139(1)
+        but otherwise not required to furnish return of income?</mat-label
+      >
+      <!-- checkbox -->
+      <mat-checkbox
+        style="margin: 0px 70px 15px 10px"
+        color="primary"
+        name="hasEdit[i]"
+        formControlName="hasEdit"
+        class=""
+      >
+      </mat-checkbox>
+    </div>
+
+    <!-- 1 -->
+    <div class="flex">
+      <mat-label style="margin: 15px" class="custom"
+        >Has incurred expenditure of an amount or aggregate of the amounts
+        exceeding 2 lakh rupees for himself or any other
+        <br />
+        person for travel to a foreign country
+      </mat-label>
+      <div class="col-sm-2">
+        <mat-form-field appearance="outline" class="custom">
+          <input
+            matInput
+            placeholder="Amount"
+            name="depAmtAggAmtExcd1CrPrYrFlg[i]"
+            formControlName="depAmtAggAmtExcd1CrPrYrFlg"
+            required
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="flex">
+      <mat-label style="margin: 15px" class="custom">
+        Has incurred expenditure of an amount or aggregate of the amounts
+        exceeding 1 lakh rupees towards consumption of electricity
+      </mat-label>
+      <div class="col-sm-2">
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            placeholder="Amount"
+            name="incrExpAggAmt2LkTrvFrgnCntryFlg[i]"
+            formControlName="incrExpAggAmt2LkTrvFrgnCntryFlg"
+            required
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="flex">
+      <mat-label style="margin: 15px" class="custom">
+        Fulfils such other conditions as may be prescribed under Rule 12AB -
+        below to be provided on cursor on Rule12AB
+      </mat-label>
+      <div class="col-sm-2">
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            placeholder="Amount"
+            name="strIncrExpAggAmt1LkElctrctyPrYrFlg[i]"
+            formControlName="strIncrExpAggAmt1LkElctrctyPrYrFlg"
+            required
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="flex">
+      <mat-label style="margin: 15px" class="custom">
+        Has deposited an amount or aggregate of the amounts exceeding one crore
+        <br />
+        rupees in one or more current accounts maintained with a banking company
+        <br />
+        or a co-operative ban
+      </mat-label>
+      <div class="col-sm-2">
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            placeholder="Amount"
+            name="incrExpAggAmt1LkElctrctyPrYrFlg[i]"
+            formControlName="incrExpAggAmt1LkElctrctyPrYrFlg"
+            required
+          />
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
   <!-- <div class="col-sm-12 spsTp bdrTp">
             <button class="tbd-btn save-btn mvRth" [disabled]="!isEditPersonal && customerProfileForm.invalid"
                 (click)="saveProfile('NEXT')">Save
