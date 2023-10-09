@@ -855,6 +855,11 @@ export class CustomerProfileComponent implements OnInit {
       this.ITR_JSON.jurisdictions = [];
       this.ITR_JSON.conditionsResStatus = null;
     }
+
+    //once user residential status changes, update the same in cg object
+    this.ITR_JSON.capitalGain.forEach(element => {
+      element.residentialStatus = status;
+    });
   }
 
   getFilePath() {
