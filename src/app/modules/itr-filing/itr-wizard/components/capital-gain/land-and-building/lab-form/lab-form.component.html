@@ -321,6 +321,7 @@
                     name="improve[i]"
                     formControlName="dateOfImprovement"
                     required
+                    (selectionChange)="isImprovementValid(this.immovableForm, i)"
                   >
                     <mat-option
                       [value]="year"
