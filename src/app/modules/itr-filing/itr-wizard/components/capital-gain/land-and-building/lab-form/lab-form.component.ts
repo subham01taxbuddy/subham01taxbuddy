@@ -387,6 +387,7 @@ export class LabFormComponent implements OnInit {
       hasIndexation: false,
       algorithm: 'cgProperty',
       capitalGain: 0,
+      cgBeforeDeduction: 0,
       grandFatheredValue: 0,
       totalFairMarketValueOfCapitalAsset: 0,
     };
@@ -1346,7 +1347,7 @@ export class LabFormComponent implements OnInit {
     const param = '/calculate/capital-gain/deduction';
     let request = {
       capitalGain:
-        this.cgArrayElement?.assetDetails[this.currentCgIndex]?.capitalGain,
+        this.cgArrayElement?.assetDetails[this.currentCgIndex]?.cgBeforeDeduction,
       capitalGainDeductions: [
         {
           deductionSection: `SECTION_${deductionForm.controls['underSection'].value}`,
