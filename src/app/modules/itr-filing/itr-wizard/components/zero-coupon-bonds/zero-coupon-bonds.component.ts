@@ -439,14 +439,14 @@ export class ZeroCouponBondsComponent
           this.loading = false;
           sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
           this.utilsService.showSnackBar(
-            'Bonds and zero coupon bonds data added successfully'
+            'Bonds and zero coupon bonds data updated successfully'
           );
           this.utilsService.smoothScrollToTop();
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
           this.utilsService.showSnackBar(
-            'Failed to add bonds and zero coupon bonds data, please try again.'
+            'Failed to update bonds and zero coupon bonds data, please try again.'
           );
           this.utilsService.smoothScrollToTop();
         }
