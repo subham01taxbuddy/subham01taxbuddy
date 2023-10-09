@@ -2394,33 +2394,130 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   // Create a variable to store the data
-  savedData: any;
+  seventhProvsioChangeSavedData: any;
 
-  handleSelectionChange() {
+  // Function to set a validator
+  setValidator(controlName: string, validator: any) {
+    this.seventhProviso139.get(controlName).setValidators(validator);
+    this.seventhProviso139.get(controlName).updateValueAndValidity();
+  }
+
+  // Function to clear a validator
+  clearValidator(controlName: string) {
+    this.seventhProviso139.get(controlName).clearValidators();
+    this.seventhProviso139.get(controlName).updateValueAndValidity();
+  }
+
+  seventhProvisioChange() {
     const seventhProvisio139 = this.seventhProviso139;
     const selectedValue =
       seventhProvisio139.controls['seventhProvisio139'].value;
 
     if (selectedValue === 'N') {
       // Save the data and clear the form group
-      this.savedData = seventhProvisio139.value;
+      this.seventhProvsioChangeSavedData = seventhProvisio139.value;
       seventhProvisio139.reset();
       seventhProvisio139.controls['seventhProvisio139'].setValue('N');
-      seventhProvisio139.controls[
-        'seventhProvisio139'
-      ].updateValueAndValidity();
-      console.log(this.seventhProviso139);
+
+      // marking questions as not required if seventhProvisio is yes
+      // 1
+      this.clearValidator('strDepAmtAggAmtExcd1CrPrYrFlg');
+
+      // 2
+      this.clearValidator('strIncrExpAggAmt2LkTrvFrgnCntryFlg');
+
+      // 3
+      this.clearValidator('strIncrExpAggAmt1LkElctrctyPrYrFlg');
+
+      // 4
+      this.clearValidator('clauseiv7provisio139i');
     } else {
+      // marking questions as required if seventhProvisio is yes
+      // 1
+      this.setValidator('strDepAmtAggAmtExcd1CrPrYrFlg', Validators.required);
+
+      // 2
+      this.setValidator(
+        'strIncrExpAggAmt2LkTrvFrgnCntryFlg',
+        Validators.required
+      );
+
+      // 3
+      this.setValidator(
+        'strIncrExpAggAmt1LkElctrctyPrYrFlg',
+        Validators.required
+      );
+
+      // 4
+      this.setValidator('clauseiv7provisio139i', Validators.required);
+
       // Check if there is saved data and populate the form group
-      if (this.savedData) {
-        seventhProvisio139.patchValue(this.savedData);
+      if (this.seventhProvsioChangeSavedData) {
+        seventhProvisio139.patchValue(this.seventhProvsioChangeSavedData);
         seventhProvisio139.controls['seventhProvisio139'].setValue('Y');
-        seventhProvisio139.controls[
-          'seventhProvisio139'
-        ].updateValueAndValidity();
-        console.log(this.seventhProviso139);
       }
     }
+  }
+
+  incrExpAggAmt2LkTrvFrgnCntryFlgSaved: any;
+  // 1
+  strIncrExpAggAmt2LkTrvFrgnCntryFlg() {
+    const seventhProvisio139 = this.seventhProviso139;
+    const selectedValue =
+      seventhProvisio139.controls['strIncrExpAggAmt2LkTrvFrgnCntryFlg'].value;
+
+    if (selectedValue === 'N') {
+      // Save the data and clear the form group
+      this.incrExpAggAmt2LkTrvFrgnCntryFlgSaved = seventhProvisio139.get(
+        'incrExpAggAmt2LkTrvFrgnCntryFlg'
+      ).value;
+      seventhProvisio139.get('incrExpAggAmt2LkTrvFrgnCntryFlg').reset();
+      seventhProvisio139.controls['incrExpAggAmt2LkTrvFrgnCntryFlg'].setValue(
+        'N'
+      );
+      this.clearValidator('incrExpAggAmt2LkTrvFrgnCntryFlg');
+    } else {
+      this.setValidator('incrExpAggAmt2LkTrvFrgnCntryFlg', Validators.required);
+      // Check if there is saved data and populate the form group
+      if (this.incrExpAggAmt2LkTrvFrgnCntryFlgSaved) {
+        seventhProvisio139.patchValue(this.seventhProvsioChangeSavedData);
+        seventhProvisio139.controls[
+          'strIncrExpAggAmt2LkTrvFrgnCntryFlg'
+        ].setValue('Y');
+      }
+    }
+  }
+
+  // 2
+  strIncrExpAggAmt1LkElctrctyPrYrFlg() {
+    const seventhProvisio139 = this.seventhProviso139;
+    const selectedValue =
+      seventhProvisio139.controls['strIncrExpAggAmt1LkElctrctyPrYrFlg'].value;
+
+    if (selectedValue === 'N') {
+      this.clearValidator('incrExpAggAmt1LkElctrctyPrYrFlg');
+    } else {
+      this.setValidator('incrExpAggAmt1LkElctrctyPrYrFlg', Validators.required);
+    }
+  }
+
+  // 3
+  clauseiv7provisio139i() {
+    const seventhProvisio139 = this.seventhProviso139;
+  }
+
+  // 4
+  strDepAmtAggAmtExcd1CrPrYrFlg() {
+    const seventhProvisio139 = this.seventhProviso139;
+    seventhProvisio139
+      .get('strDepAmtAggAmtExcd1CrPrYrFlg')
+      .valueChanges.subscribe((value) => {
+        if (value === 'Y') {
+          this.setValidator('depAmtAggAmtExcd1CrPrYrFlg', Validators.required);
+        } else {
+          this.clearValidator('depAmtAggAmtExcd1CrPrYrFlg');
+        }
+      });
   }
 
   get getBankDetailsArray() {
