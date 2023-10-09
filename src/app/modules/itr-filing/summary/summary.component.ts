@@ -3738,8 +3738,8 @@ export class SummaryComponent implements OnInit {
                         }
                       ),
                     hpTotalIncome:
-                      this.finalSummary?.assessment?.summaryIncome
-                        ?.summaryHpIncome?.totalHPTaxableIncome,
+                      Math.max(this.finalSummary?.assessment?.summaryIncome
+                        ?.summaryHpIncome?.totalHPTaxableIncome, 0),
                   },
                   otherIncome: {
                     otherIncomes: {
@@ -3877,8 +3877,8 @@ export class SummaryComponent implements OnInit {
                     },
 
                     businessIncomeTotal:
-                      this.finalSummary?.assessment?.summaryIncome
-                        ?.summaryBusinessIncome?.totalBusinessIncome,
+                      Math.max(this.finalSummary?.assessment?.summaryIncome
+                        ?.summaryBusinessIncome?.totalBusinessIncome,0),
                   },
                   capitalGain: {
                     shortTerm: {
@@ -4017,24 +4017,7 @@ export class SummaryComponent implements OnInit {
                         }, 0),
                     totalCapitalGain:
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter(
-                          (item: any) =>
-                            item?.taxRate === -1 ||
-                            item?.taxRate === 15 ||
-                            item?.taxRate === 10 ||
-                            item?.taxRate === 20
-                        )
-                        .reduce((total, element) => {
-                          const incomeAfterInternalSetOff =
-                            element.incomeAfterInternalSetOff;
-                          console.log(element, 'element');
-                          console.log(
-                            incomeAfterInternalSetOff,
-                            'incomeAfterInternalSetOff'
-                          );
-
-                          return total + incomeAfterInternalSetOff;
-                        }, 0),
+                        ?.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value),
                   },
                   Crypto: {
                     cryptoDetails: this.finalSummary?.itr?.capitalGain
@@ -5136,8 +5119,8 @@ export class SummaryComponent implements OnInit {
                       }
                     ),
                   hpTotalIncome:
-                    this.finalSummary?.assessment?.summaryIncome
-                      ?.summaryHpIncome?.totalHPTaxableIncome,
+                  Math.max( this.finalSummary?.assessment?.summaryIncome
+                      ?.summaryHpIncome?.totalHPTaxableIncome,0),
                 },
                 otherIncome: {
                   otherIncomes: {
@@ -5274,8 +5257,8 @@ export class SummaryComponent implements OnInit {
                   },
 
                   businessIncomeTotal:
-                    this.finalSummary?.assessment?.summaryIncome
-                      ?.summaryBusinessIncome?.totalBusinessIncome,
+                  Math.max(this.finalSummary?.assessment?.summaryIncome
+                      ?.summaryBusinessIncome?.totalBusinessIncome),
                 },
                 capitalGain: {
                   shortTerm: {
@@ -5414,24 +5397,7 @@ export class SummaryComponent implements OnInit {
                       }, 0),
                   totalCapitalGain:
                     this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                      ?.filter(
-                        (item: any) =>
-                          item?.taxRate === -1 ||
-                          item?.taxRate === 15 ||
-                          item?.taxRate === 10 ||
-                          item?.taxRate === 20
-                      )
-                      .reduce((total, element) => {
-                        const incomeAfterInternalSetOff =
-                          element.incomeAfterInternalSetOff;
-                        console.log(element, 'element');
-                        console.log(
-                          incomeAfterInternalSetOff,
-                          'incomeAfterInternalSetOff'
-                        );
-
-                        return total + incomeAfterInternalSetOff;
-                      }, 0),
+                      ?.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value),
                 },
                 Crypto: {
                   cryptoDetails: this.finalSummary?.itr?.capitalGain
