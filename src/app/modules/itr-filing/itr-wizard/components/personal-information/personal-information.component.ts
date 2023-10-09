@@ -2254,17 +2254,17 @@ export class PersonalInformationComponent implements OnInit {
         ],
       }),
       seventhProviso139: this.fb.group({
-        seventhProvisio139: 'Y',
-        strDepAmtAggAmtExcd1CrPrYrFlg: 'Y',
-        depAmtAggAmtExcd1CrPrYrFlg: 23423342,
-        strIncrExpAggAmt2LkTrvFrgnCntryFlg: 'Y',
-        incrExpAggAmt2LkTrvFrgnCntryFlg: 234234,
-        strIncrExpAggAmt1LkElctrctyPrYrFlg: 'Y',
+        seventhProvisio139: null,
+        strDepAmtAggAmtExcd1CrPrYrFlg: null,
+        depAmtAggAmtExcd1CrPrYrFlg: null,
+        strIncrExpAggAmt2LkTrvFrgnCntryFlg: null,
+        incrExpAggAmt2LkTrvFrgnCntryFlg: null,
+        strIncrExpAggAmt1LkElctrctyPrYrFlg: null,
         incrExpAggAmt1LkElctrctyPrYrFlg: null,
-        clauseiv7provisio139i: 'Y',
+        clauseiv7provisio139i: null,
         clauseiv7provisio139iDtls: this.fb.array([
           this.fb.group({
-            nature: '',
+            nature: null,
             amount: null,
           }),
         ]),
@@ -2280,6 +2280,17 @@ export class PersonalInformationComponent implements OnInit {
   get addressForm() {
     return this.customerProfileForm.controls['address'] as FormGroup;
   }
+
+  get seventhProviso139() {
+    return this.customerProfileForm.controls['seventhProviso139'] as FormGroup;
+  }
+
+  get getClauseiv7provisio139iDtls() {
+    return this.seventhProviso139.controls[
+      'clauseiv7provisio139iDtls'
+    ] as FormArray;
+  }
+
   createBankDetailsForm(
     obj: {
       ifsCode?: string;
@@ -2581,6 +2592,7 @@ export class PersonalInformationComponent implements OnInit {
     return this.customerProfileForm.valid;
   }
 
+  SAVES() {}
   async saveProfile(ref) {
     // this.findAssesseeType();
     //re-intialise the ITR objects
@@ -2632,6 +2644,7 @@ export class PersonalInformationComponent implements OnInit {
       //   Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
       // }
       Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+      console.log(this.customerProfileForm, 'ITRFORM');
       console.log('this.ITR_JSON: ', this.ITR_JSON);
       // const response = await this.verifyAllBanks();
       // console.log('Bank API response in saveProfile', ":", response);

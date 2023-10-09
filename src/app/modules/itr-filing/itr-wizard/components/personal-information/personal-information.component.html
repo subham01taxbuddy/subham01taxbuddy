@@ -314,100 +314,210 @@
       <div class="sub-heading">Filing Section</div>
     </div>
 
-    <div class="flex align-items-center">
+    <div class="flex">
       <mat-label style="margin: 0px 75px 0px 15px" class="custom"
         >Are you filing return of income under Seventh proviso to section 139(1)
         but otherwise not required to furnish return of income?</mat-label
       >
-      <!-- checkbox -->
-      <mat-checkbox
-        style="margin: 0px 70px 15px 10px"
-        color="primary"
-        name="hasEdit[i]"
-        formControlName="hasEdit"
-        class=""
+      <mat-radio-group
+        name="seventhProvisio139[i]"
+        formControlName="seventhProvisio139"
       >
-      </mat-checkbox>
+        <mat-radio-button
+          [value]="'Y'"
+          style="margin-left: 0px; margin-right: 2px"
+          labelPosition="before"
+        >
+          Yes
+        </mat-radio-button>
+        <mat-radio-button [value]="'N'" labelPosition="before">
+          No
+        </mat-radio-button>
+      </mat-radio-group>
     </div>
 
-    <!-- 1 -->
-    <div class="flex">
-      <mat-label style="margin: 15px" class="custom"
-        >Has incurred expenditure of an amount or aggregate of the amounts
-        exceeding 2 lakh rupees for himself or any other
-        <br />
-        person for travel to a foreign country
-      </mat-label>
-      <div class="col-sm-2">
-        <mat-form-field appearance="outline" class="custom">
-          <input
-            matInput
-            placeholder="Amount"
-            name="depAmtAggAmtExcd1CrPrYrFlg[i]"
-            formControlName="depAmtAggAmtExcd1CrPrYrFlg"
-            required
-          />
-        </mat-form-field>
+    <div
+      *ngIf="seventhProviso139.controls['seventhProvisio139']?.value === 'Y'"
+    >
+      <!-- 1 -->
+      <div class="flex align-items-center" style="margin-bottom: 15px">
+        <mat-label style="margin: 15px 50px 15px 25px" class="custom"
+          >Has incurred expenditure of an amount or aggregate of the amounts
+          exceeding 2 lakh rupees for himself or any other person for travel to
+          a foreign country
+        </mat-label>
+        <div class="flex" style="flex-direction: column">
+          <div>
+            <mat-radio-group
+              name="strIncrExpAggAmt2LkTrvFrgnCntryFlg[i]"
+              formControlName="strIncrExpAggAmt2LkTrvFrgnCntryFlg"
+            >
+              <mat-radio-button
+                [value]="'Y'"
+                style="margin-left: 0px; margin-right: 2px"
+                labelPosition="before"
+              >
+                Yes
+              </mat-radio-button>
+              <mat-radio-button [value]="'N'" labelPosition="before">
+                No
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div
+            *ngIf="
+              seventhProviso139.controls['strIncrExpAggAmt2LkTrvFrgnCntryFlg']
+                ?.value === 'Y'
+            "
+          >
+            <div class="col-sm-2" style="width: 75%; margin-top: 5px">
+              <mat-form-field appearance="outline" class="custom">
+                <input
+                  matInput
+                  placeholder="Amount"
+                  name="incrExpAggAmt2LkTrvFrgnCntryFlg[i]"
+                  formControlName="incrExpAggAmt2LkTrvFrgnCntryFlg"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- 2 -->
-    <div class="flex">
-      <mat-label style="margin: 15px" class="custom">
-        Has incurred expenditure of an amount or aggregate of the amounts
-        exceeding 1 lakh rupees towards consumption of electricity
-      </mat-label>
-      <div class="col-sm-2">
-        <mat-form-field appearance="outline">
-          <input
-            matInput
-            placeholder="Amount"
-            name="incrExpAggAmt2LkTrvFrgnCntryFlg[i]"
-            formControlName="incrExpAggAmt2LkTrvFrgnCntryFlg"
-            required
-          />
-        </mat-form-field>
+      <!-- 2 -->
+      <div class="flex align-items-center" style="margin-bottom: 15px">
+        <mat-label style="margin: 15px 50px 15px 25px" class="custom"
+          >Has incurred expenditure of an amount or aggregate of the amounts
+          exceeding 1 lakh rupees towards consumption of electricity
+        </mat-label>
+        <div class="flex" style="flex-direction: column">
+          <div>
+            <mat-radio-group
+              name="strIncrExpAggAmt1LkElctrctyPrYrFlg[i]"
+              formControlName="strIncrExpAggAmt1LkElctrctyPrYrFlg"
+            >
+              <mat-radio-button
+                [value]="'Y'"
+                style="margin-left: 0px; margin-right: 2px"
+                labelPosition="before"
+              >
+                Yes
+              </mat-radio-button>
+              <mat-radio-button [value]="'N'" labelPosition="before">
+                No
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div
+            *ngIf="
+              seventhProviso139.controls['strIncrExpAggAmt1LkElctrctyPrYrFlg']
+                ?.value === 'Y'
+            "
+          >
+            <div class="col-sm-2" style="width: 75%; margin-top: 5px">
+              <mat-form-field appearance="outline" class="custom">
+                <input
+                  matInput
+                  placeholder="Amount"
+                  name="incrExpAggAmt1LkElctrctyPrYrFlg[i]"
+                  formControlName="incrExpAggAmt1LkElctrctyPrYrFlg"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- 3 -->
-    <div class="flex">
-      <mat-label style="margin: 15px" class="custom">
-        Fulfils such other conditions as may be prescribed under Rule 12AB -
-        below to be provided on cursor on Rule12AB
-      </mat-label>
-      <div class="col-sm-2">
-        <mat-form-field appearance="outline">
-          <input
-            matInput
-            placeholder="Amount"
-            name="strIncrExpAggAmt1LkElctrctyPrYrFlg[i]"
-            formControlName="strIncrExpAggAmt1LkElctrctyPrYrFlg"
-            required
-          />
-        </mat-form-field>
+      <!-- 3 -->
+      <div class="flex align-items-center" style="margin-bottom: 15px">
+        <mat-label style="margin: 15px 50px 15px 25px" class="custom">
+          Fulfils such other conditions as may be prescribed under Rule 12AB
+        </mat-label>
+        <div class="flex" style="flex-direction: column">
+          <div>
+            <mat-radio-group
+              name="clauseiv7provisio139i[i]"
+              formControlName="clauseiv7provisio139i"
+            >
+              <mat-radio-button
+                [value]="'Y'"
+                style="margin-left: 0px; margin-right: 2px"
+                labelPosition="before"
+              >
+                Yes
+              </mat-radio-button>
+              <mat-radio-button [value]="'N'" labelPosition="before">
+                No
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div
+            *ngIf="
+              seventhProviso139.controls['clauseiv7provisio139i']?.value === 'Y'
+            "
+          >
+            <div formArrayName="clauseiv7provisio139iDtls">
+              <div
+                *ngFor="
+                  let bank of getClauseiv7provisio139iDtls?.controls;
+                  let i = index
+                "
+                [formGroupName]="i"
+              >
+                <div class="col-sm-2" style="width: 75%; margin-top: 5px">
+                  <mat-form-field appearance="outline" class="custom">
+                    <input
+                      matInput
+                      placeholder="Nature"
+                      name="nature[i]"
+                      formControlName="nature"
+                      required
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-2" style="width: 75%; margin-top: 5px">
+                  <mat-form-field appearance="outline" class="custom">
+                    <input
+                      matInput
+                      placeholder="Amount"
+                      name="amount[i]"
+                      formControlName="amount"
+                      required
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- 4 -->
-    <div class="flex">
-      <mat-label style="margin: 15px" class="custom">
-        Has deposited an amount or aggregate of the amounts exceeding one crore
-        <br />
-        rupees in one or more current accounts maintained with a banking company
-        <br />
-        or a co-operative ban
-      </mat-label>
-      <div class="col-sm-2">
-        <mat-form-field appearance="outline">
-          <input
-            matInput
-            placeholder="Amount"
-            name="incrExpAggAmt1LkElctrctyPrYrFlg[i]"
-            formControlName="incrExpAggAmt1LkElctrctyPrYrFlg"
-            required
-          />
-        </mat-form-field>
+      <!-- 4 -->
+      <div *ngIf="ITR_JSON.itrType === '4'">
+        <div class="flex">
+          <mat-label style="margin: 15px" class="custom">
+            Has deposited an amount or aggregate of the amounts exceeding one
+            crore
+            <br />
+            rupees in one or more current accounts maintained with a banking
+            company
+            <br />
+            or a co-operative ban
+          </mat-label>
+          <div class="col-sm-2">
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                placeholder="Amount"
+                name="incrExpAggAmt1LkElctrctyPrYrFlg[i]"
+                formControlName="incrExpAggAmt1LkElctrctyPrYrFlg"
+                required
+              />
+            </mat-form-field>
+          </div>
+        </div>
       </div>
     </div>
   </div>
