@@ -44,7 +44,7 @@ export interface User {
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
-export class TaxInvoiceComponent implements OnInit,OnDestroy{
+export class TaxInvoiceComponent implements OnInit, OnDestroy {
   loading!: boolean;
   invoiceData = [];
   invoiceInfo: any = [];
@@ -103,7 +103,13 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
       endDate: new Date('2021-03-31'),
     },
   ];
-
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'billTo', name: 'Name' },
+    { value: 'invoiceDate', name: 'Invoice Date' },
+    { value: 'paymentDate', name: 'Paid Date' },
+    { value: 'total', name: 'Amount Payable' },
+  ];
   dataOnLoad = true;
   constructor(
     private fb: FormBuilder,
@@ -142,6 +148,10 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
       currentPage: 1,
       totalItems: null,
     };
+  }
+
+  sortByObject(object) {
+    this.sortBy = object;
   }
 
   formatToolTip(params: any) {
@@ -200,9 +210,9 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
       }
     });
 
-    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
       this.getInvoice();
-    } else{
+    } else {
       this.dataOnLoad = false;
     }
 
@@ -427,7 +437,7 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
       this.coOwnerDropDown.resetDropdown();
       this.getInvoice(true);
     } else {
-     if(this.dataOnLoad) {
+      if (this.dataOnLoad) {
         this.getInvoice();
       } else {
         //clear grid for loaded data
@@ -437,7 +447,7 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
     }
   }
 
-  getInvoice(isCoOwner?, agentId?,pageChange?) {
+  getInvoice(isCoOwner?, agentId?, pageChange?) {
 
     ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
     ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
@@ -445,7 +455,7 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
 
     // https://uat-api.taxbuddy.com/itr/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-02&page=0&pageSize=20&paymentStatus=Paid&searchAsCoOwner=true&ownerUserId=7522'
     //https://uat-api.taxbuddy.com/report/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-30&page=0&pageSize=20&ownerUserId=7521&paymentStatus=Paid
-    if(!pageChange){
+    if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
@@ -515,7 +525,10 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
     else {
       param;
     }
-
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
@@ -529,7 +542,7 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
         this.cacheManager.initializeCache(this.invoiceData);
 
         const currentPageNumber = pageChange || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber,this.invoiceData);
+        this.cacheManager.cachePageContent(currentPageNumber, this.invoiceData);
         this.config.currentPage = currentPageNumber;
         if (this.invoiceData.length == 0) {
           this.gridApi?.setRowData(this.createRowData([]));
@@ -673,7 +686,7 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
           ifaLeadClient: userInvoices[i].ifaLeadClient,
           total: userInvoices[i].total,
           razorpayReferenceId: this.utilService.isNonEmpty(userInvoices[i].razorpayReferenceId) ? userInvoices[i].razorpayReferenceId : '-',
-          paymentId:this.utilService.isNonEmpty(userInvoices[i].paymentId) ? userInvoices[i].paymentId : '-'
+          paymentId: this.utilService.isNonEmpty(userInvoices[i].paymentId) ? userInvoices[i].paymentId : '-'
         })
       invoices.push(updateInvoice)
     }
@@ -1054,11 +1067,11 @@ export class TaxInvoiceComponent implements OnInit,OnDestroy{
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-        if (this.coOwnerToggle.value == true) {
-          this.getInvoice(true,'',event);
-        } else {
-          this.getInvoice('', '',event);
-        }
+      if (this.coOwnerToggle.value == true) {
+        this.getInvoice(true, '', event);
+      } else {
+        this.getInvoice('', '', event);
+      }
     }
   }
 

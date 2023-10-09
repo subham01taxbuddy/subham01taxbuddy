@@ -807,7 +807,7 @@ export class SharesAndEquityComponent
         ],
 
         deduction:
-          this.deductionForm.invalid || this.getSecuritiesCg() <= 0
+          this.deductionForm.invalid || this.getSecuritiesCg() <= 0 || !this.deduction
             ? []
             : [this.deductionForm.getRawValue()],
       };
@@ -942,7 +942,7 @@ export class SharesAndEquityComponent
           this.bondType === 'listed'
             ? 'EQUITY_SHARES_LISTED'
             : 'EQUITY_SHARES_UNLISTED',
-        deduction: [this.deductionForm.getRawValue()],
+        deduction: !this.deduction ? [] : [this.deductionForm.getRawValue()],
         improvement: securitiesImprovement,
         buyersDetails: [],
         assetDetails: assetDetails,
@@ -1027,7 +1027,7 @@ export class SharesAndEquityComponent
           this.bondType === 'listed'
             ? 'EQUITY_SHARES_LISTED'
             : 'EQUITY_SHARES_UNLISTED',
-        deduction: [this.deductionForm.getRawValue()],
+        deduction: !this.deduction ? [] : [this.deductionForm.getRawValue()],
         improvement: securitiesImprovement,
         buyersDetails: [],
         assetDetails: securitiesArray.getRawValue(),

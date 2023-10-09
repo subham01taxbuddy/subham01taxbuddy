@@ -468,6 +468,7 @@ export interface NewCapitalGain {
 export interface AssetDetails {
   brokerName: String;
   capitalGain: number;
+  cgBeforeDeduction: number;
   srn: number;
   id: string;
   description: string;

@@ -504,23 +504,16 @@ export class ItrValidationService {
             // obj[key]?.profitLossACIncomes?.length > 0 ||
             obj[key]?.presumptiveIncomes?.length > 0
           ) {
-            if (natOfBusiness?.length === 0) {
-              // if there is nothing present then below error will be pushed
-              const error = this.getErrorMessages('E23');
-              errorList.push(error);
-            } else {
-              const natOfBusinessDetails: boolean = natOfBusiness?.some(
-                (element) => {
-                  return !element?.tradeName || !element?.natureOfBusiness;
-                }
-              );
-
-              // if any one of the array has error then below error will be pushed
-              if (natOfBusinessDetails) {
-                const error = this.getErrorMessages('E24');
+            obj[key]?.presumptiveIncomes.forEach(element => {
+              if (!this.utilService.isNonEmpty(element.natureOfBusiness)) {
+                // if there is nothing present then below error will be pushed
+                const error = this.getErrorMessages('E23');
                 errorList.push(error);
+              } else if (!this.utilService.isNonEmpty(element.tradeName)) {
+                  const error = this.getErrorMessages('E24');
+                  errorList.push(error);
               }
-            }
+            });
           }
 
           // speculative and non-speculative errors
@@ -567,12 +560,12 @@ export class ItrValidationService {
                 element?.assessmentYear !== this.currentAssessmentYear ||
                 element?.assesseeType !== 'INDIVIDUAL' ||
                 element?.residentialStatus !== 'RESIDENT' ||
-                !element?.assetType;
+                (!this.utilService.isNonEmpty(element?.assetType));
 
-              if (capitalGainBasicDetails) {
-                const error = this.getErrorMessages('E34');
-                errorList?.push(error);
-              }
+              // if (capitalGainBasicDetails) {
+              //   const error = this.getErrorMessages('E34');
+              //   errorList?.push(error);
+              // }
 
               // for deduction array
               // const deductionArray = element?.deduction;
@@ -633,10 +626,10 @@ export class ItrValidationService {
                         buyerDetails?.srn === undefined
                     );
 
-                  if (buyersDetailsArrayStat) {
-                    const error = this.getErrorMessages('E37');
-                    errorList?.push(error);
-                  }
+                  // if (buyersDetailsArrayStat) {
+                  //   const error = this.getErrorMessages('E37');
+                  //   errorList?.push(error);
+                  // }
                 }
               }
 
@@ -656,10 +649,10 @@ export class ItrValidationService {
                       !lb?.capitalGain
                   );
 
-                  if (landAndBuildingStat) {
-                    const error = this.getErrorMessages('E38');
-                    errorList?.push(error);
-                  }
+                  // if (landAndBuildingStat) {
+                  //   const error = this.getErrorMessages('E38');
+                  //   errorList?.push(error);
+                  // }
                 }
               }
 

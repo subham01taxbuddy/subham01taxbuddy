@@ -214,7 +214,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         this.fb.group({
           label: this.exemptIncomesDropdown[i].label,
           incomeType: this.exemptIncomesDropdown[i].value,
-          incomeValue: [],
+          incomeValue: [null, Validators.min(0)],
         })
       );
     }
@@ -234,9 +234,13 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   }
 
   saveAll() {
-    this.saveOtherIncome();
-    this.saveExemptIncomes();
-    this.saveAndNext.emit(false);
+    if(this.exemptIncomeFormGroup.valid && this.otherIncomeFormGroup.valid) {
+      this.saveOtherIncome();
+      this.saveExemptIncomes();
+      this.saveAndNext.emit(false);
+    } else {
+      $('input.ng-invalid').first().focus();
+    }
   }
 
   saveOtherIncome() {

@@ -118,6 +118,9 @@ export class LabFormComponent implements OnInit {
     this.getImprovementYears();
   }
 
+  reset(control){
+    control.setValue(null);
+  }
   get getImprovementsArrayForImmovable() {
     return <FormArray>this.immovableForm.get('improvement');
   }
@@ -384,6 +387,7 @@ export class LabFormComponent implements OnInit {
       hasIndexation: false,
       algorithm: 'cgProperty',
       capitalGain: 0,
+      cgBeforeDeduction: 0,
       grandFatheredValue: 0,
       totalFairMarketValueOfCapitalAsset: 0,
     };
@@ -1274,7 +1278,8 @@ export class LabFormComponent implements OnInit {
     ).controls[0] as FormGroup;
     if (
       deductionForm.controls['underSection'].value === '54EE' ||
-      deductionForm.controls['underSection'].value === '54EC'
+      deductionForm.controls['underSection'].value === '54EC' ||
+      deductionForm.controls['underSection'].value === '54F'
     ) {
       console.log(deductionForm);
       deductionForm.controls['costOfNewAssets'].setValidators([
@@ -1291,9 +1296,15 @@ export class LabFormComponent implements OnInit {
         minDate.setDate(sellDate.getDate() - 1);
 
         // Calculate the max date (6 months after the sellDate)
-        const maxDate = new Date(sellDate);
-        maxDate.setDate(sellDate.getDate() + 1);
-        maxDate.setMonth(maxDate.getMonth() + 6);
+        let maxDate = new Date(sellDate);
+        if(deductionForm.controls['underSection'].value === '54F'){
+          maxDate = new Date();
+        } else {
+          maxDate = maxDate < new Date() ? maxDate : new Date();
+          maxDate.setDate(sellDate.getDate() + 1);
+          maxDate.setMonth(maxDate.getMonth() + 6);
+        }
+
 
         // Enable dates between the sellDate plus one day and 6 months after the sellDate,
         // and disable all other dates
@@ -1336,7 +1347,7 @@ export class LabFormComponent implements OnInit {
     const param = '/calculate/capital-gain/deduction';
     let request = {
       capitalGain:
-        this.cgArrayElement?.assetDetails[this.currentCgIndex]?.capitalGain,
+        this.cgArrayElement?.assetDetails[this.currentCgIndex]?.cgBeforeDeduction,
       capitalGainDeductions: [
         {
           deductionSection: `SECTION_${deductionForm.controls['underSection'].value}`,
