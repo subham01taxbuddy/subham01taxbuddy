@@ -393,37 +393,36 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           debounceMs: 0
         }
       },
-      //Ashwini: Commented functionality as complete QA is not yet done
-      // {
-      //   headerName: 'Re-Assign',
-      //   editable: false,
-      //   suppressMenu: true,
-      //   sortable: true,
-      //   hide: view === 'leader' ? false : true,
-      //   suppressMovable: true,
-      //   cellRenderer: function (params: any) {
-      //     if (params.data.statusId === 17 || params.data.statusId === 19 ) {
-      //       return `<button type="button" class="action_icon add_button" title="Re-Assign Scheduled Call"
-      //       style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;">
-      //         <i class="fa fa-refresh" aria-hidden="true" data-action-type="reAssignCall"></i>
-      //        </button>`;
-      //     }else{
-      //       return '-'
-      //     }
-      //
-      //
-      //   },
-      //   width: 95,
-      //   pinned: 'right',
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center',
-      //       display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center',
-      //     };
-      //   },
-      // },
+      {
+        headerName: 'Re-Assign',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        hide: view === 'leader' ? false : true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          if (params.data.statusId === 17 || params.data.statusId === 19 ) {
+            return `<button type="button" class="action_icon add_button" title="Re-Assign Scheduled Call"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;">
+              <i class="fa fa-refresh" aria-hidden="true" data-action-type="reAssignCall"></i>
+             </button>`;
+          }else{
+            return '-'
+          }
+
+
+        },
+        width: 95,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
       {
         headerName: 'Chat',
         editable: false,
