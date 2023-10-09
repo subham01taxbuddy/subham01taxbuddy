@@ -164,7 +164,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
           .controls[index] as FormGroup
       ).controls['cashReceipts'].value;
 
-      this.amountSix = Math.round(Number((this.amountSix / 100) * 6));
+      this.amountSix = Math.round(Number((this.amountSix / 100) * 8));
 
       (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
