@@ -56,6 +56,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   newSummaryIncome: any;
   oldSummaryIncome: any;
   assesssmentYear: any[] = [];
+  lastAssesssmentYear:string;
   itrType: any;
 
   newRegimeLabel = 'Opting in Now';
@@ -475,6 +476,14 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.newRegimeLabel = 'Continue to opt';
       this.oldRegimeLabel = 'Opt Out';
       currAssmntYr.enable();
+
+      //check whether user had opted for new regime in last year
+      let newRegimeAy = this.regimeSelectionForm.controls['everOptedNewRegime'].get('assessmentYear').value;
+      if(newRegimeAy === this.lastAssesssmentYear){
+        this.dueDateOver = false;
+      } else {
+        this.dueDateOver = true;
+      }
     }
 
     if (!optIn && !optOut) {
@@ -507,6 +516,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.getITRType();
     this.onChanges();
 
+    this.lastAssesssmentYear = '2022-23';
     this.assesssmentYear = [
       { assesssmentYear: '2022-23' },
       { assesssmentYear: '2021-22' },
