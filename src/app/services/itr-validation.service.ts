@@ -567,12 +567,12 @@ export class ItrValidationService {
                 element?.assessmentYear !== this.currentAssessmentYear ||
                 element?.assesseeType !== 'INDIVIDUAL' ||
                 element?.residentialStatus !== 'RESIDENT' ||
-                !element?.assetType;
+                (!this.utilService.isNonEmpty(element?.assetType));
 
-              if (capitalGainBasicDetails) {
-                const error = this.getErrorMessages('E34');
-                errorList?.push(error);
-              }
+              // if (capitalGainBasicDetails) {
+              //   const error = this.getErrorMessages('E34');
+              //   errorList?.push(error);
+              // }
 
               // for deduction array
               // const deductionArray = element?.deduction;
@@ -633,10 +633,10 @@ export class ItrValidationService {
                         buyerDetails?.srn === undefined
                     );
 
-                  if (buyersDetailsArrayStat) {
-                    const error = this.getErrorMessages('E37');
-                    errorList?.push(error);
-                  }
+                  // if (buyersDetailsArrayStat) {
+                  //   const error = this.getErrorMessages('E37');
+                  //   errorList?.push(error);
+                  // }
                 }
               }
 
@@ -656,10 +656,10 @@ export class ItrValidationService {
                       !lb?.capitalGain
                   );
 
-                  if (landAndBuildingStat) {
-                    const error = this.getErrorMessages('E38');
-                    errorList?.push(error);
-                  }
+                  // if (landAndBuildingStat) {
+                  //   const error = this.getErrorMessages('E38');
+                  //   errorList?.push(error);
+                  // }
                 }
               }
 
