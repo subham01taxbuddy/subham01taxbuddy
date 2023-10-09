@@ -128,7 +128,6 @@ export class ZeroCouponBondsComponent
       this.addMoreBondsData();
       this.isDisable = true;
     }
-    this.bondsForm.disable();
 
     // setting deduction
     const bondsDeben = this.ITR_JSON.capitalGain?.find(

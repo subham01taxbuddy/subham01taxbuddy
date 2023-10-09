@@ -220,6 +220,7 @@
                     class="hide"
                     formControlName="gainType"
                     name="gainType[i]"
+                    [disabled]="true"
                   >
                     <mat-option
                       *ngFor="let type of gainTypeList"
@@ -252,16 +253,6 @@
                     >Total capital Gain is mandatory</mat-error
                   >
                 </mat-form-field>
-              </div>
-
-              <div class="col-sm-4 spsTp">
-                <button
-                  type="button"
-                  class="edit-donation"
-                  (click)="editBondsForm(i)"
-                >
-                  <mat-icon> edit_square </mat-icon>Edit
-                </button>
               </div>
 
             </div>
