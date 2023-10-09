@@ -479,11 +479,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
       //check whether user had opted for new regime in last year
       let newRegimeAy = this.regimeSelectionForm.controls['everOptedNewRegime'].get('assessmentYear').value;
-      if(newRegimeAy === this.lastAssesssmentYear){
-        this.dueDateOver = false;
-      } else {
-        this.dueDateOver = true;
-      }
+      this.dueDateOver = false;
+
     }
 
     if (!optIn && !optOut) {
