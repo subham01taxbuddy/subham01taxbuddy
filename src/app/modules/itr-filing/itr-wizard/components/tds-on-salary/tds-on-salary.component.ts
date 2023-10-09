@@ -38,7 +38,7 @@ export class TdsOnSalaryComponent implements OnInit {
 
     this.salaryForm = this.inItForm();
 
-    if (this.data?.assetIndex) {
+    if (this.data && this.data.assetIndex >= 0) {
       this.addMore(this.Copy_ITR_JSON.taxPaid?.onSalary[this.data.assetIndex]);
     } else {
       this.addMore();
