@@ -966,6 +966,29 @@ export class ScheduleFaComponent implements OnInit {
               };
               console.log(formGroup);
               // I can empty foreign assets before starting to push, this way only the new daat will be pushed from start
+              if(!this.Copy_ITR_JSON.foreignIncome) {
+                this.Copy_ITR_JSON.foreignIncome = {
+                  foreignAssets: null,
+                  id: null,
+                  taxAmountRefunded: 0,
+                  taxPaidOutsideIndiaFlag: null,
+                  taxReliefAssessmentYear: null,
+                  taxReliefClaimed: []
+                };
+                this.Copy_ITR_JSON.foreignIncome.foreignAssets = {
+                  capitalAssetsDetails: [],
+                  cashValueInsurance: [],
+                  custodialAccounts: [],
+                  depositoryAccounts: [],
+                  equityAndDebtInterest: [],
+                  financialInterestDetails: [],
+                  id: null,
+                  immovablePropertryDetails: [],
+                  otherIncomeDetails: [],
+                  signingAuthorityDetails: [],
+                  trustsDetails: []
+                };
+              }
               this.Copy_ITR_JSON.foreignIncome.foreignAssets[section].push(
                 formGroup
               );
