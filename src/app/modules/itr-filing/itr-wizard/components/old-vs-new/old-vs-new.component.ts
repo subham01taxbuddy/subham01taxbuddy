@@ -2002,7 +2002,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   setFilingDate() {
     var id = (
       this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
-    ).controls['assessmentYear'].value;
+    ).controls['acknowledgementNumber'].value;
     var lastSix = id.toString().substr(id.length - 6);
     var day = lastSix.slice(0, 2);
     var month = lastSix.slice(2, 4);
@@ -2012,6 +2012,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
     (
       this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
-    ).controls['assessmentYear'].setValue(moment(dateString).toDate());
+    ).controls['date'].setValue(moment(dateString).toDate());
   }
 }
