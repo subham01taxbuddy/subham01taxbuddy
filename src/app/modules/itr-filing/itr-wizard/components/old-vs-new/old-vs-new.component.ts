@@ -56,6 +56,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   newSummaryIncome: any;
   oldSummaryIncome: any;
   assesssmentYear: any[] = [];
+  lastAssesssmentYear:string;
   itrType: any;
 
   newRegimeLabel = 'Opting in Now';
@@ -475,6 +476,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.newRegimeLabel = 'Continue to opt';
       this.oldRegimeLabel = 'Opt Out';
       currAssmntYr.enable();
+
+      //check whether user had opted for new regime in last year
+      let newRegimeAy = this.regimeSelectionForm.controls['everOptedNewRegime'].get('assessmentYear').value;
+      this.dueDateOver = false;
+
     }
 
     if (!optIn && !optOut) {
@@ -507,6 +513,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.getITRType();
     this.onChanges();
 
+    this.lastAssesssmentYear = '2022-23';
     this.assesssmentYear = [
       { assesssmentYear: '2022-23' },
       { assesssmentYear: '2021-22' },
@@ -1980,7 +1987,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   setFilingDate() {
     var id = (
       this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
-    ).controls['assessmentYear'].value;
+    ).controls['acknowledgementNumber'].value;
     var lastSix = id.toString().substr(id.length - 6);
     var day = lastSix.slice(0, 2);
     var month = lastSix.slice(2, 4);
@@ -1990,7 +1997,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
     (
       this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
-    ).controls['assessmentYear'].setValue(moment(dateString).toDate());
+    ).controls['date'].setValue(moment(dateString).toDate());
   }
 }
 

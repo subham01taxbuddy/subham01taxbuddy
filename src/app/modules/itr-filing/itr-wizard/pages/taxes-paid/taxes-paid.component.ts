@@ -568,10 +568,10 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     }
 
     console.log(this.taxPaid);
-    this.ITR_JSON.taxPaid = this.taxPaid;
+    this.Copy_ITR_JSON.taxPaid = this.taxPaid;
     sessionStorage.setItem(
       AppConstants.ITR_JSON,
-      JSON.stringify(this.ITR_JSON)
+      JSON.stringify(this.Copy_ITR_JSON)
     );
     this.assetList = this.assetList.filter((asset) => asset.hasEdit != true);
     this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());

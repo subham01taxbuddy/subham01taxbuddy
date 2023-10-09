@@ -128,7 +128,6 @@ export class ZeroCouponBondsComponent
       this.addMoreBondsData();
       this.isDisable = true;
     }
-    this.bondsForm.disable();
 
     // setting deduction
     const bondsDeben = this.ITR_JSON.capitalGain?.find(
@@ -414,7 +413,7 @@ export class ZeroCouponBondsComponent
         residentialStatus: this.ITR_JSON.residentialStatus,
         assetType: this.bondType === 'bonds' ? 'BONDS' : 'ZERO_COUPON_BONDS',
         deduction:
-          this.deductionForm.invalid || this.getBondsCg() <= 0
+          this.deductionForm.invalid || this.getBondsCg() <= 0 || !this.deduction
             ? []
             : [this.deductionForm.getRawValue()],
         improvement: bondImprovement,
