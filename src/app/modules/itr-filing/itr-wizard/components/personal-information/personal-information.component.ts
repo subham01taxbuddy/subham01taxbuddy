@@ -77,6 +77,7 @@ export class PersonalInformationComponent implements OnInit {
   docUrl = '';
   deletedFileData: any = [];
   fillingMaxDate: any = new Date();
+  config: any;
 
   countryDropdown = [
     {
@@ -2191,6 +2192,11 @@ export class PersonalInformationComponent implements OnInit {
     this.stateDropdown = this.stateDropdownMaster;
     this.getDocuments();
     this.getUserDataByPan(this.customerProfileForm.controls['panNumber'].value);
+    this.config = {
+      id: 'clauseIvPagination',
+      itemsPerPage: 3,
+      currentPage: 1,
+    };
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -2277,16 +2283,17 @@ export class PersonalInformationComponent implements OnInit {
         ],
       }),
       seventhProviso139: this.fb.group({
-        seventhProvisio139: null,
-        strDepAmtAggAmtExcd1CrPrYrFlg: null,
+        seventhProvisio139: 'N',
+        strDepAmtAggAmtExcd1CrPrYrFlg: 'N',
         depAmtAggAmtExcd1CrPrYrFlg: null,
-        strIncrExpAggAmt2LkTrvFrgnCntryFlg: null,
+        strIncrExpAggAmt2LkTrvFrgnCntryFlg: 'N',
         incrExpAggAmt2LkTrvFrgnCntryFlg: null,
-        strIncrExpAggAmt1LkElctrctyPrYrFlg: null,
+        strIncrExpAggAmt1LkElctrctyPrYrFlg: 'N',
         incrExpAggAmt1LkElctrctyPrYrFlg: null,
-        clauseiv7provisio139i: null,
+        clauseiv7provisio139i: 'N',
         clauseiv7provisio139iDtls: this.fb.array([
           this.fb.group({
+            hasEdit: false,
             nature: null,
             amount: null,
           }),
@@ -2302,16 +2309,6 @@ export class PersonalInformationComponent implements OnInit {
 
   get addressForm() {
     return this.customerProfileForm.controls['address'] as FormGroup;
-  }
-
-  get seventhProviso139() {
-    return this.customerProfileForm.controls['seventhProviso139'] as FormGroup;
-  }
-
-  get getClauseiv7provisio139iDtls() {
-    return this.seventhProviso139.controls[
-      'clauseiv7provisio139iDtls'
-    ] as FormArray;
   }
 
   createBankDetailsForm(
@@ -2361,163 +2358,6 @@ export class PersonalInformationComponent implements OnInit {
       $('input.ng-invalid').first().focus();
       console.log('add above details first');
     }
-  }
-
-  addClauseIv(classIvDtls) {
-    const ClauseIv = this.getClauseiv7provisio139iDtls;
-    const ClauseIvJson =
-      this.ITR_JSON.seventhProviso139?.clauseiv7provisio139iDtls;
-
-    if (classIvDtls === 'addEmpty') {
-      if (ClauseIv?.valid) {
-        const formGroup = this.fb.group({
-          nature: null,
-          amount: null,
-        });
-        ClauseIv?.push(formGroup);
-      }
-    } else if (ClauseIvJson && ClauseIvJson.length > 0) {
-      // Clear existing form groups
-      while (ClauseIv.length !== 0) {
-        ClauseIv.removeAt(0);
-      }
-
-      classIvDtls?.forEach((element) => {
-        const formGroup = this.fb.group({
-          nature: element.nature,
-          amount: element.amount,
-        });
-        ClauseIv?.push(formGroup);
-        console.log(ClauseIv);
-      });
-    }
-  }
-
-  // Create a variable to store the data
-  seventhProvsioChangeSavedData: any;
-
-  // Function to set a validator
-  setValidator(controlName: string, validator: any) {
-    this.seventhProviso139.get(controlName).setValidators(validator);
-    this.seventhProviso139.get(controlName).updateValueAndValidity();
-  }
-
-  // Function to clear a validator
-  clearValidator(controlName: string) {
-    this.seventhProviso139.get(controlName).clearValidators();
-    this.seventhProviso139.get(controlName).updateValueAndValidity();
-  }
-
-  seventhProvisioChange() {
-    const seventhProvisio139 = this.seventhProviso139;
-    const selectedValue =
-      seventhProvisio139.controls['seventhProvisio139'].value;
-
-    if (selectedValue === 'N') {
-      // Save the data and clear the form group
-      this.seventhProvsioChangeSavedData = seventhProvisio139.value;
-      seventhProvisio139.reset();
-      seventhProvisio139.controls['seventhProvisio139'].setValue('N');
-
-      // marking questions as not required if seventhProvisio is yes
-      // 1
-      this.clearValidator('strDepAmtAggAmtExcd1CrPrYrFlg');
-
-      // 2
-      this.clearValidator('strIncrExpAggAmt2LkTrvFrgnCntryFlg');
-
-      // 3
-      this.clearValidator('strIncrExpAggAmt1LkElctrctyPrYrFlg');
-
-      // 4
-      this.clearValidator('clauseiv7provisio139i');
-    } else {
-      // marking questions as required if seventhProvisio is yes
-      // 1
-      this.setValidator('strDepAmtAggAmtExcd1CrPrYrFlg', Validators.required);
-
-      // 2
-      this.setValidator(
-        'strIncrExpAggAmt2LkTrvFrgnCntryFlg',
-        Validators.required
-      );
-
-      // 3
-      this.setValidator(
-        'strIncrExpAggAmt1LkElctrctyPrYrFlg',
-        Validators.required
-      );
-
-      // 4
-      this.setValidator('clauseiv7provisio139i', Validators.required);
-
-      // Check if there is saved data and populate the form group
-      if (this.seventhProvsioChangeSavedData) {
-        seventhProvisio139.patchValue(this.seventhProvsioChangeSavedData);
-        seventhProvisio139.controls['seventhProvisio139'].setValue('Y');
-      }
-    }
-  }
-
-  incrExpAggAmt2LkTrvFrgnCntryFlgSaved: any;
-  // 1
-  strIncrExpAggAmt2LkTrvFrgnCntryFlg() {
-    const seventhProvisio139 = this.seventhProviso139;
-    const selectedValue =
-      seventhProvisio139.controls['strIncrExpAggAmt2LkTrvFrgnCntryFlg'].value;
-
-    if (selectedValue === 'N') {
-      // Save the data and clear the form group
-      this.incrExpAggAmt2LkTrvFrgnCntryFlgSaved = seventhProvisio139.get(
-        'incrExpAggAmt2LkTrvFrgnCntryFlg'
-      ).value;
-      seventhProvisio139.get('incrExpAggAmt2LkTrvFrgnCntryFlg').reset();
-      seventhProvisio139.controls['incrExpAggAmt2LkTrvFrgnCntryFlg'].setValue(
-        'N'
-      );
-      this.clearValidator('incrExpAggAmt2LkTrvFrgnCntryFlg');
-    } else {
-      this.setValidator('incrExpAggAmt2LkTrvFrgnCntryFlg', Validators.required);
-      // Check if there is saved data and populate the form group
-      if (this.incrExpAggAmt2LkTrvFrgnCntryFlgSaved) {
-        seventhProvisio139.patchValue(this.seventhProvsioChangeSavedData);
-        seventhProvisio139.controls[
-          'strIncrExpAggAmt2LkTrvFrgnCntryFlg'
-        ].setValue('Y');
-      }
-    }
-  }
-
-  // 2
-  strIncrExpAggAmt1LkElctrctyPrYrFlg() {
-    const seventhProvisio139 = this.seventhProviso139;
-    const selectedValue =
-      seventhProvisio139.controls['strIncrExpAggAmt1LkElctrctyPrYrFlg'].value;
-
-    if (selectedValue === 'N') {
-      this.clearValidator('incrExpAggAmt1LkElctrctyPrYrFlg');
-    } else {
-      this.setValidator('incrExpAggAmt1LkElctrctyPrYrFlg', Validators.required);
-    }
-  }
-
-  // 3
-  clauseiv7provisio139i() {
-    const seventhProvisio139 = this.seventhProviso139;
-  }
-
-  // 4
-  strDepAmtAggAmtExcd1CrPrYrFlg() {
-    const seventhProvisio139 = this.seventhProviso139;
-    seventhProvisio139
-      .get('strDepAmtAggAmtExcd1CrPrYrFlg')
-      .valueChanges.subscribe((value) => {
-        if (value === 'Y') {
-          this.setValidator('depAmtAggAmtExcd1CrPrYrFlg', Validators.required);
-        } else {
-          this.clearValidator('depAmtAggAmtExcd1CrPrYrFlg');
-        }
-      });
   }
 
   get getBankDetailsArray() {
@@ -2752,7 +2592,9 @@ export class PersonalInformationComponent implements OnInit {
       }
     });
 
-    if (this.ITR_JSON.seventhProviso139.clauseiv7provisio139iDtls?.length > 0) {
+    if (
+      this.ITR_JSON.seventhProviso139?.clauseiv7provisio139iDtls?.length > 0
+    ) {
       this.addClauseIv(
         this.ITR_JSON.seventhProviso139.clauseiv7provisio139iDtls
       );
@@ -3009,5 +2851,226 @@ export class PersonalInformationComponent implements OnInit {
     this.customerProfileForm.controls['form10IEDate'].setValue(
       moment(dateString).toDate()
     );
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< FILING SECTION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  get seventhProviso139() {
+    return this.customerProfileForm.controls['seventhProviso139'] as FormGroup;
+  }
+
+  get getClauseiv7provisio139iDtls() {
+    return this.seventhProviso139.controls[
+      'clauseiv7provisio139iDtls'
+    ] as FormArray;
+  }
+
+  addClauseIv(classIvDtls) {
+    const ClauseIv = this.getClauseiv7provisio139iDtls;
+    const ClauseIvJson =
+      this.ITR_JSON.seventhProviso139?.clauseiv7provisio139iDtls;
+
+    if (classIvDtls === 'addEmpty') {
+      if (ClauseIv?.valid) {
+        const formGroup = this.fb.group({
+          nature: null,
+          amount: null,
+        });
+        ClauseIv?.push(formGroup);
+      }
+    } else if (ClauseIvJson && ClauseIvJson.length > 0) {
+      // Clear existing form groups
+      while (ClauseIv.length !== 0) {
+        ClauseIv.removeAt(0);
+      }
+
+      classIvDtls?.forEach((element) => {
+        const formGroup = this.fb.group({
+          nature: element.nature,
+          amount: element.amount,
+        });
+        ClauseIv?.push(formGroup);
+        console.log(ClauseIv);
+      });
+    }
+  }
+
+  // Create a variable to store the data
+  seventhProvsioChangeSavedData: any;
+
+  // Function to set a validator
+  setValidator(controlName: string, validator: any) {
+    this.seventhProviso139.get(controlName).setValidators(validator);
+    this.seventhProviso139.get(controlName).updateValueAndValidity();
+  }
+
+  // Function to clear a validator
+  clearValidator(controlName: string) {
+    this.seventhProviso139.get(controlName).clearValidators();
+    this.seventhProviso139.get(controlName).updateValueAndValidity();
+  }
+
+  // 1
+  seventhProvisio139() {
+    const seventhProvisio139 = this.seventhProviso139;
+    const seventhProvisio139Flag =
+      seventhProvisio139.controls['seventhProvisio139'];
+    const seventhProvisio139Value = seventhProvisio139.value;
+
+    if (seventhProvisio139Flag.value === 'N') {
+      // Save the data and clear the form group
+      this.seventhProvsioChangeSavedData = seventhProvisio139Value;
+      seventhProvisio139.reset();
+      seventhProvisio139Flag.setValue('N');
+
+      // marking questions as not required if seventhProvisio is no
+      this.clearValidator('strDepAmtAggAmtExcd1CrPrYrFlg');
+      this.clearValidator('strIncrExpAggAmt2LkTrvFrgnCntryFlg');
+      this.clearValidator('strIncrExpAggAmt1LkElctrctyPrYrFlg');
+      this.clearValidator('clauseiv7provisio139i');
+    } else {
+      // marking questions as not required if seventhProvisio is yes
+      this.setValidator('strDepAmtAggAmtExcd1CrPrYrFlg', Validators.required);
+      this.setValidator(
+        'strIncrExpAggAmt2LkTrvFrgnCntryFlg',
+        Validators.required
+      );
+      this.setValidator(
+        'strIncrExpAggAmt1LkElctrctyPrYrFlg',
+        Validators.required
+      );
+      this.setValidator('clauseiv7provisio139i', Validators.required);
+
+      // Check if there is saved data and populate the form group
+      if (this.seventhProvsioChangeSavedData) {
+        seventhProvisio139.patchValue(this.seventhProvsioChangeSavedData);
+        seventhProvisio139Flag.setValue('Y');
+      }
+    }
+  }
+
+  // 2
+  incrExpAggAmt2LkTrvFrgnCntryFlgSaved: any;
+  strIncrExpAggAmt2LkTrvFrgnCntryFlg() {
+    const seventhProvisio139 = this.seventhProviso139;
+    const twoLakhsFlag =
+      seventhProvisio139.controls['strIncrExpAggAmt2LkTrvFrgnCntryFlg'];
+    const twoLakhsFlagKey = 'incrExpAggAmt2LkTrvFrgnCntryFlg';
+    const twoLakhsValue =
+      seventhProvisio139.controls['incrExpAggAmt2LkTrvFrgnCntryFlg'];
+
+    if (twoLakhsFlag.value === 'N') {
+      // Save the data and clear the form group
+      this.incrExpAggAmt2LkTrvFrgnCntryFlgSaved = twoLakhsValue.value;
+      twoLakhsValue?.reset();
+      twoLakhsFlag?.setValue('N');
+      this.clearValidator(twoLakhsFlagKey);
+    } else {
+      this.setValidator(twoLakhsFlagKey, Validators.required);
+      // Check if there is saved data and populate the form group
+      if (this.incrExpAggAmt2LkTrvFrgnCntryFlgSaved) {
+        twoLakhsValue.patchValue(this.incrExpAggAmt2LkTrvFrgnCntryFlgSaved);
+        twoLakhsFlag.setValue('Y');
+      }
+    }
+  }
+
+  // 3
+  incrExpAggAmt1LkElctrctyPrYrFlgSaved: any;
+  strIncrExpAggAmt1LkElctrctyPrYrFlg() {
+    const seventhProvisio139 = this.seventhProviso139;
+    const oneLakhsFlag =
+      seventhProvisio139.controls['strIncrExpAggAmt1LkElctrctyPrYrFlg'];
+    const oneLakhsFlagKey = 'incrExpAggAmt1LkElctrctyPrYrFlg';
+    const oneLakhsValue =
+      seventhProvisio139.controls['incrExpAggAmt1LkElctrctyPrYrFlg'];
+
+    if (oneLakhsFlag.value === 'N') {
+      // Save the data and clear the form group
+      this.incrExpAggAmt1LkElctrctyPrYrFlgSaved = oneLakhsValue.value;
+      oneLakhsValue?.reset();
+      oneLakhsFlag?.setValue('N');
+      this.clearValidator(oneLakhsFlagKey);
+    } else {
+      this.setValidator(oneLakhsFlagKey, Validators.required);
+      // Check if there is saved data and populate the form group
+      if (this.incrExpAggAmt1LkElctrctyPrYrFlgSaved) {
+        oneLakhsValue.patchValue(this.incrExpAggAmt1LkElctrctyPrYrFlgSaved);
+        oneLakhsFlag.setValue('Y');
+      }
+    }
+  }
+
+  // 4
+  clauseiv7provisio139iSaved: any;
+  clauseiv7provisio139i() {
+    const seventhProvisio139 = this.seventhProviso139;
+    const clauseIvArray = this.getClauseiv7provisio139iDtls;
+    const clauseIvFlag = seventhProvisio139.controls['clauseiv7provisio139i'];
+
+    // Iterate through the controls in the FormArray
+    clauseIvArray.controls.forEach((control) => {
+      const amount = control.get('amount');
+      const nature = control.get('nature');
+
+      if (clauseIvFlag.value === 'N') {
+        // Save the data and clear the form group
+        this.clauseiv7provisio139iSaved = amount.value;
+        amount.reset();
+        clauseIvFlag.setValue('N');
+        amount.clearValidators();
+        nature.clearValidators();
+      } else {
+        amount.setValidators(Validators.required);
+        nature.setValidators(Validators.required);
+
+        // Check if there is saved data and populate the form group
+        if (this.clauseiv7provisio139iSaved) {
+          amount.patchValue(this.clauseiv7provisio139iSaved);
+          clauseIvFlag.setValue('Y');
+        }
+      }
+    });
+  }
+
+  // 5
+  depAmtAggAmtExcd1CrPrYrFlgSaved: any;
+  strDepAmtAggAmtExcd1CrPrYrFlg() {
+    const seventhProvisio139 = this.seventhProviso139;
+    const oneCroreFlag =
+      seventhProvisio139.controls['strDepAmtAggAmtExcd1CrPrYrFlg'];
+    const oneCroreFlagKey = 'depAmtAggAmtExcd1CrPrYrFlg';
+    const oneCroreValue =
+      seventhProvisio139.controls['depAmtAggAmtExcd1CrPrYrFlg'];
+
+    if (oneCroreFlag.value === 'N') {
+      // Save the data and clear the form group
+      this.depAmtAggAmtExcd1CrPrYrFlgSaved = oneCroreValue.value;
+      oneCroreValue?.reset();
+      oneCroreFlag?.setValue('N');
+      this.clearValidator(oneCroreFlagKey);
+    } else {
+      this.setValidator(oneCroreFlagKey, Validators.required);
+      // Check if there is saved data and populate the form group
+      if (this.depAmtAggAmtExcd1CrPrYrFlgSaved) {
+        oneCroreValue.patchValue(this.depAmtAggAmtExcd1CrPrYrFlgSaved);
+        oneCroreFlag.setValue('Y');
+      }
+    }
+  }
+
+  fieldGlobalIndex(index) {
+    return this.config?.itemsPerPage * (this.config?.currentPage - 1) + index;
+  }
+
+  //  TO DO AJAY HAS TO ADD HASEDIT KEY FOR THIS TO WORK
+  deleteClauseIvArray() {
+    const clauseIvArray = this.getClauseiv7provisio139iDtls;
+
+    clauseIvArray?.controls.forEach((element, index) => {
+      if ((element as FormGroup).controls['hasEdit']?.value) {
+        clauseIvArray?.removeAt(index);
+      }
+    });
   }
 }

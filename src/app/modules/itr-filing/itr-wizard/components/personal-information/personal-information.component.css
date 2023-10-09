@@ -56,3 +56,24 @@ tr:nth-child(even) {
   display: inline-block;
   vertical-align: middle;
 }
+
+.radio-group-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.radio-group-container mat-radio-button {
+  margin-left: 15px;
+}
+
+.input-field-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.input-field-container mat-form-field {
+  width: 100%;
+  margin-right: 15px;
+}
