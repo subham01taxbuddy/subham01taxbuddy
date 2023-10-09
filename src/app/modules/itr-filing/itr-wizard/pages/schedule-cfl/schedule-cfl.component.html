@@ -51,7 +51,8 @@
                     </mat-form-field>
                 </td>
                 <td>
-                    <mat-form-field appearance="outline">
+                    <mat-form-field [appearance]="getApperance(i, 'speculativeBusinessLoss')"
+                                    >
                         <input matInput class="input-field" name="speculativeBusinessLoss[i]" maxlength="14"
                             formControlName="speculativeBusinessLoss" (change)="calculateTotalLosses()">
                     </mat-form-field>

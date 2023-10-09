@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import {
@@ -8,6 +8,7 @@ import {
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import {MatFormField, MatFormFieldAppearance} from "@angular/material/form-field";
 
 @Component({
   selector: 'app-schedule-cfl',
@@ -143,7 +144,9 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
         (element as FormGroup).controls['assessmentPastYear'].value ===
           '2016-17' ||
         (element as FormGroup).controls['assessmentPastYear'].value ===
-          '2017-18'
+          '2017-18' ||
+        (element as FormGroup).controls['assessmentPastYear'].value ===
+        '2018-19'
       ) {
         (element as FormGroup).controls['speculativeBusinessLoss'].disable();
       }
@@ -214,6 +217,18 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
 
   get getCflArray() {
     return <FormArray>this.cflForm.get('cflArray');
+  }
+
+  getField(i, field){
+    return <AbstractControl>(<FormGroup>(<FormArray>this.cflForm.controls['cflArray']).controls[i]).get(field);
+
+  }
+
+  getApperance(i, field): MatFormFieldAppearance {
+    if ((<FormGroup>(<FormArray>this.cflForm.controls['cflArray']).controls[i]).get(field).disabled) {
+      return 'fill';
+    }
+    return 'outline';
   }
 
   addMore(item?) {
