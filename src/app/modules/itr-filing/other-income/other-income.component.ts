@@ -234,9 +234,13 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   }
 
   saveAll() {
-    this.saveOtherIncome();
-    this.saveExemptIncomes();
-    this.saveAndNext.emit(false);
+    if(this.exemptIncomeFormGroup.valid && this.otherIncomeFormGroup.valid) {
+      this.saveOtherIncome();
+      this.saveExemptIncomes();
+      this.saveAndNext.emit(false);
+    } else {
+      $('input.ng-invalid').first().focus();
+    }
   }
 
   saveOtherIncome() {
