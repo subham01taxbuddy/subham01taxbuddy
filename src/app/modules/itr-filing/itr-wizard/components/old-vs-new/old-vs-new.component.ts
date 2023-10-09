@@ -1315,30 +1315,24 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               },
               {
                 label: 'Income from House Property',
-                old: this.oldSummaryIncome?.summaryIncome.summaryHpIncome
-                  .totalHPTaxableIncome,
-                new: this.newSummaryIncome?.summaryIncome.summaryHpIncome
-                  .totalHPTaxableIncome,
+                old: Math.max(this.oldSummaryIncome?.summaryIncome.summaryHpIncome
+                  .totalHPTaxableIncome),
+                new: Math.max(this.newSummaryIncome?.summaryIncome.summaryHpIncome
+                  .totalHPTaxableIncome),
               },
               {
                 label: 'Income from Business and Profession',
-                old: this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
-                  .totalBusinessIncome,
-                new: this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
-                  .totalBusinessIncome,
+                old: Math.max(this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
+                  .totalBusinessIncome),
+                new: Math.max(this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
+                  .totalBusinessIncome),
               },
               {
                 label: 'Income from Capital Gains',
-                old:
-                  this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                    .totalSpecialRateIncome +
-                  this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                    .totalNormalRateIncome,
-                new:
-                  this.newSummaryIncome?.summaryIncome.cgIncomeN
-                    .totalSpecialRateIncome +
-                  this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                    .totalNormalRateIncome,
+                old: getTotalCapitalGain(this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                  .capitalGain),
+                new:getTotalCapitalGain(this.newSummaryIncome?.summaryIncome.cgIncomeN
+                  .capitalGain)
               },
               {
                 label: 'Income from Other Sources',
@@ -1363,10 +1357,10 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               },
               {
                 label: 'BFLA',
-                old: this.oldSummaryIncome?.taxSummary
-                  .totalBroughtForwordSetOff,
-                new: this.newSummaryIncome?.taxSummary
-                  .totalBroughtForwordSetOff,
+                old: Math.abs(this.oldSummaryIncome?.taxSummary
+                  .totalBroughtForwordSetOff),
+                new: Math.abs(this.newSummaryIncome?.taxSummary
+                  .totalBroughtForwordSetOff),
               },
               {
                 label: 'Gross Total Income',
@@ -1462,30 +1456,24 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             },
             {
               label: 'Income from House Property',
-              old: this.oldSummaryIncome?.summaryIncome.summaryHpIncome
-                .totalHPTaxableIncome,
-              new: this.newSummaryIncome?.summaryIncome.summaryHpIncome
-                .totalHPTaxableIncome,
+              old: Math.max(this.oldSummaryIncome?.summaryIncome.summaryHpIncome
+                .totalHPTaxableIncome, 0),
+              new: Math.max(this.newSummaryIncome?.summaryIncome.summaryHpIncome
+                .totalHPTaxableIncome,0)
             },
             {
               label: 'Income from Business and Profession',
-              old: this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome
-                .totalBusinessIncome,
-              new: this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
-                .totalBusinessIncome,
+              old: Math.max(this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome
+                .totalBusinessIncome, 0),
+              new: Math.max(this.newSummaryIncome?.summaryIncome.summaryBusinessIncome
+                .totalBusinessIncome,0)
             },
             {
               label: 'Income from Capital Gains',
-              old:
-                this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                  .totalSpecialRateIncome +
-                this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                  .totalNormalRateIncome,
-              new:
-                this.newSummaryIncome?.summaryIncome.cgIncomeN
-                  .totalSpecialRateIncome +
-                this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                  .totalNormalRateIncome,
+              old: getTotalCapitalGain(this.oldSummaryIncome?.summaryIncome.cgIncomeN
+                .capitalGain),
+              new:getTotalCapitalGain(this.newSummaryIncome?.summaryIncome.cgIncomeN
+                .capitalGain)
             },
             {
               label: 'Income from Other Sources',
@@ -1510,8 +1498,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             },
             {
               label: 'BFLA',
-              old: this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff,
-              new: this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff,
+              old: Math.abs(this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff),
+              new: Math.abs(this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff),
             },
             {
               label: 'Gross Total Income',
@@ -2012,3 +2000,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     ).controls['date'].setValue(moment(dateString).toDate());
   }
 }
+
+function getTotalCapitalGain(capitalGain: Array<any>[]): number {
+  if(capitalGain != null && capitalGain.length>0)
+    return capitalGain.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value);
+  else
+    return 0;
+}
+
