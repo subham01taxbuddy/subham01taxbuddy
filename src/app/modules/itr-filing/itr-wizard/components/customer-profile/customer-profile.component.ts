@@ -839,7 +839,7 @@ export class CustomerProfileComponent implements OnInit {
       let disposable = this.matDialog.open(NriDetailsDialogComponent, {
         width: '50%',
         height: 'auto',
-        disableClose: true,
+        disableClose: false,
         // data: { residentialStatus: this.ITR_JSON.residentialStatus }
       });
 
@@ -849,10 +849,6 @@ export class CustomerProfileComponent implements OnInit {
           console.log('JUR:', result);
           this.ITR_JSON.jurisdictions = result.data.jurisdictions;
           this.ITR_JSON.conditionsResStatus = result.data.conditionsResStatus;
-        } else {
-          this.customerProfileForm.controls['residentialStatus'].setValue(
-            this.ITR_JSON.residentialStatus
-          );
         }
       });
     } else {
