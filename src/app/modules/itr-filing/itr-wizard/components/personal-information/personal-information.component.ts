@@ -2146,6 +2146,29 @@ export class PersonalInformationComponent implements OnInit {
     { value: 'FEMALE', label: 'Female' },
   ];
 
+  clauseiv7provisio139iDtlsList = [
+    {
+      nature:
+        'If his total sales, turnover or gross receipts, as the case maybe, in the business exceeds sixty lakh rupees during the previous year; or',
+      value: '1',
+    },
+    {
+      nature:
+        'If his total gross receipts in profession exceeds ten lakh rupees during the previous year; or',
+      value: '2',
+    },
+    {
+      nature:
+        'If the aggregate of tax deducted at source and tax collected at source during the previous year, in the case of the person, is twenty-five thousand rupees (fifty-thousand for resident senior citizen) or more; or',
+      value: '3',
+    },
+    {
+      nature:
+        'The deposits in one or more savings bank account of the person, in aggregate, is rupees fifty lakh or more, during the previous year.',
+      value: '4',
+    },
+  ];
+
   constructor(
     public fb: FormBuilder,
     public utilsService: UtilsService,
@@ -2337,6 +2360,66 @@ export class PersonalInformationComponent implements OnInit {
     } else {
       $('input.ng-invalid').first().focus();
       console.log('add above details first');
+    }
+  }
+
+  addClauseIv(classIvDtls) {
+    const ClauseIv = this.getClauseiv7provisio139iDtls;
+    const ClauseIvJson =
+      this.ITR_JSON.seventhProviso139?.clauseiv7provisio139iDtls;
+
+    if (classIvDtls === 'addEmpty') {
+      if (ClauseIv?.valid) {
+        const formGroup = this.fb.group({
+          nature: null,
+          amount: null,
+        });
+        ClauseIv?.push(formGroup);
+      }
+    } else if (ClauseIvJson && ClauseIvJson.length > 0) {
+      // Clear existing form groups
+      while (ClauseIv.length !== 0) {
+        ClauseIv.removeAt(0);
+      }
+
+      classIvDtls?.forEach((element) => {
+        const formGroup = this.fb.group({
+          nature: element.nature,
+          amount: element.amount,
+        });
+        ClauseIv?.push(formGroup);
+        console.log(ClauseIv);
+      });
+    }
+  }
+
+  // Create a variable to store the data
+  savedData: any;
+
+  handleSelectionChange() {
+    const seventhProvisio139 = this.seventhProviso139;
+    const selectedValue =
+      seventhProvisio139.controls['seventhProvisio139'].value;
+
+    if (selectedValue === 'N') {
+      // Save the data and clear the form group
+      this.savedData = seventhProvisio139.value;
+      seventhProvisio139.reset();
+      seventhProvisio139.controls['seventhProvisio139'].setValue('N');
+      seventhProvisio139.controls[
+        'seventhProvisio139'
+      ].updateValueAndValidity();
+      console.log(this.seventhProviso139);
+    } else {
+      // Check if there is saved data and populate the form group
+      if (this.savedData) {
+        seventhProvisio139.patchValue(this.savedData);
+        seventhProvisio139.controls['seventhProvisio139'].setValue('Y');
+        seventhProvisio139.controls[
+          'seventhProvisio139'
+        ].updateValueAndValidity();
+        console.log(this.seventhProviso139);
+      }
     }
   }
 
@@ -2571,6 +2654,12 @@ export class PersonalInformationComponent implements OnInit {
         });
       }
     });
+
+    if (this.ITR_JSON.seventhProviso139.clauseiv7provisio139iDtls?.length > 0) {
+      this.addClauseIv(
+        this.ITR_JSON.seventhProviso139.clauseiv7provisio139iDtls
+      );
+    }
   }
 
   isFormValid() {
