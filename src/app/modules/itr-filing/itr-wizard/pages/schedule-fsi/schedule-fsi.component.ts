@@ -22,6 +22,7 @@ export class ScheduleFsiComponent implements OnInit {
     'Capital Gains',
     'Other Sources',
   ];
+  offeredForTaxIndValue: number;
 
   constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
 
@@ -387,6 +388,32 @@ export class ScheduleFsiComponent implements OnInit {
     return (this.getFsiArray.controls[0] as FormGroup).controls[
       'headOfIncomes'
     ] as FormArray;
+  }
+
+  getLowerOfCds() {
+    const fsiArray = this?.getFsiArray;
+
+    fsiArray?.controls.forEach((fsiArrayEl) => {
+      const headOfIncomes = fsiArrayEl?.get('headOfIncomes') as FormArray;
+
+      // extracting the lower value for each headOfIncome under fsiArray
+      headOfIncomes?.controls?.forEach((head) => {
+        const taxPaidOutInd = parseFloat(head?.value?.taxPaidOutInd);
+        const taxPayableNrmlProv = parseFloat(head?.value?.taxPayableNrmlProv);
+
+        const lower =
+          taxPaidOutInd < taxPayableNrmlProv
+            ? taxPaidOutInd
+            : taxPayableNrmlProv;
+
+        // setting the lower value
+        if (lower) {
+          head?.get('offeredForTaxInd')?.setValue(lower);
+        } else {
+          head?.get('offeredForTaxInd')?.setValue(0);
+        }
+      });
+    });
   }
 
   goBack() {

@@ -52,8 +52,8 @@
           <tbody formArrayName="fsiArray">
             <tr
               class="tds-on"
-              *ngFor="let fsi of getFsiArray.controls; let i = index"
-              [formGroupName]="i"
+              *ngFor="let fsi of getFsiArray.controls; let index = index"
+              [formGroupName]="index"
             >
               <!-- checkbox -->
               <td>
@@ -154,7 +154,9 @@
                           class="input-field"
                           name="offeredForTaxInd[i]"
                           formControlName="offeredForTaxInd"
+                          readonly
                         />
+                        {{ getLowerOfCds() }}
                       </mat-form-field>
                     </td>
                     <td>
