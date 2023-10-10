@@ -4015,9 +4015,10 @@ export class SummaryComponent implements OnInit {
 
                           return total + incomeAfterInternalSetOff;
                         }, 0),
-                    totalCapitalGain:
+                    totalCapitalGain: (this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        && this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain.length > 0) ?
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value),
+                        ?.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value) : null,
                   },
                   Crypto: {
                     cryptoDetails: this.finalSummary?.itr?.capitalGain
@@ -5395,9 +5396,10 @@ export class SummaryComponent implements OnInit {
 
                         return total + incomeBeforeInternalSetOff;
                       }, 0),
-                  totalCapitalGain:
+                  totalCapitalGain: (this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                    && this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain.length > 0) ?
                     this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                      ?.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value),
+                      ?.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value) : null,
                 },
                 Crypto: {
                   cryptoDetails: this.finalSummary?.itr?.capitalGain
