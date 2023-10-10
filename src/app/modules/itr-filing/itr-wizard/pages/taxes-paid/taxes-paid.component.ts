@@ -31,8 +31,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { RowGroupingDisplayType } from 'ag-grid-community';
 import { TcsComponent } from '../../components/tcs/tcs.component';
 import { AdvanceTaxPaidComponent } from '../../components/advance-tax-paid/advance-tax-paid.component';
-import {TdsTypeCellRenderer} from "./tds-type-cell-renderer";
-import {param} from "jquery";
+import { TdsTypeCellRenderer } from './tds-type-cell-renderer';
+import { param } from 'jquery';
 
 @Component({
   selector: 'app-taxes-paid',
@@ -41,8 +41,8 @@ import {param} from "jquery";
 })
 export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   loading: boolean = false;
-  @ViewChild("other") private tdsOtherThanSalaryComponent;
-  @ViewChild("panBased") private tdsOtherThanSalaryComponent1;
+  @ViewChild('other') private tdsOtherThanSalaryComponent;
+  @ViewChild('panBased') private tdsOtherThanSalaryComponent1;
   onSalaryGridOptions: GridOptions;
   tdsOtherThanSalary16AGridOptions: GridOptions;
   tdsOtherThanSalary26QBGridOptions: GridOptions;
@@ -73,7 +73,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(
+      sessionStorage.getItem(AppConstants.ITR_JSON)
+    );
     let taxPaidData = this.ITR_JSON.taxPaid;
     if (taxPaidData) {
       this.taxPaid = taxPaidData;
@@ -81,7 +83,10 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
 
     this.allTdsDetails = <GridOptions>{
       rowData: this.tdsDetailCreateRowData(),
-      columnDefs: this.tdsDetailCreateColumnDef(this.headOfIncomeDropdownTDS2, this.headOfIncomeDropdownTDS3),
+      columnDefs: this.tdsDetailCreateColumnDef(
+        this.headOfIncomeDropdownTDS2,
+        this.headOfIncomeDropdownTDS3
+      ),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       rowSelection: 'multiple',
@@ -113,29 +118,35 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   }
 
   headOfIncomeDropdownTDS2 = [
-    { name: 'Income from business and Profession', code: 'BP', disabled: false },
+    {
+      name: 'Income from business and Profession',
+      code: 'BP',
+      disabled: false,
+    },
     { name: 'Income from House Property', code: 'HP', disabled: false },
     { name: 'Income from Other Source', code: 'OS', disabled: false },
     { name: 'Exempt Income', code: 'EI', disabled: false },
-    { name: 'Not Applicable(194N)', code: 'NA', disabled: false }
-
+    { name: 'Not Applicable(194N)', code: 'NA', disabled: false },
   ];
 
   headOfIncomeDropdownTDS3 = [
-    { name: 'Income from business and Profession', code: 'BP', disabled: false },
+    {
+      name: 'Income from business and Profession',
+      code: 'BP',
+      disabled: false,
+    },
     { name: 'Income from House Property', code: 'HP', disabled: false },
     { name: 'Income from Capital Gains', code: 'CG', disabled: false },
     { name: 'Income from Other Source', code: 'OS', disabled: false },
     { name: 'Exempt Income', code: 'EI', disabled: false },
-    { name: 'Not Applicable(194N)', code: 'NA', disabled: false }
-
+    { name: 'Not Applicable(194N)', code: 'NA', disabled: false },
   ];
 
   ngOnInit() {
     this.getItrDocuments();
   }
 
-  editTaxesPaid(type, index?){
+  editTaxesPaid(type, index?) {
     if (type === 'tdsOnSalary') {
       const dialogRef = this.matDialog.open(TdsOnSalaryComponent, {
         data: {
@@ -174,7 +185,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         console.log('Result of tdsOtherThanSalary16A:', result);
         if (result !== undefined) {
           if (index != null) {
-            this.taxPaid.otherThanSalary16A[index] = result?.cgObject?.salaryArray[0];
+            this.taxPaid.otherThanSalary16A[index] =
+              result?.cgObject?.salaryArray[0];
             this.Copy_ITR_JSON.taxPaid = this.taxPaid;
             this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
             this.saveAll();
@@ -197,7 +209,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         console.log('Result of tdsOtherThanSalary16A:', result);
         if (result !== undefined) {
           if (index != null) {
-            this.taxPaid.otherThanSalary26QB[index] = result?.cgObject?.salaryArray[0];
+            this.taxPaid.otherThanSalary26QB[index] =
+              result?.cgObject?.salaryArray[0];
             this.Copy_ITR_JSON.taxPaid = this.taxPaid;
             this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
             this.saveAll();
@@ -241,7 +254,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         console.log('Result of advanceTax:', result);
         if (result !== undefined) {
           if (index != null) {
-            this.taxPaid.otherThanTDSTCS[index] = result?.cgObject?.salaryArray[0];
+            this.taxPaid.otherThanTDSTCS[index] =
+              result?.cgObject?.salaryArray[0];
             this.Copy_ITR_JSON.taxPaid = this.taxPaid;
             this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
             this.saveAll();
@@ -261,26 +275,29 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     dialogRefSelect.afterClosed().subscribe((result) => {
-
-        if (result !== undefined) {
-          if (result.type === 'tdsOnSalary') {
-            this.taxPaid?.onSalary?.push(result.cgObject.salaryArray[0]);
-          }
-          if (result.type === 'tdsOtherThanSalary16A') {
-            this.taxPaid?.otherThanSalary16A?.push(result.cgObject.salaryArray[0]);
-          }
-          if (result.type === 'tdsOtherThanSalaryPanBased') {
-            this.taxPaid?.otherThanSalary26QB?.push(result.cgObject.salaryArray[0]);
-          }
-          if (result.type === 'tcs') {
-            this.taxPaid?.tcs?.push(result.cgObject.salaryArray[0]);
-          }
-          if (result.type === 'selfAssessment') {
-            this.taxPaid?.otherThanTDSTCS?.push(result.cgObject.salaryArray[0]);
-          }
-          this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-          this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
+      if (result !== undefined) {
+        if (result.type === 'tdsOnSalary') {
+          this.taxPaid?.onSalary?.push(result.cgObject.salaryArray[0]);
         }
+        if (result.type === 'tdsOtherThanSalary16A') {
+          this.taxPaid?.otherThanSalary16A?.push(
+            result.cgObject.salaryArray[0]
+          );
+        }
+        if (result.type === 'tdsOtherThanSalaryPanBased') {
+          this.taxPaid?.otherThanSalary26QB?.push(
+            result.cgObject.salaryArray[0]
+          );
+        }
+        if (result.type === 'tcs') {
+          this.taxPaid?.tcs?.push(result.cgObject.salaryArray[0]);
+        }
+        if (result.type === 'selfAssessment') {
+          this.taxPaid?.otherThanTDSTCS?.push(result.cgObject.salaryArray[0]);
+        }
+        this.Copy_ITR_JSON.taxPaid = this.taxPaid;
+        this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
+      }
     });
     this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
   }
@@ -288,10 +305,10 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   tdsDetailCreateRowData() {
     let counter = 0;
     this.assetList = [];
-    if(this.taxPaid?.onSalary?.length > 0) {
+    if (this.taxPaid?.onSalary?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
-        tdsType: 'TDS On Salary'
+        tdsType: 'TDS On Salary',
       });
     }
     this.taxPaid?.onSalary?.forEach((asset) => {
@@ -308,10 +325,10 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     counter = 0;
-    if(this.taxPaid?.otherThanSalary16A?.length > 0) {
+    if (this.taxPaid?.otherThanSalary16A?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
-        tdsType: 'TDS Other than Salary'
+        tdsType: 'TDS Other than Salary',
       });
     }
     this.taxPaid?.otherThanSalary16A?.forEach((asset) => {
@@ -327,10 +344,10 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     counter = 0;
-    if(this.taxPaid?.otherThanSalary26QB?.length > 0) {
+    if (this.taxPaid?.otherThanSalary26QB?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
-        tdsType: 'TDS other than salary (panBased) 26QB'
+        tdsType: 'TDS other than salary (panBased) 26QB',
       });
     }
     this.taxPaid?.otherThanSalary26QB?.forEach((asset) => {
@@ -352,10 +369,10 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     counter = 0;
-    if(this.taxPaid?.otherThanTDSTCS?.length > 0) {
+    if (this.taxPaid?.otherThanTDSTCS?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
-        tdsType: 'Self assessment or Advance tax'
+        tdsType: 'Self assessment or Advance tax',
       });
     }
     this.taxPaid?.otherThanTDSTCS?.forEach((asset) => {
@@ -385,10 +402,10 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     });
 
     counter = 0;
-    if(this.taxPaid?.tcs?.length > 0) {
+    if (this.taxPaid?.tcs?.length > 0) {
       this.assetList.push({
         isFullWidth: true,
-        tdsType: 'TCS'
+        tdsType: 'TCS',
       });
     }
     this.taxPaid?.tcs?.forEach((asset) => {
@@ -485,11 +502,15 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          if(params.data.tdsCode === 'tdsOtherThanSalary16A'){
-            return headOfIncomeDropdownTDS2.filter(item => item.code === params.data.headOfIncome)[0].name;
+          if (params.data.tdsCode === 'tdsOtherThanSalary16A') {
+            return headOfIncomeDropdownTDS2.filter(
+              (item) => item.code === params.data.headOfIncome
+            )[0].name;
           }
-          if(params.data.tdsCode === 'tdsOtherThanSalaryPanBased'){
-            return headOfIncomeDropdownTDS3.filter(item => item.code === params.data.headOfIncome)[0].name;
+          if (params.data.tdsCode === 'tdsOtherThanSalaryPanBased') {
+            return headOfIncomeDropdownTDS3.filter(
+              (item) => item.code === params.data.headOfIncome
+            )[0].name;
           }
           return '';
         },
@@ -545,26 +566,60 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     );
 
     if (filteredArray && filteredArray.length > 0) {
-      let filtered = this.taxPaid.onSalary.filter(item => !filteredArray.filter(element => element.tdsType === 'TDS On Salary').map(element => element.srNo).includes(parseInt(item.srNo)));
+      let filtered = this.taxPaid.onSalary.filter(
+        (item) =>
+          !filteredArray
+            .filter((element) => element.tdsType === 'TDS On Salary')
+            .map((element) => element.srNo)
+            .includes(parseInt(item.srNo))
+      );
       console.log(filtered);
       this.taxPaid.onSalary = filtered;
 
-      let filtered1 = this.taxPaid.otherThanSalary16A.filter(item => !filteredArray.filter(element => element.tdsType === 'TDS Other than Salary').map(element => element.srNo).includes(parseInt(item.srNo)));
+      let filtered1 = this.taxPaid.otherThanSalary16A.filter(
+        (item) =>
+          !filteredArray
+            .filter((element) => element.tdsType === 'TDS Other than Salary')
+            .map((element) => element.srNo)
+            .includes(parseInt(item.srNo))
+      );
       console.log(filtered1);
       this.taxPaid.otherThanSalary16A = filtered1;
 
-      let filtered2 = this.taxPaid.otherThanSalary26QB.filter(item => !filteredArray.filter(element => element.tdsType === 'TDS other than salary (panBased) 26QB').map(element => element.srNo).includes(parseInt(item.srNo)));
+      let filtered2 = this.taxPaid.otherThanSalary26QB.filter(
+        (item) =>
+          !filteredArray
+            .filter(
+              (element) =>
+                element.tdsType === 'TDS other than salary (panBased) 26QB'
+            )
+            .map((element) => element.srNo)
+            .includes(parseInt(item.srNo))
+      );
       console.log(filtered2);
       this.taxPaid.otherThanSalary26QB = filtered2;
 
-      let filtered3 = this.taxPaid.otherThanTDSTCS.filter(item => !filteredArray.filter(element => element.tdsType === 'Self assessment or Advance tax').map(element => element.srNo).includes(parseInt(item.srNo)));
+      let filtered3 = this.taxPaid.otherThanTDSTCS.filter(
+        (item) =>
+          !filteredArray
+            .filter(
+              (element) => element.tdsType === 'Self assessment or Advance tax'
+            )
+            .map((element) => element.srNo)
+            .includes(parseInt(item.srNo))
+      );
       console.log(filtered3);
       this.taxPaid.otherThanTDSTCS = filtered3;
 
-      let filtered4 = this.taxPaid.tcs.filter(item => !filteredArray.filter(element => element.tdsType === 'TCS').map(element => element.srNo).includes(parseInt(item.srNo)));
+      let filtered4 = this.taxPaid.tcs.filter(
+        (item) =>
+          !filteredArray
+            .filter((element) => element.tdsType === 'TCS')
+            .map((element) => element.srNo)
+            .includes(parseInt(item.srNo))
+      );
       console.log(filtered4);
       this.taxPaid.tcs = filtered4;
-
     }
 
     console.log(this.taxPaid);
@@ -613,38 +668,47 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     var path = '/itr/cloud/files?actionBy=' + adminId;
     let filePath = `${this.ITR_JSON.userId}/ITR/2019-20/Original/ITR Filing Docs/${fileName}`;
     var reqBody = [filePath];
-    console.log('URL path: ', path, ' filePath: ', filePath, ' Request body: ', reqBody);
+    console.log(
+      'URL path: ',
+      path,
+      ' filePath: ',
+      filePath,
+      ' Request body: ',
+      reqBody
+    );
     // https://uat-api.taxbuddy.com/itr/cloud/files?actionBy=%7BuserId%7D
-    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe((response: any) => {
-      this.utilsService.showSnackBar(response.response);
-      this.getItrDocuments();
-    },
-      error => {
+    this.itrMsService.deleteMethodWithRequest(path, reqBody).subscribe(
+      (response: any) => {
+        this.utilsService.showSnackBar(response.response);
+        this.getItrDocuments();
+      },
+      (error) => {
         this.utilsService.showSnackBar(error.response);
-      })
+      }
+    );
   }
 
   deletedFileInfo(cloudFileId) {
     this.deletedFileData = [];
     this.loading = true;
     let param = '/cloud/log?cloudFileId=' + cloudFileId;
-    this.itrMsService.getMethod(param).subscribe((res: any) => {
-      this.loading = false;
-      this.deletedFileData = res;
-      console.log('Deleted file detail info: ', this.deletedFileData);
-    },
-      error => {
+    this.itrMsService.getMethod(param).subscribe(
+      (res: any) => {
         this.loading = false;
-      })
+        this.deletedFileData = res;
+        console.log('Deleted file detail info: ', this.deletedFileData);
+      },
+      (error) => {
+        this.loading = false;
+      }
+    );
   }
-
 
   afterUploadDocs(fileUpload) {
     if (fileUpload === 'File uploaded successfully') {
       this.getItrDocuments();
     }
   }
-
 
   zoom: number = 1.0;
   incrementZoom(amount: number) {
@@ -653,13 +717,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
 
   docDetails = {
     docUrl: '',
-    docType: ''
+    docType: '',
   };
   getDocsUrl(index) {
     if (this.itrDocuments.length > 0) {
       const docType = this.itrDocuments[index].fileName.split('.').pop();
       if (this.itrDocuments[index].isPasswordProtected) {
-        this.docDetails.docUrl = this.itrDocuments[index].passwordProtectedFileUrl;
+        this.docDetails.docUrl =
+          this.itrDocuments[index].passwordProtectedFileUrl;
       } else {
         this.docDetails.docUrl = this.itrDocuments[index].signedUrl;
       }
@@ -697,7 +762,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
 function extractValues(mappings) {
   const array = [];
   if (mappings) {
-    mappings.forEach(element => {
+    mappings.forEach((element) => {
       array.push(element);
     });
   }
@@ -707,24 +772,23 @@ function extractValues(mappings) {
 
 function lookupValue(mappings, key) {
   let country = '';
-  mappings.forEach(element => {
+  mappings.forEach((element) => {
     if (element.code === key) {
-      country = element.name
+      country = element.name;
     }
   });
   if (country !== '' && country !== undefined && country !== null) {
     return `${country[0]}${country.substr(1).toLowerCase()}`;
   } else {
-    return ''
+    return '';
   }
-
 }
 
 // convert value to code
 function lookupKey(mappings, name) {
-  mappings.forEach(element => {
+  mappings.forEach((element) => {
     if (element.code === name) {
-      return element.name
+      return element.name;
     }
   });
 }

@@ -163,7 +163,7 @@
                     <mat-radio-group
                       formControlName="selectedOption"
                       name="options"
-                      (change)="handleSelectionChange($event.value)"
+                      (change)="amtOfTaxRef()"
                     >
                       <mat-radio-button value="yes" style="margin-right: 10px"
                         >Yes</mat-radio-button
@@ -240,8 +240,8 @@
         >
       </button>
 
-      <button class="saveBtnIn">
-        <span class="font-semibold" (click)="saveAll()">Save All</span>
+      <button class="saveBtnIn" (click)="saveAll()">
+        <span class="font-semibold">Save All</span>
       </button>
     </div>
   </div>
