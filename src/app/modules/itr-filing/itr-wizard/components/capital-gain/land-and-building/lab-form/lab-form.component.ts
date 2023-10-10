@@ -1665,8 +1665,8 @@ export class LabFormComponent implements OnInit {
         cost: assetDetails.controls['purchaseCost'].value,
         // "purchaseOrImprovementFinancialYear": "2002-2003",
         assetType: 'PLOT_OF_LAND',
-        buyDate: assetDetails.controls['purchaseDate'].value,
-        sellDate: assetDetails.controls['sellDate'].value,
+        buyDate: moment(assetDetails.controls['purchaseDate'].value).format('YYYY-MM-DD'),
+        sellDate: moment(assetDetails.controls['sellDate'].value).format('YYYY-MM-DD'),
         sellFinancialYear: sellFinancialYear,
       };
       const param = `/calculate/indexed-cost`;
