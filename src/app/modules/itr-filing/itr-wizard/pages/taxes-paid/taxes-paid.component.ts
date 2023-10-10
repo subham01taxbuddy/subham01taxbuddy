@@ -279,6 +279,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
             this.taxPaid?.otherThanTDSTCS?.push(result.cgObject.salaryArray[0]);
           }
           this.Copy_ITR_JSON.taxPaid = this.taxPaid;
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
           this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
         }
     });
