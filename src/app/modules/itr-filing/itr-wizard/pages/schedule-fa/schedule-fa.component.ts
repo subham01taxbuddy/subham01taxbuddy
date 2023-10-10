@@ -86,6 +86,7 @@ export class ScheduleFaComponent implements OnInit {
   countryCodeList: any;
   scheduleFa: FormGroup;
   isPanelOpen: boolean = false;
+  maxPurchaseDate: any;
 
   constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
 
@@ -382,6 +383,8 @@ export class ScheduleFaComponent implements OnInit {
         this.createForms(assetType, asset);
       }
     });
+
+    this.maxPurchaseDate = new Date();
   }
 
   initForms(assetType) {
