@@ -730,6 +730,9 @@ export class SharesAndEquityComponent
         securities.controls['isinCode'].setValue('');
         securities.controls['nameOfTheUnits'].setValue('');
         securities.controls['fmvAsOn31Jan2018'].setValue('');
+      } else {
+        securities.controls['isinCode'].setValidators([Validators.required]);
+        securities.controls['isinCode'].updateValueAndValidity();
       }
     }
     if (
