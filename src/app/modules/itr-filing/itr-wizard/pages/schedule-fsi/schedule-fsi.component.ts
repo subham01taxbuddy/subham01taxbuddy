@@ -22,6 +22,7 @@ export class ScheduleFsiComponent implements OnInit {
     'Capital Gains',
     'Other Sources',
   ];
+  relevantArticle = ['90', '90A', '91'];
   offeredForTaxIndValue: number;
 
   constructor(private fb: FormBuilder, private utilsService: UtilsService) {}

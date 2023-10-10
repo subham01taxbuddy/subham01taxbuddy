@@ -93,14 +93,23 @@
               </td>
               <td>
                 <mat-form-field appearance="outline">
-                  <input
+                  <mat-label>Section</mat-label>
+                  <mat-select
                     matInput
                     name="section[i]"
                     formControlName="section"
                     placeholder="Section"
                     (change)="handleSectionChange($event)"
                     required
-                  />
+                  >
+                    <mat-option
+                      *ngFor="let section of section"
+                      [value]="section"
+                      matTooltip="{{ section }}"
+                    >
+                      {{ section }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
               </td>
             </tr>

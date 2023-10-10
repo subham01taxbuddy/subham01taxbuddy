@@ -18,6 +18,8 @@ export class ScheduleTrComponent implements OnInit {
   sectionValue = '';
   loading = false;
   countryCodeList: any;
+  section: any;
+
   constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
 
   ngOnInit(): void {
@@ -275,6 +277,8 @@ export class ScheduleTrComponent implements OnInit {
       '263:ZIMBABWE',
       '9999:OTHERS',
     ];
+
+    this.section = ['90', '90A', '91'];
 
     this.scheduleTrForm = this.initForm();
 
