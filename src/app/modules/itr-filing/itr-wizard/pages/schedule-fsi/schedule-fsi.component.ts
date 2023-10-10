@@ -302,7 +302,7 @@ export class ScheduleFsiComponent implements OnInit {
 
         const formGroup = {
           hasEdit: false,
-          countryCode: trElement.countryCode,
+          countryCode: trElement.countryCode + ':' + trElement.countryName,
           tinNumber: trElement.taxPayerID,
           headOfIncomes: headOfIncomeArray,
           reliefClaimedUsSection: trElement.reliefClaimedUsSection,
@@ -499,12 +499,12 @@ export class ScheduleFsiComponent implements OnInit {
           console.log(headOfIncomeArray, 'Final headOfIncomeArray');
 
           // TO-DO need to fix for edit (similar to business)
-
+          const split = fsiArrayElement.get('countryCode').value.split(':');
           this.Copy_ITR_JSON.foreignIncome?.taxReliefClaimed.push({
             id: null,
             reliefClaimedUsSection: null,
-            countryCode: fsiArrayElement.get('countryCode').value.split(':')[0],
-            countryName: fsiArrayElement.get('countryCode').value.split(':')[1],
+            countryCode: split[0],
+            countryName: split[1],
             taxPayerID: fsiArrayElement.get('tinNumber').value,
             claimedDTAA: headOfIncomeArray[index].claimedDTAA,
             headOfIncome: headOfIncomeArray,

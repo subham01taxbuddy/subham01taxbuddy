@@ -45,13 +45,13 @@
                     formControlName="countryCode"
                     name="countryCode[i]"
                     placeholder="Country Code"
-                    readOnly
                   >
                     <mat-option
                       *ngFor="let nature of countryCodeList"
                       [value]="nature"
                       matTooltip="{{ nature }}"
-                      [disabled]="nature.disabled"
+                      [disabled]="true"
+                      readonly
                     >
                       {{ nature }}
                     </mat-option></mat-select
@@ -65,7 +65,7 @@
                     name="tinNumber[i]"
                     formControlName="tinNumber"
                     placeholder="Tax Identification Number"
-                    readOnly
+                    readonly
                   />
                 </mat-form-field>
               </td>
@@ -76,7 +76,7 @@
                     name="totalTxsPaidOutInd[i]"
                     formControlName="totalTxsPaidOutInd"
                     placeholder="Total Tax paid outside India"
-                    readOnly
+                    readonly
                   />
                 </mat-form-field>
               </td>
@@ -87,7 +87,7 @@
                     name="totalTxsRlfAvlbl[i]"
                     formControlName="totalTxsRlfAvlbl"
                     placeholder="Total tax relief available"
-                    readOnly
+                    readonly
                   />
                 </mat-form-field>
               </td>
