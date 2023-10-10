@@ -624,7 +624,7 @@ export class ScheduleFaComponent implements OnInit {
       } else if (assetType === 'equityAndDebtInterest') {
         const formGroup = this.fb.group({
           countryName: item.countryName ? item.countryName : item.countryCode,
-          countryCode: item.countryCode,
+          countryCode: item.countryCode + ':' + item.countryName,
           nameOfEntity: item.nameOfEntity,
           addressOfEntity: item.addressOfEntity,
           zipCode: item.zipCode,
@@ -640,7 +640,7 @@ export class ScheduleFaComponent implements OnInit {
       } else if (assetType === 'cashValueInsurance') {
         const formGroup = this.fb.group({
           countryCode: item.countryCode,
-          countryName: item.countryName,
+          countryName: item.countryCode + ':' + item.countryName,
           nameOfInstitution: item.nameOfInstitution,
           addressOfInstitution: item.addressOfInstitution,
           zipCode: item.zipCode,
@@ -653,7 +653,7 @@ export class ScheduleFaComponent implements OnInit {
         const formGroup = this.fb.group({
           id: item.id,
           countryCode: item.countryCode,
-          countryName: item.countryName,
+          countryName: item.countryCode + ':' + item.countryName,
           natureOfEntity: item.natureOfEntity,
           nameOfEntity: item.nameOfEntity,
           address: item.address,
@@ -671,7 +671,7 @@ export class ScheduleFaComponent implements OnInit {
       } else if (assetType === 'immovablePropertryDetails') {
         const formGroup = this.fb.group({
           countryName: item.countryName,
-          countryCode: item.countryCode,
+          countryCode: item.countryCode + ':' + item.countryName,
           address: item.address,
           zipCode: item.zipCode,
           ownerShip: item.ownerShip,
@@ -687,7 +687,7 @@ export class ScheduleFaComponent implements OnInit {
       } else if (assetType === 'capitalAssetsDetails') {
         const formGroup = this.fb.group({
           countryName: item.countryName,
-          countryCode: item.countryCode,
+          countryCode: item.countryCode + ':' + item.countryName,
           zipCode: item.zipCode,
           natureOfAsstes: item.natureOfAsstes,
           ownerShip: item.ownerShip,
@@ -703,7 +703,7 @@ export class ScheduleFaComponent implements OnInit {
       } else if (assetType === 'trustsDetails') {
         const formGroup = this.fb.group({
           countryName: item.countryName,
-          countryCode: item.countryCode,
+          countryCode: item.countryCode + ':' + item.countryName,
           zipCode: item.zipCode,
           trustName: item.trustName,
           trustAddress: item.trustAddress,
@@ -724,7 +724,7 @@ export class ScheduleFaComponent implements OnInit {
       } else if (assetType === 'otherIncomeDetails') {
         const formGroup = this.fb.group({
           countryName: item.countryName,
-          countryCode: item.countryCode,
+          countryCode: item.countryCode + ':' + item.countryName,
           zipCode: item.zipCode,
           name: item.name,
           address: item.address,
@@ -739,7 +739,7 @@ export class ScheduleFaComponent implements OnInit {
       } else if (assetType === 'signingAuthorityDetails') {
         // const formGroup = this.fb.group({
         //   countryName: item.countryName,
-        //   countryCode: item.countryCode,
+        //   countryCode: item.countryCode + ':' + item.countryName,
         //   institutionName: item.institutionName,
         //   address: item.address,
         //   zipCode: item.zipCode,
@@ -760,7 +760,7 @@ export class ScheduleFaComponent implements OnInit {
       } else if (assetType === 'custodialAccounts') {
         // const formGroup = this.fb.group({
         //   countryName: item.countryName,
-        //   countryCode: item.countryCode,
+        //   countryCode: item.countryCode + ':' + item.countryName,
         //   nameOfInstitution: item.nameOfInstitution,
         //   addressOfInstitution: item.addressOfInstitution,
         //   zipCode: item.zipCode,
@@ -917,11 +917,11 @@ export class ScheduleFaComponent implements OnInit {
           ).getRawValue();
 
           // have to implement later if required
-          // console.log(formValueToSave);
-          // formValueToSave.forEach((element) => {
-          //   (element.countryCode = element.countryCode.split(':')[0]),
-          //     (element.countryName = element.countryCode.split(':')[0]);
-          // });
+          console.log(formValueToSave);
+          formValueToSave.forEach((element) => {
+            const split = element.countryCode.split(':');
+            (element.countryCode = split[0]), (element.countryName = split[1]);
+          });
 
           formValueToSave.forEach((element) => {
             this.Copy_ITR_JSON.foreignIncome.foreignAssets[section].push(
