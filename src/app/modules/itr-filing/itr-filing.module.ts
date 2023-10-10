@@ -98,6 +98,7 @@ import { ScheduleFsiComponent } from './itr-wizard/pages/schedule-fsi/schedule-f
 import { ScheduleTrComponent } from './itr-wizard/pages/schedule-tr/schedule-tr.component';
 import { ScheduleFaComponent } from './itr-wizard/pages/schedule-fa/schedule-fa.component';
 import { BusinessInputAutocompleteComponent } from './components/business-input-autocomplete/business-input-autocomplete.component';
+import { CryptoVdaComponent } from './itr-wizard/pages/crypto-vda/crypto-vda.component';
 
 @NgModule({
   imports: [
@@ -215,6 +216,7 @@ import { BusinessInputAutocompleteComponent } from './components/business-input-
     ScheduleFsiComponent,
     ScheduleTrComponent,
     ScheduleFaComponent,
+    CryptoVdaComponent,
   ],
 
   exports: [CustomerProfileComponent],

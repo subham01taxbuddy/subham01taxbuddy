@@ -604,6 +604,10 @@ export class DonationsComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
 
+    if(this.type === '80g' && !this.panValidation()){
+      this.loading = false;
+      return false;
+    }
     if (this.generalDonationForm.valid) {
       if (this.type === '80gga') {
         this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.filter(item => item.donationType !== 'SCIENTIFIC');
@@ -618,9 +622,12 @@ export class DonationsComponent implements OnInit {
       }
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
     } else {
+      this.loading = false;
       $('input.ng-invalid').first().focus();
+      return false;
     }
     this.loading = false;
+    return true;
   }
 
   checkDoneePAN(i, donation) {
@@ -631,6 +638,42 @@ export class DonationsComponent implements OnInit {
           .controls[i] as FormGroup
       ).controls['panNumber'].setErrors({ incorrect: true });
     }
+    this.panValidation();
+  }
+
+  panValidation() {
+    const buyersDetails = <FormArray>this.generalDonationForm.get('donationArray');
+    // This method is written in utils service for common usablity.
+    let panRepeat: boolean = this.utilsService.checkDuplicateInObject(
+      'pan',
+      buyersDetails.value
+    );
+    let userPanExist = [];
+    // let failedCases = [];
+    if (buyersDetails.value instanceof Array) {
+      // failedCases = buyersDetails.value.filter(item =>
+      //   !this.utilsService.isNonEmpty(item.pan) && !this.utilsService.isNonEmpty(item.aadhaarNumber));
+      userPanExist = buyersDetails.value.filter(
+        (item) => item.pan === this.ITR_JSON.panNumber
+      );
+    }
+
+    if (panRepeat) {
+      this.utilsService.showSnackBar(
+        'Donee Details already present with this PAN.'
+      );
+    } else if (userPanExist.length > 0) {
+      this.utilsService.showSnackBar(
+        'Donee Details PAN can not be same with user PAN.'
+      );
+      panRepeat = true;
+    } /*else if(failedCases.length > 0){
+      panRepeat = true;
+      this.utilsService.showSnackBar(
+        'Please provide PAN or AADHAR for buyer details'
+      );
+    }*/
+    return panRepeat;
   }
 
   get getDonationArray() {

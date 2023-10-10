@@ -27,7 +27,7 @@ export interface User {
   templateUrl: './assigned-subscription.component.html',
   styleUrls: ['./assigned-subscription.component.scss'],
 })
-export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
+export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   // @Input() queryParam: any;
   @Input() from: any;
   @Input() tabName: any;
@@ -61,7 +61,14 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
     emailId: null,
   };
   dataOnLoad = true;
-
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'userName', name: 'Name' },
+    { value: 'userSelectedPlan.name', name: 'User Selected Plan' },
+    // { value: '', name: 'Subscription Amount' },
+    { value: 'invoiceDetail.invoiceNo', name: 'Invoice Number' },
+    { value: 'promoCode', name: 'Promo code' },
+  ];
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -110,9 +117,9 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
         this.advanceSearch();
         // console.log('this.queryParam --> ',this.queryParam)
       } else {
-        if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+        if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
           this.getAssignedSubscription(0);
-        } else{
+        } else {
           this.dataOnLoad = false;
         }
         // this.getAssignedSubscription(0);
@@ -127,6 +134,11 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
         return name ? this._filter(name as string) : this.options.slice();
       })
     );
+  }
+
+
+  sortByObject(object) {
+    this.sortBy = object;
   }
 
   displayFn(user: User): string {
@@ -159,9 +171,9 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
   }
 
   allSubscriptions = [];
-  getAssignedSubscription(pageNo?, isAgent?,fromPageChange?) {
+  getAssignedSubscription(pageNo?, isAgent?, fromPageChange?) {
     // https://uat-api.taxbuddy.com/itr/subscription-dashboard-new/7522?page=0&pageSize=500&searchAsCoOwner=true
-    if(!fromPageChange){
+    if (!fromPageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
@@ -174,8 +186,11 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
     }
 
     var param = `/subscription-dashboard-new/${this.agentId}?${pagination}`;
-
-    if((this.ownerId || this.filerId) && (loggedInSmeUserId != this.ownerId || this.filerId) ){
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
+    if ((this.ownerId || this.filerId) && (loggedInSmeUserId != this.ownerId || this.filerId)) {
       param = param + '&filter=true'
     }
 
@@ -209,7 +224,7 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
           this.cacheManager.initializeCache(response.data.content);
 
           const currentPageNumber = pageNo + 1;
-          this.cacheManager.cachePageContent(currentPageNumber,response.data.content);
+          this.cacheManager.cachePageContent(currentPageNumber, response.data.content);
           this.config.currentPage = currentPageNumber;
         } else {
           this.subscriptionListGridOptions.api?.setRowData(
@@ -239,6 +254,10 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
       pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
     }
     var param = `/subscription-dashboard-new/${selectedSmeUserId}?${pagination}`;
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
     this.loading = true;
     this.isAllowed = false;
     this.itrService.getMethod(param).subscribe(
@@ -270,10 +289,10 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
 
   }
 
-  search(pageNo?,mobileNo?){
-    if(mobileNo){
+  search(pageNo?, mobileNo?) {
+    if (mobileNo) {
       this.getUserByMobileNum(mobileNo);
-    }else{
+    } else {
       this.getAssignedSubscription(pageNo);
     }
   }
@@ -294,6 +313,10 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
 
       this.loading = true;
       let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + number;
+      let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+      if (Object.keys(this.sortBy).length) {
+        param = param + sortByJson;
+      }
       this.userMsService.getMethodNew(param).subscribe((response: any) => {
         this.loading = false;
         console.log('Get user  by mobile number responce: ', response);
@@ -373,7 +396,7 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
       this.coOwnerDropDown.resetDropdown();
       this.getAssignedSubscription(0, true);
     } else {
-      if(this.dataOnLoad) {
+      if (this.dataOnLoad) {
         this.getAssignedSubscription(0);
       } else {
         //clear grid for loaded data
@@ -723,11 +746,11 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
     } else {
       this.config.currentPage = event;
       // this.selectedPageNo = event - 1;
-        if (this.coOwnerToggle.value == true) {
-          this.getAssignedSubscription(event - 1, true,'fromPageChange');
-        } else {
-          this.getAssignedSubscription(event - 1, '','fromPageChange');
-        }
+      if (this.coOwnerToggle.value == true) {
+        this.getAssignedSubscription(event - 1, true, 'fromPageChange');
+      } else {
+        this.getAssignedSubscription(event - 1, '', 'fromPageChange');
+      }
     }
   }
 
@@ -778,12 +801,12 @@ export class AssignedSubscriptionComponent implements OnInit,OnDestroy {
   }
 
   async downloadReport() {
-    this.loading=true;
+    this.loading = true;
     console.log('this.queryParam:', this.queryParam);
 
     var param = `/subscription-dashboard-new/${this.agentId}`;
 
-    await this.genericCsvService.downloadReport(environment.url + '/itr', param, 0, 'assigned-subscription-report');
+    await this.genericCsvService.downloadReport(environment.url + '/itr', param, 0, 'assigned-subscription-report','',this.sortBy);
     this.loading = false;
   }
 

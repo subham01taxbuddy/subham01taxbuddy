@@ -1824,9 +1824,6 @@
                   <!-- ************************** Income from Crypto ****************************** -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="
-                      finalCalculations?.Crypto?.totalCryptoIncome === 0
-                    "
                     #crypto
                   >
                     <mat-expansion-panel-header class="newclass">
@@ -2675,7 +2672,7 @@
                     "
                     #lossCarryFwd
                   >
-                    <mat-expansion-panel-header>
+                    <mat-expansion-panel-header hidden>
                       <div
                         class="font80"
                         style="width: 100%"

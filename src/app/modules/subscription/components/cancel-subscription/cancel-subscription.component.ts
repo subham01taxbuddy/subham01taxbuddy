@@ -21,7 +21,7 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
   templateUrl: './cancel-subscription.component.html',
   styleUrls: ['./cancel-subscription.component.scss']
 })
-export class CancelSubscriptionComponent implements OnInit,OnDestroy {
+export class CancelSubscriptionComponent implements OnInit, OnDestroy {
   loading: boolean;
   cancelSubscriptionData: any;
   config = {
@@ -42,7 +42,12 @@ export class CancelSubscriptionComponent implements OnInit,OnDestroy {
     mobile: new FormControl(''),
     email: new FormControl(''),
   });
-
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'userName', name: 'Name' },
+    { value: 'cancellationRequestDate', name: 'Request Date' },
+    { value: 'payableSubscriptionAmount', name: 'Amount to be approved / refunded' },
+  ];
   get mobile() {
     return this.invoiceFormGroup.controls['mobile'] as FormControl;
   }
@@ -83,6 +88,10 @@ export class CancelSubscriptionComponent implements OnInit,OnDestroy {
     };
   }
 
+  sortByObject(object) {
+    this.sortBy = object;
+  }
+
   formatToolTip(params: any) {
     let temp = params.value;
     const lineBreak = false;
@@ -107,9 +116,9 @@ export class CancelSubscriptionComponent implements OnInit,OnDestroy {
     this.loggedInUserRoles = this.utilService.getUserRoles();
     this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
 
-    if(!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')){
+    if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
       this.getCancelSubscriptionList(0);
-    } else{
+    } else {
       this.dataOnLoad = false;
     }
   }
@@ -134,7 +143,7 @@ export class CancelSubscriptionComponent implements OnInit,OnDestroy {
     if (this.isOwner) {
       this.getCancelSubscriptionList(0, 'ownerUserId', loginSMEInfo.userId);
     } else {
-      if(this.dataOnLoad) {
+      if (this.dataOnLoad) {
         this.getCancelSubscriptionList(0);
       } else {
         //clear grid for loaded data
@@ -159,16 +168,16 @@ export class CancelSubscriptionComponent implements OnInit,OnDestroy {
     }
   }
 
-  getCancelSubscriptionList(pageNo, isUserId?, id?,fromPageChange?) {
-    if(!fromPageChange){
+  getCancelSubscriptionList(pageNo, isUserId?, id?, fromPageChange?) {
+    if (!fromPageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
     const userId = this.utilService.getLoggedInUserID();
-    if(this.loggedInUserRoles.includes('ROLE_OWNER')){
+    if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
       this.ownerId = userId;
     }
-    if(this.loggedInUserRoles.includes('ROLE_FILER')){
+    if (this.loggedInUserRoles.includes('ROLE_FILER')) {
       this.filerId = userId;
     }
 
@@ -210,6 +219,10 @@ export class CancelSubscriptionComponent implements OnInit,OnDestroy {
       pagination = `?page=${pageNo}&size=${this.config.itemsPerPage}${mobileFilter}${emailFilter}`;
       param = '/subscription/cancel/requests' + pagination + userParam;
     }
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
     this.loading = true;
     this.itrService.getMethod(param).subscribe(
       (response: any) => {
@@ -221,9 +234,9 @@ export class CancelSubscriptionComponent implements OnInit,OnDestroy {
             this.config.totalItems = response.data.totalElements;
             this.cacheManager.initializeCache(response.data.content);
 
-          const currentPageNumber = pageNo + 1;
-          this.cacheManager.cachePageContent(currentPageNumber,response.data.content);
-          this.config.currentPage = currentPageNumber;
+            const currentPageNumber = pageNo + 1;
+            this.cacheManager.cachePageContent(currentPageNumber, response.data.content);
+            this.config.currentPage = currentPageNumber;
           } else {
             this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
             this.config.totalItems = 0;
@@ -255,7 +268,7 @@ export class CancelSubscriptionComponent implements OnInit,OnDestroy {
     } else {
       this.config.currentPage = event;
       // this.selectedPageNo = event - 1;
-      this.getCancelSubscriptionList(event - 1,'','','fromPageChange');
+      this.getCancelSubscriptionList(event - 1, '', '', 'fromPageChange');
     }
   }
 

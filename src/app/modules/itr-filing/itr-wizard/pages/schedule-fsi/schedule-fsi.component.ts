@@ -402,6 +402,29 @@ export class ScheduleFsiComponent implements OnInit {
     if (this.scheduleFsiForm.valid) {
       this.loading = true;
 
+      if (!this.Copy_ITR_JSON.foreignIncome) {
+        this.Copy_ITR_JSON.foreignIncome = {
+          id: 1,
+          taxPaidOutsideIndiaFlag: null,
+          taxReliefAssessmentYear: null,
+          taxAmountRefunded: null,
+          taxReliefClaimed: [],
+          foreignAssets: {
+            id: null,
+            depositoryAccounts: [],
+            custodialAccounts: [],
+            equityAndDebtInterest: [],
+            cashValueInsurance: [],
+            financialInterestDetails: [],
+            immovablePropertryDetails: [],
+            capitalAssetsDetails: [],
+            signingAuthorityDetails: [],
+            trustsDetails: [],
+            otherIncomeDetails: [],
+          },
+        };
+      }
+
       if (this.Copy_ITR_JSON.foreignIncome?.taxReliefClaimed) {
         this.Copy_ITR_JSON.foreignIncome.taxReliefClaimed = [];
       }

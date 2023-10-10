@@ -122,12 +122,12 @@ export class ZeroCouponBondsComponent
         });
       } else {
         this.addMoreBondsData();
+        this.isDisable = true;
       }
     } else {
       this.addMoreBondsData();
+      this.isDisable = true;
     }
-    this.bondsForm.disable();
-    this.deductionForm.disable();
 
     // setting deduction
     const bondsDeben = this.ITR_JSON.capitalGain?.find(
@@ -413,7 +413,7 @@ export class ZeroCouponBondsComponent
         residentialStatus: this.ITR_JSON.residentialStatus,
         assetType: this.bondType === 'bonds' ? 'BONDS' : 'ZERO_COUPON_BONDS',
         deduction:
-          this.deductionForm.invalid || this.getBondsCg() <= 0
+          this.deductionForm.invalid || this.getBondsCg() <= 0 || !this.deduction
             ? []
             : [this.deductionForm.getRawValue()],
         improvement: bondImprovement,
@@ -439,14 +439,14 @@ export class ZeroCouponBondsComponent
           this.loading = false;
           sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
           this.utilsService.showSnackBar(
-            'Bonds and zero coupon bonds data added successfully'
+            'Bonds and zero coupon bonds data updated successfully'
           );
           this.utilsService.smoothScrollToTop();
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
           this.utilsService.showSnackBar(
-            'Failed to add bonds and zero coupon bonds data, please try again.'
+            'Failed to update bonds and zero coupon bonds data, please try again.'
           );
           this.utilsService.smoothScrollToTop();
         }

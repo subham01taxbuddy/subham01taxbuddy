@@ -69,7 +69,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
   allFilerList: any;
   sortBy: any = {};
   sortMenus = [
-    { value: 'fName', name: 'Name' },
+    { value: 'family.fName', name: 'Name' },
     { value: 'eFillingDate', name: 'Date of Filing ' },
     { value: 'itrType', name: 'ITR Type' },
     { value: 'isRevised', name: 'Return Type' },

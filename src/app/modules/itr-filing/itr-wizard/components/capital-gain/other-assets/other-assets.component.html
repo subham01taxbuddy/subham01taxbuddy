@@ -57,17 +57,33 @@
   <div class="card bdrArnd">
     <!-- header  -->
     <div class="flex items-center justify-between">
-      <div>
+      <div class="row">
         <div class="isDeduction">Add Deduction under section 54F</div>
-        <div>
-          (Applicable for any capital assets other than residential House
-          Property)
+        <div class="row">
+          <div class="col-sm-9 subheading">
+            (Applicable for any capital assets other than residential House
+            Property)
+          </div>
+          <div class="col-sm-3">
+          <mat-radio-group
+            [(ngModel)]="deduction"
+            [disabled]="isDisable"
+            class="mvRth"
+          >
+            <mat-radio-button [value]="true" labelPosition="before"
+            >Yes
+            </mat-radio-button>
+            <mat-radio-button [value]="false" labelPosition="before"
+            >No</mat-radio-button
+            >
+          </mat-radio-group>
+        </div>
         </div>
       </div>
     </div>
 
     <!-- form  -->
-    <form [formGroup]="deductionForm">
+    <form [formGroup]="deductionForm" *ngIf="deduction">
       <div formArrayName="deductions">
         <div
           *ngFor="
@@ -190,15 +206,6 @@
               </mat-form-field>
             </div>
 
-            <div class="col-sm-4 spsTp">
-              <button
-                type="button"
-                class="edit-donation"
-                (click)="editDeduction(i)"
-              >
-                <mat-icon> edit_square </mat-icon>Edit
-              </button>
-            </div>
           </div>
           <!-- Row Ends -->
         </div>

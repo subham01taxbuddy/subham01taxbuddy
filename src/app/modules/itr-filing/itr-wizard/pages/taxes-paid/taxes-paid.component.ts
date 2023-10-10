@@ -116,7 +116,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     { name: 'Income from business and Profession', code: 'BP', disabled: false },
     { name: 'Income from House Property', code: 'HP', disabled: false },
     { name: 'Income from Other Source', code: 'OS', disabled: false },
-    { name: 'Exempt Income', code: 'EI', disabled: false }
+    { name: 'Exempt Income', code: 'EI', disabled: false },
+    { name: 'Not Applicable(194N)', code: 'NA', disabled: false }
+
   ];
 
   headOfIncomeDropdownTDS3 = [
@@ -124,7 +126,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     { name: 'Income from House Property', code: 'HP', disabled: false },
     { name: 'Income from Capital Gains', code: 'CG', disabled: false },
     { name: 'Income from Other Source', code: 'OS', disabled: false },
-    { name: 'Exempt Income', code: 'EI', disabled: false }
+    { name: 'Exempt Income', code: 'EI', disabled: false },
+    { name: 'Not Applicable(194N)', code: 'NA', disabled: false }
+
   ];
 
   ngOnInit() {
@@ -564,10 +568,10 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     }
 
     console.log(this.taxPaid);
-    this.ITR_JSON.taxPaid = this.taxPaid;
+    this.Copy_ITR_JSON.taxPaid = this.taxPaid;
     sessionStorage.setItem(
       AppConstants.ITR_JSON,
-      JSON.stringify(this.ITR_JSON)
+      JSON.stringify(this.Copy_ITR_JSON)
     );
     this.assetList = this.assetList.filter((asset) => asset.hasEdit != true);
     this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());

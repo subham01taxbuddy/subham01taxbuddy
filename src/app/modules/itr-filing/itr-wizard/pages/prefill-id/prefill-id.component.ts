@@ -3896,6 +3896,8 @@ export class PrefillIdComponent implements OnInit {
                             fmvAsOn31Jan2018: null,
                             capitalGain:
                               zcb.Proviso112Applicabledtls?.CapgainonAssets,
+                            cgBeforeDeduction:
+                              zcb.Proviso112Applicabledtls?.CapgainonAssets,
                             indexCostOfAcquisition: null,
                             totalFairMarketValueOfCapitalAsset: null,
                             grandFatheredValue: null,
@@ -3990,6 +3992,7 @@ export class PrefillIdComponent implements OnInit {
                         algorithm: 'cgProperty',
                         fmvAsOn31Jan2018: null,
                         capitalGain: SaleofBondsDebntr?.CapgainonAssets,
+                        cgBeforeDeduction: SaleofBondsDebntr?.CapgainonAssets,
                         indexCostOfAcquisition: null,
                         totalFairMarketValueOfCapitalAsset: null,
                         grandFatheredValue: null,
@@ -4076,6 +4079,7 @@ export class PrefillIdComponent implements OnInit {
                         algorithm: 'cgProperty',
                         fmvAsOn31Jan2018: null,
                         capitalGain: SaleofAssetNA?.CapgainonAssets,
+                        cgBeforeDeduction: SaleofAssetNA?.CapgainonAssets,
                         indexCostOfAcquisition: null,
                         totalFairMarketValueOfCapitalAsset: null,
                         grandFatheredValue: null,
@@ -4212,6 +4216,7 @@ export class PrefillIdComponent implements OnInit {
                             algorithm: 'cgProperty',
                             fmvAsOn31Jan2018: null,
                             capitalGain: landAndBuilding?.Balance,
+                            cgBeforeDeduction: landAndBuilding?.Balance,
                             indexCostOfAcquisition:
                               landAndBuilding?.AquisitCostIndex,
                             totalFairMarketValueOfCapitalAsset: null,
@@ -4270,6 +4275,7 @@ export class PrefillIdComponent implements OnInit {
                         algorithm: 'cgSharesMF',
                         fmvAsOn31Jan2018: equityLtcg?.FairMktValuePerShareunit,
                         capitalGain: equityLtcg.Balance,
+                        cgBeforeDeduction: equityLtcg.Balance,
                         indexCostOfAcquisition: null,
                         grandFatheredValue: null,
                         brokerName: null,
@@ -4334,6 +4340,7 @@ export class PrefillIdComponent implements OnInit {
                             fmvAsOn31Jan2018:
                               equityLtcg?.FairMktValuePerShareunit,
                             capitalGain: equityLtcg.Balance,
+                            cgBeforeDeduction: equityLtcg.Balance,
                             indexCostOfAcquisition: null,
                             grandFatheredValue: null,
                             brokerName: null,
@@ -4429,6 +4436,7 @@ export class PrefillIdComponent implements OnInit {
                         algorithm: 'cgProperty',
                         fmvAsOn31Jan2018: null,
                         capitalGain: SaleOnOtherAssets?.CapgainonAssets,
+                        cgBeforeDeduction: SaleOnOtherAssets?.CapgainonAssets,
                         indexCostOfAcquisition: null,
                         totalFairMarketValueOfCapitalAsset: null,
                         grandFatheredValue: null,
@@ -4484,6 +4492,8 @@ export class PrefillIdComponent implements OnInit {
                         algorithm: 'cgSharesMF',
                         fmvAsOn31Jan2018: null,
                         capitalGain:
+                          equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
+                        cgBeforeDeduction:
                           equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
                         indexCostOfAcquisition: null,
                         grandFatheredValue: null,
@@ -4556,6 +4566,8 @@ export class PrefillIdComponent implements OnInit {
                             algorithm: 'cgSharesMF',
                             fmvAsOn31Jan2018: null,
                             capitalGain:
+                              equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
+                            cgBeforeDeduction:
                               equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
                             indexCostOfAcquisition: null,
                             totalFairMarketValueOfCapitalAsset: null,
@@ -4686,6 +4698,7 @@ export class PrefillIdComponent implements OnInit {
                               algorithm: 'cgProperty',
                               fmvAsOn31Jan2018: null,
                               capitalGain: landAndBuilding?.Balance,
+                              cgBeforeDeduction: landAndBuilding?.Balance,
                               indexCostOfAcquisition:
                                 landAndBuilding?.AquisitCostIndex,
                               totalFairMarketValueOfCapitalAsset: null,

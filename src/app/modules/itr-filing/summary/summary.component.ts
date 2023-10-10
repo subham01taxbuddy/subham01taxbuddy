@@ -3738,8 +3738,8 @@ export class SummaryComponent implements OnInit {
                         }
                       ),
                     hpTotalIncome:
-                      this.finalSummary?.assessment?.summaryIncome
-                        ?.summaryHpIncome?.totalHPTaxableIncome,
+                      Math.max(this.finalSummary?.assessment?.summaryIncome
+                        ?.summaryHpIncome?.totalHPTaxableIncome, 0),
                   },
                   otherIncome: {
                     otherIncomes: {
@@ -3877,8 +3877,8 @@ export class SummaryComponent implements OnInit {
                     },
 
                     businessIncomeTotal:
-                      this.finalSummary?.assessment?.summaryIncome
-                        ?.summaryBusinessIncome?.totalBusinessIncome,
+                      Math.max(this.finalSummary?.assessment?.summaryIncome
+                        ?.summaryBusinessIncome?.totalBusinessIncome,0),
                   },
                   capitalGain: {
                     shortTerm: {
@@ -4017,38 +4017,35 @@ export class SummaryComponent implements OnInit {
                         }, 0),
                     totalCapitalGain:
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter(
-                          (item: any) =>
-                            item?.taxRate === -1 ||
-                            item?.taxRate === 15 ||
-                            item?.taxRate === 10 ||
-                            item?.taxRate === 20
-                        )
-                        .reduce((total, element) => {
-                          const incomeAfterInternalSetOff =
-                            element.incomeAfterInternalSetOff;
-                          console.log(element, 'element');
-                          console.log(
-                            incomeAfterInternalSetOff,
-                            'incomeAfterInternalSetOff'
-                          );
-
-                          return total + incomeAfterInternalSetOff;
-                        }, 0),
+                        ?.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value),
                   },
                   Crypto: {
-                    cryptoDetails: [
-                      {
-                        srNo: null,
-                        buyDate: null,
-                        sellDate: null,
-                        headOfIncome: null,
-                        buyValue: null,
-                        SaleValue: null,
-                        income: 0,
-                      },
-                    ],
-                    totalCryptoIncome: 0,
+                    cryptoDetails: this.finalSummary?.itr?.capitalGain
+                      .filter((item) => item.assetType === 'VDA')
+                      .map((gain) => {
+                        return gain.assetDetails.map((element, index) => ({
+                          srNo: index + 1,
+                          buyDate: element.purchaseDate,
+                          sellDate: element.sellDate,
+                          headOfIncome:
+                            element.headOfIncome === 'BI'
+                              ? 'Business or Profession'
+                              : 'Capital Gain',
+                          buyValue: element.purchaseCost,
+                          SaleValue: element.sellValue,
+                          income: element.capitalGain,
+                        }));
+                      })
+                      .flat(),
+                    totalCryptoIncome: this.finalSummary?.itr?.capitalGain
+                      .filter((item) => item.assetType === 'VDA')
+                      .map((gain) =>
+                        gain.assetDetails.reduce(
+                          (total, element) => total + element.capitalGain,
+                          0
+                        )
+                      )
+                      .reduce((total, income) => total + income, 0),
                   },
                   totalHeadWiseIncome:
                     this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -5122,8 +5119,8 @@ export class SummaryComponent implements OnInit {
                       }
                     ),
                   hpTotalIncome:
-                    this.finalSummary?.assessment?.summaryIncome
-                      ?.summaryHpIncome?.totalHPTaxableIncome,
+                  Math.max( this.finalSummary?.assessment?.summaryIncome
+                      ?.summaryHpIncome?.totalHPTaxableIncome,0),
                 },
                 otherIncome: {
                   otherIncomes: {
@@ -5260,8 +5257,8 @@ export class SummaryComponent implements OnInit {
                   },
 
                   businessIncomeTotal:
-                    this.finalSummary?.assessment?.summaryIncome
-                      ?.summaryBusinessIncome?.totalBusinessIncome,
+                  Math.max(this.finalSummary?.assessment?.summaryIncome
+                      ?.summaryBusinessIncome?.totalBusinessIncome),
                 },
                 capitalGain: {
                   shortTerm: {
@@ -5270,15 +5267,15 @@ export class SummaryComponent implements OnInit {
                         ?.filter((item: any) => item?.taxRate === 15)
                         .map((element) => ({
                           nameOfAsset: element?.assetType,
-                          capitalGain: element.cgIncome,
+                          capitalGain: element.incomeBeforeInternalSetOff,
                           Deduction: element.deductionAmount,
-                          netCapitalGain: element.cgIncome,
+                          netCapitalGain: element.incomeBeforeInternalSetOff,
                         })),
                     ShortTerm15PerTotal:
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                         ?.filter((item: any) => item?.taxRate === 15)
                         .reduce((total, element) => {
-                          const cgIncome = element.cgIncome;
+                          const cgIncome = element.incomeBeforeInternalSetOff;
 
                           return total + cgIncome;
                         }, 0),
@@ -5297,15 +5294,15 @@ export class SummaryComponent implements OnInit {
                         ?.filter((item: any) => item?.taxRate === -1)
                         .map((element) => ({
                           nameOfAsset: element?.assetType,
-                          capitalGain: element.cgIncome,
+                          capitalGain: element.incomeBeforeInternalSetOff,
                           Deduction: element.deductionAmount,
-                          netCapitalGain: element.cgIncome,
+                          netCapitalGain: element.incomeBeforeInternalSetOff,
                         })),
                     ShortTermAppSlabRateTotal:
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                         ?.filter((item: any) => item?.taxRate === -1)
                         .reduce((total, element) => {
-                          const cgIncome = element.cgIncome;
+                          const cgIncome = element.incomeBeforeInternalSetOff;
 
                           return total + cgIncome;
                         }, 0),
@@ -5326,15 +5323,15 @@ export class SummaryComponent implements OnInit {
                           item?.taxRate === -1 || item?.taxRate === 15
                       )
                       .reduce((total, element) => {
-                        const incomeAfterInternalSetOff =
-                          element.incomeAfterInternalSetOff;
+                        const incomeBeforeInternalSetOff =
+                          element.incomeBeforeInternalSetOff;
                         console.log(element, 'element');
                         console.log(
-                          incomeAfterInternalSetOff,
-                          'incomeAfterInternalSetOff'
+                          incomeBeforeInternalSetOff,
+                          'incomeBeforeInternalSetOff'
                         );
 
-                        return total + incomeAfterInternalSetOff;
+                        return total + incomeBeforeInternalSetOff;
                       }, 0),
                   longTerm: {
                     LongTerm10Per:
@@ -5342,15 +5339,15 @@ export class SummaryComponent implements OnInit {
                         ?.filter((item: any) => item?.taxRate === 10)
                         .map((element) => ({
                           nameOfAsset: element?.assetType,
-                          capitalGain: element.cgIncome,
+                          capitalGain: element.incomeBeforeInternalSetOff,
                           Deduction: element.deductionAmount,
-                          netCapitalGain: element.cgIncome,
+                          netCapitalGain: element.incomeBeforeInternalSetOff,
                         })),
                     LongTerm10PerTotal:
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                         ?.filter((item: any) => item?.taxRate === 10)
                         .reduce((total, element) => {
-                          const cgIncome = element.cgIncome;
+                          const cgIncome = element.incomeBeforeInternalSetOff;
 
                           return total + cgIncome;
                         }, 0),
@@ -5359,15 +5356,15 @@ export class SummaryComponent implements OnInit {
                         ?.filter((item: any) => item?.taxRate === 20)
                         .map((element) => ({
                           nameOfAsset: element?.assetType,
-                          capitalGain: element.cgIncome,
+                          capitalGain: element.incomeBeforeInternalSetOff,
                           Deduction: element.deductionAmount,
-                          netCapitalGain: element.cgIncome,
+                          netCapitalGain: element.incomeBeforeInternalSetOff,
                         })),
                     LongTerm20PerTotal:
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                         ?.filter((item: any) => item?.taxRate === 20)
                         .reduce((total, element) => {
-                          const cgIncome = element.cgIncome;
+                          const cgIncome = element.incomeBeforeInternalSetOff;
 
                           return total + cgIncome;
                         }, 0),
@@ -5388,50 +5385,47 @@ export class SummaryComponent implements OnInit {
                           item?.taxRate === 10 || item?.taxRate === 20
                       )
                       .reduce((total, element) => {
-                        const incomeAfterInternalSetOff =
-                          element.incomeAfterInternalSetOff;
+                        const incomeBeforeInternalSetOff =
+                          element.incomeBeforeInternalSetOff;
                         console.log(element, 'element');
                         console.log(
-                          incomeAfterInternalSetOff,
-                          'incomeAfterInternalSetOff'
+                          incomeBeforeInternalSetOff,
+                          'incomeBeforeInternalSetOff'
                         );
 
-                        return total + incomeAfterInternalSetOff;
+                        return total + incomeBeforeInternalSetOff;
                       }, 0),
                   totalCapitalGain:
                     this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                      ?.filter(
-                        (item: any) =>
-                          item?.taxRate === -1 ||
-                          item?.taxRate === 15 ||
-                          item?.taxRate === 10 ||
-                          item?.taxRate === 20
-                      )
-                      .reduce((total, element) => {
-                        const incomeAfterInternalSetOff =
-                          element.incomeAfterInternalSetOff;
-                        console.log(element, 'element');
-                        console.log(
-                          incomeAfterInternalSetOff,
-                          'incomeAfterInternalSetOff'
-                        );
-
-                        return total + incomeAfterInternalSetOff;
-                      }, 0),
+                      ?.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value),
                 },
                 Crypto: {
-                  cryptoDetails: [
-                    {
-                      srNo: null,
-                      buyDate: null,
-                      sellDate: null,
-                      headOfIncome: null,
-                      buyValue: null,
-                      SaleValue: null,
-                      income: 0,
-                    },
-                  ],
-                  totalCryptoIncome: 0,
+                  cryptoDetails: this.finalSummary?.itr?.capitalGain
+                    .filter((item) => item.assetType === 'VDA')
+                    .map((gain) => {
+                      return gain.assetDetails.map((element, index) => ({
+                        srNo: index + 1,
+                        buyDate: element.purchaseDate,
+                        sellDate: element.sellDate,
+                        headOfIncome:
+                          element.headOfIncome === 'BI'
+                            ? 'Business or Profession'
+                            : 'Capital Gain',
+                        buyValue: element.purchaseCost,
+                        SaleValue: element.sellValue,
+                        income: element.capitalGain,
+                      }));
+                    })
+                    .flat(),
+                  totalCryptoIncome: this.finalSummary?.itr?.capitalGain
+                    .filter((item) => item.assetType === 'VDA')
+                    .map((gain) =>
+                      gain.assetDetails.reduce(
+                        (total, element) => total + element.capitalGain,
+                        0
+                      )
+                    )
+                    .reduce((total, income) => total + income, 0),
                 },
                 totalHeadWiseIncome:
                   this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -6296,9 +6290,19 @@ export class SummaryComponent implements OnInit {
               console.log(
                 this.finalCalculations,
                 'finalCalculations',
-                this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain?.filter(
-                  (item: any) => item?.taxRate === 15
-                )
+                this.finalSummary?.itr?.capitalGain
+                  .filter((item) => item.assetType === 'VDA')
+                  .forEach((gain) => {
+                    gain.assetDetails.map((element, index) => ({
+                      srNo: index++,
+                      buyDate: element.purchaseDate,
+                      sellDate: element.sellDate,
+                      headOfIncome: element.headOfIncome,
+                      buyValue: element.purchaseCost,
+                      SaleValue: element.sellValue,
+                      income: element.capitalGain,
+                    }));
+                  })
               );
             } else {
               this.loading = false;

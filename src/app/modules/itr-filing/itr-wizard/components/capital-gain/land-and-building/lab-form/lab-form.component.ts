@@ -118,6 +118,9 @@ export class LabFormComponent implements OnInit {
     this.getImprovementYears();
   }
 
+  reset(control){
+    control.setValue(null);
+  }
   get getImprovementsArrayForImmovable() {
     return <FormArray>this.immovableForm.get('improvement');
   }
@@ -384,6 +387,7 @@ export class LabFormComponent implements OnInit {
       hasIndexation: false,
       algorithm: 'cgProperty',
       capitalGain: 0,
+      cgBeforeDeduction: 0,
       grandFatheredValue: 0,
       totalFairMarketValueOfCapitalAsset: 0,
     };
@@ -855,6 +859,35 @@ export class LabFormComponent implements OnInit {
           tempImprovements.push(improvement);
         } else {
           tempImprovements = tempImprovements.concat(improvements);
+
+          // Temporary fix for not allowing to push same financial year improvement but have to disable on UI only
+          // console.log(improvements);
+          // improvements = improvements.filter(
+          //   (item) => !!item.dateOfImprovement
+          // );
+
+          // tempImprovements = tempImprovements.concat(improvements);
+          // console.log(tempImprovements);
+
+          // if (tempImprovements.length > 0) {
+          //   const uniqueYears = new Set(
+          //     tempImprovements.map(
+          //       (improvement) => improvement.dateOfImprovement
+          //     )
+          //   );
+
+          //   uniqueYears.forEach((year) => {
+          //     const improvementsWithYear = tempImprovements.filter(
+          //       (improvement) => improvement.dateOfImprovement === year
+          //     );
+          //     const latestImprovement =
+          //       improvementsWithYear[improvementsWithYear.length - 1];
+          //     tempImprovements = tempImprovements.filter(
+          //       (improvement) => improvement.dateOfImprovement !== year
+          //     );
+          //     tempImprovements.push(latestImprovement);
+          //   });
+          // }
         }
       });
       this.cgArrayElement.improvement = tempImprovements;
@@ -1245,7 +1278,8 @@ export class LabFormComponent implements OnInit {
     ).controls[0] as FormGroup;
     if (
       deductionForm.controls['underSection'].value === '54EE' ||
-      deductionForm.controls['underSection'].value === '54EC'
+      deductionForm.controls['underSection'].value === '54EC' ||
+      deductionForm.controls['underSection'].value === '54F'
     ) {
       console.log(deductionForm);
       deductionForm.controls['costOfNewAssets'].setValidators([
@@ -1262,9 +1296,15 @@ export class LabFormComponent implements OnInit {
         minDate.setDate(sellDate.getDate() - 1);
 
         // Calculate the max date (6 months after the sellDate)
-        const maxDate = new Date(sellDate);
-        maxDate.setDate(sellDate.getDate() + 1);
-        maxDate.setMonth(maxDate.getMonth() + 6);
+        let maxDate = new Date(sellDate);
+        if(deductionForm.controls['underSection'].value === '54F'){
+          maxDate = new Date();
+        } else {
+          maxDate = maxDate < new Date() ? maxDate : new Date();
+          maxDate.setDate(sellDate.getDate() + 1);
+          maxDate.setMonth(maxDate.getMonth() + 6);
+        }
+
 
         // Enable dates between the sellDate plus one day and 6 months after the sellDate,
         // and disable all other dates
@@ -1307,7 +1347,7 @@ export class LabFormComponent implements OnInit {
     const param = '/calculate/capital-gain/deduction';
     let request = {
       capitalGain:
-        this.cgArrayElement?.assetDetails[this.currentCgIndex]?.capitalGain,
+        this.cgArrayElement?.assetDetails[this.currentCgIndex]?.cgBeforeDeduction,
       capitalGainDeductions: [
         {
           deductionSection: `SECTION_${deductionForm.controls['underSection'].value}`,
@@ -1577,21 +1617,27 @@ export class LabFormComponent implements OnInit {
           this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
         );
         console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
-        if(purchaseMonth > 2) {
+        if (purchaseMonth > 2) {
           if (
-            this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1)) >= 0
+            this.improvementYears.indexOf(
+              purchaseYear + '-' + (purchaseYear + 1)
+            ) >= 0
           ) {
             this.improvementYears = this.improvementYears.splice(
-              this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1)
+              this.improvementYears.indexOf(
+                purchaseYear + '-' + (purchaseYear + 1)
               )
             );
           }
         } else {
           if (
-            this.improvementYears.indexOf((purchaseYear-1) + '-' + (purchaseYear)) >= 0
+            this.improvementYears.indexOf(
+              purchaseYear - 1 + '-' + purchaseYear
+            ) >= 0
           ) {
             this.improvementYears = this.improvementYears.splice(
-              this.improvementYears.indexOf((purchaseYear - 1) + '-' + (purchaseYear)
+              this.improvementYears.indexOf(
+                purchaseYear - 1 + '-' + purchaseYear
               )
             );
           }
@@ -1619,8 +1665,8 @@ export class LabFormComponent implements OnInit {
         cost: assetDetails.controls['purchaseCost'].value,
         // "purchaseOrImprovementFinancialYear": "2002-2003",
         assetType: 'PLOT_OF_LAND',
-        buyDate: assetDetails.controls['purchaseDate'].value,
-        sellDate: assetDetails.controls['sellDate'].value,
+        buyDate: moment(assetDetails.controls['purchaseDate'].value).format('YYYY-MM-DD'),
+        sellDate: moment(assetDetails.controls['sellDate'].value).format('YYYY-MM-DD'),
         sellFinancialYear: sellFinancialYear,
       };
       const param = `/calculate/indexed-cost`;

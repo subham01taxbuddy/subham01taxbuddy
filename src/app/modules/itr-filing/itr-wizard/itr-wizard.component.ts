@@ -83,6 +83,7 @@ export class ItrWizardComponent implements OnInit {
     this.componentsList.push(this.schedules.INVESTMENTS_DEDUCTIONS);
     this.componentsList.push(this.schedules.TAXES_PAID);
     this.componentsList.push(this.schedules.DECLARATION);
+
     //for preventing going to specific schedule without initialization
 
     if (

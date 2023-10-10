@@ -150,6 +150,7 @@
                       required
                       name="assessmentYear"
                       formControlName="assessmentYear"
+                      (selectionChange)="updateRegimeLabels()"
                     >
                       <mat-option
                         *ngFor="let year of assesssmentYear"

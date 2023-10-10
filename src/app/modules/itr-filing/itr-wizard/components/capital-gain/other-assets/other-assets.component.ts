@@ -33,6 +33,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   index: number;
   gridOptions: GridOptions;
   assetList: any;
+  deduction = false;
+  isDisable: boolean;
 
   constructor(
     public matDialog: MatDialog,
@@ -93,12 +95,15 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
   createRowData(){
     this.assetList = [];
+    let totalCg = 0;
     this.goldCg.assetDetails.forEach(asset=>{
       let copy:any = {};
       Object.assign(copy, asset);
       copy.hasEdit = false;
       this.assetList.push(copy);
+      totalCg += asset.capitalGain;
     });
+    this.isDisable = totalCg <= 0;
     return this.assetList;
   }
 
@@ -116,9 +121,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
     // adding a form on startup
     this.addDeductionForm();
-
-    //disabling the form at first
-    this.getDeductions.disable();
   }
 
   // adding deduction form at the end of the array
@@ -306,12 +308,19 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
     this.isAddOtherAssetsImprovement = Math.random();
 
-    this.matDialog.open(OtherAssetImprovementComponent, {
+    let dialogRef = this.matDialog.open(OtherAssetImprovementComponent, {
       width: '70%',
       height: 'auto',
       data: {
         isAddOtherAssetsImprovement: this.isAddOtherAssetsImprovement,
         assetIndex: index,
+      }
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined) {
+        this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+        this.createRowData();
+        this.gridOptions.api?.setRowData(this.assetList);
       }
     });
     // this.goldCg.deduction.push(result.deduction);

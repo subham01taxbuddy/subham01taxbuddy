@@ -104,7 +104,6 @@ export class SharesAndEquityComponent
     }
 
     this.securitiesForm.disable();
-    this.deductionForm.disable();
 
     // setting deduction
     const equitySharesListed = this.ITR_JSON.capitalGain?.find(
@@ -360,6 +359,8 @@ export class SharesAndEquityComponent
     let assetDetails;
     let data;
 
+    let ltcg = 0;
+
     this.brokerList = [];
     if (this.bondType === 'listed') {
       data = itrObject.capitalGain.filter(
@@ -383,6 +384,7 @@ export class SharesAndEquityComponent
             //update existing item
             if (gainType === 'LONG') {
               filtered[0].LTCG = filtered[0].LTCG + capitalGain;
+              ltcg += capitalGain;
             } else {
               filtered[0].STCG = filtered[0].STCG + capitalGain;
             }
@@ -416,6 +418,7 @@ export class SharesAndEquityComponent
         this.addMoreData();
       }
     }
+    this.isDisable = ltcg <= 0;
   }
 
   isBrokerSelected() {
@@ -804,7 +807,7 @@ export class SharesAndEquityComponent
         ],
 
         deduction:
-          this.deductionForm.invalid || this.getSecuritiesCg() <= 0
+          this.deductionForm.invalid || this.getSecuritiesCg() <= 0 || !this.deduction
             ? []
             : [this.deductionForm.getRawValue()],
       };
@@ -939,7 +942,7 @@ export class SharesAndEquityComponent
           this.bondType === 'listed'
             ? 'EQUITY_SHARES_LISTED'
             : 'EQUITY_SHARES_UNLISTED',
-        deduction: [this.deductionForm.getRawValue()],
+        deduction: !this.deduction ? [] : [this.deductionForm.getRawValue()],
         improvement: securitiesImprovement,
         buyersDetails: [],
         assetDetails: assetDetails,
@@ -1024,7 +1027,7 @@ export class SharesAndEquityComponent
           this.bondType === 'listed'
             ? 'EQUITY_SHARES_LISTED'
             : 'EQUITY_SHARES_UNLISTED',
-        deduction: [this.deductionForm.getRawValue()],
+        deduction: !this.deduction ? [] : [this.deductionForm.getRawValue()],
         improvement: securitiesImprovement,
         buyersDetails: [],
         assetDetails: securitiesArray.getRawValue(),

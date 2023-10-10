@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class Schedules {
@@ -14,6 +14,7 @@ export class Schedules {
   public SPECULATIVE_INCOME = 'speculativeIncome';
   public FOREIGN_INCOME = 'foreignIncome';
   public MORE_INFORMATION = 'moreInformation';
+  public CRYPTO_VDA = 'cryptoVda';
 
   titleMap: any = {};
   pathMap: any = {};
@@ -32,12 +33,13 @@ export class Schedules {
     this.titleMap[this.CAPITAL_GAIN] = 'Capital Gain';
     this.titleMap[this.SPECULATIVE_INCOME] = 'Future/Options';
     this.titleMap[this.FOREIGN_INCOME] = 'Foreign Income/NRI';
+    this.titleMap[this.CRYPTO_VDA] = 'Crypto/Vda';
 
     this.pathMap[this.PERSONAL_INFO] = '/itr/personal-info';
     this.pathMap[this.OTHER_SOURCES] = '/itr/other-income';
     this.pathMap[this.INVESTMENTS_DEDUCTIONS] = '/itr/investments-deductions';
     this.pathMap[this.TAXES_PAID] = '/itr/taxes-paid';
-    this.pathMap[this.MORE_INFORMATION]='/itr/more-info';
+    this.pathMap[this.MORE_INFORMATION] = '/itr/more-info';
     this.pathMap[this.DECLARATION] = '/itr/declaration';
     this.pathMap[this.SALARY] = '/itr/salary';
     this.pathMap[this.HOUSE_PROPERTY] = '/itr/house-property';
@@ -45,6 +47,7 @@ export class Schedules {
     this.pathMap[this.CAPITAL_GAIN] = '/itr/capital-gain';
     this.pathMap[this.SPECULATIVE_INCOME] = '/itr/future-options';
     this.pathMap[this.FOREIGN_INCOME] = '/itr/nri';
+    this.pathMap[this.CRYPTO_VDA] = '/itr/crypto';
 
     this.keysMap[this.SALARY] = 'SALARY';
     this.keysMap[this.HOUSE_PROPERTY] = 'HOUSE_PROPERTY';
@@ -52,6 +55,7 @@ export class Schedules {
     this.keysMap[this.CAPITAL_GAIN] = 'CAPITAL_GAINS';
     this.keysMap[this.SPECULATIVE_INCOME] = 'FUTURE_AND_OPTIONS';
     this.keysMap[this.FOREIGN_INCOME] = 'FOREIGN_INCOME_NRI_EXPAT';
+    this.keysMap[this.CRYPTO_VDA] = 'CRYPTO_VDA';
   }
 
   public getKey(key) {

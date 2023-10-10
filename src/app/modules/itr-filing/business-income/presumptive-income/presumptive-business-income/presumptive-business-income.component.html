@@ -83,6 +83,17 @@
             >
           </div>
           <div class="col-sm-3">
+            <mat-label>Business Description</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                class="input-field"
+                formControlName="description"
+                name="description[i]"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-sm-3">
             <mat-label>Bank Receipts</mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -92,7 +103,7 @@
                 class="input-field"
                 required
                 digitsOnly
-                (change)="calculatePresumptive($event, i, 'bank')"
+                (change)="calculatePresumptive(i, 'bank')"
               />
             </mat-form-field>
             <mat-error
@@ -159,7 +170,7 @@
                 class="input-field"
                 required
                 digitsOnly
-                (change)="calculatePresumptive($event, i, 'cash')"
+                (change)="calculatePresumptive(i, 'cash')"
               />
             </mat-form-field>
             <mat-error
