@@ -1331,8 +1331,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 label: 'Income from Capital Gains',
                 old: getTotalCapitalGain(this.oldSummaryIncome?.summaryIncome.cgIncomeN
                   .capitalGain),
-                new:getTotalCapitalGain(this.newSummaryIncome?.summaryIncome.cgIncomeN
+                new:getTotalCapitalGain(this.newSummaryIncome?.taxSummary.cgIncomeN
                   .capitalGain)
+              },
+              {
+                label: 'Income from Crypto',
+                old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
+                new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
               },
               {
                 label: 'Income from Other Sources',
@@ -1386,8 +1391,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               },
               {
                 label: 'CFL',
-                old: this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss,
-                new: this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss,
+                old: this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss != undefined?this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss:0,
+                new: this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss != undefined?this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss:0,
               },
               {
                 label: 'Gross Tax Liability',
@@ -1474,6 +1479,10 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 .capitalGain),
               new:getTotalCapitalGain(this.newSummaryIncome?.summaryIncome.cgIncomeN
                 .capitalGain)
+            }, {
+              label: 'Income from Crypto',
+              old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
+                new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
             },
             {
               label: 'Income from Other Sources',
@@ -1520,8 +1529,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             },
             {
               label: 'CFL',
-              old: this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss,
-              new: this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss,
+              old: this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss != undefined?this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss:0,
+              new: this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss != undefined?this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss:0,
             },
             {
               label: 'Gross Tax Liability',
@@ -2003,7 +2012,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
 function getTotalCapitalGain(capitalGain: Array<any>[]): number {
   if(capitalGain != null && capitalGain.length>0)
-    return capitalGain.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value);
+    return capitalGain.filter((cg) => (cg as any).assetType !== 'VDA').map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value,0);
   else
     return 0;
 }
