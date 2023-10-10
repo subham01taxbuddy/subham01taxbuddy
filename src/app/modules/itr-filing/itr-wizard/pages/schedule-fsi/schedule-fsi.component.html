@@ -125,6 +125,14 @@
                           name="incFromOutInd[i]"
                           formControlName="incFromOutInd"
                         />
+                        <mat-hint
+                          style="margin-top: 18px"
+                          *ngIf="headOfIncomeGroup.get('incFromOutInd').touched"
+                        >
+                          Ensure income reflects
+                          <br />
+                          in respective schedules
+                        </mat-hint>
                       </mat-form-field>
                     </td>
                     <td>
@@ -135,6 +143,14 @@
                           name="taxPaidOutInd[i]"
                           formControlName="taxPaidOutInd"
                         />
+                        <mat-hint
+                          style="margin-top: 18px"
+                          *ngIf="headOfIncomeGroup.get('incFromOutInd').touched"
+                        >
+                          Ensure income reflects
+                          <br />
+                          in respective schedules
+                        </mat-hint>
                       </mat-form-field>
                     </td>
                     <td>
@@ -145,6 +161,14 @@
                           name="taxPayableNrmlProv[i]"
                           formControlName="taxPayableNrmlProv"
                         />
+                        <mat-hint
+                          style="margin-top: 18px"
+                          *ngIf="headOfIncomeGroup.get('incFromOutInd').touched"
+                        >
+                          Ensure income reflects
+                          <br />
+                          in respective schedules
+                        </mat-hint>
                       </mat-form-field>
                     </td>
                     <td>
@@ -156,6 +180,14 @@
                           formControlName="offeredForTaxInd"
                           readonly
                         />
+                        <mat-hint
+                          style="margin-top: 18px"
+                          *ngIf="headOfIncomeGroup.get('incFromOutInd').touched"
+                        >
+                          Ensure income reflects
+                          <br />
+                          in respective schedules
+                        </mat-hint>
                         {{ getLowerOfCds() }}
                       </mat-form-field>
                     </td>
