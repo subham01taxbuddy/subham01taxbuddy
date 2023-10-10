@@ -85,23 +85,24 @@ export class SourceOfIncomesComponent implements OnInit {
               : false,
           schedule: this.schedules.SPECULATIVE_INCOME,
         },
-        {
-          name: 'Crypto',
-          selected:
-            this.ITR_JSON.capitalGain != null &&
-            this.ITR_JSON.capitalGain.length > 0
-              ? true
-              : false,
-          schedule: this.schedules.CRYPTO_VDA,
-        },
-        {
-          name: 'Foreign Income',
-          selected:
-            this.ITR_JSON.foreignIncome && this.ITR_JSON.foreignIncome != null
-              ? true
-              : false,
-          schedule: this.schedules.FOREIGN_INCOME,
-        },
+        //Ashwini: Commented the crypto and foreign income as QA is not complete
+        // {
+        //   name: 'Crypto',
+        //   selected:
+        //     this.ITR_JSON.capitalGain != null &&
+        //     this.ITR_JSON.capitalGain.length > 0
+        //       ? true
+        //       : false,
+        //   schedule: this.schedules.CRYPTO_VDA,
+        // },
+        // {
+        //   name: 'Foreign Income',
+        //   selected:
+        //     this.ITR_JSON.foreignIncome && this.ITR_JSON.foreignIncome != null
+        //       ? true
+        //       : false,
+        //   schedule: this.schedules.FOREIGN_INCOME,
+        // },
       ];
       sessionStorage.setItem('incomeSources', JSON.stringify(this.sourcesList));
     } else {
