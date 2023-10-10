@@ -82,6 +82,7 @@ export class ScheduleFaComponent implements OnInit {
     'No Amount Paid/Credited',
   ];
   natureOfInterestOwnership = ['Direct', 'Beneficial Owner', 'Beneficiary'];
+  status = ['Select', 'Owner', 'Beneficial Owner', 'Beneficiary'];
   countryCodeList: any;
   scheduleFa: FormGroup;
   isPanelOpen: boolean = false;
@@ -966,14 +967,14 @@ export class ScheduleFaComponent implements OnInit {
               };
               console.log(formGroup);
               // I can empty foreign assets before starting to push, this way only the new daat will be pushed from start
-              if(!this.Copy_ITR_JSON.foreignIncome) {
+              if (!this.Copy_ITR_JSON.foreignIncome) {
                 this.Copy_ITR_JSON.foreignIncome = {
                   foreignAssets: null,
                   id: null,
                   taxAmountRefunded: 0,
                   taxPaidOutsideIndiaFlag: null,
                   taxReliefAssessmentYear: null,
-                  taxReliefClaimed: []
+                  taxReliefClaimed: [],
                 };
                 this.Copy_ITR_JSON.foreignIncome.foreignAssets = {
                   capitalAssetsDetails: [],
@@ -986,7 +987,7 @@ export class ScheduleFaComponent implements OnInit {
                   immovablePropertryDetails: [],
                   otherIncomeDetails: [],
                   signingAuthorityDetails: [],
-                  trustsDetails: []
+                  trustsDetails: [],
                 };
               }
               this.Copy_ITR_JSON.foreignIncome.foreignAssets[section].push(

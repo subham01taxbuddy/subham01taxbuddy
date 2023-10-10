@@ -156,12 +156,20 @@
                     <!-- Status Input -->
                     <mat-form-field appearance="outline">
                       <mat-label>Status</mat-label>
-                      <input
+                      <mat-select
                         matInput
                         name="status[i]"
                         formControlName="status"
                         required
-                      />
+                      >
+                        <mat-option
+                          *ngFor="let status of status"
+                          [value]="status"
+                          matTooltip="{{ status }}"
+                        >
+                          {{ status }}
+                        </mat-option></mat-select
+                      >
                     </mat-form-field>
 
                     <!-- Account Opening Date Input -->
@@ -356,12 +364,20 @@
                     <!-- Status -->
                     <mat-form-field appearance="outline">
                       <mat-label>Status</mat-label>
-                      <input
+                      <mat-select
                         matInput
                         name="status[i]"
                         formControlName="status"
                         required
-                      />
+                      >
+                        <mat-option
+                          *ngFor="let status of status"
+                          [value]="status"
+                          matTooltip="{{ status }}"
+                        >
+                          {{ status }}
+                        </mat-option></mat-select
+                      >
                     </mat-form-field>
 
                     <!-- acount opening date -->
