@@ -114,6 +114,7 @@ const routes: Routes = [
         children: [
           { path: 'schedule-al', component: ScheduleALComponent },
           { path: 'schedule-cfl', component: ScheduleCflComponent },
+          { path: 'partner-in-firms', component: PartnerInFirmsComponent },
         ],
       },
       {
