@@ -605,6 +605,34 @@
     </div>
   </div>
 
+  <hr class="spsTp" />
+  <div>
+    <div class="sub-heading">Audit Information</div>
+  </div>
+
+  <!-- 44AA Liable question -->
+  <div class="surround flex justify-between">
+    <mat-label style="margin: 0px 75px 0px 15px" class="custom"
+      >Are you filing return of income under Seventh proviso to section 139(1)
+      but otherwise not required to furnish return of income?</mat-label
+    >
+    <mat-radio-group
+      name="liableSection44AAflag[i]"
+      formControlName="liableSection44AAflag"
+    >
+      <mat-radio-button
+        [value]="'Y'"
+        style="margin-left: 0px; margin-right: 2px"
+        labelPosition="before"
+      >
+        Yes
+      </mat-radio-button>
+      <mat-radio-button [value]="'N'" labelPosition="before">
+        No
+      </mat-radio-button>
+    </mat-radio-group>
+  </div>
+
   <!-- <div class="col-sm-12 spsTp bdrTp">
             <button class="tbd-btn save-btn mvRth" [disabled]="!isEditPersonal && customerProfileForm.invalid"
                 (click)="saveProfile('NEXT')">Save

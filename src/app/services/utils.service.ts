@@ -666,6 +666,7 @@ export class UtilsService {
 
       itrSummaryJson: null,
       isItrSummaryJsonEdited: false,
+      liableSection44AAflag: '',
     };
 
     return ITR_JSON;

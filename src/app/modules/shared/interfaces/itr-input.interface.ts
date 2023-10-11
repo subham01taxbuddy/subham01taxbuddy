@@ -102,6 +102,7 @@ export interface ITR_JSON {
 
   itrSummaryJson: any;
   isItrSummaryJsonEdited: boolean;
+  liableSection44AAflag: string;
 }
 
 export interface foreignIncome {
