@@ -4018,7 +4018,7 @@ export class SummaryComponent implements OnInit {
                     totalCapitalGain: (this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                         && this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain.length > 0) ?
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value) : null,
+                        ?.filter((item) => item.assetType !== 'VDA').map(item=>Math.max(item.incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value,0) : null,
                   },
                   Crypto: {
                     cryptoDetails: this.finalSummary?.itr?.capitalGain
@@ -5399,7 +5399,7 @@ export class SummaryComponent implements OnInit {
                   totalCapitalGain: (this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                     && this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain.length > 0) ?
                     this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                      ?.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value) : null,
+                      ?.filter((item) => item.assetType !== 'VDA').map(cg=>Math.max(cg.incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value,0) : null,
                 },
                 Crypto: {
                   cryptoDetails: this.finalSummary?.itr?.capitalGain

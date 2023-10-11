@@ -172,6 +172,7 @@
                         [matDatepicker]="dateofFilling"
                         autocomplete="off"
                         formControlName="accountOpeningDate"
+                        [max]="maxPurchaseDate"
                         required
                       />
                       <mat-datepicker-toggle
@@ -370,6 +371,7 @@
                         [matDatepicker]="dateofFilling"
                         autocomplete="off"
                         formControlName="accountOpeningDate"
+                        [max]="maxPurchaseDate"
                         required
                       />
                       <mat-datepicker-toggle
@@ -541,6 +543,7 @@
                     [matDatepicker]="dateofFilling"
                     autocomplete="off"
                     formControlName="dateOfInterest"
+                    [max]="maxPurchaseDate"
                     required
                   />
                   <mat-datepicker-toggle
@@ -708,6 +711,7 @@
                     [matDatepicker]="dateofFilling"
                     autocomplete="off"
                     formControlName="dateOfContract"
+                    [max]="maxPurchaseDate"
                     required
                   />
                   <mat-datepicker-toggle
@@ -861,6 +865,7 @@
                     [matDatepicker]="dateofFilling"
                     autocomplete="off"
                     formControlName="date"
+                    [max]="maxPurchaseDate"
                     required
                   />
                   <mat-datepicker-toggle
@@ -1042,6 +1047,7 @@
                     [matDatepicker]="dateofFilling"
                     autocomplete="off"
                     formControlName="date"
+                    [max]="maxPurchaseDate"
                     required
                   />
                   <mat-datepicker-toggle
@@ -1228,6 +1234,7 @@
                     [matDatepicker]="dateofFilling"
                     autocomplete="off"
                     formControlName="date"
+                    [max]="maxPurchaseDate"
                     required
                   />
                   <mat-datepicker-toggle
@@ -1631,7 +1638,12 @@
                     required
                   />
                 </mat-form-field>
+              </div>
 
+              <div
+                class="flex gap-[25px] align-items-center"
+                style="margin-bottom: 10px"
+              >
                 <!-- trustees Address -->
                 <mat-form-field appearance="outline">
                   <mat-label>Address of the trustee </mat-label>
@@ -1642,12 +1654,7 @@
                     required
                   />
                 </mat-form-field>
-              </div>
 
-              <div
-                class="flex gap-[25px] align-items-center"
-                style="margin-bottom: 10px"
-              >
                 <!-- settlor Name -->
                 <mat-form-field appearance="outline">
                   <mat-label>Name of the settlor</mat-label>
@@ -1669,7 +1676,12 @@
                     required
                   />
                 </mat-form-field>
+              </div>
 
+              <div
+                class="flex gap-[25px] align-items-center"
+                style="margin-bottom: 10px"
+              >
                 <!-- beneficiariesName -->
                 <mat-form-field appearance="outline">
                   <mat-label>Name of the beneficiaries</mat-label>
@@ -1691,12 +1703,7 @@
                     required
                   />
                 </mat-form-field>
-              </div>
 
-              <div
-                class="flex gap-[25px] align-items-center"
-                style="margin-bottom: 10px"
-              >
                 <!-- date -->
                 <mat-form-field appearance="outline">
                   <mat-label>Date since position held</mat-label>
@@ -1707,6 +1714,7 @@
                     [matDatepicker]="dateofFilling"
                     autocomplete="off"
                     formControlName="date"
+                    [max]="maxPurchaseDate"
                     required
                   />
                   <mat-datepicker-toggle
