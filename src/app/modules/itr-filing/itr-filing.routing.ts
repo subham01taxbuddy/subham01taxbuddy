@@ -124,7 +124,6 @@ const routes: Routes = [
           { path: 'schedule-fsi', component: ScheduleFsiComponent },
           { path: 'schedule-tr', component: ScheduleTrComponent },
           { path: 'schedule-fa', component: ScheduleFaComponent },
-          { path: 'partner-in-firms', component: PartnerInFirmsComponent },
         ],
       },
       { path: 'eri', component: AddClientsComponent },
