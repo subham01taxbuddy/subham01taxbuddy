@@ -302,9 +302,15 @@ export class CustomerProfileComponent implements OnInit {
       this.ITR_JSON.seventhProviso139 === undefined
     ) {
       this.ITR_JSON.seventhProviso139 = {
+        seventhProvisio139: null,
+        strDepAmtAggAmtExcd1CrPrYrFlg: null,
         depAmtAggAmtExcd1CrPrYrFlg: null,
-        incrExpAggAmt1LkElctrctyPrYrFlg: null,
+        strIncrExpAggAmt2LkTrvFrgnCntryFlg: null,
         incrExpAggAmt2LkTrvFrgnCntryFlg: null,
+        strIncrExpAggAmt1LkElctrctyPrYrFlg: null,
+        incrExpAggAmt1LkElctrctyPrYrFlg: null,
+        clauseiv7provisio139i: null,
+        clauseiv7provisio139iDtls: [],
       };
     }
     this.customerProfileForm.patchValue(this.ITR_JSON);
@@ -408,11 +414,20 @@ export class CustomerProfileComponent implements OnInit {
     this.findAssesseeType();
     // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
     if (this.customerProfileForm.valid) {
-      let aadhaarEnrolmentId = this.customerProfileForm.controls['aadhaarEnrolmentId'].value;
-      let aadhaarNumber = this.customerProfileForm.controls['aadharNumber'].value;
+      let aadhaarEnrolmentId =
+        this.customerProfileForm.controls['aadhaarEnrolmentId'].value;
+      let aadhaarNumber =
+        this.customerProfileForm.controls['aadharNumber'].value;
 
-      if((!this.utilsService.isNonEmpty(aadhaarNumber) && !this.utilsService.isNonEmpty(aadhaarEnrolmentId)) || (this.utilsService.isNonEmpty(aadhaarNumber) && this.utilsService.isNonEmpty(aadhaarEnrolmentId))){
-        this.utilsService.showSnackBar('Please provide aadhar number or enrollment ID');
+      if (
+        (!this.utilsService.isNonEmpty(aadhaarNumber) &&
+          !this.utilsService.isNonEmpty(aadhaarEnrolmentId)) ||
+        (this.utilsService.isNonEmpty(aadhaarNumber) &&
+          this.utilsService.isNonEmpty(aadhaarEnrolmentId))
+      ) {
+        this.utilsService.showSnackBar(
+          'Please provide aadhar number or enrollment ID'
+        );
         return;
       }
 
@@ -505,8 +520,7 @@ export class CustomerProfileComponent implements OnInit {
       case this.PAN_INFO: {
         let result = res.result;
         console.log('user data by PAN = ', result);
-        if(result.isValid && result.isValid === 'EXISTING AND VALID'){
-
+        if (result.isValid && result.isValid === 'EXISTING AND VALID') {
           this.customerProfileForm.controls['firstName'].setValue(
             this.titlecasePipe.transform(
               this.utilsService.isNonEmpty(result.firstName)
@@ -516,7 +530,9 @@ export class CustomerProfileComponent implements OnInit {
           );
           this.customerProfileForm.controls['lastName'].setValue(
             this.titlecasePipe.transform(
-              this.utilsService.isNonEmpty(result.lastName) ? result.lastName : ''
+              this.utilsService.isNonEmpty(result.lastName)
+                ? result.lastName
+                : ''
             )
           );
           this.customerProfileForm.controls['middleName'].setValue(
@@ -722,7 +738,8 @@ export class CustomerProfileComponent implements OnInit {
       contactNumber: this.customerProfileForm.controls['contactNumber'].value,
       panNumber: this.customerProfileForm.controls['panNumber'].value,
       aadharNumber: this.customerProfileForm.controls['aadharNumber'].value,
-      aadhaarEnrolmentId: this.customerProfileForm.controls['aadhaarEnrolmentId'].value,
+      aadhaarEnrolmentId:
+        this.customerProfileForm.controls['aadhaarEnrolmentId'].value,
       assesseeType: this.customerProfileForm.controls['assesseeType'].value,
       assessmentYear: this.ITR_JSON.assessmentYear,
       financialYear: this.ITR_JSON.financialYear,
@@ -859,6 +876,11 @@ export class CustomerProfileComponent implements OnInit {
       this.ITR_JSON.jurisdictions = [];
       this.ITR_JSON.conditionsResStatus = null;
     }
+
+    //once user residential status changes, update the same in cg object
+    this.ITR_JSON.capitalGain.forEach(element => {
+      element.residentialStatus = status;
+    });
   }
 
   getFilePath() {

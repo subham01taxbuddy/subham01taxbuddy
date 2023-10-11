@@ -308,12 +308,19 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
     this.isAddOtherAssetsImprovement = Math.random();
 
-    this.matDialog.open(OtherAssetImprovementComponent, {
+    let dialogRef = this.matDialog.open(OtherAssetImprovementComponent, {
       width: '70%',
       height: 'auto',
       data: {
         isAddOtherAssetsImprovement: this.isAddOtherAssetsImprovement,
         assetIndex: index,
+      }
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined) {
+        this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+        this.createRowData();
+        this.gridOptions.api?.setRowData(this.assetList);
       }
     });
     // this.goldCg.deduction.push(result.deduction);

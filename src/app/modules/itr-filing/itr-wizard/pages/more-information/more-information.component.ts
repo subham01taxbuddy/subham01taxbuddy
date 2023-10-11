@@ -59,27 +59,6 @@ export class MoreInformationComponent
       },
       {
         label:
-          'Details of income from outside India and tax relief (Schedule FSI)',
-        path: 'schedule-fsi',
-        type: 'scheduleFsi',
-        showOnUi :true
-      },
-      {
-        label:
-          'Details Summary of tax relief claimed for taxes paid outside India (Schedule TR)',
-        path: 'schedule-tr',
-        type: 'scheduleTr',
-        showOnUi :true
-      },
-      {
-        label:
-          'Details of foreign assets and income from any source outside India (Schedule FA)',
-        path: 'schedule-fa',
-        type: 'scheduleFa',
-        showOnUi :true
-      },
-      {
-        label:
           'Income From Firms in which you are Partner',
         path: 'partner-in-firms',
         type: 'partner',

@@ -22,6 +22,8 @@ export class ScheduleFsiComponent implements OnInit {
     'Capital Gains',
     'Other Sources',
   ];
+  relevantArticle = ['90', '90A', '91'];
+  offeredForTaxIndValue: number;
 
   constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
 
@@ -300,7 +302,7 @@ export class ScheduleFsiComponent implements OnInit {
 
         const formGroup = {
           hasEdit: false,
-          countryCode: trElement.countryCode,
+          countryCode: trElement.countryCode + ':' + trElement.countryName,
           tinNumber: trElement.taxPayerID,
           headOfIncomes: headOfIncomeArray,
           reliefClaimedUsSection: trElement.reliefClaimedUsSection,
@@ -389,6 +391,32 @@ export class ScheduleFsiComponent implements OnInit {
     ] as FormArray;
   }
 
+  getLowerOfCds() {
+    const fsiArray = this?.getFsiArray;
+
+    fsiArray?.controls.forEach((fsiArrayEl) => {
+      const headOfIncomes = fsiArrayEl?.get('headOfIncomes') as FormArray;
+
+      // extracting the lower value for each headOfIncome under fsiArray
+      headOfIncomes?.controls?.forEach((head) => {
+        const taxPaidOutInd = parseFloat(head?.value?.taxPaidOutInd);
+        const taxPayableNrmlProv = parseFloat(head?.value?.taxPayableNrmlProv);
+
+        const lower =
+          taxPaidOutInd < taxPayableNrmlProv
+            ? taxPaidOutInd
+            : taxPayableNrmlProv;
+
+        // setting the lower value
+        if (lower) {
+          head?.get('offeredForTaxInd')?.setValue(lower);
+        } else {
+          head?.get('offeredForTaxInd')?.setValue(0);
+        }
+      });
+    });
+  }
+
   goBack() {
     this.saveAndNext.emit(false);
   }
@@ -397,7 +425,8 @@ export class ScheduleFsiComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    const fsiArray = <FormArray>this.scheduleFsiForm.get('fsiArray');
+    const fsiArray = <FormArray>this.scheduleFsiForm?.get('fsiArray');
+    console.log(fsiArray);
 
     if (this.scheduleFsiForm.valid) {
       this.loading = true;
@@ -429,84 +458,110 @@ export class ScheduleFsiComponent implements OnInit {
         this.Copy_ITR_JSON.foreignIncome.taxReliefClaimed = [];
       }
 
-      fsiArray?.controls.forEach((fsiArrayElement, index) => {
-        const headOfIncomesArray = (
-          fsiArrayElement.get('headOfIncomes') as FormArray
-        ).controls;
+      if (fsiArray.length > 0) {
+        fsiArray?.controls?.forEach((fsiArrayElement, index) => {
+          const headOfIncomesArray = (
+            fsiArrayElement?.get('headOfIncomes') as FormArray
+          ).controls;
 
-        // setting the taxPaidOutsideIndiaFlag if it exists
-        const hastaxPaidOutIndValue = headOfIncomesArray.some(
-          (hastaxPaidOutIndValueElement) =>
-            hastaxPaidOutIndValueElement.get('taxPaidOutInd').value
-        );
+          // setting the taxPaidOutsideIndiaFlag if it exists
+          const hastaxPaidOutIndValue = headOfIncomesArray?.some(
+            (hastaxPaidOutIndValueElement) =>
+              hastaxPaidOutIndValueElement?.get('taxPaidOutInd')?.value
+          );
 
-        if (hastaxPaidOutIndValue) {
-          this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'Y';
-        }
-
-        // pushing fsi income in taxReliefClaimed
-        const checkIfValid: boolean =
-          fsiArrayElement.get('countryCode').value &&
-          fsiArrayElement.get('tinNumber').value &&
-          fsiArrayElement.get('headOfIncomes').value.length > 0;
-
-        if (checkIfValid) {
-          if (!this.Copy_ITR_JSON.foreignIncome?.taxReliefClaimed) {
-            this.Copy_ITR_JSON.foreignIncome.taxReliefClaimed = [];
+          if (hastaxPaidOutIndValue) {
+            this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'Y';
           }
 
-          const headOfIncomeArray = headOfIncomesArray.map((element) => ({
-            id: 0,
-            incomeType: element.get('headOfIncome').value,
-            outsideIncome: element.get('incFromOutInd').value,
-            outsideTaxPaid: element.get('taxPaidOutInd').value,
-            taxPayable: element.get('taxPayableNrmlProv').value,
-            taxRelief:
-              element.get('taxPaidOutInd').value <=
-              element.get('taxPayableNrmlProv').value
-                ? element.get('taxPaidOutInd').value
-                : element.get('taxPayableNrmlProv').value,
-            claimedDTAA: element.get('relevantArticle').value,
-          }));
-          console.log(headOfIncomeArray, 'Final headOfIncomeArray');
+          // pushing fsi income in taxReliefClaimed
+          const checkIfValid: boolean =
+            fsiArrayElement.get('countryCode')?.value &&
+            fsiArrayElement.get('tinNumber')?.value &&
+            fsiArrayElement.get('headOfIncomes')?.value.length > 0;
 
-          // TO-DO need to fix for edit (similar to business)
-
-          this.Copy_ITR_JSON.foreignIncome?.taxReliefClaimed.push({
-            id: null,
-            reliefClaimedUsSection: null,
-            countryCode: fsiArrayElement.get('countryCode').value.split(':')[0],
-            countryName: fsiArrayElement.get('countryCode').value.split(':')[1],
-            taxPayerID: fsiArrayElement.get('tinNumber').value,
-            claimedDTAA: headOfIncomeArray[index].claimedDTAA,
-            headOfIncome: headOfIncomeArray,
-          });
-
-          this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-            (result: any) => {
-              this.ITR_JSON = result;
-              sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-              this.loading = false;
-              this.utilsService.showSnackBar(
-                'Schedule FSI updated successfully'
-              );
-              this.saveAndNext.emit(false);
-            },
-            (error) => {
-              this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-              this.loading = false;
-              this.utilsService.showSnackBar(
-                'Failed to add schedule FSI, please try again.'
-              );
-              this.utilsService.smoothScrollToTop();
+          if (checkIfValid) {
+            if (!this.Copy_ITR_JSON.foreignIncome?.taxReliefClaimed) {
+              this.Copy_ITR_JSON.foreignIncome.taxReliefClaimed = [];
             }
-          );
-        } else {
-          this.utilsService.showSnackBar(
-            'Please make sure tin Number or head of incomes details or country code is entered correctly'
-          );
-        }
-      });
+
+            const headOfIncomeArray = headOfIncomesArray?.map((element) => ({
+              id: 0,
+              incomeType: element?.get('headOfIncome')?.value,
+              outsideIncome: element?.get('incFromOutInd')?.value,
+              outsideTaxPaid: element?.get('taxPaidOutInd')?.value,
+              taxPayable: element?.get('taxPayableNrmlProv')?.value,
+              taxRelief:
+                element?.get('taxPaidOutInd')?.value <=
+                element?.get('taxPayableNrmlProv')?.value
+                  ? element?.get('taxPaidOutInd')?.value
+                  : element?.get('taxPayableNrmlProv')?.value,
+              claimedDTAA: element?.get('relevantArticle')?.value,
+            }));
+            console.log(headOfIncomeArray, 'Final headOfIncomeArray');
+
+            // TO-DO need to fix for edit (similar to business)
+            const split = fsiArrayElement
+              ?.get('countryCode')
+              ?.value?.split(':');
+            this.Copy_ITR_JSON.foreignIncome?.taxReliefClaimed?.push({
+              id: null,
+              reliefClaimedUsSection: null,
+              countryCode: split[0],
+              countryName: split[1],
+              taxPayerID: fsiArrayElement?.get('tinNumber')?.value,
+              claimedDTAA: headOfIncomeArray[index]?.claimedDTAA,
+              headOfIncome: headOfIncomeArray,
+            });
+
+            this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+              (result: any) => {
+                this.ITR_JSON = result;
+                sessionStorage.setItem(
+                  'ITR_JSON',
+                  JSON.stringify(this.ITR_JSON)
+                );
+                this.loading = false;
+                this.utilsService.showSnackBar(
+                  'Schedule FSI updated successfully'
+                );
+                this.saveAndNext.emit(false);
+              },
+              (error) => {
+                this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+                this.loading = false;
+                this.utilsService.showSnackBar(
+                  'Failed to add schedule FSI, please try again.'
+                );
+                this.utilsService.smoothScrollToTop();
+              }
+            );
+          } else {
+            this.utilsService.showSnackBar(
+              'Please make sure tin Number or head of incomes details or country code is entered correctly'
+            );
+          }
+        });
+      } else {
+        this.Copy_ITR_JSON.foreignIncome.taxReliefClaimed = [];
+        this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+          (result: any) => {
+            this.ITR_JSON = result;
+            sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+            this.loading = false;
+            this.utilsService.showSnackBar('Schedule FSI updated successfully');
+            this.saveAndNext.emit(false);
+          },
+          (error) => {
+            this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+            this.loading = false;
+            this.utilsService.showSnackBar(
+              'Failed to add schedule FSI, please try again.'
+            );
+            this.utilsService.smoothScrollToTop();
+          }
+        );
+      }
     } else {
       this.loading = false;
       this.utilsService.showSnackBar(

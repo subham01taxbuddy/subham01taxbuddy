@@ -34,6 +34,10 @@ td {
   mat-form-field {
     width: 130px;
   }
+
+  disabled-field {
+    border: none;
+  }
 }
 
 tr:nth-child(even) {

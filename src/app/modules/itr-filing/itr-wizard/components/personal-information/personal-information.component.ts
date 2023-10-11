@@ -77,6 +77,7 @@ export class PersonalInformationComponent implements OnInit {
   docUrl = '';
   deletedFileData: any = [];
   fillingMaxDate: any = new Date();
+  config: any;
 
   countryDropdown = [
     {
@@ -2146,6 +2147,29 @@ export class PersonalInformationComponent implements OnInit {
     { value: 'FEMALE', label: 'Female' },
   ];
 
+  clauseiv7provisio139iDtlsList = [
+    {
+      nature:
+        'If his total sales, turnover or gross receipts, as the case maybe, in the business exceeds sixty lakh rupees during the previous year; or',
+      value: '1',
+    },
+    {
+      nature:
+        'If his total gross receipts in profession exceeds ten lakh rupees during the previous year; or',
+      value: '2',
+    },
+    {
+      nature:
+        'If the aggregate of tax deducted at source and tax collected at source during the previous year, in the case of the person, is twenty-five thousand rupees (fifty-thousand for resident senior citizen) or more; or',
+      value: '3',
+    },
+    {
+      nature:
+        'The deposits in one or more savings bank account of the person, in aggregate, is rupees fifty lakh or more, during the previous year.',
+      value: '4',
+    },
+  ];
+
   constructor(
     public fb: FormBuilder,
     public utilsService: UtilsService,
@@ -2168,6 +2192,11 @@ export class PersonalInformationComponent implements OnInit {
     this.stateDropdown = this.stateDropdownMaster;
     this.getDocuments();
     this.getUserDataByPan(this.customerProfileForm.controls['panNumber'].value);
+    this.config = {
+      id: 'clauseIvPagination',
+      itemsPerPage: 3,
+      currentPage: 1,
+    };
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -2254,10 +2283,23 @@ export class PersonalInformationComponent implements OnInit {
         ],
       }),
       seventhProviso139: this.fb.group({
-        depAmtAggAmtExcd1CrPrYrFlg: [null],
-        incrExpAggAmt2LkTrvFrgnCntryFlg: [null],
-        incrExpAggAmt1LkElctrctyPrYrFlg: [null],
+        seventhProvisio139: 'N',
+        strDepAmtAggAmtExcd1CrPrYrFlg: 'N',
+        depAmtAggAmtExcd1CrPrYrFlg: null,
+        strIncrExpAggAmt2LkTrvFrgnCntryFlg: 'N',
+        incrExpAggAmt2LkTrvFrgnCntryFlg: null,
+        strIncrExpAggAmt1LkElctrctyPrYrFlg: 'N',
+        incrExpAggAmt1LkElctrctyPrYrFlg: null,
+        clauseiv7provisio139i: 'N',
+        clauseiv7provisio139iDtls: this.fb.array([
+          this.fb.group({
+            hasEdit: false,
+            nature: null,
+            amount: null,
+          }),
+        ]),
       }),
+      liableSection44AAflag: 'N',
       bankDetails: this.fb.array([
         this.createBankDetailsForm({ hasRefund: true }),
       ]),
@@ -2269,6 +2311,7 @@ export class PersonalInformationComponent implements OnInit {
   get addressForm() {
     return this.customerProfileForm.controls['address'] as FormGroup;
   }
+
   createBankDetailsForm(
     obj: {
       ifsCode?: string;
@@ -2414,7 +2457,7 @@ export class PersonalInformationComponent implements OnInit {
           .getPanDetails(pan, this.ITR_JSON.userId)
           .subscribe((result: any) => {
             console.log('user data by PAN = ', result);
-            if(result.isValid && result.isValid === 'EXISTING AND VALID') {
+            if (result.isValid && result.isValid === 'EXISTING AND VALID') {
               this.customerProfileForm.controls['firstName'].setValue(
                 this.titlecasePipe.transform(
                   this.utilsService.isNonEmpty(result.firstName)
@@ -2549,6 +2592,22 @@ export class PersonalInformationComponent implements OnInit {
         });
       }
     });
+
+    if (
+      this.ITR_JSON.seventhProviso139?.clauseiv7provisio139iDtls?.length > 0
+    ) {
+      this.addClauseIv(
+        this.ITR_JSON.seventhProviso139.clauseiv7provisio139iDtls
+      );
+    }
+
+    if (this.ITR_JSON.liableSection44AAflag) {
+      this.customerProfileForm.controls['liableSection44AAflag'].setValue(
+        this.ITR_JSON.liableSection44AAflag
+      );
+    } else {
+      this.customerProfileForm.controls['liableSection44AAflag'].setValue('N');
+    }
   }
 
   isFormValid() {
@@ -2621,6 +2680,7 @@ export class PersonalInformationComponent implements OnInit {
       //   Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
       // }
       Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
+      console.log(this.customerProfileForm, 'ITRFORM');
       console.log('this.ITR_JSON: ', this.ITR_JSON);
       // const response = await this.verifyAllBanks();
       // console.log('Bank API response in saveProfile', ":", response);
@@ -2799,5 +2859,226 @@ export class PersonalInformationComponent implements OnInit {
     this.customerProfileForm.controls['form10IEDate'].setValue(
       moment(dateString).toDate()
     );
+  }
+
+  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< FILING SECTION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  get seventhProviso139() {
+    return this.customerProfileForm.controls['seventhProviso139'] as FormGroup;
+  }
+
+  get getClauseiv7provisio139iDtls() {
+    return this.seventhProviso139.controls[
+      'clauseiv7provisio139iDtls'
+    ] as FormArray;
+  }
+
+  addClauseIv(classIvDtls) {
+    const ClauseIv = this.getClauseiv7provisio139iDtls;
+    const ClauseIvJson =
+      this.ITR_JSON.seventhProviso139?.clauseiv7provisio139iDtls;
+
+    if (classIvDtls === 'addEmpty') {
+      if (ClauseIv?.valid) {
+        const formGroup = this.fb.group({
+          nature: null,
+          amount: null,
+        });
+        ClauseIv?.push(formGroup);
+      }
+    } else if (ClauseIvJson && ClauseIvJson.length > 0) {
+      // Clear existing form groups
+      while (ClauseIv.length !== 0) {
+        ClauseIv.removeAt(0);
+      }
+
+      classIvDtls?.forEach((element) => {
+        const formGroup = this.fb.group({
+          nature: element.nature,
+          amount: element.amount,
+        });
+        ClauseIv?.push(formGroup);
+        console.log(ClauseIv);
+      });
+    }
+  }
+
+  // Create a variable to store the data
+  seventhProvsioChangeSavedData: any;
+
+  // Function to set a validator
+  setValidator(controlName: string, validator: any) {
+    this.seventhProviso139.get(controlName).setValidators(validator);
+    this.seventhProviso139.get(controlName).updateValueAndValidity();
+  }
+
+  // Function to clear a validator
+  clearValidator(controlName: string) {
+    this.seventhProviso139.get(controlName).clearValidators();
+    this.seventhProviso139.get(controlName).updateValueAndValidity();
+  }
+
+  // 1
+  seventhProvisio139() {
+    const seventhProvisio139 = this.seventhProviso139;
+    const seventhProvisio139Flag =
+      seventhProvisio139.controls['seventhProvisio139'];
+    const seventhProvisio139Value = seventhProvisio139.value;
+
+    if (seventhProvisio139Flag.value === 'N') {
+      // Save the data and clear the form group
+      this.seventhProvsioChangeSavedData = seventhProvisio139Value;
+      seventhProvisio139.reset();
+      seventhProvisio139Flag.setValue('N');
+
+      // marking questions as not required if seventhProvisio is no
+      this.clearValidator('strDepAmtAggAmtExcd1CrPrYrFlg');
+      this.clearValidator('strIncrExpAggAmt2LkTrvFrgnCntryFlg');
+      this.clearValidator('strIncrExpAggAmt1LkElctrctyPrYrFlg');
+      this.clearValidator('clauseiv7provisio139i');
+    } else {
+      // marking questions as not required if seventhProvisio is yes
+      this.setValidator('strDepAmtAggAmtExcd1CrPrYrFlg', Validators.required);
+      this.setValidator(
+        'strIncrExpAggAmt2LkTrvFrgnCntryFlg',
+        Validators.required
+      );
+      this.setValidator(
+        'strIncrExpAggAmt1LkElctrctyPrYrFlg',
+        Validators.required
+      );
+      this.setValidator('clauseiv7provisio139i', Validators.required);
+
+      // Check if there is saved data and populate the form group
+      if (this.seventhProvsioChangeSavedData) {
+        seventhProvisio139.patchValue(this.seventhProvsioChangeSavedData);
+        seventhProvisio139Flag.setValue('Y');
+      }
+    }
+  }
+
+  // 2
+  incrExpAggAmt2LkTrvFrgnCntryFlgSaved: any;
+  strIncrExpAggAmt2LkTrvFrgnCntryFlg() {
+    const seventhProvisio139 = this.seventhProviso139;
+    const twoLakhsFlag =
+      seventhProvisio139.controls['strIncrExpAggAmt2LkTrvFrgnCntryFlg'];
+    const twoLakhsFlagKey = 'incrExpAggAmt2LkTrvFrgnCntryFlg';
+    const twoLakhsValue =
+      seventhProvisio139.controls['incrExpAggAmt2LkTrvFrgnCntryFlg'];
+
+    if (twoLakhsFlag.value === 'N') {
+      // Save the data and clear the form group
+      this.incrExpAggAmt2LkTrvFrgnCntryFlgSaved = twoLakhsValue.value;
+      twoLakhsValue?.reset();
+      twoLakhsFlag?.setValue('N');
+      this.clearValidator(twoLakhsFlagKey);
+    } else {
+      this.setValidator(twoLakhsFlagKey, Validators.required);
+      // Check if there is saved data and populate the form group
+      if (this.incrExpAggAmt2LkTrvFrgnCntryFlgSaved) {
+        twoLakhsValue.patchValue(this.incrExpAggAmt2LkTrvFrgnCntryFlgSaved);
+        twoLakhsFlag.setValue('Y');
+      }
+    }
+  }
+
+  // 3
+  incrExpAggAmt1LkElctrctyPrYrFlgSaved: any;
+  strIncrExpAggAmt1LkElctrctyPrYrFlg() {
+    const seventhProvisio139 = this.seventhProviso139;
+    const oneLakhsFlag =
+      seventhProvisio139.controls['strIncrExpAggAmt1LkElctrctyPrYrFlg'];
+    const oneLakhsFlagKey = 'incrExpAggAmt1LkElctrctyPrYrFlg';
+    const oneLakhsValue =
+      seventhProvisio139.controls['incrExpAggAmt1LkElctrctyPrYrFlg'];
+
+    if (oneLakhsFlag.value === 'N') {
+      // Save the data and clear the form group
+      this.incrExpAggAmt1LkElctrctyPrYrFlgSaved = oneLakhsValue.value;
+      oneLakhsValue?.reset();
+      oneLakhsFlag?.setValue('N');
+      this.clearValidator(oneLakhsFlagKey);
+    } else {
+      this.setValidator(oneLakhsFlagKey, Validators.required);
+      // Check if there is saved data and populate the form group
+      if (this.incrExpAggAmt1LkElctrctyPrYrFlgSaved) {
+        oneLakhsValue.patchValue(this.incrExpAggAmt1LkElctrctyPrYrFlgSaved);
+        oneLakhsFlag.setValue('Y');
+      }
+    }
+  }
+
+  // 4
+  clauseiv7provisio139iSaved: any;
+  clauseiv7provisio139i() {
+    const seventhProvisio139 = this.seventhProviso139;
+    const clauseIvArray = this.getClauseiv7provisio139iDtls;
+    const clauseIvFlag = seventhProvisio139.controls['clauseiv7provisio139i'];
+
+    // Iterate through the controls in the FormArray
+    clauseIvArray.controls.forEach((control) => {
+      const amount = control.get('amount');
+      const nature = control.get('nature');
+
+      if (clauseIvFlag.value === 'N') {
+        // Save the data and clear the form group
+        this.clauseiv7provisio139iSaved = amount.value;
+        amount.reset();
+        clauseIvFlag.setValue('N');
+        amount.clearValidators();
+        nature.clearValidators();
+      } else {
+        amount.setValidators(Validators.required);
+        nature.setValidators(Validators.required);
+
+        // Check if there is saved data and populate the form group
+        if (this.clauseiv7provisio139iSaved) {
+          amount.patchValue(this.clauseiv7provisio139iSaved);
+          clauseIvFlag.setValue('Y');
+        }
+      }
+    });
+  }
+
+  // 5
+  depAmtAggAmtExcd1CrPrYrFlgSaved: any;
+  strDepAmtAggAmtExcd1CrPrYrFlg() {
+    const seventhProvisio139 = this.seventhProviso139;
+    const oneCroreFlag =
+      seventhProvisio139.controls['strDepAmtAggAmtExcd1CrPrYrFlg'];
+    const oneCroreFlagKey = 'depAmtAggAmtExcd1CrPrYrFlg';
+    const oneCroreValue =
+      seventhProvisio139.controls['depAmtAggAmtExcd1CrPrYrFlg'];
+
+    if (oneCroreFlag.value === 'N') {
+      // Save the data and clear the form group
+      this.depAmtAggAmtExcd1CrPrYrFlgSaved = oneCroreValue.value;
+      oneCroreValue?.reset();
+      oneCroreFlag?.setValue('N');
+      this.clearValidator(oneCroreFlagKey);
+    } else {
+      this.setValidator(oneCroreFlagKey, Validators.required);
+      // Check if there is saved data and populate the form group
+      if (this.depAmtAggAmtExcd1CrPrYrFlgSaved) {
+        oneCroreValue.patchValue(this.depAmtAggAmtExcd1CrPrYrFlgSaved);
+        oneCroreFlag.setValue('Y');
+      }
+    }
+  }
+
+  fieldGlobalIndex(index) {
+    return this.config?.itemsPerPage * (this.config?.currentPage - 1) + index;
+  }
+
+  //  TO DO AJAY HAS TO ADD HASEDIT KEY FOR THIS TO WORK
+  deleteClauseIvArray() {
+    const clauseIvArray = this.getClauseiv7provisio139iDtls;
+
+    clauseIvArray?.controls.forEach((element, index) => {
+      if ((element as FormGroup).controls['hasEdit']?.value) {
+        clauseIvArray?.removeAt(index);
+      }
+    });
   }
 }

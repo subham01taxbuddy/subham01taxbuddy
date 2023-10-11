@@ -54,7 +54,16 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
     page: 0,
     pageSize: 20,
   };
-
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'code', name: 'Code' },
+    { value: 'title', name: 'Title' },
+    { value: 'startDate', name: 'Start Date' },
+    { value: 'endDate', name: 'End Date' },
+    { value: 'discountType', name: 'Discount Type' },
+    { value: 'discountAmount', name: 'Discount Amount' },
+    { value: 'discountPercent', name: 'Discount %' }
+  ];
 
   constructor(
     private datePipe: DatePipe,
@@ -90,6 +99,10 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
     this.getPromoCodeList();
   }
 
+  sortByObject(object) {
+    this.sortBy = object;
+  }
+
   getPromoCodeList(pageChange?) {
     //'http://uat-api.taxbuddy.com/itr/promocodes?page=0&pageSize=30&code=earlybird30&serviceType=ITR'
     if (!pageChange) {
@@ -116,6 +129,11 @@ export class PromoCodesComponent implements OnInit, OnDestroy {
     }
 
     param = `/promocodes?${data}${searchFilter}${serviceFilter}`;
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
+
     this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('Promo codes data: ', result);
       this.loading = false;

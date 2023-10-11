@@ -114,13 +114,18 @@ const routes: Routes = [
         children: [
           { path: 'schedule-al', component: ScheduleALComponent },
           { path: 'schedule-cfl', component: ScheduleCflComponent },
+        ],
+      },
+      {
+        path: 'nri',
+        component: ForeignIncomeComponent,
+        children: [
           { path: 'schedule-fsi', component: ScheduleFsiComponent },
           { path: 'schedule-tr', component: ScheduleTrComponent },
           { path: 'schedule-fa', component: ScheduleFaComponent },
           { path: 'partner-in-firms', component: PartnerInFirmsComponent },
         ],
       },
-      { path: 'nri', component: ForeignIncomeComponent },
       { path: 'eri', component: AddClientsComponent },
       { path: 'summary', component: SummaryComponent },
       { path: 'validation-errors', component: ValidationErrorScreenComponent },

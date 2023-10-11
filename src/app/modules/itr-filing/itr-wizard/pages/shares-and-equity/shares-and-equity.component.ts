@@ -146,6 +146,7 @@ export class SharesAndEquityComponent
         (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
       );
     }
+    let ltcg = 0;
     if (data.length > 0) {
       data.forEach((obj: any) => {
         assetDetails = obj.assetDetails;
@@ -155,6 +156,9 @@ export class SharesAndEquityComponent
             const filterImp = obj.improvement?.filter(
               (data) => data.srn == element.srn
             );
+            if (element.gainType === 'LONG') {
+              ltcg += element.capitalGain;
+            }
             if (filterImp?.length > 0) {
               element['costOfImprovement'] = filterImp[0].costOfImprovement;
             }
@@ -172,7 +176,7 @@ export class SharesAndEquityComponent
           this.deduction = false;
           this.isDisable = true;
         } else {
-          this.isDisable = false;
+          this.isDisable = ltcg <= 0;
         }
       });
     } else {
@@ -682,10 +686,11 @@ export class SharesAndEquityComponent
       );
     }
     if (data.length > 0) {
-      data.forEach((obj) => {
-        let assetDetails = obj.assetDetails.filter((security: any) => brokerNames.includes(security.brokerName));
-        obj.assetDetails = assetDetails;
-      });
+      // data.forEach((obj) => {
+      //   let assetDetails = obj.assetDetails.filter((security: any) => brokerNames.includes(security.brokerName));
+      //   obj.assetDetails = assetDetails;
+      // });
+      this.initBrokerList(itrObject);
     }
     console.log('ITR json', this.Copy_ITR_JSON);
   }
@@ -730,6 +735,9 @@ export class SharesAndEquityComponent
         securities.controls['isinCode'].setValue('');
         securities.controls['nameOfTheUnits'].setValue('');
         securities.controls['fmvAsOn31Jan2018'].setValue('');
+      } else {
+        securities.controls['isinCode'].setValidators([Validators.required]);
+        securities.controls['isinCode'].updateValueAndValidity();
       }
     }
     if (
@@ -807,7 +815,7 @@ export class SharesAndEquityComponent
         ],
 
         deduction:
-          this.deductionForm.invalid || this.getSecuritiesCg() <= 0
+          this.deductionForm.invalid || this.getSecuritiesCg() <= 0 || !this.deduction
             ? []
             : [this.deductionForm.getRawValue()],
       };
@@ -942,7 +950,7 @@ export class SharesAndEquityComponent
           this.bondType === 'listed'
             ? 'EQUITY_SHARES_LISTED'
             : 'EQUITY_SHARES_UNLISTED',
-        deduction: [this.deductionForm.getRawValue()],
+        deduction: !this.deduction ? [] : [this.deductionForm.getRawValue()],
         improvement: securitiesImprovement,
         buyersDetails: [],
         assetDetails: assetDetails,
@@ -1027,7 +1035,7 @@ export class SharesAndEquityComponent
           this.bondType === 'listed'
             ? 'EQUITY_SHARES_LISTED'
             : 'EQUITY_SHARES_UNLISTED',
-        deduction: [this.deductionForm.getRawValue()],
+        deduction: !this.deduction ? [] : [this.deductionForm.getRawValue()],
         improvement: securitiesImprovement,
         buyersDetails: [],
         assetDetails: securitiesArray.getRawValue(),

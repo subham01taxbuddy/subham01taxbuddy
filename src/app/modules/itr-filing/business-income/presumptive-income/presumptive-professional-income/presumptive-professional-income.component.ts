@@ -91,6 +91,10 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     this.profIncomeForm = this.fb.group({
       profIncomeFormArray: this.profIncomeFormArray,
     });
+
+    this.profIncomeFormArray.controls.forEach((formgroup, index) => {
+      this.calculatePresumptive(null, index);
+    });
   }
 
   get getProfIncomeArray() {

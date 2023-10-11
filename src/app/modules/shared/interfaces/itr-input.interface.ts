@@ -105,6 +105,7 @@ export interface ITR_JSON {
 
   itrSummaryJson: any;
   isItrSummaryJsonEdited: boolean;
+  liableSection44AAflag: string;
 }
 
 export interface foreignIncome {
@@ -488,6 +489,7 @@ export interface NewCapitalGain {
 export interface AssetDetails {
   brokerName: String;
   capitalGain: number;
+  cgBeforeDeduction: number;
   srn: number;
   id: string;
   description: string;
@@ -887,9 +889,15 @@ export interface PaidRefund {
 }
 
 export interface SeventhProviso139 {
-  depAmtAggAmtExcd1CrPrYrFlg: number;
-  incrExpAggAmt2LkTrvFrgnCntryFlg: number;
-  incrExpAggAmt1LkElctrctyPrYrFlg: number;
+  seventhProvisio139: any;
+  strDepAmtAggAmtExcd1CrPrYrFlg: any;
+  depAmtAggAmtExcd1CrPrYrFlg: any;
+  strIncrExpAggAmt2LkTrvFrgnCntryFlg: any;
+  incrExpAggAmt2LkTrvFrgnCntryFlg: any;
+  strIncrExpAggAmt1LkElctrctyPrYrFlg: any;
+  incrExpAggAmt1LkElctrctyPrYrFlg: any;
+  clauseiv7provisio139i: any;
+  clauseiv7provisio139iDtls: any;
 }
 export interface Jurisdictions {
   jurisdictionResidence: any;
