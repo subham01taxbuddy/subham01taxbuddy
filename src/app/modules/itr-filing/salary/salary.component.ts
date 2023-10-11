@@ -10,6 +10,8 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { WizardNavigation } from '../../itr-shared/WizardNavigation';
 import { AllSalaryIncomeComponent } from '../itr-wizard/pages/all-salary-income/all-salary-income.component';
 import { min } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { BifurcationComponent } from './bifurcation/bifurcation.component';
 declare let $: any;
 
 @Component({
@@ -118,7 +120,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private location: Location,
-    private AllSalaryIncomeComponent: AllSalaryIncomeComponent
+    private AllSalaryIncomeComponent: AllSalaryIncomeComponent,
+    private matDialog: MatDialog
   ) {
     super();
     console.log('nav data', this.router.getCurrentNavigation()?.extras?.state);
@@ -946,6 +949,20 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   }
 
   bifurcation() {
-    console.log('buttonWorks');
+    const dialogRef = this.matDialog.open(BifurcationComponent, {
+      data: {
+        data: 'data',
+      },
+      closeOnNavigation: true,
+      disableClose: false,
+      width: '700px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('BifurcationComponent=', result);
+      if (result !== undefined) {
+        console.log(result);
+      }
+    });
   }
 }
