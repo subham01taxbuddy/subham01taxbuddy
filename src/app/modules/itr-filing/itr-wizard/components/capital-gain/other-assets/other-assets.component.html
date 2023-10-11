@@ -37,7 +37,7 @@
 <!--            ></app-other-asset-improvement>-->
             <ag-grid-angular class="ag-theme-balham topSps"
                              [gridOptions]="gridOptions"
-                             (rowClicked)="addOtherAssets(true, $event)">
+                             (rowClicked)="onOtherAssetsRowClicked($event)">
             </ag-grid-angular>
             <button
               class="delete-btn delete-icon"
