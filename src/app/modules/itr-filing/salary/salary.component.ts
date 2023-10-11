@@ -9,7 +9,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { WizardNavigation } from '../../itr-shared/WizardNavigation';
 import { AllSalaryIncomeComponent } from '../itr-wizard/pages/all-salary-income/all-salary-income.component';
-import {min} from "rxjs";
+import { min } from 'rxjs';
 declare let $: any;
 
 @Component({
@@ -221,8 +221,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
   isVrsExemptionTaken = false;
 
-  updateVrsExemptionTaken(){
-    this.isVrsExemptionTaken = this.allowanceFormGroup.controls['vrsLastYear'].value || this.allowanceFormGroup.controls['sec89'].value;
+  updateVrsExemptionTaken() {
+    this.isVrsExemptionTaken =
+      this.allowanceFormGroup.controls['vrsLastYear'].value ||
+      this.allowanceFormGroup.controls['sec89'].value;
     this.allowanceFormGroup.updateValueAndValidity();
   }
 
@@ -256,6 +258,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             updateOn: 'change',
           },
         ],
+        standardDeduction: [
+          50000,
+          {
+            validators: Validators.compose([Validators.max(50000)]),
+            updateOn: 'change',
+          },
+        ],
       });
     } else {
       return this.fb.group({
@@ -273,6 +282,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
               Validators.max(this.limitPT),
               Validators.pattern(AppConstants.numericRegex),
             ]),
+            updateOn: 'change',
+          },
+        ],
+        standardDeduction: [
+          50000,
+          {
+            validators: Validators.compose([Validators.max(50000)]),
             updateOn: 'change',
           },
         ],
@@ -312,8 +328,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       if (this.allowanceDropdown[i].value === 'COMPENSATION_ON_VRS') {
         validators = Validators.max(500000);
       }
-      let allowedEmpTypes = ['CENTRAL_GOVT', 'GOVERNMENT', 'PRIVATE']
-      if(allowedEmpTypes.includes(this.ITR_JSON.employerCategory) && this.allowanceDropdown[i].value === 'COMPENSATION_ON_VRS') {
+      let allowedEmpTypes = ['CENTRAL_GOVT', 'GOVERNMENT', 'PRIVATE'];
+      if (
+        allowedEmpTypes.includes(this.ITR_JSON.employerCategory) &&
+        this.allowanceDropdown[i].value === 'COMPENSATION_ON_VRS'
+      ) {
         data.push(
           this.fb.group({
             label: this.allowanceDropdown[i].label,
@@ -321,7 +340,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             allowValue: [null, validators],
           })
         );
-      } else if(this.allowanceDropdown[i].value !== 'COMPENSATION_ON_VRS') {
+      } else if (this.allowanceDropdown[i].value !== 'COMPENSATION_ON_VRS') {
         data.push(
           this.fb.group({
             label: this.allowanceDropdown[i].label,
@@ -472,9 +491,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         }
       }
 
-      if(this.deductionsFormGroup.controls['entertainmentAllow'].value > Math.min(basicSalaryAmount/5, this.maxEA)){
+      if (
+        this.deductionsFormGroup.controls['entertainmentAllow'].value >
+        Math.min(basicSalaryAmount / 5, this.maxEA)
+      ) {
         this.utilsService.showSnackBar(
-          'Deduction of entertainment allowance cannot exceed 1/5 of salary as per salary 17(1) or 5000 whichever is lower');
+          'Deduction of entertainment allowance cannot exceed 1/5 of salary as per salary 17(1) or 5000 whichever is lower'
+        );
         return;
       }
 
@@ -491,29 +514,46 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           this.allowanceFormGroup.controls['allowances'] as FormArray
         ).controls[i] as FormGroup;
         if (this.utilsService.isNonZero(allowance.value.allowValue)) {
-          if(allowance.controls['allowType'].value === 'NON_MONETARY_PERQUISITES' &&
-            (allowance.controls['allowValue'].value !== 0 && allowance.controls['allowValue'].value > perquisitesAmount)){
+          if (
+            allowance.controls['allowType'].value ===
+              'NON_MONETARY_PERQUISITES' &&
+            allowance.controls['allowValue'].value !== 0 &&
+            allowance.controls['allowValue'].value > perquisitesAmount
+          ) {
             this.utilsService.showSnackBar(
-              'Non Monetary Perquisites u/s10(10C) cannot exceed the amount of Perquisites - Salary 17(2)');
+              'Non Monetary Perquisites u/s10(10C) cannot exceed the amount of Perquisites - Salary 17(2)'
+            );
             return;
           }
-          if(allowance.controls['allowType'].value === 'HOUSE_RENT' &&
-             allowance.controls['allowValue'].value > basicSalaryAmount/2){
+          if (
+            allowance.controls['allowType'].value === 'HOUSE_RENT' &&
+            allowance.controls['allowValue'].value > basicSalaryAmount / 2
+          ) {
             this.utilsService.showSnackBar(
-              'HRA cannot be more than 50% of Salary u/s 17(1).');
+              'HRA cannot be more than 50% of Salary u/s 17(1).'
+            );
             return;
           }
-          if(allowance.controls['allowType'].value === 'NON_MONETARY_PERQUISITES' &&
-            (allowance.controls['allowValue'].value !== 0 && perquisitesAmount === 0)){
+          if (
+            allowance.controls['allowType'].value ===
+              'NON_MONETARY_PERQUISITES' &&
+            allowance.controls['allowValue'].value !== 0 &&
+            perquisitesAmount === 0
+          ) {
             this.utilsService.showSnackBar(
-              'Non Monetary Perquisites u/s10(10C) is allowed only for Perquisites - Salary 17(2)');
+              'Non Monetary Perquisites u/s10(10C) is allowed only for Perquisites - Salary 17(2)'
+            );
             return;
           }
-          if(allowance.controls['allowType'].value === 'COMPENSATION_ON_VRS' &&
-            (allowance.controls['allowValue'].value !== 0
-              && (this.allowanceFormGroup.controls['vrsLastYear'].value === true || this.allowanceFormGroup.controls['sec89'].value === true))){
+          if (
+            allowance.controls['allowType'].value === 'COMPENSATION_ON_VRS' &&
+            allowance.controls['allowValue'].value !== 0 &&
+            (this.allowanceFormGroup.controls['vrsLastYear'].value === true ||
+              this.allowanceFormGroup.controls['sec89'].value === true)
+          ) {
             this.utilsService.showSnackBar(
-              'VRS exemption cannot be claimed again in this year');
+              'VRS exemption cannot be claimed again in this year'
+            );
             return;
           }
           this.localEmployer.allowance.push({
