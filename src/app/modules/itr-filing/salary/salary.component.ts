@@ -944,4 +944,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   goBack() {
     this.saveAndNext.emit(true);
   }
+
+  bifurcation() {
+    console.log('buttonWorks');
+  }
 }

@@ -209,7 +209,7 @@
                 <td>
                   <mat-form-field
                     class="input-field-width"
-                    style="width: 90% !important"
+                    style="width: 80% !important; margin-right: 5px"
                   >
                     <input
                       type="text"
@@ -223,6 +223,13 @@
                       maxlength="125"
                     />
                   </mat-form-field>
+                  <button
+                    mat-mini-fab
+                    style="margin-left: 5%"
+                    (click)="bifurcation()"
+                  >
+                    <mat-icon>filter_list</mat-icon>
+                  </button>
                 </td>
               </tr>
             </tbody>
