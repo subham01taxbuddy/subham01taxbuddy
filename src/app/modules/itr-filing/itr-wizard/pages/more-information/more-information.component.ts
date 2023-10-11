@@ -27,6 +27,7 @@ export class MoreInformationComponent
   isEditZeroCouponBonds: boolean;
   isEditOtherAssets: boolean;
   topicList = [];
+  show :boolean = false
 
   constructor(
     private router: Router,
@@ -36,6 +37,7 @@ export class MoreInformationComponent
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    this.show = (this.ITR_JSON.partnerInFirmFlag === 'Y' ? true : false) || (this.Copy_ITR_JSON.partnerInFirmFlag === 'Y' ? true : false)
 
     this.initList();
   }
@@ -47,29 +49,41 @@ export class MoreInformationComponent
         label: 'Schedule Assets & Liability (AL)',
         path: 'schedule-al',
         type: 'scheduleAl',
+        showOnUi :true
       },
       {
         label: 'Losses to be carried forward (Schedule CFL)',
         path: 'schedule-cfl',
         type: 'scheduleCfl',
+        showOnUi :true
       },
       {
         label:
           'Details of income from outside India and tax relief (Schedule FSI)',
         path: 'schedule-fsi',
         type: 'scheduleFsi',
+        showOnUi :true
       },
       {
         label:
           'Details Summary of tax relief claimed for taxes paid outside India (Schedule TR)',
         path: 'schedule-tr',
         type: 'scheduleTr',
+        showOnUi :true
       },
       {
         label:
           'Details of foreign assets and income from any source outside India (Schedule FA)',
         path: 'schedule-fa',
         type: 'scheduleFa',
+        showOnUi :true
+      },
+      {
+        label:
+          'Income From Firms in which you are Partner',
+        path: 'partner-in-firms',
+        type: 'partner',
+        showOnUi :this.show
       },
     ];
   }
