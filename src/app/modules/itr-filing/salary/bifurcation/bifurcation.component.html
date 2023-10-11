@@ -1,0 +1,153 @@
+<form [formGroup]="bifurcationFormGroup">
+  <div class="surround scroll">
+    <div formArrayName="salary">
+      <div
+        *ngFor="let salaryControl of salary.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <!-- basic -->
+        <div>
+          <div class="container">
+            <div>Basic</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>BASIC</mat-label>
+                <input matInput formControlName="BASIC" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- DA -->
+        <div>
+          <div class="container">
+            <div>Dearness Allowance</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>DA</mat-label>
+                <input matInput formControlName="DA" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- CONVEYANCE -->
+        <div>
+          <div class="container">
+            <div>Conveyance Allowance</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>CONVEYANCE</mat-label>
+                <input matInput formControlName="CONVEYANCE" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- CONVEYANCE -->
+        <div>
+          <div class="container">
+            <div>House Rent Allowance</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>HOUSE_RENT</mat-label>
+                <input matInput formControlName="HOUSE_RENT" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- LTA -->
+        <div>
+          <div class="container">
+            <div>Leave Travel Allowance</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>LTA</mat-label>
+                <input matInput formControlName="LTA" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- CHILDREN_EDUCATION -->
+        <div>
+          <div class="container">
+            <div>Children education Allowance</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>CHILDREN_EDUCATION</mat-label>
+                <input matInput formControlName="CHILDREN_EDUCATION" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- OTHER_ALLOWANCE -->
+        <div>
+          <div class="container">
+            <div>Other Allowance</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>OTHER_ALLOWANCE</mat-label>
+                <input matInput formControlName="OTHER_ALLOWANCE" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- CONTRI_80CCD -->
+        <div>
+          <div class="container">
+            <div>CONTRI_80CCD</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>CONTRI_80CCD</mat-label>
+                <input matInput formControlName="CONTRI_80CCD" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- RULE_6_PART_A_4TH_SCHEDULE -->
+        <div>
+          <div class="container">
+            <div>RULE_6_PART_A_4TH_SCHEDULE</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>RULE_6_PART_A_4TH_SCHEDULE</mat-label>
+                <input matInput formControlName="RULE_6_PART_A_4TH_SCHEDULE" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- RULE_11_4_PART_A_4TH_SCHEDULE -->
+        <div>
+          <div class="container">
+            <div>RULE_11_4_PART_A_4TH_SCHEDULE</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>RULE_11_4_PART_A_4TH_SCHEDULE</mat-label>
+                <input
+                  matInput
+                  formControlName="RULE_11_4_PART_A_4TH_SCHEDULE"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+      </div>
+    </div>
+  </div>
+</form>
