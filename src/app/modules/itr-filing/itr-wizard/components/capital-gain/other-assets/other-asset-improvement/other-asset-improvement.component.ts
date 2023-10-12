@@ -228,11 +228,11 @@ export class OtherAssetImprovementComponent implements OnInit {
     this.goldCg.assetDetails.forEach((asset) => {
       //find improvement
       let improvements = this.goldCg.improvement;
-      let srnObj = improvements.find((element) => element.srn === this.assetIndex);
-      if (!srnObj && improvements.length > 0) {
+      let srnObj = improvements?.find((element) => element.srn === this.assetIndex);
+      if (!srnObj && improvements?.length > 0) {
         improvements[0].srn = this.assetIndex;
       }
-      if (!improvements || improvements.length == 0) {
+      if (!improvements || improvements?.length == 0) {
         let improvement = {
           indexCostOfImprovement: 0,
           id: asset.srn,
@@ -247,11 +247,11 @@ export class OtherAssetImprovementComponent implements OnInit {
       }
 
       let deduction = this.goldCg.deduction;
-      let srnDednObj = deduction.find((element) => element.srn === this.assetIndex);
-      if (!srnDednObj && deduction.length > 0) {
+      let srnDednObj = deduction?.find((element) => element.srn === this.assetIndex);
+      if (!srnDednObj && deduction?.length > 0) {
         deduction[0].srn = this.assetIndex;
       }
-      if (!deduction || deduction.length == 0) {
+      if (!deduction || deduction?.length == 0) {
         let deduction = {
           costOfNewAssets: null,
           costOfPlantMachinary: null,
@@ -352,7 +352,11 @@ export class OtherAssetImprovementComponent implements OnInit {
       (item) => item.assetType === 'GOLD'
     );
 
-    filteredCapitalGain[0].assetDetails.push(this.goldCg.assetDetails[0]);
+    if(this.data.assetIndex >= 0){
+      filteredCapitalGain[0].assetDetails[this.data.assetIndex] = this.goldCg.assetDetails[0];
+    } else {
+      filteredCapitalGain[0].assetDetails.push(this.goldCg.assetDetails[0]);
+    }
     this.ITR_JSON.capitalGain.push(filteredCapitalGain[0]);
     // // Check if the filtered capitalGain array is not empty and assetDetails length is 0
     // if (
