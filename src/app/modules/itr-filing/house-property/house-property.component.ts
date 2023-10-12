@@ -1181,8 +1181,8 @@ export class HousePropertyComponent implements OnInit {
         ) {
           //Ashwini: Removed max validation due to some complaints for issue
           // interestAmountControl?.setValidators(Validators.max(200000));
-          interestAmountControl?.updateValueAndValidity();
-          interestAmountControl?.setErrors({ maxValueExceeded: true });
+          // interestAmountControl?.updateValueAndValidity();
+          // interestAmountControl?.setErrors({ maxValueExceeded: true });
         }
       }
 
