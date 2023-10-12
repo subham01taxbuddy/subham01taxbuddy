@@ -319,6 +319,12 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
         this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+        let listedData = this.ITR_JSON.capitalGain?.filter(
+          (item) => item.assetType === 'GOLD'
+        );
+        if (listedData?.length > 0) {
+          this.goldCg = listedData[0];
+        }
         this.createRowData();
         this.gridOptions.api?.setRowData(this.assetList);
       }

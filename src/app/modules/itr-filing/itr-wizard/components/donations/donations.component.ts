@@ -456,8 +456,6 @@ export class DonationsComponent implements OnInit {
         }
       });
       this.panValidation();
-    } else {
-      this.addMoreDonations();
     }
 
   }
@@ -499,7 +497,7 @@ export class DonationsComponent implements OnInit {
       donationType: this.type === '80gga' ? 'SCIENTIFIC' : 'OTHER',
       amountInCash: [
         item ? item.amountInCash : 0,
-        [Validators.required],
+        this.type === '80gga' ? [Validators.required] : [Validators.required, Validators.max(2000)],
       ],
       amountOtherThanCash: [
         item ? item.amountOtherThanCash : null,
@@ -509,7 +507,7 @@ export class DonationsComponent implements OnInit {
       details: [item ? item.details : ''],
       name: [
         item ? item.name : '',
-        [Validators.required, Validators.pattern(AppConstants.charRegex)],
+        [Validators.required, Validators.pattern(AppConstants.charSpecialRegex)],
       ],
       address: [item ? item.address : '', Validators.required],
       city: [item ? item.city : '', Validators.required],
