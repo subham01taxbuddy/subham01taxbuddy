@@ -43,7 +43,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class DailyCallingReportComponent implements OnInit ,OnDestroy {
+export class DailyCallingReportComponent implements OnInit, OnDestroy {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
@@ -63,6 +63,13 @@ export class DailyCallingReportComponent implements OnInit ,OnDestroy {
   loggedInSme: any;
   roles: any;
   showCsvMessage: boolean;
+  sortMenus = [
+    { value: 'filerName', name: 'Filer Name / Owner Name / Leader Name ' },
+    { value: 'outboundAnsweredRatio', name: 'Outbound answered Ratio' },
+    { value: 'inboundAnsweredRatio', name: 'Inbound answered Ratio' },
+    { value: 'noOfMissedCall', name: 'No. of Missed calls' }
+  ];
+  sortBy: any = {};
   constructor(
     public datePipe: DatePipe,
     private userMsService: UserMsService,
@@ -135,10 +142,14 @@ export class DailyCallingReportComponent implements OnInit ,OnDestroy {
 
   }
 
+  sortByObject(object) {
+    this.sortBy = object;
+  }
+
   showReports(pageNumber?) {
     // https://uat-api.taxbuddy.com/report/calling-report/daily-calling-report?fromDate=2023-04-01&toDate=2023-05-16
     // https://uat-api.taxbuddy.com/report/calling-report/daily-calling-report?filerUserId=11029&page=0&pageSize=10&fromDate=2023-05-01&toDate=2023-05-24&ownerUserId=7521
-    if(!pageNumber){
+    if (!pageNumber) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
@@ -160,7 +171,7 @@ export class DailyCallingReportComponent implements OnInit ,OnDestroy {
       userFilter += `&ownerUserId=${this.ownerId}`;
     }
 
-    if (this.filerId  && !pageNumber) {
+    if (this.filerId && !pageNumber) {
       this.searchParam.page = 0;
       this.config.currentPage = 1
       userFilter += `&filerUserId=${this.filerId}`;
@@ -174,6 +185,10 @@ export class DailyCallingReportComponent implements OnInit ,OnDestroy {
     // this.searchParam.page = pageNumber ? pageNumber - 1 : 0;
     let data = this.utilsService.createUrlParams(this.searchParam);
     param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
@@ -184,7 +199,7 @@ export class DailyCallingReportComponent implements OnInit ,OnDestroy {
         // this.cacheManager.cachePageContent(0, this.createRowData(this.dailyCallingReport));
 
         const currentPageNumber = pageNumber || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.dailyCallingReport));
+        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.dailyCallingReport));
         this.config.currentPage = currentPageNumber;
 
       } else {
@@ -368,7 +383,7 @@ export class DailyCallingReportComponent implements OnInit ,OnDestroy {
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
     param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'daily-calling-report', '');
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'daily-calling-report', '', this.sortBy);
     this.loading = false;
     this.showCsvMessage = false;
   }
