@@ -2,7 +2,7 @@
   <div class="surround scroll">
     <div formArrayName="salary">
       <div
-        *ngFor="let salaryControl of salary.controls; let i = index"
+        *ngFor="let salaryControl of getSalary.controls; let i = index"
         [formGroupName]="i"
       >
         <!-- basic -->
@@ -11,8 +11,8 @@
             <div>Basic</div>
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
-                <mat-label>BASIC</mat-label>
-                <input matInput formControlName="BASIC" />
+                <mat-label>Basic</mat-label>
+                <input matInput formControlName="BASIC_SALARY" />
               </mat-form-field>
             </div>
           </div>
@@ -22,10 +22,10 @@
         <!-- DA -->
         <div>
           <div class="container">
-            <div>Dearness Allowance</div>
+            <div>Dearness Allowance (DA)</div>
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
-                <mat-label>DA</mat-label>
+                <mat-label>Dearness</mat-label>
                 <input matInput formControlName="DA" />
               </mat-form-field>
             </div>
@@ -39,7 +39,7 @@
             <div>Conveyance Allowance</div>
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
-                <mat-label>CONVEYANCE</mat-label>
+                <mat-label>Conveyance</mat-label>
                 <input matInput formControlName="CONVEYANCE" />
               </mat-form-field>
             </div>
@@ -50,10 +50,10 @@
         <!-- CONVEYANCE -->
         <div>
           <div class="container">
-            <div>House Rent Allowance</div>
+            <div>House Rent Allowance (HRA)</div>
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
-                <mat-label>HOUSE_RENT</mat-label>
+                <mat-label>House Rent</mat-label>
                 <input matInput formControlName="HOUSE_RENT" />
               </mat-form-field>
             </div>
@@ -64,10 +64,10 @@
         <!-- LTA -->
         <div>
           <div class="container">
-            <div>Leave Travel Allowance</div>
+            <div>Leave Travel Allowance (LTA)</div>
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
-                <mat-label>LTA</mat-label>
+                <mat-label>Leave Travel</mat-label>
                 <input matInput formControlName="LTA" />
               </mat-form-field>
             </div>
@@ -78,10 +78,10 @@
         <!-- CHILDREN_EDUCATION -->
         <div>
           <div class="container">
-            <div>Children education Allowance</div>
+            <div>Children Education Allowance (CEA)</div>
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
-                <mat-label>CHILDREN_EDUCATION</mat-label>
+                <mat-label>Children Education</mat-label>
                 <input matInput formControlName="CHILDREN_EDUCATION" />
               </mat-form-field>
             </div>
@@ -95,7 +95,7 @@
             <div>Other Allowance</div>
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
-                <mat-label>OTHER_ALLOWANCE</mat-label>
+                <mat-label>Other Allowance</mat-label>
                 <input matInput formControlName="OTHER_ALLOWANCE" />
               </mat-form-field>
             </div>
@@ -106,7 +106,10 @@
         <!-- CONTRI_80CCD -->
         <div>
           <div class="container">
-            <div>CONTRI_80CCD</div>
+            <div>
+              The contribution made by the employer towards the pension scheme
+              as referred under section 80CCD
+            </div>
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>CONTRI_80CCD</mat-label>
@@ -120,10 +123,13 @@
         <!-- RULE_6_PART_A_4TH_SCHEDULE -->
         <div>
           <div class="container">
-            <div>RULE_6_PART_A_4TH_SCHEDULE</div>
+            <div>
+              The amount deemed to be income under rule 6 of part A of the
+              fourth schedule
+            </div>
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
-                <mat-label>RULE_6_PART_A_4TH_SCHEDULE</mat-label>
+                <mat-label>RULE6_PARTA_4THSCHEDULE</mat-label>
                 <input matInput formControlName="RULE_6_PART_A_4TH_SCHEDULE" />
               </mat-form-field>
             </div>
@@ -134,10 +140,13 @@
         <!-- RULE_11_4_PART_A_4TH_SCHEDULE -->
         <div>
           <div class="container">
-            <div>RULE_11_4_PART_A_4TH_SCHEDULE</div>
+            <div>
+              The amount deemed to be income under rule 11(4) of Part-A of the
+              Fourth Schedule
+            </div>
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
-                <mat-label>RULE_11_4_PART_A_4TH_SCHEDULE</mat-label>
+                <mat-label>RULE11_4_PARTA_4THSCHEDULE</mat-label>
                 <input
                   matInput
                   formControlName="RULE_11_4_PART_A_4TH_SCHEDULE"
@@ -147,6 +156,111 @@
           </div>
         </div>
         <hr />
+
+        <!-- PENSION -->
+        <div>
+          <div class="container">
+            <div>Annuity or Pension</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Pension</mat-label>
+                <input matInput formControlName="PENSION" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- COMMUTED_PENSION -->
+        <div>
+          <div class="container">
+            <div>Commuted Pension</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Commuted Pension</mat-label>
+                <input matInput formControlName="COMMUTED_PENSION" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- GRATUITY -->
+        <div>
+          <div class="container">
+            <div>Gratuity</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Gratuity</mat-label>
+                <input matInput formControlName="GRATUITY" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- COMMISSION -->
+        <div>
+          <div class="container">
+            <div>Fees/Commission</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Fees/Commission</mat-label>
+                <input matInput formControlName="COMMISSION" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- ADVANCE_SALARY -->
+        <div>
+          <div class="container">
+            <div>Advance Salary</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Advance Salary</mat-label>
+                <input matInput formControlName="ADVANCE_SALARY" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- LEAVE_ENCASHMENT -->
+        <div>
+          <div class="container">
+            <div>Leave Encashment</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Leave Encashment</mat-label>
+                <input matInput formControlName="LEAVE_ENCASHMENT" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- OTHER -->
+        <div>
+          <div class="container">
+            <div>Others</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>OTHER</mat-label>
+                <input matInput formControlName="OTHER" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+      </div>
+
+      <!-- Save button  -->
+      <div class="fixed-button">
+        <button class="saveButton" (click)="saveBifurcations()">
+          <span class="font-semibold">&nbsp;Save</span>
+        </button>
       </div>
     </div>
   </div>

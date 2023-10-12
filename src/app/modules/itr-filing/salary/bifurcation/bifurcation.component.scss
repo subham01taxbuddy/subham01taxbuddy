@@ -8,6 +8,28 @@
 .scroll {
   overflow-y: scroll;
   padding: 13px;
-  height: 600px;
+  height: 550px;
   width: 100%;
+}
+
+// .fixed-button {
+//   position: fixed;
+//   bottom: 20px; /* Adjust the value to set the distance from the bottom */
+//   right: 20px; /* Adjust the value to set the distance from the right */
+//   z-index: 999; /* Ensure it's above other elements if necessary */
+// }
+
+.saveButton {
+  margin-left: 80%;
+  background-color: #ffffff;
+  color: #00aeca;
+  border: 2px solid #00aeca;
+  border-radius: 6px;
+  height: 50px;
+  width: auto;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-weight: 600 !important;
+  padding: 0px 14px 0px 14px;
+  font-size: 15.5px;
 }
