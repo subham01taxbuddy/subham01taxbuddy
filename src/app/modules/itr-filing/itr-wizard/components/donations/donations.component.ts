@@ -456,8 +456,6 @@ export class DonationsComponent implements OnInit {
         }
       });
       this.panValidation();
-    } else {
-      this.addMoreDonations();
     }
 
   }
