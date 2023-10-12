@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -18,6 +18,8 @@ export class ScheduleTrComponent implements OnInit {
   sectionValue = '';
   loading = false;
   countryCodeList: any;
+  section: any;
+
   constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
 
   ngOnInit(): void {
@@ -276,6 +278,8 @@ export class ScheduleTrComponent implements OnInit {
       '9999:OTHERS',
     ];
 
+    this.section = ['90', '90A', '91'];
+
     this.scheduleTrForm = this.initForm();
 
     if (this.ITR_JSON.foreignIncome?.taxReliefClaimed?.length > 0) {
@@ -339,6 +343,10 @@ export class ScheduleTrComponent implements OnInit {
             this.getTrArray.controls[trIndex]
               .get('amtOfTaxRef')
               .setValue(this.ITR_JSON.foreignIncome?.taxAmountRefunded);
+          } else {
+            this.getTrArray.controls[trIndex]
+              .get('selectedOption')
+              .setValue('no');
           }
 
           // Update individual totals
@@ -422,9 +430,51 @@ export class ScheduleTrComponent implements OnInit {
     return formGroup;
   }
 
-  handleSelectionChange(event) {
-    this.getTrArray.controls[0].get('selectedOption').setValue(event);
+  amtOfTaxRefSaved: any;
+  assYrSaved: any;
+  amtOfTaxRef() {
+    const trArray = this.getTrArray;
+    const trFlag = trArray.controls[0].get('selectedOption');
+
+    // Iterate through the controls in the FormArray
+    trArray.controls.forEach((control) => {
+      const amount = control.get('amtOfTaxRef');
+      const assYr = control.get('assYr');
+
+      if (trFlag.value === 'no') {
+        // Save the data and clear the form group
+        this.amtOfTaxRefSaved = amount.value;
+        this.assYrSaved = assYr.value;
+
+        amount.reset();
+        assYr.reset();
+        trFlag.setValue('no');
+        amount.clearValidators();
+        assYr.clearValidators();
+        amount.updateValueAndValidity();
+        assYr.updateValueAndValidity();
+        trFlag.updateValueAndValidity();
+        console.log(amount, assYr);
+      } else {
+        amount.setValidators(Validators.required);
+        assYr.setValidators(Validators.required);
+
+        // Check if there is saved data and populate the form group
+        if (this.amtOfTaxRefSaved && this.assYrSaved) {
+          amount.patchValue(this.amtOfTaxRefSaved);
+          assYr.patchValue(this.assYrSaved);
+          trFlag.setValue('yes');
+          amount.updateValueAndValidity();
+          assYr.updateValueAndValidity();
+          trFlag.updateValueAndValidity();
+        }
+      }
+    });
   }
+
+  // handleSelectionChange(event) {
+  //   this.getTrArray.controls[0].get('selectedOption').setValue(event);
+  // }
 
   handleSectionChange(event) {
     this.sectionValue = (event.target as HTMLInputElement).value;
@@ -436,6 +486,7 @@ export class ScheduleTrComponent implements OnInit {
   }
 
   saveAll() {
+    console.log(this.scheduleTrForm);
     if (this.scheduleTrForm.valid) {
       this.loading = true;
 

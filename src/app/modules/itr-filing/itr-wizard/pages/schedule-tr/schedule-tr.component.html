@@ -45,13 +45,13 @@
                     formControlName="countryCode"
                     name="countryCode[i]"
                     placeholder="Country Code"
-                    readOnly
                   >
                     <mat-option
                       *ngFor="let nature of countryCodeList"
                       [value]="nature"
                       matTooltip="{{ nature }}"
-                      [disabled]="nature.disabled"
+                      [disabled]="true"
+                      readonly
                     >
                       {{ nature }}
                     </mat-option></mat-select
@@ -65,7 +65,7 @@
                     name="tinNumber[i]"
                     formControlName="tinNumber"
                     placeholder="Tax Identification Number"
-                    readOnly
+                    readonly
                   />
                 </mat-form-field>
               </td>
@@ -76,7 +76,7 @@
                     name="totalTxsPaidOutInd[i]"
                     formControlName="totalTxsPaidOutInd"
                     placeholder="Total Tax paid outside India"
-                    readOnly
+                    readonly
                   />
                 </mat-form-field>
               </td>
@@ -87,20 +87,29 @@
                     name="totalTxsRlfAvlbl[i]"
                     formControlName="totalTxsRlfAvlbl"
                     placeholder="Total tax relief available"
-                    readOnly
+                    readonly
                   />
                 </mat-form-field>
               </td>
               <td>
                 <mat-form-field appearance="outline">
-                  <input
+                  <mat-label>Section</mat-label>
+                  <mat-select
                     matInput
                     name="section[i]"
                     formControlName="section"
                     placeholder="Section"
                     (change)="handleSectionChange($event)"
                     required
-                  />
+                  >
+                    <mat-option
+                      *ngFor="let section of section"
+                      [value]="section"
+                      matTooltip="{{ section }}"
+                    >
+                      {{ section }}
+                    </mat-option></mat-select
+                  >
                 </mat-form-field>
               </td>
             </tr>
@@ -154,7 +163,7 @@
                     <mat-radio-group
                       formControlName="selectedOption"
                       name="options"
-                      (change)="handleSelectionChange($event.value)"
+                      (change)="amtOfTaxRef()"
                     >
                       <mat-radio-button value="yes" style="margin-right: 10px"
                         >Yes</mat-radio-button
@@ -231,8 +240,8 @@
         >
       </button>
 
-      <button class="saveBtnIn">
-        <span class="font-semibold" (click)="saveAll()">Save All</span>
+      <button class="saveBtnIn" (click)="saveAll()">
+        <span class="font-semibold">Save All</span>
       </button>
     </div>
   </div>

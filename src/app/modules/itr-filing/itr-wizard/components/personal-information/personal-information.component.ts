@@ -2299,6 +2299,7 @@ export class PersonalInformationComponent implements OnInit {
           }),
         ]),
       }),
+      liableSection44AAflag: 'N',
       bankDetails: this.fb.array([
         this.createBankDetailsForm({ hasRefund: true }),
       ]),
@@ -2599,6 +2600,14 @@ export class PersonalInformationComponent implements OnInit {
         this.ITR_JSON.seventhProviso139.clauseiv7provisio139iDtls
       );
     }
+
+    if (this.ITR_JSON.liableSection44AAflag) {
+      this.customerProfileForm.controls['liableSection44AAflag'].setValue(
+        this.ITR_JSON.liableSection44AAflag
+      );
+    } else {
+      this.customerProfileForm.controls['liableSection44AAflag'].setValue('N');
+    }
   }
 
   isFormValid() {
@@ -2620,7 +2629,6 @@ export class PersonalInformationComponent implements OnInit {
     return this.customerProfileForm.valid;
   }
 
-  SAVES() {}
   async saveProfile(ref) {
     // this.findAssesseeType();
     //re-intialise the ITR objects

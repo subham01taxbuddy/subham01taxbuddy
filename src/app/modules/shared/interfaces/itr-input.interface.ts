@@ -62,6 +62,9 @@ export interface ITR_JSON {
   itrProgress: string[];
   directorInCompany: DirectorInCompany[];
   unlistedSharesDetails: UnlistedSharesDetails[];
+  partnerInFirmFlag : string;
+  partnerFirms : PartnerFirms[];
+  partnerInFirms :partnerInFirms[];
   dateOfDividendIncome: string;
   lastVisitedURL: string;
   seventhProviso139: SeventhProviso139;
@@ -102,6 +105,7 @@ export interface ITR_JSON {
 
   itrSummaryJson: any;
   isItrSummaryJsonEdited: boolean;
+  liableSection44AAflag: string;
 }
 
 export interface foreignIncome {
@@ -362,6 +366,23 @@ export interface UnlistedSharesDetails {
   closingShares: number;
   closingCOA: number;
 }
+
+export interface partnerInFirms {
+  name: string;
+  panNumber: string;
+
+}
+
+export interface PartnerFirms {
+  name: string;
+  panNumber: string;
+  Sec92EFirmFlag: boolean;
+  isLiableToAudit: boolean;
+  profitSharePercent: Number;
+  profitShareAmount: Number;
+  capitalBalanceOn31stMarch: number;
+}
+
 export interface Family {
   pid: any;
   fName: string;

@@ -99,6 +99,8 @@ import { ScheduleTrComponent } from './itr-wizard/pages/schedule-tr/schedule-tr.
 import { ScheduleFaComponent } from './itr-wizard/pages/schedule-fa/schedule-fa.component';
 import { BusinessInputAutocompleteComponent } from './components/business-input-autocomplete/business-input-autocomplete.component';
 import { CryptoVdaComponent } from './itr-wizard/pages/crypto-vda/crypto-vda.component';
+import { PartnerInFirmsComponent } from './itr-wizard/pages/partner-in-firms/partner-in-firms.component';
+import { BifurcationComponent } from './salary/bifurcation/bifurcation.component';
 
 @NgModule({
   imports: [
@@ -217,6 +219,8 @@ import { CryptoVdaComponent } from './itr-wizard/pages/crypto-vda/crypto-vda.com
     ScheduleTrComponent,
     ScheduleFaComponent,
     CryptoVdaComponent,
+    PartnerInFirmsComponent,
+    BifurcationComponent,
   ],
 
   exports: [CustomerProfileComponent],

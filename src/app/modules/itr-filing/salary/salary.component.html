@@ -209,7 +209,7 @@
                 <td>
                   <mat-form-field
                     class="input-field-width"
-                    style="width: 90% !important"
+                    style="width: 80% !important; margin-right: 5px"
                   >
                     <input
                       type="text"
@@ -223,6 +223,13 @@
                       maxlength="125"
                     />
                   </mat-form-field>
+                  <button
+                    mat-mini-fab
+                    style="margin-left: 5%"
+                    (click)="bifurcation()"
+                  >
+                    <mat-icon>filter_list</mat-icon>
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -260,23 +267,39 @@
 
                 <td *ngIf="income.value.allowType === 'COMPENSATION_ON_VRS'">
                   <div>
-                    Whether Exemption u/s 10(10C) is taken in Previous Assessment Year ??<br>
-                    <mat-radio-group [formControl]="allowanceFormGroup.get('vrsLastYear') | formControlType"
-                    (change)="updateVrsExemptionTaken()">
+                    Whether Exemption u/s 10(10C) is taken in Previous
+                    Assessment Year ??<br />
+                    <mat-radio-group
+                      [formControl]="
+                        allowanceFormGroup.get('vrsLastYear') | formControlType
+                      "
+                      (change)="updateVrsExemptionTaken()"
+                    >
                       <mat-radio-button [value]="true">Yes</mat-radio-button>
-                      <mat-radio-button [value]="false">No</mat-radio-button>
-                    </mat-radio-group><br>
-                    Where any relief u/s 89 has been allowed to an assessee for any assessment year<br>
-                    in respect of any amount on his voluntary retirement or termination of service?<br>
-                    <mat-radio-group [formControl]="allowanceFormGroup.get('sec89') | formControlType"
-                    (change)="updateVrsExemptionTaken()">
+                      <mat-radio-button [value]="false"
+                        >No</mat-radio-button
+                      > </mat-radio-group
+                    ><br />
+                    Where any relief u/s 89 has been allowed to an assessee for
+                    any assessment year<br />
+                    in respect of any amount on his voluntary retirement or
+                    termination of service?<br />
+                    <mat-radio-group
+                      [formControl]="
+                        allowanceFormGroup.get('sec89') | formControlType
+                      "
+                      (change)="updateVrsExemptionTaken()"
+                    >
                       <mat-radio-button [value]="true">Yes</mat-radio-button>
-                      <mat-radio-button [value]="false">No</mat-radio-button>
-                    </mat-radio-group><br>
+                      <mat-radio-button [value]="false"
+                        >No</mat-radio-button
+                      > </mat-radio-group
+                    ><br />
                   </div>
                   <mat-form-field
                     class="input-field-width"
-                    style="width: 90% !important">
+                    style="width: 90% !important"
+                  >
                     <input
                       type="number"
                       trim
@@ -292,7 +315,8 @@
                 <td *ngIf="income.value.allowType !== 'COMPENSATION_ON_VRS'">
                   <mat-form-field
                     class="input-field-width"
-                    style="width: 90% !important">
+                    style="width: 90% !important"
+                  >
                     <input
                       type="text"
                       trim
@@ -323,7 +347,7 @@
         <!-- <div class="sectionTitle">Deductions u/s 16</div> -->
         <form [formGroup]="deductionsFormGroup">
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
               <mat-label class="inputLabel">Entertainment Allowance:</mat-label>
               <mat-form-field appearance="outline">
                 <input
@@ -346,7 +370,8 @@
                 </mat-error>
               </mat-form-field>
             </div>
-            <div class="col-sm-6">
+
+            <div class="col-sm-4">
               <mat-label class="inputLabel">Professional Tax:</mat-label>
               <mat-form-field appearance="outline">
                 <input
@@ -369,6 +394,35 @@
                   Enter valid amount
                 </mat-error>
               </mat-form-field>
+            </div>
+
+            <!-- // Deduction  -->
+            <div class="col-sm-4">
+              <mat-label class="inputLabel">Standard Deduction:</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  digitsOnly
+                  trim
+                  class="input-field"
+                  matInput
+                  placeholder="standard Deduction"
+                  name="standardDeduction"
+                  formControlName="standardDeduction"
+                  readonly
+                />
+                <mat-error
+                  *ngIf="
+                    deductionsFormGroup.controls['standardDeduction'].hasError(
+                      'max'
+                    )
+                  "
+                >
+                  Enter valid amount
+                </mat-error>
+              </mat-form-field>
+              <mat-hint>
+                Standard deduction applies to one employer only
+              </mat-hint>
             </div>
           </div>
         </form>
