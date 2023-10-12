@@ -507,7 +507,7 @@ export class DonationsComponent implements OnInit {
       details: [item ? item.details : ''],
       name: [
         item ? item.name : '',
-        [Validators.required, Validators.pattern(AppConstants.charRegex)],
+        [Validators.required, Validators.pattern(AppConstants.charSpecialRegex)],
       ],
       address: [item ? item.address : '', Validators.required],
       city: [item ? item.city : '', Validators.required],
