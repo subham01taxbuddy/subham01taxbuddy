@@ -32,6 +32,24 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   maxPT = this.limitPT;
   maxEA = 5000;
   currentIndex: number = null;
+  bifurcationResult: {
+    SEC17_1: {
+      total: number;
+      value: any;
+    };
+    SEC17_2: {
+      total: number;
+      value: any;
+    };
+    SEC17_3: {
+      total: number;
+      value: any;
+    };
+  } = {
+    SEC17_1: { total: 0, value: null },
+    SEC17_2: { total: 0, value: null },
+    SEC17_3: { total: 0, value: null },
+  };
 
   salaryDropdown = [
     {
@@ -220,6 +238,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     if (this.currentIndex >= 0) {
       this.editEmployerDetails(this.currentIndex);
     }
+
+    // if (!this.bifurcationResult) {
+    //   this.bifurcationResult = {
+    //     SEC17_1: { total: 0, value: null },
+    //     SEC17_2: { total: 0, value: null },
+    //     SEC17_3: { total: 0, value: null },
+    //   };
+    // }
   }
 
   isVrsExemptionTaken = false;
@@ -476,6 +502,29 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             });
             // totalSalExempt = totalSalExempt + Number(this.salaryGridOptions.rowData[i].exemptAmount);
           }
+
+          if (
+            this.bifurcationResult?.SEC17_1.total > 0 ||
+            this.bifurcationResult?.SEC17_1.value > 0
+          ) {
+            const bifurcationValues = this.bifurcationResult?.SEC17_1.value;
+
+            for (const key in bifurcationValues) {
+              if (bifurcationValues.hasOwnProperty(key)) {
+                const element = parseFloat(bifurcationValues[key]);
+                console.log(element);
+                if (element && element !== 0) {
+                  this.localEmployer.salary.push({
+                    salaryType: key,
+                    taxableAmount: element,
+                    exemptAmount: 0,
+                  });
+                }
+              }
+            }
+          }
+          console.log(this.localEmployer);
+
           if (salary.controls['salaryType'].value === 'SEC17_2') {
             perquisitesAmount = salary.controls['salaryValue'].value;
             this.localEmployer.perquisites.push({
@@ -951,7 +1000,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   bifurcation() {
     const dialogRef = this.matDialog.open(BifurcationComponent, {
       data: {
-        data: 'data',
+        data: this.currentIndex,
       },
       closeOnNavigation: true,
       disableClose: false,
@@ -959,9 +1008,28 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('BifurcationComponent=', result);
       if (result !== undefined) {
-        console.log(result);
+        console.log('BifurcationComponent=', result);
+        this.bifurcationResult.SEC17_1.total = result?.total?.salary;
+
+        if (this.bifurcationResult?.SEC17_1.total > 0) {
+          this.grossSalary = 0;
+          this.bifurcationResult.SEC17_1.value = result?.formValue?.salary[0];
+          let salaryDetails = this.employerDetailsFormGroup?.controls[
+            'salaryDetails'
+          ] as FormArray;
+
+          for (let i = 0; i < salaryDetails?.controls.length; i++) {
+            let salary = salaryDetails?.controls[i] as FormGroup;
+
+            if (salary.controls['salaryType']?.value === 'SEC17_1') {
+              this.grossSalary = this.bifurcationResult?.SEC17_1.total;
+              salary.controls['salaryValue']?.setValue(this.grossSalary);
+              this.saveEmployerDetails();
+              break;
+            }
+          }
+        }
       }
     });
   }
