@@ -501,29 +501,28 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
               exemptAmount: 0, //Number(this.salaryGridOptions.rowData[i].exemptAmount)
             });
             // totalSalExempt = totalSalExempt + Number(this.salaryGridOptions.rowData[i].exemptAmount);
-          }
 
-          if (
-            this.bifurcationResult?.SEC17_1.total > 0 ||
-            this.bifurcationResult?.SEC17_1.value > 0
-          ) {
-            const bifurcationValues = this.bifurcationResult?.SEC17_1.value;
+            if (
+              this.bifurcationResult?.SEC17_1.total > 0 ||
+              this.bifurcationResult?.SEC17_1.value > 0
+            ) {
+              const bifurcationValues = this.bifurcationResult?.SEC17_1.value;
 
-            for (const key in bifurcationValues) {
-              if (bifurcationValues.hasOwnProperty(key)) {
-                const element = parseFloat(bifurcationValues[key]);
-                console.log(element);
-                if (element && element !== 0) {
-                  this.localEmployer.salary.push({
-                    salaryType: key,
-                    taxableAmount: element,
-                    exemptAmount: 0,
-                  });
+              for (const key in bifurcationValues) {
+                if (bifurcationValues.hasOwnProperty(key)) {
+                  const element = parseFloat(bifurcationValues[key]);
+                  console.log(element);
+                  if (element && element !== 0) {
+                    this.localEmployer.salary.push({
+                      salaryType: key,
+                      taxableAmount: element,
+                      exemptAmount: 0,
+                    });
+                  }
                 }
               }
             }
           }
-          console.log(this.localEmployer);
 
           if (salary.controls['salaryType'].value === 'SEC17_2') {
             perquisitesAmount = salary.controls['salaryValue'].value;
@@ -532,7 +531,29 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
               taxableAmount: Number(salary.controls['salaryValue'].value),
               exemptAmount: 0, //Number(this.salaryGridOptions.rowData[i].exemptAmount)
             });
+
+            if (
+              this.bifurcationResult?.SEC17_2.total > 0 ||
+              this.bifurcationResult?.SEC17_2.value > 0
+            ) {
+              const bifurcationValues = this.bifurcationResult?.SEC17_2.value;
+
+              for (const key in bifurcationValues) {
+                if (bifurcationValues.hasOwnProperty(key)) {
+                  const element = parseFloat(bifurcationValues[key]);
+                  console.log(element);
+                  if (element && element !== 0) {
+                    this.localEmployer.perquisites.push({
+                      perquisiteType: key,
+                      taxableAmount: element,
+                      exemptAmount: 0,
+                    });
+                  }
+                }
+              }
+            }
           }
+
           if (salary.controls['salaryType'].value === 'SEC17_3') {
             this.localEmployer.profitsInLieuOfSalaryType.push({
               salaryType: 'SEC17_3',
@@ -847,14 +868,18 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         let salaryDetails = this.employerDetailsFormGroup.controls[
           'salaryDetails'
         ] as FormArray;
+
         const salary = salaryDetails.controls.filter(
           (item: any) =>
             item.controls['salaryType'].value ===
             this.localEmployer.salary[i].salaryType
         )[0] as FormGroup;
-        salary.controls['salaryValue'].setValue(
-          this.localEmployer.salary[i].taxableAmount
-        );
+
+        if (salary) {
+          salary.controls['salaryValue'].setValue(
+            this.localEmployer.salary[i].taxableAmount
+          );
+        }
       }
       //Ashwini: need to confirm this one
       // const sec17_1 = this.localEmployer.salary.filter((item:any) => item.salaryType === 'SEC17_1');
@@ -868,14 +893,18 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         let salaryDetails = this.employerDetailsFormGroup.controls[
           'salaryDetails'
         ] as FormArray;
+
         const salary = salaryDetails.controls.filter(
           (item: any) =>
             item.controls['salaryType'].value ===
             this.localEmployer.perquisites[i].perquisiteType
         )[0] as FormGroup;
-        salary.controls['salaryValue'].setValue(
-          this.localEmployer.perquisites[i].taxableAmount
-        );
+
+        if (salary) {
+          salary.controls['salaryValue'].setValue(
+            this.localEmployer.perquisites[i].taxableAmount
+          );
+        }
       }
     }
     /* ProfitsInLieuOfSalary Set Values */
@@ -888,14 +917,18 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         let salaryDetails = this.employerDetailsFormGroup.controls[
           'salaryDetails'
         ] as FormArray;
+
         const salary = salaryDetails.controls.filter(
           (item: any) =>
             item.controls['salaryType'].value ===
             this.localEmployer.profitsInLieuOfSalaryType[i].salaryType
         )[0] as FormGroup;
-        salary.controls['salaryValue'].setValue(
-          this.localEmployer.profitsInLieuOfSalaryType[i].taxableAmount
-        );
+
+        if (salary) {
+          salary.controls['salaryValue'].setValue(
+            this.localEmployer.profitsInLieuOfSalaryType[i].taxableAmount
+          );
+        }
       }
     }
 
@@ -997,10 +1030,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     this.saveAndNext.emit(true);
   }
 
-  bifurcation() {
+  bifurcation(i) {
     const dialogRef = this.matDialog.open(BifurcationComponent, {
       data: {
         data: this.currentIndex,
+        index: i,
       },
       closeOnNavigation: true,
       disableClose: false,
@@ -1011,6 +1045,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       if (result !== undefined) {
         console.log('BifurcationComponent=', result);
         this.bifurcationResult.SEC17_1.total = result?.total?.salary;
+        this.bifurcationResult.SEC17_2.total = result.total.perquisites;
 
         if (this.bifurcationResult?.SEC17_1.total > 0) {
           this.grossSalary = 0;
@@ -1025,7 +1060,24 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             if (salary.controls['salaryType']?.value === 'SEC17_1') {
               this.grossSalary = this.bifurcationResult?.SEC17_1.total;
               salary.controls['salaryValue']?.setValue(this.grossSalary);
-              this.saveEmployerDetails();
+              break;
+            }
+          }
+        }
+
+        if (this.bifurcationResult?.SEC17_2.total > 0) {
+          this.bifurcationResult.SEC17_2.value =
+            result?.formValue?.perquisites[0];
+          let salaryDetails = this.employerDetailsFormGroup?.controls[
+            'salaryDetails'
+          ] as FormArray;
+
+          for (let i = 0; i < salaryDetails?.controls.length; i++) {
+            let salary = salaryDetails?.controls[i] as FormGroup;
+
+            if (salary.controls['salaryType']?.value === 'SEC17_2') {
+              let value = this.bifurcationResult?.SEC17_2.total;
+              salary.controls['salaryValue']?.setValue(value);
               break;
             }
           }

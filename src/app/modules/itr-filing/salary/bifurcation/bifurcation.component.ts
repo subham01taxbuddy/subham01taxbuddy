@@ -14,6 +14,7 @@ export class BifurcationComponent implements OnInit {
   bifurcationFormGroup: FormGroup;
   total = {
     salary: 0,
+    perquisites: 0,
   };
 
   constructor(
@@ -27,15 +28,32 @@ export class BifurcationComponent implements OnInit {
 
     this.bifurcationFormGroup = this.createBifurcationForm();
     let index = this.data?.data;
-    let dataToPatch = this.ITR_JSON.employers[
+    let salaryDataToPatch = this.ITR_JSON.employers[
       index === -1 ? 0 : index
     ]?.salary?.filter((item) => item?.salaryType !== 'SEC17_1');
 
     const salaryFormArray = this.getSalary;
-    if (dataToPatch && dataToPatch.length > 0) {
-      dataToPatch?.forEach((item) => {
+    if (salaryDataToPatch && salaryDataToPatch.length > 0) {
+      salaryDataToPatch?.forEach((item) => {
         const matchingControl = salaryFormArray.controls[0].get(
           item.salaryType
+        );
+
+        if (matchingControl) {
+          matchingControl.setValue(item.taxableAmount);
+        }
+      });
+    }
+
+    let perquisitesDataToPatch = this.ITR_JSON.employers[
+      index === -1 ? 0 : index
+    ]?.perquisites?.filter((item) => item?.perquisiteType !== 'SEC17_2');
+
+    const perquisitesFormArray = this.getPerquisites;
+    if (perquisitesDataToPatch && perquisitesDataToPatch.length > 0) {
+      perquisitesDataToPatch?.forEach((item) => {
+        const matchingControl = perquisitesFormArray.controls[0].get(
+          item.perquisiteType
         );
 
         if (matchingControl) {
@@ -68,6 +86,31 @@ export class BifurcationComponent implements OnInit {
           OTHER: 0,
         }),
       ]),
+      perquisites: this.fb.array([
+        this.fb.group({
+          ACCOMODATION: 0,
+          MOTOR_CAR: 0,
+          SWEEPER_GARDNER_WATCHMAN_OR_PERSONAL_ATTENDANT: 0,
+          GAST_ELECTRICITY_WATER: 0,
+          INTEREST_FREE_LOANS: 0,
+          HOLIDAY_EXPENSES: 0,
+          FREE_OR_CONCESSIONAL_TRAVEL: 0,
+          FREE_MEALS: 0,
+          FREE_EDU: 0,
+          GIFT_VOUCHERS: 0,
+          CREDIT_CARD_EXPENSES: 0,
+          CLUB_EXP: 0,
+          USE_OF_MOVABLE_ASSETS_BY_EMPLOYEE: 0,
+          TRANSFER_OF_ASSET_TO_EMPLOYEE: 0,
+          VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE: 0,
+          SECTION_80_IAC_TAX_TO_BE_DEFERED: 0,
+          SECTION_80_IAC_TAX_NOT_TO_BE_DEFERED: 0,
+          STOCK_OPTIONS_OTHER_THAN_ESOP: 0,
+          SCHEME_TAXABLE_US_17_2_VII: 0,
+          SCHEME_TAXABLE_US_17_2_VIIA: 0,
+          OTH_BENEFITS_AMENITIES: 0,
+        }),
+      ]),
     });
   }
 
@@ -75,9 +118,14 @@ export class BifurcationComponent implements OnInit {
     return this.bifurcationFormGroup.get('salary') as FormArray;
   }
 
+  get getPerquisites() {
+    return this.bifurcationFormGroup.get('perquisites') as FormArray;
+  }
+
   saveBifurcations() {
     console.log(this.bifurcationFormGroup, 'bifurcationsForm');
     const salaryArray = this.getSalary.value;
+    const perquisitesArray = this.getPerquisites.value;
 
     const keysToSum = [
       'BASIC_SALARY',
@@ -99,6 +147,30 @@ export class BifurcationComponent implements OnInit {
       'OTHER',
     ];
 
+    const perquisiteskeysToSum = [
+      'ACCOMODATION',
+      'MOTOR_CAR',
+      'SWEEPER_GARDNER_WATCHMAN_OR_PERSONAL_ATTENDANT',
+      'GAST_ELECTRICITY_WATER',
+      'INTEREST_FREE_LOANS',
+      'HOLIDAY_EXPENSES',
+      'FREE_OR_CONCESSIONAL_TRAVEL',
+      'FREE_MEALS',
+      'FREE_EDU',
+      'GIFT_VOUCHERS',
+      'CREDIT_CARD_EXPENSES',
+      'CLUB_EXP',
+      'USE_OF_MOVABLE_ASSETS_BY_EMPLOYEE',
+      'TRANSFER_OF_ASSET_TO_EMPLOYEE',
+      'VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE',
+      'SECTION_80_IAC_TAX_TO_BE_DEFERED',
+      'SECTION_80_IAC_TAX_NOT_TO_BE_DEFERED',
+      'STOCK_OPTIONS_OTHER_THAN_ESOP',
+      'SCHEME_TAXABLE_US_17_2_VII',
+      'SCHEME_TAXABLE_US_17_2_VIIA',
+      'OTH_BENEFITS_AMENITIES',
+    ];
+
     let total = 0;
     for (const obj of salaryArray) {
       for (const key of keysToSum) {
@@ -106,8 +178,16 @@ export class BifurcationComponent implements OnInit {
       }
     }
 
+    let perquisitesTotal = 0;
+    for (const obj of perquisitesArray) {
+      for (const key of perquisiteskeysToSum) {
+        perquisitesTotal += parseFloat(obj[key]) || 0;
+      }
+    }
+
     this.total.salary = total;
-    console.log(this.total.salary, 'totalSalaryBifurcation');
+    this.total.perquisites = perquisitesTotal;
+
     const result = {
       total: this.total,
       form: this.bifurcationFormGroup,
