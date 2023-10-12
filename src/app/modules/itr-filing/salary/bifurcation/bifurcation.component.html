@@ -258,7 +258,7 @@
       </div>
     </div>
 
-    <!-- SALARY 17(2) -->
+    <!-- PERQUISITIES 17(2) -->
     <div formArrayName="perquisites" *ngIf="data.index === 1">
       <div
         *ngFor="let salaryControl of getPerquisites.controls; let i = index"
@@ -594,6 +594,82 @@
               <mat-form-field appearance="outline">
                 <mat-label>OTH_BENEFITS_AMENITIES</mat-label>
                 <input matInput formControlName="OTH_BENEFITS_AMENITIES" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+      </div>
+    </div>
+
+    <!-- PROFITS IN LIEU 17(3) -->
+    <div formArrayName="profitsInLieu" *ngIf="data.index === 2">
+      <div
+        *ngFor="let salaryControl of getProfitsInLieu.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <!-- COMPENSATION_ON_VRS -->
+        <div>
+          <div class="container">
+            <div>
+              Any compensation is due or received by an assessee from an
+              employer or former employer in connection with the termination of
+              his employment or modification thereto.
+            </div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>COMPENSATION_ON_VRS</mat-label>
+                <input matInput formControlName="COMPENSATION_ON_VRS" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- AMOUNT_DUE -->
+        <div>
+          <div class="container">
+            <div>
+              Any amount due or received by an assessee from any person before
+              joining any employment with that person, or after cessation of his
+              employment with that person
+            </div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>AMOUNT_DUE</mat-label>
+                <input matInput formControlName="AMOUNT_DUE" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- PAYMENT_DUE -->
+        <div>
+          <div class="container">
+            <div>
+              Any Payment due or received by an assessee from an employer, or
+              from provident or other funds, sum received under keyman insurance
+              policy, including bonus on such policy.
+            </div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>PAYMENT_DUE</mat-label>
+                <input matInput formControlName="PAYMENT_DUE" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <!-- ANY_OTHER -->
+        <div>
+          <div class="container">
+            <div>Any Other</div>
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline">
+                <mat-label>ANY_OTHER</mat-label>
+                <input matInput formControlName="ANY_OTHER" />
               </mat-form-field>
             </div>
           </div>

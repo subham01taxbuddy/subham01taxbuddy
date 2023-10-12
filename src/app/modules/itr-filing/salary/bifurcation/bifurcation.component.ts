@@ -15,6 +15,7 @@ export class BifurcationComponent implements OnInit {
   total = {
     salary: 0,
     perquisites: 0,
+    profitsInLieuOfSalary: 0,
   };
 
   constructor(
@@ -28,6 +29,8 @@ export class BifurcationComponent implements OnInit {
 
     this.bifurcationFormGroup = this.createBifurcationForm();
     let index = this.data?.data;
+
+    // Salary
     let salaryDataToPatch = this.ITR_JSON.employers[
       index === -1 ? 0 : index
     ]?.salary?.filter((item) => item?.salaryType !== 'SEC17_1');
@@ -45,6 +48,7 @@ export class BifurcationComponent implements OnInit {
       });
     }
 
+    // perquisities
     let perquisitesDataToPatch = this.ITR_JSON.employers[
       index === -1 ? 0 : index
     ]?.perquisites?.filter((item) => item?.perquisiteType !== 'SEC17_2');
@@ -54,6 +58,26 @@ export class BifurcationComponent implements OnInit {
       perquisitesDataToPatch?.forEach((item) => {
         const matchingControl = perquisitesFormArray.controls[0].get(
           item.perquisiteType
+        );
+
+        if (matchingControl) {
+          matchingControl.setValue(item.taxableAmount);
+        }
+      });
+    }
+
+    // profits in lieu
+    let profitsInLieuDataToPatch = this.ITR_JSON.employers[
+      index === -1 ? 0 : index
+    ]?.profitsInLieuOfSalaryType?.filter(
+      (item) => item?.salaryType !== 'SEC17_3'
+    );
+
+    const profitsInLieuFormArray = this.getProfitsInLieu;
+    if (profitsInLieuDataToPatch && profitsInLieuDataToPatch.length > 0) {
+      profitsInLieuDataToPatch?.forEach((item) => {
+        const matchingControl = profitsInLieuFormArray.controls[0].get(
+          item?.salaryType
         );
 
         if (matchingControl) {
@@ -111,21 +135,22 @@ export class BifurcationComponent implements OnInit {
           OTH_BENEFITS_AMENITIES: 0,
         }),
       ]),
+      profitsInLieu: this.fb.array([
+        this.fb.group({
+          COMPENSATION_ON_VRS: 0,
+          AMOUNT_DUE: 0,
+          PAYMENT_DUE: 0,
+          ANY_OTHER: 0,
+        }),
+      ]),
     });
-  }
-
-  get getSalary() {
-    return this.bifurcationFormGroup.get('salary') as FormArray;
-  }
-
-  get getPerquisites() {
-    return this.bifurcationFormGroup.get('perquisites') as FormArray;
   }
 
   saveBifurcations() {
     console.log(this.bifurcationFormGroup, 'bifurcationsForm');
     const salaryArray = this.getSalary.value;
     const perquisitesArray = this.getPerquisites.value;
+    const profitsInLieuArray = this.getProfitsInLieu.value;
 
     const keysToSum = [
       'BASIC_SALARY',
@@ -147,7 +172,7 @@ export class BifurcationComponent implements OnInit {
       'OTHER',
     ];
 
-    const perquisiteskeysToSum = [
+    const perquisitesKeysToSum = [
       'ACCOMODATION',
       'MOTOR_CAR',
       'SWEEPER_GARDNER_WATCHMAN_OR_PERSONAL_ATTENDANT',
@@ -171,6 +196,13 @@ export class BifurcationComponent implements OnInit {
       'OTH_BENEFITS_AMENITIES',
     ];
 
+    const profitsInLieuKeysToSum = [
+      'COMPENSATION_ON_VRS',
+      'AMOUNT_DUE',
+      'PAYMENT_DUE',
+      'ANY_OTHER',
+    ];
+
     let total = 0;
     for (const obj of salaryArray) {
       for (const key of keysToSum) {
@@ -180,13 +212,21 @@ export class BifurcationComponent implements OnInit {
 
     let perquisitesTotal = 0;
     for (const obj of perquisitesArray) {
-      for (const key of perquisiteskeysToSum) {
+      for (const key of perquisitesKeysToSum) {
         perquisitesTotal += parseFloat(obj[key]) || 0;
+      }
+    }
+
+    let profitsInLieuTotal = 0;
+    for (const obj of profitsInLieuArray) {
+      for (const key of profitsInLieuKeysToSum) {
+        profitsInLieuTotal += parseFloat(obj[key]) || 0;
       }
     }
 
     this.total.salary = total;
     this.total.perquisites = perquisitesTotal;
+    this.total.profitsInLieuOfSalary = profitsInLieuTotal;
 
     const result = {
       total: this.total,
@@ -195,5 +235,18 @@ export class BifurcationComponent implements OnInit {
     };
 
     this.dialogRef.close(result);
+  }
+
+  // get functions
+  get getSalary() {
+    return this.bifurcationFormGroup.get('salary') as FormArray;
+  }
+
+  get getPerquisites() {
+    return this.bifurcationFormGroup.get('perquisites') as FormArray;
+  }
+
+  get getProfitsInLieu() {
+    return this.bifurcationFormGroup.get('profitsInLieu') as FormArray;
   }
 }
