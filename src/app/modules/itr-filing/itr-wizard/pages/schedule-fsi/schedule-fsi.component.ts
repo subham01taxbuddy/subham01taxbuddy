@@ -16,11 +16,11 @@ export class ScheduleFsiComponent implements OnInit {
   scheduleFsiForm: FormGroup;
   countryCodeList: any;
   headOfIncomess = [
-    'Salary',
-    'House Property',
-    'Business or Professsion',
-    'Capital Gains',
-    'Other Sources',
+    'SALARY',
+    'HOUSE',
+    'CAPITAL_GAIN',
+    'BUSINESS_OR_PROFESSION',
+    'OTHER',
   ];
   relevantArticle = ['90', '90A', '91'];
   offeredForTaxIndValue: number;
