@@ -709,9 +709,8 @@ export class HousePropertyComponent implements OnInit {
       }
       this.housePropertyForm.controls['annualRentReceived'].setValue(null);
       this.housePropertyForm.controls['rentPercentage'].setValue(null);
-      this.housePropertyForm.controls['grossAnnualRentReceivedTotal'].setValue(
-        null
-      );
+      this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
+      this.housePropertyForm.controls['grossAnnualRentReceivedTotal'].setValue(null);
       this.annualValue = null;
       this.thirtyPctOfAnnualValue = null;
       this.housePropertyForm.controls['rentPercentage'].enable();
@@ -845,6 +844,7 @@ export class HousePropertyComponent implements OnInit {
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
     let typeOfHp = this.housePropertyForm.controls['propertyType'].value;
     if (typeOfHp === 'SOP') {
+      this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
       this.housePropertyForm.controls['annualRentReceived'].setValidators(null);
       this.housePropertyForm.controls[
         'annualRentReceived'
@@ -1179,7 +1179,8 @@ export class HousePropertyComponent implements OnInit {
           filteredArray.length > 0 &&
           this.housePropertyForm.controls['propertyType']?.value === 'SOP'
         ) {
-          interestAmountControl?.setValidators(Validators.max(200000));
+          //Ashwini: Removed max validation due to some complaints for issue
+          // interestAmountControl?.setValidators(Validators.max(200000));
           interestAmountControl?.updateValueAndValidity();
           interestAmountControl?.setErrors({ maxValueExceeded: true });
         }
