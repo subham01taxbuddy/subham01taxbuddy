@@ -1126,7 +1126,7 @@ export class UtilsService {
 
     inputArray.map(function (item) {
       const itemPropertyName = item[propertyName];
-      if (itemPropertyName in testObject) {
+      if ((itemPropertyName !== null && itemPropertyName !== '') && itemPropertyName in testObject) {
         testObject[itemPropertyName].duplicate = true;
         item.duplicate = true;
         seenDuplicate = true;
