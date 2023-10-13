@@ -586,8 +586,8 @@
 
             <div>
               <button
-                class="delete-btn btnGry"
-                (click)="deleteInvestment(active)"
+                class="delete-btn"
+                (click)="deleteDeduction(active)"
                 [disabled]="!deductionSelected()"
                 *ngIf="isDeductions.value"
               >
