@@ -130,6 +130,37 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       label: 'Any Other Allowance',
       detailed: false,
     },
+    {
+      id: null,
+      seqNum: 12,
+      value: 'SECOND_PROVISO_CGOV',
+      label:
+        'Second Proviso CGOV - compensation under a scheme approved by the central Govt - 10(10B)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 13,
+      value: 'SECOND_PROVISO',
+      label: 'Second proviso - Compensation limit notified by CG',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 14,
+      value: 'FIRST_PROVISO',
+      label:
+        'First Proviso - Compensation limit notified by CG in the official gazette, First Provisio 10(10Bi)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 15,
+      value: 'EIC',
+      label:
+        'Exempt income received by judge covered the payment of salaries to supreme court/high court judges Act/Rule ',
+      detailed: false,
+    },
   ];
   stateDropdown = AppConstants.stateDropdown;
   constructor(
@@ -361,7 +392,60 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             allowValue: [null, validators],
           })
         );
-      } else if (this.allowanceDropdown[i].value !== 'COMPENSATION_ON_VRS') {
+      }
+
+      // FOR EIC
+      if (
+        (this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
+          this.ITR_JSON.employerCategory === 'GOVERNMENT') &&
+        this.allowanceDropdown[i].value === 'EIC'
+      ) {
+        data.push(
+          this.fb.group({
+            label: this.allowanceDropdown[i].label,
+            allowType: this.allowanceDropdown[i].value,
+            allowValue: [null, validators],
+          })
+        );
+      }
+
+      // FIRST PROVISIO
+      if (
+        this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+        this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
+        this.allowanceDropdown[i].value === 'FIRST_PROVISO'
+      ) {
+        data.push(
+          this.fb.group({
+            label: this.allowanceDropdown[i].label,
+            allowType: this.allowanceDropdown[i].value,
+            allowValue: [null, validators],
+          })
+        );
+      }
+
+      // SECOND PROVISIO
+      if (
+        this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+        this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
+        this.allowanceDropdown[i].value === 'SECOND_PROVISO'
+      ) {
+        data.push(
+          this.fb.group({
+            label: this.allowanceDropdown[i].label,
+            allowType: this.allowanceDropdown[i].value,
+            allowValue: [null, validators],
+          })
+        );
+      }
+
+      // OTHER
+      if (
+        this.allowanceDropdown[i].value !== 'COMPENSATION_ON_VRS' &&
+        this.allowanceDropdown[i].value !== 'EIC' &&
+        this.allowanceDropdown[i].value !== 'FIRST_PROVISO' &&
+        this.allowanceDropdown[i].value !== 'SECOND_PROVISO'
+      ) {
         data.push(
           this.fb.group({
             label: this.allowanceDropdown[i].label,
@@ -371,6 +455,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         );
       }
     }
+
     return this.fb.array(data);
   }
 
