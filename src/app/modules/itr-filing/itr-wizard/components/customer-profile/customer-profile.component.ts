@@ -187,12 +187,18 @@ export class CustomerProfileComponent implements OnInit {
     this.getSmeList();
 
     console.log('nav data', this.navigationData);
+    if (this.utilsService.isNonEmpty(this.customerProfileForm.controls['aadhaarEnrolmentId'].value)) {
+      this.shallDisableOther('aadharNumber', 'aadhaarEnrolmentId');
+    }
+    if (this.utilsService.isNonEmpty(this.customerProfileForm.controls['aadharNumber'].value)) {
+      this.shallDisableOther('aadhaarEnrolmentId', 'aadharNumber');
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    setTimeout(() => {
-      this.isEditable();
-    }, 1000);
+    // setTimeout(() => {
+    //   this.isEditable();
+    // }, 1000);
   }
 
   ngOnDestroy() {
