@@ -98,6 +98,40 @@ export class OtherAssetImprovementComponent implements OnInit {
       this.financialyears = res.data;
       this.improvementYears = this.financialyears;
       // sessionStorage.setItem('improvementYears', res.data)
+      let purchaseDate = this.assetsForm.getRawValue()
+        .purchaseDate;
+      let purchaseYear = new Date(purchaseDate).getFullYear();
+      let purchaseMonth = new Date(purchaseDate).getMonth();
+
+      console.log(
+        this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
+      );
+      console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
+      if (purchaseMonth > 2) {
+        if (
+          this.improvementYears.indexOf(
+            purchaseYear + '-' + (purchaseYear + 1)
+          ) >= 0
+        ) {
+          this.improvementYears = this.improvementYears.splice(
+            this.improvementYears.indexOf(
+              purchaseYear + '-' + (purchaseYear + 1)
+            )
+          );
+        }
+      } else {
+        if (
+          this.improvementYears.indexOf(
+            purchaseYear - 1 + '-' + purchaseYear
+          ) >= 0
+        ) {
+          this.improvementYears = this.improvementYears.splice(
+            this.improvementYears.indexOf(
+              purchaseYear - 1 + '-' + purchaseYear
+            )
+          );
+        }
+      }
     });
   }
 
