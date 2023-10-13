@@ -152,6 +152,14 @@ export class SidebarComponent{
       ]
     },
     {
+      name: 'Bulk Status Update',
+      // iconClass: 'fa fa-globe',
+      active: false,
+      url: '/pages/user-management/bulk-status-update',
+      roles: ['ROLE_ADMIN'],
+      submenu: []
+    },
+    {
       name: 'All Users',
       // iconClass: 'fa fa-code',
       active: true,
