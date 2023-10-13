@@ -1389,8 +1389,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               },
               {
                 label: 'CFL',
-                old: this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss != undefined?this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss:0,
-                new: this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss != undefined?this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss:0,
+                old: getCFL(this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears),
+                new: getCFL(this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears)
               },
               {
                 label: 'Gross Tax Liability',
@@ -1525,8 +1525,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             },
             {
               label: 'CFL',
-              old: this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss != undefined?this.oldSummaryIncome?.carryForwordLosses[0]?.totalLoss:0,
-              new: this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss != undefined?this.newSummaryIncome?.carryForwordLosses[0]?.totalLoss:0,
+              old: getCFL(this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears),
+              new: getCFL(this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears)
             },
             {
               label: 'Gross Tax Liability',
@@ -2020,5 +2020,12 @@ function getTotalBusinessIncome(summaryBusinessIncome: any): number {
     Math.max(summaryBusinessIncome.totalNonSpeculativeIncome, 0)+
     Math.max(summaryBusinessIncome.totalIncomeFromFirm, 0)
     , 0)
+}
+
+function getCFL(cfl: any): number {
+  if(cfl != null)
+    return cfl.stcgloss+cfl.ltcgloss+cfl.speculativeBusinessLoss+cfl.housePropertyLoss+cfl.broughtForwordBusinessLoss;
+  else
+    return 0;
 }
 
