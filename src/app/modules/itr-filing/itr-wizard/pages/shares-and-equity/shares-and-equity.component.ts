@@ -381,6 +381,7 @@ export class SharesAndEquityComponent
     let ltcg = 0;
 
     this.brokerList = [];
+    this.brokerSelected = [];
     if (this.bondType === 'listed') {
       data = itrObject.capitalGain.filter(
         (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
@@ -727,7 +728,7 @@ export class SharesAndEquityComponent
         (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
       );
     }
-    if (data.length > 0) {
+    if (data.length > 0) {//Ashwini: check this code for broker wise delete
       // data.forEach((obj) => {
       //   let assetDetails = obj.assetDetails.filter((security: any) => brokerNames.includes(security.brokerName));
       //   obj.assetDetails = assetDetails;
@@ -745,12 +746,7 @@ export class SharesAndEquityComponent
     securitiesArray.controls = securitiesArray.controls.filter(
       (item: FormGroup) => item.controls['hasEdit'].value !== true
     );
-    // securitiesArray.controls.forEach((element, index) => {
-    //   if ((element as FormGroup).controls['hasEdit'].value) {
-    //     console.log('deleting', index);
-    //     securitiesArray.removeAt(index);
-    //   }
-    // });
+    this.equityGridOptions.api?.setRowData(this.getSecuritiesArray.controls);
   }
 
   pageChanged(event) {
