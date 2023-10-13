@@ -3877,8 +3877,8 @@ export class SummaryComponent implements OnInit {
                     },
 
                     businessIncomeTotal:
-                      Math.max(this.finalSummary?.assessment?.summaryIncome
-                        ?.summaryBusinessIncome?.totalBusinessIncome,0),
+                    getTotalBusinessIncome(this.finalSummary?.assessment?.summaryIncome
+                      ?.summaryBusinessIncome)
                   },
                   capitalGain: {
                     shortTerm: {
@@ -5258,8 +5258,8 @@ export class SummaryComponent implements OnInit {
                   },
 
                   businessIncomeTotal:
-                  Math.max(this.finalSummary?.assessment?.summaryIncome
-                      ?.summaryBusinessIncome?.totalBusinessIncome),
+                  getTotalBusinessIncome(this.finalSummary?.assessment?.summaryIncome
+                    ?.summaryBusinessIncome),
                 },
                 capitalGain: {
                   shortTerm: {
@@ -6968,4 +6968,13 @@ export class SummaryComponent implements OnInit {
     );
     console.log('UPDATE MANUALLY', this.ITR_JSON);
   }
+}
+
+function getTotalBusinessIncome(summaryBusinessIncome: any): number {
+  return Math.max(
+    Math.max(summaryBusinessIncome.totalSpeculativeIncome, 0)+
+    Math.max(summaryBusinessIncome.totalPresumptiveIncome, 0)+
+    Math.max(summaryBusinessIncome.totalNonSpeculativeIncome, 0)
+    // +Math.max(summaryBusinessIncome.totalIncomeFromFirm, 0)
+    , 0)
 }
