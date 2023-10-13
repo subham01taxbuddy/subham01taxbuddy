@@ -51,6 +51,7 @@ import { ScheduleFsiComponent } from './itr-wizard/pages/schedule-fsi/schedule-f
 import { ScheduleTrComponent } from './itr-wizard/pages/schedule-tr/schedule-tr.component';
 import { ScheduleFaComponent } from './itr-wizard/pages/schedule-fa/schedule-fa.component';
 import { CryptoVdaComponent } from './itr-wizard/pages/crypto-vda/crypto-vda.component';
+import { PartnerInFirmsComponent } from './itr-wizard/pages/partner-in-firms/partner-in-firms.component';
 
 const routes: Routes = [
   {
@@ -113,6 +114,7 @@ const routes: Routes = [
         children: [
           { path: 'schedule-al', component: ScheduleALComponent },
           { path: 'schedule-cfl', component: ScheduleCflComponent },
+          { path: 'partner-in-firms', component: PartnerInFirmsComponent },
         ],
       },
       {

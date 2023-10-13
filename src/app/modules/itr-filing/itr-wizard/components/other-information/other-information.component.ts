@@ -41,6 +41,7 @@ export class OtherInformationComponent implements OnInit {
   ];
 
   sharesForm: FormGroup;
+  firmForm :FormGroup;
 
   constructor(
     public matDialog: MatDialog,
@@ -64,6 +65,13 @@ export class OtherInformationComponent implements OnInit {
       this.ITR_JSON?.directorInCompany === undefined
     ) {
       this.ITR_JSON.directorInCompany = [];
+    }
+    if (
+      this.ITR_JSON?.partnerInFirms === null ||
+      this.ITR_JSON?.partnerInFirms === undefined
+    ) {
+      this.ITR_JSON.partnerInFirms = [];
+      this.Copy_ITR_JSON.partnerInFirmFlag = "N";
     }
     if (!this.ITR_JSON.systemFlags?.directorInCompany) {
       if (this.ITR_JSON.systemFlags) {
@@ -91,6 +99,7 @@ export class OtherInformationComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
     this.sharesCallInConstructor();
     this.directorCallInConstructor();
+    this.firmCallInConstructor();
   }
 
   ngOnInit() {
@@ -120,6 +129,21 @@ export class OtherInformationComponent implements OnInit {
     return <FormArray>this.sharesForm.get('sharesArray');
   }
 
+  get getFirmsArray() {
+    return <FormArray>this.firmForm.get('firmsArray');
+  }
+
+  firmSelected() {
+    const firmArray = <FormArray>(
+      this.firmForm.get('firmsArray')
+    );
+    return (
+      firmArray.controls.filter(
+        (element) => (element as FormGroup).controls['hasEdit'].value === true
+      ).length > 0
+    );
+  }
+
   initDirectorForm() {
     return this.fb.group({
       directorsArray: this.fb.array([]),
@@ -129,6 +153,13 @@ export class OtherInformationComponent implements OnInit {
   initSharesForm() {
     return this.fb.group({
       sharesArray: this.fb.array([]),
+    });
+  }
+
+
+  initFirmsForm() {
+    return this.fb.group({
+      firmsArray: this.fb.array([]),
     });
   }
 
@@ -232,6 +263,18 @@ export class OtherInformationComponent implements OnInit {
     });
   }
 
+  createFirmsForm(director?: any) {
+    return this.fb.group({
+      hasEdit: [false],
+      name: [director?.name, Validators.required],
+      panNumber: [
+        director?.panNumber,
+        Validators.compose([Validators.pattern(AppConstants.panNumberRegex)]),
+      ],
+
+    });
+  }
+
   saveDirectorDetials(event?) {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -301,6 +344,12 @@ export class OtherInformationComponent implements OnInit {
       this.ITR_JSON?.directorInCompany === undefined
     ) {
       this.ITR_JSON.directorInCompany = [];
+    }
+    if (
+      this.ITR_JSON?.partnerInFirms === null ||
+      this.ITR_JSON?.partnerInFirms === undefined
+    ) {
+      this.ITR_JSON.partnerInFirms = [];
     }
     if (!this.ITR_JSON.systemFlags?.directorInCompany) {
       if (this.ITR_JSON.systemFlags) {
@@ -381,6 +430,11 @@ export class OtherInformationComponent implements OnInit {
     formArray.controls[index].enable();
   }
 
+  editFirmForm(index) {
+    let formArray = this.firmForm.controls['firmsArray'] as FormArray;
+    formArray.controls[index].enable();
+  }
+
   //
   ChangeDirectorStatus() {
     if (this.Copy_ITR_JSON.systemFlags?.directorInCompany) {
@@ -432,6 +486,17 @@ export class OtherInformationComponent implements OnInit {
 
   deleteShares() {
     let formArray = this.sharesForm.controls['sharesArray'] as FormArray;
+    let index = 0;
+    formArray.controls.forEach((form: FormGroup) => {
+      if (form.controls['hasEdit'].value) {
+        formArray.removeAt(index);
+      }
+      index++;
+    });
+  }
+
+  deleteFirms() {
+    let formArray = this.firmForm.controls['firmsArray'] as FormArray;
     let index = 0;
     formArray.controls.forEach((form: FormGroup) => {
       if (form.controls['hasEdit'].value) {
@@ -499,9 +564,96 @@ export class OtherInformationComponent implements OnInit {
       $('input.ng-invalid').first().focus();
     }
   }
+
+  formAdded: boolean = false;
+
+  changeFirmStatus() {
+    if (this.Copy_ITR_JSON.partnerInFirms && this.Copy_ITR_JSON.partnerInFirmFlag === 'Y') {
+      if (!this.formAdded || (this.firmForm && this.firmForm.valid)) {
+        this.addFirmDetails('Add firm details', 'ADD', null);
+      }
+
+    } else {
+      this.Copy_ITR_JSON.partnerInFirmFlag = "N";
+      if (this.Copy_ITR_JSON?.partnerInFirms.length > 0) {
+        this.Copy_ITR_JSON.partnerInFirmFlag = "N";
+        this.Copy_ITR_JSON.partnerInFirms = [];
+        // this.directorForm.reset();
+        this.firmForm.reset();
+        this.formAdded = false;
+        (this.firmForm.controls['firmsArray'] as FormArray).clear();
+        this.serviceCall('Partner in firm');
+      }
+    }
+    console.log('Remove shares data here');
+  }
+
+  addFirmDetails(title, mode, i) {
+    if (!this.formAdded) {
+      this.firmForm = this.initFirmsForm();
+      this.formAdded = true;
+    }
+    let formArray = this.firmForm.controls['firmsArray'] as FormArray;
+    formArray.insert(0, this.createFirmsForm());
+  }
+
+  // partnerInFirmFlag:boolean=false;
+  firmCallInConstructor() {
+    if(this.Copy_ITR_JSON.partnerInFirmFlag === "Y"){
+      this.Copy_ITR_JSON.partnerInFirmFlag = "Y";
+    }else{
+      this.Copy_ITR_JSON.partnerInFirmFlag = "N";
+    }
+    this.firmForm = this.initFirmsForm();
+    let formArray = this.firmForm.controls['firmsArray'] as FormArray;
+    for (let i = 0; i < this.ITR_JSON?.partnerInFirms.length; i++) {
+      const val = this.ITR_JSON.partnerInFirms[i];
+      const temp = {
+        id: i + 1,
+        name: val?.name,
+        panNumber: val?.panNumber,
+      };
+      formArray.push(this.createFirmsForm(temp));
+    }
+  }
+
+  saveFirmDetails(event?){
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    if (this.firmForm.valid) {
+      console.log('Save form here', this.firmForm.getRawValue());
+      const firmsArray = <FormArray>this.firmForm.get('firmsArray');
+      this.Copy_ITR_JSON.partnerInFirms = firmsArray.getRawValue();
+      this.Copy_ITR_JSON.partnerInFirmFlag = "Y"
+
+      this.loading = true;
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+        (result) => {
+          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
+          this.loading = false;
+          if (event) {
+            this.utilsService.showSnackBar(
+              'Partner in Firm details added successfully'
+            );
+          }
+
+        },
+        (error) => {
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+          this.loading = false;
+        }
+      );
+    } else {
+      $('input.ng-invalid').first().focus();
+    }
+  }
+
+
   saveAndContinue(event?) {
     this.saveDirectorDetials();
     this.saveUnlistedShares();
+    this.saveFirmDetails();
     this.otherInfoSaved.emit(true);
 
     if (!event) {

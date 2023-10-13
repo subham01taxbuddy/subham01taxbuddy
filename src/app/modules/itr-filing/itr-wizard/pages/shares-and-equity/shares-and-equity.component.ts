@@ -1,15 +1,29 @@
-import {Component, Inject, LOCALE_ID, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
-import {AppConstants} from 'src/app/modules/shared/constants';
-import {ITR_JSON, NewCapitalGain} from 'src/app/modules/shared/interfaces/itr-input.interface';
-import {ItrMsService} from 'src/app/services/itr-ms.service';
-import {ToastMessageService} from 'src/app/services/toast-message.service';
-import {UtilsService} from 'src/app/services/utils.service';
-import {WizardNavigation} from '../../../../itr-shared/WizardNavigation';
-import {GridOptions} from "ag-grid-community";
-import {formatDate} from "@angular/common";
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {
+  Component,
+  Inject,
+  LOCALE_ID,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import {
+  ITR_JSON,
+  NewCapitalGain,
+} from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { UtilsService } from 'src/app/services/utils.service';
+import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
+import { GridOptions } from 'ag-grid-community';
+import { formatDate } from '@angular/common';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import {ConfirmDialogComponent} from "../../../../shared/components/confirm-dialog/confirm-dialog.component";
+import {
+  ConfirmationModalComponent
+} from "../../../../../additional-components/confirmation-popup/confirmation-popup.component";
 
 @Component({
   selector: 'app-shares-and-equity',
@@ -18,7 +32,8 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 })
 export class SharesAndEquityComponent
   extends WizardNavigation
-  implements OnInit {
+  implements OnInit
+{
   step = 1;
   securitiesForm: FormGroup;
   deductionForm: FormGroup;
@@ -33,8 +48,8 @@ export class SharesAndEquityComponent
   maxPurchaseDate: Date;
 
   gainTypeList = [
-    {name: 'STCG', value: 'SHORT'},
-    {name: 'LTCG', value: 'LONG'},
+    { name: 'STCG', value: 'SHORT' },
+    { name: 'LTCG', value: 'LONG' },
   ];
   isDisable: boolean;
   bondType: any;
@@ -55,7 +70,8 @@ export class SharesAndEquityComponent
     private toastMsgService: ToastMessageService,
     private activateRoute: ActivatedRoute,
     private dialog: MatDialog,
-    @Inject(LOCALE_ID) private locale: string) {
+    @Inject(LOCALE_ID) private locale: string
+  ) {
     super();
     // Set the minimum to January 1st 20 years in the past and December 31st a year in the future.
     const currentYear = new Date().getFullYear() - 1;
@@ -70,8 +86,7 @@ export class SharesAndEquityComponent
       columnDefs: this.equityColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
-      onGridReady: params => {
-      },
+      onGridReady: (params) => {},
       sortable: true,
     };
   }
@@ -81,7 +96,7 @@ export class SharesAndEquityComponent
       this.bondType = this.activateRoute.snapshot.queryParams['bondType'];
       this.bondType === 'listed'
         ? (this.title =
-          ' Listed Securities (Equity Shares/ Equity Mutual Funds)')
+            ' Listed Securities (Equity Shares/ Equity Mutual Funds)')
         : (this.title = 'Unlisted Securities (Shares not listed)');
       this.compactView = true;
     }
@@ -146,6 +161,7 @@ export class SharesAndEquityComponent
         (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
       );
     }
+    let ltcg = 0;
     if (data.length > 0) {
       data.forEach((obj: any) => {
         assetDetails = obj.assetDetails;
@@ -155,6 +171,9 @@ export class SharesAndEquityComponent
             const filterImp = obj.improvement?.filter(
               (data) => data.srn == element.srn
             );
+            if (element.gainType === 'LONG') {
+              ltcg += element.capitalGain;
+            }
             if (filterImp?.length > 0) {
               element['costOfImprovement'] = filterImp[0].costOfImprovement;
             }
@@ -172,7 +191,7 @@ export class SharesAndEquityComponent
           this.deduction = false;
           this.isDisable = true;
         } else {
-          this.isDisable = false;
+          this.isDisable = ltcg <= 0;
         }
       });
     } else {
@@ -218,7 +237,7 @@ export class SharesAndEquityComponent
         headerName: 'Scrip Name',
         field: 'nameOfTheUnits',
         width: 100,
-        cellStyle: {textAlign: 'center'},
+        cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['nameOfTheUnits'].value;
         },
@@ -227,7 +246,7 @@ export class SharesAndEquityComponent
         headerName: 'Buy/Sell Quantity',
         field: 'sellOrBuyQuantity',
         width: 100,
-        cellStyle: {textAlign: 'center'},
+        cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['sellOrBuyQuantity'].value;
         },
@@ -236,7 +255,7 @@ export class SharesAndEquityComponent
         headerName: 'Sale Date',
         field: 'sellDate',
         width: 100,
-        cellStyle: {textAlign: 'center'},
+        cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
           if (data.value) {
             return formatDate(data.value, 'dd/MM/yyyy', this.locale);
@@ -253,7 +272,7 @@ export class SharesAndEquityComponent
         field: 'sellValuePerUnit',
         width: 100,
         textAlign: 'center',
-        cellStyle: {textAlign: 'center'},
+        cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['sellValuePerUnit'].value;
         },
@@ -262,7 +281,7 @@ export class SharesAndEquityComponent
         headerName: 'Sale Value',
         field: 'sellValue',
         width: 100,
-        cellStyle: {textAlign: 'center'},
+        cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['sellValue'].value;
         },
@@ -271,7 +290,7 @@ export class SharesAndEquityComponent
         headerName: 'Buy Date',
         field: 'purchaseDate',
         width: 100,
-        cellStyle: {textAlign: 'center'},
+        cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
           if (data.value) {
             return formatDate(data.value, 'dd/MM/yyyy', this.locale);
@@ -288,7 +307,7 @@ export class SharesAndEquityComponent
         field: 'purchaseValuePerUnit',
         width: 100,
         textAlign: 'center',
-        cellStyle: {textAlign: 'center'},
+        cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['purchaseValuePerUnit'].value;
         },
@@ -297,7 +316,7 @@ export class SharesAndEquityComponent
         headerName: 'Buy Value',
         field: 'purchaseCost',
         width: 100,
-        cellStyle: {textAlign: 'center'},
+        cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['purchaseCost'].value;
         },
@@ -306,7 +325,7 @@ export class SharesAndEquityComponent
         headerName: 'Expenses',
         field: 'sellExpense',
         width: 100,
-        cellStyle: {textAlign: 'center'},
+        cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['sellExpense'].value;
         },
@@ -315,7 +334,7 @@ export class SharesAndEquityComponent
         headerName: 'Type of Capital Gain*',
         field: 'gainType',
         width: 100,
-        cellStyle: {textAlign: 'center'},
+        cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['gainType'].value;
         },
@@ -324,7 +343,7 @@ export class SharesAndEquityComponent
         headerName: 'Gain Amount*',
         field: 'capitalGain',
         width: 100,
-        cellStyle: {textAlign: 'center'},
+        cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['capitalGain'].value;
         },
@@ -422,7 +441,7 @@ export class SharesAndEquityComponent
   }
 
   isBrokerSelected() {
-    return this.brokerSelected.filter(value => value === true).length > 0;
+    return this.brokerSelected.filter((value) => value === true).length > 0;
   }
 
   changeSelection(i) {
@@ -440,10 +459,9 @@ export class SharesAndEquityComponent
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       rowSelection: 'multiple',
-      onGridReady: params => {
-      },
+      onGridReady: (params) => {},
       onSelectionChanged: (event) => {
-        event.api.getSelectedRows().forEach(row => {
+        event.api.getSelectedRows().forEach((row) => {
           row.controls['hasEdit'].setValue(true);
         });
         if (event.api.getSelectedRows().length === 0) {
@@ -455,7 +473,7 @@ export class SharesAndEquityComponent
       },
       sortable: true,
       pagination: true,
-      paginationPageSize: 20
+      paginationPageSize: 20,
     };
     this.equityGridOptions.api?.setRowData(this.getSecuritiesArray.controls);
   }
@@ -491,7 +509,7 @@ export class SharesAndEquityComponent
     this.selectedFormGroup = this.createForm(securitiesArray.length);
     this.addDialogRef = this.dialog.open(this.editEquity);
     this.addDialogRef.afterClosed().subscribe((result) => {
-      if(result) {
+      if (result) {
         let data;
         let itrObject = this.Copy_ITR_JSON;
         if (this.bondType === 'listed') {
@@ -508,20 +526,23 @@ export class SharesAndEquityComponent
             obj.assetDetails.push(result);
           });
         } else {
-          let cg:NewCapitalGain = {
+          let cg: NewCapitalGain = {
             assesseeType: this.Copy_ITR_JSON.assesseeType,
             assessmentYear: this.Copy_ITR_JSON.assessmentYear,
-            assetType: this.bondType === 'listed' ? "EQUITY_SHARES_LISTED" : 'EQUITY_SHARES_UNLISTED',
+            assetType:
+              this.bondType === 'listed'
+                ? 'EQUITY_SHARES_LISTED'
+                : 'EQUITY_SHARES_UNLISTED',
             buyersDetails: [],
             improvement: [],
-            residentialStatus: this.Copy_ITR_JSON.residentialStatus
+            residentialStatus: this.Copy_ITR_JSON.residentialStatus,
           };
           cg.assetDetails = [];
           cg.assetDetails.push(result);
           data.push(cg);
         }
         //append data to rest cg data
-        let otherData:any;
+        let otherData: any;
         if (this.bondType === 'listed') {
           otherData = itrObject.capitalGain.filter(
             (item: any) => item.assetType !== 'EQUITY_SHARES_LISTED'
@@ -531,21 +552,22 @@ export class SharesAndEquityComponent
             (item: any) => item.assetType !== 'EQUITY_SHARES_UNLISTED'
           );
         }
-        let completeData = []
-        completeData = otherData.concat(otherData, data);
+        let completeData = [];
+        completeData = otherData.concat(data);
         this.Copy_ITR_JSON.capitalGain = completeData;
         this.initBrokerList(this.Copy_ITR_JSON);
         this.selectedFormGroup.controls['hasEdit'].setValue(null);
-        if(!this.compactView){
+        if (!this.compactView) {
           this.initDetailedForm(this.Copy_ITR_JSON);
-          this.equityGridOptions.api?.setRowData(this.getSecuritiesArray.controls);
+          this.equityGridOptions.api?.setRowData(
+            this.getSecuritiesArray.controls
+          );
         } else {
           this.initDetailedForm(this.Copy_ITR_JSON);
         }
         // this.compactView = true;
       }
     });
-
   }
 
   initForm() {
@@ -558,13 +580,13 @@ export class SharesAndEquityComponent
     let validators =
       this.bondType === 'listed'
         ? [
-          Validators.required,
-          Validators.pattern(AppConstants.amountWithDecimal),
-        ]
+            Validators.required,
+            Validators.pattern(AppConstants.amountWithDecimal),
+          ]
         : [
-          Validators.required,
-          Validators.pattern(AppConstants.amountWithoutDecimal),
-        ];
+            Validators.required,
+            Validators.pattern(AppConstants.amountWithoutDecimal),
+          ];
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       brokerName: [item ? item.brokerName : ''],
@@ -598,8 +620,28 @@ export class SharesAndEquityComponent
     });
   }
 
-  @ViewChild('editEquity', {static: true}) editEquity: TemplateRef<any>;
+  @ViewChild('editEquity', { static: true }) editEquity: TemplateRef<any>;
   selectedFormGroup: FormGroup;
+  confirmDialog: MatDialogRef<ConfirmDialogComponent>;
+
+  deductionChanged(event){
+    if(event.value === false){
+      this.confirmDialog = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Warning',
+          message: 'Selecting "No" for deduction will erase existing data. Do you wish to continue?',
+          isHide: true,
+          showActions: true
+        },
+        disableClose: false,
+      });
+      this.confirmDialog.afterClosed().subscribe(result => {
+        if(result === 'NO'){
+          this.deduction = !event.value;
+        }
+      });
+    }
+  }
 
   editSecuritiesForm(params: any) {
     console.log(event);
@@ -610,14 +652,16 @@ export class SharesAndEquityComponent
           this.selectedFormGroup = params.data;
           this.addDialogRef = this.dialog.open(this.editEquity);
           this.addDialogRef.afterClosed().subscribe((result) => {
-            if(result) {
+            if (result) {
               // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
               // this.Copy_ITR_JSON = JSON.parse(
               //   sessionStorage.getItem(AppConstants.ITR_JSON)
               // );
               this.initBrokerList(this.Copy_ITR_JSON);
               this.selectedFormGroup.controls['hasEdit'].setValue(null);
-              this.equityGridOptions.api?.setRowData(this.getSecuritiesArray.controls);
+              this.equityGridOptions.api?.setRowData(
+                this.getSecuritiesArray.controls
+              );
             }
           });
           break;
@@ -669,7 +713,9 @@ export class SharesAndEquityComponent
       }
       this.brokerSelected[i] = false;
     }
-    this.brokerList = this.brokerList.filter(value => brokerNames.includes(value.brokerName));
+    this.brokerList = this.brokerList.filter((value) =>
+      brokerNames.includes(value.brokerName)
+    );
     let itrObject = this.Copy_ITR_JSON;
     let data;
     if (this.bondType === 'listed') {
@@ -682,10 +728,11 @@ export class SharesAndEquityComponent
       );
     }
     if (data.length > 0) {
-      data.forEach((obj) => {
-        let assetDetails = obj.assetDetails.filter((security: any) => brokerNames.includes(security.brokerName));
-        obj.assetDetails = assetDetails;
-      });
+      // data.forEach((obj) => {
+      //   let assetDetails = obj.assetDetails.filter((security: any) => brokerNames.includes(security.brokerName));
+      //   obj.assetDetails = assetDetails;
+      // });
+      this.initBrokerList(itrObject);
     }
     console.log('ITR json', this.Copy_ITR_JSON);
   }
@@ -730,6 +777,9 @@ export class SharesAndEquityComponent
         securities.controls['isinCode'].setValue('');
         securities.controls['nameOfTheUnits'].setValue('');
         securities.controls['fmvAsOn31Jan2018'].setValue('');
+      } else {
+        securities.controls['isinCode'].setValidators([Validators.required]);
+        securities.controls['isinCode'].updateValueAndValidity();
       }
     }
     if (
@@ -807,7 +857,9 @@ export class SharesAndEquityComponent
         ],
 
         deduction:
-          this.deductionForm.invalid || this.getSecuritiesCg() <= 0 || !this.deduction
+          this.deductionForm.invalid ||
+          this.getSecuritiesCg() <= 0 ||
+          !this.deduction
             ? []
             : [this.deductionForm.getRawValue()],
       };
@@ -876,9 +928,13 @@ export class SharesAndEquityComponent
 
   getPurchaseValue() {
     let purchaseValue =
-      parseFloat(this.selectedFormGroup.controls['purchaseValuePerUnit'].value) *
+      parseFloat(
+        this.selectedFormGroup.controls['purchaseValuePerUnit'].value
+      ) *
       parseFloat(this.selectedFormGroup.controls['sellOrBuyQuantity'].value);
-    this.selectedFormGroup.controls['purchaseCost'].setValue(purchaseValue.toFixed());
+    this.selectedFormGroup.controls['purchaseCost'].setValue(
+      purchaseValue.toFixed()
+    );
     // if(this.bondType === 'listed') {
     //   fg.controls['purchaseCost'].setValue(purchaseValue.toFixed(2));
     // } else {
@@ -1044,12 +1100,12 @@ export class SharesAndEquityComponent
           //get all other brokers from existing list, append current broker list and then save
           let otherData = this.Copy_ITR_JSON.capitalGain[
             securitiesIndex
-            ].assetDetails.filter(
+          ].assetDetails.filter(
             (item) => item.brokerName !== this.selectedBroker
           );
           let sameData = this.Copy_ITR_JSON.capitalGain[
             securitiesIndex
-            ].assetDetails.filter(
+          ].assetDetails.filter(
             (item) => item.brokerName === this.selectedBroker
           );
           if (!sameData) {
@@ -1070,7 +1126,7 @@ export class SharesAndEquityComponent
         } else {
           let otherData = this.Copy_ITR_JSON.capitalGain[
             securitiesIndex
-            ].assetDetails.filter(
+          ].assetDetails.filter(
             (item) => item.brokerName !== this.selectedBroker
           );
           this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails =

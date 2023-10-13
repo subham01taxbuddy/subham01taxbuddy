@@ -206,6 +206,9 @@ export class ItrWizardComponent implements OnInit {
       this.ITR_JSON = this.itrValidationService.removeNullProperties(
         this.ITR_JSON
       );
+      this.ITR_JSON = this.itrValidationService.removeDuplicateCg(
+        this.ITR_JSON
+      );
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
         JSON.stringify(this.ITR_JSON)

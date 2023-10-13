@@ -121,6 +121,7 @@
           [(ngModel)]="deduction"
           [disabled]="isDisable"
           class="mvRth"
+          (change)="deductionChanged($event)"
         >
           <mat-radio-button [value]="true" labelPosition="before"
             >Yes
@@ -133,13 +134,6 @@
     </div>
 
     <form [formGroup]="deductionForm" *ngIf="this.deduction">
-      <mat-checkbox
-        color="primary"
-        name="hasEdit[i]"
-        formControlName="hasEdit"
-        class="mvTp"
-      >
-      </mat-checkbox>
       <div class="row cardClr">
         <div class="col-sm-4">
           <mat-label>Type of Deduction*</mat-label>
@@ -304,7 +298,7 @@
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-hint style="font-size: 75%"
-              >If Scrip Name is not available you can enter
+              >If Scrip Name is not available, we will take
                 INNOTREQUIRD</mat-hint
               >
               <mat-error
@@ -572,7 +566,7 @@
                     (change)="calculateFMV(selectedFormGroup)"
                   />
                   <mat-hint style="font-size: 75%"
-                  >If ISIN Code is not available, you can enter
+                  >If ISIN Code is not available, we will take
                     INNOTREQUIRD</mat-hint
                   >
                 </mat-form-field>

@@ -218,6 +218,9 @@ export class CryptoVdaComponent implements OnInit {
         this.saveAndNext.emit(false);
         this.loading = false;
       } else {
+        this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
         this.loading = true;
         this.Copy_ITR_JSON.capitalGain =
           this.Copy_ITR_JSON?.capitalGain?.filter((item) => {

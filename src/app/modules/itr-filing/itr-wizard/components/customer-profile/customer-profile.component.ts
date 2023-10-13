@@ -223,6 +223,13 @@ export class CustomerProfileComponent implements OnInit {
     }
   }
 
+  shallDisableOther(controlTodisable, controlName){
+    if(this.utilsService.isNonEmpty(this.customerProfileForm.controls[controlName].value) && this.customerProfileForm.controls[controlName].valid){
+      this.customerProfileForm.controls[controlTodisable].disable();
+    } else {
+      this.customerProfileForm.controls[controlTodisable].enable();
+    }
+  }
   charRegex = AppConstants.charRegex;
   createCustomerProfileForm() {
     return this.fb.group({

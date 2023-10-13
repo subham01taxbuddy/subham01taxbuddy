@@ -779,29 +779,35 @@ export class InvestmentsDeductionsComponent
                   noOfMonths: 0,
                 });
               }
-            } else if (item === 'us80ggc' && this.investmentDeductionForm.controls['us80ggc'].value > 0) {
+            } else if (item === 'us80ggc')  {
               this.ITR_JSON.donations = this.ITR_JSON.donations?.filter(
                 (item: any) => item.donationType !== 'POLITICAL'
               );
               if (!this.ITR_JSON.donations) {
                 this.ITR_JSON.donations = [];
               }
-              this.ITR_JSON.donations?.push({
-                details: '',
-                identifier: '',
-                panNumber: '',
-                schemeCode: '',
-                donationType: 'POLITICAL',
-                name: '',
-                amountInCash: 0,
-                amountOtherThanCash: Number(
-                  this.investmentDeductionForm.controls['us80ggc'].value
-                ),
-                address: '',
-                city: '',
-                pinCode: '',
-                state: '',
-              });
+              if(this.investmentDeductionForm.controls['us80ggc'].value > 0) {
+                this.ITR_JSON.donations?.push({
+                  details: '',
+                  identifier: '',
+                  panNumber: '',
+                  schemeCode: '',
+                  donationType: 'POLITICAL',
+                  name: '',
+                  amountInCash: 0,
+                  amountOtherThanCash: Number(
+                    this.investmentDeductionForm.controls['us80ggc'].value
+                  ),
+                  address: '',
+                  city: '',
+                  pinCode: '',
+                  state: '',
+                });
+              } else {
+                this.ITR_JSON.donations = this.ITR_JSON.donations?.filter(
+                  (item: any) => item.donationType !== 'POLITICAL'
+                );
+              }
             } else if (item === 'us80eeb') {
               this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter(
                 (item: any) => item.expenseType !== 'ELECTRIC_VEHICLE'

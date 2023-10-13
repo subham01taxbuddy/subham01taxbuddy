@@ -154,29 +154,29 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
   calculatePresumptive(index, incomeType) {
     if (incomeType === 'cash') {
-      this.amountSix = (
+      this.amountEight = (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
           .controls[index] as FormGroup
       ).controls['cashReceipts'].value;
 
-      this.maxSixAmt = (
+      this.maxEightAmt = (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
           .controls[index] as FormGroup
       ).controls['cashReceipts'].value;
 
-      this.amountSix = Math.round(Number((this.amountSix / 100) * 8));
+      this.amountEight = Math.round(Number((this.amountEight / 100) * 8));
 
       (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
           .controls[index] as FormGroup
-      ).controls['cashPreIncome'].setValue(this.amountSix);
+      ).controls['cashPreIncome'].setValue(this.amountEight);
 
       (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
           .controls[index] as FormGroup
       ).controls['cashPreIncome'].setValidators([
-        Validators.min(this.amountSix),
-        Validators.max(this.maxSixAmt),
+        Validators.min(this.amountEight),
+        Validators.max(this.maxEightAmt),
       ]);
 
       (
@@ -184,29 +184,29 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
           .controls[index] as FormGroup
       ).controls['cashPreIncome'].updateValueAndValidity();
     } else {
-      this.amountEight = (
+      this.amountSix = (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
           .controls[index] as FormGroup
       ).controls['bankReceipts'].value;
 
-      this.maxEightAmt = (
+      this.maxSixAmt = (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
           .controls[index] as FormGroup
       ).controls['bankReceipts'].value;
 
-      this.amountEight = Math.round(Number((this.amountEight / 100) * 6));
+      this.amountSix = Math.round(Number((this.amountSix / 100) * 6));
 
       (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
           .controls[index] as FormGroup
-      ).controls['bankPreIncome'].setValue(this.amountEight);
+      ).controls['bankPreIncome'].setValue(this.amountSix);
 
       (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
           .controls[index] as FormGroup
       ).controls['bankPreIncome'].setValidators([
-        Validators.min(this.amountEight),
-        Validators.max(this.maxEightAmt),
+        Validators.min(this.amountSix),
+        Validators.max(this.maxSixAmt),
       ]);
 
       (

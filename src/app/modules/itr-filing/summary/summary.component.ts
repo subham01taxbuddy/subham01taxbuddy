@@ -3875,10 +3875,8 @@ export class SummaryComponent implements OnInit {
                         TaxableIncome: null,
                       },
                     },
-
-                    businessIncomeTotal:
-                      Math.max(this.finalSummary?.assessment?.summaryIncome
-                        ?.summaryBusinessIncome?.totalBusinessIncome,0),
+                    businessIncomeTotal:getTotalBusinessIncome(this.finalSummary?.assessment?.summaryIncome
+                      ?.summaryBusinessIncome)
                   },
                   capitalGain: {
                     shortTerm: {
@@ -4015,9 +4013,10 @@ export class SummaryComponent implements OnInit {
 
                           return total + incomeAfterInternalSetOff;
                         }, 0),
-                    totalCapitalGain:
+                    totalCapitalGain: (this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                        && this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain.length > 0) ?
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value),
+                        ?.filter((item) => item.assetType !== 'VDA').map(item=>Math.max(item.incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value,0) : null,
                   },
                   Crypto: {
                     cryptoDetails: this.finalSummary?.itr?.capitalGain
@@ -5256,9 +5255,8 @@ export class SummaryComponent implements OnInit {
                     },
                   },
 
-                  businessIncomeTotal:
-                  Math.max(this.finalSummary?.assessment?.summaryIncome
-                      ?.summaryBusinessIncome?.totalBusinessIncome),
+                  businessIncomeTotal: getTotalBusinessIncome(this.finalSummary?.assessment?.summaryIncome
+                    ?.summaryBusinessIncome)
                 },
                 capitalGain: {
                   shortTerm: {
@@ -5395,9 +5393,10 @@ export class SummaryComponent implements OnInit {
 
                         return total + incomeBeforeInternalSetOff;
                       }, 0),
-                  totalCapitalGain:
+                  totalCapitalGain: (this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                    && this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain.length > 0) ?
                     this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                      ?.map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value),
+                      ?.filter((item) => item.assetType !== 'VDA').map(cg=>Math.max(cg.incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value,0) : null,
                 },
                 Crypto: {
                   cryptoDetails: this.finalSummary?.itr?.capitalGain
@@ -6966,4 +6965,13 @@ export class SummaryComponent implements OnInit {
     );
     console.log('UPDATE MANUALLY', this.ITR_JSON);
   }
+}
+
+function getTotalBusinessIncome(summaryBusinessIncome: any): number {
+  return Math.max(
+    Math.max(summaryBusinessIncome.totalSpeculativeIncome, 0)+
+    Math.max(summaryBusinessIncome.totalPresumptiveIncome, 0)+
+    Math.max(summaryBusinessIncome.totalNonSpeculativeIncome, 0)+
+    Math.max(summaryBusinessIncome.totalIncomeFromFirm, 0)
+    , 0)
 }

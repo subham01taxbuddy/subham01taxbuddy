@@ -50,16 +50,6 @@
               <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
-                <mat-form-field appearance="outline">
-                  <mat-label>Country Name</mat-label>
-                  <input
-                    matInput
-                    name="countryName[i]"
-                    formControlName="countryName"
-                    required
-                  />
-                </mat-form-field>
-
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -78,9 +68,7 @@
                     </mat-option></mat-select
                   >
                 </mat-form-field>
-              </div>
 
-              <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Name of Institution Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Name of the financial institution</mat-label>
@@ -91,7 +79,9 @@
                     required
                   />
                 </mat-form-field>
+              </div>
 
+              <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Address of Institution Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Address of the financial Institution</mat-label>
@@ -156,12 +146,20 @@
                     <!-- Status Input -->
                     <mat-form-field appearance="outline">
                       <mat-label>Status</mat-label>
-                      <input
+                      <mat-select
                         matInput
                         name="status[i]"
                         formControlName="status"
                         required
-                      />
+                      >
+                        <mat-option
+                          *ngFor="let status of status"
+                          [value]="status"
+                          matTooltip="{{ status }}"
+                        >
+                          {{ status }}
+                        </mat-option></mat-select
+                      >
                     </mat-form-field>
 
                     <!-- Account Opening Date Input -->
@@ -174,6 +172,7 @@
                         [matDatepicker]="dateofFilling"
                         autocomplete="off"
                         formControlName="accountOpeningDate"
+                        [max]="maxPurchaseDate"
                         required
                       />
                       <mat-datepicker-toggle
@@ -250,16 +249,6 @@
               <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
-                <mat-form-field appearance="outline">
-                  <mat-label>Country Name</mat-label>
-                  <input
-                    matInput
-                    name="countryName[i]"
-                    formControlName="countryName"
-                    required
-                  />
-                </mat-form-field>
-
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -278,9 +267,7 @@
                     </mat-option></mat-select
                   >
                 </mat-form-field>
-              </div>
 
-              <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Name of Institution Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Name of financial Institution</mat-label>
@@ -291,7 +278,9 @@
                     required
                   />
                 </mat-form-field>
+              </div>
 
+              <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Address of Institution Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Address of the financial Institution</mat-label>
@@ -356,12 +345,20 @@
                     <!-- Status -->
                     <mat-form-field appearance="outline">
                       <mat-label>Status</mat-label>
-                      <input
+                      <mat-select
                         matInput
                         name="status[i]"
                         formControlName="status"
                         required
-                      />
+                      >
+                        <mat-option
+                          *ngFor="let status of status"
+                          [value]="status"
+                          matTooltip="{{ status }}"
+                        >
+                          {{ status }}
+                        </mat-option></mat-select
+                      >
                     </mat-form-field>
 
                     <!-- acount opening date -->
@@ -374,6 +371,7 @@
                         [matDatepicker]="dateofFilling"
                         autocomplete="off"
                         formControlName="accountOpeningDate"
+                        [max]="maxPurchaseDate"
                         required
                       />
                       <mat-datepicker-toggle
@@ -465,16 +463,6 @@
               <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
-                <mat-form-field appearance="outline">
-                  <mat-label>Country Name</mat-label>
-                  <input
-                    matInput
-                    name="countryName[i]"
-                    formControlName="countryName"
-                    required
-                  />
-                </mat-form-field>
-
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -493,9 +481,7 @@
                     </mat-option></mat-select
                   >
                 </mat-form-field>
-              </div>
 
-              <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Name of Institution Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Name of Entity</mat-label>
@@ -506,7 +492,9 @@
                     required
                   />
                 </mat-form-field>
+              </div>
 
+              <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Address of Institution Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Address of Entity</mat-label>
@@ -555,6 +543,7 @@
                     [matDatepicker]="dateofFilling"
                     autocomplete="off"
                     formControlName="dateOfInterest"
+                    [max]="maxPurchaseDate"
                     required
                   />
                   <mat-datepicker-toggle
@@ -655,16 +644,6 @@
               <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
-                <mat-form-field appearance="outline">
-                  <mat-label>Country Name</mat-label>
-                  <input
-                    matInput
-                    name="countryName[i]"
-                    formControlName="countryName"
-                    required
-                  />
-                </mat-form-field>
-
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -683,9 +662,7 @@
                     </mat-option></mat-select
                   >
                 </mat-form-field>
-              </div>
 
-              <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Name of Institution -->
                 <mat-form-field appearance="outline">
                   <mat-label
@@ -699,7 +676,9 @@
                     required
                   />
                 </mat-form-field>
+              </div>
 
+              <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Address of Institution -->
                 <mat-form-field appearance="outline">
                   <mat-label>Address of financial institution</mat-label>
@@ -732,6 +711,7 @@
                     [matDatepicker]="dateofFilling"
                     autocomplete="off"
                     formControlName="dateOfContract"
+                    [max]="maxPurchaseDate"
                     required
                   />
                   <mat-datepicker-toggle
@@ -753,9 +733,7 @@
                     required
                   />
                 </mat-form-field>
-              </div>
 
-              <div class="flex gap-[25px]">
                 <!-- Gross Amount Paid -->
                 <mat-form-field appearance="outline">
                   <mat-label
@@ -796,16 +774,6 @@
               <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
-                <mat-form-field appearance="outline">
-                  <mat-label>Country Name</mat-label>
-                  <input
-                    matInput
-                    name="countryName[i]"
-                    formControlName="countryName"
-                    required
-                  />
-                </mat-form-field>
-
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -824,6 +792,17 @@
                     </mat-option></mat-select
                   >
                 </mat-form-field>
+
+                <!-- Name of Entity -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Name of entity</mat-label>
+                  <input
+                    matInput
+                    name="nameOfEntity[i]"
+                    formControlName="nameOfEntity"
+                    required
+                  />
+                </mat-form-field>
               </div>
 
               <div class="flex gap-[25px]" style="margin-bottom: 15px">
@@ -834,17 +813,6 @@
                     matInput
                     name="natureOfEntity[i]"
                     formControlName="natureOfEntity"
-                    required
-                  />
-                </mat-form-field>
-
-                <!-- Name of Entity -->
-                <mat-form-field appearance="outline">
-                  <mat-label>Name of entity</mat-label>
-                  <input
-                    matInput
-                    name="nameOfEntity[i]"
-                    formControlName="nameOfEntity"
                     required
                   />
                 </mat-form-field>
@@ -897,6 +865,7 @@
                     [matDatepicker]="dateofFilling"
                     autocomplete="off"
                     formControlName="date"
+                    [max]="maxPurchaseDate"
                     required
                   />
                   <mat-datepicker-toggle
@@ -927,7 +896,9 @@
                     required
                   />
                 </mat-form-field>
+              </div>
 
+              <div class="flex gap-[25px]">
                 <!-- nature of Income -->
                 <mat-form-field appearance="outline">
                   <mat-label>Nature of income</mat-label>
@@ -938,9 +909,7 @@
                     required
                   />
                 </mat-form-field>
-              </div>
 
-              <div class="flex gap-[25px]">
                 <!-- Amount -->
                 <mat-form-field appearance="outline">
                   <mat-label>Amount</mat-label>
@@ -1007,16 +976,6 @@
               <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
-                <mat-form-field appearance="outline">
-                  <mat-label>Country Name</mat-label>
-                  <input
-                    matInput
-                    name="countryName[i]"
-                    formControlName="countryName"
-                    required
-                  />
-                </mat-form-field>
-
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -1034,6 +993,24 @@
                       {{ nature }}
                     </mat-option></mat-select
                   >
+                </mat-form-field>
+
+                <!-- Ownership -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Ownership</mat-label>
+                  <mat-select
+                    matInput
+                    name="ownerShip[i]"
+                    formControlName="ownerShip"
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let option of natureOfInterestOwnership"
+                      [value]="option"
+                    >
+                      {{ option }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
               </div>
 
@@ -1060,26 +1037,7 @@
                   />
                 </mat-form-field>
 
-                <!-- Ownership -->
-                <mat-form-field appearance="outline">
-                  <mat-label>Ownership</mat-label>
-                  <mat-select
-                    matInput
-                    name="ownerShip[i]"
-                    formControlName="ownerShip"
-                    required
-                  >
-                    <mat-option
-                      *ngFor="let option of natureOfInterestOwnership"
-                      [value]="option"
-                    >
-                      {{ option }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-
                 <!-- Date of acquisition -->
-
                 <mat-form-field appearance="outline">
                   <mat-label>Date of acquisition</mat-label>
                   <input
@@ -1089,6 +1047,7 @@
                     [matDatepicker]="dateofFilling"
                     autocomplete="off"
                     formControlName="date"
+                    [max]="maxPurchaseDate"
                     required
                   />
                   <mat-datepicker-toggle
@@ -1204,16 +1163,6 @@
               <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
-                <mat-form-field appearance="outline">
-                  <mat-label>Country Name</mat-label>
-                  <input
-                    matInput
-                    name="countryName[i]"
-                    formControlName="countryName"
-                    required
-                  />
-                </mat-form-field>
-
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -1231,6 +1180,24 @@
                       {{ nature }}
                     </mat-option></mat-select
                   >
+                </mat-form-field>
+
+                <!-- Ownership -->
+                <mat-form-field appearance="outline">
+                  <mat-label>Ownership</mat-label>
+                  <mat-select
+                    matInput
+                    name="ownerShip[i]"
+                    formControlName="ownerShip"
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let option of natureOfInterestOwnership"
+                      [value]="option"
+                    >
+                      {{ option }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
               </div>
 
@@ -1257,24 +1224,6 @@
                   />
                 </mat-form-field>
 
-                <!-- Ownership -->
-                <mat-form-field appearance="outline">
-                  <mat-label>Ownership</mat-label>
-                  <mat-select
-                    matInput
-                    name="ownerShip[i]"
-                    formControlName="ownerShip"
-                    required
-                  >
-                    <mat-option
-                      *ngFor="let option of natureOfInterestOwnership"
-                      [value]="option"
-                    >
-                      {{ option }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-
                 <!-- Date of contract -->
                 <mat-form-field appearance="outline">
                   <mat-label>Date of acquisition</mat-label>
@@ -1285,6 +1234,7 @@
                     [matDatepicker]="dateofFilling"
                     autocomplete="off"
                     formControlName="date"
+                    [max]="maxPurchaseDate"
                     required
                   />
                   <mat-datepicker-toggle
@@ -1400,16 +1350,6 @@
               <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
-                <mat-form-field appearance="outline">
-                  <mat-label>Country Name</mat-label>
-                  <input
-                    matInput
-                    name="countryName[i]"
-                    formControlName="countryName"
-                    required
-                  />
-                </mat-form-field>
-
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -1428,9 +1368,7 @@
                     </mat-option></mat-select
                   >
                 </mat-form-field>
-              </div>
 
-              <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Name of Institution Input -->
                 <mat-form-field appearance="outline">
                   <mat-label
@@ -1444,7 +1382,9 @@
                     required
                   />
                 </mat-form-field>
+              </div>
 
+              <div class="flex gap-[25px]" style="margin-bottom: 15px">
                 <!-- Address of Institution Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Address of the Institution</mat-label>
@@ -1634,16 +1574,6 @@
               <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
-                <mat-form-field appearance="outline">
-                  <mat-label>Country Name</mat-label>
-                  <input
-                    matInput
-                    name="countryName[i]"
-                    formControlName="countryName"
-                    required
-                  />
-                </mat-form-field>
-
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -1708,7 +1638,12 @@
                     required
                   />
                 </mat-form-field>
+              </div>
 
+              <div
+                class="flex gap-[25px] align-items-center"
+                style="margin-bottom: 10px"
+              >
                 <!-- trustees Address -->
                 <mat-form-field appearance="outline">
                   <mat-label>Address of the trustee </mat-label>
@@ -1719,12 +1654,7 @@
                     required
                   />
                 </mat-form-field>
-              </div>
 
-              <div
-                class="flex gap-[25px] align-items-center"
-                style="margin-bottom: 10px"
-              >
                 <!-- settlor Name -->
                 <mat-form-field appearance="outline">
                   <mat-label>Name of the settlor</mat-label>
@@ -1746,7 +1676,12 @@
                     required
                   />
                 </mat-form-field>
+              </div>
 
+              <div
+                class="flex gap-[25px] align-items-center"
+                style="margin-bottom: 10px"
+              >
                 <!-- beneficiariesName -->
                 <mat-form-field appearance="outline">
                   <mat-label>Name of the beneficiaries</mat-label>
@@ -1768,12 +1703,7 @@
                     required
                   />
                 </mat-form-field>
-              </div>
 
-              <div
-                class="flex gap-[25px] align-items-center"
-                style="margin-bottom: 10px"
-              >
                 <!-- date -->
                 <mat-form-field appearance="outline">
                   <mat-label>Date since position held</mat-label>
@@ -1784,6 +1714,7 @@
                     [matDatepicker]="dateofFilling"
                     autocomplete="off"
                     formControlName="date"
+                    [max]="maxPurchaseDate"
                     required
                   />
                   <mat-datepicker-toggle
@@ -1896,17 +1827,6 @@
               <br />
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
-                <!-- country Name -->
-                <mat-form-field appearance="outline">
-                  <mat-label>Country Name</mat-label>
-                  <input
-                    matInput
-                    name="countryName[i]"
-                    formControlName="countryName"
-                    required
-                  />
-                </mat-form-field>
-
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>

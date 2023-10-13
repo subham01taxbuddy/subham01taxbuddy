@@ -52,8 +52,8 @@
           <tbody formArrayName="fsiArray">
             <tr
               class="tds-on"
-              *ngFor="let fsi of getFsiArray.controls; let i = index"
-              [formGroupName]="i"
+              *ngFor="let fsi of getFsiArray.controls; let index = index"
+              [formGroupName]="index"
             >
               <!-- checkbox -->
               <td>
@@ -114,6 +114,7 @@
                           matInput
                           formControlName="headOfIncome"
                           name="headOfIncome[i]"
+                          readonly
                         />
                       </mat-form-field>
                     </td>
@@ -125,6 +126,11 @@
                           name="incFromOutInd[i]"
                           formControlName="incFromOutInd"
                         />
+                        <mat-hint style="margin-top: 18px">
+                          Ensure income reflects
+                          <br />
+                          in respective schedules
+                        </mat-hint>
                       </mat-form-field>
                     </td>
                     <td>
@@ -154,17 +160,26 @@
                           class="input-field"
                           name="offeredForTaxInd[i]"
                           formControlName="offeredForTaxInd"
+                          readonly
                         />
+                        {{ getLowerOfCds() }}
                       </mat-form-field>
                     </td>
                     <td>
                       <mat-form-field appearance="outline">
-                        <input
-                          matInput
-                          class="input-field"
-                          name="relevantArticle[i]"
+                        <mat-label>Relevant Article</mat-label>
+                        <mat-select
                           formControlName="relevantArticle"
-                        />
+                          name="relevantArticle[i]"
+                        >
+                          <mat-option
+                            *ngFor="let relevantArticle of relevantArticle"
+                            [value]="relevantArticle"
+                            matTooltip="{{ relevantArticle }}"
+                          >
+                            {{ relevantArticle }}
+                          </mat-option></mat-select
+                        >
                       </mat-form-field>
                     </td>
                   </tr>

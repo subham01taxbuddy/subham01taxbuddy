@@ -83,14 +83,6 @@ export class OtherAssetImprovementComponent implements OnInit {
       currentPage: 1,
     };
 
-    let data = this.goldCg?.assetDetails;
-
-    if (data.length > 0) {
-      data.forEach((obj: any) => {
-        this.addMoreOtherAssetsForm(obj);
-      });
-    }
-
   }
 
   calMaxPurchaseDate(sellDate) {
@@ -130,45 +122,46 @@ export class OtherAssetImprovementComponent implements OnInit {
   }
 
   createOtherAssetsForm(srn, index?) {
+    let obj: any = index >= 0 ? this.goldCg.assetDetails[index] : null;
     return this.fb.group({
         srn: [srn],
-        hasEdit: [index ? index.hasEdit : false],
-        purchaseDate: [index ? index.purchaseDate : '', [Validators.required]],
-        sellDate: [index ? index.sellDate : '', [Validators.required]],
+        hasEdit: [obj ? obj.hasEdit : false],
+        purchaseDate: [obj ? obj.purchaseDate : '', [Validators.required]],
+        sellDate: [obj ? obj.sellDate : '', [Validators.required]],
         purchaseCost: [
-          index ? index.purchaseCost : '',
+          obj ? obj.purchaseCost : '',
           [
             Validators.required,
             Validators.pattern(AppConstants.amountWithoutDecimal),
           ],
         ],
         sellValue: [
-          index ? index.sellValue : '',
+          obj ? obj.sellValue : '',
           [
             Validators.required,
             Validators.pattern(AppConstants.amountWithoutDecimal),
           ],
         ],
 
-        sellExpense: [index ? index.sellExpense : ''],
-        capitalGain: [index ? index.capitalGain : 0],
-        gainType: [index ? index.gainType : ''],
+        sellExpense: [obj ? obj.sellExpense : ''],
+        capitalGain: [obj ? obj.capitalGain : 0],
+        gainType: [obj ? obj.gainType : ''],
         algorithm: 'cgProperty',
-        stampDutyValue: [index ? index.stampDutyValue : 0],
-        valueInConsideration: [index ? index.valueInConsideration : 0],
-        indexCostOfAcquisition: [index ? index.indexCostOfAcquisition : 0],
+        stampDutyValue: [obj ? obj.stampDutyValue : 0],
+        valueInConsideration: [obj ? obj.valueInConsideration : 0],
+        indexCostOfAcquisition: [obj ? obj.indexCostOfAcquisition : 0],
 
       improvementsArray: this.fb.group({
         financialYearOfImprovement: [
-          index ? index.financialYearOfImprovement : '',
+          obj ? obj.financialYearOfImprovement : '',
           [Validators.required],
         ],
         costOfImprovement: [
-          index ? index.costOfImprovement : 0,
+          obj ? obj.costOfImprovement : 0,
           [Validators.required],
         ],
         indexCostOfImprovement: [
-          index ? index.indexCostOfImprovement : 0,
+          obj ? obj.indexCostOfImprovement : 0,
           [Validators.required],
         ],
       }),
@@ -235,11 +228,11 @@ export class OtherAssetImprovementComponent implements OnInit {
     this.goldCg.assetDetails.forEach((asset) => {
       //find improvement
       let improvements = this.goldCg.improvement;
-      let srnObj = improvements.find((element) => element.srn === this.assetIndex);
-      if (!srnObj && improvements.length > 0) {
+      let srnObj = improvements?.find((element) => element.srn === this.assetIndex);
+      if (!srnObj && improvements?.length > 0) {
         improvements[0].srn = this.assetIndex;
       }
-      if (!improvements || improvements.length == 0) {
+      if (!improvements || improvements?.length == 0) {
         let improvement = {
           indexCostOfImprovement: 0,
           id: asset.srn,
@@ -254,11 +247,11 @@ export class OtherAssetImprovementComponent implements OnInit {
       }
 
       let deduction = this.goldCg.deduction;
-      let srnDednObj = deduction.find((element) => element.srn === this.assetIndex);
-      if (!srnDednObj && deduction.length > 0) {
+      let srnDednObj = deduction?.find((element) => element.srn === this.assetIndex);
+      if (!srnDednObj && deduction?.length > 0) {
         deduction[0].srn = this.assetIndex;
       }
-      if (!deduction || deduction.length == 0) {
+      if (!deduction || deduction?.length == 0) {
         let deduction = {
           costOfNewAssets: null,
           costOfPlantMachinary: null,
@@ -323,7 +316,7 @@ export class OtherAssetImprovementComponent implements OnInit {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
 
-  saveDetails(i) {
+  saveDetails() {
     let result = {
       cgObject: this.assetsForm.value,
 
@@ -336,55 +329,53 @@ export class OtherAssetImprovementComponent implements OnInit {
     console.log(result.cgObject);
 
     if (result !== undefined) {
-      this.goldCg.assetDetails?.push(result.cgObject);
-      this.goldCg.improvement?.push(result.improve);
+      // this.goldCg.assetDetails?.push(result.cgObject);
+      // this.goldCg.improvement?.push(result.improve);
     }
   }
 
   saveCg() {
+    this.saveDetails()
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.loading = true;
+
+    const capitalGainArray = this.ITR_JSON.capitalGain;
     this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
       (item) => item.assetType !== 'GOLD'
     );
 
-    // this.goldCg.assetDetails = [];
-    // let cgObject = this.assetsForm.value;
-    // this.goldCg.assetDetails[this.assetIndex] = cgObject;
-    this.ITR_JSON.capitalGain.push(this.goldCg);
-
-    const capitalGainArray = this.ITR_JSON.capitalGain;
     // Filter the capitalGain array based on the assetType 'GOLD'
     const filteredCapitalGain = capitalGainArray?.filter(
       (item) => item.assetType === 'GOLD'
     );
 
-    // Check if the filtered capitalGain array is not empty and assetDetails length is 0
-    if (
-      filteredCapitalGain?.length > 0 &&
-      filteredCapitalGain[0]?.assetDetails?.length === 0
-    ) {
-      const index = capitalGainArray?.indexOf(filteredCapitalGain[0]);
-
-      // Delete the entire element from the capitalGain array
-      capitalGainArray?.splice(index, 1);
+    if(this.data.assetIndex >= 0){
+      filteredCapitalGain[0].assetDetails[this.data.assetIndex] = this.goldCg.assetDetails[0];
+    } else {
+      filteredCapitalGain[0].assetDetails.push(this.goldCg.assetDetails[0]);
     }
+    this.ITR_JSON.capitalGain.push(filteredCapitalGain[0]);
+    // // Check if the filtered capitalGain array is not empty and assetDetails length is 0
+    // if (
+    //   filteredCapitalGain?.length > 0 &&
+    //   filteredCapitalGain[0]?.assetDetails?.length === 0
+    // ) {
+    //   const index = capitalGainArray?.indexOf(filteredCapitalGain[0]);
+    //
+    //   // Delete the entire element from the capitalGain array
+    //   capitalGainArray?.splice(index, 1);
+    // }
 
-    console.log('CG:', this.ITR_JSON.capitalGain);
-    this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
-      console.log(result);
-      this.ITR_JSON = result;
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.ITR_JSON)
-      );
-      this.utilsService.showSnackBar('Other Assets Saved Successfully');
-      this.loading = false;
-    });
-    console.log('GOLD:', this.goldCg);
+    sessionStorage.setItem(
+      AppConstants.ITR_JSON,
+      JSON.stringify(this.ITR_JSON)
+    );
+    this.utilsService.showSnackBar('Other Assets Saved Successfully');
+    this.loading = false;
+
     this.dialogRef.close(this.goldCg);
 
   }
