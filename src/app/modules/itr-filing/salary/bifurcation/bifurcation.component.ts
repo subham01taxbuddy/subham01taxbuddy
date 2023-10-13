@@ -167,6 +167,7 @@ export class BifurcationComponent implements OnInit {
 
   saveBifurcations(type) {
     console.log(this.bifurcationFormGroup, 'bifurcationsForm');
+    let result;
 
     if (type === 'salary') {
       const salaryArray = this.getSalary.value;
@@ -200,12 +201,12 @@ export class BifurcationComponent implements OnInit {
       this.total.salary = total;
       this.value.salary = this.getSalary.value;
 
-      this.utilsService.setData(
-        this.total.salary,
-        this.value.salary,
-        'salary',
-        this.index
-      );
+      result = {
+        total: this.total.salary,
+        value: this.value.salary,
+        type: 'salary',
+        index: this.index
+      };
     }
 
     if (type === 'perquisites') {
@@ -244,12 +245,12 @@ export class BifurcationComponent implements OnInit {
       this.total.perquisites = perquisitesTotal;
       this.value.perquisites = this.getPerquisites.value;
 
-      this.utilsService.setData(
-        this.total.perquisites,
-        this.value.perquisites,
-        'perquisites',
-        this.index
-      );
+      result = {
+        total: this.total.perquisites,
+        value: this.value.perquisites,
+        type: 'perquisites',
+        index: this.index
+      };
     }
 
     if (type === 'profitsInLieu') {
@@ -271,15 +272,15 @@ export class BifurcationComponent implements OnInit {
       this.total.profitsInLieuOfSalary = profitsInLieuTotal;
       this.value.profitsInLieuOfSalary = this.getProfitsInLieu.value;
 
-      this.utilsService.setData(
-        this.total.profitsInLieuOfSalary,
-        this.value.profitsInLieuOfSalary,
-        'profitsInLieuOfSalary',
-        this.index
-      );
+      result = {
+        total: this.total.profitsInLieuOfSalary,
+        value: this.value.profitsInLieuOfSalary,
+        type: 'profitsInLieuOfSalary',
+        index: this.index
+      };
     }
 
-    this.dialogRef.close();
+    this.dialogRef.close(result);
   }
 
   // get functions

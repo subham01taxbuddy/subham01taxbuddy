@@ -1066,18 +1066,18 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       width: '700px',
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      const Result = this.utilsService.getData();
+    dialogRef.afterClosed().subscribe((result) => {
+      // const Result = this.utilsService.getData();
 
-      if (Result !== undefined) {
-        console.log('BifurcationComponent=', Result);
-        this.bifurcationResult.SEC17_1.total = Result?.salary?.total;
-        this.bifurcationResult.SEC17_2.total = Result?.perquisites?.total;
-        this.bifurcationResult.SEC17_3.total = Result?.profitsInLieu?.total;
+      if (result !== undefined) {
+        console.log('BifurcationComponent=', result);
+        this.bifurcationResult.SEC17_1.total = result?.salary?.total;
+        this.bifurcationResult.SEC17_2.total = result?.perquisites?.total;
+        this.bifurcationResult.SEC17_3.total = result?.profitsInLieu?.total;
 
         if (this.bifurcationResult?.SEC17_1.total > 0) {
           this.grossSalary = 0;
-          this.bifurcationResult.SEC17_1.value = Result?.salary?.value[0];
+          this.bifurcationResult.SEC17_1.value = result?.salary?.value[0];
           let salaryDetails = this.employerDetailsFormGroup?.controls[
             'salaryDetails'
           ] as FormArray;
@@ -1094,7 +1094,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         }
 
         if (this.bifurcationResult?.SEC17_2.total > 0) {
-          this.bifurcationResult.SEC17_2.value = Result?.perquisites?.value[0];
+          this.bifurcationResult.SEC17_2.value = result?.perquisites?.value[0];
           let salaryDetails = this.employerDetailsFormGroup?.controls[
             'salaryDetails'
           ] as FormArray;
@@ -1112,7 +1112,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
         if (this.bifurcationResult?.SEC17_3.total > 0) {
           this.bifurcationResult.SEC17_3.value =
-            Result?.profitsInLieu?.value[0];
+            result?.profitsInLieu?.value[0];
 
           let salaryDetails = this.employerDetailsFormGroup?.controls[
             'salaryDetails'
