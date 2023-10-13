@@ -4,6 +4,7 @@ import {
   ItrValidations,
 } from '../modules/shared/interfaces/itr-validation.interface';
 import {UtilsService} from "./utils.service";
+import {ITR_JSON} from "../modules/shared/interfaces/itr-input.interface";
 
 @Injectable()
 export class ItrValidationService {
@@ -1178,6 +1179,26 @@ export class ItrValidationService {
     this.currentFinancialYear = financialYear - 1 + '-' + financialYear;
     this.getCurrentAssessmentYear(this.currentFinancialYear);
     return financialYear - 1 + '-' + financialYear; // Format: 2022-2023 for FY 2022-23
+  }
+
+  removeDuplicateCg(ITR_JSON: ITR_JSON){
+    let cgTypes = ['PLOT_OF_LAND', 'EQUITY_SHARES_LISTED', 'EQUITY_SHARES_UNLISTED', 'BONDS', 'ZERO_COUPON_BONDS', 'GOLD'];
+    cgTypes.forEach(element =>{
+      let filtered = ITR_JSON.capitalGain?.filter(
+        (item) => item.assetType === element
+      );
+      if(filtered.length > 0){
+        let nonFiltered = ITR_JSON.capitalGain?.filter(
+          (item) => item.assetType !== element
+        );
+        if(!nonFiltered){
+          nonFiltered = [];
+        }
+        nonFiltered.push(filtered[0]);
+        ITR_JSON.capitalGain = nonFiltered;
+      }
+    });
+    return ITR_JSON;
   }
 
   getCurrentAssessmentYear(financialYear: string): string {
