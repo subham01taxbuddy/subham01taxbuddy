@@ -493,7 +493,7 @@ export class DonationsComponent implements OnInit {
   createDonationForm(item?): FormGroup {
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
-      identifier: [item ? item.identifier : ''],
+      identifier: [item ? item.identifier : '', Validators.maxLength(25)],
       donationType: this.type === '80gga' ? 'SCIENTIFIC' : 'OTHER',
       amountInCash: [
         item ? item.amountInCash : 0,
