@@ -2285,7 +2285,7 @@ export class PersonalInformationComponent implements OnInit {
       seventhProviso139: this.fb.group({
         seventhProvisio139: 'N',
         strDepAmtAggAmtExcd1CrPrYrFlg: 'N',
-        depAmtAggAmtExcd1CrPrYrFlg: null,
+        depAmtAggAmtExcd1CrPrYrFlg: [null, Validators.min(10000000)],
         strIncrExpAggAmt2LkTrvFrgnCntryFlg: 'N',
         incrExpAggAmt2LkTrvFrgnCntryFlg: null,
         strIncrExpAggAmt1LkElctrctyPrYrFlg: 'N',
@@ -2608,6 +2608,7 @@ export class PersonalInformationComponent implements OnInit {
     } else {
       this.customerProfileForm.controls['liableSection44AAflag'].setValue('N');
     }
+    this.seventhProvisio139();
   }
 
   isFormValid() {
@@ -2642,6 +2643,7 @@ export class PersonalInformationComponent implements OnInit {
     );
 
     if (!this.isFormValid()) {
+      $('input.ng-invalid').first().focus();
       return;
     }
 
@@ -2938,7 +2940,8 @@ export class PersonalInformationComponent implements OnInit {
       this.clearValidator('clauseiv7provisio139i');
     } else {
       // marking questions as not required if seventhProvisio is yes
-      this.setValidator('strDepAmtAggAmtExcd1CrPrYrFlg', Validators.required);
+      this.setValidator('strDepAmtAggAmtExcd1CrPrYrFlg',
+        [Validators.required, Validators.min(10000000)]);
       this.setValidator(
         'strIncrExpAggAmt2LkTrvFrgnCntryFlg',
         Validators.required

@@ -15,10 +15,11 @@ import { AgGridModule } from "ag-grid-angular";
 import { RoleUpdateComponent } from './role-update/role-update.component';
 import { TasksModule } from "src/app/modules/tasks/tasks.module";
 import {PagesModule} from "../pages.module";
+import { BulkStatusUpdateComponent } from "./bulk-status-update/bulk-status-update.component";
 
 @NgModule({
     declarations: [UserManagementComponent, UserListComponent, UserProfileComponent, ProfileDialogComponent, CreateNewUserComponent,
-        RoleUpdateComponent],
+        RoleUpdateComponent,BulkStatusUpdateComponent],
     imports: [
         CommonModule,
         FormsModule,
