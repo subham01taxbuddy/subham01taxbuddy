@@ -32,6 +32,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   maxPT = this.limitPT;
   maxEA = 5000;
   currentIndex: number = null;
+  valueChanged: boolean = false;
   bifurcationResult: {
     SEC17_1: {
       total: number;
@@ -565,6 +566,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
       let perquisitesAmount = 0;
       let basicSalaryAmount = 0;
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       for (let i = 0; i < salaryDetails.controls.length; i++) {
         let salary = salaryDetails.controls[i] as FormGroup;
         if (
@@ -598,6 +600,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
                   }
                 }
               }
+            } else if (
+              this.ITR_JSON?.employers[this.currentIndex]?.salary.length > 1 &&
+              this.valueChanged === false
+            ) {
+              this.localEmployer.salary =
+                this.ITR_JSON?.employers[this.currentIndex]?.salary;
             }
           }
 
@@ -628,6 +636,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
                   }
                 }
               }
+            } else if (
+              this.ITR_JSON?.employers[this.currentIndex]?.perquisites?.length >
+                1 &&
+              this.valueChanged === false
+            ) {
+              this.localEmployer.perquisites =
+                this.ITR_JSON?.employers[this.currentIndex]?.perquisites;
             }
           }
 
@@ -657,6 +672,15 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
                   }
                 }
               }
+            } else if (
+              this.ITR_JSON?.employers[this.currentIndex]
+                ?.profitsInLieuOfSalaryType?.length > 1 &&
+              this.valueChanged === false
+            ) {
+              this.localEmployer.profitsInLieuOfSalaryType =
+                this.ITR_JSON?.employers[
+                  this.currentIndex
+                ]?.profitsInLieuOfSalaryType;
             }
           }
         }
@@ -943,6 +967,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         }
       }
     }
+  }
+
+  changed() {
+    this.valueChanged = true;
   }
 
   editEmployerDetails(index) {
