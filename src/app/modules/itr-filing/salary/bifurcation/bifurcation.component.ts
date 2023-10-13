@@ -6,7 +6,6 @@ import {
   ITR_JSON,
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 
 @Component({
@@ -36,7 +35,6 @@ export class BifurcationComponent implements OnInit {
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<BifurcationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private utilsService: UtilsService,
     private itrMsService: ItrMsService
   ) {}
 

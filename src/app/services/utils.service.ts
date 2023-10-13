@@ -36,33 +36,7 @@ export class UtilsService {
     private serializer: UrlSerializer,
     private userMsService: UserMsService,
     private storageService: StorageService
-  ) {
-    // TOTALS
-    if (!this.salaryTotal) {
-      this.salaryTotal = [];
-    }
-
-    if (!this.perquisitesTotal) {
-      this.perquisitesTotal = [];
-    }
-
-    if (!this.profitsInLieuOfSalaryTotal) {
-      this.profitsInLieuOfSalaryTotal = [];
-    }
-
-    // VALUE
-    if (!this.salaryValue) {
-      this.salaryValue = [];
-    }
-
-    if (!this.perquisitesValue) {
-      this.perquisitesValue = [];
-    }
-
-    if (!this.profitsInLieuOfSalaryValue) {
-      this.profitsInLieuOfSalaryValue = [];
-    }
-  }
+  ) {}
   /**
    * @function isNonEmpty()
    * @param param
@@ -1409,53 +1383,5 @@ export class UtilsService {
 
   getAddClientJsonData() {
     return this.jsonData;
-  }
-
-  salaryTotal: any;
-  perquisitesTotal: any;
-  profitsInLieuOfSalaryTotal: any;
-  salaryValue: any;
-  perquisitesValue: any;
-  profitsInLieuOfSalaryValue: any;
-
-  reInitialize(index) {
-    if (index === -1) {
-      this.salaryTotal = 0;
-      this.salaryValue = 0;
-      this.perquisitesTotal = 0;
-      this.perquisitesValue = 0;
-      this.profitsInLieuOfSalaryTotal = 0;
-      this.profitsInLieuOfSalaryValue = 0;
-    }
-  }
-
-  setData(total, value, type, index) {
-    if (type === 'salary') {
-      this.salaryTotal = total;
-      this.salaryValue = value;
-    } else if (type === 'perquisites') {
-      this.perquisitesTotal = total;
-      this.perquisitesValue = value;
-    } else if (type === 'profitsInLieuOfSalary') {
-      this.profitsInLieuOfSalaryTotal = total;
-      this.profitsInLieuOfSalaryValue = value;
-    }
-  }
-
-  getData() {
-    return {
-      salary: {
-        total: this.salaryTotal,
-        value: this.salaryValue,
-      },
-      perquisites: {
-        total: this.perquisitesTotal,
-        value: this.perquisitesValue,
-      },
-      profitsInLieu: {
-        total: this.profitsInLieuOfSalaryTotal,
-        value: this.profitsInLieuOfSalaryValue,
-      },
-    };
   }
 }

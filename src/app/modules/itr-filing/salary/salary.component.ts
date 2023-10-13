@@ -238,18 +238,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     if (this.currentIndex >= 0) {
       this.editEmployerDetails(this.currentIndex);
     }
-
-    if (this.currentIndex === -1) {
-      this.utilsService.reInitialize(this.currentIndex);
-    }
-
-    // if (!this.bifurcationResult) {
-    //   this.bifurcationResult = {
-    //     SEC17_1: { total: 0, value: null },
-    //     SEC17_2: { total: 0, value: null },
-    //     SEC17_3: { total: 0, value: null },
-    //   };
-    // }
   }
 
   isVrsExemptionTaken = false;
