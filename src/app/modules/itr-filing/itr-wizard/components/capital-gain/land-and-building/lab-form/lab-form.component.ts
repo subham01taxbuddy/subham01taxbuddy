@@ -64,6 +64,7 @@ export const MY_FORMATS = {
 })
 export class LabFormComponent implements OnInit {
   @Output() cancelForm = new EventEmitter<any>();
+  @Output() saveForm = new EventEmitter<any>();
   disableFutureDates: any;
   loading = false;
   improvementYears = [];
@@ -1489,6 +1490,7 @@ export class LabFormComponent implements OnInit {
         this.utilsService.smoothScrollToTop();
         this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
         this.saveBusy = false;
+        this.saveForm.emit({ saved: this.saveBusy });
       },
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -1498,6 +1500,7 @@ export class LabFormComponent implements OnInit {
         );
         this.utilsService.smoothScrollToTop();
         this.saveBusy = false;
+        this.saveForm.emit({ saved: this.saveBusy });
       }
     );
   }

@@ -315,4 +315,13 @@ export class LandAndBuildingComponent
     this.location.back();
     this.saveAndNext.emit(false);
   }
+
+  saveFormData(){
+    this.loading = true;
+    this.labFormComponent.saveImmovableCG(this.labFormComponent.immovableForm, 0);
+  }
+
+  formSaved(event) {
+    this.loading = false;
+  }
 }
