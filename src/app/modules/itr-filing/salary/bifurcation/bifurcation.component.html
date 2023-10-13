@@ -1,7 +1,7 @@
 <form [formGroup]="bifurcationFormGroup">
   <div class="surround scroll">
     <!-- SALARY 17(1) -->
-    <div formArrayName="salary" *ngIf="data.index === 0">
+    <div formArrayName="salary" *ngIf="data.typeIndex === 0">
       <div
         *ngFor="let salaryControl of getSalary.controls; let i = index"
         [formGroupName]="i"
@@ -266,7 +266,7 @@
     </div>
 
     <!-- PERQUISITIES 17(2) -->
-    <div formArrayName="perquisites" *ngIf="data.index === 1">
+    <div formArrayName="perquisites" *ngIf="data.typeIndex === 1">
       <div
         *ngFor="let salaryControl of getPerquisites.controls; let i = index"
         [formGroupName]="i"
@@ -617,7 +617,7 @@
     </div>
 
     <!-- PROFITS IN LIEU 17(3) -->
-    <div formArrayName="profitsInLieu" *ngIf="data.index === 2">
+    <div formArrayName="profitsInLieu" *ngIf="data.typeIndex === 2">
       <div
         *ngFor="let salaryControl of getProfitsInLieu.controls; let i = index"
         [formGroupName]="i"

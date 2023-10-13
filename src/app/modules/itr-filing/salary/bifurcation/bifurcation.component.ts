@@ -7,6 +7,7 @@ import {
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 
 @Component({
   selector: 'app-bifurcation',
@@ -28,26 +29,30 @@ export class BifurcationComponent implements OnInit {
     profitsInLieuOfSalary: 0,
   };
   index: any;
+  Copy_ITR_JSON: ITR_JSON;
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<BifurcationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private itrMsService: ItrMsService
   ) {}
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.bifurcationFormGroup = this.createBifurcationForm();
-    this.index = this.data?.data;
+    this.index = this.data?.index;
+    this.localEmployer = this.data?.data;
 
     // Salary
     const salaryFormArray = this.getSalary;
-    let salaryDataToPatch = this.ITR_JSON?.employers[
-      this.index
-    ]?.salary?.filter((item) => item?.salaryType !== 'SEC17_1');
+    let salaryDataToPatch = this.localEmployer?.salary?.filter(
+      (item) => item?.salaryType !== 'SEC17_1'
+    );
 
-    if (salaryDataToPatch && salaryDataToPatch.length > 0) {
+    if (salaryDataToPatch && salaryDataToPatch?.length > 0) {
       salaryDataToPatch?.forEach((item) => {
         const matchingControl = salaryFormArray?.controls[0]?.get(
           item?.salaryType
@@ -61,9 +66,9 @@ export class BifurcationComponent implements OnInit {
 
     // perquisities
     const perquisitesFormArray = this.getPerquisites;
-    let perquisitesDataToPatch = this.ITR_JSON?.employers[
-      this.index
-    ]?.perquisites?.filter((item) => item?.perquisiteType !== 'SEC17_2');
+    let perquisitesDataToPatch = this.localEmployer?.perquisites?.filter(
+      (item) => item?.perquisiteType !== 'SEC17_2'
+    );
 
     if (perquisitesDataToPatch && perquisitesDataToPatch?.length > 0) {
       perquisitesDataToPatch?.forEach((item) => {
@@ -72,17 +77,16 @@ export class BifurcationComponent implements OnInit {
         );
 
         if (matchingControl) {
-          matchingControl?.setValue(item.taxableAmount);
+          matchingControl?.setValue(item?.taxableAmount);
         }
       });
     }
 
     // profits in lieu
-    let profitsInLieuDataToPatch = this.ITR_JSON?.employers[
-      this.index
-    ]?.profitsInLieuOfSalaryType?.filter(
-      (item) => item?.salaryType !== 'SEC17_3'
-    );
+    let profitsInLieuDataToPatch =
+      this.localEmployer?.profitsInLieuOfSalaryType?.filter(
+        (item) => item?.salaryType !== 'SEC17_3'
+      );
     const profitsInLieuFormArray = this.getProfitsInLieu;
     if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
       profitsInLieuDataToPatch?.forEach((item) => {
@@ -198,6 +202,80 @@ export class BifurcationComponent implements OnInit {
         type: 'salary',
         index: this.index,
       };
+
+      // NEED TO CONFIRM WITH ASHWINI IF I SHOULD CALL API OR NOT
+      // if (this.localEmployer) {
+      //   const bifurcationValues = this.value.salary[0];
+
+      //   this.localEmployer.salary = [];
+      //   for (const key in bifurcationValues) {
+      //     if (bifurcationValues.hasOwnProperty(key)) {
+      //       const element = parseFloat(bifurcationValues[key]);
+      //       console.log(element);
+      //       if (element && element !== 0) {
+      //         this.localEmployer?.salary.push({
+      //           salaryType: key,
+      //           taxableAmount: element,
+      //           exemptAmount: 0,
+      //         });
+      //       }
+      //     }
+      //   }
+
+      //   this.Copy_ITR_JSON = JSON.parse(
+      //     sessionStorage.getItem(AppConstants.ITR_JSON)
+      //   );
+
+      //   this.loading = true;
+      //   if (this.index === -1) {
+      //     const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
+      //     if (
+      //       this.Copy_ITR_JSON.employers == null ||
+      //       this.Copy_ITR_JSON.employers.length == 0
+      //     ) {
+      //       this.Copy_ITR_JSON.employers = [];
+      //     }
+      //     this.Copy_ITR_JSON.employers.push(myEmp);
+      //   } else {
+      //     const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
+      //     this.Copy_ITR_JSON.employers.splice(this.index, 1, myEmp);
+      //   }
+
+      //   const param = `/itr/itr-type`;
+      //   this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe(
+      //     (res: any) => {
+      //       this.Copy_ITR_JSON.itrType = res?.data?.itrType;
+      //       const param1 = '/taxitr?type=employers';
+      //       this.itrMsService.postMethod(param1, this.Copy_ITR_JSON).subscribe(
+      //         (result: any) => {
+      //           if (this.utilsService.isNonEmpty(result)) {
+      //             this.ITR_JSON = result;
+      //             this.Copy_ITR_JSON = JSON.parse(
+      //               JSON.stringify(this.ITR_JSON)
+      //             );
+      //             sessionStorage.setItem(
+      //               AppConstants.ITR_JSON,
+      //               JSON.stringify(this.ITR_JSON)
+      //             );
+      //           } else {
+      //             this.loading = false;
+      //             this.utilsService.showSnackBar(
+      //               'Failed to save salary detail, Please try again'
+      //             );
+      //           }
+      //         },
+      //         (error) => {
+      //           this.loading = false;
+      //           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+      //         }
+      //       );
+      //     },
+      //     (error) => {
+      //       console.log('Error fetching itr type', error);
+      //       this.utilsService.showSnackBar('Failed to save salary detail.');
+      //     }
+      //   );
+      // }
     }
 
     if (type === 'perquisites') {

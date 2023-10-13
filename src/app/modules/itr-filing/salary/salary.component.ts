@@ -1058,8 +1058,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   bifurcation(i) {
     const dialogRef = this.matDialog.open(BifurcationComponent, {
       data: {
-        data: this.currentIndex,
-        index: i,
+        data: this.ITR_JSON.employers[this.currentIndex],
+        index: this.currentIndex,
+        typeIndex: i,
       },
       closeOnNavigation: true,
       disableClose: false,
@@ -1067,8 +1068,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      // const Result = this.utilsService.getData();
-
       if (result !== undefined) {
         console.log('BifurcationComponent=', result);
         if (result.type === 'perquisites') {
