@@ -376,7 +376,7 @@
   <div class="row">
     <div class="col-sm-8">
       <div class="txBg">
-        Weather you are Partner in firm ?
+        Whether you are Partner in firm ?
       </div>
     </div>
     <div class="col-sm-4 text-right">
@@ -431,7 +431,7 @@
           <div class="container">
             <div class="row">
               <div class="col-sm-3">
-                <button type="submit" class="tbd-btn-secondary btnGry" (click)="deleteFirms()">
+                <button type="submit" class="delete-btn" (click)="deleteFirms()" [disabled]="!firmSelected()">
                   <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
                 </button>
               </div>

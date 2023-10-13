@@ -133,6 +133,17 @@ export class OtherInformationComponent implements OnInit {
     return <FormArray>this.firmForm.get('firmsArray');
   }
 
+  firmSelected() {
+    const firmArray = <FormArray>(
+      this.firmForm.get('firmsArray')
+    );
+    return (
+      firmArray.controls.filter(
+        (element) => (element as FormGroup).controls['hasEdit'].value === true
+      ).length > 0
+    );
+  }
+
   initDirectorForm() {
     return this.fb.group({
       directorsArray: this.fb.array([]),
