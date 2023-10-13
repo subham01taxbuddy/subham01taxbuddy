@@ -512,12 +512,15 @@ export class SharesAndEquityComponent
       if (result) {
         let data;
         let itrObject = this.Copy_ITR_JSON;
+        if(!itrObject.capitalGain){
+          itrObject.capitalGain = [];
+        }
         if (this.bondType === 'listed') {
-          data = itrObject.capitalGain.filter(
+          data = itrObject.capitalGain?.filter(
             (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
           );
         } else if (this.bondType === 'unlisted') {
-          data = itrObject.capitalGain.filter(
+          data = itrObject.capitalGain?.filter(
             (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
           );
         }
@@ -544,11 +547,11 @@ export class SharesAndEquityComponent
         //append data to rest cg data
         let otherData: any;
         if (this.bondType === 'listed') {
-          otherData = itrObject.capitalGain.filter(
+          otherData = itrObject.capitalGain?.filter(
             (item: any) => item.assetType !== 'EQUITY_SHARES_LISTED'
           );
         } else if (this.bondType === 'unlisted') {
-          otherData = itrObject.capitalGain.filter(
+          otherData = itrObject.capitalGain?.filter(
             (item: any) => item.assetType !== 'EQUITY_SHARES_UNLISTED'
           );
         }
