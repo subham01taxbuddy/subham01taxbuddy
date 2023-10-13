@@ -41,69 +41,60 @@ export class BifurcationComponent implements OnInit {
     this.bifurcationFormGroup = this.createBifurcationForm();
     this.index = this.data?.data;
 
-    if (this.index !== -1) {
-      // Salary
-      const salaryFormArray = this.getSalary;
-      let salaryDataToPatch = this.ITR_JSON?.employers[
-        this.index
-      ]?.salary?.filter((item) => item?.salaryType !== 'SEC17_1');
+    // Salary
+    const salaryFormArray = this.getSalary;
+    let salaryDataToPatch = this.ITR_JSON?.employers[
+      this.index
+    ]?.salary?.filter((item) => item?.salaryType !== 'SEC17_1');
 
-      if (salaryDataToPatch && salaryDataToPatch.length > 0) {
-        salaryDataToPatch?.forEach((item) => {
-          const matchingControl = salaryFormArray?.controls[0]?.get(
-            item?.salaryType
-          );
+    if (salaryDataToPatch && salaryDataToPatch.length > 0) {
+      salaryDataToPatch?.forEach((item) => {
+        const matchingControl = salaryFormArray?.controls[0]?.get(
+          item?.salaryType
+        );
 
-          if (matchingControl) {
-            matchingControl?.setValue(item?.taxableAmount);
-          }
-        });
-      }
-
-      // perquisities
-      const perquisitesFormArray = this.getPerquisites;
-      let perquisitesDataToPatch = this.ITR_JSON?.employers[
-        this.index
-      ]?.perquisites?.filter((item) => item?.perquisiteType !== 'SEC17_2');
-
-      if (perquisitesDataToPatch && perquisitesDataToPatch?.length > 0) {
-        perquisitesDataToPatch?.forEach((item) => {
-          const matchingControl = perquisitesFormArray?.controls[0]?.get(
-            item?.perquisiteType
-          );
-
-          if (matchingControl) {
-            matchingControl?.setValue(item.taxableAmount);
-          }
-        });
-      }
-
-      // profits in lieu
-      let profitsInLieuDataToPatch = this.ITR_JSON?.employers[
-        this.index
-      ]?.profitsInLieuOfSalaryType?.filter(
-        (item) => item?.salaryType !== 'SEC17_3'
-      );
-      const profitsInLieuFormArray = this.getProfitsInLieu;
-      if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
-        profitsInLieuDataToPatch?.forEach((item) => {
-          const matchingControl = profitsInLieuFormArray?.controls[0]?.get(
-            item?.salaryType
-          );
-
-          if (matchingControl) {
-            matchingControl?.setValue(item?.taxableAmount);
-          }
-        });
-      }
-    } else if (this.index > 0) {
-      this.editBifurcationForm(this.index);
+        if (matchingControl) {
+          matchingControl?.setValue(item?.taxableAmount);
+        }
+      });
     }
-  }
 
-  editBifurcationForm(index) {
-    // this.bifurcationFormGroup.reset();
-    // this.createBifurcationForm();
+    // perquisities
+    const perquisitesFormArray = this.getPerquisites;
+    let perquisitesDataToPatch = this.ITR_JSON?.employers[
+      this.index
+    ]?.perquisites?.filter((item) => item?.perquisiteType !== 'SEC17_2');
+
+    if (perquisitesDataToPatch && perquisitesDataToPatch?.length > 0) {
+      perquisitesDataToPatch?.forEach((item) => {
+        const matchingControl = perquisitesFormArray?.controls[0]?.get(
+          item?.perquisiteType
+        );
+
+        if (matchingControl) {
+          matchingControl?.setValue(item.taxableAmount);
+        }
+      });
+    }
+
+    // profits in lieu
+    let profitsInLieuDataToPatch = this.ITR_JSON?.employers[
+      this.index
+    ]?.profitsInLieuOfSalaryType?.filter(
+      (item) => item?.salaryType !== 'SEC17_3'
+    );
+    const profitsInLieuFormArray = this.getProfitsInLieu;
+    if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
+      profitsInLieuDataToPatch?.forEach((item) => {
+        const matchingControl = profitsInLieuFormArray?.controls[0]?.get(
+          item?.salaryType
+        );
+
+        if (matchingControl) {
+          matchingControl?.setValue(item?.taxableAmount);
+        }
+      });
+    }
   }
 
   createBifurcationForm() {
@@ -205,7 +196,7 @@ export class BifurcationComponent implements OnInit {
         total: this.total.salary,
         value: this.value.salary,
         type: 'salary',
-        index: this.index
+        index: this.index,
       };
     }
 
@@ -249,7 +240,7 @@ export class BifurcationComponent implements OnInit {
         total: this.total.perquisites,
         value: this.value.perquisites,
         type: 'perquisites',
-        index: this.index
+        index: this.index,
       };
     }
 
@@ -276,7 +267,7 @@ export class BifurcationComponent implements OnInit {
         total: this.total.profitsInLieuOfSalary,
         value: this.value.profitsInLieuOfSalary,
         type: 'profitsInLieuOfSalary',
-        index: this.index
+        index: this.index,
       };
     }
 

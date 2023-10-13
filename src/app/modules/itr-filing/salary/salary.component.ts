@@ -1071,60 +1071,64 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
       if (result !== undefined) {
         console.log('BifurcationComponent=', result);
-        this.bifurcationResult.SEC17_1.total = result?.salary?.total;
-        this.bifurcationResult.SEC17_2.total = result?.perquisites?.total;
-        this.bifurcationResult.SEC17_3.total = result?.profitsInLieu?.total;
+        if (result.type === 'perquisites') {
+          this.bifurcationResult.SEC17_2.total = result?.total;
 
-        if (this.bifurcationResult?.SEC17_1.total > 0) {
-          this.grossSalary = 0;
-          this.bifurcationResult.SEC17_1.value = result?.salary?.value[0];
-          let salaryDetails = this.employerDetailsFormGroup?.controls[
-            'salaryDetails'
-          ] as FormArray;
+          if (this.bifurcationResult?.SEC17_2.total > 0) {
+            this.bifurcationResult.SEC17_2.value = result?.value[0];
 
-          for (let i = 0; i < salaryDetails?.controls.length; i++) {
-            let salary = salaryDetails?.controls[i] as FormGroup;
+            let salaryDetails = this.employerDetailsFormGroup?.controls[
+              'salaryDetails'
+            ] as FormArray;
 
-            if (salary.controls['salaryType']?.value === 'SEC17_1') {
-              this.grossSalary = this.bifurcationResult?.SEC17_1.total;
-              salary.controls['salaryValue']?.setValue(this.grossSalary);
-              break;
+            for (let i = 0; i < salaryDetails?.controls.length; i++) {
+              let salary = salaryDetails?.controls[i] as FormGroup;
+
+              if (salary.controls['salaryType']?.value === 'SEC17_2') {
+                let value = this.bifurcationResult?.SEC17_2.total;
+                salary.controls['salaryValue']?.setValue(value);
+                break;
+              }
             }
           }
-        }
+        } else if (result.type === 'salary') {
+          this.bifurcationResult.SEC17_1.total = result?.total;
 
-        if (this.bifurcationResult?.SEC17_2.total > 0) {
-          this.bifurcationResult.SEC17_2.value = result?.perquisites?.value[0];
-          let salaryDetails = this.employerDetailsFormGroup?.controls[
-            'salaryDetails'
-          ] as FormArray;
+          if (this.bifurcationResult?.SEC17_1.total > 0) {
+            this.grossSalary = 0;
+            this.bifurcationResult.SEC17_1.value = result?.value[0];
+            let salaryDetails = this.employerDetailsFormGroup?.controls[
+              'salaryDetails'
+            ] as FormArray;
 
-          for (let i = 0; i < salaryDetails?.controls.length; i++) {
-            let salary = salaryDetails?.controls[i] as FormGroup;
+            for (let i = 0; i < salaryDetails?.controls.length; i++) {
+              let salary = salaryDetails?.controls[i] as FormGroup;
 
-            if (salary.controls['salaryType']?.value === 'SEC17_2') {
-              let value = this.bifurcationResult?.SEC17_2.total;
-              salary.controls['salaryValue']?.setValue(value);
-              break;
+              if (salary.controls['salaryType']?.value === 'SEC17_1') {
+                this.grossSalary = this.bifurcationResult?.SEC17_1.total;
+                salary.controls['salaryValue']?.setValue(this.grossSalary);
+                break;
+              }
             }
           }
-        }
+        } else if (result.type === 'profitsInLieuOfSalary') {
+          this.bifurcationResult.SEC17_3.total = result?.total;
 
-        if (this.bifurcationResult?.SEC17_3.total > 0) {
-          this.bifurcationResult.SEC17_3.value =
-            result?.profitsInLieu?.value[0];
+          if (this.bifurcationResult?.SEC17_3.total > 0) {
+            this.bifurcationResult.SEC17_3.value = result?.value[0];
 
-          let salaryDetails = this.employerDetailsFormGroup?.controls[
-            'salaryDetails'
-          ] as FormArray;
+            let salaryDetails = this.employerDetailsFormGroup?.controls[
+              'salaryDetails'
+            ] as FormArray;
 
-          for (let i = 0; i < salaryDetails?.controls.length; i++) {
-            let salary = salaryDetails?.controls[i] as FormGroup;
+            for (let i = 0; i < salaryDetails?.controls.length; i++) {
+              let salary = salaryDetails?.controls[i] as FormGroup;
 
-            if (salary.controls['salaryType']?.value === 'SEC17_3') {
-              let value = this.bifurcationResult?.SEC17_3.total;
-              salary.controls['salaryValue']?.setValue(value);
-              break;
+              if (salary.controls['salaryType']?.value === 'SEC17_3') {
+                let value = this.bifurcationResult?.SEC17_3.total;
+                salary.controls['salaryValue']?.setValue(value);
+                break;
+              }
             }
           }
         }
