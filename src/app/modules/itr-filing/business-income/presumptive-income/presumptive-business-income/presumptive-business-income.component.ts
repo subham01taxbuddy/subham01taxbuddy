@@ -247,18 +247,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       ? this.selection.clear()
       : this.businessArray.forEach((row) => this.selection.select(row));
   }
-  removeSelectedRows() {
-    this.selection.selected.forEach((item) => {
-      let index: number = this.businessArray.findIndex((d) => d === item);
-      this.businessArray.splice(index, 1);
-    });
-    this.selection = new SelectionModel<NewPresumptiveIncomes>(true, []);
-  }
-
-  deleteBusiness(index) {
-    this.businessGridOptions.rowData.splice(index, 1);
-    this.businessGridOptions.api.setRowData(this.businessGridOptions.rowData);
-  }
 
   addBusinessRow(mode, data: any, index?) {
     const dialogRef = this.matDialog.open(BusinessDialogComponent, {
