@@ -504,6 +504,37 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       console.log('presBusinessIncome', presBusinessIncome);
       console.log(this.Copy_ITR_JSON);
 
+      if (!this.Copy_ITR_JSON?.business) {
+        this.Copy_ITR_JSON.business = {
+          presumptiveIncomes: [],
+          financialParticulars: {
+            difference: null,
+            id: null,
+            grossTurnOverAmount: null,
+            membersOwnCapital: null,
+            securedLoans: null,
+            unSecuredLoans: null,
+            advances: null,
+            sundryCreditorsAmount: null,
+            otherLiabilities: null,
+            totalCapitalLiabilities: null,
+            fixedAssets: null,
+            inventories: null,
+            sundryDebtorsAmount: null,
+            balanceWithBank: null,
+            cashInHand: null,
+            loanAndAdvances: null,
+            otherAssets: null,
+            totalAssets: null,
+            investment: null,
+            GSTRNumber: null,
+          },
+          businessDescription: [],
+          fixedAssetsDetails: [],
+          profitLossACIncomes: [],
+        };
+      }
+
       if (!this.Copy_ITR_JSON?.business?.presumptiveIncomes) {
         this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
       } else {
