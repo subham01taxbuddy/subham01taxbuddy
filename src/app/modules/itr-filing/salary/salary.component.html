@@ -299,7 +299,7 @@
                   </div>
                   <mat-form-field
                     class="input-field-width"
-                    style="width: 90% !important"
+                    style="width: 70% !important"
                   >
                     <input
                       type="number"
@@ -312,11 +312,19 @@
                       [disabled]="isVrsExemptionTaken"
                     />
                   </mat-form-field>
+                  <button
+                    #buttonContainer
+                    mat-mini-fab
+                    style="margin-left: 5%"
+                    (click)="calculator(income.value.allowType, i)"
+                  >
+                    <mat-icon>filter_list</mat-icon>
+                  </button>
                 </td>
                 <td *ngIf="income.value.allowType !== 'COMPENSATION_ON_VRS'">
                   <mat-form-field
                     class="input-field-width"
-                    style="width: 90% !important"
+                    style="width: 70% !important; margin-right: 5px"
                   >
                     <input
                       type="text"
@@ -329,6 +337,15 @@
                       maxlength="125"
                     />
                   </mat-form-field>
+
+                  <button
+                    #buttonContainers
+                    mat-mini-fab
+                    style="margin-left: 5%"
+                    (click)="calculator(income.value.allowType, i)"
+                  >
+                    <mat-icon>filter_list</mat-icon>
+                  </button>
                 </td>
               </tr>
             </tbody>
