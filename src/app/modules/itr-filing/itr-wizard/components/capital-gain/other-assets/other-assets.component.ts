@@ -238,7 +238,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
       this.ITR_JSON.capitalGain
         .filter((item) => item.assetType === 'GOLD')?.[0]
-        ?.deduction.splice(
+        ?.deduction?.splice(
           0,
           this.ITR_JSON.capitalGain[0].deduction.length,
           extraDeductionDetails
@@ -351,12 +351,12 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   deleteAsset() {
     let selected = this.assetList.filter(asset => asset.hasEdit === true).map(asset => asset.srn);
     //delete improvement for asset
-    this.goldCg.improvement.forEach((imp) => {
+    this.goldCg.improvement?.forEach((imp) => {
       if (selected.includes(imp.srn)) {
         this.goldCg.improvement.splice(this.goldCg.improvement.indexOf(imp), 1);
       }
     });
-    this.goldCg.deduction.forEach((ded) => {
+    this.goldCg.deduction?.forEach((ded) => {
       if (selected.includes(ded.srn)) {
         this.goldCg.deduction.splice(this.goldCg.deduction.indexOf(ded), 1);
       }

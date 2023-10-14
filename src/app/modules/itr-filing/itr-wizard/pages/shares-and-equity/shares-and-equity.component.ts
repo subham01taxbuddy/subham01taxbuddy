@@ -20,6 +20,10 @@ import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 import { GridOptions } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import {ConfirmDialogComponent} from "../../../../shared/components/confirm-dialog/confirm-dialog.component";
+import {
+  ConfirmationModalComponent
+} from "../../../../../additional-components/confirmation-popup/confirmation-popup.component";
 
 @Component({
   selector: 'app-shares-and-equity',
@@ -377,6 +381,7 @@ export class SharesAndEquityComponent
     let ltcg = 0;
 
     this.brokerList = [];
+    this.brokerSelected = [];
     if (this.bondType === 'listed') {
       data = itrObject.capitalGain.filter(
         (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
@@ -621,6 +626,26 @@ export class SharesAndEquityComponent
 
   @ViewChild('editEquity', { static: true }) editEquity: TemplateRef<any>;
   selectedFormGroup: FormGroup;
+  confirmDialog: MatDialogRef<ConfirmDialogComponent>;
+
+  deductionChanged(event){
+    if(event.value === false){
+      this.confirmDialog = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Warning',
+          message: 'Selecting "No" for deduction will erase existing data. Do you wish to continue?',
+          isHide: true,
+          showActions: true
+        },
+        disableClose: false,
+      });
+      this.confirmDialog.afterClosed().subscribe(result => {
+        if(result === 'NO'){
+          this.deduction = !event.value;
+        }
+      });
+    }
+  }
 
   editSecuritiesForm(params: any) {
     console.log(event);
@@ -706,7 +731,7 @@ export class SharesAndEquityComponent
         (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
       );
     }
-    if (data.length > 0) {
+    if (data.length > 0) {//Ashwini: check this code for broker wise delete
       // data.forEach((obj) => {
       //   let assetDetails = obj.assetDetails.filter((security: any) => brokerNames.includes(security.brokerName));
       //   obj.assetDetails = assetDetails;
@@ -724,12 +749,7 @@ export class SharesAndEquityComponent
     securitiesArray.controls = securitiesArray.controls.filter(
       (item: FormGroup) => item.controls['hasEdit'].value !== true
     );
-    // securitiesArray.controls.forEach((element, index) => {
-    //   if ((element as FormGroup).controls['hasEdit'].value) {
-    //     console.log('deleting', index);
-    //     securitiesArray.removeAt(index);
-    //   }
-    // });
+    this.equityGridOptions.api?.setRowData(this.getSecuritiesArray.controls);
   }
 
   pageChanged(event) {

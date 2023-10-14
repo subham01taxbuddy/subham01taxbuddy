@@ -144,7 +144,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       purchase: [income?.purchase],
       netIncome: [0],
       cogc: [0],
-      expenditure: [income?.expenditure],
+      expenditure: [income?.expenditure == null?0:income?.expenditure],
     });
   }
 

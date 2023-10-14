@@ -78,6 +78,7 @@
     <app-lab-form
       [data]="data"
       (cancelForm)="cancelForm($event)"
+      (saveForm)="formSaved($event)"
     ></app-lab-form>
   </div>
   <hr />
@@ -87,7 +88,7 @@
       <span class="font-semibold">Back to Capital Gain Topics</span>
     </button>
 
-    <button (click)="labFormComponent.saveImmovableCG(labFormComponent.immovableForm, 0)"     
+    <button (click)="saveFormData()" [disabled]="loading"
       *ngIf="labView === 'FORM'"
       class="saveBtnIn">
       <span class="font-semibold">Save All</span>

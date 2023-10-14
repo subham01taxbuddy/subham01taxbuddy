@@ -4,6 +4,7 @@ import { CreateNewUserComponent } from "./create-new-user/create-new-user.compon
 import { UserListComponent } from "./user-list/user-list.component";
 import { UserManagementComponent } from './user-management/user-management.component';
 import { UserProfileComponent } from "./user-profile/user-profile.component";
+import { BulkStatusUpdateComponent } from "./bulk-status-update/bulk-status-update.component";
 
 const routes: Routes = [
     {
@@ -12,6 +13,7 @@ const routes: Routes = [
             { path: 'users', component: UserListComponent },
             { path: 'create-user', component: CreateNewUserComponent },
             { path: 'profile/:id', component: UserProfileComponent },
+            { path: 'bulk-status-update', component: BulkStatusUpdateComponent },
             { path: '', redirectTo: '/pages/user-management/users', pathMatch: 'full' }
         ]
     }
