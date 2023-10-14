@@ -41,7 +41,7 @@ export class OtherInformationComponent implements OnInit {
   ];
 
   sharesForm: FormGroup;
-  firmForm :FormGroup;
+  firmForm: FormGroup;
 
   constructor(
     public matDialog: MatDialog,
@@ -71,7 +71,7 @@ export class OtherInformationComponent implements OnInit {
       this.ITR_JSON?.partnerInFirms === undefined
     ) {
       this.ITR_JSON.partnerInFirms = [];
-      this.Copy_ITR_JSON.partnerInFirmFlag = "N";
+      this.Copy_ITR_JSON.partnerInFirmFlag = 'N';
     }
     if (!this.ITR_JSON.systemFlags?.directorInCompany) {
       if (this.ITR_JSON.systemFlags) {
@@ -134,9 +134,7 @@ export class OtherInformationComponent implements OnInit {
   }
 
   firmSelected() {
-    const firmArray = <FormArray>(
-      this.firmForm.get('firmsArray')
-    );
+    const firmArray = <FormArray>this.firmForm.get('firmsArray');
     return (
       firmArray.controls.filter(
         (element) => (element as FormGroup).controls['hasEdit'].value === true
@@ -155,7 +153,6 @@ export class OtherInformationComponent implements OnInit {
       sharesArray: this.fb.array([]),
     });
   }
-
 
   initFirmsForm() {
     return this.fb.group({
@@ -271,7 +268,6 @@ export class OtherInformationComponent implements OnInit {
         director?.panNumber,
         Validators.compose([Validators.pattern(AppConstants.panNumberRegex)]),
       ],
-
     });
   }
 
@@ -568,15 +564,17 @@ export class OtherInformationComponent implements OnInit {
   formAdded: boolean = false;
 
   changeFirmStatus() {
-    if (this.Copy_ITR_JSON.partnerInFirms && this.Copy_ITR_JSON.partnerInFirmFlag === 'Y') {
+    if (
+      this.Copy_ITR_JSON.partnerInFirms &&
+      this.Copy_ITR_JSON.partnerInFirmFlag === 'Y'
+    ) {
       if (!this.formAdded || (this.firmForm && this.firmForm.valid)) {
         this.addFirmDetails('Add firm details', 'ADD', null);
       }
-
     } else {
-      this.Copy_ITR_JSON.partnerInFirmFlag = "N";
+      this.Copy_ITR_JSON.partnerInFirmFlag = 'N';
       if (this.Copy_ITR_JSON?.partnerInFirms.length > 0) {
-        this.Copy_ITR_JSON.partnerInFirmFlag = "N";
+        this.Copy_ITR_JSON.partnerInFirmFlag = 'N';
         this.Copy_ITR_JSON.partnerInFirms = [];
         // this.directorForm.reset();
         this.firmForm.reset();
@@ -599,10 +597,10 @@ export class OtherInformationComponent implements OnInit {
 
   // partnerInFirmFlag:boolean=false;
   firmCallInConstructor() {
-    if(this.Copy_ITR_JSON.partnerInFirmFlag === "Y"){
-      this.Copy_ITR_JSON.partnerInFirmFlag = "Y";
-    }else{
-      this.Copy_ITR_JSON.partnerInFirmFlag = "N";
+    if (this.Copy_ITR_JSON.partnerInFirmFlag === 'Y') {
+      this.Copy_ITR_JSON.partnerInFirmFlag = 'Y';
+    } else {
+      this.Copy_ITR_JSON.partnerInFirmFlag = 'N';
     }
     this.firmForm = this.initFirmsForm();
     let formArray = this.firmForm.controls['firmsArray'] as FormArray;
@@ -617,7 +615,7 @@ export class OtherInformationComponent implements OnInit {
     }
   }
 
-  saveFirmDetails(event?){
+  saveFirmDetails(event?) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
@@ -625,9 +623,14 @@ export class OtherInformationComponent implements OnInit {
       console.log('Save form here', this.firmForm.getRawValue());
       const firmsArray = <FormArray>this.firmForm.get('firmsArray');
       this.Copy_ITR_JSON.partnerInFirms = firmsArray.getRawValue();
-      this.Copy_ITR_JSON.partnerInFirmFlag = "Y"
 
       this.loading = true;
+      if (this.Copy_ITR_JSON.partnerInFirms.length === 0) {
+        this.Copy_ITR_JSON.partnerInFirmFlag = 'N';
+      } else {
+        this.Copy_ITR_JSON.partnerInFirmFlag = 'Y';
+      }
+
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
         (result) => {
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
@@ -637,7 +640,6 @@ export class OtherInformationComponent implements OnInit {
               'Partner in Firm details added successfully'
             );
           }
-
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -648,7 +650,6 @@ export class OtherInformationComponent implements OnInit {
       $('input.ng-invalid').first().focus();
     }
   }
-
 
   saveAndContinue(event?) {
     this.saveDirectorDetials();
