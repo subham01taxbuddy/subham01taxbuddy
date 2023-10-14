@@ -12,7 +12,7 @@ import { AllSalaryIncomeComponent } from '../itr-wizard/pages/all-salary-income/
 import { min } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { BifurcationComponent } from './bifurcation/bifurcation.component';
-import { Overlay } from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { CalculatorsComponent } from './calculators/calculators.component';
 
@@ -1270,7 +1270,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     });
 
     const userProfilePortal = new ComponentPortal(CalculatorsComponent);
-    overlayRef.attach(userProfilePortal);
+    const componentRef = overlayRef.attach(userProfilePortal);
+
+    (componentRef.instance as CalculatorsComponent).data = component;
 
     // Subscribe to backdrop click events to close the overlay
     overlayRef.backdropClick().subscribe(() => {

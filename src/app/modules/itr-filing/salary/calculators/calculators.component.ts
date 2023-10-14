@@ -6,9 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./calculators.component.scss'],
 })
 export class CalculatorsComponent implements OnInit {
+  data: any;
+
   constructor() {}
 
   ngOnInit(): void {
-    console.log();
+    console.log(this.data);
   }
 }
