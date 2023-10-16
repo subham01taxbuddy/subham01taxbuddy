@@ -76,13 +76,6 @@ export class OtherInformationComponent implements OnInit {
       this.Copy_ITR_JSON.partnerInFirmFlag = 'N';
     }
 
-    if (
-      this.ITR_JSON?.schedule5a === null ||
-      this.ITR_JSON?.schedule5a === undefined
-    ) {
-      // this.ITR_JSON.schedule5a = [];
-      this.Copy_ITR_JSON.portugeseCC5AFlag = 'N';
-    }
 
     if (!this.ITR_JSON.systemFlags?.directorInCompany) {
       if (this.ITR_JSON.systemFlags) {
