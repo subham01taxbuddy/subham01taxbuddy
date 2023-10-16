@@ -36,10 +36,10 @@ export class ItrValidationService {
 
     const errorList: ItrValidationObject[] = [];
 
-    if (!itrType) {
-      const error = this.getErrorMessages('E1');
-      errorList.push(error);
-    }
+    // if (!itrType) { //ASHWINI : This is not required
+    //   const error = this.getErrorMessages('E1');
+    //   errorList.push(error);
+    // }
 
     for (const key in obj) {
       // customer profile

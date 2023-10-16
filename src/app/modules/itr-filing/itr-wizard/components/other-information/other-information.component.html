@@ -457,6 +457,275 @@
   </div>
 </div>
 
+<!-- third radio bar ends -->
+
+<!-- fourth radio bar starts -->
+<div class="gryBk1">
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="txBg">
+        Are you governed by the Portuguese Civil Code as per section 5A ?
+      </div>
+    </div>
+    <div class="col-sm-4 text-right">
+      <mat-radio-group name="isGovernedByPortuguese" (change)="changeGovernedByPortugueseStatus()"
+      [(ngModel)]="Copy_ITR_JSON.portugeseCC5AFlag">
+        <mat-radio-button [value]="'Y'" style="margin-left: 0px" labelPosition="before">Yes
+        </mat-radio-button>
+        &nbsp;&nbsp;&nbsp;
+        <mat-radio-button [value]="'N'" labelPosition="before">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div *ngIf="Copy_ITR_JSON.portugeseCC5AFlag==='Y'">
+      <form [formGroup]="schedule5AForm">
+        <div class="card spsTp">
+          <div class="row">
+            <div class="col-sm-4 spsTp">
+              <mat-label class="inputLabel">Name of Spouse:*</mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" trim matInput placeholder="Name of Spouse" name="NameOfSpouse" class="input-field"
+                  formControlName="nameOfSpouse" maxlength="125" required />
+                <mat-error *ngIf="schedule5AForm.controls['nameOfSpouse'].hasError('required')">
+                  Enter the name of spouse
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4 spsTp">
+              <mat-label class="inputLabel">PAN of the Spouse:*</mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" trim
+                  matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
+                  matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput upperCase placeholder="PAN" name="PAN"
+                  class="input-field" formControlName="panOfSpouse" maxlength="10" required/>
+                <mat-error *ngIf="schedule5AForm.controls['panOfSpouse'].hasError('pattern')">Enter valid PAN (e.g XXXXX1234X)
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4 spsTp">
+              <mat-label class="inputLabel">Aadhaar number of the spouse:</mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" trim matInput placeholder="Aadhaar number of the spouse" name="AadhaarNumberOfTheSpouse"
+                  class="input-field" formControlName="aadhaarOfSpouse" maxlength="200" />
+              </mat-form-field>
+            </div>
+
+            <div class="col-sm-12 spsTp">
+              <div class="row">
+                <div class="col-sm-8">
+                  <div class="txBg">
+                    Whether books of accounts of a spouse are audited u/s 44AB? or Whether your spouse is a partner of a firm whose accounts are required to be audited u/s 44AB under this Act?
+                  </div>
+                </div>
+                <div class="col-sm-4 ">
+                  <mat-radio-group name="booksSpouse44ABFlg" formControlName="booksSpouse44ABFlg">
+                    <mat-radio-button [value]="'Y'" style="margin-left: 50px" labelPosition="before">Yes
+                    </mat-radio-button>
+                    &nbsp;&nbsp;&nbsp;
+                    <mat-radio-button [value]="'N'" labelPosition="before">No</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 spsTp">
+              <div class="row ">
+                <div class="col-sm-8">
+                  <div class="txBg">
+                    Whether books of accounts of a spouse are audited u/s 92E? or Whether your spouse is a partner of a firm whose accounts are required to be audited u/s 92E under this Act?
+                  </div>
+                </div>
+                <div class="col-sm-4 ">
+                  <mat-radio-group name="booksSpouse92EFlg" formControlName="booksSpouse92EFlg">
+                    <mat-radio-button [value]="'Y'" style="margin-left: 50px;" labelPosition="before">Yes
+                    </mat-radio-button>
+                    &nbsp;&nbsp;&nbsp;
+                    <mat-radio-button [value]="'N'" labelPosition="before">No</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- House Property Section -->
+
+          <div class="spsTp new-border">
+            <div class="txBg new-color">
+              1 .House Property
+            </div>
+            <hr>
+            <div formGroupName="houseProperty">
+              <div class="row">
+              <div class="col-sm-6 spsTp">
+                <mat-label class="inputLabel">Receipts received under the head *</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim class="input-field" matInput placeholder="Receipts received under the head" name="incomeReceived" formControlName="incomeReceived" maxlength="10" required />
+                  <mat-error *ngIf="schedule5AForm.get('houseProperty.incomeReceived').hasError('required')">Please enter the amount</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6 spsTp">
+                <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required />
+                  <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6 spsTp">
+                <mat-label class="inputLabel">Amount of TDS deducted on income *</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim class="input-field" matInput placeholder="Amount of TDS deducted on income" name="tdsDeductedAmount" formControlName="tdsDeductedAmount" maxlength="10" required/>
+                  <mat-error *ngIf="schedule5AForm.get('houseProperty.tdsDeductedAmount').hasError('required')">Please enter the amount</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6 spsTp">
+                <mat-label class="inputLabel">TDS apportioned in the hands of Spouse *</mat-label>
+                <mat-form-field appearance="outline">
+                  <input digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required/>
+                  <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedTDSOfSpouse').hasError('required')">Please enter the amount</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            </div>
+          </div>
+
+          <!-- Business or Profession Section -->
+          <div class="spsTp new-border">
+            <div class="txBg new-color">
+              2 .Business or profession
+            </div>
+            <hr>
+          <div formGroupName="businessOrProfession">
+            <div class="row">
+            <div class="col-sm-6 spsTp">
+              <mat-label class="inputLabel">Receipts received under the head *</mat-label>
+              <mat-form-field appearance="outline">
+                <input digitsOnly trim class="input-field" matInput placeholder="Receipts received under the head" name="incomeReceived" formControlName="incomeReceived" maxlength="10" required/>
+                <mat-error *ngIf="schedule5AForm.get('businessOrProfession.incomeReceived').hasError('required')">Please enter the amount</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6 spsTp">
+              <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
+              <mat-form-field appearance="outline">
+                <input digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required/>
+                <mat-error *ngIf="schedule5AForm.get('businessOrProfession.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6 spsTp">
+              <mat-label class="inputLabel">Amount of TDS deducted on income *</mat-label>
+              <mat-form-field appearance="outline">
+                <input digitsOnly trim class="input-field" matInput placeholder="Amount of TDS deducted on income" name="tdsDeductedAmount" formControlName="tdsDeductedAmount" maxlength="10" required />
+                <mat-error *ngIf="schedule5AForm.get('businessOrProfession.tdsDeductedAmount').hasError('required')">Please enter the amount</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6 spsTp">
+              <mat-label class ="inputLabel">TDS apportioned in the hands of Spouse *</mat-label>
+              <mat-form-field appearance="outline">
+                <input digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required />
+                <mat-error *ngIf="schedule5AForm.get('businessOrProfession.apportionedTDSOfSpouse').hasError('required')">Please enter the amount</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          </div>
+        </div>
+
+         <!-- Capital Gain Section -->
+         <div class="spsTp new-border">
+          <div class="txBg new-color">
+            3 .Capital Gain
+          </div>
+          <hr>
+          <div formGroupName="capitalGain">
+            <div class="row">
+            <div class="col-sm-6 spsTp">
+              <mat-label class="inputLabel">Receipts received under the head *</mat-label>
+              <mat-form-field appearance="outline">
+                <input digitsOnly trim class="input-field" matInput placeholder="Receipts received under the head" name="incomeReceived" formControlName="incomeReceived" maxlength="10" required />
+                <mat-error *ngIf="schedule5AForm.get('capitalGain.incomeReceived').hasError('required')">Please enter the amount</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6 spsTp">
+              <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
+              <mat-form-field appearance="outline">
+                <input digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required />
+                <mat-error *ngIf="schedule5AForm.get('capitalGain.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6 spsTp">
+              <mat-label class="inputLabel">Amount of TDS deducted on income *</mat-label>
+              <mat-form-field appearance="outline">
+                <input digitsOnly trim class="input-field" matInput placeholder="Amount of TDS deducted on income" name="tdsDeductedAmount" formControlName="tdsDeductedAmount" maxlength="10" required />
+                <mat-error *ngIf="schedule5AForm.get('capitalGain.tdsDeductedAmount').hasError('required')">Please enter the amount</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6 spsTp">
+              <mat-label class="inputLabel">TDS apportioned in the hands of Spouse *</mat-label>
+              <mat-form-field appearance="outline">
+                <input digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required />
+                <mat-error *ngIf="schedule5AForm.get('capitalGain.apportionedTDSOfSpouse').hasError('required')">Please enter the amount</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          </div>
+         </div>
+
+         <!-- Other Sources of Income Section -->
+
+         <div class="spsTp new-border">
+          <div class="txBg new-color">
+            4 . Other sources
+          </div>
+          <hr>
+          <div formGroupName="otherSource">
+            <div class="row">
+            <div class="col-sm-6 spsTp">
+              <mat-label class="inputLabel">Receipts received under the head *</mat-label>
+              <mat-form-field appearance="outline">
+                <input digitsOnly trim class="input-field" matInput placeholder="Receipts received under the head" name="incomeReceived" formControlName="incomeReceived" maxlength="10" required />
+                <mat-error *ngIf="schedule5AForm.get('otherSource.incomeReceived').hasError('required')">Please enter the amount</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6 spsTp">
+              <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
+              <mat-form-field appearance="outline">
+                <input digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name ="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required />
+                <mat-error *ngIf="schedule5AForm.get('otherSource.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6 spsTp">
+              <mat-label class="inputLabel">Amount of TDS deducted on income *</mat-label>
+              <mat-form-field appearance="outline">
+                <input digitsOnly trim class="input-field" matInput placeholder="Amount of TDS deducted on income" name="tdsDeductedAmount" formControlName="tdsDeductedAmount" maxlength="10" required/>
+                <mat-error *ngIf="schedule5AForm.get('otherSource.tdsDeductedAmount').hasError('required')">Please enter the amount</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6 spsTp">
+              <mat-label class="inputLabel">TDS apportioned in the hands of Spouse *</mat-label>
+              <mat-form-field appearance="outline">
+                <input digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required />
+                <mat-error *ngIf="schedule5AForm.get('otherSource.apportionedTDSOfSpouse').hasError('required')">Please enter the amount</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          </div>
+         </div>
+
+         <div class="text-center">
+          <button type="submit" class="tbd-btn save-btn" [disabled]="schedule5AForm.invalid" (click)="saveSchedule5ADetails($event)">Save</button>
+        </div>
+
+
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- fourth radio bar ends -->
+
+
 <!-- <div class="col-sm-12 spsTp bdrTp">
     <button class="tbd-btn save-btn mvRth" [disabled]="!isEditOther" (click)="saveAndContinue($event)">
       Save

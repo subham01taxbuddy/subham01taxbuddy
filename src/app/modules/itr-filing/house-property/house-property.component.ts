@@ -66,6 +66,7 @@ export class HousePropertyComponent implements OnInit {
   displayedColumns: string[] = ['Questions', 'Amount'];
   defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
   active: number[];
+  activeHouse: number[];
   activeTenant: number[];
   @Output() saveAndNext = new EventEmitter<any>();
   taxableIncomesHP: any = [];
@@ -1042,7 +1043,14 @@ export class HousePropertyComponent implements OnInit {
     disposable.afterClosed().subscribe((result) => {
       console.info('Dialog Close result', result);
       if (result) {
-        this.Copy_ITR_JSON.houseProperties.splice(index, 1);
+        let hp = [];
+        this.Copy_ITR_JSON.houseProperties.forEach((element, i) => {
+          if(!index.includes(i)){
+            hp.push(element)
+          }
+        });
+
+        this.Copy_ITR_JSON.houseProperties = hp;
         this.serviceCall('DELETE', this.Copy_ITR_JSON);
       }
     });

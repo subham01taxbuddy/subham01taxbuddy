@@ -52,7 +52,7 @@
                     <input
                       class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                       type="checkbox"
-                      (click)="activeTenant = [i]"
+                      (click)="activeHouse = [i]"
                       (click)="$event.stopPropagation()"
                     />
                   </div>
@@ -85,7 +85,7 @@
               <button
                 class="btn"
                 style="cursor: pointer"
-                (click)="deleteHpDetails(active)"
+                (click)="deleteHpDetails(activeHouse)"
               >
                 Delete
               </button>
