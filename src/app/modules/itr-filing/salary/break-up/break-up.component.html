@@ -1,0 +1,37 @@
+<div class="surround scroll" style="margin-top: 5px; padding: 5px; width: 100%">
+  <div
+    style="
+      padding: 10px;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      background-color: #c0c0c0;
+      z-index: 9999;
+    "
+    class="title"
+  >
+    Basic Salary
+  </div>
+
+  <div
+    *ngFor="let year of years; let i = index"
+    style="padding: 10px"
+    class="container"
+  >
+    <mat-label>{{ year }}</mat-label>
+    <mat-form-field
+      appearance="outline"
+      class="input-field-width"
+      style="width: 50% !important"
+    >
+      <input
+        type="number"
+        trim
+        matInput
+        placeholder=""
+        name="allowValue[i]"
+        class="input-field"
+      />
+    </mat-form-field>
+  </div>
+</div>

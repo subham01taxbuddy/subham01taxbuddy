@@ -15,6 +15,7 @@ import { BifurcationComponent } from './bifurcation/bifurcation.component';
 import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { CalculatorsComponent } from './calculators/calculators.component';
+import { BreakUpComponent } from './break-up/break-up.component';
 
 declare let $: any;
 
@@ -24,8 +25,8 @@ declare let $: any;
   styleUrls: ['./salary.component.css'],
 })
 export class SalaryComponent extends WizardNavigation implements OnInit {
-  @ViewChild('buttonContainer') buttonContainer: ElementRef;
-  @ViewChild('buttonContainers') buttonContainers: ElementRef;
+  // @ViewChild('buttonContainer') buttonContainer: ElementRef;
+  // @ViewChild('buttonContainers') buttonContainers: ElementRef;
 
   loading: boolean = false;
   employerDetailsFormGroup: FormGroup;
@@ -1244,6 +1245,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       }
     });
   }
+
+  
 
   // CALCULATORS
   calculator(component, index) {

@@ -1,4 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Inject,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
@@ -7,6 +13,9 @@ import {
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { BreakUpComponent } from '../break-up/break-up.component';
+import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-bifurcation',
@@ -14,6 +23,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
   styleUrls: ['./bifurcation.component.scss'],
 })
 export class BifurcationComponent implements OnInit {
+  @ViewChild('breakUp') breakUp: ElementRef;
   ITR_JSON: ITR_JSON;
   bifurcationFormGroup: FormGroup;
   localEmployer: Employer;
@@ -35,7 +45,9 @@ export class BifurcationComponent implements OnInit {
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<BifurcationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private itrMsService: ItrMsService
+    private overlay: Overlay,
+    private itrMsService: ItrMsService,
+    private elementRef: ElementRef
   ) {}
 
   ngOnInit(): void {
@@ -348,6 +360,41 @@ export class BifurcationComponent implements OnInit {
     }
 
     this.dialogRef.close(result);
+  }
+
+  breakUpFn(i) {
+    console.log(this.breakUp);
+    console.log(i);
+    const positionStrategy = this.overlay
+      .position()
+      .flexibleConnectedTo(this.elementRef)
+      .withPositions([
+        {
+          originX: 'end', // Align with the right edge of the button
+          originY: 'center', // Vertically center align with the button
+          overlayX: 'end', // Align with the right edge of the overlay
+          overlayY: 'center', // Vertically center align the overlay
+          offsetX: 300, // setting horizantally
+          offsetY: 0, // setting vertically
+        },
+      ]);
+
+    const overlayRef = this.overlay.create({
+      positionStrategy,
+      hasBackdrop: true,
+      height: '600px',
+      width: '250px',
+    });
+
+    const userProfilePortal = new ComponentPortal(BreakUpComponent);
+    const componentRef = overlayRef.attach(userProfilePortal);
+
+    // (componentRef.instance as BreakUpComponent).data = component;
+
+    // Subscribe to backdrop click events to close the overlay
+    overlayRef.backdropClick().subscribe(() => {
+      overlayRef.dispose(); // Close the overlay
+    });
   }
 
   // get functions
