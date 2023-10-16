@@ -106,6 +106,25 @@ export interface ITR_JSON {
   itrSummaryJson: any;
   isItrSummaryJsonEdited: boolean;
   liableSection44AAflag: string;
+  portugeseCC5AFlag: string;
+  schedule5a: Schedule5A;
+}
+
+export interface Schedule5A{
+  nameOfSpouse: string;
+	panOfSpouse: string;
+	aadhaarOfSpouse: string;
+	booksSpouse44ABFlg: string;
+	booksSpouse92EFlg: string;
+	headIncomes: Schedule5AHeadIncome[];
+}
+
+export interface Schedule5AHeadIncome{
+  headOfIncome: string;
+  incomeReceived: number;
+	apportionedAmountOfSpouse: number;
+	tdsDeductedAmount: number;
+	apportionedTDSOfSpouse: number;
 }
 
 export interface foreignIncome {
