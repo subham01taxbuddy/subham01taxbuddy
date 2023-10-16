@@ -386,6 +386,17 @@ export class OtherAssetImprovementComponent implements OnInit {
       (item) => item.assetType === 'GOLD'
     );
 
+    if(!filteredCapitalGain[0]){
+      filteredCapitalGain.push({
+        assessmentYear: '2023-2024',
+        assesseeType: 'INDIVIDUAL',
+        residentialStatus: 'RESIDENT',
+        assetType: 'GOLD',
+        buyersDetails: [],
+        improvement: [],
+        assetDetails: []
+      });
+    }
     if(this.data.assetIndex >= 0){
       filteredCapitalGain[0].assetDetails[this.data.assetIndex] = this.goldCg.assetDetails[0];
     } else {
