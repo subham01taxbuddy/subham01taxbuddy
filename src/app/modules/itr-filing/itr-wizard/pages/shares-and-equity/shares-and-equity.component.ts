@@ -731,11 +731,11 @@ export class SharesAndEquityComponent
         (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
       );
     }
-    if (data.length > 0) {//Ashwini: check this code for broker wise delete
-      // data.forEach((obj) => {
-      //   let assetDetails = obj.assetDetails.filter((security: any) => brokerNames.includes(security.brokerName));
-      //   obj.assetDetails = assetDetails;
-      // });
+    if (data.length > 0) {
+      data.forEach((obj) => {
+        let assetDetails = obj.assetDetails.filter((security: any) => brokerNames.includes(security.brokerName));
+        obj.assetDetails = assetDetails;
+      });
       this.initBrokerList(itrObject);
     }
     console.log('ITR json', this.Copy_ITR_JSON);
