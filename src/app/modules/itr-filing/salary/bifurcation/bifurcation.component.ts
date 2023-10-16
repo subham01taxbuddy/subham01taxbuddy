@@ -16,6 +16,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { BreakUpComponent } from '../break-up/break-up.component';
 import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-bifurcation',
@@ -40,6 +41,7 @@ export class BifurcationComponent implements OnInit {
   index: any;
   Copy_ITR_JSON: ITR_JSON;
   loading: boolean = false;
+  overlayRef: any;
 
   constructor(
     private fb: FormBuilder,
@@ -47,7 +49,8 @@ export class BifurcationComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private overlay: Overlay,
     private itrMsService: ItrMsService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private utilsService: UtilsService
   ) {}
 
   ngOnInit(): void {
@@ -109,6 +112,10 @@ export class BifurcationComponent implements OnInit {
         }
       });
     }
+
+    this.utilsService.getData().subscribe((data) => {
+      this.handleData(data);
+    });
   }
 
   createBifurcationForm() {
@@ -362,9 +369,9 @@ export class BifurcationComponent implements OnInit {
     this.dialogRef.close(result);
   }
 
+  //  BREAKUP MONTHLY WISE
   breakUpFn(i) {
-    console.log(this.breakUp);
-    console.log(i);
+    const value = parseFloat(this.getSalary.value[0].BASIC_SALARY);
     const positionStrategy = this.overlay
       .position()
       .flexibleConnectedTo(this.elementRef)
@@ -379,7 +386,7 @@ export class BifurcationComponent implements OnInit {
         },
       ]);
 
-    const overlayRef = this.overlay.create({
+    this.overlayRef = this.overlay.create({
       positionStrategy,
       hasBackdrop: true,
       height: '600px',
@@ -387,14 +394,21 @@ export class BifurcationComponent implements OnInit {
     });
 
     const userProfilePortal = new ComponentPortal(BreakUpComponent);
-    const componentRef = overlayRef.attach(userProfilePortal);
+    const componentRef = this.overlayRef.attach(userProfilePortal);
 
-    // (componentRef.instance as BreakUpComponent).data = component;
+    (componentRef.instance as BreakUpComponent).data = value;
 
     // Subscribe to backdrop click events to close the overlay
-    overlayRef.backdropClick().subscribe(() => {
-      overlayRef.dispose(); // Close the overlay
+    this.overlayRef.backdropClick().subscribe(() => {
+      this.overlayRef.dispose(); // Close the overlay
     });
+  }
+
+  handleData(data: any) {
+    (this.getSalary.controls[0] as FormGroup).controls['BASIC_SALARY'].setValue(
+      Math.ceil(data)
+    );
+    this.overlayRef.dispose(); // Close the overlay
   }
 
   // get functions

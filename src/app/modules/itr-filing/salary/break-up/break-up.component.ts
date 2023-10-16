@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-break-up',
@@ -8,8 +9,10 @@ import { Component, OnInit } from '@angular/core';
 export class BreakUpComponent implements OnInit {
   data: any;
   years: any;
+  inputValues = [];
+  total: any;
 
-  constructor() {}
+  constructor(private utilsService: UtilsService) {}
 
   ngOnInit(): void {
     this.years = [
@@ -27,6 +30,43 @@ export class BreakUpComponent implements OnInit {
       'March 2024',
     ];
 
-    console.log(this.years);
+    this.total = 0;
+
+    console.log(this.data);
+    if (this.data && this.data > 0) {
+      // Initialize inputValues with the amount that we get if input in bifurcation has been entered
+      for (let i = 0; i < this.years.length; i++) {
+        this.inputValues[i] = this.data / this.years.length;
+      }
+    } else {
+      // Initialize inputValues with default value
+      for (let i = 0; i < this.years.length; i++) {
+        this.inputValues[i] = 0;
+      }
+    }
+  }
+
+  get getTotal() {
+    return Math.ceil(this.inputValues.reduce((acc, curr) => acc + curr, 0));
+  }
+
+  initializeInputValues() {
+    this.total = this.getTotal;
+    const presentInputs = this.inputValues.filter((value) => value > 0).length;
+
+    if (presentInputs > 0) {
+      const individualValue = this.total / presentInputs;
+      this.inputValues = this.inputValues.map((value) =>
+        value > 0 ? value : individualValue
+      );
+    }
+  }
+
+  saveBreakup() {
+    this.total = this.getTotal;
+
+    if (this.total > 0) {
+      this.utilsService.sendData(this.total);
+    }
   }
 }

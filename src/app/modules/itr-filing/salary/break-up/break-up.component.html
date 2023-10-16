@@ -29,9 +29,30 @@
         trim
         matInput
         placeholder=""
-        name="allowValue[i]"
+        name="value[i]"
         class="input-field"
+        [(ngModel)]="inputValues[i]"
+        (blur)="initializeInputValues()"
       />
     </mat-form-field>
+  </div>
+
+  <div class="flex justify-between align-items-center" style="width: 100%">
+    <!-- total -->
+    <div>
+      <div style="margin-left: 18%">Total</div>
+      <button class="saveButton" style="margin-left: 0">
+        <span class="font-semibold">{{ getTotal }}</span>
+      </button>
+    </div>
+
+    <!-- Save button  -->
+    <button
+      class="saveButton"
+      style="margin-left: 0; margin-top: 35px"
+      (click)="saveBreakup()"
+    >
+      <span class="font-semibold">&nbsp;Save</span>
+    </button>
   </div>
 </div>
