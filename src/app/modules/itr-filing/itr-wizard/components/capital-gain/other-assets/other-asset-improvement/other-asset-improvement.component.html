@@ -44,8 +44,8 @@
                 name="purchaseDate"
                 [matDatepicker]="purchaseDate"
                 placeholder="Buy Date / Date of Acquisition"
-                (blur)="calculateGainType()"
-                (dateChange)="calculateGainType()"
+                (blur)="getImprovementYears();calculateGainType()"
+                (dateChange)="getImprovementYears();calculateGainType()"
                 [max]="maxPurchaseDate"
               />
               <mat-datepicker-toggle

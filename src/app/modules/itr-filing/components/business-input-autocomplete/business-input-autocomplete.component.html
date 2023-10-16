@@ -6,6 +6,7 @@
          matInput
          [formControl]="myControl"
          [matAutocomplete]="auto"
+         (click)="filter($event)"
          (input)="filter($event)"
          (focus)="focusIn($event)">
   <mat-autocomplete requireSelection #auto="matAutocomplete" [displayWith]="displayFn"

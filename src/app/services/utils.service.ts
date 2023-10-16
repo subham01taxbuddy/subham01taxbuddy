@@ -616,9 +616,9 @@ export class UtilsService {
       itrProgress: [],
       directorInCompany: [],
       unlistedSharesDetails: [],
-      partnerInFirmFlag : 'N',
-      partnerFirms : [],
-      partnerInFirms : [],
+      partnerInFirmFlag: 'N',
+      partnerFirms: [],
+      partnerInFirms: [],
       dateOfDividendIncome: null,
       lastVisitedURL: '',
       seventhProviso139: null,
@@ -1129,7 +1129,11 @@ export class UtilsService {
 
     inputArray.map(function (item) {
       const itemPropertyName = item[propertyName];
-      if ((itemPropertyName !== null && itemPropertyName !== '') && itemPropertyName in testObject) {
+      if (
+        itemPropertyName !== null &&
+        itemPropertyName !== '' &&
+        itemPropertyName in testObject
+      ) {
         testObject[itemPropertyName].duplicate = true;
         item.duplicate = true;
         seenDuplicate = true;

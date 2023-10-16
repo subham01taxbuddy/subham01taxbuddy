@@ -381,6 +381,7 @@ export class SharesAndEquityComponent
     let ltcg = 0;
 
     this.brokerList = [];
+    this.brokerSelected = [];
     if (this.bondType === 'listed') {
       data = itrObject.capitalGain.filter(
         (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
@@ -731,10 +732,10 @@ export class SharesAndEquityComponent
       );
     }
     if (data.length > 0) {
-      // data.forEach((obj) => {
-      //   let assetDetails = obj.assetDetails.filter((security: any) => brokerNames.includes(security.brokerName));
-      //   obj.assetDetails = assetDetails;
-      // });
+      data.forEach((obj) => {
+        let assetDetails = obj.assetDetails.filter((security: any) => brokerNames.includes(security.brokerName));
+        obj.assetDetails = assetDetails;
+      });
       this.initBrokerList(itrObject);
     }
     console.log('ITR json', this.Copy_ITR_JSON);
@@ -748,12 +749,7 @@ export class SharesAndEquityComponent
     securitiesArray.controls = securitiesArray.controls.filter(
       (item: FormGroup) => item.controls['hasEdit'].value !== true
     );
-    // securitiesArray.controls.forEach((element, index) => {
-    //   if ((element as FormGroup).controls['hasEdit'].value) {
-    //     console.log('deleting', index);
-    //     securitiesArray.removeAt(index);
-    //   }
-    // });
+    this.equityGridOptions.api?.setRowData(this.getSecuritiesArray.controls);
   }
 
   pageChanged(event) {

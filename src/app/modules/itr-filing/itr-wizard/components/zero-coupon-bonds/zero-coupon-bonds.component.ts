@@ -438,15 +438,17 @@ export class ZeroCouponBondsComponent
           this.ITR_JSON = result;
           this.loading = false;
           sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+          let bondType = this.bondType === 'bonds' ? 'Bonds' : 'Zero coupon bonds'
           this.utilsService.showSnackBar(
-            'Bonds and zero coupon bonds data updated successfully'
+            `${bondType} data updated successfully`
           );
           this.utilsService.smoothScrollToTop();
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+          let bondType = this.bondType === 'bonds' ? 'bonds' : 'zero coupon bonds'
           this.utilsService.showSnackBar(
-            'Failed to update bonds and zero coupon bonds data, please try again.'
+            `Failed to update ${bondType} data, please try again.`
           );
           this.utilsService.smoothScrollToTop();
         }

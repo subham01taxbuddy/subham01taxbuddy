@@ -1,10 +1,8 @@
 import { NewPresumptiveIncomes } from './../../../../shared/interfaces/itr-input.interface';
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
-import {
-  ITR_JSON,
-} from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { BusinessDialogComponent } from './business-dialog/business-dialog.component';
@@ -17,7 +15,6 @@ import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./presumptive-business-income.component.scss'],
 })
 export class PresumptiveBusinessIncomeComponent implements OnInit {
-
   public businessGridOptions: GridOptions;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -43,7 +40,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
   }
 
   ngOnInit(): void {
@@ -105,7 +101,9 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       cashReceipts: [cash ? cash.receipts : 0, [Validators.required]],
       cashPreIncome: [cash ? cash.presumptiveIncome : 0, [Validators.required]],
     });
-    form.controls['natureOfBusiness'].setValue(income?.natureOfBusiness || null);
+    form.controls['natureOfBusiness'].setValue(
+      income?.natureOfBusiness || null
+    );
     return form;
   }
 
@@ -246,18 +244,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     this.isAllSelected()
       ? this.selection.clear()
       : this.businessArray.forEach((row) => this.selection.select(row));
-  }
-  removeSelectedRows() {
-    this.selection.selected.forEach((item) => {
-      let index: number = this.businessArray.findIndex((d) => d === item);
-      this.businessArray.splice(index, 1);
-    });
-    this.selection = new SelectionModel<NewPresumptiveIncomes>(true, []);
-  }
-
-  deleteBusiness(index) {
-    this.businessGridOptions.rowData.splice(index, 1);
-    this.businessGridOptions.api.setRowData(this.businessGridOptions.rowData);
   }
 
   addBusinessRow(mode, data: any, index?) {
@@ -401,6 +387,37 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       console.log('presBusinessIncome', presBusinessIncome);
       console.log(this.Copy_ITR_JSON);
 
+      if (!this.Copy_ITR_JSON?.business) {
+        this.Copy_ITR_JSON.business = {
+          presumptiveIncomes: [],
+          financialParticulars: {
+            difference: null,
+            id: null,
+            grossTurnOverAmount: null,
+            membersOwnCapital: null,
+            securedLoans: null,
+            unSecuredLoans: null,
+            advances: null,
+            sundryCreditorsAmount: null,
+            otherLiabilities: null,
+            totalCapitalLiabilities: null,
+            fixedAssets: null,
+            inventories: null,
+            sundryDebtorsAmount: null,
+            balanceWithBank: null,
+            cashInHand: null,
+            loanAndAdvances: null,
+            otherAssets: null,
+            totalAssets: null,
+            investment: null,
+            GSTRNumber: null,
+          },
+          businessDescription: [],
+          fixedAssetsDetails: [],
+          profitLossACIncomes: [],
+        };
+      }
+
       if (!this.Copy_ITR_JSON?.business?.presumptiveIncomes) {
         this.Copy_ITR_JSON.business.presumptiveIncomes = presBusinessIncome;
       } else {
@@ -463,7 +480,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         this.presBusinessSaved.emit(false);
       }
     }
-
   }
 
   onContinues() {
@@ -503,12 +519,11 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     );
   }
 
-  businessClicked(event, index){
+  businessClicked(event, index) {
     (
-      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
-        .controls[index] as FormGroup
+      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
+        index
+      ] as FormGroup
     ).controls['natureOfBusiness'].setValue(event);
   }
-
-
 }

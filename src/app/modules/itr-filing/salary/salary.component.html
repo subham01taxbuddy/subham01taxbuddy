@@ -221,12 +221,13 @@
                       (blur)="checkGrossSalary()"
                       class="input-field"
                       maxlength="125"
+                      (change)="changed()"
                     />
                   </mat-form-field>
                   <button *ngIf="false"
                     mat-mini-fab
                     style="margin-left: 5%"
-                    (click)="bifurcation()"
+                    (click)="bifurcation(i)"
                   >
                     <mat-icon>filter_list</mat-icon>
                   </button>
