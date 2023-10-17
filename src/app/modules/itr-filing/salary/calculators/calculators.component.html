@@ -1,0 +1,57 @@
+<div
+  style="width: 100%"
+  class="surround"
+  style="margin-top: 15px; padding: 10px"
+>
+  <div class="surround" style="margin-top: 5px; padding: 5px">
+    <div *ngIf="data === 'HOUSE_RENT'">
+      <mat-label>Basic</mat-label>
+      <mat-form-field
+        appearance="outline"
+        class="input-field-width"
+        style="width: 70% !important"
+      >
+        <input
+          type="number"
+          trim
+          matInput
+          placeholder=""
+          name="allowValue[i]"
+          class="input-field"
+        />
+      </mat-form-field>
+
+      <mat-label>40% of Basic</mat-label>
+      <mat-form-field
+        appearance="outline"
+        class="input-field-width"
+        style="width: 70% !important"
+      >
+        <input
+          type="number"
+          trim
+          matInput
+          placeholder=""
+          name="allowValue[i]"
+          class="input-field"
+        />
+      </mat-form-field>
+
+      <mat-label>Actual Rent paid</mat-label>
+      <mat-form-field
+        appearance="outline"
+        class="input-field-width"
+        style="width: 70% !important"
+      >
+        <input
+          type="number"
+          trim
+          matInput
+          placeholder=""
+          name="allowValue[i]"
+          class="input-field"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+</div>
