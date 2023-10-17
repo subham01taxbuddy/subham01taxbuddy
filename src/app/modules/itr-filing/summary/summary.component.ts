@@ -5309,7 +5309,8 @@ export class SummaryComponent implements OnInit {
                     },
                   },
 
-                  businessIncomeTotal: getTotalBusinessIncome(
+                  businessIncomeTotal:
+                  getTotalBusinessIncome(
                     this.finalSummary?.assessment?.summaryIncome
                       ?.summaryBusinessIncome
                   ),
@@ -7035,8 +7036,8 @@ function getTotalBusinessIncome(summaryBusinessIncome: any): number {
   return Math.max(
     Math.max(summaryBusinessIncome.totalSpeculativeIncome, 0) +
       Math.max(summaryBusinessIncome.totalPresumptiveIncome, 0) +
-      Math.max(summaryBusinessIncome.totalNonSpeculativeIncome, 0) +
-      Math.max(summaryBusinessIncome.totalIncomeFromFirm, 0),
+      Math.max(summaryBusinessIncome.totalNonSpeculativeIncome, 0)
+      // +Math.max(summaryBusinessIncome.totalIncomeFromFirm, 0),
     0
   );
 }
