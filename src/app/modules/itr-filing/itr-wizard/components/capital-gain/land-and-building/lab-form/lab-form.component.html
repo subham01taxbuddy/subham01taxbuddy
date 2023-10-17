@@ -150,26 +150,59 @@
                   </mat-error>
                 </mat-form-field>
               </div>
+
+              <!-- Full Value of Sale received/receivable -->
               <div class="col-sm-4 spsTp">
-                <mat-label>Full Value of Sale Consideration</mat-label>
+                <mat-label>Full Value of Sale received/receivable</mat-label>
                 <mat-form-field class="input-field-width" appearance="outline">
                   <input
                     input
                     matInput
                     digitsOnly
                     currencyMask
-                    placeholder="Full Value of Sale Consideration"
+                    placeholder="Full Value of Sale received/receivable"
+                    name="asset[i]"
+                    formControlName="sellValue"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+
+              <!-- stamp duty value -->
+              <div class="col-sm-4 spsTp">
+                <mat-label>Stamp duty value</mat-label>
+                <mat-form-field class="input-field-width" appearance="outline">
+                  <input
+                    input
+                    matInput
+                    digitsOnly
+                    currencyMask
+                    placeholder="Stamp duty value"
+                    name="asset[i]"
+                    formControlName="stampDutyValue"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="col-sm-4 spsTp">
+                <mat-label
+                  >Full Value of Sale Consideration as per 50C</mat-label
+                >
+                <mat-form-field class="input-field-width" appearance="outline">
+                  <input
+                    input
+                    matInput
+                    digitsOnly
+                    currencyMask
+                    placeholder="Value of Sale Consideration u/s 50C"
                     name="asset[i]"
                     formControlName="valueInConsideration"
                     (change)="calculateCapitalGain(this.immovableForm, '', i)"
                     required
                   />
-                  <!-- (selectionChange)="calculateCapitalGain(this.immovableForm)" -->
-                  <!-- <mat-option *ngFor="let dropdown of fullValuesConsideration"
-                                              [value]="dropdown.value">
-                                              {{ dropdown.label }}
-                                          </mat-option> -->
-                  <!-- </mat-select> -->
                 </mat-form-field>
               </div>
 
@@ -320,7 +353,9 @@
                     name="improve[i]"
                     formControlName="dateOfImprovement"
                     required
-                    (selectionChange)="isImprovementValid(this.immovableForm, i)"
+                    (selectionChange)="
+                      isImprovementValid(this.immovableForm, i)
+                    "
                   >
                     <mat-option
                       [value]="year"

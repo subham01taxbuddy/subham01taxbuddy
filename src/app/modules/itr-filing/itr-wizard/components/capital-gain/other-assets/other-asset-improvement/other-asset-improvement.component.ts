@@ -15,6 +15,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { withLatestFrom } from 'rxjs';
 import { forEach } from 'lodash';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import * as moment from "moment/moment";
 @Component({
   selector: 'app-other-asset-improvement',
   templateUrl: './other-asset-improvement.component.html',
@@ -324,11 +325,12 @@ export class OtherAssetImprovementComponent implements OnInit {
   }
 
   calculateGainType() {
+    let purchaseDate = this.assetsForm.controls['purchaseDate'].value;
+    let sellDate = this.assetsForm.controls['sellDate'].value;
     let req = {
       assetType: this.assetType,
-      buyDate: this.assetsForm.controls['purchaseDate'].value,
-
-      sellDate: this.assetsForm.controls['sellDate'].value,
+      buyDate: moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
+      sellDate: moment(new Date(sellDate)).format('YYYY-MM-DD'),
     };
 
     console.log(req.buyDate);
@@ -363,8 +365,8 @@ export class OtherAssetImprovementComponent implements OnInit {
     console.log(result.cgObject);
 
     if (result !== undefined) {
-      // this.goldCg.assetDetails?.push(result.cgObject);
-      // this.goldCg.improvement?.push(result.improve);
+      this.goldCg.assetDetails[0] = result.cgObject;
+      this.goldCg.improvement[0] = result.improve;
     }
   }
 
