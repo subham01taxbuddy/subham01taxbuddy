@@ -266,7 +266,6 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
       totalSTCGLoss += Number(element.STCGLoss);
 
       if (
-        element.assessmentPastYear === '2018-19' ||
         element.assessmentPastYear === '2019-20' ||
         element.assessmentPastYear === '2020-21' ||
         element.assessmentPastYear === '2021-22' ||
