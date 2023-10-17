@@ -85,15 +85,15 @@ export class SourceOfIncomesComponent implements OnInit {
               : false,
           schedule: this.schedules.SPECULATIVE_INCOME,
         },
-        {
-          name: 'Crypto',
-          selected:
-            this.ITR_JSON.capitalGain != null &&
-            this.ITR_JSON.capitalGain.length > 0
-              ? true
-              : false,
-          schedule: this.schedules.CRYPTO_VDA,
-        },
+        // {
+        //   name: 'Crypto',
+        //   selected:
+        //     this.ITR_JSON.capitalGain != null &&
+        //     this.ITR_JSON.capitalGain.length > 0
+        //       ? true
+        //       : false,
+        //   schedule: this.schedules.CRYPTO_VDA,
+        // },
         {
           name: 'Foreign Income',
           selected:this.hasForeignIncome(),
