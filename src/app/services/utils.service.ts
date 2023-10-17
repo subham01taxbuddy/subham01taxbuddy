@@ -767,28 +767,28 @@ export class UtilsService {
       if (!this.getLoggedInUserID()) {
         return [];
       }
-      let res: any = await this.getSmeList().catch((error) => {
-        this.loading = false;
-        console.log(error);
-        this.showSnackBar('Error While getting SME list.');
-        return [];
-      });
-      if (res.success && res.data && res.data.content instanceof Array) {
-        let activeSme = res.data.content.filter((item) => item.active);
-        activeSme.sort((a, b) => (a.name > b.name ? 1 : -1));
-        sessionStorage.setItem(
-          AppConstants.SME_LIST,
-          JSON.stringify(activeSme)
-        );
-        return activeSme;
-      }
+      // let res: any = await this.getSmeList().catch((error) => {
+      //   this.loading = false;
+      //   console.log(error);
+      //   this.showSnackBar('Error While getting SME list.');
+      //   return [];
+      // });
+      // if (res.success && res.data && res.data.content instanceof Array) {
+      //   let activeSme = res.data.content.filter((item) => item.active);
+      //   activeSme.sort((a, b) => (a.name > b.name ? 1 : -1));
+      //   sessionStorage.setItem(
+      //     AppConstants.SME_LIST,
+      //     JSON.stringify(activeSme)
+      //   );
+      //   return activeSme;
+      // }
       return [];
     }
   }
-  async getSmeList() {
-    const param = `/sme/all-list?page=0&size=1000`;
-    return await this.userMsService.getMethod(param).toPromise();
-  }
+  // async getSmeList() {
+  //   const param = `/sme/all-list?page=0&size=1000`;
+  //   return await this.userMsService.getMethod(param).toPromise();
+  // }
 
   async getStoredAgentList(action?: any) {
     let agentList = JSON.parse(
