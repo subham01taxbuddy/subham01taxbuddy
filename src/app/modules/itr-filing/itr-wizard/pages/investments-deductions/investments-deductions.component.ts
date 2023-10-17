@@ -839,8 +839,8 @@ export class InvestmentsDeductionsComponent
     this.saveInvestmentDeductions();
     let saved = this.sec80gDonationsComponent.saveGeneralDonation();
     this.sec80ggaDonationsComponent.saveGeneralDonation();
-    this.MedicalExpensesComponent.saveInvestmentDeductions();
-    if(saved) {
+    let medicalExpenses = this.MedicalExpensesComponent.saveInvestmentDeductions();
+    if(saved && medicalExpenses) {
       this.serviceCall();
     }
   }
