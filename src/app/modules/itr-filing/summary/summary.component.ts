@@ -5247,11 +5247,22 @@ export class SummaryComponent implements OnInit {
                     },
 
                     specIncome: {
-                      businessSection: null,
-                      natureOfBusinessCode: null,
-                      tradeName: null,
-                      grossTurnover: null,
-                      TaxableIncome: null,
+                      businessSection: 'Speculative Income',
+                      natureOfBusinessCode: 'spec',
+                      tradeName: 'Speculative Income',
+                      grossTurnover: this.ITR_JSON?.business?.profitLossACIncomes
+                        ?.find(
+                          (element) =>
+                            element?.businessType === 'SPECULATIVEINCOME'
+                        )
+                        ?.incomes?.reduce(
+                          (sum, obj) => Number(sum) + Number(obj?.turnOver),
+                          0
+                        ),
+                      TaxableIncome: this.ITR_JSON?.business?.profitLossACIncomes?.find(
+                        (element) =>
+                          element?.businessType === 'SPECULATIVEINCOME'
+                      )?.netProfitfromSpeculativeIncome,
                     },
                   },
 
