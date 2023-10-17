@@ -219,6 +219,8 @@ export class SummaryComponent implements OnInit {
         saving: Number;
         intFromDeposit: Number;
         taxRefund: Number;
+        Qqb80: number;
+        Rrb80: number;
         anyOtherInterest: Number;
         familyPension: Number;
         dividendIncome: Number;
@@ -903,6 +905,8 @@ export class SummaryComponent implements OnInit {
                   (val) => val?.OthSrcNatureDesc === 'TAX'
                 )?.OthSrcOthAmount,
 
+                Qqb80: null,
+                Rrb80: null,
                 anyOtherInterest:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
@@ -2135,6 +2139,9 @@ export class SummaryComponent implements OnInit {
                 taxRefund:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.IntrstFrmIncmTaxRefund,
+
+                Qqb80: null,
+                Rrb80: null,
 
                 anyOtherInterest:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
@@ -3737,9 +3744,11 @@ export class SummaryComponent implements OnInit {
                           };
                         }
                       ),
-                    hpTotalIncome:
-                      Math.max(this.finalSummary?.assessment?.summaryIncome
-                        ?.summaryHpIncome?.totalHPTaxableIncome, 0),
+                    hpTotalIncome: Math.max(
+                      this.finalSummary?.assessment?.summaryIncome
+                        ?.summaryHpIncome?.totalHPTaxableIncome,
+                      0
+                    ),
                   },
                   otherIncome: {
                     otherIncomes: {
@@ -3756,6 +3765,16 @@ export class SummaryComponent implements OnInit {
                       taxRefund:
                         this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                           (val) => val.incomeType === 'TAX_REFUND_INTEREST'
+                        )?.amount,
+
+                      Qqb80:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                          (val) => val.incomeType === 'ROYALTY_US_80QQB'
+                        )?.amount,
+
+                      Rrb80:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                          (val) => val.incomeType === 'ROYALTY_US_80RRB'
                         )?.amount,
 
                       anyOtherInterest:
@@ -3875,8 +3894,10 @@ export class SummaryComponent implements OnInit {
                         TaxableIncome: null,
                       },
                     },
-                    businessIncomeTotal:getTotalBusinessIncome(this.finalSummary?.assessment?.summaryIncome
-                      ?.summaryBusinessIncome)
+                    businessIncomeTotal: getTotalBusinessIncome(
+                      this.finalSummary?.assessment?.summaryIncome
+                        ?.summaryBusinessIncome
+                    ),
                   },
                   capitalGain: {
                     shortTerm: {
@@ -4013,10 +4034,18 @@ export class SummaryComponent implements OnInit {
 
                           return total + incomeAfterInternalSetOff;
                         }, 0),
-                    totalCapitalGain: (this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        && this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain.length > 0) ?
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter((item) => item.assetType !== 'VDA').map(item=>Math.max(item.incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value,0) : null,
+                    totalCapitalGain:
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN
+                        ?.capitalGain &&
+                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN
+                        ?.capitalGain.length > 0
+                        ? this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                            ?.filter((item) => item.assetType !== 'VDA')
+                            .map((item) =>
+                              Math.max(item.incomeBeforeInternalSetOff, 0)
+                            )
+                            .reduce((total, value) => total + value, 0)
+                        : null,
                   },
                   Crypto: {
                     cryptoDetails: this.finalSummary?.itr?.capitalGain
@@ -5117,9 +5146,11 @@ export class SummaryComponent implements OnInit {
                         };
                       }
                     ),
-                  hpTotalIncome:
-                  Math.max( this.finalSummary?.assessment?.summaryIncome
-                      ?.summaryHpIncome?.totalHPTaxableIncome,0),
+                  hpTotalIncome: Math.max(
+                    this.finalSummary?.assessment?.summaryIncome
+                      ?.summaryHpIncome?.totalHPTaxableIncome,
+                    0
+                  ),
                 },
                 otherIncome: {
                   otherIncomes: {
@@ -5136,6 +5167,16 @@ export class SummaryComponent implements OnInit {
                     taxRefund:
                       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                         (val) => val.incomeType === 'TAX_REFUND_INTEREST'
+                      )?.amount,
+
+                    Qqb80:
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                        (val) => val.incomeType === 'ROYALTY_US_80QQB'
+                      )?.amount,
+
+                    Rrb80:
+                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                        (val) => val.incomeType === 'ROYALTY_US_80RRB'
                       )?.amount,
 
                     anyOtherInterest:
@@ -5255,8 +5296,10 @@ export class SummaryComponent implements OnInit {
                     },
                   },
 
-                  businessIncomeTotal: getTotalBusinessIncome(this.finalSummary?.assessment?.summaryIncome
-                    ?.summaryBusinessIncome)
+                  businessIncomeTotal: getTotalBusinessIncome(
+                    this.finalSummary?.assessment?.summaryIncome
+                      ?.summaryBusinessIncome
+                  ),
                 },
                 capitalGain: {
                   shortTerm: {
@@ -5393,10 +5436,18 @@ export class SummaryComponent implements OnInit {
 
                         return total + incomeBeforeInternalSetOff;
                       }, 0),
-                  totalCapitalGain: (this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                    && this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain.length > 0) ?
-                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                      ?.filter((item) => item.assetType !== 'VDA').map(cg=>Math.max(cg.incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value,0) : null,
+                  totalCapitalGain:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN
+                      ?.capitalGain &&
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN
+                      ?.capitalGain.length > 0
+                      ? this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                          ?.filter((item) => item.assetType !== 'VDA')
+                          .map((cg) =>
+                            Math.max(cg.incomeBeforeInternalSetOff, 0)
+                          )
+                          .reduce((total, value) => total + value, 0)
+                      : null,
                 },
                 Crypto: {
                   cryptoDetails: this.finalSummary?.itr?.capitalGain
@@ -6969,9 +7020,10 @@ export class SummaryComponent implements OnInit {
 
 function getTotalBusinessIncome(summaryBusinessIncome: any): number {
   return Math.max(
-    Math.max(summaryBusinessIncome.totalSpeculativeIncome, 0)+
-    Math.max(summaryBusinessIncome.totalPresumptiveIncome, 0)+
-    Math.max(summaryBusinessIncome.totalNonSpeculativeIncome, 0)+
-    Math.max(summaryBusinessIncome.totalIncomeFromFirm, 0)
-    , 0)
+    Math.max(summaryBusinessIncome.totalSpeculativeIncome, 0) +
+      Math.max(summaryBusinessIncome.totalPresumptiveIncome, 0) +
+      Math.max(summaryBusinessIncome.totalNonSpeculativeIncome, 0) +
+      Math.max(summaryBusinessIncome.totalIncomeFromFirm, 0),
+    0
+  );
 }
