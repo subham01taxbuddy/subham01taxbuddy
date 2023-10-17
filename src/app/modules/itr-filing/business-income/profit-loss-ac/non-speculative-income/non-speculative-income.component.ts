@@ -272,6 +272,15 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       incomes: this.nonspecIncomeFormArray.getRawValue(),
       expenses: row.expenses,
     });
+    if(!this.Copy_ITR_JSON.business){
+      this.Copy_ITR_JSON.business = {
+        businessDescription: [],
+        financialParticulars: undefined,
+        fixedAssetsDetails: [],
+        presumptiveIncomes: [],
+        profitLossACIncomes: []
+      };
+    }
     if (!this.Copy_ITR_JSON?.business?.profitLossACIncomes) {
       this.Copy_ITR_JSON.business.profitLossACIncomes = profitLossACIncomes;
     } else {
