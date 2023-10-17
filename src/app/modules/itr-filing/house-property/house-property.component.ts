@@ -62,6 +62,8 @@ export class HousePropertyComponent implements OnInit {
   stateDropdown = AppConstants.stateDropdown;
   thirtyPctOfAnnualValue = 0;
   annualValue = 0;
+  // totalArrearsUnrealizedRentReceived = 0;
+  // arrearsUnrealizedRentReceived = 0;
   step = 0;
   displayedColumns: string[] = ['Questions', 'Amount'];
   defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
@@ -248,6 +250,8 @@ export class HousePropertyComponent implements OnInit {
         ],
         rentPercentage: [{ value: null, disabled: true }],
         propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
+        totalArrearsUnrealizedRentReceived : [''],
+        arrearsUnrealizedRentReceived :[''],
         isEligibleFor80EE: [null],
         // isEligibleFor80EEA: [false],
         loans: this.fb.array([
@@ -316,6 +320,8 @@ export class HousePropertyComponent implements OnInit {
         coOwners: this.fb.array([]),
         tenant: this.fb.array([]),
         ownerPercentage: [],
+        totalArrearsUnrealizedRentReceived : [''],
+        arrearsUnrealizedRentReceived :[''],
       });
     }
   }
@@ -1128,6 +1134,11 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
+  calTotalArrValue(){
+  let arrearsUnrealizedRentReceived = Number(this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived'].value) * 0.3
+    console.log(arrearsUnrealizedRentReceived);
+  this.housePropertyForm.controls['arrearsUnrealizedRentReceived'].setValue(arrearsUnrealizedRentReceived)
+  }
   // Function to set the stored values
   setStoredValues(i: any, v: string) {
     this.storedIndex = i;

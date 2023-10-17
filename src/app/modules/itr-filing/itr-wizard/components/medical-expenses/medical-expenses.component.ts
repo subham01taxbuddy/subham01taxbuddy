@@ -395,6 +395,10 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         }
       });
       return false;
+    } else {
+      fieldArray.forEach(element => {
+        element.setErrors(null);
+      });
     }
     let maxExpenseLimit = this.userAge >= 60 ? 50000 : 25000;
     let userFieldArray =[this.investmentDeductionForm.controls['selfPreventiveCheckUp'],
@@ -416,6 +420,10 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         }
       });
       return false;
+    }else {
+      userFieldArray.forEach(element => {
+        element.setErrors(null);
+      });
     }
 
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));

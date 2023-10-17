@@ -13,6 +13,7 @@ import { AddUpdateTradingComponent } from './add-update-trading/add-update-tradi
   templateUrl: './non-speculative-income.component.html',
   styleUrls: ['./non-speculative-income.component.scss']
 })
+//Ashwini:not used
 export class NonSpeculativeIncomeComponent implements OnInit {
   public tradingGridOptions: GridOptions;
   profitLossForm: FormGroup;
