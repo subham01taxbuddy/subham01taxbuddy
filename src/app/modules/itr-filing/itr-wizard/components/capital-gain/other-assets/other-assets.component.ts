@@ -14,6 +14,7 @@ import { FormArray } from '@angular/forms';
 import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 import {OtherAssetImprovementComponent} from "./other-asset-improvement/other-asset-improvement.component";
 import {formatDate} from "@angular/common";
+import {TotalCg} from "../../../../../../services/itr-json-helper-service";
 
 @Component({
   selector: 'app-other-assets',
@@ -25,7 +26,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   loading = false;
   @Input() goldCg: NewCapitalGain;
   ITR_JSON: ITR_JSON;
-  totalCg = 0;
   step = 0;
   isAddOtherAssetsImprovement: Number;
   deductionForm!: FormGroup;
@@ -93,17 +93,23 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
   }
 
+  totalCg: TotalCg = {
+    ltcg: 0,
+    stcg: 0
+  };
   createRowData(){
     this.assetList = [];
-    let totalCg = 0;
+    let ltcg = 0;
+    let stcg = 0;
     this.goldCg.assetDetails.forEach(asset=>{
       let copy:any = {};
       Object.assign(copy, asset);
       copy.hasEdit = false;
       this.assetList.push(copy);
-      totalCg += asset.capitalGain;
+      ltcg += asset.gainType === 'LONG' ? asset.capitalGain : 0;
+      stcg += asset.gainType === 'SHORT' ? asset.capitalGain : 0;
     });
-    this.isDisable = totalCg <= 0;
+    this.isDisable = this.totalCg.ltcg <= 0;
     return this.assetList;
   }
 

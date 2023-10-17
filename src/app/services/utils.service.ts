@@ -666,6 +666,8 @@ export class UtilsService {
       section91: null,
       acknowledgement91: null,
       acknowledgementDate91: null,
+      portugeseCC5AFlag: 'N',
+      schedule5a: undefined,
 
       itrSummaryJson: null,
       isItrSummaryJsonEdited: false,

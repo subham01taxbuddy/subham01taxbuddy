@@ -67,8 +67,8 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     });
 
     this.busIncomeFormArray.controls.forEach((formgroup, index) => {
-      this.calculatePresumptive(index, 'cash');
-      this.calculatePresumptive(index, 'bank');
+      this.calculatePresumptive(index, 'cash', false);
+      this.calculatePresumptive(index, 'bank', false);
     });
   }
 
@@ -150,7 +150,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     });
   }
 
-  calculatePresumptive(index, incomeType) {
+  calculatePresumptive(index, incomeType, setValue?) {
     if (incomeType === 'cash') {
       this.amountEight = (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
@@ -164,10 +164,12 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
       this.amountEight = Math.round(Number((this.amountEight / 100) * 8));
 
-      (
-        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
-          .controls[index] as FormGroup
-      ).controls['cashPreIncome'].setValue(this.amountEight);
+      if(setValue){
+        (
+          (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+            .controls[index] as FormGroup
+        ).controls['cashPreIncome'].setValue(this.amountEight);
+      }
 
       (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
@@ -194,10 +196,12 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
       this.amountSix = Math.round(Number((this.amountSix / 100) * 6));
 
-      (
-        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
-          .controls[index] as FormGroup
-      ).controls['bankPreIncome'].setValue(this.amountSix);
+      if(setValue){
+        (
+          (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+            .controls[index] as FormGroup
+        ).controls['bankPreIncome'].setValue(this.amountSix);
+      }
 
       (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
