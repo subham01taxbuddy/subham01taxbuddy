@@ -1324,6 +1324,8 @@ export class LabFormComponent implements OnInit {
         // this.utilsService.showSnackBar("Calculate gain failed please try again.");
       }
     } else {
+      this.saveBusy = false;
+      this.loading = false;
       this.utilsService.showErrorMsg('Please fill all mandatory details.');
       $('input.ng-invalid').first().focus();
     }
