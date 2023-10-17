@@ -28,7 +28,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Basic</mat-label>
-                <input matInput formControlName="BASIC_SALARY" />
+                <input digitsOnly matInput formControlName="BASIC_SALARY" />
               </mat-form-field>
             </div>
           </div>
@@ -57,7 +57,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Dearness</mat-label>
-                <input matInput formControlName="DA" />
+                <input digitsOnly matInput formControlName="DA" />
               </mat-form-field>
             </div>
           </div>
@@ -71,7 +71,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Conveyance</mat-label>
-                <input matInput formControlName="CONVEYANCE" />
+                <input digitsOnly matInput formControlName="CONVEYANCE" />
               </mat-form-field>
             </div>
           </div>
@@ -99,7 +99,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>House Rent</mat-label>
-                <input matInput formControlName="HOUSE_RENT" />
+                <input digitsOnly matInput formControlName="HOUSE_RENT" />
               </mat-form-field>
             </div>
           </div>
@@ -113,7 +113,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Leave Travel</mat-label>
-                <input matInput formControlName="LTA" />
+                <input digitsOnly matInput formControlName="LTA" />
               </mat-form-field>
             </div>
           </div>
@@ -127,7 +127,11 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Children Education</mat-label>
-                <input matInput formControlName="CHILDREN_EDUCATION" />
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="CHILDREN_EDUCATION"
+                />
               </mat-form-field>
             </div>
           </div>
@@ -141,7 +145,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Other Allowance</mat-label>
-                <input matInput formControlName="OTHER_ALLOWANCE" />
+                <input digitsOnly matInput formControlName="OTHER_ALLOWANCE" />
               </mat-form-field>
             </div>
           </div>
@@ -158,7 +162,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>CONTRI_80CCD</mat-label>
-                <input matInput formControlName="CONTRI_80CCD" />
+                <input digitsOnly matInput formControlName="CONTRI_80CCD" />
               </mat-form-field>
             </div>
           </div>
@@ -175,7 +179,11 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>RULE6_PARTA_4THSCHEDULE</mat-label>
-                <input matInput formControlName="RULE_6_PART_A_4TH_SCHEDULE" />
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="RULE_6_PART_A_4TH_SCHEDULE"
+                />
               </mat-form-field>
             </div>
           </div>
@@ -193,6 +201,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>RULE11_4_PARTA_4THSCHEDULE</mat-label>
                 <input
+                  digitsOnly
                   matInput
                   formControlName="RULE_11_4_PART_A_4TH_SCHEDULE"
                 />
@@ -209,7 +218,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Pension</mat-label>
-                <input matInput formControlName="PENSION" />
+                <input digitsOnly matInput formControlName="PENSION" />
               </mat-form-field>
             </div>
           </div>
@@ -223,7 +232,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Commuted Pension</mat-label>
-                <input matInput formControlName="COMMUTED_PENSION" />
+                <input digitsOnly matInput formControlName="COMMUTED_PENSION" />
               </mat-form-field>
             </div>
           </div>
@@ -237,7 +246,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Gratuity</mat-label>
-                <input matInput formControlName="GRATUITY" />
+                <input digitsOnly matInput formControlName="GRATUITY" />
               </mat-form-field>
             </div>
           </div>
@@ -251,7 +260,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Fees/Commission</mat-label>
-                <input matInput formControlName="COMMISSION" />
+                <input digitsOnly matInput formControlName="COMMISSION" />
               </mat-form-field>
             </div>
           </div>
@@ -265,7 +274,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Advance Salary</mat-label>
-                <input matInput formControlName="ADVANCE_SALARY" />
+                <input digitsOnly matInput formControlName="ADVANCE_SALARY" />
               </mat-form-field>
             </div>
           </div>
@@ -279,7 +288,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Leave Encashment</mat-label>
-                <input matInput formControlName="LEAVE_ENCASHMENT" />
+                <input digitsOnly matInput formControlName="LEAVE_ENCASHMENT" />
               </mat-form-field>
             </div>
           </div>
@@ -293,7 +302,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>OTHER</mat-label>
-                <input matInput formControlName="OTHER" />
+                <input digitsOnly matInput formControlName="OTHER" />
               </mat-form-field>
             </div>
           </div>
@@ -304,7 +313,7 @@
       <!-- Save button  -->
       <div class="fixed-button">
         <button class="saveButton" (click)="saveBifurcations('salary')">
-          <span class="font-semibold">&nbsp;Save</span>
+          <span class="font-semibold">&nbsp;Saves</span>
         </button>
       </div>
     </div>
@@ -322,7 +331,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Accommodation</mat-label>
-                <input matInput formControlName="ACCOMODATION" />
+                <input digitsOnly matInput formControlName="ACCOMODATION" />
               </mat-form-field>
             </div>
           </div>
@@ -336,7 +345,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Cars/other automotive</mat-label>
-                <input matInput formControlName="MOTOR_CAR" />
+                <input digitsOnly matInput formControlName="MOTOR_CAR" />
               </mat-form-field>
             </div>
           </div>
@@ -353,6 +362,7 @@
                   >Sweeper/Gardner/Watchman/Personal attendant</mat-label
                 >
                 <input
+                  digitsOnly
                   matInput
                   formControlName="SWEEPER_GARDNER_WATCHMAN_OR_PERSONAL_ATTENDANT"
                 />
@@ -369,7 +379,11 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Gas, electricity, water</mat-label>
-                <input matInput formControlName="GAST_ELECTRICITY_WATER" />
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="GAST_ELECTRICITY_WATER"
+                />
               </mat-form-field>
             </div>
           </div>
@@ -383,7 +397,11 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Interest-free or concessional loans </mat-label>
-                <input matInput formControlName="INTEREST_FREE_LOANS" />
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="INTEREST_FREE_LOANS"
+                />
               </mat-form-field>
             </div>
           </div>
@@ -397,7 +415,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Holiday expenses</mat-label>
-                <input matInput formControlName="HOLIDAY_EXPENSES" />
+                <input digitsOnly matInput formControlName="HOLIDAY_EXPENSES" />
               </mat-form-field>
             </div>
           </div>
@@ -411,7 +429,11 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Free or concessional travel</mat-label>
-                <input matInput formControlName="FREE_OR_CONCESSIONAL_TRAVEL" />
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="FREE_OR_CONCESSIONAL_TRAVEL"
+                />
               </mat-form-field>
             </div>
           </div>
@@ -425,7 +447,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Free meals</mat-label>
-                <input matInput formControlName="FREE_MEALS" />
+                <input digitsOnly matInput formControlName="FREE_MEALS" />
               </mat-form-field>
             </div>
           </div>
@@ -439,7 +461,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Free education</mat-label>
-                <input matInput formControlName="FREE_EDU" />
+                <input digitsOnly matInput formControlName="FREE_EDU" />
               </mat-form-field>
             </div>
           </div>
@@ -453,7 +475,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Gift vouchers etc. </mat-label>
-                <input matInput formControlName="GIFT_VOUCHERS" />
+                <input digitsOnly matInput formControlName="GIFT_VOUCHERS" />
               </mat-form-field>
             </div>
           </div>
@@ -467,7 +489,11 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Credit card expenses</mat-label>
-                <input matInput formControlName="CREDIT_CARD_EXPENSES" />
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="CREDIT_CARD_EXPENSES"
+                />
               </mat-form-field>
             </div>
           </div>
@@ -481,7 +507,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>Club expenses </mat-label>
-                <input matInput formControlName="CLUB_EXP" />
+                <input digitsOnly matInput formControlName="CLUB_EXP" />
               </mat-form-field>
             </div>
           </div>
@@ -496,6 +522,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>Use of movable assets by employee </mat-label>
                 <input
+                  digitsOnly
                   matInput
                   formControlName="USE_OF_MOVABLE_ASSETS_BY_EMPLOYEE"
                 />
@@ -513,6 +540,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>Transfer of asset to employee </mat-label>
                 <input
+                  digitsOnly
                   matInput
                   formControlName="TRANSFER_OF_ASSET_TO_EMPLOYEE"
                 />
@@ -532,6 +560,7 @@
                   >VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE</mat-label
                 >
                 <input
+                  digitsOnly
                   matInput
                   formControlName="VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE"
                 />
@@ -552,6 +581,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>SECTION_80_IAC_TAX_TO_BE_DEFERED </mat-label>
                 <input
+                  digitsOnly
                   matInput
                   formControlName="SECTION_80_IAC_TAX_TO_BE_DEFERED"
                 />
@@ -573,6 +603,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>SECTION_80_IAC_TAX_NOT_TO_BE_DEFERED</mat-label>
                 <input
+                  digitsOnly
                   matInput
                   formControlName="SECTION_80_IAC_TAX_NOT_TO_BE_DEFERED"
                 />
@@ -593,6 +624,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>STOCK_OPTIONS_OTHER_THAN_ESOP</mat-label>
                 <input
+                  digitsOnly
                   matInput
                   formControlName="STOCK_OPTIONS_OTHER_THAN_ESOP"
                 />
@@ -612,7 +644,11 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>SCHEME_TAXABLE_US_17_2_VII</mat-label>
-                <input matInput formControlName="SCHEME_TAXABLE_US_17_2_VII" />
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="SCHEME_TAXABLE_US_17_2_VII"
+                />
               </mat-form-field>
             </div>
           </div>
@@ -630,7 +666,11 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>SCHEME_TAXABLE_US_17_2_VIIA</mat-label>
-                <input matInput formControlName="SCHEME_TAXABLE_US_17_2_VIIA" />
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="SCHEME_TAXABLE_US_17_2_VIIA"
+                />
               </mat-form-field>
             </div>
           </div>
@@ -644,7 +684,11 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>OTH_BENEFITS_AMENITIES</mat-label>
-                <input matInput formControlName="OTH_BENEFITS_AMENITIES" />
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="OTH_BENEFITS_AMENITIES"
+                />
               </mat-form-field>
             </div>
           </div>
@@ -677,7 +721,11 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>COMPENSATION_ON_VRS</mat-label>
-                <input matInput formControlName="COMPENSATION_ON_VRS" />
+                <input
+                  digitsOnly
+                  matInput
+                  formControlName="COMPENSATION_ON_VRS"
+                />
               </mat-form-field>
             </div>
           </div>
@@ -695,7 +743,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>AMOUNT_DUE</mat-label>
-                <input matInput formControlName="AMOUNT_DUE" />
+                <input digitsOnly matInput formControlName="AMOUNT_DUE" />
               </mat-form-field>
             </div>
           </div>
@@ -713,7 +761,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>PAYMENT_DUE</mat-label>
-                <input matInput formControlName="PAYMENT_DUE" />
+                <input digitsOnly matInput formControlName="PAYMENT_DUE" />
               </mat-form-field>
             </div>
           </div>
@@ -727,7 +775,7 @@
             <div class="col-sm-4">
               <mat-form-field appearance="outline">
                 <mat-label>ANY_OTHER</mat-label>
-                <input matInput formControlName="ANY_OTHER" />
+                <input digitsOnly matInput formControlName="ANY_OTHER" />
               </mat-form-field>
             </div>
           </div>

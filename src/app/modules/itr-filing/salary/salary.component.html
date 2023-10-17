@@ -312,14 +312,19 @@
                       [disabled]="isVrsExemptionTaken"
                     />
                   </mat-form-field>
-                  <button
+                  <!-- Calculator button -->
+                  <i
                     #buttonContainer
-                    mat-mini-fab
-                    style="margin-left: 5%"
+                    class="fa-duotone fa-calculator fa-2xl"
+                    style="
+                      --fa-primary-color: #00b0cb;
+                      --fa-secondary-color: #000000;
+                      --fa-secondary-opacity: 0;
+                      margin-left: 5%;
+                    "
+                    id="buttonContainer"
                     (click)="calculator(income.value.allowType, i)"
-                  >
-                    <mat-icon>filter_list</mat-icon>
-                  </button>
+                  ></i>
                 </td>
                 <td *ngIf="income.value.allowType !== 'COMPENSATION_ON_VRS'">
                   <mat-form-field
@@ -337,15 +342,19 @@
                       maxlength="125"
                     />
                   </mat-form-field>
-
-                  <button
-                    #buttonContainers
-                    mat-mini-fab
-                    style="margin-left: 5%"
+                  <!-- Calculator button -->
+                  <i
+                    #buttonContainer
+                    class="fa-duotone fa-calculator fa-2xl"
+                    style="
+                      --fa-primary-color: #00b0cb;
+                      --fa-secondary-color: #000000;
+                      --fa-secondary-opacity: 0;
+                      margin-left: 5%;
+                    "
+                    id="buttonContainer"
                     (click)="calculator(income.value.allowType, i)"
-                  >
-                    <mat-icon>filter_list</mat-icon>
-                  </button>
+                  ></i>
                 </td>
               </tr>
             </tbody>

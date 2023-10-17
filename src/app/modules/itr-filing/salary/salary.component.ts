@@ -901,6 +901,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_JSON)
               );
+              sessionStorage.removeItem('localEmployer');
 
               this.AllSalaryIncomeComponent.updatingTaxableIncome('save');
 
@@ -1246,40 +1247,34 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     });
   }
 
-  
-
   // CALCULATORS
   calculator(component, index) {
     // console.log(this.buttonContainer);
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(this.elementRef)
-      .withPositions([
-        {
-          originX: 'end', // Align with the right edge of the button
-          originY: 'center', // Vertically center align with the button
-          overlayX: 'end', // Align with the right edge of the overlay
-          overlayY: 'center', // Vertically center align the overlay
-          offsetX: -50, // Add a 10 pixel offset from the calculated position
-          offsetY: -200,
-        },
-      ]);
-
-    const overlayRef = this.overlay.create({
-      positionStrategy,
-      hasBackdrop: true,
-      height: '200px',
-      width: '300px',
-    });
-
-    const userProfilePortal = new ComponentPortal(CalculatorsComponent);
-    const componentRef = overlayRef.attach(userProfilePortal);
-
-    (componentRef.instance as CalculatorsComponent).data = component;
-
-    // Subscribe to backdrop click events to close the overlay
-    overlayRef.backdropClick().subscribe(() => {
-      overlayRef.dispose(); // Close the overlay
-    });
+    // const positionStrategy = this.overlay
+    //   .position()
+    //   .flexibleConnectedTo(this.elementRef)
+    //   .withPositions([
+    //     {
+    //       originX: 'end', // Align with the right edge of the button
+    //       originY: 'center', // Vertically center align with the button
+    //       overlayX: 'end', // Align with the right edge of the overlay
+    //       overlayY: 'center', // Vertically center align the overlay
+    //       offsetX: -50, // Add a 10 pixel offset from the calculated position
+    //       offsetY: -200,
+    //     },
+    //   ]);
+    // const overlayRef = this.overlay.create({
+    //   positionStrategy,
+    //   hasBackdrop: true,
+    //   height: '200px',
+    //   width: '300px',
+    // });
+    // const userProfilePortal = new ComponentPortal(CalculatorsComponent);
+    // const componentRef = overlayRef.attach(userProfilePortal);
+    // (componentRef.instance as CalculatorsComponent).data = component;
+    // // Subscribe to backdrop click events to close the overlay
+    // overlayRef.backdropClick().subscribe(() => {
+    //   overlayRef.dispose(); // Close the overlay
+    // });
   }
 }

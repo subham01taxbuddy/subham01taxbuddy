@@ -57,7 +57,8 @@ export class BifurcationComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.bifurcationFormGroup = this.createBifurcationForm();
     this.index = this.data?.index;
-    this.localEmployer = this.data?.data;
+    this.localEmployer = JSON.parse(sessionStorage.getItem('localEmployer'));
+    this.localEmployer = this.data?.data ? this.data?.data : this.localEmployer;
 
     // Salary
     const salaryFormArray = this.getSalary;
@@ -178,6 +179,42 @@ export class BifurcationComponent implements OnInit {
   }
 
   saveBifurcations(type) {
+    this.Copy_ITR_JSON = JSON.parse(
+      sessionStorage.getItem(AppConstants.ITR_JSON)
+    );
+
+    if (!this.localEmployer) {
+      this.localEmployer = {
+        id: null,
+        employerName: '',
+        address: '',
+        city: '',
+        pinCode: '',
+        state: '',
+        employerPAN: '',
+        employerTAN: '',
+        taxableIncome: 0,
+        exemptIncome: 0,
+        standardDeduction: 0,
+
+        // AYAsPerForm16: string;
+        periodFrom: '',
+        periodTo: '',
+        // amountPaidAsPerForm16: number;
+        taxDeducted: 0,
+        taxRelief: 0,
+        employerCategory: '',
+        salary: [],
+        allowance: [],
+        perquisites: [],
+        profitsInLieuOfSalaryType: [],
+        deductions: [],
+        upload: [],
+        calculators: null,
+      };
+      this.Copy_ITR_JSON.employers.push(this.localEmployer);
+    }
+
     console.log(this.bifurcationFormGroup, 'bifurcationsForm');
     let result;
 
@@ -221,78 +258,32 @@ export class BifurcationComponent implements OnInit {
       };
 
       // NEED TO CONFIRM WITH ASHWINI IF I SHOULD CALL API OR NOT
-      // if (this.localEmployer) {
-      //   const bifurcationValues = this.value.salary[0];
+      if (this.localEmployer) {
+        const bifurcationValues = this.value.salary[0];
 
-      //   this.localEmployer.salary = [];
-      //   for (const key in bifurcationValues) {
-      //     if (bifurcationValues.hasOwnProperty(key)) {
-      //       const element = parseFloat(bifurcationValues[key]);
-      //       console.log(element);
-      //       if (element && element !== 0) {
-      //         this.localEmployer?.salary.push({
-      //           salaryType: key,
-      //           taxableAmount: element,
-      //           exemptAmount: 0,
-      //         });
-      //       }
-      //     }
-      //   }
+        this.localEmployer.salary = [];
+        for (const key in bifurcationValues) {
+          if (bifurcationValues.hasOwnProperty(key)) {
+            const element = parseFloat(bifurcationValues[key]);
+            console.log(element);
+            if (element && element !== 0) {
+              this.localEmployer?.salary.push({
+                salaryType: key,
+                taxableAmount: element,
+                exemptAmount: 0,
+              });
+            }
+          }
+        }
 
-      //   this.Copy_ITR_JSON = JSON.parse(
-      //     sessionStorage.getItem(AppConstants.ITR_JSON)
-      //   );
+        this.loading = true;
+        if (this.index !== -1) {
+          const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
+          this.Copy_ITR_JSON.employers.splice(this.index, 1, myEmp);
+        }
+      }
 
-      //   this.loading = true;
-      //   if (this.index === -1) {
-      //     const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
-      //     if (
-      //       this.Copy_ITR_JSON.employers == null ||
-      //       this.Copy_ITR_JSON.employers.length == 0
-      //     ) {
-      //       this.Copy_ITR_JSON.employers = [];
-      //     }
-      //     this.Copy_ITR_JSON.employers.push(myEmp);
-      //   } else {
-      //     const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
-      //     this.Copy_ITR_JSON.employers.splice(this.index, 1, myEmp);
-      //   }
-
-      //   const param = `/itr/itr-type`;
-      //   this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe(
-      //     (res: any) => {
-      //       this.Copy_ITR_JSON.itrType = res?.data?.itrType;
-      //       const param1 = '/taxitr?type=employers';
-      //       this.itrMsService.postMethod(param1, this.Copy_ITR_JSON).subscribe(
-      //         (result: any) => {
-      //           if (this.utilsService.isNonEmpty(result)) {
-      //             this.ITR_JSON = result;
-      //             this.Copy_ITR_JSON = JSON.parse(
-      //               JSON.stringify(this.ITR_JSON)
-      //             );
-      //             sessionStorage.setItem(
-      //               AppConstants.ITR_JSON,
-      //               JSON.stringify(this.ITR_JSON)
-      //             );
-      //           } else {
-      //             this.loading = false;
-      //             this.utilsService.showSnackBar(
-      //               'Failed to save salary detail, Please try again'
-      //             );
-      //           }
-      //         },
-      //         (error) => {
-      //           this.loading = false;
-      //           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      //         }
-      //       );
-      //     },
-      //     (error) => {
-      //       console.log('Error fetching itr type', error);
-      //       this.utilsService.showSnackBar('Failed to save salary detail.');
-      //     }
-      //   );
-      // }
+      console.log('salary copyItrJson', this.Copy_ITR_JSON);
     }
 
     if (type === 'perquisites') {
@@ -337,6 +328,34 @@ export class BifurcationComponent implements OnInit {
         type: 'perquisites',
         index: this.index,
       };
+
+      // NEED TO CONFIRM WITH ASHWINI IF I SHOULD CALL API OR NOT
+      if (this.localEmployer) {
+        const bifurcationValues = this.value.perquisites[0];
+
+        this.localEmployer.perquisites = [];
+        for (const key in bifurcationValues) {
+          if (bifurcationValues.hasOwnProperty(key)) {
+            const element = parseFloat(bifurcationValues[key]);
+            console.log(element);
+            if (element && element !== 0) {
+              this.localEmployer?.perquisites.push({
+                perquisiteType: key,
+                taxableAmount: element,
+                exemptAmount: 0,
+              });
+            }
+          }
+        }
+
+        this.loading = true;
+        if (this.index !== -1) {
+          const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
+          this.Copy_ITR_JSON.employers.splice(this.index, 1, myEmp);
+        }
+      }
+
+      console.log('perqusities copyItrJson', this.Copy_ITR_JSON);
     }
 
     if (type === 'profitsInLieu') {
@@ -364,9 +383,38 @@ export class BifurcationComponent implements OnInit {
         type: 'profitsInLieuOfSalary',
         index: this.index,
       };
+
+      // NEED TO CONFIRM WITH ASHWINI IF I SHOULD CALL API OR NOT
+      if (this.localEmployer) {
+        const bifurcationValues = this.value.profitsInLieuOfSalary[0];
+
+        this.localEmployer.profitsInLieuOfSalaryType = [];
+        for (const key in bifurcationValues) {
+          if (bifurcationValues.hasOwnProperty(key)) {
+            const element = parseFloat(bifurcationValues[key]);
+            console.log(element);
+            if (element && element !== 0) {
+              this.localEmployer?.profitsInLieuOfSalaryType.push({
+                salaryType: key,
+                taxableAmount: element,
+                exemptAmount: 0,
+              });
+            }
+          }
+        }
+
+        this.loading = true;
+        if (this.index !== -1) {
+          const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
+          this.Copy_ITR_JSON.employers.splice(this.index, 1, myEmp);
+        }
+      }
+
+      console.log('perqusities copyItrJson', this.Copy_ITR_JSON);
     }
 
     this.dialogRef.close(result);
+    sessionStorage.setItem('localEmployer', JSON.stringify(this.localEmployer));
   }
 
   //  BREAKUP MONTHLY WISE
