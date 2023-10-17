@@ -103,7 +103,7 @@
                 class="input-field"
                 required
                 digitsOnly
-                (change)="calculatePresumptive(i, 'bank')"
+                (change)="calculatePresumptive(i, 'bank', true)"
               />
             </mat-form-field>
             <mat-error
@@ -170,7 +170,7 @@
                 class="input-field"
                 required
                 digitsOnly
-                (change)="calculatePresumptive(i, 'cash')"
+                (change)="calculatePresumptive(i, 'cash', true)"
               />
             </mat-form-field>
             <mat-error
