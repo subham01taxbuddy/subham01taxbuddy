@@ -70,8 +70,10 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.config = {
+      id: 'professionConfig',
       itemsPerPage: 2,
       currentPage: 1,
+      totalItems: 0
     };
 
     let profBusiness = this.ITR_JSON.business?.presumptiveIncomes?.filter(
@@ -95,6 +97,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     this.profIncomeFormArray.controls.forEach((formgroup, index) => {
       this.calculatePresumptive(null, index, false);
     });
+    this.config.totalItems = this.profIncomeFormArray.controls.length;
   }
 
   get getProfIncomeArray() {

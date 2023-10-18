@@ -43,7 +43,7 @@
             <app-business-input-autocomplete
               [businessType]="'44ADA'"
               [selectedInput]="
-                profIncomeFormArray.controls[i].get('natureOfBusiness').value
+                profIncomeFormArray.controls[fieldGlobalIndex(i)].get('natureOfBusiness').value
               "
               (businessSelected)="businessClicked($event, i)"
             >
@@ -183,7 +183,7 @@
           *ngFor="let item of getProfIncomeArray.controls | paginate : config"
         ></tr>
       </table>
-      <pagination-controls
+      <pagination-controls id="professionConfig"
         (pageChange)="pageChanged($event)"
       ></pagination-controls>
     </div>
