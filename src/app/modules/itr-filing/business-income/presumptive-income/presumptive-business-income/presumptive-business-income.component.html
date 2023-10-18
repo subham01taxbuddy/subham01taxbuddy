@@ -43,8 +43,11 @@
           <div class="col-sm-3">
             <app-business-input-autocomplete
               [businessType]="'44AD'"
-              [selectedInput]="busIncomeFormArray.controls[i].get('natureOfBusiness').value"
-              (businessSelected)="businessClicked($event, i)">
+              [selectedInput]="
+                busIncomeFormArray.controls[i].get('natureOfBusiness').value
+              "
+              (businessSelected)="businessClicked($event, i)"
+            >
             </app-business-input-autocomplete>
 
             <mat-error
@@ -116,6 +119,16 @@
               "
               >Please enter the amount</mat-error
             >
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('bankReceipts').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('bankReceipts')
+                  .hasError('max')
+              "
+              >Turnover cannot be more than 2 crore</mat-error
+            >
           </div>
           <div class="col-sm-3">
             <mat-label>Presumptive Income @6%</mat-label>
@@ -182,6 +195,16 @@
                   .hasError('required')
               "
               >Please enter the amount</mat-error
+            >
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('cashReceipts').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('cashReceipts')
+                  .hasError('max')
+              "
+              >Turnover cannot be more than 2 crore</mat-error
             >
           </div>
           <div class="col-sm-3">
@@ -254,5 +277,4 @@
       ></pagination-controls>
     </div>
   </div>
-
 </div>
