@@ -31,15 +31,14 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       value: 'TAX_REFUND_INTEREST',
       label: 'Interest from Income tax refund',
     },
-    //Ashwini: commented 80qqb & 80rrb
-    // {
-    //   value: 'ROYALTY_US_80QQB',
-    //   label: 'Royalty for Books/Author/Publishers (80QQB)',
-    // },
-    // {
-    //   value: 'ROYALTY_US_80RRB',
-    //   label: 'Royalty Against Patent (80RRB)',
-    // },
+    {
+      value: 'ROYALTY_US_80QQB',
+      label: 'Royalty for Books/Author/Publishers (80QQB)',
+    },
+    {
+      value: 'ROYALTY_US_80RRB',
+      label: 'Royalty Against Patent (80RRB)',
+    },
     {
       value: 'ANY_OTHER',
       label: 'Any Other Income',
