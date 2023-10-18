@@ -44,8 +44,10 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.config = {
+      id: 'businessConfig',
       itemsPerPage: 2,
       currentPage: 1,
+      totalItems: 0
     };
 
     let presBusiness = this.ITR_JSON.business?.presumptiveIncomes?.filter(
@@ -70,6 +72,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       this.calculatePresumptive(index, 'cash', false);
       this.calculatePresumptive(index, 'bank', false);
     });
+    this.config.totalItems = this.busIncomeFormArray.controls.length;
   }
 
   get getBusIncomeArray() {

@@ -71,8 +71,10 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.config = {
+      id: 'professionConfig',
       itemsPerPage: 2,
       currentPage: 1,
+      totalItems: 0,
     };
 
     let profBusiness = this.ITR_JSON.business?.presumptiveIncomes?.filter(
@@ -94,8 +96,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     });
 
     this.profIncomeFormArray.controls.forEach((formgroup, index) => {
-      this.calculatePresumptive(null, index);
+      this.calculatePresumptive(null, index, false);
     });
+    this.config.totalItems = this.profIncomeFormArray.controls.length;
   }
 
   get getProfIncomeArray() {
@@ -176,7 +179,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     });
   }
 
-  calculatePresumptive(event, index) {
+  calculatePresumptive(event, index, setValue?) {
     this.amountFifty = 0;
     this.amountFiftyMax = 0;
 
