@@ -21,6 +21,9 @@ import { NonNullExpression } from 'typescript';
   providers: [TitleCasePipe],
 })
 export class PrefillIdComponent implements OnInit {
+  @Input() data: any;
+  @Output() jsonUploaded: EventEmitter<any> = new EventEmitter();
+  @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
   downloadPrefillChecked: boolean = false;
   uploadPrefillChecked: boolean = false;
   uploadJsonChecked: boolean = false;
@@ -33,12 +36,9 @@ export class PrefillIdComponent implements OnInit {
   localDate: Date;
   utcDate: string;
   uploadedJson;
-  @Output() jsonUploaded: EventEmitter<any> = new EventEmitter();
   ITR14_IncomeDeductions: string;
   regime: string;
   allowanceDetails23: any;
-  @Input() data: any;
-  @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
   userProfile: any;
   userItrId: any;
   itrSummaryJson: any;
@@ -88,48 +88,7 @@ export class PrefillIdComponent implements OnInit {
       });
   }
 
-  subscription: Subscription;
-
-  subscribeToEmmiter(componentRef) {
-    //this may not be needed for us
-    // if (!(componentRef instanceof OtherIncomeComponent)){
-    //   return;
-    // }
-    const child: AddClientsComponent = componentRef;
-    child.skipAddClient.subscribe(() => {
-      this.skipToSources();
-    });
-    child.completeAddClient.subscribe(() => {
-      this.showPrefillView();
-    });
-  }
-
-  unsubscribe() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
-  skipToSources() {
-    this.skipPrefill.emit(null);
-  }
-
-  proceedAfterUpload() {
-    this.skipPrefill.emit(null);
-  }
-
-  showPrefillView() {
-    this.showEriView = false;
-  }
-
-  addClient() {
-    this.showEriView = true;
-    this.router.navigate(['/itr-filing/itr/eri']);
-  }
-
-  downloadPrefillOpt() {
-    this.downloadPrefill = true;
-  }
+  // <---------------------  get functions  ---------------->
 
   getCustomerName() {
     if (
@@ -145,62 +104,88 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
-  // PREFILL PAN VALIDATION
-  uploadJsonFile(event: Event) {
-    let file = (event.target as HTMLInputElement).files;
-    console.log('File in prefill', file);
-    if (file.length > 0) {
-      this.uploadDoc = file.item(0);
+  private getUserDetailsByPAN(panNumber) {
+    this.utilsService
+      .getPanDetails(panNumber, this.ITR_JSON.userId)
+      .subscribe((result: any) => {
+        console.log('user data by PAN = ', result);
+        this.ITR_JSON.family[0].fName = this.titlecasePipe.transform(
+          this.utilsService.isNonEmpty(result.firstName) ? result.firstName : ''
+        );
+        this.ITR_JSON.family[0].mName = this.titlecasePipe.transform(
+          this.utilsService.isNonEmpty(result.middleName)
+            ? result.middleName
+            : ''
+        );
+        this.ITR_JSON.family[0].lName = this.titlecasePipe.transform(
+          this.utilsService.isNonEmpty(result.lastName) ? result.lastName : ''
+        );
 
-      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-
-      //read the file to get details upload and validate
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        let jsonRes = e.target.result;
-        let JSONData = JSON.parse(jsonRes);
-
-        //check if uploaded json is not summary json
-        if (JSONData.hasOwnProperty('ITR')) {
+        //1988-11-28 to DD/MM/YYYY
+        //this.datePipe.transform(dob,"dd/MM/yyyy")
+        let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
+        this.ITR_JSON.family[0].dateOfBirth = moment(
+          result.dateOfBirth,
+          'YYYY-MM-DD'
+        ).toDate();
+        this.ITR_JSON.assesseeType =
+          this.utilsService.findAssesseeType(panNumber);
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_JSON)
+        );
+        this.utilsService.showSnackBar(
+          'PAN number is updated from profile. Please verify customer profile.'
+        );
+        this.jsonUploaded.emit(null);
+        if (result.isValid !== 'EXISTING AND VALID') {
           this.utilsService.showSnackBar(
-            'You are trying to upload summary json instead of prefill'
+            'Record (PAN) Not Found in ITD Database/Invalid PAN'
           );
-          return;
         }
+      });
+  }
 
-        let panNo = JSONData.personalInfo?.pan;
-        let mobileNo = JSONData.personalInfo?.address?.mobileNo;
-        if (panNo !== this.data?.panNumber) {
-          this.toastMessageService.alert(
-            'error',
-            'PAN Number from profile and PAN number from json are different please confirm once.'
+  async fetchUpdatedITR() {
+    const fyList = await this.utilsService.getStoredFyList();
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+
+    const param = `/itr?userId=${this.data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}&itrId=${this.data.itrId}`;
+    this.itrMsService.getMethod(param).subscribe(
+      async (result: any) => {
+        console.log('My ITR by user Id and Assessment Years=', result);
+        if (result == null || result.length == 0) {
+          //invalid case here
+          this.utilsService.showErrorMsg(
+            'Something went wrong. Please try again.'
           );
-          console.log('PAN mismatch');
-          return;
+        } else if (result.length == 1) {
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(result[0])
+          );
         } else {
-          this.uploadPrefillJson();
+          //multiple ITRs found, invalid case
+          this.utilsService.showErrorMsg(
+            'Something went wrong. Please try again.'
+          );
         }
-      };
-      reader.readAsText(this.uploadDoc);
-    }
-  }
-
-  parseDate(dateStr: string) {
-    const parts = dateStr?.split('-');
-    return new Date(+parts?.[0], +parts[1] - 1, +parts[2]);
-  }
-
-  // setting correct format dates
-  parseAndFormatDate(date: any): any {
-    this.localDate = this.parseDate(date);
-    this.utcDate = formatDate(
-      this.localDate,
-      'yyyy-MM-ddTHH:mm:ss.SSSZ',
-      'en-US',
-      '+0000'
+      },
+      async (error: any) => {
+        console.log('Error:', error);
+        this.loading = false;
+        this.utilsService.showErrorMsg(
+          'Something went wrong. Please try again.'
+        );
+      }
     );
-    return new Date(this.utcDate);
   }
+
+  // <----------------------------------  Json parsing functions  --------------------------------->
+
+  ITR_Obj: ITR_JSON;
+
+  // <--------------------- functions relating to parsing uploaded json --------------->
 
   // getting all the allowances from json and assigning their amounts to the respective allowances field in our ITR Object
   updateSalaryAllowances(salaryAllowances, ITR_Type) {
@@ -440,7 +425,7 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
-  // Taking the other income name from json and checking for those income in our itr object. If it exists then mapping jsons amount to itr object amount
+  // Mapping other income from json to itr Object
   updateOtherIncomes(otherIncomes, ITR_Type) {
     if (ITR_Type === 'ITR1' || ITR_Type === 'ITR4') {
       // Savings Interest Income
@@ -1155,7 +1140,6 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
-  ITR_Obj: ITR_JSON;
   // Uploading Utility JSON
   uploadUtilityItrJson(event: Event) {
     let file = (event.target as HTMLInputElement).files;
@@ -1206,6 +1190,7 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
+  // mapping the uploaded json. Main funciton of parsing
   mapItrJson(ItrJSON: any) {
     try {
       // ITR_Obj IS THE TB ITR OBJECT
@@ -5306,6 +5291,200 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
+  // <---------------------- Prefill upload functions ------------------>
+  uploadPrefillJson() {
+    //https://uat-api.taxbuddy.com/itr/eri/prefill-json/upload
+    this.loading = true;
+    const formData = new FormData();
+    formData.append('file', this.uploadDoc);
+    formData.append('assessmentYear', this.data.assessmentYear);
+    formData.append('userId', this.data.userId.toString());
+    let param = '/eri/prefill-json/upload';
+    this.itrMsService.postMethod(param, formData).subscribe(
+      (res: any) => {
+        this.loading = false;
+        console.log('uploadDocument response =>', res);
+        if (res && res.success) {
+          this.utilsService.showSnackBar(res.message);
+          //prefill uploaded successfully, fetch ITR again
+          this.fetchUpdatedITR();
+        } else {
+          if (res.errors instanceof Array && res.errors.length > 0) {
+            this.utilsService.showSnackBar(res.errors[0].desc);
+          } else if (res.messages instanceof Array && res.messages.length > 0) {
+            this.utilsService.showSnackBar(res.messages[0].desc);
+          }
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'Something went wrong, try after some time.'
+        );
+      }
+    );
+  }
+
+  // PREFILL PAN VALIDATION
+  uploadJsonFile(event: Event) {
+    let file = (event.target as HTMLInputElement).files;
+    console.log('File in prefill', file);
+    if (file.length > 0) {
+      this.uploadDoc = file.item(0);
+
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+
+      //read the file to get details upload and validate
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        let jsonRes = e.target.result;
+        let JSONData = JSON.parse(jsonRes);
+
+        //check if uploaded json is not summary json
+        if (JSONData.hasOwnProperty('ITR')) {
+          this.utilsService.showSnackBar(
+            'You are trying to upload summary json instead of prefill'
+          );
+          return;
+        }
+
+        let panNo = JSONData.personalInfo?.pan;
+        let mobileNo = JSONData.personalInfo?.address?.mobileNo;
+        if (panNo !== this.data?.panNumber) {
+          this.toastMessageService.alert(
+            'error',
+            'PAN Number from profile and PAN number from json are different please confirm once.'
+          );
+          console.log('PAN mismatch');
+          return;
+        } else {
+          this.uploadPrefillJson();
+        }
+      };
+      reader.readAsText(this.uploadDoc);
+    }
+  }
+
+  upload(type: string) {
+    if (type == 'pre-filled') {
+      document.getElementById('input-jsonfile-id').click();
+    } else if (type == 'utility') {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '500px',
+        data: {
+          title: 'Uploading an existing JSON',
+          message:
+            'Once you upload an existing JSON all the existing changes if any, will be discarded. You can further not edit any details once you have successfully uploaded the JSON. If any edits are done, the TaxBuddy JSON will be generated by default and the same will be considered to be filed. Are you sure you want to continue?',
+        },
+      });
+
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log(result);
+        if (result === 'YES') {
+          this.ITR_JSON = this.utilsService.createEmptyJson(
+            this.userProfile,
+            this.ITR_JSON.assessmentYear,
+            this.ITR_JSON.financialYear,
+            this.ITR_JSON.itrId,
+            this.ITR_JSON.filingTeamMemberId,
+            this.ITR_JSON.id,
+            this.ITR_JSON
+          );
+
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
+
+          document.getElementById('input-utility-file-jsonfile-id').click();
+        }
+      });
+    }
+  }
+
+  jsonUpload() {
+    if (this.uploadedJson) {
+      this.jsonUploaded.emit(this.uploadedJson);
+    }
+  }
+
+  deleteUploadedJson() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '700px',
+      data: {
+        title: 'Are you sure you want to delete the uploaded JSON?',
+        message:
+          'Once you delete the JSON, you will have to enter all the details manually again',
+      },
+    });
+
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+      if (result === 'YES') {
+        this.ITR_JSON.itrSummaryJson = null;
+        this.uploadedJson = false;
+        this.ITR_JSON = this.utilsService.createEmptyJson(
+          this.userProfile,
+          this.ITR_JSON.assessmentYear,
+          this.ITR_JSON.financialYear,
+          this.ITR_JSON.itrId,
+          this.ITR_JSON.filingTeamMemberId,
+          this.ITR_JSON.id,
+          this.ITR_JSON
+        );
+        this.utilsService.showSnackBar(
+          'The uploaded JSON has been deleted. You can now proceed ahead.'
+        );
+
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_JSON)
+        );
+        this.jsonUploaded.emit(null);
+      }
+    });
+  }
+
+  // <---------------------  Helper functions  ---------------->
+
+  subscription: Subscription;
+  subscribeToEmmiter(componentRef) {
+    //this may not be needed for us
+    // if (!(componentRef instanceof OtherIncomeComponent)){
+    //   return;
+    // }
+    const child: AddClientsComponent = componentRef;
+    child.skipAddClient.subscribe(() => {
+      this.skipToSources();
+    });
+    child.completeAddClient.subscribe(() => {
+      this.showPrefillView();
+    });
+  }
+
+  skipToSources() {
+    this.skipPrefill.emit(null);
+  }
+
+  proceedAfterUpload() {
+    this.skipPrefill.emit(null);
+  }
+
+  showPrefillView() {
+    this.showEriView = false;
+  }
+
+  addClient() {
+    this.showEriView = true;
+    this.router.navigate(['/itr-filing/itr/eri']);
+  }
+
+  downloadPrefillOpt() {
+    this.downloadPrefill = true;
+  }
+
   sendEmail(uploadedJson) {
     this.loading = true;
 
@@ -5385,136 +5564,6 @@ export class PrefillIdComponent implements OnInit {
       }
     );
   }
-  upload(type: string) {
-    if (type == 'pre-filled') {
-      document.getElementById('input-jsonfile-id').click();
-    } else if (type == 'utility') {
-      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        width: '500px',
-        data: {
-          title: 'Uploading an existing JSON',
-          message:
-            'Once you upload an existing JSON all the existing changes if any, will be discarded. You can further not edit any details once you have successfully uploaded the JSON. If any edits are done, the TaxBuddy JSON will be generated by default and the same will be considered to be filed. Are you sure you want to continue?',
-        },
-      });
-
-      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-      dialogRef.afterClosed().subscribe((result) => {
-        console.log(result);
-        if (result === 'YES') {
-          this.ITR_JSON = this.utilsService.createEmptyJson(
-            this.userProfile,
-            this.ITR_JSON.assessmentYear,
-            this.ITR_JSON.financialYear,
-            this.ITR_JSON.itrId,
-            this.ITR_JSON.filingTeamMemberId,
-            this.ITR_JSON.id,
-            this.ITR_JSON
-          );
-
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(this.ITR_JSON)
-          );
-
-          document.getElementById('input-utility-file-jsonfile-id').click();
-        }
-      });
-    }
-  }
-
-  // upload(type: string) {
-  //   if (type == 'pre-filled') {
-  //     document.getElementById('input-jsonfile-id').click();
-  //   } else if (type == 'utility') {
-  //     document.getElementById('input-utility-file-jsonfile-id').click();
-  //     const dialogRef = this.dialog.open(KommunicateDialogComponent, {
-  //       width: '250px',
-  //       data: {
-  //         message:
-  //           'Once you upload a JSON all the existing changes if any will be discarded, and you cannot edit the details once you have uploaded the JSON. If edit is done, the TaxBuddy JSON will be generated and the same will be filed.',
-  //       },
-  //     });
-
-  //     dialogRef.afterClosed().subscribe((result) => {
-  //       if (result === 'yes') {
-  //         this.utilsService.createEmptyJson(
-  //           this.ITR_JSON.userId,
-  //           this.ITR_JSON.assessmentYear,
-  //           this.ITR_JSON.financialYear
-  //         );
-  //       }
-  //     });
-  //   }
-  // }
-
-  uploadPrefillJson() {
-    //https://uat-api.taxbuddy.com/itr/eri/prefill-json/upload
-    this.loading = true;
-    const formData = new FormData();
-    formData.append('file', this.uploadDoc);
-    formData.append('assessmentYear', this.data.assessmentYear);
-    formData.append('userId', this.data.userId.toString());
-    let param = '/eri/prefill-json/upload';
-    this.itrMsService.postMethod(param, formData).subscribe(
-      (res: any) => {
-        this.loading = false;
-        console.log('uploadDocument response =>', res);
-        if (res && res.success) {
-          this.utilsService.showSnackBar(res.message);
-          //prefill uploaded successfully, fetch ITR again
-          this.fetchUpdatedITR();
-        } else {
-          if (res.errors instanceof Array && res.errors.length > 0) {
-            this.utilsService.showSnackBar(res.errors[0].desc);
-          } else if (res.messages instanceof Array && res.messages.length > 0) {
-            this.utilsService.showSnackBar(res.messages[0].desc);
-          }
-        }
-      },
-      (error) => {
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Something went wrong, try after some time.'
-        );
-      }
-    );
-  }
-
-  async fetchUpdatedITR() {
-    const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
-
-    const param = `/itr?userId=${this.data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}&itrId=${this.data.itrId}`;
-    this.itrMsService.getMethod(param).subscribe(
-      async (result: any) => {
-        console.log('My ITR by user Id and Assessment Years=', result);
-        if (result == null || result.length == 0) {
-          //invalid case here
-          this.utilsService.showErrorMsg(
-            'Something went wrong. Please try again.'
-          );
-        } else if (result.length == 1) {
-          sessionStorage.setItem(
-            AppConstants.ITR_JSON,
-            JSON.stringify(result[0])
-          );
-        } else {
-          //multiple ITRs found, invalid case
-          this.utilsService.showErrorMsg(
-            'Something went wrong. Please try again.'
-          );
-        }
-      },
-      async (error: any) => {
-        console.log('Error:', error);
-        this.loading = false;
-        this.utilsService.showErrorMsg(
-          'Something went wrong. Please try again.'
-        );
-      }
-    );
-  }
 
   onCheckboxChange(checkboxNumber: number) {
     if (checkboxNumber === 1) {
@@ -5553,85 +5602,51 @@ export class PrefillIdComponent implements OnInit {
     );
   }
 
-  jsonUpload() {
-    if (this.uploadedJson) {
-      this.jsonUploaded.emit(this.uploadedJson);
+  // setting correct format dates
+  parseAndFormatDate(date: any): any {
+    this.localDate = this.parseDate(date);
+    this.utcDate = formatDate(
+      this.localDate,
+      'yyyy-MM-ddTHH:mm:ss.SSSZ',
+      'en-US',
+      '+0000'
+    );
+    return new Date(this.utcDate);
+  }
+
+  parseDate(dateStr: string) {
+    const parts = dateStr?.split('-');
+    return new Date(+parts?.[0], +parts[1] - 1, +parts[2]);
+  }
+
+  unsubscribe() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
   }
 
-  deleteUploadedJson() {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '700px',
-      data: {
-        title: 'Are you sure you want to delete the uploaded JSON?',
-        message:
-          'Once you delete the JSON, you will have to enter all the details manually again',
-      },
-    });
+  // upload(type: string) {
+  //   if (type == 'pre-filled') {
+  //     document.getElementById('input-jsonfile-id').click();
+  //   } else if (type == 'utility') {
+  //     document.getElementById('input-utility-file-jsonfile-id').click();
+  //     const dialogRef = this.dialog.open(KommunicateDialogComponent, {
+  //       width: '250px',
+  //       data: {
+  //         message:
+  //           'Once you upload a JSON all the existing changes if any will be discarded, and you cannot edit the details once you have uploaded the JSON. If edit is done, the TaxBuddy JSON will be generated and the same will be filed.',
+  //       },
+  //     });
 
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
-      if (result === 'YES') {
-        this.ITR_JSON.itrSummaryJson = null;
-        this.uploadedJson = false;
-        this.ITR_JSON = this.utilsService.createEmptyJson(
-          this.userProfile,
-          this.ITR_JSON.assessmentYear,
-          this.ITR_JSON.financialYear,
-          this.ITR_JSON.itrId,
-          this.ITR_JSON.filingTeamMemberId,
-          this.ITR_JSON.id,
-          this.ITR_JSON
-        );
-        this.utilsService.showSnackBar(
-          'The uploaded JSON has been deleted. You can now proceed ahead.'
-        );
-
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_JSON)
-        );
-        this.jsonUploaded.emit(null);
-      }
-    });
-  }
-
-  private getUserDetailsByPAN(panNumber) {
-    this.utilsService.getPanDetails(panNumber, this.ITR_JSON.userId).subscribe((result: any) => {
-      console.log('user data by PAN = ', result);
-      this.ITR_JSON.family[0].fName = this.titlecasePipe.transform(
-        this.utilsService.isNonEmpty(result.firstName) ? result.firstName : ''
-      );
-      this.ITR_JSON.family[0].mName = this.titlecasePipe.transform(
-        this.utilsService.isNonEmpty(result.middleName) ? result.middleName : ''
-      );
-      this.ITR_JSON.family[0].lName = this.titlecasePipe.transform(
-        this.utilsService.isNonEmpty(result.lastName) ? result.lastName : ''
-      );
-
-      //1988-11-28 to DD/MM/YYYY
-      //this.datePipe.transform(dob,"dd/MM/yyyy")
-      let dob = new Date(result.dateOfBirth).toLocaleDateString('en-US');
-      this.ITR_JSON.family[0].dateOfBirth = moment(
-        result.dateOfBirth,
-        'YYYY-MM-DD'
-      ).toDate();
-      this.ITR_JSON.assesseeType =
-        this.utilsService.findAssesseeType(panNumber);
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.ITR_JSON)
-      );
-      this.utilsService.showSnackBar(
-        'PAN number is updated from profile. Please verify customer profile.'
-      );
-      this.jsonUploaded.emit(null);
-      if (result.isValid !== 'EXISTING AND VALID') {
-        this.utilsService.showSnackBar(
-          'Record (PAN) Not Found in ITD Database/Invalid PAN'
-        );
-      }
-    });
-  }
+  //     dialogRef.afterClosed().subscribe((result) => {
+  //       if (result === 'yes') {
+  //         this.utilsService.createEmptyJson(
+  //           this.ITR_JSON.userId,
+  //           this.ITR_JSON.assessmentYear,
+  //           this.ITR_JSON.financialYear
+  //         );
+  //       }
+  //     });
+  //   }
+  // }
 }
