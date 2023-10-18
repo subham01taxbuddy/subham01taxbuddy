@@ -1135,7 +1135,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   calTotalArrValue(){
-  let arrearsUnrealizedRentReceived = Number(this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived'].value) * 0.3
+  let arrearsUnrealizedRentReceived = this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived'].value - ((this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived'].value) * 0.3)
     console.log(arrearsUnrealizedRentReceived);
   this.housePropertyForm.controls['arrearsUnrealizedRentReceived'].setValue(arrearsUnrealizedRentReceived)
   }
