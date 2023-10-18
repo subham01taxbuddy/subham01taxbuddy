@@ -63,7 +63,7 @@ export class DonationsComponent implements OnInit {
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_A',
+      value: 'SCIENTIFIC_RESEARCH',
       label: 'Sum paid to research Association or University, college or other institution for scientific research',
       description: 'NA',
       active: true,
@@ -71,7 +71,7 @@ export class DonationsComponent implements OnInit {
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_AA',
+      value: 'SOCIAL_SCIENCE_OR_STATISTICAL_RESEARCH',
       label: 'Sum paid to research Association or University, college or other institution for social science or statistical research',
       description: 'NA',
       active: true,
@@ -79,7 +79,7 @@ export class DonationsComponent implements OnInit {
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_B',
+      value: 'RURAL_DEVELOPMENT',
       label: 'Sum paid to an association or institution for Rural Development',
       description: 'NA',
       active: true,
@@ -87,7 +87,7 @@ export class DonationsComponent implements OnInit {
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_BB',
+      value: 'PSU_OR_LOCAL_AUTHORITY_FOR_CARRYING_OUT_ANY_ELIGIBLE_PROJECT',
       label: 'Sum paid to PSU or local authority or an association institution approved by a national committee for carrying out any eligible project.',
       description: 'NA',
       active: true,
@@ -95,7 +95,7 @@ export class DonationsComponent implements OnInit {
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_C',
+      value: 'CONSERVATION_OF_NATURAL_RESOURCES_OR_FOR_AFFORESTATION',
       label: 'Sum paid to an association or institution for conservation of natural resources or for afforestation',
       description: 'NA',
       active: true,
@@ -103,7 +103,7 @@ export class DonationsComponent implements OnInit {
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_CC',
+      value: 'AFFORESTATION_TO_CG_NOTIFIED_FUNDS',
       label: 'Sum paid for afforestation, to the fund, which is notified by Central Govt.',
       description: 'NA',
       active: true,
@@ -111,7 +111,7 @@ export class DonationsComponent implements OnInit {
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_D',
+      value: 'RURAL_DEVELOPMENT_TO_CG_NOTIFIED_FUNDS',
       label: 'Sum paid for Rural Development to the funds, which are notified by the central Govt.',
       description: 'NA',
       active: true,
@@ -119,7 +119,7 @@ export class DonationsComponent implements OnInit {
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_E',
+      value: 'NATIONAL_URBAN_POVERTY_ERADICATION_FUND',
       label: 'Sum Paid to National Urban Poverty Eradication Fund as set up and notified by central govt',
       description: 'NA',
       active: true,

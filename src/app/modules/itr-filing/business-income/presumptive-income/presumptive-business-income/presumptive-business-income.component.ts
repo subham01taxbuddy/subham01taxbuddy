@@ -151,6 +151,28 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   calculatePresumptive(index, incomeType, setValue?) {
+    const bankReceipts = (
+      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
+        index
+      ] as FormGroup
+    ).controls['bankReceipts'];
+
+    const cashReceipts = (
+      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
+        index
+      ] as FormGroup
+    ).controls['cashReceipts'];
+
+    let total = parseFloat(bankReceipts.value) + parseFloat(cashReceipts.value);
+
+    if (total > 20000000) {
+      bankReceipts.setValidators([Validators.max(20000000)]);
+      bankReceipts.updateValueAndValidity();
+
+      cashReceipts.setValidators([Validators.max(20000000)]);
+      cashReceipts.updateValueAndValidity();
+    }
+
     if (incomeType === 'cash') {
       this.amountEight = (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
@@ -164,7 +186,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
       this.amountEight = Math.round(Number((this.amountEight / 100) * 8));
 
-      if(setValue){
+      if (setValue) {
         (
           (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
             .controls[index] as FormGroup
@@ -196,7 +218,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
       this.amountSix = Math.round(Number((this.amountSix / 100) * 6));
 
-      if(setValue){
+      if (setValue) {
         (
           (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
             .controls[index] as FormGroup
