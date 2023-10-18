@@ -1332,11 +1332,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 new:getTotalCapitalGain(this.newSummaryIncome?.taxSummary.cgIncomeN
                   .capitalGain)
               },
-              {
-                label: 'Income from Crypto',
-                old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
-                new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
-              },
+              // {
+              //   label: 'Income from Crypto',
+              //   old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
+              //   new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
+              // },
               {
                 label: 'Income from Other Sources',
                 old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
@@ -1475,11 +1475,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                 .capitalGain),
               new:getTotalCapitalGain(this.newSummaryIncome?.summaryIncome.cgIncomeN
                 .capitalGain)
-            }, {
-              label: 'Income from Crypto',
-              old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
-                new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
             },
+            //  {
+            //   label: 'Income from Crypto',
+            //   old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
+            //     new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
+            // },
             {
               label: 'Income from Other Sources',
               old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
@@ -2017,8 +2018,8 @@ function getTotalBusinessIncome(summaryBusinessIncome: any): number {
   return Math.max(
     Math.max(summaryBusinessIncome.totalSpeculativeIncome, 0)+
     Math.max(summaryBusinessIncome.totalPresumptiveIncome, 0)+
-    Math.max(summaryBusinessIncome.totalNonSpeculativeIncome, 0)+
-    Math.max(summaryBusinessIncome.totalIncomeFromFirm, 0)
+    Math.max(summaryBusinessIncome.totalNonSpeculativeIncome, 0)
+    // +Math.max(summaryBusinessIncome.totalIncomeFromFirm, 0)
     , 0)
 }
 

@@ -143,11 +143,12 @@ export class FileParserComponent implements OnInit {
     }
   }
 
-  cloudUpload() {
+  cloudUpload(brokerName) {
+    this.brokerName = brokerName;
     this.openDialog();
   }
 
-  upload() {
+  upload(brokerName) {
     //check if there is data of capital gains
     let data = this.ITR_JSON.capitalGain.filter(
       (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
@@ -158,6 +159,7 @@ export class FileParserComponent implements OnInit {
       );
     }
 
+    this.brokerName = brokerName;
     document.getElementById('input-file-id').click();
   }
 
@@ -186,7 +188,7 @@ export class FileParserComponent implements OnInit {
     let brokerIndex = (this.brokerData as []).findIndex(
       (item: any) => item.name === this.brokerName
     );
-
+    this.brokerData[brokerIndex].loading = true;
     const formData = new FormData();
     if (document) {
       formData.append('file', document);
@@ -200,7 +202,7 @@ export class FileParserComponent implements OnInit {
     // formData.append("formCode", this.ITR_JSON.itrType);
     // formData.append("ay", annualYear);
     // formData.append("filingTypeCd", this.ITR_JSON.isRevised === "N" ? "O" : "R");
-    // formData.append('brokerName', this.brokerName);
+    formData.append('brokerName', this.brokerName);
     formData.append('userId', this.ITR_JSON.userId.toString());
     let param = '/upload-excel';
     this.itrService.postMethod(param, formData).subscribe(
@@ -215,9 +217,9 @@ export class FileParserComponent implements OnInit {
               (broker) => broker.name === this.brokerName
             )[0];
             if (this.uploadDoc) {
-              this.filesUploaded.push(this.uploadDoc.name);
+              selectedBroker.filesUploaded.push(this.uploadDoc.name);
             } else {
-              this.filesUploaded.push(res.data.documentName);
+              selectedBroker.filesUploaded.push(res.data.documentName);
             }
 
             //fetch uploaded files data converted to ITR compatible
@@ -226,6 +228,7 @@ export class FileParserComponent implements OnInit {
               .getCgSummary(this.ITR_JSON.userId.toString(), annualYear)
               .subscribe(
                 (result: any) => {
+                  this.brokerData[brokerIndex].loading = false;
                   if (result.success) {
                     if (!this.ITR_JSON.capitalGain) {
                       this.ITR_JSON.capitalGain = [];
@@ -265,6 +268,7 @@ export class FileParserComponent implements OnInit {
                     );
                     this.newDataAvailable.emit(true);
                   } else {
+                    this.brokerData[brokerIndex].loading = false;
                     this.loading = false;
                     //   this.isValidateJson = false;
                     this.utilService.showSnackBar(
@@ -273,6 +277,7 @@ export class FileParserComponent implements OnInit {
                   }
                 },
                 (error) => {
+                  this.brokerData[brokerIndex].loading = false;
                   this.loading = false;
                   //   this.isValidateJson = false;
                   this.utilService.showSnackBar(
@@ -281,6 +286,7 @@ export class FileParserComponent implements OnInit {
                 }
               );
           } else {
+            this.brokerData[brokerIndex].loading = false;
             this.utilService.showSnackBar(
               res.message
             );

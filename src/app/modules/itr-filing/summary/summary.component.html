@@ -2036,6 +2036,43 @@
                               }}
                             </td>
                           </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.Qqb80
+                            "
+                          >
+                            <td>Royalty for Books/Author/Publishers (80QQB)</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.Qqb80
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.Rrb80
+                            "
+                          >
+                            <td>Royalty Against Patent (80RRB)</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.Rrb80
+                                )
+                              }}
+                            </td>
+                          </tr>
+
                           <tr
                             *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes

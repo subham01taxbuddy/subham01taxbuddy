@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scroll {
+  overflow-y: scroll;
+  padding: 13px;
+  height: 550px;
+  width: 100%;
+}
+
+.saveButton {
+  margin-left: 80%;
+  background-color: #ffffff;
+  color: #00aeca;
+  border: 2px solid #00aeca;
+  border-radius: 6px;
+  height: 40px;
+  width: auto;
+  margin-top: 8px;
+  margin-bottom: 18px;
+  font-weight: 600 !important;
+  padding: 0px 10px 0px 10px;
+  font-size: 14px;
+}

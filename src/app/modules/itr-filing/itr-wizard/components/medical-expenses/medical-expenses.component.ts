@@ -376,58 +376,54 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
 
   saveInvestmentDeductions() {
     let isParentOverSixty = this.Copy_ITR_JSON.systemFlags.hasParentOverSixty;
+    let parentExpenseLimit = isParentOverSixty ? 50000 : 25000;
 
-    if (isParentOverSixty) {
-      let totalExpenses =
-        this.utilsService.getInt(
-          this.investmentDeductionForm.controls['premium'].value
-        ) +
-        this.utilsService.getInt(
-          this.investmentDeductionForm.controls['preventiveCheckUp'].value
-        ) +
-        this.utilsService.getInt(
-          this.investmentDeductionForm.controls['medicalExpenditure'].value
-        );
-      if (totalExpenses > 50000) {
-        this.utilsService.showSnackBar(
-          'Medical expenses for parents cannot exceed 50000'
-        );
-        return;
-      }
+    let fieldArray = [this.investmentDeductionForm.controls['premium'],
+      this.investmentDeductionForm.controls['preventiveCheckUp'],
+      this.investmentDeductionForm.controls['medicalExpenditure']];
+    let totalParentExpenses = 0;
+    fieldArray.forEach(element =>{
+      totalParentExpenses += this.utilsService.getInt(element.value);
+    });
+    if (totalParentExpenses > parentExpenseLimit) {
+      this.utilsService.showSnackBar(
+        `Medical expenses for parents cannot exceed ${parentExpenseLimit}`
+      );
+      fieldArray.forEach(element => {
+        if (element.value > 0) {
+          element.setErrors({maxValueExceeded: true});
+        }
+      });
+      return false;
     } else {
-      let totalExpenses =
-        this.utilsService.getInt(
-          this.investmentDeductionForm.controls['premium'].value
-        ) +
-        this.utilsService.getInt(
-          this.investmentDeductionForm.controls['preventiveCheckUp'].value
-        ) +
-        this.utilsService.getInt(
-          this.investmentDeductionForm.controls['medicalExpenditure'].value
-        );
-      if (totalExpenses > 25000) {
-        this.utilsService.showSnackBar(
-          'Medical expenses for parents cannot exceed 25000'
-        );
-        return;
-      }
+      fieldArray.forEach(element => {
+        element.setErrors(null);
+      });
     }
     let maxExpenseLimit = this.userAge >= 60 ? 50000 : 25000;
-    let totalExpenses =
-      this.utilsService.getInt(
-        this.investmentDeductionForm.controls['selfPreventiveCheckUp'].value
-      ) +
-      this.utilsService.getInt(
-        this.investmentDeductionForm.controls['selfPremium'].value
-      ) +
-      this.utilsService.getInt(
-        this.investmentDeductionForm.controls['selfMedicalExpenditure'].value
-      );
+    let userFieldArray =[this.investmentDeductionForm.controls['selfPreventiveCheckUp'],
+      this.investmentDeductionForm.controls['selfPremium'],
+      this.investmentDeductionForm.controls['selfMedicalExpenditure']
+    ];
+    let totalExpenses = 0;
+    userFieldArray.forEach(element =>{
+      totalExpenses += this.utilsService.getInt(element.value);
+    });
+
     if (totalExpenses > maxExpenseLimit) {
       this.utilsService.showSnackBar(
-        'Medical expenses for self cannot exceed 25000'
+        `Medical expenses for self cannot exceed ${maxExpenseLimit}`
       );
-      return;
+      userFieldArray.forEach(element => {
+        if (element.value > 0) {
+          element.setErrors({maxValueExceeded: true});
+        }
+      });
+      return false;
+    }else {
+      userFieldArray.forEach(element => {
+        element.setErrors(null);
+      });
     }
 
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -564,8 +560,10 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         AppConstants.ITR_JSON,
         JSON.stringify(this.Copy_ITR_JSON)
       );
+      return true;
     } else {
       $('input.ng-invalid').first().focus();
+      return false;
     }
     this.loading = false;
   }

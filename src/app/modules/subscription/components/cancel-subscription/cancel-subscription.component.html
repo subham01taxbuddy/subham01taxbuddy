@@ -34,7 +34,7 @@
               </mat-form-field>
             </div>
             <div class="row spsTp bdrTp">
-              <div class="col-6">
+              <div class="col-6" *ngIf="false">
                 <app-generic-sorting [sortingParameter]="sortMenus"
                   (onChange)="sortByObject($event)"></app-generic-sorting>
               </div>

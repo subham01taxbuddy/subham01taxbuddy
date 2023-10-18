@@ -1,4 +1,4 @@
-import {FormArray, FormControl, Validators} from '@angular/forms';
+import { FormArray, FormControl, Validators } from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -31,13 +31,19 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       value: 'TAX_REFUND_INTEREST',
       label: 'Interest from Income tax refund',
     },
+    //Ashwini: commented 80qqb & 80rrb
+    // {
+    //   value: 'ROYALTY_US_80QQB',
+    //   label: 'Royalty for Books/Author/Publishers (80QQB)',
+    // },
+    // {
+    //   value: 'ROYALTY_US_80RRB',
+    //   label: 'Royalty Against Patent (80RRB)',
+    // },
     {
       value: 'ANY_OTHER',
       label: 'Any Other Income',
-    } /* {
-    "value": "FAMILY_PENSION",
-    "label": "Any Other Income",
-  } */,
+    },
   ];
 
   exemptIncomesDropdown = [
@@ -234,7 +240,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   }
 
   saveAll() {
-    if(this.exemptIncomeFormGroup.valid && this.otherIncomeFormGroup.valid) {
+    if (this.exemptIncomeFormGroup.valid && this.otherIncomeFormGroup.valid) {
       this.saveOtherIncome();
       this.saveExemptIncomes();
       this.saveAndNext.emit(false);
@@ -291,7 +297,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         item.incomeType !== 'FD_RD_INTEREST' &&
         item.incomeType !== 'TAX_REFUND_INTEREST' &&
         item.incomeType !== 'ANY_OTHER' &&
-        item.incomeType !== 'FAMILY_PENSION'
+        item.incomeType !== 'FAMILY_PENSION' &&
+        item.incomeType !== 'ROYALTY_US_80RRB' &&
+        item.incomeType !== 'ROYALTY_US_80QQB'
     );
     if (!this.Copy_ITR_JSON.incomes) {
       this.Copy_ITR_JSON.incomes = [];
@@ -335,7 +343,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         );
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
-        this.utilsService.showSnackBar('Other sources of Income updated successfully.');
+        this.utilsService.showSnackBar(
+          'Other sources of Income updated successfully.'
+        );
         // this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
       },
       (error) => {
@@ -375,7 +385,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         );
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
-        this.utilsService.showSnackBar('Other sources of Income updated successfully.');
+        this.utilsService.showSnackBar(
+          'Other sources of Income updated successfully.'
+        );
         // this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
       },
       (error) => {
@@ -393,6 +405,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           item.incomeType === 'SAVING_INTEREST' ||
           item.incomeType === 'FD_RD_INTEREST' ||
           item.incomeType === 'TAX_REFUND_INTEREST' ||
+          item.incomeType === 'ROYALTY_US_80RRB' ||
+          item.incomeType === 'ROYALTY_US_80QQB' ||
           item.incomeType === 'ANY_OTHER'
       );
       let otherIncomesFormArray = this.otherIncomeFormGroup.controls[

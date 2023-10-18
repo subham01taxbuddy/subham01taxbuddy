@@ -13,10 +13,7 @@ import {
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
-import {
-  MatDialog,
-
-} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import {
@@ -105,7 +102,7 @@ export class LabFormComponent implements OnInit {
     this.getImprovementYears();
   }
 
-  reset(control){
+  reset(control) {
     control.setValue(null);
   }
   get getImprovementsArrayForImmovable() {
@@ -775,6 +772,27 @@ export class LabFormComponent implements OnInit {
     if (!index) {
       index = 0;
     }
+
+    if (
+      formGroupName.controls['assetDetails'].controls[0].controls['sellValue']
+        .valid &&
+      formGroupName.controls['assetDetails'].controls[0].controls[
+        'stampDutyValue'
+      ].valid
+    )
+      this.calculateFVOC(
+        parseFloat(
+          formGroupName.controls['assetDetails'].controls[0].controls[
+            'stampDutyValue'
+          ].value
+        ),
+        parseFloat(
+          formGroupName.controls['assetDetails'].controls[0].controls[
+            'sellValue'
+          ].value
+        )
+      );
+
     if (
       formGroupName.controls['assetDetails'].controls[0].controls['sellDate']
         .valid /* && formGroupName.controls['sellValue'].valid */ /* formGroupName.controls['stampDutyValue'].valid
@@ -816,7 +834,6 @@ export class LabFormComponent implements OnInit {
           tempImprovements.push(improvement);
         } else {
           tempImprovements = tempImprovements.concat(improvements);
-
         }
       });
       this.cgArrayElement.improvement = tempImprovements;
@@ -962,7 +979,6 @@ export class LabFormComponent implements OnInit {
         }
         this.mergeImprovements();
         this.calculateCapitalGain(formGroupName, '', index);
-
       });
     }
   }
@@ -1135,14 +1151,13 @@ export class LabFormComponent implements OnInit {
 
         // Calculate the max date (6 months after the sellDate)
         let maxDate = new Date(sellDate);
-        if(deductionForm.controls['underSection'].value === '54F'){
+        if (deductionForm.controls['underSection'].value === '54F') {
           maxDate = new Date();
         } else {
           maxDate = maxDate < new Date() ? maxDate : new Date();
           maxDate.setDate(sellDate.getDate() + 1);
           maxDate.setMonth(maxDate.getMonth() + 6);
         }
-
 
         // Enable dates between the sellDate plus one day and 6 months after the sellDate,
         // and disable all other dates
@@ -1185,7 +1200,8 @@ export class LabFormComponent implements OnInit {
     const param = '/calculate/capital-gain/deduction';
     let request = {
       capitalGain:
-        this.cgArrayElement?.assetDetails[this.currentCgIndex]?.cgBeforeDeduction,
+        this.cgArrayElement?.assetDetails[this.currentCgIndex]
+          ?.cgBeforeDeduction,
       capitalGainDeductions: [
         {
           deductionSection: `SECTION_${deductionForm.controls['underSection'].value}`,
@@ -1253,7 +1269,9 @@ export class LabFormComponent implements OnInit {
           formValue.buyersDetails
         );
         const deductions = <FormArray>this.immovableForm.get('deductions');
-        this.cgArrayElement.deduction = this.isDeductions ? deductions.getRawValue() : [];
+        this.cgArrayElement.deduction = this.isDeductions
+          ? deductions.getRawValue()
+          : [];
 
         // Object.assign(this.cgArrayElement, formGroupName.getRawValue());
         this.cgArrayElement.assetType = this.assetType.value;
@@ -1306,6 +1324,8 @@ export class LabFormComponent implements OnInit {
         // this.utilsService.showSnackBar("Calculate gain failed please try again.");
       }
     } else {
+      this.saveBusy = false;
+      this.loading = false;
       this.utilsService.showErrorMsg('Please fill all mandatory details.');
       $('input.ng-invalid').first().focus();
     }
@@ -1439,8 +1459,12 @@ export class LabFormComponent implements OnInit {
         cost: assetDetails.controls['purchaseCost'].value,
         // "purchaseOrImprovementFinancialYear": "2002-2003",
         assetType: 'PLOT_OF_LAND',
-        buyDate: moment(assetDetails.controls['purchaseDate'].value).format('YYYY-MM-DD'),
-        sellDate: moment(assetDetails.controls['sellDate'].value).format('YYYY-MM-DD'),
+        buyDate: moment(assetDetails.controls['purchaseDate'].value).format(
+          'YYYY-MM-DD'
+        ),
+        sellDate: moment(assetDetails.controls['sellDate'].value).format(
+          'YYYY-MM-DD'
+        ),
         sellFinancialYear: sellFinancialYear,
       };
       const param = `/calculate/indexed-cost`;
@@ -1505,5 +1529,27 @@ export class LabFormComponent implements OnInit {
 
   fieldGlobalIndex(index) {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
+  }
+
+  calculateFVOC(sdv: number, saleConsideration: number) {
+    const threshold = saleConsideration * 1.1; // 110% of Sale Consideration
+
+    if (sdv > threshold) {
+      // SDV is greater than 110% of Sale Consideration, so take it as FVOC
+      const valueInConsideration = (
+        this.immovableForm.controls['assetDetails'] as FormGroup
+      ).controls[0].get('valueInConsideration');
+
+      console.log(valueInConsideration);
+      valueInConsideration.setValue(sdv);
+    } else {
+      // SDV is up to 110% of Sale Consideration, so take Sale Consideration as FVOC
+      const valueInConsideration = (
+        this.immovableForm.controls['assetDetails'] as FormGroup
+      ).controls[0].get('valueInConsideration');
+
+      console.log(valueInConsideration);
+      valueInConsideration.setValue(saleConsideration);
+    }
   }
 }

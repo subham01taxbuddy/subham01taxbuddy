@@ -1,0 +1,58 @@
+<div class="surround scroll" style="margin-top: 5px; padding: 5px; width: 100%">
+  <div
+    style="
+      padding: 10px;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      background-color: #c0c0c0;
+      z-index: 9999;
+    "
+    class="title"
+  >
+    Basic Salary
+  </div>
+
+  <div
+    *ngFor="let year of years; let i = index"
+    style="padding: 10px"
+    class="container"
+  >
+    <mat-label>{{ year }}</mat-label>
+    <mat-form-field
+      appearance="outline"
+      class="input-field-width"
+      style="width: 50% !important"
+    >
+      <input
+        type="number"
+        trim
+        matInput
+        placeholder=""
+        name="value[i]"
+        class="input-field"
+        [(ngModel)]="inputValues[i]"
+        (blur)="initializeInputValues()"
+      />
+    </mat-form-field>
+  </div>
+
+  <div class="flex justify-between align-items-center" style="width: 100%">
+    <!-- total -->
+    <div>
+      <div style="margin-left: 18%">Total</div>
+      <button class="saveButton" style="margin-left: 0">
+        <span class="font-semibold">{{ getTotal }}</span>
+      </button>
+    </div>
+
+    <!-- Save button  -->
+    <button
+      class="saveButton"
+      style="margin-left: 0; margin-top: 35px"
+      (click)="saveBreakup()"
+    >
+      <span class="font-semibold">&nbsp;Save</span>
+    </button>
+  </div>
+</div>

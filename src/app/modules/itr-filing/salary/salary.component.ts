@@ -1,7 +1,7 @@
 import { Employer } from './../../../modules/shared/interfaces/itr-input.interface';
 import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from './../../../services/utils.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,6 +12,11 @@ import { AllSalaryIncomeComponent } from '../itr-wizard/pages/all-salary-income/
 import { min } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { BifurcationComponent } from './bifurcation/bifurcation.component';
+import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { CalculatorsComponent } from './calculators/calculators.component';
+import { BreakUpComponent } from './break-up/break-up.component';
+
 declare let $: any;
 
 @Component({
@@ -20,6 +25,9 @@ declare let $: any;
   styleUrls: ['./salary.component.css'],
 })
 export class SalaryComponent extends WizardNavigation implements OnInit {
+  // @ViewChild('buttonContainer') buttonContainer: ElementRef;
+  // @ViewChild('buttonContainers') buttonContainers: ElementRef;
+
   loading: boolean = false;
   employerDetailsFormGroup: FormGroup;
   deductionsFormGroup: FormGroup;
@@ -171,7 +179,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     private itrMsService: ItrMsService,
     private location: Location,
     private AllSalaryIncomeComponent: AllSalaryIncomeComponent,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private overlay: Overlay,
+    private elementRef: ElementRef
   ) {
     super();
     console.log('nav data', this.router.getCurrentNavigation()?.extras?.state);
@@ -891,6 +901,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
                 AppConstants.ITR_JSON,
                 JSON.stringify(this.ITR_JSON)
               );
+              sessionStorage.removeItem('localEmployer');
 
               this.AllSalaryIncomeComponent.updatingTaxableIncome('save');
 
@@ -1234,5 +1245,36 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         }
       }
     });
+  }
+
+  // CALCULATORS
+  calculator(component, index) {
+    // console.log(this.buttonContainer);
+    // const positionStrategy = this.overlay
+    //   .position()
+    //   .flexibleConnectedTo(this.elementRef)
+    //   .withPositions([
+    //     {
+    //       originX: 'end', // Align with the right edge of the button
+    //       originY: 'center', // Vertically center align with the button
+    //       overlayX: 'end', // Align with the right edge of the overlay
+    //       overlayY: 'center', // Vertically center align the overlay
+    //       offsetX: -50, // Add a 10 pixel offset from the calculated position
+    //       offsetY: -200,
+    //     },
+    //   ]);
+    // const overlayRef = this.overlay.create({
+    //   positionStrategy,
+    //   hasBackdrop: true,
+    //   height: '200px',
+    //   width: '300px',
+    // });
+    // const userProfilePortal = new ComponentPortal(CalculatorsComponent);
+    // const componentRef = overlayRef.attach(userProfilePortal);
+    // (componentRef.instance as CalculatorsComponent).data = component;
+    // // Subscribe to backdrop click events to close the overlay
+    // overlayRef.backdropClick().subscribe(() => {
+    //   overlayRef.dispose(); // Close the overlay
+    // });
   }
 }
