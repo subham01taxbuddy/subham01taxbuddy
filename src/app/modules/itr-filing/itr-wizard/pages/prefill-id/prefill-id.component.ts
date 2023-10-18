@@ -895,6 +895,8 @@ export class PrefillIdComponent implements OnInit {
           Section80U: disabilities80U,
           Section80TTA: 0, // Did not find this in itrObject
           Section80TTB: 0, // Did not find this in itrObject
+          Section80RRB: 'ROYALTY_US_80RRB',
+          Section80QQB: 'ROYALTY_US_80QQB',
         };
 
         let expenseIndex = 0;
@@ -937,6 +939,25 @@ export class PrefillIdComponent implements OnInit {
                 expenseFor: 0,
                 expenseType: newName,
                 noOfMonths: 0,
+              });
+            }
+
+            // pushing rrb and qqb in other incomes if those deductions are present under deductions
+            if (newName === 'ROYALTY_US_80RRB') {
+              this.ITR_Obj.incomes.push({
+                incomeType: 'ROYALTY_US_80RRB',
+                details: null,
+                amount: investments[i][1],
+                expenses: null,
+              });
+            }
+
+            if (newName === 'ROYALTY_US_80QQB') {
+              this.ITR_Obj.incomes.push({
+                incomeType: 'ROYALTY_US_80QQB',
+                details: null,
+                amount: investments[i][1],
+                expenses: null,
               });
             }
 
