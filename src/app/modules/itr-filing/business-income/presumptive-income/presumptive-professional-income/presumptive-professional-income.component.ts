@@ -44,6 +44,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   amountFiftyMax: number = 0;
   submitted = false;
   @Output() presProfessionalSaved = new EventEmitter<boolean>();
+  percentage: any[] = [];
 
   constructor(
     public matDialog: MatDialog,
@@ -122,6 +123,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         income?.incomes[0]?.presumptiveIncome || 0,
         [Validators.required, Validators.min(this.amountFifty)],
       ],
+      minimumPresumptiveIncome: [
+        income?.incomes[0]?.minimumPresumptiveIncome || 0,
+      ],
     });
     form.controls['natureOfBusiness'].setValue(
       income?.natureOfBusiness || null
@@ -190,24 +194,44 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
     this.amountFifty = Math.round(Number((this.amountFifty / 100) * 50));
 
-    (
+    const minimumPresumptiveIncome = (
       (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
         .controls[index] as FormGroup
-    ).controls['presumptiveIncome'].setValue(this.amountFifty);
+    ).controls['minimumPresumptiveIncome'];
 
-    (
-      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
-        .controls[index] as FormGroup
-    ).controls['presumptiveIncome'].setValidators([
-      Validators.required,
-      Validators.min(this.amountFifty),
-      Validators.max(this.amountFiftyMax),
-    ]);
+    minimumPresumptiveIncome.setValue(this.amountFifty);
 
-    (
+    const presumptiveIncome = (
       (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
         .controls[index] as FormGroup
-    ).controls['presumptiveIncome'].updateValueAndValidity();
+    ).controls['presumptiveIncome'];
+
+    let PresumptiveIncome =
+      presumptiveIncome.value !== '' ? parseFloat(presumptiveIncome.value) : 0;
+
+    if (PresumptiveIncome && PresumptiveIncome !== 0) {
+      presumptiveIncome?.setValidators([
+        Validators.required,
+        Validators.min(this.amountFifty),
+        Validators.max(this.amountFiftyMax),
+      ]);
+      presumptiveIncome.updateValueAndValidity();
+    } else {
+      presumptiveIncome.clearValidators();
+      presumptiveIncome.updateValueAndValidity();
+    }
+
+    const profIncomeFormArray = this.profIncomeForm.get(
+      'profIncomeFormArray'
+    ) as FormArray;
+
+    for (let i = 0; i < profIncomeFormArray.length; i++) {
+      const receipts = (profIncomeFormArray.at(i) as FormGroup).get(
+        'receipts'
+      ).value;
+      const percentage = Math.ceil((PresumptiveIncome * 100) / receipts);
+      this.percentage.splice(i, 1, percentage);
+    }
   }
 
   ////// OLD CODE
