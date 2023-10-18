@@ -93,7 +93,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     });
 
     this.profIncomeFormArray.controls.forEach((formgroup, index) => {
-      this.calculatePresumptive(null, index);
+      this.calculatePresumptive(null, index, false);
     });
   }
 
@@ -172,7 +172,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     });
   }
 
-  calculatePresumptive(event, index) {
+  calculatePresumptive(event, index, setValue?) {
     this.amountFifty = 0;
     this.amountFiftyMax = 0;
 
@@ -190,10 +190,12 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
     this.amountFifty = Math.round(Number((this.amountFifty / 100) * 50));
 
-    (
-      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
-        .controls[index] as FormGroup
-    ).controls['presumptiveIncome'].setValue(this.amountFifty);
+    if(setValue) {
+      (
+        (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['presumptiveIncome'].setValue(this.amountFifty);
+    }
 
     (
       (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
