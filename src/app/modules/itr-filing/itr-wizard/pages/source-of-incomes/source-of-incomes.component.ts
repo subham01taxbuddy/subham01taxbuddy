@@ -115,17 +115,22 @@ export class SourceOfIncomesComponent implements OnInit {
     });
   }
 
-  hasForeignIncome(){
-    if(this.ITR_JSON.foreignIncome && this.ITR_JSON.foreignIncome != null){
+  hasForeignIncome() {
+    if (this.ITR_JSON.foreignIncome && this.ITR_JSON.foreignIncome != null) {
       let assets = this.ITR_JSON.foreignIncome.foreignAssets;
-      assets.capitalAssetsDetails?.length > 0 || assets.otherIncomeDetails?.length > 0 || assets.trustsDetails?.length ||
-        assets.cashValueInsurance?.length > 0 || assets.custodialAccounts?.length > 0 || assets.depositoryAccounts?.length >0 ||
-      assets.equityAndDebtInterest?.length > 0 || assets.financialInterestDetails?.length > 0 ||
-      assets.immovablePropertryDetails?.length > 0 || assets.signingAuthorityDetails?.length > 0
+      assets.capitalAssetsDetails?.length > 0 ||
+        assets.otherIncomeDetails?.length > 0 ||
+        assets.trustsDetails?.length ||
+        assets.cashValueInsurance?.length > 0 ||
+        assets.custodialAccounts?.length > 0 ||
+        assets.depositoryAccounts?.length > 0 ||
+        assets.equityAndDebtInterest?.length > 0 ||
+        assets.financialInterestDetails?.length > 0 ||
+        assets.immovablePropertryDetails?.length > 0 ||
+        assets.signingAuthorityDetails?.length > 0;
     } else {
       return false;
     }
-
   }
   arrayContains(array, schedule) {
     return array?.indexOf(this.schedules.getKey(schedule)) > -1;

@@ -10,6 +10,7 @@ import { OldInvoicesComponent } from './components/old-invoices/old-invoices.com
 import { PauseInvoiceReminderComponent } from "./components/pause-invoice-reminder/pause-invoice-reminder.component";
 import { CancelSubscriptionComponent } from './components/cancel-subscription/cancel-subscription.component';
 import { RefundRequestComponent } from './components/refund-request/refund-request.component';
+import { CreditNoteComponent } from './components/credit-note/credit-note.component';
 
 // const routes: Routes = [{ path: '', component: SubscriptionComponent }];
 
@@ -26,6 +27,7 @@ const routes: Routes = [
       { path: 'old-invoices', component: OldInvoicesComponent },
       { path: 'pause-reminders', component: PauseInvoiceReminderComponent },
       { path: 'refund-request', component: RefundRequestComponent },
+      { path: 'credit-note', component: CreditNoteComponent },
       { path: '', redirectTo: '/subscription/assigned-subscription', pathMatch: 'full' }
     ]
   }
