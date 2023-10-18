@@ -43,6 +43,7 @@ export class PrefillIdComponent implements OnInit {
   userItrId: any;
   itrSummaryJson: any;
   taxComputation: any;
+  Copy_ITR_JSON: ITR_JSON;
 
   constructor(
     private router: Router,
@@ -3812,6 +3813,59 @@ export class PrefillIdComponent implements OnInit {
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
             );
+          }
+
+          // SCHEDULE VDA
+          {
+            const vdaDetails =
+              ItrJSON[this.ITR_Type]?.ScheduleVDA?.ScheduleVDADtls;
+            console.log(vdaDetails, 'jsonVdaDetails');
+
+            if (vdaDetails) {
+              const vdaToPush = vdaDetails.map((vda, index) => {
+                return {
+                  algorithm: 'vdaCrypto',
+                  capitalGain: vda?.IncomeFromVDA,
+                  gainType: 'NA',
+                  headOfIncome: vda?.HeadUndIncTaxed,
+                  purchaseCost: parseFloat(vda.AcquisitionCost),
+                  purchaseDate: vda?.DateofAcquisition,
+                  purchaseValuePerUnit: parseFloat(vda.AcquisitionCost),
+                  sellDate: vda.DateofTransfer,
+                  sellOrBuyQuantity: 1,
+                  sellValue: parseFloat(vda.ConsidReceived.replace(/,/g, '')),
+                  sellValuePerUnit: parseFloat(
+                    vda.ConsidReceived.replace(/,/g, '')
+                  ),
+                  srn: index++,
+                };
+              });
+
+              console.log(vdaToPush, 'vdaToPush');
+              if (vdaToPush) {
+                const toSave = {
+                  assessmentYear: '2023-2024',
+                  assesseeType: 'INDIVIDUAL',
+                  residentialStatus: 'RESIDENT',
+                  assetType: 'VDA',
+                  assetDetails: vdaToPush,
+                  improvement: [],
+                  buyersDetails: [],
+                };
+
+                console.log(toSave, 'tosave');
+
+                // Pusing all the vda details in the capital gain array
+                if (toSave) {
+                  this.ITR_Obj?.capitalGain?.push(toSave);
+
+                  sessionStorage.setItem(
+                    'ITR_JSON',
+                    JSON.stringify(this.ITR_Obj)
+                  );
+                }
+              }
+            }
           }
 
           // SCHEDULE CG
