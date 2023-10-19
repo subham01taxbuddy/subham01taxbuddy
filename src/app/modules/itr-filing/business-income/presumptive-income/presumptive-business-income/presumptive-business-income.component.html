@@ -32,293 +32,223 @@
         [formGroupName]="fieldGlobalIndex(i)"
       >
         <div class="row specBk">
-          <div class="flex">
-            <!-- checkbox -->
-            <div class="col-sm-1">
-              <mat-checkbox
-                name="hasEdit[i]"
-                formControlName="hasEdit"
-                class="tpBtn1"
-              >
-              </mat-checkbox>
-            </div>
-            <!-- details -->
-            <div style="width: 100%">
-              <div class="detail">
-                <!-- dropdownSelection -->
-                <div class="col-sm-3">
-                  <app-business-input-autocomplete
-                    [businessType]="'44AD'"
-                    [selectedInput]="
-                      busIncomeFormArray.controls[i].get('natureOfBusiness')
-                        .value
-                    "
-                    (businessSelected)="businessClicked($event, i)"
-                  >
-                  </app-business-input-autocomplete>
+          <div class="col-sm-1">
+            <mat-checkbox
+              name="hasEdit[i]"
+              formControlName="hasEdit"
+              class="tpBtn1"
+            >
+            </mat-checkbox>
+          </div>
+          <div class="col-sm-3">
+            <app-business-input-autocomplete
+              [businessType]="'44AD'"
+              [selectedInput]="
+                busIncomeFormArray.controls[i].get('natureOfBusiness').value
+              "
+              (businessSelected)="businessClicked($event, i)"
+            >
+            </app-business-input-autocomplete>
 
-                  <mat-error
-                    *ngIf="
-                      (busIncomeFormArray.controls[i].get('natureOfBusiness')
-                        .touched ||
-                        submitted) &&
-                      busIncomeFormArray.controls[i]
-                        .get('natureOfBusiness')
-                        .hasError('required')
-                    "
-                    >Please select</mat-error
-                  >
-                </div>
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('natureOfBusiness')
+                  .touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('natureOfBusiness')
+                  .hasError('required')
+              "
+              >Please select</mat-error
+            >
+          </div>
 
-                <!-- tradeName -->
-                <div class="col-sm-3">
-                  <mat-label>Trade Name</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      formControlName="tradeName"
-                      matInput
-                      name="tradeName[i]"
-                      class="input-field"
-                      required
-                    />
-                  </mat-form-field>
-                  <mat-error
-                    *ngIf="
-                      (busIncomeFormArray.controls[i].get('tradeName')
-                        .touched ||
-                        submitted) &&
-                      busIncomeFormArray.controls[i]
-                        .get('tradeName')
-                        .hasError('required')
-                    "
-                    >Please enter the trade name</mat-error
-                  >
-                </div>
-
-                <!-- businessDescription -->
-                <div class="col-sm-3">
-                  <mat-label>Business Description</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      class="input-field"
-                      formControlName="description"
-                      name="description[i]"
-                    />
-                  </mat-form-field>
-                </div>
-              </div>
-
-              <div class="detail">
-                <!-- bankReceipts -->
-                <div class="col-sm-3">
-                  <mat-label>Bank Receipts</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      formControlName="bankReceipts"
-                      matInput
-                      name="bankReceipts[i]"
-                      class="input-field"
-                      required
-                      digitsOnly
-                      (change)="calculatePresumptive(i, 'bank', true)"
-                    />
-                  </mat-form-field>
-                  <mat-error
-                    *ngIf="
-                      (busIncomeFormArray.controls[i].get('bankReceipts')
-                        .touched ||
-                        submitted) &&
-                      busIncomeFormArray.controls[i]
-                        .get('bankReceipts')
-                        .hasError('required')
-                    "
-                    >Please enter the amount</mat-error
-                  >
-                  <mat-error
-                    *ngIf="
-                      (busIncomeFormArray.controls[i].get('bankReceipts')
-                        .touched ||
-                        submitted) &&
-                      busIncomeFormArray.controls[i]
-                        .get('bankReceipts')
-                        .hasError('max')
-                    "
-                    >Turnover cannot be more than 2 crore</mat-error
-                  >
-                </div>
-
-                <!-- minimun presumptive Income 6% -->
-                <div class="col-sm-3">
-                  <mat-label>Minimum Presumptive Income 6%</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      formControlName="bankMinIncome"
-                      matInput
-                      name="bankMinIncome[i]"
-                      class="input-field"
-                      required
-                      digitsOnly
-                      readonly
-                    />
-                  </mat-form-field>
-                  <mat-error
-                    *ngIf="
-                      (busIncomeFormArray.controls[i].get('bankMinIncome')
-                        .touched ||
-                        submitted) &&
-                      busIncomeFormArray.controls[i]
-                        .get('bankMinIncome')
-                        .hasError('required')
-                    "
-                    >Please enter the amount</mat-error
-                  >
-                </div>
-
-                <!-- presumptive Income 6% -->
-                <div class="col-sm-3">
-                  <mat-label>Presumptive Income</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      formControlName="bankPreIncome"
-                      matInput
-                      name="bankPreIncome[i]"
-                      class="input-field"
-                      required
-                      digitsOnly
-                      (change)="calculatePresumptive(i, 'bank', true)"
-                    />
-                  </mat-form-field>
-                  <mat-error
-                    *ngIf="
-                      (busIncomeFormArray.controls[i].get('bankPreIncome')
-                        .touched ||
-                        submitted) &&
-                      busIncomeFormArray.controls[i]
-                        .get('bankPreIncome')
-                        .hasError('min')
-                    "
-                    >Amount should be greater than {{ amountSix }}
-                  </mat-error>
-                  <mat-error
-                    *ngIf="
-                      (busIncomeFormArray.controls[i].get('bankPreIncome')
-                        .touched ||
-                        submitted) &&
-                      busIncomeFormArray.controls[i]
-                        .get('bankPreIncome')
-                        .hasError('max')
-                    "
-                    >Amount cannot be greater than {{ maxSixAmt }}
-                  </mat-error>
-                </div>
-              </div>
-
-              <div class="detail">
-                <!-- cashReceipts -->
-                <div class="col-sm-3">
-                  <mat-label>Cash Receipts</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      formControlName="cashReceipts"
-                      matInput
-                      name="cashReceipts[i]"
-                      class="input-field"
-                      required
-                      digitsOnly
-                      (change)="calculatePresumptive(i, 'cash', true)"
-                    />
-                  </mat-form-field>
-                  <mat-error
-                    *ngIf="
-                      (busIncomeFormArray.controls[i].get('cashReceipts')
-                        .touched ||
-                        submitted) &&
-                      busIncomeFormArray.controls[i]
-                        .get('cashReceipts')
-                        .hasError('required')
-                    "
-                    >Please enter the amount</mat-error
-                  >
-                  <mat-error
-                    *ngIf="
-                      (busIncomeFormArray.controls[i].get('cashReceipts')
-                        .touched ||
-                        submitted) &&
-                      busIncomeFormArray.controls[i]
-                        .get('cashReceipts')
-                        .hasError('max')
-                    "
-                    >Turnover cannot be more than 2 crore</mat-error
-                  >
-                </div>
-
-                <!-- minimumPresumptiveIncome 8% -->
-                <div class="col-sm-3">
-                  <mat-label>Minimum Presumptive Income @8%</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      formControlName="cashMinIncome"
-                      matInput
-                      name="cashMinIncome[i]"
-                      class="input-field"
-                      required
-                      digitsOnly
-                      readonly
-                    />
-                  </mat-form-field>
-                  <mat-error
-                    *ngIf="
-                      (busIncomeFormArray.controls[i].get('cashMinIncome')
-                        .touched ||
-                        submitted) &&
-                      busIncomeFormArray.controls[i]
-                        .get('cashMinIncome')
-                        .hasError('required')
-                    "
-                    >Please enter the amount</mat-error
-                  >
-                </div>
-
-                <!-- presumptiveIncome 8% -->
-                <div class="col-sm-3">
-                  <mat-label>Presumptive Income</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      formControlName="cashPreIncome"
-                      matInput
-                      name="cashPreIncome[i]"
-                      class="input-field"
-                      required
-                      digitsOnly
-                      (change)="calculatePresumptive(i, 'cash', true)"
-                    />
-                  </mat-form-field>
-                  <mat-error
-                    *ngIf="
-                      (busIncomeFormArray.controls[i].get('cashPreIncome')
-                        .touched ||
-                        submitted) &&
-                      busIncomeFormArray.controls[i]
-                        .get('cashPreIncome')
-                        .hasError('min')
-                    "
-                    >Amount should be greater than {{ amountEight }}
-                  </mat-error>
-                  <mat-error
-                    *ngIf="
-                      (busIncomeFormArray.controls[i].get('cashPreIncome')
-                        .touched ||
-                        submitted) &&
-                      busIncomeFormArray.controls[i]
-                        .get('cashPreIncome')
-                        .hasError('max')
-                    "
-                    >Amount cannot be greater than {{ maxEightAmt }}
-                  </mat-error>
-                </div>
-              </div>
-            </div>
+          <div class="col-sm-3">
+            <mat-label>Trade Name</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                formControlName="tradeName"
+                matInput
+                name="tradeName[i]"
+                class="input-field"
+                required
+              />
+            </mat-form-field>
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('tradeName').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('tradeName')
+                  .hasError('required')
+              "
+              >Please enter the trade name</mat-error
+            >
+          </div>
+          <div class="col-sm-3">
+            <mat-label>Business Description</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                class="input-field"
+                formControlName="description"
+                name="description[i]"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-sm-3">
+            <mat-label>Bank Receipts</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                formControlName="bankReceipts"
+                matInput
+                name="bankReceipts[i]"
+                class="input-field"
+                required
+                digitsOnly
+                (change)="calculatePresumptive(i, 'bank', true)"
+              />
+            </mat-form-field>
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('bankReceipts').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('bankReceipts')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            >
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('bankReceipts').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('bankReceipts')
+                  .hasError('max')
+              "
+              >Turnover cannot be more than 2 crore</mat-error
+            >
+          </div>
+          <div class="col-sm-3">
+            <mat-label>Presumptive Income @6%</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                formControlName="bankPreIncome"
+                matInput
+                name="bankPreIncome[i]"
+                class="input-field"
+                required
+                digitsOnly
+              />
+            </mat-form-field>
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('bankPreIncome').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('bankPreIncome')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            >
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('bankPreIncome').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('bankPreIncome')
+                  .hasError('min')
+              "
+              >Amount should be greater than {{ amountSix }}
+            </mat-error>
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('bankPreIncome').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('bankPreIncome')
+                  .hasError('max')
+              "
+              >Amount cannot be greater than {{ maxSixAmt }}
+            </mat-error>
+          </div>
+          <div class="col-sm-3">
+            <mat-label>Cash Receipts</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                formControlName="cashReceipts"
+                matInput
+                name="cashReceipts[i]"
+                class="input-field"
+                required
+                digitsOnly
+                (change)="calculatePresumptive(i, 'cash', true)"
+              />
+            </mat-form-field>
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('cashReceipts').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('cashReceipts')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            >
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('cashReceipts').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('cashReceipts')
+                  .hasError('max')
+              "
+              >Turnover cannot be more than 2 crore</mat-error
+            >
+          </div>
+          <div class="col-sm-3">
+            <mat-label>Presumptive Income @8%</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                formControlName="cashPreIncome"
+                matInput
+                name="cashPreIncome[i]"
+                class="input-field"
+                required
+                digitsOnly
+              />
+            </mat-form-field>
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('cashPreIncome').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('cashPreIncome')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            >
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('cashPreIncome').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('cashPreIncome')
+                  .hasError('min')
+              "
+              >Amount should be greater than {{ amountEight }}
+            </mat-error>
+            <mat-error
+              *ngIf="
+                (busIncomeFormArray.controls[i].get('cashPreIncome').touched ||
+                  submitted) &&
+                busIncomeFormArray.controls[i]
+                  .get('cashPreIncome')
+                  .hasError('max')
+              "
+              >Amount cannot be greater than {{ maxEightAmt }}
+            </mat-error>
           </div>
         </div>
       </div>

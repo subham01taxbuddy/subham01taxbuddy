@@ -100,17 +100,9 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       tradeName: [income?.tradeName || null, [Validators.required]],
       description: [income?.description || null],
       bankReceipts: [bank ? bank.receipts : 0, [Validators.required]],
-      bankMinIncome: [
-        bank ? bank.minimumPresumptiveIncome : 0,
-        [Validators.required],
-      ],
-      bankPreIncome: [bank ? bank.presumptiveIncome : 0],
+      bankPreIncome: [bank ? bank.presumptiveIncome : 0, [Validators.required]],
       cashReceipts: [cash ? cash.receipts : 0, [Validators.required]],
-      cashMinIncome: [
-        cash ? cash.minimumPresumptiveIncome : 0,
-        [Validators.required],
-      ],
-      cashPreIncome: [cash ? cash.presumptiveIncome : 0],
+      cashPreIncome: [cash ? cash.presumptiveIncome : 0, [Validators.required]],
     });
     form.controls['natureOfBusiness'].setValue(
       income?.natureOfBusiness || null
@@ -185,65 +177,69 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     }
 
     if (incomeType === 'cash') {
-      this.amountEight = cashReceipts?.value;
-      this.maxEightAmt = cashReceipts?.value;
+      this.amountEight = (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['cashReceipts'].value;
+
+      this.maxEightAmt = (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['cashReceipts'].value;
+
       this.amountEight = Math.round(Number((this.amountEight / 100) * 8));
 
       if (setValue) {
         (
           (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
             .controls[index] as FormGroup
-        ).controls['cashMinIncome'].setValue(this.amountEight);
+        ).controls['cashPreIncome'].setValue(this.amountEight);
       }
 
-      const cashPreIncome = (
+      (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
           .controls[index] as FormGroup
-      ).controls['cashPreIncome'];
+      ).controls['cashPreIncome'].setValidators([
+        Validators.min(this.amountEight),
+        Validators.max(this.maxEightAmt),
+      ]);
 
-      let CashPreIncome =
-        cashPreIncome.value !== '' ? parseFloat(cashPreIncome.value) : 0;
-
-      if (CashPreIncome && CashPreIncome !== 0) {
-        cashPreIncome?.setValidators([
-          Validators.min(this.amountEight),
-          Validators.max(this.maxEightAmt),
-        ]);
-        cashPreIncome?.updateValueAndValidity();
-      } else {
-        cashPreIncome?.clearValidators();
-        cashPreIncome?.updateValueAndValidity();
-      }
+      (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['cashPreIncome'].updateValueAndValidity();
     } else {
-      this.amountSix = bankReceipts?.value;
-      this.maxSixAmt = bankReceipts?.value;
+      this.amountSix = (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['bankReceipts'].value;
+
+      this.maxSixAmt = (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['bankReceipts'].value;
+
       this.amountSix = Math.round(Number((this.amountSix / 100) * 6));
 
       if (setValue) {
         (
           (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
             .controls[index] as FormGroup
-        ).controls['bankMinIncome'].setValue(this.amountSix);
+        ).controls['bankPreIncome'].setValue(this.amountSix);
       }
 
-      const bankPreIncome = (
+      (
         (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
           .controls[index] as FormGroup
-      ).controls['bankPreIncome'];
+      ).controls['bankPreIncome'].setValidators([
+        Validators.min(this.amountSix),
+        Validators.max(this.maxSixAmt),
+      ]);
 
-      let BankPreIncome =
-        bankPreIncome.value !== '' ? parseFloat(bankPreIncome.value) : 0;
-
-      if (BankPreIncome && BankPreIncome !== 0) {
-        bankPreIncome?.setValidators([
-          Validators.min(this.amountSix),
-          Validators.max(this.maxSixAmt),
-        ]);
-        bankPreIncome?.updateValueAndValidity();
-      } else {
-        bankPreIncome?.clearValidators();
-        bankPreIncome?.updateValueAndValidity();
-      }
+      (
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray)
+          .controls[index] as FormGroup
+      ).controls['bankPreIncome'].updateValueAndValidity();
     }
   }
 
@@ -359,7 +355,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
               receipts: element.bankReceipts,
               presumptiveIncome: element.bankPreIncome,
               periodOfHolding: null,
-              minimumPresumptiveIncome: element.bankMinIncome,
+              minimumPresumptiveIncome: null,
               registrationNo: null,
               ownership: null,
               tonnageCapacity: null,
@@ -371,7 +367,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
               receipts: element.cashReceipts,
               presumptiveIncome: element.cashPreIncome,
               periodOfHolding: null,
-              minimumPresumptiveIncome: element.cashMinIncome,
+              minimumPresumptiveIncome: null,
               registrationNo: null,
               ownership: null,
               tonnageCapacity: null,
@@ -397,7 +393,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
                 receipts: element.bankReceipts,
                 presumptiveIncome: element.bankPreIncome,
                 periodOfHolding: null,
-                minimumPresumptiveIncome: element.bankMinIncome,
+                minimumPresumptiveIncome: null,
                 registrationNo: null,
                 ownership: null,
                 tonnageCapacity: null,
@@ -408,7 +404,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
                 receipts: element.cashReceipts,
                 presumptiveIncome: element.cashPreIncome,
                 periodOfHolding: null,
-                minimumPresumptiveIncome: element.cashMinIncome,
+                minimumPresumptiveIncome: null,
                 registrationNo: null,
                 ownership: null,
                 tonnageCapacity: null,
