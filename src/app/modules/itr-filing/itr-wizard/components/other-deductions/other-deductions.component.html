@@ -1,9 +1,6 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading"></ngx-loading>
 
-<div class="card">
+<div class="card" *ngIf="!loading">
   <form [formGroup]="otherDeductionForm">
     <ng-container>
       <div class="titMed">More Deductions</div>
