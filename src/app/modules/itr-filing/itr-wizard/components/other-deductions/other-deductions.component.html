@@ -1,0 +1,110 @@
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+
+<div class="card">
+  <form [formGroup]="otherDeductionForm">
+    <ng-container>
+      <div class="titMed">More Deductions</div>
+    </ng-container>
+
+    <div class="row grup">
+      <!-- 80EE -->
+      <div class="col-lg-4">
+        <mat-label>Under sec. 80EE</mat-label>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            placeholder="Under sec. 80EE"
+            maxlength="8"
+            formControlName="us80ee"
+            autocomplete="off"
+            digitsOnly
+            readonly
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- 80EEA -->
+      <div class="col-lg-4">
+        <mat-label>Under sec. 80EEA</mat-label>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            placeholder="Under sec. 80EEA"
+            maxlength="8"
+            formControlName="us80eea"
+            autocomplete="off"
+            digitsOnly
+            readonly
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- 80TTA -->
+      <div class="col-lg-4">
+        <mat-label>Under sec. 80TTA</mat-label>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            placeholder="Under sec. 80TTA"
+            maxlength="8"
+            formControlName="us80tta"
+            autocomplete="off"
+            digitsOnly
+            readonly
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- 80TTB -->
+      <div class="col-lg-4">
+        <mat-label>Under sec. 80TTB</mat-label>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            placeholder="Under sec. 80TTB"
+            maxlength="8"
+            formControlName="us80ttb"
+            autocomplete="off"
+            digitsOnly
+            readonly
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- 80QQB -->
+      <div class="col-lg-4">
+        <mat-label>Under sec. 80QQB</mat-label>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            placeholder="Under sec. 80QQB"
+            maxlength="8"
+            formControlName="us80qqb"
+            autocomplete="off"
+            digitsOnly
+            readonly
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- 80RRB -->
+      <div class="col-lg-4">
+        <mat-label>Under sec. 80RRB</mat-label>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            placeholder="Under sec. 80RRB"
+            maxlength="8"
+            formControlName="us80rrb"
+            autocomplete="off"
+            digitsOnly
+            readonly
+          />
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
