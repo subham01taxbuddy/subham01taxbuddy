@@ -139,37 +139,37 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       label: 'Any Other Allowance',
       detailed: false,
     },
-    {
-      id: null,
-      seqNum: 12,
-      value: 'SECOND_PROVISO_CGOV',
-      label:
-        'Second Proviso CGOV - compensation under a scheme approved by the central Govt - 10(10B)',
-      detailed: false,
-    },
-    {
-      id: null,
-      seqNum: 13,
-      value: 'SECOND_PROVISO',
-      label: 'Second proviso - Compensation limit notified by CG',
-      detailed: false,
-    },
-    {
-      id: null,
-      seqNum: 14,
-      value: 'FIRST_PROVISO',
-      label:
-        'First Proviso - Compensation limit notified by CG in the official gazette, First Provisio 10(10Bi)',
-      detailed: false,
-    },
-    {
-      id: null,
-      seqNum: 15,
-      value: 'EIC',
-      label:
-        'Exempt income received by judge covered the payment of salaries to supreme court/high court judges Act/Rule ',
-      detailed: false,
-    },
+    // {
+    //   id: null,
+    //   seqNum: 12,
+    //   value: 'SECOND_PROVISO_CGOV',
+    //   label:
+    //     'Second Proviso CGOV - compensation under a scheme approved by the central Govt - 10(10B)',
+    //   detailed: false,
+    // },
+    // {
+    //   id: null,
+    //   seqNum: 13,
+    //   value: 'SECOND_PROVISO',
+    //   label: 'Second proviso - Compensation limit notified by CG',
+    //   detailed: false,
+    // },
+    // {
+    //   id: null,
+    //   seqNum: 14,
+    //   value: 'FIRST_PROVISO',
+    //   label:
+    //     'First Proviso - Compensation limit notified by CG in the official gazette, First Provisio 10(10Bi)',
+    //   detailed: false,
+    // },
+    // {
+    //   id: null,
+    //   seqNum: 15,
+    //   value: 'EIC',
+    //   label:
+    //     'Exempt income received by judge covered the payment of salaries to supreme court/high court judges Act/Rule ',
+    //   detailed: false,
+    // },
   ];
   stateDropdown = AppConstants.stateDropdown;
   constructor(
