@@ -58,6 +58,8 @@
                 <mat-form-field appearance="outline">
                   <mat-label>Date of acquisition</mat-label>
                   <input
+                    [min]="minDate"
+                    [max]="maxDate"
                     matInput
                     placeholder="DD/MM/YYYY"
                     name="dateOfAcquisition[i]"
@@ -79,6 +81,8 @@
                 <mat-form-field appearance="outline">
                   <mat-label>Date of Transfer</mat-label>
                   <input
+                    [min]="minDate"
+                    [max]="maxDate"
                     matInput
                     placeholder="DD/MM/YYYY"
                     name="dateOfTransfer[i]"
