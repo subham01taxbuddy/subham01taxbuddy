@@ -31,6 +31,8 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   maxEightAmt: number = 0;
   config: any;
   @Output() presBusinessSaved = new EventEmitter<boolean>();
+  cashPercentage: any[] = [];
+  bankPercentage: any[] = [];
 
   constructor(
     public matDialog: MatDialog,
@@ -47,7 +49,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       id: 'businessConfig',
       itemsPerPage: 2,
       currentPage: 1,
-      totalItems: 0
+      totalItems: 0,
     };
 
     let presBusiness = this.ITR_JSON.business?.presumptiveIncomes?.filter(
@@ -245,6 +247,38 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         bankPreIncome?.updateValueAndValidity();
       }
     }
+
+    const cashIncomeFormArray = this.busIncomeForm.controls[
+      'busIncomeFormArray'
+    ] as FormArray;
+
+    this.cashPercentage = [];
+    this.bankPercentage = [];
+
+    for (let i = 0; i < cashIncomeFormArray.length; i++) {
+      // cash Percentage
+      const cashReceipts = parseFloat(
+        (cashIncomeFormArray.at(i) as FormGroup).get('cashReceipts').value
+      );
+      const cashPreIncome = parseFloat(
+        (cashIncomeFormArray.at(i) as FormGroup).get('cashPreIncome').value
+      );
+
+      const cashPercentage = Math.ceil((cashPreIncome * 100) / cashReceipts);
+      this.cashPercentage.push(cashPercentage);
+
+      // bank percentage
+      const bankReceipts = parseFloat(
+        (cashIncomeFormArray.at(i) as FormGroup).get('bankReceipts').value
+      );
+      const bankPreIncome = parseFloat(
+        (cashIncomeFormArray.at(i) as FormGroup).get('bankPreIncome').value
+      );
+
+      const bankPercentage = Math.ceil((bankPreIncome * 100) / bankReceipts);
+      this.bankPercentage.push(bankPercentage);
+    }
+    console.log(this.cashPercentage);
   }
 
   getByBank(item, incomeType, incomeSubType) {

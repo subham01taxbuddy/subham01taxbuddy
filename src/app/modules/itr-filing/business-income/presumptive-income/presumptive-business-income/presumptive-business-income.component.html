@@ -282,7 +282,11 @@
 
                 <!-- presumptiveIncome 8% -->
                 <div class="col-sm-3">
-                  <mat-label>Presumptive Income</mat-label>
+                  <mat-label
+                    >Presumptive Income ({{
+                      cashPercentage[i] ? cashPercentage[i] : 0
+                    }}%)</mat-label
+                  >
                   <mat-form-field appearance="outline">
                     <input
                       formControlName="cashPreIncome"
