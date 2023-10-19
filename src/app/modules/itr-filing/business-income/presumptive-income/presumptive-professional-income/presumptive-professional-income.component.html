@@ -44,7 +44,9 @@
             <app-business-input-autocomplete
               [businessType]="'44ADA'"
               [selectedInput]="
-                profIncomeFormArray.controls[fieldGlobalIndex(i)].get('natureOfBusiness').value
+                profIncomeFormArray.controls[fieldGlobalIndex(i)].get(
+                  'natureOfBusiness'
+                ).value
               "
               (businessSelected)="businessClicked($event, i)"
             >
@@ -146,8 +148,7 @@
 
           <div class="col-sm-2">
             <mat-label
-              >Income
-              <!-- ({{ percentage[i] ? percentage[i] : 0 }}%) -->
+              >Income ({{ percentage[i] ? percentage[i] : 0 }}%)
             </mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -205,7 +206,8 @@
           *ngFor="let item of getProfIncomeArray.controls | paginate : config"
         ></tr>
       </table>
-      <pagination-controls id="professionConfig"
+      <pagination-controls
+        id="professionConfig"
         (pageChange)="pageChanged($event)"
       ></pagination-controls>
     </div>

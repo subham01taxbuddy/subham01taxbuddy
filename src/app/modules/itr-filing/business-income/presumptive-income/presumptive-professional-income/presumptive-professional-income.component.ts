@@ -228,13 +228,19 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       'profIncomeFormArray'
     ) as FormArray;
 
+    this.percentage = [];
     for (let i = 0; i < profIncomeFormArray.length; i++) {
       const receipts = (profIncomeFormArray.at(i) as FormGroup).get(
         'receipts'
       ).value;
-      const percentage = Math.ceil((PresumptiveIncome * 100) / receipts);
-      this.percentage.splice(i, 1, percentage);
+      const presIncome = (profIncomeFormArray.at(i) as FormGroup).get(
+        'presumptiveIncome'
+      ).value;
+
+      const percentage = Math.ceil((presIncome * 100) / parseFloat(receipts));
+      this.percentage.push(percentage);
     }
+    console.log(this.percentage);
   }
 
   ////// OLD CODE
