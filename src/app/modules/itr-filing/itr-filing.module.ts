@@ -103,6 +103,7 @@ import { PartnerInFirmsComponent } from './itr-wizard/pages/partner-in-firms/par
 import { BifurcationComponent } from './salary/bifurcation/bifurcation.component';
 import { CalculatorsComponent } from './salary/calculators/calculators.component';
 import { BreakUpComponent } from './salary/break-up/break-up.component';
+import { OtherDeductionsComponent } from './itr-wizard/components/other-deductions/other-deductions.component';
 
 @NgModule({
   imports: [
@@ -225,6 +226,7 @@ import { BreakUpComponent } from './salary/break-up/break-up.component';
     BifurcationComponent,
     CalculatorsComponent,
     BreakUpComponent,
+    OtherDeductionsComponent,
   ],
 
   exports: [CustomerProfileComponent],

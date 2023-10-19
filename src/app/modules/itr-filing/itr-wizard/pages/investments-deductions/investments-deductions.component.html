@@ -108,7 +108,8 @@
         <div style="padding-top: 20px">
           <div class="row grup">
             <div class="col-lg-12">Other Deductions:</div>
-            <div class="col-lg-8">
+            <!-- 80ggc -->
+            <div class="col-lg-6">
               <mat-label>Under sec. 80GGC</mat-label>
               <mat-form-field appearance="outline">
                 <input
@@ -125,7 +126,9 @@
                 >Non-cash donations are accepted</mat-label
               >
             </div>
-            <div class="col-lg-4">
+
+            <!-- 80eeb -->
+            <div class="col-lg-6">
               <mat-label>Under sec. 80EEB</mat-label>
               <mat-form-field appearance="outline">
                 <input
@@ -136,16 +139,24 @@
                   autocomplete="off"
                   digitsOnly
                 />
-                <mat-error
-                  *ngIf="
-                    investmentDeductionForm.controls['us80eeb'].hasError('max')
-                  "
-                >
-                  Max limit is 1,50,000</mat-error
-                >
               </mat-form-field>
             </div>
           </div>
+
+          <!-- More Deductions -->
+          <mat-expansion-panel
+            [expanded]="step === 0"
+            (opened)="setStep(0)"
+            hideToggle
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon> arrow_forward_ios </mat-icon>
+                More Deductions
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-other-deductions> </app-other-deductions>
+          </mat-expansion-panel>
         </div>
       </div>
       <div class="space-in" *ngIf="false"></div>
@@ -161,8 +172,8 @@
   <div class="card__row mb-2">
     <mat-accordion class="headers-align">
       <mat-expansion-panel
-        [expanded]="step === 0"
-        (opened)="setStep(0)"
+        [expanded]="step === 1"
+        (opened)="setStep(1)"
         hideToggle
       >
         <mat-expansion-panel-header>
@@ -181,8 +192,8 @@
   <div class="card__row mb-2">
     <mat-accordion class="headers-align">
       <mat-expansion-panel
-        [expanded]="step === 1"
-        (opened)="setStep(1)"
+        [expanded]="step === 2"
+        (opened)="setStep(2)"
         hideToggle
       >
         <mat-expansion-panel-header>
@@ -206,15 +217,14 @@
           [isAddDonation]="isAddDonation"
         ></app-donations>
       </mat-expansion-panel>
-
     </mat-accordion>
   </div>
 
   <div class="card__row mb-2">
     <mat-accordion class="headers-align">
       <mat-expansion-panel
-        [expanded]="step === 2"
-        (opened)="setStep(2)"
+        [expanded]="step === 3"
+        (opened)="setStep(3)"
         hideToggle
       >
         <mat-expansion-panel-header>
