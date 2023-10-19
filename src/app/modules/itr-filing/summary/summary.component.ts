@@ -4042,7 +4042,7 @@ export class SummaryComponent implements OnInit {
                         ? this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                             ?.filter((item) => item.assetType !== 'VDA')
                             .map((item) =>
-                              Math.max(item.incomeBeforeInternalSetOff, 0)
+                              Math.max(item.incomeAfterInternalSetOff, 0)
                             )
                             .reduce((total, value) => total + value, 0)
                         : null,
@@ -5440,15 +5440,15 @@ export class SummaryComponent implements OnInit {
                           item?.taxRate === 10 || item?.taxRate === 20
                       )
                       .reduce((total, element) => {
-                        const incomeBeforeInternalSetOff =
-                          element.incomeBeforeInternalSetOff;
+                        const incomeAfterInternalSetOff =
+                          element.incomeAfterInternalSetOff;
                         console.log(element, 'element');
                         console.log(
-                          incomeBeforeInternalSetOff,
-                          'incomeBeforeInternalSetOff'
+                          incomeAfterInternalSetOff,
+                          'incomeAfterInternalSetOff'
                         );
 
-                        return total + incomeBeforeInternalSetOff;
+                        return total + incomeAfterInternalSetOff;
                       }, 0),
                   totalCapitalGain:
                     this.finalSummary?.assessment?.summaryIncome?.cgIncomeN
@@ -5458,7 +5458,7 @@ export class SummaryComponent implements OnInit {
                       ? this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                           ?.filter((item) => item.assetType !== 'VDA')
                           .map((cg) =>
-                            Math.max(cg.incomeBeforeInternalSetOff, 0)
+                            Math.max(cg.incomeAfterInternalSetOff, 0)
                           )
                           .reduce((total, value) => total + value, 0)
                       : null,
