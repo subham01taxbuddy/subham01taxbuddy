@@ -3909,7 +3909,8 @@ export class SummaryComponent implements OnInit {
                               element?.assetType === 'GOLD'
                                 ? 'Other Assets'
                                 : element.assetType,
-                            capitalGain: element.cgIncome,
+                            capitalGain:
+                              element.cgIncome + element.deductionAmount,
                             Deduction: element.deductionAmount,
                             netCapitalGain: element.cgIncome,
                           })),
@@ -3939,7 +3940,8 @@ export class SummaryComponent implements OnInit {
                               element?.assetType === 'GOLD'
                                 ? 'Other Assets'
                                 : element.assetType,
-                            capitalGain: element.cgIncome,
+                            capitalGain:
+                              element.cgIncome + element.deductionAmount,
                             Deduction: element.deductionAmount,
                             netCapitalGain: element.cgIncome,
                           })),
@@ -3987,7 +3989,8 @@ export class SummaryComponent implements OnInit {
                               element?.assetType === 'GOLD'
                                 ? 'Other Assets'
                                 : element.assetType,
-                            capitalGain: element.cgIncome,
+                            capitalGain:
+                              element.cgIncome + element.deductionAmount,
                             Deduction: element.deductionAmount,
                             netCapitalGain: element.cgIncome,
                           })),
@@ -4007,7 +4010,8 @@ export class SummaryComponent implements OnInit {
                               element?.assetType === 'GOLD'
                                 ? 'Other Assets'
                                 : element.assetType,
-                            capitalGain: element.cgIncome,
+                            capitalGain:
+                              element.cgIncome + element.deductionAmount,
                             Deduction: element.deductionAmount,
                             netCapitalGain: element.cgIncome,
                           })),
@@ -5336,7 +5340,9 @@ export class SummaryComponent implements OnInit {
                             element?.assetType === 'GOLD'
                               ? 'Other Assets'
                               : element.assetType,
-                          capitalGain: element.incomeBeforeInternalSetOff,
+                          capitalGain:
+                            element.incomeBeforeInternalSetOff +
+                            element.deductionAmount,
                           Deduction: element.deductionAmount,
                           netCapitalGain: element.incomeBeforeInternalSetOff,
                         })),
@@ -5366,7 +5372,9 @@ export class SummaryComponent implements OnInit {
                             element?.assetType === 'GOLD'
                               ? 'Other Assets'
                               : element.assetType,
-                          capitalGain: element.incomeBeforeInternalSetOff,
+                          capitalGain:
+                            element.incomeBeforeInternalSetOff +
+                            element.deductionAmount,
                           Deduction: element.deductionAmount,
                           netCapitalGain: element.incomeBeforeInternalSetOff,
                         })),
@@ -5414,7 +5422,9 @@ export class SummaryComponent implements OnInit {
                             element?.assetType === 'GOLD'
                               ? 'Other Assets'
                               : element.assetType,
-                          capitalGain: element.incomeBeforeInternalSetOff,
+                          capitalGain:
+                            element.incomeBeforeInternalSetOff +
+                            element.deductionAmount,
                           Deduction: element.deductionAmount,
                           netCapitalGain: element.incomeBeforeInternalSetOff,
                         })),
@@ -5434,7 +5444,9 @@ export class SummaryComponent implements OnInit {
                             element?.assetType === 'GOLD'
                               ? 'Other Assets'
                               : element.assetType,
-                          capitalGain: element.incomeBeforeInternalSetOff,
+                          capitalGain:
+                            element.incomeBeforeInternalSetOff +
+                            element.deductionAmount,
                           Deduction: element.deductionAmount,
                           netCapitalGain: element.incomeBeforeInternalSetOff,
                         })),

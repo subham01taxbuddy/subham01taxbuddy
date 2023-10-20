@@ -64,6 +64,7 @@ export class LabFormComponent implements OnInit {
   stateDropdown = AppConstants.stateDropdown;
   // data: any; // TODO use input output to decide view edit or add
   @Input() data: any;
+  selectedIndexes: number[] = [];
 
   config: any;
   active: any;
@@ -1034,42 +1035,56 @@ export class LabFormComponent implements OnInit {
     }
   }
 
-  removeImprovement(index, formGroupName) {
-    console.log('Remove Index', index);
-    const improve = <FormArray>formGroupName.get('improvement');
-    let objToRemove = improve.controls[index].value;
-    improve.removeAt(index);
-
-    //update the cg object
-    console.log('objToRemove', objToRemove);
-    let filtered = this.cgArrayElement.improvement.filter(
-      (item) =>
-        item.srn == objToRemove.srn &&
-        item.costOfImprovement === objToRemove.costOfImprovement &&
-        item.dateOfImprovement == objToRemove.dateOfImprovement
-    );
-    this.cgArrayElement.improvement.splice(
-      this.cgArrayElement.improvement.indexOf(filtered[0]),
-      1
-    );
-
-    //remove from improvements list also
-    let toDelete = this.improvements.filter(
-      (item) =>
-        item.srn == objToRemove.srn &&
-        item.costOfImprovement === objToRemove.costOfImprovement &&
-        item.dateOfImprovement == objToRemove.dateOfImprovement
-    );
-    this.improvements.splice(this.improvements.indexOf(toDelete[0]), 1);
-
-    // This condition is added for setting isCoOwners independent Form Control value when CoOwners Form array is Empty
-    // And this Control is used for Yes/No Type question for showing the details of CoOwners
-    if (improve.length === 0) {
-      this.isImprovements.setValue(false);
+  // Function to toggle selected index
+  toggleSelectedIndex(index: number) {
+    const idx = this.selectedIndexes.indexOf(index);
+    if (idx > -1) {
+      this.selectedIndexes.splice(idx, 1);
+    } else {
+      this.selectedIndexes.push(index);
     }
-    // improve.length === 0 ? this.isImprovements.setValue(false) : null;
+  }
 
-    this.calculateCapitalGain(formGroupName, '', index);
+  removeImprovement(formGroupName: FormGroup) {
+    for (let i = this.selectedIndexes.length - 1; i >= 0; i--) {
+      const index = this.selectedIndexes[i];
+      const improve = <FormArray>formGroupName.get('improvement');
+      if (improve && improve.at(index)) {
+        let objToRemove = improve.at(index).value;
+        improve.removeAt(index);
+
+        // Update the cg object
+        let filtered = this.cgArrayElement?.improvement?.filter(
+          (item) =>
+            item.srn == objToRemove?.srn &&
+            item.costOfImprovement === objToRemove?.costOfImprovement &&
+            item.dateOfImprovement == objToRemove?.dateOfImprovement
+        );
+        if (filtered.length > 0) {
+          this.cgArrayElement?.improvement.splice(
+            this.cgArrayElement?.improvement.indexOf(filtered[0]),
+            1
+          );
+        }
+
+        // Remove from improvements list also
+        let toDelete = this.improvements?.filter(
+          (item) =>
+            item?.srn == objToRemove?.srn &&
+            item?.costOfImprovement === objToRemove?.costOfImprovement &&
+            item?.dateOfImprovement == objToRemove?.dateOfImprovement
+        );
+        if (toDelete.length > 0) {
+          this.improvements.splice(this.improvements?.indexOf(toDelete[0]), 1);
+        }
+
+        if (improve?.length === 0) {
+          this.isImprovements?.setValue(false);
+        }
+
+        this.calculateCapitalGain(formGroupName, '', index);
+      }
+    }
   }
 
   haveImprovements(formGroupName) {
