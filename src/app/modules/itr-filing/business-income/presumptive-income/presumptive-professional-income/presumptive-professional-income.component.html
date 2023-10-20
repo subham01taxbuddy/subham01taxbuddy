@@ -148,7 +148,20 @@
 
           <div class="col-sm-2">
             <mat-label
-              >Income ({{ percentage[i] ? percentage[i] : 0 }}%)
+              >Income
+              <ng-container
+                *ngFor="let percentage of percentage; let id = index"
+              >
+                <ng-container *ngIf="id === i">
+                  ({{
+                    percentage.natOfBusiness ===
+                    profIncomeFormArray.controls[i].get("natureOfBusiness")
+                      .value
+                      ? percentage.percentage
+                      : 0
+                  }}%)
+                </ng-container>
+              </ng-container>
             </mat-label>
             <mat-form-field appearance="outline">
               <input

@@ -121,7 +121,9 @@
                       class="input-field"
                       required
                       digitsOnly
-                      (change)="calculatePresumptive(i, 'bank', true)"
+                      (change)="
+                        calculatePresumptive(fieldGlobalIndex(i), 'bank', true)
+                      "
                     />
                   </mat-form-field>
                   <mat-error
@@ -177,7 +179,11 @@
 
                 <!-- presumptive Income 6% -->
                 <div class="col-sm-3">
-                  <mat-label>Presumptive Income</mat-label>
+                  <mat-label
+                    >Presumptive Income ({{
+                      bankPercentage[i] ? bankPercentage[i] : 0
+                    }}%)</mat-label
+                  >
                   <mat-form-field appearance="outline">
                     <input
                       formControlName="bankPreIncome"
@@ -186,7 +192,9 @@
                       class="input-field"
                       required
                       digitsOnly
-                      (change)="calculatePresumptive(i, 'bank', true)"
+                      (change)="
+                        calculatePresumptive(fieldGlobalIndex(i), 'bank', true)
+                      "
                     />
                   </mat-form-field>
                   <mat-error
@@ -226,7 +234,9 @@
                       class="input-field"
                       required
                       digitsOnly
-                      (change)="calculatePresumptive(i, 'cash', true)"
+                      (change)="
+                        calculatePresumptive(fieldGlobalIndex(i), 'cash', true)
+                      "
                     />
                   </mat-form-field>
                   <mat-error
@@ -295,7 +305,9 @@
                       class="input-field"
                       required
                       digitsOnly
-                      (change)="calculatePresumptive(i, 'cash', true)"
+                      (change)="
+                        calculatePresumptive(fieldGlobalIndex(i), 'cash', true)
+                      "
                     />
                   </mat-form-field>
                   <mat-error
