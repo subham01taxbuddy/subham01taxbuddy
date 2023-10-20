@@ -577,7 +577,7 @@
                           <input
                             matInput
                             placeholder="total arrears amount"
-                            formControlName = "totalArrearsUnrealizedRentReceived"
+                            formControlName="totalArrearsUnrealizedRentReceived"
                             name="totalArrearsAmount"
                             class="input-field"
                             maxlength="11"
@@ -595,19 +595,20 @@
                     <!-- 30% Total Arrears Amount  -->
                     <tr>
                       <th scope="row">
-                        <mat-label>30% of Total Arrears Amount</mat-label>
+                        <mat-label
+                          >Arrears Amount after 30% deduction</mat-label
+                        >
                       </th>
                       <td>
                         <mat-form-field appearance="outline">
                           <input
                             matInput
-                            placeholder="30% of Total Arrears Amount"
+                            placeholder="Arrears Amount after 30% deduction"
                             formControlName="arrearsUnrealizedRentReceived"
                             name="thirtyPctOfTAA"
                             class="input-field"
                             maxlength="11"
                             digitsOnly
-
                           />
                           <mat-hint>30% of Total Arrears Amount</mat-hint>
                         </mat-form-field>
