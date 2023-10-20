@@ -31,7 +31,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   selectedAgent: any;
   searchMobNo: any;
   statusId: null;
-  agentList: any = [];
   statuslist: any = [
     { statusName: 'Open', statusId: '17' },
     { statusName: 'Done', statusId: '18' },
@@ -80,13 +79,13 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       pageCount: null,
     };
     let roles = this.utilsService.getUserRoles();
-    let show : boolean;
-    if(roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN') ){
-      show =true;
+    let show: boolean;
+    if (roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')) {
+      show = true;
     }
     this.scheduleCallGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs:show ?  this.createColumnDef('leader') :this.createColumnDef('reg') ,
+      columnDefs: show ? this.createColumnDef('leader') : this.createColumnDef('reg'),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => { },
@@ -136,21 +135,12 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   //   this.statuslist = await this.utilsService.getStoredMasterStatusList();
   // }
   getAgentList() {
-    // this.agentList = await this.utilsService.getStoredAgentList();
     const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
     const isAgentListAvailable =
       this.roleBaseAuthGuardService.checkHasPermission(
         loggedInUserDetails.USER_ROLE,
         ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']
       );
-    if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
-      this.userMsService.getMethod(param).subscribe((result: any) => {
-        if (result.success) {
-          this.agentList = result.data;
-        }
-      });
-    }
   }
 
   // showScheduleCallList() {
@@ -401,12 +391,12 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         hide: view === 'leader' ? false : true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          if (params.data.statusId === 17 || params.data.statusId === 19 ) {
+          if (params.data.statusId === 17 || params.data.statusId === 19) {
             return `<button type="button" class="action_icon add_button" title="Re-Assign Scheduled Call"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;">
               <i class="fa fa-refresh" aria-hidden="true" data-action-type="reAssignCall"></i>
              </button>`;
-          }else{
+          } else {
             return '-'
           }
 
@@ -558,7 +548,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           this.openWhatsappChat(params.data);
           break;
         }
-        case 'reAssignCall' : {
+        case 'reAssignCall': {
           this.reAssignCall(params.data);
           break;
         }
@@ -566,12 +556,12 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     }
   }
 
-  reAssignCall(data){
+  reAssignCall(data) {
     let disposable = this.dialog.open(ScheduledCallReassignDialogComponent, {
       width: '60%',
       height: 'auto',
       data: {
-        allData : data,
+        allData: data,
       },
     });
     disposable.afterClosed().subscribe((result) => {

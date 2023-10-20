@@ -41,7 +41,6 @@ export class AssignedUsersComponent implements OnInit {
     mobileNumber: null,
     emailId: null
   }
-  agents = [];
   agentId = null;
   constructor(
     private userMsService: UserMsService,
@@ -76,7 +75,6 @@ export class AssignedUsersComponent implements OnInit {
     this.agentId = userId;
     this.getMasterStatusList();
     this.search();
-    this.getAgentList();
   }
 
   async getMasterStatusList() {
@@ -102,20 +100,6 @@ export class AssignedUsersComponent implements OnInit {
     } else {
       this.agentId = event;
       this.search('agent');
-    }
-  }
-
-  getAgentList() {
-    let loggedInUserRoles = this.utilsService.getUserRoles();
-    let loggedInUserId = this.utilsService.getLoggedInUserID();
-    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
-    if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserId}/child-details`;
-      this.userMsService.getMethod(param).subscribe((result: any) => {
-        if (result.success) {
-          this.agents = result.data;
-        }
-      })
     }
   }
 
@@ -418,7 +402,7 @@ export class AssignedUsersComponent implements OnInit {
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
-          if(params.data.serviceType === 'ITR') {
+          if (params.data.serviceType === 'ITR') {
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
             if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" style="border: none;
@@ -505,7 +489,7 @@ export class AssignedUsersComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           if ((params.data.serviceType === 'ITR' && params.data.itrObjectStatus != 'ITR_FILED')
-              ||  params.data.serviceType != 'ITR') {
+            || params.data.serviceType != 'ITR') {
             return `<button type="button" class="action_icon add_button" title="Re Assignment"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;">
               <i class="fa fa-refresh" aria-hidden="true" data-action-type="re-assign"></i>
@@ -799,7 +783,7 @@ export class AssignedUsersComponent implements OnInit {
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
-    if(data.itrObjectStatus === 'CREATE') {
+    if (data.itrObjectStatus === 'CREATE') {
       //no ITR object found, create a new ITR object
       this.loading = true;
       let profile = await this.getUserProfile(data.userId).catch(error => {
@@ -819,19 +803,20 @@ export class AssignedUsersComponent implements OnInit {
 
       const param = '/itr';
       this.itrMsService.postMethod(param, objITR).subscribe((result: any) => {
-          console.log('My iTR Json successfully created-==', result);
-          this.loading = false;
-          objITR = result;
-          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
-          this.router.navigate(['/itr-filing/itr'],{
-            state: {
-              userId: data.userId,
-              panNumber: data.panNumber,
-              eriClientValidUpto: data.eriClientValidUpto,
-              name: data.name }
-            });
+        console.log('My iTR Json successfully created-==', result);
+        this.loading = false;
+        objITR = result;
+        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(objITR));
+        this.router.navigate(['/itr-filing/itr'], {
+          state: {
+            userId: data.userId,
+            panNumber: data.panNumber,
+            eriClientValidUpto: data.eriClientValidUpto,
+            name: data.name
+          }
+        });
       }, error => {
-          this.loading = false;
+        this.loading = false;
       });
       this.loading = false;
       console.log('end');
@@ -842,10 +827,10 @@ export class AssignedUsersComponent implements OnInit {
       const param = `/itr?userId=${data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}` + itrFilter;
       this.itrMsService.getMethod(param).subscribe(async (result: any) => {
         console.log(`My ITR by ${param}`, result);
-        if(result == null || result.length == 0) {
+        if (result == null || result.length == 0) {
           //no ITR found, error case
           this.utilsService.showErrorMsg('Something went wrong. Please try again');
-        } else if(result.length == 1) {
+        } else if (result.length == 1) {
           //update status to WIP
           //this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
           let workingItr = result[0];
@@ -861,7 +846,7 @@ export class AssignedUsersComponent implements OnInit {
           console.log('obj:', obj);
           workingItr = JSON.parse(JSON.stringify(obj));
           sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-          this.router.navigate(['/itr-filing/itr'],{
+          this.router.navigate(['/itr-filing/itr'], {
             state: {
               userId: data.userId,
               panNumber: data.panNumber,
@@ -872,9 +857,9 @@ export class AssignedUsersComponent implements OnInit {
         } else {
           //multiple ITRs found, navigate to ITR tab with the results
           this.router.navigateByUrl('/tasks/filings',
-            {state: {'mobileNumber': data.mobileNumber}});
+            { state: { 'mobileNumber': data.mobileNumber } });
         }
-      }, async (error:any) => {
+      }, async (error: any) => {
         console.log('Error:', error);
         this.utilsService.showErrorMsg('Something went wrong. Please try again');
       });
@@ -890,13 +875,13 @@ export class AssignedUsersComponent implements OnInit {
 
   updateITRtoWIP(data, itr, assessmentYear) {
     console.log('data', itr);
-    if(data.statusId) {
+    if (data.statusId) {
       const param = '/itr'
       const request = {
-        'userId':data.userId,
-        'assessmentYear':assessmentYear,
+        'userId': data.userId,
+        'assessmentYear': assessmentYear,
         'isRevised': itr.isRevised,
-        'status':'PREPARING_ITR'
+        'status': 'PREPARING_ITR'
       };
 
       this.loading = true;
@@ -942,13 +927,14 @@ export class AssignedUsersComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       if (result === 'reviseReturn') {
-        this.router.navigate(['/itr-filing/itr'],{
+        this.router.navigate(['/itr-filing/itr'], {
           state: {
             userId: data.userId,
             panNumber: data.panNumber,
             eriClientValidUpto: data.eriClientValidUpto,
-            name: data.name }
-          });
+            name: data.name
+          }
+        });
       }
       console.log('The dialog was closed', result);
     });

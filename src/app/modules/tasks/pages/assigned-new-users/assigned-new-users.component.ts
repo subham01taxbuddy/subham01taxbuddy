@@ -57,7 +57,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     mobileNumber: null,
     emailId: null,
   };
-  agents = [];
   agentId = null;
   loggedInUserRoles: any;
   showReassignmentBtn: any;
@@ -134,7 +133,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     this.agentId = userId;
     this.getMasterStatusList();
     // this.search();
-    this.getAgentList();
     this.activatedRoute.queryParams.subscribe(params => {
       this.searchVal = params['mobileNumber'];
       this.searchStatusId = params['statusId'];
@@ -388,18 +386,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     //  this.search('agent');
   }
 
-  getAgentList() {
-    let loggedInUserId = this.utilsService.getLoggedInUserID();
-    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
-    if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserId}/child-details`;
-      this.userMsService.getMethod(param).subscribe((result: any) => {
-        if (result.success) {
-          this.agents = result.data;
-        }
-      });
-    }
-  }
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
