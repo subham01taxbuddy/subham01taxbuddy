@@ -283,6 +283,11 @@
 <ng-template #editEquity>
   <mat-dialog-content>
     <form [formGroup]="selectedFormGroup">
+      <div class="row gainHeader">
+        <mat-label><b>Type of Capital Gain:</b> {{selectedFormGroup.controls['gainType'].value}} &nbsp;&nbsp;
+          <b>Gain Amount:</b> {{selectedFormGroup.controls['capitalGain'].value}}</mat-label>
+
+      </div>
       <div
         class="mvTp">
         <div class="row cardClr">
@@ -306,28 +311,6 @@
                         selectedFormGroup.get(
                           'nameOfTheUnits'
                         ).hasError('pattern')
-                      "
-              >Enter valid amount.</mat-error
-              >
-            </mat-form-field>
-          </div>
-          <div class="col-sm-4">
-            <mat-label>Buy/Sell Quantity</mat-label>
-            <mat-form-field appearance="outline">
-              <input
-                matInput appTwoDigitDecimaNumber
-                formControlName="sellOrBuyQuantity"
-                placeholder="Sell/Buy Quantity"
-                name="sellOrBuyQuantity"
-                maxlength="14"
-                (change)="calculateTotalCG(selectedFormGroup)"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                (blur)="getPurchaseValue();getSaleValue()"
-              />
-
-              <mat-error
-                *ngIf="
-                        selectedFormGroup.get('sellOrBuyQuantity').hasError('pattern')
                       "
               >Enter valid amount.</mat-error
               >
@@ -374,102 +357,84 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="col-sm-4 spsTp">
-            <mat-label>Sale Price</mat-label>
+          <div class="col-sm-4">
+          <mat-label>Buy Date</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              [max]="maxPurchaseDate"
+              formControlName="purchaseDate"
+              name="purchaseDate"
+              [matDatepicker]="purchaseDate"
+              placeholder="DD/MM/YYYY"
+              readonly
+              (dateChange)="
+                      calculateGainType(selectedFormGroup);
+                      calculateTotalCG(selectedFormGroup)
+                    "
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="purchaseDate"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #purchaseDate></mat-datepicker>
+            <mat-error
+              *ngIf="
+                      selectedFormGroup.get('purchaseDate').hasError('dateOrder')
+                    "
+            >
+              Purchase date must be before the sale date.
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+          <div class="col-sm-4" *ngIf="checkBuyDateBefore31stJan(selectedFormGroup) && this.bondType === 'listed'">
+            <mat-label>Buy/Sell Quantity</mat-label>
             <mat-form-field appearance="outline">
               <input
                 matInput appTwoDigitDecimaNumber
-                formControlName="sellValuePerUnit"
-                placeholder="Sale Price"
-                name="sellValuePerUnit"
+                formControlName="sellOrBuyQuantity"
+                placeholder="Sell/Buy Quantity"
+                name="sellOrBuyQuantity"
                 maxlength="14"
                 (change)="calculateTotalCG(selectedFormGroup)"
-                (blur)="getSaleValue()"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                (blur)="getPurchaseValue();getSaleValue()"
               />
+
               <mat-error
                 *ngIf="
-                        selectedFormGroup.get('sellValuePerUnit').hasError('pattern')
-                      "
+                      selectedFormGroup.get('sellOrBuyQuantity').hasError('pattern')
+                    "
               >Enter valid amount.</mat-error
               >
             </mat-form-field>
           </div>
-          <div class="col-sm-4 spsTp">
-            <mat-label>Sale Value</mat-label>
-            <mat-form-field appearance="outline">
-              <input
-                matInput
-                formControlName="sellValue"
-                placeholder="Sale Value"
-                name="sellValue"
-                maxlength="14"
-                required
-                readonly
-                (change)="
-                        calculateTotalCG(selectedFormGroup); calculateDeductionGain()
-                      "
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              />
-              <mat-error
-                *ngIf="bondType !== 'listed' &&
-                        selectedFormGroup.get('sellValue').hasError('pattern')
-                      "
-              >Enter valid amount.</mat-error
-              >
-            </mat-form-field>
-          </div>
-          <div class="col-sm-4 spsTp">
-            <mat-label>Buy Date</mat-label>
-            <mat-form-field appearance="outline">
-              <input
-                matInput
-                [max]="maxPurchaseDate"
-                formControlName="purchaseDate"
-                name="purchaseDate"
-                [matDatepicker]="purchaseDate"
-                placeholder="DD/MM/YYYY"
-                readonly
-                (dateChange)="
-                        calculateGainType(selectedFormGroup);
-                        calculateTotalCG(selectedFormGroup)
-                      "
-              />
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="purchaseDate"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #purchaseDate></mat-datepicker>
-              <mat-error
-                *ngIf="
-                        selectedFormGroup.get('purchaseDate').hasError('dateOrder')
-                      "
-              >
-                Purchase date must be before the sale date.
-              </mat-error>
-            </mat-form-field>
-          </div>
-          <div class="col-sm-4 spsTp">
-            <mat-label>Buy Price</mat-label>
-            <mat-form-field appearance="outline">
-              <input
-                matInput appTwoDigitDecimaNumber
-                formControlName="purchaseValuePerUnit"
-                placeholder="Buy Price"
-                name="purchaseValuePerUnit"
-                maxlength="14"
-                (blur)="getPurchaseValue()"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              />
-              <mat-error
-                *ngIf="
-                        selectedFormGroup.get('purchaseValuePerUnit').hasError('pattern')
-                      "
-              >Enter valid amount.</mat-error
-              >
-            </mat-form-field>
-          </div>
-          <div class="col-sm-4 spsTp">
+          <div class="col-sm-4">
+          <mat-label>Sale Value</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              formControlName="sellValue"
+              placeholder="Sale Value"
+              name="sellValue"
+              maxlength="14"
+              required
+              readonly
+              (change)="
+                      calculateTotalCG(selectedFormGroup); calculateDeductionGain()
+                    "
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            />
+            <mat-error
+              *ngIf="bondType !== 'listed' &&
+                      selectedFormGroup.get('sellValue').hasError('pattern')
+                    "
+            >Enter valid amount.</mat-error
+            >
+          </mat-form-field>
+        </div>
+          <div class="col-sm-4">
             <mat-label>Buy Value</mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -490,7 +455,8 @@
               >
             </mat-form-field>
           </div>
-          <div class="col-sm-4 spsTp">
+
+          <div class="col-sm-4">
             <mat-label>Expenses</mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -501,57 +467,60 @@
                 maxlength="14"
                 digitsOnly
                 (change)="
-                        calculateTotalCG(selectedFormGroup); calculateDeductionGain()
-                      "
+                      calculateTotalCG(selectedFormGroup); calculateDeductionGain()
+                    "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-error
                 *ngIf="
-                        selectedFormGroup.get('sellExpense').hasError('pattern')
+                      selectedFormGroup.get('sellExpense').hasError('pattern')
+                    "
+              >Enter valid amount.</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4" *ngIf="checkBuyDateBefore31stJan(selectedFormGroup) && this.bondType === 'listed'">
+            <mat-label>Sale Price</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                matInput appTwoDigitDecimaNumber
+                formControlName="sellValuePerUnit"
+                placeholder="Sale Price"
+                name="sellValuePerUnit"
+                maxlength="14"
+                (change)="calculateTotalCG(selectedFormGroup)"
+                (blur)="getSaleValue()"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              />
+              <mat-error
+                *ngIf="
+                        selectedFormGroup.get('sellValuePerUnit').hasError('pattern')
                       "
               >Enter valid amount.</mat-error
               >
             </mat-form-field>
           </div>
-          <div class="col-sm-4 spsTp">
-            <mat-label>Type of Capital Gain*</mat-label>
-            <mat-form-field appearance="outline">
-              <mat-select
-                placeholder="Type of Gain"
-                class="hide"
-                formControlName="gainType"
-                name="gainType[i]"
-                [disabled]="true"
-              >
-                <mat-option
-                  *ngFor="let type of gainTypeList"
-                  [value]="type.value"
-                >
-                  {{ type.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="col-sm-4 spsTp">
-            <mat-label>Gain Amount*</mat-label>
+          <div class="col-sm-4" *ngIf="checkBuyDateBefore31stJan(selectedFormGroup) && this.bondType === 'listed'">
+            <mat-label>Buy Price</mat-label>
             <mat-form-field appearance="outline">
               <input
-                matInput
-                name="assets[i]"
-                placeholder="capitalGain"
-                formControlName="capitalGain"
+                matInput appTwoDigitDecimaNumber
+                formControlName="purchaseValuePerUnit"
+                placeholder="Buy Price"
+                name="purchaseValuePerUnit"
                 maxlength="14"
-                readonly
-                (change)="calculateDeductionGain()"
+                (blur)="getPurchaseValue()"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-error
                 *ngIf="
-                        selectedFormGroup.get('capitalGain').hasError('required')
+                        selectedFormGroup.get('purchaseValuePerUnit').hasError('pattern')
                       "
-              >Total capital Gain is mandatory</mat-error
+              >Enter valid amount.</mat-error
               >
             </mat-form-field>
           </div>
+
           <div *ngIf="checkBuyDateBefore31stJan(selectedFormGroup) && this.bondType === 'listed'">
             <div class="row">
               <div class="col-sm-4 spsTp">
@@ -571,6 +540,7 @@
                   >
                 </mat-form-field>
               </div>
+
               <div class="col-sm-4 spsTp">
                 <mat-label>FMV Per Unit as on 31st Jan 2018</mat-label>
                 <mat-form-field appearance="outline">
@@ -611,26 +581,7 @@
                   >
                 </mat-form-field>
               </div>
-              <div class="col-sm-4 spsTp">
-              <mat-label>Gain Amount*</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  name="assets[i]"
-                  placeholder="capitalGain"
-                  formControlName="capitalGain"
-                  maxlength="14"
-                  readonly
-                  (change)="calculateDeductionGain()"
-                />
-                <mat-error
-                  *ngIf="
-                          selectedFormGroup.get('capitalGain').hasError('required')
-                        "
-                >Total capital Gain is mandatory</mat-error
-                >
-              </mat-form-field>
-            </div>
+
             </div>
           </div>
         </div>
