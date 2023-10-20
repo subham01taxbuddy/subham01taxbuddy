@@ -48,71 +48,63 @@ export class OtherDeductionsComponent implements OnInit {
         // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
         console.log('result is=====', result);
 
-        this.summaryIncome = result.summaryIncome;
-        const sumParam = `/itr-summary?itrId=${this.ITR_JSON.itrId}&itrSummaryId=0`;
-        this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
-          this.finalSummary = summary;
-          console.log('SUMMARY Result=> ', summary);
+        if (result) {
+          const deductionDetails = result.summaryDeductions.filter(
+            (deduction) =>
+              deduction.sectionType === '80QQB' ||
+              deduction.sectionType === '80RRB' ||
+              deduction.sectionType === '80TTA' ||
+              deduction.sectionType === '80TTB' ||
+              deduction.sectionType === '80EE' ||
+              deduction.sectionType === '80EEA'
+          );
+          console.log(deductionDetails, 'filteredDeductions');
 
-          if (summary) {
-            const deductionDetails =
-              summary.assessment.summaryDeductions.filter(
-                (deduction) =>
-                  deduction.sectionType === '80QQB' ||
-                  deduction.sectionType === '80RRB' ||
-                  deduction.sectionType === '80TTA' ||
-                  deduction.sectionType === '80TTB' ||
-                  deduction.sectionType === '80EE' ||
-                  deduction.sectionType === '80EEA'
+          const deductionArray = [
+            'us80ee',
+            'us80eea',
+            'us80tta',
+            'us80ttb',
+            'us80qqb',
+            'us80rrb',
+          ];
+
+          deductionArray.forEach((element) => {
+            const key = this.otherDeductionForm.get(element);
+
+            if (element === 'us80ee') {
+              let value = deductionDetails?.filter(
+                (deduction) => deduction.sectionType === '80EE'
               );
-            console.log(deductionDetails, 'filteredDeductions');
-
-            const deductionArray = [
-              'us80ee',
-              'us80eea',
-              'us80tta',
-              'us80ttb',
-              'us80qqb',
-              'us80rrb',
-            ];
-
-            deductionArray.forEach((element) => {
-              const key = this.otherDeductionForm.get(element);
-
-              if (element === 'us80ee') {
-                let value = deductionDetails?.filter(
-                  (deduction) => deduction.sectionType === '80EE'
-                );
-                key.setValue(value[0].eligibleAmount);
-              } else if (element === 'us80eea') {
-                let value = deductionDetails?.filter(
-                  (deduction) => deduction.sectionType === '80EEA'
-                );
-                key.setValue(value[0].eligibleAmount);
-              } else if (element === 'us80tta') {
-                let value = deductionDetails?.filter(
-                  (deduction) => deduction.sectionType === '80TTA'
-                );
-                key.setValue(value[0].eligibleAmount);
-              } else if (element === 'us80ttb') {
-                let value = deductionDetails?.filter(
-                  (deduction) => deduction.sectionType === '80TTB'
-                );
-                key.setValue(value[0].eligibleAmount);
-              } else if (element === 'us80qqb') {
-                let value = deductionDetails?.filter(
-                  (deduction) => deduction.sectionType === '80QQB'
-                );
-                key.setValue(value[0].eligibleAmount);
-              } else if (element === 'us80rrb') {
-                let value = deductionDetails?.filter(
-                  (deduction) => deduction.sectionType === '80RRB'
-                );
-                key.setValue(value[0].eligibleAmount);
-              }
-            });
-          }
-        });
+              key.setValue(value[0].eligibleAmount);
+            } else if (element === 'us80eea') {
+              let value = deductionDetails?.filter(
+                (deduction) => deduction.sectionType === '80EEA'
+              );
+              key.setValue(value[0].eligibleAmount);
+            } else if (element === 'us80tta') {
+              let value = deductionDetails?.filter(
+                (deduction) => deduction.sectionType === '80TTA'
+              );
+              key.setValue(value[0].eligibleAmount);
+            } else if (element === 'us80ttb') {
+              let value = deductionDetails?.filter(
+                (deduction) => deduction.sectionType === '80TTB'
+              );
+              key.setValue(value[0].eligibleAmount);
+            } else if (element === 'us80qqb') {
+              let value = deductionDetails?.filter(
+                (deduction) => deduction.sectionType === '80QQB'
+              );
+              key.setValue(value[0].eligibleAmount);
+            } else if (element === 'us80rrb') {
+              let value = deductionDetails?.filter(
+                (deduction) => deduction.sectionType === '80RRB'
+              );
+              key.setValue(value[0].eligibleAmount);
+            }
+          });
+        }
         this.loading = false;
       },
       (error) => {
