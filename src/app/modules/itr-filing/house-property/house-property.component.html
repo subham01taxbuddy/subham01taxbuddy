@@ -52,8 +52,9 @@
                     <input
                       class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                       type="checkbox"
-                      (click)="activeHouse = [i]"
                       (click)="$event.stopPropagation()"
+                      [checked]="selectedIndexes.includes(i)"
+                      (click)="toggleSelectedIndex(i)"
                     />
                   </div>
                   <!-- title  -->
@@ -85,7 +86,7 @@
               <button
                 class="btn"
                 style="cursor: pointer"
-                (click)="deleteHpDetails(activeHouse)"
+                (click)="deleteHpDetails()"
               >
                 Delete
               </button>
