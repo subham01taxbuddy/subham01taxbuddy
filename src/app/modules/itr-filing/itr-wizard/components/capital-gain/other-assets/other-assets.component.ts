@@ -1,5 +1,5 @@
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import {Component, Inject, LOCALE_ID, OnInit} from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
@@ -12,9 +12,9 @@ import { Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormArray } from '@angular/forms';
 import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
-import {OtherAssetImprovementComponent} from "./other-asset-improvement/other-asset-improvement.component";
-import {formatDate} from "@angular/common";
-import {TotalCg} from "../../../../../../services/itr-json-helper-service";
+import { OtherAssetImprovementComponent } from './other-asset-improvement/other-asset-improvement.component';
+import { formatDate } from '@angular/common';
+import { TotalCg } from '../../../../../../services/itr-json-helper-service';
 
 @Component({
   selector: 'app-other-assets',
@@ -22,7 +22,6 @@ import {TotalCg} from "../../../../../../services/itr-json-helper-service";
   styleUrls: ['./other-assets.component.scss'],
 })
 export class OtherAssetsComponent extends WizardNavigation implements OnInit {
-
   loading = false;
   @Input() goldCg: NewCapitalGain;
   ITR_JSON: ITR_JSON;
@@ -35,6 +34,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   assetList: any;
   deduction = false;
   isDisable: boolean;
+  maximumDate = new Date();
 
   constructor(
     public matDialog: MatDialog,
@@ -72,13 +72,12 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       rowSelection: 'multiple',
-      onGridReady: params => {
-      },
-      onSelectionChanged: (event) =>{
-        event.api.getSelectedRows().forEach(row=>{
+      onGridReady: (params) => {},
+      onSelectionChanged: (event) => {
+        event.api.getSelectedRows().forEach((row) => {
           row.hasEdit = true;
         });
-        if(event.api.getSelectedRows().length === 0){
+        if (event.api.getSelectedRows().length === 0) {
           this.assetList.forEach((asset: any) => {
             asset.hasEdit = false;
           });
@@ -87,34 +86,37 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       },
       sortable: true,
       pagination: true,
-      paginationPageSize:20
+      paginationPageSize: 20,
     };
     this.gridOptions.api?.setRowData(this.assetList);
-
   }
 
   totalCg: TotalCg = {
     ltcg: 0,
-    stcg: 0
+    stcg: 0,
   };
-  createRowData(){
+  createRowData() {
     this.assetList = [];
     let ltcg = 0;
     let stcg = 0;
-    this.goldCg.assetDetails.forEach(asset=>{
-      let copy:any = {};
+    this.goldCg.assetDetails.forEach((asset) => {
+      let copy: any = {};
       Object.assign(copy, asset);
       copy.hasEdit = false;
       this.assetList.push(copy);
       ltcg += asset.gainType === 'LONG' ? asset.capitalGain : 0;
       stcg += asset.gainType === 'SHORT' ? asset.capitalGain : 0;
     });
-    this.isDisable = this.totalCg.ltcg <= 0;
+    this.totalCg.ltcg = ltcg;
+    this.totalCg.stcg = stcg;
+    this.isDisable = this.totalCg.ltcg <= 0 ? true : false;
     return this.assetList;
   }
 
   ngOnInit() {
     console.log('INSIDE OTHER');
+
+    this.maximumDate = new Date();
 
     // for pagination
     this.config = {
@@ -311,7 +313,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
   // add event that allows the form to be looped
   addOtherAssets(isEdit, index?) {
-
     this.isAddOtherAssetsImprovement = Math.random();
 
     let dialogRef = this.matDialog.open(OtherAssetImprovementComponent, {
@@ -320,11 +321,13 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       data: {
         isAddOtherAssetsImprovement: this.isAddOtherAssetsImprovement,
         assetIndex: index,
-      }
+      },
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
-        this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+        this.ITR_JSON = JSON.parse(
+          sessionStorage.getItem(AppConstants.ITR_JSON)
+        );
         let listedData = this.ITR_JSON.capitalGain?.filter(
           (item) => item.assetType === 'GOLD'
         );
@@ -350,12 +353,14 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
   closed() {}
 
-  isAssetSelected(){
-    return this.assetList.filter(asset => asset.hasEdit === true).length > 0;
+  isAssetSelected() {
+    return this.assetList.filter((asset) => asset.hasEdit === true).length > 0;
   }
 
   deleteAsset() {
-    let selected = this.assetList.filter(asset => asset.hasEdit === true).map(asset => asset.srn);
+    let selected = this.assetList
+      .filter((asset) => asset.hasEdit === true)
+      .map((asset) => asset.srn);
     //delete improvement for asset
     this.goldCg.improvement?.forEach((imp) => {
       if (selected.includes(imp.srn)) {
@@ -367,8 +372,10 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         this.goldCg.deduction.splice(this.goldCg.deduction.indexOf(ded), 1);
       }
     });
-    this.goldCg.assetDetails = this.goldCg.assetDetails.filter(asset => !selected.includes(asset.srn));
-    this.assetList = this.assetList.filter(asset => asset.hasEdit != true);
+    this.goldCg.assetDetails = this.goldCg.assetDetails.filter(
+      (asset) => !selected.includes(asset.srn)
+    );
+    this.assetList = this.assetList.filter((asset) => asset.hasEdit != true);
 
     if (this.goldCg.assetDetails.length === 0) {
       //remove deductions
@@ -378,7 +385,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     this.gridOptions.api?.setRowData(this.createRowData());
   }
 
-  saveAll(){
+  saveAll() {
     this.saveCg();
     this.saveAndNext.emit(false);
   }
@@ -390,7 +397,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         headerCheckboxSelection: true,
         width: 80,
         pinned: 'left',
-        checkboxSelection:(params) => {
+        checkboxSelection: (params) => {
           return true;
         },
         // valueGetter: function nameFromCode(params) {
