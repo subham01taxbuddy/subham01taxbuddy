@@ -161,9 +161,9 @@ export class LoginComponent implements OnInit {
     });
     this.speedTest();
   }
-  internetSpeed:any = -1;
+  internetSpeed: any = -1;
   speedIterations = 2;
-  speedTest(){
+  speedTest() {
     this.speedTestService.getMbps(
       {
         iterations: 1,
@@ -173,7 +173,7 @@ export class LoginComponent implements OnInit {
       (speed) => {
         console.log('Your speed is ' + Number(speed));
         this.internetSpeed = Number(speed).toFixed(2);
-        if(this.speedIterations > 0) {
+        if (this.speedIterations > 0) {
           this.speedIterations--;
           this.speedTest();
         }
@@ -223,7 +223,7 @@ export class LoginComponent implements OnInit {
   }
 
   public onSubmit() {
-    if(this.isMobileBrowser()){
+    if (this.isMobileBrowser()) {
       return;
     }
     this.form.controls['passphrase'].setValidators([Validators.required, Validators.minLength(6)]);
@@ -384,14 +384,15 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.loading = true;
-    const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
+    // const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
+    const param = `/bo/sme-details-new/${userId}`;
     this.requestManager.addRequest(this.SME_INFO, this.userMsService.getMethodNew(param));
     this.requestManager.requestCompleted.subscribe((event) => {
       if (event.api === this.SME_INFO) {
         if (event.error) {
           console.log('Error:', event.error);
           this._toastMessageService.alert("error", event.error.error.error);
-        }else {
+        } else {
           console.log('Success:', event.result);
         }
       }

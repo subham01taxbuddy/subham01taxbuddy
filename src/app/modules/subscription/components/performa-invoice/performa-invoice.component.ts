@@ -26,6 +26,7 @@ import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ActivatedRoute } from "@angular/router";
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import { ReportService } from 'src/app/services/report-service';
 declare function we_track(key: string, value: any);
 
 export const MY_FORMATS = {
@@ -138,6 +139,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     private toastMsgService: ToastMessageService,
     private activatedRoute: ActivatedRoute,
     private cacheManager: CacheManager,
+    private reportService:ReportService
   ) {
     // this.getAgentList();
     this.startDate.setValue('2023-04-01');
@@ -397,8 +399,8 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
 
   getOwner() {
     const loggedInSmeUserId = this.loggedInSme[0].userId;
-    let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+    let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.ownerList = result.data;
       console.log('ownerlist', this.ownerList);
@@ -423,13 +425,13 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     // this.options1=this.allFilers;
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = '';
-    if (this.ownerDetails?.userId) {
-      param = `/sme-details-new/${this.ownerDetails?.userId}?filer=true`;
-    } else {
-      param = `/sme-details-new/${loggedInSmeUserId}?owner=true&assigned=true`;
-    }
+    // if (this.ownerDetails?.userId) {
+    //   param = `/sme-details-new/${this.ownerDetails?.userId}?filer=true`;
+    // } else {
+      param = `/bo/sme-details-new/${loggedInSmeUserId}?partnerType=Individual,Principal`;
+    // }
 
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+    this.reportService.getMethod(param).subscribe((result: any) => {
       this.options1 = [];
       console.log('filer list result -> ', result);
       this.filerList = result.data;

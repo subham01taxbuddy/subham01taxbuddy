@@ -6,6 +6,7 @@ import { filter, map, startWith } from 'rxjs/operators';
 import { UtilsService } from 'src/app/services/utils.service';
 import {User} from "../../../subscription/components/performa-invoice/performa-invoice.component";
 import {AppConstants} from "../../constants";
+import { ReportService } from 'src/app/services/report-service';
 
 @Component({
   selector: 'app-sme-list-drop-down',
@@ -51,7 +52,9 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   loggedInSme: any;
   roles: any;
   constructor(public utilsService: UtilsService,
-    private userMsService: UserMsService) {
+    private userMsService: UserMsService,
+    private reportService:ReportService
+    ) {
   }
 
   ngOnInit() {
@@ -210,8 +213,8 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   getOwners() {
     if(this.listType === 'ALL') {
       const loggedInSmeUserId = this.loggedInSme[0].userId;
-      let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-      this.userMsService.getMethodNew(param).subscribe((result: any) => {
+      let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
+      this.reportService.getMethod(param).subscribe((result: any) => {
         console.log('owner list result -> ', result);
         this.ownerList = result.data;
         console.log('ownerlist', this.ownerList);
@@ -244,13 +247,13 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     // this.options1=this.allFilers;
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = '';
-    if (this.ownerDetails?.userId) {
-      param = `/sme-details-new/${this.ownerDetails?.userId}?filer=true`;
-    } else {
-      param = `/sme-details-new/${loggedInSmeUserId}?owner=true&assigned=true`;
-    }
+    // if (this.ownerDetails?.userId) {
+    //   param = `/sme-details-new/${this.ownerDetails?.userId}?filer=true`;
+    // } else {
+      param = `/bo/sme-details-new/${loggedInSmeUserId}?partnerType=Individual,Principal`;
+    // }
 
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+    this.reportService.getMethod(param).subscribe((result: any) => {
       this.options1 = [];
       console.log('filer list result -> ', result);
       this.filerList = result.data;

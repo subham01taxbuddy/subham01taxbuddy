@@ -12,10 +12,10 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
+            <!-- <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
               <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner
               </mat-slide-toggle>
-            </div>
+            </div> -->
 
             <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
               <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event)"
@@ -30,9 +30,6 @@
             <div class="col-sm-2 spsTp">
               <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
             </div>
-            <!--      <div class="filter__col card__col-sm-3 card__col-xs-12" *ngIf="agents.length>0">-->
-            <!--        <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>-->
-            <!--      </div>-->
             <div class="col-sm-2 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>Select Status</mat-label>

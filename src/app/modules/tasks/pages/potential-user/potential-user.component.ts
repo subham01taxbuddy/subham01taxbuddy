@@ -24,7 +24,6 @@ declare function we_track(key: string, value: any);
 })
 export class PotentialUserComponent implements OnInit, OnDestroy {
   loading = false;
-  agents = [];
   agentId = null;
   itrStatus: any = [];
   userInfo: any = [];
@@ -95,7 +94,6 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     } else {
       this.dataOnLoad = false;
     }
-    this.getAgentList();
     this.getMasterStatusList();
   }
 
@@ -166,21 +164,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     //  this.search('agent');
   }
 
-  getAgentList() {
-    let loggedInUserRoles = this.utilsService.getUserRoles();
-    let loggedInUserId = this.utilsService.getLoggedInUserID();
-    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
-    if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserId}/child-details`;
-      this.userMsService.getMethod(param).subscribe((result: any) => {
-        if (result.success) {
-          this.agents = result.data;
-        }
-      })
-    }
-  }
-
-  search(form?, isAgent?, pageChange?) {
+    search(form?, isAgent?, pageChange?) {
     if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')

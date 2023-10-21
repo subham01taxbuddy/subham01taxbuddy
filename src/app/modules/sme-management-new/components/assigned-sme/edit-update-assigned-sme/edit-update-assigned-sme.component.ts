@@ -9,6 +9,7 @@ import { map, Observable, startWith } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import {DatePipe, KeyValue, Location} from "@angular/common";
+import { ReportService } from 'src/app/services/report-service';
 
 
 export const MY_FORMATS = {
@@ -72,6 +73,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private location: Location,
+    private reportService:ReportService
   ) { }
 
   ngOnInit() {
@@ -424,8 +426,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   getOwner() {
     const loggedInSmeUserId=this.loggedInSme[0].userId
     console.log(loggedInSmeUserId)
-    let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+    let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.ownerList = result.data;
       console.log("ownerlist",this.ownerList)

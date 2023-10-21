@@ -44,7 +44,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   myItrsGridOptions: GridOptions;
   itrDataList = [];
-  agents = [];
   selectedFilingTeamMemberId: number;
   config: any;
   selectedPageNo = 0;
@@ -175,14 +174,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
         'ROLE_GST_SL',
         'ROLE_NOTICE_SL',
       ]);
-    if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserId}/child-details`;
-      this.userMsService.getMethod(param).subscribe((result: any) => {
-        if (result.success) {
-          this.agents = result.data;
-        }
-      });
-    }
   }
 
   fromOwner(event) {
