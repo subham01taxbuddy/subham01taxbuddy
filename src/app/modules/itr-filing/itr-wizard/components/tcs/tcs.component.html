@@ -4,6 +4,9 @@
 ></ngx-loading>
 <form [formGroup]="salaryForm">
   <div formArrayName="salaryArray">
+    <div class="head-title mb-4" style="font-size: 18px">
+      <strong> Tax Collected at Source Details </strong>
+    </div>
     <div class="head-title mb-4">
       In case of some incomes the payer of income collects TCS from you. Enter
       the amount from form 16A or 26AS
@@ -25,7 +28,9 @@
       </mat-checkbox>
       <div class="row">
         <div class="col-sm-3">
-          <mat-label>TAN of Collector*</mat-label>
+          <mat-label style="margin-bottom: 16.4px"
+            >TAN of Collector*
+          </mat-label>
           <mat-form-field appearance="outline">
             <input
               matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number"
@@ -52,7 +57,7 @@
         </div>
 
         <div class="col-sm-3">
-          <mat-label>Collector Name*</mat-label>
+          <mat-label style="margin-bottom: 16.4px">Collector Name* </mat-label>
           <mat-form-field appearance="outline">
             <input
               formControlName="collectorName"
@@ -74,7 +79,7 @@
         </div>
 
         <div class="col-sm-3">
-          <mat-label>Amount*</mat-label>
+          <mat-label style="margin-bottom: 16.4px">Amount*</mat-label>
           <mat-form-field appearance="outline">
             <input
               formControlName="totalAmountPaid"
