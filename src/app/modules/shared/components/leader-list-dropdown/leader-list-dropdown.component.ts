@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import { FormControl } from '@angular/forms';
 import { Observable, map, startWith } from 'rxjs';
 import { User } from 'src/app/modules/subscription/components/performa-invoice/performa-invoice.component';
+import { ReportService } from 'src/app/services/report-service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -39,7 +40,8 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
 
   constructor(
     public utilsService: UtilsService,
-    private userMsService: UserMsService
+    private userMsService: UserMsService,
+    private reportService:ReportService
   ) { }
 
   ngOnInit() {
@@ -117,8 +119,8 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
   getLeaders() {
     // https://uat-api.taxbuddy.com/user/sme-details-new/3000?leader=true
     const loggedInSmeUserId = this.loggedInSme[0].userId;
-    let param = `/sme-details-new/${loggedInSmeUserId}?leader=true`;
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+    let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('leader list result -> ', result);
       this.leaderList = result.data;
       console.log('leaderlist', this.leaderList);
@@ -136,13 +138,13 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
     //'http://uat-api.taxbuddy.com/report/sme-details-new/9362?ownersByLeader=true'
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = '';
-    if (this.leaderDetails?.userId) {
-      param = `/sme-details-new/${this.leaderDetails?.userId}?ownersByLeader=true`;
-    } else {
-      param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-    }
+    // if (this.leaderDetails?.userId) {
+    //   param = `/sme-details-new/${this.leaderDetails?.userId}?ownersByLeader=true`;
+    // } else {
+      param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
+    // }
 
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+    this.reportService.getMethod(param).subscribe((result: any) => {
       this.options1 = [];
       console.log('filer list result -> ', result);
       this.ownerList = result.data;

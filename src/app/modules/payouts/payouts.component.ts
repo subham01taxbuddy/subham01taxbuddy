@@ -18,6 +18,7 @@ import {capitalize} from "lodash";
 import { ConfirmDialogComponent } from '../shared/components/confirm-dialog/confirm-dialog.component';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from '../shared/interfaces/cache-manager.interface';
+import { ReportService } from 'src/app/services/report-service';
 
 @Component({
   selector: 'app-payouts',
@@ -74,6 +75,7 @@ export class PayoutsComponent implements OnInit,OnDestroy {
               private roleBaseAuthGuardService: RoleBaseAuthGuardService,
               private genericCsvService: GenericCsvService,
               private cacheManager: CacheManager,
+              private reportService:ReportService,
               @Inject(LOCALE_ID) private locale: string) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
 
@@ -127,8 +129,8 @@ export class PayoutsComponent implements OnInit,OnDestroy {
     if (environment.environment === 'PROD') {
       adminId = 1067;
     }
-    let param = `/sme-details-new/${adminId}?leader=true`;
-    this.userService.getMethodNew(param).subscribe((result: any) => {
+    let param = `/bo/sme-details-new/${adminId}?leader=true`;
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.allLeaderList = result.data;
       console.log('leaderlist', this.allLeaderList);
