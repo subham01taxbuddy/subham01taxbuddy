@@ -1150,7 +1150,8 @@ export class LabFormComponent implements OnInit {
       deductionForm.controls['underSection'].value === '54EE' ||
       deductionForm.controls['underSection'].value === '54EC' ||
       deductionForm.controls['underSection'].value === '54F' ||
-      deductionForm.controls['underSection'].value === '54B'
+      deductionForm.controls['underSection'].value === '54B' ||
+      deductionForm.controls['underSection'].value === '54'
     ) {
       console.log(deductionForm);
       deductionForm.controls['costOfNewAssets'].setValidators([
