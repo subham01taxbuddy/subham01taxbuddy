@@ -621,6 +621,24 @@ export class SummaryComponent implements OnInit {
     };
     amountPayable: number;
     amountRefund: number;
+    exemptIncome: {
+      partnerFirms: [
+        {
+          bonus: number;
+          capitalBalanceOn31stMarch: number;
+          commission: number;
+          interest: number;
+          isLiableToAudit: string;
+          name: string;
+          others: number;
+          panNumber: string;
+          profitShareAmount: number;
+          profitSharePercent: number;
+          salary: number;
+          sec92EFirmFlag: string;
+        }
+      ];
+    };
   };
 
   constructor(
@@ -1915,6 +1933,25 @@ export class SummaryComponent implements OnInit {
             amountRefund:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.Refund
                 ?.RefundDue,
+
+            exemptIncome: {
+              partnerFirms: [
+                {
+                  bonus: 0,
+                  capitalBalanceOn31stMarch: 0,
+                  commission: 0,
+                  interest: 0,
+                  isLiableToAudit: '',
+                  name: '',
+                  others: 0,
+                  panNumber: '',
+                  profitShareAmount: 0,
+                  profitSharePercent: 0,
+                  salary: 0,
+                  sec92EFirmFlag: '',
+                },
+              ],
+            },
           };
           console.log(this.finalCalculations, 'finalCalculations');
 
@@ -3530,6 +3567,25 @@ export class SummaryComponent implements OnInit {
             amountRefund:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.Refund?.RefundDue,
+
+            exemptIncome: {
+              partnerFirms: [
+                {
+                  bonus: 0,
+                  capitalBalanceOn31stMarch: 0,
+                  commission: 0,
+                  interest: 0,
+                  isLiableToAudit: '',
+                  name: '',
+                  others: 0,
+                  panNumber: '',
+                  profitShareAmount: 0,
+                  profitSharePercent: 0,
+                  salary: 0,
+                  sec92EFirmFlag: '',
+                },
+              ],
+            },
           };
           console.log(
             this.finalCalculations,
@@ -4978,6 +5034,39 @@ export class SummaryComponent implements OnInit {
                     this.finalSummary?.assessment?.taxSummary?.taxpayable,
                   amountRefund:
                     this.finalSummary?.assessment?.taxSummary?.taxRefund,
+
+                  exemptIncome: {
+                    partnerFirms: this.finalSummary?.itr?.partnerFirms
+                      ?.map((element, index) => {
+                        return {
+                          srNo: index + 1,
+                          bonus: element.bonus,
+                          capitalBalanceOn31stMarch:
+                            element.capitalBalanceOn31stMarch,
+                          commission: element.commission,
+                          interest: element.interest,
+                          isLiableToAudit: element.isLiableToAudit,
+                          name: element.name,
+                          others: element.others,
+                          panNumber: element.panNumber,
+                          profitShareAmount: element.profitShareAmount,
+                          profitSharePercent: element.profitSharePercent,
+                          salary: element.salary,
+                          sec92EFirmFlag: element.sec92EFirmFlag,
+
+                          buyDate: element.purchaseDate,
+                          sellDate: element.sellDate,
+                          headOfIncome:
+                            element.headOfIncome === 'BI'
+                              ? 'Business or Profession'
+                              : 'Capital Gain',
+                          buyValue: element.purchaseCost,
+                          SaleValue: element.sellValue,
+                          income: element.capitalGain,
+                        };
+                      })
+                      .flat(),
+                  },
                 };
                 console.log(this.finalCalculations, 'finalCalculations');
                 this.loading = false;
@@ -6402,6 +6491,39 @@ export class SummaryComponent implements OnInit {
                   this.finalSummary?.assessment?.taxSummary?.taxpayable,
                 amountRefund:
                   this.finalSummary?.assessment?.taxSummary?.taxRefund,
+
+                exemptIncome: {
+                  partnerFirms: this.finalSummary?.itr?.partnerFirms
+                    ?.map((element, index) => {
+                      return {
+                        srNo: index + 1,
+                        bonus: element.bonus,
+                        capitalBalanceOn31stMarch:
+                          element.capitalBalanceOn31stMarch,
+                        commission: element.commission,
+                        interest: element.interest,
+                        isLiableToAudit: element.isLiableToAudit,
+                        name: element.name,
+                        others: element.others,
+                        panNumber: element.panNumber,
+                        profitShareAmount: element.profitShareAmount,
+                        profitSharePercent: element.profitSharePercent,
+                        salary: element.salary,
+                        sec92EFirmFlag: element.sec92EFirmFlag,
+
+                        buyDate: element.purchaseDate,
+                        sellDate: element.sellDate,
+                        headOfIncome:
+                          element.headOfIncome === 'BI'
+                            ? 'Business or Profession'
+                            : 'Capital Gain',
+                        buyValue: element.purchaseCost,
+                        SaleValue: element.sellValue,
+                        income: element.capitalGain,
+                      };
+                    })
+                    .flat(),
+                },
               };
               console.log(
                 this.finalCalculations,
