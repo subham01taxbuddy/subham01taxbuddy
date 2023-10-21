@@ -1140,8 +1140,10 @@ export class UtilsService {
         item.duplicate = true;
         seenDuplicate = true;
       } else {
-        testObject[itemPropertyName] = item;
-        delete item.duplicate;
+        if (itemPropertyName !== 'GGGGG0000G') {
+          testObject[itemPropertyName] = item;
+          delete item.duplicate;
+        }
       }
     });
 
