@@ -13,6 +13,7 @@ import {AppConstants} from "../../constants";
   styleUrls: ['./sme-list-drop-down.component.scss']
 })
 export class SmeListDropDownComponent implements OnInit, OnChanges {
+  @Output() sendLeader = new EventEmitter<any>();
   @Output() sendOwner = new EventEmitter<any>();
   @Output() sendFiler = new EventEmitter<any>();
   @Input() disabled: any;
@@ -25,10 +26,14 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   smeList: any[] = [];
   searchFiler = new FormControl('');
   searchOwner = new FormControl('');
+  searchLeader = new FormControl('');
+
   filteredOptions!: Observable<any[]>;
   filteredFilers: Observable<any[]>;
   filteredOwners: Observable<any[]>;
+  filteredLeaders : Observable<any[]>;
 
+  leaderDetails:any;
   ownerDetails: any;
   filerDetails: any;
 
@@ -36,9 +41,13 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   filerList: any;
   filerNames: User[];
   ownerNames: User[];
+  leaderNames : User[];
   options: User[] = [];
   options1: User[] = [];
+  leaderOptions :User[] =[];
+
   ownerList: any;
+  leaderList :any;
   loggedInSme: any;
   roles: any;
   constructor(public utilsService: UtilsService,
@@ -48,10 +57,13 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
+    this.getLeaders();
 
     this.getOwners();
     this.setFiletedOptions1();
     this.setFiletedOptions2();
+    this.setFilteredLeaders();
+
     if(this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
       this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
       console.log('all filers', this.smeList);
@@ -75,6 +87,12 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       this.setFiler(this.loggedInSme[0]);
     }
 
+  }
+
+  setLeader(leader :any){
+    this.leaderDetails = leader;
+    this.sendLeader.emit(this.leaderDetails);
+    console.log('emitting value leader details', this.leaderDetails);
   }
 
   setOwner(owner: any){
@@ -126,6 +144,32 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     );
   }
 
+  setFilteredLeaders() {
+    this.filteredLeaders = this.searchLeader.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        console.log('change', value);
+        if (!this.utilsService.isNonEmpty(value)) {
+          this.setLeader({});
+          // if (this.roles?.includes('ROLE_ADMIN')) {
+          //   this.ownerDetails.userId = this?.loggedInSme[0]?.userId;
+          //   this.getFilers();
+          // }
+        }
+        const name = typeof value === 'string' ? value : value?.name;
+        return name
+          ? this._filter(name as string, this.options)
+          : this.options.slice();
+      })
+    );
+  }
+
+
+  getLeaderNameId(option){
+    this.setLeader(option)
+    console.log(option);
+  }
+
   getOwnerNameId(option) {
     this.setOwner(option);
     console.log(option);
@@ -143,6 +187,24 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     } else if (this.roles?.includes('ROLE_OWNER')){
       this.options1 = this.filerList;
     }
+  }
+
+
+  getLeaders(){
+    // 'https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000?leader=true' \
+    const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
+    this.roles = this.utilsService.getUserRoles();
+    let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
+    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+      console.log('new leader list result -> ', result);
+      this.leaderList = result.data;
+      this.leaderNames = this.leaderList.map((item) => {
+        return {name: item.name, userId: item.userId};
+      });
+    },error=>{
+      this.utilsService.showSnackBar('Error in API of get leader list');
+    })
+
   }
 
   getOwners() {
