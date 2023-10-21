@@ -742,9 +742,11 @@ export class HousePropertyComponent implements OnInit {
           .controls[0] as FormGroup
       ).controls['interestAmount'].updateValueAndValidity();
     } else if (type === 'LOP') {
-      if (mode != 'EDIT') {
+      if (!mode && mode !== 'EDIT') {
         const tenant = <FormArray>this.housePropertyForm.get('tenant');
         tenant.push(this.createTenantForm());
+        this.annualValue = null;
+        this.thirtyPctOfAnnualValue = null;
       } else {
         const nilTenant = <FormArray>this.housePropertyForm.get('tenant');
         // Condition is added because at least one tenant details is mandatory
