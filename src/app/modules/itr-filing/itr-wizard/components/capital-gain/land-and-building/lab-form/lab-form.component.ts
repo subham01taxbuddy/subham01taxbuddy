@@ -1145,10 +1145,12 @@ export class LabFormComponent implements OnInit {
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
     ).controls[0] as FormGroup;
+
     if (
       deductionForm.controls['underSection'].value === '54EE' ||
       deductionForm.controls['underSection'].value === '54EC' ||
-      deductionForm.controls['underSection'].value === '54F'
+      deductionForm.controls['underSection'].value === '54F' ||
+      deductionForm.controls['underSection'].value === '54B'
     ) {
       console.log(deductionForm);
       deductionForm.controls['costOfNewAssets'].setValidators([
@@ -1160,13 +1162,18 @@ export class LabFormComponent implements OnInit {
         // Get the sell date from the assetDetails form group
         const sellDate = new Date(assetDetails.controls['sellDate'].value);
 
-        // Calculate the min date (the sellDate plus one day)
+        // Calculate the min date to one year before sale date
         const minDate = new Date(sellDate);
-        minDate.setDate(sellDate.getDate() - 1);
+        minDate.setFullYear(sellDate.getFullYear() - 1);
 
         // Calculate the max date (6 months after the sellDate)
         let maxDate = new Date(sellDate);
-        if (deductionForm.controls['underSection'].value === '54F') {
+        if (
+          deductionForm.controls['underSection'].value === '54' ||
+          deductionForm.controls['underSection'].value === '54B' ||
+          deductionForm.controls['underSection'].value === '54F'
+        ) {
+          // max date will be today's date
           maxDate = new Date();
         } else {
           maxDate = maxDate < new Date() ? maxDate : new Date();
