@@ -127,7 +127,7 @@
           <mat-label>COGC (Opening Stock + Purchase - Closing Stock)</mat-label>
           <mat-form-field appearance="outline">
             <input
-              [disabled]="true"
+              readonly
               formControlName="cogc"
               name="cogc[i]"
               matInput
@@ -142,7 +142,7 @@
           <mat-label>Gross Profit (Turnover - COGC)</mat-label>
           <mat-form-field appearance="outline">
             <input
-              [disabled]="true"
+              readonly
               formControlName="grossProfit"
               name="grossProfit[i]"
               matInput
@@ -157,7 +157,7 @@
           <mat-label>Net Profit (Gross Profit - Expenses)</mat-label>
           <mat-form-field appearance="outline">
             <input
-              [disabled]="true"
+              readonly
               formControlName="netIncome"
               name="netIncome[i]"
               matInput
