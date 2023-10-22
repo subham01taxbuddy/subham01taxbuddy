@@ -73,7 +73,7 @@ export class OtherInformationComponent implements OnInit {
       this.ITR_JSON?.partnerInFirms === undefined
     ) {
       this.ITR_JSON.partnerInFirms = [];
-      this.Copy_ITR_JSON.partnerInFirmFlag = 'N';
+      this.ITR_JSON.partnerInFirmFlag = 'N';
     }
 
 
@@ -812,5 +812,9 @@ export class OtherInformationComponent implements OnInit {
     if (!event) {
       this.saveAndNext.emit(true);
     }
+  }
+
+  isPartnerInFirmFlag(){
+    return this.Copy_ITR_JSON.partnerInFirmFlag && this.Copy_ITR_JSON.partnerInFirmFlag === 'Y';
   }
 }
