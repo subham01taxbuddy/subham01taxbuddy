@@ -104,8 +104,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       Object.assign(copy, asset);
       copy.hasEdit = false;
       this.assetList.push(copy);
-      ltcg += asset.gainType === 'LONG' ? asset.capitalGain : 0;
-      stcg += asset.gainType === 'SHORT' ? asset.capitalGain : 0;
+      ltcg += asset?.gainType === 'LONG' ? asset?.capitalGain : 0;
+      stcg += asset?.gainType === 'SHORT' ? asset?.capitalGain : 0;
     });
     this.totalCg.ltcg = ltcg;
     this.totalCg.stcg = stcg;
