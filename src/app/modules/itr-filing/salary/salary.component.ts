@@ -122,7 +122,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       id: null,
       seqNum: 9,
       value: 'NON_MONETARY_PERQUISITES',
-      label: 'Non Monetary Perquisites u/s10(10CC)',
+      label: 'Tax paid by employer on non-monetary perquisites u/s 10CC',
       detailed: false,
     },
     {
@@ -726,7 +726,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             allowance.controls['allowValue'].value > perquisitesAmount
           ) {
             this.utilsService.showSnackBar(
-              'Non Monetary Perquisites u/s10(10CC) cannot exceed the amount of Perquisites - Salary 17(2)'
+              'Tax paid by employer on non-monetary perquisites u/s 10CC cannot exceed the amount of Perquisites - Salary 17(2)'
             );
             return;
           }
@@ -746,7 +746,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             perquisitesAmount === 0
           ) {
             this.utilsService.showSnackBar(
-              'Non Monetary Perquisites u/s10(10CC) is allowed only for Perquisites - Salary 17(2)'
+              'Tax paid by employer on non-monetary perquisites u/s 10CC is allowed only for Perquisites - Salary 17(2)'
             );
             return;
           }
