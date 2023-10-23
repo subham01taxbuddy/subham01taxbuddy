@@ -29,12 +29,13 @@ import { AgTooltipComponent } from "../../../shared/components/ag-tooltip/ag-too
 import { ReAssignActionDialogComponent } from '../../components/re-assign-action-dialog/re-assign-action-dialog.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 declare function we_track(key: string, value: any);
+
 @Component({
-  selector: 'app-assigned-new-users',
-  templateUrl: './assigned-new-users.component.html',
-  styleUrls: ['./assigned-new-users.component.scss']
+  selector: 'app-itr-assigned-users',
+  templateUrl: './itr-assigned-users.component.html',
+  styleUrls: ['./itr-assigned-users.component.scss']
 })
-export class AssignedNewUsersComponent implements OnInit, OnDestroy {
+export class ItrAssignedUsersComponent implements OnInit {
   loading!: boolean;
   usersGridOptions: GridOptions;
   config: any;
@@ -61,6 +62,13 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   sortMenus = [
     { value: 'name', name: 'Name' },
     { value: 'createdDate', name: 'Creation Date' }
+  ];
+  searchBy: any = {};
+  searchMenus = [
+    { value: 'name', name: 'User Name' },
+    { value: 'email', name: 'Email' },
+    { value: 'mobileNo', name: 'Mobile No' },
+    { value: 'pan', name: 'PAN' }
   ];
   constructor(
     private reviewService: ReviewService,
@@ -164,7 +172,13 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   }
 
   sortByObject(object) {
+    debugger
     this.sortBy = object;
+  }
+
+  searchByObject(object) {
+    debugger
+    this.searchBy = object;
   }
 
   LIFECYCLE = 'LIFECYCLE';
