@@ -429,7 +429,7 @@
                 name="sellValue"
                 maxlength="14"
                 required
-                (change)="
+                (change)="calculateGainType(selectedFormGroup);
                   calculateTotalCG(selectedFormGroup); calculateDeductionGain()
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -452,7 +452,7 @@
                 placeholder="Buy Value"
                 name="purchaseCost"
                 maxlength="14"
-                (change)="calculateTotalCG(selectedFormGroup)"
+                (change)="calculateGainType(selectedFormGroup);calculateTotalCG(selectedFormGroup)"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-error

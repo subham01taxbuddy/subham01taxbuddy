@@ -782,6 +782,9 @@ export class SharesAndEquityComponent
         securities.controls['isinCode'].setValue('');
         securities.controls['nameOfTheUnits'].setValue('');
         securities.controls['fmvAsOn31Jan2018'].setValue('');
+        securities.controls['sellOrBuyQuantity'].setValue(1);
+        securities.controls['purchaseValuePerUnit'].setValue(securities.controls['purchaseCost'].value);
+        securities.controls['sellValuePerUnit'].setValue(securities.controls['sellValue'].value);
       } else {
         securities.controls['isinCode'].setValidators([Validators.required]);
         securities.controls['isinCode'].updateValueAndValidity();
