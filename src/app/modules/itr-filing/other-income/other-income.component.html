@@ -388,22 +388,32 @@
                       formArrayName="agriInc"
                     >
                       <div
+                        class="flex align-items-center justify-between"
+                        style="margin: 0px 25px 25px 25px"
+                      >
+                        <div class="note">Agriculture Income Details</div>
+                        <button (click)="addAgriLandDtls()">+Add More</button>
+                      </div>
+                      <div
                         *ngFor="
                           let agriIncArray of getAgriIncomeArray.controls;
                           let j = index
                         "
                         [formGroupName]="j"
                       >
-                        <div
-                          class="flex align-items-center justify-between"
-                          style="margin: 0px 25px 25px 25px"
-                        >
-                          <div class="note">Agriculture Income Details</div>
-                          <button (click)="addAgriLandDtls()">+Add More</button>
-                        </div>
-
                         <div style="margin: 0px 25px 25px 25px">
+                          <!-- checkbox -->
                           <div class="flex justify-between align-items-center">
+                            <div class="custom-control custom-checkbox">
+                              <input
+                                class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                type="checkbox"
+                                (click)="$event.stopPropagation()"
+                                [checked]="selectedIndexes.includes(j)"
+                                (click)="toggleSelectedIndex(j)"
+                              />
+                            </div>
+
                             <!-- name of district -->
                             <div class="col-sm-5">
                               <mat-label style="margin-bottom: 16px"
@@ -414,7 +424,7 @@
                                   trim
                                   matInput
                                   placeholder="Name of District"
-                                  name="nameOfDistrict[i]"
+                                  name="nameOfDistrict[j]"
                                   formControlName="nameOfDistrict"
                                   class="input-field"
                                 />
@@ -431,7 +441,7 @@
                                   trim
                                   matInput
                                   placeholder="land In Acre"
-                                  name="landInAcre[i]"
+                                  name="landInAcre[j]"
                                   formControlName="landInAcre"
                                   class="input-field"
                                 />
@@ -448,7 +458,7 @@
                                   trim
                                   matInput
                                   placeholder="Pincode"
-                                  name="pinCode[i]"
+                                  name="pinCode[j]"
                                   formControlName="pinCode"
                                   class="input-field"
                                 />
@@ -464,7 +474,7 @@
                               lease*</mat-label
                             >
                             <mat-radio-group
-                              name="owner[i]"
+                              name="owner[j]"
                               formControlName="owner"
                               placeholder="owner"
                               required
@@ -493,9 +503,9 @@
                               rain-fed?
                             </mat-label>
                             <mat-radio-group
-                              name="typeOfLand[i]"
+                              name="typeOfLand[j]"
                               formControlName="typeOfLand"
-                              placeholder="typeOfLand"
+                              placeholder="Type Of Land"
                             >
                               <mat-radio-button
                                 [value]="'IRG'"
@@ -513,6 +523,9 @@
                             </mat-radio-group>
                           </div>
                         </div>
+                      </div>
+                      <div (click)="delete()">
+                        <button>Delete</button>
                       </div>
                     </div>
                   </div>
