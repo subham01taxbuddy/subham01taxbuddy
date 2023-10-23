@@ -163,6 +163,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   exemptIncomesFormArray: FormArray;
   agriIncFormGroup: FormGroup;
   agriIncFormArray: FormArray;
+  selectedIndexes: number[] = [];
+
   constructor(
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
@@ -193,14 +195,13 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       totalFamPenDeduction: [],
     });
 
-    this.agriIncFormArray = this.createAgriIncForm();
     this.agriIncFormGroup = this.fb.group({
       grossAgriculturalReceipts: new FormControl(null),
       expenditureIncurredOnAgriculture: new FormControl(null),
       unabsorbedAgriculturalLoss: new FormControl(null),
       agriIncomePortionRule7: new FormControl(null),
       netAgriculturalIncome: new FormControl(null),
-      agriInc: this.agriIncFormArray,
+      agriInc: this.createAgriIncForm(),
     });
 
     this.exemptIncomesFormArray = this.createExemptIncomeForm();
@@ -255,6 +256,30 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
     data.push(formGroup);
     return this.fb.array(data);
+  }
+
+  // Function to toggle selected index
+  toggleSelectedIndex(index: number) {
+    const idx = this.selectedIndexes.indexOf(index);
+    if (idx > -1) {
+      this.selectedIndexes.splice(idx, 1);
+    } else {
+      this.selectedIndexes.push(index);
+    }
+  }
+
+  delete() {
+    let agriIncArray = [];
+
+    this.getAgriIncomeArray.controls.forEach((element, i) => {
+      if (!this.selectedIndexes.includes(i)) {
+        agriIncArray.push(element);
+      }
+    });
+
+    this.Copy_ITR_JSON.agriculturalLandDetails = agriIncArray;
+    this.agriIncFormArray = this.fb.array(agriIncArray);
+    this.saveExemptIncomes('delete');
   }
 
   get getIncomeArray() {
@@ -391,7 +416,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     );
   }
 
-  saveExemptIncomes() {
+  saveExemptIncomes(type?) {
     // setting exempt Income Details
     this.Copy_ITR_JSON.exemptIncomes = [];
     let exemptIncomes = this.exemptIncomeFormGroup.controls[
@@ -438,12 +463,14 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.Copy_ITR_JSON.agriculturalIncome = agriIncome;
 
     // setting agri land details
-    const agriLbValue = this.getAgriIncomeArray.getRawValue();
-    console.log(agriLbValue, 'agriLbValue');
-
-    agriLbValue.forEach((element) => {
-      this.Copy_ITR_JSON.agriculturalLandDetails.push(element);
-    });
+    if (type === 'delete') {
+      const agriLbValue = this.agriIncFormArray.value;
+      this.Copy_ITR_JSON.agriculturalLandDetails = agriLbValue;
+    } else {
+      const agriLbValue = this.getAgriIncomeArray.getRawValue();
+      console.log(agriLbValue, 'agriLbValue');
+      this.Copy_ITR_JSON.agriculturalLandDetails = agriLbValue;
+    }
 
     // saving
     this.loading = true;
@@ -456,9 +483,26 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         );
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
-        this.utilsService.showSnackBar(
-          'Other sources of Income updated successfully.'
-        );
+
+        if (type === 'delete') {
+          this.getAgriIncomeArray.clear();
+          for (
+            let i = 0;
+            i < this.ITR_JSON.agriculturalLandDetails.length;
+            i++
+          ) {
+            const jsonDetails = this.ITR_JSON.agriculturalLandDetails[i];
+            this.addAgriLandDtls(jsonDetails);
+          }
+
+          this.utilsService.showSnackBar(
+            'Agriculture land details deleted successfully'
+          );
+        } else {
+          this.utilsService.showSnackBar(
+            'Other sources of Income updated successfully.'
+          );
+        }
         // this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
       },
       (error) => {
@@ -593,14 +637,31 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   }
 
   addAgriLandDtls(item?) {
-    const formGroup = this.fb.group({
-      nameOfDistrict: item ? item.nameOfDistrict : '',
-      pinCode: item ? item.pinCode : 0,
-      landInAcre: item ? item.landInAcre : 0,
-      owner: item ? item.owner : '',
-      typeOfLand: item ? item.typeOfLand : '',
-    });
-    this.agriIncFormArray.push(formGroup);
+    if (item) {
+      if (this.getAgriIncomeArray.valid) {
+        const formGroup = this.fb.group({
+          nameOfDistrict: item ? item.nameOfDistrict : '',
+          pinCode: item ? item.pinCode : 0,
+          landInAcre: item ? item.landInAcre : 0,
+          owner: item ? item.owner : '',
+          typeOfLand: item ? item.typeOfLand : '',
+        });
+        this.getAgriIncomeArray.push(formGroup);
+      } else {
+        this.utilsService.showSnackBar(
+          'Please make sure all the details are entered'
+        );
+      }
+    } else {
+      const formGroup = this.fb.group({
+        nameOfDistrict: '',
+        pinCode: 0,
+        landInAcre: 0,
+        owner: '',
+        typeOfLand: '',
+      });
+      this.getAgriIncomeArray.push(formGroup);
+    }
   }
 
   setNetAgriIncome(index) {
