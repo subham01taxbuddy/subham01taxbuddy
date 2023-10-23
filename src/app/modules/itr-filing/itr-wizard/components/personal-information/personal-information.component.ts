@@ -2197,6 +2197,8 @@ export class PersonalInformationComponent implements OnInit {
       itemsPerPage: 3,
       currentPage: 1,
     };
+    this.strDepAmtAggAmtExcd1CrPrYrFlg();
+    this.clauseiv7provisio139i();
   }
 
   ngOnChanges(changes: SimpleChanges) {
