@@ -624,20 +624,12 @@ export class SummaryComponent implements OnInit {
     exemptIncome: {
       partnerFirms: [
         {
-          bonus: number;
-          capitalBalanceOn31stMarch: number;
-          commission: number;
-          interest: number;
-          isLiableToAudit: string;
           name: string;
-          others: number;
           panNumber: string;
           profitShareAmount: number;
-          profitSharePercent: number;
-          salary: number;
-          sec92EFirmFlag: string;
         }
       ];
+      total: number;
     };
   };
 
@@ -1937,20 +1929,12 @@ export class SummaryComponent implements OnInit {
             exemptIncome: {
               partnerFirms: [
                 {
-                  bonus: 0,
-                  capitalBalanceOn31stMarch: 0,
-                  commission: 0,
-                  interest: 0,
-                  isLiableToAudit: '',
                   name: '',
-                  others: 0,
                   panNumber: '',
                   profitShareAmount: 0,
-                  profitSharePercent: 0,
-                  salary: 0,
-                  sec92EFirmFlag: '',
                 },
               ],
+              total: 0,
             },
           };
           console.log(this.finalCalculations, 'finalCalculations');
@@ -3571,20 +3555,12 @@ export class SummaryComponent implements OnInit {
             exemptIncome: {
               partnerFirms: [
                 {
-                  bonus: 0,
-                  capitalBalanceOn31stMarch: 0,
-                  commission: 0,
-                  interest: 0,
-                  isLiableToAudit: '',
                   name: '',
-                  others: 0,
                   panNumber: '',
                   profitShareAmount: 0,
-                  profitSharePercent: 0,
-                  salary: 0,
-                  sec92EFirmFlag: '',
                 },
               ],
+              total: 0,
             },
           };
           console.log(
@@ -5025,32 +5001,16 @@ export class SummaryComponent implements OnInit {
                       ?.map((element, index) => {
                         return {
                           srNo: index + 1,
-                          bonus: element.bonus,
-                          capitalBalanceOn31stMarch:
-                            element.capitalBalanceOn31stMarch,
-                          commission: element.commission,
-                          interest: element.interest,
-                          isLiableToAudit: element.isLiableToAudit,
                           name: element.name,
-                          others: element.others,
                           panNumber: element.panNumber,
                           profitShareAmount: element.profitShareAmount,
-                          profitSharePercent: element.profitSharePercent,
-                          salary: element.salary,
-                          sec92EFirmFlag: element.sec92EFirmFlag,
-
-                          buyDate: element.purchaseDate,
-                          sellDate: element.sellDate,
-                          headOfIncome:
-                            element.headOfIncome === 'BI'
-                              ? 'Business or Profession'
-                              : 'Capital Gain',
-                          buyValue: element.purchaseCost,
-                          SaleValue: element.sellValue,
-                          income: element.capitalGain,
                         };
                       })
                       .flat(),
+                    total: this.finalSummary?.itr?.partnerFirms?.reduce(
+                      (total, item) => total + item?.profitShareAmount,
+                      0
+                    ),
                   },
                 };
                 console.log(this.finalCalculations, 'finalCalculations');
@@ -6467,32 +6427,16 @@ export class SummaryComponent implements OnInit {
                     ?.map((element, index) => {
                       return {
                         srNo: index + 1,
-                        bonus: element.bonus,
-                        capitalBalanceOn31stMarch:
-                          element.capitalBalanceOn31stMarch,
-                        commission: element.commission,
-                        interest: element.interest,
-                        isLiableToAudit: element.isLiableToAudit,
                         name: element.name,
-                        others: element.others,
                         panNumber: element.panNumber,
                         profitShareAmount: element.profitShareAmount,
-                        profitSharePercent: element.profitSharePercent,
-                        salary: element.salary,
-                        sec92EFirmFlag: element.sec92EFirmFlag,
-
-                        buyDate: element.purchaseDate,
-                        sellDate: element.sellDate,
-                        headOfIncome:
-                          element.headOfIncome === 'BI'
-                            ? 'Business or Profession'
-                            : 'Capital Gain',
-                        buyValue: element.purchaseCost,
-                        SaleValue: element.sellValue,
-                        income: element.capitalGain,
                       };
                     })
                     .flat(),
+                  total: this.finalSummary?.itr?.partnerFirms?.reduce(
+                    (total, item) => total + item?.profitShareAmount,
+                    0
+                  ),
                 },
               };
               console.log(
