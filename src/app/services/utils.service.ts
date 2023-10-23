@@ -672,6 +672,14 @@ export class UtilsService {
       itrSummaryJson: null,
       isItrSummaryJsonEdited: false,
       liableSection44AAflag: '',
+
+      agriculturalIncome: {
+        grossAgriculturalReceipts: 0,
+        expenditureIncurredOnAgriculture: 0,
+        unabsorbedAgriculturalLoss: 0,
+        agriIncomePortionRule7: 0,
+        netAgriculturalIncome: 0,
+      },
     };
 
     return ITR_JSON;

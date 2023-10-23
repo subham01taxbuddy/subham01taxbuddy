@@ -239,6 +239,7 @@
           <table class="table table-bordered">
             <thead style="background: #eaeaea">
               <tr class="table-head">
+                <th class="text-center">Sr. No</th>
                 <th class="text-center">Allowance Type</th>
                 <th class="text-center">Exempt Amount</th>
               </tr>
@@ -251,8 +252,142 @@
                 "
                 [formGroupName]="i"
               >
-                <td class="label-td">
+                <td>{{ i + 1 }}</td>
+                <td class="label-td note">
                   {{ income.value.label }}
+
+                  <!-- Additional fields for AGRI -->
+                  <div
+                    [formGroup]="agriIncFormGroup"
+                    *ngIf="income.value.incomeType === 'AGRI'"
+                    class="surround"
+                  >
+                    <div class="note" style="margin-left: 25px">
+                      Agriculture Details
+                    </div>
+                    <!-- grossAgriculturalReceipts -->
+                    <div class="flex justify-between align-items-center">
+                      <mat-label style="margin-left: 25px"
+                        >Gross Agricultural Receipts</mat-label
+                      >
+                      <div class="col-sm-2" style="margin-right: 75px">
+                        <mat-form-field appearance="outline">
+                          <input
+                            type="number"
+                            trim
+                            matInput
+                            placeholder=""
+                            name="grossAgriculturalReceipts[i]"
+                            formControlName="grossAgriculturalReceipts"
+                            maxlength="125"
+                            (change)="setNetAgriIncome(i)"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <!-- expenditureIncurredOnAgriculture -->
+                    <div class="flex justify-between align-items-center">
+                      <mat-label style="margin-left: 25px"
+                        >Expenditure incurred on agriculture</mat-label
+                      >
+                      <div class="col-sm-2" style="margin-right: 75px">
+                        <mat-form-field appearance="outline">
+                          <input
+                            type="number"
+                            trim
+                            matInput
+                            placeholder=""
+                            name="expenditureIncurredOnAgriculture[i]"
+                            formControlName="expenditureIncurredOnAgriculture"
+                            class="input-field"
+                            maxlength="125"
+                            (change)="setNetAgriIncome(i)"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <!-- unabsorbedAgriculturalLoss -->
+                    <div class="flex justify-between align-items-center">
+                      <mat-label style="margin-left: 25px"
+                        >Unabsorbed agricultural loss of the previous eight
+                        assessment years</mat-label
+                      >
+                      <div class="col-sm-2" style="margin-right: 75px">
+                        <mat-form-field appearance="outline">
+                          <input
+                            type="number"
+                            trim
+                            matInput
+                            placeholder=""
+                            name="unabsorbedAgriculturalLoss[i]"
+                            formControlName="unabsorbedAgriculturalLoss"
+                            class="input-field"
+                            maxlength="125"
+                            (change)="setNetAgriIncome(i)"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <!-- agriIncomePortionRule7 -->
+                    <div class="flex justify-between align-items-center">
+                      <mat-label style="margin-left: 25px"
+                        >The agricultural income portion relating to rules 7,
+                        7A, 7B(1), 7B(1A) & 8</mat-label
+                      >
+                      <div class="col-sm-2" style="margin-right: 75px">
+                        <mat-form-field appearance="outline">
+                          <input
+                            type="number"
+                            trim
+                            matInput
+                            placeholder=""
+                            name="agriIncomePortionRule7[i]"
+                            formControlName="agriIncomePortionRule7"
+                            class="input-field"
+                            maxlength="125"
+                            (change)="setNetAgriIncome(i)"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <!-- netAgriculturalIncome -->
+                    <div class="flex justify-between align-items-center">
+                      <mat-label style="margin-left: 25px"
+                        >Net Agricultural income</mat-label
+                      >
+                      <div class="col-sm-2" style="margin-right: 75px">
+                        <mat-form-field appearance="outline">
+                          <input
+                            type="number"
+                            trim
+                            matInput
+                            placeholder=""
+                            name="netAgriculturalIncome[i]"
+                            formControlName="netAgriculturalIncome"
+                            class="input-field"
+                            maxlength="125"
+                            readonly
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- agriculture income details -->
+                  <!-- <div
+                    class="surround"
+                    *ngIf="income.value.incomeType === 'AGRI'"
+                  >
+                    some texts. Lorem ipsum dolor sit amet consectetur
+                    adipisicing elit. Beatae accusantium optio incidunt, ad a
+                    assumenda distinctio expedita nobis, delectus neque
+                    inventore sit quidem perferendis dolorum quod? Hic ipsum
+                    temporibus labore!s
+                  </div> -->
                 </td>
 
                 <td>

@@ -62,9 +62,9 @@ export interface ITR_JSON {
   itrProgress: string[];
   directorInCompany: DirectorInCompany[];
   unlistedSharesDetails: UnlistedSharesDetails[];
-  partnerInFirmFlag : string;
-  partnerFirms : PartnerFirms[];
-  partnerInFirms :partnerInFirms[];
+  partnerInFirmFlag: string;
+  partnerFirms: PartnerFirms[];
+  partnerInFirms: partnerInFirms[];
   dateOfDividendIncome: string;
   lastVisitedURL: string;
   seventhProviso139: SeventhProviso139;
@@ -108,23 +108,31 @@ export interface ITR_JSON {
   liableSection44AAflag: string;
   portugeseCC5AFlag: string;
   schedule5a: Schedule5A;
+
+  agriculturalIncome: {
+    grossAgriculturalReceipts: number;
+    expenditureIncurredOnAgriculture: number;
+    unabsorbedAgriculturalLoss: number;
+    agriIncomePortionRule7: number;
+    netAgriculturalIncome: number;
+  };
 }
 
-export interface Schedule5A{
+export interface Schedule5A {
   nameOfSpouse: string;
-	panOfSpouse: string;
-	aadhaarOfSpouse: string;
-	booksSpouse44ABFlg: string;
-	booksSpouse92EFlg: string;
-	headIncomes: Schedule5AHeadIncome[];
+  panOfSpouse: string;
+  aadhaarOfSpouse: string;
+  booksSpouse44ABFlg: string;
+  booksSpouse92EFlg: string;
+  headIncomes: Schedule5AHeadIncome[];
 }
 
-export interface Schedule5AHeadIncome{
+export interface Schedule5AHeadIncome {
   headOfIncome: string;
   incomeReceived: number;
-	apportionedAmountOfSpouse: number;
-	tdsDeductedAmount: number;
-	apportionedTDSOfSpouse: number;
+  apportionedAmountOfSpouse: number;
+  tdsDeductedAmount: number;
+  apportionedTDSOfSpouse: number;
 }
 
 export interface foreignIncome {
@@ -389,7 +397,6 @@ export interface UnlistedSharesDetails {
 export interface partnerInFirms {
   name: string;
   panNumber: string;
-
 }
 
 export interface PartnerFirms {
