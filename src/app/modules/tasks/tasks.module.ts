@@ -25,6 +25,7 @@ import { ItrStatusDialogComponent } from './components/itr-status-dialog/itr-sta
 import { ReAssignActionDialogComponent } from './components/re-assign-action-dialog/re-assign-action-dialog.component';
 import { ChatOptionsDialogComponent } from './components/chat-options/chat-options-dialog.component';
 import { ScheduledCallReassignDialogComponent } from './components/scheduled-call-reassign-dialog/scheduled-call-reassign-dialog.component';
+import { ItrAssignedUsersComponent } from './pages/itr-assigned-users/itr-assigned-users.component';
 
 @NgModule({
     imports: [
@@ -57,6 +58,7 @@ import { ScheduledCallReassignDialogComponent } from './components/scheduled-cal
         ChatOptionsDialogComponent,
         ReAssignActionDialogComponent,
         ScheduledCallReassignDialogComponent,
+        ItrAssignedUsersComponent,
     ],
     entryComponents: [
         ReAssignDialogComponent,
