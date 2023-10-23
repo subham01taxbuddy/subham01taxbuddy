@@ -30,8 +30,8 @@
         "
         [formGroupName]="fieldGlobalIndex(i)"
       >
-        <div class="row specBk">
-          <div class="col-sm-1">
+        <div class="row specBk" style="justify-content: space-between">
+          <div class="col-sm-1" style="padding: 0px">
             <mat-checkbox
               name="hasEdit[i]"
               formControlName="hasEdit"
@@ -39,11 +39,14 @@
             >
             </mat-checkbox>
           </div>
-          <div class="col-sm-3">
+
+          <div class="col-sm-2" style="padding-left: 0px">
             <app-business-input-autocomplete
               [businessType]="'44ADA'"
               [selectedInput]="
-                profIncomeFormArray.controls[fieldGlobalIndex(i)].get('natureOfBusiness').value
+                profIncomeFormArray.controls[fieldGlobalIndex(i)].get(
+                  'natureOfBusiness'
+                ).value
               "
               (businessSelected)="businessClicked($event, i)"
             >
@@ -83,6 +86,21 @@
               >Please enter the amount</mat-error
             >
           </div>
+
+          <!-- businessDescription -->
+          <div class="col-sm-3">
+            <mat-label>Business Description</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                class="input-field"
+                formControlName="description"
+                name="description[i]"
+              />
+            </mat-form-field>
+          </div>
+
+
           <div class="col-sm-2">
             <mat-label>Gross Receipt</mat-label>
             <mat-form-field appearance="outline">
@@ -115,8 +133,50 @@
               >Gross receipts amount cannot be more than 50,00,000
             </mat-error>
           </div>
-          <div class="col-sm-3">
-            <mat-label>Presumptive Income Min(50%)</mat-label>
+
+          <div class="col-sm-2">
+            <mat-label>Minimum Income (50%)</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                formControlName="minimumPresumptiveIncome"
+                matInput
+                name="minimumPresumptiveIncome[i]"
+                class="input-field"
+                required
+                digitsOnly
+                readonly
+              />
+            </mat-form-field>
+            <mat-error
+              *ngIf="
+                (profIncomeFormArray.controls[i].get('minimumPresumptiveIncome')
+                  .touched ||
+                  submitted) &&
+                profIncomeFormArray.controls[i]
+                  .get('minimumPresumptiveIncome')
+                  .hasError('required')
+              "
+              >Please enter the amount</mat-error
+            >
+          </div>
+
+          <div class="col-sm-2">
+            <mat-label
+              >Income
+              <ng-container
+                *ngFor="let percentage of percentage; let id = index"
+              >
+                <ng-container *ngIf="id === i">
+                  ({{
+                    percentage.natOfBusiness ===
+                    profIncomeFormArray.controls[i].get("natureOfBusiness")
+                      .value
+                      ? percentage.percentage
+                      : 0
+                  }}%)
+                </ng-container>
+              </ng-container>
+            </mat-label>
             <mat-form-field appearance="outline">
               <input
                 formControlName="presumptiveIncome"
@@ -125,19 +185,9 @@
                 class="input-field"
                 required
                 digitsOnly
+                (change)="calculatePresumptive($event, i)"
               />
             </mat-form-field>
-            <mat-error
-              *ngIf="
-                (profIncomeFormArray.controls[i].get('presumptiveIncome')
-                  .touched ||
-                  submitted) &&
-                profIncomeFormArray.controls[i]
-                  .get('presumptiveIncome')
-                  .hasError('required')
-              "
-              >Please enter the amount</mat-error
-            >
             <mat-error
               *ngIf="
                 (profIncomeFormArray.controls[i].get('presumptiveIncome')
@@ -183,7 +233,8 @@
           *ngFor="let item of getProfIncomeArray.controls | paginate : config"
         ></tr>
       </table>
-      <pagination-controls id="professionConfig"
+      <pagination-controls
+        id="professionConfig"
         (pageChange)="pageChanged($event)"
       ></pagination-controls>
     </div>

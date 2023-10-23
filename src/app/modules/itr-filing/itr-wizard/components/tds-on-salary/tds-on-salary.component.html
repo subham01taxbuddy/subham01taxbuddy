@@ -40,7 +40,7 @@
         </mat-checkbox> -->
         <div class="row">
           <div class="col-sm-3">
-            <mat-label>TAN of Employer*</mat-label>
+            <mat-label>TAN of Employer* &nbsp;&nbsp;&nbsp;</mat-label>
             <mat-form-field appearance="outline">
               <input
                 matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
@@ -91,7 +91,7 @@
               <input
                 formControlName="totalAmountCredited"
                 matInput
-                placeholder="Amt other than cash"
+                placeholder="Total Amount credited"
                 name="totalAmountCredited[i]"
                 required
                 class="input-field"
@@ -112,7 +112,7 @@
               <input
                 formControlName="totalTdsDeposited"
                 matInput
-                placeholder="Amt other than cash"
+                placeholder="Total Tax Deducted"
                 name="totalTdsDeposited[i]"
                 required
                 class="input-field"
@@ -127,49 +127,13 @@
             </mat-form-field>
           </div>
         </div>
-        <!--
-        <div class="edit-head">
-          <button
-            type="button"
-            class="edit-donation spEd"
-            (click)="editDonationForm(i)"
-          >
-            <mat-icon> edit_square </mat-icon>Edit
-          </button>
-        </div> -->
+
       </div>
       <hr />
       <div class="col-sm-3">
         <button class="tbd-btn save-btn mvRth" (click)="save()">Save</button>
       </div>
-      <!-- <hr />
 
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-3">
-            <button
-              type="submit"
-              class="tbd-btn-secondary delBtn"
-              (click)="deleteSalaryArray()"
-            >
-              <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-            </button>
-          </div>
-          <div class="col-sm-6">
-            <table class="numSp">
-              <tr
-                *ngFor="let item of getSalaryArray.controls | paginate : config"
-              ></tr>
-            </table>
-            <pagination-controls
-              id="salaryPagination"
-              (pageChange)="pageChanged($event)"
-              class="pgNmbr"
-            ></pagination-controls>
-          </div>
-
-        </div>
-      </div> -->
     </div>
   </form>
 </div>

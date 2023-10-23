@@ -13,6 +13,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './other-information.component.html',
   styleUrls: ['./other-information.component.scss']
 })
+//Ashwini: not used
 export class OtherInformationComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
 
@@ -95,7 +96,7 @@ export class OtherInformationComponent implements OnInit {
           haveUnlistedShares: false
         }
       }
-    } 
+    }
   }
 
   ChangeSharesStatus() {
@@ -353,7 +354,7 @@ export class OtherInformationComponent implements OnInit {
 
   //
   ChangeDirectorStatus() {
-    
+
     if (this.ITR_JSON.systemFlags?.directorInCompany) {
       this.addDirectorDetails('Add director details', 'ADD', null);
     } else {

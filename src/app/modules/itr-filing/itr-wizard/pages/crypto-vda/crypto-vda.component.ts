@@ -17,6 +17,8 @@ export class CryptoVdaComponent implements OnInit {
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
   loading = false;
+  minDate: Date;
+  maxDate: Date;
 
   constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
 
@@ -33,6 +35,14 @@ export class CryptoVdaComponent implements OnInit {
         return item?.assetType === 'VDA';
       }
     );
+
+    // Set the minimum to January 1st 20 years in the past and December 31st a year in the future.
+    const currentYear = new Date().getFullYear() - 1;
+    const thisYearStartDate = new Date(currentYear, 3, 1); // April 1st of the current year
+    const nextYearEndDate = new Date(currentYear + 1, 2, 31); // March 31st of the next year
+
+    this.minDate = thisYearStartDate;
+    this.maxDate = nextYearEndDate;
 
     if (this.Copy_ITR_JSON.capitalGain.length > 0) {
       const vdaCgArray = this.Copy_ITR_JSON?.capitalGain;

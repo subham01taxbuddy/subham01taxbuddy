@@ -15,7 +15,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
-import {TotalCg} from "../../../../../services/itr-json-helper-service";
+import { TotalCg } from '../../../../../services/itr-json-helper-service';
 
 @Component({
   selector: 'app-zero-coupon-bonds',
@@ -38,6 +38,7 @@ export class ZeroCouponBondsComponent
   minDate: Date;
   maxDate: Date;
   maxPurchaseDate: Date;
+  maximumDate = new Date();
 
   gainTypeList = [
     { name: 'STCG', value: 'SHORT' },
@@ -64,6 +65,7 @@ export class ZeroCouponBondsComponent
   }
 
   ngOnInit(): void {
+    this.maximumDate = new Date();
     if (this.activateRoute.snapshot.queryParams['bondType']) {
       this.bondType = this.activateRoute.snapshot.queryParams['bondType'];
       this.bondType === 'bonds'
@@ -139,7 +141,7 @@ export class ZeroCouponBondsComponent
     // this.onChanges();
   }
 
-  updateDeductionUI(){
+  updateDeductionUI() {
     this.getBondsCg();
     if (this.totalCg.ltcg <= 0) {
       this.deduction = false;
@@ -348,15 +350,21 @@ export class ZeroCouponBondsComponent
 
   totalCg: TotalCg = {
     ltcg: 0,
-    stcg: 0
+    stcg: 0,
   };
   getBondsCg() {
     let ltcg = 0;
     let stcg = 0;
     const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
     bondsArray.controls.forEach((element) => {
-      ltcg += (element as FormGroup).controls['gainType'].value === 'LONG' ? parseInt((element as FormGroup).controls['capitalGain'].value) : 0;
-      stcg += (element as FormGroup).controls['gainType'].value === 'SHORT' ? parseInt((element as FormGroup).controls['capitalGain'].value) : 0;
+      ltcg +=
+        (element as FormGroup).controls['gainType'].value === 'LONG'
+          ? parseInt((element as FormGroup).controls['capitalGain'].value)
+          : 0;
+      stcg +=
+        (element as FormGroup).controls['gainType'].value === 'SHORT'
+          ? parseInt((element as FormGroup).controls['capitalGain'].value)
+          : 0;
     });
     this.totalCg.ltcg = ltcg;
     this.totalCg.stcg = stcg;
@@ -434,7 +442,8 @@ export class ZeroCouponBondsComponent
           this.ITR_JSON = result;
           this.loading = false;
           sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          let bondType = this.bondType === 'bonds' ? 'Bonds' : 'Zero coupon bonds'
+          let bondType =
+            this.bondType === 'bonds' ? 'Bonds' : 'Zero coupon bonds';
           this.utilsService.showSnackBar(
             `${bondType} data updated successfully`
           );
@@ -442,7 +451,8 @@ export class ZeroCouponBondsComponent
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          let bondType = this.bondType === 'bonds' ? 'bonds' : 'zero coupon bonds'
+          let bondType =
+            this.bondType === 'bonds' ? 'bonds' : 'zero coupon bonds';
           this.utilsService.showSnackBar(
             `Failed to update ${bondType} data, please try again.`
           );
@@ -479,15 +489,17 @@ export class ZeroCouponBondsComponent
       let expenses = 0;
       const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
       bondsArray.controls.forEach((element) => {
-        capitalGain += parseInt(
-          (element as FormGroup).controls['capitalGain'].value
-        );
-        saleValue += parseInt(
-          (element as FormGroup).controls['valueInConsideration'].value
-        );
-        expenses += parseInt(
-          (element as FormGroup).controls['sellExpense'].value
-        );
+        if((element as FormGroup).controls['gainType'].value === 'LONG') {
+          capitalGain += parseInt(
+            (element as FormGroup).controls['capitalGain'].value
+          );
+          saleValue += parseInt(
+            (element as FormGroup).controls['valueInConsideration'].value
+          );
+          expenses += parseInt(
+            (element as FormGroup).controls['sellExpense'].value
+          );
+        }
       });
 
       let param = '/calculate/capital-gain/deduction';

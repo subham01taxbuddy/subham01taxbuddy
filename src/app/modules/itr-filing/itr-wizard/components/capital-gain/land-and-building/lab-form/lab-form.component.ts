@@ -64,6 +64,7 @@ export class LabFormComponent implements OnInit {
   stateDropdown = AppConstants.stateDropdown;
   // data: any; // TODO use input output to decide view edit or add
   @Input() data: any;
+  selectedIndexes: number[] = [];
 
   config: any;
   active: any;
@@ -638,10 +639,15 @@ export class LabFormComponent implements OnInit {
     });
   }
 
-  removeBuyersDetails(index) {
-    console.log('Remove Index', index);
-    const buyersDetails = <FormArray>this.immovableForm.get('buyersDetails');
-    buyersDetails.removeAt(index);
+  removeBuyersDetails() {
+    let buyersDetails = <FormArray>this.immovableForm.controls['buyersDetails'];
+    let nonSelected = buyersDetails.controls.filter((item: FormGroup) => item.controls['selected'].value !== true);
+    buyersDetails.controls = [];
+
+    nonSelected.forEach((item, index) => {
+      buyersDetails.push(item);
+    });
+
     // Condition is added because at least one buyers details is mandatory
     if (buyersDetails.length === 0) {
       buyersDetails.push(this.createBuyersDetailsForm());
@@ -1034,42 +1040,56 @@ export class LabFormComponent implements OnInit {
     }
   }
 
-  removeImprovement(index, formGroupName) {
-    console.log('Remove Index', index);
-    const improve = <FormArray>formGroupName.get('improvement');
-    let objToRemove = improve.controls[index].value;
-    improve.removeAt(index);
-
-    //update the cg object
-    console.log('objToRemove', objToRemove);
-    let filtered = this.cgArrayElement.improvement.filter(
-      (item) =>
-        item.srn == objToRemove.srn &&
-        item.costOfImprovement === objToRemove.costOfImprovement &&
-        item.dateOfImprovement == objToRemove.dateOfImprovement
-    );
-    this.cgArrayElement.improvement.splice(
-      this.cgArrayElement.improvement.indexOf(filtered[0]),
-      1
-    );
-
-    //remove from improvements list also
-    let toDelete = this.improvements.filter(
-      (item) =>
-        item.srn == objToRemove.srn &&
-        item.costOfImprovement === objToRemove.costOfImprovement &&
-        item.dateOfImprovement == objToRemove.dateOfImprovement
-    );
-    this.improvements.splice(this.improvements.indexOf(toDelete[0]), 1);
-
-    // This condition is added for setting isCoOwners independent Form Control value when CoOwners Form array is Empty
-    // And this Control is used for Yes/No Type question for showing the details of CoOwners
-    if (improve.length === 0) {
-      this.isImprovements.setValue(false);
+  // Function to toggle selected index
+  toggleSelectedIndex(index: number) {
+    const idx = this.selectedIndexes.indexOf(index);
+    if (idx > -1) {
+      this.selectedIndexes.splice(idx, 1);
+    } else {
+      this.selectedIndexes.push(index);
     }
-    // improve.length === 0 ? this.isImprovements.setValue(false) : null;
+  }
 
-    this.calculateCapitalGain(formGroupName, '', index);
+  removeImprovement(formGroupName: FormGroup) {
+    for (let i = this.selectedIndexes.length - 1; i >= 0; i--) {
+      const index = this.selectedIndexes[i];
+      const improve = <FormArray>formGroupName.get('improvement');
+      if (improve && improve.at(index)) {
+        let objToRemove = improve.at(index).value;
+        improve.removeAt(index);
+
+        // Update the cg object
+        let filtered = this.cgArrayElement?.improvement?.filter(
+          (item) =>
+            item.srn == objToRemove?.srn &&
+            item.costOfImprovement === objToRemove?.costOfImprovement &&
+            item.dateOfImprovement == objToRemove?.dateOfImprovement
+        );
+        if (filtered.length > 0) {
+          this.cgArrayElement?.improvement.splice(
+            this.cgArrayElement?.improvement.indexOf(filtered[0]),
+            1
+          );
+        }
+
+        // Remove from improvements list also
+        let toDelete = this.improvements?.filter(
+          (item) =>
+            item?.srn == objToRemove?.srn &&
+            item?.costOfImprovement === objToRemove?.costOfImprovement &&
+            item?.dateOfImprovement == objToRemove?.dateOfImprovement
+        );
+        if (toDelete.length > 0) {
+          this.improvements.splice(this.improvements?.indexOf(toDelete[0]), 1);
+        }
+
+        if (improve?.length === 0) {
+          this.isImprovements?.setValue(false);
+        }
+
+        this.calculateCapitalGain(formGroupName, '', index);
+      }
+    }
   }
 
   haveImprovements(formGroupName) {
@@ -1130,10 +1150,13 @@ export class LabFormComponent implements OnInit {
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
     ).controls[0] as FormGroup;
+
     if (
       deductionForm.controls['underSection'].value === '54EE' ||
       deductionForm.controls['underSection'].value === '54EC' ||
-      deductionForm.controls['underSection'].value === '54F'
+      deductionForm.controls['underSection'].value === '54F' ||
+      deductionForm.controls['underSection'].value === '54B' ||
+      deductionForm.controls['underSection'].value === '54'
     ) {
       console.log(deductionForm);
       deductionForm.controls['costOfNewAssets'].setValidators([
@@ -1145,13 +1168,18 @@ export class LabFormComponent implements OnInit {
         // Get the sell date from the assetDetails form group
         const sellDate = new Date(assetDetails.controls['sellDate'].value);
 
-        // Calculate the min date (the sellDate plus one day)
+        // Calculate the min date to one year before sale date
         const minDate = new Date(sellDate);
-        minDate.setDate(sellDate.getDate() - 1);
+        minDate.setFullYear(sellDate.getFullYear() - 1);
 
         // Calculate the max date (6 months after the sellDate)
         let maxDate = new Date(sellDate);
-        if (deductionForm.controls['underSection'].value === '54F') {
+        if (
+          deductionForm.controls['underSection'].value === '54' ||
+          deductionForm.controls['underSection'].value === '54B' ||
+          deductionForm.controls['underSection'].value === '54F'
+        ) {
+          // max date will be today's date
           maxDate = new Date();
         } else {
           maxDate = maxDate < new Date() ? maxDate : new Date();

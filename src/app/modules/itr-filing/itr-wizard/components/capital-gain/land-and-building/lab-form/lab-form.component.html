@@ -202,6 +202,7 @@
                     formControlName="valueInConsideration"
                     (change)="calculateCapitalGain(this.immovableForm, '', i)"
                     required
+                    readOnly
                   />
                 </mat-form-field>
               </div>
@@ -340,13 +341,20 @@
           >
             <div>
               <div class="card__col-xs-12 card__col-sm-4">
-                <mat-label
-                  ><mat-checkbox
-                    name="improve[i]"
-                    formControlName="selected"
-                  ></mat-checkbox>
-                  Year Of Improvement</mat-label
-                >
+                <mat-label>
+                  <ng-container class="custom-control custom-checkbox">
+                    <input
+                      class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                      type="checkbox"
+                      (click)="$event.stopPropagation()"
+                      [checked]="selectedIndexes.includes(i)"
+                      (click)="toggleSelectedIndex(i)"
+                      name="improve[i]"
+                      formControlName="selected"
+                    />
+                  </ng-container>
+                  &nbsp;&nbsp; Year Of Improvement
+                </mat-label>
                 <mat-form-field class="input-field-width">
                   <mat-select
                     name="improve[i]"
@@ -411,7 +419,7 @@
         <div>
           <button
             class="delete-btn"
-            (click)="removeImprovement(active, this.immovableForm)"
+            (click)="removeImprovement(this.immovableForm)"
             [disabled]="!improvementSelected()"
             *ngIf="isImprovements.value"
           >
@@ -832,7 +840,7 @@
           <div class="col-sm-3">
             <button
               class="delete-btn"
-              (click)="removeBuyersDetails(active)"
+              (click)="removeBuyersDetails()"
               [disabled]="!buyerSelected()"
             >
               <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete
