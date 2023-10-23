@@ -234,7 +234,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         incomeType: this.exemptIncomesDropdown[i].value,
         incomeValue:
           this.exemptIncomesDropdown[i].value === 'AGRI'
-            ? [null, Validators.max(500000)]
+            ? [null]
             : [null, Validators.min(0)],
       });
 
@@ -266,7 +266,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   }
 
   get getAgriIncomeArray() {
-    return <FormArray>this.agriIncFormGroup.get('agriIncFormArray');
+    const agri = <FormArray>this.agriIncFormGroup.get('agriInc');
+    return agri;
   }
 
   goBack() {
@@ -436,6 +437,15 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
     this.Copy_ITR_JSON.agriculturalIncome = agriIncome;
 
+    // setting agri land details
+    const agriLbValue = this.getAgriIncomeArray.getRawValue();
+    console.log(agriLbValue, 'agriLbValue');
+
+    agriLbValue.forEach((element) => {
+      this.Copy_ITR_JSON.agriculturalLandDetails.push(element);
+    });
+
+    // saving
     this.loading = true;
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
       (result: ITR_JSON) => {
@@ -571,8 +581,26 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     ];
 
     propertiesToSet.forEach((property) => {
-      form.get(property).setValue(agriIncome[property]);
+      form?.get(property).setValue(agriIncome?.[property]);
     });
+
+    // setting agri Land Details
+    const agriArrayItr = this.ITR_JSON.agriculturalLandDetails;
+
+    agriArrayItr.forEach((item) => {
+      this.addAgriLandDtls(item);
+    });
+  }
+
+  addAgriLandDtls(item?) {
+    const formGroup = this.fb.group({
+      nameOfDistrict: item ? item.nameOfDistrict : '',
+      pinCode: item ? item.pinCode : 0,
+      landInAcre: item ? item.landInAcre : 0,
+      owner: item ? item.owner : '',
+      typeOfLand: item ? item.typeOfLand : '',
+    });
+    this.agriIncFormArray.push(formGroup);
   }
 
   setNetAgriIncome(index) {

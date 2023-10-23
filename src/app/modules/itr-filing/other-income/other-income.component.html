@@ -265,129 +265,257 @@
                     <div class="note" style="margin-left: 25px">
                       Agriculture Details
                     </div>
-                    <!-- grossAgriculturalReceipts -->
-                    <div class="flex justify-between align-items-center">
-                      <mat-label style="margin-left: 25px"
-                        >Gross Agricultural Receipts</mat-label
-                      >
-                      <div class="col-sm-2" style="margin-right: 75px">
-                        <mat-form-field appearance="outline">
-                          <input
-                            type="number"
-                            trim
-                            matInput
-                            placeholder=""
-                            name="grossAgriculturalReceipts[i]"
-                            formControlName="grossAgriculturalReceipts"
-                            maxlength="125"
-                            (change)="setNetAgriIncome(i)"
-                          />
-                        </mat-form-field>
+                    <div>
+                      <!-- grossAgriculturalReceipts -->
+                      <div class="flex justify-between align-items-center">
+                        <mat-label style="margin-left: 25px"
+                          >Gross Agricultural Receipts</mat-label
+                        >
+                        <div class="col-sm-2" style="margin-right: 75px">
+                          <mat-form-field appearance="outline">
+                            <input
+                              type="number"
+                              trim
+                              matInput
+                              placeholder=""
+                              name="grossAgriculturalReceipts[i]"
+                              formControlName="grossAgriculturalReceipts"
+                              maxlength="125"
+                              (change)="setNetAgriIncome(i)"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <!-- expenditureIncurredOnAgriculture -->
+                      <div class="flex justify-between align-items-center">
+                        <mat-label style="margin-left: 25px"
+                          >Expenditure incurred on agriculture</mat-label
+                        >
+                        <div class="col-sm-2" style="margin-right: 75px">
+                          <mat-form-field appearance="outline">
+                            <input
+                              type="number"
+                              trim
+                              matInput
+                              placeholder=""
+                              name="expenditureIncurredOnAgriculture[i]"
+                              formControlName="expenditureIncurredOnAgriculture"
+                              class="input-field"
+                              maxlength="125"
+                              (change)="setNetAgriIncome(i)"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <!-- unabsorbedAgriculturalLoss -->
+                      <div class="flex justify-between align-items-center">
+                        <mat-label style="margin-left: 25px"
+                          >Unabsorbed agricultural loss of the previous eight
+                          assessment years</mat-label
+                        >
+                        <div class="col-sm-2" style="margin-right: 75px">
+                          <mat-form-field appearance="outline">
+                            <input
+                              type="number"
+                              trim
+                              matInput
+                              placeholder=""
+                              name="unabsorbedAgriculturalLoss[i]"
+                              formControlName="unabsorbedAgriculturalLoss"
+                              class="input-field"
+                              maxlength="125"
+                              (change)="setNetAgriIncome(i)"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <!-- agriIncomePortionRule7 -->
+                      <div class="flex justify-between align-items-center">
+                        <mat-label style="margin-left: 25px"
+                          >The agricultural income portion relating to rules 7,
+                          7A, 7B(1), 7B(1A) & 8</mat-label
+                        >
+                        <div class="col-sm-2" style="margin-right: 75px">
+                          <mat-form-field appearance="outline">
+                            <input
+                              type="number"
+                              trim
+                              matInput
+                              placeholder=""
+                              name="agriIncomePortionRule7[i]"
+                              formControlName="agriIncomePortionRule7"
+                              class="input-field"
+                              maxlength="125"
+                              (change)="setNetAgriIncome(i)"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <!-- netAgriculturalIncome -->
+                      <div class="flex justify-between align-items-center">
+                        <mat-label style="margin-left: 25px"
+                          >Net Agricultural income</mat-label
+                        >
+                        <div class="col-sm-2" style="margin-right: 75px">
+                          <mat-form-field appearance="outline">
+                            <input
+                              type="number"
+                              trim
+                              matInput
+                              placeholder=""
+                              name="netAgriculturalIncome[i]"
+                              formControlName="netAgriculturalIncome"
+                              class="input-field"
+                              maxlength="125"
+                              readonly
+                            />
+                          </mat-form-field>
+                        </div>
                       </div>
                     </div>
 
-                    <!-- expenditureIncurredOnAgriculture -->
-                    <div class="flex justify-between align-items-center">
-                      <mat-label style="margin-left: 25px"
-                        >Expenditure incurred on agriculture</mat-label
+                    <!-- agriculture income details -->
+                    <div
+                      class="surround"
+                      *ngIf="
+                        income.value.incomeType === 'AGRI' &&
+                        income.value.incomeValue > 500000
+                      "
+                      formArrayName="agriInc"
+                    >
+                      <div
+                        *ngFor="
+                          let agriIncArray of getAgriIncomeArray.controls;
+                          let j = index
+                        "
+                        [formGroupName]="j"
                       >
-                      <div class="col-sm-2" style="margin-right: 75px">
-                        <mat-form-field appearance="outline">
-                          <input
-                            type="number"
-                            trim
-                            matInput
-                            placeholder=""
-                            name="expenditureIncurredOnAgriculture[i]"
-                            formControlName="expenditureIncurredOnAgriculture"
-                            class="input-field"
-                            maxlength="125"
-                            (change)="setNetAgriIncome(i)"
-                          />
-                        </mat-form-field>
-                      </div>
-                    </div>
+                        <div
+                          class="flex align-items-center justify-between"
+                          style="margin: 0px 25px 25px 25px"
+                        >
+                          <div class="note">Agriculture Income Details</div>
+                          <button (click)="addAgriLandDtls()">+Add More</button>
+                        </div>
 
-                    <!-- unabsorbedAgriculturalLoss -->
-                    <div class="flex justify-between align-items-center">
-                      <mat-label style="margin-left: 25px"
-                        >Unabsorbed agricultural loss of the previous eight
-                        assessment years</mat-label
-                      >
-                      <div class="col-sm-2" style="margin-right: 75px">
-                        <mat-form-field appearance="outline">
-                          <input
-                            type="number"
-                            trim
-                            matInput
-                            placeholder=""
-                            name="unabsorbedAgriculturalLoss[i]"
-                            formControlName="unabsorbedAgriculturalLoss"
-                            class="input-field"
-                            maxlength="125"
-                            (change)="setNetAgriIncome(i)"
-                          />
-                        </mat-form-field>
-                      </div>
-                    </div>
+                        <div style="margin: 0px 25px 25px 25px">
+                          <div class="flex justify-between align-items-center">
+                            <!-- name of district -->
+                            <div class="col-sm-5">
+                              <mat-label style="margin-bottom: 16px"
+                                >Name Of District</mat-label
+                              >
+                              <mat-form-field appearance="outline">
+                                <input
+                                  trim
+                                  matInput
+                                  placeholder="Name of District"
+                                  name="nameOfDistrict[i]"
+                                  formControlName="nameOfDistrict"
+                                  class="input-field"
+                                />
+                              </mat-form-field>
+                            </div>
 
-                    <!-- agriIncomePortionRule7 -->
-                    <div class="flex justify-between align-items-center">
-                      <mat-label style="margin-left: 25px"
-                        >The agricultural income portion relating to rules 7,
-                        7A, 7B(1), 7B(1A) & 8</mat-label
-                      >
-                      <div class="col-sm-2" style="margin-right: 75px">
-                        <mat-form-field appearance="outline">
-                          <input
-                            type="number"
-                            trim
-                            matInput
-                            placeholder=""
-                            name="agriIncomePortionRule7[i]"
-                            formControlName="agriIncomePortionRule7"
-                            class="input-field"
-                            maxlength="125"
-                            (change)="setNetAgriIncome(i)"
-                          />
-                        </mat-form-field>
-                      </div>
-                    </div>
+                            <!-- landInAcre -->
+                            <div class="col-sm-3">
+                              <mat-label
+                                >Measurement of agricultural land* (In acres)
+                              </mat-label>
+                              <mat-form-field appearance="outline">
+                                <input
+                                  trim
+                                  matInput
+                                  placeholder="land In Acre"
+                                  name="landInAcre[i]"
+                                  formControlName="landInAcre"
+                                  class="input-field"
+                                />
+                              </mat-form-field>
+                            </div>
 
-                    <!-- netAgriculturalIncome -->
-                    <div class="flex justify-between align-items-center">
-                      <mat-label style="margin-left: 25px"
-                        >Net Agricultural income</mat-label
-                      >
-                      <div class="col-sm-2" style="margin-right: 75px">
-                        <mat-form-field appearance="outline">
-                          <input
-                            type="number"
-                            trim
-                            matInput
-                            placeholder=""
-                            name="netAgriculturalIncome[i]"
-                            formControlName="netAgriculturalIncome"
-                            class="input-field"
-                            maxlength="125"
-                            readonly
-                          />
-                        </mat-form-field>
+                            <!-- pincode -->
+                            <div class="col-sm-3">
+                              <mat-label style="margin-bottom: 16px"
+                                >Pincode</mat-label
+                              >
+                              <mat-form-field appearance="outline">
+                                <input
+                                  trim
+                                  matInput
+                                  placeholder="Pincode"
+                                  name="pinCode[i]"
+                                  formControlName="pinCode"
+                                  class="input-field"
+                                />
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <br />
+
+                          <!-- owner -->
+                          <div class="flex justify-between align-items-center">
+                            <mat-label
+                              >Whether the agricultural land is owned or held on
+                              lease*</mat-label
+                            >
+                            <mat-radio-group
+                              name="owner[i]"
+                              formControlName="owner"
+                              placeholder="owner"
+                              required
+                            >
+                              <mat-radio-button
+                                [value]="'O'"
+                                style="margin-left: 0px; margin-right: 2px"
+                                labelPosition="before"
+                              >
+                                Owner
+                              </mat-radio-button>
+                              <mat-radio-button
+                                [value]="'H'"
+                                labelPosition="before"
+                              >
+                                Held on lease
+                              </mat-radio-button>
+                            </mat-radio-group>
+                          </div>
+                          <br />
+
+                          <!-- typeOfLand -->
+                          <div class="flex justify-between align-items-center">
+                            <mat-label
+                              >Whether the agricultural land is irrigated or
+                              rain-fed?
+                            </mat-label>
+                            <mat-radio-group
+                              name="typeOfLand[i]"
+                              formControlName="typeOfLand"
+                              placeholder="typeOfLand"
+                            >
+                              <mat-radio-button
+                                [value]="'IRG'"
+                                style="margin-left: 0px; margin-right: 2px"
+                                labelPosition="before"
+                              >
+                                Irrigated
+                              </mat-radio-button>
+                              <mat-radio-button
+                                [value]="'RF'"
+                                labelPosition="before"
+                              >
+                                Rain-fed
+                              </mat-radio-button>
+                            </mat-radio-group>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-
-                  <!-- agriculture income details -->
-                  <!-- <div
-                    class="surround"
-                    *ngIf="income.value.incomeType === 'AGRI'"
-                  >
-                    some texts. Lorem ipsum dolor sit amet consectetur
-                    adipisicing elit. Beatae accusantium optio incidunt, ad a
-                    assumenda distinctio expedita nobis, delectus neque
-                    inventore sit quidem perferendis dolorum quod? Hic ipsum
-                    temporibus labore!s
-                  </div> -->
                 </td>
 
                 <td>

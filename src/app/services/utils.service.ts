@@ -680,6 +680,16 @@ export class UtilsService {
         agriIncomePortionRule7: 0,
         netAgriculturalIncome: 0,
       },
+
+      agriculturalLandDetails: [
+        {
+          nameOfDistrict: '',
+          pinCode: '',
+          landInAcre: 1,
+          owner: '', //"O - Owned; H - Held on lease"
+          typeOfLand: '', //"IRG - Irrigated; RF - Rain-fed"
+        },
+      ],
     };
 
     return ITR_JSON;
