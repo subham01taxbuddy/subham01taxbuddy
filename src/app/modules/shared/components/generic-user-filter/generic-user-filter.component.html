@@ -1,0 +1,34 @@
+<!-- <div class="sortBy">Search By : </div> -->
+<div class="row">
+    <div class="col-sm-5">
+        <label class="input__label">Select attribute </label>
+        <select class="select__box ogp_select" [(ngModel)]="searchKey" (change)="changeInput(true)">
+            <option *ngFor="let drop of searchParameter" class="un-select-list" [value]="drop.value">
+                {{drop.name}}</option>
+        </select>
+    </div>
+
+    <div class="col-sm-4">
+        <label class="input__label">Enter Value </label>
+        <input type="text" class="select__box ogp_select" style="background-image:none" [formControl]="searchValue"
+            name="searchValue" />
+        <div *ngIf="searchValue?.invalid || (searchValue?.dirty || searchValue?.touched)" class="errorMessage">
+            <div *ngIf="searchValue.errors?.['required']">
+                Please enter the field.
+            </div>
+            <div *ngIf="searchValue.errors?.['pattern']">
+                Please enter the proper value.
+            </div>
+            <div *ngIf="searchValue.errors?.['minLength']">
+                Please enter the proper value.
+            </div>
+            <div *ngIf="searchValue.errors?.['maxLength']">
+                Please enter the proper value.
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <button class="clrLnk mvRth clearSort" (click)="clear()">Clear Search
+            Parameters</button>
+    </div>
+</div>

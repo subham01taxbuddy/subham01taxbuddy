@@ -85,7 +85,8 @@ export class SidebarComponent{
       url: null,
       roles: [],
       submenu: [
-        { name: 'My Users', url: '/tasks/assigned-users-new', roles: [] },
+        { name: 'My Users (All Services)', url: '/tasks/assigned-users-new', roles: [] },
+        { name: 'ITR Assigned Users', url: '/tasks/itr-assigned-users', roles: [] },
         { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles: [] },
         { name: 'ITRs', url: '/tasks/filings', roles: [] },
         // {
