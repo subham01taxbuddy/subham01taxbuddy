@@ -116,6 +116,16 @@ export interface ITR_JSON {
     agriIncomePortionRule7: number;
     netAgriculturalIncome: number;
   };
+
+  agriculturalLandDetails: agriculturalLandDetails[];
+}
+
+export interface agriculturalLandDetails {
+  nameOfDistrict: string;
+  pinCode: string;
+  landInAcre: number;
+  owner: string;
+  typeOfLand: string;
 }
 
 export interface Schedule5A {
