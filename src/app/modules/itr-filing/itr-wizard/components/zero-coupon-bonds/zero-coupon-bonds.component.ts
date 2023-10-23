@@ -489,15 +489,17 @@ export class ZeroCouponBondsComponent
       let expenses = 0;
       const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
       bondsArray.controls.forEach((element) => {
-        capitalGain += parseInt(
-          (element as FormGroup).controls['capitalGain'].value
-        );
-        saleValue += parseInt(
-          (element as FormGroup).controls['valueInConsideration'].value
-        );
-        expenses += parseInt(
-          (element as FormGroup).controls['sellExpense'].value
-        );
+        if((element as FormGroup).controls['gainType'].value === 'LONG') {
+          capitalGain += parseInt(
+            (element as FormGroup).controls['capitalGain'].value
+          );
+          saleValue += parseInt(
+            (element as FormGroup).controls['valueInConsideration'].value
+          );
+          expenses += parseInt(
+            (element as FormGroup).controls['sellExpense'].value
+          );
+        }
       });
 
       let param = '/calculate/capital-gain/deduction';

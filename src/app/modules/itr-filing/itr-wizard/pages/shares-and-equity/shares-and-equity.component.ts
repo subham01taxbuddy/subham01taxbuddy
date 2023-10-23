@@ -118,6 +118,7 @@ export class SharesAndEquityComponent
     }
 
     this.securitiesForm.disable();
+    this.initDetailedForm(this.Copy_ITR_JSON);
 
     // setting deduction
     const equitySharesListed = this.ITR_JSON.capitalGain?.find(
@@ -1201,16 +1202,19 @@ export class SharesAndEquityComponent
         this.securitiesForm.get('securitiesArray')
       );
       securitiesArray.controls.forEach((element) => {
-        capitalGain += parseInt(
-          (element as FormGroup).controls['capitalGain'].value
-        );
-        saleValue += parseInt(
-          (element as FormGroup).controls['sellValue'].value
-        );
-        expenses += parseInt(
-          (element as FormGroup).controls['sellExpense'].value
-        );
+        if ((element as FormGroup).controls['gainType'].value === 'LONG') {
+          capitalGain += parseInt(
+            (element as FormGroup).controls['capitalGain'].value
+          );
+          saleValue += parseInt(
+            (element as FormGroup).controls['sellValue'].value
+          );
+          expenses += parseInt(
+            (element as FormGroup).controls['sellExpense'].value
+          );
+        }
       });
+
 
       let param = '/calculate/capital-gain/deduction';
       let request = {
