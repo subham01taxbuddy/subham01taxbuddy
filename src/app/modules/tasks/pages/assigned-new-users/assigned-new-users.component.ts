@@ -1151,7 +1151,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     }
     const reqBody = {
       "agent_number": agent_number,
-      "customer_number": data.mobileNumber
+        "userId": data.userId,
     }
     // this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
     //   this.loading = false;

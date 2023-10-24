@@ -42,6 +42,7 @@ export class AppConstants {
     public static LOGGED_IN_SME_INFO = environment.production ? 'LOGGED_IN_SME_INFO' : 'LOGGED_IN_SME_INFO';
     public static ALL_FILERS_LIST = environment.production ? 'ALL_FILERS_LIST' : 'ALL_FILERS_LIST';
     public static BANK_LIST = environment.production ? 'BANK_LIST' : 'BANK_LIST';
+    public static REMOTE_CONFIG_STRING = 'REMOTE_CONFIG_STRING';
     public static gstFyList = [
         { financialYear: '2023-24' },
         { financialYear: '2022-23' },

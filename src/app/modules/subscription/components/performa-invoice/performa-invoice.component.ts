@@ -27,6 +27,8 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ActivatedRoute } from "@angular/router";
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ReportService } from 'src/app/services/report-service';
+import { MobileEncryptDecryptService } from 'src/app/services/mobile-encr-decr.service';
+import { RemoteConfigService } from 'src/app/services/remote-config-service';
 declare function we_track(key: string, value: any);
 
 export const MY_FORMATS = {
@@ -139,7 +141,8 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     private toastMsgService: ToastMessageService,
     private activatedRoute: ActivatedRoute,
     private cacheManager: CacheManager,
-    private reportService:ReportService
+    private reportService:ReportService,
+    private mobileEncryptDecryptService :MobileEncryptDecryptService,
   ) {
     // this.getAgentList();
     this.startDate.setValue('2023-04-01');
@@ -241,6 +244,10 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
       this.dataOnLoad = false;
     }
     // this.getInvoice();
+  }
+
+  decryptPhoneNumber(encryptedPhone: string): string {
+    return this.mobileEncryptDecryptService?.decryptData(encryptedPhone);
   }
 
   ownerId: number;
@@ -849,6 +856,19 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: (params) => {
+          if(params.value){
+            if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')){
+              const encryptedPhone = params.value;
+              const decryptedPhone = this.decryptPhoneNumber(encryptedPhone);
+              return decryptedPhone;
+            }else{
+              return params.value;
+            }
+          }else{
+            return '-'
+          }
+        },
       },
       {
         headerName: 'Email',
@@ -1235,7 +1255,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     this.loading = true;
     const reqBody = {
       agent_number: agentNumber,
-      customer_number: user.phone,
+      userId: user.userId,
     };
     // this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
     //   (result: any) => {

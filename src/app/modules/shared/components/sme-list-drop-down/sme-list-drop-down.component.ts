@@ -61,37 +61,77 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     this.roles = this.loggedInSme[0]?.roles;
     this.partnerType =  this.loggedInSme[0]?.partnerType;
     console.log('all logged in sme info ',this.loggedInSme)
-    this.getLeaders();
-    this.getPrincipleIndividuals();
-    // this.getChild();
 
-    this.setFilteredLeaders();
-    this.setFilteredPrincipleIndividuals();
-    this.setFilteredChild();
+    if(this.roles.includes('ROLE_ADMIN')){
+      this.getLeaders();
+      this.getPrincipleIndividuals();
 
+      this.setFilteredLeaders();
+      this.setFilteredPrincipleIndividuals();
+      this.setFilteredChild();
 
-    if(this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
       this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
       console.log('all filers', this.smeList);
-      this.allFilers = this.smeList.map((item) => {
+      this.allFilers = this?.smeList?.map((item) => {
         return {name: item.name, userId: item.userId, partnerType :item.partnerType };
       });
       this.childOptions = this.allFilers;
-    } else if(this.partnerType == 'Principle'){
+
+    }else if(this.roles.includes('ROLE_LEADER')){
+      this.getPrincipleIndividuals();
+      this.setFilteredPrincipleIndividuals();
+      this.setFilteredChild();
+
+
+    }else if(this.partnerType ==='Principle' ){
       this.principleIndividualDetails = this.loggedInSme[0];
       this.getChild();
-      // this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
-      // console.log('my agents', this.smeList);
-      // this.allFilers = this.smeList.map((item) => {
-      //   return {name: item.name, userId: item.userId};
-      // });
-      // this.childOptions = this.allFilers;
+      this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
+      console.log('my agents', this.smeList);
+      this.allFilers = this?.smeList?.map((item) => {
+        return {name: item.name, userId: item.userId};
+      });
+      this.childOptions = this.allFilers;
+      this.setFilteredChild();
     }
-    if (this.partnerType == 'Principle') {
+
+     if (this.partnerType == 'Principle') {
       this.setPrinciple(this.loggedInSme[0]);
     } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.setChild(this.loggedInSme[0]);
     }
+
+    // this.getLeaders();
+    // this.getPrincipleIndividuals();
+    // // this.getChild();
+
+    // this.setFilteredLeaders();
+    // this.setFilteredPrincipleIndividuals();
+    // this.setFilteredChild();
+
+
+    // if(this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
+    //   this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
+    //   console.log('all filers', this.smeList);
+    //   this.allFilers = this.smeList.map((item) => {
+    //     return {name: item.name, userId: item.userId, partnerType :item.partnerType };
+    //   });
+    //   this.childOptions = this.allFilers;
+    // } else if(this.partnerType == 'Principle'){
+    //   this.principleIndividualDetails = this.loggedInSme[0];
+    //   this.getChild();
+    //   // this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
+    //   // console.log('my agents', this.smeList);
+    //   // this.allFilers = this.smeList.map((item) => {
+    //   //   return {name: item.name, userId: item.userId};
+    //   // });
+    //   // this.childOptions = this.allFilers;
+    // }
+    // if (this.partnerType == 'Principle') {
+    //   this.setPrinciple(this.loggedInSme[0]);
+    // } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+    //   this.setChild(this.loggedInSme[0]);
+    // }
 
   }
 

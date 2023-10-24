@@ -771,7 +771,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     const param = `tts/outbound-call`;
     const reqBody = {
       "agent_number": agentNumber,
-      "customer_number": data.mobileNumber
+         "userId": data.userId,
     }
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
