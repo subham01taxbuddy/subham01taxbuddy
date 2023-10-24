@@ -48,7 +48,7 @@
                                 </mat-form-field>
                             </div>
                             <div class="col-9">
-                                <app-generic-user-filter [searchParameter]="searchMenus"
+                                <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                                     (onChange)="searchByObject($event)"></app-generic-user-filter>
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                         </div> -->
                         <div class="row spsTp bdrTp">
                             <div class="col-6">
-                                <app-generic-sorting [sortingParameter]="sortMenus"
+                                <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                                     (onChange)="sortByObject($event)"></app-generic-sorting>
                             </div>
                             <div class="col-sm-6">

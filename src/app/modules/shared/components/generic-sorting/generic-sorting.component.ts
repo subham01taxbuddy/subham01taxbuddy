@@ -15,7 +15,19 @@ export class GenericSortingComponent implements OnInit {
     { value: 1, name: 'Ascending' },
     { value: -1, name: 'Descending' }
   ];
+  private _clearSortFilter: number;
 
+  @Input() set clearSortFilter(value: number) {
+
+    this._clearSortFilter = value;
+    this.clear();
+  }
+
+  get clearSortFilter(): number {
+
+    return this._clearSortFilter;
+
+  }
 
   constructor() {
 
