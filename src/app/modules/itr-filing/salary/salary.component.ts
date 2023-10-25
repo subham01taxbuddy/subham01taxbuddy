@@ -92,13 +92,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     },
     {
       id: null,
-      seqNum: 4,
-      value: 'CHILDREN_EDUCATION',
-      label: 'Children education allowance',
-      detailed: false,
-    },
-    {
-      id: null,
       seqNum: 6,
       value: 'GRATUITY',
       label: 'Gratuity received u/s 10(10)',
@@ -122,7 +115,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       id: null,
       seqNum: 9,
       value: 'NON_MONETARY_PERQUISITES',
-      label: 'Non Monetary Perquisites u/s10(10CC)',
+      label: 'Tax paid by employer on non monetary perquisites u/s10(10CC)',
       detailed: false,
     },
     {
@@ -139,37 +132,37 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       label: 'Any Other Allowance',
       detailed: false,
     },
-    // {
-    //   id: null,
-    //   seqNum: 12,
-    //   value: 'SECOND_PROVISO_CGOV',
-    //   label:
-    //     'Second Proviso CGOV - compensation under a scheme approved by the central Govt - 10(10B)',
-    //   detailed: false,
-    // },
-    // {
-    //   id: null,
-    //   seqNum: 13,
-    //   value: 'SECOND_PROVISO',
-    //   label: 'Second proviso - Compensation limit notified by CG',
-    //   detailed: false,
-    // },
-    // {
-    //   id: null,
-    //   seqNum: 14,
-    //   value: 'FIRST_PROVISO',
-    //   label:
-    //     'First Proviso - Compensation limit notified by CG in the official gazette, First Provisio 10(10Bi)',
-    //   detailed: false,
-    // },
-    // {
-    //   id: null,
-    //   seqNum: 15,
-    //   value: 'EIC',
-    //   label:
-    //     'Exempt income received by judge covered the payment of salaries to supreme court/high court judges Act/Rule ',
-    //   detailed: false,
-    // },
+    {
+      id: null,
+      seqNum: 12,
+      value: 'SECOND_PROVISO_CGOV',
+      label:
+        'Second Proviso CGOV - compensation under a scheme approved by the central Govt - 10(10B)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 13,
+      value: 'SECOND_PROVISO',
+      label: 'Second proviso - Compensation limit notified by CG, 10(10Bii)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 14,
+      value: 'FIRST_PROVISO',
+      label:
+        'First Proviso - Compensation limit notified by CG in the official gazette, First Provisio 10(10Bi)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 15,
+      value: 'EIC',
+      label:
+        'Exempt income received by judge covered the payment of salaries to supreme court/high court judges Act/Rule ',
+      detailed: false,
+    },
   ];
   stateDropdown = AppConstants.stateDropdown;
   constructor(
@@ -385,24 +378,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
     for (let i = 0; i < this.allowanceDropdown.length; i++) {
       let validators = null;
-      if (this.allowanceDropdown[i].value === 'CHILDREN_EDUCATION') {
-        validators = Validators.max(2400);
-      }
       if (this.allowanceDropdown[i].value === 'COMPENSATION_ON_VRS') {
         validators = Validators.max(500000);
-      }
-      let allowedEmpTypes = ['CENTRAL_GOVT', 'GOVERNMENT', 'PRIVATE'];
-      if (
-        allowedEmpTypes.includes(this.ITR_JSON.employerCategory) &&
-        this.allowanceDropdown[i].value === 'COMPENSATION_ON_VRS'
-      ) {
-        data.push(
-          this.fb.group({
-            label: this.allowanceDropdown[i].label,
-            allowType: this.allowanceDropdown[i].value,
-            allowValue: [null, validators],
-          })
-        );
       }
 
       // FOR EIC
@@ -452,7 +429,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
       // OTHER
       if (
-        this.allowanceDropdown[i].value !== 'COMPENSATION_ON_VRS' &&
         this.allowanceDropdown[i].value !== 'EIC' &&
         this.allowanceDropdown[i].value !== 'FIRST_PROVISO' &&
         this.allowanceDropdown[i].value !== 'SECOND_PROVISO'
@@ -761,6 +737,62 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             );
             return;
           }
+
+          const allowancesArray = this.allowanceFormGroup.get(
+            'allowances'
+          ) as FormArray;
+
+          const firstProviso = allowancesArray.controls.find(
+            (element) => element.value.allowType === 'FIRST_PROVISO'
+          );
+
+          const secondProviso = allowancesArray.controls.find(
+            (element) => element.value.allowType === 'SECOND_PROVISO'
+          );
+
+          const compensationVrs = allowancesArray.controls.find(
+            (element) => element.value.allowType === 'COMPENSATION_ON_VRS'
+          );
+
+          if (
+            allowance.controls['allowType'].value === 'COMPENSATION_ON_VRS' &&
+            allowance.controls['allowValue'].value !== 0
+          ) {
+            if (firstProviso) {
+              firstProviso.get('allowValue').setValue(0);
+            }
+
+            if (secondProviso) {
+              secondProviso.get('allowValue').setValue(0);
+            }
+          }
+
+          if (
+            allowance.controls['allowType'].value === 'FIRST_PROVISO' &&
+            allowance.controls['allowValue'].value !== 0
+          ) {
+            if (compensationVrs) {
+              compensationVrs.get('allowValue').setValue(0);
+            }
+
+            if (secondProviso) {
+              secondProviso.get('allowValue').setValue(0);
+            }
+          }
+
+          if (
+            allowance.controls['allowType'].value === 'SECOND_PROVISO' &&
+            allowance.controls['allowValue'].value !== 0
+          ) {
+            if (firstProviso) {
+              firstProviso.get('allowValue').setValue(0);
+            }
+
+            if (compensationVrs) {
+              compensationVrs.get('allowValue').setValue(0);
+            }
+          }
+
           this.localEmployer.allowance.push({
             allowanceType: allowance.controls['allowType'].value,
             taxableAmount: 0,
