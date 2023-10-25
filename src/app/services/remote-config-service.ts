@@ -46,21 +46,21 @@ export class RemoteConfigService {
       remoteConfig.settings.minimumFetchIntervalMillis = 6 * 3600 * 1000;//6 hours in msec
 
       switch (configName) {
-        case AppConstants.REMOTE_CONFIG_STRING:
+        case AppConstants.ADMIN_GLOBAL_CONFIG:
           let tempValue = getValue(remoteConfig, 'adminGlobalConfig');
           let tempObject = JSON.parse(JSON.stringify(tempValue));
           let tempValueParse = JSON.parse(tempObject._value);
-          this.setLocalStorageItem(AppConstants.REMOTE_CONFIG_STRING, JSON.stringify(tempValueParse));
+          this.setLocalStorageItem(AppConstants.ADMIN_GLOBAL_CONFIG, JSON.stringify(tempValueParse));
           return tempValueParse;
       }
 
     } catch (e) {
       switch (configName) {
-        case AppConstants.REMOTE_CONFIG_STRING:
-          this.httpClient.get('./assets/jsons/remote_config_string.json')
+        case AppConstants.ADMIN_GLOBAL_CONFIG:
+          this.httpClient.get('./assets/jsons/adminGlobalConfig.json')
             .subscribe((result: any) => {
               let tempObject = JSON.parse(JSON.stringify(result));
-              this.setLocalStorageItem(AppConstants.REMOTE_CONFIG_STRING, JSON.stringify(tempObject));
+              this.setLocalStorageItem(AppConstants.ADMIN_GLOBAL_CONFIG, JSON.stringify(tempObject));
 
             }, error => {
             });
