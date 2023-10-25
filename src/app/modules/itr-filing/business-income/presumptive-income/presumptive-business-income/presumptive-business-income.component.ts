@@ -206,7 +206,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       let CashPreIncome =
         cashPreIncome.value !== '' ? parseFloat(cashPreIncome.value) : 0;
 
-      if (CashPreIncome && CashPreIncome !== 0) {
+      if (CashPreIncome || CashPreIncome === 0) {
         cashPreIncome?.setValidators([
           Validators.min(this.amountEight),
           Validators.max(this.maxEightAmt),
@@ -236,7 +236,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       let BankPreIncome =
         bankPreIncome.value !== '' ? parseFloat(bankPreIncome.value) : 0;
 
-      if (BankPreIncome && BankPreIncome !== 0) {
+      if (BankPreIncome || BankPreIncome === 0) {
         bankPreIncome?.setValidators([
           Validators.min(this.amountSix),
           Validators.max(this.maxSixAmt),
