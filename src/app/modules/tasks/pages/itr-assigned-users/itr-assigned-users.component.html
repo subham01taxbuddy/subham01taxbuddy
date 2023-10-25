@@ -16,24 +16,11 @@
             <div class="rowClr">
                 <div class="surround">
                     <div class="row">
-                        <!-- <div class="col-sm-12" *ngIf="loggedInUserRoles?.includes('ROLE_OWNER')">
-              <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner
-              </mat-slide-toggle>
-            </div> -->
                         <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
                             <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
                                 (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
                         </div>
-                        <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-                            <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)"
-                                (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
-                        </div>
 
-                        <!-- <div class="col-sm-2 spsTp">
-                            <app-service-drop-down #serviceDropDown ngDefaultControl
-                                (sendService)="fromServiceType($event)"
-                                [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
-                        </div> -->
                         <div class="row spsTp bdrTp">
                             <div *ngIf="itrStatus" class="col-sm-3">
                                 <label class="input__label" for="attr">Select Status </label>
