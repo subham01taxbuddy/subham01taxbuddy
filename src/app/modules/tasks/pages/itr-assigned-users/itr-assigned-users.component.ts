@@ -1,7 +1,7 @@
 import { ChatOptionsDialogComponent } from './../../components/chat-options/chat-options-dialog.component';
 import { formatDate } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
@@ -28,6 +28,9 @@ import { ItrStatusDialogComponent } from '../../components/itr-status-dialog/itr
 import { AgTooltipComponent } from "../../../shared/components/ag-tooltip/ag-tooltip.component";
 import { ReAssignActionDialogComponent } from '../../components/re-assign-action-dialog/re-assign-action-dialog.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import { ReportService } from 'src/app/services/report-service';
+import * as moment from 'moment';
+
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -70,6 +73,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     { value: 'mobileNo', name: 'Mobile No' },
     { value: 'pan', name: 'PAN' }
   ];
+  clearUserFilter: number;
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -83,6 +87,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private requestManager: RequestManager,
     private cacheManager: CacheManager,
+    private reportService: ReportService,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
@@ -137,23 +142,19 @@ export class ItrAssignedUsersComponent implements OnInit {
     const userId = this.utilsService.getLoggedInUserID();
     this.agentId = userId;
     this.getMasterStatusList();
-    // this.search();
     this.activatedRoute.queryParams.subscribe(params => {
       this.searchVal = params['mobileNumber'];
       this.searchStatusId = params['statusId'];
 
       if (this.searchVal) {
-        // console.log('q param',this.searchVal)
         this.searchParam.mobileNumber = this.searchVal;
         this.search('mobile');
       }
       else if (this.searchStatusId) {
-        // console.log('q param',this.searchStatus)
         this.searchParam.statusId = this.searchStatusId;
         this.search('status');
       }
       else {
-        //check user roles here and do not load all data for admin/leaders
         if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
           this.search();
         } else {
@@ -172,12 +173,10 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   sortByObject(object) {
-    debugger
     this.sortBy = object;
   }
 
   searchByObject(object) {
-    debugger
     this.searchBy = object;
   }
 
@@ -192,7 +191,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
         if (this.rowData.itrObjectStatus === 'CREATE') {
-          //no ITR object found, create a new ITR object
           this.loading = true;
           let profile = await this.getUserProfile(this.rowData.userId).catch(error => {
             this.loading = false;
@@ -201,16 +199,8 @@ export class ItrAssignedUsersComponent implements OnInit {
             return;
           });
           let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
-          //Object.assign(obj, this.ITR_JSON)
-          // Ashwini: Current implementation sends filing team member id as logged in user id.
-          // So credit will go to the one who files ITR
-          // changing the filingTeamMemberId to filerUserId so credit will go to assigned filer
           objITR.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
-          //this.ITR_JSON = JSON.parse(JSON.stringify(obj))
           console.log('obj:', objITR);
-
-          //update status to WIP
-          //this.updateITRtoWIP(data, objITR, currentFyDetails[0].assessmentYear);
 
           const param = '/itr';
           this.itrMsService.postMethod(param, objITR).subscribe((result: any) => {
@@ -232,24 +222,15 @@ export class ItrAssignedUsersComponent implements OnInit {
           this.loading = false;
           console.log('end');
         } else {
-          //one more ITR objects in place, use existing ITR object
           let itrFilter = this.rowData.itrObjectStatus !== 'MULTIPLE_ITR' ? `&itrId=${this.rowData.openItrId}` : '';
           const param = `/itr?userId=${this.rowData.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}` + itrFilter;
           this.itrMsService.getMethod(param).subscribe(async (result: any) => {
             console.log(`My ITR by ${param}`, result);
             if (result == null || result.length == 0) {
-              //no ITR found, error case
               this.utilsService.showErrorMsg('Something went wrong. Please try again');
             } else if (result.length == 1) {
-              //update status to WIP
-              //this.updateITRtoWIP(data, result[0], currentFyDetails[0].assessmentYear);
               let workingItr = result[0];
-              // Object.entries(workingItr).forEach((key, value) => {
-              //   console.log(key, value)
-              //   if (key[1] === null) {
-              //     delete workingItr[key[0]];
-              //   }
-              // });
+
               workingItr.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
               let obj = this.utilsService.createEmptyJson(null, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
               Object.assign(obj, workingItr);
@@ -265,7 +246,6 @@ export class ItrAssignedUsersComponent implements OnInit {
                 }
               });
             } else {
-              //multiple ITRs found, navigate to ITR tab with the results
               this.router.navigateByUrl('/tasks/filings',
                 { state: { 'mobileNumber': this.rowData.mobileNumber } });
             }
@@ -316,15 +296,6 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
   }
 
-  // pageChanged(event: any) {
-  //   this.config.currentPage = event;
-  //   this.searchParam.page = event - 1;
-  //   if (this.coOwnerToggle.value == true) {
-  //     this.search(event - 1, true);
-  //   } else {
-  //     this.search(event - 1);
-  //   }
-  // }
 
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
@@ -334,18 +305,17 @@ export class ItrAssignedUsersComponent implements OnInit {
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      if (this.coOwnerToggle.value == true) {
-        this.search('', true, event);
-      } else {
-        this.search('', '', event);
-      }
+      // if (this.coOwnerToggle.value == true) {
+      //   this.search('', true, event);
+      // }
+      //  else {
+      this.search('', '', event);
+      // }
     }
   }
 
   fromServiceType(event) {
     this.searchParam.serviceType = event;
-    // this.search('serviceType', 'isAgent');
-
     if (this.searchParam.serviceType) {
       setTimeout(() => {
         this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
@@ -366,12 +336,10 @@ export class ItrAssignedUsersComponent implements OnInit {
       this.agentId = this.filerId;
     } else if (this.ownerId) {
       this.agentId = this.ownerId;
-      // this.search('agent');
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    // this.search('agent');
   }
 
   coOwnerId: number;
@@ -386,15 +354,12 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
     if (this.coFilerId) {
       this.agentId = this.coFilerId;
-      // this.search('agent');
     } else if (this.coOwnerId) {
       this.agentId = this.coOwnerId;
-      //  this.search('agent');
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    //  this.search('agent');
   }
 
 
@@ -440,19 +405,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         },
       },
       {
-        headerName: 'Mobile No',
-        field: 'mobileNumber',
-        width: 100,
-        textAlign: 'center',
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
         headerName: 'Email Address',
         field: 'email',
         width: 200,
@@ -466,6 +418,19 @@ export class ItrAssignedUsersComponent implements OnInit {
         cellRenderer: function (params) {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
+      },
+      {
+        headerName: 'Mobile No',
+        field: 'mobileNumber',
+        width: 100,
+        textAlign: 'center',
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'fint-weight': 'bold' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
       },
       // {
       //   headerName: 'Status',
@@ -498,30 +463,8 @@ export class ItrAssignedUsersComponent implements OnInit {
       //   },
       // },
       {
-        headerName: 'Action With',
-        field: 'conversationWithFiler',
-        width: 110,
-        suppressMovable: true,
-        hide: !showOwnerCols,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-        valueGetter: function nameFromCode(params) {
-          {
-            if (params.data.conversationWithFiler === true) {
-              return params.data.filerName;
-            } else {
-              return params.data.ownerName;
-            }
-          }
-        }
-      },
-      {
-        headerName: 'Owner Name',
-        field: 'ownerName',
+        headerName: 'leader Name',
+        field: 'leaderName',
         width: 110,
         suppressMovable: true,
         hide: !showOwnerCols,
@@ -538,6 +481,44 @@ export class ItrAssignedUsersComponent implements OnInit {
         width: 150,
         suppressMovable: true,
         hide: !showOwnerCols,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Service Type',
+        field: 'serviceType',
+        width: 100,
+        textAlign: 'center',
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Language',
+        field: 'language',
+        width: 115,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'PAN Number',
+        field: 'panNumber',
+        width: 120,
+        textAlign: 'center',
+        suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -563,44 +544,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         },
       },
       {
-        headerName: 'PAN Number',
-        field: 'panNumber',
-        width: 120,
-        textAlign: 'center',
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
-        headerName: 'Service Type',
-        field: 'serviceType',
-        width: 100,
-        textAlign: 'center',
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
-        headerName: 'Language',
-        field: 'laguage',
-        width: 115,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
         headerName: 'Created Date',
         field: 'createdDate',
         width: 100,
@@ -613,11 +556,6 @@ export class ItrAssignedUsersComponent implements OnInit {
             return '-';
           }
         },
-        // filter: "agTextColumnFilter",
-        // filterParams: {
-        //   filterOptions: ["contains", "notContains"],
-        //   debounceMs: 0
-        // }
       },
       {
         headerName: 'Status Updated On',
@@ -631,11 +569,6 @@ export class ItrAssignedUsersComponent implements OnInit {
           else
             return '-';
         },
-        // filter: "agTextColumnFilter",
-        // filterParams: {
-        //   filterOptions: ["contains", "notContains"],
-        //   debounceMs: 0
-        // }
       },
       {
         headerName: 'User Id',
@@ -649,6 +582,32 @@ export class ItrAssignedUsersComponent implements OnInit {
           debounceMs: 0,
         },
       },
+      {
+        headerName: 'Action With',
+        field: 'conversationWithFiler',
+        width: 110,
+        suppressMovable: true,
+        hide: !showOwnerCols,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function nameFromCode(params) {
+          {
+            if (params.data.conversationWithFiler === true) {
+              return params.data.filerName;
+            } else {
+              return params.data.leaderName;
+            }
+          }
+        }
+      },
+
+
+
+
       // {
       //   headerName: 'Agent Name',
       //   field: 'callerAgentName',
@@ -897,7 +856,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         serviceType: userData[i].serviceType,
         assessmentYear: userData[i].assessmentYear,
         callerAgentName: userData[i].filerName,
-        ownerName: userData[i].ownerName,
+        leaderName: userData[i].leaderName,
         filerName: userData[i].filerName,
         callerAgentNumber: userData[i].filerMobile,
         callerAgentUserId: userData[i].filerUserId,
@@ -905,7 +864,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         statusUpdatedDate: userData[i].statusUpdatedDate,
         panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
         eriClientValidUpto: userData[i].eriClientValidUpto,
-        laguage: userData[i].laguage,
+        language: userData[i].language,
         itrObjectStatus: userData[i].itrObjectStatus,
         openItrId: userData[i].openItrId,
         lastFiledItrId: userData[i].lastFiledItrId,
@@ -1068,11 +1027,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     console.log("param2: ", param2);
     this.userMsService.postMethod(param, param2).subscribe(res => {
       console.log("Status update response: ", res)
-      // this.loading = false;
-      //this._toastMessageService.alert("success", "Status update successfully.");
     }, error => {
-      // this.loading = false;
-      //this._toastMessageService.alert("error", "There is some issue to Update Status information.");
     });
   }
 
@@ -1145,11 +1100,8 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   async call(data) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
-    // let callInfo = data.customerNumber;
     let agent_number
     this.loading = true;
-    // const param = `/prod/call-support/call`;
-    // TODO check the caller agent number;
     const param = `tts/outbound-call`;
     const agentNumber = await this.utilsService.getMyCallingNumber();
     console.log('agent number', agentNumber);
@@ -1161,21 +1113,12 @@ export class ItrAssignedUsersComponent implements OnInit {
       agent_number = agentNumber;
     } else {
       agent_number = agentNumber;
-      // agent_number = data.callerAgentNumber;
     }
     const reqBody = {
       "agent_number": agent_number,
         "userId": data.userId,
     }
-    // this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
-    //   this.loading = false;
-    //   if (result.success.status) {
-    //     this._toastMessageService.alert("success", result.success.message)
-    //   }
-    // }, error => {
-    //   this.utilsService.showSnackBar('Error while making call, Please try again.');
-    //   this.loading = false;
-    // })
+
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
@@ -1279,6 +1222,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
@@ -1325,10 +1269,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         this.searchParam.mobileNumber = null;
       }
 
-      // this.searchParam.statusId = null;
     } else if (form == 'status') {
       this.searchParam.page = 0;
-      // this.searchParam.serviceType = null;
       this.searchParam.mobileNumber = null
       this.searchParam.emailId = null
 
@@ -1345,51 +1287,40 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
-    //https://dev-api.taxbuddy.com/user/%7BloggedInSmeUserId%7D/user-list-new?page=0&pageSize=20
-    //https://uat-api.taxbuddy.com/user/7522/user-list-new?page=0&searchAsCoOwner=true&pageSize=100
-    //https://uat-api.taxbuddy.com/report/7521/user-list-new?page=0&pageSize=20
+    // 'https://dev-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=5&itrChatInitiated=true&serviceType=ITR'
+    //'https://dev-api.taxbuddy.com/bo/user-list-new?page=0&pageSize=5&itrChatInitiated=true&serviceType=ITR&filerUserId=779519'
+    // 'https://dev-api.taxbuddy.com/bo/user-list-new?page=0&pageSize=5&itrChatInitiated=true&leaderUserId=1064&serviceType=ITR' 
+    let param = `/bo/user-list-new?${data}&itrChatInitiated=true&serviceType=ITR`;
 
-    let param = `/${this.agentId}/user-list-new?${data}`;
-    // if (isAgent) {
-    //   param = param + '&isAgent=true';
-    // }
-    // if(this.filerUserId){
-    //   param= param + `&filerUserId=${this.filerUserId}`
-    // }
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
-    if (this.coOwnerToggle.value && isAgent) {
-      param = param + '&searchAsCoOwner=true';
-    }
+    // if (this.coOwnerToggle.value && isAgent) {
+    //   param = param + '&searchAsCoOwner=true';
+    // }
     if (this.filerId === this.agentId) {
       param = param + `&filerUserId=${this.filerId}`
     }
-    if (this.coOwnerToggle.value && isAgent && loggedInId !== this.agentId) {
-      param = `/${this.agentId}/user-list-new?${data}`;
-      let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
-      if (Object.keys(this.sortBy).length) {
-        param = param + sortByJson;
-      }
+    if (this.filerId === this.ownerId) {
+      param = param + `&leaderUserId=${this.ownerId}`
     }
-    else {
-      param;
-    }
+    // if (loggedInId !== this.agentId) {
+    //   param = `/${this.agentId}/user-list-new?${data}`;
+    //   let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    //   if (Object.keys(this.sortBy).length) {
+    //     param = param + sortByJson;
+    //   }
+    // }
+    // else {
+    //   param;
+    // }
 
-    this.userMsService.getMethodNew(param).subscribe(
-      /* {
-        next: (v) => console.log(v),
-        error: (e) => console.error(e),
-        complete: () => {
-          console.info('complete');
-          this.loading = false;
-        }
-      } */
+    this.reportService.getMethod(param).subscribe(
+
       (result: any) => {
         if (result.success == false) {
           this._toastMessageService.alert("error", result.message);
-          // this.utilsService.showSnackBar(result.message);
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
         }

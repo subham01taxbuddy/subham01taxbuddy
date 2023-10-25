@@ -72,6 +72,8 @@ export class ItrStatusDialogComponent implements OnInit {
   showDematEvcEriOtp: boolean;
   showDueDate: boolean;
   showLastFilingDate: boolean;
+  selectedPlanId: any;
+  userSelectedPlan: any;
 
   constructor(
     public dialogRef: MatDialogRef<ItrStatusDialogComponent>,
@@ -193,6 +195,7 @@ export class ItrStatusDialogComponent implements OnInit {
     this.isEditPan = response.data?.addClient?.taskStatus === 'Completed';
     this.isEditIncomeSources = response.data?.planSelection?.taskStatus === 'Completed';
     if (response.data?.planSelection?.customAttributes) {
+      this.selectedPlanId = response.data?.planSelection?.customAttributes.planId;
       this.isInsuranceOpted.setValue(response.data?.planSelection?.customAttributes?.isInsuranceOpted);
     } else {
       this.isInsuranceOpted.setValue(true);
@@ -325,26 +328,12 @@ export class ItrStatusDialogComponent implements OnInit {
       }
     });
     this.loading = true;
-    let param = '/plans-master?serviceType=ITR&eligilities=' + userSelectedIncomeSources.toString() + '&userId=' + this.data.userId;
+    let param = '/plans-master?serviceType=ITR&userId=' + this.data.userId;
     this.itrMsService.getMethod(param).subscribe((response: any) => {
       this.eligiblePlan = response;
-      if (sessionStorage.getItem('DATALAYEROBJ')) {
-        let datalayerObj = JSON.parse(sessionStorage.getItem('DATALAYEROBJ'));
-        if (!window['dataLayer']) {
-          window['dataLayer'] = [];
-        }
-        window['dataLayer'].push({
-          'event': 'form_submit_enhance',
-          'enhanced_conversion_data': {
-            "email": datalayerObj['email'],
-            "phone_number": datalayerObj['phone_number'],
-            'planId': this.eligiblePlan['planId'],
-            'planAmount': this.eligiblePlan['totalAmount'],
-          }
-        })
+      if (this.eligiblePlan.length) {
+        this.userSelectedPlan = this.eligiblePlan.filter(item => item.planId === this.selectedPlanId);
       }
-      console.log('Datalayer: ', window['dataLayer']);
-      this.loading = false;
     },
       error => {
         this.loading = false;

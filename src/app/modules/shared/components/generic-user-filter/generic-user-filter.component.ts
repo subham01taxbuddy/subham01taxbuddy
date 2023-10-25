@@ -9,10 +9,23 @@ import { AppConstants } from '../../constants';
 })
 export class GenericUserFilterComponent implements OnInit {
   @Output() onChange = new EventEmitter();
-  searchValue: FormControl;
+  searchValue = new FormControl('');
   searchKey: any;
   @Input() searchParameter: any[] = [];
 
+  private _clearUserFilter: number;
+
+  @Input() set clearUserFilter(value: number) {
+
+    this._clearUserFilter = value;
+    this.clear();
+  }
+
+  get clearUserFilter(): number {
+
+    return this._clearUserFilter;
+
+  }
   constructor() {
 
   }
@@ -20,35 +33,38 @@ export class GenericUserFilterComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  changeInput(hasClear) {
-    debugger
-    if (this.searchKey === 'name') {
-      this.searchValue = new FormControl('', [Validators.required, Validators.pattern(AppConstants.charRegex)]);
-    } else if (this.searchKey === 'mobileNo') {
-      this.searchValue = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(AppConstants.numericRegex)]);
-    } else if (this.searchKey === 'email') {
-      this.searchValue = new FormControl('', [Validators.required, Validators.pattern(AppConstants.emailRegex)]);
-    } else if (this.searchKey === 'pan') {
-      this.searchValue = new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(AppConstants.panNumberRegex)]);
+  changeInput() {
+    switch (this.searchKey) {
+      case 'name':
+        this.searchValue.setValidators([Validators.required, Validators.pattern(AppConstants.charRegex)]);
+        this.searchValue.updateValueAndValidity();
+        break;
+      case 'mobileNo':
+        this.searchValue.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(AppConstants.numericRegex)]);
+        this.searchValue.updateValueAndValidity();
+        break;
+      case 'email':
+        this.searchValue.setValidators([Validators.required, Validators.pattern(AppConstants.emailRegex)]);
+        this.searchValue.updateValueAndValidity();
+        break;
+      case 'pan':
+        this.searchValue.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(AppConstants.panNumberRegex)]);
+        this.searchValue.updateValueAndValidity();
+        break;
     }
-    // if (!this.searchValue && hasClear) {
-    //   this.searchValue = 1;
-    // }
     var searchBy = {};
-    // if (this.searchKey) {
-    //   // var key1 = 'level';
-    //   // sortBy[key1] = 0;
-    //   var key2 = this.searchKey.toString();
-    //   sortBy[key2] = Number(this.searchValue);
-    // }
+    if (this.searchKey) {
+      var key2 = this.searchKey.toString();
+      searchBy[key2] = this.searchValue.value;
+    }
     this.onChange.emit(searchBy);
 
   }
 
   clear() {
     this.searchKey = '';
-    this.searchValue = null;
-    this.changeInput(false);
+    this.searchValue = new FormControl('');
+    this.changeInput();
   }
 
 }
