@@ -205,7 +205,7 @@ export class FileParserComponent implements OnInit {
     let param = '/upload-excel';
     this.itrService.postMethod(param, formData).subscribe(
       (res: any) => {
-        this.loading = false;
+        // this.loading = false;
         //   this.isValidateJson = true;
         console.log('uploadDocument response =>', res);
         if (this.utilService.isNonEmpty(res)) {
@@ -227,6 +227,7 @@ export class FileParserComponent implements OnInit {
               .subscribe(
                 (result: any) => {
                   if (result.success) {
+                    this.loading = false;
                     if (!this.ITR_JSON.capitalGain) {
                       this.ITR_JSON.capitalGain = [];
                     }
@@ -281,6 +282,7 @@ export class FileParserComponent implements OnInit {
                 }
               );
           } else {
+            this.loading = false;
             this.utilService.showSnackBar(
               res.message
             );
