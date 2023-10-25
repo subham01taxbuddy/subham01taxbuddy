@@ -153,7 +153,8 @@
       </div>
     </div>
 
-    <form [formGroup]="deductionForm" *ngIf="this.deduction">
+    <div class="card deduction-form" *ngIf="this.deduction">
+      <form [formGroup]="deductionForm">
       <div class="row cardClr">
         <div class="col-sm-4">
           <mat-label>Type of Deduction*</mat-label>
@@ -269,20 +270,8 @@
       </div>
       <!-- Row Ends -->
     </form>
-
-    <div class="row spsTp bdrTp" *ngIf="deduction">
-      <div class="col-sm-9"></div>
-      <div class="col-sm-3">
-        <button
-          type="submit"
-          class="tbd-btn save-btn mvRth"
-          [disabled]="deductionForm.invalid"
-          (click)="save()"
-        >
-          Save
-        </button>
-      </div>
     </div>
+
   </div>
 </div>
 
@@ -440,7 +429,7 @@
                 name="sellValue"
                 maxlength="14"
                 required
-                (change)="
+                (change)="calculateGainType(selectedFormGroup);
                   calculateTotalCG(selectedFormGroup); calculateDeductionGain()
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -463,7 +452,7 @@
                 placeholder="Buy Value"
                 name="purchaseCost"
                 maxlength="14"
-                (change)="calculateTotalCG(selectedFormGroup)"
+                (change)="calculateGainType(selectedFormGroup);calculateTotalCG(selectedFormGroup)"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-error

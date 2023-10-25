@@ -639,10 +639,15 @@ export class LabFormComponent implements OnInit {
     });
   }
 
-  removeBuyersDetails(index) {
-    console.log('Remove Index', index);
-    const buyersDetails = <FormArray>this.immovableForm.get('buyersDetails');
-    buyersDetails.removeAt(index);
+  removeBuyersDetails() {
+    let buyersDetails = <FormArray>this.immovableForm.controls['buyersDetails'];
+    let nonSelected = buyersDetails.controls.filter((item: FormGroup) => item.controls['selected'].value !== true);
+    buyersDetails.controls = [];
+
+    nonSelected.forEach((item, index) => {
+      buyersDetails.push(item);
+    });
+
     // Condition is added because at least one buyers details is mandatory
     if (buyersDetails.length === 0) {
       buyersDetails.push(this.createBuyersDetailsForm());

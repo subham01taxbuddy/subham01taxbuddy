@@ -216,8 +216,8 @@
                     </div>
                     <div class="col-sm-4">
                       <mat-radio-group
-                        name="{{ i + 'Sec92EFirmFlag' }}"
-                        formControlName="Sec92EFirmFlag"
+                        name="{{ i + 'sec92EFirmFlag' }}"
+                        formControlName="sec92EFirmFlag"
                       >
                         <mat-radio-button
                           [value]="'Y'"
@@ -240,8 +240,9 @@
                 <div class="col-sm-3">
                   <button
                     type="submit"
-                    class="tbd-btn-delete"
+                    class="delete-btn"
                     (click)="deleteFirms()"
+                    [disabled]="!firmSelected()"
                   >
                     <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
                   </button>

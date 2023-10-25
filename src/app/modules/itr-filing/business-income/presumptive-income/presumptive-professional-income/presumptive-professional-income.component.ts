@@ -118,6 +118,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         [Validators.required],
       ],
       tradeName: [income?.tradeName || null, [Validators.required]],
+      description: [income?.description || null],
       receipts: [
         income?.incomes[0]?.receipts || 0,
         [Validators.required, Validators.max(5000000)],
@@ -506,6 +507,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
             natureOfBusiness: element.natureOfBusiness,
             label: null,
             tradeName: element.tradeName,
+            description: element.description,
             salaryInterestAmount: null,
             taxableIncome: null,
             exemptIncome: null,

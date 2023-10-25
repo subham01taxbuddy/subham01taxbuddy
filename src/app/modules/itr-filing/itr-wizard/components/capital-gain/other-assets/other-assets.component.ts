@@ -104,8 +104,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       Object.assign(copy, asset);
       copy.hasEdit = false;
       this.assetList.push(copy);
-      ltcg += asset.gainType === 'LONG' ? asset.capitalGain : 0;
-      stcg += asset.gainType === 'SHORT' ? asset.capitalGain : 0;
+      ltcg += asset?.gainType === 'LONG' ? asset?.capitalGain : 0;
+      stcg += asset?.gainType === 'SHORT' ? asset?.capitalGain : 0;
     });
     this.totalCg.ltcg = ltcg;
     this.totalCg.stcg = stcg;
@@ -163,8 +163,19 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   calculateDeduction() {
     this.loading = true;
     const param = '/calculate/capital-gain/deduction';
+    let capitalGain = 0;
+    let saleValue = 0;
+    let expenses = 0;
+    this.goldCg.assetDetails.forEach((asset) => {
+      if(asset.gainType === 'LONG'){
+        capitalGain += asset.capitalGain;
+        saleValue += asset.purchaseCost;
+        expenses += asset.sellExpense;
+      }
+    });
+
     let request = {
-      capitalGain: this.ITR_JSON.capitalGain[0]?.assetDetails[0]?.capitalGain,
+      capitalGain: capitalGain,
       capitalGainDeductions: [
         {
           deductionSection: 'SECTION_54F',
@@ -172,8 +183,8 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
             .controls['costOfNewAsset'].value,
           cgasDepositedAmount: (this.getDeductions.controls[0] as FormGroup)
             .controls['CGASAmount'].value,
-          saleValue: this.ITR_JSON.capitalGain[0]?.assetDetails[0]?.sellValue,
-          expenses: this.ITR_JSON.capitalGain[0]?.assetDetails[0]?.sellExpense,
+          saleValue: saleValue,
+          expenses: expenses,
         },
       ],
     };

@@ -781,7 +781,7 @@
                               finalCalculations?.businessIncome
                                 ?.businessIncomeDetails?.business44ADA &&
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44ADA.length >
+                                ?.businessIncomeDetails?.business44ADA?.length >
                                 0
                             "
                           >
@@ -1311,7 +1311,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermAppSlabRate.length > 0
+                          ?.ShortTermAppSlabRate?.length > 0
                       "
                     >
                       Short term capital gain @ slab rate
@@ -1324,7 +1324,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermAppSlabRate.length > 0
+                          ?.ShortTermAppSlabRate?.length > 0
                       "
                     >
                       <thead>
@@ -1381,7 +1381,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm15Per.length > 0
+                          ?.ShortTerm15Per?.length > 0
                       "
                     >
                       Short term capital gain @ 15% rate
@@ -1394,7 +1394,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm15Per.length > 0
+                          ?.ShortTerm15Per?.length > 0
                       "
                     >
                       <thead>
@@ -1451,7 +1451,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm30Per.length > 0 &&
+                          ?.ShortTerm30Per?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1468,7 +1468,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm30Per.length > 0 &&
+                          ?.ShortTerm30Per?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1529,7 +1529,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermSplRateDTAA.length > 0 &&
+                          ?.ShortTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1546,7 +1546,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermSplRateDTAA.length > 0 &&
+                          ?.ShortTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1747,7 +1747,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.longTerm
-                          ?.LongTermSplRateDTAA.length > 0 &&
+                          ?.LongTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1764,7 +1764,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.longTerm
-                          ?.LongTermSplRateDTAA.length > 0 &&
+                          ?.LongTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -4802,7 +4802,6 @@
                   <!-- *********************** Exempt Income ************************ -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="ITR_JSON?.exemptIncomes?.length > 0"
                     #exemptIncome
                   >
                     <mat-expansion-panel-header class="newclass">
@@ -4830,7 +4829,8 @@
                               >&nbsp;{{
                                 keys.ExemptIncAgriOthUs10Total
                                   ? keys.ExemptIncAgriOthUs10Total
-                                  : getExemptIncomeTotal()
+                                  : getExemptIncomeTotal() +
+                                    finalCalculations?.exemptIncome?.total
                               }}</label
                             >
                           </div>
@@ -4900,7 +4900,7 @@
                     <table
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
-                        finalCalculations?.exemptIncome?.partnerFirms.length > 0
+                        finalCalculations?.exemptIncome?.partnerFirms?.length > 0
                       "
                     >
                       <thead>
@@ -4908,22 +4908,7 @@
                           <th style="font-weight: bold">Sr. No</th>
                           <th style="font-weight: bold">Name</th>
                           <th style="font-weight: bold">Pan Number</th>
-                          <th style="font-weight: bold">Salary</th>
-                          <th style="font-weight: bold">Bonus</th>
-                          <th style="font-weight: bold">Commission</th>
-                          <th style="font-weight: bold">Interest</th>
-                          <th style="font-weight: bold">others</th>
-                          <th style="font-weight: bold">Is Liable To Audit</th>
-                          <th style="font-weight: bold">
-                            Section 92E firm flag
-                          </th>
                           <th style="font-weight: bold">Profit Share Amount</th>
-                          <th style="font-weight: bold">
-                            Profit Share Percent
-                          </th>
-                          <th style="font-weight: bold">
-                            Capital Balance On 31st March
-                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -4941,44 +4926,10 @@
                           <td>
                             {{ slabRate?.panNumber }}
                           </td>
-                          <td>
-                            Rs
-                            {{ slabRate?.salary }}
-                          </td>
-                          <td>
-                            Rs
-                            {{ slabRate?.bonus }}
-                          </td>
-                          <td>
-                            Rs
-                            {{ slabRate?.commission }}
-                          </td>
-                          <td>
-                            Rs
-                            {{ slabRate?.interest }}
-                          </td>
-                          <td>
-                            Rs
-                            {{ slabRate?.others }}
-                          </td>
-                          <td>
-                            {{ slabRate?.isLiableToAudit }}
-                          </td>
-                          <td>
-                            {{ slabRate?.sec92EFirmFlag }}
-                          </td>
 
                           <td>
                             Rs
                             {{ slabRate?.profitShareAmount }}
-                          </td>
-                          <td>
-                            Rs
-                            {{ slabRate?.profitSharePercent }}
-                          </td>
-                          <td>
-                            Rs
-                            {{ slabRate?.capitalBalanceOn31stMarch }}
                           </td>
                         </tr>
                       </tbody>

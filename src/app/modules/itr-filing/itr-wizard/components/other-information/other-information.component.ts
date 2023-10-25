@@ -55,7 +55,7 @@ export class OtherInformationComponent implements OnInit {
       itemsPerPage: 2,
       currentPage: 1,
     };
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     if (
       this.ITR_JSON.unlistedSharesDetails === null ||
       this.ITR_JSON.unlistedSharesDetails === undefined
@@ -73,9 +73,8 @@ export class OtherInformationComponent implements OnInit {
       this.ITR_JSON?.partnerInFirms === undefined
     ) {
       this.ITR_JSON.partnerInFirms = [];
-      this.Copy_ITR_JSON.partnerInFirmFlag = 'N';
+      this.ITR_JSON.partnerInFirmFlag = 'N';
     }
-
 
     if (!this.ITR_JSON.systemFlags?.directorInCompany) {
       if (this.ITR_JSON.systemFlags) {
@@ -278,7 +277,7 @@ export class OtherInformationComponent implements OnInit {
 
   saveDirectorDetials(event?) {
     //re-intialise the ITR objects
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     if (this.directorForm.valid) {
@@ -296,13 +295,19 @@ export class OtherInformationComponent implements OnInit {
       this.loading = true;
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
         (result) => {
-          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
+          this.ITR_JSON = result;
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
           this.loading = false;
           if (event) {
             this.utilsService.showSnackBar(
               'Director in company details added successfully'
             );
           }
+
+          this.saveUnlistedShares();
           // this.saveAndNext.emit(true);
           // this.directorForm.reset();
         },
@@ -333,7 +338,7 @@ export class OtherInformationComponent implements OnInit {
 
   tabChanged() {
     //re-intialise the ITR objects
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     if (
       this.ITR_JSON.unlistedSharesDetails === null ||
       this.ITR_JSON.unlistedSharesDetails === undefined
@@ -378,25 +383,28 @@ export class OtherInformationComponent implements OnInit {
   }
 
   changeGovernedByPortugueseStatus() {
-    console.log("changeGovernedByPortugueseStatus: "+this.Copy_ITR_JSON.portugeseCC5AFlag);
-    if(this.Copy_ITR_JSON.portugeseCC5AFlag === 'Y'){
-      this.schedule5AForm.get('isGovernedByPortuguese').setValue('Y')
-    }else{
-      this.schedule5AForm.reset()
+    console.log(
+      'changeGovernedByPortugueseStatus: ' +
+        this.Copy_ITR_JSON.portugeseCC5AFlag
+    );
+    if (this.Copy_ITR_JSON.portugeseCC5AFlag === 'Y') {
+      this.schedule5AForm.get('isGovernedByPortuguese').setValue('Y');
+    } else {
+      this.schedule5AForm.reset();
       this.schedule5AForm.get('isGovernedByPortuguese').setValue('N');
       this.schedule5AForm.get('houseProperty').reset();
       this.schedule5AForm.get('businessOrProfession').reset();
       this.schedule5AForm.get('capitalGain').reset();
       this.schedule5AForm.get('otherSource').reset();
 
-      this.Copy_ITR_JSON.schedule5a =  {
-        "nameOfSpouse": "",
-        "panOfSpouse": "",
-        "aadhaarOfSpouse": "",
-        "booksSpouse44ABFlg": "",
-        "booksSpouse92EFlg": "",
-        "headIncomes": []
-      }
+      this.Copy_ITR_JSON.schedule5a = {
+        nameOfSpouse: '',
+        panOfSpouse: '',
+        aadhaarOfSpouse: '',
+        booksSpouse44ABFlg: '',
+        booksSpouse92EFlg: '',
+        headIncomes: [],
+      };
       this.serviceCall('governed by the Portuguese Civil Code');
     }
   }
@@ -405,18 +413,24 @@ export class OtherInformationComponent implements OnInit {
     this.schedule5AForm = this.fb.group({
       isGovernedByPortuguese: [null],
       nameOfSpouse: [null, Validators.required],
-      panOfSpouse: [null, [Validators.required, Validators.pattern(/^([A-Z]){5}([0-9]){4}([A-Z]){1}$/)]],
+      panOfSpouse: [
+        null,
+        [
+          Validators.required,
+          Validators.pattern(/^([A-Z]){5}([0-9]){4}([A-Z]){1}$/),
+        ],
+      ],
       aadhaarOfSpouse: [null],
       booksSpouse44ABFlg: [null],
       booksSpouse92EFlg: [null],
-      houseProperty: this.createIncomeFormGroup(),
+      houseProperty: this.createIncomeFormGroup('HP'),
       businessOrProfession: this.createIncomeFormGroup('BUSINESS'),
       capitalGain: this.createIncomeFormGroup('CAPITAL_GAIN'),
       otherSource: this.createIncomeFormGroup('OTHER_SOURCE'),
     });
   }
 
-  createIncomeFormGroup(headOfIncome: string = 'HP') {
+  createIncomeFormGroup(headOfIncome: string) {
     return this.fb.group({
       headOfIncome: [headOfIncome],
       incomeReceived: [0, Validators.required],
@@ -425,7 +439,6 @@ export class OtherInformationComponent implements OnInit {
       apportionedTDSOfSpouse: [0, Validators.required],
     });
   }
-
 
   ChangeSharesStatus() {
     if (this.ITR_JSON.systemFlags.haveUnlistedShares) {
@@ -562,7 +575,11 @@ export class OtherInformationComponent implements OnInit {
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
       (result) => {
         console.log('result of save itr object', result);
-        sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
+        this.ITR_JSON = result;
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_JSON)
+        );
         this.ITR_JSON = JSON.parse(JSON.stringify(result));
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(result));
         console.log('copy of itr json', this.Copy_ITR_JSON);
@@ -575,13 +592,13 @@ export class OtherInformationComponent implements OnInit {
         if (this.ITR_JSON.systemFlags.haveUnlistedShares) {
           this.ITR_JSON.unlistedSharesDetails = [];
         }
-        if(this.ITR_JSON.portugeseCC5AFlag === 'N'){
+        if (this.ITR_JSON.portugeseCC5AFlag === 'N') {
           this.ITR_JSON.schedule5a = {
-            nameOfSpouse:'',
+            nameOfSpouse: '',
             panOfSpouse: '',
-            aadhaarOfSpouse:'',
-            booksSpouse44ABFlg:'',
-            booksSpouse92EFlg:'',
+            aadhaarOfSpouse: '',
+            booksSpouse44ABFlg: '',
+            booksSpouse92EFlg: '',
             headIncomes: [],
           };
         }
@@ -596,7 +613,7 @@ export class OtherInformationComponent implements OnInit {
 
   saveUnlistedShares(event?) {
     //re-intialise the ITR objects
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     if (this.sharesForm.valid) {
@@ -608,13 +625,19 @@ export class OtherInformationComponent implements OnInit {
       this.loading = true;
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
         (result) => {
-          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
+          this.ITR_JSON = result;
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
           this.loading = false;
           if (event) {
             this.utilsService.showSnackBar(
               'Other information updated successfully.'
             );
           }
+
+          this.saveFirmDetails();
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -681,7 +704,7 @@ export class OtherInformationComponent implements OnInit {
   }
 
   saveFirmDetails(event?) {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     if (this.firmForm.valid) {
@@ -698,7 +721,11 @@ export class OtherInformationComponent implements OnInit {
 
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
         (result) => {
-          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
+          this.ITR_JSON = result;
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
           this.loading = false;
           if (event) {
             this.utilsService.showSnackBar(
@@ -716,31 +743,36 @@ export class OtherInformationComponent implements OnInit {
     }
   }
 
-
-  portugeseCall(){
+  portugeseCall() {
     this.createSchedule5AForm();
     if (this.Copy_ITR_JSON.portugeseCC5AFlag === 'Y') {
       this.Copy_ITR_JSON.portugeseCC5AFlag = 'Y';
-      if(this.Copy_ITR_JSON.schedule5a != null){
+      if (this.Copy_ITR_JSON.schedule5a != null) {
         this.schedule5AForm.patchValue({
           nameOfSpouse: this.Copy_ITR_JSON.schedule5a.nameOfSpouse,
           panOfSpouse: this.Copy_ITR_JSON.schedule5a.panOfSpouse,
           aadhaarOfSpouse: this.Copy_ITR_JSON.schedule5a.aadhaarOfSpouse,
           booksSpouse44ABFlg: this.Copy_ITR_JSON.schedule5a.booksSpouse44ABFlg,
-          booksSpouse92EFlg:this.Copy_ITR_JSON.schedule5a.booksSpouse92EFlg,
+          booksSpouse92EFlg: this.Copy_ITR_JSON.schedule5a.booksSpouse92EFlg,
         });
       }
-      if(this.Copy_ITR_JSON.schedule5a.headIncomes != null){
-        const incomeTypes = ['HP','BUSINESS','CAPITAL_GAIN','OTHER_SOURCE'];
+      if (this.Copy_ITR_JSON.schedule5a.headIncomes != null) {
+        const incomeTypes = ['HP', 'BUSINESS', 'CAPITAL_GAIN', 'OTHER_SOURCE'];
         incomeTypes.forEach((incomeType) => {
           if (this.Copy_ITR_JSON.schedule5a.headIncomes) {
-            const selectedIncome = this.Copy_ITR_JSON.schedule5a.headIncomes.find(income => income.headOfIncome === incomeType);
+            const selectedIncome =
+              this.Copy_ITR_JSON.schedule5a.headIncomes.find(
+                (income) => income.headOfIncome === incomeType
+              );
             const selectedIncomeType = this.getIncomeTypeKey(incomeType);
             if (selectedIncome) {
-              const incomeFormGroup = this.schedule5AForm.get(selectedIncomeType) as FormGroup;
+              const incomeFormGroup = this.schedule5AForm.get(
+                selectedIncomeType
+              ) as FormGroup;
               incomeFormGroup.patchValue({
                 incomeReceived: selectedIncome.incomeReceived,
-                apportionedAmountOfSpouse: selectedIncome.apportionedAmountOfSpouse,
+                apportionedAmountOfSpouse:
+                  selectedIncome.apportionedAmountOfSpouse,
                 tdsDeductedAmount: selectedIncome.tdsDeductedAmount,
                 apportionedTDSOfSpouse: selectedIncome.apportionedTDSOfSpouse,
               });
@@ -748,11 +780,9 @@ export class OtherInformationComponent implements OnInit {
           }
         });
       }
-
     } else {
       this.Copy_ITR_JSON.portugeseCC5AFlag = 'N';
     }
-
   }
 
   getIncomeTypeKey(type: string): string {
@@ -771,32 +801,42 @@ export class OtherInformationComponent implements OnInit {
   }
 
   saveSchedule5ADetails(event?) {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
     if (this.schedule5AForm.valid) {
       console.log('Save form here', this.schedule5AForm.getRawValue());
       this.loading = true;
 
-      this.Copy_ITR_JSON.portugeseCC5AFlag =  this.schedule5AForm.get('isGovernedByPortuguese').value ||  this.Copy_ITR_JSON.portugeseCC5AFlag ||'';
+      this.Copy_ITR_JSON.portugeseCC5AFlag =
+        this.schedule5AForm.get('isGovernedByPortuguese').value ||
+        this.Copy_ITR_JSON.portugeseCC5AFlag ||
+        '';
       const schedule5a = {
         nameOfSpouse: this.schedule5AForm.get('nameOfSpouse').value || '',
         panOfSpouse: this.schedule5AForm.get('panOfSpouse').value || '',
         aadhaarOfSpouse: this.schedule5AForm.get('aadhaarOfSpouse').value || '',
-        booksSpouse44ABFlg: this.schedule5AForm.get('booksSpouse44ABFlg').value || '',
-        booksSpouse92EFlg: this.schedule5AForm.get('booksSpouse92EFlg').value || '',
+        booksSpouse44ABFlg:
+          this.schedule5AForm.get('booksSpouse44ABFlg').value || '',
+        booksSpouse92EFlg:
+          this.schedule5AForm.get('booksSpouse92EFlg').value || '',
         headIncomes: [],
       };
 
-      const incomeTypes = ['houseProperty', 'businessOrProfession', 'capitalGain', 'otherSource'];
+      const incomeTypes = [
+        'houseProperty',
+        'businessOrProfession',
+        'capitalGain',
+        'otherSource',
+      ];
 
       incomeTypes.forEach((incomeType) => {
-        let incomeItem = this.schedule5AForm.controls[`${incomeType}`].value
+        let incomeItem = this.schedule5AForm.controls[`${incomeType}`].value;
         if (incomeItem) {
           const incomeObject = {
             headOfIncome: incomeItem.headOfIncome,
             incomeReceived: incomeItem.incomeReceived || 0,
-            apportionedAmountOfSpouse: incomeItem.apportionedAmountOfSpouse || 0,
+            apportionedAmountOfSpouse:
+              incomeItem.apportionedAmountOfSpouse || 0,
             tdsDeductedAmount: incomeItem.tdsDeductedAmount || 0,
             apportionedTDSOfSpouse: incomeItem.apportionedTDSOfSpouse || 0,
           };
@@ -808,11 +848,19 @@ export class OtherInformationComponent implements OnInit {
 
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
         (result) => {
-          sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(result));
+          this.ITR_JSON = result;
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
           this.loading = false;
           if (event) {
-            this.utilsService.showSnackBar('Schedule5A Details added successfully');
+            this.utilsService.showSnackBar(
+              'Schedule5A Details added successfully'
+            );
           }
+
+          this.saveDirectorDetials();
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -824,16 +872,19 @@ export class OtherInformationComponent implements OnInit {
     }
   }
 
-
   saveAndContinue(event?) {
-    this.saveDirectorDetials();
-    this.saveUnlistedShares();
-    this.saveFirmDetails();
     this.saveSchedule5ADetails();
     this.otherInfoSaved.emit(true);
 
     if (!event) {
       this.saveAndNext.emit(true);
     }
+  }
+
+  isPartnerInFirmFlag() {
+    return (
+      this.Copy_ITR_JSON.partnerInFirmFlag &&
+      this.Copy_ITR_JSON.partnerInFirmFlag === 'Y'
+    );
   }
 }
