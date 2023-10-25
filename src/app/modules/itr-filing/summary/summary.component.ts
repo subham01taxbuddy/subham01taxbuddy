@@ -3894,8 +3894,8 @@ export class SummaryComponent implements OnInit {
                           )
                           .map((element) => ({
                             businessSection: element?.businessType,
-                            natureOfBusinessCode: 0,
-                            tradeName: '',
+                            natureOfBusinessCode: element?.natureOfBusinessCode,
+                            tradeName: element?.tradeName,
                             grossTurnover: element?.receipts,
                             TaxableIncome: element?.presumptiveIncome,
                           })),
@@ -5327,8 +5327,8 @@ export class SummaryComponent implements OnInit {
                         )
                         .map((element) => ({
                           businessSection: element?.businessType,
-                          natureOfBusinessCode: 0,
-                          tradeName: '',
+                          natureOfBusinessCode: element?.natureOfBusinessCode,
+                          tradeName: element?.tradeName,
                           grossTurnover: element?.receipts,
                           TaxableIncome: element?.presumptiveIncome,
                         })),
