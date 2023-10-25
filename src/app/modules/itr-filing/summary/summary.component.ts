@@ -380,6 +380,8 @@ export class SummaryComponent implements OnInit {
         hpLoss: Number; // TotBFLossSetoff
         stLoss: Number; // TotUnabsorbedDeprSetoff
         ltLoss: Number; // TotAllUs35cl4Setoff
+        businessLoss: Number; // TotAllUs35cl4Setoff
+        speculativeBusinessLoss: Number; // TotAllUs35cl4Setoff
       };
       BroughtFwdLossesSetoffTotal: Number;
     };
@@ -1165,6 +1167,8 @@ export class SummaryComponent implements OnInit {
                 hpLoss: 0,
                 stLoss: 0,
                 ltLoss: 0,
+                businessLoss: 0,
+                speculativeBusinessLoss: 0
               },
               BroughtFwdLossesSetoffTotal: 0,
             },
@@ -2530,20 +2534,19 @@ export class SummaryComponent implements OnInit {
                 ?.BalanceAfterSetoffLosses,
             BroughtFwdLossesSetoff: {
               BroughtFwdLossesSetoffDtls: {
-                hpLoss:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    ?.ScheduleBFLA?.TotalBFLossSetOff?.TotBFLossSetoff,
-                stLoss:
-                  this.itrType === 'ITR3'
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleBFLA?.TotalBFLossSetOff
-                        ?.TotUnabsorbedDeprSetoff
-                    : 0,
-                ltLoss:
-                  this.itrType === 'ITR3'
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleBFLA?.TotalBFLossSetOff?.TotAllUs35cl4Setoff
-                    : 0,
+                hpLoss: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                  ?.ScheduleBFLA?.TotalBFLossSetOff?.TotBFLossSetoff,
+                stLoss: this.itrType === 'ITR3'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleBFLA?.TotalBFLossSetOff
+                    ?.TotUnabsorbedDeprSetoff
+                  : 0,
+                ltLoss: this.itrType === 'ITR3'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleBFLA?.TotalBFLossSetOff?.TotAllUs35cl4Setoff
+                  : 0,
+                businessLoss: 0,
+                speculativeBusinessLoss: 0
               },
               BroughtFwdLossesSetoffTotal:
                 Number(
@@ -4148,20 +4151,25 @@ export class SummaryComponent implements OnInit {
                   BroughtFwdLossesSetoff: {
                     BroughtFwdLossesSetoffDtls: {
                       hpLoss: this.losses?.pastYearLosses?.reduce(
-                        (total, item) =>
-                          total + item?.setOffWithCurrentYearHPIncome,
+                        (total, item) => total + item?.setOffWithCurrentYearHPIncome,
                         0
                       ),
                       stLoss: this.losses?.pastYearLosses?.reduce(
-                        (total, item) =>
-                          total + item?.setOffWithCurrentYearSTCGIncome,
+                        (total, item) => total + item?.setOffWithCurrentYearSTCGIncome,
                         0
                       ),
                       ltLoss: this.losses?.pastYearLosses?.reduce(
-                        (total, item) =>
-                          total + item?.setOffWithCurrentYearLTCGIncome,
+                        (total, item) => total + item?.setOffWithCurrentYearLTCGIncome,
                         0
                       ),
+                      businessLoss: this.losses?.pastYearLosses?.reduce(
+                        (total, item) => total + item?.setOffWithCurrentYearBroughtForwordBusinessIncome,
+                        0
+                      ),
+                      speculativeBusinessLoss: this.losses?.pastYearLosses?.reduce(
+                        (total, item) => total + item?.setOffWithCurrentYearSpeculativeBusinessIncome,
+                        0
+                      )
                     },
                     BroughtFwdLossesSetoffTotal: Number(
                       this.finalSummary?.assessment?.taxSummary
@@ -5604,6 +5612,14 @@ export class SummaryComponent implements OnInit {
                         total + item?.setOffWithCurrentYearLTCGIncome,
                       0
                     ),
+                    businessLoss: this.losses?.pastYearLosses?.reduce(
+                      (total, item) => total + item?.setOffWithCurrentYearBroughtForwordBusinessIncome,
+                      0
+                    ),
+                    speculativeBusinessLoss: this.losses?.pastYearLosses?.reduce(
+                      (total, item) => total + item?.setOffWithCurrentYearSpeculativeBusinessIncome,
+                      0
+                    )
                   },
                   BroughtFwdLossesSetoffTotal: Number(
                     this.finalSummary?.assessment?.taxSummary
