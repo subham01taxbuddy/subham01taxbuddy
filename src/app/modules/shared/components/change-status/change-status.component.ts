@@ -70,7 +70,8 @@ export class ChangeStatusComponent implements OnInit {
   }
 
   getStatus() {
-    let param = '/itr-status-master/source/BACK_OFFICE';
+    // 'https://dev-api.taxbuddy.com/user/itr-status-master/source/BACK_OFFICE?userId=8664&serviceType=ITR'
+    let param = '/itr-status-master/source/BACK_OFFICE?userId=' + this.data.userId + '&serviceType=' + this.data.serviceType;
     this.userService.getMethod(param).subscribe(
       (response) => {
         console.log('status response: ', response);

@@ -326,6 +326,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   ownerId: number;
   filerId: number;
   fromSme(event, isOwner) {
+    debugger
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.ownerId = event ? event.userId : null;
@@ -1116,7 +1117,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
     const reqBody = {
       "agent_number": agent_number,
-        "userId": data.userId,
+      "userId": data.userId,
     }
 
 
@@ -1302,11 +1303,11 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (this.filerId === this.agentId) {
       param = param + `&filerUserId=${this.filerId}`
     }
-    if (this.filerId === this.ownerId) {
-      param = param + `&leaderUserId=${this.ownerId}`
-    }
+    // if (this.filerId === this.ownerId) {
+    //   param = param + `&leaderUserId=${this.ownerId}`
+    // }
     // if (loggedInId !== this.agentId) {
-    //   param = `/${this.agentId}/user-list-new?${data}`;
+    //   param = param + `&filerUserId=${this.filerId}`
     //   let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     //   if (Object.keys(this.sortBy).length) {
     //     param = param + sortByJson;
