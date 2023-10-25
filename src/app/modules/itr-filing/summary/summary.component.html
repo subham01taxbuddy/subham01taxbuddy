@@ -781,7 +781,7 @@
                               finalCalculations?.businessIncome
                                 ?.businessIncomeDetails?.business44ADA &&
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44ADA.length >
+                                ?.businessIncomeDetails?.business44ADA?.length >
                                 0
                             "
                           >
@@ -1311,7 +1311,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermAppSlabRate.length > 0
+                          ?.ShortTermAppSlabRate?.length > 0
                       "
                     >
                       Short term capital gain @ slab rate
@@ -1324,7 +1324,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermAppSlabRate.length > 0
+                          ?.ShortTermAppSlabRate?.length > 0
                       "
                     >
                       <thead>
@@ -1381,7 +1381,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm15Per.length > 0
+                          ?.ShortTerm15Per?.length > 0
                       "
                     >
                       Short term capital gain @ 15% rate
@@ -1394,7 +1394,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm15Per.length > 0
+                          ?.ShortTerm15Per?.length > 0
                       "
                     >
                       <thead>
@@ -1451,7 +1451,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm30Per.length > 0 &&
+                          ?.ShortTerm30Per?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1468,7 +1468,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm30Per.length > 0 &&
+                          ?.ShortTerm30Per?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1529,7 +1529,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermSplRateDTAA.length > 0 &&
+                          ?.ShortTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1546,7 +1546,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermSplRateDTAA.length > 0 &&
+                          ?.ShortTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1747,7 +1747,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.longTerm
-                          ?.LongTermSplRateDTAA.length > 0 &&
+                          ?.LongTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1764,7 +1764,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.longTerm
-                          ?.LongTermSplRateDTAA.length > 0 &&
+                          ?.LongTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -4899,7 +4899,7 @@
                     <table
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
-                        finalCalculations?.exemptIncome?.partnerFirms.length > 0
+                        finalCalculations?.exemptIncome?.partnerFirms?.length > 0
                       "
                     >
                       <thead>
