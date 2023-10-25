@@ -211,7 +211,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
           ? parseFloat(presumptiveIncome.value)
           : 0;
 
-      if (PresumptiveIncome && PresumptiveIncome !== 0) {
+      if (PresumptiveIncome || PresumptiveIncome === 0) {
         presumptiveIncome?.setValidators([
           Validators.required,
           Validators.min(this.amountFifty),
