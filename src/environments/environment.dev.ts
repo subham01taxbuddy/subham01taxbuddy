@@ -6,7 +6,7 @@ export const environment = {
     gst_gov_url: "https://devapi.gst.gov.in",
     ifsc_url: "https://ifsc.razorpay.com",
     amazonaws_url: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com",
-    reviewUrl: "https://dfxi9rg1pf.execute-api.us-east-1.amazonaws.com/dev/",
+    reviewUrl: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/",
     isValidItr:false,
     assistedKmScript: '../assets/assisted-km-script-uat.html',
 	  environment:'DEV',
@@ -43,8 +43,8 @@ export const environment = {
     projectId: "taxbuddy-uat",
     storageBucket: "taxbuddy-uat.appspot.com",
     messagingSenderId: "805239680508",
-    appId: "1:805239680508:web:b9258ec04023b0fda05679",
-    measurementId: "G-DMWVKK98X2"
+    appId: "1:805239680508:web:57f68aeeeed74a4aa05679",
+    measurementId: "G-JD9F7FYVWM"
   },
 
   s3_cred: {

@@ -1116,7 +1116,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
     const reqBody = {
       "agent_number": agent_number,
-      "customer_number": data.mobileNumber
+        "userId": data.userId,
     }
 
 

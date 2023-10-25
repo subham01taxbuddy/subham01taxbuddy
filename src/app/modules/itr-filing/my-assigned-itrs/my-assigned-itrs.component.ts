@@ -618,7 +618,7 @@ export class MyAssignedItrsComponent implements OnInit, AfterContentChecked {
     const param = `/prod/call-support/call`;
     const reqBody = {
       "agent_number": agentNumber,
-      "customer_number": customerNumber
+      "userId": user.userId,
     }
     console.log('reqBody:', reqBody)
     this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {

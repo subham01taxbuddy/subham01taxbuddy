@@ -622,7 +622,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     this.loading = true;
     const reqBody = {
       agent_number: agentNumber,
-      customer_number: user.userMobile,
+      userId: user.userId,
     };
 
     // const param = `/prod/call-support/call`;

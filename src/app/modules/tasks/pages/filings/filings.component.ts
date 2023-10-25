@@ -1126,7 +1126,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     const param = `tts/outbound-call`;
     const reqBody = {
       agent_number: agentNumber,
-      customer_number: customerNumber,
+      userId: user.userId,
     };
     console.log('reqBody:', reqBody);
     // this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
