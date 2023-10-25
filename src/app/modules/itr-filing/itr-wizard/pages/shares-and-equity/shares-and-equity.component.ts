@@ -519,6 +519,7 @@ export class SharesAndEquityComponent
         }
         if (data.length > 0) {
           data.forEach((obj) => {
+            result.srn = obj.assetDetails.length;
             obj.assetDetails.push(result);
           });
         } else {
@@ -572,6 +573,14 @@ export class SharesAndEquityComponent
     });
   }
 
+  dialogSaveClicked(){
+    if(this.selectedFormGroup.valid) {
+      this.addDialogRef.close(this.selectedFormGroup.value);
+    } else {
+      $('input.ng-invalid').first().focus();
+    }
+  }
+
   createForm(srn, item?): FormGroup {
     let validators =
       this.bondType === 'listed'
@@ -601,7 +610,7 @@ export class SharesAndEquityComponent
       isinCode: [item ? item.isinCode : ''],
       nameOfTheUnits: [item ? item.nameOfTheUnits : ''],
       fmvAsOn31Jan2018: [item ? item.fmvAsOn31Jan2018 : null],
-      gainType: [item ? item.gainType : null],
+      gainType: [item ? item.gainType : null, [Validators.required]],
       grandFatheredValue: [
         item ? item.grandFatheredValue || item.purchaseCost : null,
       ],
@@ -768,7 +777,7 @@ export class SharesAndEquityComponent
   }
 
   checkBuyDateBefore31stJan(securities) {
-    return (
+    return this.utilsService.isNonEmpty(securities.controls['purchaseDate'].value) && (
       new Date(securities.controls['purchaseDate'].value) <
       new Date('02/01/2018')
     );
