@@ -273,9 +273,9 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       let param = '';
 
       if (this.leaderDetails?.userId) {
-        param = `/bo/sme-details-new/${this.leaderDetails?.userId}?partnerType=Individual,Principal`;
+        param = `/bo/sme-details-new/${this.leaderDetails?.userId}?partnerType=INDIVIDUAL,PRINCIPAL`;
       }else{
-        param = `/bo/sme-details-new/${loggedInSmeUserId}?partnerType=Individual,Principal`;
+        param = `/bo/sme-details-new/${loggedInSmeUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
       }
 
       this.reportService.getMethod(param).subscribe((result: any) => {
@@ -311,9 +311,9 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = '';
     if (this.principleIndividualDetails?.userId) {
-      param = `/bo/sme-details-new/${this.principleIndividualDetails?.userId}?partnerType=Child`;
+      param = `/bo/sme-details-new/${this.principleIndividualDetails?.userId}?partnerType=CHILD`;
     } else {
-      param = `/bo/sme-details-new/${loggedInSmeUserId}?partnerType=Child`;
+      param = `/bo/sme-details-new/${loggedInSmeUserId}?partnerType=CHILD`;
     }
 
     this.reportService.getMethod(param).subscribe((result: any) => {

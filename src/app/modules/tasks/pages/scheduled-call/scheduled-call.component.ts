@@ -56,9 +56,15 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   dataOnLoad = true;
   showCsvMessage: boolean;
   sortBy: any = {};
+  searchBy: any = {};
   sortMenus = [
     { value: 'userName', name: 'Name' },
   ];
+  searchMenus = [
+    { value: 'email', name: 'Email' },
+    { value: 'mobileNumber', name: 'Mobile No' },
+  ];
+  clearUserFilter: number;
   constructor(
     private reviewService: ReviewService,
     private toastMsgService: ToastMessageService,
@@ -149,20 +155,26 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   sortByObject(object) {
     this.sortBy = object;
   }
+
+  searchByObject(object) {
+    this.searchBy = object;
+  }
+
   ownerId: number;
   filerId: number;
   agentId = null;
+  leaderId: number;
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
-      this.ownerId = event ? event.userId : null;
+      this.leaderId = event ? event.userId : null;
     } else {
       this.filerId = event ? event.userId : null;
     }
     if (this.filerId) {
       this.agentId = this.filerId;
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
+    } else if (this.leaderId) {
+      this.agentId = this.leaderId;
       // this.search('agent');
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
@@ -344,19 +356,19 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
       },
-      {
-        headerName: 'Filer Name',
-        field: 'filerName',
-        width: 120,
-        suppressMovable: true,
-        sortable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
+      // {
+      //   headerName: 'Filer Name',
+      //   field: 'filerName',
+      //   width: 120,
+      //   suppressMovable: true,
+      //   sortable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: 'agTextColumnFilter',
+      //   filterParams: {
+      //     filterOptions: ['contains', 'notContains'],
+      //     debounceMs: 0,
+      //   },
+      // },
       {
         headerName: 'Owner Name',
         field: 'ownerName',
@@ -759,6 +771,9 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   }
 
   search(form?, isAgent?, pageChange?) {
+   // Admin -  'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20' \
+   //Leader - 'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20&leaderUserId=8712'
+   //
     if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
@@ -793,10 +808,13 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
+    let leaderFilter = ''
 
-    // https://uat-api.taxbuddy.com/user/schedule-call-details/7523?page=0&pageSize=30&searchAsCoOwner=true
+    if (this.leaderId) {
+      leaderFilter = `&leaderUserId=${this.leaderId}`
+    }
 
-    var param = `/dashboard/schedule-call-details/${this.agentId}?${data}`;
+    var param = `/bo/schedule-call-details?${data}${leaderFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
@@ -843,6 +861,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         if (result.message) { this.toastMsgService.alert('error', result.message); }
         else { this.toastMsgService.alert('error', 'No Data Found'); }
       }
+      this.loading = false;
+    },error =>{
       this.loading = false;
     });
   }

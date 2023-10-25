@@ -19,7 +19,7 @@
             </div> -->
 
             <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
-              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
+              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
                 (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
             <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
@@ -27,8 +27,8 @@
                 (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
             </div>
             <div class="col-sm-3 spsTp">
+              <mat-label>Select Status</mat-label>
               <mat-form-field appearance="outline">
-                <mat-label>Select Status</mat-label>
                 <mat-select placeholder="Select Status" [(ngModel)]="searchParam.statusId">
                   <mat-option *ngFor="let status of statuslist" [value]="status.statusId">
                     {{ status.statusName }}
@@ -36,7 +36,7 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-sm-4 spsTp">
+            <!-- <div class="col-sm-4 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>Mobile Number: </mat-label>
                 <input matInput type="text" placeholder="Enter Mobile Number" [(ngModel)]="searchParam.mobileNumber"
@@ -49,7 +49,11 @@
                 <mat-label>Email Address: </mat-label>
                 <input matInput placeholder="Enter Email Address" [(ngModel)]="searchParam.email" maxlength="50" />
               </mat-form-field>
-            </div>
+            </div> -->
+            <div class="col-9 ">
+              <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                  (onChange)="searchByObject($event)"></app-generic-user-filter>
+          </div>
             <div class="row  spsTp bdrTp">
               <div class="col-6">
                 <app-generic-sorting [sortingParameter]="sortMenus"
