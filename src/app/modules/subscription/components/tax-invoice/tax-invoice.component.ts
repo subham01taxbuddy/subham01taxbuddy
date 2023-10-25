@@ -384,7 +384,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     // if (this.ownerDetails?.userId) {
     //   param = `/sme-details-new/${this.ownerDetails?.userId}?filer=true`;
     // } else {
-      param = `/bo/sme-details-new/${loggedInSmeUserId}?partnerType=Individual,Principal`;
+      param = `/bo/sme-details-new/${loggedInSmeUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
     // }
 
     this.reportService.getMethod(param).subscribe((result: any) => {

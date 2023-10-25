@@ -831,7 +831,7 @@ export class UtilsService {
   async getAgentList() {
     //https://uat-api.taxbuddy.com/user/sme-details-new/3000?page=0&size=100&filer=true
     const loggedInUserId = this.getLoggedInUserID();
-    const param = `/bo/sme-details-new/${loggedInUserId}?partnerType=Individual,Principal`;
+    const param = `/bo/sme-details-new/${loggedInUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
     return await this.reportService.getMethod(param).toPromise();
   }
 
@@ -1362,7 +1362,7 @@ export class UtilsService {
     // https://uat-api.taxbuddy.com/user/sme-details-new/3000?filer=true
     let loggedInUserId = environment.admin_id;
     console.log('logged in sme id ', loggedInUserId);
-    const param = `/bo/sme-details-new/${loggedInUserId}?partnerType=Individual,Principal`;
+    const param = `/bo/sme-details-new/${loggedInUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
     // return await this.userMsService.getMethod(param).toPromise();
     this.reportService.getMethod(param).subscribe((res: any) => {
       console.log('filer List Result', res);
