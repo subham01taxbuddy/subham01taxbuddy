@@ -291,26 +291,8 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         data.concat(profitLossACIncomes);
     }
     console.log(this.Copy_ITR_JSON);
-    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-      (result: any) => {
-        this.ITR_JSON = result;
-        this.loading = false;
-        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-        this.utilsService.showSnackBar(
-          'non-speculative income added successfully'
-        );
-        console.log('non-speculative income=', result);
-        this.utilsService.smoothScrollToTop();
-      },
-      (error) => {
-        this.loading = false;
-        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        this.utilsService.showSnackBar(
-          'Failed to add non-speculative income, please try again.'
-        );
-        this.utilsService.smoothScrollToTop();
-      }
-    );
+    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+
   }
 
   ngDoCheck() {
