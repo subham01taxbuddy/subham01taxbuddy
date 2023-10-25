@@ -69,9 +69,9 @@ export class ItrAssignedUsersComponent implements OnInit {
   searchBy: any = {};
   searchMenus = [
     { value: 'name', name: 'User Name' },
-    { value: 'email', name: 'Email' },
-    { value: 'mobileNo', name: 'Mobile No' },
-    { value: 'pan', name: 'PAN' }
+    { value: 'emailId', name: 'Email' },
+    { value: 'mobileNumber', name: 'Mobile No' },
+    { value: 'panNumber', name: 'PAN' }
   ];
   clearUserFilter: number;
   constructor(
@@ -363,23 +363,6 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   coOwnerId: number;
   coFilerId: number;
-
-  fromSme1(event, isOwner) {
-    console.log('co-owner-drop-down', event, isOwner);
-    if (isOwner) {
-      this.coOwnerId = event ? event.userId : null;
-    } else {
-      this.coFilerId = event ? event.userId : null;
-    }
-    if (this.coFilerId) {
-      this.agentId = this.coFilerId;
-    } else if (this.coOwnerId) {
-      this.agentId = this.coOwnerId;
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
-    }
-  }
 
 
   usersCreateColumnDef(itrStatus) {
@@ -1315,9 +1298,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
-    // if (this.coOwnerToggle.value && isAgent) {
-    //   param = param + '&searchAsCoOwner=true';
-    // }
+    
     if (this.filerId === this.agentId) {
       param = param + `&filerUserId=${this.filerId}`
     }

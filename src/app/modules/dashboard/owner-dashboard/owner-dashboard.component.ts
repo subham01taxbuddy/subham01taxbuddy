@@ -99,7 +99,7 @@ export class OwnerDashboardComponent implements OnInit {
     // API to get filers under owner-
     // https://dev-api.taxbuddy.com/user/sme-details-new/8078?owner=true&assigned=true
 
-    let param = `/bo/sme-details-new/${this.loggedInSmeUserId}?partnerType=Individual,Principal`;
+    let param = `/bo/sme-details-new/${this.loggedInSmeUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
 
     this.reportService.getMethod(param).subscribe((result: any) => {
       this.options1 = [];
