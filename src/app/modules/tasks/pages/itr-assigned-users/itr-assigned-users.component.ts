@@ -88,6 +88,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     private requestManager: RequestManager,
     private cacheManager: CacheManager,
     private reportService: ReportService,
+    private userService:UserMsService,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
@@ -141,7 +142,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
     this.agentId = userId;
-    this.getMasterStatusList();
+    this.getStatus();
     this.activatedRoute.queryParams.subscribe(params => {
       this.searchVal = params['mobileNumber'];
       this.searchStatusId = params['statusId'];
@@ -291,9 +292,26 @@ export class ItrAssignedUsersComponent implements OnInit {
     });
   }
 
-  async getMasterStatusList() {
-    this.itrStatus = await this.utilsService.getStoredMasterStatusList();
-    this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
+  // async getMasterStatusList() {
+  //   this.itrStatus = await this.utilsService.getStoredMasterStatusList();
+  //   this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
+  // }
+
+  getStatus() {
+    // 'https://dev-api.taxbuddy.com/user/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&serviceType=ITR'
+    let param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&serviceType=ITR';
+    this.userService.getMethod(param).subscribe(
+      (response) => {
+        if (response instanceof Array && response.length > 0) {
+          this.itrStatus = response;
+        } else {
+          this.itrStatus = [];
+        }
+      },
+      (error) => {
+        console.log('Error during fetching status info.');
+      }
+    );
   }
 
 
@@ -314,18 +332,19 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
   }
 
-  fromServiceType(event) {
-    this.searchParam.serviceType = event;
-    if (this.searchParam.serviceType) {
-      setTimeout(() => {
-        this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
-      }, 100);
-    }
-  }
+  // fromServiceType(event) {
+  //   this.searchParam.serviceType = event;
+  //   if (this.searchParam.serviceType) {
+  //     setTimeout(() => {
+  //       this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
+  //     }, 100);
+  //   }
+  // }
 
   ownerId: number;
   filerId: number;
   fromSme(event, isOwner) {
+    debugger
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.ownerId = event ? event.userId : null;
@@ -1116,7 +1135,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     }
     const reqBody = {
       "agent_number": agent_number,
-        "userId": data.userId,
+      "userId": data.userId,
     }
 
 
@@ -1302,11 +1321,11 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (this.filerId === this.agentId) {
       param = param + `&filerUserId=${this.filerId}`
     }
-    if (this.filerId === this.ownerId) {
-      param = param + `&leaderUserId=${this.ownerId}`
-    }
+    // if (this.filerId === this.ownerId) {
+    //   param = param + `&leaderUserId=${this.ownerId}`
+    // }
     // if (loggedInId !== this.agentId) {
-    //   param = `/${this.agentId}/user-list-new?${data}`;
+    //   param = param + `&filerUserId=${this.filerId}`
     //   let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     //   if (Object.keys(this.sortBy).length) {
     //     param = param + sortByJson;

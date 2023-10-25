@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.sass']
 })
-export class SidebarComponent{
+export class SidebarComponent {
   loading: boolean = false;
   openSidebar: boolean = true;
   loggedInUserRoles: any;
@@ -75,7 +75,7 @@ export class SidebarComponent{
       // iconClass: 'fa fa-globe',
       active: false,
       url: '/dashboard/leader',
-      roles: ['ROLE_ADMIN','ROLE_LEADER'],
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
     {
@@ -85,7 +85,9 @@ export class SidebarComponent{
       url: null,
       roles: [],
       submenu: [
-        { name: 'My Users (All Services)', url: '/tasks/assigned-users-new', roles: [] },
+        {
+          name: 'My Users (All Services)', url: '/tasks/assigned-users-new', roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+        },
         { name: 'ITR Assigned Users', url: '/tasks/itr-assigned-users', roles: [] },
         { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles: [] },
         { name: 'ITRs', url: '/tasks/filings', roles: [] },
@@ -147,9 +149,9 @@ export class SidebarComponent{
       url: null,
       roles: [],
       submenu: [
-        {name:'Payouts',url:'/payouts',roles:[]},
-        {name:'Pay Processing',url:'/payouts/pay-processing',roles:['ROLE_ADMIN']},
-        {name:'Payout Adjustment',url:'/payouts/payouts-adjustments',roles:['ROLE_ADMIN']},
+        { name: 'Payouts', url: '/payouts', roles: [] },
+        { name: 'Pay Processing', url: '/payouts/pay-processing', roles: ['ROLE_ADMIN'] },
+        { name: 'Payout Adjustment', url: '/payouts/payouts-adjustments', roles: ['ROLE_ADMIN'] },
       ]
     },
     {
@@ -213,14 +215,14 @@ export class SidebarComponent{
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
         { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
         { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN'] },
-        { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN','ROLE_LEADER','ROLE_OWNER']},
+        { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN', 'ROLE_LEADER', 'ROLE_OWNER'] },
       ]
     },
     {
       name: 'Delete User Request',
       active: false,
       url: '/delete-user',
-      roles: ['ROLE_ADMIN','ROLE_LEADER'],
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
   ];

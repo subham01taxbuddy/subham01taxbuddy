@@ -1,5 +1,4 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<!-- New Open Close Filter Starts -->
 <div class="mrgArdTog">
     <mat-accordion class="headers-align">
         <mat-expansion-panel [expanded]="!dataOnLoad">
@@ -39,7 +38,6 @@
                             <div *ngIf="itrStatus" class="col-sm-3">
                                 <label class="input__label" for="attr">Select Status </label>
                                 <mat-form-field appearance="outline">
-                                    <!-- <mat-label>Select Status</mat-label> -->
                                     <mat-select placeholder="" [(ngModel)]="searchParam.statusId">
                                         <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
                                             {{ status.statusName }}
@@ -48,25 +46,11 @@
                                 </mat-form-field>
                             </div>
                             <div class="col-9">
-                                <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                                <app-generic-user-filter [searchParameter]="searchMenus"
+                                    [clearUserFilter]="clearUserFilter"
                                     (onChange)="searchByObject($event)"></app-generic-user-filter>
                             </div>
                         </div>
-                        <!-- <div class="col-sm-3 spsTp">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Mobile Number: </mat-label>
-                                <input matInput placeholder="Enter Mobile Number" [(ngModel)]="searchParam.mobileNumber"
-                                    type="text" digitsOnly onkeypress=" event.charCode >= 48 && event.charCode <= 57">
-                            </mat-form-field>
-                        </div>
-
-                        <div class="col-sm-4 spsTp">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Email Address: </mat-label>
-                                <input matInput placeholder="Enter Email Address" [(ngModel)]="searchParam.emailId"
-                                    maxlength="50">
-                            </mat-form-field>
-                        </div> -->
                         <div class="row spsTp bdrTp">
                             <div class="col-6">
                                 <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
