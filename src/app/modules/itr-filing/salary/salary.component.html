@@ -312,6 +312,9 @@
                       [disabled]="isVrsExemptionTaken"
                     />
                   </mat-form-field>
+                  <mat-error *ngIf="freeze && (income.value.allowType === 'COMPENSATION_ON_VRS' || income.value.allowType === 'FIRST_PROVISO' || income.value.allowType === 'SECOND_PROVISO' )">
+                    Only any one is allowed of the three
+                    </mat-error>
                   <!-- Calculator button -->
                   <i
                     #buttonContainer
@@ -341,7 +344,11 @@
                       class="input-field"
                       maxlength="125"
                     />
+
                   </mat-form-field>
+                  <mat-error *ngIf="freeze && (income.value.allowType === 'COMPENSATION_ON_VRS' || income.value.allowType === 'FIRST_PROVISO' || income.value.allowType === 'SECOND_PROVISO' )">
+                    Only any one is allowed of the three
+                    </mat-error>
                   <!-- Calculator button -->
                   <i
                     #buttonContainer

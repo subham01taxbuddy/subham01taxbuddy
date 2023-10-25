@@ -2386,6 +2386,40 @@
                             }}
                           </td>
                         </tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.BroughtFwdLossesSetoff
+                              ?.BroughtFwdLossesSetoffDtls?.businessLoss !== 0
+                          "
+                        >
+                          <td>Non Speculative Loss</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.BroughtFwdLossesSetoff
+                                  ?.BroughtFwdLossesSetoffDtls?.businessLoss
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.BroughtFwdLossesSetoff
+                              ?.BroughtFwdLossesSetoffDtls?.speculativeBusinessLoss !== 0
+                          "
+                        >
+                          <td>Speculative Loss</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.BroughtFwdLossesSetoff
+                                  ?.BroughtFwdLossesSetoffDtls?.speculativeBusinessLoss
+                              )
+                            }}
+                          </td>
+                        </tr>
                       </tbody>
                     </table>
                   </mat-expansion-panel>
