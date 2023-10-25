@@ -1824,8 +1824,7 @@
                     <div
                       class="bxHed"
                       *ngIf="
-                        finalCalculations?.capitalGain?.crypto?.cryptoDetails
-                          .length > 0
+                        finalCalculations?.capitalGain?.crypto?.cryptoDetails?.length > 0
                       "
                     >
                       Income from crypto
@@ -1837,7 +1836,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.crypto?.cryptoDetails
-                          .length > 0
+                          ?.length > 0
                       "
                     >
                       <thead>
@@ -4889,7 +4888,7 @@
                     <div
                       class="bxHed"
                       *ngIf="
-                        finalCalculations?.exemptIncome?.partnerFirms.length > 0
+                        finalCalculations?.exemptIncome?.partnerFirms?.length > 0
                       "
                     >
                       Partnership firm details
