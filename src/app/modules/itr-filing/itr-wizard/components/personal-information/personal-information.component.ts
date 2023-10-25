@@ -78,6 +78,7 @@ export class PersonalInformationComponent implements OnInit {
   deletedFileData: any = [];
   fillingMaxDate: any = new Date();
   config: any;
+  selectedIndexes: number[] = [];
 
   countryDropdown = [
     {
@@ -2633,6 +2634,8 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   async saveProfile(ref) {
+    this.loading = true;
+    console.log(this.customerProfileForm, 'customerProfile');
     // this.findAssesseeType();
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -2710,7 +2713,8 @@ export class PersonalInformationComponent implements OnInit {
           this.loading = false;
         }
       );
-      // }
+    } else {
+      this.loading = false;
     }
     // else {
     //   $('input.ng-invalid').first().focus();
@@ -2942,8 +2946,10 @@ export class PersonalInformationComponent implements OnInit {
       this.clearValidator('clauseiv7provisio139i');
     } else {
       // marking questions as not required if seventhProvisio is yes
-      this.setValidator('strDepAmtAggAmtExcd1CrPrYrFlg',
-        [Validators.required, Validators.min(10000000)]);
+      this.setValidator('strDepAmtAggAmtExcd1CrPrYrFlg', [
+        Validators.required,
+        Validators.min(10000000),
+      ]);
       this.setValidator(
         'strIncrExpAggAmt2LkTrvFrgnCntryFlg',
         Validators.required
@@ -2966,13 +2972,15 @@ export class PersonalInformationComponent implements OnInit {
   incrExpAggAmt2LkTrvFrgnCntryFlgSaved: any;
   strIncrExpAggAmt2LkTrvFrgnCntryFlg() {
     const seventhProvisio139 = this.seventhProviso139;
+    const seventhProvisio139Flag =
+      seventhProvisio139.controls['seventhProvisio139'];
     const twoLakhsFlag =
       seventhProvisio139.controls['strIncrExpAggAmt2LkTrvFrgnCntryFlg'];
     const twoLakhsFlagKey = 'incrExpAggAmt2LkTrvFrgnCntryFlg';
     const twoLakhsValue =
       seventhProvisio139.controls['incrExpAggAmt2LkTrvFrgnCntryFlg'];
 
-    if (twoLakhsFlag.value === 'N') {
+    if (twoLakhsFlag.value === 'N' || seventhProvisio139Flag.value === 'N') {
       // Save the data and clear the form group
       this.incrExpAggAmt2LkTrvFrgnCntryFlgSaved = twoLakhsValue.value;
       twoLakhsValue?.reset();
@@ -2992,13 +3000,15 @@ export class PersonalInformationComponent implements OnInit {
   incrExpAggAmt1LkElctrctyPrYrFlgSaved: any;
   strIncrExpAggAmt1LkElctrctyPrYrFlg() {
     const seventhProvisio139 = this.seventhProviso139;
+    const seventhProvisio139Flag =
+      seventhProvisio139.controls['seventhProvisio139'];
     const oneLakhsFlag =
       seventhProvisio139.controls['strIncrExpAggAmt1LkElctrctyPrYrFlg'];
     const oneLakhsFlagKey = 'incrExpAggAmt1LkElctrctyPrYrFlg';
     const oneLakhsValue =
       seventhProvisio139.controls['incrExpAggAmt1LkElctrctyPrYrFlg'];
 
-    if (oneLakhsFlag.value === 'N') {
+    if (oneLakhsFlag.value === 'N' || seventhProvisio139Flag.value === 'N') {
       // Save the data and clear the form group
       this.incrExpAggAmt1LkElctrctyPrYrFlgSaved = oneLakhsValue.value;
       oneLakhsValue?.reset();
@@ -3018,6 +3028,8 @@ export class PersonalInformationComponent implements OnInit {
   clauseiv7provisio139iSaved: any;
   clauseiv7provisio139i() {
     const seventhProvisio139 = this.seventhProviso139;
+    const seventhProvisio139Flag =
+      seventhProvisio139.controls['seventhProvisio139'];
     const clauseIvArray = this.getClauseiv7provisio139iDtls;
     const clauseIvFlag = seventhProvisio139.controls['clauseiv7provisio139i'];
 
@@ -3026,7 +3038,7 @@ export class PersonalInformationComponent implements OnInit {
       const amount = control.get('amount');
       const nature = control.get('nature');
 
-      if (clauseIvFlag.value === 'N') {
+      if (clauseIvFlag.value === 'N' || seventhProvisio139Flag.value === 'N') {
         // Save the data and clear the form group
         this.clauseiv7provisio139iSaved = amount.value;
         amount.reset();
@@ -3050,13 +3062,15 @@ export class PersonalInformationComponent implements OnInit {
   depAmtAggAmtExcd1CrPrYrFlgSaved: any;
   strDepAmtAggAmtExcd1CrPrYrFlg() {
     const seventhProvisio139 = this.seventhProviso139;
+    const seventhProvisio139Flag =
+      seventhProvisio139.controls['seventhProvisio139'];
     const oneCroreFlag =
       seventhProvisio139.controls['strDepAmtAggAmtExcd1CrPrYrFlg'];
     const oneCroreFlagKey = 'depAmtAggAmtExcd1CrPrYrFlg';
     const oneCroreValue =
       seventhProvisio139.controls['depAmtAggAmtExcd1CrPrYrFlg'];
 
-    if (oneCroreFlag.value === 'N') {
+    if (oneCroreFlag.value === 'N' || seventhProvisio139Flag.value === 'N') {
       // Save the data and clear the form group
       this.depAmtAggAmtExcd1CrPrYrFlgSaved = oneCroreValue.value;
       oneCroreValue?.reset();
@@ -3064,6 +3078,8 @@ export class PersonalInformationComponent implements OnInit {
       this.clearValidator(oneCroreFlagKey);
     } else {
       this.setValidator(oneCroreFlagKey, Validators.required);
+      this.setValidator(oneCroreFlagKey, Validators.min(10000000));
+
       // Check if there is saved data and populate the form group
       if (this.depAmtAggAmtExcd1CrPrYrFlgSaved) {
         oneCroreValue.patchValue(this.depAmtAggAmtExcd1CrPrYrFlgSaved);
@@ -3081,9 +3097,19 @@ export class PersonalInformationComponent implements OnInit {
     const clauseIvArray = this.getClauseiv7provisio139iDtls;
 
     clauseIvArray?.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit']?.value) {
+      if (this.selectedIndexes.includes(index)) {
         clauseIvArray?.removeAt(index);
       }
     });
+  }
+
+  // Function to toggle selected index
+  toggleSelectedIndex(index: number) {
+    const idx = this.selectedIndexes.indexOf(index);
+    if (idx > -1) {
+      this.selectedIndexes.splice(idx, 1);
+    } else {
+      this.selectedIndexes.push(index);
+    }
   }
 }
