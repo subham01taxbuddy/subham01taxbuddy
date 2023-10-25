@@ -64,8 +64,8 @@
       (click)="deleteUser()">
       Delete User&nbsp;&nbsp; <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
     </button> -->
-    <button type="button" title="Delete User" class="delete-user tbd-btn-small"
-      *ngIf="isApplicable(['ROLE_ADMIN'])" (click)="deleteUser()">
+    <button type="button" title="Delete User" class="delete-user tbd-btn-small" *ngIf="isApplicable(['ROLE_ADMIN'])"
+      (click)="deleteUser()">
       Delete User&nbsp;&nbsp; <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
     </button>
   </span>
@@ -133,12 +133,17 @@
         <th>Status Name</th>
         <th>Assessment Year</th>
         <th>Created Date</th>
+        <th>status Updated By Name </th>
+        <th>Role</th>
+
       </tr>
       <tr *ngFor="let service of statusList">
         <td>{{service.serviceType}}</td>
         <td>{{service.statusName}}</td>
         <td>{{service.assessmentYear}}</td>
         <td>{{service.createdDate | date:'dd MMM yyyy'}}</td>
+        <td>{{service.statusUpdatedByName?service.statusUpdatedByName:'-'}}</td>
+        <td>{{service.statusUpdatedByRole?service.statusUpdatedByRole:'-'}}</td>
       </tr>
     </table>
     <br>
