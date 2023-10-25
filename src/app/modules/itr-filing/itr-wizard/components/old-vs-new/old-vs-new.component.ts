@@ -2009,18 +2009,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
 function getTotalCapitalGain(capitalGain: Array<any>[]): number {
   if(capitalGain != null && capitalGain.length>0)
-    return capitalGain.filter((cg) => (cg as any).assetType !== 'VDA').map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value,0);
+    return capitalGain.filter((cg) => (cg as any).assetType !== 'VDA').map(cg=>Math.max((cg as any).incomeAfterInternalSetOff,0)).reduce((total, value)=> total + value,0);
   else
     return 0;
 }
 
 function getTotalBusinessIncome(summaryBusinessIncome: any): number {
-  return Math.max(
-    Math.max(summaryBusinessIncome.totalSpeculativeIncome, 0)+
-    Math.max(summaryBusinessIncome.totalPresumptiveIncome, 0)+
-    Math.max(summaryBusinessIncome.totalNonSpeculativeIncome, 0)
-    // +Math.max(summaryBusinessIncome.totalIncomeFromFirm, 0)
-    , 0)
+  return Math.max(summaryBusinessIncome.totalBusinessIncome, 0);
 }
 
 function getCFL(cfl: any): number {

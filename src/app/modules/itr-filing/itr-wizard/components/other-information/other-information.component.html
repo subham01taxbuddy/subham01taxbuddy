@@ -372,7 +372,7 @@
 <!-- Second radio bar ends -->
 
 <!-- third radio bar starts -->
-<div class="gryBk1">
+<div class="gryBk1" *ngIf="false">
   <div class="row">
     <div class="col-sm-8">
       <div class="txBg">
@@ -394,7 +394,7 @@
         <i class="fa fa-plus" aria-hidden="true"></i> Add New Firm
       </button>
     </div>
-    <div *ngIf="isPartnerInFirmFlag">
+    <div *ngIf="isPartnerInFirmFlag()">
       <form [formGroup]="firmForm" >
         <div formArrayName="firmsArray">
           <div class="card" *ngFor="
@@ -428,7 +428,7 @@
               </div>
             </div>
           </div>
-          <div class="container">
+          <div class="container" *ngIf="isPartnerInFirmFlag()">
             <div class="row">
               <div class="col-sm-3">
                 <button type="submit" class="delete-btn" (click)="deleteFirms()" [disabled]="!firmSelected()">
@@ -443,12 +443,6 @@
                 </table>
                 <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
               </div>
-              <div class="col-sm-3">
-                <button type="submit" class="tbd-btn save-btn mvRth" [disabled]="firmForm.invalid"
-                  (click)="saveFirmDetails($event)">
-                  Save
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -460,7 +454,7 @@
 <!-- third radio bar ends -->
 
 <!-- fourth radio bar starts -->
-<div class="gryBk1">
+<div class="gryBk1" *ngIf="false">
   <div class="row">
     <div class="col-sm-8">
       <div class="txBg">
@@ -708,11 +702,6 @@
           </div>
           </div>
          </div>
-
-         <div class="text-center">
-          <button type="submit" class="tbd-btn save-btn" [disabled]="schedule5AForm.invalid" (click)="saveSchedule5ADetails($event)">Save</button>
-        </div>
-
 
         </div>
 

@@ -77,7 +77,7 @@ export class PartnerInFirmsComponent implements OnInit {
       hasEdit: [item ? item.hasEdit : 'N'],
       name: [item ? item.name : ''],
       panNumber: [item ? item.panNumber : ''],
-      Sec92EFirmFlag: [item ? item.Sec92EFirmFlag : 'N'],
+      sec92EFirmFlag: [item ? item.sec92EFirmFlag : 'N'],
       isLiableToAudit: [item ? item.isLiableToAudit : 'N'],
       profitSharePercent: [item ? item.profitSharePercent : 0],
       profitShareAmount: [item ? item.profitShareAmount : 0],
@@ -102,6 +102,15 @@ export class PartnerInFirmsComponent implements OnInit {
         }
       });
     }
+  }
+
+  firmSelected() {
+    const improve = <FormArray>this.partnerInFirmForm.controls['firmArray'];
+    return (
+      improve.controls.filter(
+        (item: FormGroup) => item.controls['hasEdit'].value === true
+      ).length > 0
+    );
   }
 
   pageChanged(event) {

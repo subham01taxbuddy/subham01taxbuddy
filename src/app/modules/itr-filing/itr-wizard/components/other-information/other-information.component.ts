@@ -382,8 +382,21 @@ export class OtherInformationComponent implements OnInit {
     if(this.Copy_ITR_JSON.portugeseCC5AFlag === 'Y'){
       this.schedule5AForm.get('isGovernedByPortuguese').setValue('Y')
     }else{
+      this.schedule5AForm.reset()
       this.schedule5AForm.get('isGovernedByPortuguese').setValue('N');
-      this.schedule5AForm.reset();
+      this.schedule5AForm.get('houseProperty').reset();
+      this.schedule5AForm.get('businessOrProfession').reset();
+      this.schedule5AForm.get('capitalGain').reset();
+      this.schedule5AForm.get('otherSource').reset();
+
+      this.Copy_ITR_JSON.schedule5a =  {
+        "nameOfSpouse": "",
+        "panOfSpouse": "",
+        "aadhaarOfSpouse": "",
+        "booksSpouse44ABFlg": "",
+        "booksSpouse92EFlg": "",
+        "headIncomes": []
+      }
       this.serviceCall('governed by the Portuguese Civil Code');
     }
   }
@@ -561,6 +574,16 @@ export class OtherInformationComponent implements OnInit {
         }
         if (this.ITR_JSON.systemFlags.haveUnlistedShares) {
           this.ITR_JSON.unlistedSharesDetails = [];
+        }
+        if(this.ITR_JSON.portugeseCC5AFlag === 'N'){
+          this.ITR_JSON.schedule5a = {
+            nameOfSpouse:'',
+            panOfSpouse: '',
+            aadhaarOfSpouse:'',
+            booksSpouse44ABFlg:'',
+            booksSpouse92EFlg:'',
+            headIncomes: [],
+          };
         }
       },
       (error) => {

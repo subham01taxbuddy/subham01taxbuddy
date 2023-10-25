@@ -3780,8 +3780,8 @@ export class SummaryComponent implements OnInit {
                         }
                       ),
                     hpTotalIncome: Math.max(
-                      this.finalSummary?.assessment?.summaryIncome
-                        ?.summaryHpIncome?.totalHPTaxableIncome,
+                      this.finalSummary?.assessment?.taxSummary.housePropertyIncome
+                        ,
                       0
                     ),
                   },
@@ -3829,10 +3829,7 @@ export class SummaryComponent implements OnInit {
                     },
 
                     otherIncomeTotal:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.reduce(
-                        (sum, obj) => sum + obj.amount,
-                        0
-                      ),
+                      this.finalSummary?.assessment?.taxSummary.otherIncome,
                   },
                   businessIncome: {
                     businessIncomeDetails: {
@@ -3929,10 +3926,7 @@ export class SummaryComponent implements OnInit {
                         TaxableIncome: null,
                       },
                     },
-                    businessIncomeTotal: getTotalBusinessIncome(
-                      this.finalSummary?.assessment?.summaryIncome
-                        ?.summaryBusinessIncome
-                    ),
+                    businessIncomeTotal: this.finalSummary?.assessment?.taxSummary.businessIncome,
                   },
                   capitalGain: {
                     // short term gain
@@ -3945,16 +3939,16 @@ export class SummaryComponent implements OnInit {
                               element?.assetType === 'GOLD'
                                 ? 'Other Assets'
                                 : element.assetType,
-                            capitalGain:
-                              element.cgIncome + element.deductionAmount,
-                            Deduction: element.deductionAmount,
-                            netCapitalGain: element.cgIncome,
+                              capitalGain:
+                                element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement,
+                              Deduction: element.deductionAmount,
+                              netCapitalGain: element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement-element.deductionAmount,
                           })),
                       ShortTerm15PerTotal:
                         this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                           ?.filter((item: any) => item?.taxRate === 15)
                           .reduce((total, element) => {
-                            const cgIncome = element.cgIncome;
+                            const cgIncome = element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement-element.deductionAmount;
 
                             return total + cgIncome;
                           }, 0),
@@ -3976,16 +3970,16 @@ export class SummaryComponent implements OnInit {
                               element?.assetType === 'GOLD'
                                 ? 'Other Assets'
                                 : element.assetType,
-                            capitalGain:
-                              element.cgIncome + element.deductionAmount,
-                            Deduction: element.deductionAmount,
-                            netCapitalGain: element.cgIncome,
+                              capitalGain:
+                                element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement,
+                              Deduction: element.deductionAmount,
+                              netCapitalGain: element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement-element.deductionAmount,
                           })),
                       ShortTermAppSlabRateTotal:
                         this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                           ?.filter((item: any) => item?.taxRate === -1)
                           .reduce((total, element) => {
-                            const cgIncome = element.cgIncome;
+                            const cgIncome = element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement-element.deductionAmount;
 
                             return total + cgIncome;
                           }, 0),
@@ -4028,16 +4022,16 @@ export class SummaryComponent implements OnInit {
                               element?.assetType === 'GOLD'
                                 ? 'Other Assets'
                                 : element.assetType,
-                            capitalGain:
-                              element.cgIncome + element.deductionAmount,
-                            Deduction: element.deductionAmount,
-                            netCapitalGain: element.cgIncome,
+                              capitalGain:
+                                element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement,
+                              Deduction: element.deductionAmount,
+                              netCapitalGain: element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement-element.deductionAmount,
                           })),
                       LongTerm10PerTotal:
                         this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                           ?.filter((item: any) => item?.taxRate === 10)
                           .reduce((total, element) => {
-                            const cgIncome = element.cgIncome;
+                            const cgIncome = element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement-element.deductionAmount;
 
                             return total + cgIncome;
                           }, 0),
@@ -4049,16 +4043,16 @@ export class SummaryComponent implements OnInit {
                               element?.assetType === 'GOLD'
                                 ? 'Other Assets'
                                 : element.assetType,
-                            capitalGain:
-                              element.cgIncome + element.deductionAmount,
-                            Deduction: element.deductionAmount,
-                            netCapitalGain: element.cgIncome,
+                              capitalGain:
+                                element.netSellValue-(element.indexCostOfAcquisition>0 ? element.indexCostOfAcquisition : element.purchesCost)-element.saleExpense-element.costOfImprovement,
+                              Deduction: element.deductionAmount,
+                              netCapitalGain: element.netSellValue-(element.indexCostOfAcquisition>0 ? element.indexCostOfAcquisition : element.purchesCost)-element.saleExpense-element.costOfImprovement-element.deductionAmount,
                           })),
                       LongTerm20PerTotal:
                         this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                           ?.filter((item: any) => item?.taxRate === 20)
                           .reduce((total, element) => {
-                            const cgIncome = element.cgIncome;
+                            const cgIncome = element.netSellValue-(element.indexCostOfAcquisition>0 ? element.indexCostOfAcquisition : element.purchesCost)-element.saleExpense-element.costOfImprovement-element.deductionAmount;
 
                             return total + cgIncome;
                           }, 0),
@@ -4124,16 +4118,7 @@ export class SummaryComponent implements OnInit {
 
                     // total capital gain
                     totalCapitalGain:
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN
-                        ?.capitalGain &&
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN
-                        ?.capitalGain.length > 0
-                        ? this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                            ?.map((item) =>
-                              Math.max(item.incomeBeforeInternalSetOff, 0)
-                            )
-                            .reduce((total, value) => total + value, 0)
-                        : null,
+                      this.finalSummary?.assessment?.taxSummary.capitalGain,
                   },
                   totalHeadWiseIncome:
                     this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -5223,11 +5208,11 @@ export class SummaryComponent implements OnInit {
                         };
                       }
                     ),
-                  hpTotalIncome: Math.max(
-                    this.finalSummary?.assessment?.summaryIncome
-                      ?.summaryHpIncome?.totalHPTaxableIncome,
-                    0
-                  ),
+                    hpTotalIncome: Math.max(
+                      this.finalSummary?.assessment?.taxSummary.housePropertyIncome
+                        ,
+                      0
+                    ),
                 },
                 otherIncome: {
                   otherIncomes: {
@@ -5273,10 +5258,7 @@ export class SummaryComponent implements OnInit {
                   },
 
                   otherIncomeTotal:
-                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.reduce(
-                      (sum, obj) => sum + obj.amount,
-                      0
-                    ),
+                  this.finalSummary?.assessment?.taxSummary.otherIncome,
                 },
                 businessIncome: {
                   businessIncomeDetails: {
@@ -5385,11 +5367,7 @@ export class SummaryComponent implements OnInit {
                         )?.netProfitfromSpeculativeIncome,
                     },
                   },
-
-                  businessIncomeTotal: getTotalBusinessIncome(
-                    this.finalSummary?.assessment?.summaryIncome
-                      ?.summaryBusinessIncome
-                  ),
+                  businessIncomeTotal: this.finalSummary?.assessment?.taxSummary.businessIncome,
                 },
                 capitalGain: {
                   // short term gain
@@ -5402,16 +5380,16 @@ export class SummaryComponent implements OnInit {
                             element?.assetType === 'GOLD'
                               ? 'Other Assets'
                               : element.assetType,
-                          capitalGain:
-                            element.cgIncome + element.deductionAmount,
-                          Deduction: element.deductionAmount,
-                          netCapitalGain: element.cgIncome,
+                            capitalGain:
+                              element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement,
+                            Deduction: element.deductionAmount,
+                            netCapitalGain: element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement-element.deductionAmount,
                         })),
                     ShortTerm15PerTotal:
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                         ?.filter((item: any) => item?.taxRate === 15)
                         .reduce((total, element) => {
-                          const cgIncome = element.cgIncome;
+                          const cgIncome = element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement-element.deductionAmount;
 
                           return total + cgIncome;
                         }, 0),
@@ -5433,16 +5411,16 @@ export class SummaryComponent implements OnInit {
                             element?.assetType === 'GOLD'
                               ? 'Other Assets'
                               : element.assetType,
-                          capitalGain:
-                            element.cgIncome + element.deductionAmount,
-                          Deduction: element.deductionAmount,
-                          netCapitalGain: element.cgIncome,
+                              capitalGain:
+                              element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement,
+                            Deduction: element.deductionAmount,
+                            netCapitalGain: element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement-element.deductionAmount,
                         })),
                     ShortTermAppSlabRateTotal:
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                         ?.filter((item: any) => item?.taxRate === -1)
                         .reduce((total, element) => {
-                          const cgIncome = element.cgIncome;
+                          const cgIncome = element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement-element.deductionAmount;
 
                           return total + cgIncome;
                         }, 0),
@@ -5485,16 +5463,16 @@ export class SummaryComponent implements OnInit {
                             element?.assetType === 'GOLD'
                               ? 'Other Assets'
                               : element.assetType,
-                          capitalGain:
-                            element.cgIncome + element.deductionAmount,
-                          Deduction: element.deductionAmount,
-                          netCapitalGain: element.cgIncome,
+                            capitalGain:
+                              element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement,
+                            Deduction: element.deductionAmount,
+                            netCapitalGain: element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement-element.deductionAmount,
                         })),
                     LongTerm10PerTotal:
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                         ?.filter((item: any) => item?.taxRate === 10)
                         .reduce((total, element) => {
-                          const cgIncome = element.cgIncome;
+                          const cgIncome = element.netSellValue-element.purchesCost-element.saleExpense-element.costOfImprovement-element.deductionAmount;
 
                           return total + cgIncome;
                         }, 0),
@@ -5506,16 +5484,16 @@ export class SummaryComponent implements OnInit {
                             element?.assetType === 'GOLD'
                               ? 'Other Assets'
                               : element.assetType,
-                          capitalGain:
-                            element.cgIncome + element.deductionAmount,
-                          Deduction: element.deductionAmount,
-                          netCapitalGain: element.cgIncome,
-                        })),
+                            capitalGain:
+                              element.netSellValue-(element.indexCostOfAcquisition>0 ? element.indexCostOfAcquisition : element.purchesCost)-element.saleExpense-element.costOfImprovement,
+                            Deduction: element.deductionAmount,
+                            netCapitalGain: element.netSellValue-(element.indexCostOfAcquisition>0 ? element.indexCostOfAcquisition : element.purchesCost)-element.saleExpense-element.costOfImprovement-element.deductionAmount,
+                          })),
                     LongTerm20PerTotal:
                       this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
                         ?.filter((item: any) => item?.taxRate === 20)
                         .reduce((total, element) => {
-                          const cgIncome = element.cgIncome;
+                          const cgIncome = element.netSellValue-(element.indexCostOfAcquisition>0 ? element.indexCostOfAcquisition : element.purchesCost)-element.saleExpense-element.costOfImprovement-element.deductionAmount;
 
                           return total + cgIncome;
                         }, 0),
@@ -5581,16 +5559,8 @@ export class SummaryComponent implements OnInit {
 
                   // total capital gain
                   totalCapitalGain:
-                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN
-                      ?.capitalGain &&
-                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN
-                      ?.capitalGain.length > 0
-                      ? this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                          ?.map((item) =>
-                            Math.max(item.incomeBeforeInternalSetOff, 0)
-                          )
-                          .reduce((total, value) => total + value, 0)
-                      : null,
+                  this.finalSummary?.assessment?.taxSummary.capitalGain,
+
                 },
                 totalHeadWiseIncome:
                   this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -7151,10 +7121,5 @@ export class SummaryComponent implements OnInit {
 }
 
 function getTotalBusinessIncome(summaryBusinessIncome: any): number {
-  return Math.max(
-    Math.max(summaryBusinessIncome.totalSpeculativeIncome, 0) +
-      Math.max(summaryBusinessIncome.totalPresumptiveIncome, 0) +
-      Math.max(summaryBusinessIncome.totalNonSpeculativeIncome, 0) +
-      Math.max(summaryBusinessIncome.totalIncomeFromFirm, 0)
-  );
+  return Math.max(summaryBusinessIncome.totalBusinessIncome, 0);
 }

@@ -20,9 +20,9 @@ import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 import { GridOptions } from 'ag-grid-community';
 import { formatDate } from '@angular/common';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { ConfirmationModalComponent } from '../../../../../additional-components/confirmation-popup/confirmation-popup.component';
+import {ConfirmDialogComponent} from "../../../../shared/components/confirm-dialog/confirm-dialog.component";
 import { TotalCg } from 'src/app/services/itr-json-helper-service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-shares-and-equity',
@@ -119,6 +119,7 @@ export class SharesAndEquityComponent
     }
 
     this.securitiesForm.disable();
+    this.initDetailedForm(this.Copy_ITR_JSON);
 
     // setting deduction
     const equitySharesListed = this.ITR_JSON.capitalGain?.find(
@@ -196,12 +197,15 @@ export class SharesAndEquityComponent
     }
   }
 
-  updateDeductionUI() {
+  updateDeductionUI(){
     this.getSecuritiesCg();
     if (this.totalCg.ltcg + this.totalCg.stcg <= 0) {
       this.deduction = false;
       this.isDisable = true;
     } else {
+      if(this.deduction) {
+        this.deduction = this.totalCg.ltcg > 0;
+      }
       this.isDisable = this.totalCg.ltcg <= 0;
     }
   }
@@ -502,7 +506,7 @@ export class SharesAndEquityComponent
       if (result) {
         let data;
         let itrObject = this.Copy_ITR_JSON;
-        if (!itrObject.capitalGain) {
+        if(!itrObject.capitalGain){
           itrObject.capitalGain = [];
         }
         if (this.bondType === 'listed') {
@@ -617,21 +621,20 @@ export class SharesAndEquityComponent
   selectedFormGroup: FormGroup;
   confirmDialog: MatDialogRef<ConfirmDialogComponent>;
 
-  deductionChanged(event) {
-    if (event.value === false) {
+  deductionChanged(event){
+    if(event.value === false){
       this.confirmDialog = this.dialog.open(ConfirmDialogComponent, {
         data: {
           title: 'Warning',
-          message:
-            'Selecting "No" for deduction will erase existing data. Do you wish to continue?',
+          message: 'Selecting "No" for deduction will erase existing data. Do you wish to continue?',
           isHide: true,
-          showActions: true,
+          showActions: true
         },
         disableClose: false,
       });
-      this.confirmDialog.afterClosed().subscribe((result) => {
-        if (result === 'NO') {
-          this.deduction = !event.value;
+      this.confirmDialog.afterClosed().subscribe(result => {
+        if(result === 'NO'){
+          this.deduction = !this.deduction;
         }
       });
     }
@@ -651,7 +654,7 @@ export class SharesAndEquityComponent
               let data;
               let securitiesIndex;
               let itrObject = this.Copy_ITR_JSON;
-              if (!itrObject.capitalGain) {
+              if(!itrObject.capitalGain){
                 itrObject.capitalGain = [];
               }
               if (this.bondType === 'listed') {
@@ -778,30 +781,30 @@ export class SharesAndEquityComponent
   }
 
   calculateGainType(securities) {
+    let purchaseDate = securities.controls['purchaseDate'].value;
+    let sellDate = securities.controls['sellDate'].value;
     if (securities.controls['purchaseDate'].valid) {
-      this.buyDateBefore31stJan =
-        new Date(securities.controls['purchaseDate'].value) <
-        new Date('02/01/2018');
+      this.buyDateBefore31stJan = new Date(purchaseDate) < new Date('02/01/2018');
       if (!this.buyDateBefore31stJan) {
         securities.controls['isinCode'].setValue('');
         securities.controls['nameOfTheUnits'].setValue('');
         securities.controls['fmvAsOn31Jan2018'].setValue('');
+        securities.controls['sellOrBuyQuantity'].setValue(1);
+        securities.controls['purchaseValuePerUnit'].setValue(securities.controls['purchaseCost'].value);
+        securities.controls['sellValuePerUnit'].setValue(securities.controls['sellValue'].value);
       } else {
         securities.controls['isinCode'].setValidators([Validators.required]);
         securities.controls['isinCode'].updateValueAndValidity();
       }
     }
-    if (
-      securities.controls['purchaseDate'].value &&
-      securities.controls['sellDate'].value
-    ) {
+    if (purchaseDate && sellDate) {
       let req = {
         assetType:
           this.bondType === 'listed'
             ? 'EQUITY_SHARES_LISTED'
             : 'EQUITY_SHARES_UNLISTED',
-        buyDate: securities.controls['purchaseDate'].value,
-        sellDate: securities.controls['sellDate'].value,
+        buyDate: moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
+        sellDate: moment(new Date(sellDate)).format('YYYY-MM-DD')
       };
       const param = `/calculate/indexed-cost`;
       this.itrMsService.postMethod(param, req).subscribe((res: any) => {
@@ -913,7 +916,7 @@ export class SharesAndEquityComponent
 
   totalCg: TotalCg = {
     ltcg: 0,
-    stcg: 0,
+    stcg: 0
   };
   getSecuritiesCg() {
     let ltcg = 0;
@@ -1204,16 +1207,19 @@ export class SharesAndEquityComponent
         this.securitiesForm.get('securitiesArray')
       );
       securitiesArray.controls.forEach((element) => {
-        capitalGain += parseInt(
-          (element as FormGroup).controls['capitalGain'].value
-        );
-        saleValue += parseInt(
-          (element as FormGroup).controls['sellValue'].value
-        );
-        expenses += parseInt(
-          (element as FormGroup).controls['sellExpense'].value
-        );
+        if ((element as FormGroup).controls['gainType'].value === 'LONG') {
+          capitalGain += parseInt(
+            (element as FormGroup).controls['capitalGain'].value
+          );
+          saleValue += parseInt(
+            (element as FormGroup).controls['sellValue'].value
+          );
+          expenses += parseInt(
+            (element as FormGroup).controls['sellExpense'].value
+          );
+        }
       });
+
 
       let param = '/calculate/capital-gain/deduction';
       let request = {

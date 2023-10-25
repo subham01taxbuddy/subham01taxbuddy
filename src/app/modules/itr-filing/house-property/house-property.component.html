@@ -567,53 +567,54 @@
                           </mat-form-field>
                         </td>
                       </tr>
-
-                      <!-- Total Arrears Amount -->
-                      <tr *ngIf="false">
-                        <th scope="row">
-                          <mat-label>Total Arrears Amount</mat-label>
-                        </th>
-                        <td>
-                          <mat-form-field appearance="outline">
-                            <input
-                              matInput
-                              placeholder="total arrears amount"
-                              formControlName="totalArrearsUnrealizedRentReceived"
-                              name="totalArrearsAmount"
-                              class="input-field"
-                              maxlength="11"
-                              digitsOnly
-                              (blur)="calTotalArrValue()"
-                            />
-                            <mat-hint>Total Arrears Amount</mat-hint>
-                            <!-- <mat-error
-                              *ngIf="housePropertyForm.controls['totalArrearsUnrealizedRentReceived'].hasError('pattern')">
-                              Enter positive amount without decimal.</mat-error> -->
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <!-- 30% Total Arrears Amount  -->
-                      <tr *ngIf="false">
-                        <th scope="row">
-                          <mat-label>30% of Total Arrears Amount</mat-label>
-                        </th>
-                        <td>
-                          <mat-form-field appearance="outline">
-                            <input
-                              matInput
-                              placeholder="30% of Total Arrears Amount"
-                              formControlName="arrearsUnrealizedRentReceived"
-                              name="thirtyPctOfTAA"
-                              class="input-field"
-                              maxlength="11"
-                              digitsOnly
-                            />
-                            <mat-hint>30% of Total Arrears Amount</mat-hint>
-                          </mat-form-field>
-                        </td>
-                      </tr>
                     </ng-container>
+                    <!-- Total Arrears Amount -->
+                    <tr>
+                      <th scope="row">
+                        <mat-label>Total Arrears Amount</mat-label>
+                      </th>
+                      <td>
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            placeholder="total arrears amount"
+                            formControlName="totalArrearsUnrealizedRentReceived"
+                            name="totalArrearsAmount"
+                            class="input-field"
+                            maxlength="11"
+                            digitsOnly
+                            (blur)="calTotalArrValue()"
+                          />
+                          <mat-hint>Total Arrears Amount</mat-hint>
+                          <!-- <mat-error
+                            *ngIf="housePropertyForm.controls['totalArrearsUnrealizedRentReceived'].hasError('pattern')">
+                            Enter positive amount without decimal.</mat-error> -->
+                        </mat-form-field>
+                      </td>
+                    </tr>
+
+                    <!-- 30% Total Arrears Amount  -->
+                    <tr>
+                      <th scope="row">
+                        <mat-label
+                          >Arrears Amount after 30% deduction</mat-label
+                        >
+                      </th>
+                      <td>
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            placeholder="Arrears Amount after 30% deduction"
+                            formControlName="arrearsUnrealizedRentReceived"
+                            name="thirtyPctOfTAA"
+                            class="input-field"
+                            maxlength="11"
+                            digitsOnly
+                          />
+                          <mat-hint>30% of Total Arrears Amount</mat-hint>
+                        </mat-form-field>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
