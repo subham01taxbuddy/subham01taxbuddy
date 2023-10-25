@@ -2632,7 +2632,6 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   async saveProfile(ref) {
-    this.loading = true;
     console.log(this.customerProfileForm, 'customerProfile');
     // this.findAssesseeType();
     //re-intialise the ITR objects
