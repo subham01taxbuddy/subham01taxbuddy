@@ -13,18 +13,9 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <!-- <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
-              <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner
-              </mat-slide-toggle>
-            </div> -->
-
-            <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
+            <div class="col-sm-12 bckClr">
               <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
                 (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-            </div>
-            <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-              <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)"
-                (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
             </div>
             <div class="col-sm-3 spsTp">
               <mat-label>Select Status</mat-label>

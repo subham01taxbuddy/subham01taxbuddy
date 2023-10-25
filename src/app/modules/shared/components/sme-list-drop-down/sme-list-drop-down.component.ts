@@ -83,7 +83,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       this.setFilteredChild();
 
 
-    }else if(this.partnerType ==='Principle' ){
+    }else if(this.partnerType ==='PRINCIPAL' ){
       this.principleIndividualDetails = this.loggedInSme[0];
       this.getChild();
       this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
@@ -95,7 +95,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       this.setFilteredChild();
     }
 
-     if (this.partnerType == 'Principle') {
+     if (this.partnerType == 'PRINCIPAL') {
       this.setPrinciple(this.loggedInSme[0]);
     } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.setChild(this.loggedInSme[0]);
@@ -220,7 +220,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   getPrincipleNameId(option) {
     this.setPrinciple(option);
     console.log(option);
-    if(option?.partnerType ==='Principal'){
+    if(option?.partnerType ==='PRINCIPAL'){
       this.showChildFilter =true;
       this.getChild();
     }else{

@@ -15,6 +15,7 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import * as moment from 'moment';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -53,8 +54,13 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     { value: 'createdDate', name: 'Creation Date' }
   ];
   sortBy: any = {};
-
-
+  searchBy: any = {};
+  searchMenus = [
+    { value: 'email', name: 'Email' },
+    { value: 'mobileNumber', name: 'Mobile No' },
+  ];
+  clearUserFilter: number;
+  searchAsPrinciple :boolean =false;
 
   constructor(
     private reviewService: ReviewService,
@@ -101,6 +107,12 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     this.sortBy = object;
   }
 
+  searchByObject(object) {
+    this.searchBy = object;
+    console.log('object from search param ',this.searchBy);
+  }
+
+
   async getMasterStatusList() {
     this.itrStatus = await this.utilsService.getStoredMasterStatusList();
     this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
@@ -121,18 +133,25 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
   ownerId: number;
   filerId: number;
-
+  leaderId: number;
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
-      this.ownerId = event ? event.userId : null;
+      this.leaderId = event ? event.userId : null;
     } else {
-      this.filerId = event ? event.userId : null;
+      if (event.partnerType === 'PRINCIPAL') {
+        this.filerId = event ? event.userId : null;
+        this.searchAsPrinciple = true;
+      } else {
+        this.filerId = event ? event.userId : null;
+        this.searchAsPrinciple = false;
+      }
     }
+
     if (this.filerId) {
       this.agentId = this.filerId;
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
+    } else if (this.leaderId) {
+      this.agentId = this.leaderId;
       //  this.search('agent');
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
@@ -165,11 +184,18 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   }
 
     search(form?, isAgent?, pageChange?) {
+    //'https://dev-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&active=false'
     if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
     let loggedInId = this.utilsService.getLoggedInUserID();
+    if(this.searchBy?.mobileNumber){
+      this.searchParam.mobileNumber = this.searchBy?.mobileNumber
+    }
+    if(this.searchBy?.email){
+      this.searchParam.emailId = this.searchBy?.email
+    }
     if (form == 'mobile') {
       this.searchParam.page = 0;
       if (
@@ -207,10 +233,24 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     }
     let data = this.utilsService.createUrlParams(this.searchParam);
 
+    let leaderFilter = ''
+    if (this.leaderId) {
+      leaderFilter = `&leaderUserId=${this.leaderId}`
+    }
+    let filerFilter ='';
+    if(this.filerId && this.searchAsPrinciple === true){
+      leaderFilter ='';
+      filerFilter=`&searchAsPrincipal=true&filerUserId=${this.filerId}`
+    }
+    if(this.filerId && this.searchAsPrinciple === false){
+      leaderFilter ='';
+      filerFilter=`&filerUserId=${this.filerId}`
+    }
+
     //https://uat-api.taxbuddy.com/report/7521/user-list-new?page=0&pageSize=20&active=false
     // https://uat-api.taxbuddy.com/user/3000/user-list-new?statusId=16&page=0&pageSize=20&active=false
     // 'https://uat-api.taxbuddy.com/user/7522/user-list-new?page=0&searchAsCoOwner=true&pageSize=100&active=false'
-    let param = `/${this.agentId}/user-list-new?${data}&active=false`;
+    let param = `/bo/user-list-new?${data}&active=false${leaderFilter}${filerFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
@@ -301,7 +341,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         serviceType: userData[i].serviceType,
         assessmentYear: userData[i].assessmentYear,
         callerAgentName: userData[i].filerName,
-        ownerName: userData[i].ownerName,
+        leaderName: userData[i].leaderName,
         filerName: userData[i].filerName,
         callerAgentNumber: userData[i].filerMobile,
         callerAgentUserId: userData[i].filerUserId,
@@ -494,7 +534,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         }
       },
       {
-        headerName: 'Owner Name',
+        headerName: 'Leader Name',
         field: 'ownerName',
         width: 200,
         suppressMovable: true,
@@ -707,10 +747,10 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   }
 
   active(data) {
-    // https://uat-api.taxbuddy.com/user/agent-assignment-new?userId=737178&assessmentYear=2023-2024&serviceType=ITR
+    //'https://dev-api.taxbuddy.com/user/leader-assignment?userId=8729&serviceType=ITR&statusId=16' \
     console.log('data to active user', data);
     this.loading = true;
-    const param = `/agent-assignment-new?userId=${data.userId}&assessmentYear=${data.assessmentYear}&serviceType=${data.serviceType}`;
+    const param = `/leader-assignment?userId=${data.userId}&serviceType=${data.serviceType}&statusId=16`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('res after active ', result)
       this.loading = false;
@@ -772,6 +812,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
     this.searchParam.page = 0;
     this.searchParam.size = 20;
     this.searchParam.mobileNumber = null;

@@ -19,6 +19,7 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { ScheduledCallReassignDialogComponent } from '../../components/scheduled-call-reassign-dialog/scheduled-call-reassign-dialog.component';
+import * as moment from 'moment';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -158,6 +159,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
   searchByObject(object) {
     this.searchBy = object;
+    console.log('object from search param ',this.searchBy);
   }
 
   ownerId: number;
@@ -746,6 +748,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.size = 20;
@@ -778,8 +781,14 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
-
     let loggedInId = this.utilsService.getLoggedInUserID();
+    if(this.searchBy?.mobileNumber){
+      this.searchParam.mobileNumber = this.searchBy?.mobileNumber
+    }
+    if(this.searchBy?.email){
+      this.searchParam.email = this.searchBy?.email
+    }
+
     if (form == 'mobile') {
       this.searchParam.page = 0;
       if (
