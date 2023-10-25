@@ -180,27 +180,7 @@ export class SpeculativeIncomeComponent implements OnInit {
       // this.Copy_ITR_JSON.business.profitLossACIncomes = nonSpec;
 
       console.log(this.Copy_ITR_JSON);
-      this.loading = true;
-      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-        (result: any) => {
-          this.ITR_JSON = result;
-          sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          this.loading = false;
-          this.utilsService.showSnackBar(
-            'Speculative income added successfully'
-          );
-          console.log('Speculative income=', result);
-          this.utilsService.smoothScrollToTop();
-        },
-        (error) => {
-          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          this.loading = false;
-          this.utilsService.showSnackBar(
-            'Failed to add Speculative income, please try again.'
-          );
-          this.utilsService.smoothScrollToTop();
-        }
-      );
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
     } else {
       //show errors
     }
