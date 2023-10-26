@@ -32,7 +32,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   employerDetailsFormGroup: FormGroup;
   deductionsFormGroup: FormGroup;
   allowanceFormGroup: FormGroup;
-  freeze:boolean = false;
+  freeze: boolean = false;
 
   localEmployer: Employer;
   ITR_JSON: ITR_JSON;
@@ -755,37 +755,25 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             (element) => element.value.allowType === 'COMPENSATION_ON_VRS'
           );
 
-          // ALLOWING ONLY ONE EXEMPTION
-          // if (
-          //   allowance.controls['allowType'].value === 'COMPENSATION_ON_VRS' &&
-          //   allowance.controls['allowValue'].value !== 0
-          // ) {
-          //   this.freeze = true;
-          // } else if (
-          //   allowance.controls['allowType'].value === 'FIRST_PROVISO' &&
-          //   allowance.controls['allowValue'].value !== 0
-          // ) {
-          //   this.freeze = true;
-          // } else if (
-          //   allowance.controls['allowType'].value === 'SECOND_PROVISO' &&
-          //   allowance.controls['allowValue'].value !== 0
-          // ) {
-          //   this.freeze = true; 
-          // } else{
-          //   this.freeze = false
-          // }
+          let array = [
+            parseFloat(firstProviso.value.allowValue),
+            parseFloat(secondProviso.value.allowValue),
+            parseFloat(compensationVrs.value.allowValue),
+          ];
 
-          // if (
-          //   (allowance.controls['allowType'].value === 'COMPENSATION_ON_VRS' &&
-          //   allowance.controls['allowValue'].value !== 0) && (allowance.controls['allowType'].value === 'FIRST_PROVISO' &&
-          //   allowance.controls['allowValue'].value !== 0) &&  (            allowance.controls['allowType'].value === 'SECOND_PROVISO' &&
-          //   allowance.controls['allowValue'].value !== 0)
-          // )
-          // {
-          //  this.freeze = false
-          // }
-          
+          let count = 0;
 
+          for (let i = 0; i < array.length; i++) {
+            if (array[i] && array[i] > 0) {
+              count++;
+            }
+          }
+
+          if(count > 1){
+            this.freeze = true
+          } else {
+            this.freeze = false
+          }
 
           this.localEmployer.allowance.push({
             allowanceType: allowance.controls['allowType'].value,
@@ -871,8 +859,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   }
 
   serviceCall() {
-    if(!this.freeze){
-
+    if (!this.freeze) {
       this.Copy_ITR_JSON = JSON.parse(
         sessionStorage.getItem(AppConstants.ITR_JSON)
       );
@@ -890,7 +877,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
         this.Copy_ITR_JSON.employers.splice(this.currentIndex, 1, myEmp);
       }
-  
+
       if (!this.Copy_ITR_JSON.systemFlags) {
         this.Copy_ITR_JSON.systemFlags = {
           hasSalary: false,
@@ -912,9 +899,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       }
       this.Copy_ITR_JSON.systemFlags.hasSalary = true;
       this.Copy_ITR_JSON = this.claimEitherHraOr80GG(this.Copy_ITR_JSON);
-  
+
       console.log('Employer details Filled:', this.ITR_JSON);
-  
+
       const param = `/itr/itr-type`;
       this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe(
         (res: any) => {
@@ -930,12 +917,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
                   JSON.stringify(this.ITR_JSON)
                 );
                 sessionStorage.removeItem('localEmployer');
-  
+
                 this.AllSalaryIncomeComponent.updatingTaxableIncome('save');
-  
+
                 this.utilsService.showSnackBar('Salary updated successfully.');
                 this.loading = false;
-  
+
                 this.saveAndNext.emit(true);
               } else {
                 this.loading = false;
@@ -958,7 +945,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           this.utilsService.showSnackBar('Failed to save salary detail.');
         }
       );
-    } 
+    }
   }
 
   claimEitherHraOr80GG(ITR_JSON: ITR_JSON) {
