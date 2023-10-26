@@ -28,6 +28,7 @@ import { ItrStatusDialogComponent } from '../../components/itr-status-dialog/itr
 import { AgTooltipComponent } from "../../../shared/components/ag-tooltip/ag-tooltip.component";
 import { ReAssignActionDialogComponent } from '../../components/re-assign-action-dialog/re-assign-action-dialog.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import * as moment from 'moment';
 declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-assigned-new-users',
@@ -62,6 +63,14 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     { value: 'name', name: 'Name' },
     { value: 'createdDate', name: 'Creation Date' }
   ];
+  searchBy: any = {};
+  searchMenus = [
+    { value: 'name', name: 'User Name' },
+    { value: 'email', name: 'Email' },
+    { value: 'customerNumber', name: 'Mobile No' },
+    { value: 'panNumber', name: 'PAN' }
+  ];
+  clearUserFilter: number;
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -75,6 +84,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private requestManager: RequestManager,
     private cacheManager: CacheManager,
+    private userService: UserMsService,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
@@ -128,24 +138,22 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
     this.agentId = userId;
+    this.getStatus();
     this.getMasterStatusList();
-    // this.search();
     this.activatedRoute.queryParams.subscribe(params => {
-      this.searchVal = params['mobileNumber'];
+      // this.searchVal = params['mobileNumber'];
       this.searchStatusId = params['statusId'];
 
-      if (this.searchVal) {
-        // console.log('q param',this.searchVal)
-        this.searchParam.mobileNumber = this.searchVal;
-        this.search('mobile');
-      }
-      else if (this.searchStatusId) {
-        // console.log('q param',this.searchStatus)
+      // if (this.searchVal) {
+      //   this.searchParam.mobileNumber = this.searchVal;
+      //   this.search('mobile');
+      // }
+      // else 
+      if (this.searchStatusId) {
         this.searchParam.statusId = this.searchStatusId;
         this.search('status');
       }
       else {
-        //check user roles here and do not load all data for admin/leaders
         if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
           this.search();
         } else {
@@ -165,6 +173,10 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
   sortByObject(object) {
     this.sortBy = object;
+  }
+
+  searchByObject(object) {
+    this.searchBy = object;
   }
 
   LIFECYCLE = 'LIFECYCLE';
@@ -298,8 +310,25 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   }
 
   async getMasterStatusList() {
-    this.itrStatus = await this.utilsService.getStoredMasterStatusList();
+    // this.itrStatus = await this.utilsService.getStoredMasterStatusList();
     this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
+  }
+
+  getStatus() {
+    // 'https://dev-api.taxbuddy.com/user/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&serviceType=ITR'
+    let param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=false';
+    this.userService.getMethod(param).subscribe(
+      (response) => {
+        if (response instanceof Array && response.length > 0) {
+          this.itrStatus = response;
+        } else {
+          this.itrStatus = [];
+        }
+      },
+      (error) => {
+        console.log('Error during fetching status info.');
+      }
+    );
   }
 
   // pageChanged(event: any) {
@@ -339,25 +368,22 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     }
   }
 
-  ownerId: number;
+  leaderId: number;
   filerId: number;
-  fromSme(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.ownerId = event ? event.userId : null;
+  fromSme(event, isLeader) {
+    if (isLeader) {
+      this.leaderId = event ? event.userId : null;
     } else {
       this.filerId = event ? event.userId : null;
     }
     if (this.filerId) {
       this.agentId = this.filerId;
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
-      // this.search('agent');
+    } else if (this.leaderId) {
+      this.agentId = this.leaderId;
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    // this.search('agent');
   }
 
   coOwnerId: number;
@@ -391,28 +417,28 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
-      {
-        field: 'Re Assign',
-        headerCheckboxSelection: true,
-        width: 110,
-        hide: !this.showReassignmentBtn.length,
-        pinned: 'left',
-        checkboxSelection: (params) => {
-          if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-            return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
-          } else {
-            return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
-          }
-        },
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
-        },
-      },
+      // {
+      //   field: 'Re Assign',
+      //   headerCheckboxSelection: true,
+      //   width: 110,
+      //   hide: !this.showReassignmentBtn.length,
+      //   pinned: 'left',
+      //   checkboxSelection: (params) => {
+      //     if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
+      //       return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
+      //     } else {
+      //       return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
+      //     }
+      //   },
+      //   cellStyle: function (params: any) {
+      //     return {
+      //       textAlign: 'center',
+      //       display: 'flex',
+      //       'align-items': 'center',
+      //       'justify-content': 'center',
+      //     };
+      //   },
+      // },
       {
         headerName: 'Client Name',
         field: 'name',
@@ -453,107 +479,12 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
-      // {
-      //   headerName: 'Status',
-      //   field: 'statusId',
-      //   width: 90,
-      //   suppressMovable: true,
-      //   sortable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: 'agTextColumnFilter',
-      //   filterParams: {
-      //     filterOptions: ['contains', 'notContains'],
-      //     debounceMs: 0,
-      //   },
-      //   valueGetter: function nameFromCode(params) {
-      //     // console.log('params === ', params, params.data.statusId);
-      //     // console.log('itrStatus array === ', itrStatus);
-      //     if (itrStatus.length !== 0) {
-      //       const nameArray = itrStatus.filter(
-      //         (item: any) => item.statusId === params.data.statusId
-      //       );
-      //       if (nameArray.length !== 0) {
-      //         statusSequence = nameArray[0].sequence;
-      //         return nameArray[0].statusName;
-      //       } else {
-      //         return '-';
-      //       }
-      //     } else {
-      //       return params.data.statusId;
-      //     }
-      //   },
-      // },
       {
-        headerName: 'Action With',
-        field: 'conversationWithFiler',
+        headerName: 'Leader Name',
+        field: 'leaderName',
         width: 110,
         suppressMovable: true,
         hide: !showOwnerCols,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-        valueGetter: function nameFromCode(params) {
-          {
-            if (params.data.conversationWithFiler === true) {
-              return params.data.filerName;
-            } else {
-              return params.data.ownerName;
-            }
-          }
-        }
-      },
-      {
-        headerName: 'Owner Name',
-        field: 'ownerName',
-        width: 110,
-        suppressMovable: true,
-        hide: !showOwnerCols,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
-        headerName: 'Filer Name',
-        field: 'filerName',
-        width: 150,
-        suppressMovable: true,
-        hide: !showOwnerCols,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
-        headerName: 'ERI Client',
-        field: 'eriClientValidUpto',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        cellRenderer: (data: any) => {
-          if (data.value !== null)
-            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
-          else return '-';
-        },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
-        headerName: 'PAN Number',
-        field: 'panNumber',
-        width: 120,
-        textAlign: 'center',
-        suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -575,9 +506,10 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         },
       },
       {
-        headerName: 'Language',
-        field: 'laguage',
-        width: 115,
+        headerName: 'PAN Number',
+        field: 'panNumber',
+        width: 120,
+        textAlign: 'center',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -586,6 +518,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
       },
+
       {
         headerName: 'Created Date',
         field: 'createdDate',
@@ -599,11 +532,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
             return '-';
           }
         },
-        // filter: "agTextColumnFilter",
-        // filterParams: {
-        //   filterOptions: ["contains", "notContains"],
-        //   debounceMs: 0
-        // }
+
       },
       {
         headerName: 'Status Updated On',
@@ -617,11 +546,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           else
             return '-';
         },
-        // filter: "agTextColumnFilter",
-        // filterParams: {
-        //   filterOptions: ["contains", "notContains"],
-        //   debounceMs: 0
-        // }
       },
       {
         headerName: 'User Id',
@@ -633,45 +557,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
-        },
-      },
-      // {
-      //   headerName: 'Agent Name',
-      //   field: 'callerAgentName',
-      //   width: 180,
-      //   suppressMovable: true,
-      //   cellStyle: { textAlign: 'center' },
-      //   filter: "agTextColumnFilter",
-      //   filterParams: {
-      //     filterOptions: ["contains", "notContains"],
-      //     debounceMs: 0
-      //   }
-      // },
-      {
-        headerName: 'ITR Status',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          if (params.data.serviceType === 'ITR') {
-            return `<button type="button" class="action_icon add_button" title="see ITR Journey of user"
-            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
-            <i class="fa fa-sort-alpha-asc" aria-hidden="true" data-action-type="getItrStatus"></i>
-             </button>`;
-          } else {
-            return '-'
-          }
-        },
-        width: 80,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
         },
       },
       {
@@ -704,23 +589,24 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          let statusText = '';
-          if (itrStatus.length !== 0) {
-            const nameArray = itrStatus.filter(
-              (item: any) => item.statusId === params.data.statusId
-            );
-            if (nameArray.length !== 0) {
-              statusSequence = nameArray[0].sequence;
-              statusText = nameArray[0].statusName;
-            } else {
-              statusText = '-';
-            }
-          } else {
-            statusText = params.data.statusId;
-          }
+          // debugger
+          // let statusText = '';
+          // if (itrStatus.length !== 0) {
+          //   const nameArray = itrStatus.filter(
+          //     (item: any) => item.statusId === params.data.statusId
+          //   );
+          //   if (nameArray.length !== 0) {
+          //     statusSequence = nameArray[0].sequence;
+          //     statusText = nameArray[0].statusName;
+          //   } else {
+          //     statusText = '-';
+          //   }
+          // } else {
+          //   statusText = params.data.statusId;
+          // }
           return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
           style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
-          <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
+          <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${params.data.statusName}
            </button>`;
         },
         width: 170,
@@ -883,12 +769,13 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         serviceType: userData[i].serviceType,
         assessmentYear: userData[i].assessmentYear,
         callerAgentName: userData[i].filerName,
-        ownerName: userData[i].ownerName,
+        leaderName: userData[i].leaderName,
         filerName: userData[i].filerName,
         callerAgentNumber: userData[i].filerMobile,
         callerAgentUserId: userData[i].filerUserId,
         statusId: userData[i].statusId,
         statusUpdatedDate: userData[i].statusUpdatedDate,
+        statusName:userData[i].statusName,
         panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
         eriClientValidUpto: userData[i].eriClientValidUpto,
         laguage: userData[i].laguage,
@@ -1151,7 +1038,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     }
     const reqBody = {
       "agent_number": agent_number,
-        "userId": data.userId,
+      "userId": data.userId,
     }
     // this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
     //   this.loading = false;
@@ -1266,12 +1153,13 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
     this.cacheManager.clearCache();
+    this.clearUserFilter = moment.now().valueOf();
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
-    this.searchParam.mobileNumber = null;
-    this.searchParam.emailId = null;
+    // this.searchParam.mobileNumber = null;
+    // this.searchParam.emailId = null;
 
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
@@ -1298,21 +1186,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     }
 
     let loggedInId = this.utilsService.getLoggedInUserID();
-    if (form == 'mobile') {
-      this.searchParam.page = 0;
-      if (this.searchParam.mobileNumber == null || this.searchParam.mobileNumber == '') {
-        this.searchParam.mobileNumber = null;
-      } else {
-        this.searchParam.emailId = null;
-      }
-      if (this.searchParam.emailId == null || this.searchParam.emailId == '') {
-        this.searchParam.emailId = null;
-      } else {
-        this.searchParam.mobileNumber = null;
-      }
-
-      // this.searchParam.statusId = null;
-    } else if (form == 'status') {
+    if (form == 'status') {
       this.searchParam.page = 0;
       // this.searchParam.serviceType = null;
       this.searchParam.mobileNumber = null
@@ -1326,56 +1200,53 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     } else if (form == 'agent') {
       this.searchParam.page = 0;
     }
-    if (this.searchParam.emailId) {
-      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
-    }
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
     //https://dev-api.taxbuddy.com/user/%7BloggedInSmeUserId%7D/user-list-new?page=0&pageSize=20
     //https://uat-api.taxbuddy.com/user/7522/user-list-new?page=0&searchAsCoOwner=true&pageSize=100
     //https://uat-api.taxbuddy.com/report/7521/user-list-new?page=0&pageSize=20
 
-    let param = `/${this.agentId}/user-list-new?${data}`;
-    // if (isAgent) {
-    //   param = param + '&isAgent=true';
-    // }
-    // if(this.filerUserId){
-    //   param= param + `&filerUserId=${this.filerUserId}`
-    // }
+    //'https://dev-api.taxbuddy.com/bo/user-list-new?page=0&pageSize=30'
+
+    let param = `/bo/user-list-new?${data}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
-    if (this.coOwnerToggle.value && isAgent) {
-      param = param + '&searchAsCoOwner=true';
+
+    if (Object.keys(this.searchBy).length) {
+      Object.keys(this.searchBy).forEach(key => {
+        param = param + '&' + key + '=' + this.searchBy[key];
+      });
     }
+
     if (this.filerId === this.agentId) {
       param = param + `&filerUserId=${this.filerId}`
     }
-    if (this.coOwnerToggle.value && isAgent && loggedInId !== this.agentId) {
-      param = `/${this.agentId}/user-list-new?${data}`;
-      let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
-      if (Object.keys(this.sortBy).length) {
-        param = param + sortByJson;
-      }
-    }
-    else {
-      param;
+
+    if (this.leaderId === this.agentId) {
+      param = param + `&leaderUserId=${this.leaderId}`;
     }
 
+    if (this.agentId === loggedInId && this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      param = param + `&leaderUserId=${this.agentId}`;
+    }
+    // if (this.coOwnerToggle.value && isAgent && loggedInId !== this.agentId) {
+    //   param = `/${this.agentId}/user-list-new?${data}`;
+    //   let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    //   if (Object.keys(this.sortBy).length) {
+    //     param = param + sortByJson;
+    //   }
+    // }
+    // else {
+    //   param;
+    // }
+
     this.userMsService.getMethodNew(param).subscribe(
-      /* {
-        next: (v) => console.log(v),
-        error: (e) => console.error(e),
-        complete: () => {
-          console.info('complete');
-          this.loading = false;
-        }
-      } */
+
       (result: any) => {
         if (result.success == false) {
           this._toastMessageService.alert("error", result.message);
-          // this.utilsService.showSnackBar(result.message);
           this.usersGridOptions.api?.setRowData(this.createRowData([]));
           this.config.totalItems = 0;
         }
