@@ -187,10 +187,18 @@ export class CustomerProfileComponent implements OnInit {
     this.getSmeList();
 
     console.log('nav data', this.navigationData);
-    if (this.utilsService.isNonEmpty(this.customerProfileForm.controls['aadhaarEnrolmentId'].value)) {
+    if (
+      this.utilsService.isNonEmpty(
+        this.customerProfileForm.controls['aadhaarEnrolmentId'].value
+      )
+    ) {
       this.shallDisableOther('aadharNumber', 'aadhaarEnrolmentId');
     }
-    if (this.utilsService.isNonEmpty(this.customerProfileForm.controls['aadharNumber'].value)) {
+    if (
+      this.utilsService.isNonEmpty(
+        this.customerProfileForm.controls['aadharNumber'].value
+      )
+    ) {
       this.shallDisableOther('aadhaarEnrolmentId', 'aadharNumber');
     }
   }
@@ -229,8 +237,13 @@ export class CustomerProfileComponent implements OnInit {
     }
   }
 
-  shallDisableOther(controlTodisable, controlName){
-    if(this.utilsService.isNonEmpty(this.customerProfileForm.controls[controlName].value) && this.customerProfileForm.controls[controlName].valid){
+  shallDisableOther(controlTodisable, controlName) {
+    if (
+      this.utilsService.isNonEmpty(
+        this.customerProfileForm.controls[controlName].value
+      ) &&
+      this.customerProfileForm.controls[controlName].valid
+    ) {
       this.customerProfileForm.controls[controlTodisable].disable();
     } else {
       this.customerProfileForm.controls[controlTodisable].enable();
@@ -448,6 +461,9 @@ export class CustomerProfileComponent implements OnInit {
       const ageCalculated = this.calAge(
         this.customerProfileForm.controls['dateOfBirth'].value
       );
+
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+
       this.ITR_JSON.family = [
         {
           pid: null,
@@ -891,7 +907,7 @@ export class CustomerProfileComponent implements OnInit {
     }
 
     //once user residential status changes, update the same in cg object
-    this.ITR_JSON.capitalGain.forEach(element => {
+    this.ITR_JSON.capitalGain.forEach((element) => {
       element.residentialStatus = status;
     });
   }

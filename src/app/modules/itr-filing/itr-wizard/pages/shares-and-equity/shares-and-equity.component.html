@@ -296,7 +296,6 @@
                 placeholder="Scrip Name"
                 name="nameOfTheUnits"
                 (change)="calculateTotalCG(selectedFormGroup)"
-                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-hint style="font-size: 75%"
               >If Scrip Name is not available, we will take
@@ -360,16 +359,12 @@
               ></mat-datepicker-toggle>
               <mat-datepicker #sellDate> </mat-datepicker>
               <mat-error
-                *ngIf="
-                        selectedFormGroup.get('sellDate').hasError('required')
-                      "
+                *ngIf="selectedFormGroup.get('sellDate').hasError('required')"
               >
                 Enter valid Date.
               </mat-error>
               <mat-error
-                *ngIf="
-                        selectedFormGroup.get('sellDate').hasError('dateOrder')
-                      "
+                *ngIf="selectedFormGroup.get('sellDate').hasError('dateOrder')"
               >
                 Sale date must be after purchase date.
               </mat-error>
@@ -443,8 +438,8 @@
               <mat-datepicker #purchaseDate></mat-datepicker>
               <mat-error
                 *ngIf="
-                        selectedFormGroup.get('purchaseDate').hasError('dateOrder')
-                      "
+                  selectedFormGroup.get('purchaseDate').hasError('dateOrder')
+                "
               >
                 Purchase date must be before the sale date.
               </mat-error>

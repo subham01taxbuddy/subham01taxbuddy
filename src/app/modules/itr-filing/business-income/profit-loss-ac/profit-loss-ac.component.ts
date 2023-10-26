@@ -3,6 +3,8 @@ import { Subscription } from 'rxjs';
 import { WizardNavigation } from '../../../itr-shared/WizardNavigation';
 import { NonSpeculativeIncomeComponent } from './non-speculative-income/non-speculative-income.component';
 import { SpeculativeIncomeComponent } from './speculative-income/speculative-income.component';
+import {AppConstants} from "../../../shared/constants";
+import {UtilsService} from "../../../../services/utils.service";
 @Component({
   selector: 'app-profit-loss-ac',
   templateUrl: './profit-loss-ac.component.html',
@@ -13,7 +15,9 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
   SpeculativeIncomeComponent!: SpeculativeIncomeComponent;
   @ViewChild('NonSpeculativeIncomeComponentRef', { static: false })
   NonSpeculativeIncomeComponent!: NonSpeculativeIncomeComponent;
-  constructor() {
+
+  loading = false;
+  constructor(private utilsService: UtilsService) {
     super();
   }
 
@@ -24,9 +28,33 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
   }
 
   saveAll() {
-    this.NonSpeculativeIncomeComponent.onContinue();
-    this.SpeculativeIncomeComponent.onContinue();
-    this.saveAndNext.emit(true);
+
+    let nonSpecSaved = this.NonSpeculativeIncomeComponent.onContinue();
+    let specSaved = this.SpeculativeIncomeComponent.onContinue();
+    if(specSaved && nonSpecSaved) {
+      this.loading = true;
+      let Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      this.utilsService.saveItrObject(Copy_ITR_JSON).subscribe(
+        (result: any) => {
+          Copy_ITR_JSON = result;
+          this.loading = false;
+          sessionStorage.setItem('ITR_JSON', JSON.stringify(Copy_ITR_JSON));
+          this.utilsService.showSnackBar(
+            'Business income added successfully'
+          );
+          console.log('non-speculative income=', result);
+          this.utilsService.smoothScrollToTop();
+        },
+        (error) => {
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Failed to update business income, please try again.'
+          );
+          this.utilsService.smoothScrollToTop();
+        }
+      );
+      this.saveAndNext.emit(true);
+    }
   }
 
   subscription: Subscription;

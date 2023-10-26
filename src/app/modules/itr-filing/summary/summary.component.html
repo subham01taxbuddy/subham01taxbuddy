@@ -671,9 +671,13 @@
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
                                   finalCalculations?.businessIncome
-                                    ?.businessIncomeTotal
+                                    ?.businessIncomeTotal || finalCalculations?.businessIncome
+                                    ?.businessIncomeTotal === 0
                                     ? finalCalculations?.businessIncome
-                                        ?.businessIncomeTotal
+                                        ?.businessIncomeTotal +
+                                        finalCalculations?.businessIncome
+                                          ?.businessIncomeDetails
+                                          ?.totalCryptoIncome
                                     : 0
                                 )
                               }}</label
@@ -924,6 +928,62 @@
                         </tbody>
                       </table>
                     </div>
+
+                    <!-- crypto gains  -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.businessIncome?.businessIncomeDetails?.crypto?.cryptoDetails
+                          .length > 0
+                      "
+                    >
+                      Income from crypto
+                      <span style="float: right">{{
+                        finalCalculations?.businessIncome?.businessIncomeDetails?.totalCryptoIncome
+                      }}</span>
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                      finalCalculations?.businessIncome?.businessIncomeDetails?.crypto?.cryptoDetails
+                          .length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Sr. No</th>
+                          <th style="font-weight: bold">Head of income</th>
+                          <th style="font-weight: bold">Buy Value</th>
+                          <th style="font-weight: bold">Sale Value</th>
+                          <th style="font-weight: bold">Income</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let slabRate of finalCalculations?.businessIncome?.businessIncomeDetails?.crypto?.cryptoDetails
+                            let i = index
+                          "
+                        >
+                          <td>{{ slabRate?.srNo }}</td>
+                          <td>
+                            {{ slabRate?.headOfIncome }}
+                          </td>
+                          <td>
+                            Rs
+                            {{ slabRate?.buyValue }}
+                          </td>
+                          <td>
+                            Rs
+                            {{ slabRate?.SaleValue }}
+                          </td>
+                          <td>
+                            Rs
+                            {{ slabRate?.income }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </mat-expansion-panel>
 
                   <!-- ************************** Income from Capital Gain ****************************** -->
@@ -1297,7 +1357,9 @@
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
                                   finalCalculations?.capitalGain
-                                    ?.totalCapitalGain
+                                    ?.totalCapitalGain -
+                                    finalCalculations?.businessIncome
+                                      ?.businessIncomeDetails?.totalCryptoIncome
                                 )
                               }}</label
                             >
@@ -2405,7 +2467,8 @@
                         <tr
                           *ngIf="
                             finalCalculations?.BroughtFwdLossesSetoff
-                              ?.BroughtFwdLossesSetoffDtls?.speculativeBusinessLoss !== 0
+                              ?.BroughtFwdLossesSetoffDtls
+                              ?.speculativeBusinessLoss !== 0
                           "
                         >
                           <td>Speculative Loss</td>
@@ -2414,7 +2477,8 @@
                             {{
                               utilsService.currencyFormatter(
                                 finalCalculations?.BroughtFwdLossesSetoff
-                                  ?.BroughtFwdLossesSetoffDtls?.speculativeBusinessLoss
+                                  ?.BroughtFwdLossesSetoffDtls
+                                  ?.speculativeBusinessLoss
                               )
                             }}
                           </td>
@@ -4933,7 +4997,8 @@
                     <table
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
-                        finalCalculations?.exemptIncome?.partnerFirms?.length > 0
+                        finalCalculations?.exemptIncome?.partnerFirms?.length >
+                        0
                       "
                     >
                       <thead>

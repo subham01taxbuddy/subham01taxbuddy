@@ -156,11 +156,9 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     const busIncomeFormArray = <FormArray>(
       this.busIncomeForm.get('busIncomeFormArray')
     );
-    busIncomeFormArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        busIncomeFormArray.removeAt(index);
-      }
-    });
+    busIncomeFormArray.controls = busIncomeFormArray.controls.filter(
+      element => !(element as FormGroup).controls['hasEdit'].value);
+    this.config.totalItems = busIncomeFormArray.controls.length;
   }
 
   calculatePresumptive(index, incomeType, setValue?) {
@@ -206,7 +204,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       let CashPreIncome =
         cashPreIncome.value !== '' ? parseFloat(cashPreIncome.value) : 0;
 
-      if (CashPreIncome && CashPreIncome !== 0) {
+      if (CashPreIncome || CashPreIncome === 0) {
         cashPreIncome?.setValidators([
           Validators.min(this.amountEight),
           Validators.max(this.maxEightAmt),
@@ -236,7 +234,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       let BankPreIncome =
         bankPreIncome.value !== '' ? parseFloat(bankPreIncome.value) : 0;
 
-      if (BankPreIncome && BankPreIncome !== 0) {
+      if (BankPreIncome || BankPreIncome === 0) {
         bankPreIncome?.setValidators([
           Validators.min(this.amountSix),
           Validators.max(this.maxSixAmt),
@@ -375,7 +373,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
       // form values
       let BusinessFormIncome =
-        this.busIncomeForm.controls['busIncomeFormArray'].value;
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).getRawValue();
 
       // array that will be stored unde presumptive income
       let presBusinessIncome = [];

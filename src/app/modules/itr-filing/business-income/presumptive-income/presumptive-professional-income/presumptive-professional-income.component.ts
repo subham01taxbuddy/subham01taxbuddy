@@ -173,11 +173,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     const profIncomeFormArray = <FormArray>(
       this.profIncomeForm.get('profIncomeFormArray')
     );
-    profIncomeFormArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        profIncomeFormArray.removeAt(index);
-      }
-    });
+    profIncomeFormArray.controls = profIncomeFormArray.controls.filter(
+      element => !(element as FormGroup).controls['hasEdit'].value);
+    this.config.totalItems = profIncomeFormArray.controls.length;
   }
 
   calculatePresumptive(event, index, setValue?) {
@@ -211,7 +209,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
           ? parseFloat(presumptiveIncome.value)
           : 0;
 
-      if (PresumptiveIncome && PresumptiveIncome !== 0) {
+      if (PresumptiveIncome || PresumptiveIncome === 0) {
         presumptiveIncome?.setValidators([
           Validators.required,
           Validators.min(this.amountFifty),
@@ -475,7 +473,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
       // form values
       let profBusinessFormIncome =
-        this.profIncomeForm.controls['profIncomeFormArray'].value;
+        (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).getRawValue();
 
       // array that will be stored unde presumptive income
       let presBusinessIncome = [];
