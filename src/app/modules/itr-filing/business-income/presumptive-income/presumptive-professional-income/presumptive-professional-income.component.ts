@@ -173,11 +173,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     const profIncomeFormArray = <FormArray>(
       this.profIncomeForm.get('profIncomeFormArray')
     );
-    profIncomeFormArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        profIncomeFormArray.removeAt(index);
-      }
-    });
+    profIncomeFormArray.controls = profIncomeFormArray.controls.filter(
+      element => !(element as FormGroup).controls['hasEdit'].value);
+    this.config.totalItems = profIncomeFormArray.controls.length;
   }
 
   calculatePresumptive(event, index, setValue?) {

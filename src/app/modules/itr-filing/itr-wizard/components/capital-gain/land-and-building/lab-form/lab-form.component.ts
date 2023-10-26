@@ -182,11 +182,16 @@ export class LabFormComponent implements OnInit {
   ngOnInit() {
     if (this.data.mode === 'EDIT') {
       console.log('this.data = ', this.data.assetSelected);
-      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       const dataToPatch = this.ITR_JSON.capitalGain?.filter(
         (item) => item.assetType === 'PLOT_OF_LAND'
       );
-      this.currentCgIndex = this.data.assetSelected.srn;
+      dataToPatch[0].assetDetails.forEach((element, index) =>{
+        if(element.srn === this.data.assetSelected.srn){
+          this.currentCgIndex = index;
+        }
+      });
+
       console.log('selected index=', this.currentCgIndex);
       console.log('dataToPatch = ', dataToPatch, this.data.assetSelected);
       this.cgArrayElement = dataToPatch[0];
@@ -504,7 +509,15 @@ export class LabFormComponent implements OnInit {
   addMoreBuyersDetails() {
     const buyersDetails = <FormArray>this.immovableForm.get('buyersDetails');
     if (buyersDetails.valid) {
-      buyersDetails.push(this.createBuyersDetailsForm());
+      let first = buyersDetails.controls[0].value;
+      first.srn = '';
+      first.id = '';
+      first.pan = '';
+      first.aadhaarNumber = ''
+      first.share = '';
+      first.name = '';
+      first.amount = '';
+      buyersDetails.push(this.createBuyersDetailsForm(first));
     } else {
       console.log('add above details first');
     }
@@ -577,6 +590,23 @@ export class LabFormComponent implements OnInit {
     }*/
     console.log('Form + buyersDetails=', this.immovableForm.valid);
     return panRepeat;
+  }
+
+  deductionValidation() {
+    const deduction = <FormArray>this.immovableForm.get('deductions');
+    // This method is written in utils service for common usablity.
+    let sectionRepeat: boolean = this.utilsService.checkDuplicateInObject(
+      'underSection',
+      deduction.value
+    );
+
+    if (sectionRepeat) {
+      this.utilsService.showSnackBar(
+        'Deduction cannot be claimed under same section multiple times.'
+      );
+    }
+    console.log('Form + deduction=', this.immovableForm.valid);
+    return sectionRepeat;
   }
 
   makePanUppercase(control) {
@@ -1280,7 +1310,7 @@ export class LabFormComponent implements OnInit {
       formGroupName.controls['assetDetails'].valid &&
       formGroupName.controls['buyersDetails'].valid &&
       formGroupName.controls['improvement'] &&
-      !this.panValidation() &&
+      !this.panValidation() && !this.deductionValidation() &&
       !this.calPercentage()
     ) {
       this.saveBusy = true;

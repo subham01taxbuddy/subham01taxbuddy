@@ -156,11 +156,9 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     const busIncomeFormArray = <FormArray>(
       this.busIncomeForm.get('busIncomeFormArray')
     );
-    busIncomeFormArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        busIncomeFormArray.removeAt(index);
-      }
-    });
+    busIncomeFormArray.controls = busIncomeFormArray.controls.filter(
+      element => !(element as FormGroup).controls['hasEdit'].value);
+    this.config.totalItems = busIncomeFormArray.controls.length;
   }
 
   calculatePresumptive(index, incomeType, setValue?) {
