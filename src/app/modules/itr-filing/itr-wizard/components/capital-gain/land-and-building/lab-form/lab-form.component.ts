@@ -182,11 +182,16 @@ export class LabFormComponent implements OnInit {
   ngOnInit() {
     if (this.data.mode === 'EDIT') {
       console.log('this.data = ', this.data.assetSelected);
-      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       const dataToPatch = this.ITR_JSON.capitalGain?.filter(
         (item) => item.assetType === 'PLOT_OF_LAND'
       );
-      this.currentCgIndex = this.data.assetSelected.srn;
+      dataToPatch[0].assetDetails.forEach((element, index) =>{
+        if(element.srn === this.data.assetSelected.srn){
+          this.currentCgIndex = index;
+        }
+      });
+
       console.log('selected index=', this.currentCgIndex);
       console.log('dataToPatch = ', dataToPatch, this.data.assetSelected);
       this.cgArrayElement = dataToPatch[0];
