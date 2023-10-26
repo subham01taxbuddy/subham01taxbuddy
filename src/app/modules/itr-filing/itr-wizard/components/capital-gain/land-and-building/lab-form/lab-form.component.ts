@@ -579,6 +579,23 @@ export class LabFormComponent implements OnInit {
     return panRepeat;
   }
 
+  deductionValidation() {
+    const deduction = <FormArray>this.immovableForm.get('deductions');
+    // This method is written in utils service for common usablity.
+    let sectionRepeat: boolean = this.utilsService.checkDuplicateInObject(
+      'underSection',
+      deduction.value
+    );
+
+    if (sectionRepeat) {
+      this.utilsService.showSnackBar(
+        'Deduction cannot be claimed under same section multiple times.'
+      );
+    }
+    console.log('Form + deduction=', this.immovableForm.valid);
+    return sectionRepeat;
+  }
+
   makePanUppercase(control) {
     if (this.utilsService.isNonEmpty(control.value)) {
       control.setValue(control.value.toUpperCase());
@@ -1280,7 +1297,7 @@ export class LabFormComponent implements OnInit {
       formGroupName.controls['assetDetails'].valid &&
       formGroupName.controls['buyersDetails'].valid &&
       formGroupName.controls['improvement'] &&
-      !this.panValidation() &&
+      !this.panValidation() && !this.deductionValidation() &&
       !this.calPercentage()
     ) {
       this.saveBusy = true;
