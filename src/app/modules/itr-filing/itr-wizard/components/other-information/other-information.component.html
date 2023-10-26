@@ -560,9 +560,9 @@
               <div class="col-sm-6 spsTp">
                 <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
                 <mat-form-field appearance="outline">
-                  <input digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" (change)="validation()" required />
-                  <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
+                  <input (input)="validation()" digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required />
                 </mat-form-field>
+                <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
                 <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedAmountOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
               </div>
               <div class="col-sm-6 spsTp">
@@ -601,7 +601,7 @@
             <div class="col-sm-6 spsTp">
               <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
               <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" (change)="validation()" required/>
+                <input (input)="validation()" digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required/>
                 <mat-error *ngIf="schedule5AForm.get('businessOrProfession.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
               </mat-form-field>
               <mat-error *ngIf="schedule5AForm.get('businessOrProfession.apportionedAmountOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
@@ -642,7 +642,7 @@
             <div class="col-sm-6 spsTp">
               <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
               <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" (change)="validation()" required />
+                <input (input)="validation()" digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10"  required />
                 <mat-error *ngIf="schedule5AForm.get('capitalGain.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
               </mat-form-field>
               <mat-error *ngIf="schedule5AForm.get('capitalGain.apportionedAmountOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
@@ -684,7 +684,7 @@
             <div class="col-sm-6 spsTp">
               <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
               <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name ="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" (change)="validation()" required />
+                <input (input)="validation()" digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name ="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10"  required />
                 <mat-error *ngIf="schedule5AForm.get('otherSource.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
               </mat-form-field>
               <mat-error *ngIf="schedule5AForm.get('otherSource.apportionedAmountOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
