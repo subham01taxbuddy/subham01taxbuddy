@@ -47,7 +47,7 @@
           </div>
             <div class="row  spsTp bdrTp">
               <div class="col-6">
-                <app-generic-sorting [sortingParameter]="sortMenus"
+                <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                   (onChange)="sortByObject($event)"></app-generic-sorting>
               </div>
               <div class="col-sm-6">

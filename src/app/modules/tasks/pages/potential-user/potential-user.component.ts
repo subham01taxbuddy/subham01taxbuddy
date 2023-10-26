@@ -16,6 +16,7 @@ import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import * as moment from 'moment';
+import { ReportService } from 'src/app/services/report-service';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -69,6 +70,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private dialog: MatDialog,
+    private reportService: ReportService,
     private genericCsvService: GenericCsvService,
     private cacheManager: CacheManager,
     @Inject(LOCALE_ID) private locale: string
@@ -268,7 +270,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       param;
     }
 
-    this.userMsService.getMethodNew(param).subscribe(
+    this.reportService.getMethod(param).subscribe(
       (result: any) => {
         this.loading = false;
         if (result.success == false) {
@@ -810,7 +812,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
+
   resetFilters() {
     this.clearUserFilter = moment.now().valueOf();
     this.searchParam.page = 0;
@@ -818,22 +820,10 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
     this.searchParam.statusId = null;
-
+    this.usersGridOptions.api?.setRowData(this.createRowData([]));
+    this.userInfoLength = 0;
+    this.config.totalItems = 0;
     this?.smeDropDown?.resetDropdown();
-
-    if (this.coOwnerDropDown) {
-
-      this.coOwnerDropDown.resetDropdown();
-      this.search('', true);
-    } else {
-      if (this.dataOnLoad) {
-        this.search();
-      } else {
-        this.usersGridOptions.api?.setRowData(this.createRowData([]));
-        this.userInfoLength = 0;
-        this.config.totalItems = 0;
-      }
-    }
   }
 
   ngOnDestroy() {

@@ -49,7 +49,7 @@ export class RemoteConfigService {
           let tempValue = getValue(remoteConfig, 'adminGlobalConfig');
           let tempObject = JSON.parse(JSON.stringify(tempValue));
           let tempValueParse = JSON.parse(tempObject._value);
-          this.setLocalStorageItem(AppConstants.ADMIN_GLOBAL_CONFIG, JSON.stringify(tempValueParse));
+          // this.setLocalStorageItem(AppConstants.ADMIN_GLOBAL_CONFIG, JSON.stringify(tempValueParse));
           return tempValueParse;
       }
 

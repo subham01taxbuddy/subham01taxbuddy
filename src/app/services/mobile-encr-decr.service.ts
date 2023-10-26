@@ -7,19 +7,22 @@ import { AppConstants } from '../modules/shared/constants';
   providedIn: 'root',
 })
 export class MobileEncryptDecryptService {
-  remoteConfig
+  remoteConfig :any;
+  secretKey :any;
+
   constructor(
     private remoteConfigService: RemoteConfigService,
   ){
-    this.getRemoteConfigData();
+    this.getRemoteConfigData().then(() => {
+      this.secretKey = this.remoteConfig?.decryptKeyForMobileNo ;
+    });
   }
 
   async getRemoteConfigData() {
-    this.remoteConfig = await this.remoteConfigService.getRemoteConfigData(AppConstants.ADMIN_GLOBAL_CONFIG);
-    console.log('learn on the go config obj', this.remoteConfig);
+    this.remoteConfig = await this.remoteConfigService.fetchRemoteConfigData(AppConstants.ADMIN_GLOBAL_CONFIG);
+    // console.log('learn on the go config obj', this.remoteConfig);
   }
 
-  secretKey = 'TAXBUDDY';
 
   encrypt(value: string): string {
     return CryptoJS.AES.encrypt(value, this.secretKey.trim()).toString();
@@ -40,7 +43,7 @@ export class MobileEncryptDecryptService {
         padding: CryptoJS.pad.Pkcs7,
       });
       const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
-      console.log(plaintext)
+      // console.log(plaintext)
       return plaintext;
     } catch (error) {
       console.error('Error while decrypting:', error);
