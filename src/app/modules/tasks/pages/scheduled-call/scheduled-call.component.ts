@@ -20,6 +20,7 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { ScheduledCallReassignDialogComponent } from '../../components/scheduled-call-reassign-dialog/scheduled-call-reassign-dialog.component';
 import * as moment from 'moment';
+import { ReportService } from 'src/app/services/report-service';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -78,6 +79,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private cacheManager: CacheManager,
     private genericCsvService: GenericCsvService,
+    private reportService: ReportService,
   ) {
     this.config = {
       itemsPerPage: this.searchParam.size,
@@ -841,7 +843,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       param;
     }
 
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('MOBsearchScheCALL:', result);
       this.loading = false;
       if (result.success == false) {

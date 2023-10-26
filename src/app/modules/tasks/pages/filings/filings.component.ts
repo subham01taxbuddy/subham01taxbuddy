@@ -33,6 +33,7 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RequestManager } from 'src/app/modules/shared/services/request-manager';
+import { ReportService } from 'src/app/services/report-service';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -61,8 +62,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
     panNumber: null,
     selectedStatusId: 'ALL',
     selectedFyYear: null,
-    ownerUserId: null,
-    filerUserId: null,
+    filerUserId: '',
+    leaderUserId:'',
   };
 
   allFilerList: any;
@@ -73,6 +74,15 @@ export class FilingsComponent implements OnInit, OnDestroy {
     { value: 'itrType', name: 'ITR Type' },
     { value: 'isRevised', name: 'Return Type' },
   ];
+  searchBy: any = {};
+  searchMenus = [
+    { value: 'mobileNumber', name: 'Mobile No' },
+    { value: 'email', name: 'Email' },
+    { value: 'panNumber', name: 'PAN' }
+  ];
+  clearUserFilter: number;
+  searchAsPrinciple :boolean =false
+
   constructor(
     private reviewService: ReviewService,
     private itrMsService: ItrMsService,
@@ -86,6 +96,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private cacheManager: CacheManager,
     private http: HttpClient,
+    private reportService: ReportService,
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
     this.myItrsGridOptions = <GridOptions>{
@@ -176,15 +187,33 @@ export class FilingsComponent implements OnInit, OnDestroy {
       ]);
   }
 
-  fromOwner(event) {
-    this.searchParams.ownerUserId = event ? event.userId : null;
-    console.log('fromowner:', event);
+  fromLeader(event) {
+    this.searchParams.leaderUserId = event ? event.userId : null;
     // this.myItrsList(0, this.selectedFilingTeamMemberId);
+  }
+  fromPrinciple(event,isPrinciple){
+    if(isPrinciple){
+      this.searchParams.leaderUserId ='';
+      if (event.partnerType === 'PRINCIPAL') {
+        this.searchParams.filerUserId = event ? event.userId : null;
+        this.searchAsPrinciple = true;
+      } else {
+        this.searchParams.filerUserId = event ? event.userId : null;
+        this.searchAsPrinciple = false;
+      }
+    }
+    console.log('filer user id ',this.searchParams.filerUserId)
   }
   fromFiler(event) {
-    this.searchParams.filerUserId = event ? event.userId : null;
+    if(event){
+      this.searchAsPrinciple = false;
+      this.searchParams.filerUserId = event ? event.userId : null;
+    }else{
+      return;
+    }
     // this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
+
   search() {
     this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
@@ -197,23 +226,14 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.sortBy = object;
   }
 
-  coOwnerId: number;
-  coFilerId: number;
-  agentId: number;
+  searchByObject(object) {
+    this.searchBy = object;
+  }
 
-  fromCoOwner(event) {
-    this.coOwnerId = event.userId;
-    // this.myItrsList(0, this.selectedFilingTeamMemberId);
-  }
-  fromCoFiler(event) {
-    this.coFilerId = event.userId;
-    // this.myItrsList(0, this.selectedFilingTeamMemberId);
-  }
+
 
   myItrsList(pageNo, filingTeamMemberId, fromPageChange?) {
-    // https://uat-api.taxbuddy.com/itr/itr-list?pageSize=10&ownerUserId=7522&financialYear=2022-2023&status=ALL
-    // &searchAsCoOwner=true&page=0
-    //https://uat-api.taxbuddy.com/report/itr-list?page=0&pageSize=20&ownerUserId=7521&financialYear=2022-2023&status=ALL
+    // https://dev-api.taxbuddy.com/report/bo/itr-list?page=0&pageSize=20&financialYear=2022-2023&status=ITR_FILED
     if (!fromPageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
@@ -221,43 +241,33 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
     this.loading = true;
     return new Promise((resolve, reject) => {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      let loggedInUserRoles = this.utilsService.getUserRoles();
 
-      if (loggedInUserRoles.includes('ROLE_FILER')) {
-        this.searchParams.filerUserId = loggedInId;
+      if(this.searchBy?.mobileNumber){
+        this.searchParams.mobileNumber = this.searchBy?.mobileNumber
+      }
+      if(this.searchBy?.email){
+        this.searchParams.email = this.searchBy?.email
+      }
+      if(this.searchBy?.panNumber){
+        this.searchParams.panNumber = this.searchBy?.panNumber
       }
 
-      if (loggedInUserRoles.includes('ROLE_OWNER')) {
-        this.searchParams.ownerUserId = loggedInId;
-      }
-
-      let param = `/itr-list?page=${pageNo}&pageSize=20`;
+      let param = `/bo/itr-list?page=${pageNo}&pageSize=20`;
       let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
       if (Object.keys(this.sortBy).length) {
         param = param + sortByJson;
       }
-      if (this.utilsService.isNonEmpty(this.searchParams.filerUserId)) {
+
+      if (this.utilsService.isNonEmpty(this.searchParams.filerUserId) && this.searchAsPrinciple === true ) {
+        param = param + `&searchAsPrincipal=true&filerUserId=${this.searchParams.filerUserId}`;
+      }
+
+      if (this.utilsService.isNonEmpty(this.searchParams.filerUserId) && this.searchAsPrinciple === false ) {
         param = param + `&filerUserId=${this.searchParams.filerUserId}`;
       }
-      if (this.utilsService.isNonEmpty(this.searchParams.ownerUserId)) {
-        param = param + `&ownerUserId=${this.searchParams.ownerUserId}`;
-      }
 
-      if (this.utilsService.isNonEmpty(this.coOwnerId)) {
-        param = `/itr-list?page=${pageNo}&pageSize=20`;
-        param = param + `&ownerUserId=${this.coOwnerId}`;
-        if (Object.keys(this.sortBy).length) {
-          param = param + sortByJson;
-        }
-      }
-
-      if (this.utilsService.isNonEmpty(this.coFilerId)) {
-        // param = `/itr-list?page=${pageNo}&pageSize=20`;
-        param = param + `&filerUserId=${this.coFilerId}`;
-        if (Object.keys(this.sortBy).length) {
-          param = param + sortByJson;
-        }
+      if (this.utilsService.isNonEmpty(this.searchParams.leaderUserId)) {
+        param = param + `&leaderUserId=${this.searchParams.leaderUserId}`;
       }
 
       if (this.utilsService.isNonEmpty(this.searchParams.selectedFyYear)) {
@@ -278,19 +288,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
         param = param + `&panNumber=${this.searchParams.panNumber}`;
       }
 
-      if (this.coOwnerToggle.value == true && filingTeamMemberId) {
-        if (this.coOwnerId || this.coFilerId) {
-          param
-        } else {
-          param = param + '&searchAsCoOwner=true';
-        }
-      }
-      else {
-        param;
-      }
-
       console.log('My Params:', param);
-      this.userMsService.getMethodNew(param).subscribe(
+      this.reportService.getMethod(param).subscribe(
         (res: any) => {
           if (res.success == false) {
             this.toastMsgService.alert("error", res.message);
@@ -375,7 +374,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
         ownerUserId: data[i].ownerUserId,
         filerUserId: data[i].filerUserId,
         status: data[i].status,
-        filingTeamMemberId: data[i].filingTeamMemberId
+        filingTeamMemberId: data[i].filingTeamMemberId,
+        leaderName : data[i].leaderName,
       });
     }
     return newData;
@@ -487,17 +487,18 @@ export class FilingsComponent implements OnInit, OnDestroy {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
-      // {
-      //   headerName: 'Owner',
-      //   field: 'ownerName',
-      //   cellStyle: { textAlign: 'center' },
-      //   sortable: true,
-      //   filter: 'agTextColumnFilter',
-      //   filterParams: {
-      //     defaultOption: 'startsWith',
-      //     debounceMs: 0,
-      //   },
-      // },
+      {
+        headerName: 'Leader Name',
+        field: 'leaderName',
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
       {
         headerName: 'Filer',
         field: 'filingTeamMemberId',
@@ -1129,21 +1130,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
       userId: user.userId,
     };
     console.log('reqBody:', reqBody);
-    // this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
-    //   (result: any) => {
-    //     console.log('Call Result: ', result);
-    //     this.loading = false;
-    //     if (result.success.status) {
-    //       this.toastMsgService.alert('success', result.success.message);
-    //     }
-    //   },
-    //   (error) => {
-    //     this.utilsService.showSnackBar(
-    //       'Error while making call, Please try again.'
-    //     );
-    //     this.loading = false;
-    //   }
-    // );
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
@@ -1199,20 +1185,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       console.log('The dialog was closed');
     });
   }
-  // pageChanged(event) {
-  //   this.config.currentPage = event;
-  //   this.selectedPageNo = event - 1;
-  //   if (this.coOwnerToggle.value == true) {
-  //     this.myItrsList(event - 1, true);
-  //   } else {
-  //     this.myItrsList(event - 1, '');
-  //   }
-  //   // this.myItrsList(
-  //   //   // this.selectedFyYear,
-  //   //   this.selectedPageNo,
-  //   //   this.selectedFilingTeamMemberId
-  //   // );
-  // }
+
 
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
@@ -1232,8 +1205,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.searchParams.selectedStatusId = 'ALL';
     this.config.page = 0;
@@ -1241,21 +1214,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.searchParams.mobileNumber = null;
     this.searchParams.email = null;
     this.searchParams.panNumber = null;
-
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
-
-    if (this.coOwnerDropDown) {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.coOwnerDropDown.resetDropdown();
-      this.coFilerId = null;
-      this.coOwnerId = null;
-      this.searchParams.ownerUserId = loggedInId;
-      this.searchParams.filerUserId = null;
-      this.myItrsList(0, true)
-    } else {
-      this.search();
-    }
   }
 
   eriITRLifeCycleStatus(data) {

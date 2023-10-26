@@ -342,8 +342,10 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   }
 
   resetDropdown(){
+    this.searchLeader.setValue(null);
     this.searchPrincipleIndividual.setValue(null);
     this.searchChild.setValue(null);
+    this.leaderDetails =null;
     this.principleIndividualDetails = null;
     this.childDetails = null;
   }
