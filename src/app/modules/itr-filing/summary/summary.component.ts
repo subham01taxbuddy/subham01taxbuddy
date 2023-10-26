@@ -186,46 +186,46 @@ export class SummaryComponent implements OnInit {
     salary: {
       employers: [
         {
-          employerNo: Number;
+          employerNo: number;
           employerName: String;
-          grossSalary: Number;
-          exemptAllowance: Number;
-          professionalTax: Number;
-          entAllowance: Number;
-          standardDeduction: Number;
-          taxableSalary: Number;
+          grossSalary: number;
+          exemptAllowance: number;
+          professionalTax: number;
+          entAllowance: number;
+          standardDeduction: number;
+          taxableSalary: number;
         }
       ];
-      salaryTotalIncome: Number;
+      salaryTotalIncome: number;
     };
     houseProperties: {
       houseProps: [
         {
-          hpNo: Number;
+          hpNo: number;
           typeOfHp;
           grossRentReceived;
-          taxesPaid: Number;
-          annualValue: Number;
-          hpStandardDeduction: Number;
-          hpinterest: Number;
-          hpNetIncome: Number;
-          hpIncome: Number;
+          taxesPaid: number;
+          annualValue: number;
+          hpStandardDeduction: number;
+          hpinterest: number;
+          hpNetIncome: number;
+          hpIncome: number;
         }
       ];
-      hpTotalIncome: Number;
+      hpTotalIncome: number;
     };
     otherIncome: {
       otherIncomes: {
-        saving: Number;
-        intFromDeposit: Number;
-        taxRefund: Number;
+        saving: number;
+        intFromDeposit: number;
+        taxRefund: number;
         Qqb80: number;
         Rrb80: number;
-        anyOtherInterest: Number;
-        familyPension: Number;
-        dividendIncome: Number;
+        anyOtherInterest: number;
+        familyPension: number;
+        dividendIncome: number;
       };
-      otherIncomeTotal: Number;
+      otherIncomeTotal: number;
     };
     businessIncome: {
       businessIncomeDetails: {
@@ -265,7 +265,6 @@ export class SummaryComponent implements OnInit {
           grossTurnover: Number;
           TaxableIncome: Number;
         };
-
         specIncome: {
           businessSection: String;
           natureOfBusinessCode: any;
@@ -273,8 +272,22 @@ export class SummaryComponent implements OnInit {
           grossTurnover: Number;
           TaxableIncome: Number;
         };
+        crypto: {
+          cryptoDetails: [
+            {
+              srNo: any;
+              buyDate: any;
+              sellDate: any;
+              headOfIncome: String;
+              buyValue: number;
+              SaleValue: number;
+              income: number;
+            }
+          ];
+        };
+        totalCryptoIncome: number;
       };
-      businessIncomeTotal: Number;
+      businessIncomeTotal: number;
     };
     capitalGain: {
       shortTerm: {
@@ -282,70 +295,70 @@ export class SummaryComponent implements OnInit {
           {
             nameOfAsset: String;
             capitalGain: Number;
-            Deduction: Number;
-            netCapitalGain: Number;
+            Deduction: number;
+            netCapitalGain: number;
           }
         ];
-        ShortTerm15PerTotal: Number;
+        ShortTerm15PerTotal: number;
         ShortTerm30Per: [
           {
             nameOfAsset: String;
-            capitalGain: Number;
-            Deduction: Number;
-            netCapitalGain: Number;
+            capitalGain: number;
+            Deduction: number;
+            netCapitalGain: number;
           }
         ];
-        ShortTerm30PerTotal: Number;
+        ShortTerm30PerTotal: number;
         ShortTermAppSlabRate: [
           {
             nameOfAsset: String;
-            capitalGain: Number;
-            Deduction: Number;
-            netCapitalGain: Number;
+            capitalGain: number;
+            Deduction: number;
+            netCapitalGain: number;
           }
         ];
-        ShortTermAppSlabRateTotal: Number;
+        ShortTermAppSlabRateTotal: number;
         ShortTermSplRateDTAA: [
           {
             nameOfAsset: String;
-            capitalGain: Number;
-            Deduction: Number;
-            netCapitalGain: Number;
+            capitalGain: number;
+            Deduction: number;
+            netCapitalGain: number;
           }
         ];
-        ShortTermSplRateDTAATotal: Number;
+        ShortTermSplRateDTAATotal: number;
       };
-      totalShortTerm: Number;
+      totalShortTerm: number;
       longTerm: {
         LongTerm10Per: [
           {
             nameOfAsset: String;
-            capitalGain: Number;
-            Deduction: Number;
-            netCapitalGain: Number;
+            capitalGain: number;
+            Deduction: number;
+            netCapitalGain: number;
           }
         ];
-        LongTerm10PerTotal: Number;
+        LongTerm10PerTotal: number;
         LongTerm20Per: [
           {
             nameOfAsset: String;
-            capitalGain: Number;
-            Deduction: Number;
-            netCapitalGain: Number;
+            capitalGain: number;
+            Deduction: number;
+            netCapitalGain: number;
           }
         ];
-        LongTerm20PerTotal: Number;
+        LongTerm20PerTotal: number;
         LongTermSplRateDTAA: [
           {
             nameOfAsset: String;
-            capitalGain: Number;
-            Deduction: Number;
-            netCapitalGain: Number;
+            capitalGain: number;
+            Deduction: number;
+            netCapitalGain: number;
           }
         ];
-        LongTermSplRateDTAATotal: Number;
+        LongTermSplRateDTAATotal: number;
       };
-      totalLongTerm: Number;
+      totalLongTerm: number;
       crypto: {
         cryptoDetails: [
           {
@@ -353,40 +366,40 @@ export class SummaryComponent implements OnInit {
             buyDate: any;
             sellDate: any;
             headOfIncome: String;
-            buyValue: Number;
-            SaleValue: Number;
-            income: Number;
+            buyValue: number;
+            SaleValue: number;
+            income: number;
           }
         ];
       };
-      totalCryptoIncome: Number;
-      totalCapitalGain: Number;
+      totalCryptoIncome: number;
+      totalCapitalGain: number;
     };
 
-    totalHeadWiseIncome: Number;
+    totalHeadWiseIncome: number;
     currentYearLosses: {
       currentYearLossesSetOff: [
         {
-          houseProperty: Number;
-          businessSetOff: Number;
-          otherThanHpBusiness: Number;
+          houseProperty: number;
+          businessSetOff: number;
+          otherThanHpBusiness: number;
         }
       ];
-      totalCurrentYearSetOff: Number;
+      totalCurrentYearSetOff: number;
     };
-    balanceAfterSetOffCurrentYearLosses: Number;
+    balanceAfterSetOffCurrentYearLosses: number;
     BroughtFwdLossesSetoff: {
       BroughtFwdLossesSetoffDtls: {
-        hpLoss: Number; // TotBFLossSetoff
-        stLoss: Number; // TotUnabsorbedDeprSetoff
-        ltLoss: Number; // TotAllUs35cl4Setoff
-        businessLoss: Number; // TotAllUs35cl4Setoff
-        speculativeBusinessLoss: Number; // TotAllUs35cl4Setoff
+        hpLoss: number; // TotBFLossSetoff
+        stLoss: number; // TotUnabsorbedDeprSetoff
+        ltLoss: number; // TotAllUs35cl4Setoff
+        businessLoss: number; // TotAllUs35cl4Setoff
+        speculativeBusinessLoss: number; // TotAllUs35cl4Setoff
       };
-      BroughtFwdLossesSetoffTotal: Number;
+      BroughtFwdLossesSetoffTotal: number;
     };
-    grossTotalIncome: Number;
-    totalSpecialRateIncome: Number;
+    grossTotalIncome: number;
+    totalSpecialRateIncome: number;
     deductions: {
       deductionDtls: {
         name: String;
@@ -394,10 +407,10 @@ export class SummaryComponent implements OnInit {
       }[];
       deductionTotal: number;
     };
-    totalIncome: Number;
-    specialRateChargeable: Number;
-    netAgricultureIncome: Number;
-    aggregateIncome: Number;
+    totalIncome: number;
+    specialRateChargeable: number;
+    netAgricultureIncome: number;
+    aggregateIncome: number;
     lossesToBeCarriedForward: {
       cflDtls: {
         assessmentPastYear: any;
@@ -634,7 +647,7 @@ export class SummaryComponent implements OnInit {
       total: number;
     };
   };
-  natureOfBusiness:any = []
+  natureOfBusiness: any = [];
 
   constructor(
     private itrMsService: ItrMsService,
@@ -681,8 +694,11 @@ export class SummaryComponent implements OnInit {
       this.itrType = 'ITR4';
     }
 
-    this.natureOfBusiness = JSON.parse(sessionStorage.getItem('NATURE_OF_BUSINESS'));
+    this.natureOfBusiness = JSON.parse(
+      sessionStorage.getItem('NATURE_OF_BUSINESS')
+    );
 
+    some();
   }
 
   getItrTypeInSummary() {
@@ -1057,6 +1073,21 @@ export class SummaryComponent implements OnInit {
                   grossTurnover: null,
                   TaxableIncome: null,
                 },
+
+                crypto: {
+                  cryptoDetails: [
+                    {
+                      srNo: 0,
+                      buyDate: 0,
+                      sellDate: 0,
+                      headOfIncome: '',
+                      buyValue: 0,
+                      SaleValue: 0,
+                      income: 0,
+                    },
+                  ],
+                },
+                totalCryptoIncome: 0,
               },
               businessIncomeTotal:
                 this.itrType === 'ITR4'
@@ -2333,6 +2364,28 @@ export class SummaryComponent implements OnInit {
                         grossTurnover: null,
                         TaxableIncome: null,
                       },
+
+                crypto: {
+                  cryptoDetails: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ]?.ScheduleVDA?.ScheduleVDADtls?.map((element, index) => {
+                    return {
+                      srNo: index + 1,
+                      buyDate: element?.DateofAcquisition,
+                      sellDate: element?.DateofTransfer,
+                      headOfIncome: element?.HeadUndIncTaxed,
+                      buyValue: element?.AcquisitionCost,
+                      SaleValue: element?.ConsidReceived,
+                      income: element?.IncomeFromVDA,
+                    };
+                  }),
+                },
+                totalCryptoIncome: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleVDA?.TotIncCapGain
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleVDA?.TotIncCapGain
+                  : 0,
               },
               businessIncomeTotal:
                 this.itrType === 'ITR3'
@@ -3856,9 +3909,12 @@ export class SummaryComponent implements OnInit {
                                 accumulated.grossTurnover += element?.receipts;
                                 accumulated.TaxableIncome +=
                                   element?.presumptiveIncome;
-                                accumulated.natureOfBusinessCode = this.natureOfBusiness.find(item=> {
-                                 return item.code === element.natureOfBusinessCode;
-                                }).label;
+                                accumulated.natureOfBusinessCode =
+                                  this.natureOfBusiness.find((item) => {
+                                    return (
+                                      item.code === element.natureOfBusinessCode
+                                    );
+                                  }).label;
                                 accumulated.tradeName = element.tradeName;
                                 return accumulated;
                               },
@@ -3884,8 +3940,11 @@ export class SummaryComponent implements OnInit {
                                 accumulated.grossTurnover += element?.receipts;
                                 accumulated.TaxableIncome +=
                                   element?.presumptiveIncome;
-                                  accumulated.natureOfBusinessCode = this.natureOfBusiness.find(item=> {
-                                   return item.code === element.natureOfBusinessCode;
+                                accumulated.natureOfBusinessCode =
+                                  this.natureOfBusiness.find((item) => {
+                                    return (
+                                      item.code === element.natureOfBusinessCode
+                                    );
                                   }).label;
                                 accumulated.tradeName = element.tradeName;
                                 return accumulated;
@@ -3909,9 +3968,13 @@ export class SummaryComponent implements OnInit {
                           )
                           .map((element) => ({
                             businessSection: element?.businessType,
-                            natureOfBusinessCode: this.natureOfBusiness.find(item=> {
-                              return item.code === element.natureOfBusinessCode;
-                             }).label,
+                            natureOfBusinessCode: this.natureOfBusiness.find(
+                              (item) => {
+                                return (
+                                  item.code === element.natureOfBusinessCode
+                                );
+                              }
+                            ).label,
                             tradeName: element?.tradeName,
                             grossTurnover: element?.receipts,
                             TaxableIncome: element?.presumptiveIncome,
@@ -3945,6 +4008,44 @@ export class SummaryComponent implements OnInit {
                         grossTurnover: null,
                         TaxableIncome: null,
                       },
+
+                      // crypto gain
+                      crypto: {
+                        cryptoDetails: this.finalSummary?.itr?.capitalGain
+                          .find((item) => {
+                            return item.assetType === 'VDA';
+                          })
+                          .assetDetails.filter((element) => {
+                            return element.headOfIncome === 'BI';
+                          })
+                          .map((element, index) => {
+                            return {
+                              srNo: index + 1,
+                              buyDate: element.purchaseDate,
+                              sellDate: element.sellDate,
+                              headOfIncome:
+                                element.headOfIncome === 'BI'
+                                  ? 'Business or Profession'
+                                  : 'Capital Gain',
+                              buyValue: element.purchaseCost,
+                              SaleValue: element.sellValue,
+                              income: element.capitalGain,
+                            };
+                          }),
+                      },
+
+                      // total crypto gain
+                      totalCryptoIncome: this.finalSummary?.itr?.capitalGain
+                        .find((item) => {
+                          return item.assetType === 'VDA';
+                        })
+                        .assetDetails.filter((element) => {
+                          return element.headOfIncome === 'BI';
+                        })
+                        .reduce(
+                          (total, element) => total + element.capitalGain,
+                          0
+                        ),
                     },
                     businessIncomeTotal:
                       this.finalSummary?.assessment?.taxSummary.businessIncome,
@@ -4167,9 +4268,14 @@ export class SummaryComponent implements OnInit {
                     // crypto gain
                     crypto: {
                       cryptoDetails: this.finalSummary?.itr?.capitalGain
-                        .filter((item) => item.assetType === 'VDA')
-                        .map((gain) => {
-                          return gain.assetDetails.map((element, index) => ({
+                        .find((item) => {
+                          return item.assetType === 'VDA';
+                        })
+                        .assetDetails.filter((element) => {
+                          return element.headOfIncome === 'CG';
+                        })
+                        .map((element, index) => {
+                          return {
                             srNo: index + 1,
                             buyDate: element.purchaseDate,
                             sellDate: element.sellDate,
@@ -4180,20 +4286,21 @@ export class SummaryComponent implements OnInit {
                             buyValue: element.purchaseCost,
                             SaleValue: element.sellValue,
                             income: element.capitalGain,
-                          }));
-                        })
-                        .flat(),
+                          };
+                        }),
                     },
                     // total crypto gain
                     totalCryptoIncome: this.finalSummary?.itr?.capitalGain
-                      .filter((item) => item.assetType === 'VDA')
-                      .map((gain) =>
-                        gain.assetDetails.reduce(
-                          (total, element) => total + element.capitalGain,
-                          0
-                        )
-                      )
-                      .reduce((total, income) => total + income, 0),
+                      .find((item) => {
+                        return item.assetType === 'VDA';
+                      })
+                      .assetDetails.filter((element) => {
+                        return element.headOfIncome === 'CG';
+                      })
+                      .reduce(
+                        (total, element) => total + element.capitalGain,
+                        0
+                      ),
 
                     // total capital gain
                     totalCapitalGain:
@@ -5367,10 +5474,13 @@ export class SummaryComponent implements OnInit {
                               accumulated.grossTurnover += element?.receipts;
                               accumulated.TaxableIncome +=
                                 element?.presumptiveIncome;
-                                accumulated.natureOfBusinessCode = this.natureOfBusiness.find(item=> {
-                                 return item.code === element.natureOfBusinessCode;
+                              accumulated.natureOfBusinessCode =
+                                this.natureOfBusiness.find((item) => {
+                                  return (
+                                    item.code === element.natureOfBusinessCode
+                                  );
                                 }).label;
-                                accumulated.tradeName = element.tradeName;
+                              accumulated.tradeName = element.tradeName;
                               return accumulated;
                             },
                             {
@@ -5395,10 +5505,13 @@ export class SummaryComponent implements OnInit {
                               accumulated.grossTurnover += element?.receipts;
                               accumulated.TaxableIncome +=
                                 element?.presumptiveIncome;
-                                accumulated.natureOfBusinessCode = this.natureOfBusiness.find(item=> {
-                                 return item.code === element.natureOfBusinessCode;
+                              accumulated.natureOfBusinessCode =
+                                this.natureOfBusiness.find((item) => {
+                                  return (
+                                    item.code === element.natureOfBusinessCode
+                                  );
                                 }).label;
-                                accumulated.tradeName = element.tradeName;
+                              accumulated.tradeName = element.tradeName;
                               return accumulated;
                             },
                             {
@@ -5419,9 +5532,11 @@ export class SummaryComponent implements OnInit {
                         )
                         .map((element) => ({
                           businessSection: element?.businessType,
-                          natureOfBusinessCode: this.natureOfBusiness.find(item=> {
-                            return item.code === element.natureOfBusinessCode;
-                           }).label,
+                          natureOfBusinessCode: this.natureOfBusiness.find(
+                            (item) => {
+                              return item.code === element.natureOfBusinessCode;
+                            }
+                          ).label,
                           tradeName: element?.tradeName,
                           grossTurnover: element?.receipts,
                           TaxableIncome: element?.presumptiveIncome,
@@ -5468,6 +5583,44 @@ export class SummaryComponent implements OnInit {
                             element?.businessType === 'SPECULATIVEINCOME'
                         )?.netProfitfromSpeculativeIncome,
                     },
+
+                    // crypto gain
+                    crypto: {
+                      cryptoDetails: this.finalSummary?.itr?.capitalGain
+                        .find((item) => {
+                          return item.assetType === 'VDA';
+                        })
+                        .assetDetails.filter((element) => {
+                          return element.headOfIncome === 'BI';
+                        })
+                        .map((element, index) => {
+                          return {
+                            srNo: index + 1,
+                            buyDate: element.purchaseDate,
+                            sellDate: element.sellDate,
+                            headOfIncome:
+                              element.headOfIncome === 'BI'
+                                ? 'Business or Profession'
+                                : 'Capital Gain',
+                            buyValue: element.purchaseCost,
+                            SaleValue: element.sellValue,
+                            income: element.capitalGain,
+                          };
+                        }),
+                    },
+
+                    // total crypto gain
+                    totalCryptoIncome: this.finalSummary?.itr?.capitalGain
+                      .find((item) => {
+                        return item.assetType === 'VDA';
+                      })
+                      .assetDetails.filter((element) => {
+                        return element.headOfIncome === 'BI';
+                      })
+                      .reduce(
+                        (total, element) => total + element.capitalGain,
+                        0
+                      ),
                   },
                   businessIncomeTotal:
                     this.finalSummary?.assessment?.taxSummary.businessIncome,
@@ -5690,9 +5843,14 @@ export class SummaryComponent implements OnInit {
                   // crypto gain
                   crypto: {
                     cryptoDetails: this.finalSummary?.itr?.capitalGain
-                      .filter((item) => item.assetType === 'VDA')
-                      .map((gain) => {
-                        return gain.assetDetails.map((element, index) => ({
+                      .find((item) => {
+                        return item.assetType === 'VDA';
+                      })
+                      .assetDetails.filter((element) => {
+                        return element.headOfIncome === 'CG';
+                      })
+                      .map((element, index) => {
+                        return {
                           srNo: index + 1,
                           buyDate: element.purchaseDate,
                           sellDate: element.sellDate,
@@ -5703,20 +5861,18 @@ export class SummaryComponent implements OnInit {
                           buyValue: element.purchaseCost,
                           SaleValue: element.sellValue,
                           income: element.capitalGain,
-                        }));
-                      })
-                      .flat(),
+                        };
+                      }),
                   },
                   // total crypto gain
                   totalCryptoIncome: this.finalSummary?.itr?.capitalGain
-                    .filter((item) => item.assetType === 'VDA')
-                    .map((gain) =>
-                      gain.assetDetails.reduce(
-                        (total, element) => total + element.capitalGain,
-                        0
-                      )
-                    )
-                    .reduce((total, income) => total + income, 0),
+                    .find((item) => {
+                      return item.assetType === 'VDA';
+                    })
+                    .assetDetails.filter((element) => {
+                      return element.headOfIncome === 'CG';
+                    })
+                    .reduce((total, element) => total + element.capitalGain, 0),
 
                   // total capital gain
                   totalCapitalGain:
@@ -7295,4 +7451,44 @@ export class SummaryComponent implements OnInit {
 
 function getTotalBusinessIncome(summaryBusinessIncome: any): number {
   return Math.max(summaryBusinessIncome.totalBusinessIncome, 0);
+}
+
+function some() {
+  this.finalSummary?.itr?.capitalGain
+    .find((item) => {
+      return item.assetType === 'VDA';
+    })
+    .assetDetails.filter((element) => {
+      element.headOfIncome === 'BI';
+    })
+    .map((gain) => {
+      return gain.assetDetails.map((element, index) => ({
+        srNo: index + 1,
+        buyDate: element.purchaseDate,
+        sellDate: element.sellDate,
+        headOfIncome:
+          element.headOfIncome === 'BI'
+            ? 'Business or Profession'
+            : 'Capital Gain',
+        buyValue: element.purchaseCost,
+        SaleValue: element.sellValue,
+        income: element.capitalGain,
+      }));
+    })
+    .flat();
+
+  this.finalSummary?.itr?.capitalGain
+    .find((item) => {
+      return item.assetType === 'VDA';
+    })
+    .assetDetails.filter((element) => {
+      element.headOfIncome === 'BI';
+    })
+    .map((gain) =>
+      gain.assetDetails.reduce(
+        (total, element) => total + element.capitalGain,
+        0
+      )
+    )
+    .reduce((total, income) => total + income, 0);
 }
