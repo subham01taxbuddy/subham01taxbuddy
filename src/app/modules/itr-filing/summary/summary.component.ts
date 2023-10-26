@@ -3909,7 +3909,9 @@ export class SummaryComponent implements OnInit {
                           )
                           .map((element) => ({
                             businessSection: element?.businessType,
-                            natureOfBusinessCode: element?.natureOfBusinessCode,
+                            natureOfBusinessCode: this.natureOfBusiness.find(item=> {
+                              return item.code === element.natureOfBusinessCode;
+                             }).label,
                             tradeName: element?.tradeName,
                             grossTurnover: element?.receipts,
                             TaxableIncome: element?.presumptiveIncome,
@@ -5417,7 +5419,9 @@ export class SummaryComponent implements OnInit {
                         )
                         .map((element) => ({
                           businessSection: element?.businessType,
-                          natureOfBusinessCode: element?.natureOfBusinessCode,
+                          natureOfBusinessCode: this.natureOfBusiness.find(item=> {
+                            return item.code === element.natureOfBusinessCode;
+                           }).label,
                           tradeName: element?.tradeName,
                           grossTurnover: element?.receipts,
                           TaxableIncome: element?.presumptiveIncome,
