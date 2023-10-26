@@ -32,6 +32,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   employerDetailsFormGroup: FormGroup;
   deductionsFormGroup: FormGroup;
   allowanceFormGroup: FormGroup;
+  freeze:boolean = false;
 
   localEmployer: Employer;
   ITR_JSON: ITR_JSON;
@@ -754,44 +755,37 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             (element) => element.value.allowType === 'COMPENSATION_ON_VRS'
           );
 
-          if (
-            allowance.controls['allowType'].value === 'COMPENSATION_ON_VRS' &&
-            allowance.controls['allowValue'].value !== 0
-          ) {
-            if (firstProviso) {
-              firstProviso.get('allowValue').setValue(0);
-            }
+          // ALLOWING ONLY ONE EXEMPTION
+          // if (
+          //   allowance.controls['allowType'].value === 'COMPENSATION_ON_VRS' &&
+          //   allowance.controls['allowValue'].value !== 0
+          // ) {
+          //   this.freeze = true;
+          // } else if (
+          //   allowance.controls['allowType'].value === 'FIRST_PROVISO' &&
+          //   allowance.controls['allowValue'].value !== 0
+          // ) {
+          //   this.freeze = true;
+          // } else if (
+          //   allowance.controls['allowType'].value === 'SECOND_PROVISO' &&
+          //   allowance.controls['allowValue'].value !== 0
+          // ) {
+          //   this.freeze = true; 
+          // } else{
+          //   this.freeze = false
+          // }
 
-            if (secondProviso) {
-              secondProviso.get('allowValue').setValue(0);
-            }
-          }
+          // if (
+          //   (allowance.controls['allowType'].value === 'COMPENSATION_ON_VRS' &&
+          //   allowance.controls['allowValue'].value !== 0) && (allowance.controls['allowType'].value === 'FIRST_PROVISO' &&
+          //   allowance.controls['allowValue'].value !== 0) &&  (            allowance.controls['allowType'].value === 'SECOND_PROVISO' &&
+          //   allowance.controls['allowValue'].value !== 0)
+          // )
+          // {
+          //  this.freeze = false
+          // }
+          
 
-          if (
-            allowance.controls['allowType'].value === 'FIRST_PROVISO' &&
-            allowance.controls['allowValue'].value !== 0
-          ) {
-            if (compensationVrs) {
-              compensationVrs.get('allowValue').setValue(0);
-            }
-
-            if (secondProviso) {
-              secondProviso.get('allowValue').setValue(0);
-            }
-          }
-
-          if (
-            allowance.controls['allowType'].value === 'SECOND_PROVISO' &&
-            allowance.controls['allowValue'].value !== 0
-          ) {
-            if (firstProviso) {
-              firstProviso.get('allowValue').setValue(0);
-            }
-
-            if (compensationVrs) {
-              compensationVrs.get('allowValue').setValue(0);
-            }
-          }
 
           this.localEmployer.allowance.push({
             allowanceType: allowance.controls['allowType'].value,
@@ -877,91 +871,94 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   }
 
   serviceCall() {
-    this.Copy_ITR_JSON = JSON.parse(
-      sessionStorage.getItem(AppConstants.ITR_JSON)
-    );
-    this.loading = true;
-    if (this.currentIndex === -1) {
-      const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
-      if (
-        this.Copy_ITR_JSON.employers == null ||
-        this.Copy_ITR_JSON.employers.length == 0
-      ) {
-        this.Copy_ITR_JSON.employers = [];
+    if(!this.freeze){
+
+      this.Copy_ITR_JSON = JSON.parse(
+        sessionStorage.getItem(AppConstants.ITR_JSON)
+      );
+      this.loading = true;
+      if (this.currentIndex === -1) {
+        const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
+        if (
+          this.Copy_ITR_JSON.employers == null ||
+          this.Copy_ITR_JSON.employers.length == 0
+        ) {
+          this.Copy_ITR_JSON.employers = [];
+        }
+        this.Copy_ITR_JSON.employers.push(myEmp);
+      } else {
+        const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
+        this.Copy_ITR_JSON.employers.splice(this.currentIndex, 1, myEmp);
       }
-      this.Copy_ITR_JSON.employers.push(myEmp);
-    } else {
-      const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
-      this.Copy_ITR_JSON.employers.splice(this.currentIndex, 1, myEmp);
-    }
-
-    if (!this.Copy_ITR_JSON.systemFlags) {
-      this.Copy_ITR_JSON.systemFlags = {
-        hasSalary: false,
-        hasHouseProperty: false,
-        hasMultipleProperties: false,
-        hasForeignAssets: false,
-        hasCapitalGain: false,
-        hasBroughtForwardLosses: false,
-        hasAgricultureIncome: false,
-        hasOtherIncome: false,
-        hasParentOverSixty: false,
-        hasBusinessProfessionIncome: false,
-        hasFutureOptionsIncome: false,
-        hasNRIIncome: false,
-        hraAvailed: false,
-        directorInCompany: false,
-        haveUnlistedShares: false,
-      };
-    }
-    this.Copy_ITR_JSON.systemFlags.hasSalary = true;
-    this.Copy_ITR_JSON = this.claimEitherHraOr80GG(this.Copy_ITR_JSON);
-
-    console.log('Employer details Filled:', this.ITR_JSON);
-
-    const param = `/itr/itr-type`;
-    this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe(
-      (res: any) => {
-        this.Copy_ITR_JSON.itrType = res?.data?.itrType;
-        const param1 = '/taxitr?type=employers';
-        this.itrMsService.postMethod(param1, this.Copy_ITR_JSON).subscribe(
-          (result: any) => {
-            if (this.utilsService.isNonEmpty(result)) {
-              this.ITR_JSON = result;
+  
+      if (!this.Copy_ITR_JSON.systemFlags) {
+        this.Copy_ITR_JSON.systemFlags = {
+          hasSalary: false,
+          hasHouseProperty: false,
+          hasMultipleProperties: false,
+          hasForeignAssets: false,
+          hasCapitalGain: false,
+          hasBroughtForwardLosses: false,
+          hasAgricultureIncome: false,
+          hasOtherIncome: false,
+          hasParentOverSixty: false,
+          hasBusinessProfessionIncome: false,
+          hasFutureOptionsIncome: false,
+          hasNRIIncome: false,
+          hraAvailed: false,
+          directorInCompany: false,
+          haveUnlistedShares: false,
+        };
+      }
+      this.Copy_ITR_JSON.systemFlags.hasSalary = true;
+      this.Copy_ITR_JSON = this.claimEitherHraOr80GG(this.Copy_ITR_JSON);
+  
+      console.log('Employer details Filled:', this.ITR_JSON);
+  
+      const param = `/itr/itr-type`;
+      this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe(
+        (res: any) => {
+          this.Copy_ITR_JSON.itrType = res?.data?.itrType;
+          const param1 = '/taxitr?type=employers';
+          this.itrMsService.postMethod(param1, this.Copy_ITR_JSON).subscribe(
+            (result: any) => {
+              if (this.utilsService.isNonEmpty(result)) {
+                this.ITR_JSON = result;
+                this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+                sessionStorage.setItem(
+                  AppConstants.ITR_JSON,
+                  JSON.stringify(this.ITR_JSON)
+                );
+                sessionStorage.removeItem('localEmployer');
+  
+                this.AllSalaryIncomeComponent.updatingTaxableIncome('save');
+  
+                this.utilsService.showSnackBar('Salary updated successfully.');
+                this.loading = false;
+  
+                this.saveAndNext.emit(true);
+              } else {
+                this.loading = false;
+                this.utilsService.showSnackBar(
+                  'Failed to save salary detail, Please try again'
+                );
+              }
+            },
+            (error) => {
+              this.loading = false;
               this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-              sessionStorage.setItem(
-                AppConstants.ITR_JSON,
-                JSON.stringify(this.ITR_JSON)
-              );
-              sessionStorage.removeItem('localEmployer');
-
-              this.AllSalaryIncomeComponent.updatingTaxableIncome('save');
-
-              this.utilsService.showSnackBar('Salary updated successfully.');
-              this.loading = false;
-
-              this.saveAndNext.emit(true);
-            } else {
-              this.loading = false;
-              this.utilsService.showSnackBar(
-                'Failed to save salary detail, Please try again'
-              );
+              // this.utilsService.disposable.unsubscribe();
+              this.utilsService.showSnackBar('Failed to save salary detail.');
+              this.utilsService.smoothScrollToTop();
             }
-          },
-          (error) => {
-            this.loading = false;
-            this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-            // this.utilsService.disposable.unsubscribe();
-            this.utilsService.showSnackBar('Failed to save salary detail.');
-            this.utilsService.smoothScrollToTop();
-          }
-        );
-      },
-      (error) => {
-        console.log('Error fetching itr type', error);
-        this.utilsService.showSnackBar('Failed to save salary detail.');
-      }
-    );
+          );
+        },
+        (error) => {
+          console.log('Error fetching itr type', error);
+          this.utilsService.showSnackBar('Failed to save salary detail.');
+        }
+      );
+    } 
   }
 
   claimEitherHraOr80GG(ITR_JSON: ITR_JSON) {

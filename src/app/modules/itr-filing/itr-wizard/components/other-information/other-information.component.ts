@@ -887,4 +887,35 @@ export class OtherInformationComponent implements OnInit {
       this.Copy_ITR_JSON.partnerInFirmFlag === 'Y'
     );
   }
+
+  validation(){
+    const hpReceipt =  this.schedule5AForm.get('houseProperty.incomeReceived');
+    const hpApportioned = this.schedule5AForm.get('houseProperty.apportionedAmountOfSpouse');
+
+    if( parseFloat(hpApportioned.value) > parseFloat(hpReceipt.value)){
+      hpApportioned?.setValidators(Validators.max(parseFloat(hpReceipt?.value)))
+    }
+
+    const businessReceipt =  this.schedule5AForm.get('businessOrProfession.incomeReceived');
+    const businessApportioned = this.schedule5AForm.get('businessOrProfession.apportionedAmountOfSpouse');
+
+    if( parseFloat(businessApportioned.value) > parseFloat(businessReceipt.value)){
+      businessApportioned?.setValidators(Validators.max(parseFloat(businessReceipt?.value)))
+    }
+
+    const cgReceipt =  this.schedule5AForm.get('capitalGain.incomeReceived');
+    const cgApportioned = this.schedule5AForm.get('capitalGain.apportionedAmountOfSpouse');
+
+    if( parseFloat(cgApportioned.value) > parseFloat(cgReceipt.value)){
+      cgApportioned?.setValidators(Validators.max(parseFloat(cgReceipt?.value)))
+    }
+
+    const othReceipt =  this.schedule5AForm.get('otherSource.incomeReceived');
+    const othApportioned = this.schedule5AForm.get('otherSource.apportionedAmountOfSpouse');
+
+    if( parseFloat(othApportioned.value) > parseFloat(othReceipt.value)){
+      othApportioned?.setValidators(Validators.max(parseFloat(othReceipt?.value)))
+    }
+ 
+  }
 }
