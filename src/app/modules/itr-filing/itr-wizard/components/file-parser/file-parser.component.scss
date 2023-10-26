@@ -27,10 +27,11 @@
   }
 
   .download {
-    color: #087586;
+    border: 1px solid #00aeca;
+    color: #00aeca;
+    border-radius: 4px;
     padding: 5px;
-    font-size: 14px;
-    text-decoration: none;
+    font-size: 10px;
   }
 
   .filename {
