@@ -28,30 +28,33 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
   }
 
   saveAll() {
-    this.loading = true;
-    this.NonSpeculativeIncomeComponent.onContinue();
-    this.SpeculativeIncomeComponent.onContinue();
-    let Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.utilsService.saveItrObject(Copy_ITR_JSON).subscribe(
-      (result: any) => {
-        Copy_ITR_JSON = result;
-        this.loading = false;
-        sessionStorage.setItem('ITR_JSON', JSON.stringify(Copy_ITR_JSON));
-        this.utilsService.showSnackBar(
-          'Business income added successfully'
-        );
-        console.log('non-speculative income=', result);
-        this.utilsService.smoothScrollToTop();
-      },
-      (error) => {
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Failed to update business income, please try again.'
-        );
-        this.utilsService.smoothScrollToTop();
-      }
-    );
-    this.saveAndNext.emit(true);
+
+    let nonSpecSaved = this.NonSpeculativeIncomeComponent.onContinue();
+    let specSaved = this.SpeculativeIncomeComponent.onContinue();
+    if(specSaved && nonSpecSaved) {
+      this.loading = true;
+      let Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      this.utilsService.saveItrObject(Copy_ITR_JSON).subscribe(
+        (result: any) => {
+          Copy_ITR_JSON = result;
+          this.loading = false;
+          sessionStorage.setItem('ITR_JSON', JSON.stringify(Copy_ITR_JSON));
+          this.utilsService.showSnackBar(
+            'Business income added successfully'
+          );
+          console.log('non-speculative income=', result);
+          this.utilsService.smoothScrollToTop();
+        },
+        (error) => {
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Failed to update business income, please try again.'
+          );
+          this.utilsService.smoothScrollToTop();
+        }
+      );
+      this.saveAndNext.emit(true);
+    }
   }
 
   subscription: Subscription;

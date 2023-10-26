@@ -1,11 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
-  GridOptions,
-  GridSizeChangedEvent,
-  ValueSetterParams,
-} from 'ag-grid-community';
-import {
   ITR_JSON,
   ProfitLossIncomes,
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -144,7 +139,7 @@ export class SpeculativeIncomeComponent implements OnInit {
           specBusinessIncome
         );
       } else {
-        // specBusiness[0].incomes = this.specIncomeForm.controls['specIncomesArray'].value;
+
         specBusiness[0].incomes = [];
         let businessIncomes =
           this.Copy_ITR_JSON.business.profitLossACIncomes.filter(
@@ -181,8 +176,11 @@ export class SpeculativeIncomeComponent implements OnInit {
 
       console.log(this.Copy_ITR_JSON);
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      return true;
     } else {
       //show errors
+      $('input.ng-invalid').first().focus();
+      return false;
     }
   }
 

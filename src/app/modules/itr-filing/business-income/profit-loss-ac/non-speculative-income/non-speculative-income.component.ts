@@ -260,38 +260,45 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    this.loading = true;
-    this.calculateNetProfit();
-    const row = this.profitLossForm.getRawValue();
-    const profitLossACIncomes = [];
-    profitLossACIncomes.push({
-      id: null,
-      businessType: 'NONSPECULATIVEINCOME',
-      totalgrossProfitFromNonSpeculativeIncome: row.grossProfit,
-      netProfitfromNonSpeculativeIncome: row.netProfit,
-      incomes: this.nonspecIncomeFormArray.getRawValue(),
-      expenses: row.expenses,
-    });
-    if(!this.Copy_ITR_JSON.business){
-      this.Copy_ITR_JSON.business = {
-        businessDescription: [],
-        financialParticulars: undefined,
-        fixedAssetsDetails: [],
-        presumptiveIncomes: [],
-        profitLossACIncomes: []
-      };
-    }
-    if (!this.Copy_ITR_JSON?.business?.profitLossACIncomes) {
-      this.Copy_ITR_JSON.business.profitLossACIncomes = profitLossACIncomes;
+    if(this.profitLossForm.valid) {
+      this.loading = true;
+      this.calculateNetProfit();
+      const row = this.profitLossForm.getRawValue();
+      const profitLossACIncomes = [];
+      profitLossACIncomes.push({
+        id: null,
+        businessType: 'NONSPECULATIVEINCOME',
+        totalgrossProfitFromNonSpeculativeIncome: row.grossProfit,
+        netProfitfromNonSpeculativeIncome: row.netProfit,
+        incomes: this.nonspecIncomeFormArray.getRawValue(),
+        expenses: row.expenses,
+      });
+      if (!this.Copy_ITR_JSON.business) {
+        this.Copy_ITR_JSON.business = {
+          businessDescription: [],
+          financialParticulars: undefined,
+          fixedAssetsDetails: [],
+          presumptiveIncomes: [],
+          profitLossACIncomes: []
+        };
+      }
+      if (!this.Copy_ITR_JSON?.business?.profitLossACIncomes) {
+        this.Copy_ITR_JSON.business.profitLossACIncomes = profitLossACIncomes;
+      } else {
+        let data = this.Copy_ITR_JSON?.business?.profitLossACIncomes.filter(
+          (item: any) => item.businessType != 'NONSPECULATIVEINCOME'
+        );
+        this.Copy_ITR_JSON.business.profitLossACIncomes =
+          data.concat(profitLossACIncomes);
+      }
+      console.log(this.Copy_ITR_JSON);
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+
+      return true;
     } else {
-      let data = this.Copy_ITR_JSON?.business?.profitLossACIncomes.filter(
-        (item: any) => item.businessType != 'NONSPECULATIVEINCOME'
-      );
-      this.Copy_ITR_JSON.business.profitLossACIncomes =
-        data.concat(profitLossACIncomes);
+      $('input.ng-invalid').first().focus();
+      return false;
     }
-    console.log(this.Copy_ITR_JSON);
-    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
 
   }
 
