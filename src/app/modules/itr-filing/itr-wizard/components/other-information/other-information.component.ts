@@ -15,7 +15,13 @@ import { DirectorInCompanyComponent } from './director-in-company/director-in-co
 import { UnlistedSharesComponent } from './unlisted-shares/unlisted-shares.component';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { parse } from 'path';
 
 @Component({
@@ -308,7 +314,11 @@ export class OtherInformationComponent implements OnInit {
             );
           }
 
-          this.saveUnlistedShares();
+          if(this.sharesForm.valid){
+            this.saveUnlistedShares();
+          } else {
+            this.utilsService.showSnackBar('Please make sure all the details in unlisted equity shares are correctly entered')
+          }
           // this.saveAndNext.emit(true);
           // this.directorForm.reset();
         },
@@ -638,7 +648,11 @@ export class OtherInformationComponent implements OnInit {
             );
           }
 
-          this.saveFirmDetails();
+          if(this.firmForm.valid){
+            this.saveFirmDetails();
+          } else {
+            this.utilsService.showSnackBar('Please make sure all the details in partnership firm details are correctly entered')
+          }
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -861,7 +875,11 @@ export class OtherInformationComponent implements OnInit {
             );
           }
 
-          this.saveDirectorDetials();
+          if(this.directorForm.valid){
+            this.saveDirectorDetials();
+          } else {
+            this.utilsService.showSnackBar('Please make sure all the details in director details are correctly entered')
+          }
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -874,12 +892,16 @@ export class OtherInformationComponent implements OnInit {
   }
 
   saveAndContinue(event?) {
-    this.saveSchedule5ADetails();
-    this.otherInfoSaved.emit(true);
-
-    if (!event) {
-      this.saveAndNext.emit(true);
+    if(this.schedule5AForm.valid){
+      this.saveSchedule5ADetails();
+      this.otherInfoSaved.emit(true);
+      if (!event) {
+        this.saveAndNext.emit(true);
+      }
+    } else {
+      this.utilsService.showSnackBar('Please make sure all the details in Portuguese civil code as per section 5A are correctly entered')
     }
+
   }
 
   isPartnerInFirmFlag() {
@@ -889,57 +911,62 @@ export class OtherInformationComponent implements OnInit {
     );
   }
 
-  validation() {
-    const hpReceipt = this.schedule5AForm.get('houseProperty.incomeReceived');
-    const hpApportioned = this.schedule5AForm.get(
-      'houseProperty.apportionedAmountOfSpouse'
-    );
-    const hpReceiptValue = parseFloat(hpReceipt?.value);
-    const hpApportionedValue = parseFloat(hpApportioned?.value);
+  validateApportioned(
+    receiptControl: AbstractControl,
+    apportionedControl: AbstractControl,
+    tdsReceiptControl: AbstractControl,
+    tdsApportionedControl: AbstractControl
+  ) {
+    const receiptValue = parseFloat(receiptControl?.value);
+    const apportionedValue = parseFloat(apportionedControl?.value);
 
-    if (hpApportionedValue > hpReceiptValue) {
-      hpApportioned?.setValidators(Validators.max(hpReceiptValue));
-      hpApportioned.updateValueAndValidity();
+    if (apportionedValue > receiptValue) {
+      apportionedControl?.setValidators(Validators.max(receiptValue));
+      apportionedControl.updateValueAndValidity();
     }
 
-    const businessReceipt = this.schedule5AForm.get(
-      'businessOrProfession.incomeReceived'
-    );
-    const businessApportioned = this.schedule5AForm.get(
-      'businessOrProfession.apportionedAmountOfSpouse'
-    );
+    const tdsReceiptValue = parseFloat(tdsReceiptControl?.value);
+    const tdsApportionedValue = parseFloat(tdsApportionedControl?.value);
 
-    if (
-      parseFloat(businessApportioned.value) > parseFloat(businessReceipt.value)
-    ) {
-      businessApportioned?.setValidators(
-        Validators.max(parseFloat(businessReceipt?.value))
-      );
-      businessApportioned.updateValueAndValidity();
+    if (tdsApportionedValue > tdsReceiptValue) {
+      tdsApportionedControl?.setValidators(Validators.max(tdsReceiptValue));
+      tdsApportionedControl.updateValueAndValidity();
     }
+  }
 
-    const cgReceipt = this.schedule5AForm.get('capitalGain.incomeReceived');
-    const cgApportioned = this.schedule5AForm.get(
-      'capitalGain.apportionedAmountOfSpouse'
+  validationHp() {
+    this.validateApportioned(
+      this.schedule5AForm.get('houseProperty.incomeReceived'),
+      this.schedule5AForm.get('houseProperty.apportionedAmountOfSpouse'),
+      this.schedule5AForm.get('houseProperty.tdsDeductedAmount'),
+      this.schedule5AForm.get('houseProperty.apportionedTDSOfSpouse')
     );
+  }
 
-    if (parseFloat(cgApportioned.value) > parseFloat(cgReceipt.value)) {
-      cgApportioned?.setValidators(
-        Validators.max(parseFloat(cgReceipt?.value))
-      );
-      cgApportioned?.updateValueAndValidity();
-    }
-
-    const othReceipt = this.schedule5AForm.get('otherSource.incomeReceived');
-    const othApportioned = this.schedule5AForm.get(
-      'otherSource.apportionedAmountOfSpouse'
+  validationBusiness() {
+    this.validateApportioned(
+      this.schedule5AForm.get('businessOrProfession.incomeReceived'),
+      this.schedule5AForm.get('businessOrProfession.apportionedAmountOfSpouse'),
+      this.schedule5AForm.get('businessOrProfession.tdsDeductedAmount'),
+      this.schedule5AForm.get('businessOrProfession.apportionedTDSOfSpouse')
     );
+  }
 
-    if (parseFloat(othApportioned.value) > parseFloat(othReceipt.value)) {
-      othApportioned?.setValidators(
-        Validators.max(parseFloat(othReceipt?.value))
-      );
-      othApportioned?.updateValueAndValidity();
-    }
+  validationCg() {
+    this.validateApportioned(
+      this.schedule5AForm.get('capitalGain.incomeReceived'),
+      this.schedule5AForm.get('capitalGain.apportionedAmountOfSpouse'),
+      this.schedule5AForm.get('capitalGain.tdsDeductedAmount'),
+      this.schedule5AForm.get('capitalGain.apportionedTDSOfSpouse')
+    );
+  }
+
+  validationOth() {
+    this.validateApportioned(
+      this.schedule5AForm.get('otherSource.incomeReceived'),
+      this.schedule5AForm.get('otherSource.apportionedAmountOfSpouse'),
+      this.schedule5AForm.get('otherSource.tdsDeductedAmount'),
+      this.schedule5AForm.get('otherSource.apportionedTDSOfSpouse')
+    );
   }
 }
