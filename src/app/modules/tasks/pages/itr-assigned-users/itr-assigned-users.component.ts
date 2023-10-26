@@ -152,7 +152,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         this.search('mobile');
       }
       else if (this.searchStatusId) {
-        debugger
         this.searchParam.statusId = this.searchStatusId;
         this.search('status');
       }

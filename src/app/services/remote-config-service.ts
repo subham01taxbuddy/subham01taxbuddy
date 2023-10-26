@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFireModule } from '@angular/fire/compat';
-// import { AngularFireModule } from '@angular/fire/compat/firebase.app.module';
 import { AngularFireRemoteConfig } from '@angular/fire/compat/remote-config';
 import { getRemoteConfig, getValue } from '@angular/fire/remote-config';
 import * as CryptoJS from 'crypto-js';

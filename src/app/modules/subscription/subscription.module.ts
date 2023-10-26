@@ -20,6 +20,9 @@ import {PauseInvoiceReminderComponent} from "./components/pause-invoice-reminder
 import { CancelSubscriptionComponent } from './components/cancel-subscription/cancel-subscription.component';
 import { ApproveRejectComponent } from './components/approve-reject/approve-reject.component';
 import { RefundRequestComponent } from './components/refund-request/refund-request.component';
+import { AngularFireRemoteConfigModule } from '@angular/fire/compat/remote-config';
+import { MobileEncryptDecryptService } from 'src/app/services/mobile-encr-decr.service';
+import { RemoteConfigService } from 'src/app/services/remote-config-service';
 
 
 @NgModule({
@@ -35,6 +38,7 @@ import { RefundRequestComponent } from './components/refund-request/refund-reque
     SubscriptionRoutingModule,
     MatFormFieldModule,
     SharedModule,
+    AngularFireRemoteConfigModule
 
   ],
   declarations: [
@@ -50,5 +54,9 @@ import { RefundRequestComponent } from './components/refund-request/refund-reque
     ApproveRejectComponent,
     RefundRequestComponent
   ],
+  providers:[
+    MobileEncryptDecryptService,
+    RemoteConfigService
+  ]
 })
 export class SubscriptionModule { }

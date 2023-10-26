@@ -7,17 +7,17 @@ import { AppConstants } from '../modules/shared/constants';
   providedIn: 'root',
 })
 export class MobileEncryptDecryptService {
-  // remoteConfig
-  // constructor(
-  //   private remoteConfigService: RemoteConfigService,
-  // ){
-  //   this.getRemoteConfigData();
-  // }
+  remoteConfig
+  constructor(
+    private remoteConfigService: RemoteConfigService,
+  ){
+    this.getRemoteConfigData();
+  }
 
-  // async getRemoteConfigData() {
-  //   this.remoteConfig = await this.remoteConfigService.getRemoteConfigData(AppConstants.ADMIN_GLOBAL_CONFIG);
-  //   console.log('learn on the go config obj', this.remoteConfig);
-  // }
+  async getRemoteConfigData() {
+    this.remoteConfig = await this.remoteConfigService.getRemoteConfigData(AppConstants.ADMIN_GLOBAL_CONFIG);
+    console.log('learn on the go config obj', this.remoteConfig);
+  }
 
   secretKey = 'TAXBUDDY';
 
