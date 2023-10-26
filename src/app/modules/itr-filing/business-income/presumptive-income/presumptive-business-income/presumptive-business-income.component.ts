@@ -373,7 +373,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
       // form values
       let BusinessFormIncome =
-        this.busIncomeForm.controls['busIncomeFormArray'].value;
+        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).getRawValue();
 
       // array that will be stored unde presumptive income
       let presBusinessIncome = [];
