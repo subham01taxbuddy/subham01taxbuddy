@@ -668,13 +668,14 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     const formValues = this.agriIncFormGroup.value;
 
     // List of keys to ignore
-    const keysToIgnore = ['netAgriculturalIncome', 'agriInc'];
+    const keysToIgnore = ['grossAgriculturalReceipts','netAgriculturalIncome', 'agriInc'];
 
     // Filter out keys to ignore and sum the rest
-    const total = Object.keys(formValues)
+    const otherKeystotal = Object.keys(formValues)
       .filter((key) => !keysToIgnore.includes(key))
       .reduce((acc, key) => acc + (formValues[key] || 0), 0);
 
+    const total = this.agriIncFormGroup.get('grossAgriculturalReceipts').value - otherKeystotal;
     this.agriIncFormGroup.get('netAgriculturalIncome').setValue(total);
     const exemptIncomes = this.getExemptIncomeArray;
 
