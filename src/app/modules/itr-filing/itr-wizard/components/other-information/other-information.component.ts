@@ -16,6 +16,7 @@ import { UnlistedSharesComponent } from './unlisted-shares/unlisted-shares.compo
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { parse } from 'path';
 
 @Component({
   selector: 'app-other-information',
@@ -888,34 +889,57 @@ export class OtherInformationComponent implements OnInit {
     );
   }
 
-  validation(){
-    const hpReceipt =  this.schedule5AForm.get('houseProperty.incomeReceived');
-    const hpApportioned = this.schedule5AForm.get('houseProperty.apportionedAmountOfSpouse');
+  validation() {
+    const hpReceipt = this.schedule5AForm.get('houseProperty.incomeReceived');
+    const hpApportioned = this.schedule5AForm.get(
+      'houseProperty.apportionedAmountOfSpouse'
+    );
+    const hpReceiptValue = parseFloat(hpReceipt?.value);
+    const hpApportionedValue = parseFloat(hpApportioned?.value);
 
-    if( parseFloat(hpApportioned.value) > parseFloat(hpReceipt.value)){
-      hpApportioned?.setValidators(Validators.max(parseFloat(hpReceipt?.value)))
+    if (hpApportionedValue > hpReceiptValue) {
+      hpApportioned?.setValidators(Validators.max(hpReceiptValue));
+      hpApportioned.updateValueAndValidity();
     }
 
-    const businessReceipt =  this.schedule5AForm.get('businessOrProfession.incomeReceived');
-    const businessApportioned = this.schedule5AForm.get('businessOrProfession.apportionedAmountOfSpouse');
+    const businessReceipt = this.schedule5AForm.get(
+      'businessOrProfession.incomeReceived'
+    );
+    const businessApportioned = this.schedule5AForm.get(
+      'businessOrProfession.apportionedAmountOfSpouse'
+    );
 
-    if( parseFloat(businessApportioned.value) > parseFloat(businessReceipt.value)){
-      businessApportioned?.setValidators(Validators.max(parseFloat(businessReceipt?.value)))
+    if (
+      parseFloat(businessApportioned.value) > parseFloat(businessReceipt.value)
+    ) {
+      businessApportioned?.setValidators(
+        Validators.max(parseFloat(businessReceipt?.value))
+      );
+      businessApportioned.updateValueAndValidity();
     }
 
-    const cgReceipt =  this.schedule5AForm.get('capitalGain.incomeReceived');
-    const cgApportioned = this.schedule5AForm.get('capitalGain.apportionedAmountOfSpouse');
+    const cgReceipt = this.schedule5AForm.get('capitalGain.incomeReceived');
+    const cgApportioned = this.schedule5AForm.get(
+      'capitalGain.apportionedAmountOfSpouse'
+    );
 
-    if( parseFloat(cgApportioned.value) > parseFloat(cgReceipt.value)){
-      cgApportioned?.setValidators(Validators.max(parseFloat(cgReceipt?.value)))
+    if (parseFloat(cgApportioned.value) > parseFloat(cgReceipt.value)) {
+      cgApportioned?.setValidators(
+        Validators.max(parseFloat(cgReceipt?.value))
+      );
+      cgApportioned?.updateValueAndValidity();
     }
 
-    const othReceipt =  this.schedule5AForm.get('otherSource.incomeReceived');
-    const othApportioned = this.schedule5AForm.get('otherSource.apportionedAmountOfSpouse');
+    const othReceipt = this.schedule5AForm.get('otherSource.incomeReceived');
+    const othApportioned = this.schedule5AForm.get(
+      'otherSource.apportionedAmountOfSpouse'
+    );
 
-    if( parseFloat(othApportioned.value) > parseFloat(othReceipt.value)){
-      othApportioned?.setValidators(Validators.max(parseFloat(othReceipt?.value)))
+    if (parseFloat(othApportioned.value) > parseFloat(othReceipt.value)) {
+      othApportioned?.setValidators(
+        Validators.max(parseFloat(othReceipt?.value))
+      );
+      othApportioned?.updateValueAndValidity();
     }
- 
   }
 }

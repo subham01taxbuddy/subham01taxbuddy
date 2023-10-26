@@ -143,17 +143,17 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     },
     {
       id: null,
-      seqNum: 13,
-      value: 'SECOND_PROVISO',
-      label: 'Second proviso - Compensation limit notified by CG, 10(10Bii)',
-      detailed: false,
-    },
-    {
-      id: null,
       seqNum: 14,
       value: 'FIRST_PROVISO',
       label:
         'First Proviso - Compensation limit notified by CG in the official gazette, First Provisio 10(10Bi)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 13,
+      value: 'SECOND_PROVISO',
+      label: 'Second proviso - Compensation limit notified by CG, 10(10Bii)',
       detailed: false,
     },
     {
