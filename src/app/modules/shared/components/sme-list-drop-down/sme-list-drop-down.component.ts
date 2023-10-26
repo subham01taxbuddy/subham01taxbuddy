@@ -138,16 +138,17 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   setLeader(leader :any){
     this.leaderDetails = leader;
     this.sendLeader.emit(this.leaderDetails);
+    debugger
     console.log('emitting value leader details', this.leaderDetails);
   }
 
   setPrinciple(owner: any){
     this.principleIndividualDetails = owner;
     this.sendPrincipleIndividual.emit(this.principleIndividualDetails);
-    console.log('emitting value', this.principleIndividualDetails);
   }
 
   setChild(child: any){
+    debugger
     this.childDetails = child;
     this.sendFiler.emit(this.childDetails);
   }
@@ -213,7 +214,6 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
 
   getLeaderNameId(option){
     this.setLeader(option)
-    console.log(option);
     this.getPrincipleIndividuals();
   }
 

@@ -88,7 +88,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     private requestManager: RequestManager,
     private cacheManager: CacheManager,
     private reportService: ReportService,
-    private userService:UserMsService,
+    private userService: UserMsService,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
@@ -152,6 +152,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         this.search('mobile');
       }
       else if (this.searchStatusId) {
+        debugger
         this.searchParam.statusId = this.searchStatusId;
         this.search('status');
       }
@@ -341,20 +342,18 @@ export class ItrAssignedUsersComponent implements OnInit {
   //   }
   // }
 
-  ownerId: number;
+  leaderId: number;
   filerId: number;
-  fromSme(event, isOwner) {
-    debugger
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.ownerId = event ? event.userId : null;
+  fromSme(event, isLeader) {
+    if (isLeader) {
+      this.leaderId = event ? event.userId : null;
     } else {
       this.filerId = event ? event.userId : null;
     }
     if (this.filerId) {
       this.agentId = this.filerId;
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
+    } else if (this.leaderId) {
+      this.agentId = this.leaderId;
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
@@ -1298,9 +1297,25 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
-    
+
+    if (Object.keys(this.searchBy).length) {
+      Object.keys(this.searchBy).forEach(key => {
+        param = param + '&' + key + '=' + this.searchBy[key];
+      });
+    }
+    // if (this.searchParam.statusId) {
+    //   param = param + '&statusId=' + this.searchParam.statusId;
+    // }
+
     if (this.filerId === this.agentId) {
-      param = param + `&filerUserId=${this.filerId}`
+      param = param + `&filerUserId=${this.filerId}`;
+    }
+    if (this.leaderId === this.agentId) {
+      param = param + `&leaderUserId=${this.leaderId}`;
+    }
+
+    if (this.agentId === loggedInId && this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      param = param + `&leaderUserId=${this.agentId}`;
     }
     // if (this.filerId === this.ownerId) {
     //   param = param + `&leaderUserId=${this.ownerId}`
