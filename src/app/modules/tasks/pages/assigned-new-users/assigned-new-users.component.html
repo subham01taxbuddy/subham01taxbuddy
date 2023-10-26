@@ -1,12 +1,11 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<!-- New Open Close Filter Starts -->
 <div class="mrgArdTog">
   <mat-accordion class="headers-align">
     <mat-expansion-panel [expanded]="!dataOnLoad">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon> arrow_forward_ios </mat-icon>
-          Filter - My Users:
+          Filter - My Users (All Services):
         </mat-panel-title>
         <div class="col-sm-3"
           *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER') || loggedInUserRoles?.includes('ROLE_OWNER'))">
@@ -17,50 +16,32 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <!-- <div class="col-sm-12" *ngIf="loggedInUserRoles?.includes('ROLE_OWNER')">
-              <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner
-              </mat-slide-toggle>
-            </div> -->
             <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
-              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
-                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-            </div>
-            <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-              <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)"
-                (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
+              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                (sendPrincipleIndividual)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
 
-            <div class="col-sm-2 spsTp">
+            <div class="col-sm-3">
               <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
                 [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
             </div>
-            <div *ngIf="itrStatus" class="col-sm-3 spsTp">
+            <div *ngIf="itrStatus" class="col-sm-3">
+              <label class="input__label" for="attr">Select Status </label>
               <mat-form-field appearance="outline">
-                <mat-label>Select Status</mat-label>
-                <mat-select placeholder="Select Status" [(ngModel)]="searchParam.statusId">
+                <mat-select placeholder="" [(ngModel)]="searchParam.statusId">
                   <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
                     {{ status.statusName }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-sm-3 spsTp">
-              <mat-form-field appearance="outline">
-                <mat-label>Mobile Number: </mat-label>
-                <input matInput placeholder="Enter Mobile Number" [(ngModel)]="searchParam.mobileNumber" type="text"
-                  digitsOnly onkeypress=" event.charCode >= 48 && event.charCode <= 57">
-              </mat-form-field>
-            </div>
-
-            <div class="col-sm-4 spsTp">
-              <mat-form-field appearance="outline">
-                <mat-label>Email Address: </mat-label>
-                <input matInput placeholder="Enter Email Address" [(ngModel)]="searchParam.emailId" maxlength="50">
-              </mat-form-field>
+            <div class="col-6">
+              <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                (onChange)="searchByObject($event)"></app-generic-user-filter>
             </div>
             <div class="row spsTp bdrTp">
               <div class="col-6">
-                <app-generic-sorting [sortingParameter]="sortMenus"
+                <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                   (onChange)="sortByObject($event)"></app-generic-sorting>
               </div>
               <div class="col-sm-6">
@@ -69,7 +50,7 @@
                     Clear form
                   </button>
 
-                  <button class="srch-btn mvRth" [disabled]="loading" (click)="this.search('mobile','isAgent')"><i
+                  <button class="srch-btn mvRth" [disabled]="loading" (click)="this.search(' ','isAgent')"><i
                       class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
                 </div>
                 <div class="col-sm-12 row">
@@ -101,11 +82,11 @@
         <div class="txTit col-sm-4">
           User Details:
         </div>
-        <div class="col-sm-5">
+        <!-- <div class="col-sm-5">
           <button class="tbd-btn spRt aprv mt" *ngIf="showReassignmentBtn.length && config.totalItems > 1"
             (click)="actionWithReassignment()">
             Action with Re-assignment </button>
-        </div>
+        </div> -->
       </div>
       <div class="col-sm-3">
         <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
