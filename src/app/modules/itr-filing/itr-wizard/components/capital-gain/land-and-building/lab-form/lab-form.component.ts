@@ -504,7 +504,15 @@ export class LabFormComponent implements OnInit {
   addMoreBuyersDetails() {
     const buyersDetails = <FormArray>this.immovableForm.get('buyersDetails');
     if (buyersDetails.valid) {
-      buyersDetails.push(this.createBuyersDetailsForm());
+      let first = buyersDetails.controls[0].value;
+      first.srn = '';
+      first.id = '';
+      first.pan = '';
+      first.aadhaarNumber = ''
+      first.share = '';
+      first.name = '';
+      first.amount = '';
+      buyersDetails.push(this.createBuyersDetailsForm(first));
     } else {
       console.log('add above details first');
     }
