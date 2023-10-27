@@ -756,9 +756,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           );
 
           let array = [
-            parseFloat(firstProviso.value.allowValue),
-            parseFloat(secondProviso.value.allowValue),
-            parseFloat(compensationVrs.value.allowValue),
+            parseFloat(firstProviso?.value.allowValue),
+            parseFloat(secondProviso?.value.allowValue),
+            parseFloat(compensationVrs?.value.allowValue),
           ];
 
           let count = 0;
