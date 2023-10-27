@@ -1,6 +1,4 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-
-<!-- New Open Close Filter Starts -->
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
     <mat-expansion-panel [expanded]="!dataOnLoad">
@@ -13,31 +11,25 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <!-- <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
-              <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner
-              </mat-slide-toggle>
-            </div> -->
-
-            <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
+            <div class="col-sm-12 bckClr">
               <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
                 (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
-            <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-              <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)"
-                (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
-            </div>
-            <div class="col-sm-6 spsTp">
+            <div class="col-sm-2 spsTp">
               <mat-label> Financial Year </mat-label>
               <mat-form-field appearance="outline" class="customBg">
                 <input type="text" matInput [formControl]="assessmentYear" readonly>
-                <!-- <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off" required>
-                       <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
-                         {{year.financialYear}}
-                       </mat-option>
-                     </mat-select> -->
               </mat-form-field>
             </div>
-            <div class="col-sm-6 spsTp" *ngIf="false">
+            <div class="col-6">
+              <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                (onChange)="searchByObject($event)"></app-generic-user-filter>
+            </div>
+            <div class="col-sm-3">
+              <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+                [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
+            </div>
+            <!-- <div class="col-sm-6 spsTp" *ngIf="false">
               <mat-label> Search by Name </mat-label>
               <mat-form-field appearance="outline" class="customBg">
                 <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
@@ -56,17 +48,8 @@
               <mat-label> Search Mobile Number</mat-label>
               <mat-form-field appearance="outline" class="customBg">
                 <input type="text" matInput [formControl]="mobileNumber" digitsOnly>
-                <!-- <button [disabled]="loading" (click)="search(0,mobileNumber.value)" mat-button matSuffix mat-icon-button>
-               <mat-icon style="color: #00AECA">search</mat-icon>
-             </button> -->
-                <!-- <mat-icon matSuffix>search</mat-icon> -->
-                <!-- <mat-autocomplete #auto="matAutocomplete">
-             <mat-option *ngFor="let option  of filteredOptions | async" [value]="option" (click)="getownerNameId(option)">
-               {{option.name}}
-             </mat-option>
-           </mat-autocomplete> -->
               </mat-form-field>
-            </div>
+            </div> -->
             <div class="row spsTp bdrTp">
               <div class="col-6">
                 <app-generic-sorting [sortingParameter]="sortMenus"
@@ -97,18 +80,13 @@
     </mat-expansion-panel>
   </mat-accordion>
 </div>
-<!-- New Open Close Filter Ends -->
 
-<!-- Table Below -->
 <div class="tableSpc">
   <div class="row">
     <div class="col-sm-8">
       <div class="txTit">
         Assigned Subscription Details:
       </div>
-    </div>
-    <div class="col-sm-4">
-      <!-- <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>  -->
     </div>
   </div>
 
