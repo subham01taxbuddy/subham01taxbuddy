@@ -20,6 +20,8 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 import { ReportService } from 'src/app/services/report-service';
 import { MobileEncryptDecryptService } from 'src/app/services/mobile-encr-decr.service';
+import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
+import * as moment from 'moment';
 declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
@@ -75,8 +77,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     statusId: null,
     page: 0,
     pageSize: 20,
-    // assigned:false,
-    // owner:true,
+    serviceType:null,
     mobileNumber: null,
     emailId: null,
   };
@@ -113,6 +114,18 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     { value: 'total', name: 'Amount Payable' },
   ];
   dataOnLoad = true;
+  searchAsPrinciple :boolean =false;
+  searchBy: any = {};
+  searchMenus = [
+    { value: 'name', name: 'User Name' },
+    { value: 'email', name: 'Email' },
+    { value: 'mobile', name: 'Mobile No' },
+    { value: 'invoiceNo', name: 'Invoice No' },
+  ];
+  clearUserFilter: number;
+  itrStatus: any = [];
+  ogStatusList: any = [];
+
   constructor(
     private fb: FormBuilder,
     private datePipe: DatePipe,
@@ -164,18 +177,13 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     return { temp, lineBreak };
   }
 
-  cardTitle: any;
   smeList: any;
   gridApi: GridApi;
 
   ngOnInit() {
+    this.getMasterStatusList();
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
-    this.cardTitle = this.roles?.includes("ROLE_ADMIN") ?
-      'Leader/Admin' : this.roles?.includes("ROLE_OWNER") ?
-        'Owner' : this.roles?.includes("ROLE_FILER") ? 'Filer' : "NA"
-    console.log('roles', this.roles);
-    // this.getInvoice();
 
     if (this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
       this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
@@ -193,18 +201,9 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       this.options1 = this.allFilers;
     }
 
-    if (this.roles?.includes('ROLE_OWNER')) {
-      this.ownerDetails = this.loggedInSme[0];
-    } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
-      this.filerDetails = this.loggedInSme[0];
-    }
-    // this.getOwner();
-    //  this.getFilers();
+
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
-
-    this.setFiletedOptions1()
-    this.setFiletedOptions2();
 
     this.activatedRoute.queryParams.subscribe(params => {
       let invNo = params['invoiceNo'];
@@ -223,22 +222,61 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     // this.getInvoice();
   }
 
-  ownerId: number;
-  filerId: number;
+  decryptPhoneNumber(encryptedPhone: string): string {
+    return this.mobileEncryptDecryptService?.decryptData(encryptedPhone);
+  }
 
-  fromSme(event, isOwner) {
+  fromServiceType(event) {
+    this.searchParam.serviceType = event;
+    // this.search('serviceType', 'isAgent');
+
+    if (this.searchParam.serviceType) {
+      setTimeout(() => {
+        this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
+      }, 100);
+    }
+  }
+
+  async getMasterStatusList() {
+    // this.itrStatus = await this.utilsService.getStoredMasterStatusList();
+    this.ogStatusList = await this.utilService.getStoredMasterStatusList();
+  }
+
+  filerId: number;
+  leaderId: number;
+  agentId: number;
+
+  searchByObject(object) {
+    this.searchBy = object;
+    console.log('object from search param ',this.searchBy);
+  }
+
+  fromSme(event, isOwner,fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
-      this.ownerId = event ? event.userId : null;
+      this.leaderId = event ? event.userId : null;
     } else {
-      this.filerId = event ? event.userId : null;
+      if(fromPrinciple){
+        if (event?.partnerType === 'PRINCIPAL') {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = true;
+        } else {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }else{
+        if(event){
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }
     }
     if (this.filerId) {
       let loggedInId = this.utilService.getLoggedInUserID();
       this.agentId = loggedInId;
       // this.filerUserId = this.filerId;
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
+    } else if (this.leaderId) {
+      this.agentId = this.leaderId;
       // this.getInvoice();
     } else {
       let loggedInId = this.utilService.getLoggedInUserID();
@@ -247,89 +285,15 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     // this.getInvoice();
   }
 
-  setFiletedOptions2() {
-    this.filteredOptions1 = this.searchFiler.valueChanges.pipe(
-      startWith(''),
-      map((value) => {
-        if (!this.utilService.isNonEmpty(value)) {
-          this.filerDetails = null;
-        }
-        const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string, this.options1) : this.options1.slice();
-      })
-    );
-  }
-
-  setFiletedOptions1() {
-    this.filteredOptions = this.searchOwner.valueChanges.pipe(
-      startWith(''),
-      map((value) => {
-        if (!this.utilService.isNonEmpty(value)) {
-          this.ownerDetails = null;
-          if (this.roles?.includes('ROLE_OWNER')) {
-            this.ownerDetails.userId = this.loggedInSme.userId;
-            this.getFilers();
-          }
-        }
-        const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string, this.options) : this.options.slice();
-      })
-    );
-  }
-
-  setList() {
-    if (this.searchOwner.value == '') {
-      this.options1 = this.allFilers;
-      this.setFiletedOptions2()
-    }
-  }
-
-  displayFn(user: User): string {
-    return user && user.name ? user.name : '';
-  }
-
-  private _filter(name: string, options): User[] {
-    const filterValue = name.toLowerCase();
-
-    return options.filter((option) =>
-      option.name.toLowerCase().includes(filterValue)
-    );
-  }
-
-  coOwnerId: number;
-  coFilerId: number;
-  agentId: number;
-
-  fromSme1(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.coOwnerId = event ? event.userId : null;
-    } else {
-      this.coFilerId = event ? event.userId : null;
-    }
-    if (this.coFilerId) {
-      this.agentId = this.coFilerId;
-      // this.getInvoice('','agentId');
-    } else if (this.coOwnerId) {
-      this.agentId = this.coOwnerId;
-      // this.getInvoice('','agentId');
-    } else {
-      let loggedInId = this.utilService.getLoggedInUserID();
-      this.agentId = loggedInId;
-    }
-
-  }
-
   invoiceFormGroup: FormGroup = this.fb.group({
     assessmentYear: new FormControl('2023-24'),
     startDate: new FormControl('', [Validators.required]),
     endDate: new FormControl('', [Validators.required]),
     status: new FormControl('Paid'),
-    searchFiler: new FormControl(''),
-    searchOwner: new FormControl(''),
     mobile: new FormControl(''),
     email: new FormControl(''),
     invoiceNo: new FormControl(''),
+    name: new FormControl(''),
   });
   get assessmentYear() {
     return this.invoiceFormGroup.controls['assessmentYear'] as FormControl;
@@ -342,12 +306,6 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   }
   get status() {
     return this.invoiceFormGroup.controls['status'] as FormControl;
-  }
-  get searchFiler() {
-    return this.invoiceFormGroup.controls['searchFiler'] as FormControl;
-  }
-  get searchOwner() {
-    return this.invoiceFormGroup.controls['searchOwner'] as FormControl;
   }
 
   get mobile() {
@@ -362,64 +320,16 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     return this.invoiceFormGroup.controls['invoiceNo'] as FormControl;
   }
 
-  getOwner() {
-    const loggedInSmeUserId = this.loggedInSme[0].userId
-    let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
-    this.reportService.getMethod(param).subscribe((result: any) => {
-      console.log('owner list result -> ', result);
-      this.ownerList = result.data;
-      console.log("ownerlist", this.ownerList)
-      this.ownerNames = this.ownerList.map((item) => {
-        return { name: item.name, userId: item.userId };
-      });
-      this.options = this.ownerNames;
-      console.log(' ownerName -> ', this.ownerNames);
-    });
+  get name() {
+    return this.invoiceFormGroup.controls['name'] as FormControl;
   }
 
 
-  getFilers() {
-    // API to get filers under owner-
-    // https://dev-api.taxbuddy.com/user/sme-details-new/8078?owner=true&assigned=true
-    const loggedInSmeUserId = this.loggedInSme[0].userId;
-    let param = '';
-    // if (this.ownerDetails?.userId) {
-    //   param = `/sme-details-new/${this.ownerDetails?.userId}?filer=true`;
-    // } else {
-      param = `/bo/sme-details-new/${loggedInSmeUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
-    // }
-
-    this.reportService.getMethod(param).subscribe((result: any) => {
-      this.options1 = [];
-      console.log('filer list result -> ', result);
-      this.filerList = result.data;
-      console.log("filerList", this.filerList)
-      this.filerNames = this.ownerList.map((item) => {
-        return { name: item.name, userId: item.userId };
-      });
-      this.options1 = this.filerList;
-      this.setFiletedOptions2()
-      console.log(' filerNames -> ', this.filerNames);
-    });
-  }
-
-  ownerDetails: any;
-  getOwnerNameId(option) {
-    this.ownerDetails = option;
-    console.log(option);
-    this.getFilers();
-  }
-
-
-  filerDetails: any;
-  getFilerNameId(option) {
-    this.filerDetails = option;
-    console.log(option);
-  }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
+  @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.searchParam.serviceType = null;
     this.searchParam.statusId = null;
@@ -434,75 +344,52 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     this.mobile.setValue(null);
     this.email.setValue(null);
     this.invoiceNo.setValue(null);
-    this.searchOwner.setValue(null);
-    this.searchFiler.setValue(null);
+    this.gridApi?.setRowData(this.createRowData([]));
+    this.config.totalItems = 0;
     this?.smeDropDown?.resetDropdown();
-    if (this.coOwnerDropDown) {
-      this.coOwnerDropDown.resetDropdown();
-      this.getInvoice(true);
-    } else {
-      if (this.dataOnLoad) {
-        this.getInvoice();
-      } else {
-        //clear grid for loaded data
-        this.gridApi?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
-      }
-    }
   }
 
+
   getInvoice(isCoOwner?, agentId?, pageChange?) {
+    // https://dev-api.taxbuddy.com/report/bo/v1/invoice?fromDate=2023-04-01&toDate=2023-10-25&page=0&pageSize=20&paymentStatus=Paid' \
 
-    ///itr/v1/invoice/back-office?filerUserId=23505&ownerUserId=1062&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-04-07&pageSize=10&page=0
-    ///itr/v1/invoice/back-office?fromDate=2023-04-07&toDate=2023-04-07&page=0&pageSize=20
-    ///////////////////////////////////////////////////////////////////////////
-
-    // https://uat-api.taxbuddy.com/itr/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-02&page=0&pageSize=20&paymentStatus=Paid&searchAsCoOwner=true&ownerUserId=7522'
-    //https://uat-api.taxbuddy.com/report/v1/invoice/back-office?fromDate=2023-04-01&toDate=2023-05-30&page=0&pageSize=20&ownerUserId=7521&paymentStatus=Paid
     if (!pageChange) {
       this.cacheManager.clearCache();
-      console.log('in clear cache')
     }
     this.loading = true;
-    let loggedInId = this.utilService.getLoggedInUserID();
-    if (this.roles?.includes('ROLE_OWNER')) {
-      this.ownerId = loggedInId;
-    }
-    if (this.roles?.includes('ROLE_FILER')) {
-      this.filerId = loggedInId;
-    }
-    const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
-    let data = this.utilService.createUrlParams(this.searchParam);
+
     let status = this.status.value;
-    console.log('selected status', this.status);
-    let fromData =
-      this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') ||
-      this.startDate.value;
-    console.log('fromdate', fromData);
+    let fromData =this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
-    console.log('todate', toData);
+
+    if(this.searchBy?.mobile){
+      this.mobile.setValue(this.searchBy?.mobile)
+    }
+    if(this.searchBy?.email){
+      this.email.setValue(this.searchBy?.email)
+    }
+    if(this.searchBy?.invoiceNo){
+      this.invoiceNo.setValue(this.searchBy?.invoiceNo)
+    }
+    if(this.searchBy?.name){
+      this.name.setValue(this.searchBy?.name)
+    }
+
     let param = '';
     let statusFilter = '';
     if (status) {
       statusFilter = `&paymentStatus=${status}`;
     }
     let userFilter = '';
-    if (this.ownerId && !this.filerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
-    }
-    if (this.filerId) {
-      userFilter += `&filerUserId=${this.filerId}`;
-    }
 
-    if (agentId) {
-      if (this.coOwnerId && !this.coFilerId) {
-        userFilter = '';
-        userFilter += `&ownerUserId=${this.coOwnerId}`;
-      }
-      if (this.coFilerId) {
-        userFilter = '';
-        userFilter += `&filerUserId=${this.coFilerId}`;
-      }
+    if ((this.leaderId && !this.filerId)) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
     }
 
     let mobileFilter = '';
@@ -517,22 +404,22 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['invoiceNo'].value)) {
       invoiceFilter = '&invoiceNo=' + this.invoiceFormGroup.controls['invoiceNo'].value;
     }
-    param = `/v1/invoice/back-office?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}`;
 
-    if (this.coOwnerToggle.value == true && isCoOwner) {
-      if (this.coOwnerId || this.coFilerId) {
-        param
-      } else {
-        param = param + '&searchAsCoOwner=true';
-      }
+    let nameFilter = '';
+    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['name'].value)){
+      this.searchParam.page = 0 ;
+      nameFilter ='&name=' + this.invoiceFormGroup.controls['name'].value;
     }
-    else {
-      param;
-    }
+
+    let data = this.utilService.createUrlParams(this.searchParam);
+
+    param = `/bo/v1/invoice?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${statusFilter}${mobileFilter}${emailFilter}${invoiceFilter}${nameFilter}`;
+
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
+
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
@@ -566,105 +453,6 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     }
     );
 
-    /*this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    this.roles = this.loggedInSme[0]?.roles;
-    console.log(this.loggedInSme[0].userId);
-
-    if (this.roles?.includes('ROLE_OWNER')) {
-      this.loading = true;
-      const param = `/v1/invoice/back-office?ownerUserId=${
-        this.loggedInSme[0].userId
-      }&paymentStatus=${this.status.value}&fromDate=${this.datePipe.transform(
-        this.startDate.value,
-        'yyyy-MM-dd'
-      )}&toDate=${this.datePipe.transform(
-        this.endDate.value,
-        'yyyy-MM-dd'
-      )}&pageSize=${this.config.itemsPerPage}&page=${
-        this.config.currentPage || 1
-      }`;
-
-      this.itrService.getMethod(param).subscribe(
-        (res: any) => {
-          this.loading = false;
-          this.loading = false;
-          console.log(res);
-          this.invoiceData = res.data.content;
-          this.totalInvoice = res?.data?.totalElements;
-          this.gridApi?.setRowData(this.createRowData(this.invoiceData));
-          this.config.totalItems = res?.data?.totalElements;
-        },
-        (error) => {
-          this.loading = false;
-          this.toastMsgService.alert(
-            'error',
-            'failed to calculate total capital gain.'
-          );
-        }
-      );
-    } else if (this.roles?.includes('ROLE_FILER')) {
-      this.loading = true;
-      const param = `/v1/invoice/back-office?filerUserId=${
-        this.loggedInSme[0].userId
-      }&paymentStatus=${this.status.value}&fromDate=${this.datePipe.transform(
-        this.startDate.value,
-        'yyyy-MM-dd'
-      )}&toDate=${this.datePipe.transform(
-        this.endDate.value,
-        'yyyy-MM-dd'
-      )}&pageSize=${this.config.itemsPerPage}&page=${
-        this.config.currentPage || 1
-      }`;
-
-      this.itrService.getMethod(param).subscribe(
-        (res: any) => {
-          this.loading = false;
-          console.log(res);
-          this.invoiceData = res.data.content;
-          this.totalInvoice = res?.data?.totalElements;
-          this.gridApi?.setRowData(this.createRowData(this.invoiceData));
-          this.config.totalItems = res?.data?.totalElements;
-        },
-        (error) => {
-          this.loading = false;
-          this.toastMsgService.alert(
-            'error',
-            'failed to calculate total capital gain.'
-          );
-        }
-      );
-    } else {
-      this.loading = true;
-      const param = `/v1/invoice/back-office?paymentStatus=${
-        this.status.value
-      }&fromDate=${this.datePipe.transform(
-        this.startDate.value,
-        'yyyy-MM-dd'
-      )}&toDate=${this.datePipe.transform(
-        this.endDate.value,
-        'yyyy-MM-dd'
-      )}&pageSize=${this.config.itemsPerPage}&page=${
-        this.config.currentPage || 1
-      }`;
-
-      this.itrService.getMethod(param).subscribe(
-        (res: any) => {
-          this.loading = false;
-          console.log(res);
-          this.invoiceData = res.data.content;
-          this.totalInvoice = res?.data?.totalElements;
-          this.gridApi?.setRowData(this.createRowData(this.invoiceData));
-          this.config.totalItems = res?.data?.totalElements;
-        },
-        (error) => {
-          this.loading = false;
-          this.toastMsgService.alert(
-            'error',
-            'failed to calculate total capital gain.'
-          );
-        }
-      );
-    }*/
   }
 
   createRowData(userInvoices) {
@@ -690,7 +478,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
           ifaLeadClient: userInvoices[i].ifaLeadClient,
           total: userInvoices[i].total,
           razorpayReferenceId: this.utilService.isNonEmpty(userInvoices[i].razorpayReferenceId) ? userInvoices[i].razorpayReferenceId : '-',
-          paymentId: this.utilService.isNonEmpty(userInvoices[i].paymentId) ? userInvoices[i].paymentId : '-'
+          paymentId: this.utilService.isNonEmpty(userInvoices[i].paymentId) ? userInvoices[i].paymentId : '-',
+          leaderName :userInvoices[i].leaderName,
         })
       invoices.push(updateInvoice)
     }
@@ -797,6 +586,19 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+        cellRenderer: (params) => {
+          if(params.value){
+            if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')){
+              const encryptedPhone = params.value;
+              const decryptedPhone = this.decryptPhoneNumber(encryptedPhone);
+              return decryptedPhone;
+            }else{
+              return params.value;
+            }
+          }else{
+            return '-'
+          }
+        },
       },
       {
         headerName: 'Email',
@@ -892,6 +694,21 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       },
+      {
+        headerName: 'Leader Name',
+        field: 'leaderName',
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      },
+      {
+        headerName: 'Filer Name',
+        field: 'filerName',
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      },
+
       {
         headerName: 'Prepared By',
         field: 'inovicePreparedBy',
@@ -1053,16 +870,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     this.toDateMin = FromDate;
   }
 
-  // pageChanged(event: any) {
-  //   this.config.currentPage = event;
-  //   this.searchParam.page = event - 1;
-  //   if (this.coOwnerToggle.value == true) {
-  //     this.getInvoice(true);
-  //   } else {
-  //     this.getInvoice();
-  //   }
-  //   // this.getInvoice();
-  // }
+
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
@@ -1071,25 +879,11 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      if (this.coOwnerToggle.value == true) {
-        this.getInvoice(true, '', event);
-      } else {
-        this.getInvoice('', '', event);
-      }
+      this.getInvoice('', '', event);
     }
   }
 
-  getToggleValue() {
-    console.log('co-owner toggle', this.coOwnerToggle.value)
-    we_track('Co-Owner Toggle', '');
-    if (this.coOwnerToggle.value == true) {
-      this.coOwnerCheck = true;
-    }
-    else {
-      this.coOwnerCheck = false;
-    }
-    this.getInvoice(true);
-  }
+
   ngOnDestroy() {
     this.cacheManager.clearCache();
   }
