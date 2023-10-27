@@ -3908,11 +3908,11 @@ export class SummaryComponent implements OnInit {
                                 accumulated.TaxableIncome +=
                                   element?.presumptiveIncome;
                                 accumulated.natureOfBusinessCode =
-                                  this.natureOfBusiness.find((item) => {
+                                  this.natureOfBusiness?.find((item) => {
                                     return (
-                                      item.code === element.natureOfBusinessCode
+                                      item?.code === element?.natureOfBusinessCode
                                     );
-                                  }).label;
+                                  })?.label;
                                 accumulated.tradeName = element.tradeName;
                                 return accumulated;
                               },
@@ -3939,11 +3939,11 @@ export class SummaryComponent implements OnInit {
                                 accumulated.TaxableIncome +=
                                   element?.presumptiveIncome;
                                 accumulated.natureOfBusinessCode =
-                                  this.natureOfBusiness.find((item) => {
+                                  this.natureOfBusiness?.find((item) => {
                                     return (
-                                      item.code === element.natureOfBusinessCode
+                                      item?.code === element?.natureOfBusinessCode
                                     );
-                                  }).label;
+                                  })?.label;
                                 accumulated.tradeName = element.tradeName;
                                 return accumulated;
                               },
@@ -3966,13 +3966,13 @@ export class SummaryComponent implements OnInit {
                           )
                           .map((element) => ({
                             businessSection: element?.businessType,
-                            natureOfBusinessCode: this.natureOfBusiness.find(
+                            natureOfBusinessCode: this.natureOfBusiness?.find(
                               (item) => {
                                 return (
-                                  item.code === element.natureOfBusinessCode
+                                  item?.code === element?.natureOfBusinessCode
                                 );
                               }
-                            ).label,
+                            )?.label,
                             tradeName: element?.tradeName,
                             grossTurnover: element?.receipts,
                             TaxableIncome: element?.presumptiveIncome,
@@ -5497,11 +5497,11 @@ export class SummaryComponent implements OnInit {
                               accumulated.TaxableIncome +=
                                 element?.presumptiveIncome;
                               accumulated.natureOfBusinessCode =
-                                this.natureOfBusiness.find((item) => {
+                                this.natureOfBusiness?.find((item) => {
                                   return (
-                                    item.code === element.natureOfBusinessCode
+                                    item?.code === element?.natureOfBusinessCode
                                   );
-                                }).label;
+                                })?.label;
                               accumulated.tradeName = element.tradeName;
                               return accumulated;
                             },
@@ -5528,11 +5528,11 @@ export class SummaryComponent implements OnInit {
                               accumulated.TaxableIncome +=
                                 element?.presumptiveIncome;
                               accumulated.natureOfBusinessCode =
-                                this.natureOfBusiness.find((item) => {
+                                this.natureOfBusiness?.find((item) => {
                                   return (
-                                    item.code === element.natureOfBusinessCode
+                                    item?.code === element?.natureOfBusinessCode
                                   );
-                                }).label;
+                                })?.label;
                               accumulated.tradeName = element.tradeName;
                               return accumulated;
                             },
@@ -5554,11 +5554,11 @@ export class SummaryComponent implements OnInit {
                         )
                         .map((element) => ({
                           businessSection: element?.businessType,
-                          natureOfBusinessCode: this.natureOfBusiness.find(
+                          natureOfBusinessCode: this.natureOfBusiness?.find(
                             (item) => {
-                              return item.code === element.natureOfBusinessCode;
+                              return item?.code === element?.natureOfBusinessCode;
                             }
-                          ).label,
+                          )?.label,
                           tradeName: element?.tradeName,
                           grossTurnover: element?.receipts,
                           TaxableIncome: element?.presumptiveIncome,
