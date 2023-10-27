@@ -19,6 +19,7 @@ import { ActivatedRoute } from "@angular/router";
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 import { ReportService } from 'src/app/services/report-service';
+import { MobileEncryptDecryptService } from 'src/app/services/mobile-encr-decr.service';
 declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
@@ -123,7 +124,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     @Inject(LOCALE_ID) private locale: string,
     private activatedRoute: ActivatedRoute,
     private cacheManager: CacheManager,
-    private reportService:ReportService
+    private reportService:ReportService,
+    private mobileEncryptDecryptService :MobileEncryptDecryptService,
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
     console.log('new Filer List ', this.allFilerList)

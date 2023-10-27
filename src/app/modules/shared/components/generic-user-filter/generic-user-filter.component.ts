@@ -55,6 +55,10 @@ export class GenericUserFilterComponent implements OnInit {
         this.searchValue.setValidators([Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(AppConstants.numericRegex)]);
         this.searchValue.updateValueAndValidity();
         break;
+      case 'txbdyInvoiceId':
+        this.searchValue.setValidators([Validators.required, Validators.maxLength(10), Validators.pattern(AppConstants.numericRegex)]);
+        this.searchValue.updateValueAndValidity();
+        break;
 
     }
     var searchBy = {};
