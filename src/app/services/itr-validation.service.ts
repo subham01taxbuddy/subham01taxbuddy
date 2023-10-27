@@ -950,8 +950,8 @@ export class ItrValidationService {
         for (let i = 0; i < obj[key]?.length; i++) {
           const profitLossACIncomes = obj[key][i]?.incomes;
           if (
-            obj[key][i]?.netProfitfromNonSpeculativeIncome === 0 ||
-              obj[key][i]?.netProfitfromNonSpeculativeIncome === null
+            (obj[key][i]?.netProfitfromNonSpeculativeIncome === 0 ||
+              obj[key][i]?.netProfitfromNonSpeculativeIncome === null) && obj[key][i]?.businessType === 'NONSPECULATIVEINCOME'
           ) {
             delete obj[key][i];
           }

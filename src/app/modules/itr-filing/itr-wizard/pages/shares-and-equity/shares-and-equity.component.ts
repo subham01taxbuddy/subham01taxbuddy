@@ -939,12 +939,14 @@ export class SharesAndEquityComponent
     let saleValue =
       parseFloat(this.selectedFormGroup.controls['sellValuePerUnit'].value) *
       parseFloat(this.selectedFormGroup.controls['sellOrBuyQuantity'].value);
-    this.selectedFormGroup.controls['sellValue'].setValue(saleValue.toFixed());
-    // if(this.bondType === 'listed') {
-    //   fg.controls['sellValue'].setValue(saleValue.toFixed(2));
-    // } else {
-    //   fg.controls['sellValue'].setValue(saleValue.toFixed());
-    // }
+    // this.selectedFormGroup.controls['sellValue'].setValue(saleValue.toFixed());
+
+    //Ashwini: Removing rounding off of the values after discussion with Gitanjali
+    if(this.bondType === 'listed') {
+      this.selectedFormGroup.controls['sellValue'].setValue(saleValue.toFixed(2));
+    } else {
+      this.selectedFormGroup.controls['sellValue'].setValue(saleValue.toFixed());
+    }
     this.calculateTotalCG(this.selectedFormGroup);
   }
 
@@ -954,9 +956,15 @@ export class SharesAndEquityComponent
         this.selectedFormGroup.controls['purchaseValuePerUnit'].value
       ) *
       parseFloat(this.selectedFormGroup.controls['sellOrBuyQuantity'].value);
-    this.selectedFormGroup.controls['purchaseCost'].setValue(
-      purchaseValue.toFixed()
-    );
+    // this.selectedFormGroup.controls['purchaseCost'].setValue(
+    //   purchaseValue.toFixed()
+    // );
+
+    if(this.bondType === 'listed') {
+      this.selectedFormGroup.controls['purchaseCost'].setValue(purchaseValue.toFixed(2));
+    } else {
+      this.selectedFormGroup.controls['purchaseCost'].setValue(purchaseValue.toFixed());
+    }
     this.calculateTotalCG(this.selectedFormGroup);
   }
 
