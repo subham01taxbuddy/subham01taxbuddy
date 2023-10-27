@@ -697,8 +697,6 @@ export class SummaryComponent implements OnInit {
     this.natureOfBusiness = JSON.parse(
       sessionStorage.getItem('NATURE_OF_BUSINESS')
     );
-
-    some();
   }
 
   getItrTypeInSummary() {
@@ -7453,42 +7451,3 @@ function getTotalBusinessIncome(summaryBusinessIncome: any): number {
   return Math.max(summaryBusinessIncome.totalBusinessIncome, 0);
 }
 
-function some() {
-  this.finalSummary?.itr?.capitalGain
-    .find((item) => {
-      return item.assetType === 'VDA';
-    })
-    .assetDetails.filter((element) => {
-      element.headOfIncome === 'BI';
-    })
-    .map((gain) => {
-      return gain.assetDetails.map((element, index) => ({
-        srNo: index + 1,
-        buyDate: element.purchaseDate,
-        sellDate: element.sellDate,
-        headOfIncome:
-          element.headOfIncome === 'BI'
-            ? 'Business or Profession'
-            : 'Capital Gain',
-        buyValue: element.purchaseCost,
-        SaleValue: element.sellValue,
-        income: element.capitalGain,
-      }));
-    })
-    .flat();
-
-  this.finalSummary?.itr?.capitalGain
-    .find((item) => {
-      return item.assetType === 'VDA';
-    })
-    .assetDetails.filter((element) => {
-      element.headOfIncome === 'BI';
-    })
-    .map((gain) =>
-      gain.assetDetails.reduce(
-        (total, element) => total + element.capitalGain,
-        0
-      )
-    )
-    .reduce((total, income) => total + income, 0);
-}
