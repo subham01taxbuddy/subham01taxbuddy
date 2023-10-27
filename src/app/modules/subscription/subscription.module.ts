@@ -23,6 +23,7 @@ import { RefundRequestComponent } from './components/refund-request/refund-reque
 import { AngularFireRemoteConfigModule } from '@angular/fire/compat/remote-config';
 import { MobileEncryptDecryptService } from 'src/app/services/mobile-encr-decr.service';
 import { RemoteConfigService } from 'src/app/services/remote-config-service';
+import { CreditNoteComponent } from './components/credit-note/credit-note.component';
 
 
 @NgModule({
@@ -52,7 +53,8 @@ import { RemoteConfigService } from 'src/app/services/remote-config-service';
     PauseInvoiceReminderComponent,
     CancelSubscriptionComponent,
     ApproveRejectComponent,
-    RefundRequestComponent
+    RefundRequestComponent,
+    CreditNoteComponent
   ],
   providers:[
     MobileEncryptDecryptService,

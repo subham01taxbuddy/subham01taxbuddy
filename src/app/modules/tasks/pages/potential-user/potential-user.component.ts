@@ -812,7 +812,6 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-
   resetFilters() {
     this.clearUserFilter = moment.now().valueOf();
     this.searchParam.page = 0;
