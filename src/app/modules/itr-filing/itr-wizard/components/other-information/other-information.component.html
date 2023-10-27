@@ -118,12 +118,6 @@
                 </table>
                 <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
               </div>
-              <div class="col-sm-3">
-                <button type="submit" class="tbd-btn save-btn mvRth" [disabled]="directorForm.invalid"
-                  (click)="saveDirectorDetials($event)">
-                  Save
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -189,7 +183,7 @@
               </div>
               <div class="col-sm-3">
                 <mat-form-field class="input-field-width">
-                  <mat-select placeholder="Type of Company" (selectionChange)="addPanValidator()" name="typeOfCompany"
+                  <mat-select placeholder="Type of Company" (selectionChange)="addPanValidator(i)" name="typeOfCompany"
                     formControlName="typeOfCompany" required>
                     <mat-option *ngFor="let type of typeOfCompanies" [value]="type.value">
                       {{ type.label }}
@@ -357,12 +351,6 @@
                 "></tr>
             </table>
             <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-          </div>
-          <div class="col-sm-3">
-            <button type="submit" class="tbd-btn save-btn mvRth" [disabled]="directorForm.invalid"
-              (click)="saveUnlistedShares($event)">
-              Save
-            </button>
           </div>
         </div>
       </div>
