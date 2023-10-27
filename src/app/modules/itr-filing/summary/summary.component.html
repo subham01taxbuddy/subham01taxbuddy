@@ -672,7 +672,7 @@
                                 utilsService.currencyFormatter(
                                   finalCalculations?.businessIncome
                                     ?.businessIncomeTotal || finalCalculations?.businessIncome
-                                    ?.businessIncomeTotal === 0 
+                                    ?.businessIncomeTotal === 0
                                     ? finalCalculations?.businessIncome
                                         ?.businessIncomeTotal +
                                         finalCalculations?.businessIncome
@@ -934,7 +934,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.businessIncome?.businessIncomeDetails?.crypto?.cryptoDetails
-                          .length > 0
+                          ?.length > 0
                       "
                     >
                       Income from crypto
@@ -946,7 +946,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                       finalCalculations?.businessIncome?.businessIncomeDetails?.crypto?.cryptoDetails
-                          .length > 0
+                          ?.length > 0
                       "
                     >
                       <thead>
@@ -1887,7 +1887,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.crypto?.cryptoDetails
-                          .length > 0
+                          ?.length > 0
                       "
                     >
                       Income from crypto
@@ -1899,7 +1899,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.crypto?.cryptoDetails
-                          .length > 0
+                          ?.length > 0
                       "
                     >
                       <thead>
@@ -2260,7 +2260,7 @@
                         <td><b>Business loss of the current year set off</b></td>
                         <td><b>Current years Income remaining after set off</b></td>
                       </tr>
-                      
+
                       <tr>
                         <td>Loss to be set off</td>
                         <td></td>
@@ -2269,7 +2269,7 @@
                             >&nbsp;
                           {{
                             utilsService.currencyFormatter(
-                              finalSummary?.assessment?.currentYearLossesSetoff?.totalCurrentYearHpLoss                              
+                              finalSummary?.assessment?.currentYearLossesSetoff?.totalCurrentYearHpLoss
                             )
                           }}
                         </td>

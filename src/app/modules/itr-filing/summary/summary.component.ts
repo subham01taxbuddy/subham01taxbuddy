@@ -4013,7 +4013,7 @@ export class SummaryComponent implements OnInit {
                           .find((item) => {
                             return item.assetType === 'VDA';
                           })
-                          .assetDetails.filter((element) => {
+                          ?.assetDetails.filter((element) => {
                             return element.headOfIncome === 'BI';
                           })
                           .map((element, index) => {
@@ -4037,7 +4037,7 @@ export class SummaryComponent implements OnInit {
                         .find((item) => {
                           return item.assetType === 'VDA';
                         })
-                        .assetDetails.filter((element) => {
+                        ?.assetDetails.filter((element) => {
                           return element.headOfIncome === 'BI';
                         })
                         .reduce(
@@ -4269,7 +4269,7 @@ export class SummaryComponent implements OnInit {
                         .find((item) => {
                           return item.assetType === 'VDA';
                         })
-                        .assetDetails.filter((element) => {
+                        ?.assetDetails.filter((element) => {
                           return element.headOfIncome === 'CG';
                         })
                         .map((element, index) => {
@@ -4292,7 +4292,7 @@ export class SummaryComponent implements OnInit {
                       .find((item) => {
                         return item.assetType === 'VDA';
                       })
-                      .assetDetails.filter((element) => {
+                      ?.assetDetails.filter((element) => {
                         return element.headOfIncome === 'CG';
                       })
                       .reduce(
@@ -5588,7 +5588,7 @@ export class SummaryComponent implements OnInit {
                         .find((item) => {
                           return item.assetType === 'VDA';
                         })
-                        .assetDetails.filter((element) => {
+                        ?.assetDetails.filter((element) => {
                           return element.headOfIncome === 'BI';
                         })
                         .map((element, index) => {
@@ -5612,7 +5612,7 @@ export class SummaryComponent implements OnInit {
                       .find((item) => {
                         return item.assetType === 'VDA';
                       })
-                      .assetDetails.filter((element) => {
+                      ?.assetDetails.filter((element) => {
                         return element.headOfIncome === 'BI';
                       })
                       .reduce(
@@ -5844,7 +5844,7 @@ export class SummaryComponent implements OnInit {
                       .find((item) => {
                         return item.assetType === 'VDA';
                       })
-                      .assetDetails.filter((element) => {
+                      ?.assetDetails.filter((element) => {
                         return element.headOfIncome === 'CG';
                       })
                       .map((element, index) => {
@@ -5867,7 +5867,7 @@ export class SummaryComponent implements OnInit {
                     .find((item) => {
                       return item.assetType === 'VDA';
                     })
-                    .assetDetails.filter((element) => {
+                    ?.assetDetails.filter((element) => {
                       return element.headOfIncome === 'CG';
                     })
                     .reduce((total, element) => total + element.capitalGain, 0),
