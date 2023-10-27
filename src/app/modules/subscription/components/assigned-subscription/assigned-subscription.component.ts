@@ -16,6 +16,7 @@ import { SmeListDropDownComponent } from "../../../shared/components/sme-list-dr
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import * as moment from 'moment';
 declare function we_track(key: string, value: any);
 export interface User {
   name: string;
@@ -39,7 +40,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   queryParam: any;
   userInfo: any = [];
   options: User[] = [];
-  filteredOptions: Observable<User[]>;
   userId: any;
   selectedUserName: any = '';
   subscriptionListGridOptions: GridOptions;
@@ -74,6 +74,14 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     { value: 'email', name: 'Email' },
     { value: 'mobileNumber', name: 'Mobile No' },
   ];
+  services = [
+    { key: 'ITR', value: 'ITR', isHide: false },
+    { key: 'GST', value: 'GST', isHide: false },
+    { key: 'TPA', value: 'TPA', isHide: false },
+    { key: 'NOTICE', value: 'NOTICE', isHide: false },
+  ];
+  clearUserFilter: number;
+  mobileNumber: any;
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -130,13 +138,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     });
 
     this.getFilerList();
-    this.filteredOptions = this.searchName.valueChanges.pipe(
-      startWith(''),
-      map((value) => {
-        const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string) : this.options.slice();
-      })
-    );
+
   }
 
 
@@ -164,30 +166,17 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   isAllowed = false;
 
   subscriptionFormGroup: FormGroup = this.fb.group({
-    searchName: new FormControl(''),
-    mobileNumber: new FormControl(''),
     assessmentYear: new FormControl('2023-24'),
+    serviceType: new FormControl('')
   });
-  get searchName() {
-    return this.subscriptionFormGroup.controls['searchName'] as FormControl;
-  }
-  get mobileNumber() {
-    return this.subscriptionFormGroup.controls['mobileNumber'] as FormControl;
-  }
+
   get assessmentYear() {
     return this.subscriptionFormGroup.controls['assessmentYear'] as FormControl;
   }
-
-  fromServiceType(event) {
-    this.searchParam.serviceType = event;
-    // this.search('serviceType', 'isAgent');
-
-    if (this.searchParam.serviceType) {
-      setTimeout(() => {
-        this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
-      }, 100);
-    }
+  get serviceType() {
+    return this.subscriptionFormGroup.controls['serviceType'] as FormControl;
   }
+
 
   allSubscriptions = [];
   getAssignedSubscription(pageNo?, isAgent?, fromPageChange?) {
@@ -293,11 +282,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   advanceSearch() {
-    console.log('this.searchVal -> ', this.searchVal)
-    this.mobileNumber.setValue('')
     if (this.utilsService.isNonEmpty(this.searchVal)) {
       if (this.searchVal.toString().length >= 8 && this.searchVal.toString().length <= 50) {
-        this.mobileNumber.setValue(this.searchVal);
         this.getUserByMobileNum(this.searchVal)
       } else {
         this._toastMessageService.alert("error", "Enter valid mobile number.");
@@ -400,27 +386,20 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
     this.cacheManager.clearCache();
+    this.clearUserFilter = moment.now().valueOf();
     this.searchParam.statusId = null;
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
-    this.searchParam.mobileNumber = null;
-    this.searchParam.emailId = null;
-
-    this.subscriptionFormGroup.controls['searchName'].setValue(null);
-    this.subscriptionFormGroup.controls['mobileNumber'].setValue(null);
+    this.subscriptionFormGroup.controls['serviceType'].setValue(null);
     this?.smeDropDown?.resetDropdown();
-    if (this.coOwnerDropDown) {
-      this.coOwnerDropDown.resetDropdown();
-      this.getAssignedSubscription(0, true);
+
+    if (this.dataOnLoad) {
+      this.getAssignedSubscription(0);
     } else {
-      if (this.dataOnLoad) {
-        this.getAssignedSubscription(0);
-      } else {
-        this.subscriptionListGridOptions.api?.setRowData(
-          this.createRowData([])
-        );
-        this.config.totalItems = 0;
-      }
+      this.subscriptionListGridOptions.api?.setRowData(
+        this.createRowData([])
+      );
+      this.config.totalItems = 0;
     }
     this.isAllowed = false;
   }
@@ -696,12 +675,19 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   createSub() {
+    if (Object.keys(this.searchBy).length) {
+      Object.keys(this.searchBy).forEach(key => {
+        if (key === 'mobileNumber') {
+          this.mobileNumber = this.searchBy[key];
+        }
+      });
+    }
     let disposable = this.dialog.open(AddSubscriptionComponent, {
       width: '80%',
       height: 'auto',
       data: {
         userId: this.userId,
-        mobileNo: this.mobileNumber.value,
+        mobileNo: this.mobileNumber,
       },
 
     })

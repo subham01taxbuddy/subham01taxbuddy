@@ -15,44 +15,29 @@
               <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
                 (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
-            <div class="col-sm-2 spsTp">
-              <mat-label> Financial Year </mat-label>
+            <div class="col-sm-2">
+              <label class="input__label" for="attr">Financial Year </label>
               <mat-form-field appearance="outline" class="customBg">
                 <input type="text" matInput [formControl]="assessmentYear" readonly>
               </mat-form-field>
             </div>
-            <div class="col-6">
+            <div class="col-7">
               <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                 (onChange)="searchByObject($event)"></app-generic-user-filter>
             </div>
-            <div class="col-sm-3">
-              <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
-                [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
-            </div>
-            <!-- <div class="col-sm-6 spsTp" *ngIf="false">
-              <mat-label> Search by Name </mat-label>
-              <mat-form-field appearance="outline" class="customBg">
-                <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
-                <button [disabled]="loading" (click)="searchByName()" mat-button matSuffix mat-icon-button>
-                  <mat-icon style="color: #00AECA">search</mat-icon>
-                </button>
-                <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name"
-                    (click)="getFilerNameId(option)">
-                    {{option.name}}
+            <div class="col-sm-2">
+              <label class="input__label" for="attr">Service TYpe</label>
+              <mat-form-field appearance="outline" class="class1">
+                <mat-select placeholder="" [formControl]="serviceType" required>
+                  <mat-option *ngFor="let service of services" [disabled]="service.isHide" [value]="service.value">
+                    <span> {{service.key}}</span>
                   </mat-option>
-                </mat-autocomplete>
+                </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-sm-6 spsTp">
-              <mat-label> Search Mobile Number</mat-label>
-              <mat-form-field appearance="outline" class="customBg">
-                <input type="text" matInput [formControl]="mobileNumber" digitsOnly>
-              </mat-form-field>
-            </div> -->
             <div class="row spsTp bdrTp">
               <div class="col-6">
-                <app-generic-sorting [sortingParameter]="sortMenus"
+                <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                   (onChange)="sortByObject($event)"></app-generic-sorting>
               </div>
               <div class="col-sm-6">

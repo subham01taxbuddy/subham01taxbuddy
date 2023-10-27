@@ -378,7 +378,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       this.partnerType = event.partnerType;
       this.filerId = event ? event.userId : null;
     }
-    debugger
     if (this.filerId) {
       this.agentId = this.filerId;
     } else if (this.leaderId) {
