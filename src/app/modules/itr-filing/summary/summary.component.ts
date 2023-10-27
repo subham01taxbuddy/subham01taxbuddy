@@ -699,7 +699,6 @@ export class SummaryComponent implements OnInit {
     );
   }
 
-  
   getItrTypeInSummary() {
     return Object.keys(this.ITR_JSON.itrSummaryJson.ITR)[0].substring(3);
   }
@@ -4011,43 +4010,55 @@ export class SummaryComponent implements OnInit {
                       // crypto gain
                       crypto: {
                         cryptoDetails: this.finalSummary?.itr?.capitalGain
-                          .find((item) => {
-                            return item.assetType === 'VDA';
+                          ?.find((item) => {
+                            return item?.assetType === 'VDA';
                           })
-                          .assetDetails.filter((element) => {
-                            return element.headOfIncome === 'BI';
+                          ?.assetDetails?.filter((element) => {
+                            return element?.headOfIncome === 'BI';
                           })
-                          .map((element, index) => {
+                          ?.map((element, index) => {
                             return {
                               srNo: index + 1,
-                              buyDate: element.purchaseDate,
-                              sellDate: element.sellDate,
+                              buyDate: element?.purchaseDate,
+                              sellDate: element?.sellDate,
                               headOfIncome:
-                                element.headOfIncome === 'BI'
+                                element?.headOfIncome === 'BI'
                                   ? 'Business or Profession'
                                   : 'Capital Gain',
-                              buyValue: element.purchaseCost,
-                              SaleValue: element.sellValue,
-                              income: element.capitalGain,
+                              buyValue: element?.purchaseCost,
+                              SaleValue: element?.sellValue,
+                              income: element?.capitalGain,
                             };
                           }),
                       },
 
                       // total crypto gain
                       totalCryptoIncome: this.finalSummary?.itr?.capitalGain
-                        .find((item) => {
-                          return item.assetType === 'VDA';
+                        ?.find((item) => {
+                          return item?.assetType === 'VDA';
                         })
-                        .assetDetails.filter((element) => {
-                          return element.headOfIncome === 'BI';
+                        ?.assetDetails?.filter((element) => {
+                          return element?.headOfIncome === 'BI';
                         })
-                        .reduce(
-                          (total, element) => total + element.capitalGain,
+                        ?.reduce(
+                          (total, element) => total + element?.capitalGain,
                           0
-                        ),
+                        )
+                        ? this.finalSummary?.itr?.capitalGain
+                            ?.find((item) => {
+                              return item?.assetType === 'VDA';
+                            })
+                            ?.assetDetails?.filter((element) => {
+                              return element?.headOfIncome === 'BI';
+                            })
+                            ?.reduce(
+                              (total, element) => total + element?.capitalGain,
+                              0
+                            )
+                        : 0,
                     },
                     businessIncomeTotal:
-                      this.finalSummary?.assessment?.taxSummary.businessIncome,
+                      this.finalSummary?.assessment?.taxSummary?.businessIncome,
                   },
                   capitalGain: {
                     // short term gain
@@ -4267,43 +4278,55 @@ export class SummaryComponent implements OnInit {
                     // crypto gain
                     crypto: {
                       cryptoDetails: this.finalSummary?.itr?.capitalGain
-                        .find((item) => {
-                          return item.assetType === 'VDA';
+                        ?.find((item) => {
+                          return item?.assetType === 'VDA';
                         })
-                        .assetDetails.filter((element) => {
-                          return element.headOfIncome === 'CG';
+                        ?.assetDetails?.filter((element) => {
+                          return element?.headOfIncome === 'CG';
                         })
-                        .map((element, index) => {
+                        ?.map((element, index) => {
                           return {
                             srNo: index + 1,
-                            buyDate: element.purchaseDate,
-                            sellDate: element.sellDate,
+                            buyDate: element?.purchaseDate,
+                            sellDate: element?.sellDate,
                             headOfIncome:
-                              element.headOfIncome === 'BI'
+                              element?.headOfIncome === 'BI'
                                 ? 'Business or Profession'
                                 : 'Capital Gain',
-                            buyValue: element.purchaseCost,
-                            SaleValue: element.sellValue,
-                            income: element.capitalGain,
+                            buyValue: element?.purchaseCost,
+                            SaleValue: element?.sellValue,
+                            income: element?.capitalGain,
                           };
                         }),
                     },
                     // total crypto gain
                     totalCryptoIncome: this.finalSummary?.itr?.capitalGain
-                      .find((item) => {
-                        return item.assetType === 'VDA';
+                      ?.find((item) => {
+                        return item?.assetType === 'VDA';
                       })
-                      .assetDetails.filter((element) => {
-                        return element.headOfIncome === 'CG';
+                      ?.assetDetails?.filter((element) => {
+                        return element?.headOfIncome === 'CG';
                       })
-                      .reduce(
-                        (total, element) => total + element.capitalGain,
+                      ?.reduce(
+                        (total, element) => total + element?.capitalGain,
                         0
-                      ),
+                      )
+                      ? this.finalSummary?.itr?.capitalGain
+                          ?.find((item) => {
+                            return item?.assetType === 'VDA';
+                          })
+                          ?.assetDetails?.filter((element) => {
+                            return element?.headOfIncome === 'CG';
+                          })
+                          ?.reduce(
+                            (total, element) => total + element?.capitalGain,
+                            0
+                          )
+                      : 0,
 
                     // total capital gain
                     totalCapitalGain:
-                      this.finalSummary?.assessment?.taxSummary.capitalGain,
+                      this.finalSummary?.assessment?.taxSummary?.capitalGain,
                   },
                   totalHeadWiseIncome:
                     this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -5586,43 +5609,55 @@ export class SummaryComponent implements OnInit {
                     // crypto gain
                     crypto: {
                       cryptoDetails: this.finalSummary?.itr?.capitalGain
-                        .find((item) => {
-                          return item.assetType === 'VDA';
+                        ?.find((item) => {
+                          return item?.assetType === 'VDA';
                         })
-                        .assetDetails.filter((element) => {
-                          return element.headOfIncome === 'BI';
+                        ?.assetDetails.filter((element) => {
+                          return element?.headOfIncome === 'BI';
                         })
-                        .map((element, index) => {
+                        ?.map((element, index) => {
                           return {
                             srNo: index + 1,
-                            buyDate: element.purchaseDate,
-                            sellDate: element.sellDate,
+                            buyDate: element?.purchaseDate,
+                            sellDate: element?.sellDate,
                             headOfIncome:
-                              element.headOfIncome === 'BI'
+                              element?.headOfIncome === 'BI'
                                 ? 'Business or Profession'
                                 : 'Capital Gain',
-                            buyValue: element.purchaseCost,
-                            SaleValue: element.sellValue,
-                            income: element.capitalGain,
+                            buyValue: element?.purchaseCost,
+                            SaleValue: element?.sellValue,
+                            income: element?.capitalGain,
                           };
                         }),
                     },
 
                     // total crypto gain
                     totalCryptoIncome: this.finalSummary?.itr?.capitalGain
-                      .find((item) => {
-                        return item.assetType === 'VDA';
+                      ?.find((item) => {
+                        return item?.assetType === 'VDA';
                       })
-                      .assetDetails.filter((element) => {
-                        return element.headOfIncome === 'BI';
+                      ?.assetDetails.filter((element) => {
+                        return element?.headOfIncome === 'BI';
                       })
-                      .reduce(
-                        (total, element) => total + element.capitalGain,
+                      ?.reduce(
+                        (total, element) => total + element?.capitalGain,
                         0
-                      ),
+                      )
+                      ? this.finalSummary?.itr?.capitalGain
+                          ?.find((item) => {
+                            return item?.assetType === 'VDA';
+                          })
+                          ?.assetDetails.filter((element) => {
+                            return element?.headOfIncome === 'BI';
+                          })
+                          ?.reduce(
+                            (total, element) => total + element?.capitalGain,
+                            0
+                          )
+                      : 0,
                   },
                   businessIncomeTotal:
-                    this.finalSummary?.assessment?.taxSummary.businessIncome,
+                    this.finalSummary?.assessment?.taxSummary?.businessIncome,
                 },
                 capitalGain: {
                   // short term gain
@@ -5842,40 +5877,55 @@ export class SummaryComponent implements OnInit {
                   // crypto gain
                   crypto: {
                     cryptoDetails: this.finalSummary?.itr?.capitalGain
-                      .find((item) => {
-                        return item.assetType === 'VDA';
+                      ?.find((item) => {
+                        return item?.assetType === 'VDA';
                       })
-                      .assetDetails.filter((element) => {
-                        return element.headOfIncome === 'CG';
+                      ?.assetDetails?.filter((element) => {
+                        return element?.headOfIncome === 'CG';
                       })
-                      .map((element, index) => {
+                      ?.map((element, index) => {
                         return {
                           srNo: index + 1,
-                          buyDate: element.purchaseDate,
-                          sellDate: element.sellDate,
+                          buyDate: element?.purchaseDate,
+                          sellDate: element?.sellDate,
                           headOfIncome:
-                            element.headOfIncome === 'BI'
+                            element?.headOfIncome === 'BI'
                               ? 'Business or Profession'
                               : 'Capital Gain',
-                          buyValue: element.purchaseCost,
-                          SaleValue: element.sellValue,
-                          income: element.capitalGain,
+                          buyValue: element?.purchaseCost,
+                          SaleValue: element?.sellValue,
+                          income: element?.capitalGain,
                         };
                       }),
                   },
                   // total crypto gain
                   totalCryptoIncome: this.finalSummary?.itr?.capitalGain
-                    .find((item) => {
-                      return item.assetType === 'VDA';
+                    ?.find((item) => {
+                      return item?.assetType === 'VDA';
                     })
-                    .assetDetails.filter((element) => {
-                      return element.headOfIncome === 'CG';
+                    ?.assetDetails?.filter((element) => {
+                      return element?.headOfIncome === 'CG';
                     })
-                    .reduce((total, element) => total + element.capitalGain, 0),
+                    ?.reduce(
+                      (total, element) => total + element?.capitalGain,
+                      0
+                    )
+                    ? this.finalSummary?.itr?.capitalGain
+                        ?.find((item) => {
+                          return item?.assetType === 'VDA';
+                        })
+                        ?.assetDetails?.filter((element) => {
+                          return element?.headOfIncome === 'CG';
+                        })
+                        ?.reduce(
+                          (total, element) => total + element?.capitalGain,
+                          0
+                        )
+                    : 0,
 
                   // total capital gain
                   totalCapitalGain:
-                    this.finalSummary?.assessment?.taxSummary.capitalGain,
+                    this.finalSummary?.assessment?.taxSummary?.capitalGain,
                 },
                 totalHeadWiseIncome:
                   this.finalSummary?.assessment?.taxSummary?.totalIncome,
