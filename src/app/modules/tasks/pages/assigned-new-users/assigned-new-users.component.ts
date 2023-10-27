@@ -71,6 +71,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     { value: 'panNumber', name: 'PAN' }
   ];
   clearUserFilter: number;
+  partnerType: any;
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -374,8 +375,10 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     if (isLeader) {
       this.leaderId = event ? event.userId : null;
     } else {
+      this.partnerType = event.partnerType;
       this.filerId = event ? event.userId : null;
     }
+    debugger
     if (this.filerId) {
       this.agentId = this.filerId;
     } else if (this.leaderId) {
@@ -775,7 +778,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         callerAgentUserId: userData[i].filerUserId,
         statusId: userData[i].statusId,
         statusUpdatedDate: userData[i].statusUpdatedDate,
-        statusName:userData[i].statusName,
+        statusName: userData[i].statusName,
         panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
         eriClientValidUpto: userData[i].eriClientValidUpto,
         laguage: userData[i].laguage,
@@ -1223,6 +1226,9 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     if (this.filerId === this.agentId) {
       param = param + `&filerUserId=${this.filerId}`
     }
+    if (this.partnerType === 'PRINCIPAL') {
+      param = param + '&searchAsPrincipal=true';
+    };
 
     if (this.leaderId === this.agentId) {
       param = param + `&leaderUserId=${this.leaderId}`;
