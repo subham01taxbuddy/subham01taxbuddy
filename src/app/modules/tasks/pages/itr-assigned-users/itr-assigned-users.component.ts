@@ -74,6 +74,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     { value: 'panNumber', name: 'PAN' }
   ];
   clearUserFilter: number;
+  partnerType: any;
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -347,6 +348,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (isLeader) {
       this.leaderId = event ? event.userId : null;
     } else {
+      this.partnerType = event.partnerType;
       this.filerId = event ? event.userId : null;
     }
     if (this.filerId) {
@@ -1309,6 +1311,10 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (this.filerId === this.agentId) {
       param = param + `&filerUserId=${this.filerId}`;
     }
+
+    if (this.partnerType === 'PRINCIPAL') {
+      param = param + '&searchAsPrincipal=true';
+    };
     if (this.leaderId === this.agentId) {
       param = param + `&leaderUserId=${this.leaderId}`;
     }

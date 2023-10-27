@@ -4,8 +4,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { filter, map, startWith } from 'rxjs/operators';
 import { UtilsService } from 'src/app/services/utils.service';
-import {User} from "../../../subscription/components/performa-invoice/performa-invoice.component";
-import {AppConstants} from "../../constants";
+import { User } from "../../../subscription/components/performa-invoice/performa-invoice.component";
+import { AppConstants } from "../../constants";
 import { ReportService } from 'src/app/services/report-service';
 
 @Component({
@@ -20,8 +20,8 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   @Input() disabled: any;
   @Input() checkboxSelection = false;
   @Output() sendFilerList = new EventEmitter<any>();
-  @Input() showOwnerList =false;
-  @Input() showOnlyOwnerList =false;
+  @Input() showOwnerList = false;
+  @Input() showOnlyOwnerList = false;
   @Input() listType = 'ALL';
 
   smeList: any[] = [];
@@ -31,38 +31,38 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   filteredOptions!: Observable<any[]>;
   filteredChild: Observable<any[]>;
   filteredPrincipleIndividuals: Observable<any[]>;
-  filteredLeaders : Observable<any[]>;
-  leaderDetails:any;
+  filteredLeaders: Observable<any[]>;
+  leaderDetails: any;
   principleIndividualDetails: any;
   childDetails: any;
   allFilers: any;
   childList: any;
   childNames: User[];
   principleIndividualNames: User[];
-  leaderNames : User[];
+  leaderNames: User[];
   principleIndividualOptions: User[] = [];
   childOptions: User[] = [];
-  leaderOptions :User[] =[];
+  leaderOptions: User[] = [];
   principleIndividualList: any;
-  leaderList :any;
+  leaderList: any;
   loggedInSme: any;
   roles: any;
-  showChildFilter :boolean =false;
-  partnerType :any;
+  showChildFilter: boolean = false;
+  partnerType: any;
 
   constructor(public utilsService: UtilsService,
     private userMsService: UserMsService,
-    private reportService:ReportService
-    ) {
+    private reportService: ReportService
+  ) {
   }
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
-    this.partnerType =  this.loggedInSme[0]?.partnerType;
-    console.log('all logged in sme info ',this.loggedInSme)
+    this.partnerType = this.loggedInSme[0]?.partnerType;
+    console.log('all logged in sme info ', this.loggedInSme)
 
-    if(this.roles.includes('ROLE_ADMIN')){
+    if (this.roles.includes('ROLE_ADMIN')) {
       this.getLeaders();
       this.getPrincipleIndividuals();
 
@@ -73,31 +73,31 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
       console.log('all filers', this.smeList);
       this.allFilers = this?.smeList?.map((item) => {
-        return {name: item.name, userId: item.userId, partnerType :item.partnerType };
+        return { name: item.name, userId: item.userId, partnerType: item.partnerType };
       });
       this.childOptions = this.allFilers;
 
-    }else if(this.roles.includes('ROLE_LEADER')){
+    } else if (this.roles.includes('ROLE_LEADER')) {
       this.getPrincipleIndividuals();
       this.setFilteredPrincipleIndividuals();
       this.setFilteredChild();
 
 
-    }else if(this.partnerType ==='PRINCIPAL' ){
+    } else if (this.partnerType === 'PRINCIPAL') {
       this.principleIndividualDetails = this.loggedInSme[0];
       this.getChild();
       this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.MY_AGENT_LIST));
       console.log('my agents', this.smeList);
       this.allFilers = this?.smeList?.map((item) => {
-        return {name: item.name, userId: item.userId};
+        return { name: item.name, userId: item.userId };
       });
       this.childOptions = this.allFilers;
       this.setFilteredChild();
     }
 
-     if (this.partnerType == 'PRINCIPAL') {
+    if (this.partnerType == 'PRINCIPAL') {
       this.setPrinciple(this.loggedInSme[0]);
-    } else if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+    } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.setChild(this.loggedInSme[0]);
     }
 
@@ -135,18 +135,18 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
 
   }
 
-  setLeader(leader :any){
+  setLeader(leader: any) {
     this.leaderDetails = leader;
     this.sendLeader.emit(this.leaderDetails);
     console.log('emitting value leader details', this.leaderDetails);
   }
 
-  setPrinciple(owner: any){
+  setPrinciple(owner: any) {
     this.principleIndividualDetails = owner;
     this.sendPrincipleIndividual.emit(this.principleIndividualDetails);
   }
 
-  setChild(child: any){
+  setChild(child: any) {
     this.childDetails = child;
     this.sendFiler.emit(this.childDetails);
   }
@@ -171,13 +171,13 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     );
   }
 
-  setFilteredChild(){
+  setFilteredChild() {
     this.filteredChild = this.searchChild.valueChanges.pipe(
       startWith(''),
       map((value) => {
         if (!this.utilsService.isNonEmpty(value)) {
           this.setChild(null);
-          if(!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
+          if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
             this.childDetails = this.loggedInSme[0];
           }
         }
@@ -210,7 +210,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   }
 
 
-  getLeaderNameId(option){
+  getLeaderNameId(option) {
     this.setLeader(option)
     this.getPrincipleIndividuals();
   }
@@ -218,11 +218,11 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   getPrincipleNameId(option) {
     this.setPrinciple(option);
     console.log(option);
-    if(option?.partnerType ==='PRINCIPAL'){
-      this.showChildFilter =true;
+    if (option?.partnerType === 'PRINCIPAL') {
+      this.showChildFilter = true;
       this.getChild();
-    }else{
-      this.showChildFilter=false;
+    } else {
+      this.showChildFilter = false;
     }
   }
 
@@ -240,12 +240,12 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     // }
   }
 
-  setList2(){
+  setList2() {
 
   }
 
 
-  getLeaders(){
+  getLeaders() {
     // 'https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000?leader=true' \
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
@@ -254,11 +254,11 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       console.log('new leader list result -> ', result);
       this.leaderList = result.data;
       this.leaderNames = this.leaderList.map((item) => {
-        return {name: item.name, userId: item.userId};
+        return { name: item.name, userId: item.userId };
       });
-     this.leaderOptions = this.leaderNames
+      this.leaderOptions = this.leaderNames
 
-    },error=>{
+    }, error => {
       this.utilsService.showSnackBar('Error in API of get leader list');
     })
 
@@ -267,26 +267,26 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   getPrincipleIndividuals() {
     // https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000?partnerType=Individual%2CPrincipal'
     // if(this.listType === 'ALL') {
-      const loggedInSmeUserId = this.loggedInSme[0].userId;
-      let param = '';
+    const loggedInSmeUserId = this.loggedInSme[0].userId;
+    let param = '';
 
-      if (this.leaderDetails?.userId) {
-        param = `/bo/sme-details-new/${this.leaderDetails?.userId}?partnerType=INDIVIDUAL,PRINCIPAL`;
-      }else{
-        param = `/bo/sme-details-new/${loggedInSmeUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
-      }
+    if (this.leaderDetails?.userId) {
+      param = `/bo/sme-details-new/${this.leaderDetails?.userId}?partnerType=INDIVIDUAL,PRINCIPAL`;
+    } else {
+      param = `/bo/sme-details-new/${loggedInSmeUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
+    }
 
-      this.reportService.getMethod(param).subscribe((result: any) => {
-        console.log('principle/individual list result -> ', result);
-        this.principleIndividualList = result.data;
-        console.log('principleIndividualList', this.principleIndividualList);
-        this.principleIndividualNames = this.principleIndividualList.map((item) => {
-          return {name: item.name, userId: item.userId ,partnerType :item.partnerType};
-        });
-        this.principleIndividualOptions = this.principleIndividualNames;
-        // this.setFilteredPrincipleIndividuals();
-        console.log(' principleIndividualNames -> ', this.principleIndividualNames);
+    this.reportService.getMethod(param).subscribe((result: any) => {
+      console.log('principle/individual list result -> ', result);
+      this.principleIndividualList = result.data;
+      console.log('principleIndividualList', this.principleIndividualList);
+      this.principleIndividualNames = this.principleIndividualList.map((item) => {
+        return { name: item.name, userId: item.userId, partnerType: item.partnerType };
       });
+      this.principleIndividualOptions = this.principleIndividualNames;
+      // this.setFilteredPrincipleIndividuals();
+      console.log(' principleIndividualNames -> ', this.principleIndividualNames);
+    });
     // } else if(this.listType === 'ASSIGNED') {
     //   const loggedInSmeUserId = this.loggedInSme[0].userId;
     //   let param = `/sme-details-new/${loggedInSmeUserId}?ownersByLeader=true`;
@@ -320,7 +320,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
       this.childList = result.data;
       console.log('childList', this.childList);
       this.childNames = this?.principleIndividualList?.map((item) => {
-        return { name: item.name, userId: item.userId,partnerType :item.partnerType };
+        return { name: item.name, userId: item.userId, partnerType: item.partnerType };
       });
       this.childOptions = this.childList; //this.filerNames;
       this.setFilteredChild();
@@ -341,11 +341,11 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     );
   }
 
-  resetDropdown(){
+  resetDropdown() {
     this.searchLeader.setValue(null);
     this.searchPrincipleIndividual.setValue(null);
     this.searchChild.setValue(null);
-    this.leaderDetails =null;
+    this.leaderDetails = null;
     this.principleIndividualDetails = null;
     this.childDetails = null;
   }
@@ -368,16 +368,17 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   }
 
 
-  getFilerList(searchChild){
+  getFilerList(searchChild) {
     let filerIds = []
     this.filteredChild.subscribe(filteredChild => {
       filteredChild.forEach(filer => {
         if (searchChild.value.includes(filer.name)) {
           filerIds.push(filer.userId);
         }
-      })})
-      console.log("filer ids",filerIds)
-      this.sendFilerList.emit(filerIds);
+      })
+    })
+    console.log("filer ids", filerIds)
+    this.sendFilerList.emit(filerIds);
   }
 
 }
