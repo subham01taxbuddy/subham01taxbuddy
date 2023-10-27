@@ -413,7 +413,6 @@ export class OtherInformationComponent implements OnInit {
         booksSpouse92EFlg: '',
         headIncomes: [],
       };
-      this.serviceCall('governed by the Portuguese Civil Code');
     }
   }
 
@@ -425,7 +424,6 @@ export class OtherInformationComponent implements OnInit {
         this.Copy_ITR_JSON.unlistedSharesDetails = [];
         (this.sharesForm.controls['sharesArray'] as FormArray).clear();
         this.Copy_ITR_JSON.systemFlags.haveUnlistedShares = false;
-        this.serviceCall('Unlisted shares');
       }
     }
   }
@@ -440,7 +438,6 @@ export class OtherInformationComponent implements OnInit {
         // this.directorForm.reset();
         (this.directorForm.controls['directorsArray'] as FormArray).clear();
         this.Copy_ITR_JSON.systemFlags.directorInCompany = false;
-        this.serviceCall('Director in company');
       }
     }
     console.log('Remove shares data here');
@@ -464,7 +461,6 @@ export class OtherInformationComponent implements OnInit {
         this.firmForm.reset();
         this.formAdded = false;
         (this.firmForm.controls['firmsArray'] as FormArray).clear();
-        this.serviceCall('Partner in firm');
       }
     }
     console.log('Remove shares data here');
@@ -583,8 +579,6 @@ export class OtherInformationComponent implements OnInit {
         if(msg === 'saveAll'){
           this.otherInfoSaved.emit(true);
           this.utilsService.showSnackBar('All details are saved successfully');
-        } else {
-          this.utilsService.showSnackBar(msg + ' details removed successfully');
         }
 
         if (this.ITR_JSON.systemFlags?.directorInCompany) {
