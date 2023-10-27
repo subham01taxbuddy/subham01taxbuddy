@@ -951,8 +951,7 @@ export class ItrValidationService {
           const profitLossACIncomes = obj[key][i]?.incomes;
           if (
             (obj[key][i]?.netProfitfromNonSpeculativeIncome === 0 ||
-              obj[key][i]?.netProfitfromNonSpeculativeIncome === null) &&
-            obj[key][i]?.incomes.length === 0
+              obj[key][i]?.netProfitfromNonSpeculativeIncome === null) && obj[key][i]?.businessType === 'NONSPECULATIVEINCOME'
           ) {
             delete obj[key][i];
           }

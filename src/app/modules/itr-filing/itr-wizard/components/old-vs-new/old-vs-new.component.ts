@@ -1308,29 +1308,23 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             this.particularsArray = [
               {
                 label: 'Income from Salary',
-                old: this.oldSummaryIncome?.summaryIncome.summarySalaryIncome
-                  .totalSalaryTaxableIncome,
-                new: this.newSummaryIncome?.summaryIncome.summarySalaryIncome
-                  .totalSalaryTaxableIncome,
+                old: this.oldSummaryIncome?.taxSummary.salary,
+                new: this.newSummaryIncome?.taxSummary.salary,
               },
               {
                 label: 'Income from House Property',
-                old: Math.max(this.oldSummaryIncome?.summaryIncome.summaryHpIncome
-                  .totalHPTaxableIncome, 0),
-                new: Math.max(this.newSummaryIncome?.summaryIncome.summaryHpIncome
-                  .totalHPTaxableIncome, 0),
+                old: this.oldSummaryIncome?.taxSummary.housePropertyIncome,
+                new: this.newSummaryIncome?.taxSummary.housePropertyIncome,
               },
               {
                 label: 'Income from Business and Profession',
-                old: getTotalBusinessIncome(this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome),
-                new: getTotalBusinessIncome(this.newSummaryIncome?.summaryIncome.summaryBusinessIncome)
+                old: this.oldSummaryIncome?.taxSummary.businessIncome,
+                new: this.newSummaryIncome?.taxSummary.businessIncome
               },
               {
                 label: 'Income from Capital Gains',
-                old: getTotalCapitalGain(this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                  .capitalGain),
-                new:getTotalCapitalGain(this.newSummaryIncome?.taxSummary.cgIncomeN
-                  .capitalGain)
+                old: this.oldSummaryIncome?.taxSummary.capitalGain,
+                new: this.newSummaryIncome?.taxSummary.capitalGain,
               },
               // {
               //   label: 'Income from Crypto',
@@ -1452,29 +1446,23 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           this.particularsArray = [
             {
               label: 'Income from Salary',
-              old: this.oldSummaryIncome?.summaryIncome.summarySalaryIncome
-                .totalSalaryTaxableIncome,
-              new: this.newSummaryIncome?.summaryIncome.summarySalaryIncome
-                .totalSalaryTaxableIncome,
+              old: this.oldSummaryIncome?.taxSummary.salary,
+              new: this.newSummaryIncome?.taxSummary.salary,
             },
             {
               label: 'Income from House Property',
-              old: Math.max(this.oldSummaryIncome?.summaryIncome.summaryHpIncome
-                .totalHPTaxableIncome, 0),
-              new: Math.max(this.newSummaryIncome?.summaryIncome.summaryHpIncome
-                .totalHPTaxableIncome,0)
+              old: this.oldSummaryIncome?.taxSummary.housePropertyIncome,
+              new: this.newSummaryIncome?.taxSummary.housePropertyIncome,
             },
             {
               label: 'Income from Business and Profession',
-              old: getTotalBusinessIncome(this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome),
-              new: getTotalBusinessIncome(this.newSummaryIncome?.summaryIncome.summaryBusinessIncome)
+              old: this.oldSummaryIncome?.taxSummary.businessIncome,
+              new: this.newSummaryIncome?.taxSummary.businessIncome
             },
             {
               label: 'Income from Capital Gains',
-              old: getTotalCapitalGain(this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                .capitalGain),
-              new:getTotalCapitalGain(this.newSummaryIncome?.summaryIncome.cgIncomeN
-                .capitalGain)
+              old: this.oldSummaryIncome?.taxSummary.capitalGain,
+              new: this.newSummaryIncome?.taxSummary.capitalGain,
             },
             //  {
             //   label: 'Income from Crypto',
@@ -2005,17 +1993,6 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
     ).controls['date'].setValue(moment(dateString).toDate());
   }
-}
-
-function getTotalCapitalGain(capitalGain: Array<any>[]): number {
-  if(capitalGain != null && capitalGain.length>0)
-    return capitalGain.filter((cg) => (cg as any).assetType !== 'VDA').map(cg=>Math.max((cg as any).incomeAfterInternalSetOff,0)).reduce((total, value)=> total + value,0);
-  else
-    return 0;
-}
-
-function getTotalBusinessIncome(summaryBusinessIncome: any): number {
-  return Math.max(summaryBusinessIncome.totalBusinessIncome, 0);
 }
 
 function getCFL(cfl: any): number {

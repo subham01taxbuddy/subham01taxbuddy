@@ -266,7 +266,7 @@
                   {{ income.value.label }}
                 </td>
 
-                <td *ngIf="income.value.allowType === 'COMPENSATION_ON_VRS'">
+                <td class="flex align-items-center" style="flex-direction: column;" *ngIf="income.value.allowType === 'COMPENSATION_ON_VRS'">
                   <div>
                     Whether Exemption u/s 10(10C) is taken in Previous
                     Assessment Year ??<br />
@@ -297,51 +297,64 @@
                       > </mat-radio-group
                     ><br />
                   </div>
-                  <mat-form-field
-                    class="input-field-width"
-                    style="width: 70% !important"
-                  >
-                    <input
-                      type="number"
-                      trim
-                      matInput
-                      placeholder=""
-                      name="allowValue[i]"
-                      formControlName="allowValue"
-                      class="input-field"
-                      [disabled]="isVrsExemptionTaken"
-                    />
-                  </mat-form-field>
-                  <!-- Calculator button -->
-                  <i *ngIf="false"
-                    #buttonContainer
-                    class="fa-duotone fa-calculator fa-2xl"
-                    style="
-                      --fa-primary-color: #00b0cb;
-                      --fa-secondary-color: #000000;
-                      --fa-secondary-opacity: 0;
-                      margin-left: 5%;
-                    "
-                    id="buttonContainer"
-                    (click)="calculator(income.value.allowType, i)"
-                  ></i>
+                  <div style="width: 100%;" class="flex align-items-center">
+                    <div style="width: 100%;">
+                      <mat-form-field
+                        class="input-field-width"
+                        style="width: 70% !important"
+                      >
+                        <input
+                          type="number"
+                          trim
+                          matInput
+                          placeholder=""
+                          name="allowValue[i]"
+                          formControlName="allowValue"
+                          class="input-field"
+                          [disabled]="isVrsExemptionTaken"
+                        />
+                      </mat-form-field>
+                      <mat-error *ngIf="freeze && (income.value.allowType === 'COMPENSATION_ON_VRS' || income.value.allowType === 'FIRST_PROVISO' || income.value.allowType === 'SECOND_PROVISO' )">
+                        Only any one of the three is allowed
+                        </mat-error>
+                    </div>
+                    <!-- Calculator button -->
+                    <i
+                      #buttonContainer
+                      class="fa-duotone fa-calculator fa-2xl"
+                      style="
+                        --fa-primary-color: #00b0cb;
+                        --fa-secondary-color: #000000;
+                        --fa-secondary-opacity: 0;
+                        margin-right: 5%;
+                      "
+                      id="buttonContainer"
+                      (click)="calculator(income.value.allowType, i)"
+                    ></i>
+                  </div>
                 </td>
-                <td *ngIf="income.value.allowType !== 'COMPENSATION_ON_VRS'">
-                  <mat-form-field
-                    class="input-field-width"
-                    style="width: 70% !important; margin-right: 5px"
-                  >
-                    <input
-                      type="text"
-                      trim
-                      matInput
-                      placeholder=""
-                      name="allowValue[i]"
-                      formControlName="allowValue"
-                      class="input-field"
-                      maxlength="125"
-                    />
-                  </mat-form-field>
+                <td class="flex align-items-center" *ngIf="income.value.allowType !== 'COMPENSATION_ON_VRS'">
+                  <div style="width:100%">
+                    <mat-form-field
+                      class="input-field-width"
+                      style="width: 70% !important; margin-right: 5px"
+                    >
+                      <input
+                        type="text"
+                        trim
+                        matInput
+                        placeholder=""
+                        name="allowValue[i]"
+                        formControlName="allowValue"
+                        class="input-field"
+                        maxlength="125"
+                      />
+
+                    </mat-form-field>
+                    <mat-error *ngIf="freeze && (income.value.allowType === 'COMPENSATION_ON_VRS' || income.value.allowType === 'FIRST_PROVISO' || income.value.allowType === 'SECOND_PROVISO' )">
+                      Only any one is allowed of the three
+                      </mat-error>
+                  </div>
                   <!-- Calculator button -->
                   <i *ngIf="false"
                     #buttonContainer
@@ -350,7 +363,7 @@
                       --fa-primary-color: #00b0cb;
                       --fa-secondary-color: #000000;
                       --fa-secondary-opacity: 0;
-                      margin-left: 5%;
+                      margin-right: 5%;
                     "
                     id="buttonContainer"
                     (click)="calculator(income.value.allowType, i)"

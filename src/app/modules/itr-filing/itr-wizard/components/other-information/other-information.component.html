@@ -372,7 +372,7 @@
 <!-- Second radio bar ends -->
 
 <!-- third radio bar starts -->
-<div class="gryBk1" *ngIf="false">
+<div class="gryBk1">
   <div class="row">
     <div class="col-sm-8">
       <div class="txBg">
@@ -454,7 +454,7 @@
 <!-- third radio bar ends -->
 
 <!-- fourth radio bar starts -->
-<div class="gryBk1" *ngIf="false">
+<div class="gryBk1">
   <div class="row">
     <div class="col-sm-8">
       <div class="txBg">
@@ -560,9 +560,10 @@
               <div class="col-sm-6 spsTp">
                 <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
                 <mat-form-field appearance="outline">
-                  <input digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required />
-                  <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
+                  <input (input)="validationHp()" digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required />
                 </mat-form-field>
+                <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
+                <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedAmountOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
               </div>
               <div class="col-sm-6 spsTp">
                 <mat-label class="inputLabel">Amount of TDS deducted on income *</mat-label>
@@ -574,9 +575,10 @@
               <div class="col-sm-6 spsTp">
                 <mat-label class="inputLabel">TDS apportioned in the hands of Spouse *</mat-label>
                 <mat-form-field appearance="outline">
-                  <input digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required/>
+                  <input (input)="validationHp()" digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required/>
                   <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedTDSOfSpouse').hasError('required')">Please enter the amount</mat-error>
                 </mat-form-field>
+                <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedTDSOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
               </div>
             </div>
             </div>
@@ -600,9 +602,10 @@
             <div class="col-sm-6 spsTp">
               <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
               <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required/>
+                <input (input)="validationBusiness()" digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required/>
                 <mat-error *ngIf="schedule5AForm.get('businessOrProfession.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
               </mat-form-field>
+              <mat-error *ngIf="schedule5AForm.get('businessOrProfession.apportionedAmountOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
             </div>
             <div class="col-sm-6 spsTp">
               <mat-label class="inputLabel">Amount of TDS deducted on income *</mat-label>
@@ -614,9 +617,10 @@
             <div class="col-sm-6 spsTp">
               <mat-label class ="inputLabel">TDS apportioned in the hands of Spouse *</mat-label>
               <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required />
+                <input (input)="validationBusiness()" digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required />
                 <mat-error *ngIf="schedule5AForm.get('businessOrProfession.apportionedTDSOfSpouse').hasError('required')">Please enter the amount</mat-error>
               </mat-form-field>
+              <mat-error *ngIf="schedule5AForm.get('businessOrProfession.apportionedTDSOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
             </div>
           </div>
           </div>
@@ -640,9 +644,10 @@
             <div class="col-sm-6 spsTp">
               <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
               <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required />
+                <input (input)="validationCg()" digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10"  required />
                 <mat-error *ngIf="schedule5AForm.get('capitalGain.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
               </mat-form-field>
+              <mat-error *ngIf="schedule5AForm.get('capitalGain.apportionedAmountOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
             </div>
             <div class="col-sm-6 spsTp">
               <mat-label class="inputLabel">Amount of TDS deducted on income *</mat-label>
@@ -654,16 +659,16 @@
             <div class="col-sm-6 spsTp">
               <mat-label class="inputLabel">TDS apportioned in the hands of Spouse *</mat-label>
               <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required />
+                <input (input)="validationCg()" digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required />
                 <mat-error *ngIf="schedule5AForm.get('capitalGain.apportionedTDSOfSpouse').hasError('required')">Please enter the amount</mat-error>
               </mat-form-field>
+              <mat-error *ngIf="schedule5AForm.get('capitalGain.apportionedTDSOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
             </div>
           </div>
           </div>
          </div>
 
          <!-- Other Sources of Income Section -->
-
          <div class="spsTp new-border">
           <div class="txBg new-color">
             4 . Other sources
@@ -681,9 +686,10 @@
             <div class="col-sm-6 spsTp">
               <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
               <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name ="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required />
+                <input (input)="validationOth()" digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name ="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10"  required />
                 <mat-error *ngIf="schedule5AForm.get('otherSource.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
               </mat-form-field>
+              <mat-error *ngIf="schedule5AForm.get('otherSource.apportionedAmountOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
             </div>
             <div class="col-sm-6 spsTp">
               <mat-label class="inputLabel">Amount of TDS deducted on income *</mat-label>
@@ -695,9 +701,10 @@
             <div class="col-sm-6 spsTp">
               <mat-label class="inputLabel">TDS apportioned in the hands of Spouse *</mat-label>
               <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required />
+                <input (input)="validationOth()" digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required />
                 <mat-error *ngIf="schedule5AForm.get('otherSource.apportionedTDSOfSpouse').hasError('required')">Please enter the amount</mat-error>
               </mat-form-field>
+              <mat-error *ngIf="schedule5AForm.get('otherSource.apportionedTDSOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
             </div>
           </div>
           </div>
