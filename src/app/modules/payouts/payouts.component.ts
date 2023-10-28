@@ -8,7 +8,7 @@ import {HttpClient} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {ItrMsService} from "../../services/itr-ms.service";
 import {NavbarService} from "../../services/navbar.service";
-import {formatDate} from "@angular/common";
+import {DatePipe, formatDate} from "@angular/common";
 import {UserNotesComponent} from "../shared/components/user-notes/user-notes.component";
 import {ChatOptionsDialogComponent} from "../tasks/components/chat-options/chat-options-dialog.component";
 import {SmeListDropDownComponent} from "../shared/components/sme-list-drop-down/sme-list-drop-down.component";
@@ -19,11 +19,34 @@ import { ConfirmDialogComponent } from '../shared/components/confirm-dialog/conf
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from '../shared/interfaces/cache-manager.interface';
 import { ReportService } from 'src/app/services/report-service';
+import { FormControl, Validators } from '@angular/forms';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 @Component({
   selector: 'app-payouts',
   templateUrl: './payouts.component.html',
-  styleUrls: ['./payouts.component.scss']
+  styleUrls: ['./payouts.component.scss'],
+  providers: [
+    DatePipe,
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
 export class PayoutsComponent implements OnInit,OnDestroy {
 
@@ -64,6 +87,12 @@ export class PayoutsComponent implements OnInit,OnDestroy {
   roles:any;
   dataOnLoad = true;
   showCsvMessage: boolean;
+  searchAsPrinciple :boolean =false;
+  startDate= new FormControl('', [Validators.required]);
+  endDate= new FormControl('', [Validators.required]);
+  maxDate = new Date(2024, 2, 31);
+  minDate = new Date(2023, 1, 1);
+  toDateMin: any;
 
   constructor(private userService: UserMsService,
               private _toastMessageService: ToastMessageService,
@@ -76,7 +105,11 @@ export class PayoutsComponent implements OnInit,OnDestroy {
               private genericCsvService: GenericCsvService,
               private cacheManager: CacheManager,
               private reportService:ReportService,
+              public datePipe: DatePipe,
               @Inject(LOCALE_ID) private locale: string) {
+    this.startDate.setValue('2023-01-01');
+    this.endDate.setValue(new Date());
+    this.setToDateValidation(this.startDate.value);
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
 
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
@@ -142,15 +175,26 @@ export class PayoutsComponent implements OnInit,OnDestroy {
     this.currentUserId = 0;
   }
 
-  ownerId: number;
+  leaderId: number;
   filerId: number;
-  fromOwner(event) {
+  fromLeader(event) {
     if(event) {
-      this.ownerId = event ? event.userId : null;
+      this.leaderId = event ? event.userId : null;
       console.log('fromowner:', event);
       //let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
       //let queryString = this.ownerId ? `&ownerUserId=${this.ownerId}${statusFilter}` : `${statusFilter}`;
       // this.serviceCall('');
+    }
+  }
+  fromPrinciple(event){
+    if(event){
+      if (event?.partnerType === 'PRINCIPAL') {
+        this.filerId = event ? event.userId : null;
+        this.searchAsPrinciple = true;
+      } else {
+        this.filerId = event ? event.userId : null;
+        this.searchAsPrinciple = false;
+      }
     }
   }
   fromFiler(event) {
@@ -164,7 +208,7 @@ export class PayoutsComponent implements OnInit,OnDestroy {
 
   advanceSearch(key: any) {
     this.user_data = [];
-    if(this.ownerId || this.filerId){
+    if(this.leaderId || this.filerId){
       this.serviceCall('');
     }
     else if (this.searchVal !== "") {
@@ -211,22 +255,31 @@ export class PayoutsComponent implements OnInit,OnDestroy {
   }
 
   serviceCall(queryString,pageChange?){
+    //https://dev-api.taxbuddy.com/report/bo/itr-filing-credit?fromDate=2022-01-10&toDate=2023-10-27&page=0&size=20' \
     if(!pageChange){
       this.cacheManager.clearCache();
-      console.log('in clear cache')
     }
     this.loading = true;
+
+    let fromData =this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
+
     let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
     let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
-    if(this.filerId) {
-      queryString += this.filerId ? `&filerUserId=${this.filerId}${statusFilter}${payOutStatusFilter}` : `${statusFilter}${payOutStatusFilter}`;
-    } else if(this.ownerId){
-      queryString += this.ownerId ? `&ownerUserId=${this.ownerId}${statusFilter}${payOutStatusFilter}` : `${statusFilter}${payOutStatusFilter}`;
-    } else{
-      queryString += `${statusFilter}${payOutStatusFilter}`;
+
+    let userFilter = ''
+    if (this.leaderId && !this.filerId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11&page=${this.config.currentPage-1}&size=${this.config.itemsPerPage}${queryString}`;
-    this.itrMsService.getMethod(param).subscribe((result: any) => {
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+
+    const param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}&page=${this.config.currentPage-1}&size=${this.config.itemsPerPage}${statusFilter}${payOutStatusFilter}${userFilter}${queryString}`;
+    this.reportService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
       console.log(result);
       if(result.success) {
@@ -312,8 +365,8 @@ export class PayoutsComponent implements OnInit,OnDestroy {
         }
       },
       {
-        headerName: 'Owner Name',
-        field: 'ownerUserId',
+        headerName: 'Leader Name',
+        field: 'leaderUserId',
         width: 110,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -838,20 +891,26 @@ export class PayoutsComponent implements OnInit,OnDestroy {
     this.loading = true;
     this.showCsvMessage = true;
 
+    let fromData =this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
+
     let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
     let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';
 
     let userFilter = ''
-    if (this.ownerId && !this.filerId) {
-      userFilter = `&ownerUserId=${this.ownerId}`;
+    if (this.leaderId && !this.filerId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.filerId) {
-      userFilter = `&filerUserId=${this.filerId}`;
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    const param = `/dashboard/itr-filing-credit/${this.loggedInUserId}?fromDate=2023-01-01&toDate=2023-05-11${statusFilter}${payOutStatusFilter}${userFilter}`;
+    const param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}${statusFilter}${payOutStatusFilter}${userFilter}`;
 
-    await this.genericCsvService.downloadReport(environment.url + '/itr', param, 0, 'payout-report','');
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report','');
     this.loading = false;
     this.showCsvMessage = false;
   }
@@ -859,7 +918,7 @@ export class PayoutsComponent implements OnInit,OnDestroy {
   resetFilters(){
     this.cacheManager.clearCache();
     this.filerId = null;
-    this.ownerId = null;
+    this.leaderId = null;
     this.selectedStatus = this.statusList[2].value;
     this.selectedPayoutStatus = this.paymentStatusList[0].value;
     this.key = null;
@@ -881,5 +940,11 @@ export class PayoutsComponent implements OnInit,OnDestroy {
   ngOnDestroy() {
     this.cacheManager.clearCache();
   }
+
+  setToDateValidation(FromDate) {
+    console.log('FromDate: ', FromDate);
+    this.toDateMin = FromDate;
+  }
+
 
 }
