@@ -138,7 +138,7 @@ export class SidebarComponent {
         { name: 'Proforma Invoice', url: '/subscription/proforma-invoice', roles: [] },
         { name: 'Refund Request', url: '/subscription/refund-request', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Tax Invoice', url: '/subscription/tax-invoice', roles: [] },
-        { name: 'Credit Note', url: '/subscription/credit-note', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Credit Note', url: '/subscription/credit-note', roles: ['ROLE_ADMIN'] },
         { name: 'Old Invoices', url: '/subscription/old-invoices', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         // { name: 'Pause Reminders', url: '/subscription/pause-reminders', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]

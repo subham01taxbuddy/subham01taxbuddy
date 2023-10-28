@@ -337,7 +337,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
-
+    this?.serviceDropDown?.resetService();
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
     this.status.setValue(this.Status[0].value);
@@ -350,7 +350,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   }
 
 
-  getInvoice(isCoOwner?, agentId?, pageChange?) {
+  getInvoice(pageChange?) {
     // https://dev-api.taxbuddy.com/report/bo/v1/invoice?fromDate=2023-04-01&toDate=2023-10-25&page=0&pageSize=20&paymentStatus=Paid' \
 
     if (!pageChange) {
@@ -420,7 +420,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       param = param + sortByJson;
     }
 
-    this.userMsService.getMethodNew(param).subscribe((response: any) => {
+    this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
         this.invoiceData = response.data.content;
@@ -879,7 +879,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      this.getInvoice('', '', event);
+      this.getInvoice( event);
     }
   }
 

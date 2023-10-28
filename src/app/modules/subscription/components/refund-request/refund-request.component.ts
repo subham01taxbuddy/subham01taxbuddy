@@ -16,6 +16,8 @@ import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
+import { ReportService } from 'src/app/services/report-service';
+import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 
 @Component({
   selector: 'app-refund-request',
@@ -30,9 +32,18 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     currentPage: 1,
     totalItems: null,
   };
+  searchParam: any = {
+    statusId: null,
+    page: 0,
+    size: 20,
+    serviceType:null,
+    mobileNumber: null,
+    emailId: null,
+  };
   refundListGridOptions: GridOptions;
   coOwnerId: number;
   coFilerId: number;
+  leaderId:number;
   ownerId: number;
   filerId: number;
   agentId: number;
@@ -50,11 +61,27 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     { value: 'payableRefundAmount', name: 'Amount to refund' },
     { value: 'refundPaidAmount', name: 'Amount Paid Updates' },
   ];
+  Type: any = [
+    { label: 'Cancel', value: 'cancel' },
+    { label: 'Downgraded', value: 'downgraded' },
+  ];
+  searchAsPrinciple :boolean =false;
+  searchBy: any = {};
+  searchMenus = [
+    { value: 'name', name: 'User Name' },
+    { value: 'email', name: 'Email' },
+    { value: 'mobile', name: 'Mobile No' },
+    { value: 'invoiceNo', name: 'Invoice No' },
+  ];
+  clearUserFilter: number;
+  itrStatus: any = [];
+  ogStatusList: any = [];
   invoiceFormGroup: FormGroup = this.fb.group({
-
+    requestType: new FormControl(''),
     mobile: new FormControl(''),
     email: new FormControl(''),
     invoiceNo: new FormControl(''),
+    name: new FormControl(''),
   });
 
   get mobile() {
@@ -69,6 +96,13 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     return this.invoiceFormGroup.controls['invoiceNo'] as FormControl;
   }
 
+  get requestType() {
+    return this.invoiceFormGroup.controls['requestType'] as FormControl;
+  }
+  get name() {
+    return this.invoiceFormGroup.controls['name'] as FormControl;
+  }
+
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -79,6 +113,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     private utilService: UtilsService,
     private cacheManager: CacheManager,
     private reviewService: ReviewService,
+    private reportService:ReportService,
     @Inject(LOCALE_ID) private locale: string
   ) {
     let roles = this.utilsService.getUserRoles();
@@ -95,7 +130,6 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
       }
       ,
-
       sortable: true,
       defaultColDef: {
         resizable: true,
@@ -105,6 +139,39 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         },
       },
     };
+  }
+
+  ngOnInit(): void {
+    this.getMasterStatusList();
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
+    this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
+    if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      this.getRefundRequestList(0);
+    } else {
+      this.dataOnLoad = false;
+    }
+    // this.resetFilters();
+  }
+
+  searchByObject(object) {
+    this.searchBy = object;
+    console.log('object from search param ',this.searchBy);
+  }
+
+  fromServiceType(event) {
+    this.searchParam.serviceType = event;
+    // this.search('serviceType', 'isAgent');
+
+    if (this.searchParam.serviceType) {
+      setTimeout(() => {
+        this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
+      }, 100);
+    }
+  }
+
+  async getMasterStatusList() {
+    // this.itrStatus = await this.utilsService.getStoredMasterStatusList();
+    this.ogStatusList = await this.utilService.getStoredMasterStatusList();
   }
 
   sortByObject(object) {
@@ -117,33 +184,31 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     return { temp, lineBreak };
   }
 
-  fromOwner(event, isOwner) {
-    if (event) {
-      this.ownerId = null;
-      this.filerId = null;
-      if (isOwner) {
-        this.ownerId = event ? event.userId : null;
-        // this.getRefundRequestList(0, 'ownerUserId', this.ownerId);
-      } else {
-        this.filerId = event ? event.userId : null;
-        // this.getRefundRequestList(0, 'filerUserId', this.filerId);
+
+  fromSme(event, isOwner,fromPrinciple?) {
+    console.log('sme-drop-down', event, isOwner);
+    if (isOwner) {
+      this.leaderId = event ? event.userId : null;
+    } else {
+      if(fromPrinciple){
+        if (event?.partnerType === 'PRINCIPAL') {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = true;
+        } else {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }else{
+        if(event){
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
       }
     }
   }
 
-  ngOnInit(): void {
-    this.loggedInUserRoles = this.utilsService.getUserRoles();
-    this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
-    if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
-      this.getRefundRequestList(0);
-    } else {
-      this.dataOnLoad = false;
-    }
-    // this.resetFilters();
-  }
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
-
+  @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   resetFilters() {
     this.cacheManager.clearCache();
     this.invoiceFormGroup.controls['email'].setValue(null);
@@ -154,90 +219,83 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     const loginSMEInfo = data[0];
     this.invoiceFormGroup.reset();
     this.invoiceFormGroup.updateValueAndValidity();
+    this?.serviceDropDown?.resetService();
     this.filerId = null;
     this.ownerId = null;
-    if (this.isOwner) {
-      this.getRefundRequestList(0, 'ownerUserId', loginSMEInfo.userId);
-    } else {
-      if (this.dataOnLoad) {
-        this.getRefundRequestList(0);
-      } else {
-        //clear grid for loaded data
-        this.refundListGridOptions.api?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
-      }
-    }
-
+    this.refundListGridOptions.api?.setRowData(this.createRowData([]));
+    this.config.totalItems = 0;
   }
 
   applyFilter() {
-    const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    const loginSMEInfo = data[0];
-    if (this.isOwner) {
-      this.getRefundRequestList(0, 'ownerUserId', loginSMEInfo.userId);
-    } else {
-      this.getRefundRequestList(0);
-    }
+  this.getRefundRequestList(0);
   }
 
   getRefundRequestList(pageNo, isUserId?, id?, fromPageChange?) {
+    // https://dev-api.taxbuddy.com/report/bo/refund/requests?page=0&size=20
     if (!fromPageChange) {
       this.cacheManager.clearCache();
-      console.log('in clear cache')
     }
-    let pagination;
+
     let param;
 
-    let mobileFilter = '';
-    if (
-      this.utilService.isNonEmpty(
-        this.invoiceFormGroup.controls['mobile'].value
-      ) &&
-      this.invoiceFormGroup.controls['mobile'].valid
-    ) {
-      mobileFilter =
-        '&mobile=' + this.invoiceFormGroup.controls['mobile'].value;
+    if(this.searchBy?.mobile){
+      this.mobile.setValue(this.searchBy?.mobile)
     }
-    let emailFilter = '';
-    if (
-      this.utilService.isNonEmpty(
-        this.invoiceFormGroup.controls['email'].value
-      ) &&
-      this.invoiceFormGroup.controls['email'].valid
-    ) {
-      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value.toLocaleLowerCase();
+    if(this.searchBy?.email){
+      this.email.setValue(this.searchBy?.email)
     }
-    let invoiceFilter = '';
-    if (
-      this.utilService.isNonEmpty(
-        this.invoiceFormGroup.controls['invoiceNo'].value
-      )
-    ) {
-      invoiceFilter =
-        '&invoiceNo=' +
-        this.invoiceFormGroup.controls['invoiceNo'].value;
+    if(this.searchBy?.txbdyInvoiceId){
+      this.invoiceNo.setValue(this.searchBy?.txbdyInvoiceId)
+    }
+    if(this.searchBy?.name){
+      this.name.setValue(this.searchBy?.name)
     }
 
-    if (id) {
-      pagination = `&page=${pageNo}&size=${this.config.itemsPerPage}${mobileFilter}${emailFilter}${invoiceFilter}`;
-      param = '/v1/invoice/refund/requests?' + isUserId + '=' + id + pagination;
-    } else {
-      let userParam = '';
-      if (this.ownerId) {
-        userParam += `&ownerUserId=${this.ownerId}`;
-      }
-      if (this.filerId) {
-        userParam += `&filerUserId=${this.filerId}`;
-      }
-      pagination = `?page=${pageNo}&size=${this.config.itemsPerPage}${mobileFilter}${emailFilter}${invoiceFilter}`;
-      param = '/v1/invoice/refund/requests' + pagination + userParam;
+    let mobileFilter = '';
+    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['mobile'].value) &&this.invoiceFormGroup.controls['mobile'].valid) {
+      mobileFilter ='&mobile=' + this.invoiceFormGroup.controls['mobile'].value;
     }
+
+    let emailFilter = '';
+    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['email'].value) &&this.invoiceFormGroup.controls['email'].valid) {
+      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value.toLocaleLowerCase();
+    }
+
+    let invoiceFilter = '';
+    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['invoiceNo'].value)) {
+      invoiceFilter ='&invoiceNo=' +this.invoiceFormGroup.controls['invoiceNo'].value;
+    }
+    let nameFilter = '';
+    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['name'].value)) {
+      invoiceFilter ='&name=' +this.invoiceFormGroup.controls['name'].value;
+    }
+    let reqFilter ='';
+    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['requestType'].value)) {
+      invoiceFilter ='&requestType=' +this.invoiceFormGroup.controls['requestType'].value;
+    }
+
+    let userFilter = '';
+
+    if ((this.leaderId && !this.filerId)) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+
+    let data = this.utilService.createUrlParams(this.searchParam);
+
+    param = `/bo/refund/requests?${data}${userFilter}${reqFilter}${mobileFilter}${emailFilter}${invoiceFilter}${nameFilter}`;
+
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
     this.loading = true;
-    this.itrService.getMethod(param).subscribe(
+    this.reportService.getMethod(param).subscribe(
       (response: any) => {
         this.cancelSubscriptionData = response;
         this.loading = false;
