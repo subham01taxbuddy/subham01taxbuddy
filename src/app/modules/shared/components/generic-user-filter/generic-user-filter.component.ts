@@ -32,7 +32,9 @@ export class GenericUserFilterComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+  clearValue(){
+    this.searchValue.setValue('');
+  }
   changeInput() {
     switch (this.searchKey) {
       case 'name':
