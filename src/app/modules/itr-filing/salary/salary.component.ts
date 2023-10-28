@@ -164,6 +164,22 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         'Exempt income received by judge covered the payment of salaries to supreme court/high court judges Act/Rule ',
       detailed: false,
     },
+    {
+      id: null,
+      seqNum: 16,
+      value: '10(14)(i)',
+      label:
+        'Prescribed Allowances or benefits granted to meet personal expenses in the performance of duties of office or employment or to compensate him for the increased cost of living u/s 10(14)(i)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 17,
+      value: '10(14)(ii)',
+      label:
+        'Prescribed Allowances or benefits (not in nature of perquisite) specifically granted to meet expenses wholly, necessarily and exclusively and to the extent actually incurred, in performance of duties of office or employment u/s 10(14)(ii)',
+      detailed: false,
+    },
   ];
   stateDropdown = AppConstants.stateDropdown;
   constructor(
