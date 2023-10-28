@@ -262,11 +262,11 @@
                 *ngFor="let income of getAllowanceArray.controls; let i = index"
                 [formGroupName]="i"
               >
-                <td>
+                <td class="allowance-label">
                   {{ income.value.label }}
                 </td>
 
-                <td class="flex align-items-center" style="flex-direction: column;" *ngIf="income.value.allowType === 'COMPENSATION_ON_VRS'">
+                <td class="flex align-items-center allowance-label" style="flex-direction: column;" *ngIf="income.value.allowType === 'COMPENSATION_ON_VRS'">
                   <div>
                     Whether Exemption u/s 10(10C) is taken in Previous
                     Assessment Year ??<br />
@@ -333,7 +333,7 @@
                     ></i>
                   </div>
                 </td>
-                <td class="flex align-items-center" *ngIf="income.value.allowType !== 'COMPENSATION_ON_VRS'">
+                <td class="flex align-items-center allowance-label" *ngIf="income.value.allowType !== 'COMPENSATION_ON_VRS'">
                   <div style="width:100%">
                     <mat-form-field
                       class="input-field-width"
