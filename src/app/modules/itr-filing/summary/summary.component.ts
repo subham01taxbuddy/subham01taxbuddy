@@ -4711,7 +4711,8 @@ export class SummaryComponent implements OnInit {
                       adjInBflHpLoss:
                         this.finalSummary?.assessment
                           ?.adjustmentofLossesInScheduleBFLA?.housePropertyLoss,
-                      adjInBflBusLossOthThanSpecifiedLossCF: 0,
+                      adjInBflBusLossOthThanSpecifiedLossCF:this.finalSummary?.assessment
+                      ?.adjustmentofLossesInScheduleBFLA?.broughtForwordBusinessLoss,
                       adjInBflLossFrmSpecifiedBusCF: 0,
                       adjInBflStcgLoss:
                         this.finalSummary?.assessment
@@ -6302,7 +6303,8 @@ export class SummaryComponent implements OnInit {
                     adjInBflHpLoss:
                       this.finalSummary?.assessment
                         ?.adjustmentofLossesInScheduleBFLA?.housePropertyLoss,
-                    adjInBflBusLossOthThanSpecifiedLossCF: 0,
+                    adjInBflBusLossOthThanSpecifiedLossCF: this.finalSummary?.assessment
+                    ?.adjustmentofLossesInScheduleBFLA?.broughtForwordBusinessLoss,
                     adjInBflLossFrmSpecifiedBusCF: 0,
                     adjInBflStcgLoss:
                       this.finalSummary?.assessment
