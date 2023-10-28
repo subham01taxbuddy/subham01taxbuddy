@@ -124,9 +124,9 @@
                 <div
                   *ngFor="
                     let accountCtrl of getAccountControls.controls;
-                    let i = index
+                    let j = index
                   "
-                  [formGroupName]="i"
+                  [formGroupName]="j"
                 >
                   <div
                     class="flex gap-[25px] align-items-center"
@@ -137,7 +137,7 @@
                       <mat-label>Account Number</mat-label>
                       <input
                         matInput
-                        name="accountNumber[i]"
+                        name="accountNumber[j]"
                         formControlName="accountNumber"
                         digitsOnly
                         required
@@ -149,7 +149,7 @@
                       <mat-label>Status</mat-label>
                       <mat-select
                         matInput
-                        name="status[i]"
+                        name="status[j]"
                         formControlName="status"
                         required
                       >
@@ -169,7 +169,7 @@
                       <input
                         matInput
                         placeholder="DD/MM/YYYY"
-                        name="accountOpeningDate[i]"
+                        name="accountOpeningDate[j]"
                         [matDatepicker]="dateofFilling"
                         autocomplete="off"
                         formControlName="accountOpeningDate"
@@ -190,7 +190,7 @@
                       <mat-label>Peak Balance during the period</mat-label>
                       <input
                         matInput
-                        name="peakBalance[i]"
+                        name="peakBalance[j]"
                         formControlName="peakBalance"
                         digitsOnly
                         required
@@ -202,7 +202,7 @@
                       <mat-label>Closing Balance</mat-label>
                       <input
                         matInput
-                        name="closingBalance[i]"
+                        name="closingBalance[j]"
                         formControlName="closingBalance"
                         digitsOnly
                         required
@@ -217,7 +217,7 @@
                       </mat-label>
                       <input
                         matInput
-                        name="grossInterestPaid[i]"
+                        name="grossInterestPaid[j]"
                         formControlName="grossInterestPaid"
                         digitsOnly
                         required
@@ -245,7 +245,7 @@
             </div>
             <div
               *ngFor="
-                let custodialAccounts of getCustodialAccounts.controls;
+                let custodialAccounts of getCustodialAccounts?.controls;
                 let i = index
               "
               [formGroupName]="i"
@@ -326,10 +326,10 @@
               >
                 <div
                   *ngFor="
-                    let accountCtrl of getCustodialAccountControls.controls;
-                    let i = index
+                    let accountCtrl of getCustodialAccountControls?.controls;
+                    let j = index
                   "
-                  [formGroupName]="i"
+                  [formGroupName]="j"
                 >
                   <div
                     class="flex gap-[25px] align-items-center"
@@ -340,7 +340,7 @@
                       <mat-label>Account Number</mat-label>
                       <input
                         matInput
-                        name="accountNumber[i]"
+                        name="accountNumber[j]"
                         formControlName="accountNumber"
                         digitsOnly
                         required
@@ -352,7 +352,7 @@
                       <mat-label>Status</mat-label>
                       <mat-select
                         matInput
-                        name="status[i]"
+                        name="status[j]"
                         formControlName="status"
                         required
                       >
@@ -372,7 +372,7 @@
                       <input
                         matInput
                         placeholder="DD/MM/YYYY"
-                        name="accountOpeningDate[i]"
+                        name="accountOpeningDate[j]"
                         [matDatepicker]="dateofFilling"
                         autocomplete="off"
                         formControlName="accountOpeningDate"
@@ -391,7 +391,7 @@
                       <mat-label>Peak Balance during the period</mat-label>
                       <input
                         matInput
-                        name="peakBalance[i]"
+                        name="peakBalance[j]"
                         formControlName="peakBalance"
                         digitsOnly
                         required
@@ -405,7 +405,7 @@
                       <mat-label>Closing balance</mat-label>
                       <input
                         matInput
-                        name="closingBalance[i]"
+                        name="closingBalance[j]"
                         formControlName="closingBalance"
                         digitsOnly
                         required
@@ -417,7 +417,7 @@
                       <mat-label>Nature of Amount</mat-label>
                       <mat-select
                         matInput
-                        name="grossAmountNature[i]"
+                        name="grossAmountNature[j]"
                         formControlName="grossAmountNature"
                         required
                       >
@@ -435,7 +435,7 @@
                       <mat-label>Amount</mat-label>
                       <input
                         matInput
-                        name="grossInterestPaid[i]"
+                        name="grossInterestPaid[j]"
                         formControlName="grossInterestPaid"
                         digitsOnly
                         required
@@ -1365,7 +1365,7 @@
             </div>
             <div
               *ngFor="
-                let signingAuthorityDetails of getSigningAuthorityDetails.controls;
+                let signingAuthorityDetails of getSigningAuthorityDetails?.controls;
                 let i = index
               "
               [formGroupName]="i"
@@ -1449,10 +1449,10 @@
               >
                 <div
                   *ngFor="
-                    let accountCtrl of getSigningAuthAccountControls.controls;
-                    let i = index
+                    let accountCtrl of getSigningAuthAccountControls?.controls;
+                    let j = index
                   "
-                  [formGroupName]="i"
+                  [formGroupName]="j"
                 >
                   <div
                     class="flex gap-[25px] align-items-center"
@@ -1463,7 +1463,7 @@
                       <mat-label>Name of the account holder</mat-label>
                       <input
                         matInput
-                        name="accountHolderName[i]"
+                        name="accountHolderName[j]"
                         formControlName="accountHolderName"
                         required
                       />
@@ -1474,7 +1474,7 @@
                       <mat-label>Account Number</mat-label>
                       <input
                         matInput
-                        name="accountNumber[i]"
+                        name="accountNumber[j]"
                         formControlName="accountNumber"
                         digitsOnly
                         required
@@ -1486,7 +1486,7 @@
                       <mat-label>Peak Balance during the year</mat-label>
                       <input
                         matInput
-                        name="peakBalance[i]"
+                        name="peakBalance[j]"
                         formControlName="peakBalance"
                         digitsOnly
                         required
@@ -1500,7 +1500,7 @@
                       >Whether income accrued is taxable in your hands? *
                     </mat-label>
                     <mat-radio-group
-                      name="isTaxableinYourHand[i]"
+                      name="isTaxableinYourHand[j]"
                       formControlName="isTaxableinYourHand"
                       required
                       (change)="handleSelectionChange($event.value)"
@@ -1513,7 +1513,7 @@
                   </div>
                   <br />
                   <div
-                    *ngIf="accountCtrl.get('isTaxableinYourHand').value === 'Y'"
+                    *ngIf="accountCtrl?.get('isTaxableinYourHand')?.value === 'Y'"
                   >
                     <div class="flex gap-[25px]">
                       <!-- accruedIncome -->
@@ -1521,7 +1521,7 @@
                         <mat-label>Income accrued in the account * </mat-label>
                         <input
                           matInput
-                          name="accruedIncome[i]"
+                          name="accruedIncome[j]"
                           formControlName="accruedIncome"
                           digitsOnly
                           required
@@ -1533,7 +1533,7 @@
                         <mat-label>Amount </mat-label>
                         <input
                           matInput
-                          name="amount[i]"
+                          name="amount[j]"
                           formControlName="amount"
                           digitsOnly
                           required
@@ -1547,7 +1547,7 @@
                         <mat-label>Schedule where offered</mat-label>
                         <mat-select
                           matInput
-                          name="scheduleOfferd[i]"
+                          name="scheduleOfferd[j]"
                           formControlName="scheduleOfferd"
                           required
                         >
@@ -1565,7 +1565,7 @@
                         <mat-label>Item number of Schedule </mat-label>
                         <input
                           matInput
-                          name="numberOfSchedule[i]"
+                          name="numberOfSchedule[j]"
                           formControlName="numberOfSchedule"
                           required
                         />
@@ -1775,7 +1775,7 @@
               <div
                 class="flex gap-[25px] align-items-center"
                 style="margin-bottom: 10px"
-                *ngIf="trustsDetails.get('isTaxableinYourHand').value === 'Y'"
+                *ngIf="trustsDetails?.get('isTaxableinYourHand')?.value === 'Y'"
               >
                 <!-- derivedIncome -->
                 <mat-form-field appearance="outline">
@@ -1958,7 +1958,7 @@
                 class="flex gap-[25px] align-items-center"
                 style="margin-bottom: 10px"
                 *ngIf="
-                  otherIncomeDetails.get('isTaxableinYourHand').value === 'Y'
+                  otherIncomeDetails?.get('isTaxableinYourHand')?.value === 'Y'
                 "
               >
                 <!-- amount -->
