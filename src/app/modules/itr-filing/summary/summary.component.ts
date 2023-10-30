@@ -3881,7 +3881,7 @@ export class SummaryComponent implements OnInit {
                       familyPension:
                         this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                           (val) => val.incomeType === 'FAMILY_PENSION'
-                        )?.amount,
+                        )?.taxableAmount,
 
                       dividendIncome:
                         this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
@@ -4711,7 +4711,8 @@ export class SummaryComponent implements OnInit {
                       adjInBflHpLoss:
                         this.finalSummary?.assessment
                           ?.adjustmentofLossesInScheduleBFLA?.housePropertyLoss,
-                      adjInBflBusLossOthThanSpecifiedLossCF: 0,
+                      adjInBflBusLossOthThanSpecifiedLossCF:this.finalSummary?.assessment
+                      ?.adjustmentofLossesInScheduleBFLA?.broughtForwordBusinessLoss,
                       adjInBflLossFrmSpecifiedBusCF: 0,
                       adjInBflStcgLoss:
                         this.finalSummary?.assessment
@@ -5470,7 +5471,7 @@ export class SummaryComponent implements OnInit {
                     familyPension:
                       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                         (val) => val.incomeType === 'FAMILY_PENSION'
-                      )?.amount,
+                      )?.taxableAmount,
 
                     dividendIncome:
                       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
@@ -6302,7 +6303,8 @@ export class SummaryComponent implements OnInit {
                     adjInBflHpLoss:
                       this.finalSummary?.assessment
                         ?.adjustmentofLossesInScheduleBFLA?.housePropertyLoss,
-                    adjInBflBusLossOthThanSpecifiedLossCF: 0,
+                    adjInBflBusLossOthThanSpecifiedLossCF: this.finalSummary?.assessment
+                    ?.adjustmentofLossesInScheduleBFLA?.broughtForwordBusinessLoss,
                     adjInBflLossFrmSpecifiedBusCF: 0,
                     adjInBflStcgLoss:
                       this.finalSummary?.assessment
@@ -7501,4 +7503,3 @@ export class SummaryComponent implements OnInit {
 function getTotalBusinessIncome(summaryBusinessIncome: any): number {
   return Math.max(summaryBusinessIncome.totalBusinessIncome, 0);
 }
-

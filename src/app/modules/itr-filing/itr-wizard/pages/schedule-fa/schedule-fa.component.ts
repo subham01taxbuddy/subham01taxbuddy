@@ -1,4 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Output,
+  EventEmitter,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Form } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -88,7 +94,11 @@ export class ScheduleFaComponent implements OnInit {
   isPanelOpen: boolean = false;
   maxPurchaseDate: any;
 
-  constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
+  constructor(
+    private fb: FormBuilder,
+    private utilsService: UtilsService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.countryCodeList = [
@@ -362,22 +372,11 @@ export class ScheduleFaComponent implements OnInit {
 
     assetTypes.forEach((assetType) => {
       const asset = this.ITR_JSON?.foreignIncome?.foreignAssets?.[assetType];
+      const formNotAdded: boolean = !this.scheduleFa.get(assetType);
 
-      const check: boolean =
-        (!asset || asset.length === 0) && !this.scheduleFa.get(assetType);
-
-      // console.log(check);
-      //  TODO =========> Only add a control if asset is empty
-      // if ((!asset || asset.length === 0) && !this.scheduleFa.get(assetType)) {
-      //   this.scheduleFa.addControl(assetType, this.initForms(assetType));
-      // }
-
-      if (check) {
+      if (formNotAdded) {
         this.scheduleFa.addControl(assetType, this.initForms(assetType));
       }
-
-      // remove this once create forms starts working for everything
-      this.scheduleFa.addControl(assetType, this.initForms(assetType));
 
       if (asset?.length > 0) {
         this.createForms(assetType, asset);
@@ -582,49 +581,103 @@ export class ScheduleFaComponent implements OnInit {
     }
   }
 
+  updateMultipleTypeForm(asset, assetType) {
+    const formArray = this.scheduleFa?.controls[assetType] as FormArray;
+    formArray.clear();
+
+    const groupedAccounts = asset?.reduce((result, acc) => {
+      const countryCode = acc?.countryCode;
+      const nameOfInstitution = acc?.nameOfInstitution;
+      const addressOfInstitution = acc?.addressOfInstitution;
+      const address = acc?.address;
+      const institutionName = acc?.institutionName;
+      const zipCode = acc?.zipCode;
+
+      if (!result[countryCode]) {
+        result[countryCode] = {
+          countryCode: countryCode,
+          nameOfInstitution: nameOfInstitution,
+          addressOfInstitution: addressOfInstitution,
+          zipCode: zipCode,
+          address: address,
+          institutionName: institutionName,
+          account: [],
+        };
+      }
+
+      const accountDetails = { ...acc };
+      delete accountDetails?.countryCode;
+      delete accountDetails?.nameOfInstitution;
+      delete accountDetails?.addressOfInstitution;
+      delete accountDetails?.zipCode;
+      delete accountDetails?.address;
+      delete accountDetails?.institutionName;
+
+      result[countryCode]?.account?.push(accountDetails);
+
+      return result;
+    }, {});
+
+    // Assuming you have 'groupedAccounts' object
+    for (const countryCode in groupedAccounts) {
+      if (groupedAccounts?.hasOwnProperty(countryCode)) {
+        const group = groupedAccounts[countryCode];
+        const formGroup = this.fb.group({
+          countryCode: [group?.countryCode],
+          nameOfInstitution: [group?.nameOfInstitution],
+          institutionName: [group?.institutionName],
+          addressOfInstitution: [group?.addressOfInstitution],
+          address: [group?.address],
+          zipCode: [group?.zipCode],
+          account: this.fb.array([]),
+        });
+        const accountFormArray = formGroup?.get('account') as FormArray;
+
+        group.account.forEach((other) => {
+          const accountFormGroup = this.fb.group({
+            hasEdit: null,
+            accountNumber: null,
+            status: null,
+            accountOpeningDate: null,
+            peakBalance: null,
+            closingBalance: null,
+            grossInterestPaid: null,
+            grossAmountNature: null,
+            accountHolderName: null,
+            isTaxableinYourHand: null,
+            accruedIncome: null,
+            amount: null,
+            numberOfSchedule: null,
+            scheduleOfferd: null,
+          });
+
+          accountFormGroup?.patchValue(other);
+          accountFormArray?.push(accountFormGroup);
+        });
+
+        formArray?.push(formGroup);
+      }
+    }
+  }
+
   createForms(assetType: string, asset: any[]) {
-    const formArray = this.scheduleFa.controls[assetType] as FormArray;
-    // console.log(asset, assetType);
+    console.log('creatingForms:', asset, assetType);
+    const formArray = this.scheduleFa?.controls[assetType] as FormArray;
+
+    if (assetType === 'depositoryAccounts') {
+      this.updateMultipleTypeForm(asset, assetType);
+    }
+
+    if (assetType === 'custodialAccounts') {
+      this.updateMultipleTypeForm(asset, assetType);
+    }
+
+    if (assetType === 'signingAuthorityDetails') {
+      this.updateMultipleTypeForm(asset, assetType);
+    }
+
     asset.forEach((item, index) => {
-      if (assetType === 'depositoryAccounts') {
-        // console.log(asset);
-        // const key: boolean =
-        //   asset[index].countryCode === item.countryCode &&
-        //   asset[index].nameOfInstitution === item.nameOfInstitution;
-        // if (!key) {
-        //   const formGroup = this.fb.group({
-        //     countryName: item.countryCode,
-        //     countryCode: item.countryCode,
-        //     nameOfInstitution: item.nameOfInstitution,
-        //     addressOfInstitution: item.addressOfInstitution,
-        //     zipCode: item.zipCode,
-        //     account: item.account.forEach((account) => {
-        //       account.push({
-        //         hasEdit: false,
-        //         accountNumber: account.accountNumber,
-        //         status: account.status,
-        //         accountOpeningDate: account.accountOpeningDate,
-        //         peakBalance: account.peakBalance,
-        //         closingBalance: account.closingBalance,
-        //         grossInterestPaid: account.grossInterestPaid,
-        //       });
-        //     }),
-        //   });
-        //   formArray.push(formGroup);
-        // } else {
-        //   formArray[index].account.forEach((account) => {
-        //     account.push({
-        //       hasEdit: false,
-        //       accountNumber: account.accountNumber,
-        //       status: account.status,
-        //       accountOpeningDate: account.accountOpeningDate,
-        //       peakBalance: account.peakBalance,
-        //       closingBalance: account.closingBalance,
-        //       grossInterestPaid: account.grossInterestPaid,
-        //     });
-        //   });
-        // }
-      } else if (assetType === 'equityAndDebtInterest') {
+      if (assetType === 'equityAndDebtInterest') {
         const formGroup = this.fb.group({
           countryName: item.countryName ? item.countryName : item.countryCode,
           countryCode: item.countryCode + ':' + item.countryName,
@@ -739,56 +792,12 @@ export class ScheduleFaComponent implements OnInit {
           numberOfSchedule: item.numberOfSchedule,
         });
         formArray.push(formGroup);
-      } else if (assetType === 'signingAuthorityDetails') {
-        // const formGroup = this.fb.group({
-        //   countryName: item.countryName,
-        //   countryCode: item.countryCode + ':' + item.countryName,
-        //   institutionName: item.institutionName,
-        //   address: item.address,
-        //   zipCode: item.zipCode,
-        //   account: this.fb.array([
-        //     this.fb.group({
-        //       accountHolderName: item.accountHolderName,
-        //       accountNumber: item.accountNumber,
-        //       peakBalance: item.peakBalance,
-        //       isTaxableinYourHand: item.isTaxableinYourHand,
-        //       accruedIncome: item.accruedIncome,
-        //       amount: item.amount,
-        //       scheduleOfferd: item.scheduleOfferd,
-        //       numberOfSchedule: item.numberOfSchedule,
-        //     }),
-        //   ]),
-        // });
-        // formArray.push(formGroup);
-      } else if (assetType === 'custodialAccounts') {
-        // const formGroup = this.fb.group({
-        //   countryName: item.countryName,
-        //   countryCode: item.countryCode + ':' + item.countryName,
-        //   nameOfInstitution: item.nameOfInstitution,
-        //   addressOfInstitution: item.addressOfInstitution,
-        //   zipCode: item.zipCode,
-        //   account: this.fb.array([
-        //     this.fb.group({
-        //       accountNumber: item.accountNumber,
-        //       status: item.status,
-        //       accountOpeningDate: item.accountOpeningDate,
-        //       peakBalance: item.peakBalance,
-        //       closingBalance: item.closingBalance,
-        //       grossAmountNature: item.grossAmountNature,
-        //       grossInterestPaid: item.grossInterestPaid,
-        //       dateOfContract: null,
-        //       cashValue: null,
-        //       totalGrossAmountPaid: null,
-        //     }),
-        //   ]),
-        // });
-        // formArray.push(formGroup);
       }
     });
   }
 
   // adding whole section
-  addMore(section) {
+  addMore(section, i?) {
     const newFormGroup = this.initForms(section);
 
     if (newFormGroup) {
@@ -954,7 +963,7 @@ export class ScheduleFaComponent implements OnInit {
               const formGroup = {
                 countryName: sectionForm.countryName,
                 countryCode: sectionForm.countryCode,
-                nameOfInstitution: sectionForm.countryName,
+                nameOfInstitution: sectionForm.nameOfInstitution,
                 addressOfInstitution: sectionForm.addressOfInstitution,
                 zipCode: sectionForm.zipCode,
                 accountNumber: account.accountNumber,
@@ -1012,6 +1021,7 @@ export class ScheduleFaComponent implements OnInit {
                 scheduleOfferd: account.scheduleOfferd,
                 numberOfSchedule: account.numberOfSchedule,
                 id: null,
+                status: account.status,
               };
 
               console.log(formGroup);
@@ -1055,6 +1065,7 @@ export class ScheduleFaComponent implements OnInit {
           this.loading = false;
           this.utilsService.showSnackBar('Schedule FA saved successfully');
           this.saveAndNext.emit(false);
+          console.log(this.ITR_JSON, 'scheduleFaResult');
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));

@@ -133,37 +133,53 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       label: 'Any Other Allowance',
       detailed: false,
     },
-    // {
-    //   id: null,
-    //   seqNum: 12,
-    //   value: 'SECOND_PROVISO_CGOV',
-    //   label:
-    //     'Second Proviso CGOV - compensation under a scheme approved by the central Govt - 10(10B)',
-    //   detailed: false,
-    // },
-    // {
-    //   id: null,
-    //   seqNum: 13,
-    //   value: 'SECOND_PROVISO',
-    //   label: 'Second proviso - Compensation limit notified by CG',
-    //   detailed: false,
-    // },
-    // {
-    //   id: null,
-    //   seqNum: 14,
-    //   value: 'FIRST_PROVISO',
-    //   label:
-    //     'First Proviso - Compensation limit notified by CG in the official gazette, First Provisio 10(10Bi)',
-    //   detailed: false,
-    // },
-    // {
-    //   id: null,
-    //   seqNum: 15,
-    //   value: 'EIC',
-    //   label:
-    //     'Exempt income received by judge covered the payment of salaries to supreme court/high court judges Act/Rule ',
-    //   detailed: false,
-    // },
+    {
+      id: null,
+      seqNum: 12,
+      value: 'SECOND_PROVISO_CGOV',
+      label:
+        'Second Proviso CGOV - compensation under a scheme approved by the central Govt - 10(10B)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 14,
+      value: 'FIRST_PROVISO',
+      label:
+        'First Proviso - Compensation limit notified by CG in the official gazette, First Provisio 10(10Bi)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 13,
+      value: 'SECOND_PROVISO',
+      label: 'Second proviso - Compensation limit notified by CG, 10(10Bii)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 15,
+      value: 'EIC',
+      label:
+        'Exempt income received by judge covered the payment of salaries to supreme court/high court judges Act/Rule ',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 16,
+      value: '10(14)(i)',
+      label:
+        'Prescribed Allowances or benefits granted to meet personal expenses in the performance of duties of office or employment or to compensate him for the increased cost of living u/s 10(14)(i)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 17,
+      value: '10(14)(ii)',
+      label:
+        'Prescribed Allowances or benefits (not in nature of perquisite) specifically granted to meet expenses wholly, necessarily and exclusively and to the extent actually incurred, in performance of duties of office or employment u/s 10(14)(ii)',
+      detailed: false,
+    },
   ];
   stateDropdown = AppConstants.stateDropdown;
   constructor(
