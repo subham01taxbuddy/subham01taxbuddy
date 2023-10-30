@@ -926,6 +926,117 @@
                               </td>
                             </tr>
                           </ng-container>
+
+                          <ng-container
+                            *ngIf="
+                            finalSummary?.assessment
+                            ?.summaryIncome?.summaryBusinessIncome
+                            .totalIncomeFromFirm !== 0
+                            "
+                          >
+                            <tr>
+                              <td>
+                                Income From Firm
+                              </td>
+                              <td>
+                                
+                              </td>
+                              <td>
+                                
+                              </td>
+                              <td>
+                                
+                                
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(
+                                    finalSummary?.assessment
+                                    ?.summaryIncome?.summaryBusinessIncome
+                                    .totalIncomeFromFirm
+                                  )
+                                }}
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div
+                    class="bxHed"
+                    *ngIf="
+                            finalSummary?.assessment
+                            ?.summaryIncome?.summaryBusinessIncome
+                            .totalIncomeFromFirm !== 0
+                            "
+                  >
+                  Partner's Remuneration
+                    <span style="float: right">{{
+                      finalSummary?.assessment
+                            ?.summaryIncome?.summaryBusinessIncome
+                            .totalIncomeFromFirm
+                    }}</span>
+                  </div>
+
+                    <div  *ngIf="
+                    finalSummary?.assessment
+                    ?.summaryIncome?.summaryBusinessIncome
+                    .totalIncomeFromFirm !== 0
+                    ">
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Salary</th>
+                            <th>Bonus</th>
+                            <th>Commission</th>
+                            <th>Interest</th>
+                            <th>Others</th>
+                          </tr>
+                          <ng-container
+                            *ngIf="
+                            finalSummary?.assessment
+                            ?.summaryIncome?.summaryBusinessIncome
+                            .totalIncomeFromFirm !== 0
+                            "
+                          >
+                            <tr>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.salary)}}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.bonus)}}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.commission)}}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.interest)}}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.others)}}
+                              </td>
+                            </tr>
+                          </ng-container>
                         </tbody>
                       </table>
                     </div>
@@ -2100,24 +2211,6 @@
                           <tr
                             *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
-                                ?.anyOtherInterest
-                            "
-                          >
-                            <td>Any Other Interest Income</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  finalCalculations?.otherIncome?.otherIncomes
-                                    ?.anyOtherInterest
-                                )
-                              }}
-                            </td>
-                          </tr>
-
-                          <tr
-                            *ngIf="
-                              finalCalculations?.otherIncome?.otherIncomes
                                 ?.dividendIncome ||
                               finalCalculations?.otherIncome?.otherIncomes
                                 ?.familyPension
@@ -2161,6 +2254,23 @@
                               }}
                             </td>
                           </tr>
+                          <tr
+                          *ngIf="
+                            finalCalculations?.otherIncome?.otherIncomes
+                              ?.anyOtherInterest
+                          "
+                        >
+                          <td>Any Other Income</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.otherIncome?.otherIncomes
+                                  ?.anyOtherInterest
+                              )
+                            }}
+                          </td>
+                        </tr>
                           <tr>
                             <th>Total</th>
                             <th>
@@ -2351,8 +2461,7 @@
                           </td>
 
                           <td>
-                            <i class="material-icons icSmRup">&#8377;</i>&nbsp;
-                            0
+                            -
                           </td>
 
                           <td>
@@ -2404,9 +2513,7 @@
                           </td>
 
                           <td>
-                            <i class="material-icons icSmRup">&#8377;</i>&nbsp;
-                            0
-                          </td>
+                           -
                           <td>
                             <i class="material-icons icSmRup">&#8377;</i
                             >&nbsp;{{
@@ -2446,8 +2553,7 @@
                           </td>
 
                           <td>
-                            <i class="material-icons icSmRup">&#8377;</i>&nbsp;
-                            0
+                            -
                           </td>
                           <td>
                             <i class="material-icons icSmRup">&#8377;</i
