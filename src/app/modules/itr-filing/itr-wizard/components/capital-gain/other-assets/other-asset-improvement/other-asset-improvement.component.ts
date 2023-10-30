@@ -1,4 +1,10 @@
-import {Component, Inject, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormGroup,
   FormArray,
@@ -13,9 +19,9 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { NewCapitalGain } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { withLatestFrom } from 'rxjs';
-import { forEach } from 'lodash';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import * as moment from "moment/moment";
+import { filter, forEach } from 'lodash';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import * as moment from 'moment/moment';
 @Component({
   selector: 'app-other-asset-improvement',
   templateUrl: './other-asset-improvement.component.html',
@@ -83,7 +89,6 @@ export class OtherAssetImprovementComponent implements OnInit {
       itemsPerPage: 2,
       currentPage: 1,
     };
-
   }
 
   calMaxPurchaseDate(sellDate) {
@@ -99,8 +104,7 @@ export class OtherAssetImprovementComponent implements OnInit {
       this.financialyears = res.data;
       this.improvementYears = this.financialyears;
       // sessionStorage.setItem('improvementYears', res.data)
-      let purchaseDate = this.assetsForm.getRawValue()
-        .purchaseDate;
+      let purchaseDate = this.assetsForm.getRawValue().purchaseDate;
       let purchaseYear = new Date(purchaseDate).getFullYear();
       let purchaseMonth = new Date(purchaseDate).getMonth();
 
@@ -127,9 +131,7 @@ export class OtherAssetImprovementComponent implements OnInit {
           ) >= 0
         ) {
           this.improvementYears = this.improvementYears.splice(
-            this.improvementYears.indexOf(
-              purchaseYear - 1 + '-' + purchaseYear
-            )
+            this.improvementYears.indexOf(purchaseYear - 1 + '-' + purchaseYear)
           );
         }
       }
@@ -152,39 +154,41 @@ export class OtherAssetImprovementComponent implements OnInit {
   assetsForm: FormGroup;
   assetIndex: number;
   addMoreOtherAssetsForm(index?) {
-    this.assetsForm =
-      this.createOtherAssetsForm(this.goldCg.assetDetails.length, index);
+    this.assetsForm = this.createOtherAssetsForm(
+      this.goldCg.assetDetails.length,
+      index
+    );
   }
 
   createOtherAssetsForm(srn, index?) {
     let obj: any = index >= 0 ? this.goldCg.assetDetails[index] : null;
     return this.fb.group({
-        srn: [srn],
-        hasEdit: [obj ? obj.hasEdit : false],
-        purchaseDate: [obj ? obj.purchaseDate : '', [Validators.required]],
-        sellDate: [obj ? obj.sellDate : '', [Validators.required]],
-        purchaseCost: [
-          obj ? obj.purchaseCost : '',
-          [
-            Validators.required,
-            Validators.pattern(AppConstants.amountWithoutDecimal),
-          ],
+      srn: [srn],
+      hasEdit: [obj ? obj.hasEdit : false],
+      purchaseDate: [obj ? obj.purchaseDate : '', [Validators.required]],
+      sellDate: [obj ? obj.sellDate : '', [Validators.required]],
+      purchaseCost: [
+        obj ? obj.purchaseCost : '',
+        [
+          Validators.required,
+          Validators.pattern(AppConstants.amountWithoutDecimal),
         ],
-        sellValue: [
-          obj ? obj.sellValue : '',
-          [
-            Validators.required,
-            Validators.pattern(AppConstants.amountWithoutDecimal),
-          ],
+      ],
+      sellValue: [
+        obj ? obj.sellValue : '',
+        [
+          Validators.required,
+          Validators.pattern(AppConstants.amountWithoutDecimal),
         ],
+      ],
 
-        sellExpense: [obj ? obj.sellExpense : ''],
-        capitalGain: [obj ? obj.capitalGain : 0],
-        gainType: [obj ? obj.gainType : ''],
-        algorithm: 'cgProperty',
-        stampDutyValue: [obj ? obj.stampDutyValue : 0],
-        valueInConsideration: [obj ? obj.valueInConsideration : 0],
-        indexCostOfAcquisition: [obj ? obj.indexCostOfAcquisition : 0],
+      sellExpense: [obj ? obj.sellExpense : ''],
+      capitalGain: [obj ? obj.capitalGain : 0],
+      gainType: [obj ? obj.gainType : ''],
+      algorithm: 'cgProperty',
+      stampDutyValue: [obj ? obj.stampDutyValue : 0],
+      valueInConsideration: [obj ? obj.valueInConsideration : 0],
+      indexCostOfAcquisition: [obj ? obj.indexCostOfAcquisition : 0],
 
       improvementsArray: this.fb.group({
         financialYearOfImprovement: [
@@ -204,49 +208,49 @@ export class OtherAssetImprovementComponent implements OnInit {
   }
 
   calculateIndexCost() {
-
     let gainType = this.assetsForm.controls['gainType'].value;
 
     if (gainType == 'LONG') {
+      let selectedYear = moment(this.assetsForm.controls['sellDate'].value);
+      let sellFinancialYear =
+        selectedYear.get('month') > 2
+          ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
+          : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
+
       let req = {
-        cost: this.assetsForm.controls['costOfImprovement'].value,
-
+        cost: parseFloat(
+          (this.assetsForm.controls['improvementsArray'] as FormGroup).controls[
+            'costOfImprovement'
+          ].value
+        ),
         purchaseOrImprovementFinancialYear: (
-          this.assetsForm.controls[
-            'improvementsArray'
-          ] as FormGroup
+          this.assetsForm.controls['improvementsArray'] as FormGroup
         ).controls['financialYearOfImprovement'].value,
-
         assetType: this.goldCg.assetType,
-
-        // "buyDate": this.immovableForm.controls['purchaseDate'].value,
-        // "sellDate": this.immovableForm.controls['sellDate'].value
+        buyDate: this.assetsForm.controls['purchaseDate'].value,
+        sellDate: this.assetsForm.controls['sellDate'].value,
+        sellFinancialYear: sellFinancialYear,
       };
 
       const param = `/calculate/indexed-cost`;
       this.itrMsService.postMethod(param, req).subscribe((res: any) => {
         console.log('INDEX COST : ', res);
 
-
-        this.assetsForm.controls['indexCostOfImprovement']?.setValue(
-          res.data.costOfAcquisitionOrImprovement
-        );
+        (this.assetsForm.controls['improvementsArray'] as FormGroup).controls[
+          'indexCostOfImprovement'
+        ]?.setValue(res.data.costOfAcquisitionOrImprovement);
       });
     } else {
-      (
-        this.assetsForm.controls[
-          'improvementsArray'
-        ] as FormGroup
-      ).controls['indexCostOfImprovement']?.setValue(null);
+      (this.assetsForm.controls['improvementsArray'] as FormGroup).controls[
+        'indexCostOfImprovement'
+      ]?.setValue(null);
     }
   }
 
   calculateCg() {
     let cgObject = this.assetsForm.value;
     let improvements = (
-      this.assetsForm.controls[
-        'improvementsArray'
-      ] as FormGroup
+      this.assetsForm.controls['improvementsArray'] as FormGroup
     ).value;
     this.loading = true;
     const param = '/singleCgCalculate';
@@ -263,10 +267,12 @@ export class OtherAssetImprovementComponent implements OnInit {
     this.goldCg.assetDetails.forEach((asset) => {
       //find improvement
       let improvements = this.goldCg.improvement;
-      let srnObj = improvements?.find((element) => element.srn === this.assetIndex);
-      if (!srnObj && improvements?.length > 0) {
-        improvements[0].srn = this.assetIndex;
-      }
+      // let srnObj = improvements?.find(
+      //   (element) => element.srn === this.assetIndex
+      // );
+      // if (!srnObj && improvements?.length > 0) {
+      //   improvements[0].srn = this.assetIndex;
+      // }
       if (!improvements || improvements?.length == 0) {
         let improvement = {
           indexCostOfImprovement: 0,
@@ -278,11 +284,13 @@ export class OtherAssetImprovementComponent implements OnInit {
         };
         request.improvement.push(improvement);
       } else {
-        request.improvement = this.goldCg.improvement;
+        request.improvement[0] = this.goldCg.improvement;
       }
 
       let deduction = this.goldCg.deduction;
-      let srnDednObj = deduction?.find((element) => element.srn === this.assetIndex);
+      let srnDednObj = deduction?.find(
+        (element) => element.srn === this.assetIndex
+      );
       if (!srnDednObj && deduction?.length > 0) {
         deduction[0].srn = this.assetIndex;
       }
@@ -310,13 +318,12 @@ export class OtherAssetImprovementComponent implements OnInit {
       (res: any) => {
         this.loading = false;
         console.log('Single CG result:', res);
-        this.assetsForm.controls['capitalGain']?.setValue(res.assetDetails[0].capitalGain);
+        this.assetsForm.controls['capitalGain']?.setValue(
+          res.assetDetails[0].capitalGain
+        );
         this.goldCg.assetDetails = res.assetDetails;
         this.goldCg.improvement = res.improvement;
         this.goldCg.deduction = res.deduction;
-
-
-
       },
       (error) => {
         this.loading = false;
@@ -356,22 +363,29 @@ export class OtherAssetImprovementComponent implements OnInit {
     let result = {
       cgObject: this.assetsForm.value,
 
-      improve: (
-        this.assetsForm.controls[
-          'improvementsArray'
-        ] as FormGroup
-      ).value,
+      improve: (this.assetsForm.controls['improvementsArray'] as FormGroup)
+        .value,
     };
     console.log(result.cgObject);
 
+    console.log(this.goldCg);
     if (result !== undefined) {
-      this.goldCg.assetDetails[0] = result.cgObject;
-      this.goldCg.improvement[0] = result.improve;
+      if (this.goldCg?.assetDetails?.length > 0) {
+        this.goldCg.assetDetails[0] = result?.cgObject;
+      } else {
+        this.goldCg?.assetDetails?.push(result?.cgObject);
+      }
+
+      if (this.goldCg?.improvement.length > 0) {
+        this.goldCg.improvement[0] = result.improve;
+      } else {
+        this.goldCg.improvement?.push(result?.improve);
+      }
     }
   }
 
   saveCg() {
-    this.saveDetails()
+    this.saveDetails();
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -388,7 +402,7 @@ export class OtherAssetImprovementComponent implements OnInit {
       (item) => item.assetType === 'GOLD'
     );
 
-    if(!filteredCapitalGain[0]){
+    if (!filteredCapitalGain[0]) {
       filteredCapitalGain.push({
         assessmentYear: '2023-2024',
         assesseeType: 'INDIVIDUAL',
@@ -396,14 +410,20 @@ export class OtherAssetImprovementComponent implements OnInit {
         assetType: 'GOLD',
         buyersDetails: [],
         improvement: [],
-        assetDetails: []
+        assetDetails: [],
       });
     }
-    if(this.data.assetIndex >= 0){
-      filteredCapitalGain[0].assetDetails[this.data.assetIndex] = this.goldCg.assetDetails[0];
+    if (this.data.assetIndex >= 0) {
+      filteredCapitalGain[0].assetDetails[this.data.assetIndex] =
+        this.goldCg.assetDetails[0];
     } else {
       filteredCapitalGain[0].assetDetails.push(this.goldCg.assetDetails[0]);
     }
+
+    filteredCapitalGain[0].improvement[0] =
+    filteredCapitalGain[0].assetDetails[0]?.improvementsArray;
+
+    delete filteredCapitalGain[0].assetDetails[0]?.improvementsArray;
     this.ITR_JSON.capitalGain.push(filteredCapitalGain[0]);
     // // Check if the filtered capitalGain array is not empty and assetDetails length is 0
     // if (
@@ -424,6 +444,12 @@ export class OtherAssetImprovementComponent implements OnInit {
     this.loading = false;
 
     this.dialogRef.close(this.goldCg);
+  }
 
+  get getImprovementsArray() {
+    const improvementsArray = this.assetsForm.get(
+      'improvementsArray'
+    ) as FormGroup;
+    return improvementsArray;
   }
 }
