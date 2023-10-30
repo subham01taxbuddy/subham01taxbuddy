@@ -32,7 +32,7 @@
         name="value[i]"
         class="input-field"
         [(ngModel)]="inputValues[i]"
-        (blur)="initializeInputValues()"
+        (change)="initializeInputValues($event, i)"
       />
     </mat-form-field>
   </div>
