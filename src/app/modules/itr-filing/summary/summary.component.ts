@@ -3881,7 +3881,7 @@ export class SummaryComponent implements OnInit {
                       familyPension:
                         this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                           (val) => val.incomeType === 'FAMILY_PENSION'
-                        )?.amount,
+                        )?.taxableAmount,
 
                       dividendIncome:
                         this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
@@ -5471,7 +5471,7 @@ export class SummaryComponent implements OnInit {
                     familyPension:
                       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                         (val) => val.incomeType === 'FAMILY_PENSION'
-                      )?.amount,
+                      )?.taxableAmount,
 
                     dividendIncome:
                       this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(

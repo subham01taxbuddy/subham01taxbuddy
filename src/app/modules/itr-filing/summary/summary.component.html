@@ -2100,24 +2100,6 @@
                           <tr
                             *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
-                                ?.anyOtherInterest
-                            "
-                          >
-                            <td>Any Other Interest Income</td>
-                            <td>
-                              Rs
-                              {{
-                                utilsService.currencyFormatter(
-                                  finalCalculations?.otherIncome?.otherIncomes
-                                    ?.anyOtherInterest
-                                )
-                              }}
-                            </td>
-                          </tr>
-
-                          <tr
-                            *ngIf="
-                              finalCalculations?.otherIncome?.otherIncomes
                                 ?.dividendIncome ||
                               finalCalculations?.otherIncome?.otherIncomes
                                 ?.familyPension
@@ -2161,6 +2143,23 @@
                               }}
                             </td>
                           </tr>
+                          <tr
+                          *ngIf="
+                            finalCalculations?.otherIncome?.otherIncomes
+                              ?.anyOtherInterest
+                          "
+                        >
+                          <td>Any Other Income</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.otherIncome?.otherIncomes
+                                  ?.anyOtherInterest
+                              )
+                            }}
+                          </td>
+                        </tr>
                           <tr>
                             <th>Total</th>
                             <th>
