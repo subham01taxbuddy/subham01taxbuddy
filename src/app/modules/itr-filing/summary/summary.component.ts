@@ -285,6 +285,13 @@ export class SummaryComponent implements OnInit {
             }
           ];
         };
+        incomeFromFirm:{
+          salary: number;
+          bonus: number;
+          commission: number;
+          interest: number;
+          others: number;
+        };
         totalCryptoIncome: number;
       };
       businessIncomeTotal: number;
@@ -993,9 +1000,7 @@ export class SummaryComponent implements OnInit {
             businessIncome: {
               businessIncomeDetails: {
                 business44AD: {
-                  bank: this.ITR_JSON.itrSummaryJson['ITR'][
-                    this.itrType
-                  ].ScheduleBP?.NatOfBus44AD?.map((element) => {
+                  bank: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP?.NatOfBus44AD?.map((element) => {
                     return {
                       businessSection: 'Section 44AD',
                       natureOfBusinessCode: element?.CodeAD,
@@ -1003,21 +1008,21 @@ export class SummaryComponent implements OnInit {
                       grossTurnover: Number(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                           .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
-                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            .ScheduleBP?.PersumptiveInc44AD
-                            ?.GrsTrnOverAnyOthMode /
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              .ScheduleBP?.NatOfBus44AD?.length
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.PersumptiveInc44AD
+                          ?.GrsTrnOverAnyOthMode /
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.NatOfBus44AD?.length
                       ),
                       TaxableIncome: Number(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                           .ScheduleBP?.PersumptiveInc44AD
                           ?.PersumptiveInc44AD6Per +
-                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            .ScheduleBP?.PersumptiveInc44AD
-                            ?.PersumptiveInc44AD8Per /
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              .ScheduleBP?.NatOfBus44AD?.length
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.PersumptiveInc44AD
+                          ?.PersumptiveInc44AD8Per /
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.NatOfBus44AD?.length
                       ),
                     };
                   }),
@@ -1033,9 +1038,7 @@ export class SummaryComponent implements OnInit {
                   ],
                 },
 
-                business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ].ScheduleBP?.NatOfBus44ADA?.map((element) => {
+                business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleBP?.NatOfBus44ADA?.map((element) => {
                   return {
                     businessSection: 'Section 44ADA',
                     natureOfBusinessCode: element?.CodeADA,
@@ -1043,15 +1046,15 @@ export class SummaryComponent implements OnInit {
                     grossTurnover: Number(
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                         .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.NatOfBus44ADA?.length
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        .ScheduleBP?.NatOfBus44ADA?.length
                     ),
                     TaxableIncome: Number(
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                         .ScheduleBP?.PersumptiveInc44ADA
                         ?.TotPersumptiveInc44ADA /
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.NatOfBus44ADA?.length
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        .ScheduleBP?.NatOfBus44ADA?.length
                     ),
                   };
                 }),
@@ -1086,6 +1089,13 @@ export class SummaryComponent implements OnInit {
                   ],
                 },
                 totalCryptoIncome: 0,
+                incomeFromFirm: {
+                  salary: 0,
+                  bonus: 0,
+                  commission: 0,
+                  interest: 0,
+                  others: 0
+                }
               },
               businessIncomeTotal:
                 this.itrType === 'ITR4'
@@ -2236,42 +2246,35 @@ export class SummaryComponent implements OnInit {
             businessIncome: {
               businessIncomeDetails: {
                 business44AD: {
-                  bank:
-                    this.itrType === 'ITR3'
-                      ? this.ITR_JSON.itrSummaryJson['ITR'][
-                          this.itrType
-                        ]?.PARTA_PL?.NatOfBus44AD?.map((element) => {
-                          return {
-                            businessSection: 'Section 44AD',
-                            natureOfBusinessCode: element?.CodeAD,
-                            tradeName: element?.NameOfBusiness,
-                            grossTurnover: Number(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.PersumptiveInc44AD
-                                ?.GrsTrnOverOrReceipt /
-                                this.ITR_JSON.itrSummaryJson['ITR'][
-                                  this.itrType
-                                ]?.PARTA_PL?.NatOfBus44AD?.length
-                            ),
-                            TaxableIncome: Number(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.PersumptiveInc44AD
-                                ?.TotPersumptiveInc44AD /
-                                this.ITR_JSON.itrSummaryJson['ITR'][
-                                  this.itrType
-                                ]?.PARTA_PL?.NatOfBus44AD?.length
-                            ),
-                          };
-                        })
-                      : [
-                          {
-                            businessSection: null,
-                            natureOfBusinessCode: null,
-                            tradeName: null,
-                            grossTurnover: null,
-                            TaxableIncome: null,
-                          },
-                        ],
+                  bank: this.itrType === 'ITR3'
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PARTA_PL?.NatOfBus44AD?.map((element) => {
+                      return {
+                        businessSection: 'Section 44AD',
+                        natureOfBusinessCode: element?.CodeAD,
+                        tradeName: element?.NameOfBusiness,
+                        grossTurnover: Number(
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.PARTA_PL?.PersumptiveInc44AD
+                            ?.GrsTrnOverOrReceipt /
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PARTA_PL?.NatOfBus44AD?.length
+                        ),
+                        TaxableIncome: Number(
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.PARTA_PL?.PersumptiveInc44AD
+                            ?.TotPersumptiveInc44AD /
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PARTA_PL?.NatOfBus44AD?.length
+                        ),
+                      };
+                    })
+                    : [
+                      {
+                        businessSection: null,
+                        natureOfBusinessCode: null,
+                        tradeName: null,
+                        grossTurnover: null,
+                        TaxableIncome: null,
+                      },
+                    ],
 
                   cash: [
                     {
@@ -2284,89 +2287,77 @@ export class SummaryComponent implements OnInit {
                   ],
                 },
 
-                business44ADA:
-                  this.itrType === 'ITR3'
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][
-                        this.itrType
-                      ]?.PARTA_PL?.NatOfBus44ADA?.map((element) => {
-                        return {
-                          businessSection: 'Section 44ADA',
-                          natureOfBusinessCode: element?.CodeADA,
-                          tradeName: element?.NameOfBusiness,
-                          grossTurnover: Number(
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              ?.PARTA_PL?.PersumptiveInc44ADA?.GrsReceipt /
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.NatOfBus44ADA?.length
-                          ),
-                          TaxableIncome: Number(
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              ?.PARTA_PL?.PersumptiveInc44ADA
-                              ?.TotPersumptiveInc44ADA /
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.NatOfBus44ADA?.length
-                          ),
-                        };
-                      })
-                    : [
-                        {
-                          businessSection: null,
-                          natureOfBusinessCode: null,
-                          tradeName: null,
-                          grossTurnover: null,
-                          TaxableIncome: null,
-                        },
-                      ],
+                business44ADA: this.itrType === 'ITR3'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PARTA_PL?.NatOfBus44ADA?.map((element) => {
+                    return {
+                      businessSection: 'Section 44ADA',
+                      natureOfBusinessCode: element?.CodeADA,
+                      tradeName: element?.NameOfBusiness,
+                      grossTurnover: Number(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.PARTA_PL?.PersumptiveInc44ADA?.GrsReceipt /
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.PARTA_PL?.NatOfBus44ADA?.length
+                      ),
+                      TaxableIncome: Number(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.PARTA_PL?.PersumptiveInc44ADA
+                          ?.TotPersumptiveInc44ADA /
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.PARTA_PL?.NatOfBus44ADA?.length
+                      ),
+                    };
+                  })
+                  : [
+                    {
+                      businessSection: null,
+                      natureOfBusinessCode: null,
+                      tradeName: null,
+                      grossTurnover: null,
+                      TaxableIncome: null,
+                    },
+                  ],
 
-                nonSpecIncome:
-                  this.itrType === 'ITR3'
-                    ? {
-                        businessSection: 'Non-Speculative Income',
-                        natureOfBusinessCode: 'nonSpec',
-                        tradeName: 'Non-Speculative Income',
-                        grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][
-                          this.itrType
-                        ]?.TradingAccount?.OtherOperatingRevenueDtls?.reduce(
-                          (sum, obj) => sum + obj.OperatingRevenueAmt,
-                          0
-                        ),
-                        TaxableIncome:
-                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            ?.TradingAccount?.GrossProfitFrmBusProf,
-                      }
-                    : {
-                        businessSection: null,
-                        natureOfBusinessCode: null,
-                        tradeName: null,
-                        grossTurnover: null,
-                        TaxableIncome: null,
-                      },
+                nonSpecIncome: this.itrType === 'ITR3'
+                  ? {
+                    businessSection: 'Non-Speculative Income',
+                    natureOfBusinessCode: 'nonSpec',
+                    tradeName: 'Non-Speculative Income',
+                    grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TradingAccount?.OtherOperatingRevenueDtls?.reduce(
+                      (sum, obj) => sum + obj.OperatingRevenueAmt,
+                      0
+                    ),
+                    TaxableIncome: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.TradingAccount?.GrossProfitFrmBusProf,
+                  }
+                  : {
+                    businessSection: null,
+                    natureOfBusinessCode: null,
+                    tradeName: null,
+                    grossTurnover: null,
+                    TaxableIncome: null,
+                  },
 
-                specIncome:
-                  this.itrType === 'ITR3'
-                    ? {
-                        businessSection: 'Speculative Income',
-                        natureOfBusinessCode: 'speculative',
-                        tradeName: 'Speculative Income',
-                        grossTurnover:
-                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            ?.PARTA_PL?.TurnverFrmSpecActivity,
-                        TaxableIncome:
-                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                            ?.PARTA_PL?.NetIncomeFrmSpecActivity,
-                      }
-                    : {
-                        businessSection: null,
-                        natureOfBusinessCode: null,
-                        tradeName: null,
-                        grossTurnover: null,
-                        TaxableIncome: null,
-                      },
+                specIncome: this.itrType === 'ITR3'
+                  ? {
+                    businessSection: 'Speculative Income',
+                    natureOfBusinessCode: 'speculative',
+                    tradeName: 'Speculative Income',
+                    grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PARTA_PL?.TurnverFrmSpecActivity,
+                    TaxableIncome: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PARTA_PL?.NetIncomeFrmSpecActivity,
+                  }
+                  : {
+                    businessSection: null,
+                    natureOfBusinessCode: null,
+                    tradeName: null,
+                    grossTurnover: null,
+                    TaxableIncome: null,
+                  },
 
                 crypto: {
-                  cryptoDetails: this.ITR_JSON.itrSummaryJson['ITR'][
-                    this.itrType
-                  ]?.ScheduleVDA?.ScheduleVDADtls?.map((element, index) => {
+                  cryptoDetails: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleVDA?.ScheduleVDADtls?.map((element, index) => {
                     return {
                       srNo: index + 1,
                       buyDate: element?.DateofAcquisition,
@@ -2378,12 +2369,17 @@ export class SummaryComponent implements OnInit {
                     };
                   }),
                 },
-                totalCryptoIncome: this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ]?.ScheduleVDA?.TotIncCapGain
+                totalCryptoIncome: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleVDA?.TotIncCapGain
                   ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleVDA?.TotIncCapGain
+                    ?.ScheduleVDA?.TotIncCapGain
                   : 0,
+                incomeFromFirm: {
+                  salary: 0,
+                  bonus: 0,
+                  commission: 0,
+                  interest: 0,
+                  others: 0
+                }
               },
               businessIncomeTotal:
                 this.itrType === 'ITR3'
@@ -4032,6 +4028,30 @@ export class SummaryComponent implements OnInit {
                           }),
                       },
 
+                      
+                    incomeFromFirm: {
+                      salary: this.finalSummary?.itr?.partnerFirms?.reduce(
+                        (total, element) => total + element?.salary,
+                        0
+                      ),
+                      bonus: this.finalSummary?.itr?.partnerFirms?.reduce(
+                        (total, element) => total + element?.bonus,
+                        0
+                      ),
+                      commission: this.finalSummary?.itr?.partnerFirms?.reduce(
+                        (total, element) => total + element?.commission,
+                        0
+                      ),
+                      interest: this.finalSummary?.itr?.partnerFirms?.reduce(
+                        (total, element) => total + element?.interest,
+                        0
+                      ),
+                      others: this.finalSummary?.itr?.partnerFirms?.reduce(
+                        (total, element) => total + element?.others,
+                        0
+                      )
+                    },
+
                       // total crypto gain
                       totalCryptoIncome: this.finalSummary?.itr?.capitalGain
                         ?.find((item) => {
@@ -5607,6 +5627,29 @@ export class SummaryComponent implements OnInit {
                         )?.netProfitfromSpeculativeIncome,
                     },
 
+                    incomeFromFirm: {
+                      salary: this.finalSummary?.itr?.partnerFirms?.reduce(
+                        (total, element) => total + element?.salary,
+                        0
+                      ),
+                      bonus: this.finalSummary?.itr?.partnerFirms?.reduce(
+                        (total, element) => total + element?.bonus,
+                        0
+                      ),
+                      commission: this.finalSummary?.itr?.partnerFirms?.reduce(
+                        (total, element) => total + element?.commission,
+                        0
+                      ),
+                      interest: this.finalSummary?.itr?.partnerFirms?.reduce(
+                        (total, element) => total + element?.interest,
+                        0
+                      ),
+                      others: this.finalSummary?.itr?.partnerFirms?.reduce(
+                        (total, element) => total + element?.others,
+                        0
+                      )
+                    },
+                    
                     // crypto gain
                     crypto: {
                       cryptoDetails: this.finalSummary?.itr?.capitalGain
