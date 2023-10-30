@@ -50,7 +50,16 @@ export class BreakUpComponent implements OnInit {
     return Math.ceil(this.inputValues.reduce((acc, curr) => acc + curr, 0));
   }
 
-  initializeInputValues() {
+  initializeInputValues(event, index) {
+    // setting values aheadd of an index if it is changed
+    if (index >= this.inputValues.length - 1) return; // Ensure the index is within bounds
+    const valueToSet = this.inputValues[index];
+
+    for (let i = index + 1; i < this.inputValues.length; i++) {
+      this.inputValues[i] = valueToSet;
+    }
+
+    // setting total 
     this.total = this.getTotal;
     const presentInputs = this.inputValues.filter((value) => value > 0).length;
 
