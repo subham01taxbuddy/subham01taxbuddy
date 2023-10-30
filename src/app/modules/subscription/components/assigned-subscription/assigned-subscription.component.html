@@ -11,9 +11,9 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <div class="col-sm-12 bckClr">
-              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
-                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+            <div class="col-sm-12 bckClr" >
+              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
             <div class="col-sm-2">
               <label class="input__label" for="attr">Financial Year </label>
@@ -21,11 +21,7 @@
                 <input type="text" matInput [formControl]="assessmentYear" readonly>
               </mat-form-field>
             </div>
-            <div class="col-7">
-              <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
-                (onChange)="searchByObject($event)"></app-generic-user-filter>
-            </div>
-            <div class="col-sm-2">
+            <!-- <div class="col-sm-2">
               <label class="input__label" for="attr">Service TYpe</label>
               <mat-form-field appearance="outline" class="class1">
                 <mat-select placeholder="" [formControl]="serviceType" required>
@@ -34,6 +30,14 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
+            </div> -->
+            <div class="col-sm-3">
+              <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+                [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
+            </div>
+            <div class="col-7">
+              <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                (onChange)="searchByObject($event)"></app-generic-user-filter>
             </div>
             <div class="row spsTp bdrTp">
               <div class="col-6">
@@ -48,7 +52,7 @@
                   <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
                     <i class="fa fa-download" aria-hidden="true"></i> Download File
                   </button>
-                  <button class="srch-btn mvRth" [disabled]="loading" (click)="search(0,mobileNumber.value)"><i
+                  <button class="srch-btn mvRth" [disabled]="loading" (click)="search(0,'')"><i
                       class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
                   <button *ngIf="isAllowed" class="srch-btn mvRth" (click)="createSub()"> Create Subscription </button>
                 </div>

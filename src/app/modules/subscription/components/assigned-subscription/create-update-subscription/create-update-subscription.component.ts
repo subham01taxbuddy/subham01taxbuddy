@@ -20,20 +20,6 @@ import { filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 declare function we_track(key: string, value: any);
-// export class Schedules {
-//   public PERSONAL_INFO = 'PERSONAL_INFO';
-//   public OTHER_SOURCES = 'otherSources';
-//   public INVESTMENTS_DEDUCTIONS = 'investmentsDeductions';
-//   public TAXES_PAID = 'taxesPaid';
-//   public DECLARATION = 'declaration';
-//   public SALARY = 'SALARY';
-//   public HOUSE_PROPERTY = 'HOUSE_PROPERTY';
-//   public BUSINESS_INCOME = 'BUSINESS_INCOME';
-//   public CAPITAL_GAIN = 'capitalGain';
-//   public SPECULATIVE_INCOME = 'speculativeIncome';
-//   public FOREIGN_INCOME = 'foreignIncome';
-//   public MORE_INFORMATION = 'moreInformation'
-// }
 
 @Component({
   selector: 'app-create-update-subscription',
@@ -93,7 +79,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     { label: 'Monthly', value: 'MONTHLY' },
     { label: 'Quarterly', value: 'QUARTERLY' },
   ];
-
+  roles:any;
   subType: string;
   invoiceAmount: any;
   constructor(
@@ -175,38 +161,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     //   // this.serviceDetail=this.createSubscriptionObj.item.serviceDetail;
     // }
 
-    this.sourcesList = [
-      {
-        name: 'Salary',
-        schedule: 'SALARY',
-      },
-      {
-        name: 'House Property',
-        schedule: 'HOUSE_PROPERTY',
-      },
-      {
-        name: 'Business / Profession',
-        schedule: 'BUSINESS_AND_PROFESSION',
-      },
-      {
-        name: 'Capital Gain',
-        schedule: 'CAPITAL_GAINS',
-      },
-      {
-        name: 'Futures / Options',
-        schedule: 'FUTURE_AND_OPTIONS',
-      },
-      {
-        name: 'NRI / Foreign',
-        schedule: 'FOREIGN_INCOME_NRI_EXPAT',
-      },
-      {
-        name: 'Crypto',
-        schedule: 'CRYPTOCURRENCY',
-      },
-    ];
-    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
 
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    this.roles = this.utilsService.getUserRoles();
     this.getAllPlanInfo(this.serviceType);
     this.getOwnerFilerName();
     this.setFormValues(this.selectedUserInfo);
@@ -254,10 +211,23 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       });
   }
 
+  maskMobileNumber(originalMobileNumber: string): string {
+    if (originalMobileNumber && originalMobileNumber.length >= 10) {
+      const maskedPart = '*'.repeat(originalMobileNumber.length - 4);
+      const lastFourDigits = originalMobileNumber.slice(-4);
+      return maskedPart + lastFourDigits;
+    }
+    return originalMobileNumber;
+  }
+
   setFormValues(data) {
     console.log('data', data);
     this.userName.setValue(data?.fName + ' ' + data?.lName);
-    this.mobileNumber.setValue(data?.mobileNumber);
+    if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER') ){
+      this.mobileNumber.setValue(data?.mobileNumber);
+    }else{
+      this.mobileNumber.setValue(this.maskMobileNumber(data?.mobileNumber));
+    }
     this.emailAddress.setValue(data?.emailAddress);
     this.pin.setValue(data?.address[0]?.pinCode);
     this.state.setValue(data?.address[0]?.state);
@@ -539,7 +509,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         console.log('user Subscription', this.userSubscription);
         this.gstUserInfoByUserId(subscription.userId);
         this.loading = false;
-        this.reminderMobileNumber.setValue(subscription.reminderMobileNumber);
+        if(this.roles.includes('ROLE_ADMIN') ||this.roles.includes('ROLE_LEADER') ){
+          this.reminderMobileNumber.setValue(subscription.reminderMobileNumber);
+        }else{
+          this.reminderMobileNumber.setValue(this.maskMobileNumber( subscription.reminderMobileNumber));
+        }
         this.reminderEmail.setValue(subscription.reminderEmail);
         this.description.setValue(subscription.item.itemDescription);
         this.sacNumber.setValue(subscription.item.sacCode);

@@ -285,7 +285,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
         return { name: item.name, userId: item.userId, partnerType: item.partnerType };
       });
       this.principleIndividualOptions = this.principleIndividualNames;
-      // this.setFilteredPrincipleIndividuals();
+      this.setFilteredPrincipleIndividuals();
       console.log(' principleIndividualNames -> ', this.principleIndividualNames);
     });
     // } else if(this.listType === 'ASSIGNED') {
@@ -349,6 +349,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     this.leaderDetails = null;
     this.principleIndividualDetails = null;
     this.childDetails = null;
+    this.showChildFilter =false;
   }
 
   ngOnChanges() {

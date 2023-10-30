@@ -17,6 +17,10 @@ import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import * as moment from 'moment';
+import { ReportService } from 'src/app/services/report-service';
+import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
+import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
+import { Location } from '@angular/common';
 declare function we_track(key: string, value: any);
 export interface User {
   name: string;
@@ -55,9 +59,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     statusId: null,
     page: 0,
     pageSize: 20,
-    assigned: true,
-    mobileNumber: null,
-    emailId: null,
+    serviceType:null,
+    // mobileNumber: null,
+    // emailId: null,
   };
   dataOnLoad = true;
   sortBy: any = {};
@@ -82,6 +86,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   ];
   clearUserFilter: number;
   mobileNumber: any;
+  ogStatusList: any = [];
+  searchAsPrinciple :boolean =false;
+
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -93,6 +100,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private genericCsvService: GenericCsvService,
     private cacheManager: CacheManager,
+    private reportService:ReportService,
+    public location: Location,
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
     console.log('new Filer List ', this.allFilerList)
@@ -128,6 +137,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         this.searchVal = params['userMobNo'];
         this.queryParam = `?userId=${this.userId}`;
         this.advanceSearch();
+        this.dataOnLoad = false;
       } else {
         if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
           this.getAssignedSubscription(0);
@@ -141,11 +151,25 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
   }
 
+  fromServiceType(event) {
+    this.searchParam.serviceType = event;
+    // this.search('serviceType', 'isAgent');
+
+    if (this.searchParam.serviceType) {
+      setTimeout(() => {
+        this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
+      }, 100);
+    }
+  }
+
+  async getMasterStatusList() {
+    // this.itrStatus = await this.utilsService.getStoredMasterStatusList();
+    this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
+  }
 
   sortByObject(object) {
     this.sortBy = object;
   }
-
 
   searchByObject(object) {
     this.searchBy = object;
@@ -179,43 +203,55 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
 
   allSubscriptions = [];
-  getAssignedSubscription(pageNo?, isAgent?, fromPageChange?) {
-    // https://uat-api.taxbuddy.com/itr/subscription-dashboard-new/7522?page=0&pageSize=500&searchAsCoOwner=true
+  getAssignedSubscription(pageNo?, mobileNo?, fromPageChange?) {
+    // 'https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20'
     if (!fromPageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
-    this.queryParam = `?subscriptionAssigneeId=${this.agentId}`;
-    console.log('this.queryParam:', this.queryParam);
-    let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
-    if (this.utilsService.isNonEmpty(this.queryParam)) {
-      pagination = `&page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
+    let mobileFilter = '';
+    if(this.searchBy?.mobileNumber || mobileNo ){
+      this.isAllowed =  true
+      mobileFilter = '&mobileNumber=' +(this.searchBy?.mobileNumber || mobileNo);
+    }
+    let emailFilter = '';
+    if(this.searchBy?.email){
+      emailFilter = '&email=' +this.searchBy?.email;
     }
 
-    var param = `/subscription-dashboard-new/${this.agentId}?${pagination}`;
+    let nameFilter = '';
+    if(this.searchBy?.name){
+      nameFilter ='&name=' + this.searchBy?.name;
+    }
+
+    let userFilter = '';
+    if ((this.leaderId && !this.filerId)) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+
+    let data = this.utilsService.createUrlParams(this.searchParam);
+    // let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
+
+    var param = `/bo/subscription-dashboard-new?${data}${userFilter}${mobileFilter}${emailFilter}${nameFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
-    if (Object.keys(this.searchBy).length) {
-      Object.keys(this.searchBy).forEach(key => {
-        param = param + '&' + key + '=' + this.searchBy[key];
-      });
-    }
-    if ((this.ownerId || this.filerId) && (loggedInSmeUserId != this.ownerId || this.filerId)) {
-      param = param + '&filter=true'
-    }
-
-    if (this.coOwnerToggle.value == true && isAgent) {
-      param = param + '&searchAsCoOwner=true';
-    }
-    else {
-      param;
-    }
+    // if (Object.keys(this.searchBy).length) {
+    //   Object.keys(this.searchBy).forEach(key => {
+    //     param = param + '&' + key + '=' + this.searchBy[key];
+    //   });
+    // }
 
     this.loading = true;
-    this.userMsService.getMethodNew(param).subscribe(
+    this.reportService.getMethod(param).subscribe(
       (response: any) => {
         console.log('SUBSCRIPTION RESPONSE:', response);
         this.allSubscriptions = response;
@@ -237,11 +273,45 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           const currentPageNumber = pageNo + 1;
           this.cacheManager.cachePageContent(currentPageNumber, response.data.content);
           this.config.currentPage = currentPageNumber;
+
+          // this.selectedUserName = response.data[0].userName;
+          // this.userId = response.data[0].userId;
+
+          // this.queryParam = `?userId=${this.userId}`;
+          // this.utilsService.sendMessage(this.queryParam);
+
         } else {
-          this.subscriptionListGridOptions.api?.setRowData(
-            this.createRowData([])
-          );
-          this.config.totalItems = 0;
+          // this.subscriptionListGridOptions.api?.setRowData(
+          //   this.createRowData([])
+          // );
+          // this.config.totalItems = 0;
+          if (response.data.error === 'User not found') {
+            this._toastMessageService.alert("error", "No user with this mobile number found. " +
+              "Please create user before creating subscription.");
+            this.isAllowed = false;
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
+            return;
+          } else if (response.data.error === 'Subscription not found') {
+            this._toastMessageService.alert('error', response.data.error);
+            let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER' || item === 'ROLE_FILER');
+            this.isAllowed = filtered && filtered.length > 0 ? true : false;
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
+            return;
+          } else {
+            this._toastMessageService.alert('error', response.data.error);
+            this.isAllowed = false;
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
+            return;
+          }
         }
         this.sendTotalCount.emit(this.config.totalItems);
       },
@@ -284,7 +354,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   advanceSearch() {
     if (this.utilsService.isNonEmpty(this.searchVal)) {
       if (this.searchVal.toString().length >= 8 && this.searchVal.toString().length <= 50) {
-        this.getUserByMobileNum(this.searchVal)
+        this.search('',this.searchVal)
       } else {
         this._toastMessageService.alert("error", "Enter valid mobile number.");
       }
@@ -293,11 +363,12 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   search(pageNo?, mobileNo?) {
-    if (mobileNo) {
-      this.getUserByMobileNum(mobileNo);
-    } else {
+    if(mobileNo){
+      this.getAssignedSubscription(pageNo,mobileNo);
+    }else{
       this.getAssignedSubscription(pageNo);
     }
+
   }
 
   getUserByMobileNum(number) {
@@ -383,15 +454,17 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
+  @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   resetFilters() {
     this.cacheManager.clearCache();
     this.clearUserFilter = moment.now().valueOf();
     this.searchParam.statusId = null;
+    this.searchParam.serviceType = null;
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.subscriptionFormGroup.controls['serviceType'].setValue(null);
     this?.smeDropDown?.resetDropdown();
+    this?.serviceDropDown?.resetService();
 
     if (this.dataOnLoad) {
       this.getAssignedSubscription(0);
@@ -527,9 +600,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         },
       },
       {
-        headerName: 'Subscription Prepared',
-        field: 'subscriptionCreatedBy',
-        width: 150,
+        headerName: 'Leader Name',
+        field: 'leaderName',
+        width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -537,27 +610,67 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
-        valueGetter: function (params) {
-          let createdUserId = params.data.subscriptionCreatedBy
-          let filer1 = List;
-          // console.log('filer1',filer1)
-          //  let filer= filer1.filter(item=> item.userId {
-          //   if(item.userId==createdUserId){
-          //     return item.name;
-          //    }else 'NA'
-          //  })
-          let filer = filer1?.filter((item) => {
-            return item.userId === createdUserId;
-          }).map((item) => {
-            return item.name;
-          });
-          return filer;
-        }
       },
       {
-        headerName: 'Update',
+        headerName: 'Filer Name',
+        field: 'assigneeName',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      // {
+      //   headerName: 'Subscription Prepared',
+      //   field: 'subscriptionCreatedBy',
+      //   width: 150,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: 'agTextColumnFilter',
+      //   filterParams: {
+      //     filterOptions: ['contains', 'notContains'],
+      //     debounceMs: 0,
+      //   },
+      //   valueGetter: function (params) {
+      //     let createdUserId = params.data.subscriptionCreatedBy
+      //     let filer1 = List;
+      //     // console.log('filer1',filer1)
+      //     //  let filer= filer1.filter(item=> item.userId {
+      //     //   if(item.userId==createdUserId){
+      //     //     return item.name;
+      //     //    }else 'NA'
+      //     //  })
+      //     let filer = filer1?.filter((item) => {
+      //       return item.userId === createdUserId;
+      //     }).map((item) => {
+      //       return item.name;
+      //     });
+      //     return filer;
+      //   }
+      // },
+      {
+        headerName: 'Delete Subscription',
         field: '',
-        width: 100,
+        width: 120,
+        pinned: 'right',
+        lockPosition: true,
+        suppressMovable: false,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        // filter: 'agTextColumnFilter',
+        cellRenderer: function (params: any) {
+            return `<button type="button" class="action_icon add_button" title="Click to delete/cancel Subscription" data-action-type="remove"
+            style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:red; ">
+            <i class="fa fa-trash fa-xs" aria-hidden="true" data-action-type="remove"> Delete</i>
+             </button>`;
+        },
+      },
+      {
+        headerName: 'Update/Revise Subscription',
+        field: '',
+        width: 130,
         pinned: 'right',
         lockPosition: true,
         suppressMovable: false,
@@ -643,8 +756,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
             this.utilsService.isNonEmpty(subscriptionData[i].userSelectedPlan) ? subscriptionData[i].userSelectedPlan.totalAmount : '-'),
         // invoiceAmount: subscriptionData[i].payableSubscriptionAmount,
         subscriptionCreatedBy: subscriptionData[i].subscriptionCreatedBy,
-        cancellationStatus: subscriptionData[i].cancellationStatus
+        cancellationStatus: subscriptionData[i].cancellationStatus,
         // invoiceDetails: invoiceDetails,
+        leaderName : subscriptionData[i].leaderName
       });
     }
     return newData;
@@ -658,8 +772,51 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           this.createUpdateSubscription(params.data);
           break;
         }
+        case 'remove': {
+          this.deleteSubscription(params.data);
+          break;
+        }
       }
     }
+  }
+
+  dialogRef: any;
+  deleteSubscription(subscription){
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Cancel Subscription!',
+        message: 'Are you sure you want to Cancel the Subscription?',
+      },
+
+    });
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result === 'YES') {
+        this.loading = true;
+        let param = `/itr/subscription`;
+        let reqBody = {
+          "subscriptionId": subscription.subscriptionId,
+          "cancellationStatus": "PENDING"
+        };
+        this.userMsService.spamPutMethod(param, reqBody).subscribe(
+          (res: any) => {
+            this.loading = false;
+            // we_track('Cancel Subscription  ', {
+            //   'User number ': subscription.mobileNumber,
+            // });
+            this._toastMessageService.alert('success', 'Subscription will be canceled/Deleted onces your Owner Approves it.');
+            this.getAssignedSubscription(0)
+          },
+          (error) => {
+            this.loading = false;
+            if (error.error.error === 'BAD_REQUEST') {
+              this._toastMessageService.alert('error', error.error.message);
+            } else {
+              this._toastMessageService.alert('error', 'failed to update.');
+            }
+          }
+        );
+      }
+    })
   }
 
   createUpdateSubscription(subscription) {
@@ -682,29 +839,39 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         }
       });
     }
-    let disposable = this.dialog.open(AddSubscriptionComponent, {
-      width: '80%',
-      height: 'auto',
-      data: {
-        userId: this.userId,
-        mobileNo: this.mobileNumber,
-      },
-
-    })
-    console.log('send data', data)
-    disposable.afterClosed().subscribe(result => {
-      if (result && result.data) {
-        let subData = {
-          type: 'create',
-          data: result.data
-        }
-        sessionStorage.setItem('createSubscriptionObject', JSON.stringify(subData))
-        // let subID=result.data['subscriptionId'];
-        console.log('Afetr dialog close -> ', subData);
-        this.router.navigate(['/subscription/create-subscription']);
-        // this.router.navigate(['/subscription/create-subscription ' + result.data['subscriptionId']]);
+    const loggedInSmeUserId = this?.loggedInSme[0]?.userId
+    this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, this.mobileNumber).subscribe((res: any) => {
+      console.log(res);
+      if (res.records) {
+        this.userId = res.records[0].userId;
       }
-    })
+    });
+    if(this.userId){
+      let disposable = this.dialog.open(AddSubscriptionComponent, {
+        width: '80%',
+        height: 'auto',
+        data: {
+          userId: this.userId,
+          mobileNo: this.mobileNumber,
+        },
+
+      })
+      console.log('send data', data)
+      disposable.afterClosed().subscribe(result => {
+        if (result && result.data) {
+          let subData = {
+            type: 'create',
+            data: result.data
+          }
+          sessionStorage.setItem('createSubscriptionObject', JSON.stringify(subData))
+          // let subID=result.data['subscriptionId'];
+          console.log('Afetr dialog close -> ', subData);
+          this.router.navigate(['/subscription/create-subscription']);
+          // this.router.navigate(['/subscription/create-subscription ' + result.data['subscriptionId']]);
+        }
+      })
+    }
+
   }
 
   getFilerList() {
@@ -759,56 +926,51 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   ownerId: number;
   filerId: number;
   agentId: number;
-  fromSme(event, isOwner) {
+  leaderId: number;
+  fromSme(event, isOwner,fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
-      this.ownerId = event ? event.userId : null;
+      this.leaderId = event ? event.userId : null;
     } else {
-      this.filerId = event ? event.userId : null;
+      if(fromPrinciple){
+        if (event?.partnerType === 'PRINCIPAL') {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = true;
+        } else {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }else{
+        if(event){
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }
     }
-    if (this.filerId) {
-      this.agentId = this.filerId;
-      // this.getAssignedSubscription(0);
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
-      // this.getAssignedSubscription(0);
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
-    }
-    // this.getAssignedSubscription(0);
+
   }
 
-  coOwnerId: number;
-  coFilerId: number;
-
-  fromSme1(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.coOwnerId = event ? event.userId : null;
-    } else {
-      this.coFilerId = event ? event.userId : null;
-    }
-    if (this.coFilerId) {
-      this.agentId = this.coFilerId;
-      // this.getAssignedSubscription(0);
-    } else if (this.coOwnerId) {
-      this.agentId = this.coOwnerId;
-      // this.getAssignedSubscription(0);
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
-    }
-    // this.getAssignedSubscription(0);
-  }
-
+  showCsvMessage: boolean;
   async downloadReport() {
+     // 'https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20'
     this.loading = true;
     console.log('this.queryParam:', this.queryParam);
+    this.loading = true;
+    this.showCsvMessage = true;
+    let userFilter = ''
+    if (this.leaderId && !this.filerId) {
+      userFilter += `leaderUserId=${this.leaderId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `filerUserId=${this.filerId}`;
+    }
 
-    var param = `/subscription-dashboard-new/${this.agentId}`;
+    var param = `/bo/subscription-dashboard-new?${userFilter}`;
 
-    await this.genericCsvService.downloadReport(environment.url + '/itr', param, 0, 'assigned-subscription-report', '', this.sortBy);
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-subscription-report', '', this.sortBy);
     this.loading = false;
   }
 

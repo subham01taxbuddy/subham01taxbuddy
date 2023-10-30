@@ -6,7 +6,7 @@
     </div>
   </div>
   <div class="content-wrapper">
-    <div class="container" *ngIf="
+    <!-- <div class="container" *ngIf="
         userSubscription?.userSelectedPlan !== null &&
         userSubscription?.userSelectedPlan?.servicesType === 'ITR'
       ">
@@ -16,7 +16,6 @@
             <div class="txHd alTxH">Select at least 1 sources of income:</div>
             <div class="flex items-center justify-between align-center p-[25px] mt-[25px]">
               <div class="sources-back">
-                <!-- sources-of-income options  -->
                 <mat-chip-list class="sources-chip" multiple (change)="sourcesUpdated($event)">
                   <mat-chip disableRipple *ngFor="let source of sourcesList" (click)="sourcesUpdated(source)"
                     [selected]="source.selected">
@@ -31,7 +30,7 @@
         </div>
       </div>
       <hr />
-    </div>
+    </div> -->
 
     <div class="container">
       <div class="col-sm-10" style="margin-top: 10px">
@@ -83,7 +82,7 @@
           <mat-label> Secondary Mobile Number </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Secondary Mobile Number" [formControl]="reminderMobileNumber"
-              class="input-field" />
+              class="input-field" readonly/>
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -505,12 +504,12 @@
           Cancel
         </button>
       </div>
-      <div style="float: right">
+      <!-- <div style="float: right">
         <button class="tbd-btn cancel-btn" [disabled]="loading" (click)="cancelSubscription()"><i
             class="fa fa-close"></i>
           Cancel Subscription
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
