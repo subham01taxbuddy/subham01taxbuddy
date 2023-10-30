@@ -4,6 +4,7 @@ import { WizardNavigation } from '../../../itr-shared/WizardNavigation';
 import { PresumptiveBusinessIncomeComponent } from './presumptive-business-income/presumptive-business-income.component';
 import { PresumptiveProfessionalIncomeComponent } from './presumptive-professional-income/presumptive-professional-income.component';
 import { UtilsService } from 'src/app/services/utils.service';
+import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 
 @Component({
   selector: 'app-presumptive-income',
@@ -70,7 +71,26 @@ export class PresumptiveIncomeComponent
     });
   }
 
+  ITR_JSON: ITR_JSON;
+  Copy_ITR_JSON: ITR_JSON;
+  loading = false;
+
   save() {
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+      (result: any) => {
+        this.ITR_JSON = result;
+        this.loading = false;
+        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+        this.utilsService.smoothScrollToTop();
+      },
+      (error) => {
+        this.loading = false;
+        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+        this.utilsService.smoothScrollToTop();
+      }
+    );
     if (this.presProfessionalSaved && this.presBusinessSaved) {
       this.utilsService.showSnackBar(
         'Presumptive Income details were saved successfully'

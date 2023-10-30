@@ -568,22 +568,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         this.Copy_ITR_JSON.business.presumptiveIncomes =
           data.concat(presBusinessIncome);
       }
-
-      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-        (result: any) => {
-          this.ITR_JSON = result;
-          this.loading = false;
-          sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          this.utilsService.smoothScrollToTop();
-          this.presProfessionalSaved.emit(true);
-        },
-        (error) => {
-          this.loading = false;
-          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          this.utilsService.smoothScrollToTop();
-          this.presProfessionalSaved.emit(false);
-        }
-      );
+      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.Copy_ITR_JSON));
+      this.loading = false;
+      this.presProfessionalSaved.emit(true);
     } else {
       const profIncomeArray = this.getProfIncomeArray;
 
