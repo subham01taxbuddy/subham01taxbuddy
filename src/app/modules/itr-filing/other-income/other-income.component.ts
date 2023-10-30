@@ -300,7 +300,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   }
 
   saveAll() {
-    if (this.exemptIncomeFormGroup.valid && this.otherIncomeFormGroup.valid) {
+    if (
+      this.exemptIncomeFormGroup.valid &&
+      this.agriIncFormGroup.valid &&
+      this.otherIncomeFormGroup.valid
+    ) {
       this.saveOtherIncome();
       this.saveExemptIncomes();
       this.saveAndNext.emit(false);
@@ -631,20 +635,25 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     // setting agri Land Details
     const agriArrayItr = this.ITR_JSON.agriculturalLandDetails;
 
-    agriArrayItr.forEach((item) => {
-      this.addAgriLandDtls(item);
-    });
+    if (agriArrayItr && agriArrayItr.length > 0) {
+      const agriIncArray = form.get('agriInc') as FormArray;
+      agriIncArray.clear();
+
+      agriArrayItr.forEach((item) => {
+        this.addAgriLandDtls(item);
+      });
+    }
   }
 
   addAgriLandDtls(item?) {
     if (item) {
       if (this.getAgriIncomeArray.valid) {
         const formGroup = this.fb.group({
-          nameOfDistrict: item ? item.nameOfDistrict : '',
-          pinCode: item ? item.pinCode : 0,
-          landInAcre: item ? item.landInAcre : 0,
-          owner: item ? item.owner : '',
-          typeOfLand: item ? item.typeOfLand : '',
+          nameOfDistrict: item ? item.nameOfDistrict : null,
+          pinCode: item ? item.pinCode : null,
+          landInAcre: [item ? item.landInAcre : null, Validators.required],
+          owner: [item ? item.owner : null, Validators.required],
+          typeOfLand: item ? item.typeOfLand : null,
         });
         this.getAgriIncomeArray.push(formGroup);
       } else {
@@ -654,11 +663,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       }
     } else {
       const formGroup = this.fb.group({
-        nameOfDistrict: '',
-        pinCode: 0,
-        landInAcre: 0,
-        owner: '',
-        typeOfLand: '',
+        nameOfDistrict: null,
+        pinCode: null,
+        landInAcre: [null, Validators.required],
+        owner: [null, Validators.required],
+        typeOfLand: null,
       });
       this.getAgriIncomeArray.push(formGroup);
     }
@@ -668,14 +677,20 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     const formValues = this.agriIncFormGroup.value;
 
     // List of keys to ignore
-    const keysToIgnore = ['grossAgriculturalReceipts','netAgriculturalIncome', 'agriInc'];
+    const keysToIgnore = [
+      'grossAgriculturalReceipts',
+      'netAgriculturalIncome',
+      'agriInc',
+    ];
 
     // Filter out keys to ignore and sum the rest
     const otherKeystotal = Object.keys(formValues)
       .filter((key) => !keysToIgnore.includes(key))
       .reduce((acc, key) => acc + (formValues[key] || 0), 0);
 
-    const total = this.agriIncFormGroup.get('grossAgriculturalReceipts').value - otherKeystotal;
+    const total =
+      this.agriIncFormGroup.get('grossAgriculturalReceipts').value -
+      otherKeystotal;
     this.agriIncFormGroup.get('netAgriculturalIncome').setValue(total);
     const exemptIncomes = this.getExemptIncomeArray;
 
