@@ -190,8 +190,6 @@ export class SharesAndEquityComponent
 
         this.updateDeductionUI();
       });
-    } else {
-      this.addMoreData();
     }
 
   }
