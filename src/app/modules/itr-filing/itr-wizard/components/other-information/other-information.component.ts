@@ -658,7 +658,7 @@ export class OtherInformationComponent implements OnInit {
 
       this.Copy_ITR_JSON.schedule5a = schedule5a;
     } else {
-      $('input.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
     }
 
     // saving director details
@@ -670,7 +670,7 @@ export class OtherInformationComponent implements OnInit {
       this.Copy_ITR_JSON.systemFlags.directorInCompany =
         this.Copy_ITR_JSON?.directorInCompany?.length > 0 ? true : false;
     } else {
-      $('input.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
     }
 
     // save unlisted details
@@ -682,7 +682,7 @@ export class OtherInformationComponent implements OnInit {
       this.Copy_ITR_JSON.systemFlags.haveUnlistedShares =
         this.Copy_ITR_JSON?.unlistedSharesDetails?.length > 0 ? true : false;
     } else {
-      $('input.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
     } 
 
     // save firm details 
@@ -697,7 +697,7 @@ export class OtherInformationComponent implements OnInit {
         this.Copy_ITR_JSON.partnerInFirmFlag = 'Y';
       }
     } else {
-      $('input.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
     }
 
     if (this.schedule5AForm?.valid && this.firmForm?.valid && this.sharesForm?.valid && this.directorForm?.valid){
