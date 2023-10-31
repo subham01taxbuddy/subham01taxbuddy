@@ -31,6 +31,7 @@ export class AllPersonalInformationComponent implements OnInit {
   customerProfileSaved: boolean;
   personalInfoSaved: boolean;
   otherInfoSaved: boolean;
+  loading: boolean = false;
 
   constructor(private utilService: UtilsService) {
     this.navigationData = history.state;
@@ -96,19 +97,24 @@ export class AllPersonalInformationComponent implements OnInit {
   saveAllInfo() {
     //check validations
     if (!this.customerProfileComponent.customerProfileForm.valid) {
+      this.setStep(0);
       this.utilService.showSnackBar(
         'Please fill all required fields in Customer Profile'
       );
+      this.loading = false;
       return;
     } else if (!this.personalInfoComponent.isFormValid()) {
+      this.setStep(1);
       this.utilService.showSnackBar(
         'Please fill all required fields in Personal Details'
       );
+      this.loading = false;
       return;
     } else if (
-      !this.otherInfoComponent.sharesForm.valid ||
-      !this.otherInfoComponent.directorForm.valid
+      !this.otherInfoComponent.sharesForm.valid
     ) {
+      this.setStep(3);
+      this.loading = false;
       this.utilService.showSnackBar(
         'Please fill all required fields in Other Information'
       );
@@ -133,6 +139,7 @@ export class AllPersonalInformationComponent implements OnInit {
   onPersonalInfoSaved(event) {
     this.personalInfoSaved = event;
     if (this.personalInfoSaved) {
+      this.saveAndNext.emit(false);
       this.otherInfoComponent.saveAndContinue();
       this.saveAllInfo();
     }
