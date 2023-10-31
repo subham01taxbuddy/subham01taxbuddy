@@ -607,11 +607,11 @@ export class UtilsService {
         haveUnlistedShares: false,
       },
       agriculturalDetails: {
-        nameOfDistrict: '',
+        nameOfDistrict: null,
         landInAcre: null,
-        owner: '',
-        typeOfLand: '',
-        pinCode: '',
+        owner: null,
+        typeOfLand: null,
+        pinCode: null,
       },
       itrProgress: [],
       directorInCompany: [],
@@ -674,20 +674,20 @@ export class UtilsService {
       liableSection44AAflag: '',
 
       agriculturalIncome: {
-        grossAgriculturalReceipts: 0,
-        expenditureIncurredOnAgriculture: 0,
-        unabsorbedAgriculturalLoss: 0,
-        agriIncomePortionRule7: 0,
-        netAgriculturalIncome: 0,
+        grossAgriculturalReceipts: null,
+        expenditureIncurredOnAgriculture: null,
+        unabsorbedAgriculturalLoss: null,
+        agriIncomePortionRule7: null,
+        netAgriculturalIncome: null,
       },
 
       agriculturalLandDetails: [
         {
-          nameOfDistrict: '',
-          pinCode: '',
-          landInAcre: 1,
-          owner: '', //"O - Owned; H - Held on lease"
-          typeOfLand: '', //"IRG - Irrigated; RF - Rain-fed"
+          nameOfDistrict: null,
+          pinCode: null,
+          landInAcre: null,
+          owner: null, //"O - Owned; H - Held on lease"
+          typeOfLand: null, //"IRG - Irrigated; RF - Rain-fed"
         },
       ],
     };
