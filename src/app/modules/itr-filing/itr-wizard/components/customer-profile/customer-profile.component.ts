@@ -272,7 +272,7 @@ export class CustomerProfileComponent implements OnInit {
         Validators.compose([Validators.pattern(AppConstants.charRegex)]),
       ],
       dateOfBirth: ['', Validators.required],
-      gender: ['', Validators.required],
+      gender: [''],
       contactNumber: [
         '',
         Validators.compose([
@@ -435,9 +435,15 @@ export class CustomerProfileComponent implements OnInit {
       }
     }
   }
+
   saveProfile(ref) {
     console.log('customerProfileForm: ', this.customerProfileForm);
     this.findAssesseeType();
+
+    let gender = this.customerProfileForm.get('gender');
+    gender?.setValidators(Validators.required);
+    gender?.updateValueAndValidity();
+
     // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
     if (this.customerProfileForm.valid) {
       let aadhaarEnrolmentId =
@@ -527,7 +533,15 @@ export class CustomerProfileComponent implements OnInit {
         }
       );
     } else {
-      $('input.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      
+      if(gender?.status === 'INVALID'){
+        gender?.setValidators(Validators.required);
+        gender?.updateValueAndValidity();
+      } else {
+        gender?.clearValidators();
+        gender?.updateValueAndValidity();
+      }
     }
   }
   calAge(dob) {

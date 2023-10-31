@@ -332,7 +332,7 @@
           class="input-field"
           maxlength="12"
           digitsOnly
-          (change)="shallDisableOther('aadhaarEnrolmentId','aadharNumber')"
+          (change)="shallDisableOther('aadhaarEnrolmentId', 'aadharNumber')"
         />
         <mat-error
           *ngIf="
@@ -376,21 +376,27 @@
         />
         <mat-error
           *ngIf="
-            customerProfileForm.controls['aadhaarEnrolmentId'].hasError('required')
+            customerProfileForm.controls['aadhaarEnrolmentId'].hasError(
+              'required'
+            )
           "
         >
           Enter Aadhar Enrollment ID</mat-error
         >
         <mat-error
           *ngIf="
-            customerProfileForm.controls['aadhaarEnrolmentId'].hasError('maxlength')
+            customerProfileForm.controls['aadhaarEnrolmentId'].hasError(
+              'maxlength'
+            )
           "
         >
           Enter 14 digit Aadhar Enrollment ID</mat-error
         >
         <mat-error
           *ngIf="
-            customerProfileForm.controls['aadhaarEnrolmentId'].hasError('minlength')
+            customerProfileForm.controls['aadhaarEnrolmentId'].hasError(
+              'minlength'
+            )
           "
         >
           Enter 14 digit Aadhar Enrollment ID</mat-error
@@ -436,10 +442,17 @@
           labelPosition="after"
           *ngFor="let gender of genderMaster"
           [value]="gender.value"
+          required
         >
           {{ gender.label }}
         </mat-radio-button>
       </mat-radio-group>
+      <mat-error
+        *ngIf="
+          customerProfileForm.controls['gender'].hasError('required')
+        "
+        >Please select gender</mat-error
+      >
     </div>
 
     <!-- <div class="col-sm-12 spsTp bdrTp">

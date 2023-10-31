@@ -706,56 +706,16 @@
                           <ng-container
                             *ngIf="
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD?.bank &&
+                                ?.businessIncomeDetails?.business44AD &&
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD?.bank
-                                .length > 0
+                                ?.businessIncomeDetails?.business44AD?.length > 0
                             "
                           >
                             <tr
                               *ngFor="
                                 let business of finalCalculations
                                   ?.businessIncome?.businessIncomeDetails
-                                  ?.business44AD?.bank
-                              "
-                            >
-                              <ng-container
-                                *ngIf="
-                                  business.grossTurnover > 0 &&
-                                  business.TaxableIncome > 0
-                                "
-                              >
-                                <td>
-                                  {{ business?.businessSection }}
-                                </td>
-                                <td>
-                                  {{ business?.natureOfBusinessCode }}
-                                </td>
-                                <td>{{ business?.tradeName }}</td>
-                                <td>Rs {{ business?.grossTurnover }}</td>
-                                <td>
-                                  Rs
-                                  {{ business?.TaxableIncome }}
-                                </td>
-                              </ng-container>
-                            </tr>
-                          </ng-container>
-
-                          <!-- businessIncome - cash  -->
-                          <ng-container
-                            *ngIf="
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD?.cash &&
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD?.cash
-                                .length > 0
-                            "
-                          >
-                            <tr
-                              *ngFor="
-                                let business of finalCalculations
-                                  ?.businessIncome?.businessIncomeDetails
-                                  ?.business44AD?.cash
+                                  ?.business44AD
                               "
                             >
                               <ng-container
@@ -923,6 +883,117 @@
                                       ?.TaxableIncome
                                   )
                                 }}
+                              </td>
+                            </tr>
+                          </ng-container>
+
+                          <ng-container
+                            *ngIf="
+                            finalSummary?.assessment
+                            ?.summaryIncome?.summaryBusinessIncome
+                            .totalIncomeFromFirm !== 0
+                            "
+                          >
+                            <tr>
+                              <td>
+                                Income From Firm
+                              </td>
+                              <td>
+                                
+                              </td>
+                              <td>
+                                
+                              </td>
+                              <td>
+                                
+                                
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(
+                                    finalSummary?.assessment
+                                    ?.summaryIncome?.summaryBusinessIncome
+                                    .totalIncomeFromFirm
+                                  )
+                                }}
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div
+                    class="bxHed"
+                    *ngIf="
+                            finalSummary?.assessment
+                            ?.summaryIncome?.summaryBusinessIncome
+                            .totalIncomeFromFirm !== 0
+                            "
+                  >
+                  Partner's Remuneration
+                    <span style="float: right">{{
+                      finalSummary?.assessment
+                            ?.summaryIncome?.summaryBusinessIncome
+                            .totalIncomeFromFirm
+                    }}</span>
+                  </div>
+
+                    <div  *ngIf="
+                    finalSummary?.assessment
+                    ?.summaryIncome?.summaryBusinessIncome
+                    .totalIncomeFromFirm !== 0
+                    ">
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Salary</th>
+                            <th>Bonus</th>
+                            <th>Commission</th>
+                            <th>Interest</th>
+                            <th>Others</th>
+                          </tr>
+                          <ng-container
+                            *ngIf="
+                            finalSummary?.assessment
+                            ?.summaryIncome?.summaryBusinessIncome
+                            .totalIncomeFromFirm !== 0
+                            "
+                          >
+                            <tr>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.salary)}}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.bonus)}}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.commission)}}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.interest)}}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.others)}}
                               </td>
                             </tr>
                           </ng-container>
@@ -2350,8 +2421,7 @@
                           </td>
 
                           <td>
-                            <i class="material-icons icSmRup">&#8377;</i>&nbsp;
-                            0
+                            -
                           </td>
 
                           <td>
@@ -2403,9 +2473,7 @@
                           </td>
 
                           <td>
-                            <i class="material-icons icSmRup">&#8377;</i>&nbsp;
-                            0
-                          </td>
+                           -
                           <td>
                             <i class="material-icons icSmRup">&#8377;</i
                             >&nbsp;{{
@@ -2445,8 +2513,7 @@
                           </td>
 
                           <td>
-                            <i class="material-icons icSmRup">&#8377;</i>&nbsp;
-                            0
+                            -
                           </td>
                           <td>
                             <i class="material-icons icSmRup">&#8377;</i

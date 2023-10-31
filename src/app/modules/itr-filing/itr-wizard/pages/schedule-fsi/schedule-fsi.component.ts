@@ -22,7 +22,6 @@ export class ScheduleFsiComponent implements OnInit {
     'BUSINESS_OR_PROFESSION',
     'OTHER',
   ];
-  relevantArticle = ['90', '90A', '91'];
   offeredForTaxIndValue: number;
 
   constructor(private fb: FormBuilder, private utilsService: UtilsService) {}

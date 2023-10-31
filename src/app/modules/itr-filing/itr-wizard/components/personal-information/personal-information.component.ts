@@ -2359,7 +2359,7 @@ export class PersonalInformationComponent implements OnInit {
     if (bankDetails.valid) {
       bankDetails.push(this.createBankDetailsForm());
     } else {
-      $('input.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
       console.log('add above details first');
     }
   }
@@ -2634,7 +2634,6 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   async saveProfile(ref) {
-    this.loading = true;
     console.log(this.customerProfileForm, 'customerProfile');
     // this.findAssesseeType();
     //re-intialise the ITR objects
@@ -2648,7 +2647,7 @@ export class PersonalInformationComponent implements OnInit {
     );
 
     if (!this.isFormValid()) {
-      $('input.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
       return;
     }
 
