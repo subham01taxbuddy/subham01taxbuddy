@@ -706,56 +706,16 @@
                           <ng-container
                             *ngIf="
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD?.bank &&
+                                ?.businessIncomeDetails?.business44AD &&
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD?.bank
-                                .length > 0
+                                ?.businessIncomeDetails?.business44AD?.length > 0
                             "
                           >
                             <tr
                               *ngFor="
                                 let business of finalCalculations
                                   ?.businessIncome?.businessIncomeDetails
-                                  ?.business44AD?.bank
-                              "
-                            >
-                              <ng-container
-                                *ngIf="
-                                  business.grossTurnover > 0 &&
-                                  business.TaxableIncome > 0
-                                "
-                              >
-                                <td>
-                                  {{ business?.businessSection }}
-                                </td>
-                                <td>
-                                  {{ business?.natureOfBusinessCode }}
-                                </td>
-                                <td>{{ business?.tradeName }}</td>
-                                <td>Rs {{ business?.grossTurnover }}</td>
-                                <td>
-                                  Rs
-                                  {{ business?.TaxableIncome }}
-                                </td>
-                              </ng-container>
-                            </tr>
-                          </ng-container>
-
-                          <!-- businessIncome - cash  -->
-                          <ng-container
-                            *ngIf="
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD?.cash &&
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD?.cash
-                                .length > 0
-                            "
-                          >
-                            <tr
-                              *ngFor="
-                                let business of finalCalculations
-                                  ?.businessIncome?.businessIncomeDetails
-                                  ?.business44AD?.cash
+                                  ?.business44AD
                               "
                             >
                               <ng-container
