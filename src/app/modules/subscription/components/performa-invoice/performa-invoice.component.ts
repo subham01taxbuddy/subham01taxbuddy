@@ -155,7 +155,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
 
   ngOnInit() {
     this.getMasterStatusList();
-    this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
+    this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
     console.log('new Filer List ', this.allFilerList);
 
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
@@ -308,6 +308,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     this.status.setValue(this.Status[0].value);
     this.mobile.setValue(null);
     this.email.setValue(null);
+    this.name.setValue(null);
     this.invoiceFormGroup.controls['txbdyInvoiceId'].setValue(null);
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
@@ -633,7 +634,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
         },
       },
       {
-        headerName: 'Amount Payable',
+        headerName: 'Payable Amount',
         field: 'total',
         width: 100,
         suppressMovable: true,
@@ -653,39 +654,17 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       },
-      {
-        headerName: 'Filer Name',
-        field: 'filerName',
-        width: 140,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      },
-
-      {
-        headerName: 'Prepared By',
-        field: 'inovicePreparedBy',
-        width: 140,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-        valueGetter: function (params) {
-          let createdUserId = parseInt(params?.data?.inovicePreparedBy)
-          let filer1 = List;
-          let filer = filer1.filter((item) => {
-            return item.userId === createdUserId;
-          }).map((item) => {
-            return item.name;
-          });
-          return filer
-        }
-      },
       // {
-      //   headerName: 'Assigned to',
-      //   field: 'invoiceAssignedTo',
+      //   headerName: 'Filer Name',
+      //   field: 'filerName',
+      //   width: 140,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+      // },
+
+      // {
+      //   headerName: 'Prepared By',
+      //   field: 'inovicePreparedBy',
       //   width: 140,
       //   suppressMovable: true,
       //   cellStyle: { textAlign: 'center' },
@@ -695,16 +674,38 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
       //     debounceMs: 0,
       //   },
       //   valueGetter: function (params) {
-      //     let createdUserId = params.data.invoiceAssignedTo
+      //     let createdUserId = parseInt(params?.data?.inovicePreparedBy)
       //     let filer1 = List;
       //     let filer = filer1.filter((item) => {
       //       return item.userId === createdUserId;
       //     }).map((item) => {
       //       return item.name;
       //     });
-      //     return filer;
+      //     return filer
       //   }
       // },
+      {
+        headerName: 'Filer Name',
+        field: 'invoiceAssignedTo',
+        width: 140,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function (params) {
+          let createdUserId = params.data.invoiceAssignedTo
+          let filer1 = List;
+          let filer = filer1.filter((item) => {
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+          return filer;
+        }
+      },
 
       {
         headerName: 'Send Reminder',

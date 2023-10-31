@@ -110,7 +110,7 @@ export class PayoutsComponent implements OnInit,OnDestroy {
     this.startDate.setValue('2023-01-01');
     this.endDate.setValue(new Date());
     this.setToDateValidation(this.startDate.value);
-    this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
+    this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'));
 
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     let loggedInUserRoles = this.utilsService.getUserRoles();

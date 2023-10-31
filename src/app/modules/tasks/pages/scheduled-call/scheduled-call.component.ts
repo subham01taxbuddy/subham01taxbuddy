@@ -223,7 +223,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         filerNumber: scheduleCalls[i]['filerNumber'],
         filerName: scheduleCalls[i]['filerName'],
         ownerMobileNumber: scheduleCalls[i]['ownerNumber'],
-        ownerName: scheduleCalls[i]['ownerName'],
+        leaderName: scheduleCalls[i]['leaderName'],
         userEmail: scheduleCalls[i]['userEmail'],
         smeMobileNumber: scheduleCalls[i]['smeMobileNumber'],
         smeName: scheduleCalls[i]['smeName'],
@@ -374,8 +374,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       //   },
       // },
       {
-        headerName: 'Owner Name',
-        field: 'ownerName',
+        headerName: 'Leader Name',
+        field: 'leaderName',
         width: 110,
         suppressMovable: true,
         sortable: true,
@@ -581,6 +581,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       },
     });
     disposable.afterClosed().subscribe((result) => {
+      this.search()
       console.log('The dialog was closed');
     });
   }

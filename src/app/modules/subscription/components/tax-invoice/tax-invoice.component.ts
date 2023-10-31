@@ -140,7 +140,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     private reportService:ReportService,
     private mobileEncryptDecryptService :MobileEncryptDecryptService,
   ) {
-    this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
+    this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
     console.log('new Filer List ', this.allFilerList)
 
     this.invoiceListGridOptions = <GridOptions>{
@@ -701,39 +701,33 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
       },
+
+
+      // {
+      //   headerName: 'Prepared By',
+      //   field: 'inovicePreparedBy',
+      //   width: 140,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: 'agTextColumnFilter',
+      //   filterParams: {
+      //     filterOptions: ['contains', 'notContains'],
+      //     debounceMs: 0,
+      //   },
+      //   valueGetter: function (params) {
+      //     let createdUserId = parseInt(params?.data?.inovicePreparedBy)
+      //     let filer1 = List;
+      //     let filer = filer1.filter((item) => {
+      //       return item.userId === createdUserId;
+      //     }).map((item) => {
+      //       return item.name;
+      //     });
+      //     return filer
+      //   }
+
+      // },
       {
         headerName: 'Filer Name',
-        field: 'filerName',
-        width: 140,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-      },
-
-      {
-        headerName: 'Prepared By',
-        field: 'inovicePreparedBy',
-        width: 140,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-        valueGetter: function (params) {
-          let createdUserId = parseInt(params?.data?.inovicePreparedBy)
-          let filer1 = List;
-          let filer = filer1.filter((item) => {
-            return item.userId === createdUserId;
-          }).map((item) => {
-            return item.name;
-          });
-          return filer
-        }
-
-      },
-      {
-        headerName: 'Assigned to',
         field: 'invoiceAssignedTo',
         width: 140,
         suppressMovable: true,
