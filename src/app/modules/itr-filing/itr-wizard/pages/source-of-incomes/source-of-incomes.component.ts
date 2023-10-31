@@ -79,8 +79,8 @@ export class SourceOfIncomesComponent implements OnInit {
         {
           name: 'Futures / Options',
           selected:
-            this.ITR_JSON.business != null &&
-            this.ITR_JSON.business.profitLossACIncomes?.length > 0
+            this.ITR_JSON.business?.profitLossACIncomes != null &&
+            this.ITR_JSON.business?.profitLossACIncomes?.length > 0
               ? true
               : false,
           schedule: this.schedules.SPECULATIVE_INCOME,
@@ -88,8 +88,8 @@ export class SourceOfIncomesComponent implements OnInit {
         {
           name: 'Crypto',
           selected:
-            this.ITR_JSON.capitalGain != null &&
-            this.ITR_JSON.capitalGain.length > 0
+            this.ITR_JSON.capitalGain?.filter(item=> item?.assetType === 'VDA') !== null &&
+            this.ITR_JSON.capitalGain?.filter(item=> item?.assetType === 'VDA').length > 0
               ? true
               : false,
           schedule: this.schedules.CRYPTO_VDA,
