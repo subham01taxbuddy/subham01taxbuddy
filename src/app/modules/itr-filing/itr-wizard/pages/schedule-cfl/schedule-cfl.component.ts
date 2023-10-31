@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import {
@@ -8,7 +14,10 @@ import {
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import {MatFormField, MatFormFieldAppearance} from "@angular/material/form-field";
+import {
+  MatFormField,
+  MatFormFieldAppearance,
+} from '@angular/material/form-field';
 
 @Component({
   selector: 'app-schedule-cfl',
@@ -146,7 +155,7 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
         (element as FormGroup).controls['assessmentPastYear'].value ===
           '2017-18' ||
         (element as FormGroup).controls['assessmentPastYear'].value ===
-        '2018-19'
+          '2018-19'
       ) {
         (element as FormGroup).controls['speculativeBusinessLoss'].disable();
       }
@@ -219,13 +228,20 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     return <FormArray>this.cflForm.get('cflArray');
   }
 
-  getField(i, field){
-    return <AbstractControl>(<FormGroup>(<FormArray>this.cflForm.controls['cflArray']).controls[i]).get(field);
-
+  getField(i, field) {
+    return <AbstractControl>(
+      (<FormGroup>(
+        (<FormArray>this.cflForm.controls['cflArray']).controls[i]
+      )).get(field)
+    );
   }
 
   getApperance(i, field): MatFormFieldAppearance {
-    if ((<FormGroup>(<FormArray>this.cflForm.controls['cflArray']).controls[i]).get(field).disabled) {
+    if (
+      (<FormGroup>(
+        (<FormArray>this.cflForm.controls['cflArray']).controls[i]
+      )).get(field).disabled
+    ) {
       return 'fill';
     }
     return 'outline';
@@ -293,10 +309,12 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     let isError = false;
+    let dateError = false;
 
-    const cflArrays = this.cflForm.get('cflArray').value;
+    const cflArrays = this.cflForm.get('cflArray') as FormArray;
+    const cflArraysValue = this.cflForm.get('cflArray').value;
 
-    cflArrays.forEach((element) => {
+    cflArraysValue.forEach((element, index) => {
       if (
         element.dateofFilling &&
         element.LTCGLoss == 0 &&
@@ -306,6 +324,25 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
         element.speculativeBusinessLoss == 0
       ) {
         isError = true;
+      } else if (
+        !element.dateofFilling &&
+        ((element?.LTCGLoss && parseFloat(element?.LTCGLoss) !== 0) ||
+          (element?.STCGLoss && parseFloat(element?.STCGLoss) !== 0) ||
+          (element?.broughtForwordBusinessLoss &&
+            parseFloat(element?.broughtForwordBusinessLoss) !== 0) ||
+          (element?.housePropertyLoss &&
+            parseFloat(element?.housePropertyLoss) !== 0) ||
+          (element?.speculativeBusinessLoss &&
+            parseFloat(element?.speculativeBusinessLoss) !== 0))
+      ) {
+        const date = cflArrays.controls[index].get('dateofFilling');
+        date?.setValidators(Validators.required);
+        date?.updateValueAndValidity();
+        dateError = true;
+      } else {
+        const date = cflArrays.controls[index].get('dateofFilling');
+        date?.clearValidators();
+        date?.updateValueAndValidity();
       }
     });
     if (isError) {
@@ -316,36 +353,46 @@ export class ScheduleCflComponent extends WizardNavigation implements OnInit {
       return;
     }
 
-    const cflArray = <FormArray>this.cflForm.get('cflArray');
-    this.Copy_ITR_JSON.pastYearLosses = [];
-    this.Copy_ITR_JSON.pastYearLosses = cflArray.getRawValue();
-    this.loading = true;
-    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-      (result: any) => {
-        this.ITR_JSON = result;
-        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-        this.loading = false;
-        this.utilsService.showSnackBar('Schedule CFL updated successfully');
-        console.log('Schedule CFL=', result);
-        this.utilsService.smoothScrollToTop();
-      },
-      (error) => {
-        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Failed to add schedule CFL, please try again.'
-        );
-        this.utilsService.smoothScrollToTop();
-      }
-    );
+    if (dateError) {
+      this.utilsService.showSnackBar(
+        'If loss amount is present then date of filing is required.'
+      );
+      this.utilsService.smoothScrollToTop();
+      return;
+    }
+
+    if (cflArrays?.valid) {
+      const cflArray = <FormArray>this.cflForm.get('cflArray');
+      this.Copy_ITR_JSON.pastYearLosses = [];
+      this.Copy_ITR_JSON.pastYearLosses = cflArray.getRawValue();
+      this.loading = true;
+      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
+        (result: any) => {
+          this.ITR_JSON = result;
+          sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
+          this.loading = false;
+          this.saveAndNext.emit(true);
+          this.utilsService.showSnackBar('Schedule CFL updated successfully');
+          console.log('Schedule CFL=', result);
+          this.utilsService.smoothScrollToTop();
+        },
+        (error) => {
+          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+          this.loading = false;
+          this.utilsService.showSnackBar(
+            'Failed to add schedule CFL, please try again.'
+          );
+          this.utilsService.smoothScrollToTop();
+        }
+      );
+    } else {
+      this.utilsService.showSnackBar(
+        'please make sure all details are entered correctly'
+      );
+    }
   }
 
   goBack() {
     this.saveAndNext.emit(false);
-  }
-
-  saveAll() {
-    this.save();
-    this.saveAndNext.emit(true);
-  }
+  } 
 }
