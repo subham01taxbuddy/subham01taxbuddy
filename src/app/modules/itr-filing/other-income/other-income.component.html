@@ -533,6 +533,7 @@
                 </td>
 
                 <td>
+                  <!--                      [readonly]="income.value.incomeType === 'AGRI'"-->
                   <mat-form-field appearance="outline">
                     <input
                       type="number"
@@ -543,7 +544,6 @@
                       formControlName="incomeValue"
                       class="input-field"
                       maxlength="125"
-                      [readonly]="income.value.incomeType === 'AGRI'"
                     />
                   </mat-form-field>
                 </td>
