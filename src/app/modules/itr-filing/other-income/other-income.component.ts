@@ -247,11 +247,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   private createAgriIncForm() {
     const data = [];
     const formGroup = this.fb.group({
-      nameOfDistrict: '',
-      pinCode: '',
-      landInAcre: 0,
-      owner: '', //"O - Owned; H - Held on lease"
-      typeOfLand: '', //"IRG - Irrigated; RF - Rain-fed"
+      nameOfDistrict: null,
+      pinCode: null,
+      landInAcre: null,
+      owner: null, //"O - Owned; H - Held on lease"
+      typeOfLand: null, //"IRG - Irrigated; RF - Rain-fed"
     });
 
     data.push(formGroup);
@@ -300,16 +300,20 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   }
 
   saveAll() {
+    let agriIncome = this.agriIncFormGroup.get('netAgriculturalIncome');
     if (
       this.exemptIncomeFormGroup.valid &&
-      this.agriIncFormGroup.valid &&
-      this.otherIncomeFormGroup.valid
+      this.otherIncomeFormGroup.valid &&
+      (agriIncome && agriIncome?.value > 500000 ? this.agriIncFormGroup.valid : true)
     ) {
       this.saveOtherIncome();
       this.saveExemptIncomes();
       this.saveAndNext.emit(false);
     } else {
       $('input.ng-invalid').first().focus();
+      this.utilsService.showSnackBar(
+        'Please make sure all details are entered correctly'
+      );
     }
   }
 
@@ -445,11 +449,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     console.log(agriValue, 'agriValue');
 
     const agriIncome = this.Copy_ITR_JSON.agriculturalIncome || {
-      grossAgriculturalReceipts: 0,
-      expenditureIncurredOnAgriculture: 0,
-      unabsorbedAgriculturalLoss: 0,
-      agriIncomePortionRule7: 0,
-      netAgriculturalIncome: 0,
+      grossAgriculturalReceipts: null,
+      expenditureIncurredOnAgriculture: null,
+      unabsorbedAgriculturalLoss: null,
+      agriIncomePortionRule7: null,
+      netAgriculturalIncome: null,
     };
 
     const propertiesToCopy = [
@@ -461,7 +465,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     ];
 
     propertiesToCopy.forEach((property) => {
-      agriIncome[property] = agriValue[property] || 0;
+      agriIncome[property] = agriValue[property] || null;
     });
 
     this.Copy_ITR_JSON.agriculturalIncome = agriIncome;
@@ -651,7 +655,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         const formGroup = this.fb.group({
           nameOfDistrict: item ? item.nameOfDistrict : null,
           pinCode: item ? item.pinCode : null,
-          landInAcre: [item ? item.landInAcre : null, Validators.required],
+          landInAcre: [item?.landInAcre === 0 ? null : item?.landInAcre, Validators.required],
           owner: [item ? item.owner : null, Validators.required],
           typeOfLand: item ? item.typeOfLand : null,
         });
