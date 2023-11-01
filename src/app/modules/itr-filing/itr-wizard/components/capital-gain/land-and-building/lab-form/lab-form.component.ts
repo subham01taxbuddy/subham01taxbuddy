@@ -186,8 +186,8 @@ export class LabFormComponent implements OnInit {
       const dataToPatch = this.ITR_JSON.capitalGain?.filter(
         (item) => item.assetType === 'PLOT_OF_LAND'
       );
-      dataToPatch[0].assetDetails.forEach((element, index) =>{
-        if(element.srn === this.data.assetSelected.srn){
+      dataToPatch[0].assetDetails.forEach((element, index) => {
+        if (element.srn === this.data.assetSelected.srn) {
           this.currentCgIndex = index;
         }
       });
@@ -513,7 +513,7 @@ export class LabFormComponent implements OnInit {
       first.srn = '';
       first.id = '';
       first.pan = '';
-      first.aadhaarNumber = ''
+      first.aadhaarNumber = '';
       first.share = '';
       first.name = '';
       first.amount = '';
@@ -671,7 +671,9 @@ export class LabFormComponent implements OnInit {
 
   removeBuyersDetails() {
     let buyersDetails = <FormArray>this.immovableForm.controls['buyersDetails'];
-    let nonSelected = buyersDetails.controls.filter((item: FormGroup) => item.controls['selected'].value !== true);
+    let nonSelected = buyersDetails.controls.filter(
+      (item: FormGroup) => item.controls['selected'].value !== true
+    );
     buyersDetails.controls = [];
 
     nonSelected.forEach((item, index) => {
@@ -700,23 +702,30 @@ export class LabFormComponent implements OnInit {
   }
 
   updateSaleValue(index) {
-    const buyersDetails = (
-      this.immovableForm.controls['buyersDetails'] as FormArray
-    ).controls[index] as FormGroup;
-    const assetDetails = (
-      this.immovableForm.controls['assetDetails'] as FormArray
-    ).controls[0] as FormGroup;
+    if (typeof index === 'number') {
+      const buyersDetails = (
+        this.immovableForm.controls['buyersDetails'] as FormArray
+      ).controls[index] as FormGroup;
+      const assetDetails = (
+        this.immovableForm.controls['assetDetails'] as FormArray
+      ).controls[0] as FormGroup;
 
-    const shareValue = buyersDetails.controls['share'].value;
-    if (shareValue >= 0 && shareValue <= 100) {
-      buyersDetails.controls['amount'].setValue(
-        (assetDetails.controls['valueInConsideration'].value * shareValue) / 100
-      );
+      const shareValue = buyersDetails.controls['share'].value;
+      if (shareValue >= 0 && shareValue <= 100) {
+        buyersDetails.controls['amount'].setValue(
+          (assetDetails.controls['sellValue'].value * shareValue) / 100
+        );
+      } else {
+        console.log(
+          this.immovableForm.controls['assetDetails'],
+          this.currentCgIndex
+        );
+      }
     } else {
-      console.log(
-        this.immovableForm.controls['assetDetails'],
-        this.currentCgIndex
-      );
+      const buyersDetails = <FormArray>this.immovableForm?.get('buyersDetails');
+      buyersDetails?.controls?.forEach((i) => {
+        this.updateSaleValue(i);
+      });
     }
   }
 
@@ -1310,7 +1319,8 @@ export class LabFormComponent implements OnInit {
       formGroupName.controls['assetDetails'].valid &&
       formGroupName.controls['buyersDetails'].valid &&
       formGroupName.controls['improvement'] &&
-      !this.panValidation() && !this.deductionValidation() &&
+      !this.panValidation() &&
+      !this.deductionValidation() &&
       !this.calPercentage()
     ) {
       this.saveBusy = true;
@@ -1609,5 +1619,17 @@ export class LabFormComponent implements OnInit {
       console.log(valueInConsideration);
       valueInConsideration.setValue(saleConsideration);
     }
+  }
+
+  changeAddress(event, inputField) {
+    const value = inputField === 'state' ? event?.value : event?.target?.value;
+
+    const buyersDetails = <FormArray>this.immovableForm?.get('buyersDetails');
+    buyersDetails?.controls?.forEach((element, i) => {
+      (element as FormGroup)?.controls[inputField]?.setValue(value);
+      if (inputField === 'pin') {
+        this.updateDataByPincode(i);
+      }
+    });
   }
 }
