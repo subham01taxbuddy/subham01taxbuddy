@@ -780,6 +780,7 @@
                     class="input-field"
                     maxlength="6"
                     (blur)="updateDataByPincode(i)"
+                    (change)="changeAddress($event, 'pin')"
                     required
                   />
                   <mat-error *ngIf="buyer.get('pin').hasError('pattern')">
@@ -795,6 +796,7 @@
                     formControlName="city"
                     name="buyer[i]"
                     class="input-field"
+                    (change)="changeAddress($event, 'city')"
                     required
                   />
                 </mat-form-field>
@@ -805,6 +807,7 @@
                   <mat-select
                     name="improve[i]"
                     formControlName="state"
+                    (selectionChange)="changeAddress($event, 'state')"
                     required
                   >
                     <mat-option
@@ -824,6 +827,7 @@
                     matInput
                     formControlName="address"
                     name="buyer[i]"
+                    (change)="changeAddress($event, 'address')"
                     required
                     trim
                   ></textarea>
