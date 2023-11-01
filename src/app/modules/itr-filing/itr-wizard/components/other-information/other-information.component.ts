@@ -611,6 +611,10 @@ export class OtherInformationComponent implements OnInit {
   }
 
   saveAllOtherDetails(){
+    if (!this.schedule5AForm?.valid || !this.firmForm?.valid || !this.sharesForm?.valid || !this.directorForm?.valid){
+      this.otherInfoSaved.emit(false);
+      return;
+    }
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
@@ -683,9 +687,9 @@ export class OtherInformationComponent implements OnInit {
         this.Copy_ITR_JSON?.unlistedSharesDetails?.length > 0 ? true : false;
     } else {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
-    } 
+    }
 
-    // save firm details 
+    // save firm details
     if (this.firmForm?.valid) {
       console.log('SaveFirmDetails', this.firmForm?.getRawValue());
       const firmsArray = <FormArray>this.firmForm?.get('firmsArray');
@@ -702,7 +706,13 @@ export class OtherInformationComponent implements OnInit {
 
     if (this.schedule5AForm?.valid && this.firmForm?.valid && this.sharesForm?.valid && this.directorForm?.valid){
       this.serviceCall('saveAll');
+    } else {
+      this.otherInfoSaved.emit(false);
     }
+  }
+
+  isFormValid(){
+    return this.schedule5AForm?.valid && this.firmForm?.valid && this.sharesForm?.valid && this.directorForm?.valid;
   }
 
   // get functions

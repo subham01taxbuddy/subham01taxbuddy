@@ -457,6 +457,7 @@ export class CustomerProfileComponent implements OnInit {
         (this.utilsService.isNonEmpty(aadhaarNumber) &&
           this.utilsService.isNonEmpty(aadhaarEnrolmentId))
       ) {
+        this.customerProfileSaved.emit(false);
         this.utilsService.showSnackBar(
           'Please provide aadhar number or enrollment ID'
         );
@@ -534,7 +535,7 @@ export class CustomerProfileComponent implements OnInit {
       );
     } else {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
-      
+
       if(gender?.status === 'INVALID'){
         gender?.setValidators(Validators.required);
         gender?.updateValueAndValidity();
