@@ -543,6 +543,7 @@ export class CustomerProfileComponent implements OnInit {
         gender?.clearValidators();
         gender?.updateValueAndValidity();
       }
+      this.customerProfileSaved.emit(false);
     }
   }
   calAge(dob) {
