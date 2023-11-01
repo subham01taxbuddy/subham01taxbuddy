@@ -180,6 +180,22 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         'Prescribed Allowances or benefits (not in nature of perquisite) specifically granted to meet expenses wholly, necessarily and exclusively and to the extent actually incurred, in performance of duties of office or employment u/s 10(14)(ii)',
       detailed: false,
     },
+    {
+      id: null,
+      seqNum: 18,
+      value: '10(6)',
+      label:
+        'Remuneration received as an official, by whatever name called, of an embassy, high commission etc u/s 10(6)',
+      detailed: false,
+    },
+    {
+      id: null,
+      seqNum: 19,
+      value: '10(7)',
+      label:
+        'Allowances or perquisites paid or allowed as such outside India by the Government to a citizen of India for rendering service outside India u/s 10(7)',
+      detailed: false,
+    },
   ];
   stateDropdown = AppConstants.stateDropdown;
   constructor(
@@ -785,10 +801,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             }
           }
 
-          if(count > 1){
-            this.freeze = true
+          if (count > 1) {
+            this.freeze = true;
           } else {
-            this.freeze = false
+            this.freeze = false;
           }
 
           this.localEmployer.allowance.push({
