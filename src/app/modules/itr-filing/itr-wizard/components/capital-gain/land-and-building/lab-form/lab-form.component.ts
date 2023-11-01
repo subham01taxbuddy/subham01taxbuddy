@@ -702,23 +702,30 @@ export class LabFormComponent implements OnInit {
   }
 
   updateSaleValue(index) {
-    const buyersDetails = (
-      this.immovableForm.controls['buyersDetails'] as FormArray
-    ).controls[index] as FormGroup;
-    const assetDetails = (
-      this.immovableForm.controls['assetDetails'] as FormArray
-    ).controls[0] as FormGroup;
+    if (typeof index === 'number') {
+      const buyersDetails = (
+        this.immovableForm.controls['buyersDetails'] as FormArray
+      ).controls[index] as FormGroup;
+      const assetDetails = (
+        this.immovableForm.controls['assetDetails'] as FormArray
+      ).controls[0] as FormGroup;
 
-    const shareValue = buyersDetails.controls['share'].value;
-    if (shareValue >= 0 && shareValue <= 100) {
-      buyersDetails.controls['amount'].setValue(
-        (assetDetails.controls['sellValue'].value * shareValue) / 100
-      );
+      const shareValue = buyersDetails.controls['share'].value;
+      if (shareValue >= 0 && shareValue <= 100) {
+        buyersDetails.controls['amount'].setValue(
+          (assetDetails.controls['sellValue'].value * shareValue) / 100
+        );
+      } else {
+        console.log(
+          this.immovableForm.controls['assetDetails'],
+          this.currentCgIndex
+        );
+      }
     } else {
-      console.log(
-        this.immovableForm.controls['assetDetails'],
-        this.currentCgIndex
-      );
+      const buyersDetails = <FormArray>this.immovableForm?.get('buyersDetails');
+      buyersDetails?.controls?.forEach((i) => {
+        this.updateSaleValue(i);
+      });
     }
   }
 

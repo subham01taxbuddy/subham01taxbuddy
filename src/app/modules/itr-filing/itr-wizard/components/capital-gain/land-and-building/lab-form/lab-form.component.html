@@ -163,7 +163,7 @@
                     placeholder="Full Value of Sale received/receivable"
                     name="asset[i]"
                     formControlName="sellValue"
-                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i); updateSaleValue('saleValueChange')"
                     required
                   />
                 </mat-form-field>
