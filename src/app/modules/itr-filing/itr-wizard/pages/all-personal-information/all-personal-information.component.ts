@@ -43,7 +43,9 @@ export class AllPersonalInformationComponent implements OnInit {
     this.isEditOther = true;
   }
   setStep(index: number) {
-    this.step = index;
+    if(this.step != index) {
+      this.step = index;
+    }
   }
 
   closed(type) {
@@ -111,7 +113,7 @@ export class AllPersonalInformationComponent implements OnInit {
       this.loading = false;
       return;
     } else if (
-      !this.otherInfoComponent.sharesForm.valid
+      !this.otherInfoComponent.isFormValid()
     ) {
       this.setStep(3);
       this.loading = false;
@@ -119,29 +121,35 @@ export class AllPersonalInformationComponent implements OnInit {
         'Please fill all required fields in Other Information'
       );
       return;
+    } else {
+
     }
   }
 
   saveAll() {
     this.saveCount = 0;
     this.customerProfileComponent.saveProfile('CONTINUE');
-    this.saveAllInfo();
+    // this.saveAllInfo();
   }
 
   onCustomerProfileSaved(event) {
     this.customerProfileSaved = event;
     if (this.customerProfileSaved) {
       this.personalInfoComponent.saveProfile('NEXT');
-      this.saveAllInfo();
+      // this.saveAllInfo();
+    } else {
+      this.setStep(0);
     }
   }
 
   onPersonalInfoSaved(event) {
     this.personalInfoSaved = event;
     if (this.personalInfoSaved) {
-      this.saveAndNext.emit(false);
+      // this.saveAndNext.emit(false);
       this.otherInfoComponent.saveAndContinue();
-      this.saveAllInfo();
+      // this.saveAllInfo();
+    } else {
+      this.setStep(1);
     }
   }
 
@@ -153,6 +161,8 @@ export class AllPersonalInformationComponent implements OnInit {
       this.utilService.showSnackBar(
         'Personal information updated successfully.'
       );
+    } else {
+      this.setStep(2);
     }
   }
 }
