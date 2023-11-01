@@ -344,10 +344,13 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   leaderId: number;
   filerId: number;
-  fromSme(event, isLeader) {
-    if (isLeader) {
+  fromSme(event, item) {
+    if (item === 1) {
       this.leaderId = event ? event.userId : null;
-    } else {
+    } else if (item === 2) {
+      this.partnerType = event.partnerType;
+      this.filerId = event ? event.userId : null;
+    } else if (item === 3) {
       this.partnerType = event.partnerType;
       this.filerId = event ? event.userId : null;
     }
@@ -1322,19 +1325,6 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (this.agentId === loggedInId && this.loggedInUserRoles.includes('ROLE_LEADER')) {
       param = param + `&leaderUserId=${this.agentId}`;
     }
-    // if (this.filerId === this.ownerId) {
-    //   param = param + `&leaderUserId=${this.ownerId}`
-    // }
-    // if (loggedInId !== this.agentId) {
-    //   param = param + `&filerUserId=${this.filerId}`
-    //   let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
-    //   if (Object.keys(this.sortBy).length) {
-    //     param = param + sortByJson;
-    //   }
-    // }
-    // else {
-    //   param;
-    // }
 
     this.reportService.getMethod(param).subscribe(
 
@@ -1369,18 +1359,6 @@ export class ItrAssignedUsersComponent implements OnInit {
         this.config.totalItems = 0;
         this._toastMessageService.alert("error", "Fail to getting leads data, try after some time.");
       })
-  }
-
-  getToggleValue() {
-    console.log('co-owner toggle', this.coOwnerToggle.value)
-    we_track('Co-Owner Toggle', '');
-    if (this.coOwnerToggle.value == true) {
-      this.coOwnerCheck = true;
-    }
-    else {
-      this.coOwnerCheck = false;
-    }
-    this.search('', true);
   }
 
 
