@@ -202,6 +202,11 @@ export class ItrWizardComponent implements OnInit {
     } else {
       if(!this.ITR_JSON.systemFlags.hasAgricultureIncome){
         this.ITR_JSON.agriculturalDetails = null;
+        this.ITR_JSON.agriculturalLandDetails = null;
+        this.ITR_JSON.agriculturalIncome = null;
+      }
+      if(this.ITR_JSON.portugeseCC5AFlag === 'N'){
+        this.ITR_JSON.schedule5a = null;
       }
       this.ITR_JSON = this.itrValidationService.removeNullProperties(
         this.ITR_JSON
