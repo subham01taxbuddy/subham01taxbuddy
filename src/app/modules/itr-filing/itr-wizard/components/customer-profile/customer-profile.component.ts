@@ -458,6 +458,8 @@ export class CustomerProfileComponent implements OnInit {
           this.utilsService.isNonEmpty(aadhaarEnrolmentId))
       ) {
         this.customerProfileSaved.emit(false);
+        this.customerProfileForm.controls['aadhaarEnrolmentId'].setErrors({ invalid: true })
+        this.customerProfileForm.controls['aadharNumber'].setErrors({ invalid: true })
         this.utilsService.showSnackBar(
           'Please provide aadhar number or enrollment ID'
         );
