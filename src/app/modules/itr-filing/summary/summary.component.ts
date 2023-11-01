@@ -3779,7 +3779,7 @@ export class SummaryComponent implements OnInit {
                         ) => {
                           return {
                             employerNo: index,
-                            employersName: employerName,
+                            employerName: employerName,
                             grossSalary: salary[0]?.taxableAmount
                               ? salary[0]?.taxableAmount
                               : 0 + profitsInLieuOfSalaryType[0]?.taxableAmount
@@ -5335,7 +5335,7 @@ export class SummaryComponent implements OnInit {
                       ) => {
                         return {
                           employerNo: index,
-                          employersName: employerName,
+                          employerName: employerName,
                           grossSalary: salary[0]?.taxableAmount
                             ? salary[0]?.taxableAmount
                             : 0 + profitsInLieuOfSalaryType[0]?.taxableAmount
