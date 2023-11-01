@@ -17,8 +17,8 @@
         <div class="surround">
           <div class="row">
             <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
-              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
-                (sendPrincipleIndividual)="fromSme($event, false)"></app-sme-list-drop-down>
+              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, 1)"
+                (sendPrincipleIndividual)="fromSme($event, 2)" (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
             </div>
 
             <div class="col-sm-3">

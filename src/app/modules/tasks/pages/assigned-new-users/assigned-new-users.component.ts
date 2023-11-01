@@ -66,8 +66,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   searchBy: any = {};
   searchMenus = [
     { value: 'name', name: 'User Name' },
-    { value: 'email', name: 'Email' },
-    { value: 'customerNumber', name: 'Mobile No' },
+    { value: 'emailId', name: 'Email' },
+    { value: 'mobileNumber', name: 'Mobile No' },
     { value: 'panNumber', name: 'PAN' }
   ];
   clearUserFilter: number;
@@ -375,10 +375,13 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
   leaderId: number;
   filerId: number;
-  fromSme(event, isLeader) {
-    if (isLeader) {
+  fromSme(event, item) {
+    if (item === 1) {
       this.leaderId = event ? event.userId : null;
-    } else {
+    } else if (item === 2) {
+      this.partnerType = event.partnerType;
+      this.filerId = event ? event.userId : null;
+    } else if (item === 3) {
       this.partnerType = event.partnerType;
       this.filerId = event ? event.userId : null;
     }
@@ -391,30 +394,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       this.agentId = loggedInId;
     }
   }
-
-  coOwnerId: number;
-  coFilerId: number;
-
-  fromSme1(event, isOwner) {
-    console.log('co-owner-drop-down', event, isOwner);
-    if (isOwner) {
-      this.coOwnerId = event ? event.userId : null;
-    } else {
-      this.coFilerId = event ? event.userId : null;
-    }
-    if (this.coFilerId) {
-      this.agentId = this.coFilerId;
-      // this.search('agent');
-    } else if (this.coOwnerId) {
-      this.agentId = this.coOwnerId;
-      //  this.search('agent');
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
-    }
-    //  this.search('agent');
-  }
-
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
@@ -1229,9 +1208,11 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     if (this.filerId === this.agentId) {
       param = param + `&filerUserId=${this.filerId}`
     }
+
     if (this.partnerType === 'PRINCIPAL') {
       param = param + '&searchAsPrincipal=true';
     };
+
 
     if (this.leaderId === this.agentId) {
       param = param + `&leaderUserId=${this.leaderId}`;
