@@ -27,7 +27,7 @@ export class CreateNewUserComponent implements OnInit {
     { key: 'TPA', value: 'TPA', isHide: false },
     { key: 'NOTICE', value: 'NOTICE', isHide: false },
   ];
-  assignedToMe = false;
+  assignedToMe = true;
   disableAssignedToMe = false;
   disableUserSignUp = false;
   assessmentYear: string;
@@ -150,14 +150,14 @@ export class CreateNewUserComponent implements OnInit {
     }
     if (this.filerId) {
       this.disableUserSignUp = false;
-      this.signUpForm.controls['agentUserId'].setValue(this.filerId);
+      // this.signUpForm.controls['agentUserId'].setValue(this.filerId);
       this.getSmeRecords(this.filerId);
     } else if (this.leaderId) {
       this.disableUserSignUp = true;
       if (this.roles.includes('ROLE_OWNER')) {
         this.disableUserSignUp = false;
       }
-      this.signUpForm.controls['agentUserId'].setValue(this.leaderId);
+      // this.signUpForm.controls['agentUserId'].setValue(this.leaderId);
       this.getSmeRecords(this.leaderId)
     } else {
       if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
@@ -165,7 +165,7 @@ export class CreateNewUserComponent implements OnInit {
       } else {
         this.disableUserSignUp = false;
       }
-      this.signUpForm.controls['agentUserId'].setValue(this.loggedInId);
+      // this.signUpForm.controls['agentUserId'].setValue(this.loggedInId);
     }
 
   }
@@ -175,11 +175,11 @@ export class CreateNewUserComponent implements OnInit {
   isAssignedToMe() {
     this.disableUserSignUp = false;
     if (!this.assignedToMe) {
-      this.signUpForm.controls['agentUserId'].setValue(null);
+      // this.signUpForm.controls['agentUserId'].setValue(null);
       return;
     }
     const loggedInId = this.utilsService.getLoggedInUserID();
-    this.signUpForm.controls['agentUserId'].setValue(loggedInId);
+    // this.signUpForm.controls['agentUserId'].setValue(loggedInId);
 
   }
 
@@ -238,7 +238,6 @@ export class CreateNewUserComponent implements OnInit {
           return;
         }
         this.assignUser(res.userId, this.signUpForm.controls['serviceType'].value);
-        console.log('sme user ID under user is going', this.signUpForm.controls['agentUserId'].value)
       }, (error) => {
         this.loading = false;
         console.log("Error when creating user: ", error);
