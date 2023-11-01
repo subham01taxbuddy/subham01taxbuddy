@@ -1409,8 +1409,8 @@ export class UtilsService {
 
   private dataSubject = new Subject<any>();
 
-  sendData(data: any) {
-    this.dataSubject.next(data);
+  sendData(data: any, component:string) {
+    this.dataSubject.next({data, component});
   }
 
   getData() {
