@@ -32,11 +32,10 @@ export class BreakUpComponent implements OnInit {
 
     this.total = 0;
 
-    console.log(this.data);
-    if (this.data && this.data > 0) {
+    if (this.data && this.data?.value > 0) {
       // Initialize inputValues with the amount that we get if input in bifurcation has been entered
       for (let i = 0; i < this.years.length; i++) {
-        this.inputValues[i] = this.data / this.years.length;
+        this.inputValues[i] = this.data?.value / this.years.length;
       }
     } else {
       // Initialize inputValues with default value
@@ -71,11 +70,10 @@ export class BreakUpComponent implements OnInit {
     }
   }
 
-  saveBreakup() {
+  saveBreakup(component) {
     this.total = this.getTotal;
-
     if (this.total > 0) {
-      this.utilsService.sendData(this.total);
+      this.utilsService.sendData(this.total, component);
     }
   }
 }
