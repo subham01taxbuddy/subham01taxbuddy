@@ -200,6 +200,9 @@ export class ItrWizardComponent implements OnInit {
         state: { validationErrors: this.validationErrors },
       });
     } else {
+      if(!this.ITR_JSON.systemFlags.hasAgricultureIncome){
+        this.ITR_JSON.agriculturalDetails = null;
+      }
       this.ITR_JSON = this.itrValidationService.removeNullProperties(
         this.ITR_JSON
       );
