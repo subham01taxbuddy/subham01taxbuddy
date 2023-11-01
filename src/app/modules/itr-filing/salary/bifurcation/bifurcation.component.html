@@ -21,7 +21,7 @@
                   --fa-secondary-opacity: 0;
                 "
                 id="breakUp"
-                (click)="breakUpFn(i)"
+                (click)="breakUpFn(i, 'Basic Salary')"
               ></i>
             </div>
 
@@ -50,7 +50,7 @@
                   --fa-secondary-opacity: 0;
                 "
                 id="breakUp"
-                (click)="breakUpFn(i)"
+                (click)="breakUpFn(i, 'Dearness Allowance (DA)')"
               ></i>
             </div>
 
@@ -93,7 +93,7 @@
                   --fa-secondary-opacity: 0;
                 "
                 id="breakUp"
-                (click)="breakUpFn(i)"
+                (click)="breakUpFn(i, 'House Rent Allowance (HRA)')"
               ></i>
             </div>
             <div class="col-sm-4">
@@ -313,7 +313,7 @@
       <!-- Save button  -->
       <div class="fixed-button">
         <button class="saveButton" (click)="saveBifurcations('salary')">
-          <span class="font-semibold">&nbsp;Saves</span>
+          <span class="font-semibold">&nbsp;Save</span>
         </button>
       </div>
     </div>

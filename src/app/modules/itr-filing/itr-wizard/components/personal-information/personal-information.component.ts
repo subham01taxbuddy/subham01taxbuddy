@@ -2648,6 +2648,7 @@ export class PersonalInformationComponent implements OnInit {
 
     if (!this.isFormValid()) {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      this.personalInfoSaved.emit(false);
       return;
     }
 
@@ -2667,30 +2668,11 @@ export class PersonalInformationComponent implements OnInit {
 
     if (this.customerProfileForm.valid) {
       this.loading = true;
-      // const ageCalculated = this.calAge(this.ITR_JSON['dateOfBirth']);
-      // if (ref) {
-      //   this.ITR_JSON.family = [
-      //     {
-      //       pid: null,
-      //       fName: this.customerProfileForm.controls['firstName'].value,
-      //       mName: this.customerProfileForm.controls['middleName'].value,
-      //       lName: this.customerProfileForm.controls['lastName'].value,
-      //       fatherName: this.customerProfileForm.controls['fatherName'].value,
-      //       age: this.ITR_JSON.family[0]['age'],
-      //       gender: this.ITR_JSON.family[0]['gender'],
-      //       relationShipCode: 'SELF',
-      //       relationType: 'SELF',
-      //       dateOfBirth: this.ITR_JSON.family[0]['dateOfBirth'],
-      //     },
-      //   ];
-      //   Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
-      // }
+
       Object.assign(this.ITR_JSON, this.customerProfileForm.getRawValue());
       console.log(this.customerProfileForm, 'ITRFORM');
       console.log('this.ITR_JSON: ', this.ITR_JSON);
-      // const response = await this.verifyAllBanks();
-      // console.log('Bank API response in saveProfile', ":", response);
-      // if (response) {
+
       this.utilsService.saveItrObject(this.ITR_JSON).subscribe(
         (result) => {
           sessionStorage.setItem(
@@ -2714,16 +2696,9 @@ export class PersonalInformationComponent implements OnInit {
       );
     } else {
       this.loading = false;
+      $('input.ng-invalid').first().focus();
+      this.personalInfoSaved.emit(false);
     }
-    // else {
-    //   $('input.ng-invalid').first().focus();
-    //   if (this.customerProfileForm.controls['assesseeType'].invalid) {
-    //     console.log('this.customerProfileForm', this.customerProfileForm);
-    //     this.utilsService.showSnackBar(
-    //       'We are not supporting Assessee Type except Individual and HUF.'
-    //     );
-    //   }
-    // }
   }
 
   async verifyAllBanks() {

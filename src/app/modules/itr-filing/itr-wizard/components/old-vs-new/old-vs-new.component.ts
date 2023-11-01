@@ -19,7 +19,7 @@ import {
   ValidationErrors,
   AbstractControl,
 } from '@angular/forms';
-import {environment} from "../../../../../../environments/environment";
+import { environment } from '../../../../../../environments/environment';
 
 @Component({
   selector: 'app-old-vs-new',
@@ -56,7 +56,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   newSummaryIncome: any;
   oldSummaryIncome: any;
   assesssmentYear: any[] = [];
-  lastAssesssmentYear:string;
+  lastAssesssmentYear: string;
   itrType: any;
 
   newRegimeLabel = 'Opting in Now';
@@ -478,9 +478,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       currAssmntYr.enable();
 
       //check whether user had opted for new regime in last year
-      let newRegimeAy = this.regimeSelectionForm.controls['everOptedNewRegime'].get('assessmentYear').value;
+      let newRegimeAy =
+        this.regimeSelectionForm.controls['everOptedNewRegime'].get(
+          'assessmentYear'
+        ).value;
       this.dueDateOver = false;
-
     }
 
     if (!optIn && !optOut) {
@@ -1318,13 +1320,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               },
               {
                 label: 'Income from Business and Profession',
-                old: this.oldSummaryIncome?.taxSummary.businessIncome,
-                new: this.newSummaryIncome?.taxSummary.businessIncome
+                old: this.getCrypto(this.oldSummaryIncome, 'business'),
+                new: this.getCrypto(this.newSummaryIncome, 'business'),
               },
               {
                 label: 'Income from Capital Gains',
-                old: this.oldSummaryIncome?.taxSummary.capitalGain,
-                new: this.newSummaryIncome?.taxSummary.capitalGain,
+                old: this.getCrypto(this.oldSummaryIncome, 'capitalGains'),
+                new: this.getCrypto(this.newSummaryIncome, 'capitalGains'),
               },
               // {
               //   label: 'Income from Crypto',
@@ -1354,10 +1356,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               },
               {
                 label: 'BFLA',
-                old: Math.abs(this.oldSummaryIncome?.taxSummary
-                  .totalBroughtForwordSetOff),
-                new: Math.abs(this.newSummaryIncome?.taxSummary
-                  .totalBroughtForwordSetOff),
+                old: Math.abs(
+                  this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+                ),
+                new: Math.abs(
+                  this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+                ),
               },
               {
                 label: 'Gross Total Income',
@@ -1383,8 +1387,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               },
               {
                 label: 'CFL',
-                old: getCFL(this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears),
-                new: getCFL(this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears)
+                old: getCFL(
+                  this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears
+                ),
+                new: getCFL(
+                  this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears
+                ),
               },
               {
                 label: 'Gross Tax Liability',
@@ -1456,13 +1464,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             },
             {
               label: 'Income from Business and Profession',
-              old: this.oldSummaryIncome?.taxSummary.businessIncome,
-              new: this.newSummaryIncome?.taxSummary.businessIncome
+              old: this.getCrypto(this.oldSummaryIncome, 'business'),
+              new: this.getCrypto(this.newSummaryIncome, 'business'),
             },
             {
               label: 'Income from Capital Gains',
-              old: this.oldSummaryIncome?.taxSummary.capitalGain,
-              new: this.newSummaryIncome?.taxSummary.capitalGain,
+              old: this.getCrypto(this.oldSummaryIncome, 'capitalGains'),
+              new: this.getCrypto(this.newSummaryIncome, 'capitalGains'),
             },
             //  {
             //   label: 'Income from Crypto',
@@ -1492,8 +1500,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             },
             {
               label: 'BFLA',
-              old: Math.abs(this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff),
-              new: Math.abs(this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff),
+              old: Math.abs(
+                this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+              ),
+              new: Math.abs(
+                this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+              ),
             },
             {
               label: 'Gross Total Income',
@@ -1514,8 +1526,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             },
             {
               label: 'CFL',
-              old: getCFL(this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears),
-              new: getCFL(this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears)
+              old: getCFL(
+                this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears
+              ),
+              new: getCFL(
+                this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears
+              ),
             },
             {
               label: 'Gross Tax Liability',
@@ -1782,18 +1798,21 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       (this.ITR_JSON?.isRevised === 'Y' && this.ITR_JSON?.regime === 'OLD')
     ) {
       this.dueDateOver = true;
-      this.allowNewRegime = environment.environment === 'UAT' ? true : !this.dueDateOver;
+      this.allowNewRegime =
+        environment.environment === 'UAT' ? true : !this.dueDateOver;
       return;
     } else if (
       (currentMonth === july && currentDay > july31) ||
       (this.ITR_JSON?.isRevised === 'Y' && this.ITR_JSON?.regime === 'OLD')
     ) {
       this.dueDateOver = true;
-      this.allowNewRegime = environment.environment === 'UAT' ? true : !this.dueDateOver;
+      this.allowNewRegime =
+        environment.environment === 'UAT' ? true : !this.dueDateOver;
       return;
     } else {
       this.dueDateOver = false;
-      this.allowNewRegime = environment.environment === 'UAT' ? true : !this.dueDateOver;
+      this.allowNewRegime =
+        environment.environment === 'UAT' ? true : !this.dueDateOver;
       return;
     }
   }
@@ -1993,12 +2012,37 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
     ).controls['date'].setValue(moment(dateString).toDate());
   }
+
+  getCrypto(summary, type) {
+    const totalCapitalGain = summary?.taxSummary?.capitalGain;
+    const totalBusinessIncome = summary?.taxSummary?.businessIncome;
+    const vdaArray = summary?.summaryIncome?.cgIncomeN?.capitalGain?.filter(
+      (item) => {
+        return item?.assetType === 'VDA';
+      }
+    );
+    const cryptoGainArray = vdaArray
+      .filter((element) => element?.headOfIncome === 'BI')
+      .reduce((total, element) => total + (element?.cgIncome || 0), 0);
+
+    if (type === 'business') {
+      let business = totalBusinessIncome + cryptoGainArray;
+      return business;
+    } else {
+      let capitalGain = totalCapitalGain - cryptoGainArray;
+      return capitalGain;
+    }
+  }
 }
 
 function getCFL(cfl: any): number {
-  if(cfl != null)
-    return cfl.stcgloss+cfl.ltcgloss+cfl.speculativeBusinessLoss+cfl.housePropertyLoss+cfl.broughtForwordBusinessLoss;
-  else
-    return 0;
+  if (cfl != null)
+    return (
+      cfl.stcgloss +
+      cfl.ltcgloss +
+      cfl.speculativeBusinessLoss +
+      cfl.housePropertyLoss +
+      cfl.broughtForwordBusinessLoss
+    );
+  else return 0;
 }
-

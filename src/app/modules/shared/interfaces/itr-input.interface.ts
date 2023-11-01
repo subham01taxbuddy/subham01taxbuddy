@@ -549,6 +549,7 @@ export interface AssetDetails {
   fmvAsOn31Jan2018: string;
   indexCostOfAcquisition: number;
   totalFairMarketValueOfCapitalAsset: number;
+  improvementsArray?: any;
 }
 
 export interface NewCapitalGain {
