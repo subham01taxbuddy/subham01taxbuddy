@@ -42,6 +42,11 @@ export class BifurcationComponent implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   loading: boolean = false;
   overlayRef: any;
+  controlMappings = {
+    'Basic Salary': 'BASIC_SALARY',
+    'House Rent Allowance (HRA)': 'HOUSE_RENT',
+    'Dearness Allowance (DA)': 'DA'
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -418,8 +423,7 @@ export class BifurcationComponent implements OnInit {
   }
 
   //  BREAKUP MONTHLY WISE
-  breakUpFn(i) {
-    const value = parseFloat(this.getSalary.value[0].BASIC_SALARY);
+  breakUpFn(i, component) {
     const positionStrategy = this.overlay
       .position()
       .flexibleConnectedTo(this.elementRef)
@@ -443,8 +447,10 @@ export class BifurcationComponent implements OnInit {
 
     const userProfilePortal = new ComponentPortal(BreakUpComponent);
     const componentRef = this.overlayRef.attach(userProfilePortal);
-
-    (componentRef.instance as BreakUpComponent).data = value;
+    
+    const value = parseFloat(this.getSalary.value[0]?.[this.controlMappings[component]]);
+    (componentRef.instance as BreakUpComponent).data = { value, component };
+    
 
     // Subscribe to backdrop click events to close the overlay
     this.overlayRef.backdropClick().subscribe(() => {
@@ -453,11 +459,15 @@ export class BifurcationComponent implements OnInit {
   }
 
   handleData(data: any) {
-    (this.getSalary.controls[0] as FormGroup).controls['BASIC_SALARY'].setValue(
-      Math.ceil(data)
-    );
-    this.overlayRef.dispose(); // Close the overlay
+    const controlName = this.controlMappings[data?.component];
+    if (controlName) {
+      (this.getSalary?.controls[0] as FormGroup)?.controls[controlName]?.setValue(
+        Math.ceil(data?.data)
+      );
+      this.overlayRef.dispose();
+    }
   }
+  
 
   // get functions
   get getSalary() {
