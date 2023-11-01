@@ -18,6 +18,7 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { ReportService } from 'src/app/services/report-service';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-refund-request',
@@ -62,8 +63,8 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     { value: 'refundPaidAmount', name: 'Amount Paid Updates' },
   ];
   Type: any = [
-    { label: 'Cancel', value: 'cancel' },
-    { label: 'Downgraded', value: 'downgraded' },
+    { label: 'Cancel', value: 'CANCEL' },
+    { label: 'Downgraded', value: 'DOWNGRADED' },
   ];
   searchAsPrinciple :boolean =false;
   searchBy: any = {};
@@ -210,6 +211,8 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
+    this.searchBy = {};
     this.cacheManager.clearCache();
     this.invoiceFormGroup.controls['email'].setValue(null);
     this.invoiceFormGroup.controls['mobile'].setValue(null);
@@ -222,6 +225,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     this?.serviceDropDown?.resetService();
     this.filerId = null;
     this.ownerId = null;
+    this.leaderId =null;
     this.refundListGridOptions.api?.setRowData(this.createRowData([]));
     this.config.totalItems = 0;
   }
@@ -244,8 +248,8 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     if(this.searchBy?.email){
       this.email.setValue(this.searchBy?.email)
     }
-    if(this.searchBy?.txbdyInvoiceId){
-      this.invoiceNo.setValue(this.searchBy?.txbdyInvoiceId)
+    if(this.searchBy?.invoiceNo){
+      this.invoiceNo.setValue(this.searchBy?.invoiceNo)
     }
     if(this.searchBy?.name){
       this.name.setValue(this.searchBy?.name)
@@ -489,6 +493,18 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
       },
+      {
+        headerName: 'Leader Name',
+        field: 'leaderName',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
 
       {
         headerName: 'Invoice No.',
@@ -522,7 +538,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         cellStyle: { textAlign: 'center' },
       },
       {
-        headerName: 'Amount Paid Updates',
+        headerName: 'Amount Refund Updates',
         field: 'refundPaidAmount',
         width: 150,
         suppressMovable: true,
@@ -636,8 +652,8 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         refundPaidAmount: this.utilsService.isNonEmpty(subscriptionData[i].refundPaidAmount) ? subscriptionData[i].refundPaidAmount : '-',
         status: this.utilsService.isNonEmpty(subscriptionData[i].status) ? subscriptionData[i].status : '-',
         id: this.utilsService.isNonEmpty(subscriptionData[i].id) ? subscriptionData[i].id : '-',
-        paymentId: this.utilService.isNonEmpty(subscriptionData[i].paymentId) ? subscriptionData[i].paymentId : '-'
-
+        paymentId: this.utilService.isNonEmpty(subscriptionData[i].paymentId) ? subscriptionData[i].paymentId : '-',
+        leaderName: this.utilService.isNonEmpty(subscriptionData[i].leaderName) ? subscriptionData[i].leaderName : '-'
       });
     }
     return newData;

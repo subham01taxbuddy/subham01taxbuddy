@@ -79,16 +79,23 @@ export class UserListComponent implements OnInit {
   }
 
   advanceSearch() {
-    this.user_data = [];
-    const searchParam =this.searchBy;
-    const key = Object.keys(searchParam)[0];
-    let value = searchParam[key];
-    if (value !== "") {
-      if (key === 'emailAddress') {
-        value = value.toLocaleLowerCase();
+    if(Object.keys(this.searchBy).length){
+      this.user_data = [];
+      const searchParam =this.searchBy;
+      const key = Object.keys(searchParam)[0];
+      let value = searchParam[key];
+      if (value !== "") {
+        if (key === 'emailAddress') {
+          value = value.toLocaleLowerCase();
+        }
+        this.getUserSearchList(key, value);
+      }else{
+        this._toastMessageService.alert('error',"Please enter value ");
       }
-      this.getUserSearchList(key, value);
+    }else{
+      this._toastMessageService.alert("error",'please select attribute and enter value and then search ' );
     }
+
   }
 
   searchByObject(object) {

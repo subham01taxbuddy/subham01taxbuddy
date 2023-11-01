@@ -269,6 +269,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     ownerName: new FormControl(''),
     filerName: new FormControl(''),
     assessmentYear: new FormControl(''),
+    leaderName : new FormControl(''),
   });
 
   get mobileNumber() {
@@ -311,6 +312,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
   get assessmentYear() {
     return this.personalInfoForm.controls['assessmentYear'] as FormControl;
+  }
+
+  get leaderName() {
+    return this.personalInfoForm.controls['leaderName'] as FormControl;
   }
 
   otherInfoForm: FormGroup = this.fb.group({
@@ -496,6 +501,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       console.log('get Owner and filer name for new create sub ', result)
       this.filerName.setValue(result.data?.name);
       this.ownerName.setValue(result.data?.ownerName);
+      this.leaderName.setValue(result.data?.leaderName);
     })
   }
 
@@ -520,6 +526,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         this.assessmentYear.setValue(subscription.item.financialYear);
         this.ownerName.setValue(subscription.ownerName);
         this.filerName.setValue(subscription.assigneeName);
+        this.leaderName.setValue(subscription.leaderName);
 
         let myDate = new Date();
         console.log(myDate.getMonth(), myDate.getDate(), myDate.getFullYear());
