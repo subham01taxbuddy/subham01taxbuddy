@@ -723,7 +723,7 @@ export class LabFormComponent implements OnInit {
       }
     } else {
       const buyersDetails = <FormArray>this.immovableForm?.get('buyersDetails');
-      buyersDetails?.controls?.forEach((i) => {
+      buyersDetails?.controls?.forEach((element, i) => {
         this.updateSaleValue(i);
       });
     }
