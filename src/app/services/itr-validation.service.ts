@@ -955,6 +955,12 @@ export class ItrValidationService {
           ) {
             delete obj[key][i];
           }
+          if (
+            (obj[key][i]?.netProfitfromSpeculativeIncome === 0 ||
+              obj[key][i]?.netProfitfromSpeculativeIncome === null) && obj[key][i]?.businessType === 'SPECULATIVEINCOME'
+          ) {
+            delete obj[key][i];
+          }
         }
       }
 
