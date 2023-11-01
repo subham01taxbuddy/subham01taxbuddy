@@ -315,9 +315,15 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
   }
 
-  getStatus() {
+  getStatus(serviceType?) {
     // 'https://dev-api.taxbuddy.com/user/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&serviceType=ITR'
-    let param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=false';
+    let param;
+    if (serviceType) {
+      param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=false&serviceType=' + serviceType;
+    } else {
+      param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=false';
+    }
+
     this.userService.getMethod(param).subscribe(
       (response) => {
         if (response instanceof Array && response.length > 0) {
@@ -363,9 +369,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     // this.search('serviceType', 'isAgent');
 
     if (this.searchParam.serviceType) {
-      setTimeout(() => {
-        this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
-      }, 100);
+      this.getStatus(this.searchParam.serviceType);
     }
   }
 

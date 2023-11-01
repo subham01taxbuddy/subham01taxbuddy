@@ -95,9 +95,9 @@
                 Service type </mat-error>
             </mat-form-field>
           </div>
-          <div class="col-sm-12" *ngIf="(roles?.includes('ROLE_OWNER') || roles?.includes('ROLE_FILER'))">
+          <div class="col-sm-12" *ngIf="roles?.includes('ROLE_FILER')">
             <mat-checkbox class="example-margin bldFnt mvRth assign" [(ngModel)]="assignedToMe"
-              [ngModelOptions]="{standalone: true}" [disabled]="disableAssignedToMe"
+              [ngModelOptions]="{standalone: true}" disabled
               (change)="isAssignedToMe()">Assigned
               to me!</mat-checkbox>
           </div>
