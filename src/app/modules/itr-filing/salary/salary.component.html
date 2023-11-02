@@ -384,6 +384,23 @@
                       House rent allowance cannot be more than 50% of Basic or
                       Total HRA
                     </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="income.value.allowType === 'LTA' && ltaError"
+                    >
+                      LTA to be claimed cannot be more than the LTA that is
+                      provided
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'GRATUITY' && gratuityError
+                      "
+                    >
+                      Gratuity to be claimed cannot be more than the gratuity
+                      that is provided or salary entered in Salary 17(1) or 20
+                      lakhs, whichever is lower
+                    </mat-error>
                   </div>
                   <!-- Calculator button -->
                   <i
