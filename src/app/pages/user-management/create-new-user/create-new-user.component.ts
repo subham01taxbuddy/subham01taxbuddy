@@ -69,9 +69,9 @@ export class CreateNewUserComponent implements OnInit {
     console.log('roles', this.roles)
     this.signUpForm = this.fb.group({
       panNumber: ['', Validators.pattern(AppConstants.panNumberRegex)],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      middleName: [''],
+      firstName: ['', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
+      lastName: ['', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
+      middleName: ['', Validators.pattern(AppConstants.charRegex)],
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
       countryCode: ['', Validators.required],
       mobile: ['', Validators.required],
