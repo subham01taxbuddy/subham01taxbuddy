@@ -222,6 +222,13 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
 
+  maskMobileNumber(mobileNumber) {
+    if (mobileNumber) {
+      return 'X'.repeat(mobileNumber.length);
+    }
+    return '-';
+  }
+
   sortByObject(object) {
     this.sortBy = object;
   }
@@ -422,6 +429,20 @@ export class FilingsComponent implements OnInit, OnDestroy {
         filterParams: {
           defaultOption: 'startsWith',
           debounceMs: 0,
+        },
+         // code to masking mobile no
+        cellRenderer: (params)=> {
+          const mobileNumber = params.value;
+          if(mobileNumber){
+            if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+              const maskedMobile = this.maskMobileNumber(mobileNumber);
+              return maskedMobile;
+            }else{
+              return mobileNumber;
+            }
+          }else{
+            return '-'
+          }
         },
       },
       {

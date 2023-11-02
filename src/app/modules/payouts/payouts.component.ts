@@ -206,6 +206,13 @@ export class PayoutsComponent implements OnInit,OnDestroy {
     }
   }
 
+  maskMobileNumber(mobileNumber) {
+    if (mobileNumber) {
+      return 'X'.repeat(mobileNumber.length);
+    }
+    return '-';
+  }
+
   advanceSearch(key: any) {
     this.user_data = [];
     if(this.leaderId || this.filerId){
@@ -409,7 +416,21 @@ export class PayoutsComponent implements OnInit,OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+          // code to masking mobile no
+         cellRenderer: (params)=> {
+          const mobileNumber = params.value;
+          if(mobileNumber){
+            if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+              const maskedMobile = this.maskMobileNumber(mobileNumber);
+              return maskedMobile;
+            }else{
+              return mobileNumber;
+            }
+          }else{
+            return '-'
+          }
+        },
       },
       {
         headerName: 'Service Type',

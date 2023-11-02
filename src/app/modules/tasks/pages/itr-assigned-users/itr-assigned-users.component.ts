@@ -174,6 +174,13 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.cacheManager.clearCache();
   }
 
+  maskMobileNumber(mobileNumber) {
+    if (mobileNumber) {
+      return 'X'.repeat(mobileNumber.length);
+    }
+    return '-';
+  }
+
   sortByObject(object) {
     this.sortBy = object;
   }
@@ -435,6 +442,20 @@ export class ItrAssignedUsersComponent implements OnInit {
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
+        },
+        // code to masking mobile no
+        cellRenderer: (params)=> {
+          const mobileNumber = params.value;
+          if(mobileNumber){
+            if(!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')){
+              const maskedMobile = this.maskMobileNumber(mobileNumber);
+              return maskedMobile;
+            }else{
+              return mobileNumber;
+            }
+          }else{
+            return '-'
+          }
         },
       },
       // {
@@ -1294,7 +1315,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     let data = this.utilsService.createUrlParams(this.searchParam);
     // 'https://dev-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=5&itrChatInitiated=true&serviceType=ITR'
     //'https://dev-api.taxbuddy.com/bo/user-list-new?page=0&pageSize=5&itrChatInitiated=true&serviceType=ITR&filerUserId=779519'
-    // 'https://dev-api.taxbuddy.com/bo/user-list-new?page=0&pageSize=5&itrChatInitiated=true&leaderUserId=1064&serviceType=ITR' 
+    // 'https://dev-api.taxbuddy.com/bo/user-list-new?page=0&pageSize=5&itrChatInitiated=true&leaderUserId=1064&serviceType=ITR'
     let param = `/bo/user-list-new?${data}&itrChatInitiated=true&serviceType=ITR`;
 
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));

@@ -155,6 +155,14 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   // showScheduleCallList() {
   //   this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage);
   // }
+
+  maskMobileNumber(mobileNumber) {
+    if (mobileNumber) {
+      return 'X'.repeat(mobileNumber.length);
+    }
+    return '-';
+  }
+
   sortByObject(object) {
     this.sortBy = object;
   }
@@ -288,6 +296,20 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
+        },
+        // code to masking mobile no
+        cellRenderer: (params)=> {
+          const mobileNumber = params.value;
+          if(mobileNumber){
+            if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+              const maskedMobile = this.maskMobileNumber(mobileNumber);
+              return maskedMobile;
+            }else{
+              return mobileNumber;
+            }
+          }else{
+            return '-'
+          }
         },
       },
       {
