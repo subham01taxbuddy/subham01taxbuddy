@@ -425,6 +425,10 @@ export class BifurcationComponent implements OnInit {
     }
 
     this.utilsService.setChange(false);
+    
+    const values = this.bifurcationFormGroup.getRawValue();
+    this.utilsService.setSalaryValues(values);
+
     this.dialogRef.close(result);
     sessionStorage.setItem('localEmployer', JSON.stringify(this.localEmployer));
   }

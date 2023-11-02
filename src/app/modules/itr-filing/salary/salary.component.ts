@@ -3,7 +3,14 @@ import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface
 import { UtilsService } from './../../../services/utils.service';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
-import { Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import {
+  Validators,
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  AbstractControl,
+  ValidatorFn,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -33,7 +40,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   deductionsFormGroup: FormGroup;
   allowanceFormGroup: FormGroup;
   freeze: boolean = false;
-
+  hraError: boolean = false;
   localEmployer: Employer;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -557,6 +564,53 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
   validatePT() {
     this.deductionsFormGroup.controls['professionalTax'].markAllAsTouched();
+  }
+
+  customMaxValidator(basic50: number, hraValue: number): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value = control.value;
+
+      if (value > basic50 || value > hraValue) {
+        return { maxError: { value } };
+      }
+
+      return null;
+    };
+  }
+
+  validations() {
+    const allowance = this.allowanceFormGroup?.controls[
+      'allowances'
+    ] as FormArray;
+    const FormValues = this.utilsService.getSalaryValues();
+    const isAtLeastOneSalaryGreaterThanZero = Object?.values(
+      FormValues?.salary[0]
+    ).some((element: any) => element > 0);
+
+    if (isAtLeastOneSalaryGreaterThanZero) {
+      const hraControl = allowance?.controls?.find((element) => {
+        return element?.get('allowType')?.value === 'HOUSE_RENT';
+      });
+
+      const lowerOf = Math.min(
+        parseFloat(FormValues?.salary[0]?.BASIC_SALARY) / 2,
+        parseFloat(FormValues?.salary[0]?.HOUSE_RENT)
+      );
+
+      hraControl?.get('allowValue')?.setValidators(Validators.max(lowerOf));
+      hraControl?.get('allowValue')?.updateValueAndValidity();
+
+      if (
+        hraControl?.get('allowValue')?.errors &&
+        hraControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+      ) {
+        this.hraError = true;
+      } else {
+        hraControl?.get('allowValue')?.clearValidators();
+        hraControl?.get('allowValue')?.updateValueAndValidity();
+        this.hraError = false;
+      }
+    }
   }
 
   saveEmployerDetails() {
