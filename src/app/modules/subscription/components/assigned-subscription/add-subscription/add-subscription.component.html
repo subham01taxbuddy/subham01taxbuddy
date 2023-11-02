@@ -14,31 +14,31 @@
     <div>
     <div class="container">
       <div class="row">
-        <div class="col-lg-2 col-md-4 col-sm-6 space">
+        <div class="col-lg-2 col-md-4 col-sm-6 space" >
           <a  class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false" [class.disabled]=" service && service === 'ITR'"
           (click)="showSelectedServicePlans('ITR')">ITR</a>
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6 space">
+        <div class="col-lg-2 col-md-4 col-sm-6 space" >
           <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITRU' ? true : false" href="javascript:"
         (click)="showSelectedServicePlans('ITRU')">ITR-U</a>
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6 space">
+        <div class="col-lg-2 col-md-4 col-sm-6 space" *ngIf="isAllowed">
           <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'NOTICE' ? true : false" href="javascript:"
         (click)="showSelectedServicePlans('NOTICE')">NOTICE</a>
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6 space">
+        <div class="col-lg-2 col-md-4 col-sm-6 space" *ngIf="isAllowed">
           <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'GST' ? true : false" href="javascript:"
         (click)="showSelectedServicePlans('GST')">GST</a>
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6 space">
+        <div class="col-lg-2 col-md-4 col-sm-6 space" *ngIf="isAllowed">
           <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'TPA' ? true : false" [class.disabled]="service && service.includes('TPA')"
         (click)="showSelectedServicePlans('TPA')">TPA</a>
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6 space">
+        <div class="col-lg-2 col-md-4 col-sm-6 space" *ngIf="isAllowed">
           <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'OTHER' ? true : false" href="javascript:"
         (click)="showSelectedServicePlans('OTHER')">OTH SERVICE</a>
         </div>
-        <div class="col-lg-2 col-md-4 col-sm-6 space">
+        <div class="col-lg-2 col-md-4 col-sm-6 space" *ngIf="isAllowed">
           <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ALL' ? true : false" href="javascript:"
         (click)="showSelectedServicePlans('ALL')">ALL</a>
         </div>
@@ -49,11 +49,14 @@
 
 
     <div *ngIf="serviceTypeSelected">
+      <div class="row" *ngIf="this.roles.includes('ROLE_FILER')">
+        <span *ngIf="showMessage && !(filteredPlans.length === 0)" class="show-note">Note: {{showMessage}}</span>
+      </div>
       <label *ngIf="filteredPlans.length === 0">Selected service plan detail not available.</label>
 
       <div *ngFor="let plan of filteredPlans">
         <div class="card__col-lg-2 plan" id="plans" (click)="selectPlan(plan)" style="cursor: pointer;"
-        [class.disabled]="serviceDetails && serviceDetails.includes('Schedule call') && plan.name === 'Schedule call'"
+        [class.disabled]="(serviceDetails && serviceDetails.includes('Schedule call') && plan.name === 'Schedule call') || !isPlanEnabled(plan)"
           [style.background-color]="plan.planId === selectedPlanInfo?.planId ? 'lightgreen':''">
           <h1 class="plan-head"><b>₹ {{plan.totalAmount}}</b></h1><br>
           <p class="plan-info">{{plan.name}}</p><br>

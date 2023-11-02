@@ -88,6 +88,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   mobileNumber: any;
   ogStatusList: any = [];
   searchAsPrinciple :boolean =false;
+  partnerType:any;
 
   constructor(
     private fb: FormBuilder,
@@ -128,6 +129,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     console.log('loggedIn Sme Details', this.loggedInSme)
     this.roles = this.loggedInSme[0]?.roles
+    this.partnerType = this.loggedInSme[0]?.partnerType
     console.log('roles', this.roles)
     this.activatedRoute.queryParams.subscribe(params => {
       console.log("99999999999999999:", params)
@@ -140,6 +142,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         this.dataOnLoad = false;
       } else {
         if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+          this.agentId =  this.loggedInSme[0]?.userId;
           this.getAssignedSubscription(0);
         } else {
           this.dataOnLoad = false;
@@ -210,6 +213,15 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       console.log('in clear cache')
     }
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInSmeUserId
+    }
+
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInSmeUserId){
+      this.filerId = loggedInSmeUserId ;
+      this.searchAsPrinciple =true;
+    }
+
     let mobileFilter = '';
     if(this.searchBy?.mobileNumber || mobileNo ){
       this.isAllowed =  true
@@ -465,16 +477,12 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     this.subscriptionFormGroup.controls['serviceType'].setValue(null);
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
-
-    if (this.dataOnLoad) {
-      this.getAssignedSubscription(0);
-    } else {
-      this.subscriptionListGridOptions.api?.setRowData(
-        this.createRowData([])
-      );
-      this.config.totalItems = 0;
-    }
+    this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
+    this.config.totalItems = 0;
     this.isAllowed = false;
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+      this.agentId =  this.loggedInSme[0]?.userId;
+    }
   }
 
   subscriptionCreateColumnDef(List) {
@@ -614,7 +622,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       {
         headerName: 'Filer Name',
         field: 'assigneeName',
-        width: 120,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -835,9 +843,11 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     if (Object.keys(this.searchBy).length) {
       Object.keys(this.searchBy).forEach(key => {
         if (key === 'mobileNumber') {
-          this.mobileNumber = this.searchBy[key];
+          this.mobileNumber = this.searchBy[key] ;
         }
       });
+    }else{
+      this.mobileNumber = this.searchVal
     }
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId
     this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, this.mobileNumber).subscribe((res: any) => {
@@ -946,6 +956,14 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           this.searchAsPrinciple = false;
         }
       }
+    }
+    if (this.filerId) {
+      this.agentId = this.filerId;
+    } else if (this.leaderId) {
+      this.agentId = this.leaderId;
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
     }
 
   }

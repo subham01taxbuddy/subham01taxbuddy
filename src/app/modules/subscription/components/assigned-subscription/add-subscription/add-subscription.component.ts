@@ -6,6 +6,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ConfirmModel } from '../assigned-subscription.component';
+import { ReportService } from 'src/app/services/report-service';
 declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-add-subscription',
@@ -25,15 +26,48 @@ export class AddSubscriptionComponent implements OnInit {
   subscriptionPlan = new FormControl('', Validators.required);
   selectedPlanInfo: any;
   serviceTypeSelected: boolean;
+  roles:any;
+  isAllowed:boolean = true;
+  smeDetails:any
+  serviceEligibility:any;
+  showMessage ='';
   constructor(public dialogRef: MatDialogRef<AddSubscriptionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private itrService: ItrMsService, private utilService: UtilsService, private toastMessage: ToastMessageService) {
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private itrService: ItrMsService, private utilService: UtilsService, private toastMessage: ToastMessageService,private reportService:ReportService,) {
     this.getAllPlanInfo();
   }
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     console.log('data -> ', this.data)
+    this.roles = this.loggedInSme[0]?.roles;
+    if(this.roles.includes('ROLE_FILER')){
+      this.isAllowed = false;
+      this.getSmeDetail();
+    }
     this.getUserInfoByMobileNum(this.data.mobileNo)
+  }
+
+  getSmeDetail(){
+    // https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000'
+    let loggedInSmeUserId=this.loggedInSme[0]?.userId;
+    let param =`/bo/sme-details-new/${loggedInSmeUserId}`
+    this.reportService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.smeDetails = response.data[0];
+        console.log('new sme',this.smeDetails);
+        this.serviceEligibility = this.smeDetails.serviceEligibility_ITR;
+        this.showMessage ='Disabled plans are not available in your eligibility please contact with your leader'
+      }
+    })
+  }
+
+  isPlanEnabled(plan: any): boolean {
+    if (this.smeDetails.skillSetPlanIdList) {
+      const planId = plan.planId;
+      return this.smeDetails.skillSetPlanIdList.includes(planId);
+    }
+    return false;
   }
 
   getAllPlanInfo() {
