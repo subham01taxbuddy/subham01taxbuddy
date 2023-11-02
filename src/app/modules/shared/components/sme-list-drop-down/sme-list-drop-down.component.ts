@@ -61,18 +61,14 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
     this.partnerType = this.loggedInSme[0]?.partnerType;
-    console.log('all logged in sme info ', this.loggedInSme)
 
     if (this.roles.includes('ROLE_ADMIN')) {
       this.getLeaders();
       this.getPrincipleIndividuals();
-
-      this.setFilteredLeaders();
       this.setFilteredPrincipleIndividuals();
       this.setFilteredChild();
 
       this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
-      console.log('all filers', this.smeList);
       this.allFilers = this?.smeList?.map((item) => {
         return { name: item.name, userId: item.userId, partnerType: item.partnerType };
       });
@@ -258,7 +254,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
         return { name: item.name, userId: item.userId };
       });
       this.leaderOptions = this.leaderNames
-
+      this.setFilteredLeaders();
     }, error => {
       this.utilsService.showSnackBar('Error in API of get leader list');
     })
