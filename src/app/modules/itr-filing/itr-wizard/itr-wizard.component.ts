@@ -208,6 +208,9 @@ export class ItrWizardComponent implements OnInit {
       if(this.ITR_JSON.portugeseCC5AFlag === 'N'){
         this.ITR_JSON.schedule5a = null;
       }
+      if(this.ITR_JSON.partnerInFirmFlag === 'N'){
+        this.ITR_JSON.partnerFirms = [];
+      }
       this.ITR_JSON = this.itrValidationService.removeNullProperties(
         this.ITR_JSON
       );
