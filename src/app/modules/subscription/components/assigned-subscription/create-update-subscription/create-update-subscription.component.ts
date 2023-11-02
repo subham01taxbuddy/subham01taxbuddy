@@ -79,7 +79,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     { label: 'Monthly', value: 'MONTHLY' },
     { label: 'Quarterly', value: 'QUARTERLY' },
   ];
-  roles:any;
+  roles: any;
   subType: string;
   invoiceAmount: any;
   constructor(
@@ -223,9 +223,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   setFormValues(data) {
     console.log('data', data);
     this.userName.setValue(data?.fName + ' ' + data?.lName);
-    if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER') ){
+    if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
       this.mobileNumber.setValue(data?.mobileNumber);
-    }else{
+    } else {
       this.mobileNumber.setValue(this.maskMobileNumber(data?.mobileNumber));
     }
     this.emailAddress.setValue(data?.emailAddress);
@@ -269,7 +269,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     ownerName: new FormControl(''),
     filerName: new FormControl(''),
     assessmentYear: new FormControl(''),
-    leaderName : new FormControl(''),
+    leaderName: new FormControl(''),
   });
 
   get mobileNumber() {
@@ -412,35 +412,36 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   removePromoCode(selectedPlan) {
-    if (this.userSubscription.subscriptionId && this.userSubscription.subscriptionId > 0) {
-      console.log('selectedPromoCode:', this.selectedPromoCode);
-      this.smeSelectedPlanId = selectedPlan;
-      const param = `/subscription/recalculate`;
-      const request = {
-        userId: this.userSubscription.userId,
-        planId: selectedPlan,
-        selectedBy: 'SME',
-        smeUserId: this?.loggedInSme[0]?.userId,
-        subscriptionId: this.userSubscription.subscriptionId,
-        promoCode: this.selectedPromoCode,
-        removePromoCode: true
-      };
-      this.itrService.postMethod(param, request).subscribe((res: any) => {
-        console.log('remove promo res', res);
-        this.appliedPromo = res.promoCode;
-        console.log('removed promo', this.appliedPromo);
-        if (res['Error']) {
-          this.utilsService.showSnackBar(res['Error']);
-          return;
-        }
-        this.utilsService.showSnackBar(
-          `Promo Code ${this.selectedPromoCode} removed successfully!`
-        );
-        this.isPromoRemoved = true;
-        this.userSubscription = res;
-        this.setFinalPricing();
-      });
-    } /*else {
+    // if (this.userSubscription.subscriptionId && this.userSubscription.subscriptionId > 0) {
+    console.log('selectedPromoCode:', this.selectedPromoCode);
+    this.smeSelectedPlanId = selectedPlan;
+    const param = `/subscription/recalculate`;
+    const request = {
+      userId: this.userSubscription.userId,
+      planId: selectedPlan,
+      selectedBy: 'SME',
+      smeUserId: this?.loggedInSme[0]?.userId,
+      subscriptionId: this.userSubscription.subscriptionId,
+      promoCode: this.selectedPromoCode,
+      removePromoCode: true
+    };
+    this.itrService.postMethod(param, request).subscribe((res: any) => {
+      console.log('remove promo res', res);
+      this.appliedPromo = res.promoCode;
+      console.log('removed promo', this.appliedPromo);
+      if (res['Error']) {
+        this.utilsService.showSnackBar(res['Error']);
+        return;
+      }
+      this.utilsService.showSnackBar(
+        `Promo Code ${this.selectedPromoCode} removed successfully!`
+      );
+      this.isPromoRemoved = true;
+      this.userSubscription = res;
+      this.setFinalPricing();
+    });
+    // }
+    /*else {
       this.selectedPromoCode = '';
       this.searchedPromoCode.reset();
       this.applySmeSelectedPlan(this.userSubscription.smeSelectedPlan.planId);
@@ -515,10 +516,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         console.log('user Subscription', this.userSubscription);
         this.gstUserInfoByUserId(subscription.userId);
         this.loading = false;
-        if(this.roles.includes('ROLE_ADMIN') ||this.roles.includes('ROLE_LEADER') ){
+        if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
           this.reminderMobileNumber.setValue(subscription.reminderMobileNumber);
-        }else{
-          this.reminderMobileNumber.setValue(this.maskMobileNumber( subscription.reminderMobileNumber));
+        } else {
+          this.reminderMobileNumber.setValue(this.maskMobileNumber(subscription.reminderMobileNumber));
         }
         this.reminderEmail.setValue(subscription.reminderEmail);
         this.description.setValue(subscription.item.itemDescription);
@@ -774,7 +775,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           this.utilsService.isNonEmpty(this.userSubscription) &&
           this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)
         ) {
-          if(!this.maxEndDate){
+          if (!this.maxEndDate) {
             let myDate = new Date();
             this.maxEndDate = new Date(
               myDate.getMonth() <= 2
@@ -823,12 +824,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   filteredFinancialYears: any[] = this.financialYear;
 
   changeService() {
-    if(this.service === 'ITRU'){
+    if (this.service === 'ITRU') {
       this.filteredFinancialYears = this.financialYear.filter(
         (year) => year.financialYear === '2020-2021' || year.financialYear === '2021-2022'
       );
 
-    }else{
+    } else {
       this.filteredFinancialYears = this.financialYear;
     }
     const serviceArray = [
@@ -928,33 +929,33 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   updateUserDetails() {
     let param = `/profile/${this.userSubscription.userId}`;
-    if(this.personalInfoForm.controls['gstNo'].value){
-      if(!this.selectedUserInfo.gstDetails){
+    if (this.personalInfoForm.controls['gstNo'].value) {
+      if (!this.selectedUserInfo.gstDetails) {
         this.selectedUserInfo.gstDetails = {
-          bankInformation : null,
-          businessAddress : null,
-          businessLogo : null,
-          businessSignature : null,
-          compositeDealerQuarter : null,
-          compositeDealerYear : null,
-          gstCertificate : null,
-          gstPortalPassword : "",
-          gstPortalUserName : "",
-          gstType : null,
-          gstinNumber : null,
-          gstinRegisteredMobileNumber : "",
-          gstr1Type : "",
-          legalName : "",
-          natureOfBusiness : null,
-          openingPurchaseValue : null,
-          openingSalesValue : null,
-          registrationDate : null,
-          regularDealerMonth : null,
-          regularDealerYear : null,
-          returnType : null,
-          salesInvoicePrefix : "",
-          termsAndConditions : null,
-          tradeName : ""
+          bankInformation: null,
+          businessAddress: null,
+          businessLogo: null,
+          businessSignature: null,
+          compositeDealerQuarter: null,
+          compositeDealerYear: null,
+          gstCertificate: null,
+          gstPortalPassword: "",
+          gstPortalUserName: "",
+          gstType: null,
+          gstinNumber: null,
+          gstinRegisteredMobileNumber: "",
+          gstr1Type: "",
+          legalName: "",
+          natureOfBusiness: null,
+          openingPurchaseValue: null,
+          openingSalesValue: null,
+          registrationDate: null,
+          regularDealerMonth: null,
+          regularDealerYear: null,
+          returnType: null,
+          salesInvoicePrefix: "",
+          termsAndConditions: null,
+          tradeName: ""
         };
       }
       this.selectedUserInfo.gstDetails.gstinNumber = this.personalInfoForm.controls['gstNo'].value;
@@ -1024,8 +1025,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   updateSubscription() {
     this.loading = true;
-    if(this.service ==='ITRU'){
-      if(this.assessmentYear.value === ''){
+    if (this.service === 'ITRU') {
+      if (this.assessmentYear.value === '') {
         this.loading = false;
         this.toastMessage.alert('error', 'Please select Financial Year For ITR-U subscription');
         return;
