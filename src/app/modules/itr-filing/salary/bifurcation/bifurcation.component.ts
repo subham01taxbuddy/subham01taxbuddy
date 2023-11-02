@@ -17,6 +17,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { BreakUpComponent } from '../break-up/break-up.component';
 import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
 import { UtilsService } from 'src/app/services/utils.service';
+import { SalaryComponent } from '../salary.component';
 
 @Component({
   selector: 'app-bifurcation',
@@ -45,7 +46,7 @@ export class BifurcationComponent implements OnInit {
   controlMappings = {
     'Basic Salary': 'BASIC_SALARY',
     'House Rent Allowance (HRA)': 'HOUSE_RENT',
-    'Dearness Allowance (DA)': 'DA'
+    'Dearness Allowance (DA)': 'DA',
   };
 
   constructor(
@@ -61,67 +62,72 @@ export class BifurcationComponent implements OnInit {
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.bifurcationFormGroup = this.createBifurcationForm();
-    this.index = this.data?.index;
-    this.localEmployer = JSON.parse(sessionStorage.getItem('localEmployer'));
-    this.localEmployer = this.data?.data ? this.data?.data : this.localEmployer;
 
-    // Salary
-    const salaryFormArray = this.getSalary;
-    let salaryDataToPatch = this.localEmployer?.salary?.filter(
-      (item) => item?.salaryType !== 'SEC17_1'
-    );
+    if (this.data.valueChanged === false) {
+      this.index = this.data?.index;
+      this.localEmployer = JSON.parse(sessionStorage.getItem('localEmployer'));
+      this.localEmployer = this.data?.data
+        ? this.data?.data
+        : this.localEmployer;
 
-    if (salaryDataToPatch && salaryDataToPatch?.length > 0) {
-      salaryDataToPatch?.forEach((item) => {
-        const matchingControl = salaryFormArray?.controls[0]?.get(
-          item?.salaryType
-        );
-
-        if (matchingControl) {
-          matchingControl?.setValue(item?.taxableAmount);
-        }
-      });
-    }
-
-    // perquisities
-    const perquisitesFormArray = this.getPerquisites;
-    let perquisitesDataToPatch = this.localEmployer?.perquisites?.filter(
-      (item) => item?.perquisiteType !== 'SEC17_2'
-    );
-
-    if (perquisitesDataToPatch && perquisitesDataToPatch?.length > 0) {
-      perquisitesDataToPatch?.forEach((item) => {
-        const matchingControl = perquisitesFormArray?.controls[0]?.get(
-          item?.perquisiteType
-        );
-
-        if (matchingControl) {
-          matchingControl?.setValue(item?.taxableAmount);
-        }
-      });
-    }
-
-    // profits in lieu
-    let profitsInLieuDataToPatch =
-      this.localEmployer?.profitsInLieuOfSalaryType?.filter(
-        (item) => item?.salaryType !== 'SEC17_3'
+      // Salary
+      const salaryFormArray = this.getSalary;
+      let salaryDataToPatch = this.localEmployer?.salary?.filter(
+        (item) => item?.salaryType !== 'SEC17_1'
       );
-    const profitsInLieuFormArray = this.getProfitsInLieu;
-    if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
-      profitsInLieuDataToPatch?.forEach((item) => {
-        const matchingControl = profitsInLieuFormArray?.controls[0]?.get(
-          item?.salaryType
-        );
 
-        if (matchingControl) {
-          matchingControl?.setValue(item?.taxableAmount);
-        }
+      if (salaryDataToPatch && salaryDataToPatch?.length > 0) {
+        salaryDataToPatch?.forEach((item) => {
+          const matchingControl = salaryFormArray?.controls[0]?.get(
+            item?.salaryType
+          );
+
+          if (matchingControl) {
+            matchingControl?.setValue(item?.taxableAmount);
+          }
+        });
+      }
+
+      // perquisities
+      const perquisitesFormArray = this.getPerquisites;
+      let perquisitesDataToPatch = this.localEmployer?.perquisites?.filter(
+        (item) => item?.perquisiteType !== 'SEC17_2'
+      );
+
+      if (perquisitesDataToPatch && perquisitesDataToPatch?.length > 0) {
+        perquisitesDataToPatch?.forEach((item) => {
+          const matchingControl = perquisitesFormArray?.controls[0]?.get(
+            item?.perquisiteType
+          );
+
+          if (matchingControl) {
+            matchingControl?.setValue(item?.taxableAmount);
+          }
+        });
+      }
+
+      // profits in lieu
+      let profitsInLieuDataToPatch =
+        this.localEmployer?.profitsInLieuOfSalaryType?.filter(
+          (item) => item?.salaryType !== 'SEC17_3'
+        );
+      const profitsInLieuFormArray = this.getProfitsInLieu;
+      if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
+        profitsInLieuDataToPatch?.forEach((item) => {
+          const matchingControl = profitsInLieuFormArray?.controls[0]?.get(
+            item?.salaryType
+          );
+
+          if (matchingControl) {
+            matchingControl?.setValue(item?.taxableAmount);
+          }
+        });
+      }
+
+      this.utilsService.getData().subscribe((data) => {
+        this.handleData(data);
       });
     }
-
-    this.utilsService.getData().subscribe((data) => {
-      this.handleData(data);
-    });
   }
 
   createBifurcationForm() {
@@ -418,6 +424,7 @@ export class BifurcationComponent implements OnInit {
       console.log('perqusities copyItrJson', this.Copy_ITR_JSON);
     }
 
+    this.utilsService.setChange(false);
     this.dialogRef.close(result);
     sessionStorage.setItem('localEmployer', JSON.stringify(this.localEmployer));
   }
@@ -447,10 +454,11 @@ export class BifurcationComponent implements OnInit {
 
     const userProfilePortal = new ComponentPortal(BreakUpComponent);
     const componentRef = this.overlayRef.attach(userProfilePortal);
-    
-    const value = parseFloat(this.getSalary.value[0]?.[this.controlMappings[component]]);
+
+    const value = parseFloat(
+      this.getSalary.value[0]?.[this.controlMappings[component]]
+    );
     (componentRef.instance as BreakUpComponent).data = { value, component };
-    
 
     // Subscribe to backdrop click events to close the overlay
     this.overlayRef.backdropClick().subscribe(() => {
@@ -461,13 +469,12 @@ export class BifurcationComponent implements OnInit {
   handleData(data: any) {
     const controlName = this.controlMappings[data?.component];
     if (controlName) {
-      (this.getSalary?.controls[0] as FormGroup)?.controls[controlName]?.setValue(
-        Math.ceil(data?.data)
-      );
+      (this.getSalary?.controls[0] as FormGroup)?.controls[
+        controlName
+      ]?.setValue(Math.ceil(data?.data));
       this.overlayRef.dispose();
     }
   }
-  
 
   // get functions
   get getSalary() {
