@@ -65,7 +65,6 @@ export class OtherInformationComponent implements OnInit {
     };
 
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     if (
       this.ITR_JSON.unlistedSharesDetails === null ||
@@ -112,6 +111,8 @@ export class OtherInformationComponent implements OnInit {
         haveUnlistedShares: false,
       };
     }
+
+    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     this.sharesCallInConstructor();
     this.directorCallInConstructor();

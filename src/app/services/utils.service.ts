@@ -20,6 +20,7 @@ import { Environment } from 'ag-grid-community';
 import { parse } from '@typescript-eslint/parser';
 import { AppSetting } from '../modules/shared/app.setting';
 import { StorageService } from '../modules/shared/services/storage.service';
+import {Form, FormArray, FormControl, FormGroup, ValidationErrors} from "@angular/forms";
 
 @Injectable()
 export class UtilsService {
@@ -28,6 +29,7 @@ export class UtilsService {
   private subject = new Subject<any>();
   uploadedJson: any;
   jsonData: any;
+  value:any;
   constructor(
     private snackBar: MatSnackBar,
     private itrMsService: ItrMsService,
@@ -1415,5 +1417,40 @@ export class UtilsService {
 
   getData() {
     return this.dataSubject.asObservable();
+  }
+
+  highlightInvalidFormFields(formGroup: FormGroup){
+    Object.keys(formGroup.controls).forEach((key) => {
+      if(formGroup.get(key) instanceof FormControl) {
+        const controlErrors: ValidationErrors =
+          formGroup.get(key).errors;
+        if (controlErrors != null) {
+          console.log(formGroup);
+          Object.keys(controlErrors).forEach((keyError) => {
+            console.log(
+              'Key control: ' + key + ', keyError: ' + keyError + ', err value: ',
+              controlErrors[keyError]
+            );
+            formGroup.controls[key].markAsTouched();
+            return;
+          });
+        }
+      } else if(formGroup.get(key) instanceof FormGroup){
+        this.highlightInvalidFormFields(formGroup.get(key) as FormGroup);
+      } else if(formGroup.get(key) instanceof FormArray){
+        let formArray = formGroup.get(key) as FormArray;
+        formArray.controls.forEach(element =>{
+          this.highlightInvalidFormFields(element as FormGroup);
+        });
+      }
+    });
+  }
+
+  setChange(value){
+    return this.value = value;
+  }
+
+  getChange(){
+    return this.value;
   }
 }
