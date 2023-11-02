@@ -12,7 +12,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import {FormGroup, Validators, FormBuilder, ValidationErrors} from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -538,6 +538,7 @@ export class CustomerProfileComponent implements OnInit {
       );
     } else {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
 
       if(gender?.status === 'INVALID'){
         gender?.setValidators(Validators.required);
@@ -555,8 +556,8 @@ export class CustomerProfileComponent implements OnInit {
       ) {
         this.customerProfileForm.controls['aadhaarEnrolmentId'].setErrors({ 'required': true });
         this.customerProfileForm.controls['aadharNumber'].setErrors({ 'required': true });
-        this.customerProfileForm.controls['aadhaarEnrolmentId'].markAsDirty();
-        this.customerProfileForm.controls['aadharNumber'].markAsTouched();
+        // this.customerProfileForm.controls['aadhaarEnrolmentId'].markAsDirty();
+        // this.customerProfileForm.controls['aadharNumber'].markAsTouched();
         this.utilsService.showSnackBar(
           'Please provide aadhar number or enrollment ID'
         );

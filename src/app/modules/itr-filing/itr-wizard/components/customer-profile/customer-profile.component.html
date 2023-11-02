@@ -227,7 +227,7 @@
       </mat-form-field>
     </div>
     <div class="col-sm-4 spsTp">
-      <mat-label>Employee Category</mat-label>
+      <mat-label>Employer Category</mat-label>
       <mat-form-field appearance="outline">
         <mat-select
           placeholder="Employer Category"
@@ -239,6 +239,13 @@
             {{ emp.label }}
           </mat-option>
         </mat-select>
+        <mat-error
+          *ngIf="
+            customerProfileForm.controls['employerCategory'].hasError('required')
+          "
+        >
+          Enter employer category</mat-error
+        >
       </mat-form-field>
     </div>
 
