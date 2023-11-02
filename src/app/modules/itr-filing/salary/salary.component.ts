@@ -1028,8 +1028,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  changed() {
-    this.valueChanged = true;
+  changed(value?) {
+    if (value === true) {
+      this.valueChanged = true;
+      this.utilsService.setChange(this.valueChanged);
+    } else {
+      this.valueChanged = false;
+      this.utilsService.setChange(this.valueChanged);
+    }
   }
 
   editEmployerDetails(index) {
@@ -1216,11 +1222,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   }
 
   bifurcation(i) {
+    this.valueChanged = this.utilsService.getChange();
     const dialogRef = this.matDialog.open(BifurcationComponent, {
       data: {
         data: this.ITR_JSON.employers[this.currentIndex],
         index: this.currentIndex,
         typeIndex: i,
+        valueChanged: this.valueChanged,
       },
       closeOnNavigation: true,
       disableClose: false,
@@ -1233,7 +1241,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         if (result.type === 'perquisites') {
           this.bifurcationResult.SEC17_2.total = result?.total;
 
-          if (this.bifurcationResult?.SEC17_2.total > 0) {
+          if (
+            this.bifurcationResult?.SEC17_2.total > 0 ||
+            this.bifurcationResult?.SEC17_2.total === 0
+          ) {
             this.bifurcationResult.SEC17_2.value = result?.value[0];
 
             let salaryDetails = this.employerDetailsFormGroup?.controls[
@@ -1253,7 +1264,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         } else if (result.type === 'salary') {
           this.bifurcationResult.SEC17_1.total = result?.total;
 
-          if (this.bifurcationResult?.SEC17_1.total > 0) {
+          if (
+            this.bifurcationResult?.SEC17_1.total > 0 ||
+            this.bifurcationResult?.SEC17_1.total === 0
+          ) {
             this.grossSalary = 0;
             this.bifurcationResult.SEC17_1.value = result?.value[0];
             let salaryDetails = this.employerDetailsFormGroup?.controls[
@@ -1273,7 +1287,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         } else if (result.type === 'profitsInLieuOfSalary') {
           this.bifurcationResult.SEC17_3.total = result?.total;
 
-          if (this.bifurcationResult?.SEC17_3.total > 0) {
+          if (
+            this.bifurcationResult?.SEC17_3.total > 0 ||
+            this.bifurcationResult?.SEC17_3.total === 0
+          ) {
             this.bifurcationResult.SEC17_3.value = result?.value[0];
 
             let salaryDetails = this.employerDetailsFormGroup?.controls[

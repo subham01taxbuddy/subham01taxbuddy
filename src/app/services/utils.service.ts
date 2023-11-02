@@ -28,6 +28,7 @@ export class UtilsService {
   private subject = new Subject<any>();
   uploadedJson: any;
   jsonData: any;
+  value:any;
   constructor(
     private snackBar: MatSnackBar,
     private itrMsService: ItrMsService,
@@ -1415,5 +1416,13 @@ export class UtilsService {
 
   getData() {
     return this.dataSubject.asObservable();
+  }
+
+  setChange(value){
+    return this.value = value;
+  }
+
+  getChange(){
+    return this.value;
   }
 }
