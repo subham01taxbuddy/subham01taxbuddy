@@ -27,18 +27,24 @@
             <mat-form-field appearance="outline" class="class1">
               <mat-label>First name</mat-label>
               <input matInput placeholder="First Name" required type="text" formControlName="firstName" capitalizeFirst>
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['firstName'].hasError('pattern')">Please enter the
+                valid name.</mat-error>
             </mat-form-field>
           </div>
           <div class="col-sm-3 spsTp">
             <mat-form-field appearance="outline" class="class1">
               <mat-label>Middle Name</mat-label>
               <input placeholder="Middle Name" type="text" formControlName="middleName" capitalizeFirst matInput>
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['middleName'].hasError('pattern')">Please enter the
+                valid name.</mat-error>
             </mat-form-field>
           </div>
           <div class="col-sm-3 spsTp">
             <mat-form-field appearance="outline" class="class1">
               <mat-label>Last Name</mat-label>
               <input matInput placeholder="Last Name" type="text" formControlName="lastName" capitalizeFirst required>
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['lastName'].hasError('pattern')">Please enter the
+                valid name.</mat-error>
             </mat-form-field>
           </div>
           <div class="col-sm-3 spsTp">
@@ -97,8 +103,7 @@
           </div>
           <div class="col-sm-12" *ngIf="roles?.includes('ROLE_FILER')">
             <mat-checkbox class="example-margin bldFnt mvRth assign" [(ngModel)]="assignedToMe"
-              [ngModelOptions]="{standalone: true}" disabled
-              (change)="isAssignedToMe()">Assigned
+              [ngModelOptions]="{standalone: true}" disabled (change)="isAssignedToMe()">Assigned
               to me!</mat-checkbox>
           </div>
           <div class="col-sm-12 spsTp bdrTp">
