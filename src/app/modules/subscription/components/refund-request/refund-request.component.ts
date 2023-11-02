@@ -64,7 +64,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
   ];
   Type: any = [
     { label: 'Cancel', value: 'CANCEL' },
-    { label: 'Downgraded', value: 'DOWNGRADED' },
+    { label: 'Downgraded', value: 'DOWNGRADE' },
   ];
   searchAsPrinciple :boolean =false;
   searchBy: any = {};
