@@ -240,6 +240,11 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
       this.cacheManager.clearCache();
     }
 
+    let loggedInId = this.utilService.getLoggedInUserID();
+    if(this.loggedInUserRoles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
+
     let param;
 
     if(this.searchBy?.mobile){
