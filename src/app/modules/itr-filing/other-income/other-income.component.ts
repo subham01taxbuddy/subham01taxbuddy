@@ -304,7 +304,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     if (
       this.exemptIncomeFormGroup.valid &&
       this.otherIncomeFormGroup.valid &&
-      (agriIncome && agriIncome?.value > 500000 ? this.agriIncFormGroup.valid : true)
+      (agriIncome && agriIncome?.value > 500000
+        ? this.agriIncFormGroup.valid
+        : true)
     ) {
       this.saveOtherIncome();
       this.saveExemptIncomes();
@@ -469,6 +471,15 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     });
 
     this.Copy_ITR_JSON.agriculturalIncome = agriIncome;
+    const agri = exemptIncomes?.controls?.find((element) => {
+      return element?.get('incomeType')?.value === 'AGRI';
+    });
+
+    if (agri?.value?.incomeType === 'AGRI' && agri?.value?.incomeValue > 0) {
+      this.Copy_ITR_JSON.systemFlags.hasAgricultureIncome = true;
+    } else {
+      this.Copy_ITR_JSON.systemFlags.hasAgricultureIncome = false;
+    }
 
     // setting agri land details
     if (type === 'delete') {
@@ -655,7 +666,10 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         const formGroup = this.fb.group({
           nameOfDistrict: item ? item.nameOfDistrict : null,
           pinCode: item ? item.pinCode : null,
-          landInAcre: [item?.landInAcre === 0 ? null : item?.landInAcre, Validators.required],
+          landInAcre: [
+            item?.landInAcre === 0 ? null : item?.landInAcre,
+            Validators.required,
+          ],
           owner: [item ? item.owner : null, Validators.required],
           typeOfLand: item ? item.typeOfLand : null,
         });
