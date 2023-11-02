@@ -444,12 +444,13 @@ export class CustomerProfileComponent implements OnInit {
     gender?.setValidators(Validators.required);
     gender?.updateValueAndValidity();
 
+    let aadhaarEnrolmentId =
+      this.customerProfileForm.controls['aadhaarEnrolmentId'].value;
+    let aadhaarNumber =
+      this.customerProfileForm.controls['aadharNumber'].value;
+
     // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
     if (this.customerProfileForm.valid) {
-      let aadhaarEnrolmentId =
-        this.customerProfileForm.controls['aadhaarEnrolmentId'].value;
-      let aadhaarNumber =
-        this.customerProfileForm.controls['aadharNumber'].value;
 
       if (
         (!this.utilsService.isNonEmpty(aadhaarNumber) &&
@@ -544,6 +545,21 @@ export class CustomerProfileComponent implements OnInit {
       } else {
         gender?.clearValidators();
         gender?.updateValueAndValidity();
+      }
+
+      if (
+        (!this.utilsService.isNonEmpty(aadhaarNumber) &&
+          !this.utilsService.isNonEmpty(aadhaarEnrolmentId)) ||
+        (this.utilsService.isNonEmpty(aadhaarNumber) &&
+          this.utilsService.isNonEmpty(aadhaarEnrolmentId))
+      ) {
+        this.customerProfileForm.controls['aadhaarEnrolmentId'].setErrors({ 'required': true });
+        this.customerProfileForm.controls['aadharNumber'].setErrors({ 'required': true });
+        this.customerProfileForm.controls['aadhaarEnrolmentId'].markAsDirty();
+        this.customerProfileForm.controls['aadharNumber'].markAsTouched();
+        this.utilsService.showSnackBar(
+          'Please provide aadhar number or enrollment ID'
+        );
       }
       this.customerProfileSaved.emit(false);
     }
