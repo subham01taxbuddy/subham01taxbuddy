@@ -209,6 +209,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   hraError: boolean = false;
   ltaError: boolean = false;
   gratuityError: boolean = false;
+  pensionError: boolean = false;
 
   constructor(
     private router: Router,
@@ -621,7 +622,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           ) {
             this.hraError = true;
           } else {
-            hraControl?.get('allowValue')?.clearValidators();
+            hraControl?.get('allowValue')?.removeValidators(Validators.max(lowerOf));
             hraControl?.get('allowValue')?.updateValueAndValidity();
             this.hraError = false;
           }
@@ -644,7 +645,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           ) {
             this.ltaError = true;
           } else {
-            ltaControl?.get('allowValue')?.clearValidators();
+            ltaControl?.get('allowValue')?.removeValidators(Validators.max(LTA));
             ltaControl?.get('allowValue')?.updateValueAndValidity();
             this.ltaError = false;
           }
@@ -679,9 +680,36 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           ) {
             this.gratuityError = true;
           } else {
-            gratuityControl?.get('allowValue')?.clearValidators();
+            gratuityControl?.get('allowValue')?.removeValidators(Validators.max(lowerOf));
             gratuityControl?.get('allowValue')?.updateValueAndValidity();
             this.gratuityError = false;
+          }
+        }
+
+        // pension
+        {
+          const pensionControl = allowance?.controls?.find((element) => {
+            return element?.get('allowType')?.value === 'COMMUTED_PENSION';
+          });
+
+          const pension = parseFloat(FormValues?.salary[0]?.COMMUTED_PENSION);
+
+          pensionControl
+            ?.get('allowValue')
+            ?.setValidators(Validators.max(pension));
+          pensionControl?.get('allowValue')?.updateValueAndValidity();
+
+          if (
+            pensionControl?.get('allowValue')?.errors &&
+            pensionControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+          ) {
+            this.pensionError = true;
+          } else {
+            pensionControl
+              ?.get('allowValue')
+              ?.removeValidators(Validators.max(pension));
+            pensionControl?.get('allowValue')?.updateValueAndValidity();
+            this.pensionError = false;
           }
         }
       }
@@ -705,8 +733,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         ) {
           this.gratuityError = true;
         } else {
-          gratuityControl?.get('allowValue')?.clearValidators();
+          gratuityControl
+            ?.get('allowValue')
+            ?.removeValidators(Validators.max(fixedLimit));
           gratuityControl?.get('allowValue')?.updateValueAndValidity();
+          console.log(gratuityControl);
           this.gratuityError = false;
         }
       }

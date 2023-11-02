@@ -401,6 +401,16 @@
                       that is provided or salary entered in Salary 17(1) or 20
                       lakhs, whichever is lower
                     </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'COMMUTED_PENSION' &&
+                        pensionError
+                      "
+                    >
+                      Commuted pension u/s 10(10A) to be claimed cannot be more
+                      than the commuted pension u/s 10(10A) that is provided
+                    </mat-error>
                   </div>
                   <!-- Calculator button -->
                   <i *ngIf="false"
