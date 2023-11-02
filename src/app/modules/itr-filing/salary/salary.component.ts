@@ -40,7 +40,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   deductionsFormGroup: FormGroup;
   allowanceFormGroup: FormGroup;
   freeze: boolean = false;
-  hraError: boolean = false;
   localEmployer: Employer;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -205,6 +204,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     },
   ];
   stateDropdown = AppConstants.stateDropdown;
+
+  // errors keys
+  hraError: boolean = false;
+  ltaError: boolean = false;
+  gratuityError: boolean = false;
+
   constructor(
     private router: Router,
     private fb: FormBuilder,
@@ -583,32 +588,127 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       'allowances'
     ] as FormArray;
     const FormValues = this.utilsService.getSalaryValues();
-    const isAtLeastOneSalaryGreaterThanZero = Object?.values(
-      FormValues?.salary[0]
-    ).some((element: any) => element > 0);
+    if (FormValues) {
+      const isAtLeastOneSalaryGreaterThanZero = Object?.values(
+        FormValues?.salary[0]
+      ).some((element: any) => element > 0);
 
-    if (isAtLeastOneSalaryGreaterThanZero) {
-      const hraControl = allowance?.controls?.find((element) => {
-        return element?.get('allowType')?.value === 'HOUSE_RENT';
-      });
+      if (isAtLeastOneSalaryGreaterThanZero) {
+        // house rent allowance validation
+        {
+          const hraControl = allowance?.controls?.find((element) => {
+            return element?.get('allowType')?.value === 'HOUSE_RENT';
+          });
 
-      const lowerOf = Math.min(
-        parseFloat(FormValues?.salary[0]?.BASIC_SALARY) / 2,
-        parseFloat(FormValues?.salary[0]?.HOUSE_RENT)
-      );
+          const BASIC_SALARY = parseFloat(FormValues?.salary[0]?.BASIC_SALARY);
+          const HOUSE_RENT = parseFloat(FormValues?.salary[0]?.HOUSE_RENT);
 
-      hraControl?.get('allowValue')?.setValidators(Validators.max(lowerOf));
-      hraControl?.get('allowValue')?.updateValueAndValidity();
+          let lowerOf = Math.min(
+            BASIC_SALARY !== 0 ? BASIC_SALARY / 2 : Infinity,
+            HOUSE_RENT !== 0 ? HOUSE_RENT : Infinity
+          );
 
-      if (
-        hraControl?.get('allowValue')?.errors &&
-        hraControl?.get('allowValue')?.errors?.hasOwnProperty('max')
-      ) {
-        this.hraError = true;
-      } else {
-        hraControl?.get('allowValue')?.clearValidators();
-        hraControl?.get('allowValue')?.updateValueAndValidity();
-        this.hraError = false;
+          if (BASIC_SALARY === 0 && HOUSE_RENT === 0) {
+            lowerOf = 0;
+          }
+
+          hraControl?.get('allowValue')?.setValidators(Validators.max(lowerOf));
+          hraControl?.get('allowValue')?.updateValueAndValidity();
+
+          if (
+            hraControl?.get('allowValue')?.errors &&
+            hraControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+          ) {
+            this.hraError = true;
+          } else {
+            hraControl?.get('allowValue')?.clearValidators();
+            hraControl?.get('allowValue')?.updateValueAndValidity();
+            this.hraError = false;
+          }
+        }
+
+        // Leave travel allowances
+        {
+          const ltaControl = allowance?.controls?.find((element) => {
+            return element?.get('allowType')?.value === 'LTA';
+          });
+
+          const LTA = parseFloat(FormValues?.salary[0]?.LTA);
+
+          ltaControl?.get('allowValue')?.setValidators(Validators.max(LTA));
+          ltaControl?.get('allowValue')?.updateValueAndValidity();
+
+          if (
+            ltaControl?.get('allowValue')?.errors &&
+            ltaControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+          ) {
+            this.ltaError = true;
+          } else {
+            ltaControl?.get('allowValue')?.clearValidators();
+            ltaControl?.get('allowValue')?.updateValueAndValidity();
+            this.ltaError = false;
+          }
+        }
+
+        // gratuity received
+        {
+          const gratuityControl = allowance?.controls?.find((element) => {
+            return element?.get('allowType')?.value === 'GRATUITY';
+          });
+
+          const gratuity = parseFloat(FormValues?.salary[0]?.GRATUITY);
+          const fixedLimit = 2000000;
+
+          let lowerOf = Math.min(
+            gratuity !== 0 ? gratuity : Infinity,
+            fixedLimit
+          );
+
+          if (gratuity === 0) {
+            lowerOf = fixedLimit;
+          }
+
+          gratuityControl
+            ?.get('allowValue')
+            ?.setValidators(Validators.max(lowerOf));
+          gratuityControl?.get('allowValue')?.updateValueAndValidity();
+
+          if (
+            gratuityControl?.get('allowValue')?.errors &&
+            gratuityControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+          ) {
+            this.gratuityError = true;
+          } else {
+            gratuityControl?.get('allowValue')?.clearValidators();
+            gratuityControl?.get('allowValue')?.updateValueAndValidity();
+            this.gratuityError = false;
+          }
+        }
+      }
+    } else {
+      // gratuity received
+      {
+        const gratuityControl = allowance?.controls?.find((element) => {
+          return element?.get('allowType')?.value === 'GRATUITY';
+        });
+
+        const fixedLimit = 2000000;
+
+        gratuityControl
+          ?.get('allowValue')
+          ?.setValidators(Validators.max(fixedLimit));
+        gratuityControl?.get('allowValue')?.updateValueAndValidity();
+
+        if (
+          gratuityControl?.get('allowValue')?.errors &&
+          gratuityControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+        ) {
+          this.gratuityError = true;
+        } else {
+          gratuityControl?.get('allowValue')?.clearValidators();
+          gratuityControl?.get('allowValue')?.updateValueAndValidity();
+          this.gratuityError = false;
+        }
       }
     }
   }

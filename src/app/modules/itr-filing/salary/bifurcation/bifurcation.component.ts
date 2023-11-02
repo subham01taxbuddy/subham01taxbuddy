@@ -63,7 +63,7 @@ export class BifurcationComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.bifurcationFormGroup = this.createBifurcationForm();
 
-    if (this.data.valueChanged === false) {
+    if (this.data.valueChanged !== true) {
       this.index = this.data?.index;
       this.localEmployer = JSON.parse(sessionStorage.getItem('localEmployer'));
       this.localEmployer = this.data?.data
@@ -425,7 +425,7 @@ export class BifurcationComponent implements OnInit {
     }
 
     this.utilsService.setChange(false);
-    
+
     const values = this.bifurcationFormGroup.getRawValue();
     this.utilsService.setSalaryValues(values);
 
