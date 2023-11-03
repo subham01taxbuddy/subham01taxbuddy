@@ -217,6 +217,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   secondProvisoError: boolean = false;
   remunerationError: boolean = false;
   serviceOutIndError: boolean = false;
+  prescPersonalExpError: boolean = false;
+
 
   constructor(
     private router: Router,
@@ -1027,6 +1029,38 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
               ?.removeValidators(Validators.max(lowerOf));
             leaveEncashControl?.get('allowValue')?.updateValueAndValidity();
             this.leaveEncashError = false;
+          }
+        }
+
+        // personal expenses 14(ii)
+        {
+          const personalExpControl = allowance?.controls?.find((element) => {
+            return element?.get('allowType')?.value === '10(14)(ii)';
+          });
+
+          const personalExp =
+            parseFloat(FormValues?.salary[0]?.CONVEYANCE) +
+            parseFloat(FormValues?.salary[0]?.OTHER_ALLOWANCE) +
+            parseFloat(FormValues?.salary[0]?.OTHER);
+
+          if (personalExp && personalExp !== 0) {
+            personalExpControl
+              ?.get('allowValue')
+              ?.setValidators(Validators.max(personalExp));
+            personalExpControl?.get('allowValue')?.updateValueAndValidity();
+          }
+
+          if (
+            personalExpControl?.get('allowValue')?.errors &&
+            personalExpControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+          ) {
+            this.prescPersonalExpError = true;
+          } else {
+            personalExpControl
+              ?.get('allowValue')
+              ?.removeValidators(Validators.max(personalExp));
+            personalExpControl?.get('allowValue')?.updateValueAndValidity();
+            this.prescPersonalExpError = false;
           }
         }
       } else {
