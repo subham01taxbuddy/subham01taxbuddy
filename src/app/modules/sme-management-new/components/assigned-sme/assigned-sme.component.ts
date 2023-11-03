@@ -307,6 +307,10 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
       console.log('in clear cache')
     }
     this.loading = true;
+    let loggedInId = this.utilsService.getLoggedInUserID();
+      if(this.roles.includes('ROLE_LEADER')){
+        this.leaderId = loggedInId;
+      }
     let userFilter = '';
     if ((this.leaderId && !this.filerId)) {
       userFilter += `&leaderUserId=${this.leaderId}`;
@@ -420,6 +424,10 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     //https://dev-api.taxbuddy.com/report/bo/sme-details?assigned=true&page=0&pageSize=5&onlyCount=true' \
     this.loading = true;
     let param = '';
+    let loggedInId = this.utilsService.getLoggedInUserID();
+      if(this.roles.includes('ROLE_LEADER')){
+        this.leaderId = loggedInId;
+      }
     let countFilter = '&onlyCount=true';
     let userFilter = '';
     if ((this.leaderId && !this.filerId)) {

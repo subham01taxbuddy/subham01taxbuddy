@@ -807,6 +807,11 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       console.log('in clear cache')
     }
     let loggedInId = this.utilsService.getLoggedInUserID();
+
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
+
     if(this.searchBy?.mobileNumber){
       this.searchParam.mobileNumber = this.searchBy?.mobileNumber
     }

@@ -1358,6 +1358,18 @@ export class UtilsService {
     }
   }
 
+  getPartnerType() {
+    const loggedInSmeInfo = JSON.parse(
+      sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
+    );
+    if (
+      this.isNonEmpty(loggedInSmeInfo) &&
+      this.isNonEmpty(loggedInSmeInfo[0].partnerType)
+    ) {
+      return loggedInSmeInfo[0].partnerType;
+    }
+  }
+
   async getFilersList() {
     // https://uat-api.taxbuddy.com/user/sme-details-new/3000?filer=true
     let loggedInUserId = environment.admin_id;
