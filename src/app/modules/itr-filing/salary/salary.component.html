@@ -423,6 +423,17 @@
                       Salary 17(1) or 3 lakhs (for non-goverment employees),
                       whichever is lower
                     </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'SECOND_PROVISO_CGOV' &&
+                        secProvisoCgovError
+                      "
+                    >
+                      Second proviso under central government can be only
+                      claimed by government employees and should be less than
+                      salary in 17(1) or 5 lakhs, whichever is lower
+                    </mat-error>
                   </div>
                   <!-- Calculator button -->
                   <i *ngIf="false"

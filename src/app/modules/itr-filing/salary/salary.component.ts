@@ -211,6 +211,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   gratuityError: boolean = false;
   pensionError: boolean = false;
   leaveEncashError: boolean = false;
+  secProvisoCgovError: boolean = false;
 
   constructor(
     private router: Router,
@@ -585,6 +586,43 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     };
   }
 
+  secondProviso1010B() {
+    const allowance = this.allowanceFormGroup?.controls[
+      'allowances'
+    ] as FormArray;
+
+    const secondProvisoControl = allowance?.controls?.find((element) => {
+      return element?.get('allowType')?.value === 'SECOND_PROVISO_CGOV';
+    });
+
+    const fixedLimit = 500000;
+
+    if (
+      this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
+      this.ITR_JSON.employerCategory === 'GOVERNMENT' ||
+      this.ITR_JSON.employerCategory === 'PE' ||
+      this.ITR_JSON.employerCategory === 'PESG'
+    ) {
+      secondProvisoControl
+        ?.get('allowValue')
+        ?.setValidators(Validators.max(fixedLimit));
+      secondProvisoControl?.get('allowValue')?.updateValueAndValidity();
+    }
+
+    if (
+      secondProvisoControl?.get('allowValue')?.errors &&
+      secondProvisoControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+    ) {
+      this.secProvisoCgovError = true;
+    } else {
+      secondProvisoControl
+        ?.get('allowValue')
+        ?.removeValidators(Validators.max(fixedLimit));
+      secondProvisoControl?.get('allowValue')?.updateValueAndValidity();
+      this.secProvisoCgovError = false;
+    }
+  }
+
   ifFormValuesNotPresent() {
     const allowance = this.allowanceFormGroup?.controls[
       'allowances'
@@ -842,11 +880,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
           // lower of 3 lakhs only applicable for non government employees
           if (
-            this.ITR_JSON.employerCategory === 'OTHER' ||
-            this.ITR_JSON.employerCategory === 'PRIVATE' ||
-            this.ITR_JSON.employerCategory === 'PEPS' ||
-            this.ITR_JSON.employerCategory === 'PENSIONERS' ||
-            this.ITR_JSON.employerCategory === 'NA'
+            this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+            this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
+            this.ITR_JSON.employerCategory !== 'PE' &&
+            this.ITR_JSON.employerCategory !== 'PESG'
           ) {
             leaveEncashControl
               ?.get('allowValue')
@@ -878,6 +915,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     } else {
       this.ifFormValuesNotPresent();
     }
+
+    // applicable overall
+    this.secondProviso1010B();
   }
 
   saveEmployerDetails() {
