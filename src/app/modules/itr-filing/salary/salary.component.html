@@ -466,6 +466,16 @@
                       Second proviso allowance cannot be claimed by government
                       employees
                     </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === '10(6)' &&
+                        remunerationError
+                      "
+                    >
+                      Deduction claimed cannot be more than the total Salary
+                      under 17(1), 17(2) and 17(3)
+                    </mat-error>
                   </div>
                   <!-- Calculator button -->
                   <i

@@ -215,7 +215,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   compensationOnVrsError: boolean = false;
   firstProvisoError: boolean = false;
   secondProvisoError: boolean = false;
-
+  remunerationError: boolean = false;
 
   constructor(
     private router: Router,
@@ -595,6 +595,14 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   }
 
   validationApplicableForAll() {
+    const employerTotal = this.employerDetailsFormGroup
+      ?.get('salaryDetails')
+      ?.value?.reduce(
+        (acc, item) =>
+          acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0),
+        0
+      );
+
     const allowance = this.allowanceFormGroup?.controls[
       'allowances'
     ] as FormArray;
@@ -690,6 +698,31 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         this.secondProvisoError = true;
       } else {
         this.secondProvisoError = false;
+      }
+    }
+
+    // Remuneration 10(6)
+    {
+      const remunerationControl = allowance?.controls?.find((element) => {
+        return element?.get('allowType')?.value === '10(6)';
+      });
+
+      remunerationControl
+        ?.get('allowValue')
+        ?.setValidators(Validators.max(employerTotal));
+      remunerationControl?.get('allowValue')?.updateValueAndValidity();
+
+      if (
+        remunerationControl?.get('allowValue')?.errors &&
+        remunerationControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+      ) {
+        this.remunerationError = true;
+      } else {
+        remunerationControl
+          ?.get('allowValue')
+          ?.removeValidators(Validators.max(employerTotal));
+        remunerationControl?.get('allowValue')?.updateValueAndValidity();
+        this.remunerationError = false;
       }
     }
   }
@@ -1244,8 +1277,11 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             taxableAmount: 0,
             exemptAmount: Number(allowance.controls['allowValue'].value),
           });
-          totalAllowExempt =
-            totalAllowExempt + Number(allowance.controls['allowValue'].value);
+
+          if (allowance.controls['allowType'].value !== '10(6)') {
+            totalAllowExempt =
+              totalAllowExempt + Number(allowance.controls['allowValue'].value);
+          }
         }
       }
 
