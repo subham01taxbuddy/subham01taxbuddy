@@ -210,6 +210,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   ltaError: boolean = false;
   gratuityError: boolean = false;
   pensionError: boolean = false;
+  leaveEncashError: boolean = false;
 
   constructor(
     private router: Router,
@@ -584,17 +585,117 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     };
   }
 
+  ifFormValuesNotPresent() {
+    const allowance = this.allowanceFormGroup?.controls[
+      'allowances'
+    ] as FormArray;
+
+    // gratuity received
+    {
+      const gratuityControl = allowance?.controls?.find((element) => {
+        return element?.get('allowType')?.value === 'GRATUITY';
+      });
+
+      const fixedLimit = 2000000;
+
+      gratuityControl
+        ?.get('allowValue')
+        ?.setValidators(Validators.max(fixedLimit));
+      gratuityControl?.get('allowValue')?.updateValueAndValidity();
+
+      if (
+        gratuityControl?.get('allowValue')?.errors &&
+        gratuityControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+      ) {
+        this.gratuityError = true;
+      } else {
+        gratuityControl
+          ?.get('allowValue')
+          ?.removeValidators(Validators.max(fixedLimit));
+        gratuityControl?.get('allowValue')?.updateValueAndValidity();
+        console.log(gratuityControl);
+        this.gratuityError = false;
+      }
+    }
+
+    // leave encashment
+    {
+      const leaveEncashControl = allowance?.controls?.find((element) => {
+        return element?.get('allowType')?.value === 'LEAVE_ENCASHMENT';
+      });
+
+      const fixedLimit = 300000;
+
+      // lower of 3 lakhs only applicable for non government employees if form values not present
+      if (
+        this.ITR_JSON.employerCategory === 'OTHER' ||
+        this.ITR_JSON.employerCategory === 'PRIVATE' ||
+        this.ITR_JSON.employerCategory === 'PEPS' ||
+        this.ITR_JSON.employerCategory === 'PENSIONERS' ||
+        this.ITR_JSON.employerCategory === 'NA'
+      ) {
+        leaveEncashControl
+          ?.get('allowValue')
+          ?.setValidators(Validators.max(fixedLimit));
+        leaveEncashControl?.get('allowValue')?.updateValueAndValidity();
+      }
+
+      if (
+        leaveEncashControl?.get('allowValue')?.errors &&
+        leaveEncashControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+      ) {
+        this.leaveEncashError = true;
+      } else {
+        leaveEncashControl
+          ?.get('allowValue')
+          ?.removeValidators(Validators.max(fixedLimit));
+        leaveEncashControl?.get('allowValue')?.updateValueAndValidity();
+        this.leaveEncashError = false;
+      }
+    }
+  }
+
   validations() {
     const allowance = this.allowanceFormGroup?.controls[
       'allowances'
     ] as FormArray;
     const FormValues = this.utilsService.getSalaryValues();
+
     if (FormValues) {
       const isAtLeastOneSalaryGreaterThanZero = Object?.values(
         FormValues?.salary[0]
       ).some((element: any) => element > 0);
 
+      // For simplified code
+      // const allowancesToSet = [
+      //   'HOUSE_RENT',
+      //   'LTA',
+      //   'GRATUITY',
+      //   'COMMUTED_PENSION',
+      // 'LEAVE_ENCASHMENT'
+      // ];
+
       if (isAtLeastOneSalaryGreaterThanZero) {
+        // for simplified code
+        // allowancesToSet?.forEach((element) => {
+        //   const control = allowance?.controls?.find((item) => {
+        //     return item?.get('allowType')?.value === element;
+        //   });
+
+        //   if(element === 'HOUSE_RENT'){
+        //     const incomeProvided = parseFloat(FormValues?.salary[0]?.BASIC_SALARY);
+        //     const limit = parseFloat(FormValues?.salary[0]?.HOUSE_RENT);
+
+        //     let lowerOf = Math.min(
+        //       incomeProvided !== 0 ? incomeProvided / 2 : Infinity,
+        //       limit !== 0 ? limit : Infinity
+        //     );
+
+        //     if (incomeProvided === 0 && limit === 0) {
+        //       lowerOf = 0;
+        //     }
+        //   }
+        // });
         // house rent allowance validation
         {
           const hraControl = allowance?.controls?.find((element) => {
@@ -622,7 +723,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           ) {
             this.hraError = true;
           } else {
-            hraControl?.get('allowValue')?.removeValidators(Validators.max(lowerOf));
+            hraControl
+              ?.get('allowValue')
+              ?.removeValidators(Validators.max(lowerOf));
             hraControl?.get('allowValue')?.updateValueAndValidity();
             this.hraError = false;
           }
@@ -645,7 +748,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           ) {
             this.ltaError = true;
           } else {
-            ltaControl?.get('allowValue')?.removeValidators(Validators.max(LTA));
+            ltaControl
+              ?.get('allowValue')
+              ?.removeValidators(Validators.max(LTA));
             ltaControl?.get('allowValue')?.updateValueAndValidity();
             this.ltaError = false;
           }
@@ -680,13 +785,15 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           ) {
             this.gratuityError = true;
           } else {
-            gratuityControl?.get('allowValue')?.removeValidators(Validators.max(lowerOf));
+            gratuityControl
+              ?.get('allowValue')
+              ?.removeValidators(Validators.max(lowerOf));
             gratuityControl?.get('allowValue')?.updateValueAndValidity();
             this.gratuityError = false;
           }
         }
 
-        // pension
+        // commuted pension 10(10A)
         {
           const pensionControl = allowance?.controls?.find((element) => {
             return element?.get('allowType')?.value === 'COMMUTED_PENSION';
@@ -712,35 +819,64 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             this.pensionError = false;
           }
         }
+
+        // leave encashment
+        {
+          const leaveEncashControl = allowance?.controls?.find((element) => {
+            return element?.get('allowType')?.value === 'LEAVE_ENCASHMENT';
+          });
+
+          const leaveEncash = parseFloat(
+            FormValues?.salary[0]?.LEAVE_ENCASHMENT
+          );
+          const fixedLimit = 300000;
+
+          let lowerOf = Math.min(
+            leaveEncash !== 0 ? leaveEncash : Infinity,
+            fixedLimit
+          );
+
+          if (leaveEncash === 0) {
+            lowerOf = fixedLimit;
+          }
+
+          // lower of 3 lakhs only applicable for non government employees
+          if (
+            this.ITR_JSON.employerCategory === 'OTHER' ||
+            this.ITR_JSON.employerCategory === 'PRIVATE' ||
+            this.ITR_JSON.employerCategory === 'PEPS' ||
+            this.ITR_JSON.employerCategory === 'PENSIONERS' ||
+            this.ITR_JSON.employerCategory === 'NA'
+          ) {
+            leaveEncashControl
+              ?.get('allowValue')
+              ?.setValidators(Validators.max(lowerOf));
+            leaveEncashControl?.get('allowValue')?.updateValueAndValidity();
+          } else {
+            leaveEncashControl
+              ?.get('allowValue')
+              ?.setValidators(Validators.max(leaveEncash));
+            leaveEncashControl?.get('allowValue')?.updateValueAndValidity();
+          }
+
+          if (
+            leaveEncashControl?.get('allowValue')?.errors &&
+            leaveEncashControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+          ) {
+            this.leaveEncashError = true;
+          } else {
+            leaveEncashControl
+              ?.get('allowValue')
+              ?.removeValidators(Validators.max(lowerOf));
+            leaveEncashControl?.get('allowValue')?.updateValueAndValidity();
+            this.leaveEncashError = false;
+          }
+        }
+      } else {
+        this.ifFormValuesNotPresent();
       }
     } else {
-      // gratuity received
-      {
-        const gratuityControl = allowance?.controls?.find((element) => {
-          return element?.get('allowType')?.value === 'GRATUITY';
-        });
-
-        const fixedLimit = 2000000;
-
-        gratuityControl
-          ?.get('allowValue')
-          ?.setValidators(Validators.max(fixedLimit));
-        gratuityControl?.get('allowValue')?.updateValueAndValidity();
-
-        if (
-          gratuityControl?.get('allowValue')?.errors &&
-          gratuityControl?.get('allowValue')?.errors?.hasOwnProperty('max')
-        ) {
-          this.gratuityError = true;
-        } else {
-          gratuityControl
-            ?.get('allowValue')
-            ?.removeValidators(Validators.max(fixedLimit));
-          gratuityControl?.get('allowValue')?.updateValueAndValidity();
-          console.log(gratuityControl);
-          this.gratuityError = false;
-        }
-      }
+      this.ifFormValuesNotPresent();
     }
   }
 
