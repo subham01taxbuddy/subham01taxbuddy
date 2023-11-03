@@ -315,6 +315,7 @@
                           name="allowValue[i]"
                           formControlName="allowValue"
                           class="input-field"
+                          (change)="validations()"
                           [disabled]="isVrsExemptionTaken"
                         />
                       </mat-form-field>
@@ -327,6 +328,17 @@
                         "
                       >
                         Only any one of the three is allowed
+                      </mat-error>
+                      <mat-error
+                        style="width: 70%"
+                        *ngIf="
+                          income.value.allowType === 'COMPENSATION_ON_VRS' &&
+                          compensationOnVrsError
+                        "
+                      >
+                        Compensation on VRS cannot be more than 17(1) or 5 lakh
+                        or if it is already claimed in any previous year then it
+                        cannot be claimed again
                       </mat-error>
                     </div>
                     <!-- Calculator button -->
