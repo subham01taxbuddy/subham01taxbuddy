@@ -33,6 +33,8 @@ export class AddSubscriptionComponent implements OnInit {
   smeDetails: any
   serviceEligibility: any;
   showMessage = '';
+  partnerType:any;
+  searchAsPrinciple :boolean =false;
   constructor(
     public dialogRef: MatDialogRef<AddSubscriptionComponent>,
     private dialog: MatDialog,
@@ -48,11 +50,17 @@ export class AddSubscriptionComponent implements OnInit {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     console.log('data -> ', this.data)
     this.roles = this.loggedInSme[0]?.roles;
+    this.partnerType = this.loggedInSme[0]?.partnerType;
     if (this.roles.includes('ROLE_FILER')) {
       this.isAllowed = false;
       this.getSmeDetail();
     }
-    this.getUserInfoByMobileNum(this.data.mobileNo)
+    if(this.data.mobileNo){
+      this.getUserInfoByMobileNum(this.data.mobileNo);
+    }else{
+      this.getUserInfoByMobileNum('',this.data.userId);
+    }
+
   }
 
   getSmeDetail() {
@@ -104,15 +112,34 @@ export class AddSubscriptionComponent implements OnInit {
     console.log('selectedPlanInfo -> ', this.selectedPlanInfo);
   }
 
-  getUserInfoByMobileNum(number) {
-    console.log('number', number)
+  getUserInfoByMobileNum(number,userId?) {
+    // https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId
+   let filter = '';
+    if(number){
+      filter='&mobileNumber=' + number
+    }else{
+      filter = '&userId=' + userId
+    }
+    let userFilter=''
+    if(this.roles.includes('ROLE_LEADER')){
+      userFilter += `&leaderUserId=${loggedInSmeUserId}`;
+
+    }
+    if(this.roles.includes('ROLE_FILER') && this.partnerType != "PRINCIPAL"){
+      userFilter += `&filerUserId=${loggedInSmeUserId}`;
+    }
+
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL"){
+      userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeUserId}`;
+    }
+
     this.loading = true;
-    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + number;
-    this.itrService.getMethod(param).subscribe((response: any) => {
+    let param = `/bo/subscription-dashboard-new?page=0&pageSize=20${userFilter}${filter}`;
+    this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       console.log('Get user  by mobile number responce: ', response);
-      this.allSubscriptions = response.data
+      this.allSubscriptions = response.data.content
       console.log("All Sub", this.allSubscriptions)
       let smeSelectedPlan = this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan);
       let userSelectedPlan = this.allSubscriptions?.map((item: any) => item?.userSelectedPlan);
@@ -120,7 +147,6 @@ export class AddSubscriptionComponent implements OnInit {
         this.service = smeSelectedPlan[0]?.servicesType;
         this.serviceDetails = smeSelectedPlan[0]?.name;
       } else if (userSelectedPlan.length && userSelectedPlan[0] != null) {
-        debugger
         this.service = userSelectedPlan[0]?.servicesType;
         this.serviceDetails = userSelectedPlan[0]?.name;
       } else {

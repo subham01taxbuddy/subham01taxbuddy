@@ -116,12 +116,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   dataOnLoad = true;
   searchAsPrinciple :boolean =false;
   searchBy: any = {};
-  searchMenus = [
-    { value: 'name', name: 'User Name' },
-    { value: 'email', name: 'Email' },
-    { value: 'mobile', name: 'Mobile No' },
-    { value: 'invoiceNo', name: 'Invoice No' },
-  ];
+  searchMenus = [];
   clearUserFilter: number;
   itrStatus: any = [];
   ogStatusList: any = [];
@@ -186,7 +181,20 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
     this.partnerType = this.loggedInSme[0]?.partnerType
-
+    if (this.roles.includes('ROLE_FILER')) {
+      this.searchMenus = [
+        { value: 'name', name: 'User Name' },
+        { value: 'email', name: 'Email' },
+        { value: 'invoiceNo', name: 'Invoice No' },
+      ]
+    }else{
+      this.searchMenus = [
+        { value: 'name', name: 'User Name' },
+        { value: 'email', name: 'Email' },
+        { value: 'mobile', name: 'Mobile No' },
+        { value: 'invoiceNo', name: 'Invoice No' },
+      ]
+    }
     if (this.roles?.includes('ROLE_ADMIN') || this.roles?.includes('ROLE_LEADER')) {
       this.smeList = JSON.parse(sessionStorage.getItem(AppConstants.AGENT_LIST));
       console.log('all filers', this.smeList);

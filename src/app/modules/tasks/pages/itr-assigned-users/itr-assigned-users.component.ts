@@ -67,12 +67,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     { value: 'createdDate', name: 'Creation Date' }
   ];
   searchBy: any = {};
-  searchMenus = [
-    { value: 'name', name: 'User Name' },
-    { value: 'emailId', name: 'Email' },
-    { value: 'mobileNumber', name: 'Mobile No' },
-    { value: 'panNumber', name: 'PAN' }
-  ];
+  searchMenus = [];
   clearUserFilter: number;
   partnerType: any;
   constructor(
@@ -141,6 +136,20 @@ export class ItrAssignedUsersComponent implements OnInit {
   requestManagerSubscription: Subscription;
   dataOnLoad = true;
   ngOnInit() {
+     if (this.loggedInUserRoles.includes('ROLE_FILER')) {
+      this.searchMenus = [
+        { value: 'name', name: 'User Name' },
+        { value: 'emailId', name: 'Email' },
+        { value: 'panNumber', name: 'PAN' }
+      ]
+    }else{
+      this.searchMenus = [
+        { value: 'name', name: 'User Name' },
+        { value: 'emailId', name: 'Email' },
+        { value: 'mobileNumber', name: 'Mobile No' },
+        { value: 'panNumber', name: 'PAN' }
+      ]
+    }
     const userId = this.utilsService.getLoggedInUserID();
     this.agentId = userId;
     this.getStatus();

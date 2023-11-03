@@ -56,10 +56,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   ];
   sortBy: any = {};
   searchBy: any = {};
-  searchMenus = [
-    { value: 'email', name: 'Email' },
-    { value: 'mobileNumber', name: 'Mobile No' },
-  ];
+  searchMenus = [];
   clearUserFilter: number;
   searchAsPrinciple :boolean =false;
   partnerType:any;
@@ -98,7 +95,16 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     const userId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
     this.partnerType =this.utilsService.getPartnerType();
-
+    if (this.roles.includes('ROLE_FILER')) {
+      this.searchMenus = [
+        { value: 'email', name: 'Email' },
+      ]
+    }else{
+      this.searchMenus = [
+        { value: 'email', name: 'Email' },
+        { value: 'mobileNumber', name: 'Mobile No' },
+      ]
+    }
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
       this.agentId = userId;
       this.search();

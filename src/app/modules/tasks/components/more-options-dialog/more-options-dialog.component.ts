@@ -74,7 +74,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   checkSubscriptionForInvoice() {
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.loading = true;
-    //https://dev-api.taxbuddy.com/report/subscription-dashboard-new/3000?userId=8369&serviceType=TPA' 
+    //https://dev-api.taxbuddy.com/report/subscription-dashboard-new/3000?userId=8369&serviceType=TPA'
     let param = '/subscription-dashboard-new/' + loggedInSmeUserId + '?userId=' + this.data?.userId + '&serviceType=' + this.data.serviceType;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -143,12 +143,20 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   goToSubscription() {
-    this.router.navigate(['/subscription/assigned-subscription'], {
-      queryParams: {
-        userMobNo: this.data.mobileNumber,
-        userId: this.data.userId,
-      },
-    });
+    if(this.loggedInUserRoles.includes('ROLE_FILER')){
+      this.router.navigate(['/subscription/assigned-subscription'], {
+        queryParams: {
+          userId: this.data.userId,
+        },
+      });
+    }else{
+      this.router.navigate(['/subscription/assigned-subscription'], {
+        queryParams: {
+          userMobNo: this.data.mobileNumber,
+          userId: this.data.userId,
+        },
+      });
+    }
     // ([`${link.split('?')[0]}`, { queryParams: {id: 37, username: 'jimmy'}}]);
     this.dialogRef.close();
   }

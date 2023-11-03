@@ -129,6 +129,18 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     console.log('loggedIn Sme Details', this.loggedInSme)
     this.roles = this.loggedInSme[0]?.roles
+    if (this.roles.includes('ROLE_FILER')) {
+      this.searchMenus = [
+        { value: 'email', name: 'Email' },
+        { value: 'panNumber', name: 'PAN' }
+      ]
+    }else{
+      this.searchMenus = [
+        { value: 'mobileNumber', name: 'Mobile No' },
+        { value: 'email', name: 'Email' },
+        { value: 'panNumber', name: 'PAN' }
+      ]
+    }
     this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     this.getAgentList();
     this.getMasterStatusList();
