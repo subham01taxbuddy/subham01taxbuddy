@@ -582,60 +582,71 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     );
 
     if (filteredArray && filteredArray.length > 0) {
-      let filtered = this.taxPaid.onSalary.filter(
+      let filtered = this.taxPaid?.onSalary?.filter(
         (item) =>
           !filteredArray
-            .filter((element) => element.tdsType === 'TDS On Salary')
-            .map((element) => element.srNo)
-            .includes(parseInt(item.srNo))
+            ?.filter((element) => element?.tdsType === 'TDS On Salary')
+            ?.map((element) => element.srNo)
+            ?.includes(parseInt(item.srNo))
       );
       console.log(filtered);
-      this.taxPaid.onSalary = filtered;
+      if(filtered){
+        this.taxPaid.onSalary = filtered;
+      }
 
-      let filtered1 = this.taxPaid.otherThanSalary16A.filter(
+      let filtered1 = this.taxPaid?.otherThanSalary16A?.filter(
         (item) =>
           !filteredArray
-            .filter((element) => element.tdsType === 'TDS Other than Salary')
-            .map((element) => element.srNo)
-            .includes(parseInt(item.srNo))
+            ?.filter((element) => element?.tdsType === 'TDS Other than Salary')
+            ?.map((element) => element?.srNo)
+            ?.includes(parseInt(item?.srNo))
       );
       console.log(filtered1);
-      this.taxPaid.otherThanSalary16A = filtered1;
 
-      let filtered2 = this.taxPaid.otherThanSalary26QB.filter(
+      if(filtered1){
+        this.taxPaid.otherThanSalary16A = filtered1;
+      }
+
+      let filtered2 = this.taxPaid?.otherThanSalary26QB?.filter(
         (item) =>
           !filteredArray
-            .filter(
+            ?.filter(
               (element) =>
-                element.tdsType === 'TDS other than salary (panBased) 26QB'
+                element?.tdsType === 'TDS other than salary (panBased) 26QB'
             )
-            .map((element) => element.srNo)
-            .includes(parseInt(item.srNo))
+            ?.map((element) => element?.srNo)
+            ?.includes(parseInt(item?.srNo))
       );
       console.log(filtered2);
-      this.taxPaid.otherThanSalary26QB = filtered2;
+      if(filtered2){
+        this.taxPaid.otherThanSalary26QB = filtered2;
+      }
 
-      let filtered3 = this.taxPaid.otherThanTDSTCS.filter(
+      let filtered3 = this.taxPaid?.otherThanTDSTCS?.filter(
         (item) =>
           !filteredArray
-            .filter(
-              (element) => element.tdsType === 'Self assessment or Advance tax'
+            ?.filter(
+              (element) => element?.tdsType === 'Self assessment or Advance tax'
             )
-            .map((element) => element.srNo)
-            .includes(parseInt(item.srNo))
+            ?.map((element) => element?.srNo)
+            ?.includes(parseInt(item?.srNo))
       );
       console.log(filtered3);
-      this.taxPaid.otherThanTDSTCS = filtered3;
+      if(filtered3){
+        this.taxPaid.otherThanTDSTCS = filtered3;
+      }
 
-      let filtered4 = this.taxPaid.tcs.filter(
+      let filtered4 = this.taxPaid?.tcs?.filter(
         (item) =>
           !filteredArray
-            .filter((element) => element.tdsType === 'TCS')
-            .map((element) => element.srNo)
-            .includes(parseInt(item.srNo))
+            ?.filter((element) => element?.tdsType === 'TCS')
+            ?.map((element) => element?.srNo)
+            ?.includes(parseInt(item?.srNo))
       );
       console.log(filtered4);
-      this.taxPaid.tcs = filtered4;
+      if(filtered4){
+        this.taxPaid.tcs = filtered4;
+      }
     }
 
     console.log(this.taxPaid);
@@ -644,8 +655,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       AppConstants.ITR_JSON,
       JSON.stringify(this.Copy_ITR_JSON)
     );
-    this.assetList = this.assetList.filter((asset) => asset.hasEdit != true);
-    this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
+    this.assetList = this.assetList?.filter((asset) => asset?.hasEdit != true);
+    this.allTdsDetails?.api?.setRowData(this.tdsDetailCreateRowData());
   }
 
   saveAll() {

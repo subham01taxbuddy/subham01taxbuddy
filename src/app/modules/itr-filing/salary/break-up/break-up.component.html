@@ -10,7 +10,7 @@
     "
     class="title"
   >
-    Basic Salary
+    {{ data?.component }}
   </div>
 
   <div
@@ -32,7 +32,7 @@
         name="value[i]"
         class="input-field"
         [(ngModel)]="inputValues[i]"
-        (blur)="initializeInputValues()"
+        (change)="initializeInputValues($event, i)"
       />
     </mat-form-field>
   </div>
@@ -50,7 +50,7 @@
     <button
       class="saveButton"
       style="margin-left: 0; margin-top: 35px"
-      (click)="saveBreakup()"
+      (click)="saveBreakup(data.component)"
     >
       <span class="font-semibold">&nbsp;Save</span>
     </button>

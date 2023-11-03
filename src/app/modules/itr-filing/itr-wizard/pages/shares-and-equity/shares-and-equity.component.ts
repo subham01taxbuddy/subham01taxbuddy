@@ -192,8 +192,6 @@ export class SharesAndEquityComponent
 
         this.updateDeductionUI();
       });
-    } else {
-      this.addMoreData();
     }
   }
 
@@ -520,7 +518,6 @@ export class SharesAndEquityComponent
         }
         if (data.length > 0) {
           data.forEach((obj) => {
-            result.srn = obj.assetDetails.length;
             obj.assetDetails.push(result);
           });
         } else {

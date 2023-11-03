@@ -44,13 +44,13 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
         steps: './assets/files/Steps to download 5 Paisa.pdf',
       },
-      {
-        name: 'IIFL',
-        label: 'IIFL',
-        loading: false,
-        filesUploaded: [],
-        steps: '',
-      },
+      // {
+      //   name: 'IIFL',
+      //   label: 'IIFL',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: '',
+      // },
       {
         name: 'Angel',
         label: 'Angel One',
@@ -100,13 +100,13 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
         steps: './assets/files/Steps to download ICICI Statement.pdf',
       },
-      {
-        name: 'Jainam',
-        label: 'Jainam',
-        loading: false,
-        filesUploaded: [],
-        steps: '',
-      },
+      // {
+      //   name: 'Jainam',
+      //   label: 'Jainam',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: '',
+      // },
       {
         name: 'Taxbuddy',
         label: 'TaxBuddy',

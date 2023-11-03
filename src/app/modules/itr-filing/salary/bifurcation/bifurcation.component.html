@@ -12,7 +12,7 @@
             <div class="some">
               <div>Basic</div>
               <!-- Calculator button -->
-              <i
+              <i *ngIf="false"
                 #breakUp
                 class="fa-duotone fa-calculator fa-2xl"
                 style="
@@ -21,7 +21,7 @@
                   --fa-secondary-opacity: 0;
                 "
                 id="breakUp"
-                (click)="breakUpFn(i)"
+                (click)="breakUpFn(i, 'Basic Salary')"
               ></i>
             </div>
 
@@ -41,7 +41,7 @@
             <div class="some">
               <div>Dearness Allowance (DA)</div>
               <!-- Calculator button -->
-              <i
+              <i *ngIf="false"
                 #breakUp
                 class="fa-duotone fa-calculator fa-2xl"
                 style="
@@ -50,7 +50,7 @@
                   --fa-secondary-opacity: 0;
                 "
                 id="breakUp"
-                (click)="breakUpFn(i)"
+                (click)="breakUpFn(i, 'Dearness Allowance (DA)')"
               ></i>
             </div>
 
@@ -84,7 +84,7 @@
             <div class="some">
               <div>House Rent Allowance (HRA)</div>
               <!-- Calculator button -->
-              <i
+              <i *ngIf="false"
                 #breakUp
                 class="fa-duotone fa-calculator fa-2xl"
                 style="
@@ -93,7 +93,7 @@
                   --fa-secondary-opacity: 0;
                 "
                 id="breakUp"
-                (click)="breakUpFn(i)"
+                (click)="breakUpFn(i, 'House Rent Allowance (HRA)')"
               ></i>
             </div>
             <div class="col-sm-4">
@@ -313,7 +313,7 @@
       <!-- Save button  -->
       <div class="fixed-button">
         <button class="saveButton" (click)="saveBifurcations('salary')">
-          <span class="font-semibold">&nbsp;Saves</span>
+          <span class="font-semibold">&nbsp;Save</span>
         </button>
       </div>
     </div>

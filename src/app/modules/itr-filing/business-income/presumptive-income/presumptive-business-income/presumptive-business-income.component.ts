@@ -493,21 +493,10 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
           data.concat(presBusinessIncome);
       }
 
-      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-        (result: any) => {
-          this.ITR_JSON = result;
-          this.loading = false;
-          sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          this.utilsService.smoothScrollToTop();
-          this.presBusinessSaved.emit(true);
-        },
-        (error) => {
-          this.loading = false;
-          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          this.utilsService.smoothScrollToTop();
-          this.presBusinessSaved.emit(false);
-        }
-      );
+      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.Copy_ITR_JSON));
+      this.loading = false;
+      this.presBusinessSaved.emit(true);
+
     } else {
       const busIncomeArray = this.getBusIncomeArray;
 
@@ -545,43 +534,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         this.presBusinessSaved.emit(false);
       }
     }
-  }
-
-  onContinues() {
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
-    this.loading = true;
-
-    if (!this.Copy_ITR_JSON.business.presumptiveIncomes) {
-      this.Copy_ITR_JSON.business.presumptiveIncomes = this.businessArray;
-    } else {
-      let data = this.Copy_ITR_JSON.business.presumptiveIncomes.filter(
-        (item: any) => item.businessType != 'BUSINESS'
-      );
-      this.Copy_ITR_JSON.business.presumptiveIncomes = data.concat(
-        this.businessArray
-      );
-    }
-    console.log(this.Copy_ITR_JSON);
-
-    this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-      (result: any) => {
-        this.ITR_JSON = result;
-        this.loading = false;
-        sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-        this.utilsService.showSnackBar('Business income added successfully');
-        this.utilsService.smoothScrollToTop();
-      },
-      (error) => {
-        this.loading = false;
-        this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-        this.utilsService.showSnackBar(
-          'Failed to add business income, please try again.'
-        );
-        this.utilsService.smoothScrollToTop();
-      }
-    );
   }
 
   businessClicked(event, index) {
