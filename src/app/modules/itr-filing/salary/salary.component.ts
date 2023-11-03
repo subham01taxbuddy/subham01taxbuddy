@@ -167,7 +167,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       seqNum: 15,
       value: 'EIC',
       label:
-        'Exempt income received by judge covered the payment of salaries to supreme court/high court judges Act/Rule ',
+        'Exempt income received by judge covered the payment of salaries to supreme court/high court judges Act/Rule (EIC)',
       detailed: false,
     },
     {
@@ -218,7 +218,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   remunerationError: boolean = false;
   serviceOutIndError: boolean = false;
   prescPersonalExpError: boolean = false;
-
+  prescProfExpError: boolean = false;
+  eicProfExpError: boolean = false;
 
   constructor(
     private router: Router,
@@ -701,6 +702,18 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
     // Rendering services outside india 10(7)
     this.setting106107('10(7)');
+
+    // eic
+    {
+      if (
+        this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+        this.ITR_JSON.employerCategory !== 'GOVERNMENT'
+      ) {
+        this.eicProfExpError = true;
+      } else {
+        this.eicProfExpError = false;
+      }
+    }
   }
 
   setting106107(section) {
@@ -811,6 +824,51 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           ?.removeValidators(Validators.max(fixedLimit));
         leaveEncashControl?.get('allowValue')?.updateValueAndValidity();
         this.leaveEncashError = false;
+      }
+    }
+  }
+
+  prescribed14Expenses(section) {
+    const allowance = this.allowanceFormGroup?.controls[
+      'allowances'
+    ] as FormArray;
+
+    const FormValues = this.utilsService.getSalaryValues();
+
+    const personalExpControl = allowance?.controls?.find((element) => {
+      return element?.get('allowType')?.value === section;
+    });
+
+    const personalExp =
+      parseFloat(FormValues?.salary[0]?.CONVEYANCE) +
+      parseFloat(FormValues?.salary[0]?.OTHER_ALLOWANCE) +
+      parseFloat(FormValues?.salary[0]?.OTHER);
+
+    if (personalExp && personalExp !== 0) {
+      personalExpControl
+        ?.get('allowValue')
+        ?.setValidators(Validators.max(personalExp));
+      personalExpControl?.get('allowValue')?.updateValueAndValidity();
+    }
+
+    if (
+      personalExpControl?.get('allowValue')?.errors &&
+      personalExpControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+    ) {
+      if (section === '10(14)(ii)') {
+        this.prescPersonalExpError = true;
+      } else if (section === '10(14)(i)') {
+        this.prescProfExpError = true;
+      }
+    } else {
+      personalExpControl
+        ?.get('allowValue')
+        ?.removeValidators(Validators.max(personalExp));
+      personalExpControl?.get('allowValue')?.updateValueAndValidity();
+      if (section === '10(14)(ii)') {
+        this.prescPersonalExpError = false;
+      } else if (section === '10(14)(i)') {
+        this.prescProfExpError = false;
       }
     }
   }
@@ -1033,36 +1091,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         }
 
         // personal expenses 14(ii)
-        {
-          const personalExpControl = allowance?.controls?.find((element) => {
-            return element?.get('allowType')?.value === '10(14)(ii)';
-          });
+        this.prescribed14Expenses('10(14)(ii)');
 
-          const personalExp =
-            parseFloat(FormValues?.salary[0]?.CONVEYANCE) +
-            parseFloat(FormValues?.salary[0]?.OTHER_ALLOWANCE) +
-            parseFloat(FormValues?.salary[0]?.OTHER);
-
-          if (personalExp && personalExp !== 0) {
-            personalExpControl
-              ?.get('allowValue')
-              ?.setValidators(Validators.max(personalExp));
-            personalExpControl?.get('allowValue')?.updateValueAndValidity();
-          }
-
-          if (
-            personalExpControl?.get('allowValue')?.errors &&
-            personalExpControl?.get('allowValue')?.errors?.hasOwnProperty('max')
-          ) {
-            this.prescPersonalExpError = true;
-          } else {
-            personalExpControl
-              ?.get('allowValue')
-              ?.removeValidators(Validators.max(personalExp));
-            personalExpControl?.get('allowValue')?.updateValueAndValidity();
-            this.prescPersonalExpError = false;
-          }
-        }
+        // expenses 14(i)
+        this.prescribed14Expenses('10(14)(i)');
       } else {
         this.ifFormValuesNotPresent();
       }
