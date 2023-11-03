@@ -1,12 +1,14 @@
 import { filter } from 'rxjs/operators';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ConfirmModel } from '../assigned-subscription.component';
 import { ReportService } from 'src/app/services/report-service';
+import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
+import { Router } from '@angular/router';
 declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-add-subscription',
@@ -26,13 +28,19 @@ export class AddSubscriptionComponent implements OnInit {
   subscriptionPlan = new FormControl('', Validators.required);
   selectedPlanInfo: any;
   serviceTypeSelected: boolean;
-  roles:any;
-  isAllowed:boolean = true;
-  smeDetails:any
-  serviceEligibility:any;
-  showMessage ='';
-  constructor(public dialogRef: MatDialogRef<AddSubscriptionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private itrService: ItrMsService, private utilService: UtilsService, private toastMessage: ToastMessageService,private reportService:ReportService,) {
+  roles: any;
+  isAllowed: boolean = true;
+  smeDetails: any
+  serviceEligibility: any;
+  showMessage = '';
+  constructor(
+    public dialogRef: MatDialogRef<AddSubscriptionComponent>,
+    private dialog: MatDialog,
+    private router: Router,
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
+    private itrService: ItrMsService, private utilService: UtilsService,
+    private toastMessage: ToastMessageService, private reportService: ReportService,
+  ) {
     this.getAllPlanInfo();
   }
 
@@ -40,34 +48,38 @@ export class AddSubscriptionComponent implements OnInit {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     console.log('data -> ', this.data)
     this.roles = this.loggedInSme[0]?.roles;
-    if(this.roles.includes('ROLE_FILER')){
+    if (this.roles.includes('ROLE_FILER')) {
       this.isAllowed = false;
       this.getSmeDetail();
     }
     this.getUserInfoByMobileNum(this.data.mobileNo)
   }
 
-  getSmeDetail(){
+  getSmeDetail() {
     // https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000'
-    let loggedInSmeUserId=this.loggedInSme[0]?.userId;
-    let param =`/bo/sme-details-new/${loggedInSmeUserId}`
+    let loggedInSmeUserId = this.loggedInSme[0]?.userId;
+    let param = `/bo/sme-details-new/${loggedInSmeUserId}`
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
         this.smeDetails = response.data[0];
-        console.log('new sme',this.smeDetails);
+        console.log('new sme', this.smeDetails);
         this.serviceEligibility = this.smeDetails.serviceEligibility_ITR;
-        this.showMessage ='Disabled plans are not available in your eligibility please contact with your leader'
+        this.showMessage = 'Disabled plans are not available in your eligibility please contact with your leader'
       }
     })
   }
 
   isPlanEnabled(plan: any): boolean {
-    if (this.smeDetails.skillSetPlanIdList) {
-      const planId = plan.planId;
-      return this.smeDetails.skillSetPlanIdList.includes(planId);
+    if (this.roles.includes('ROLE_FILER')) {
+      if (this.smeDetails?.skillSetPlanIdList) {
+        const planId = plan.planId;
+        return this.smeDetails?.skillSetPlanIdList.includes(planId);
+      }
+      return false;
+    } else {
+      return true;
     }
-    return false;
   }
 
   getAllPlanInfo() {
@@ -104,10 +116,11 @@ export class AddSubscriptionComponent implements OnInit {
       console.log("All Sub", this.allSubscriptions)
       let smeSelectedPlan = this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan);
       let userSelectedPlan = this.allSubscriptions?.map((item: any) => item?.userSelectedPlan);
-      if (smeSelectedPlan) {
+      if (smeSelectedPlan.length && smeSelectedPlan[0] != null) {
         this.service = smeSelectedPlan[0]?.servicesType;
         this.serviceDetails = smeSelectedPlan[0]?.name;
-      } else if (userSelectedPlan) {
+      } else if (userSelectedPlan.length && userSelectedPlan[0] != null) {
+        debugger
         this.service = userSelectedPlan[0]?.servicesType;
         this.serviceDetails = userSelectedPlan[0]?.name;
       } else {
@@ -126,6 +139,20 @@ export class AddSubscriptionComponent implements OnInit {
   // }
 
   createSubscription() {
+    // debugger
+    // let dialogRef;
+    // dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    //   data: {
+    //     title: '',
+    //     message: 'This user has an ITR subscription in deletion process pending approval from leader. Creating another subscription for ITR service will RECOVER the earlier subscription and remove it from leaders  deletion approval process. Do you want to continue?',
+    //   },
+    // }); this.dialogRef.afterClosed().subscribe(result => {
+    //   if (result === 'YES') {
+
+    //   } else {
+    //     this.router.navigate(['subscription/assigned-subscription']);
+    //   }
+    // });
     this.loading = true
     if (this.utilService.isNonEmpty(this.selectedPlanInfo)) {
       console.log('selectedPlanInfo -> ', this.selectedPlanInfo);

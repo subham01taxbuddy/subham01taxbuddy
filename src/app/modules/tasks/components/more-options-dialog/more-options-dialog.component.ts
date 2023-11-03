@@ -205,7 +205,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   optService() {
     if (this.utilsService.isNonEmpty(this.selectedService)) {
       this.loading = true;
-      const param = `/agent-assignment-new?userId=${this.data.userId}&assessmentYear=2022-2023&serviceType=${this.selectedService}`;
+      const param = `/leader-assignment?userId=${this.data.userId}&serviceType=${this.selectedService}`;
       this.userMsService.getMethod(param).subscribe(
         (res: any) => {
           this.optedServices();
