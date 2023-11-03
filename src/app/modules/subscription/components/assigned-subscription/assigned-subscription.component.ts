@@ -301,7 +301,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           this.config.currentPage = currentPageNumber;
 
           // this.selectedUserName = response.data[0].userName;
-          // this.userId = response.data[0].userId;
+          this.userId = response.data.content[0].userId;
 
           // this.queryParam = `?userId=${this.userId}`;
           // this.utilsService.sendMessage(this.queryParam);
@@ -860,6 +860,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   createSub() {
+    debugger
     if (Object.keys(this.searchBy).length) {
       Object.keys(this.searchBy).forEach(key => {
         if (key === 'mobileNumber') {
