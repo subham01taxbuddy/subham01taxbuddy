@@ -213,6 +213,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   leaveEncashError: boolean = false;
   secProvisoCgovError: boolean = false;
   compensationOnVrsError: boolean = false;
+  firstProvisoError: boolean = false;
 
   constructor(
     private router: Router,
@@ -450,6 +451,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       if (
         this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
         this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
+        this.ITR_JSON.employerCategory !== 'PE' &&
+        this.ITR_JSON.employerCategory !== 'PESG' &&
         this.allowanceDropdown[i].value === 'FIRST_PROVISO'
       ) {
         data.push(
@@ -655,6 +658,20 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           ?.removeValidators(Validators.max(fixedLimit));
         secondProvisoControl?.get('allowValue')?.updateValueAndValidity();
         this.compensationOnVrsError = false;
+      }
+    }
+
+    // First proviso- compensation limit notified by CG in the official gazette 10(10Bi)
+    {
+      if (
+        this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
+        this.ITR_JSON.employerCategory === 'GOVERNMENT' ||
+        this.ITR_JSON.employerCategory === 'PE' ||
+        this.ITR_JSON.employerCategory === 'PESG'
+      ) {
+        this.firstProvisoError = true;
+      } else {
+        this.firstProvisoError = false;
       }
     }
   }
