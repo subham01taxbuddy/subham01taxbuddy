@@ -56,12 +56,10 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   ];
   sortBy: any = {};
   searchBy: any = {};
-  searchMenus = [
-    { value: 'email', name: 'Email' },
-    { value: 'mobileNumber', name: 'Mobile No' },
-  ];
+  searchMenus = [];
   clearUserFilter: number;
   searchAsPrinciple :boolean =false;
+  partnerType:any;
 
   constructor(
     private reviewService: ReviewService,
@@ -96,8 +94,19 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
-    this.agentId = userId;
+    this.partnerType =this.utilsService.getPartnerType();
+    if (this.roles.includes('ROLE_FILER')) {
+      this.searchMenus = [
+        { value: 'email', name: 'Email' },
+      ]
+    }else{
+      this.searchMenus = [
+        { value: 'email', name: 'Email' },
+        { value: 'mobileNumber', name: 'Mobile No' },
+      ]
+    }
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+      this.agentId = userId;
       this.search();
     } else {
       this.dataOnLoad = false;
@@ -156,17 +165,14 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         this.searchAsPrinciple = false;
       }
     }
-
     if (this.filerId) {
       this.agentId = this.filerId;
     } else if (this.leaderId) {
       this.agentId = this.leaderId;
-      //  this.search('agent');
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    //  this.search('agent');
   }
 
   coOwnerId: number;
@@ -199,6 +205,14 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       console.log('in clear cache')
     }
     let loggedInId = this.utilsService.getLoggedInUserID();
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
+
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =true;
+    }
     if(this.searchBy?.mobileNumber){
       this.searchParam.mobileNumber = this.searchBy?.mobileNumber
     }

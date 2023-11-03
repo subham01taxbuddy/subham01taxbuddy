@@ -56,11 +56,7 @@ export class PayoutsComponent implements OnInit,OnDestroy {
   usersGridOptions: GridOptions;
   config: any;
   userInfo: any = [];
-  searchMenus = [{
-    value: 'mobileNumber', name: 'Mobile Number'
-  }, {
-    value: 'invoiceNo', name: 'Invoice No'
-  }, ];
+  searchMenus = [];
   statusList = [
     {value: '', name: 'All'},
     {value: 'APPROVED', name: 'Approved'},
@@ -149,6 +145,16 @@ export class PayoutsComponent implements OnInit,OnDestroy {
     this.selectedStatus = this.statusList[2].value;
     this.selectedPayoutStatus = this.paymentStatusList[0].value;
     this.roles = this.utilsService.getUserRoles();
+    if (this.roles.includes('ROLE_FILER')) {
+      this.searchMenus = [
+        {value: 'invoiceNo', name: 'Invoice No'},
+      ]
+    }else{
+      this.searchMenus = [
+        {value: 'mobileNumber', name: 'Mobile Number'},
+        {value: 'invoiceNo', name: 'Invoice No'},
+      ]
+    }
     if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
       this.serviceCall('');
     } else{

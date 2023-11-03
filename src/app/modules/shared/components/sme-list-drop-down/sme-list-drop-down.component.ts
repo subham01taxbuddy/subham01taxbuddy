@@ -181,7 +181,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
         const name = typeof value === 'string' ? value : value?.name;
         return name
           ? this._filter(name as string, this.childOptions)
-          : this.childOptions.slice();
+          : this.childOptions?.slice();
       })
     );
   }

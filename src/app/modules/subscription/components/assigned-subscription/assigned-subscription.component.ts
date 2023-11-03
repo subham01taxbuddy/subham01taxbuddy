@@ -73,11 +73,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     { value: 'promoCode', name: 'Promo code' },
   ];
   searchBy: any = {};
-  searchMenus = [
-    { value: 'name', name: 'User Name' },
-    { value: 'email', name: 'Email' },
-    { value: 'mobileNumber', name: 'Mobile No' },
-  ];
+  searchMenus = [];
   services = [
     { key: 'ITR', value: 'ITR', isHide: false },
     { key: 'GST', value: 'GST', isHide: false },
@@ -89,6 +85,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   ogStatusList: any = [];
   searchAsPrinciple :boolean =false;
   partnerType:any;
+  selectedSearchUserId:any;
 
   constructor(
     private fb: FormBuilder,
@@ -125,17 +122,28 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   ngOnInit() {
     let loggedInId = this.utilsService.getLoggedInUserID();
     this.agentId = loggedInId;
-
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     console.log('loggedIn Sme Details', this.loggedInSme)
     this.roles = this.loggedInSme[0]?.roles
     this.partnerType = this.loggedInSme[0]?.partnerType
     console.log('roles', this.roles)
+    if (this.roles.includes('ROLE_FILER')) {
+      this.searchMenus = [
+        { value: 'name', name: 'User Name' },
+        { value: 'email', name: 'Email' },
+      ]
+    }else{
+      this.searchMenus = [
+        { value: 'name', name: 'User Name' },
+        { value: 'email', name: 'Email' },
+        { value: 'mobileNumber', name: 'Mobile No' },
+      ]
+    }
     this.activatedRoute.queryParams.subscribe(params => {
       console.log("99999999999999999:", params)
-      if (this.utilsService.isNonEmpty(params['userId']) && params['userMobNo'] !== '-') {
+      if (this.utilsService.isNonEmpty(params['userId']) || params['userMobNo'] !== '-') {
         this.userId = params['userId'];
-        this.selectedUserName = this.userId
+        this.selectedSearchUserId = this.userId
         this.searchVal = params['userMobNo'];
         this.queryParam = `?userId=${this.userId}`;
         this.advanceSearch();
@@ -206,7 +214,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
 
   allSubscriptions = [];
-  getAssignedSubscription(pageNo?, mobileNo?, fromPageChange?) {
+  getAssignedSubscription(pageNo?,mobileNo?, userId?,fromPageChange?) {
     // 'https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20'
     if (!fromPageChange) {
       this.cacheManager.clearCache();
@@ -222,8 +230,14 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       this.searchAsPrinciple =true;
     }
 
+    let userIdFilter ='';
+    if(userId){
+      this.isAllowed =  true
+      userIdFilter = `&userId=${userId}`;
+    }
+
     let mobileFilter = '';
-    if(this.searchBy?.mobileNumber || mobileNo ){
+    if(this.searchBy?.mobileNumber || mobileNo){
       this.isAllowed =  true
       mobileFilter = '&mobileNumber=' +(this.searchBy?.mobileNumber || mobileNo);
     }
@@ -251,7 +265,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     let data = this.utilsService.createUrlParams(this.searchParam);
     // let pagination = `?page=${pageNo}&pageSize=${this.config.itemsPerPage}`;
 
-    var param = `/bo/subscription-dashboard-new?${data}${userFilter}${mobileFilter}${emailFilter}${nameFilter}`;
+    var param = `/bo/subscription-dashboard-new?${data}${userFilter}${mobileFilter}${emailFilter}${nameFilter}${userIdFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
@@ -372,11 +386,17 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       }
     }
 
+    if(this.roles.includes('ROLE_FILER') && this.utilsService.isNonEmpty(this.selectedSearchUserId) ){
+      this.search('','',this.selectedSearchUserId)
+    }
+
   }
 
-  search(pageNo?, mobileNo?) {
+  search(pageNo?,mobileNo?, userId?) {
     if(mobileNo){
       this.getAssignedSubscription(pageNo,mobileNo);
+    }else if(userId){
+      this.getAssignedSubscription(pageNo,'',userId);
     }else{
       this.getAssignedSubscription(pageNo);
     }
@@ -849,13 +869,13 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     }else{
       this.mobileNumber = this.searchVal
     }
-    const loggedInSmeUserId = this?.loggedInSme[0]?.userId
-    this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, this.mobileNumber).subscribe((res: any) => {
-      console.log(res);
-      if (res.records) {
-        this.userId = res.records[0].userId;
-      }
-    });
+    // const loggedInSmeUserId = this?.loggedInSme[0]?.userId
+    // this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, this.mobileNumber).subscribe((res: any) => {
+    //   console.log(res);
+    //   if (res.records) {
+    //     this.userId = res.records[0].userId;
+    //   }
+    // });
     if(this.userId){
       let disposable = this.dialog.open(AddSubscriptionComponent, {
         width: '80%',
@@ -925,11 +945,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     } else {
       this.config.currentPage = event;
       // this.selectedPageNo = event - 1;
-      if (this.coOwnerToggle.value == true) {
-        this.getAssignedSubscription(event - 1, true, 'fromPageChange');
-      } else {
-        this.getAssignedSubscription(event - 1, '', 'fromPageChange');
-      }
+      this.getAssignedSubscription(event - 1, '','', 'fromPageChange');
     }
   }
 

@@ -12,11 +12,9 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-
             <div class="col-sm-12 bckClr" >
-              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
-               (sendPrincipleIndividual)="fromPrinciple($event,true)"
-                (sendFiler)="fromFiler($event)"></app-sme-list-drop-down>
+              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
             <div class="col-sm-3 spsTp">
               <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>

@@ -62,8 +62,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
     panNumber: null,
     selectedStatusId: 'ALL',
     selectedFyYear: null,
-    filerUserId: '',
-    leaderUserId:'',
   };
 
   allFilerList: any;
@@ -131,6 +129,18 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     console.log('loggedIn Sme Details', this.loggedInSme)
     this.roles = this.loggedInSme[0]?.roles
+    if (this.roles.includes('ROLE_FILER')) {
+      this.searchMenus = [
+        { value: 'email', name: 'Email' },
+        { value: 'panNumber', name: 'PAN' }
+      ]
+    }else{
+      this.searchMenus = [
+        { value: 'mobileNumber', name: 'Mobile No' },
+        { value: 'email', name: 'Email' },
+        { value: 'panNumber', name: 'PAN' }
+      ]
+    }
     this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     this.getAgentList();
     this.getMasterStatusList();
@@ -187,31 +197,38 @@ export class FilingsComponent implements OnInit, OnDestroy {
       ]);
   }
 
-  fromLeader(event) {
-    this.searchParams.leaderUserId = event ? event.userId : null;
-    // this.myItrsList(0, this.selectedFilingTeamMemberId);
-  }
-  fromPrinciple(event,isPrinciple){
-    if(isPrinciple){
-      this.searchParams.leaderUserId ='';
-      if (event.partnerType === 'PRINCIPAL') {
-        this.searchParams.filerUserId = event ? event.userId : null;
-        this.searchAsPrinciple = true;
-      } else {
-        this.searchParams.filerUserId = event ? event.userId : null;
-        this.searchAsPrinciple = false;
+  agentId:any;
+  filerUserId: any;
+  leaderUserId:any;
+  fromSme(event, isOwner,fromPrinciple?) {
+    console.log('sme-drop-down', event, isOwner);
+    if (isOwner) {
+      this.leaderUserId = event ? event.userId : null;
+    } else {
+      if(fromPrinciple){
+        if (event?.partnerType === 'PRINCIPAL') {
+          this.filerUserId = event ? event.userId : null;
+          this.searchAsPrinciple = true;
+        } else {
+          this.filerUserId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }else{
+        if(event){
+          this.filerUserId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
       }
     }
-    console.log('filer user id ',this.searchParams.filerUserId)
-  }
-  fromFiler(event) {
-    if(event){
-      this.searchAsPrinciple = false;
-      this.searchParams.filerUserId = event ? event.userId : null;
-    }else{
-      return;
+    if (this.filerUserId) {
+      this.agentId = this.filerUserId;
+    } else if (this.leaderUserId) {
+      this.agentId = this.leaderUserId;
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
     }
-    // this.myItrsList(0, this.selectedFilingTeamMemberId);
+    // this.getInvoice();
   }
 
   search() {
@@ -248,6 +265,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
     this.loading = true;
     return new Promise((resolve, reject) => {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      if(this.roles.includes('ROLE_LEADER')){
+        this.leaderUserId = loggedInId;
+      }
 
       if(this.searchBy?.mobileNumber){
         this.searchParams.mobileNumber = this.searchBy?.mobileNumber
@@ -265,16 +286,16 @@ export class FilingsComponent implements OnInit, OnDestroy {
         param = param + sortByJson;
       }
 
-      if (this.utilsService.isNonEmpty(this.searchParams.filerUserId) && this.searchAsPrinciple === true ) {
-        param = param + `&searchAsPrincipal=true&filerUserId=${this.searchParams.filerUserId}`;
-      }
+      let userFilter = '';
 
-      if (this.utilsService.isNonEmpty(this.searchParams.filerUserId) && this.searchAsPrinciple === false ) {
-        param = param + `&filerUserId=${this.searchParams.filerUserId}`;
+      if ((this.leaderUserId && !this.filerUserId)) {
+        userFilter += `&leaderUserId=${this.leaderUserId}`;
       }
-
-      if (this.utilsService.isNonEmpty(this.searchParams.leaderUserId)) {
-        param = param + `&leaderUserId=${this.searchParams.leaderUserId}`;
+      if (this.filerUserId && this.searchAsPrinciple === true) {
+        userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerUserId}`;
+      }
+      if (this.filerUserId && this.searchAsPrinciple === false) {
+        userFilter += `&filerUserId=${this.filerUserId}`;
       }
 
       if (this.utilsService.isNonEmpty(this.searchParams.selectedFyYear)) {
@@ -296,6 +317,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       }
 
       console.log('My Params:', param);
+      param= param + `${userFilter}`
       this.reportService.getMethod(param).subscribe(
         (res: any) => {
           if (res.success == false) {
