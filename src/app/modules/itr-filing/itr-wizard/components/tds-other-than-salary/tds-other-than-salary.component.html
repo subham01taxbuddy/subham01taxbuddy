@@ -6,10 +6,6 @@
   <div class="head-title mb-4" style="font-size: 18px">
     <strong> TDS other than salary </strong>
   </div>
-  <div class="head-title mb-4">
-    This is TDS on salary deducted by your employer. Enter the amount from form
-    16 or 26AS
-  </div>
 </div>
 <form [formGroup]="salaryForm">
   <div formArrayName="salaryArray">
@@ -21,13 +17,7 @@
       "
       [formGroupName]="fieldGlobalIndex(i)"
     >
-      <!-- <mat-checkbox
-        color="primary"
-        name="hasEdit[i]"
-        formControlName="hasEdit"
-        class="mv"
-      >
-      </mat-checkbox> -->
+
       <div class="row">
         <div class="col-sm-4" *ngIf="showHeadOfIncome === 'TDTS'">
           <mat-label>TAN of Deductor*</mat-label>
@@ -39,7 +29,7 @@
               formControlName="deductorTAN"
               matInput
               currencyMask
-              placeholder="XXXXNNNNNX"
+              placeholder="Tan of deductor"
               name="deductorTAN[i]"
               class="input-field"
               maxlength="10"
@@ -50,9 +40,6 @@
               upperCase
             />
 
-            <!-- <mat-error *ngIf="donation.get('deductorTAN').hasError('pattern')">
-              Enter valid TAN (e.g XXXX12345X)</mat-error
-            > -->
           </mat-form-field>
         </div>
         <div class="col-sm-4" *ngIf="showHeadOfIncome === 'TDTSP'">
@@ -65,7 +52,7 @@
               formControlName="deductorPAN"
               matInput
               currencyMask
-              placeholder="XXXXXNNNNX"
+              placeholder="Pan of deductor"
               name="deductorPAN[i]"
               class="input-field"
               maxlength="10"
@@ -76,9 +63,6 @@
               upperCase
             />
 
-            <!-- <mat-error *ngIf="donation.get('deductorPAN').hasError('pattern')">
-              Enter valid PAN (e.g XXXXX1234X)</mat-error
-            > -->
           </mat-form-field>
         </div>
         <div class="col-sm-4" *ngIf="showHeadOfIncome === 'TDTS'">
@@ -88,7 +72,7 @@
               (selectionChange)="changed()"
               matTooltipClass="tab-tooltip"
               matTooltipPosition="above"
-              placeholder=""
+              placeholder="Head of Income"
               formControlName="headOfIncome"
               name="headOfIncome[i]"
               required
@@ -112,7 +96,7 @@
               (selectionChange)="changed()"
               matTooltipClass="tab-tooltip"
               matTooltipPosition="above"
-              placeholder=""
+              placeholder="Head of Income"
               formControlName="headOfIncome"
               name="headOfIncome[i]"
               required
@@ -143,9 +127,7 @@
               type="text"
               trim
             />
-            <!-- <mat-error *ngIf="donation.get('deductorName').hasError('pattern')">
-              Name should be character only</mat-error
-            > -->
+
           </mat-form-field>
         </div>
 
@@ -155,18 +137,14 @@
             <input
               formControlName="totalAmountCredited"
               matInput
-              placeholder="Amount Other Than Cash"
+              placeholder="Total amount credited"
               name="totalAmountCredited[i]"
               required
               class="input-field"
               maxlength="14"
               digitsOnly
             />
-            <!-- <mat-error
-              *ngIf="donation.get('totalAmountCredited').hasError('pattern')"
-            >
-              Enter positive amount without decimal.</mat-error
-            > -->
+
           </mat-form-field>
         </div>
 
@@ -176,53 +154,20 @@
             <input
               formControlName="totalTdsDeposited"
               matInput
-              placeholder="Amount Other Than Cash"
+              placeholder="Total tax deposited"
               name="totalTdsDeposited[i]"
               required
               class="input-field"
               maxlength="14"
               digitsOnly
             />
-            <!-- <mat-error
-              *ngIf="donation.get('totalTdsDeposited').hasError('pattern')"
-            >
-              Enter positive amount without decimal.</mat-error
-            > -->
+
           </mat-form-field>
         </div>
       </div>
 
-      <!-- <div class="edit-head">
-        <button
-          type="button"
-          class="edit-donation"
-          (click)="editSalaryForm(fieldGlobalIndex(i))"
-        >
-          <mat-icon> edit_square </mat-icon>Edit
-        </button>
-      </div> -->
     </div>
     <div class="row spsTp bdrTp">
-      <!-- <div class="col-sm-3">
-        <button
-          type="submit"
-          class="tbd-btn-secondary delBtn"
-          (click)="deleteSalaryArray()"
-        >
-          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-        </button>
-      </div> -->
-      <!-- <div class="col-sm-6">
-        <table>
-          <tr
-            *ngFor="let item of getSalaryArray.controls | paginate : config"
-          ></tr>
-        </table>
-        <pagination-controls
-          id="{{ showHeadOfIncome }}"
-          (pageChange)="pageChanged($event)"
-        ></pagination-controls>
-      </div> -->
       <div class="col-sm-3">
         <button class="tbd-btn save-btn mvRth" (click)="save()">Save</button>
       </div>

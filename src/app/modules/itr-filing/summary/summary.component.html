@@ -671,9 +671,14 @@
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
                                   finalCalculations?.businessIncome
-                                    ?.businessIncomeTotal
+                                    ?.businessIncomeTotal ||
+                                    finalCalculations?.businessIncome
+                                      ?.businessIncomeTotal === 0
                                     ? finalCalculations?.businessIncome
-                                        ?.businessIncomeTotal
+                                        ?.businessIncomeTotal +
+                                        finalCalculations?.businessIncome
+                                          ?.businessIncomeDetails
+                                          ?.totalCryptoIncome
                                     : 0
                                 )
                               }}</label
@@ -701,56 +706,16 @@
                           <ng-container
                             *ngIf="
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD?.bank &&
+                                ?.businessIncomeDetails?.business44AD &&
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD?.bank
-                                .length > 0
+                                ?.businessIncomeDetails?.business44AD?.length > 0
                             "
                           >
                             <tr
                               *ngFor="
                                 let business of finalCalculations
                                   ?.businessIncome?.businessIncomeDetails
-                                  ?.business44AD?.bank
-                              "
-                            >
-                              <ng-container
-                                *ngIf="
-                                  business.grossTurnover > 0 &&
-                                  business.TaxableIncome > 0
-                                "
-                              >
-                                <td>
-                                  {{ business?.businessSection }}
-                                </td>
-                                <td>
-                                  {{ business?.natureOfBusinessCode }}
-                                </td>
-                                <td>{{ business?.tradeName }}</td>
-                                <td>Rs {{ business?.grossTurnover }}</td>
-                                <td>
-                                  Rs
-                                  {{ business?.TaxableIncome }}
-                                </td>
-                              </ng-container>
-                            </tr>
-                          </ng-container>
-
-                          <!-- businessIncome - cash  -->
-                          <ng-container
-                            *ngIf="
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD?.cash &&
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD?.cash
-                                .length > 0
-                            "
-                          >
-                            <tr
-                              *ngFor="
-                                let business of finalCalculations
-                                  ?.businessIncome?.businessIncomeDetails
-                                  ?.business44AD?.cash
+                                  ?.business44AD
                               "
                             >
                               <ng-container
@@ -781,7 +746,7 @@
                               finalCalculations?.businessIncome
                                 ?.businessIncomeDetails?.business44ADA &&
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44ADA.length >
+                                ?.businessIncomeDetails?.business44ADA?.length >
                                 0
                             "
                           >
@@ -921,9 +886,178 @@
                               </td>
                             </tr>
                           </ng-container>
+
+                          <ng-container
+                            *ngIf="
+                            finalSummary?.assessment
+                            ?.summaryIncome?.summaryBusinessIncome
+                            .totalIncomeFromFirm !== 0
+                            "
+                          >
+                            <tr>
+                              <td>
+                                Income From Firm
+                              </td>
+                              <td>
+                                
+                              </td>
+                              <td>
+                                
+                              </td>
+                              <td>
+                                
+                                
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(
+                                    finalSummary?.assessment
+                                    ?.summaryIncome?.summaryBusinessIncome
+                                    .totalIncomeFromFirm
+                                  )
+                                }}
+                              </td>
+                            </tr>
+                          </ng-container>
                         </tbody>
                       </table>
                     </div>
+
+                    <div
+                    class="bxHed"
+                    *ngIf="
+                            finalSummary?.assessment
+                            ?.summaryIncome?.summaryBusinessIncome
+                            .totalIncomeFromFirm !== 0
+                            "
+                  >
+                  Partner's Remuneration
+                    <span style="float: right">{{
+                      finalSummary?.assessment
+                            ?.summaryIncome?.summaryBusinessIncome
+                            .totalIncomeFromFirm
+                    }}</span>
+                  </div>
+
+                    <div  *ngIf="
+                    finalSummary?.assessment
+                    ?.summaryIncome?.summaryBusinessIncome
+                    .totalIncomeFromFirm !== 0
+                    ">
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Salary</th>
+                            <th>Bonus</th>
+                            <th>Commission</th>
+                            <th>Interest</th>
+                            <th>Others</th>
+                          </tr>
+                          <ng-container
+                            *ngIf="
+                            finalSummary?.assessment
+                            ?.summaryIncome?.summaryBusinessIncome
+                            .totalIncomeFromFirm !== 0
+                            "
+                          >
+                            <tr>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.salary)}}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.bonus)}}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.commission)}}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.interest)}}
+                              </td>
+                              <td>
+                                Rs
+                                {{
+                                  utilsService.currencyFormatter(finalCalculations?.businessIncome
+                                    ?.businessIncomeDetails?.incomeFromFirm.others)}}
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- crypto gains  -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.businessIncome?.businessIncomeDetails
+                          ?.crypto?.cryptoDetails?.length > 0
+                      "
+                    >
+                      Income from crypto
+                      <span style="float: right">{{
+                        finalCalculations?.businessIncome?.businessIncomeDetails
+                          ?.totalCryptoIncome
+                      }}</span>
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.businessIncome?.businessIncomeDetails
+                          ?.crypto?.cryptoDetails?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Sr. No</th>
+                          <th style="font-weight: bold">Head of income</th>
+                          <th style="font-weight: bold">Buy Value</th>
+                          <th style="font-weight: bold">Sale Value</th>
+                          <th style="font-weight: bold">Income</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let slabRate of finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.crypto?.cryptoDetails;
+                            let i = index
+                          "
+                        >
+                          <td>{{ slabRate?.srNo }}</td>
+                          <td>
+                            {{ slabRate?.headOfIncome }}
+                          </td>
+                          <td>
+                            Rs
+                            {{ slabRate?.buyValue }}
+                          </td>
+                          <td>
+                            Rs
+                            {{ slabRate?.SaleValue }}
+                          </td>
+                          <td>
+                            Rs
+                            {{ slabRate?.income }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </mat-expansion-panel>
 
                   <!-- ************************** Income from Capital Gain ****************************** -->
@@ -1297,7 +1431,9 @@
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
                                   finalCalculations?.capitalGain
-                                    ?.totalCapitalGain
+                                    ?.totalCapitalGain -
+                                    finalCalculations?.businessIncome
+                                      ?.businessIncomeDetails?.totalCryptoIncome
                                 )
                               }}</label
                             >
@@ -1311,7 +1447,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermAppSlabRate.length > 0
+                          ?.ShortTermAppSlabRate?.length > 0
                       "
                     >
                       Short term capital gain @ slab rate
@@ -1324,7 +1460,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermAppSlabRate.length > 0
+                          ?.ShortTermAppSlabRate?.length > 0
                       "
                     >
                       <thead>
@@ -1381,7 +1517,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm15Per.length > 0
+                          ?.ShortTerm15Per?.length > 0
                       "
                     >
                       Short term capital gain @ 15% rate
@@ -1394,7 +1530,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm15Per.length > 0
+                          ?.ShortTerm15Per?.length > 0
                       "
                     >
                       <thead>
@@ -1451,7 +1587,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm30Per.length > 0 &&
+                          ?.ShortTerm30Per?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1468,7 +1604,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm30Per.length > 0 &&
+                          ?.ShortTerm30Per?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1529,7 +1665,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermSplRateDTAA.length > 0 &&
+                          ?.ShortTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1546,7 +1682,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermSplRateDTAA.length > 0 &&
+                          ?.ShortTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1747,7 +1883,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.longTerm
-                          ?.LongTermSplRateDTAA.length > 0 &&
+                          ?.LongTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1764,7 +1900,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.longTerm
-                          ?.LongTermSplRateDTAA.length > 0 &&
+                          ?.LongTermSplRateDTAA?.length > 0 &&
                         this.utilsService.isNonEmpty(
                           this.ITR_JSON.itrSummaryJson
                         ) &&
@@ -1819,100 +1955,59 @@
                         </tr>
                       </tbody>
                     </table>
-                  </mat-expansion-panel>
 
-                  <!-- ************************** Income from Crypto ****************************** -->
-                  <mat-expansion-panel
-                    class="color-panel accordion-border"
-                    #crypto
-                  >
-                    <mat-expansion-panel-header class="newclass">
-                      <div
-                        class="font80"
-                        style="width: 100%"
-                        cellpadding="0"
-                        cellspacing="0"
-                      >
-                        <div class="nav nav-stacked">
-                          <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
-                            5. Income from Crypto
-                          </div>
-                          <div class="col-lg-4 col-md-4 col-sm-4">
-                            <div class="AdjAr1">
-                              <mat-icon *ngIf="!crypto.expanded"
-                                >keyboard_arrow_down
-                              </mat-icon>
-                              <mat-icon *ngIf="crypto.expanded"
-                                >keyboard_arrow_up</mat-icon
-                              >
-                            </div>
-                            <label class="rtNumb1">
-                              <i class="material-icons icRup">&#8377;</i
-                              >&nbsp;{{
-                                utilsService.currencyFormatter(
-                                  finalCalculations?.Crypto?.totalCryptoIncome
-                                    ? finalCalculations?.Crypto
-                                        ?.totalCryptoIncome
-                                    : 0
-                                )
-                              }}</label
-                            >
-                          </div>
-                        </div>
-                      </div>
-                    </mat-expansion-panel-header>
-
-                    <!-- crypto details  -->
+                    <!-- crypto gains  -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.crypto?.cryptoDetails
+                          ?.length > 0
+                      "
+                    >
+                      Income from crypto
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.totalCryptoIncome
+                      }}</span>
+                    </div>
                     <table
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
-                        finalCalculations?.Crypto?.cryptoDetails?.length > 0
+                        finalCalculations?.capitalGain?.crypto?.cryptoDetails
+                          ?.length > 0
                       "
                     >
                       <thead>
                         <tr>
                           <th style="font-weight: bold">Sr. No</th>
-                          <th style="font-weight: bold">Buy Date</th>
-                          <th style="font-weight: bold">Sale Date</th>
-                          <th style="font-weight: bold">Head of Income</th>
+                          <th style="font-weight: bold">Head of income</th>
                           <th style="font-weight: bold">Buy Value</th>
                           <th style="font-weight: bold">Sale Value</th>
-                          <th style="font-weight: bold">Capital Gain</th>
+                          <th style="font-weight: bold">Income</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr
                           *ngFor="
-                            let crypto of finalCalculations?.Crypto
-                              ?.cryptoDetails;
+                            let slabRate of finalCalculations?.capitalGain
+                              ?.crypto?.cryptoDetails;
                             let i = index
                           "
                         >
-                          <td>{{ crypto?.srNo }}</td>
+                          <td>{{ slabRate?.srNo }}</td>
                           <td>
-                            {{ crypto?.buyDate | date : "dd MMM yyyy" }}
-                          </td>
-                          <td>
-                            {{ crypto?.sellDate | date : "dd MMM yyyy" }}
-                          </td>
-                          <td>
-                            {{ crypto?.headOfIncome }}
+                            {{ slabRate?.headOfIncome }}
                           </td>
                           <td>
                             Rs
-                            {{
-                              utilsService.currencyFormatter(crypto?.buyValue)
-                            }}
+                            {{ slabRate?.buyValue }}
                           </td>
                           <td>
                             Rs
-                            {{
-                              utilsService.currencyFormatter(crypto?.SaleValue)
-                            }}
+                            {{ slabRate?.SaleValue }}
                           </td>
                           <td>
                             Rs
-                            {{ utilsService.currencyFormatter(crypto?.income) }}
+                            {{ slabRate?.income }}
                           </td>
                         </tr>
                       </tbody>
@@ -2036,19 +2131,38 @@
                               }}
                             </td>
                           </tr>
+
                           <tr
                             *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
-                                ?.anyOtherInterest
+                                ?.Qqb80
                             "
                           >
-                            <td>Any Other Interest Income</td>
+                            <td>Royalty for Books/Author/Publishers (80QQB)</td>
                             <td>
                               Rs
                               {{
                                 utilsService.currencyFormatter(
                                   finalCalculations?.otherIncome?.otherIncomes
-                                    ?.anyOtherInterest
+                                    ?.Qqb80
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.Rrb80
+                            "
+                          >
+                            <td>Royalty Against Patent (80RRB)</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.Rrb80
                                 )
                               }}
                             </td>
@@ -2100,6 +2214,23 @@
                               }}
                             </td>
                           </tr>
+                          <tr
+                          *ngIf="
+                            finalCalculations?.otherIncome?.otherIncomes
+                              ?.anyOtherInterest
+                          "
+                        >
+                          <td>Any Other Income</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.otherIncome?.otherIncomes
+                                  ?.anyOtherInterest
+                              )
+                            }}
+                          </td>
+                        </tr>
                           <tr>
                             <th>Total</th>
                             <th>
@@ -2196,61 +2327,493 @@
                     >
                       <tbody>
                         <tr>
-                          <td><b>Loss Of Current Year </b></td>
-                          <td><b>Amount Adjusted</b></td>
-                        </tr>
-                        <tr
-                          *ngIf="
-                            finalCalculations?.currentYearLosses
-                              ?.currentYearLossesSetOff[0]?.houseProperty !== 0
-                          "
-                        >
-                          <td>House Property</td>
+                          <td><b>Head/Source of Income</b></td>
+                          <td><b>Income of current year</b></td>
                           <td>
-                            Rs
+                            <b
+                              >House Property loss of the current year set
+                              off</b
+                            >
+                          </td>
+                          <td>
+                            <b>Business loss of the current year set off</b>
+                          </td>
+                          <td>
+                            <b>Current years Income remaining after set off</b>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td>Loss to be set off</td>
+                          <td></td>
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i>&nbsp;
                             {{
                               utilsService.currencyFormatter(
-                                finalCalculations?.currentYearLosses
-                                  ?.currentYearLossesSetOff[0]?.houseProperty
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff
+                                  ?.totalCurrentYearHpLoss
+                              )
+                            }}
+                          </td>
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i>&nbsp;
+                            {{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff
+                                  ?.totalCurrentYearBusinessLoss
+                              )
+                            }}
+                          </td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td><b>Salaries</b></td>
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.salaryCYLA
+                                  .incomeCYLA.currentYearIncome
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.salaryCYLA
+                                  .incomeCYLA.hpLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i>&nbsp;
+                            0
+                          </td>
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.salaryCYLA
+                                  .incomeCYLA.currentYearIncomeAfterSetoff
                               )
                             }}
                           </td>
                         </tr>
-                        <tr
-                          *ngIf="
-                            finalCalculations?.currentYearLosses
-                              ?.currentYearLossesSetOff[0]?.businessSetOff !== 0
-                          "
-                        >
-                          <td>Business</td>
+                        <tr>
+                          <td><b>House Property</b></td>
                           <td>
-                            Rs
-                            {{
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
                               utilsService.currencyFormatter(
-                                finalCalculations?.currentYearLosses
-                                  ?.currentYearLossesSetOff[0]?.businessSetOff
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.hpCYLA.incomeCYLA
+                                  .currentYearIncome
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            -
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.hpCYLA.incomeCYLA
+                                  .businessLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.hpCYLA.incomeCYLA
+                                  .currentYearIncomeAfterSetoff
                               )
                             }}
                           </td>
                         </tr>
-                        <tr
-                          *ngIf="
-                            finalCalculations?.currentYearLosses
-                              ?.currentYearLossesSetOff[0]
-                              ?.otherThanHpBusiness !== 0
-                          "
-                        >
-                          <td>Other's</td>
+                        <tr>
+                          <td><b>Business Income</b></td>
                           <td>
-                            Rs
-                            {{
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
                               utilsService.currencyFormatter(
-                                finalCalculations?.currentYearLosses
-                                  ?.currentYearLossesSetOff[0]
-                                  ?.otherThanHpBusiness
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff
+                                  ?.businessProfessionCYLA.incomeCYLA
+                                  .currentYearIncome
                               )
                             }}
                           </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff
+                                  ?.businessProfessionCYLA.incomeCYLA
+                                  .hpLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                           -
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff
+                                  ?.businessProfessionCYLA.incomeCYLA
+                                  .currentYearIncomeAfterSetoff
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><b>Speculative Business Income</b></td>
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff
+                                  ?.speculativeIncomeCYLA.incomeCYLA
+                                  .currentYearIncome
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff
+                                  ?.speculativeIncomeCYLA.incomeCYLA
+                                  .hpLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            -
+                          </td>
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff
+                                  ?.speculativeIncomeCYLA.incomeCYLA
+                                  .currentYearIncomeAfterSetoff
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><b>Other Income</b></td>
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.otherSourceCYLA
+                                  .incomeCYLA.currentYearIncome
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.otherSourceCYLA
+                                  .incomeCYLA.hpLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.otherSourceCYLA
+                                  .incomeCYLA.businessLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.otherSourceCYLA
+                                  .incomeCYLA.currentYearIncomeAfterSetoff
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <b
+                              >Short-term capital gain taxable at applicable
+                              rates</b
+                            >
+                          </td>
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.stcgAppRateCYLA
+                                  .incomeCYLA.currentYearIncome
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.stcgAppRateCYLA
+                                  .incomeCYLA.hpLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.stcgAppRateCYLA
+                                  .incomeCYLA.businessLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.stcgAppRateCYLA
+                                  .incomeCYLA.currentYearIncomeAfterSetoff
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><b>Long term capital gain taxable @ 20%</b></td>
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.ltcg20PerCYLA
+                                  .incomeCYLA.currentYearIncome
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.ltcg20PerCYLA
+                                  .incomeCYLA.hpLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.ltcg20PerCYLA
+                                  .incomeCYLA.businessLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.ltcg20PerCYLA
+                                  .incomeCYLA.currentYearIncomeAfterSetoff
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><b>Short-term capital gain taxable @ 15%</b></td>
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.stcg15PerCYLA
+                                  .incomeCYLA.currentYearIncome
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.stcg15PerCYLA
+                                  .incomeCYLA.hpLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.stcg15PerCYLA
+                                  .incomeCYLA.businessLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.stcg15PerCYLA
+                                  .incomeCYLA.currentYearIncomeAfterSetoff
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><b>Long term capital gain taxable @ 10%</b></td>
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.ltcg10PerCYLA
+                                  .incomeCYLA.currentYearIncome
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.ltcg10PerCYLA
+                                  .incomeCYLA.hpLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.ltcg10PerCYLA
+                                  .incomeCYLA.businessLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.ltcg10PerCYLA
+                                  .incomeCYLA.currentYearIncomeAfterSetoff
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><b>Total loss set off</b></td>
+                          <td></td>
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff?.totalHpLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff
+                                  ?.totalBusinessLossSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td><b>Loss remaining after set off</b></td>
+                          <td></td>
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff
+                                  ?.totalHpLossRemainAfterSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td>
+                            <i class="material-icons icSmRup">&#8377;</i
+                            >&nbsp;{{
+                              utilsService.currencyFormatter(
+                                finalSummary?.assessment
+                                  ?.currentYearLossesSetoff
+                                  ?.totalBusinessLossRemainAfterSetoff
+                              )
+                            }}
+                          </td>
+
+                          <td></td>
                         </tr>
                       </tbody>
                     </table>
@@ -2386,6 +2949,42 @@
                               utilsService.currencyFormatter(
                                 finalCalculations?.BroughtFwdLossesSetoff
                                   ?.BroughtFwdLossesSetoffDtls?.ltLoss
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.BroughtFwdLossesSetoff
+                              ?.BroughtFwdLossesSetoffDtls?.businessLoss !== 0
+                          "
+                        >
+                          <td>Non Speculative Loss</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.BroughtFwdLossesSetoff
+                                  ?.BroughtFwdLossesSetoffDtls?.businessLoss
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.BroughtFwdLossesSetoff
+                              ?.BroughtFwdLossesSetoffDtls
+                              ?.speculativeBusinessLoss !== 0
+                          "
+                        >
+                          <td>Speculative Loss</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.BroughtFwdLossesSetoff
+                                  ?.BroughtFwdLossesSetoffDtls
+                                  ?.speculativeBusinessLoss
                               )
                             }}
                           </td>
@@ -4806,7 +5405,6 @@
                   <!-- *********************** Exempt Income ************************ -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="ITR_JSON?.exemptIncomes?.length > 0"
                     #exemptIncome
                   >
                     <mat-expansion-panel-header class="newclass">
@@ -4834,7 +5432,8 @@
                               >&nbsp;{{
                                 keys.ExemptIncAgriOthUs10Total
                                   ? keys.ExemptIncAgriOthUs10Total
-                                  : getExemptIncomeTotal()
+                                  : getExemptIncomeTotal() +
+                                    finalCalculations?.exemptIncome?.total
                               }}</label
                             >
                           </div>
@@ -4889,6 +5488,56 @@
                         </tbody>
                       </table>
                     </div>
+                    <!-- crypto gains  -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.exemptIncome?.partnerFirms.length > 0
+                      "
+                    >
+                      Partnership firm details
+                      <!-- <span style="float: right">{{
+                  finalCalculations?.capitalGain?.totalCryptoIncome
+                }}</span> -->
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.exemptIncome?.partnerFirms?.length >
+                        0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Sr. No</th>
+                          <th style="font-weight: bold">Name</th>
+                          <th style="font-weight: bold">Pan Number</th>
+                          <th style="font-weight: bold">Profit Share Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let slabRate of finalCalculations?.exemptIncome
+                              ?.partnerFirms;
+                            let i = index
+                          "
+                        >
+                          <td>{{ i + 1 }}</td>
+                          <td>
+                            {{ slabRate?.name }}
+                          </td>
+                          <td>
+                            {{ slabRate?.panNumber }}
+                          </td>
+
+                          <td>
+                            Rs
+                            {{ slabRate?.profitShareAmount }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </mat-expansion-panel>
                 </mat-accordion>
               </td>

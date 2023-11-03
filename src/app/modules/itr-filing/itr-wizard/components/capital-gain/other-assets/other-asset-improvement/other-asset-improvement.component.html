@@ -172,7 +172,7 @@
 
           <hr class="linSps" />
           <!-- cost-of-improvement  -->
-          <div>
+          <div formGroupName="improvementsArray">
             <!-- co-owner yes-no selection  -->
             <div class="row linSps">
               <div class="col-sm-9">
@@ -230,6 +230,7 @@
                       formControlName="costOfImprovement"
                       placeholder="Cost Of Improvement"
                       name="costOfImprovement"
+                      (blur)="calculateIndexCost()"
                       class="input-field"
                       maxlength="14"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -251,7 +252,6 @@
                       class="input-field"
                       maxlength="14"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                      (blur)="calculateIndexCost()"
                       readonly
                     />
                   </mat-form-field>

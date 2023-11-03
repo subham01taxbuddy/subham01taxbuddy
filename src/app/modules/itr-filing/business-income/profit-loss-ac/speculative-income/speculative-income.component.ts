@@ -1,11 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
-  GridOptions,
-  GridSizeChangedEvent,
-  ValueSetterParams,
-} from 'ag-grid-community';
-import {
   ITR_JSON,
   ProfitLossIncomes,
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -70,10 +65,10 @@ export class SpeculativeIncomeComponent implements OnInit {
         this.specIncomeFormArray.push(form);
       }
       // this.speculativeIncome = specBusiness?.incomes[0];
-    } else {
+    } /*else {
       let form = this.createSpecIncomeForm(0, null);
       this.specIncomeFormArray.push(form);
-    }
+    }*/
     this.specIncomeForm = this.fb.group({
       specIncomesArray: this.specIncomeFormArray,
     });
@@ -144,7 +139,7 @@ export class SpeculativeIncomeComponent implements OnInit {
           specBusinessIncome
         );
       } else {
-        // specBusiness[0].incomes = this.specIncomeForm.controls['specIncomesArray'].value;
+
         specBusiness[0].incomes = [];
         let businessIncomes =
           this.Copy_ITR_JSON.business.profitLossACIncomes.filter(
@@ -180,29 +175,12 @@ export class SpeculativeIncomeComponent implements OnInit {
       // this.Copy_ITR_JSON.business.profitLossACIncomes = nonSpec;
 
       console.log(this.Copy_ITR_JSON);
-      this.loading = true;
-      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-        (result: any) => {
-          this.ITR_JSON = result;
-          sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          this.loading = false;
-          this.utilsService.showSnackBar(
-            'Speculative income added successfully'
-          );
-          console.log('Speculative income=', result);
-          this.utilsService.smoothScrollToTop();
-        },
-        (error) => {
-          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          this.loading = false;
-          this.utilsService.showSnackBar(
-            'Failed to add Speculative income, please try again.'
-          );
-          this.utilsService.smoothScrollToTop();
-        }
-      );
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      return true;
     } else {
       //show errors
+      $('input.ng-invalid').first().focus();
+      return false;
     }
   }
 

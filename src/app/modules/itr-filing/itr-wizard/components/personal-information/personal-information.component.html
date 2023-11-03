@@ -101,7 +101,7 @@
       </div>
 
       <div class="col-sm-4 spsTp">
-        <mat-label>Flat/Door/Block No.</mat-label>
+        <mat-label>Flat/Door/Block No*</mat-label>
         <mat-form-field appearance="outline">
           <input
             type="text"
@@ -137,7 +137,7 @@
         </mat-form-field>
       </div>
       <div class="col-sm-4 spsTp">
-        <mat-label>Area/Locality</mat-label>
+        <mat-label>Area/Locality*</mat-label>
         <mat-form-field appearance="outline">
           <input
             type="text"
@@ -496,13 +496,15 @@
                   gap: 10px;
                 "
               >
-                <mat-checkbox
-                  color="primary"
-                  name="hasEdit[i]"
-                  formControlName="hasEdit"
-                  class=""
-                >
-                </mat-checkbox>
+                <div class="custom-control custom-checkbox">
+                  <input
+                    class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                    type="checkbox"
+                    (click)="$event.stopPropagation()"
+                    [checked]="selectedIndexes.includes(i)"
+                    (click)="toggleSelectedIndex(i)"
+                  />
+                </div>
 
                 <div style="width: 75%">
                   <mat-form-field appearance="outline">
@@ -598,6 +600,15 @@
                   formControlName="depAmtAggAmtExcd1CrPrYrFlg"
                 />
               </mat-form-field>
+
+              <mat-error
+                *ngIf="
+                  seventhProviso139.controls[
+                    'depAmtAggAmtExcd1CrPrYrFlg'
+                  ].hasError('min')
+                "
+                >Amount should be more than 1 crore</mat-error
+              >
             </div>
           </div>
         </div>
@@ -607,14 +618,13 @@
 
   <hr class="spsTp" />
   <div>
-    <div class="sub-heading">Audit Information</div>
+    <div class="sub-heading">Accounting Information</div>
   </div>
 
   <!-- 44AA Liable question -->
   <div class="surround flex justify-between">
     <mat-label style="margin: 0px 75px 0px 15px" class="custom"
-      >Are you filing return of income under Seventh proviso to section 139(1)
-      but otherwise not required to furnish return of income?</mat-label
+      >Are you liable to maintain accounts as per section 44AA?</mat-label
     >
     <mat-radio-group
       name="liableSection44AAflag[i]"

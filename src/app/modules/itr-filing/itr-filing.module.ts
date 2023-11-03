@@ -101,6 +101,9 @@ import { BusinessInputAutocompleteComponent } from './components/business-input-
 import { CryptoVdaComponent } from './itr-wizard/pages/crypto-vda/crypto-vda.component';
 import { PartnerInFirmsComponent } from './itr-wizard/pages/partner-in-firms/partner-in-firms.component';
 import { BifurcationComponent } from './salary/bifurcation/bifurcation.component';
+import { CalculatorsComponent } from './salary/calculators/calculators.component';
+import { BreakUpComponent } from './salary/break-up/break-up.component';
+import { OtherDeductionsComponent } from './itr-wizard/components/other-deductions/other-deductions.component';
 
 @NgModule({
   imports: [
@@ -221,6 +224,9 @@ import { BifurcationComponent } from './salary/bifurcation/bifurcation.component
     CryptoVdaComponent,
     PartnerInFirmsComponent,
     BifurcationComponent,
+    CalculatorsComponent,
+    BreakUpComponent,
+    OtherDeductionsComponent,
   ],
 
   exports: [CustomerProfileComponent],

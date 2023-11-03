@@ -528,7 +528,17 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   }
 
   onContinue() {
-    if (this.assetLiabilitiesForm.valid || this.natOfBusinessDtlForm.valid) {
+    if (
+      this.assetLiabilitiesForm.valid ||
+      this.natOfBusinessDtlForm.valid ||
+      (this.assetLiabilitiesForm.controls['cashInHand'].valid &&
+        this.assetLiabilitiesForm.controls['sundryDebtorsAmount'].valid &&
+        this.assetLiabilitiesForm.controls['sundryCreditorsAmount'].valid &&
+        this.assetLiabilitiesForm.controls['inventories'].valid) ||
+      this.ITR_JSON?.liableSection44AAflag === 'Y'
+        ? this.assetLiabilitiesForm?.controls['difference']?.value === 0
+        : true
+    ) {
       this.loading = true;
       this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -561,11 +571,18 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         }
       );
     } else {
+      if (this.assetLiabilitiesForm?.controls['difference']?.value !== 0) {
+        this.utilsService.showSnackBar(
+          'Please make sure the difference is not more than 0'
+        );
+      }
       $('input.ng-invalid').first().focus();
     }
   }
 
-  businessClicked(event, index){
-    (this.natOfBusinessDtlsArray.controls[index] as FormGroup).controls['natureOfBusiness'].setValue(event);
+  businessClicked(event, index) {
+    (this.natOfBusinessDtlsArray.controls[index] as FormGroup).controls[
+      'natureOfBusiness'
+    ].setValue(event);
   }
 }

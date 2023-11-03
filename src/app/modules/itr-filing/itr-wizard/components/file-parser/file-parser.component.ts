@@ -44,13 +44,13 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
         steps: './assets/files/Steps to download 5 Paisa.pdf',
       },
-      {
-        name: 'IIFL',
-        label: 'IIFL',
-        loading: false,
-        filesUploaded: [],
-        steps: '',
-      },
+      // {
+      //   name: 'IIFL',
+      //   label: 'IIFL',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: '',
+      // },
       {
         name: 'Angel',
         label: 'Angel One',
@@ -100,13 +100,13 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
         steps: './assets/files/Steps to download ICICI Statement.pdf',
       },
-      {
-        name: 'Jainam',
-        label: 'Jainam',
-        loading: false,
-        filesUploaded: [],
-        steps: '',
-      },
+      // {
+      //   name: 'Jainam',
+      //   label: 'Jainam',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: '',
+      // },
       {
         name: 'Taxbuddy',
         label: 'TaxBuddy',
@@ -205,7 +205,7 @@ export class FileParserComponent implements OnInit {
     let param = '/upload-excel';
     this.itrService.postMethod(param, formData).subscribe(
       (res: any) => {
-        this.loading = false;
+        // this.loading = false;
         //   this.isValidateJson = true;
         console.log('uploadDocument response =>', res);
         if (this.utilService.isNonEmpty(res)) {
@@ -227,6 +227,7 @@ export class FileParserComponent implements OnInit {
               .subscribe(
                 (result: any) => {
                   if (result.success) {
+                    this.loading = false;
                     if (!this.ITR_JSON.capitalGain) {
                       this.ITR_JSON.capitalGain = [];
                     }
@@ -281,6 +282,7 @@ export class FileParserComponent implements OnInit {
                 }
               );
           } else {
+            this.loading = false;
             this.utilService.showSnackBar(
               res.message
             );

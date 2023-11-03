@@ -12,7 +12,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import {FormGroup, Validators, FormBuilder, ValidationErrors} from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -187,10 +187,18 @@ export class CustomerProfileComponent implements OnInit {
     this.getSmeList();
 
     console.log('nav data', this.navigationData);
-    if (this.utilsService.isNonEmpty(this.customerProfileForm.controls['aadhaarEnrolmentId'].value)) {
+    if (
+      this.utilsService.isNonEmpty(
+        this.customerProfileForm.controls['aadhaarEnrolmentId'].value
+      )
+    ) {
       this.shallDisableOther('aadharNumber', 'aadhaarEnrolmentId');
     }
-    if (this.utilsService.isNonEmpty(this.customerProfileForm.controls['aadharNumber'].value)) {
+    if (
+      this.utilsService.isNonEmpty(
+        this.customerProfileForm.controls['aadharNumber'].value
+      )
+    ) {
       this.shallDisableOther('aadhaarEnrolmentId', 'aadharNumber');
     }
   }
@@ -229,8 +237,13 @@ export class CustomerProfileComponent implements OnInit {
     }
   }
 
-  shallDisableOther(controlTodisable, controlName){
-    if(this.utilsService.isNonEmpty(this.customerProfileForm.controls[controlName].value) && this.customerProfileForm.controls[controlName].valid){
+  shallDisableOther(controlTodisable, controlName) {
+    if (
+      this.utilsService.isNonEmpty(
+        this.customerProfileForm.controls[controlName].value
+      ) &&
+      this.customerProfileForm.controls[controlName].valid
+    ) {
       this.customerProfileForm.controls[controlTodisable].disable();
     } else {
       this.customerProfileForm.controls[controlTodisable].enable();
@@ -259,7 +272,7 @@ export class CustomerProfileComponent implements OnInit {
         Validators.compose([Validators.pattern(AppConstants.charRegex)]),
       ],
       dateOfBirth: ['', Validators.required],
-      gender: ['', Validators.required],
+      gender: [''],
       contactNumber: [
         '',
         Validators.compose([
@@ -422,15 +435,22 @@ export class CustomerProfileComponent implements OnInit {
       }
     }
   }
+
   saveProfile(ref) {
     console.log('customerProfileForm: ', this.customerProfileForm);
     this.findAssesseeType();
+
+    let gender = this.customerProfileForm.get('gender');
+    gender?.setValidators(Validators.required);
+    gender?.updateValueAndValidity();
+
+    let aadhaarEnrolmentId =
+      this.customerProfileForm.controls['aadhaarEnrolmentId'].value;
+    let aadhaarNumber =
+      this.customerProfileForm.controls['aadharNumber'].value;
+
     // this.ITR_JSON.isLate = 'Y'; // TODO added for late fee filing need think about all time solution
     if (this.customerProfileForm.valid) {
-      let aadhaarEnrolmentId =
-        this.customerProfileForm.controls['aadhaarEnrolmentId'].value;
-      let aadhaarNumber =
-        this.customerProfileForm.controls['aadharNumber'].value;
 
       if (
         (!this.utilsService.isNonEmpty(aadhaarNumber) &&
@@ -438,6 +458,9 @@ export class CustomerProfileComponent implements OnInit {
         (this.utilsService.isNonEmpty(aadhaarNumber) &&
           this.utilsService.isNonEmpty(aadhaarEnrolmentId))
       ) {
+        this.customerProfileSaved.emit(false);
+        this.customerProfileForm.controls['aadhaarEnrolmentId'].setErrors({ invalid: true })
+        this.customerProfileForm.controls['aadharNumber'].setErrors({ invalid: true })
         this.utilsService.showSnackBar(
           'Please provide aadhar number or enrollment ID'
         );
@@ -448,6 +471,9 @@ export class CustomerProfileComponent implements OnInit {
       const ageCalculated = this.calAge(
         this.customerProfileForm.controls['dateOfBirth'].value
       );
+
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
+
       this.ITR_JSON.family = [
         {
           pid: null,
@@ -511,7 +537,32 @@ export class CustomerProfileComponent implements OnInit {
         }
       );
     } else {
-      $('input.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
+
+      if(gender?.status === 'INVALID'){
+        gender?.setValidators(Validators.required);
+        gender?.updateValueAndValidity();
+      } else {
+        gender?.clearValidators();
+        gender?.updateValueAndValidity();
+      }
+
+      if (
+        (!this.utilsService.isNonEmpty(aadhaarNumber) &&
+          !this.utilsService.isNonEmpty(aadhaarEnrolmentId)) ||
+        (this.utilsService.isNonEmpty(aadhaarNumber) &&
+          this.utilsService.isNonEmpty(aadhaarEnrolmentId))
+      ) {
+        this.customerProfileForm.controls['aadhaarEnrolmentId'].setErrors({ 'required': true });
+        this.customerProfileForm.controls['aadharNumber'].setErrors({ 'required': true });
+        // this.customerProfileForm.controls['aadhaarEnrolmentId'].markAsDirty();
+        // this.customerProfileForm.controls['aadharNumber'].markAsTouched();
+        this.utilsService.showSnackBar(
+          'Please provide aadhar number or enrollment ID'
+        );
+      }
+      this.customerProfileSaved.emit(false);
     }
   }
   calAge(dob) {
@@ -891,7 +942,7 @@ export class CustomerProfileComponent implements OnInit {
     }
 
     //once user residential status changes, update the same in cg object
-    this.ITR_JSON.capitalGain.forEach(element => {
+    this.ITR_JSON.capitalGain.forEach((element) => {
       element.residentialStatus = status;
     });
   }

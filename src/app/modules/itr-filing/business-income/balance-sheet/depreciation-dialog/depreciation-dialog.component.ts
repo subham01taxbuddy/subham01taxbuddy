@@ -77,7 +77,6 @@ export class DepreciationDialogComponent implements OnInit {
     } else {
       this.addMore();
     }
-    // this.depreciationForm.disable();
   }
 
 
@@ -156,20 +155,6 @@ export class DepreciationDialogComponent implements OnInit {
   addMore() {
     const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
     depreciationArray.push(this.createForm());
-    // (this.depreciationForm.controls['depreciationArray'] as FormGroup).disable()
-    for (const iterator of this.getDepreciationArray.controls) {
-      console.log(iterator)
-
-      iterator['controls']['description'].disable()
-      iterator['controls']['assetType'].disable()
-      iterator['controls']['bookValue'].disable()
-      iterator['controls']['depreciationRate'].disable()
-      iterator['controls']['depreciationAmount'].disable()
-      iterator['controls']['fixedAssetClosingAmount'].disable()
-
-
-    }
-    // ((this.depreciationForm.controls['depreciationArray'] as FormGroup).controls[i] as FormGroup).enable();
   }
 
   edit(i,formGroup :any) {

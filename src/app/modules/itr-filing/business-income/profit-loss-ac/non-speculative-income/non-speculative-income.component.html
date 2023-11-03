@@ -127,7 +127,7 @@
           <mat-label>COGC (Opening Stock + Purchase - Closing Stock)</mat-label>
           <mat-form-field appearance="outline">
             <input
-              [disabled]="true"
+              readonly
               formControlName="cogc"
               name="cogc[i]"
               matInput
@@ -142,7 +142,7 @@
           <mat-label>Gross Profit (Turnover - COGC)</mat-label>
           <mat-form-field appearance="outline">
             <input
-              [disabled]="true"
+              readonly
               formControlName="grossProfit"
               name="grossProfit[i]"
               matInput
@@ -157,7 +157,7 @@
           <mat-label>Net Profit (Gross Profit - Expenses)</mat-label>
           <mat-form-field appearance="outline">
             <input
-              [disabled]="true"
+              readonly
               formControlName="netIncome"
               name="netIncome[i]"
               matInput
@@ -265,7 +265,6 @@
                   class="input-field"
                   placeholder="description"
                   formControlName="description"
-                  maxlength="14"
                   [required]="
                     expense.get('expenseType').value === 'OTHER_EXPENSES'
                   "
@@ -301,11 +300,6 @@
         [disabled]="!expenseSelected()"
       >
         <i class="fa fa-trash" aria-hidden="true"></i> Delete
-      </button>
-    </div>
-    <div class="col-sm-6">
-      <button class="tbd-btn save-btn mvRth" (click)="onContinue()">
-        &nbsp;&nbsp;Save
       </button>
     </div>
   </div>

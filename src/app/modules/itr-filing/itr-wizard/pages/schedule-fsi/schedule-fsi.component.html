@@ -168,18 +168,12 @@
                     <td>
                       <mat-form-field appearance="outline">
                         <mat-label>Relevant Article</mat-label>
-                        <mat-select
+                        <input
+                          matInput
+                          class="input-field"
                           formControlName="relevantArticle"
                           name="relevantArticle[i]"
-                        >
-                          <mat-option
-                            *ngFor="let relevantArticle of relevantArticle"
-                            [value]="relevantArticle"
-                            matTooltip="{{ relevantArticle }}"
-                          >
-                            {{ relevantArticle }}
-                          </mat-option></mat-select
-                        >
+                        />
                       </mat-form-field>
                     </td>
                   </tr>

@@ -1,4 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Inject,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
@@ -7,6 +13,11 @@ import {
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { BreakUpComponent } from '../break-up/break-up.component';
+import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
+import { UtilsService } from 'src/app/services/utils.service';
+import { SalaryComponent } from '../salary.component';
 
 @Component({
   selector: 'app-bifurcation',
@@ -14,6 +25,7 @@ import { ItrMsService } from 'src/app/services/itr-ms.service';
   styleUrls: ['./bifurcation.component.scss'],
 })
 export class BifurcationComponent implements OnInit {
+  @ViewChild('breakUp') breakUp: ElementRef;
   ITR_JSON: ITR_JSON;
   bifurcationFormGroup: FormGroup;
   localEmployer: Employer;
@@ -30,71 +42,90 @@ export class BifurcationComponent implements OnInit {
   index: any;
   Copy_ITR_JSON: ITR_JSON;
   loading: boolean = false;
+  overlayRef: any;
+  controlMappings = {
+    'Basic Salary': 'BASIC_SALARY',
+    'House Rent Allowance (HRA)': 'HOUSE_RENT',
+    'Dearness Allowance (DA)': 'DA',
+  };
 
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<BifurcationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private itrMsService: ItrMsService
+    private overlay: Overlay,
+    private itrMsService: ItrMsService,
+    private elementRef: ElementRef,
+    private utilsService: UtilsService
   ) {}
 
   ngOnInit(): void {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.bifurcationFormGroup = this.createBifurcationForm();
-    this.index = this.data?.index;
-    this.localEmployer = this.data?.data;
 
-    // Salary
-    const salaryFormArray = this.getSalary;
-    let salaryDataToPatch = this.localEmployer?.salary?.filter(
-      (item) => item?.salaryType !== 'SEC17_1'
-    );
+    if (this.data.valueChanged === false) {
+      this.index = this.data?.index;
+      this.localEmployer = JSON.parse(sessionStorage.getItem('localEmployer'));
+      this.localEmployer = this.data?.data
+        ? this.data?.data
+        : this.localEmployer;
 
-    if (salaryDataToPatch && salaryDataToPatch?.length > 0) {
-      salaryDataToPatch?.forEach((item) => {
-        const matchingControl = salaryFormArray?.controls[0]?.get(
-          item?.salaryType
-        );
-
-        if (matchingControl) {
-          matchingControl?.setValue(item?.taxableAmount);
-        }
-      });
-    }
-
-    // perquisities
-    const perquisitesFormArray = this.getPerquisites;
-    let perquisitesDataToPatch = this.localEmployer?.perquisites?.filter(
-      (item) => item?.perquisiteType !== 'SEC17_2'
-    );
-
-    if (perquisitesDataToPatch && perquisitesDataToPatch?.length > 0) {
-      perquisitesDataToPatch?.forEach((item) => {
-        const matchingControl = perquisitesFormArray?.controls[0]?.get(
-          item?.perquisiteType
-        );
-
-        if (matchingControl) {
-          matchingControl?.setValue(item?.taxableAmount);
-        }
-      });
-    }
-
-    // profits in lieu
-    let profitsInLieuDataToPatch =
-      this.localEmployer?.profitsInLieuOfSalaryType?.filter(
-        (item) => item?.salaryType !== 'SEC17_3'
+      // Salary
+      const salaryFormArray = this.getSalary;
+      let salaryDataToPatch = this.localEmployer?.salary?.filter(
+        (item) => item?.salaryType !== 'SEC17_1'
       );
-    const profitsInLieuFormArray = this.getProfitsInLieu;
-    if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
-      profitsInLieuDataToPatch?.forEach((item) => {
-        const matchingControl = profitsInLieuFormArray?.controls[0]?.get(
-          item?.salaryType
-        );
 
-        if (matchingControl) {
-          matchingControl?.setValue(item?.taxableAmount);
-        }
+      if (salaryDataToPatch && salaryDataToPatch?.length > 0) {
+        salaryDataToPatch?.forEach((item) => {
+          const matchingControl = salaryFormArray?.controls[0]?.get(
+            item?.salaryType
+          );
+
+          if (matchingControl) {
+            matchingControl?.setValue(item?.taxableAmount);
+          }
+        });
+      }
+
+      // perquisities
+      const perquisitesFormArray = this.getPerquisites;
+      let perquisitesDataToPatch = this.localEmployer?.perquisites?.filter(
+        (item) => item?.perquisiteType !== 'SEC17_2'
+      );
+
+      if (perquisitesDataToPatch && perquisitesDataToPatch?.length > 0) {
+        perquisitesDataToPatch?.forEach((item) => {
+          const matchingControl = perquisitesFormArray?.controls[0]?.get(
+            item?.perquisiteType
+          );
+
+          if (matchingControl) {
+            matchingControl?.setValue(item?.taxableAmount);
+          }
+        });
+      }
+
+      // profits in lieu
+      let profitsInLieuDataToPatch =
+        this.localEmployer?.profitsInLieuOfSalaryType?.filter(
+          (item) => item?.salaryType !== 'SEC17_3'
+        );
+      const profitsInLieuFormArray = this.getProfitsInLieu;
+      if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
+        profitsInLieuDataToPatch?.forEach((item) => {
+          const matchingControl = profitsInLieuFormArray?.controls[0]?.get(
+            item?.salaryType
+          );
+
+          if (matchingControl) {
+            matchingControl?.setValue(item?.taxableAmount);
+          }
+        });
+      }
+
+      this.utilsService.getData().subscribe((data) => {
+        this.handleData(data);
       });
     }
   }
@@ -159,6 +190,42 @@ export class BifurcationComponent implements OnInit {
   }
 
   saveBifurcations(type) {
+    this.Copy_ITR_JSON = JSON.parse(
+      sessionStorage.getItem(AppConstants.ITR_JSON)
+    );
+
+    if (!this.localEmployer) {
+      this.localEmployer = {
+        id: null,
+        employerName: '',
+        address: '',
+        city: '',
+        pinCode: '',
+        state: '',
+        employerPAN: '',
+        employerTAN: '',
+        taxableIncome: 0,
+        exemptIncome: 0,
+        standardDeduction: 0,
+
+        // AYAsPerForm16: string;
+        periodFrom: '',
+        periodTo: '',
+        // amountPaidAsPerForm16: number;
+        taxDeducted: 0,
+        taxRelief: 0,
+        employerCategory: '',
+        salary: [],
+        allowance: [],
+        perquisites: [],
+        profitsInLieuOfSalaryType: [],
+        deductions: [],
+        upload: [],
+        calculators: null,
+      };
+      this.Copy_ITR_JSON.employers.push(this.localEmployer);
+    }
+
     console.log(this.bifurcationFormGroup, 'bifurcationsForm');
     let result;
 
@@ -202,78 +269,32 @@ export class BifurcationComponent implements OnInit {
       };
 
       // NEED TO CONFIRM WITH ASHWINI IF I SHOULD CALL API OR NOT
-      // if (this.localEmployer) {
-      //   const bifurcationValues = this.value.salary[0];
+      if (this.localEmployer) {
+        const bifurcationValues = this.value.salary[0];
 
-      //   this.localEmployer.salary = [];
-      //   for (const key in bifurcationValues) {
-      //     if (bifurcationValues.hasOwnProperty(key)) {
-      //       const element = parseFloat(bifurcationValues[key]);
-      //       console.log(element);
-      //       if (element && element !== 0) {
-      //         this.localEmployer?.salary.push({
-      //           salaryType: key,
-      //           taxableAmount: element,
-      //           exemptAmount: 0,
-      //         });
-      //       }
-      //     }
-      //   }
+        this.localEmployer.salary = [];
+        for (const key in bifurcationValues) {
+          if (bifurcationValues.hasOwnProperty(key)) {
+            const element = parseFloat(bifurcationValues[key]);
+            console.log(element);
+            if (element && element !== 0) {
+              this.localEmployer?.salary.push({
+                salaryType: key,
+                taxableAmount: element,
+                exemptAmount: 0,
+              });
+            }
+          }
+        }
 
-      //   this.Copy_ITR_JSON = JSON.parse(
-      //     sessionStorage.getItem(AppConstants.ITR_JSON)
-      //   );
+        this.loading = true;
+        if (this.index !== -1) {
+          const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
+          this.Copy_ITR_JSON.employers.splice(this.index, 1, myEmp);
+        }
+      }
 
-      //   this.loading = true;
-      //   if (this.index === -1) {
-      //     const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
-      //     if (
-      //       this.Copy_ITR_JSON.employers == null ||
-      //       this.Copy_ITR_JSON.employers.length == 0
-      //     ) {
-      //       this.Copy_ITR_JSON.employers = [];
-      //     }
-      //     this.Copy_ITR_JSON.employers.push(myEmp);
-      //   } else {
-      //     const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
-      //     this.Copy_ITR_JSON.employers.splice(this.index, 1, myEmp);
-      //   }
-
-      //   const param = `/itr/itr-type`;
-      //   this.itrMsService.postMethod(param, this.Copy_ITR_JSON).subscribe(
-      //     (res: any) => {
-      //       this.Copy_ITR_JSON.itrType = res?.data?.itrType;
-      //       const param1 = '/taxitr?type=employers';
-      //       this.itrMsService.postMethod(param1, this.Copy_ITR_JSON).subscribe(
-      //         (result: any) => {
-      //           if (this.utilsService.isNonEmpty(result)) {
-      //             this.ITR_JSON = result;
-      //             this.Copy_ITR_JSON = JSON.parse(
-      //               JSON.stringify(this.ITR_JSON)
-      //             );
-      //             sessionStorage.setItem(
-      //               AppConstants.ITR_JSON,
-      //               JSON.stringify(this.ITR_JSON)
-      //             );
-      //           } else {
-      //             this.loading = false;
-      //             this.utilsService.showSnackBar(
-      //               'Failed to save salary detail, Please try again'
-      //             );
-      //           }
-      //         },
-      //         (error) => {
-      //           this.loading = false;
-      //           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-      //         }
-      //       );
-      //     },
-      //     (error) => {
-      //       console.log('Error fetching itr type', error);
-      //       this.utilsService.showSnackBar('Failed to save salary detail.');
-      //     }
-      //   );
-      // }
+      console.log('salary copyItrJson', this.Copy_ITR_JSON);
     }
 
     if (type === 'perquisites') {
@@ -318,6 +339,34 @@ export class BifurcationComponent implements OnInit {
         type: 'perquisites',
         index: this.index,
       };
+
+      // NEED TO CONFIRM WITH ASHWINI IF I SHOULD CALL API OR NOT
+      if (this.localEmployer) {
+        const bifurcationValues = this.value.perquisites[0];
+
+        this.localEmployer.perquisites = [];
+        for (const key in bifurcationValues) {
+          if (bifurcationValues.hasOwnProperty(key)) {
+            const element = parseFloat(bifurcationValues[key]);
+            console.log(element);
+            if (element && element !== 0) {
+              this.localEmployer?.perquisites.push({
+                perquisiteType: key,
+                taxableAmount: element,
+                exemptAmount: 0,
+              });
+            }
+          }
+        }
+
+        this.loading = true;
+        if (this.index !== -1) {
+          const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
+          this.Copy_ITR_JSON.employers.splice(this.index, 1, myEmp);
+        }
+      }
+
+      console.log('perqusities copyItrJson', this.Copy_ITR_JSON);
     }
 
     if (type === 'profitsInLieu') {
@@ -345,9 +394,86 @@ export class BifurcationComponent implements OnInit {
         type: 'profitsInLieuOfSalary',
         index: this.index,
       };
+
+      // NEED TO CONFIRM WITH ASHWINI IF I SHOULD CALL API OR NOT
+      if (this.localEmployer) {
+        const bifurcationValues = this.value.profitsInLieuOfSalary[0];
+
+        this.localEmployer.profitsInLieuOfSalaryType = [];
+        for (const key in bifurcationValues) {
+          if (bifurcationValues.hasOwnProperty(key)) {
+            const element = parseFloat(bifurcationValues[key]);
+            console.log(element);
+            if (element && element !== 0) {
+              this.localEmployer?.profitsInLieuOfSalaryType.push({
+                salaryType: key,
+                taxableAmount: element,
+                exemptAmount: 0,
+              });
+            }
+          }
+        }
+
+        this.loading = true;
+        if (this.index !== -1) {
+          const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
+          this.Copy_ITR_JSON.employers.splice(this.index, 1, myEmp);
+        }
+      }
+
+      console.log('perqusities copyItrJson', this.Copy_ITR_JSON);
     }
 
+    this.utilsService.setChange(false);
     this.dialogRef.close(result);
+    sessionStorage.setItem('localEmployer', JSON.stringify(this.localEmployer));
+  }
+
+  //  BREAKUP MONTHLY WISE
+  breakUpFn(i, component) {
+    const positionStrategy = this.overlay
+      .position()
+      .flexibleConnectedTo(this.elementRef)
+      .withPositions([
+        {
+          originX: 'end', // Align with the right edge of the button
+          originY: 'center', // Vertically center align with the button
+          overlayX: 'end', // Align with the right edge of the overlay
+          overlayY: 'center', // Vertically center align the overlay
+          offsetX: 300, // setting horizantally
+          offsetY: 0, // setting vertically
+        },
+      ]);
+
+    this.overlayRef = this.overlay.create({
+      positionStrategy,
+      hasBackdrop: true,
+      height: '600px',
+      width: '250px',
+    });
+
+    const userProfilePortal = new ComponentPortal(BreakUpComponent);
+    const componentRef = this.overlayRef.attach(userProfilePortal);
+
+    const value = parseFloat(
+      this.getSalary.value[0]?.[this.controlMappings[component]]
+    );
+    (componentRef.instance as BreakUpComponent).data = { value, component };
+
+    // Subscribe to backdrop click events to close the overlay
+    this.overlayRef.backdropClick().subscribe(() => {
+      this.overlayRef.dispose(); // Close the overlay
+    });
+  }
+
+  handleData(data: any) {
+    const controlName = this.controlMappings[data?.component];
+    if (controlName) {
+      (this.getSalary?.controls[0] as FormGroup)?.controls[
+        controlName
+      ]?.setValue(Math.ceil(data?.data));
+      this.overlayRef.dispose();
+    }
   }
 
   // get functions

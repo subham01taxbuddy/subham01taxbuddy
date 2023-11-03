@@ -44,6 +44,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   amountFiftyMax: number = 0;
   submitted = false;
   @Output() presProfessionalSaved = new EventEmitter<boolean>();
+  percentage: any[] = [];
 
   constructor(
     public matDialog: MatDialog,
@@ -70,8 +71,10 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.config = {
+      id: 'professionConfig',
       itemsPerPage: 2,
       currentPage: 1,
+      totalItems: 0,
     };
 
     let profBusiness = this.ITR_JSON.business?.presumptiveIncomes?.filter(
@@ -93,8 +96,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     });
 
     this.profIncomeFormArray.controls.forEach((formgroup, index) => {
-      this.calculatePresumptive(null, index);
+      this.calculatePresumptive(null, index, false);
     });
+    this.config.totalItems = this.profIncomeFormArray.controls.length;
   }
 
   get getProfIncomeArray() {
@@ -114,6 +118,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         [Validators.required],
       ],
       tradeName: [income?.tradeName || null, [Validators.required]],
+      description: [income?.description || null],
       receipts: [
         income?.incomes[0]?.receipts || 0,
         [Validators.required, Validators.max(5000000)],
@@ -121,6 +126,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       presumptiveIncome: [
         income?.incomes[0]?.presumptiveIncome || 0,
         [Validators.required, Validators.min(this.amountFifty)],
+      ],
+      minimumPresumptiveIncome: [
+        income?.incomes[0]?.minimumPresumptiveIncome || 0,
       ],
     });
     form.controls['natureOfBusiness'].setValue(
@@ -165,49 +173,64 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     const profIncomeFormArray = <FormArray>(
       this.profIncomeForm.get('profIncomeFormArray')
     );
-    profIncomeFormArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        profIncomeFormArray.removeAt(index);
-      }
-    });
+    profIncomeFormArray.controls = profIncomeFormArray.controls.filter(
+      element => !(element as FormGroup).controls['hasEdit'].value);
+    this.config.totalItems = profIncomeFormArray.controls.length;
   }
 
-  calculatePresumptive(event, index) {
-    this.amountFifty = 0;
-    this.amountFiftyMax = 0;
-
-    this.amountFifty = (
-      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
-        .controls[index] as FormGroup
-    ).controls['receipts'].value;
-
-    this.amountFiftyMax = Number(
-      (
-        (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
-          .controls[index] as FormGroup
-      ).controls['receipts'].value
+  calculatePresumptive(event, index, setValue?) {
+    this.percentage = [];
+    const profIncomeFormArray = <FormArray>(
+      this.profIncomeForm.get('profIncomeFormArray')
     );
 
-    this.amountFifty = Math.round(Number((this.amountFifty / 100) * 50));
+    for (let i = 0; i < profIncomeFormArray.length; i++) {
+      const receipt = (profIncomeFormArray.at(i) as FormGroup).get('receipts');
+      const minimumPresumptiveIncome = (
+        profIncomeFormArray.at(i) as FormGroup
+      ).get('minimumPresumptiveIncome');
+      const presumptiveIncome = (profIncomeFormArray.at(i) as FormGroup).get(
+        'presumptiveIncome'
+      );
+      const natOfBusiness = (profIncomeFormArray.at(i) as FormGroup).get(
+        'natureOfBusiness'
+      ).value;
 
-    (
-      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
-        .controls[index] as FormGroup
-    ).controls['presumptiveIncome'].setValue(this.amountFifty);
+      this.amountFifty = 0;
+      this.amountFiftyMax = 0;
+      this.amountFifty = receipt?.value;
+      this.amountFiftyMax = receipt?.value;
+      this.amountFifty = Math.round(Number((this.amountFifty / 100) * 50));
 
-    (
-      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
-        .controls[index] as FormGroup
-    ).controls['presumptiveIncome'].setValidators([
-      Validators.required,
-      Validators.min(this.amountFifty),
-      Validators.max(this.amountFiftyMax),
-    ]);
+      minimumPresumptiveIncome?.setValue(this.amountFifty);
 
-    (
-      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray)
-        .controls[index] as FormGroup
-    ).controls['presumptiveIncome'].updateValueAndValidity();
+      let PresumptiveIncome =
+        presumptiveIncome.value !== ''
+          ? parseFloat(presumptiveIncome.value)
+          : 0;
+
+      if (PresumptiveIncome || PresumptiveIncome === 0) {
+        presumptiveIncome?.setValidators([
+          Validators.required,
+          Validators.min(this.amountFifty),
+          Validators.max(this.amountFiftyMax),
+        ]);
+        presumptiveIncome.updateValueAndValidity();
+      } else {
+        presumptiveIncome.clearValidators();
+        presumptiveIncome.updateValueAndValidity();
+      }
+
+      const percentage = Math.ceil(
+        (parseFloat(presumptiveIncome.value) * 100) / parseFloat(receipt.value)
+      );
+      this.percentage.push({ natOfBusiness, percentage });
+      console.log(
+        this.percentage[0] === natOfBusiness ? this.percentage[1] : 0
+      );
+    }
+
+    console.log(this.percentage);
   }
 
   ////// OLD CODE
@@ -450,7 +473,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
       // form values
       let profBusinessFormIncome =
-        this.profIncomeForm.controls['profIncomeFormArray'].value;
+        (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).getRawValue();
 
       // array that will be stored unde presumptive income
       let presBusinessIncome = [];
@@ -482,6 +505,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
             natureOfBusiness: element.natureOfBusiness,
             label: null,
             tradeName: element.tradeName,
+            description: element.description,
             salaryInterestAmount: null,
             taxableIncome: null,
             exemptIncome: null,
@@ -544,22 +568,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         this.Copy_ITR_JSON.business.presumptiveIncomes =
           data.concat(presBusinessIncome);
       }
-
-      this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
-        (result: any) => {
-          this.ITR_JSON = result;
-          this.loading = false;
-          sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-          this.utilsService.smoothScrollToTop();
-          this.presProfessionalSaved.emit(true);
-        },
-        (error) => {
-          this.loading = false;
-          this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-          this.utilsService.smoothScrollToTop();
-          this.presProfessionalSaved.emit(false);
-        }
-      );
+      sessionStorage.setItem('ITR_JSON', JSON.stringify(this.Copy_ITR_JSON));
+      this.loading = false;
+      this.presProfessionalSaved.emit(true);
     } else {
       const profIncomeArray = this.getProfIncomeArray;
 

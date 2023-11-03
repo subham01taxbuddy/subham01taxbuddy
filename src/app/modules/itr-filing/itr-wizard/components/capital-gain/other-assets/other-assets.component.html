@@ -31,18 +31,21 @@
       <div>
         <div>
           <div>
-<!--            <app-other-asset-improvement-->
-<!--              style="padding-top: 25px"-->
-<!--              [isAddOtherAssetsImprovement]="isAddOtherAssetsImprovement"-->
-<!--            ></app-other-asset-improvement>-->
-            <ag-grid-angular class="ag-theme-balham topSps"
-                             [gridOptions]="gridOptions"
-                             (rowClicked)="onOtherAssetsRowClicked($event)">
+            <!--            <app-other-asset-improvement-->
+            <!--              style="padding-top: 25px"-->
+            <!--              [isAddOtherAssetsImprovement]="isAddOtherAssetsImprovement"-->
+            <!--            ></app-other-asset-improvement>-->
+            <ag-grid-angular
+              class="ag-theme-balham topSps"
+              [gridOptions]="gridOptions"
+              (rowClicked)="onOtherAssetsRowClicked($event)"
+            >
             </ag-grid-angular>
             <button
               class="delete-btn delete-icon"
-              (click)="$event.stopPropagation();deleteAsset()"
-              [disabled]="!isAssetSelected()">
+              (click)="$event.stopPropagation(); deleteAsset()"
+              [disabled]="!isAssetSelected()"
+            >
               <i class="fa fa-trash" aria-hidden="true"></i> Delete
             </button>
           </div>
@@ -65,19 +68,19 @@
             Property)
           </div>
           <div class="col-sm-3">
-          <mat-radio-group
-            [(ngModel)]="deduction"
-            [disabled]="isDisable"
-            class="mvRth"
-          >
-            <mat-radio-button [value]="true" labelPosition="before"
-            >Yes
-            </mat-radio-button>
-            <mat-radio-button [value]="false" labelPosition="before"
-            >No</mat-radio-button
+            <mat-radio-group
+              [(ngModel)]="deduction"
+              [disabled]="isDisable"
+              class="mvRth"
             >
-          </mat-radio-group>
-        </div>
+              <mat-radio-button [value]="true" labelPosition="before"
+                >Yes
+              </mat-radio-button>
+              <mat-radio-button [value]="false" labelPosition="before"
+                >No</mat-radio-button
+              >
+            </mat-radio-group>
+          </div>
         </div>
       </div>
     </div>
@@ -93,15 +96,10 @@
           [formGroupName]="fieldGlobalIndex(i)"
         >
           <div class="row cardClr2">
-            <!-- CHECKBOX  -->
-            <div class="col-sm-1">
-              <mat-checkbox color="primary"></mat-checkbox>
-            </div>
-
             <!-- inputs  -->
 
             <!-- type-of-deduction  -->
-            <div class="col-sm-3">
+            <div class="col-sm-4">
               <mat-label>Type of Deduction</mat-label>
               <mat-form-field class="input-field-width" appearance="outline">
                 <input
@@ -135,6 +133,8 @@
                   name="purchaseDate"
                   [matDatepicker]="purchaseDate"
                   placeholder="Buy Date / Date of Acquisition"
+                  [max]="maximumDate"
+                  (change)="calculateDeduction()"
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -156,6 +156,7 @@
                   class="input-field"
                   maxlength="14"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  (change)="calculateDeduction()"
                 />
                 <!-- <mat-error
                   *ngIf="
@@ -178,6 +179,7 @@
                   class="input-field"
                   maxlength="14"
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  (change)="calculateDeduction()"
                 />
                 <!-- <mat-error
                   *ngIf="
@@ -189,7 +191,7 @@
             </div>
             <!-- deduction claimed  -->
             <div class="col-sm-4 spsTp">
-              <mat-label>Amount of Deduction Claimed</mat-label>
+              <mat-label><br />Amount of Deduction Claimed</mat-label>
               <mat-form-field class="input-field-width" appearance="outline">
                 <input
                   matInput
@@ -201,11 +203,9 @@
                   maxlength="14"
                   readonly
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  (click)="calculateDeduction()"
                 />
               </mat-form-field>
             </div>
-
           </div>
           <!-- Row Ends -->
         </div>
@@ -213,34 +213,6 @@
         <!-- edit Other Assets deduction -->
       </div>
     </form>
-
-    <!-- footer  -->
-    <div class="row spsTp bdrTp">
-      <div class="col-sm-9">
-        <button
-          type="submit"
-          class="delete-btn"
-          (click)="deleteDeduction(index)"
-        >
-          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-        </button>
-      </div>
-      <!-- <div class="card__col-sm-6 txt-center">
-          <table>
-            <tr
-              *ngFor="
-                let item of getDeductions?.controls | paginate : config
-              "
-            ></tr>
-          </table>
-          <pagination-controls
-            (pageChange)="pageChanged($event)"
-          ></pagination-controls>
-        </div> -->
-      <div class="col-sm-3">
-        <button class="tbd-btn save-btn mvRth" (click)="saveCg()">Save</button>
-      </div>
-    </div>
   </div>
 
   <!-- page-navigation-buttons  -->

@@ -62,6 +62,8 @@ export class HousePropertyComponent implements OnInit {
   stateDropdown = AppConstants.stateDropdown;
   thirtyPctOfAnnualValue = 0;
   annualValue = 0;
+  // totalArrearsUnrealizedRentReceived = 0;
+  // arrearsUnrealizedRentReceived = 0;
   step = 0;
   displayedColumns: string[] = ['Questions', 'Amount'];
   defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
@@ -74,6 +76,7 @@ export class HousePropertyComponent implements OnInit {
   EAStatus: boolean;
   storedIndex: any;
   storedValue: String;
+  selectedIndexes: number[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -248,6 +251,8 @@ export class HousePropertyComponent implements OnInit {
         ],
         rentPercentage: [{ value: null, disabled: true }],
         propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
+        totalArrearsUnrealizedRentReceived: [''],
+        arrearsUnrealizedRentReceived: [''],
         isEligibleFor80EE: [null],
         // isEligibleFor80EEA: [false],
         loans: this.fb.array([
@@ -316,6 +321,8 @@ export class HousePropertyComponent implements OnInit {
         coOwners: this.fb.array([]),
         tenant: this.fb.array([]),
         ownerPercentage: [],
+        totalArrearsUnrealizedRentReceived: [''],
+        arrearsUnrealizedRentReceived: [''],
       });
     }
   }
@@ -711,7 +718,9 @@ export class HousePropertyComponent implements OnInit {
       this.housePropertyForm.controls['annualRentReceived'].setValue(null);
       this.housePropertyForm.controls['rentPercentage'].setValue(null);
       this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(null);
-      this.housePropertyForm.controls['grossAnnualRentReceivedTotal'].setValue(null);
+      this.housePropertyForm.controls['grossAnnualRentReceivedTotal'].setValue(
+        null
+      );
       this.annualValue = null;
       this.thirtyPctOfAnnualValue = null;
       this.housePropertyForm.controls['rentPercentage'].enable();
@@ -733,9 +742,11 @@ export class HousePropertyComponent implements OnInit {
           .controls[0] as FormGroup
       ).controls['interestAmount'].updateValueAndValidity();
     } else if (type === 'LOP') {
-      if (mode != 'EDIT') {
+      if (!mode && mode !== 'EDIT') {
         const tenant = <FormArray>this.housePropertyForm.get('tenant');
         tenant.push(this.createTenantForm());
+        this.annualValue = null;
+        this.thirtyPctOfAnnualValue = null;
       } else {
         const nilTenant = <FormArray>this.housePropertyForm.get('tenant');
         // Condition is added because at least one tenant details is mandatory
@@ -1033,7 +1044,19 @@ export class HousePropertyComponent implements OnInit {
     this.utilsService.smoothScrollToTop();
   }
 
-  deleteHpDetails(index) {
+  // Function to toggle selected index
+  toggleSelectedIndex(index: number) {
+    const idx = this.selectedIndexes.indexOf(index);
+    if (idx > -1) {
+      this.selectedIndexes.splice(idx, 1);
+    } else {
+      this.selectedIndexes.push(index);
+    }
+  }
+
+  deleteHpDetails() {
+    console.log(this.selectedIndexes, 'indexes');
+
     let disposable = this.matDialog.open(DeleteConfirmationDialogComponent, {
       width: '50%',
       height: 'auto',
@@ -1045,8 +1068,8 @@ export class HousePropertyComponent implements OnInit {
       if (result) {
         let hp = [];
         this.Copy_ITR_JSON.houseProperties.forEach((element, i) => {
-          if(!index.includes(i)){
-            hp.push(element)
+          if (!this.selectedIndexes.includes(i)) {
+            hp.push(element);
           }
         });
 
@@ -1054,11 +1077,6 @@ export class HousePropertyComponent implements OnInit {
         this.serviceCall('DELETE', this.Copy_ITR_JSON);
       }
     });
-
-    // this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-
-    // this.Copy_ITR_JSON.houseProperties = [];
-    // this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
   }
   // serviceCall(request, ref) {
   //   this.loading = true;
@@ -1128,6 +1146,18 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
+  calTotalArrValue() {
+    let arrearsUnrealizedRentReceived =
+      this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived']
+        .value -
+      this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived']
+        .value *
+        0.3;
+    console.log(arrearsUnrealizedRentReceived);
+    this.housePropertyForm.controls['arrearsUnrealizedRentReceived'].setValue(
+      arrearsUnrealizedRentReceived
+    );
+  }
   // Function to set the stored values
   setStoredValues(i: any, v: string) {
     this.storedIndex = i;

@@ -319,6 +319,7 @@ export class LandAndBuildingComponent
   saveFormData(){
     this.loading = true;
     this.labFormComponent.saveImmovableCG(this.labFormComponent.immovableForm, 0);
+    this.loading = false;
   }
 
   formSaved(event) {

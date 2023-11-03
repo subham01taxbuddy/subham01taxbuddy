@@ -26,6 +26,11 @@ margin-bottom:150px!important;
 float: left;
 }
 
+.gainHeader {
+  padding-bottom: 20px;
+  text-align: right;
+}
+
 .delete-icon{
   margin-top: 20px;
 }
@@ -178,4 +183,8 @@ float: left;
   border-width: 1px;
   border:1px solid #cccccc;
   background-color: #fafafa;
+}
+
+.deduction-form {
+  padding-top: 50px;
 }

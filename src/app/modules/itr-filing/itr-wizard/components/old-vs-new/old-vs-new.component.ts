@@ -19,7 +19,7 @@ import {
   ValidationErrors,
   AbstractControl,
 } from '@angular/forms';
-import {environment} from "../../../../../../environments/environment";
+import { environment } from '../../../../../../environments/environment';
 
 @Component({
   selector: 'app-old-vs-new',
@@ -56,7 +56,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   newSummaryIncome: any;
   oldSummaryIncome: any;
   assesssmentYear: any[] = [];
-  lastAssesssmentYear:string;
+  lastAssesssmentYear: string;
   itrType: any;
 
   newRegimeLabel = 'Opting in Now';
@@ -478,9 +478,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       currAssmntYr.enable();
 
       //check whether user had opted for new regime in last year
-      let newRegimeAy = this.regimeSelectionForm.controls['everOptedNewRegime'].get('assessmentYear').value;
+      let newRegimeAy =
+        this.regimeSelectionForm.controls['everOptedNewRegime'].get(
+          'assessmentYear'
+        ).value;
       this.dueDateOver = false;
-
     }
 
     if (!optIn && !optOut) {
@@ -1308,35 +1310,29 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             this.particularsArray = [
               {
                 label: 'Income from Salary',
-                old: this.oldSummaryIncome?.summaryIncome.summarySalaryIncome
-                  .totalSalaryTaxableIncome,
-                new: this.newSummaryIncome?.summaryIncome.summarySalaryIncome
-                  .totalSalaryTaxableIncome,
+                old: this.oldSummaryIncome?.taxSummary.salary,
+                new: this.newSummaryIncome?.taxSummary.salary,
               },
               {
                 label: 'Income from House Property',
-                old: Math.max(this.oldSummaryIncome?.summaryIncome.summaryHpIncome
-                  .totalHPTaxableIncome, 0),
-                new: Math.max(this.newSummaryIncome?.summaryIncome.summaryHpIncome
-                  .totalHPTaxableIncome, 0),
+                old: this.oldSummaryIncome?.taxSummary.housePropertyIncome,
+                new: this.newSummaryIncome?.taxSummary.housePropertyIncome,
               },
               {
                 label: 'Income from Business and Profession',
-                old: getTotalBusinessIncome(this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome),
-                new: getTotalBusinessIncome(this.newSummaryIncome?.summaryIncome.summaryBusinessIncome)
+                old: this.getCrypto(this.oldSummaryIncome, 'business'),
+                new: this.getCrypto(this.newSummaryIncome, 'business'),
               },
               {
                 label: 'Income from Capital Gains',
-                old: getTotalCapitalGain(this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                  .capitalGain),
-                new:getTotalCapitalGain(this.newSummaryIncome?.taxSummary.cgIncomeN
-                  .capitalGain)
+                old: this.getCrypto(this.oldSummaryIncome, 'capitalGains'),
+                new: this.getCrypto(this.newSummaryIncome, 'capitalGains'),
               },
-              {
-                label: 'Income from Crypto',
-                old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
-                new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
-              },
+              // {
+              //   label: 'Income from Crypto',
+              //   old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
+              //   new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
+              // },
               {
                 label: 'Income from Other Sources',
                 old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
@@ -1360,10 +1356,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               },
               {
                 label: 'BFLA',
-                old: Math.abs(this.oldSummaryIncome?.taxSummary
-                  .totalBroughtForwordSetOff),
-                new: Math.abs(this.newSummaryIncome?.taxSummary
-                  .totalBroughtForwordSetOff),
+                old: Math.abs(
+                  this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+                ),
+                new: Math.abs(
+                  this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+                ),
               },
               {
                 label: 'Gross Total Income',
@@ -1389,8 +1387,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               },
               {
                 label: 'CFL',
-                old: getCFL(this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears),
-                new: getCFL(this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears)
+                old: getCFL(
+                  this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears
+                ),
+                new: getCFL(
+                  this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears
+                ),
               },
               {
                 label: 'Gross Tax Liability',
@@ -1452,34 +1454,29 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           this.particularsArray = [
             {
               label: 'Income from Salary',
-              old: this.oldSummaryIncome?.summaryIncome.summarySalaryIncome
-                .totalSalaryTaxableIncome,
-              new: this.newSummaryIncome?.summaryIncome.summarySalaryIncome
-                .totalSalaryTaxableIncome,
+              old: this.oldSummaryIncome?.taxSummary.salary,
+              new: this.newSummaryIncome?.taxSummary.salary,
             },
             {
               label: 'Income from House Property',
-              old: Math.max(this.oldSummaryIncome?.summaryIncome.summaryHpIncome
-                .totalHPTaxableIncome, 0),
-              new: Math.max(this.newSummaryIncome?.summaryIncome.summaryHpIncome
-                .totalHPTaxableIncome,0)
+              old: this.oldSummaryIncome?.taxSummary.housePropertyIncome,
+              new: this.newSummaryIncome?.taxSummary.housePropertyIncome,
             },
             {
               label: 'Income from Business and Profession',
-              old: getTotalBusinessIncome(this.oldSummaryIncome?.summaryIncome.summaryBusinessIncome),
-              new: getTotalBusinessIncome(this.newSummaryIncome?.summaryIncome.summaryBusinessIncome)
+              old: this.getCrypto(this.oldSummaryIncome, 'business'),
+              new: this.getCrypto(this.newSummaryIncome, 'business'),
             },
             {
               label: 'Income from Capital Gains',
-              old: getTotalCapitalGain(this.oldSummaryIncome?.summaryIncome.cgIncomeN
-                .capitalGain),
-              new:getTotalCapitalGain(this.newSummaryIncome?.summaryIncome.cgIncomeN
-                .capitalGain)
-            }, {
-              label: 'Income from Crypto',
-              old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
-                new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
+              old: this.getCrypto(this.oldSummaryIncome, 'capitalGains'),
+              new: this.getCrypto(this.newSummaryIncome, 'capitalGains'),
             },
+            //  {
+            //   label: 'Income from Crypto',
+            //   old: Math.max(this.oldSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.oldSummaryIncome?.taxSummary.totalVDABusinessIncome, 0),
+            //     new: Math.max(this.newSummaryIncome?.taxSummary.totalVDACapitalGainIncome+this.newSummaryIncome?.taxSummary.totalVDABusinessIncome, 0)
+            // },
             {
               label: 'Income from Other Sources',
               old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
@@ -1503,8 +1500,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             },
             {
               label: 'BFLA',
-              old: Math.abs(this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff),
-              new: Math.abs(this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff),
+              old: Math.abs(
+                this.oldSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+              ),
+              new: Math.abs(
+                this.newSummaryIncome?.taxSummary.totalBroughtForwordSetOff
+              ),
             },
             {
               label: 'Gross Total Income',
@@ -1525,8 +1526,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             },
             {
               label: 'CFL',
-              old: getCFL(this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears),
-              new: getCFL(this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears)
+              old: getCFL(
+                this.oldSummaryIncome?.totalLossCarriedForwardedToFutureYears
+              ),
+              new: getCFL(
+                this.newSummaryIncome?.totalLossCarriedForwardedToFutureYears
+              ),
             },
             {
               label: 'Gross Tax Liability',
@@ -1793,18 +1798,21 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       (this.ITR_JSON?.isRevised === 'Y' && this.ITR_JSON?.regime === 'OLD')
     ) {
       this.dueDateOver = true;
-      this.allowNewRegime = environment.environment === 'UAT' ? true : !this.dueDateOver;
+      this.allowNewRegime =
+        environment.environment === 'UAT' ? true : !this.dueDateOver;
       return;
     } else if (
       (currentMonth === july && currentDay > july31) ||
       (this.ITR_JSON?.isRevised === 'Y' && this.ITR_JSON?.regime === 'OLD')
     ) {
       this.dueDateOver = true;
-      this.allowNewRegime = environment.environment === 'UAT' ? true : !this.dueDateOver;
+      this.allowNewRegime =
+        environment.environment === 'UAT' ? true : !this.dueDateOver;
       return;
     } else {
       this.dueDateOver = false;
-      this.allowNewRegime = environment.environment === 'UAT' ? true : !this.dueDateOver;
+      this.allowNewRegime =
+        environment.environment === 'UAT' ? true : !this.dueDateOver;
       return;
     }
   }
@@ -2004,28 +2012,37 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
     ).controls['date'].setValue(moment(dateString).toDate());
   }
-}
 
-function getTotalCapitalGain(capitalGain: Array<any>[]): number {
-  if(capitalGain != null && capitalGain.length>0)
-    return capitalGain.filter((cg) => (cg as any).assetType !== 'VDA').map(cg=>Math.max((cg as any).incomeBeforeInternalSetOff,0)).reduce((total, value)=> total + value,0);
-  else
-    return 0;
-}
+  getCrypto(summary, type) {
+    const totalCapitalGain = summary?.taxSummary?.capitalGain;
+    const totalBusinessIncome = summary?.taxSummary?.businessIncome;
+    const vdaArray = summary?.summaryIncome?.cgIncomeN?.capitalGain?.filter(
+      (item) => {
+        return item?.assetType === 'VDA';
+      }
+    );
+    const cryptoGainArray = vdaArray
+      .filter((element) => element?.headOfIncome === 'BI')
+      .reduce((total, element) => total + (element?.cgIncome || 0), 0);
 
-function getTotalBusinessIncome(summaryBusinessIncome: any): number {
-  return Math.max(
-    Math.max(summaryBusinessIncome.totalSpeculativeIncome, 0)+
-    Math.max(summaryBusinessIncome.totalPresumptiveIncome, 0)+
-    Math.max(summaryBusinessIncome.totalNonSpeculativeIncome, 0)+
-    Math.max(summaryBusinessIncome.totalIncomeFromFirm, 0)
-    , 0)
+    if (type === 'business') {
+      let business = totalBusinessIncome + cryptoGainArray;
+      return business;
+    } else {
+      let capitalGain = totalCapitalGain - cryptoGainArray;
+      return capitalGain;
+    }
+  }
 }
 
 function getCFL(cfl: any): number {
-  if(cfl != null)
-    return cfl.stcgloss+cfl.ltcgloss+cfl.speculativeBusinessLoss+cfl.housePropertyLoss+cfl.broughtForwordBusinessLoss;
-  else
-    return 0;
+  if (cfl != null)
+    return (
+      cfl.stcgloss +
+      cfl.ltcgloss +
+      cfl.speculativeBusinessLoss +
+      cfl.housePropertyLoss +
+      cfl.broughtForwordBusinessLoss
+    );
+  else return 0;
 }
-

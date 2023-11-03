@@ -150,26 +150,60 @@
                   </mat-error>
                 </mat-form-field>
               </div>
+
+              <!-- Full Value of Sale received/receivable -->
               <div class="col-sm-4 spsTp">
-                <mat-label>Full Value of Sale Consideration</mat-label>
+                <mat-label>Full Value of Sale received/receivable</mat-label>
                 <mat-form-field class="input-field-width" appearance="outline">
                   <input
                     input
                     matInput
                     digitsOnly
                     currencyMask
-                    placeholder="Full Value of Sale Consideration"
+                    placeholder="Full Value of Sale received/receivable"
+                    name="asset[i]"
+                    formControlName="sellValue"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i); updateSaleValue('saleValueChange')"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+
+              <!-- stamp duty value -->
+              <div class="col-sm-4 spsTp">
+                <mat-label>Stamp duty value</mat-label>
+                <mat-form-field class="input-field-width" appearance="outline">
+                  <input
+                    input
+                    matInput
+                    digitsOnly
+                    currencyMask
+                    placeholder="Stamp duty value"
+                    name="asset[i]"
+                    formControlName="stampDutyValue"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="col-sm-4 spsTp">
+                <mat-label
+                  >Full Value of Sale Consideration as per 50C</mat-label
+                >
+                <mat-form-field class="input-field-width" appearance="outline">
+                  <input
+                    input
+                    matInput
+                    digitsOnly
+                    currencyMask
+                    placeholder="Value of Sale Consideration u/s 50C"
                     name="asset[i]"
                     formControlName="valueInConsideration"
                     (change)="calculateCapitalGain(this.immovableForm, '', i)"
                     required
+                    readonly
                   />
-                  <!-- (selectionChange)="calculateCapitalGain(this.immovableForm)" -->
-                  <!-- <mat-option *ngFor="let dropdown of fullValuesConsideration"
-                                              [value]="dropdown.value">
-                                              {{ dropdown.label }}
-                                          </mat-option> -->
-                  <!-- </mat-select> -->
                 </mat-form-field>
               </div>
 
@@ -281,7 +315,6 @@
             <button
               class="tbd-btn save-btn"
               style="float: right"
-              [disabled]="totalCg <= 0"
               (click)="addMoreImprovements(this.immovableForm)"
               *ngIf="isImprovements.value"
             >
@@ -308,19 +341,28 @@
           >
             <div>
               <div class="card__col-xs-12 card__col-sm-4">
-                <mat-label
-                  ><mat-checkbox
-                    name="improve[i]"
-                    formControlName="selected"
-                  ></mat-checkbox>
-                  Year Of Improvement</mat-label
-                >
+                <mat-label>
+                  <ng-container class="custom-control custom-checkbox">
+                    <input
+                      class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                      type="checkbox"
+                      (click)="$event.stopPropagation()"
+                      [checked]="selectedIndexes.includes(i)"
+                      (click)="toggleSelectedIndex(i)"
+                      name="improve[i]"
+                      formControlName="selected"
+                    />
+                  </ng-container>
+                  &nbsp;&nbsp; Year Of Improvement
+                </mat-label>
                 <mat-form-field class="input-field-width">
                   <mat-select
                     name="improve[i]"
                     formControlName="dateOfImprovement"
                     required
-                    (selectionChange)="isImprovementValid(this.immovableForm, i)"
+                    (selectionChange)="
+                      isImprovementValid(this.immovableForm, i)
+                    "
                   >
                     <mat-option
                       [value]="year"
@@ -377,7 +419,7 @@
         <div>
           <button
             class="delete-btn"
-            (click)="removeImprovement(active, this.immovableForm)"
+            (click)="removeImprovement(this.immovableForm)"
             [disabled]="!improvementSelected()"
             *ngIf="isImprovements.value"
           >
@@ -738,6 +780,7 @@
                     class="input-field"
                     maxlength="6"
                     (blur)="updateDataByPincode(i)"
+                    (change)="changeAddress($event, 'pin')"
                     required
                   />
                   <mat-error *ngIf="buyer.get('pin').hasError('pattern')">
@@ -753,6 +796,7 @@
                     formControlName="city"
                     name="buyer[i]"
                     class="input-field"
+                    (change)="changeAddress($event, 'city')"
                     required
                   />
                 </mat-form-field>
@@ -763,6 +807,7 @@
                   <mat-select
                     name="improve[i]"
                     formControlName="state"
+                    (selectionChange)="changeAddress($event, 'state')"
                     required
                   >
                     <mat-option
@@ -782,7 +827,7 @@
                     matInput
                     formControlName="address"
                     name="buyer[i]"
-                    maxlength="25"
+                    (change)="changeAddress($event, 'address')"
                     required
                     trim
                   ></textarea>
@@ -798,7 +843,7 @@
           <div class="col-sm-3">
             <button
               class="delete-btn"
-              (click)="removeBuyersDetails(active)"
+              (click)="removeBuyersDetails()"
               [disabled]="!buyerSelected()"
             >
               <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete

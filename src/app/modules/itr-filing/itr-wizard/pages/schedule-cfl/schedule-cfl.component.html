@@ -121,24 +121,20 @@
             <button type="submit" class="clr-btn" (click)="deleteCflArray()"><i class="fa fa-close"
                     aria-hidden="true">&nbsp;</i>Clear</button>
         </div>
-
-        <div class="col-sm-6">
-            <button type="submit" class="tbd-btn save-btn mvRth" (click)="save()">Save</button>
-        </div>
     </div>
 </div>
 </div>
 
     <div class="flex justify-between p-[30px] back-foot">
-    <button class="lgtBtn">
+    <button class="lgtBtn" (click)="goBack()">
       <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-      <span class="font-semibold" (click)="goBack()"
+      <span class="font-semibold"
         >&nbsp;Back to More Info List</span
       >
     </button>
 
-    <button class="saveBtnIn">
-      <span class="font-semibold" (click)="saveAll()">Save All</span>
+    <button class="saveBtnIn" (click)="save()">
+      <span class="font-semibold">Save All</span>
     </button>
   </div>
   </div>

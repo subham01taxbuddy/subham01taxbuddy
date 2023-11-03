@@ -21,6 +21,7 @@ import { parse } from '@typescript-eslint/parser';
 import { AppSetting } from '../modules/shared/app.setting';
 import { StorageService } from '../modules/shared/services/storage.service';
 import { ReportService } from './report-service';
+import {Form, FormArray, FormControl, FormGroup, ValidationErrors} from "@angular/forms";
 
 @Injectable()
 export class UtilsService {
@@ -29,6 +30,7 @@ export class UtilsService {
   private subject = new Subject<any>();
   uploadedJson: any;
   jsonData: any;
+  value:any;
   constructor(
     private snackBar: MatSnackBar,
     private itrMsService: ItrMsService,
@@ -609,11 +611,11 @@ export class UtilsService {
         haveUnlistedShares: false,
       },
       agriculturalDetails: {
-        nameOfDistrict: '',
+        nameOfDistrict: null,
         landInAcre: null,
-        owner: '',
-        typeOfLand: '',
-        pinCode: '',
+        owner: null,
+        typeOfLand: null,
+        pinCode: null,
       },
       itrProgress: [],
       directorInCompany: [],
@@ -674,6 +676,24 @@ export class UtilsService {
       itrSummaryJson: null,
       isItrSummaryJsonEdited: false,
       liableSection44AAflag: '',
+
+      agriculturalIncome: {
+        grossAgriculturalReceipts: null,
+        expenditureIncurredOnAgriculture: null,
+        unabsorbedAgriculturalLoss: null,
+        agriIncomePortionRule7: null,
+        netAgriculturalIncome: null,
+      },
+
+      agriculturalLandDetails: [
+        {
+          nameOfDistrict: null,
+          pinCode: null,
+          landInAcre: null,
+          owner: null, //"O - Owned; H - Held on lease"
+          typeOfLand: null, //"IRG - Irrigated; RF - Rain-fed"
+        },
+      ],
     };
 
     return ITR_JSON;
@@ -1143,8 +1163,10 @@ export class UtilsService {
         item.duplicate = true;
         seenDuplicate = true;
       } else {
-        testObject[itemPropertyName] = item;
-        delete item.duplicate;
+        if (itemPropertyName !== 'GGGGG0000G') {
+          testObject[itemPropertyName] = item;
+          delete item.duplicate;
+        }
       }
     });
 
@@ -1388,5 +1410,50 @@ export class UtilsService {
 
   getAddClientJsonData() {
     return this.jsonData;
+  }
+
+  private dataSubject = new Subject<any>();
+
+  sendData(data: any, component:string) {
+    this.dataSubject.next({data, component});
+  }
+
+  getData() {
+    return this.dataSubject.asObservable();
+  }
+
+  highlightInvalidFormFields(formGroup: FormGroup){
+    Object.keys(formGroup.controls).forEach((key) => {
+      if(formGroup.get(key) instanceof FormControl) {
+        const controlErrors: ValidationErrors =
+          formGroup.get(key).errors;
+        if (controlErrors != null) {
+          console.log(formGroup);
+          Object.keys(controlErrors).forEach((keyError) => {
+            console.log(
+              'Key control: ' + key + ', keyError: ' + keyError + ', err value: ',
+              controlErrors[keyError]
+            );
+            formGroup.controls[key].markAsTouched();
+            return;
+          });
+        }
+      } else if(formGroup.get(key) instanceof FormGroup){
+        this.highlightInvalidFormFields(formGroup.get(key) as FormGroup);
+      } else if(formGroup.get(key) instanceof FormArray){
+        let formArray = formGroup.get(key) as FormArray;
+        formArray.controls.forEach(element =>{
+          this.highlightInvalidFormFields(element as FormGroup);
+        });
+      }
+    });
+  }
+
+  setChange(value){
+    return this.value = value;
+  }
+
+  getChange(){
+    return this.value;
   }
 }

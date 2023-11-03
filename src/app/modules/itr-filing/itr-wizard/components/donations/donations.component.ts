@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -56,30 +51,32 @@ export class DonationsComponent implements OnInit {
       label: '50% deduction subject to qualifying limit',
       description: 'NA',
       active: true,
-    }
+    },
   ];
 
   scientificDonationDropdown = [
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_A',
-      label: 'Sum paid to research Association or University, college or other institution for scientific research',
+      value: 'SCIENTIFIC_RESEARCH',
+      label:
+        'Sum paid to research Association or University, college or other institution for scientific research',
       description: 'NA',
       active: true,
     },
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_AA',
-      label: 'Sum paid to research Association or University, college or other institution for social science or statistical research',
+      value: 'SOCIAL_SCIENCE_OR_STATISTICAL_RESEARCH',
+      label:
+        'Sum paid to research Association or University, college or other institution for social science or statistical research',
       description: 'NA',
       active: true,
     },
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_B',
+      value: 'RURAL_DEVELOPMENT',
       label: 'Sum paid to an association or institution for Rural Development',
       description: 'NA',
       active: true,
@@ -87,43 +84,48 @@ export class DonationsComponent implements OnInit {
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_BB',
-      label: 'Sum paid to PSU or local authority or an association institution approved by a national committee for carrying out any eligible project.',
+      value: 'PSU_OR_LOCAL_AUTHORITY_FOR_CARRYING_OUT_ANY_ELIGIBLE_PROJECT',
+      label:
+        'Sum paid to PSU or local authority or an association institution approved by a national committee for carrying out any eligible project.',
       description: 'NA',
       active: true,
     },
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_C',
-      label: 'Sum paid to an association or institution for conservation of natural resources or for afforestation',
+      value: 'CONSERVATION_OF_NATURAL_RESOURCES_OR_FOR_AFFORESTATION',
+      label:
+        'Sum paid to an association or institution for conservation of natural resources or for afforestation',
       description: 'NA',
       active: true,
     },
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_CC',
-      label: 'Sum paid for afforestation, to the fund, which is notified by Central Govt.',
+      value: 'AFFORESTATION_TO_CG_NOTIFIED_FUNDS',
+      label:
+        'Sum paid for afforestation, to the fund, which is notified by Central Govt.',
       description: 'NA',
       active: true,
     },
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_D',
-      label: 'Sum paid for Rural Development to the funds, which are notified by the central Govt.',
+      value: 'RURAL_DEVELOPMENT_TO_CG_NOTIFIED_FUNDS',
+      label:
+        'Sum paid for Rural Development to the funds, which are notified by the central Govt.',
       description: 'NA',
       active: true,
     },
     {
       id: null,
       donationType: 'SCIENTIFIC',
-      value: 'FND_SEC80GGA_E',
-      label: 'Sum Paid to National Urban Poverty Eradication Fund as set up and notified by central govt',
+      value: 'NATIONAL_URBAN_POVERTY_ERADICATION_FUND',
+      label:
+        'Sum Paid to National Urban Poverty Eradication Fund as set up and notified by central govt',
       description: 'NA',
       active: true,
-    }
+    },
   ];
   stateDropdown = [
     {
@@ -448,16 +450,15 @@ export class DonationsComponent implements OnInit {
       this.Copy_ITR_JSON.donations.length > 0
     ) {
       this.Copy_ITR_JSON.donations.forEach((item) => {
-        if(this.type === '80g' && item.donationType === 'OTHER') {
+        if (this.type === '80g' && item.donationType === 'OTHER') {
           this.addMoreDonations(item);
         }
-        if(this.type === '80gga' && item.donationType === 'SCIENTIFIC') {
+        if (this.type === '80gga' && item.donationType === 'SCIENTIFIC') {
           this.addMoreDonations(item);
         }
       });
       this.panValidation();
     }
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -497,7 +498,9 @@ export class DonationsComponent implements OnInit {
       donationType: this.type === '80gga' ? 'SCIENTIFIC' : 'OTHER',
       amountInCash: [
         item ? item.amountInCash : 0,
-        this.type === '80gga' ? [Validators.required] : [Validators.required, Validators.max(2000)],
+        this.type === '80gga'
+          ? [Validators.required]
+          : [Validators.required, Validators.max(2000)],
       ],
       amountOtherThanCash: [
         item ? item.amountOtherThanCash : null,
@@ -507,7 +510,11 @@ export class DonationsComponent implements OnInit {
       details: [item ? item.details : ''],
       name: [
         item ? item.name : '',
-        [Validators.required, Validators.maxLength(25), Validators.pattern(AppConstants.charAllSpecialRegex)],
+        [
+          Validators.required,
+          Validators.maxLength(25),
+          Validators.pattern(AppConstants.charAllSpecialRegex),
+        ],
       ],
       address: [item ? item.address : '', Validators.required],
       city: [item ? item.city : '', Validators.required],
@@ -548,7 +555,7 @@ export class DonationsComponent implements OnInit {
   }
 
   displayTooltip(i) {
-    if(this.type === '80g') {
+    if (this.type === '80g') {
       const donationLabel: any = this.otherDonationToDropdown.filter(
         (item: any) =>
           item.value ===
@@ -558,7 +565,7 @@ export class DonationsComponent implements OnInit {
           ).controls['schemeCode'].value
       );
       this.donationToolTip = donationLabel[0].label;
-    } else if(this.type === '80gga') {
+    } else if (this.type === '80gga') {
       const donationLabel: any = this.scientificDonationDropdown.filter(
         (item: any) =>
           item.value ===
@@ -572,11 +579,14 @@ export class DonationsComponent implements OnInit {
   }
 
   getEligibleAmount(i) {
-    let formGroup = (this.generalDonationForm.controls['donationArray'] as FormGroup)
-      .controls[i] as FormGroup;
+    let formGroup = (
+      this.generalDonationForm.controls['donationArray'] as FormGroup
+    ).controls[i] as FormGroup;
     let amountInCash = parseInt(formGroup.controls['amountInCash'].value);
-    let amountOtherThanCash = parseInt(formGroup.controls['amountOtherThanCash'].value);
-    if(amountInCash > 2000){
+    let amountOtherThanCash = parseInt(
+      formGroup.controls['amountOtherThanCash'].value
+    );
+    if (amountInCash > 2000) {
       return amountOtherThanCash;
     } else {
       return amountInCash + amountOtherThanCash;
@@ -584,10 +594,13 @@ export class DonationsComponent implements OnInit {
   }
 
   getTotalAmount(i) {
-    let formGroup = (this.generalDonationForm.controls['donationArray'] as FormGroup)
-      .controls[i] as FormGroup;
+    let formGroup = (
+      this.generalDonationForm.controls['donationArray'] as FormGroup
+    ).controls[i] as FormGroup;
     let amountInCash = parseInt(formGroup.controls['amountInCash'].value);
-    let amountOtherThanCash = parseInt(formGroup.controls['amountOtherThanCash'].value);
+    let amountOtherThanCash = parseInt(
+      formGroup.controls['amountOtherThanCash'].value
+    );
     return amountInCash + amountOtherThanCash;
   }
 
@@ -600,26 +613,39 @@ export class DonationsComponent implements OnInit {
 
   saveGeneralDonation() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(
+      sessionStorage.getItem(AppConstants.ITR_JSON)
+    );
     this.loading = true;
 
-    if(this.type === '80g' && this.panValidation()){
+    if (this.type === '80g' && this.panValidation()) {
       this.loading = false;
       return false;
     }
     if (this.generalDonationForm.valid) {
       if (this.type === '80gga') {
-        this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.filter(item => item.donationType !== 'SCIENTIFIC');
-        if(this.generalDonationForm.value.donationArray.length > 0) {
-          this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.concat(this.generalDonationForm.value.donationArray);
+        this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.filter(
+          (item) => item.donationType !== 'SCIENTIFIC'
+        );
+        if (this.generalDonationForm.value.donationArray.length > 0) {
+          this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.concat(
+            this.generalDonationForm.value.donationArray
+          );
         }
       } else if (this.type === '80g') {
-        this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.filter(item => item.donationType !== 'OTHER');
-        if(this.generalDonationForm.value.donationArray.length > 0) {
-          this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.concat(this.generalDonationForm.value.donationArray);
+        this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.filter(
+          (item) => item.donationType !== 'OTHER'
+        );
+        if (this.generalDonationForm.value.donationArray.length > 0) {
+          this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.concat(
+            this.generalDonationForm.value.donationArray
+          );
         }
       }
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.Copy_ITR_JSON)
+      );
     } else {
       this.loading = false;
       $('input.ng-invalid').first().focus();
@@ -641,10 +667,12 @@ export class DonationsComponent implements OnInit {
   }
 
   panValidation() {
-    const buyersDetails = <FormArray>this.generalDonationForm.get('donationArray');
+    const buyersDetails = <FormArray>(
+      this.generalDonationForm.get('donationArray')
+    );
     // This method is written in utils service for common usablity.
     let panRepeat: boolean = this.utilsService.checkDuplicateInObject(
-      'pan',
+      'panNumber',
       buyersDetails.value
     );
     let userPanExist = [];
