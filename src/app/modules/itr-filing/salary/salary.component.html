@@ -456,6 +456,16 @@
                       First proviso under central government cannot be claimed
                       by government employees
                     </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'SECOND_PROVISO' &&
+                        secondProvisoError
+                      "
+                    >
+                      Second proviso allowance cannot be claimed by government
+                      employees
+                    </mat-error>
                   </div>
                   <!-- Calculator button -->
                   <i
