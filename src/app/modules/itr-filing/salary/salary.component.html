@@ -446,6 +446,16 @@
                       claimed by government employees and should be less than
                       salary in 17(1) or 5 lakhs, whichever is lower
                     </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'FIRST_PROVISO' &&
+                        firstProvisoError
+                      "
+                    >
+                      First proviso under central government cannot be claimed
+                      by government employees
+                    </mat-error>
                   </div>
                   <!-- Calculator button -->
                   <i *ngIf="false"
