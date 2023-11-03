@@ -411,6 +411,18 @@
                       Commuted pension u/s 10(10A) to be claimed cannot be more
                       than the commuted pension u/s 10(10A) that is provided
                     </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'LEAVE_ENCASHMENT' &&
+                        leaveEncashError
+                      "
+                    >
+                      Leave Encashment to be claimed cannot be more than the
+                      Leave Encashment that is provided or salary entered in
+                      Salary 17(1) or 3 lakhs (for non-goverment employees),
+                      whichever is lower
+                    </mat-error>
                   </div>
                   <!-- Calculator button -->
                   <i *ngIf="false"
