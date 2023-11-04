@@ -874,7 +874,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       console.log(res);
       if (res?.records) {
         this.userId = res?.records[0]?.userId;
-        debugger
         if (this.userId) {
           let disposable = this.dialog.open(AddSubscriptionComponent, {
             width: '80%',

@@ -167,7 +167,6 @@ export class AddSubscriptionComponent implements OnInit {
 
   createSubscription() {
     if (this.utilService.isNonEmpty(this.selectedPlanInfo)) {
-      debugger
       if (this.selectedPlanInfo.servicesType === 'ITR') {
         // https://dev-api.taxbuddy.com/report/bo/subscription/cancel/requests?page=0&pageSize=5&mobileNumber=1348972580
         let param = `/bo/subscription/cancel/requests?page=0&pageSize=5&serviceType=ITR&mobileNumber=${this.data.mobileNo}`
@@ -227,7 +226,6 @@ export class AddSubscriptionComponent implements OnInit {
       selectedBy: "SME",
       smeUserId: this?.loggedInSme[0]?.userId
     }
-    debugger
     this.itrService.postMethod(param, reqBody).subscribe((res: any) => {
       this.loading = false;
       we_track('Create Subscription', {
