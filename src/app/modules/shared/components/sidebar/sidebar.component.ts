@@ -62,14 +62,13 @@ export class SidebarComponent {
       roles: ['ROLE_FILER'],
       submenu: []
     },
-    {
-      name: 'Owner Dashboard',
-      // iconClass: 'fa fa-globe',
-      active: false,
-      url: '/dashboard/main',
-      roles: ['ROLE_OWNER'],
-      submenu: []
-    },
+    // {
+    //   name: 'Owner Dashboard',
+    //   active: false,
+    //   url: '/dashboard/main',
+    //   roles: ['ROLE_OWNER'],
+    //   submenu: []
+    // },
     {
       name: 'Leader Dashboard',
       // iconClass: 'fa fa-globe',
@@ -110,7 +109,7 @@ export class SidebarComponent {
       // iconClass: 'fa fa-mobile',
       active: false,
       url: null,
-      roles: ['ROLE_ADMIN', 'ROLE_OWNER', 'ROLE_LEADER'],
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: [
         { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Assigned SME', url: '/sme-management-new/assignedsme', roles: [] },
@@ -179,14 +178,13 @@ export class SidebarComponent {
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
-    {
-      name: 'BO-Partners',
-      // iconClass: 'fa fa-code',
-      active: true,
-      url: '/bo-partners',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
-      submenu: []
-    },
+    // {
+    //   name: 'BO-Partners',
+    //   active: true,
+    //   url: '/bo-partners',
+    //   roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+    //   submenu: []
+    // },
     {
       name: 'Promo-Codes',
       // iconClass: 'fa fa-code',
@@ -216,7 +214,7 @@ export class SidebarComponent {
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
         { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
         { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN'] },
-        { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN', 'ROLE_LEADER', 'ROLE_OWNER'] },
+        { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     },
     {
