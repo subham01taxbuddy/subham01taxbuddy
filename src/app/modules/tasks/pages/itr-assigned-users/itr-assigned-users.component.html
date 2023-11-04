@@ -7,10 +7,12 @@
                     <mat-icon> arrow_forward_ios </mat-icon>
                     Filter - ITR Assigned User:
                 </mat-panel-title>
-                <div class="col-sm-3"
-                    *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER') || loggedInUserRoles?.includes('ROLE_OWNER'))">
-                    <button class="tbd-btn spRt" style="float:right"
-                        (click)="$event.stopPropagation(); openBulkReAssignment()">Bulk Re-Assignment</button>
+                <div class="col-sm-7"
+                    *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER') )">
+                    <button class="tbd-btn spRt bulk col-sm-4" style="float:right" disabled
+                        (click)="$event.stopPropagation(); openBulkReAssignment()">Bulk Re-Assignment to Leader</button>
+                    <button class="tbd-btn spRt bulk col-sm-4" style="float:right" disabled
+                        (click)="$event.stopPropagation(); openBulkReAssignment()">Bulk Re-Assignment to Filer</button>
                 </div>
             </mat-expansion-panel-header>
             <div class="rowClr">
@@ -84,11 +86,11 @@
                 <div class="txTit col-sm-4">
                     User Details:
                 </div>
-                <div class="col-sm-5">
+                <!-- <div class="col-sm-5">
                     <button class="tbd-btn spRt aprv mt" *ngIf="showReassignmentBtn.length && config.totalItems > 1"
                         (click)="actionWithReassignment()">
                         Action with Re-assignment </button>
-                </div>
+                </div> -->
             </div>
             <div class="col-sm-3">
                 <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
