@@ -1,0 +1,6 @@
+projectKey=Taxbuddy-Backoffice
+serverUrl=http://qc.taxbuddy.com
+serverVersion=9.9.1.69595
+dashboardUrl=http://qc.taxbuddy.com/dashboard?id=Taxbuddy-Backoffice
+ceTaskId=AYnU-b5wf4jR-5WysP3B
+ceTaskUrl=http://qc.taxbuddy.com/api/ce/task?id=AYnU-b5wf4jR-5WysP3B
