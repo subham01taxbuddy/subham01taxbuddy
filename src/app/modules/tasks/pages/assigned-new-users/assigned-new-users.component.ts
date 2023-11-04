@@ -574,7 +574,6 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          // debugger
           // let statusText = '';
           // if (itrStatus.length !== 0) {
           //   const nameArray = itrStatus.filter(

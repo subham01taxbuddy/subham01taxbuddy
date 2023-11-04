@@ -17,7 +17,7 @@ declare function we_track(key: string, value: any);
 })
 export class AddSubscriptionComponent implements OnInit {
   allSubscriptions: any;
-  service: any;
+  service = '';
   serviceDetails: any;
   loading!: boolean;
   loggedInSme: any;
@@ -33,8 +33,8 @@ export class AddSubscriptionComponent implements OnInit {
   smeDetails: any
   serviceEligibility: any;
   showMessage = '';
-  partnerType:any;
-  searchAsPrinciple :boolean =false;
+  partnerType: any;
+  searchAsPrinciple: boolean = false;
   constructor(
     public dialogRef: MatDialogRef<AddSubscriptionComponent>,
     private dialog: MatDialog,
@@ -55,10 +55,10 @@ export class AddSubscriptionComponent implements OnInit {
       this.isAllowed = false;
       this.getSmeDetail();
     }
-    if(this.data.mobileNo){
+    if (this.data.mobileNo) {
       this.getUserInfoByMobileNum(this.data.mobileNo);
-    }else{
-      this.getUserInfoByMobileNum('',this.data.userId);
+    } else {
+      this.getUserInfoByMobileNum('', this.data.userId);
     }
 
   }
@@ -112,25 +112,25 @@ export class AddSubscriptionComponent implements OnInit {
     console.log('selectedPlanInfo -> ', this.selectedPlanInfo);
   }
 
-  getUserInfoByMobileNum(number,userId?) {
+  getUserInfoByMobileNum(number, userId?) {
     // https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId
-   let filter = '';
-    if(number){
-      filter='&mobileNumber=' + number
-    }else{
+    let filter = '';
+    if (number) {
+      filter = '&mobileNumber=' + number
+    } else {
       filter = '&userId=' + userId
     }
-    let userFilter=''
-    if(this.roles.includes('ROLE_LEADER')){
+    let userFilter = ''
+    if (this.roles.includes('ROLE_LEADER')) {
       userFilter += `&leaderUserId=${loggedInSmeUserId}`;
 
     }
-    if(this.roles.includes('ROLE_FILER') && this.partnerType != "PRINCIPAL"){
+    if (this.roles.includes('ROLE_FILER') && this.partnerType != "PRINCIPAL") {
       userFilter += `&filerUserId=${loggedInSmeUserId}`;
     }
 
-    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL"){
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL") {
       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeUserId}`;
     }
 
@@ -138,22 +138,20 @@ export class AddSubscriptionComponent implements OnInit {
     let param = `/bo/subscription-dashboard-new?page=0&pageSize=20${userFilter}${filter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      console.log('Get user  by mobile number responce: ', response);
       this.allSubscriptions = response.data.content
-      console.log("All Sub", this.allSubscriptions)
-      let smeSelectedPlan = this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan);
-      let userSelectedPlan = this.allSubscriptions?.map((item: any) => item?.userSelectedPlan);
-      if (smeSelectedPlan.length && smeSelectedPlan[0] != null) {
-        this.service = smeSelectedPlan[0]?.servicesType;
-        this.serviceDetails = smeSelectedPlan[0]?.name;
-      } else if (userSelectedPlan.length && userSelectedPlan[0] != null) {
-        this.service = userSelectedPlan[0]?.servicesType;
-        this.serviceDetails = userSelectedPlan[0]?.name;
-      } else {
-        this.service = this.allSubscriptions?.map((item: any) => item?.item?.service);
-        this.serviceDetails = this.allSubscriptions?.map((item: any) => item?.item?.serviceDetail);
+      let smeSelectedPlan = [];
+      smeSelectedPlan = [...smeSelectedPlan, ... this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan).filter(data => {
+        if (data) return data;
+      })];
+      smeSelectedPlan = [...smeSelectedPlan, ...this.allSubscriptions?.map((item: any) => item?.userSelectedPlan).filter(data => {
+        if (data) return data;
+      })];
+      debugger
+      if (smeSelectedPlan.length) {
+        let itrPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'ITR')
+        this.service = itrPlanDetails[0]?.servicesType;
+        this.serviceDetails = itrPlanDetails[0]?.name;
       }
-      console.log("services of user", this.service)
     })
   }
 

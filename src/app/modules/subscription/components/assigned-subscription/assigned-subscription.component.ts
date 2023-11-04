@@ -860,7 +860,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   createSub() {
-    debugger
     if (Object.keys(this.searchBy).length) {
       Object.keys(this.searchBy).forEach(key => {
         if (key === 'mobileNumber') {
