@@ -35,10 +35,14 @@ export class AddSubscriptionComponent implements OnInit {
   showMessage = '';
   partnerType: any;
   searchAsPrinciple: boolean = false;
+  cancelSubscriptionData: any;
   constructor(
     public dialogRef: MatDialogRef<AddSubscriptionComponent>,
     private dialog: MatDialog,
+    private _toastMessageService: ToastMessageService,
     private router: Router,
+    private utilsService: UtilsService,
+    private itrMsService: ItrMsService,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
     private itrService: ItrMsService, private utilService: UtilsService,
     private toastMessage: ToastMessageService, private reportService: ReportService,
@@ -146,7 +150,6 @@ export class AddSubscriptionComponent implements OnInit {
       smeSelectedPlan = [...smeSelectedPlan, ...this.allSubscriptions?.map((item: any) => item?.userSelectedPlan).filter(data => {
         if (data) return data;
       })];
-      debugger
       if (smeSelectedPlan.length) {
         let itrPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'ITR')
         this.service = itrPlanDetails[0]?.servicesType;
@@ -163,53 +166,99 @@ export class AddSubscriptionComponent implements OnInit {
   // }
 
   createSubscription() {
-    // debugger
-    // let dialogRef;
-    // dialogRef = this.dialog.open(ConfirmDialogComponent, {
-    //   data: {
-    //     title: '',
-    //     message: 'This user has an ITR subscription in deletion process pending approval from leader. Creating another subscription for ITR service will RECOVER the earlier subscription and remove it from leaders  deletion approval process. Do you want to continue?',
-    //   },
-    // }); this.dialogRef.afterClosed().subscribe(result => {
-    //   if (result === 'YES') {
-
-    //   } else {
-    //     this.router.navigate(['subscription/assigned-subscription']);
-    //   }
-    // });
-    this.loading = true
     if (this.utilService.isNonEmpty(this.selectedPlanInfo)) {
-      console.log('selectedPlanInfo -> ', this.selectedPlanInfo);
-      let param = '/subscription/recalculate';
-      // const smeInfo = JSON.parse(localStorage.getItem('UMD'));
-      let reqBody = {
-        userId: this.data.userId,
-        planId: this.selectedPlanInfo.planId,
-        selectedBy: "SME", // USER or SME
-        smeUserId: this?.loggedInSme[0]?.userId
+      debugger
+      if (this.selectedPlanInfo.servicesType === 'ITR') {
+        // https://dev-api.taxbuddy.com/report/bo/subscription/cancel/requests?page=0&pageSize=5&mobileNumber=1348972580
+        let param = `/bo/subscription/cancel/requests?page=0&pageSize=5&serviceType=ITR&mobileNumber=${this.data.mobileNo}`
+
+        this.loading = true;
+        this.reportService.getMethod(param).subscribe(
+          (response: any) => {
+            this.loading = false;
+            if (response.success) {
+              if (response?.data?.content instanceof Array && response?.data?.content?.length > 0) {
+                this.cancelSubscriptionData = response.data.content[0];
+                if (this.cancelSubscriptionData?.cancellationStatus === 'PENDING') {
+                  let dialogRef;
+                  dialogRef = this.dialog.open(ConfirmDialogComponent, {
+                    data: {
+                      title: 'Confirmation',
+                      message: 'This user has an ITR subscription in deletion process pending approval from leader. Creating another subscription for ITR service will RECOVER the earlier subscription and remove it from leaders  deletion approval process. Do you want to continue?',
+                    },
+                  }); dialogRef.afterClosed().subscribe(result => {
+                    if (result === 'YES') {
+                      this.removeCancelSubscription();
+                    } else {
+                      this.dialogRef.close();
+                      this.router.navigate(['subscription/assigned-subscription']);
+                    }
+                  });
+                } else {
+                  this.updateSubscription();
+                }
+              } else {
+                if (response.message !== null) { this._toastMessageService.alert('error', response.message); }
+                else { this._toastMessageService.alert('error', 'No Data Found'); }
+              }
+            } else {
+              this._toastMessageService.alert("error", response.message);
+            }
+          },
+          (error) => {
+            this.loading = false;
+            this._toastMessageService.alert("error", "Error while fetching subscription cancellation requests: Not_found: data not found");
+          }
+        );
+
       }
-      console.log('Req Body: ', reqBody)
-      this.itrService.postMethod(param, reqBody).subscribe((res: any) => {
-        this.loading = false
-        we_track('Create Subscription', {
-          'User Number': this.data.mobileNo,
-          'Service': this.selectedPlanInfo?.servicesType + ' : ' + this.selectedPlanInfo?.name,
-        });
-        console.log('After subscription plan added res:', res);
-        this.dialogRef.close({ event: 'close', data: res });
-        this.toastMessage.alert("success", "Subscription created successfully.")
-        let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
-        console.log('subInfo: ', subInfo)
-      }, error => {
-        this.loading = false
-        console.log('error -> ', error);
-        this.toastMessage.alert("error", this.utilService.showErrorMsg(error.error.status))
-      })
-    }
-    else {
+    } else {
       this.loading = false
       this.toastMessage.alert("error", "Select Plan.")
     }
+  }
+
+  updateSubscription() {
+    this.loading = true;
+    let param = '/subscription/recalculate';
+    let reqBody = {
+      userId: this.data.userId,
+      planId: this.selectedPlanInfo.planId,
+      selectedBy: "SME",
+      smeUserId: this?.loggedInSme[0]?.userId
+    }
+    debugger
+    this.itrService.postMethod(param, reqBody).subscribe((res: any) => {
+      this.loading = false;
+      we_track('Create Subscription', {
+        'User Number': this.data.mobileNo,
+        'Service': this.selectedPlanInfo?.servicesType + ' : ' + this.selectedPlanInfo?.name,
+      });
+      this.dialogRef.close({ event: 'close', data: res });
+      this.toastMessage.alert("success", "Subscription created successfully.")
+      let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
+    }, error => {
+      this.loading = false
+      this.toastMessage.alert("error", this.utilService.showErrorMsg(error.error.status))
+    })
+  }
+
+  removeCancelSubscription() {
+    // https://dev-api.taxbuddy.com/itr/subscription/cancellation?subscriptionId=2427
+    const param = '/subscription/cancellation?subscriptionId=' + this.cancelSubscriptionData?.subscriptionId
+    this.loading = true;
+    this.itrMsService.patchMethod(param, '').subscribe((result: any) => {
+      this.loading = false;
+      if (result.success) {
+        this.updateSubscription();
+        this.utilsService.showSnackBar(result.message)
+      } else {
+        this.utilsService.showSnackBar(result.message)
+      }
+    }, err => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Failed to delete previous subscription.')
+    });
   }
 
   showSelectedServicePlans(serviceType) {
