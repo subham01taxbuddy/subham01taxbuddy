@@ -2696,7 +2696,7 @@ export class PersonalInformationComponent implements OnInit {
       );
     } else {
       this.loading = false;
-      $('input.ng-invalid').first().focus();
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
       this.personalInfoSaved.emit(false);
     }
   }
