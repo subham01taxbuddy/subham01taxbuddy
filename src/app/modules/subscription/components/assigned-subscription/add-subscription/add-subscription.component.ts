@@ -210,6 +210,8 @@ export class AddSubscriptionComponent implements OnInit {
           }
         );
 
+      } else {
+        this.updateSubscription();
       }
     } else {
       this.loading = false
