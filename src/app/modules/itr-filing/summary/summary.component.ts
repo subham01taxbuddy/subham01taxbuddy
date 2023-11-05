@@ -3744,7 +3744,7 @@ export class SummaryComponent implements OnInit {
 
                     email: this.ITR_JSON?.email,
 
-                    itrType: this.ITR_JSON?.itrType,
+                    itrType:  this.finalSummary?.itr?.itrType,
 
                     orgAckNumber:
                       this.ITR_JSON.isRevised === 'Y'
@@ -5300,8 +5300,8 @@ export class SummaryComponent implements OnInit {
 
                   email: this.ITR_JSON?.email,
 
-                  itrType: this.ITR_JSON?.itrType,
-
+                  itrType:  this.finalSummary?.itr?.itrType,
+                  
                   orgAckNumber:
                     this.ITR_JSON.isRevised === 'Y'
                       ? this.ITR_JSON.orgITRAckNum
