@@ -5,7 +5,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SumaryDialogComponent } from '../sumary-dialog/sumary-dialog.component';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import * as converter from 'xml-js';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
@@ -664,9 +663,9 @@ export class Itr2mainComponent implements OnInit, OnChanges {
         this.inputXml = xml;
         this.inputJSON = '';
         // console.log('Uploaded file in XML format: ',this.inputXml);
-        let result1 = converter.xml2json(xml, { compact: true, spaces: 2 });
-        this.JSONData = JSON.parse(result1);
-        console.log('JSON formated data: ', this.JSONData);
+        // let result1 = converter.xml2json(xml, { compact: true, spaces: 2 });
+        // this.JSONData = JSON.parse(result1);
+        // console.log('JSON formated data: ', this.JSONData);
       } else if (file === 'json') {
         let json = e.target.result;
         this.JSONData = '';
