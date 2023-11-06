@@ -19,6 +19,7 @@ import { Location } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
+import { ReportService } from 'src/app/services/report-service';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -82,6 +83,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   roles: any;
   subType: string;
   invoiceAmount: any;
+  smeDetails: any;
+  showMessage = '';
+  serviceEligibility: any;
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -92,7 +96,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     private schedules: Schedules,
     public location: Location,
     private dialog: MatDialog,
-  ) { }
+    private reportService: ReportService
+  ) {
+    this.roles = this.utilsService.getUserRoles();
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+
+  }
 
   ngOnInit() {
     this.getAllPromoCode();
@@ -105,6 +114,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.isButtonDisable = false;
     } else {
       this.isButtonDisable = true;
+    }
+    if (this.roles?.includes('ROLE_FILER')) {
+      this.getSmeDetail();
     }
 
     this.filteredOptions = this.searchedPromoCode.valueChanges.pipe(
@@ -127,7 +139,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.subscriptionObj = JSON.parse(
         sessionStorage.getItem('subscriptionObject')
       )?.data;
-      this.invoiceAmount = this.subscriptionObj['invoiceAmount'];
+      if (this.subscriptionObj?.['invoiceAmount']) {
+        this.invoiceAmount = this.subscriptionObj['invoiceAmount'];
+      }
       console.log('subscriptionObj', this.subscriptionObj);
     } else {
       this.subscriptionObj = this.createSubscriptionObj;
@@ -162,8 +176,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     // }
 
 
-    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    this.roles = this.utilsService.getUserRoles();
     this.getAllPlanInfo(this.serviceType);
     this.getOwnerFilerName();
     this.setFormValues(this.selectedUserInfo);
@@ -178,6 +190,19 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     return this.allPromoCodes.filter(
       (option) => option.title.toLowerCase().indexOf(filterValue) === 0
     );
+  }
+
+  getSmeDetail() {
+    // https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000'
+    let loggedInSmeUserId = this.loggedInSme[0]?.userId;
+    let param = `/bo/sme-details-new/${loggedInSmeUserId}`
+    this.reportService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.smeDetails = response.data[0];
+        this.showMessage = 'Disabled plans are not available in your eligibility please contact with your leader'
+      }
+    })
   }
 
   getCodeFromLabelOnBlur() {
@@ -738,13 +763,35 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           const activePlans = plans.filter(
             (item: any) => item.isActive === true
           );
-          if (this.utilsService.isNonEmpty(serviceType))
-            this.allPlans = activePlans.filter(
-              (item: any) => item.servicesType === serviceType
-            );
-          else this.allPlans = activePlans;
+          if (this.utilsService.isNonEmpty(serviceType)) {
+            this.allPlans = activePlans.filter((item: any) => item.servicesType === serviceType);
+            if (this.roles.includes('ROLE_FILER')) {
+              this.allPlans.forEach((item: any) => {
+                item.disable = true;
+                if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
+                  item.disable = false;
+              })
+            }
+          }
+          else {
+            this.allPlans = activePlans;
+            if (this.roles.includes('ROLE_FILER')) {
+              this.allPlans.forEach((item: any) => {
+                item.disable = true;
+                if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
+                  item.disable = false;
+              })
+            }
+          }
         } else {
           this.allPlans = [plans];
+          if (this.roles.includes('ROLE_FILER')) {
+            this.allPlans.forEach((item: any) => {
+              item.disable = true;
+              if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
+                item.disable = false;
+            })
+          }
         }
         this.setServiceDetails();
       },
