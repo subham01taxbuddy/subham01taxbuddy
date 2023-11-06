@@ -6,7 +6,7 @@
     </div>
   </div>
   <div class="content-wrapper">
-    <div class="container" *ngIf="
+    <!-- <div class="container" *ngIf="
         userSubscription?.userSelectedPlan !== null &&
         userSubscription?.userSelectedPlan?.servicesType === 'ITR'
       ">
@@ -16,7 +16,6 @@
             <div class="txHd alTxH">Select at least 1 sources of income:</div>
             <div class="flex items-center justify-between align-center p-[25px] mt-[25px]">
               <div class="sources-back">
-                <!-- sources-of-income options  -->
                 <mat-chip-list class="sources-chip" multiple (change)="sourcesUpdated($event)">
                   <mat-chip disableRipple *ngFor="let source of sourcesList" (click)="sourcesUpdated(source)"
                     [selected]="source.selected">
@@ -31,7 +30,7 @@
         </div>
       </div>
       <hr />
-    </div>
+    </div> -->
 
     <div class="container">
       <div class="col-sm-10" style="margin-top: 10px">
@@ -83,7 +82,7 @@
           <mat-label> Secondary Mobile Number </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Secondary Mobile Number" [formControl]="reminderMobileNumber"
-              class="input-field" />
+              class="input-field" readonly/>
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -149,9 +148,9 @@
           </mat-form-field>
         </div>
         <div class="col-sm-4">
-          <mat-label> Owner Name </mat-label>
+          <mat-label> Leader Name </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Owner Name" [formControl]="ownerName" class="input-field" readonly />
+            <input type="text" matInput placeholder="Leader Name" [formControl]="leaderName" class="input-field" readonly />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -324,7 +323,7 @@
                 <div style="font-weight: bold; font-size: small; margin-bottom: 10px;">
                   <span>Note:
                     <br>
-                    &bull; Removing of Promo code will apply if subscription is created — so create subscription and then remove
+                    <!-- &bull; Removing of Promo code will apply if subscription is created — so create subscription and then remove -->
                     <br>
                     &bull; Apply the SME selected plan then only Promo code apply/remove will be enabled</span>
                 </div>
@@ -505,12 +504,12 @@
           Cancel
         </button>
       </div>
-      <div style="float: right">
+      <!-- <div style="float: right">
         <button class="tbd-btn cancel-btn" [disabled]="loading" (click)="cancelSubscription()"><i
             class="fa fa-close"></i>
           Cancel Subscription
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>

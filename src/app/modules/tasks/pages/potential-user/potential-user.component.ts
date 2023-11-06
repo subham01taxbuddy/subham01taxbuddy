@@ -15,6 +15,8 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import * as moment from 'moment';
+import { ReportService } from 'src/app/services/report-service';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -24,7 +26,6 @@ declare function we_track(key: string, value: any);
 })
 export class PotentialUserComponent implements OnInit, OnDestroy {
   loading = false;
-  agents = [];
   agentId = null;
   itrStatus: any = [];
   userInfo: any = [];
@@ -54,8 +55,11 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     { value: 'createdDate', name: 'Creation Date' }
   ];
   sortBy: any = {};
-
-
+  searchBy: any = {};
+  searchMenus = [];
+  clearUserFilter: number;
+  searchAsPrinciple :boolean =false;
+  partnerType:any;
 
   constructor(
     private reviewService: ReviewService,
@@ -64,6 +68,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private dialog: MatDialog,
+    private reportService: ReportService,
     private genericCsvService: GenericCsvService,
     private cacheManager: CacheManager,
     @Inject(LOCALE_ID) private locale: string
@@ -89,19 +94,42 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const userId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
-    this.agentId = userId;
+    this.partnerType =this.utilsService.getPartnerType();
+    if (this.roles.includes('ROLE_FILER')) {
+      this.searchMenus = [
+        { value: 'email', name: 'Email' },
+      ]
+    }else{
+      this.searchMenus = [
+        { value: 'email', name: 'Email' },
+        { value: 'mobileNumber', name: 'Mobile No' },
+      ]
+    }
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+      this.agentId = userId;
       this.search();
     } else {
       this.dataOnLoad = false;
     }
-    this.getAgentList();
     this.getMasterStatusList();
+  }
+
+  maskMobileNumber(mobileNumber) {
+    if (mobileNumber) {
+      return 'X'.repeat(mobileNumber.length);
+    }
+    return '-';
   }
 
   sortByObject(object) {
     this.sortBy = object;
   }
+
+  searchByObject(object) {
+    this.searchBy = object;
+    console.log('object from search param ',this.searchBy);
+  }
+
 
   async getMasterStatusList() {
     this.itrStatus = await this.utilsService.getStoredMasterStatusList();
@@ -123,24 +151,28 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
   ownerId: number;
   filerId: number;
-
+  leaderId: number;
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
-      this.ownerId = event ? event.userId : null;
+      this.leaderId = event ? event.userId : null;
     } else {
-      this.filerId = event ? event.userId : null;
+      if (event.partnerType === 'PRINCIPAL') {
+        this.filerId = event ? event.userId : null;
+        this.searchAsPrinciple = true;
+      } else {
+        this.filerId = event ? event.userId : null;
+        this.searchAsPrinciple = false;
+      }
     }
     if (this.filerId) {
       this.agentId = this.filerId;
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
-      //  this.search('agent');
+    } else if (this.leaderId) {
+      this.agentId = this.leaderId;
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    //  this.search('agent');
   }
 
   coOwnerId: number;
@@ -166,26 +198,27 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     //  this.search('agent');
   }
 
-  getAgentList() {
-    let loggedInUserRoles = this.utilsService.getUserRoles();
-    let loggedInUserId = this.utilsService.getLoggedInUserID();
-    const isAgentListAvailable = this.roleBaseAuthGuardService.checkHasPermission(loggedInUserRoles, ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']);
-    if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserId}/child-details`;
-      this.userMsService.getMethod(param).subscribe((result: any) => {
-        if (result.success) {
-          this.agents = result.data;
-        }
-      })
-    }
-  }
-
-  search(form?, isAgent?, pageChange?) {
+    search(form?, isAgent?, pageChange?) {
+    //'https://dev-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&active=false'
     if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
     let loggedInId = this.utilsService.getLoggedInUserID();
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
+
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =true;
+    }
+    if(this.searchBy?.mobileNumber){
+      this.searchParam.mobileNumber = this.searchBy?.mobileNumber
+    }
+    if(this.searchBy?.email){
+      this.searchParam.emailId = this.searchBy?.email
+    }
     if (form == 'mobile') {
       this.searchParam.page = 0;
       if (
@@ -223,10 +256,24 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     }
     let data = this.utilsService.createUrlParams(this.searchParam);
 
+    let leaderFilter = ''
+    if (this.leaderId) {
+      leaderFilter = `&leaderUserId=${this.leaderId}`
+    }
+    let filerFilter ='';
+    if(this.filerId && this.searchAsPrinciple === true){
+      leaderFilter ='';
+      filerFilter=`&searchAsPrincipal=true&filerUserId=${this.filerId}`
+    }
+    if(this.filerId && this.searchAsPrinciple === false){
+      leaderFilter ='';
+      filerFilter=`&filerUserId=${this.filerId}`
+    }
+
     //https://uat-api.taxbuddy.com/report/7521/user-list-new?page=0&pageSize=20&active=false
     // https://uat-api.taxbuddy.com/user/3000/user-list-new?statusId=16&page=0&pageSize=20&active=false
     // 'https://uat-api.taxbuddy.com/user/7522/user-list-new?page=0&searchAsCoOwner=true&pageSize=100&active=false'
-    let param = `/${this.agentId}/user-list-new?${data}&active=false`;
+    let param = `/bo/user-list-new?${data}&active=false${leaderFilter}${filerFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
@@ -244,7 +291,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       param;
     }
 
-    this.userMsService.getMethodNew(param).subscribe(
+    this.reportService.getMethod(param).subscribe(
       (result: any) => {
         this.loading = false;
         if (result.success == false) {
@@ -317,7 +364,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         serviceType: userData[i].serviceType,
         assessmentYear: userData[i].assessmentYear,
         callerAgentName: userData[i].filerName,
-        ownerName: userData[i].ownerName,
+        leaderName: userData[i].leaderName,
         filerName: userData[i].filerName,
         callerAgentNumber: userData[i].filerMobile,
         callerAgentUserId: userData[i].filerUserId,
@@ -367,7 +414,21 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        }
+        },
+         // code to masking mobile no
+         cellRenderer: (params)=> {
+          const mobileNumber = params.value;
+          if(mobileNumber){
+            if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+              const maskedMobile = this.maskMobileNumber(mobileNumber);
+              return maskedMobile;
+            }else{
+              return mobileNumber;
+            }
+          }else{
+            return '-'
+          }
+        },
       },
       {
         headerName: 'Email',
@@ -510,7 +571,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
         }
       },
       {
-        headerName: 'Owner Name',
+        headerName: 'Leader Name',
         field: 'ownerName',
         width: 200,
         suppressMovable: true,
@@ -723,10 +784,10 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   }
 
   active(data) {
-    // https://uat-api.taxbuddy.com/user/agent-assignment-new?userId=737178&assessmentYear=2023-2024&serviceType=ITR
+    //'https://dev-api.taxbuddy.com/user/leader-assignment?userId=8729&serviceType=ITR&statusId=16' \
     console.log('data to active user', data);
     this.loading = true;
-    const param = `/agent-assignment-new?userId=${data.userId}&assessmentYear=${data.assessmentYear}&serviceType=${data.serviceType}`;
+    const param = `/leader-assignment?userId=${data.userId}&serviceType=${data.serviceType}&statusId=16`;
     this.userMsService.getMethod(param).subscribe((result: any) => {
       console.log('res after active ', result)
       this.loading = false;
@@ -786,29 +847,17 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
     this.searchParam.page = 0;
     this.searchParam.size = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
     this.searchParam.statusId = null;
-
+    this.usersGridOptions.api?.setRowData(this.createRowData([]));
+    this.userInfoLength = 0;
+    this.config.totalItems = 0;
     this?.smeDropDown?.resetDropdown();
-
-    if (this.coOwnerDropDown) {
-
-      this.coOwnerDropDown.resetDropdown();
-      this.search('', true);
-    } else {
-      if (this.dataOnLoad) {
-        this.search();
-      } else {
-        this.usersGridOptions.api?.setRowData(this.createRowData([]));
-        this.userInfoLength = 0;
-        this.config.totalItems = 0;
-      }
-    }
   }
 
   ngOnDestroy() {

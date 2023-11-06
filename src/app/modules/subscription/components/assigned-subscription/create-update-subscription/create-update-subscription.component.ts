@@ -20,20 +20,6 @@ import { filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 declare function we_track(key: string, value: any);
-// export class Schedules {
-//   public PERSONAL_INFO = 'PERSONAL_INFO';
-//   public OTHER_SOURCES = 'otherSources';
-//   public INVESTMENTS_DEDUCTIONS = 'investmentsDeductions';
-//   public TAXES_PAID = 'taxesPaid';
-//   public DECLARATION = 'declaration';
-//   public SALARY = 'SALARY';
-//   public HOUSE_PROPERTY = 'HOUSE_PROPERTY';
-//   public BUSINESS_INCOME = 'BUSINESS_INCOME';
-//   public CAPITAL_GAIN = 'capitalGain';
-//   public SPECULATIVE_INCOME = 'speculativeIncome';
-//   public FOREIGN_INCOME = 'foreignIncome';
-//   public MORE_INFORMATION = 'moreInformation'
-// }
 
 @Component({
   selector: 'app-create-update-subscription',
@@ -93,7 +79,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     { label: 'Monthly', value: 'MONTHLY' },
     { label: 'Quarterly', value: 'QUARTERLY' },
   ];
-
+  roles: any;
   subType: string;
   invoiceAmount: any;
   constructor(
@@ -175,38 +161,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     //   // this.serviceDetail=this.createSubscriptionObj.item.serviceDetail;
     // }
 
-    this.sourcesList = [
-      {
-        name: 'Salary',
-        schedule: 'SALARY',
-      },
-      {
-        name: 'House Property',
-        schedule: 'HOUSE_PROPERTY',
-      },
-      {
-        name: 'Business / Profession',
-        schedule: 'BUSINESS_AND_PROFESSION',
-      },
-      {
-        name: 'Capital Gain',
-        schedule: 'CAPITAL_GAINS',
-      },
-      {
-        name: 'Futures / Options',
-        schedule: 'FUTURE_AND_OPTIONS',
-      },
-      {
-        name: 'NRI / Foreign',
-        schedule: 'FOREIGN_INCOME_NRI_EXPAT',
-      },
-      {
-        name: 'Crypto',
-        schedule: 'CRYPTOCURRENCY',
-      },
-    ];
-    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
 
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    this.roles = this.utilsService.getUserRoles();
     this.getAllPlanInfo(this.serviceType);
     this.getOwnerFilerName();
     this.setFormValues(this.selectedUserInfo);
@@ -254,10 +211,23 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       });
   }
 
+  maskMobileNumber(originalMobileNumber: string): string {
+    if (originalMobileNumber && originalMobileNumber.length >= 10) {
+      const maskedPart = '*'.repeat(originalMobileNumber.length - 4);
+      const lastFourDigits = originalMobileNumber.slice(-4);
+      return maskedPart + lastFourDigits;
+    }
+    return originalMobileNumber;
+  }
+
   setFormValues(data) {
     console.log('data', data);
     this.userName.setValue(data?.fName + ' ' + data?.lName);
-    this.mobileNumber.setValue(data?.mobileNumber);
+    if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+      this.mobileNumber.setValue(data?.mobileNumber);
+    } else {
+      this.mobileNumber.setValue(this.maskMobileNumber(data?.mobileNumber));
+    }
     this.emailAddress.setValue(data?.emailAddress);
     this.pin.setValue(data?.address[0]?.pinCode);
     this.state.setValue(data?.address[0]?.state);
@@ -299,6 +269,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     ownerName: new FormControl(''),
     filerName: new FormControl(''),
     assessmentYear: new FormControl(''),
+    leaderName: new FormControl(''),
   });
 
   get mobileNumber() {
@@ -341,6 +312,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
   get assessmentYear() {
     return this.personalInfoForm.controls['assessmentYear'] as FormControl;
+  }
+
+  get leaderName() {
+    return this.personalInfoForm.controls['leaderName'] as FormControl;
   }
 
   otherInfoForm: FormGroup = this.fb.group({
@@ -437,35 +412,36 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   removePromoCode(selectedPlan) {
-    if (this.userSubscription.subscriptionId && this.userSubscription.subscriptionId > 0) {
-      console.log('selectedPromoCode:', this.selectedPromoCode);
-      this.smeSelectedPlanId = selectedPlan;
-      const param = `/subscription/recalculate`;
-      const request = {
-        userId: this.userSubscription.userId,
-        planId: selectedPlan,
-        selectedBy: 'SME',
-        smeUserId: this?.loggedInSme[0]?.userId,
-        subscriptionId: this.userSubscription.subscriptionId,
-        promoCode: this.selectedPromoCode,
-        removePromoCode: true
-      };
-      this.itrService.postMethod(param, request).subscribe((res: any) => {
-        console.log('remove promo res', res);
-        this.appliedPromo = res.promoCode;
-        console.log('removed promo', this.appliedPromo);
-        if (res['Error']) {
-          this.utilsService.showSnackBar(res['Error']);
-          return;
-        }
-        this.utilsService.showSnackBar(
-          `Promo Code ${this.selectedPromoCode} removed successfully!`
-        );
-        this.isPromoRemoved = true;
-        this.userSubscription = res;
-        this.setFinalPricing();
-      });
-    } /*else {
+    // if (this.userSubscription.subscriptionId && this.userSubscription.subscriptionId > 0) {
+    console.log('selectedPromoCode:', this.selectedPromoCode);
+    this.smeSelectedPlanId = selectedPlan;
+    const param = `/subscription/recalculate`;
+    const request = {
+      userId: this.userSubscription.userId,
+      planId: selectedPlan,
+      selectedBy: 'SME',
+      smeUserId: this?.loggedInSme[0]?.userId,
+      subscriptionId: this.userSubscription.subscriptionId,
+      promoCode: this.selectedPromoCode,
+      removePromoCode: true
+    };
+    this.itrService.postMethod(param, request).subscribe((res: any) => {
+      console.log('remove promo res', res);
+      this.appliedPromo = res.promoCode;
+      console.log('removed promo', this.appliedPromo);
+      if (res['Error']) {
+        this.utilsService.showSnackBar(res['Error']);
+        return;
+      }
+      this.utilsService.showSnackBar(
+        `Promo Code ${this.selectedPromoCode} removed successfully!`
+      );
+      this.isPromoRemoved = true;
+      this.userSubscription = res;
+      this.setFinalPricing();
+    });
+    // }
+    /*else {
       this.selectedPromoCode = '';
       this.searchedPromoCode.reset();
       this.applySmeSelectedPlan(this.userSubscription.smeSelectedPlan.planId);
@@ -526,6 +502,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       console.log('get Owner and filer name for new create sub ', result)
       this.filerName.setValue(result.data?.name);
       this.ownerName.setValue(result.data?.ownerName);
+      this.leaderName.setValue(result.data?.leaderName);
     })
   }
 
@@ -539,13 +516,18 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         console.log('user Subscription', this.userSubscription);
         this.gstUserInfoByUserId(subscription.userId);
         this.loading = false;
-        this.reminderMobileNumber.setValue(subscription.reminderMobileNumber);
+        if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+          this.reminderMobileNumber.setValue(subscription.reminderMobileNumber);
+        } else {
+          this.reminderMobileNumber.setValue(this.maskMobileNumber(subscription.reminderMobileNumber));
+        }
         this.reminderEmail.setValue(subscription.reminderEmail);
         this.description.setValue(subscription.item.itemDescription);
         this.sacNumber.setValue(subscription.item.sacCode);
         this.assessmentYear.setValue(subscription.item.financialYear);
         this.ownerName.setValue(subscription.ownerName);
         this.filerName.setValue(subscription.assigneeName);
+        this.leaderName.setValue(subscription.leaderName);
 
         let myDate = new Date();
         console.log(myDate.getMonth(), myDate.getDate(), myDate.getFullYear());
@@ -793,7 +775,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           this.utilsService.isNonEmpty(this.userSubscription) &&
           this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)
         ) {
-          if(!this.maxEndDate){
+          if (!this.maxEndDate) {
             let myDate = new Date();
             this.maxEndDate = new Date(
               myDate.getMonth() <= 2
@@ -842,12 +824,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   filteredFinancialYears: any[] = this.financialYear;
 
   changeService() {
-    if(this.service === 'ITRU'){
+    if (this.service === 'ITRU') {
       this.filteredFinancialYears = this.financialYear.filter(
         (year) => year.financialYear === '2020-2021' || year.financialYear === '2021-2022'
       );
 
-    }else{
+    } else {
       this.filteredFinancialYears = this.financialYear;
     }
     const serviceArray = [
@@ -947,33 +929,33 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   updateUserDetails() {
     let param = `/profile/${this.userSubscription.userId}`;
-    if(this.personalInfoForm.controls['gstNo'].value){
-      if(!this.selectedUserInfo.gstDetails){
+    if (this.personalInfoForm.controls['gstNo'].value) {
+      if (!this.selectedUserInfo.gstDetails) {
         this.selectedUserInfo.gstDetails = {
-          bankInformation : null,
-          businessAddress : null,
-          businessLogo : null,
-          businessSignature : null,
-          compositeDealerQuarter : null,
-          compositeDealerYear : null,
-          gstCertificate : null,
-          gstPortalPassword : "",
-          gstPortalUserName : "",
-          gstType : null,
-          gstinNumber : null,
-          gstinRegisteredMobileNumber : "",
-          gstr1Type : "",
-          legalName : "",
-          natureOfBusiness : null,
-          openingPurchaseValue : null,
-          openingSalesValue : null,
-          registrationDate : null,
-          regularDealerMonth : null,
-          regularDealerYear : null,
-          returnType : null,
-          salesInvoicePrefix : "",
-          termsAndConditions : null,
-          tradeName : ""
+          bankInformation: null,
+          businessAddress: null,
+          businessLogo: null,
+          businessSignature: null,
+          compositeDealerQuarter: null,
+          compositeDealerYear: null,
+          gstCertificate: null,
+          gstPortalPassword: "",
+          gstPortalUserName: "",
+          gstType: null,
+          gstinNumber: null,
+          gstinRegisteredMobileNumber: "",
+          gstr1Type: "",
+          legalName: "",
+          natureOfBusiness: null,
+          openingPurchaseValue: null,
+          openingSalesValue: null,
+          registrationDate: null,
+          regularDealerMonth: null,
+          regularDealerYear: null,
+          returnType: null,
+          salesInvoicePrefix: "",
+          termsAndConditions: null,
+          tradeName: ""
         };
       }
       this.selectedUserInfo.gstDetails.gstinNumber = this.personalInfoForm.controls['gstNo'].value;
@@ -1043,8 +1025,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   updateSubscription() {
     this.loading = true;
-    if(this.service ==='ITRU'){
-      if(this.assessmentYear.value === ''){
+    if (this.service === 'ITRU') {
+      if (this.assessmentYear.value === '') {
         this.loading = false;
         this.toastMessage.alert('error', 'Please select Financial Year For ITR-U subscription');
         return;

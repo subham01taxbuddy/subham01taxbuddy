@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.sass']
 })
-export class SidebarComponent{
+export class SidebarComponent {
   loading: boolean = false;
   openSidebar: boolean = true;
   loggedInUserRoles: any;
@@ -62,20 +62,19 @@ export class SidebarComponent{
       roles: ['ROLE_FILER'],
       submenu: []
     },
-    {
-      name: 'Owner Dashboard',
-      // iconClass: 'fa fa-globe',
-      active: false,
-      url: '/dashboard/main',
-      roles: ['ROLE_OWNER'],
-      submenu: []
-    },
+    // {
+    //   name: 'Owner Dashboard',
+    //   active: false,
+    //   url: '/dashboard/main',
+    //   roles: ['ROLE_OWNER'],
+    //   submenu: []
+    // },
     {
       name: 'Leader Dashboard',
       // iconClass: 'fa fa-globe',
       active: false,
       url: '/dashboard/leader',
-      roles: ['ROLE_ADMIN','ROLE_LEADER'],
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
     {
@@ -85,8 +84,11 @@ export class SidebarComponent{
       url: null,
       roles: [],
       submenu: [
-        { name: 'My Users', url: '/tasks/assigned-users-new', roles: [] },
-        { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles: [] },
+        {
+          name: 'My Users (All Services)', url: '/tasks/assigned-users-new', roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+        },
+        { name: 'ITR Assigned Users', url: '/tasks/itr-assigned-users', roles: [] },
+        { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'ITRs', url: '/tasks/filings', roles: [] },
         // {
         //   name: 'Exceptions', url: '/tasks/exceptions', roles: [],
@@ -107,7 +109,7 @@ export class SidebarComponent{
       // iconClass: 'fa fa-mobile',
       active: false,
       url: null,
-      roles: ['ROLE_ADMIN', 'ROLE_OWNER', 'ROLE_LEADER'],
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: [
         { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Assigned SME', url: '/sme-management-new/assignedsme', roles: [] },
@@ -135,7 +137,7 @@ export class SidebarComponent{
         { name: 'Proforma Invoice', url: '/subscription/proforma-invoice', roles: [] },
         { name: 'Refund Request', url: '/subscription/refund-request', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Tax Invoice', url: '/subscription/tax-invoice', roles: [] },
-        { name: 'Credit Note', url: '/subscription/credit-note', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Credit Note', url: '/subscription/credit-note', roles: ['ROLE_ADMIN'] },
         { name: 'Old Invoices', url: '/subscription/old-invoices', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         // { name: 'Pause Reminders', url: '/subscription/pause-reminders', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
@@ -147,9 +149,9 @@ export class SidebarComponent{
       url: null,
       roles: [],
       submenu: [
-        {name:'Payouts',url:'/payouts',roles:[]},
-        {name:'Pay Processing',url:'/payouts/pay-processing',roles:['ROLE_ADMIN']},
-        {name:'Payout Adjustment',url:'/payouts/payouts-adjustments',roles:['ROLE_ADMIN']},
+        { name: 'Payouts', url: '/payouts', roles: [] },
+        { name: 'Pay Processing', url: '/payouts/pay-processing', roles: ['ROLE_ADMIN'] },
+        { name: 'Payout Adjustment', url: '/payouts/payouts-adjustments', roles: ['ROLE_ADMIN'] },
       ]
     },
     {
@@ -176,14 +178,13 @@ export class SidebarComponent{
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
-    {
-      name: 'BO-Partners',
-      // iconClass: 'fa fa-code',
-      active: true,
-      url: '/bo-partners',
-      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
-      submenu: []
-    },
+    // {
+    //   name: 'BO-Partners',
+    //   active: true,
+    //   url: '/bo-partners',
+    //   roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+    //   submenu: []
+    // },
     {
       name: 'Promo-Codes',
       // iconClass: 'fa fa-code',
@@ -213,14 +214,14 @@ export class SidebarComponent{
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
         { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
         { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN'] },
-        { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN','ROLE_LEADER','ROLE_OWNER']},
+        { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     },
     {
       name: 'Delete User Request',
       active: false,
       url: '/delete-user',
-      roles: ['ROLE_ADMIN','ROLE_LEADER'],
+      roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
   ];

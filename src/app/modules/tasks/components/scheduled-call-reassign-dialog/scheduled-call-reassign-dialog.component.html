@@ -5,10 +5,20 @@ font-weight: bold;">Re-Assign Scheduled Call for: {{data.allData.userName}}</lab
 <div>Scheduled call time : {{data.allData.scheduleCallTime | date:'d/M/yy,  h:mm a':'UTC'}}</div>
   <div class="row spsTp bdrTp">
   <!-- <label style="font-size: 14px;font-weight:normal; color:red;"> * Please select Both Owner And filer Name </label> -->
-  <div class="col-sm-9">
-    <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL"
-    [showOnlyOwnerList]=true>
-    </app-sme-list-drop-down>
+  <div class="col-sm-6">
+    <!-- <app-sme-list-drop-down (sendLeader)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL"
+    [showOnlyLeaderList]=true>
+    </app-sme-list-drop-down> -->
+      <mat-label> Search By Leader </mat-label>
+      <mat-form-field appearance="outline" class="customBg">
+        <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto" />
+        <mat-autocomplete #auto>
+          <mat-option *ngFor="let option of filteredLeaders | async" [value]="option.name"
+            (click)="getLeaderNameId(option);">
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
   </div>
   <div class="col-sm-3">
     <button class="tbd-btn save-btn spsTp2" (click)="reAssign()" [disabled]="loading || disableReAssign">Re-Assign Call</button>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import * as moment from 'moment';
@@ -9,6 +9,7 @@ import { map, Observable, startWith } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import {DatePipe, KeyValue, Location} from "@angular/common";
+import { ReportService } from 'src/app/services/report-service';
 
 
 export const MY_FORMATS = {
@@ -55,9 +56,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   loggedInSmeRoles:any;
   coOwnerData:any;
 
-  langList = ['English', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Hindi', 'Kashmiri', 'Kannada',
-  'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
-  'Santali', 'Sindhi', 'Urdu']
+  langList = ['English','Hindi','Marathi', 'Tamil', 'Telugu', 'Oriya', 'Gujarati','Kannada','Malayalam','Bangla','Assamese',]
   itrTypeList = [
     { value: 1, display: 'ITR 1' },
     { value: 2, display: 'ITR 2' },
@@ -65,6 +64,16 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     { value: 4, display: 'ITR 4' },
 
   ];
+  languageForm: FormGroup
+  irtTypeCapability = [
+  "Salary & HP Income ITR's","Capital Gain Income ITR's","Business & Profession Income (other than F&O )",
+  "Future & Option","Crypto Currencyy Income","NRI's & Resident having Foreign Income ITR's "
+  ]
+  irtTypeForm: FormGroup;
+  inactivityTimeForm :FormGroup;
+  inactivityTimeDuration = ["15 Min","30 Min","45 Min","60 Min"];
+  caseLimit=["5 Cases","10 Cases","15 Cases","20 Cases","30 Cases","50 Cases"];
+  caseLimitForm: FormGroup;
 
   constructor(
     private  fb:FormBuilder,
@@ -72,7 +81,27 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private location: Location,
-  ) { }
+    private reportService:ReportService
+  ) {
+    this.languageForm = this.fb.group({});
+    this.langList.forEach((lang)=>{
+      this.languageForm.addControl(lang,new FormControl(false));
+    })
+    this.irtTypeForm = this.fb.group({});
+    this.irtTypeCapability.forEach((itrType)=>{
+      this.irtTypeForm.addControl(itrType,new FormControl(false));
+    })
+
+    this.inactivityTimeForm = this.fb.group({});
+    this.inactivityTimeDuration.forEach((duration) => {
+      this.inactivityTimeForm.addControl(duration, new FormControl(false));
+    });
+    this.caseLimitForm = this.fb.group({});
+    this.caseLimit.forEach((limit) => {
+      this.caseLimitForm.addControl(limit, new FormControl(false));
+    });
+  }
+
 
   ngOnInit() {
     this.loggedInSme =JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
@@ -161,9 +190,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   roles : FormGroup =this.fb.group({
     admin: new FormControl(''),
     leader: new FormControl(''),
-    owner: new FormControl(''),
-    filer :new FormControl(''),
-    leadEngagement:new FormControl(''),
+    filerIndividual: new FormControl(''),
+    filerPrinciple :new FormControl(''),
+    filerChild:new FormControl(''),
   });
 
   get admin(){
@@ -172,14 +201,14 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   get leader(){
     return this.roles.controls['leader'] as FormControl
   }
-  get owner(){
-    return this.roles.controls['owner'] as FormControl
+  get filerIndividual(){
+    return this.roles.controls['filerIndividual'] as FormControl
   }
-  get filer(){
-    return this.roles.controls['filer'] as FormControl
+  get filerPrinciple(){
+    return this.roles.controls['filerPrinciple'] as FormControl
   }
-  get leadEngagement(){
-    return this.roles.controls['leadEngagement'] as FormControl
+  get filerChild(){
+    return this.roles.controls['filerChild'] as FormControl
   }
 
   services  : FormGroup =this.fb.group({
@@ -258,6 +287,71 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     return this.services.controls['otherToggle'] as FormControl
   }
 
+  onLanguageCheckboxChange(lang: string) {
+    const langControl = this.getLanguageControl(lang);
+
+    // if (langControl) {
+    //   if (langControl.value) {
+    //     this.selectedLanguages.push(this.fb.control(lang));
+    //   } else {
+    //     const index = this.selectedLanguages.controls.findIndex(
+    //       (control) => control.value === lang
+    //     );
+    //     if (index !== -1) {
+    //       this.selectedLanguages.removeAt(index);
+    //     }
+    //   }
+    // }
+  }
+
+  getLanguageControl(lang: string): FormControl {
+    return this.languageForm.get(lang) as FormControl;
+  }
+
+  onIrtTypeCheckboxChange(irtType: string) {
+    const irtTypeControl = this.getIrtTypeControl(irtType);
+
+    // if (irtTypeControl) {
+    //   if (irtTypeControl.value) {
+    //     this.selectedIrtTypes.push(this.fb.control(irtType));
+    //   } else {
+    //     const index = this.selectedIrtTypes.controls.findIndex(
+    //       (control) => control.value === irtType
+    //     );
+    //     if (index !== -1) {
+    //       this.selectedIrtTypes.removeAt(index);
+    //     }
+    //   }
+    // }
+  }
+
+  getIrtTypeControl(irtType: string): FormControl {
+    return this.irtTypeForm.get( irtType) as FormControl;
+  }
+
+  getDurationControl(duration: string): FormControl {
+    return this.inactivityTimeForm.get(duration) as FormControl;
+  }
+
+  onDurationCheckboxChange(selectedDuration: string) {
+    this.inactivityTimeDuration.forEach((duration) => {
+      if (duration !== selectedDuration) {
+        this.getDurationControl(duration).setValue(false);
+      }
+    });
+  }
+
+  getCaseLimitControl(limit: string): FormControl {
+    return this.caseLimitForm.get(limit) as FormControl;
+  }
+
+  onCaseLimitCheckboxChange(selectedLimit: string) {
+    this.caseLimit.forEach((limit) => {
+      if (limit !== selectedLimit) {
+        this.getCaseLimitControl(limit).setValue(false);
+      }
+    });
+  }
 
   smeFormGroup : FormGroup =this.fb.group({
     mobileNumber :new FormControl(''),
@@ -269,6 +363,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     qualification: new FormControl(''),
     state: new FormControl(''),
     parentName: new FormControl(''),
+    pin : new FormControl(''),
+    city: new FormControl(''),
 
   })
 
@@ -298,6 +394,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
   get parentName(){
     return this.smeFormGroup.controls['parentName'] as FormControl
+  }
+  get pin(){
+    return this.smeFormGroup.controls['pin'] as FormControl
+  }
+  get city(){
+    return this.smeFormGroup.controls['pin'] as FormControl
   }
 
   assignmentUpdated(serviceType, service: FormControl, assignment: FormControl) {
@@ -383,6 +485,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     leaveEndDate:new FormControl(''),
     joiningDate:new FormControl(''),
     resigningDate:new FormControl(''),
+    external:new FormControl(''),
   })
 
   get coOwner(){
@@ -419,13 +522,27 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   get resigningDate(){
     return this.otherSmeInfo.controls['resigningDate'] as FormControl
   }
+  get external(){
+    return this.otherSmeInfo.controls['external'] as FormControl
+  }
+
+
+  handleCheckboxSelection(value: 'internal' | 'external') {
+    if (value === 'internal') {
+      this.internal.setValue(true);
+      this.external.setValue(false);
+    } else {
+      this.internal.setValue(false);
+      this.external.setValue(true);
+    }
+  }
 
 
   getOwner() {
     const loggedInSmeUserId=this.loggedInSme[0].userId
     console.log(loggedInSmeUserId)
-    let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+    let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.ownerList = result.data;
       console.log("ownerlist",this.ownerList)
@@ -475,9 +592,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         }
         if (element.assignmentStart == true) {
           this.itrToggle.setValue(true);
-          if(this.roles.controls['owner'].value){
-            this.itrToggle.disable();
-          }
+          // if(this.roles.controls['owner']?.value){
+          //   this.itrToggle.disable();
+          // }
         }
       }
       else if (element.serviceType == "TPA") {
@@ -485,9 +602,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.tpa.disable();
         if (element.assignmentStart == true) {
           this.tpaToggle.setValue(true);
-          if(this.roles.controls['owner'].value){
-            this.tpaToggle.disable();
-          }
+          // if(this.roles.controls['owner'].value){
+          //   this.tpaToggle.disable();
+          // }
         }
       }
       else if (element.serviceType == "GST") {
@@ -495,9 +612,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.gst.disable();
         if (element.assignmentStart == true) {
           this.gstToggle.setValue(true);
-          if(this.roles.controls['owner'].value){
-            this.gstToggle.disable();
-          }
+          // if(this.roles.controls['owner'].value){
+          //   this.gstToggle.disable();
+          // }
         }
       }
       else if (element.serviceType == "NOTICE") {
@@ -505,9 +622,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.notice.disable();
         if (element.assignmentStart == true) {
           this.noticeToggle.setValue(true);
-          if(this.roles.controls['owner'].value){
-            this.noticeToggle.disable();
-          }
+          // if(this.roles.controls['owner'].value){
+          //   this.noticeToggle.disable();
+          // }
         }
       }
       else if (element.serviceType == "WB") {
@@ -515,9 +632,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.wb.disable();
         if (element.assignmentStart == true) {
           this.wbToggle.setValue(true);
-          if(this.roles.controls['owner'].value){
-            this.wbToggle.disable();
-          }
+          // if(this.roles.controls['owner'].value){
+          //   this.wbToggle.disable();
+          // }
         }
       }
       else if (element.serviceType == "PD") {
@@ -525,9 +642,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.pd.disable();
         if (element.assignmentStart == true) {
           this.pdToggle.setValue(true);
-          if(this.roles.controls['owner'].value){
-            this.pdToggle.disable();
-          }
+          // if(this.roles.controls['owner'].value){
+          //   this.pdToggle.disable();
+          // }
         }
       }
       else if (element.serviceType == "MF") {
@@ -535,9 +652,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.mf.disable();
         if (element.assignmentStart == true) {
           this.mfToggle.setValue(true);
-          if(this.roles.controls['owner'].value){
-            this.mfToggle.disable();
-          }
+          // if(this.roles.controls['owner'].value){
+          //   this.mfToggle.disable();
+          // }
         }
       }
       });
@@ -620,10 +737,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         finalReq.internal = this.internal.value === 'internal'? true : false;
         finalReq.itrTypes = this.itrTypes.value;
         finalReq.parentName = this.parentName.value;
-        finalReq.owner = this.owner.value;
+        // finalReq.owner = this.owner.value;
         finalReq.leader = this.leader.value;
         finalReq.admin = this.admin.value;
-        finalReq.filer = this.filer.value;
+        // finalReq.filer = this.filer.value;
         finalReq.coOwnerUserId = this.ownerDetails?.userId || null;
 
         if(!finalReq.roles) {

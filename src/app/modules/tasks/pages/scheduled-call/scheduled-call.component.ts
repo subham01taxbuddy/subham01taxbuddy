@@ -19,6 +19,8 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { ScheduledCallReassignDialogComponent } from '../../components/scheduled-call-reassign-dialog/scheduled-call-reassign-dialog.component';
+import * as moment from 'moment';
+import { ReportService } from 'src/app/services/report-service';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -31,7 +33,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   selectedAgent: any;
   searchMobNo: any;
   statusId: null;
-  agentList: any = [];
   statuslist: any = [
     { statusName: 'Open', statusId: '17' },
     { statusName: 'Done', statusId: '18' },
@@ -57,9 +58,15 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   dataOnLoad = true;
   showCsvMessage: boolean;
   sortBy: any = {};
+  searchBy: any = {};
   sortMenus = [
     { value: 'userName', name: 'Name' },
   ];
+  searchMenus = [
+    { value: 'email', name: 'Email' },
+    { value: 'mobileNumber', name: 'Mobile No' },
+  ];
+  clearUserFilter: number;
   constructor(
     private reviewService: ReviewService,
     private toastMsgService: ToastMessageService,
@@ -72,6 +79,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private cacheManager: CacheManager,
     private genericCsvService: GenericCsvService,
+    private reportService: ReportService,
   ) {
     this.config = {
       itemsPerPage: this.searchParam.size,
@@ -80,13 +88,13 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       pageCount: null,
     };
     let roles = this.utilsService.getUserRoles();
-    let show : boolean;
-    if(roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN') ){
-      show =true;
+    let show: boolean;
+    if (roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')) {
+      show = true;
     }
     this.scheduleCallGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs:show ?  this.createColumnDef('leader') :this.createColumnDef('reg') ,
+      columnDefs: show ? this.createColumnDef('leader') : this.createColumnDef('reg'),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => { },
@@ -136,43 +144,49 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   //   this.statuslist = await this.utilsService.getStoredMasterStatusList();
   // }
   getAgentList() {
-    // this.agentList = await this.utilsService.getStoredAgentList();
     const loggedInUserDetails = JSON.parse(localStorage.getItem('UMD'));
     const isAgentListAvailable =
       this.roleBaseAuthGuardService.checkHasPermission(
         loggedInUserDetails.USER_ROLE,
         ['ROLE_ADMIN', 'ROLE_ITR_SL', 'ROLE_GST_SL', 'ROLE_NOTICE_SL']
       );
-    if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserDetails.USER_UNIQUE_ID}/child-details`;
-      this.userMsService.getMethod(param).subscribe((result: any) => {
-        if (result.success) {
-          this.agentList = result.data;
-        }
-      });
-    }
   }
 
   // showScheduleCallList() {
   //   this.getScheduledCallsInfo(this.loggedUserId, this.config.currentPage);
   // }
+
+  maskMobileNumber(mobileNumber) {
+    if (mobileNumber) {
+      return 'X'.repeat(mobileNumber.length);
+    }
+    return '-';
+  }
+
   sortByObject(object) {
     this.sortBy = object;
   }
+
+  searchByObject(object) {
+    this.searchBy = object;
+    console.log('object from search param ',this.searchBy);
+  }
+
   ownerId: number;
   filerId: number;
   agentId = null;
+  leaderId: number;
   fromSme(event, isOwner) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
-      this.ownerId = event ? event.userId : null;
+      this.leaderId = event ? event.userId : null;
     } else {
       this.filerId = event ? event.userId : null;
     }
     if (this.filerId) {
       this.agentId = this.filerId;
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
+    } else if (this.leaderId) {
+      this.agentId = this.leaderId;
       // this.search('agent');
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
@@ -217,7 +231,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         filerNumber: scheduleCalls[i]['filerNumber'],
         filerName: scheduleCalls[i]['filerName'],
         ownerMobileNumber: scheduleCalls[i]['ownerNumber'],
-        ownerName: scheduleCalls[i]['ownerName'],
+        leaderName: scheduleCalls[i]['leaderName'],
         userEmail: scheduleCalls[i]['userEmail'],
         smeMobileNumber: scheduleCalls[i]['smeMobileNumber'],
         smeName: scheduleCalls[i]['smeName'],
@@ -282,6 +296,20 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
+        },
+        // code to masking mobile no
+        cellRenderer: (params)=> {
+          const mobileNumber = params.value;
+          if(mobileNumber){
+            if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+              const maskedMobile = this.maskMobileNumber(mobileNumber);
+              return maskedMobile;
+            }else{
+              return mobileNumber;
+            }
+          }else{
+            return '-'
+          }
         },
       },
       {
@@ -354,22 +382,22 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
       },
+      // {
+      //   headerName: 'Filer Name',
+      //   field: 'filerName',
+      //   width: 120,
+      //   suppressMovable: true,
+      //   sortable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: 'agTextColumnFilter',
+      //   filterParams: {
+      //     filterOptions: ['contains', 'notContains'],
+      //     debounceMs: 0,
+      //   },
+      // },
       {
-        headerName: 'Filer Name',
-        field: 'filerName',
-        width: 120,
-        suppressMovable: true,
-        sortable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
-        headerName: 'Owner Name',
-        field: 'ownerName',
+        headerName: 'Leader Name',
+        field: 'leaderName',
         width: 110,
         suppressMovable: true,
         sortable: true,
@@ -401,12 +429,12 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         hide: view === 'leader' ? false : true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          if (params.data.statusId === 17 || params.data.statusId === 19 ) {
+          if (params.data.statusId === 17 || params.data.statusId === 19) {
             return `<button type="button" class="action_icon add_button" title="Re-Assign Scheduled Call"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;">
               <i class="fa fa-refresh" aria-hidden="true" data-action-type="reAssignCall"></i>
              </button>`;
-          }else{
+          } else {
             return '-'
           }
 
@@ -558,7 +586,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           this.openWhatsappChat(params.data);
           break;
         }
-        case 'reAssignCall' : {
+        case 'reAssignCall': {
           this.reAssignCall(params.data);
           break;
         }
@@ -566,15 +594,16 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     }
   }
 
-  reAssignCall(data){
+  reAssignCall(data) {
     let disposable = this.dialog.open(ScheduledCallReassignDialogComponent, {
       width: '60%',
       height: 'auto',
       data: {
-        allData : data,
+        allData: data,
       },
     });
     disposable.afterClosed().subscribe((result) => {
+      this.search()
       console.log('The dialog was closed');
     });
   }
@@ -632,7 +661,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     this.loading = true;
     const reqBody = {
       agent_number: agentNumber,
-      customer_number: user.userMobile,
+      userId: user.userId,
     };
 
     // const param = `/prod/call-support/call`;
@@ -744,6 +773,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.size = 20;
@@ -769,12 +799,26 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   }
 
   search(form?, isAgent?, pageChange?) {
+   // Admin -  'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20' \
+   //Leader - 'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20&leaderUserId=8712'
+   //
     if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
-
     let loggedInId = this.utilsService.getLoggedInUserID();
+
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
+
+    if(this.searchBy?.mobileNumber){
+      this.searchParam.mobileNumber = this.searchBy?.mobileNumber
+    }
+    if(this.searchBy?.email){
+      this.searchParam.email = this.searchBy?.email
+    }
+
     if (form == 'mobile') {
       this.searchParam.page = 0;
       if (
@@ -803,10 +847,13 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
     this.loading = true;
     let data = this.utilsService.createUrlParams(this.searchParam);
+    let leaderFilter = ''
 
-    // https://uat-api.taxbuddy.com/user/schedule-call-details/7523?page=0&pageSize=30&searchAsCoOwner=true
+    if (this.leaderId) {
+      leaderFilter = `&leaderUserId=${this.leaderId}`
+    }
 
-    var param = `/dashboard/schedule-call-details/${this.agentId}?${data}`;
+    var param = `/bo/schedule-call-details?${data}${leaderFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
@@ -824,7 +871,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       param;
     }
 
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('MOBsearchScheCALL:', result);
       this.loading = false;
       if (result.success == false) {
@@ -853,6 +900,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         if (result.message) { this.toastMsgService.alert('error', result.message); }
         else { this.toastMsgService.alert('error', 'No Data Found'); }
       }
+      this.loading = false;
+    },error =>{
       this.loading = false;
     });
   }

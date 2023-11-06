@@ -15,6 +15,9 @@ import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import { ReportService } from 'src/app/services/report-service';
+import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-cancel-subscription',
@@ -56,6 +59,22 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     return this.invoiceFormGroup.controls['email'] as FormControl;
   }
   dataOnLoad = true;
+  searchBy: any = {};
+  searchMenus = [
+    { value: 'name', name: 'User Name' },
+    { value: 'email', name: 'Email' },
+    { value: 'mobileNumber', name: 'Mobile No' },
+  ];
+  clearUserFilter: number;
+  ogStatusList: any = [];
+  searchAsPrinciple :boolean =false;
+  searchParam: any = {
+    statusId: null,
+    page: 0,
+    pageSize: 20,
+    serviceType:null,
+  };
+  itrStatus: any = [];
 
   constructor(
     private fb: FormBuilder,
@@ -64,6 +83,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     private utilService: UtilsService,
     private itrService: ItrMsService,
     private cacheManager: CacheManager,
+    private reportService:ReportService,
     @Inject(LOCALE_ID) private locale: string
   ) {
 
@@ -98,21 +118,9 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     return { temp, lineBreak };
   }
 
-  fromOwner(event, isOwner) {
-    if (event) {
-      this.ownerId = null;
-      this.filerId = null;
-      if (isOwner) {
-        this.ownerId = event ? event.userId : null;
-        // this.getCancelSubscriptionList(0, 'ownerUserId', this.ownerId);
-      } else {
-        this.filerId = event ? event.userId : null;
-        // this.getCancelSubscriptionList(0, 'filerUserId', this.filerId);
-      }
-    }
-  }
 
   ngOnInit(): void {
+    this.getMasterStatusList();
     this.loggedInUserRoles = this.utilService.getUserRoles();
     this.isOwner = this.loggedInUserRoles.indexOf('ROLE_OWNER') > -1;
 
@@ -123,108 +131,120 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     }
   }
 
+  fromServiceType(event) {
+    this.searchParam.serviceType = event;
+    // this.search('serviceType', 'isAgent');
+
+    if (this.searchParam.serviceType) {
+      setTimeout(() => {
+        this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
+      }, 100);
+    }
+  }
+
+  async getMasterStatusList() {
+    // this.itrStatus = await this.utilsService.getStoredMasterStatusList();
+    this.ogStatusList = await this.utilService.getStoredMasterStatusList();
+  }
+
+  searchByObject(object) {
+    this.searchBy = object;
+  }
+
+  leaderId: number;
+  fromSme(event, isOwner,fromPrinciple?) {
+    console.log('sme-drop-down', event, isOwner);
+    if (isOwner) {
+      this.leaderId = event ? event.userId : null;
+    } else {
+      if(fromPrinciple){
+        if (event?.partnerType === 'PRINCIPAL') {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = true;
+        } else {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }else{
+        if(event){
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }
+    }
+  }
+
   public rowSelection: 'single';
   rowMultiSelectWithClick: false;
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
+  @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
+    this.smeDropDown?.resetDropdown();
     this.invoiceFormGroup.controls['mobile'].setValue(null);
     this.invoiceFormGroup.controls['email'].setValue(null);
-    this.smeDropDown?.resetDropdown();
+    this?.serviceDropDown?.resetService();
     const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     const loginSMEInfo = data[0];
     this.invoiceFormGroup.reset();
     this.invoiceFormGroup.updateValueAndValidity();
+    this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
+    this.config.totalItems = 0;
 
     this.filerId = null;
     this.ownerId = null;
-    if (this.isOwner) {
-      this.getCancelSubscriptionList(0, 'ownerUserId', loginSMEInfo.userId);
-    } else {
-      if (this.dataOnLoad) {
-        this.getCancelSubscriptionList(0);
-      } else {
-        //clear grid for loaded data
-        this.subscriptionListGridOptions.api?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
-      }
-    }
+    this.leaderId = null;
 
   }
 
   applyFilter() {
-    const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    const loginSMEInfo = data[0];
-    if (this.filerId) {
-      this.getCancelSubscriptionList(0, 'filerUserId', this.filerId);
-      return;
-    }
-    if (this.isOwner) {
-      this.getCancelSubscriptionList(0, 'ownerUserId', loginSMEInfo.userId);
-    } else {
-      this.getCancelSubscriptionList(0);
-    }
+    this.getCancelSubscriptionList(0);
   }
 
   getCancelSubscriptionList(pageNo, isUserId?, id?, fromPageChange?) {
+    //https://dev-api.taxbuddy.com/report/bo/subscription/cancel/requests?page=0&pageSize=5'
     if (!fromPageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
-    const userId = this.utilService.getLoggedInUserID();
-    if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-      this.ownerId = userId;
+
+    let userFilter = '';
+    if ((this.leaderId && !this.filerId)) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.loggedInUserRoles.includes('ROLE_FILER')) {
-      this.filerId = userId;
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
     }
 
     let mobileFilter = '';
-    if (
-      this.utilService.isNonEmpty(
-        this.invoiceFormGroup.controls['mobile'].value
-      ) &&
-      this.invoiceFormGroup.controls['mobile'].valid
-    ) {
-      mobileFilter =
-        '&mobile=' + this.invoiceFormGroup.controls['mobile'].value;
+    if(this.searchBy?.mobileNumber ){
+
+      mobileFilter = '&mobileNumber=' +this.searchBy?.mobileNumber;
     }
     let emailFilter = '';
-    if (
-      this.utilService.isNonEmpty(
-        this.invoiceFormGroup.controls['email'].value
-      ) &&
-      this.invoiceFormGroup.controls['email'].valid
-    ) {
-      emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value.toLocaleLowerCase();
+    if(this.searchBy?.email){
+      emailFilter = '&email=' +this.searchBy?.email;
     }
 
-
-    let pagination;
-    let param;
-
-    if (id) {
-      pagination = `&page=${pageNo}&size=${this.config.itemsPerPage}${mobileFilter}${emailFilter}`;
-      param = '/subscription/cancel/requests?' + isUserId + '=' + id + pagination;
-    } else {
-      let userParam = '';
-      if (this.ownerId) {
-        userParam += `&ownerUserId=${this.ownerId}`;
-      }
-      if (this.filerId) {
-        userParam += `&filerUserId=${this.filerId}`;
-      }
-      pagination = `?page=${pageNo}&size=${this.config.itemsPerPage}${mobileFilter}${emailFilter}`;
-      param = '/subscription/cancel/requests' + pagination + userParam;
+    let nameFilter = '';
+    if(this.searchBy?.name){
+      nameFilter ='&name=' + this.searchBy?.name;
     }
+    let data = this.utilService.createUrlParams(this.searchParam);
+
+    let param = `/bo/subscription/cancel/requests?${data}${userFilter}${mobileFilter}${emailFilter}${nameFilter}`
+
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
     this.loading = true;
-    this.itrService.getMethod(param).subscribe(
+    this.reportService.getMethod(param).subscribe(
       (response: any) => {
         this.cancelSubscriptionData = response;
         this.loading = false;
@@ -347,6 +367,18 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
       {
         headerName: 'Service Type',
         field: 'servicesType',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Leader Name',
+        field: 'leaderName',
         width: 120,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -512,6 +544,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
         served: subscriptionData[i].served,
         promoCode: this.utilService.isNonEmpty(subscriptionData[i].promoCode) ? subscriptionData[i].promoCode : '-',
         subscriptionCreatedBy: subscriptionData[i].subscriptionCreatedBy,
+        leaderName : subscriptionData[i].leaderName
       });
     }
     return newData;

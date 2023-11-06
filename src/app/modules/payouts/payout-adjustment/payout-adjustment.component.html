@@ -5,8 +5,8 @@
     <div class="surround">
       <div class="row">
         <div class="col-sm-8">
-          <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
-            (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+          <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
+            (sendPrincipleIndividual)="fromPrinciple($event)"[skipChild]= false></app-sme-list-drop-down>
         </div>
         <div class="col-sm-4" style="margin-top: 12px;">
           <button class="srch-btn" [disabled]="loading" (click)="search()"><i class="fa fa-search"
