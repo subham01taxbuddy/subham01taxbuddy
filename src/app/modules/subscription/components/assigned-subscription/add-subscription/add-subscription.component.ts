@@ -197,6 +197,7 @@ export class AddSubscriptionComponent implements OnInit {
                   this.updateSubscription();
                 }
               } else {
+                this.updateSubscription();
                 if (response.message !== null) { this._toastMessageService.alert('error', response.message); }
                 else { this._toastMessageService.alert('error', 'No Data Found'); }
               }
