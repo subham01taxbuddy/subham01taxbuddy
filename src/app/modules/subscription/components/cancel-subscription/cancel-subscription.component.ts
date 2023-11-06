@@ -209,7 +209,10 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
-
+    let loggedInId = this.utilService.getLoggedInUserID();
+    if(this.loggedInUserRoles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
     let userFilter = '';
     if ((this.leaderId && !this.filerId)) {
       userFilter += `&leaderUserId=${this.leaderId}`;
@@ -353,7 +356,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
       //   },
       // },
       {
-        headerName: 'Subscription',
+        headerName: 'Subscription Details',
         field: 'userSelected',
         width: 320,
         suppressMovable: true,
