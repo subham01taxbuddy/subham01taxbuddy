@@ -40,6 +40,22 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       label: 'Royalty Against Patent (80RRB)',
     },
     {
+      value: 'INTEREST_ACCRUED_10_11_I_P',
+      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(11)',
+    },
+    {
+      value: 'INTEREST_ACCRUED_10_11_II_P',
+      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(11)',
+    },
+    {
+      value: 'INTEREST_ACCRUED_10_12_I_P',
+      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(12)',
+    },
+    {
+      value: 'INTEREST_ACCRUED_10_12_II_P',
+      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(12)',
+    },
+    {
       value: 'ANY_OTHER',
       label: 'Any Other Income',
     },
@@ -212,6 +228,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.setOtherIncomeValues();
     this.setExemptIncomeValues();
     this.setAgriIncValues();
+    this.validateIncomeValueOnBlur();
   }
 
   private createOtherIncomeForm() {
@@ -369,7 +386,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         item.incomeType !== 'ANY_OTHER' &&
         item.incomeType !== 'FAMILY_PENSION' &&
         item.incomeType !== 'ROYALTY_US_80RRB' &&
-        item.incomeType !== 'ROYALTY_US_80QQB'
+        item.incomeType !== 'ROYALTY_US_80QQB' && 
+        item.incomeType === 'INTEREST_ACCRUED_10_11_I_P' &&
+        item.incomeType === 'INTEREST_ACCRUED_10_11_II_P' &&
+        item.incomeType === 'INTEREST_ACCRUED_10_12_I_P' &&
+        item.incomeType === 'INTEREST_ACCRUED_10_12_II_P'
     );
     if (!this.Copy_ITR_JSON.incomes) {
       this.Copy_ITR_JSON.incomes = [];
@@ -541,6 +562,10 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           item.incomeType === 'TAX_REFUND_INTEREST' ||
           item.incomeType === 'ROYALTY_US_80RRB' ||
           item.incomeType === 'ROYALTY_US_80QQB' ||
+          item.incomeType === 'INTEREST_ACCRUED_10_11_I_P' ||
+          item.incomeType === 'INTEREST_ACCRUED_10_11_II_P' ||
+          item.incomeType === 'INTEREST_ACCRUED_10_12_I_P' ||
+          item.incomeType === 'INTEREST_ACCRUED_10_12_II_P' ||
           item.incomeType === 'ANY_OTHER'
       );
       let otherIncomesFormArray = this.otherIncomeFormGroup.controls[
@@ -794,4 +819,30 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     }
     return total;
   }
+
+  validateIncomeValueOnBlur(){
+    if(this.otherIncomeFormGroup.get('otherIncomes').value.some((otherIncome: { incomeType: string, incomeValue:any})=> (otherIncome.incomeType === 'INTEREST_ACCRUED_10_11_I_P' || otherIncome.incomeType === 'INTEREST_ACCRUED_10_11_II_P' || otherIncome.incomeType === 'INTEREST_ACCRUED_10_12_I_P'|| otherIncome.incomeType === 'INTEREST_ACCRUED_10_12_II_P') && otherIncome.incomeValue !== null && otherIncome.incomeValue !== '')){
+      const otherIncomes = this.otherIncomeFormGroup.get('otherIncomes') as FormArray;
+      for (let i = 0; i < otherIncomes.length; i++) {
+        const otherIncome = otherIncomes.at(i) as FormGroup;
+        if((otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_I_P' || 
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_II_P' ||
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_I_P' || 
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_II_P') && (otherIncome.get('incomeValue').value === '' || otherIncome.get('incomeValue').value === null)){
+          otherIncome.disable();
+       }
+      }
+    } else{
+      const otherIncomes = this.otherIncomeFormGroup.get('otherIncomes') as FormArray;
+      for (let i = 0; i < otherIncomes.length; i++) {
+        const otherIncome = otherIncomes.at(i) as FormGroup;
+        if(otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_I_P' || 
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_II_P' ||
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_I_P' || 
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_II_P'){
+          otherIncome.enable();
+       }
+    }
+  }
+}
 }
