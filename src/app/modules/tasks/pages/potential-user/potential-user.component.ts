@@ -152,17 +152,24 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   ownerId: number;
   filerId: number;
   leaderId: number;
-  fromSme(event, isOwner) {
+  fromSme(event, isOwner,fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.leaderId = event ? event.userId : null;
     } else {
-      if (event.partnerType === 'PRINCIPAL') {
-        this.filerId = event ? event.userId : null;
-        this.searchAsPrinciple = true;
-      } else {
-        this.filerId = event ? event.userId : null;
-        this.searchAsPrinciple = false;
+      if(fromPrinciple){
+        if (event?.partnerType === 'PRINCIPAL') {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = true;
+        } else {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }else{
+        if(event){
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
       }
     }
     if (this.filerId) {
@@ -204,6 +211,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
+    this.loading = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
     if(this.roles.includes('ROLE_LEADER')){
       this.leaderId = loggedInId
@@ -218,42 +226,9 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     }
     if(this.searchBy?.email){
       this.searchParam.emailId = this.searchBy?.email
+      this.searchParam.emailId = this.searchParam.emailId.toLocaleLowerCase();
     }
-    if (form == 'mobile') {
-      this.searchParam.page = 0;
-      if (
-        this.searchParam.mobileNumber == null ||
-        this.searchParam.mobileNumber == ''
-      ) {
-        this.searchParam.mobileNumber = null;
-      } else {
-        this.searchParam.emailId = null;
-      }
-      if (this.searchParam.emailId == null || this.searchParam.emailId == '') {
-        this.searchParam.emailId = null;
-      } else {
-        this.searchParam.mobileNumber = null;
-      }
 
-      this.searchParam.statusId = null;
-    } else if (form == 'status') {
-      this.searchParam.page = 0;
-      // this.searchParam.serviceType = null;
-      this.searchParam.mobileNumber = null;
-      this.searchParam.emailId = null;
-    } else if (form == 'serviceType') {
-      this.searchParam.page = 0;
-      this.searchParam.status = null;
-      this.searchParam.mobileNumber = null;
-      this.searchParam.emailId = null;
-    } else if (form == 'agent') {
-      this.searchParam.page = 0;
-    }
-    this.loading = true;
-
-    if (this.searchParam.email) {
-      this.searchParam.email = this.searchParam.email.toLocaleLowerCase();
-    }
     let data = this.utilsService.createUrlParams(this.searchParam);
 
     let leaderFilter = ''
@@ -270,9 +245,6 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       filerFilter=`&filerUserId=${this.filerId}`
     }
 
-    //https://uat-api.taxbuddy.com/report/7521/user-list-new?page=0&pageSize=20&active=false
-    // https://uat-api.taxbuddy.com/user/3000/user-list-new?statusId=16&page=0&pageSize=20&active=false
-    // 'https://uat-api.taxbuddy.com/user/7522/user-list-new?page=0&searchAsCoOwner=true&pageSize=100&active=false'
     let param = `/bo/user-list-new?${data}&active=false${leaderFilter}${filerFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
@@ -850,7 +822,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   resetFilters() {
     this.clearUserFilter = moment.now().valueOf();
     this.searchParam.page = 0;
-    this.searchParam.size = 20;
+    this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
     this.searchParam.statusId = null;
@@ -858,6 +830,8 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     this.userInfoLength = 0;
     this.config.totalItems = 0;
     this?.smeDropDown?.resetDropdown();
+    this.searchBy ={};
+    this.agentId = this.utilsService.getLoggedInUserID();
   }
 
   ngOnDestroy() {
