@@ -1147,6 +1147,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
+    this.getStatus();
     if (this.coOwnerDropDown) {
       this.coOwnerDropDown.resetDropdown();
       this.search('', true);
