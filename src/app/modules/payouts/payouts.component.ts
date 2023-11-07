@@ -389,7 +389,7 @@ export class PayoutsComponent implements OnInit,OnDestroy {
           debounceMs: 0
         },
         valueGetter: function(params) {
-          let createdUserId= parseInt(params?.data?.ownerUserId)
+          let createdUserId= parseInt(params?.data?.leaderUserId)
           let filer1 = list;
           let filer = filer1?.filter((item) => {
             return item.userId === createdUserId;

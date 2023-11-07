@@ -459,7 +459,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         },
       },
       {
-        headerName: 'Old Subscription',
+        headerName: 'Old Subscription Amount',
         field: 'oldSubscriptionAmount',
         width: 130,
         suppressMovable: true,
@@ -467,50 +467,13 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
       },
       {
-        headerName: 'New Subscription',
+        headerName: 'New Subscription Amount',
         field: 'newSubscriptionAmount',
         width: 130,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
 
       },
-      {
-        headerName: 'Service Type',
-        field: 'serviceType',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
-        headerName: 'Filer Name',
-        field: 'assignedToName',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
-        headerName: 'Leader Name',
-        field: 'leaderName',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-
       {
         headerName: 'Invoice No.',
         field: 'invoiceNo',
@@ -548,6 +511,42 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
+      },
+      {
+        headerName: 'Service Type',
+        field: 'serviceType',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Leader Name',
+        field: 'leaderName',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Filer Name',
+        field: 'assignedToName',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
       },
       {
         headerName: 'Payment ID',

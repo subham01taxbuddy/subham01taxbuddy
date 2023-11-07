@@ -230,6 +230,14 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       this.dataOnLoad = false;
     }
 
+    this.activatedRoute.queryParams.subscribe(params => {
+      let mobileNo = params['mobile'];
+      if (mobileNo) {
+        this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
+        this.getInvoice();
+      }
+    });
+
     // this.getInvoice();
   }
 
