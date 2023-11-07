@@ -462,6 +462,13 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         suppressMovable: true,
       },
       {
+        headerName: 'Indexed cost of acquisition',
+        field: 'indexCostOfAcquisition',
+        width: 100,
+        editable: false,
+        suppressMovable: true,
+      },
+      {
         headerName: 'Sale Value',
         field: 'sellValue',
         width: 100,

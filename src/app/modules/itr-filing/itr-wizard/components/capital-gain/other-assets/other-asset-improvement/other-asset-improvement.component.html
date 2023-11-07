@@ -8,8 +8,7 @@
   <div>
     <div>
       <!-- otherAssets  -->
-      <div >
-
+      <div>
         <div class="row cardClr">
           <div class="col-sm-4">
             <mat-label>Sale Date/Date of Transfer</mat-label>
@@ -23,7 +22,8 @@
                 (blur)="calculateGainType()"
                 (dateChange)="
                   calculateGainType();
-                  calMaxPurchaseDate(assetsForm.get('sellDate')?.value)"
+                  calMaxPurchaseDate(assetsForm.get('sellDate')?.value)
+                "
                 [min]="minDate"
                 [max]="maxDate"
               />
@@ -44,8 +44,8 @@
                 name="purchaseDate"
                 [matDatepicker]="purchaseDate"
                 placeholder="Buy Date / Date of Acquisition"
-                (blur)="getImprovementYears();calculateGainType()"
-                (dateChange)="getImprovementYears();calculateGainType()"
+                (blur)="getImprovementYears(); calculateGainType()"
+                (dateChange)="getImprovementYears(); calculateGainType()"
                 [max]="maxPurchaseDate"
               />
               <mat-datepicker-toggle
@@ -70,6 +70,7 @@
                 maxlength="14"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 (blur)="calculateCg()"
+                (change)="calculateIndexCost('asset')"
               />
 
               <!-- <mat-error
@@ -82,6 +83,23 @@
               > -->
             </mat-form-field>
           </div>
+
+          <!-- indexed cost of acquisition  -->
+          <div class="col-sm-4">
+            <mat-label> Indexed cost of acquisition</mat-label>
+            <mat-form-field class="input-field-width" appearance="outline">
+              <input
+                matInput
+                digitsOnly
+                formControlName="indexCostOfAcquisition"
+                placeholder="Indexed cost of acquistion"
+                name="indexCostOfAcquisition[i]"
+                class="input-field"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+
           <!-- sale-value  -->
           <div class="col-sm-4 spsTp">
             <mat-label>Sale Value</mat-label>
@@ -266,18 +284,17 @@
     </div>
 
     <div class="row spsTp bdrTp">
-<!--      <div class="col-sm-3">-->
-<!--        <button-->
-<!--          type="submit"-->
-<!--          class="delete-btn"-->
-<!--          (click)="deleteOtherAsset(index)"-->
-<!--          [disabled]="!assetSelected()"-->
-<!--        >-->
-<!--          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete-->
-<!--        </button>-->
-<!--      </div>-->
-      <div class="col-sm-6">
-      </div>
+      <!--      <div class="col-sm-3">-->
+      <!--        <button-->
+      <!--          type="submit"-->
+      <!--          class="delete-btn"-->
+      <!--          (click)="deleteOtherAsset(index)"-->
+      <!--          [disabled]="!assetSelected()"-->
+      <!--        >-->
+      <!--          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete-->
+      <!--        </button>-->
+      <!--      </div>-->
+      <div class="col-sm-6"></div>
       <div class="col-sm-3">
         <button class="tbd-btn save-btn mvRth" (click)="saveCg()">Save</button>
       </div>
