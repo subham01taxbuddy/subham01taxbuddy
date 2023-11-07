@@ -266,7 +266,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.loading = true;
     return new Promise((resolve, reject) => {
       let loggedInId = this.utilsService.getLoggedInUserID();
-      if(this.roles.includes('ROLE_LEADER')){
+      if(this.roles?.includes('ROLE_LEADER')){
         this.leaderUserId = loggedInId;
       }
 
