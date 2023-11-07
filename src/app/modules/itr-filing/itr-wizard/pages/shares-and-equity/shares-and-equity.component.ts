@@ -620,6 +620,9 @@ export class SharesAndEquityComponent
       totalFairMarketValueOfCapitalAsset: [
         item ? item.totalFairMarketValueOfCapitalAsset : null,
       ],
+      lowerOfFMVandSaleValue: [
+        item ? item.lowerOfFMVandSaleValue : null,
+      ],
     });
   }
 
@@ -907,6 +910,12 @@ export class SharesAndEquityComponent
             );
           } else {
             securities.controls['grandFatheredValue'].setValue(0);
+          }
+          if (res.assetDetails[0].lowerOfFMVandSaleValue) {
+            securities.controls['lowerOfFMVandSaleValue'].setValue(
+              res.assetDetails[0].lowerOfFMVandSaleValue);
+          } else{
+            securities.controls['lowerOfFMVandSaleValue'].setValue(0);
           }
         },
         (error) => {
