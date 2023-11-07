@@ -359,7 +359,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
         },
       },
       {
-        headerName: 'Services',
+        headerName: 'Service',
         field: 'serviceType',
         width: 120,
         suppressMovable: true,

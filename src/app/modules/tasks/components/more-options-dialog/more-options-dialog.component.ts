@@ -40,6 +40,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   // isDisable = true;
   loggedInUserRoles: any;
   showInvoiceButton: boolean;
+  navigateToInvoice:boolean
 
   constructor(
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
@@ -80,6 +81,12 @@ export class MoreOptionsDialogComponent implements OnInit {
       this.loading = false;
       if (response.success) {
         this.showInvoiceButton = true;
+        if(response?.data[0]?.invoiceDetail[0]?.paymentStatus === "Paid"){
+          this.navigateToInvoice = true;
+        }else{
+          this.navigateToInvoice = false;
+        }
+
       } else {
         this.showInvoiceButton = false;
       }
@@ -136,9 +143,16 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   goToInvoice() {
-    this.router.navigate(['/subscription/proforma-invoice'], {
-      queryParams: { mobile: this.data.mobileNumber },
-    });
+    if(this.navigateToInvoice){
+      this.router.navigate(['/subscription/tax-invoice'], {
+        queryParams: { mobile: this.data.mobileNumber },
+      });
+    }else{
+      this.router.navigate(['/subscription/proforma-invoice'], {
+        queryParams: { mobile: this.data.mobileNumber },
+      });
+    }
+
     this.dialogRef.close();
   }
 

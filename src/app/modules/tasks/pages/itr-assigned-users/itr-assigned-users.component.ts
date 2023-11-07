@@ -593,7 +593,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         },
       },
       {
-        headerName: 'Status Updated On',
+        headerName: 'Status Updated',
         field: 'statusUpdatedDate',
         width: 130,
         suppressMovable: true,
@@ -617,28 +617,28 @@ export class ItrAssignedUsersComponent implements OnInit {
           debounceMs: 0,
         },
       },
-      {
-        headerName: 'Action With',
-        field: 'conversationWithFiler',
-        width: 110,
-        suppressMovable: true,
-        hide: !showOwnerCols,
-        cellStyle: { textAlign: 'center' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-        valueGetter: function nameFromCode(params) {
-          {
-            if (params.data.conversationWithFiler === true) {
-              return params.data.filerName;
-            } else {
-              return params.data.leaderName;
-            }
-          }
-        }
-      },
+      // {
+      //   headerName: 'Action With',
+      //   field: 'conversationWithFiler',
+      //   width: 110,
+      //   suppressMovable: true,
+      //   hide: !showOwnerCols,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: 'agTextColumnFilter',
+      //   filterParams: {
+      //     filterOptions: ['contains', 'notContains'],
+      //     debounceMs: 0,
+      //   },
+      //   valueGetter: function nameFromCode(params) {
+      //     {
+      //       if (params.data.conversationWithFiler === true) {
+      //         return params.data.filerName;
+      //       } else {
+      //         return params.data.leaderName;
+      //       }
+      //     }
+      //   }
+      // },
 
 
 
@@ -656,7 +656,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       //   }
       // },
       {
-        headerName: 'ITR Status',
+        headerName: 'ITR Form Base Status',
         editable: false,
         suppressMenu: true,
         sortable: true,
@@ -671,7 +671,7 @@ export class ItrAssignedUsersComponent implements OnInit {
             return '-'
           }
         },
-        width: 80,
+        width: 120,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
