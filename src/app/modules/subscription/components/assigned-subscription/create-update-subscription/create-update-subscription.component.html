@@ -82,7 +82,7 @@
           <mat-label> Secondary Mobile Number </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Secondary Mobile Number" [formControl]="reminderMobileNumber"
-              class="input-field" readonly/>
+              class="input-field" readonly />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -150,7 +150,8 @@
         <div class="col-sm-4">
           <mat-label> Leader Name </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Leader Name" [formControl]="leaderName" class="input-field" readonly />
+            <input type="text" matInput placeholder="Leader Name" [formControl]="leaderName" class="input-field"
+              readonly />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -159,7 +160,8 @@
         <div class="col-sm-4">
           <mat-label> Filer Name </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Filer Name" [formControl]="filerName" class="input-field" readonly />
+            <input type="text" matInput placeholder="Filer Name" [formControl]="filerName" class="input-field"
+              readonly />
             <!-- <mat-error
                   *ngIf="name?.hasError('required') ">
                   This field is required</mat-error> -->
@@ -224,10 +226,11 @@
         <div class="card" style="margin-top: 10px">
           <div class="row" style="margin-top: 10px">
             <div class="col-sm-8">
+              <span style="font-weight: bold; font-size: small; margin-bottom: 10px;" *ngIf="showMessage">Note: {{showMessage}}</span>
               <mat-label>Select Plan</mat-label>
               <mat-form-field appearance="outline">
                 <mat-select matInput placeholder="Select Plan" [(ngModel)]="smeSelectedPlanId" autocomplete="off">
-                  <mat-option *ngFor="let plan of allPlans" [value]="plan?.planId">
+                  <mat-option *ngFor="let plan of allPlans" [value]="plan?.planId" [disabled]="plan.disable">
                     {{ plan.name }}
                   </mat-option>
                 </mat-select>

@@ -266,7 +266,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.loading = true;
     return new Promise((resolve, reject) => {
       let loggedInId = this.utilsService.getLoggedInUserID();
-      if(this.roles.includes('ROLE_LEADER')){
+      if(this.roles?.includes('ROLE_LEADER')){
         this.leaderUserId = loggedInId;
       }
 
@@ -405,6 +405,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         status: data[i].status,
         filingTeamMemberId: data[i].filingTeamMemberId,
         leaderName : data[i].leaderName,
+        leaderUserId :data[i].leaderUserId,
       });
     }
     return newData;
@@ -532,7 +533,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Leader Name',
-        field: 'leaderName',
+        field: 'leaderUserId',
         width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -540,6 +541,17 @@ export class FilingsComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
+        } ,
+        valueGetter: function(params) {
+          let createdUserId= parseInt(params?.data?.leaderUserId)
+          let filer1 = filerList;
+          let filer = filer1?.filter((item) => {
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+          console.log('filer', filer);
+          return filer
         }
       },
       {

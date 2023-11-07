@@ -899,14 +899,14 @@
                                 Income From Firm
                               </td>
                               <td>
-                                
+
                               </td>
                               <td>
-                                
+
                               </td>
                               <td>
-                                
-                                
+
+
                               </td>
                               <td>
                                 Rs
@@ -2167,6 +2167,79 @@
                               }}
                             </td>
                           </tr>
+
+                          
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.pfInterest1011IP
+                            "
+                          >
+                            <td>Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(11)</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.pfInterest1011IP
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                          *ngIf="
+                            finalCalculations?.otherIncome?.otherIncomes
+                              ?.pfInterest1011IIP
+                          "
+                        >
+                          <td>Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(11)</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.otherIncome?.otherIncomes
+                                  ?.pfInterest1011IIP
+                              )
+                            }}
+                          </td>
+                        </tr>
+
+                        <tr
+                        *ngIf="
+                          finalCalculations?.otherIncome?.otherIncomes
+                            ?.pfInterest1012IP
+                        "
+                      >
+                        <td>Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(12)</td>
+                        <td>
+                          Rs
+                          {{
+                            utilsService.currencyFormatter(
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.pfInterest1012IP
+                            )
+                          }}
+                        </td>
+                      </tr>
+
+                      <tr
+                      *ngIf="
+                        finalCalculations?.otherIncome?.otherIncomes
+                          ?.pfInterest1012IIP
+                      "
+                    >
+                      <td>Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(12)</td>
+                      <td>
+                        Rs
+                        {{
+                          utilsService.currencyFormatter(
+                            finalCalculations?.otherIncome?.otherIncomes
+                              ?.pfInterest1012IIP
+                          )
+                        }}
+                      </td>
+                    </tr>
 
                           <tr
                             *ngIf="
@@ -5492,7 +5565,7 @@
                     <div
                       class="bxHed"
                       *ngIf="
-                        finalCalculations?.exemptIncome?.partnerFirms.length > 0
+                        finalCalculations?.exemptIncome?.partnerFirms?.length > 0
                       "
                     >
                       Partnership firm details

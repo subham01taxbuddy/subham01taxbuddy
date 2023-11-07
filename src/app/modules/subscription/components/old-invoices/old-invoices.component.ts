@@ -5,10 +5,12 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridApi, GridOptions } from 'ag-grid-community';
+import * as moment from 'moment';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -69,12 +71,19 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
     mobileNumber: null,
     emailId: null,
   };
+  searchMenus = [
+    { value: 'name', name: 'User Name' },
+    { value: 'email', name: 'Email' },
+    { value: 'mobile', name: 'Mobile No' },
+  ];
+  clearUserFilter: number;
+  searchBy: any = {};
 
   constructor(
     private fb: FormBuilder,
     private utilService: UtilsService,
     public datePipe: DatePipe,
-    private userMsService: UserMsService,
+    private reportService:ReportService,
     private _toastMessageService: ToastMessageService,
     private itrService: ItrMsService,
     private dialog: MatDialog,
@@ -125,7 +134,32 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
     return this.invoiceFormGroup.controls['status'] as FormControl;
   }
 
+  resetFilters(){
+    this.clearUserFilter = moment.now().valueOf();
+    this.searchBy= {};
+    this.cacheManager.clearCache();
+    this.searchParam.statusId = null;
+    this.searchParam.page = 0;
+    this.searchParam.pageSize = 20;
+    this.searchParam.mobileNumber = null;
+    this.searchParam.emailId = null;
+    this.startDate.setValue(null);
+    this.endDate.setValue(null);
+    this.status.setValue(null);
+    this.assessmentYear.setValue(null)
+    this.gridApi?.setRowData(this.createRowData([]));
+    this.config.totalItems = 0;
+  }
+
+  searchByObject(object) {
+    this.searchBy = object;
+    console.log('object from search param ',this.searchBy);
+  }
+
   getInvoices(pageChange?) {
+    //https://dev-api.taxbuddy.com/report/bo/invoice/report?fromDate=2022-04-01&toDate=2023-03-31&pageNumber=0
+    //&pageSize=20&paymentStatus=Unpaid,Paid&mobile=9537210081
+
     if(!pageChange){
       this.cacheManager.clearCache();
       console.log('in clear cache')
@@ -136,14 +170,25 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
       let status = this.status.value;
       let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
       let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-      let param = '';
-      if (this.utilService.isNonEmpty(status)) {
-        param = `/invoice/report?fromDate=${fromData}&toDate=${toData}&${data}&paymentStatus=${status}`;
-      } else {
-        param = `/invoice/report?fromDate=${fromData}&toDate=${toData}&${data}`;
+      let mobileFilter='';
+      if(this.searchBy?.mobile){
+        mobileFilter = '&mobile='+ this.searchBy?.mobile;
       }
+      let emailFilter ='';
+      if(this.searchBy?.email){
+        emailFilter = '&email='+ this.searchBy?.email;
+      }
+      let nameFilter='';
+      if(this.searchBy?.name){
+        nameFilter = '&name='+ this.searchBy?.name;
+      }
+      let statusFilter ='';
+      if (this.utilService.isNonEmpty(status)){
+        statusFilter = '&paymentStatus='+ status;
+      }
+      let param = `/bo/invoice/report?fromDate=${fromData}&toDate=${toData}&${data}${statusFilter}${mobileFilter}${emailFilter}${nameFilter}`;
 
-      this.itrService.getMethod(param).subscribe((res: any) => {
+      this.reportService.getMethod(param).subscribe((res: any) => {
         this.loading = false;
         this.invoiceData = res.content;
         this.totalInvoice = res?.totalElements;
@@ -314,7 +359,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
         },
       },
       {
-        headerName: 'Services',
+        headerName: 'Service',
         field: 'serviceType',
         width: 120,
         suppressMovable: true,
@@ -549,11 +594,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
     console.log('FromDate: ', FromDate);
     this.toDateMin = FromDate;
   }
-  // pageChanged(event: any) {
-  //   this.config.currentPage = event;
-  //   this.searchParam.pageNumber = event - 1;
-  //   this.getInvoices();
-  // }
+
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {

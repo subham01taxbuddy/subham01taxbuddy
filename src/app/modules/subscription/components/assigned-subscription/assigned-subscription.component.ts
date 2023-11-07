@@ -230,6 +230,11 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       this.searchAsPrinciple = true;
     }
 
+    if (this.roles.includes('ROLE_FILER')  && this.agentId === loggedInSmeUserId) {
+      this.filerId = loggedInSmeUserId;
+      this.searchAsPrinciple = false;
+    }
+
     let userIdFilter = '';
     if (userId) {
       this.isAllowed = true
@@ -258,7 +263,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     if (this.filerId && this.searchAsPrinciple === true) {
       userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
     }
-    if (this.filerId && this.searchAsPrinciple === false) {
+    if ((this.filerId && this.searchAsPrinciple === false)) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
@@ -320,8 +325,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
               this.createRowData([])
             );
             return;
-          } else if (response.data.error === 'Subscription not found') {
-            this._toastMessageService.alert('error', response.data.error);
+          } else if (response?.data?.error === 'Subscription not found') {
+            this._toastMessageService.alert('error', response?.data?.error);
             let filtered = this.roles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_FILER');
             this.isAllowed = filtered && filtered.length > 0 ? true : false;
             this.config.totalItems = 0;
@@ -330,7 +335,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
             );
             return;
           } else {
-            this._toastMessageService.alert('error', response.data.error);
+            this._toastMessageService.alert('error', response?.data?.error);
             this.isAllowed = false;
             this.config.totalItems = 0;
             this.subscriptionListGridOptions.api?.setRowData(
@@ -870,39 +875,46 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       this.mobileNumber = this.searchVal
     }
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId
-    this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, this.mobileNumber).subscribe((res: any) => {
-      console.log(res);
-      if (res?.records) {
-        this.userId = res?.records[0]?.userId;
-        if (this.userId) {
-          let disposable = this.dialog.open(AddSubscriptionComponent, {
-            width: '80%',
-            height: 'auto',
-            data: {
-              userId: this.userId,
-              mobileNo: this.mobileNumber,
-            },
-
-          })
-          console.log('send data', data)
-          disposable.afterClosed().subscribe(result => {
-            if (result && result.data) {
-              let subData = {
-                type: 'create',
-                data: result.data
-              }
-              sessionStorage.setItem('createSubscriptionObject', JSON.stringify(subData))
-              // let subID=result.data['subscriptionId'];
-              console.log('Afetr dialog close -> ', subData);
-              this.router.navigate(['/subscription/create-subscription']);
-              // this.router.navigate(['/subscription/create-subscription ' + result.data['subscriptionId']]);
-            }
-          })
+    debugger
+    if (this.roles.includes('ROLE_FILER')) {
+      this.openAddSubscriptionDialog();
+    } else {
+      this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, this.mobileNumber).subscribe((res: any) => {
+        console.log(res);
+        if (res?.records) {
+          this.userId = res?.records[0]?.userId;
+          if (this.userId) {
+            this.openAddSubscriptionDialog();
+          }
         }
+      });
+    }
+  }
+
+  openAddSubscriptionDialog() {
+    let disposable = this.dialog.open(AddSubscriptionComponent, {
+      width: '80%',
+      height: 'auto',
+      data: {
+        userId: this.userId,
+        mobileNo: this.mobileNumber,
+      },
+
+    })
+    console.log('send data', data)
+    disposable.afterClosed().subscribe(result => {
+      if (result && result.data) {
+        let subData = {
+          type: 'create',
+          data: result.data
+        }
+        sessionStorage.setItem('createSubscriptionObject', JSON.stringify(subData))
+        // let subID=result.data['subscriptionId'];
+        console.log('Afetr dialog close -> ', subData);
+        this.router.navigate(['/subscription/create-subscription']);
+        // this.router.navigate(['/subscription/create-subscription ' + result.data['subscriptionId']]);
       }
-    });
-
-
+    })
   }
 
   getFilerList() {

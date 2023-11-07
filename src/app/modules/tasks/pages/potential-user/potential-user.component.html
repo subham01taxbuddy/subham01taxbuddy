@@ -17,7 +17,7 @@
           <div class="row">
             <div class="col-sm-12 bckClr" >
               <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
-                (sendPrincipleIndividual)="fromSme($event, false)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+                (sendPrincipleIndividual)="fromSme($event, false,true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
             <!-- <div class="filter__col card__col-sm-3 card__col-xs-12">
               <app-service-drop-down (sendService)="fromServiceType($event)" [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
@@ -25,8 +25,7 @@
             <div class="col-sm-3 spsTp">
               <mat-label>Select Status</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select placeholder="Select Status" [(ngModel)]="searchParam.statusId"
-                  (selectionChange)="this.search('status','isAgent')">
+                <mat-select placeholder="Select Status" [(ngModel)]="searchParam.statusId">
                   <mat-option *ngFor="let status of statuslist" [value]="status.statusId">
                     {{ status.statusName }}
                   </mat-option>

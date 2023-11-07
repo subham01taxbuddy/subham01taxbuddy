@@ -139,6 +139,7 @@ export class CreateNewUserComponent implements OnInit {
       this.leaderName = event ? event.name : null;
       this.leaderId = event ? event.userId : null;
       if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.leaderId) {
+        this.assignedToMe=false;
         this.getSmeInfoDetails(this.leaderId);
       }
     } else {
