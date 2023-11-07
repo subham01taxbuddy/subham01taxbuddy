@@ -334,7 +334,7 @@ export class UserProfileComponent implements OnInit {
   // get getAddressArray() {
   //   return <FormArray>this.userProfileForm.get('address');
   // }
-
+  roles:any;
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserMsService,
@@ -348,6 +348,7 @@ export class UserProfileComponent implements OnInit {
     private titleCasePipe: TitleCasePipe) { }
 
   ngOnInit() {
+    this.roles = this.utilsService.getUserRoles();
     // this.getStateInfo().then(res => {
     this.activatedRoute.params.subscribe(params => {
       console.log("99999999999999999:", params)
@@ -489,6 +490,15 @@ export class UserProfileComponent implements OnInit {
   //   })
   // }
 
+  maskMobileNumber(originalMobileNumber: string): string {
+    if (originalMobileNumber && originalMobileNumber.length >= 10) {
+      const maskedPart = '*'.repeat(originalMobileNumber.length - 4);
+      const lastFourDigits = originalMobileNumber.slice(-4);
+      return maskedPart + lastFourDigits;
+    }
+    return originalMobileNumber;
+  }
+
   getUserInfo(userId: any) {
     this.loading = true;
     let param = '/profile/' + userId;
@@ -496,6 +506,11 @@ export class UserProfileComponent implements OnInit {
       this.loading = false;
       console.log('user data -> ', res);
       this.userInfo = res;
+      if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+        this.userProfileForm.controls['mobileNumber'].setValue(this.userInfo?.mobileNumber ? this.userInfo.mobileNumber : '');
+      } else {
+        this.userProfileForm.controls['mobileNumber'].setValue(this.maskMobileNumber(this.userInfo?.mobileNumber ? this.userInfo?.mobileNumber : ''));
+      }
       if (this.utilsService.isNonEmpty(this.userInfo.bankDetails) && this.utilsService.isNonEmpty(this.userInfo.address)) {
         this.userProfileForm.patchValue(this.userInfo);
       }
