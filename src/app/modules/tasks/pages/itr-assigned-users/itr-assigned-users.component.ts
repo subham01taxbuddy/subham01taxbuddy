@@ -1236,7 +1236,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     })
     disposable.afterClosed().subscribe(result => {
       console.log('result after more option closed', result)
-      if (result.data === 'success') {
+      if (result?.data === 'success') {
         this.search();
       }
     });
