@@ -96,7 +96,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private reportService: ReportService,
   ) {
-    this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
+    this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
       columnDefs: this.columnDef(this.allFilerList),
