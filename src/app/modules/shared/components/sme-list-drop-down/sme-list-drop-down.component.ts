@@ -193,10 +193,10 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
         console.log('change', value);
         if (!this.utilsService.isNonEmpty(value)) {
           this.setLeader({});
-          if (this.roles?.includes('ROLE_ADMIN')) {
-            // this.ownerDetails.userId = this?.loggedInSme[0]?.userId;
-            this.getPrincipleIndividuals();
-          }
+          // if (this.roles?.includes('ROLE_ADMIN')) {
+          //   // this.ownerDetails.userId = this?.loggedInSme[0]?.userId;
+          //   this.getPrincipleIndividuals();
+          // }
         }
         const name = typeof value === 'string' ? value : value?.name;
         return name
@@ -208,6 +208,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
 
 
   getLeaderNameId(option) {
+    this.leaderDetails = option;
     this.setLeader(option)
     this.getPrincipleIndividuals();
   }

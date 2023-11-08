@@ -544,7 +544,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Leader Name',
-        field: 'ownerName',
+        field: 'leaderName',
         width: 200,
         suppressMovable: true,
         hide: !showOwnerCols,

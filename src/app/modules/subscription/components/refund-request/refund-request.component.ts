@@ -461,7 +461,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
       {
         headerName: 'Old Subscription Amount',
         field: 'oldSubscriptionAmount',
-        width: 130,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
 
@@ -469,7 +469,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
       {
         headerName: 'New Subscription Amount',
         field: 'newSubscriptionAmount',
-        width: 130,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
 

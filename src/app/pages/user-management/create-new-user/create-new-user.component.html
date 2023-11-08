@@ -12,7 +12,7 @@
         <div class="row">
           <div class="col-sm-12 bckClr" *ngIf="isApplicable(['ROLE_ADMIN'])">
             <app-sme-list-drop-down (sendLeader)="fromSme($event, true)"
-              (sendPrincipleIndividual)="fromSme($event, false)" listType="ALL" [disabled]="assignedToMe">
+              (sendPrincipleIndividual)="fromSme($event, false)" [disabled]="assignedToMe">
             </app-sme-list-drop-down>
           </div>
           <div class="col-sm-3 spsTp">
