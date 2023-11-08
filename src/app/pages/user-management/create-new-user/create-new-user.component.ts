@@ -303,9 +303,9 @@ export class CreateNewUserComponent implements OnInit {
   getSmeRecords(agentUserId) {
     const userId = agentUserId;
     const loggedInSmeUserId = this.loggedInSme[0].userId
-    const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
+    const param = `/bo/sme-details-new/${userId}`;
 
-    this.userService.getMethodNew(param).subscribe((result: any) => {
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('sme record by service  -> ', result);
       this.smeRecords = result.data;
       this.smeRecords = this.smeRecords?.filter(element => element.serviceType !== null);
