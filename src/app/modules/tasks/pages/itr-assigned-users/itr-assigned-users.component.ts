@@ -502,7 +502,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         field: 'leaderName',
         width: 110,
         suppressMovable: true,
-        hide: !showOwnerCols,
+        // hide: !showOwnerCols,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -515,7 +515,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         field: 'filerName',
         width: 150,
         suppressMovable: true,
-        hide: !showOwnerCols,
+        // hide: !showOwnerCols,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         filterParams: {

@@ -149,7 +149,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       //   this.searchParam.mobileNumber = this.searchVal;
       //   this.search('mobile');
       // }
-      // else 
+      // else
       if (this.searchStatusId) {
         this.searchParam.statusId = this.searchStatusId;
         this.search('status');
@@ -652,6 +652,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Start Filing',
+        hide:true,
         width: 90,
         sortable: true,
         pinned: 'right',
