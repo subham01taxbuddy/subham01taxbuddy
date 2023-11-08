@@ -177,7 +177,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
 
     this.getAllPlanInfo(this.serviceType);
-    this.getOwnerFilerName();
+    this.getLeaderFilerName();
     this.setFormValues(this.selectedUserInfo);
   }
 
@@ -291,7 +291,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     state: new FormControl(''),
     city: new FormControl(''),
     zipcode: new FormControl(''),
-    ownerName: new FormControl(''),
     filerName: new FormControl(''),
     assessmentYear: new FormControl(''),
     leaderName: new FormControl(''),
@@ -329,9 +328,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   get zipcode() {
     return this.personalInfoForm.controls['zipcode'] as FormControl;
   }
-  get ownerName() {
-    return this.personalInfoForm.controls['ownerName'] as FormControl;
-  }
+ 
   get filerName() {
     return this.personalInfoForm.controls['filerName'] as FormControl;
   }
@@ -513,20 +510,19 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     this.AssessmentYear = currentFyDetails[0].assessmentYear
     console.log("ay", this.AssessmentYear)
-    this.getOwnerFiler();
+    this.getLeaderFiler();
   }
 
-  getOwnerFiler() {
+  getLeaderFiler() {
     // https://api.taxbuddy.com/user/agent-assignment-new?userId=747677&assessmentYear=2023-2024&serviceType=ITR
     this.loading = true;
     let types = ['GST', 'NOTICE', 'TPA'];
     let sType = types.includes(this.serviceType) ? this.serviceType : 'ITR';
-    const param = `/agent-assignment-new?userId=${this.subscriptionObj.userId}&assessmentYear=${this.AssessmentYear}&serviceType=${sType}`;
+    const param = `/leader-assignment?userId=${this.subscriptionObj.userId}&serviceType=${sType}`;
     this.userService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
       console.log('get Owner and filer name for new create sub ', result)
-      this.filerName.setValue(result.data?.name);
-      this.ownerName.setValue(result.data?.ownerName);
+      this.filerName.setValue(result.data?.filerName);
       this.leaderName.setValue(result.data?.leaderName);
     })
   }
@@ -550,7 +546,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         this.description.setValue(subscription.item.itemDescription);
         this.sacNumber.setValue(subscription.item.sacCode);
         this.assessmentYear.setValue(subscription.item.financialYear);
-        this.ownerName.setValue(subscription.ownerName);
         this.filerName.setValue(subscription.assigneeName);
         this.leaderName.setValue(subscription.leaderName);
 
@@ -963,14 +958,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   // }
 
-  getOwnerFilerName() {
+  getLeaderFilerName() {
     // const loggedInSmeUserId=this?.loggedInSme[0]?.userId
 
-    let param = `/sme-details-new/${this?.loggedInSme[0]?.userId}?smeUserId=${this.subscriptionObj?.subscriptionAssigneeId}`;
-    this.userService.getMethodNew(param).subscribe((result: any) => {
+    let param = `/bo/sme-details-new/${this.subscriptionObj?.subscriptionAssigneeId}`;
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('owner filer name  -> ', result);
-      // this.filerName.setValue(result.data[0]?.name);
-      // this.ownerName.setValue(result.data[0]?.parentName);
+      this.filerName.setValue(result.data[0]?.name);
+      this.leaderName.setValue(result.data[0]?.parentName);
     });
   }
 
