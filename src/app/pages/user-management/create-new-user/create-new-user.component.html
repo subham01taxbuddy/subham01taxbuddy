@@ -107,7 +107,7 @@
               to me!</mat-checkbox>
           </div>
           <div class="col-sm-12 spsTp bdrTp">
-            <button class="rt-btn" (click)="userSignUp()"> User Sign-up </button>
+            <button class="rt-btn" (click)="userSignUp()"[disabled]="disableUserSignUp" > User Sign-up </button>
           </div>
         </div>
       </form>

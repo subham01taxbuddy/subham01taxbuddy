@@ -490,13 +490,11 @@ export class UserProfileComponent implements OnInit {
   //   })
   // }
 
-  maskMobileNumber(originalMobileNumber: string): string {
-    if (originalMobileNumber && originalMobileNumber.length >= 10) {
-      const maskedPart = '*'.repeat(originalMobileNumber.length - 4);
-      const lastFourDigits = originalMobileNumber.slice(-4);
-      return maskedPart + lastFourDigits;
+  maskMobileNumber(mobileNumber) {
+    if (mobileNumber) {
+      return 'X'.repeat(mobileNumber.length);
     }
-    return originalMobileNumber;
+    return '-';
   }
 
   getUserInfo(userId: any) {
@@ -506,11 +504,6 @@ export class UserProfileComponent implements OnInit {
       this.loading = false;
       console.log('user data -> ', res);
       this.userInfo = res;
-      if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
-        this.userProfileForm.controls['mobileNumber'].setValue(this.userInfo?.mobileNumber ? this.userInfo.mobileNumber : '');
-      } else {
-        this.userProfileForm.controls['mobileNumber'].setValue(this.maskMobileNumber(this.userInfo?.mobileNumber ? this.userInfo?.mobileNumber : ''));
-      }
       if (this.utilsService.isNonEmpty(this.userInfo.bankDetails) && this.utilsService.isNonEmpty(this.userInfo.address)) {
         this.userProfileForm.patchValue(this.userInfo);
       }
@@ -542,6 +535,12 @@ export class UserProfileComponent implements OnInit {
       this.bankData = this.userProfileForm.controls['bankDetails'].value;
 
       this.updateUserRole(this.userInfo.mobileNumber)
+
+      if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+        this.userProfileForm.controls['mobileNumber'].setValue(this.userInfo?.mobileNumber ? this.userInfo.mobileNumber : '');
+      } else {
+        this.userProfileForm.controls['mobileNumber'].setValue(this.maskMobileNumber(this.userInfo?.mobileNumber ? this.userInfo?.mobileNumber : ''));
+      }
     },
       error => {
         this.loading = false;
