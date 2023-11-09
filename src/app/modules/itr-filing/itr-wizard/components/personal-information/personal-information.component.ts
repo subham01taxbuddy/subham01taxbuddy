@@ -2693,9 +2693,9 @@ export class PersonalInformationComponent implements OnInit {
             JSON.stringify(this.ITR_JSON)
           );
           this.loading = false;
-          this.utilsService.showSnackBar(
-            'Customer profile updated successfully.'
-          );
+          // this.utilsService.showSnackBar(
+          //   'Customer profile updated successfully.'
+          // );
           this.personalInfoSaved.emit(true);
 
           if (!ref) {
@@ -3040,7 +3040,7 @@ export class PersonalInformationComponent implements OnInit {
       const amount = control.get('amount');
       const nature = control.get('nature');
 
-      if (clauseIvFlag.value === 'N' || seventhProvisio139Flag.value === 'N') {
+      if (!clauseIvFlag.value || clauseIvFlag.value === 'N' || seventhProvisio139Flag.value === 'N') {
         // Save the data and clear the form group
         this.clauseiv7provisio139iSaved = amount.value;
         clauseIvFlag.reset();
