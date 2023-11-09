@@ -42,6 +42,7 @@ export class BusinessInputAutocompleteComponent implements OnInit {
       this.filteredOptions = this.natureOfBusinessList;
     } else {
       console.log('business list not found');
+      this.getMastersData();
     }
     if(this.selectedInput) {
       this.myControl.setValue(this.selectedInput);

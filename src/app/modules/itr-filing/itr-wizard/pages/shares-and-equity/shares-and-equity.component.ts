@@ -45,6 +45,7 @@ export class SharesAndEquityComponent
   minDate: Date;
   maxDate: Date;
   maxPurchaseDate: Date;
+  maximumDate = new Date();
 
   gainTypeList = [
     { name: 'STCG', value: 'SHORT' },
@@ -137,6 +138,7 @@ export class SharesAndEquityComponent
     } else {
       this.deduction = false;
     }
+    this.maximumDate = new Date();
   }
 
   calMaxPurchaseDate(sellDate) {
@@ -191,7 +193,6 @@ export class SharesAndEquityComponent
         this.updateDeductionUI();
       });
     }
-
   }
 
   updateDeductionUI(){
@@ -680,12 +681,15 @@ export class SharesAndEquityComponent
                   (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
                 );
               }
-              let filtered = data[0].assetDetails.filter(element => element.srn !== result.srn);
-              if(!filtered){
+              let filtered = data[0].assetDetails.filter(
+                (element) => element.srn !== result.srn
+              );
+              if (!filtered) {
                 filtered = [];
               }
               filtered.push(result);
-              this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = filtered;
+              this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails =
+                filtered;
               this.initBrokerList(this.Copy_ITR_JSON);
               this.initDetailedForm(this.Copy_ITR_JSON);
               this.selectedFormGroup.controls['hasEdit'].setValue(null);
@@ -749,7 +753,9 @@ export class SharesAndEquityComponent
     }
     if (data.length > 0) {
       data.forEach((obj) => {
-        let assetDetails = obj.assetDetails.filter((security: any) => brokerNames.includes(security.brokerName));
+        let assetDetails = obj.assetDetails.filter((security: any) =>
+          brokerNames.includes(security.brokerName)
+        );
         obj.assetDetails = assetDetails;
       });
       this.initBrokerList(itrObject);
@@ -873,8 +879,7 @@ export class SharesAndEquityComponent
         ],
 
         deduction:
-          this.deductionForm.invalid ||
-          !this.deduction
+          this.deductionForm.invalid || !this.deduction
             ? []
             : [this.deductionForm.getRawValue()],
       };

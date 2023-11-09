@@ -352,6 +352,13 @@
                               >
                                 Interest amount should be 1
                               </mat-error>
+                              <mat-error
+                                *ngIf="
+                                  coOwn.get('interestAmount').hasError('max')
+                                "
+                              >
+                                Interest amount should not exceed {{200000 - sopInterestClaimed}}
+                              </mat-error>
                             </mat-form-field>
                             <mat-label
                               *ngIf="

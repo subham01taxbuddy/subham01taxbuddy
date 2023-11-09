@@ -29,7 +29,8 @@ export class UtilsService {
   private subject = new Subject<any>();
   uploadedJson: any;
   jsonData: any;
-  value:any;
+  value: any;
+  salaryValues: any;
   constructor(
     private snackBar: MatSnackBar,
     private itrMsService: ItrMsService,
@@ -1411,8 +1412,8 @@ export class UtilsService {
 
   private dataSubject = new Subject<any>();
 
-  sendData(data: any, component:string) {
-    this.dataSubject.next({data, component});
+  sendData(data: any, component: string) {
+    this.dataSubject.next({ data, component });
   }
 
   getData() {
@@ -1450,7 +1451,15 @@ export class UtilsService {
     return this.value = value;
   }
 
-  getChange(){
+  getChange() {
     return this.value;
+  }
+
+  setSalaryValues(values) {
+    this.salaryValues = values;
+  }
+
+  getSalaryValues() {
+    return this.salaryValues;
   }
 }

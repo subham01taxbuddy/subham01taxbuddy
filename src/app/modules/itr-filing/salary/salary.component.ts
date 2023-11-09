@@ -3,7 +3,14 @@ import { ITR_JSON } from '../../../modules/shared/interfaces/itr-input.interface
 import { UtilsService } from './../../../services/utils.service';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
-import { Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import {
+  Validators,
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  AbstractControl,
+  ValidatorFn,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -33,7 +40,6 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   deductionsFormGroup: FormGroup;
   allowanceFormGroup: FormGroup;
   freeze: boolean = false;
-
   localEmployer: Employer;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -161,7 +167,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       seqNum: 15,
       value: 'EIC',
       label:
-        'Exempt income received by judge covered the payment of salaries to supreme court/high court judges Act/Rule ',
+        'Exempt income received by judge covered the payment of salaries to supreme court/high court judges Act/Rule (EIC)',
       detailed: false,
     },
     {
@@ -198,6 +204,23 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     },
   ];
   stateDropdown = AppConstants.stateDropdown;
+
+  // errors keys
+  hraError: boolean = false;
+  ltaError: boolean = false;
+  gratuityError: boolean = false;
+  pensionError: boolean = false;
+  leaveEncashError: boolean = false;
+  secProvisoCgovError: boolean = false;
+  compensationOnVrsError: boolean = false;
+  firstProvisoError: boolean = false;
+  secondProvisoError: boolean = false;
+  remunerationError: boolean = false;
+  serviceOutIndError: boolean = false;
+  prescPersonalExpError: boolean = false;
+  prescProfExpError: boolean = false;
+  eicProfExpError: boolean = false;
+
   constructor(
     private router: Router,
     private fb: FormBuilder,
@@ -434,6 +457,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       if (
         this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
         this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
+        this.ITR_JSON.employerCategory !== 'PE' &&
+        this.ITR_JSON.employerCategory !== 'PESG' &&
         this.allowanceDropdown[i].value === 'FIRST_PROVISO'
       ) {
         data.push(
@@ -449,6 +474,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       if (
         this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
         this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
+        this.ITR_JSON.employerCategory !== 'PE' &&
+        this.ITR_JSON.employerCategory !== 'PESG' &&
         this.allowanceDropdown[i].value === 'SECOND_PROVISO'
       ) {
         data.push(
@@ -557,6 +584,448 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
   validatePT() {
     this.deductionsFormGroup.controls['professionalTax'].markAllAsTouched();
+  }
+
+  customMaxValidator(basic50: number, hraValue: number): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value = control.value;
+
+      if (value > basic50 || value > hraValue) {
+        return { maxError: { value } };
+      }
+
+      return null;
+    };
+  }
+
+  // Function to set a validator
+  setValidator(controlName: string, validator: any) {
+    const allowance = this.allowanceFormGroup?.controls[
+      'allowances'
+    ] as FormArray;
+    const control = allowance?.controls?.find((element) => {
+      return element?.get('allowType')?.value === controlName;
+    });
+
+    control?.get('allowValue')?.setValidators(validator);
+    control?.get('allowValue')?.updateValueAndValidity();
+  }
+
+  // Function to remove a validator
+  removeValidator(controlName: string, validator: any) {
+    const allowance = this.allowanceFormGroup?.controls[
+      'allowances'
+    ] as FormArray;
+    const control = allowance?.controls?.find((element) => {
+      return element?.get('allowType')?.value === controlName;
+    });
+
+    control?.get('allowValue')?.removeValidators(validator);
+    control?.get('allowValue')?.updateValueAndValidity();
+  }
+
+  validationApplicableForAll() {
+    const allowance = this.allowanceFormGroup?.controls[
+      'allowances'
+    ] as FormArray;
+
+    // secondProviso
+    {
+      const secondProvisoControl = allowance?.controls?.find((element) => {
+        return element?.get('allowType')?.value === 'SECOND_PROVISO_CGOV';
+      });
+      const fixedLimit = 500000;
+
+      if (
+        this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
+        this.ITR_JSON.employerCategory === 'GOVERNMENT' ||
+        this.ITR_JSON.employerCategory === 'PE' ||
+        this.ITR_JSON.employerCategory === 'PESG'
+      ) {
+        this.setValidator('SECOND_PROVISO_CGOV', Validators.max(fixedLimit));
+      }
+
+      if (
+        secondProvisoControl?.get('allowValue')?.errors &&
+        secondProvisoControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+      ) {
+        this.secProvisoCgovError = true;
+      } else {
+        this.removeValidator('SECOND_PROVISO_CGOV', Validators.max(fixedLimit));
+        this.secProvisoCgovError = false;
+      }
+    }
+
+    // voluntary retirement 10 (10C)
+    {
+      const secondProvisoControl = allowance?.controls?.find((element) => {
+        return element?.get('allowType')?.value === 'COMPENSATION_ON_VRS';
+      });
+      const vrsLastYearValue = this.allowanceFormGroup.get('vrsLastYear').value;
+      const fixedLimit = 500000;
+      this.setValidator('COMPENSATION_ON_VRS', Validators.max(fixedLimit));
+
+      if (
+        (secondProvisoControl?.get('allowValue')?.errors &&
+          secondProvisoControl
+            ?.get('allowValue')
+            ?.errors?.hasOwnProperty('max')) ||
+        vrsLastYearValue
+      ) {
+        this.compensationOnVrsError = true;
+      } else {
+        this.removeValidator('COMPENSATION_ON_VRS', Validators.max(fixedLimit));
+        this.compensationOnVrsError = false;
+      }
+    }
+
+    // First proviso- compensation limit notified by CG in the official gazette 10(10Bi)
+    {
+      if (
+        this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
+        this.ITR_JSON.employerCategory === 'GOVERNMENT' ||
+        this.ITR_JSON.employerCategory === 'PE' ||
+        this.ITR_JSON.employerCategory === 'PESG'
+      ) {
+        this.firstProvisoError = true;
+      } else {
+        this.firstProvisoError = false;
+      }
+    }
+
+    // First proviso- compensation limit notified by CG in the official gazette 10(10Bi)
+    {
+      if (
+        this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
+        this.ITR_JSON.employerCategory === 'GOVERNMENT' ||
+        this.ITR_JSON.employerCategory === 'PE' ||
+        this.ITR_JSON.employerCategory === 'PESG'
+      ) {
+        this.secondProvisoError = true;
+      } else {
+        this.secondProvisoError = false;
+      }
+    }
+
+    // eic
+    {
+      if (
+        this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+        this.ITR_JSON.employerCategory !== 'GOVERNMENT'
+      ) {
+        this.eicProfExpError = true;
+      } else {
+        this.eicProfExpError = false;
+      }
+    }
+
+    // Remuneration 10(6)
+    this.setting106107('10(6)');
+
+    // Rendering services outside india 10(7)
+    this.setting106107('10(7)');
+  }
+
+  setting106107(section) {
+    const employerTotal = this.employerDetailsFormGroup
+      ?.get('salaryDetails')
+      ?.value?.reduce(
+        (acc, item) =>
+          acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0),
+        0
+      );
+    const allowance = this.allowanceFormGroup?.controls[
+      'allowances'
+    ] as FormArray;
+    const Control = allowance?.controls?.find((element) => {
+      return element?.get('allowType')?.value === section;
+    });
+    this.setValidator(section, Validators.max(employerTotal));
+
+    if (
+      Control?.get('allowValue')?.errors &&
+      Control?.get('allowValue')?.errors?.hasOwnProperty('max')
+    ) {
+      if (section === '10(7)') {
+        this.serviceOutIndError = true;
+      } else if (section === '10(6)') {
+        this.remunerationError = true;
+      }
+    } else {
+      this.removeValidator(section, Validators.max(employerTotal));
+      if (section === '10(7)') {
+        this.serviceOutIndError = false;
+      } else if (section === '10(6)') {
+        this.remunerationError = false;
+      }
+    }
+  }
+
+  ifFormValuesNotPresent() {
+    const allowance = this.allowanceFormGroup?.controls[
+      'allowances'
+    ] as FormArray;
+
+    // gratuity received
+    {
+      const gratuityControl = allowance?.controls?.find((element) => {
+        return element?.get('allowType')?.value === 'GRATUITY';
+      });
+      const fixedLimit = 2000000;
+      this.setValidator('GRATUITY', Validators.max(fixedLimit));
+
+      if (
+        gratuityControl?.get('allowValue')?.errors &&
+        gratuityControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+      ) {
+        this.gratuityError = true;
+      } else {
+        this.removeValidator('GRATUITY', Validators.max(fixedLimit));
+        this.gratuityError = false;
+      }
+    }
+
+    // leave encashment
+    {
+      const leaveEncashControl = allowance?.controls?.find((element) => {
+        return element?.get('allowType')?.value === 'LEAVE_ENCASHMENT';
+      });
+      const fixedLimit = 300000;
+
+      // lower of 3 lakhs only applicable for non government employees if form values not present
+      if (
+        this.ITR_JSON.employerCategory === 'OTHER' ||
+        this.ITR_JSON.employerCategory === 'PRIVATE' ||
+        this.ITR_JSON.employerCategory === 'PEPS' ||
+        this.ITR_JSON.employerCategory === 'PENSIONERS' ||
+        this.ITR_JSON.employerCategory === 'NA'
+      ) {
+        this.setValidator('LEAVE_ENCASHMENT', Validators.max(fixedLimit));
+      }
+
+      if (
+        leaveEncashControl?.get('allowValue')?.errors &&
+        leaveEncashControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+      ) {
+        this.leaveEncashError = true;
+      } else {
+        this.removeValidator('LEAVE_ENCASHMENT', Validators.max(fixedLimit));
+        this.leaveEncashError = false;
+      }
+    }
+  }
+
+  prescribed14Expenses(section) {
+    const allowance = this.allowanceFormGroup?.controls[
+      'allowances'
+    ] as FormArray;
+    const FormValues = this.utilsService.getSalaryValues();
+    const personalExpControl = allowance?.controls?.find((element) => {
+      return element?.get('allowType')?.value === section;
+    });
+    const personalExp =
+      parseFloat(FormValues?.salary[0]?.CONVEYANCE) +
+      parseFloat(FormValues?.salary[0]?.OTHER_ALLOWANCE) +
+      parseFloat(FormValues?.salary[0]?.OTHER);
+
+    if (personalExp && personalExp !== 0) {
+      this.setValidator(section, Validators.max(personalExp));
+    }
+
+    if (
+      personalExpControl?.get('allowValue')?.errors &&
+      personalExpControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+    ) {
+      if (section === '10(14)(ii)') {
+        this.prescPersonalExpError = true;
+      } else if (section === '10(14)(i)') {
+        this.prescProfExpError = true;
+      }
+    } else {
+      this.removeValidator(section, Validators.max(personalExp));
+      if (section === '10(14)(ii)') {
+        this.prescPersonalExpError = false;
+      } else if (section === '10(14)(i)') {
+        this.prescProfExpError = false;
+      }
+    }
+  }
+
+  validations() {
+    const allowance = this.allowanceFormGroup?.controls[
+      'allowances'
+    ] as FormArray;
+    const FormValues = this.utilsService.getSalaryValues();
+
+    if (FormValues) {
+      const isAtLeastOneSalaryGreaterThanZero = Object?.values(
+        FormValues?.salary[0]
+      ).some((element: any) => element > 0);
+
+      if (isAtLeastOneSalaryGreaterThanZero) {
+        {
+          const hraControl = allowance?.controls?.find((element) => {
+            return element?.get('allowType')?.value === 'HOUSE_RENT';
+          });
+          const BASIC_SALARY = parseFloat(FormValues?.salary[0]?.BASIC_SALARY);
+          const HOUSE_RENT = parseFloat(FormValues?.salary[0]?.HOUSE_RENT);
+
+          let lowerOf = Math.min(
+            BASIC_SALARY !== 0 ? BASIC_SALARY / 2 : Infinity,
+            HOUSE_RENT !== 0 ? HOUSE_RENT : Infinity
+          );
+
+          if (BASIC_SALARY === 0 && HOUSE_RENT === 0) {
+            lowerOf = 0;
+          }
+          this.setValidator('HOUSE_RENT', Validators.max(lowerOf));
+
+          if (
+            hraControl?.get('allowValue')?.errors &&
+            hraControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+          ) {
+            this.hraError = true;
+          } else {
+            this.removeValidator('HOUSE_RENT', Validators.max(lowerOf));
+            this.hraError = false;
+          }
+        }
+
+        // Leave travel allowances
+        {
+          const ltaControl = allowance?.controls?.find((element) => {
+            return element?.get('allowType')?.value === 'LTA';
+          });
+          const LTA = parseFloat(FormValues?.salary[0]?.LTA);
+          this.setValidator('LTA', Validators.max(LTA));
+
+          if (
+            ltaControl?.get('allowValue')?.errors &&
+            ltaControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+          ) {
+            this.ltaError = true;
+          } else {
+            this.removeValidator('LTA', Validators.max(LTA));
+            this.ltaError = false;
+          }
+        }
+
+        // gratuity received
+        {
+          const gratuityControl = allowance?.controls?.find((element) => {
+            return element?.get('allowType')?.value === 'GRATUITY';
+          });
+          const gratuity = parseFloat(FormValues?.salary[0]?.GRATUITY);
+          const fixedLimit = 2000000;
+
+          let lowerOf = Math.min(
+            gratuity !== 0 ? gratuity : Infinity,
+            fixedLimit
+          );
+
+          if (gratuity === 0) {
+            lowerOf = fixedLimit;
+          }
+          this.setValidator('GRATUITY', Validators.max(lowerOf));
+
+          if (
+            gratuityControl?.get('allowValue')?.errors &&
+            gratuityControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+          ) {
+            this.gratuityError = true;
+          } else {
+            this.removeValidator('GRATUITY', Validators.max(lowerOf));
+            this.gratuityError = false;
+          }
+        }
+
+        // commuted pension 10(10A)
+        {
+          const pensionControl = allowance?.controls?.find((element) => {
+            return element?.get('allowType')?.value === 'COMMUTED_PENSION';
+          });
+          const pension = parseFloat(FormValues?.salary[0]?.COMMUTED_PENSION);
+          this.setValidator('COMMUTED_PENSION', Validators.max(pension));
+
+          if (
+            pensionControl?.get('allowValue')?.errors &&
+            pensionControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+          ) {
+            this.pensionError = true;
+          } else {
+            this.removeValidator('COMMUTED_PENSION', Validators.max(pension));
+            this.pensionError = false;
+          }
+        }
+
+        // leave encashment
+        {
+          const leaveEncashControl = allowance?.controls?.find((element) => {
+            return element?.get('allowType')?.value === 'LEAVE_ENCASHMENT';
+          });
+          const leaveEncash = parseFloat(
+            FormValues?.salary[0]?.LEAVE_ENCASHMENT
+          );
+          const fixedLimit = 300000;
+
+          let lowerOf = Math.min(
+            leaveEncash !== 0 ? leaveEncash : Infinity,
+            fixedLimit
+          );
+
+          if (leaveEncash === 0) {
+            lowerOf = fixedLimit;
+          }
+
+          // lower of 3 lakhs only applicable for non government employees
+          if (
+            this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+            this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
+            this.ITR_JSON.employerCategory !== 'PE' &&
+            this.ITR_JSON.employerCategory !== 'PESG'
+          ) {
+            this.setValidator('LEAVE_ENCASHMENT', Validators.max(lowerOf));
+          } else {
+            this.setValidator('LEAVE_ENCASHMENT', Validators.max(leaveEncash));
+          }
+
+          if (
+            leaveEncashControl?.get('allowValue')?.errors &&
+            leaveEncashControl?.get('allowValue')?.errors?.hasOwnProperty('max')
+          ) {
+            this.leaveEncashError = true;
+          } else {
+            if (
+              this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+              this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
+              this.ITR_JSON.employerCategory !== 'PE' &&
+              this.ITR_JSON.employerCategory !== 'PESG'
+            ) {
+              this.removeValidator('LEAVE_ENCASHMENT', Validators.max(lowerOf));
+            } else {
+              this.removeValidator(
+                'LEAVE_ENCASHMENT',
+                Validators.max(leaveEncash)
+              );
+            }
+            this.leaveEncashError = false;
+          }
+        }
+
+        // personal expenses 14(ii)
+        this.prescribed14Expenses('10(14)(ii)');
+
+        // expenses 14(i)
+        this.prescribed14Expenses('10(14)(i)');
+      } else {
+        this.ifFormValuesNotPresent();
+      }
+    } else {
+      this.ifFormValuesNotPresent();
+    }
+
+    // applicable overall
+    this.validationApplicableForAll();
   }
 
   saveEmployerDetails() {
@@ -717,6 +1186,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
       this.localEmployer.allowance = [];
       let totalAllowExempt = 0;
+      let othTotalAllowExempt = 0;
       for (
         let i = 0;
         i <
@@ -812,8 +1282,18 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             taxableAmount: 0,
             exemptAmount: Number(allowance.controls['allowValue'].value),
           });
-          totalAllowExempt =
-            totalAllowExempt + Number(allowance.controls['allowValue'].value);
+
+          if (
+            allowance.controls['allowType'].value !== '10(6)' &&
+            allowance.controls['allowType'].value !== '10(7)'
+          ) {
+            totalAllowExempt =
+              totalAllowExempt + Number(allowance.controls['allowValue'].value);
+          } else {
+            othTotalAllowExempt =
+              othTotalAllowExempt +
+              Number(allowance.controls['allowValue'].value);
+          }
         }
       }
 
@@ -821,6 +1301,21 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       if (totalAllowExempt > this.grossSalary) {
         this.utilsService.showSnackBar(
           'Allowances total cannot exceed gross salary'
+        );
+        return;
+      }
+
+      const employerTotal = this.employerDetailsFormGroup
+        ?.get('salaryDetails')
+        ?.value?.reduce(
+          (acc, item) =>
+            acc + parseFloat(item?.salaryValue ? item?.salaryValue : 0),
+          0
+        );
+
+      if (othTotalAllowExempt > employerTotal) {
+        this.utilsService.showSnackBar(
+          'Allowances total cannot exceed total gross salary'
         );
         return;
       }

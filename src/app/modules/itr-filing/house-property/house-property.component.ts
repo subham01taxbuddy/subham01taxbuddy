@@ -121,6 +121,7 @@ export class HousePropertyComponent implements OnInit {
         haveUnlistedShares: false,
       };
     }
+
   }
 
   ngOnInit() {
@@ -470,9 +471,9 @@ export class HousePropertyComponent implements OnInit {
     this.hpView = 'FORM';
     // this.housingView = 'FORM';
     this.mode = 'ADD';
-    this.chekIsSOPAdded();
     this.housePropertyForm = this.createHousePropertyForm();
     this.housePropertyForm.controls['country'].setValue('91');
+    this.chekIsSOPAdded();
     this.defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
     this.setStoredValues(this.ITR_JSON.houseProperties.length, 'add');
   }
@@ -582,6 +583,8 @@ export class HousePropertyComponent implements OnInit {
       : false;
 
     this.EeEaValueChanges();
+    this.chekIsSOPAdded();
+
   }
 
   haveCoOwners() {
@@ -681,9 +684,19 @@ export class HousePropertyComponent implements OnInit {
       for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
         if (this.ITR_JSON.houseProperties[i].propertyType === 'SOP') {
           this.isSelfOccupied++;
+          if(this.storedIndex != i) {
+            this.sopInterestClaimed = this.ITR_JSON.houseProperties[i].loans[0]?.interestAmount;
+          }
           // break;
         }
       }
+    }
+    let typeOfHp = this.housePropertyForm.controls['propertyType'].value;
+    if(typeOfHp === 'SOP') {
+      (
+        (this.housePropertyForm.controls['loans'] as FormGroup)
+          .controls[0] as FormGroup
+      ).controls['interestAmount'].setValidators([Validators.max(200000 - this.sopInterestClaimed)]);
     }
   }
 
@@ -737,6 +750,10 @@ export class HousePropertyComponent implements OnInit {
         (this.housePropertyForm.controls['loans'] as FormGroup)
           .controls[0] as FormGroup
       ).controls['interestAmount'].setValidators([Validators.min(1)]);
+      (
+        (this.housePropertyForm.controls['loans'] as FormGroup)
+          .controls[0] as FormGroup
+      ).controls['interestAmount'].setValidators([Validators.max(200000 - this.sopInterestClaimed)]);
       (
         (this.housePropertyForm.controls['loans'] as FormGroup)
           .controls[0] as FormGroup
@@ -948,6 +965,7 @@ export class HousePropertyComponent implements OnInit {
     }
   }
   isSelfOccupied = 0;
+  sopInterestClaimed = 0;
   serviceCall(ref, request) {
     // this.utilsService.openLoaderDialog();
     this.loading = true;
