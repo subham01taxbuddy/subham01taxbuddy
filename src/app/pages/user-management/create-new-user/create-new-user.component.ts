@@ -134,8 +134,9 @@ export class CreateNewUserComponent implements OnInit {
 
   leaderId: number;
   filerId: number;
+  agentId: number;
   fromSme(event, isLeader) {
-    if (isLeader) {
+    if (isLeader && event && Object.keys(event).length > 0) {
       this.leaderName = event ? event.name : null;
       this.leaderId = event ? event.userId : null;
       if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.leaderId) {
@@ -170,8 +171,6 @@ export class CreateNewUserComponent implements OnInit {
     }
 
   }
-
-  agentId: number;
 
   isAssignedToMe() {
     this.disableUserSignUp = false;
@@ -269,7 +268,7 @@ export class CreateNewUserComponent implements OnInit {
         this.utilsService.showSnackBar("User created succesfully.");
       } else {
         this.loading = false;
-        this.utilsService.showSnackBar("Error while assigning user!!! Please select Owner or Filer Name ");
+        this.utilsService.showSnackBar("Error while assigning user!!! Please select leader or Filer Name ");
       }
 
     }, error => {
