@@ -53,6 +53,7 @@
               name="turnOver[i]"
               required
               class="input-field"
+              (blur)="calculateIncome(fieldGlobalIndex(i))"
               digitsOnly
             />
           </mat-form-field>
