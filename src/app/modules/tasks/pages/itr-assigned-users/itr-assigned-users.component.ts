@@ -167,6 +167,8 @@ export class ItrAssignedUsersComponent implements OnInit {
       }
       else {
         if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
+          this.filerId = this.agentId ;
+          this.partnerType = this.utilsService.getPartnerType();
           this.search();
         } else {
           this.dataOnLoad = false;
@@ -1265,22 +1267,20 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
-
+    if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      this.agentId = this.utilsService.getLoggedInUserID();
+      this.filerId = this.filerId = this.agentId ;
+      this.partnerType = this.utilsService.getPartnerType();
+    }
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
-    if (this.coOwnerDropDown) {
-      this.coOwnerDropDown.resetDropdown();
-      this.search('', true);
+    if (this.dataOnLoad) {
+      this.search();
     } else {
-      if (this.dataOnLoad) {
-        this.search();
-      } else {
         //clear grid for loaded data
-        this.usersGridOptions.api?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
+      this.usersGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
       }
-    }
-
   }
 
   search(form?, isAgent?, pageChange?) {

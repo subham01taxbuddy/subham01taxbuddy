@@ -89,6 +89,7 @@ export class PayoutsComponent implements OnInit,OnDestroy {
   maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 1, 1);
   toDateMin: any;
+  partnerType :any;
 
   constructor(private userService: UserMsService,
               private _toastMessageService: ToastMessageService,
@@ -145,6 +146,7 @@ export class PayoutsComponent implements OnInit,OnDestroy {
     this.selectedStatus = this.statusList[2].value;
     this.selectedPayoutStatus = this.paymentStatusList[0].value;
     this.roles = this.utilsService.getUserRoles();
+    this.partnerType =this.utilsService.getPartnerType();
     if (this.roles.includes('ROLE_FILER')) {
       this.searchMenus = [
         {value: 'invoiceNo', name: 'Invoice No'},
@@ -156,6 +158,7 @@ export class PayoutsComponent implements OnInit,OnDestroy {
       ]
     }
     if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.agentId = this.loggedInUserId
       this.serviceCall('');
     } else{
       this.dataOnLoad = false;
@@ -183,10 +186,12 @@ export class PayoutsComponent implements OnInit,OnDestroy {
 
   leaderId: number;
   filerId: number;
+  agentId: number;
   fromLeader(event) {
     if(event) {
       this.leaderId = event ? event.userId : null;
       console.log('fromowner:', event);
+      this.agentId = this.leaderId;
       //let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
       //let queryString = this.ownerId ? `&ownerUserId=${this.ownerId}${statusFilter}` : `${statusFilter}`;
       // this.serviceCall('');
@@ -201,11 +206,13 @@ export class PayoutsComponent implements OnInit,OnDestroy {
         this.filerId = event ? event.userId : null;
         this.searchAsPrinciple = false;
       }
+      this.agentId =  this.filerId;
     }
   }
   fromFiler(event) {
     if(event) {
       this.filerId = event ? event.userId : null;
+      this.agentId =  this.filerId;
       // let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
       // let queryString = this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
       // this.serviceCall('');
@@ -273,9 +280,21 @@ export class PayoutsComponent implements OnInit,OnDestroy {
       this.cacheManager.clearCache();
     }
     this.loading = true;
-
     let fromData =this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
+
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
+
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =true;
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =false;
+    }
 
     let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
     let payOutStatusFilter = this.selectedPayoutStatus ? `&payoutStatus=${this.selectedPayoutStatus}` : '';

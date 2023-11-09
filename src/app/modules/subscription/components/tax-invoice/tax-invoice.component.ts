@@ -211,17 +211,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       this.options1 = this.allFilers;
     }
 
-
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
-
-    this.activatedRoute.queryParams.subscribe(params => {
-      let invNo = params['invoiceNo'];
-      if (invNo) {
-        this.invoiceFormGroup.controls['invoiceNo'].setValue(invNo);
-        this.getInvoice();
-      }
-    });
 
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
       this.agentId =  this.loggedInSme[0]?.userId;
@@ -229,16 +220,23 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     } else {
       this.dataOnLoad = false;
     }
-
     this.activatedRoute.queryParams.subscribe(params => {
+    if (this.utilService.isNonEmpty(params['name']) || params['mobile'] !== '-' || params['invoiceNo'] ) {
+      let name = params['name'];
       let mobileNo = params['mobile'];
-      if (mobileNo) {
+      let invNo = params['invoiceNo'];
+      if(name){
+        this.invoiceFormGroup.controls['name'].setValue(name);
+      }else if (mobileNo) {
         this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
+      }else if (invNo) {
+        this.invoiceFormGroup.controls['invoiceNo'].setValue(invNo);
+      }
+      if(name || mobileNo || invNo){
         this.getInvoice();
       }
-    });
+    }})
 
-    // this.getInvoice();
   }
 
   decryptPhoneNumber(encryptedPhone: string): string {
@@ -305,7 +303,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       let loggedInId = this.utilService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    // this.getInvoice();
+
   }
 
   invoiceFormGroup: FormGroup = this.fb.group({
@@ -393,6 +391,9 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
       this.filerId = loggedInId ;
       this.searchAsPrinciple =true;
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =false;
     }
 
     if(this.searchBy?.mobile){

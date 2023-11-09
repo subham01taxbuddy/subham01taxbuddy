@@ -220,7 +220,11 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
       this.filerId = loggedInId ;
       this.searchAsPrinciple =true;
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =false;
     }
+
     if(this.searchBy?.mobileNumber){
       this.searchParam.mobileNumber = this.searchBy?.mobileNumber
     }
