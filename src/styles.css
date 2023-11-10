@@ -1461,6 +1461,31 @@ main {
     position: relative;
     align-self: stretch;
 }
+.pre-box {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 24px;  
+  background-color: #F6F6F6;
+  width:100%;
+  position: relative;
+  align-self: stretch;
+}
+.PreBoxOut {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 24px;
+  background-color: #F8F8F8;
+  width: 100%;
+  position: relative;
+  align-self: stretch;
+  gap: 30px;
+}
 .lndBldg-L {
   flex: 1; 
 }
@@ -1495,6 +1520,24 @@ main {
   border-bottom:1px solid #C9C9C9;
 }
 
+.pre-box1 {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0px 0px 10px 25px;
+  background-color: #F0F7FF;
+  width: 100%;
+  position: relative;
+  align-self: stretch;
+  border-bottom: 1px solid #C9C9C9;
+}
+
+.disBx {
+  background-color: #F0F0F0!important;
+}
+
 .hdByr-L{
   flex: 3; 
   font-weight:bold;
@@ -1505,6 +1548,17 @@ main {
 
 .LndBx{
   padding:25px;
+}
+
+.PreBxUp {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 40px;
+}
+
+.PreBxDwn{
+  width:100%;
 }
    /* landBldg 2 Column Ends*/
 
