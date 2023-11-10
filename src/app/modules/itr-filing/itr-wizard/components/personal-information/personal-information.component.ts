@@ -2654,6 +2654,7 @@ export class PersonalInformationComponent implements OnInit {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
         .first()
         .focus();
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
       this.personalInfoSaved.emit(false);
       return;
     }
