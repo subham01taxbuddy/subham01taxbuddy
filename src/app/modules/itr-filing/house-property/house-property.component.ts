@@ -693,10 +693,15 @@ export class HousePropertyComponent implements OnInit {
     }
     let typeOfHp = this.housePropertyForm.controls['propertyType'].value;
     if(typeOfHp === 'SOP') {
+      console.log('updating validations');
       (
         (this.housePropertyForm.controls['loans'] as FormGroup)
           .controls[0] as FormGroup
       ).controls['interestAmount'].setValidators([Validators.max(200000 - this.sopInterestClaimed)]);
+      (
+        (this.housePropertyForm.controls['loans'] as FormGroup)
+          .controls[0] as FormGroup
+      ).controls['interestAmount'].updateValueAndValidity();
     }
   }
 
@@ -726,6 +731,7 @@ export class HousePropertyComponent implements OnInit {
         //     this.housePropertyForm.controls[control].disable();
         // }
         // this.housePropertyForm.disable();
+        this.chekIsSOPAdded();
         return;
       }
       this.housePropertyForm.controls['annualRentReceived'].setValue(null);
@@ -850,6 +856,9 @@ export class HousePropertyComponent implements OnInit {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    this.chekIsSOPAdded();
+    this.housePropertyForm.updateValueAndValidity();
 
     if (!this.Copy_ITR_JSON.systemFlags) {
       this.Copy_ITR_JSON.systemFlags = {
