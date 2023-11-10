@@ -726,6 +726,7 @@ export class HousePropertyComponent implements OnInit {
         //     this.housePropertyForm.controls[control].disable();
         // }
         // this.housePropertyForm.disable();
+        this.chekIsSOPAdded();
         return;
       }
       this.housePropertyForm.controls['annualRentReceived'].setValue(null);
