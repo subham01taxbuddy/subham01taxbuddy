@@ -1287,20 +1287,30 @@ main {
     justify-content: space-between;
     padding: 24px;    
   }
+  .hp4main1 {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 14px;    
+  }
   .hp4-1{
     flex: 1; 
     background-color:#F6F6F6;
     padding:15px;
+    min-height: 105px;
   }
   .hp4-2{
     flex: 1; 
     background-color:#F6F6F6;
     padding:15px;
+    min-height: 105px;
   }
   .hp4-3{
     flex: 1; 
     background-color:#F6F6F6;
     padding:15px;
+    min-height: 105px;
   }
   .hp4-4{
     flex: 1;  
@@ -1348,12 +1358,63 @@ main {
   }
   /* hp 4 columns ends */
 
+  /* Land 5 Boxes */
+  .mnBx-5{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between; 
+    padding: 24px; 
+  }
+  .Box5-L {
+    padding: 15px;
+    background-color: #F6F6F6;
+    display: flex;
+    flex-direction: row;  
+    gap:50px;
+    flex-wrap: wrap;
+    flex: 3;  
+}
+.Box5-R {
+  padding: 15px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;  
+  gap:50px;
+  flex-wrap: wrap;
+  flex: 1;  
+}
+.Box5-1{
+  width:150px;
+}
+.Box5-2{
+  width:150px;
+}
+.Box5-3{ 
+  width:150px;
+}
+.Box5-4{ 
+  width:150px;
+}
+.Box5-5{
+  width:150px;
+}
+/* Land 5 Boxes Ends*/
+
+
   .hdTxMn{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
     padding: 24px 0px 0px 24px;
+  }
+  .hdTxMn1{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 14px 0px 0px 14px;
   }
   .hdTxL{
     flex: 1; 
@@ -1362,6 +1423,79 @@ main {
   .hdTxR{
     flex: 1; 
   }
+
+  /* landBldg 2 Column */
+  .lndBldg-box {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 24px;  
+    background-color:#F8F8F8;
+    width:100%;
+    position: relative;
+    align-self: stretch;
+}
+.lndBldg-L {
+  flex: 1; 
+}
+.lndBldg-R {
+  flex: 1; 
+}
+.buyr-box {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 24px;  
+  background-color:#F8F8F8;
+  width:100%;
+  position: relative;
+  align-self: stretch;
+  gap:30px;
+}
+
+.buyr-box1 {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 24px;  
+  background-color:#F8F8F8;
+  width:100%;
+  position: relative;
+  align-self: stretch;
+  border-bottom:1px solid #C9C9C9;
+}
+
+.hdByr-L{
+  flex: 3; 
+  font-weight:bold;
+}
+.hdByr-R{
+  flex: 1; 
+}
+
+.LndBx{
+  padding:25px;
+}
+   /* landBldg 2 Column Ends*/
+
+
+  /* Second Box */
+  .scnBxWh{    
+    padding: 15px;  
+    width: 100%;   
+    background-color: #ffffff;  
+}
+  
+  /* Second Box */
+
+
+
 
 
   .out-box {
@@ -1372,6 +1506,18 @@ main {
     align-items: baseline;
     /* padding: 24px; */
     width:100%;   
+}
+
+.land-box-buyr {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-items: baseline;
+  /* padding: 24px; */
+  width:100%;   
+  flex-wrap: wrap;
+  padding: 25px;
 }
 
 .lft-btn {  
