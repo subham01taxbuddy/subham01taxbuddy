@@ -1237,6 +1237,30 @@ main {
     margin: 25px;
 }
 
+.surBx1{
+  border-bottom: 1px solid #DADADA;
+  padding: 10px;
+  display: block;
+}
+
+.txHdg{
+  font-weight:400;
+  font-size:16px;
+  padding:25px;
+}
+
+
+.gry-box-spc {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+  flex-wrap: wrap;
+  padding: 25px;
+}
+
 .spntx{
   font-size:13px;
   font-weight:400;
