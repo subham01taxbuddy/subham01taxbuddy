@@ -45,7 +45,7 @@
         
         <div class="frameC">
             <div class="div">
-              <div class="text-wrapper">Land and Building</div>
+              <div class="text-wrapper">House Property</div>
               <div class="mingcute-down-fill"></div>
             </div>
             <div class="space">
@@ -53,7 +53,7 @@
                 <div class="div-3">
                   <div class="contents-wrapper">
                     <div class="contents">
-                      <div class="field-text">Land & Building Property 1</div>
+                      <div class="field-text">House Property 1</div>
                       <div class="group"><img class="material-symbols" src="assets/img/new/del.png" /></div>
                     </div>
                   </div>
@@ -69,206 +69,229 @@
                         <div class="accordion" id="myAccordion">
                             <div class="accordion-item">
                                 <h2 class="accordion-header accoHdclr" id="headingOne">
-                                    <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne">Employer Details</button>									
+                                    <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne">Let Out House Property</button>									
                                 </h2>
                                 <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                                     <div class="card-body">
-                                      <div class="div-5">
-                                      <div class="div-6">
-                                        <div class="field">
-                                          <div class="field-label">
-                                            <span class="span">Name of the employer </span> <span class="text-wrapper-2">*</span>
-                                          </div>
-                                          <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="AC technologies">
-                                        </div>
-                                        <div class="field">
-                                          <div class="field-label">
-                                            <span class="span">Employer TAN </span> <span class="text-wrapper-2">*</span>
-                                          </div>
-                                          <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="56886TTFG">
-                                        </div>
-                                      </div>
-                                      <div class="div-6">
-                                        <div class="field">
-                                          <div class="field-label">
-                                            <span class="span">Address of the Employer </span> <span class="text-wrapper-2">*</span>
-                                          </div>
-                                          <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="">
-                                        </div>                    
-                                      </div>
-                                      <div class="div-6">
-                                        <div class="field">
-                                          <div class="field-label">
-                                            <span class="span">PIN Code </span> <span class="text-wrapper-2">*</span>
-                                          </div>
-                                          <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="">
-                                        </div> 
-                                        <div class="field">
-                                          <div class="field-label">
-                                            <span class="span">City </span> <span class="text-wrapper-2">*</span>
-                                          </div>
-                                          <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Mumbai">
-                                        </div>                 
-                                      </div>
-                                      <div class="div-6">
-                                        <div class="field">
-                                          <div class="field-label">
-                                            <span class="span">State </span> <span class="text-wrapper-2">*</span>
-                                              <select class="form-control select" id="exampleFormControlSelect1">
-                                              <option>Select</option>
-                                              <option>2</option>
-                                              <option>3</option>
-                                              <option>4</option>
-                                              <option>5</option>
-                                            </select>
-                                          </div>                 
-                                        </div>
-                                        <div class="field">
-                                          <div class="field-label">
-                                          <span class="span">Country </span> <span class="text-wrapper-2">*</span>
-                                          <select class="form-control select" id="exampleFormControlSelect1">
-                                            <option>India</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                          </select>
-                                          </div>
-                                        
-                                        </div>
-                                      </div>
+
+                                    <div class="surBx">
+
+                                     <div class="hp2main">
+                                      <div class="hplft">Gross Rent Received/Receivable/Letable Value <span class="redAst">*</span></div>
+                                      <div class="hprgt"><input type="text" placeholder="₹ Enter Amount" class="form-control"> </div>
+                                     </div>
+                                     <div class="hp2main">
+                                      <div class="hplft">Amount of Property Tax <span class="redAst">*</span></div>
+                                      <div class="hprgt"><input type="text"  placeholder="₹ Enter Amount" class="form-control"> </div>
+                                     </div>
+                                     <div class="hp2main">
+                                      <div class="hplft">Annual value <span class="redAst">*</span></div>
+                                      <div class="hprgt"><input type="text" class="form-control" disabled> </div>
+                                     </div>
+                                     <div class="hp2main">
+                                      <div class="hplft">30% Of Annual Value <span class="redAst">*</span></div>
+                                      <div class="hprgt"><input type="text" class="form-control" disabled> </div>
+                                     </div>
+                                     <div class="hp2main">
+                                      <div class="hplft">Interest paid on housing loan <span class="redAst">*</span><br><span class="spntx">(If amount is more than 2Lakh, additional deduction is available u/s 80EE/80EEA)</span></div>
+                                      <div class="hprgt"><input type="text" class="form-control"> </div>
+                                     </div>
+                                     <div class="hp2main">
+                                      <div class="hplft">Arreas/Unrealised Rent received during year is less than 30% <span class="redAst">*</span></div>
+                                      <div class="hprgt"><input type="text" class="form-control"> </div>
+                                     </div>
+                                     <div class="hp2mainClr">
+                                      <div class="hplft">Net Taxable Income from this House Property</div>
+                                      <div class="hprgt"><input type="text" class="form-control formClr" placeholder="₹ 56,000"> </div>
+                                     </div>
+
                                     </div>
+
+                                    <div class="surBx">
+
+                                      <div class="hp2main">
+                                       <div class="hplft">Principal on housing loan <span class="redAst">*</span></div>
+                                       <div class="hprgt"><input type="text" placeholder="₹ Enter Amount" class="form-control"> </div>
+                                      </div>                                     
+ 
+                                     </div>
+
+                                     
+
+                                     
+
                                     </div>
                                 </div>
                             </div>
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingTwo">
-                                    <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">Gross Salary   <input type="number" class="form-control inpClr2" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹0"></button>
+                                    <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">Property Address</button>
                                     
                                 </h2>
                                 <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                                     <div class="card-body">
-
-                                      <div class="div-8">                  
-                                        <div class="div-9">
-                                          <div class="field-label-wrapper"><p class="p">Salary as per section 17(1)</p></div>
-                                          <div class="div-10">
-                                            <input type="number" class="form-control inpClr1" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹0">
-                                            <div class="field-label-2">OR</div>
-                                            <div class="contents-8"><button type="button" class="btnSal"> + Add based on category </button></div>
-                                          </div>
+                                      <div class="div-5">
+                                        
+                                        <div class="div-6">
+                                          <div class="field">
+                                            <div class="field-label">
+                                              <span class="span">Address of the Employer </span> <span class="text-wrapper-2">*</span>
+                                            </div>
+                                            <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="">
+                                          </div>                    
                                         </div>
-                                        <img class="line" src="img/line-2-2.svg" />
-                                        <div class="div-9">
-                                          <div class="field-label-wrapper"><p class="p">Salary as per section 17(1)</p></div>
-                                          <div class="div-10">
-                                            <input type="number" class="form-control inpClr1" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹0">
-                                            <div class="field-label-2">OR</div>
-                                            <div class="contents-8"><button type="button" class="btnSal"> + Add based on category </button></div>
-                                          </div>
+                                        <div class="div-6">
+                                          <div class="field">
+                                            <div class="field-label">
+                                              <span class="span">PIN Code </span> <span class="text-wrapper-2">*</span>
+                                            </div>
+                                            <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="">
+                                          </div> 
+                                          <div class="field">
+                                            <div class="field-label">
+                                              <span class="span">City </span> <span class="text-wrapper-2">*</span>
+                                            </div>
+                                            <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Mumbai">
+                                          </div>                 
                                         </div>
-                                        <img class="line" src="img/line-5.svg" />
-                                        <div class="div-9">
-                                          <div class="field-label-wrapper"><p class="p">Salary as per section 17(1)</p></div>
-                                          <div class="div-10">
-                                            <input type="number" class="form-control inpClr1" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹0">
-                                            <div class="field-label-2">OR</div>
-                                            <div class="contents-8"><button type="button" class="btnSal"> + Add based on category </button></div>
+                                        <div class="div-6">
+                                          <div class="field">
+                                            <div class="field-label">
+                                              <span class="span">State </span> <span class="text-wrapper-2">*</span>
+                                                <select class="form-control select" id="exampleFormControlSelect1">
+                                                <option>Select</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                              </select>
+                                            </div>                 
+                                          </div>
+                                          <div class="field">
+                                            <div class="field-label">
+                                            <span class="span">Country </span> <span class="text-wrapper-2">*</span>
+                                            <select class="form-control select" id="exampleFormControlSelect1">
+                                              <option>India</option>
+                                              <option>2</option>
+                                              <option>3</option>
+                                              <option>4</option>
+                                              <option>5</option>
+                                            </select>
+                                            </div>
+                                          
                                           </div>
                                         </div>
                                       </div>
-
+                                     
                                     </div>
                                 </div>
                             </div>
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingThree">
-                                    <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseThree">Exemptions <input type="number" class="form-control inpClr2" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹0"></button>                     
+                                    <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseThree">Co-ownership Details</button>                     
                                 </h2>
                                 <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                                     <div class="card-body">
-                                      <div class="div-8A">
-                                        
-                                          <div class="item1">
-                                          <div class="field-label-3">Type of Allowance</div>
-                                          </div>
-                                          
-                                          <div class="item2">
-                                          <div class="contents-10">                        
-                                            <select class="form-control select">
-                                              <option>Select</option>
-                                              <option>2</option>
-                                              <option>4</option>
-                                            </select>
-                                          </div>
-                                        </div>
-                                         
-                                          <div class="item3">
-                                            <div class="input-group mb-3">
-                                              <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-                                              <div class="input-group-append">
-                                              <div class="input-group-text btnIco"><i class="fa fa-calculator"></i> </div>
-                                              </div>
-                                            </div>
-                                            </div>
-                                                        
-                                        
+                                      
+                                      <div class="hdTxMn">
+                                       <div class="hdTxL">
+                                        Is the Property Jointly Owned? <span class="redAst">*</span>
+                                       </div>
+                                      <div class="hdTxR">
+                                       <input type="radio" checked><label> Yes</label>
+                                       <input type="radio"><label> No</label>
+                                       </div>
                                       </div>
+
+                                       <div class="hp4main">
+                                        <div class="hp4-1">
+                                          <div class="field">
+                                            <div class="field-label">
+                                              <span class="span">Name of co-owner </span> <span class="redAst">*</span>
+                                            </div>
+                                            <input type="text" class="form-control gry" placeholder="Ravi Kumar">
+                                          </div>   
+                                        </div>
+
+                                        <div class="hp4-2">
+                                          <div class="field">
+                                            <div class="field-label">
+                                              <span class="span">Co-owner’s PAN </span> <span class="redAst">*</span>
+                                            </div>
+                                            <input type="text" class="form-control gry" placeholder="TTG4567FV">
+                                          </div>   
+                                        </div>
+
+                                        <div class="hp4-3">
+                                          <div class="field">
+                                            <div class="field-label">
+                                              <span class="span">Their % Share </span> <span class="redAst">*</span>
+                                            </div>
+                                            <input type="text" class="form-control gry" placeholder="67%">
+                                          </div>   
+                                        </div>
+
+                                        <div class="hp4-4">
+                                           <div class="Bx4">
+                                           <div class="Bx4L">
+                                            <button type="button"> <i class="fa fa-trash-o delbt"></i> </button> 
+                                           </div>
+                                           <div class="Bx4R">
+                                           <button type="button" class="addAno"> + Add Another </button> 
+                                           </div>
+                                          </div> 
+                                        </div>
+
+
+                                       </div>
+           
                                       
                                     </div>
                                 </div>
                             </div>                           
                           <div class="accordion-item">
                             <h2 class="accordion-header" id="headingThree">
-                                <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseThree">Deductions</button>                     
+                                <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseThree">Tenant Details</button>                     
                             </h2>
                             <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                                 <div class="card-body">
 
-                                  <div class="div-8A">
-                                   <div class="item-left">
-                                    <div class="field-label-3">Standard Deduction sec 16(i)</div>
-                                   </div>
-                                   <div class="item-right">
-                                    <input type="text" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹ Enter Amount" class="form-control inpplac1"> 
-                                   </div>                                   
-                                  </div>
+                                  <div class="hp4main">
 
-                                  <div class="div-8A">
-                                    <div class="item-left">
-                                     <div class="field-label-3">Entainment Allowance sec 16(ii)</div>
+                                    <div class="hp4A">
+
+                                      <div class="field spcBtw">
+                                        <div class="field-label">
+                                          <span class="span">Name of tenant</span> <span class="redAst">*</span>
+                                        </div>
+                                        <input type="text" class="form-control gry" placeholder="Samiksha Joshi">
+                                      </div> 
+                                      
+                                      <div class="field">
+                                        <div class="field-label">
+                                          <span class="span">Tenant’s PAN</span> <span class="redAst">*</span>
+                                        </div>
+                                        <input type="text" class="form-control gry" placeholder="TTG4567FV">
+                                      </div>  
+
                                     </div>
-                                    <div class="item-right">
-                                     <input type="text" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹ Enter Amount" class="form-control inpplac1"> 
+
+                                    
+
+                                    <div class="hp4-4">
+                                       <div class="Bx4">
+                                       <div class="Bx4L">
+                                        <button type="button"> <i class="fa fa-trash-o delbt"></i> </button> 
+                                       </div>
+                                       <div class="Bx4R">
+                                       <button type="button" class="addAno"> + Add Another </button> 
+                                       </div>
+                                      </div> 
                                     </div>
+
+
                                    </div>
 
-                                   <div class="div-8A">
-                                    <div class="item-left">
-                                     <div class="field-label-3">Standard Deduction sec 16(i)</div>
-                                    </div>
-                                    <div class="item-right">
-                                     <input type="text" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹ Enter Amount" class="form-control inpplac1"> 
-                                    </div>
-                                   </div>
-
-                                   <div class="div-8A">
-                                    <div class="item-left">
-                                     <div class="field-label-3">Entainment Allowance&nbsp;&nbsp;sec 16(ii)</div>
-                                    </div>
-                                    <div class="item-right">
-                                     <input type="text" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹ Enter Amount" class="form-control inpplac1"> 
-                                    </div>
-                                   </div>
-
-                                   <div class="div-8A">
-                                    <div class="item-left">
-                                     <div class="field-label-3">Professional Tax sec 16(iii)</div>
-                                    </div>
-                                    <div class="item-right">
-                                     <input type="text" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹ Enter Amount" class="form-control inpplac1"> 
-                                    </div>
-                                   </div>
 
                                 </div>
                             </div>
@@ -281,35 +304,19 @@
                     </div>
                     
              
-                  <div class="frame-wrapper-2">
-                        
+              
 
-                            <div class="div-8B">
-                              <div class="item-left1">
-                               <div class="field-label-3">Net Taxable Salary from Employer 1</div>
-                              </div>
-                              <div class="item-right1">
-                                ₹ 56,000
-                              </div>
-                             </div>
+             
 
-                       
-                       
-                      
-                   
-                  </div>
-                  <div class="div-11">
-                    <div class="frame-wrapper-3">
-                      <div class="contents-wrapper">
-                        <div class="contents-13"><div class="field-text-9">Back</div></div>
-                      </div>
+                  <div class="out-box"> 
+                    <div class="box-left">
+                    <div class="lft-btn">Back</div>
                     </div>
-                    <div class="frame-wrapper-4">
-                      <div class="contents-wrapper">
-                        <div class="contents-14"><div class="field-text">Save &amp; View Summary</div></div>
+                    <div class="box-right">
+                      <div class="rght-btn">Save & View Summary</div>
                       </div>
-                    </div>
                   </div>
+
                 </div>
               </div>
             </div>

@@ -322,9 +322,10 @@ button {
 /* Style the page wrapper */
 .page-wrapper {
   display: flex;
-  height: 100%;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
 }
-
 /* Style the header */
 header {
   text-align: center;
@@ -899,7 +900,7 @@ main {
     border-radius: 0px 0px 4px 4px;
     display: flex;
     position: relative;
-    align-self: stretch;    
+    align-self: stretch;        
   }
 
   .frameC .div-8A {
@@ -910,6 +911,7 @@ main {
     align-items:baseline;
     padding: 24px;   
     gap:15px;
+    border-bottom: 1px solid #f1f1f1;
   }
 
   .frameC .div-8B {
@@ -925,6 +927,11 @@ main {
   .item-right{
     flex-grow:1;
   }
+
+  .item-right1{
+    font-weight:bold;
+  }
+
 
   .item-left{
     flex-basis:220px;
@@ -1186,13 +1193,204 @@ main {
     background-color:#ff0000;
   }
 
-  .frameC .frame-wrapper-3 {
-    display: block;
+  /* 4 column */
+  .out-4box {
+    display: flex;
+    flex-direction: row;
     align-items: flex-start;
-    position: relative;
-    align-self: stretch;
-    width: auto;
-    flex: 0 0 auto;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 24px;
+    width:100%;   
+    gap:30px; 
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.area-1 {
+  flex: 1;
+  margin-right:120px;
+  font-weight:bold;
+}
+.area-2 {
+  flex: 1;  
+}
+.area-3 {
+  flex: 1;
+  text-align:center;
+  font-weight:bold;
+}
+.area-4 {
+  flex: 1;
+  border-radius: 4px;
+  border: 1.5px solid;
+  border-color: #157999;
+  padding: 8px 12px;
+}
+
+  /* 4 column */
+
+  /* hp 2 columns */
+  .surBx{
+    border: 1px solid #DADADA;
+    padding: 10px;
+    display: block;
+    margin: 25px;
+}
+
+.spntx{
+  font-size:13px;
+  font-weight:400;
+  color:#cccccc;
+}
+  .hp2main {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 24px;
+    gap: 15px;   
+}
+.hplft{
+  flex: 1;
+  margin-right: 40px;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.hprgt{
+  flex: 1;  
+}
+
+.hp2mainClr {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 24px;
+  gap: 15px;   
+  background-color: #F0F7FF;
+  margin:10px;
+}
+
+.formClr{
+  background-color: #DDEDFF!important;
+}
+  /* hp 2 columns */
+
+  /* hp 4 columns */
+  .hp4main {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 24px;    
+  }
+  .hp4-1{
+    flex: 1; 
+    background-color:#F6F6F6;
+    padding:15px;
+  }
+  .hp4-2{
+    flex: 1; 
+    background-color:#F6F6F6;
+    padding:15px;
+  }
+  .hp4-3{
+    flex: 1; 
+    background-color:#F6F6F6;
+    padding:15px;
+  }
+  .hp4-4{
+    flex: 1;  
+    padding:15px;
+  }
+  .hp4A {
+    flex: 3.3;  
+    padding:15px;
+    background-color:#F6F6F6;
+    display: flex;
+    flex-direction: row;    
+  }
+  .spcBtw{
+    padding-right:15px;
+  }
+  .gry{
+    background-color:#f6f6f6!important;    
+  }
+  .redAst{
+    color:#ff0000;
+  }
+  .addAno{  
+    border-radius: 4px;
+    border: 1.5px solid;
+    border-color: #157999;
+    padding: 8px 12px;
+    color: #157999;
+  }
+  .Bx4 {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;   
+    }
+  .Bx4L{
+    flex: 1;  
+  }
+  .Bx4R{
+    flex: 3;  
+  }
+  .delbt{
+    color:#EB5757;
+  }
+  /* hp 4 columns ends */
+
+  .hdTxMn{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 24px 0px 0px 24px;
+  }
+  .hdTxL{
+    flex: 1; 
+    font-weight:bold;
+  }
+  .hdTxR{
+    flex: 1; 
+  }
+
+
+  .out-box {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    align-items: baseline;
+    /* padding: 24px; */
+    width:100%;   
+}
+
+.lft-btn {  
+    padding: 8px 24px;
+    border-radius: 4px;
+    border: 1.5px solid;
+    border-color: #3d82cd;
+}
+.rght-btn {
+    background-color: #3d82cd;
+    border-radius: 4px;
+    border: 1.5px solid;
+    padding: 8px 24px;
+    color: #ffffff;
+}
+
+
+  .frameC .frame-wrapper-3 {
+
   }
   
   .frameC .contents-wrapper-4 {
@@ -1253,12 +1451,10 @@ main {
   
   .frameC .div-11 {
     display: flex;
+    flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
-    gap:-250px!important;
-    position: relative;
-    align-self: stretch;
-    flex: 0 0 auto;
+    align-items: baseline;
   }
   
   .frameC .frame-wrapper-3 {
@@ -1295,12 +1491,7 @@ main {
   }
   
   .frameC .frame-wrapper-4 {
-    display: flex;
-    width: 175px;
-    align-items: flex-start;
-    justify-content: space-around;
-    gap: 12px;
-    position: relative;
+
   }
   
   .frameC .contents-14 {
