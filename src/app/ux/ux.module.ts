@@ -16,7 +16,6 @@ import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
 import { InvestmentsDeductionsComponent } from './investments-deductions/investments-deductions.component';
 import {PersonalInfoComponent} from "./personal-info/personal-info.component";
 
-
 @NgModule({
   declarations: [
     UxComponent,
@@ -31,7 +30,7 @@ import {PersonalInfoComponent} from "./personal-info/personal-info.component";
     PresumptiveIncomeComponent,
     SpeculativeIncomeComponent,
     BalanceSheetComponent,
-    InvestmentsDeductionsComponent
+    InvestmentsDeductionsComponent,
   ],
   imports: [
     CommonModule,
