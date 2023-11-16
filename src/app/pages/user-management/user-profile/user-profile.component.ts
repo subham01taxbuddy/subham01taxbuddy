@@ -335,6 +335,7 @@ export class UserProfileComponent implements OnInit {
   //   return <FormArray>this.userProfileForm.get('address');
   // }
   roles:any;
+  unMaskedMobileNo :any;
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserMsService,
@@ -368,7 +369,7 @@ export class UserProfileComponent implements OnInit {
       emailAddress: ['', Validators.pattern(AppConstants.emailRegex)],
       aadharNumber: ['', [Validators.pattern(AppConstants.numericRegex), Validators.minLength(12), Validators.maxLength(12)]],
       panNumber: ['', Validators.pattern(AppConstants.panNumberRegex)],
-      mobileNumber: ['', [Validators.pattern(AppConstants.mobileNumberRegex), Validators.minLength(10), Validators.maxLength(10)]],
+      mobileNumber: ['', [Validators.minLength(10), Validators.maxLength(10)]],
       residentialStatus: ['RESIDENT'],
       address: [],   //this.fb.array([]),
       bankDetails: []
@@ -491,10 +492,17 @@ export class UserProfileComponent implements OnInit {
   // }
 
   maskMobileNumber(mobileNumber) {
-    if (mobileNumber) {
-      return 'X'.repeat(mobileNumber.length);
+    if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+      this.userProfileForm.controls['mobileNumber'].setValue(mobileNumber ? mobileNumber : '');
+    } else {
+      if (mobileNumber) {
+        let maskedNo ='X'.repeat(mobileNumber.length);
+        this.userProfileForm.controls['mobileNumber'].setValue(maskedNo);
+        return
+      }
+      return '-';
     }
-    return '-';
+
   }
 
   getUserInfo(userId: any) {
@@ -533,14 +541,9 @@ export class UserProfileComponent implements OnInit {
         this.addressData = [];
       }
       this.bankData = this.userProfileForm.controls['bankDetails'].value;
-
-      this.updateUserRole(this.userInfo.mobileNumber)
-
-      if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
-        this.userProfileForm.controls['mobileNumber'].setValue(this.userInfo?.mobileNumber ? this.userInfo.mobileNumber : '');
-      } else {
-        this.userProfileForm.controls['mobileNumber'].setValue(this.maskMobileNumber(this.userInfo?.mobileNumber ? this.userInfo?.mobileNumber : ''));
-      }
+      this.unMaskedMobileNo = this.userInfo.mobileNumber ;
+      this.updateUserRole(this.unMaskedMobileNo);
+      this.maskMobileNumber(this.userInfo.mobileNumber);
     },
       error => {
         this.loading = false;
@@ -736,6 +739,7 @@ export class UserProfileComponent implements OnInit {
   updateUserProfile() {
     console.log('user profile valid -> ', this.userProfileForm.valid, ' GST valid -> ', this.gstForm.valid)
     console.log('user profile form -> ', this.userProfileForm, ' GST form -> ', this.gstForm)
+    this.userProfileForm.controls['mobileNumber'].setValue(this.unMaskedMobileNo);
     if (this.userProfileForm.valid && this.gstForm.valid) {
       console.log('Before User Info : -> ', this.userInfo);
 
@@ -745,6 +749,7 @@ export class UserProfileComponent implements OnInit {
       this.loading = true;
       let param = '/profile/' + this.userInfo.userId;
       this.userService.putMethod(param, this.userInfo).subscribe(res => {
+        this.maskMobileNumber(this.unMaskedMobileNo);
         this._toastMessageService.alert("success", this.userInfo.fName + "'s profile updated successfully.");
         this.loading = false;
         we_track('Profile', {
@@ -780,7 +785,7 @@ export class UserProfileComponent implements OnInit {
 
   updateUserRole(userMobNo: any) {
     console.log('userMobNo: ', userMobNo, typeof userMobNo, typeof parseInt(userMobNo))
-    let param = '/users?mobileNumber=' + parseInt(userMobNo);
+    let param = '/users?mobileNumber=' +userMobNo;
     this.userService.getMethod(param).subscribe((userRole: any) => {
       console.log('User rolses: ', userRole);
       if (Array.isArray(userRole.role) && userRole.role.length > 0) {

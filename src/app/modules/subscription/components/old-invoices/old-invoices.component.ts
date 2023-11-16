@@ -165,7 +165,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
       console.log('in clear cache')
     }
     this.loading = true;
-    if (this.invoiceFormGroup.valid) {
+    if (this.assessmentYear.valid && this.assessmentYear.value) {
       let data = this.utilService.createUrlParams(this.searchParam);
       let status = this.status.value;
       let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
