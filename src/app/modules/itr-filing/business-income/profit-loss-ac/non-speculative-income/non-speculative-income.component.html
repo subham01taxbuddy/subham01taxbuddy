@@ -125,7 +125,9 @@
           <div class="titTx1">Profit and Loss Account</div>
         </div>
         <div class="col-sm-4 spsTp">
-          <mat-label>COGC (Opening Stock + Purchase - Closing Stock)</mat-label>
+          <mat-label style="margin-bottom: 21.5px"
+            >COGC (Opening Stock + Purchase - Closing Stock)</mat-label
+          >
           <mat-form-field appearance="outline">
             <input
               readonly
@@ -141,6 +143,7 @@
         </div>
         <div class="col-sm-4 spsTp">
           <mat-label>Gross Profit (Turnover - COGC)</mat-label>
+          <mat-hint> Note: Gross Profit cannot be more than Turnover</mat-hint>
           <mat-form-field appearance="outline">
             <input
               readonly
@@ -155,7 +158,9 @@
           </mat-form-field>
         </div>
         <div class="col-sm-4 spsTp">
-          <mat-label>Net Profit (Gross Profit - Expenses)</mat-label>
+          <mat-label style="margin-bottom: 21.5px"
+            >Net Profit (Gross Profit - Expenses)</mat-label
+          >
           <mat-form-field appearance="outline">
             <input
               readonly
@@ -170,12 +175,13 @@
           </mat-form-field>
         </div>
 
-        <div class="col-sm-12">
+        <div class="col-sm-2" style="margin-top: 15px">
           <button
             type="submit"
             class="delete-btn"
             (click)="deleteArray()"
             [disabled]="!nonspecSelected()"
+            style="width: 100%"
           >
             <i class="fa fa-trash" aria-hidden="true"></i> Delete Income
           </button>
@@ -279,6 +285,16 @@
   </div>
 </div>
 
+<div class="col-sm-6" style="margin: 15px 0px 0px 27px">
+  <button
+    class="delete-btn"
+    (click)="deleteExpenseForm()"
+    [disabled]="!expenseSelected()"
+  >
+    <i class="fa fa-trash" aria-hidden="true"></i> Delete
+  </button>
+</div>
+
 <div
   class="card__col-xs-12 flex justify-between"
   style="
@@ -290,18 +306,4 @@
 >
   <div class="titTx1">Total Net Profit</div>
   <strong>{{ totalNetProfit }}</strong>
-</div>
-
-<div class="col-sm-12 spsTp bdrTp">
-  <div class="row">
-    <div class="col-sm-6">
-      <button
-        class="delete-btn"
-        (click)="deleteExpenseForm()"
-        [disabled]="!expenseSelected()"
-      >
-        <i class="fa fa-trash" aria-hidden="true"></i> Delete
-      </button>
-    </div>
-  </div>
 </div>
