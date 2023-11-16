@@ -472,14 +472,13 @@ export class OtherAssetImprovementComponent implements OnInit {
         filteredCapitalGain[0]?.improvement?.push(this.goldCg?.improvement[0]);
       }
 
-      // setting deduction
-      // if (this.data?.assetIndex >= 0) {
-      //   filteredCapitalGain[0].deduction[this.data.assetIndex] =
-      //     this.goldCg?.deduction?.[0];
-      // } else {
-      //   filteredCapitalGain[0]?.deduction?.push(this.goldCg?.deduction?.[0]);
-      // }
+      // filtering out undefined or null elements from improvement array
+      filteredCapitalGain[0].improvement =
+        filteredCapitalGain[0]?.improvement.filter(
+          (element) => element !== null && element !== undefined
+        );
 
+      // pushing the final asset
       this.ITR_JSON.capitalGain.push(filteredCapitalGain[0]);
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
