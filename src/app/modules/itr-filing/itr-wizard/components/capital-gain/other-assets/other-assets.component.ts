@@ -370,23 +370,23 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
   deleteAsset() {
     let selected = this.assetList
-      .filter((asset) => asset.hasEdit === true)
-      .map((asset) => asset.srn);
+      .filter((asset) => asset?.hasEdit === true)
+      .map((asset) => asset?.srn);
     //delete improvement for asset
     this.goldCg.improvement?.forEach((imp) => {
-      if (selected.includes(imp.srn)) {
+      if (selected.includes(imp?.srn)) {
         this.goldCg.improvement.splice(this.goldCg.improvement.indexOf(imp), 1);
       }
     });
     this.goldCg.deduction?.forEach((ded) => {
-      if (selected.includes(ded.srn)) {
+      if (selected.includes(ded?.srn)) {
         this.goldCg.deduction.splice(this.goldCg.deduction.indexOf(ded), 1);
       }
     });
     this.goldCg.assetDetails = this.goldCg.assetDetails.filter(
-      (asset) => !selected.includes(asset.srn)
+      (asset) => !selected.includes(asset?.srn)
     );
-    this.assetList = this.assetList.filter((asset) => asset.hasEdit != true);
+    this.assetList = this.assetList.filter((asset) => asset?.hasEdit != true);
 
     if (this.goldCg.assetDetails.length === 0) {
       //remove deductions
