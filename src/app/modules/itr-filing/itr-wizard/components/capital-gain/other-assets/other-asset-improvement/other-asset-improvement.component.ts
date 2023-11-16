@@ -383,92 +383,94 @@ export class OtherAssetImprovementComponent implements OnInit {
   fieldGlobalIndex(index) {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
-
-  saveDetails() {
-    let result = {
-      cgObject: this.assetsForm.value,
-
-      improve: (this.assetsForm.controls['improvementsArray'] as FormGroup)
-        .value,
-    };
-    console.log(result.cgObject);
-
-    console.log(this.goldCg);
-    if (result !== undefined) {
-      if (this.goldCg?.assetDetails?.length > 0) {
-        this.goldCg.assetDetails[0] = result?.cgObject;
-      } else {
-        this.goldCg?.assetDetails?.push(result?.cgObject);
-      }
-
-      if (this.goldCg?.improvement.length > 0) {
-        this.goldCg.improvement[0] = result.improve;
-      } else {
-        this.goldCg.improvement?.push(result?.improve);
-      }
-    }
-  }
-
+  
   saveCg() {
-    this.saveDetails();
-    //re-intialise the ITR objects
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    const improvementsArray = this.assetsForm.controls[
+      'improvementsArray'
+    ] as FormGroup;
+    const coiArray = [
+      'financialYearOfImprovement',
+      'costOfImprovement',
+      'indexCostOfImprovement',
+    ];
 
-    this.loading = true;
-
-    const capitalGainArray = this.ITR_JSON.capitalGain;
-    this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
-      (item) => item.assetType !== 'GOLD'
-    );
-
-    // Filter the capitalGain array based on the assetType 'GOLD'
-    const filteredCapitalGain = capitalGainArray?.filter(
-      (item) => item.assetType === 'GOLD'
-    );
-
-    if (!filteredCapitalGain[0]) {
-      filteredCapitalGain.push({
-        assessmentYear: '2023-2024',
-        assesseeType: 'INDIVIDUAL',
-        residentialStatus: 'RESIDENT',
-        assetType: 'GOLD',
-        buyersDetails: [],
-        improvement: [],
-        assetDetails: [],
+    if (this.isImprovement.value) {
+      coiArray.forEach((element) => {
+        improvementsArray.controls[element].setValidators(Validators.required);
+        improvementsArray.controls[element].updateValueAndValidity();
+      });
+    } else {
+      coiArray.forEach((element) => {
+        improvementsArray.controls[element].clearValidators();
+        improvementsArray.controls[element].updateValueAndValidity();
+        improvementsArray.controls[element].reset();
+        this.goldCg.improvement = [];
       });
     }
-    if (this.data.assetIndex >= 0) {
-      filteredCapitalGain[0].assetDetails[this.data.assetIndex] =
-        this.goldCg.assetDetails[0];
+
+    if (this.assetsForm.valid) {
+      this.loading = true;
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      const capitalGainArray = this.ITR_JSON.capitalGain;
+      this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
+        (item) => item.assetType !== 'GOLD'
+      );
+      const filteredCapitalGain = capitalGainArray?.filter(
+        (item) => item.assetType === 'GOLD'
+      );
+
+      if (!filteredCapitalGain[0]) {
+        filteredCapitalGain.push({
+          assessmentYear: '2023-2024',
+          assesseeType: 'INDIVIDUAL',
+          residentialStatus: 'RESIDENT',
+          assetType: 'GOLD',
+          buyersDetails: [],
+          improvement: [],
+          assetDetails: [],
+          deduction: [],
+        });
+      }
+
+      // setting asset details
+      if (this.data?.assetIndex >= 0) {
+        filteredCapitalGain[0].assetDetails[this.data.assetIndex] =
+          this.goldCg?.assetDetails[this.data.assetIndex];
+      } else {
+        filteredCapitalGain[0]?.assetDetails?.push(
+          this.goldCg?.assetDetails[0]
+        );
+      }
+
+      // setting improvements
+      if (this.data?.assetIndex >= 0) {
+        filteredCapitalGain[0].improvement[this.data?.assetIndex] =
+          this.goldCg?.improvement[this.data?.assetIndex];
+      } else {
+        filteredCapitalGain[0]?.improvement?.push(this.goldCg?.improvement[0]);
+      }
+
+      // filtering out undefined or null elements from improvement array
+      filteredCapitalGain[0].improvement =
+        filteredCapitalGain[0]?.improvement.filter(
+          (element) => element !== null && element !== undefined
+        );
+
+      // pushing the final asset
+      this.ITR_JSON.capitalGain.push(filteredCapitalGain[0]);
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.ITR_JSON)
+      );
+
+      this.utilsService.showSnackBar('Other Assets Saved Successfully');
+      this.dialogRef.close(this.goldCg);
+      this.loading = false;
     } else {
-      filteredCapitalGain[0].assetDetails.push(this.goldCg.assetDetails[0]);
+      this.utilsService.showSnackBar(
+        'Please make sure all the details are properly entered.'
+      );
     }
-
-    filteredCapitalGain[0].improvement[0] =
-    filteredCapitalGain[0].assetDetails[0]?.improvementsArray;
-
-    delete filteredCapitalGain[0].assetDetails[0]?.improvementsArray;
-    this.ITR_JSON.capitalGain.push(filteredCapitalGain[0]);
-    // // Check if the filtered capitalGain array is not empty and assetDetails length is 0
-    // if (
-    //   filteredCapitalGain?.length > 0 &&
-    //   filteredCapitalGain[0]?.assetDetails?.length === 0
-    // ) {
-    //   const index = capitalGainArray?.indexOf(filteredCapitalGain[0]);
-    //
-    //   // Delete the entire element from the capitalGain array
-    //   capitalGainArray?.splice(index, 1);
-    // }
-
-    sessionStorage.setItem(
-      AppConstants.ITR_JSON,
-      JSON.stringify(this.ITR_JSON)
-    );
-    this.utilsService.showSnackBar('Other Assets Saved Successfully');
-    this.loading = false;
-
-    this.dialogRef.close(this.goldCg);
   }
 
   get getImprovementsArray() {
