@@ -3784,13 +3784,7 @@ export class SummaryComponent implements OnInit {
                           return {
                             employerNo: index,
                             employerName: employerName,
-                            grossSalary: salary[0]?.taxableAmount
-                              ? salary[0]?.taxableAmount
-                              : 0 + profitsInLieuOfSalaryType[0]?.taxableAmount
-                              ? profitsInLieuOfSalaryType[0]?.taxableAmount
-                              : 0 + perquisites[0]?.taxableAmount
-                              ? perquisites[0]?.taxableAmount
-                              : 0,
+                            grossSalary: this.getGrossSalary(salary, profitsInLieuOfSalaryType, perquisites),
                             exemptAllowance: totalAllowanceExemptIncome,
                             professionalTax: totalPTDuctionsExemptIncome,
                             entAllowance: totalETDuctionsExemptIncome,
@@ -3874,7 +3868,7 @@ export class SummaryComponent implements OnInit {
                           (val) => val.incomeType === 'INTEREST_ACCRUED_10_11_II_P'
                         )?.amount,
 
-                        
+
                         pfInterest1012IP:
                         this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                           (val) => val.incomeType === 'INTEREST_ACCRUED_10_12_I_P'
@@ -5326,7 +5320,7 @@ export class SummaryComponent implements OnInit {
                   email: this.ITR_JSON?.email,
 
                   itrType:  this.finalSummary?.itr?.itrType,
-                  
+
                   orgAckNumber:
                     this.ITR_JSON.isRevised === 'Y'
                       ? this.ITR_JSON.orgITRAckNum
@@ -5361,13 +5355,7 @@ export class SummaryComponent implements OnInit {
                         return {
                           employerNo: index,
                           employerName: employerName,
-                          grossSalary: salary[0]?.taxableAmount
-                            ? salary[0]?.taxableAmount
-                            : 0 + profitsInLieuOfSalaryType[0]?.taxableAmount
-                            ? profitsInLieuOfSalaryType[0]?.taxableAmount
-                            : 0 + perquisites[0]?.taxableAmount
-                            ? perquisites[0]?.taxableAmount
-                            : 0,
+                          grossSalary: this.getGrossSalary(salary, profitsInLieuOfSalaryType, perquisites),
                           exemptAllowance: totalAllowanceExemptIncome,
                           professionalTax: totalPTDuctionsExemptIncome,
                           entAllowance: totalETDuctionsExemptIncome,
@@ -5450,7 +5438,7 @@ export class SummaryComponent implements OnInit {
                           (val) => val.incomeType === 'INTEREST_ACCRUED_10_11_II_P'
                         )?.amount,
 
-                        
+
                         pfInterest1012IP:
                         this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                           (val) => val.incomeType === 'INTEREST_ACCRUED_10_12_I_P'
@@ -6805,6 +6793,13 @@ export class SummaryComponent implements OnInit {
         }
       );
     }
+  }
+
+  private getGrossSalary(salary, profitsInLieuOfSalaryType, perquisites) {
+    let gross = salary[0]?.taxableAmount ? salary[0]?.taxableAmount : 0;
+    let profit = profitsInLieuOfSalaryType[0]?.taxableAmount ? profitsInLieuOfSalaryType[0]?.taxableAmount : 0;
+    let perquisite = perquisites[0]?.taxableAmount ? perquisites[0]?.taxableAmount : 0;
+    return gross + profit + perquisite;
   }
 
   getUserName(type) {

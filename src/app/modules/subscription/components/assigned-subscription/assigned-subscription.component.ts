@@ -147,18 +147,16 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         this.searchVal = params['userMobNo'];
         this.queryParam = `?userId=${this.userId}`;
         this.advanceSearch();
-        this.dataOnLoad = false;
-      } else {
-        if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
-          this.agentId = this.loggedInSme[0]?.userId;
-          this.getAssignedSubscription(0);
-        } else {
-          this.dataOnLoad = false;
-        }
       }
     });
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER') && !this.userId){
+      this.agentId = this.loggedInSme[0]?.userId;
+      this.getAssignedSubscription(0);
+    } else {
+      this.dataOnLoad = false;
+    }
 
-    this.getFilerList();
+    // this.getFilerList();
 
   }
 
@@ -228,11 +226,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInSmeUserId) {
       this.filerId = loggedInSmeUserId;
       this.searchAsPrinciple = true;
-    }
-
-    if (this.roles.includes('ROLE_FILER')  && this.agentId === loggedInSmeUserId) {
-      this.filerId = loggedInSmeUserId;
-      this.searchAsPrinciple = false;
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInSmeUserId){
+      this.filerId = loggedInSmeUserId ;
+      this.searchAsPrinciple =false;
     }
 
     let userIdFilter = '';
@@ -316,6 +312,14 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           //   this.createRowData([])
           // );
           // this.config.totalItems = 0;
+          if(response?.data?.content?.length === 0 ){
+            this._toastMessageService.alert('error', "Subscription not found");
+            this.config.totalItems = 0;
+            this.subscriptionListGridOptions.api?.setRowData(
+              this.createRowData([])
+            );
+            return;
+          }
           if (response?.data?.error === 'User not found') {
             this._toastMessageService.alert("error", "No user with this mobile number found. " +
               "Please create user before creating subscription.");

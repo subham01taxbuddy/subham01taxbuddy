@@ -15,15 +15,15 @@
             <div *ngIf="searchValue.errors?.['required']">
                 Please enter the field.
             </div>
-            <div *ngIf="searchValue.errors?.['pattern']">
+            <div *ngIf="searchValue.errors?.['pattern'] || searchValue.errors?.['minlength'] || searchValue.errors?.['maxlength'] ">
                 Please enter the proper value.
             </div>
-            <div *ngIf="searchValue.errors?.['minlength']">
+            <!-- <div *ngIf="searchValue.errors?.['minlength']">
                 Please enter the proper value.
             </div>
             <div *ngIf="searchValue.errors?.['maxlength']">
                 Please enter the proper value.
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

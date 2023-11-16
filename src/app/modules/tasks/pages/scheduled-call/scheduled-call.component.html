@@ -13,9 +13,9 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <div class="col-sm-12 bckClr">
+            <div class="col-sm-12 bckClr" *ngIf="roles.includes('ROLE_ADMIN')">
               <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
-                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+                (sendFiler)="fromSme($event, false)" [skipChild]= false></app-sme-list-drop-down>
             </div>
             <div class="col-sm-3 spsTp">
               <mat-label>Select Status</mat-label>

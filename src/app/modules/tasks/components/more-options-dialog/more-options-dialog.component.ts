@@ -143,14 +143,26 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   goToInvoice() {
+    if(this.loggedInUserRoles.includes('ROLE_FILER')){
     if(this.navigateToInvoice){
       this.router.navigate(['/subscription/tax-invoice'], {
-        queryParams: { mobile: this.data.mobileNumber },
+        queryParams: { name: this.data.name },
       });
     }else{
       this.router.navigate(['/subscription/proforma-invoice'], {
-        queryParams: { mobile: this.data.mobileNumber },
+        queryParams: { name: this.data.name },
       });
+    }
+    }else{
+      if(this.navigateToInvoice){
+        this.router.navigate(['/subscription/tax-invoice'], {
+          queryParams: { mobile: this.data.mobileNumber },
+        });
+      }else{
+        this.router.navigate(['/subscription/proforma-invoice'], {
+          queryParams: { mobile: this.data.mobileNumber },
+        });
+      }
     }
 
     this.dialogRef.close();

@@ -118,7 +118,21 @@ export class SourceOfIncomesComponent implements OnInit {
   hasForeignIncome() {
     if (this.ITR_JSON.foreignIncome && this.ITR_JSON.foreignIncome != null) {
       let assets = this.ITR_JSON.foreignIncome.foreignAssets;
-      assets.capitalAssetsDetails?.length > 0 ||
+      let relief = this.ITR_JSON.foreignIncome.taxReliefClaimed;
+      let isForeignIncome = false;
+      relief.forEach(r => {
+        r.headOfIncome.forEach(income =>{
+          let testIncome = income.outsideIncome > 0 || income.outsideTaxPaid > 0;
+          if(testIncome === true) {
+            isForeignIncome = true;
+            return;
+          }
+        });
+        if(isForeignIncome === true){
+          return;
+        }
+      });
+      return assets.capitalAssetsDetails?.length > 0 ||
         assets.otherIncomeDetails?.length > 0 ||
         assets.trustsDetails?.length ||
         assets.cashValueInsurance?.length > 0 ||
@@ -127,7 +141,7 @@ export class SourceOfIncomesComponent implements OnInit {
         assets.equityAndDebtInterest?.length > 0 ||
         assets.financialInterestDetails?.length > 0 ||
         assets.immovablePropertryDetails?.length > 0 ||
-        assets.signingAuthorityDetails?.length > 0;
+        assets.signingAuthorityDetails?.length > 0 || isForeignIncome;
     } else {
       return false;
     }

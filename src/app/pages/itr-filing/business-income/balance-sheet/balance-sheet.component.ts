@@ -14,6 +14,7 @@ import { DepreciationDialogComponent } from './depreciation-dialog/depreciation-
   templateUrl: './balance-sheet.component.html',
   styleUrls: ['./balance-sheet.component.scss']
 })
+//not used
 export class BalanceSheetComponent implements OnInit {
   public balanceSheetGridOptions: GridOptions;
   ITR_JSON: ITR_JSON;
