@@ -67,8 +67,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   showCurrentAYOptions = false;
   submitted: boolean = false;
   dueDateOver: boolean = false;
-
   allowNewRegime = false;
+
   constructor(
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
@@ -77,6 +77,58 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   ) {
     super();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+  }
+
+  setReliefValues() {
+    // section9090A
+    let totalTaxRelief9090A = 0;
+    const acknowledgement90 =
+      this.ITR_JSON?.foreignIncome?.taxReliefClaimed?.filter(
+        (item) =>
+          item?.reliefClaimedUsSection === '90A' ||
+          item?.reliefClaimedUsSection === '90'
+      );
+
+    if (acknowledgement90 && acknowledgement90?.length > 0) {
+      acknowledgement90?.forEach((element) => {
+        totalTaxRelief9090A += element?.headOfIncome?.reduce(
+          (total, itm) => total + (itm?.taxRelief || 0),
+          0
+        );
+      });
+
+      if (totalTaxRelief9090A && totalTaxRelief9090A > 0) {
+        this.ITR_JSON.acknowledgement90 = totalTaxRelief9090A;
+
+        this.summaryToolReliefsForm.controls['section90']?.setValue(
+          this.ITR_JSON.acknowledgement90
+        );
+      }
+    }
+
+    // section91
+    let totalTaxRelief91 = 0;
+    const acknowledgement91 =
+      this.ITR_JSON?.foreignIncome?.taxReliefClaimed?.filter(
+        (item) => item?.reliefClaimedUsSection === '91'
+      );
+
+    if (acknowledgement91 && acknowledgement91?.length > 0) {
+      acknowledgement91?.forEach((element) => {
+        totalTaxRelief91 += element?.headOfIncome?.reduce(
+          (total, itm) => total + (itm?.taxRelief || 0),
+          0
+        );
+      });
+
+      if (totalTaxRelief91 && totalTaxRelief91 > 0) {
+        this.ITR_JSON.acknowledgement91 = totalTaxRelief91;
+
+        this.summaryToolReliefsForm?.controls['section91']?.setValue(
+          this.ITR_JSON?.acknowledgement91
+        );
+      }
+    }
   }
 
   initForm() {
@@ -524,6 +576,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.settingValues();
     this.updateRegimeLabels();
     this.updateCurrentAYOptions();
+    this.setReliefValues();
 
     //https://dev-api.taxbuddy.com/itr/tax/old-vs-new'
     if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
