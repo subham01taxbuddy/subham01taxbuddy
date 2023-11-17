@@ -44,7 +44,7 @@
 
       <div class="radiusMain">
         <div class="row">
-          <div class="col-sm-4">
+          <div class="col-sm-4" *ngIf="roles.includes('ROLE_ADMIN')">
             <!-- <form class="form-inline">
                       <input class="form-control mr-sm-2" type="search" placeholder="Select Filer"
                           aria-label="Search">

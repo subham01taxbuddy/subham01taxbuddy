@@ -54,7 +54,7 @@
         </mat-autocomplete>
       </mat-form-field>
     </div>
-    <div class="col-sm-4" *ngIf="showChildFilter">
+    <div class="col-sm-4" *ngIf="showChildFilter && skipChild">
       <mat-label> Search By Child </mat-label>
       <mat-form-field appearance="outline" class="customBg">
         <input type="text" matInput [formControl]="searchChild" [matAutocomplete]="auto2" />

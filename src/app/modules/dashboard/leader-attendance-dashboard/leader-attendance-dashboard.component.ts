@@ -85,6 +85,9 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = this.loggedInSmeUserId;
+    }
     this.search();
   }
 
