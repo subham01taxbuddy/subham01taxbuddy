@@ -78,8 +78,18 @@ export class OtherAssetImprovementComponent implements OnInit {
     this.maxDate = nextYearEndDate;
 
     this.isAddOtherAssetsImprovement = this.data.isAddOtherAssetsImprovement;
-    this.assetIndex = this.data.assetIndex;
+    this.assetIndex = this.data?.assetIndex;
     this.addMoreOtherAssetsForm(this.assetIndex);
+
+    // setting improvement flag
+    let improvement = this.goldCg?.improvement?.[this.assetIndex];
+    if (
+      improvement &&
+      improvement.indexCostOfImprovement &&
+      improvement.indexCostOfImprovement !== 0
+    ) {
+      this.isImprovement?.setValue(true);
+    }
   }
 
   ngOnInit() {
@@ -161,7 +171,9 @@ export class OtherAssetImprovementComponent implements OnInit {
   }
 
   createOtherAssetsForm(srn, index?) {
-    let obj: any = index >= 0 ? this.goldCg.assetDetails[index] : null;
+    let obj: any = index >= 0 ? this.goldCg?.assetDetails[index] : null;
+    let impObj: any = index >= 0 ? this.goldCg?.improvement[index] : null;
+
     return this.fb.group({
       srn: [srn],
       hasEdit: [obj ? obj.hasEdit : false],
@@ -192,15 +204,15 @@ export class OtherAssetImprovementComponent implements OnInit {
 
       improvementsArray: this.fb.group({
         financialYearOfImprovement: [
-          obj ? obj.financialYearOfImprovement : '',
+          impObj ? impObj?.financialYearOfImprovement : '',
           [Validators.required],
         ],
         costOfImprovement: [
-          obj ? obj.costOfImprovement : 0,
+          impObj ? impObj?.costOfImprovement : 0,
           [Validators.required],
         ],
         indexCostOfImprovement: [
-          obj ? obj.indexCostOfImprovement : 0,
+          impObj ? impObj?.indexCostOfImprovement : 0,
           [Validators.required],
         ],
       }),
@@ -273,10 +285,18 @@ export class OtherAssetImprovementComponent implements OnInit {
   }
 
   calculateCg() {
-    let cgObject = this.assetsForm.value;
-    let improvements = (
-      this.assetsForm.controls['improvementsArray'] as FormGroup
-    ).value;
+    let cgObject = this.assetsForm?.value;
+    let improvement = cgObject?.improvementsArray;
+
+    // setting the correct index for calculations
+    delete cgObject?.improvementsArray;
+    if (this.assetIndex || this.assetIndex === 0) {
+      cgObject.srn = this.assetIndex;
+      improvement.srn = this.assetIndex;
+    } else {
+      improvement.srn = cgObject?.srn;
+    }
+
     this.loading = true;
     const param = '/singleCgCalculate';
     let request = {
@@ -285,39 +305,20 @@ export class OtherAssetImprovementComponent implements OnInit {
       residentialStatus: 'RESIDENT',
       assetType: 'GOLD',
       assetDetails: [cgObject],
-      improvement: [],
+      improvement: [improvement],
       deduction: [],
     };
 
-    this.goldCg.assetDetails.forEach((asset) => {
-      //find improvement
-      let improvements = this.goldCg.improvement;
-      // let srnObj = improvements?.find(
-      //   (element) => element.srn === this.assetIndex
-      // );
-      // if (!srnObj && improvements?.length > 0) {
-      //   improvements[0].srn = this.assetIndex;
-      // }
-      if (!improvements || improvements?.length == 0) {
-        let improvement = {
-          indexCostOfImprovement: 0,
-          id: asset.srn,
-          dateOfImprovement: '',
-          costOfImprovement: 0,
-          financialYearOfImprovement: null,
-          srn: asset.srn,
-        };
-        request.improvement.push(improvement);
-      } else {
-        request.improvement[0] = this.goldCg.improvement;
-      }
-
-      let deduction = this.goldCg.deduction;
+    this.goldCg?.assetDetails?.forEach((asset, index) => {
+      // deduction
+      let deduction = this.goldCg?.deduction;
       let srnDednObj = deduction?.find(
-        (element) => element.srn === this.assetIndex
+        (element) => element?.srn === this.assetIndex
       );
       if (!srnDednObj && deduction?.length > 0) {
-        deduction[0].srn = this.assetIndex;
+        if (deduction[0]?.srn) {
+          deduction[0].srn = this.assetIndex;
+        }
       }
       if (!deduction || deduction?.length == 0) {
         let deduction = {
@@ -328,27 +329,48 @@ export class OtherAssetImprovementComponent implements OnInit {
           panOfEligibleCompany: null,
           purchaseDate: null,
           purchaseDatePlantMachine: null,
-          srn: asset.srn,
+          srn: asset?.srn,
           totalDeductionClaimed: null,
           underSection: 'Deduction 54F',
           usedDeduction: null,
         };
-        request.deduction.push(deduction);
+        request?.deduction?.push(deduction);
       } else {
-        request.deduction = this.goldCg.deduction;
+        request.deduction = this.goldCg?.deduction;
       }
     });
 
+    // calling the API
     this.itrMsService.postMethod(param, request).subscribe(
       (res: any) => {
         this.loading = false;
         console.log('Single CG result:', res);
-        this.assetsForm.controls['capitalGain']?.setValue(
-          res.assetDetails[0].capitalGain
+        this.assetsForm?.controls['capitalGain']?.setValue(
+          res?.assetDetails[0]?.capitalGain
         );
-        this.goldCg.assetDetails = res.assetDetails;
-        this.goldCg.improvement = res.improvement;
-        this.goldCg.deduction = res.deduction;
+
+        // setting assetDetails
+        if (res?.assetDetails[0]) {
+          this.goldCg?.assetDetails?.splice(
+            this.assetIndex,
+            1,
+            res?.assetDetails[0]
+          );
+        }
+
+        // setting improvement details
+        if (res?.improvement[0]) {
+          this.goldCg?.improvement?.splice(
+            this.assetIndex,
+            1,
+            res?.improvement[0]
+          );
+        }
+
+        // setting deduction details
+        // if (res.deduction[0]) {
+        //   this.goldCg?.deduction?.splice(this.assetIndex, 1, res.deduction[0]);
+        // }
       },
       (error) => {
         this.loading = false;
@@ -384,7 +406,7 @@ export class OtherAssetImprovementComponent implements OnInit {
   fieldGlobalIndex(index) {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
-  
+
   saveCg() {
     const improvementsArray = this.assetsForm.controls[
       'improvementsArray'

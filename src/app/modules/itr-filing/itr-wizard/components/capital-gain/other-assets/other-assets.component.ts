@@ -9,7 +9,7 @@ import {
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Input } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormArray } from '@angular/forms';
 import { WizardNavigation } from '../../../../../itr-shared/WizardNavigation';
 import { OtherAssetImprovementComponent } from './other-asset-improvement/other-asset-improvement.component';
@@ -126,37 +126,49 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
     // initiating deduction form
     this.deductionForm = this.fb.group({ deductions: this.fb.array([]) });
+    const dednDetails = this.goldCg?.deduction[0];
 
-    // adding a form on startup
-    this.addDeductionForm();
+    if (
+      dednDetails?.totalDeductionClaimed &&
+      dednDetails?.totalDeductionClaimed !== 0
+    ) {
+      // adding a form on startup
+      this.addDeductionForm(dednDetails);
+      this.deduction = true;
+    } else {
+      this.addDeductionForm();
+    }
   }
 
   // adding deduction form at the end of the array
-  addDeductionForm() {
+  addDeductionForm(obj?) {
     const deductionsArray = this.getDeductions;
-    const deductionsArrayLength = deductionsArray.length;
-    deductionsArray.insert(deductionsArrayLength, this.createDeductionForm());
+    const deductionsArrayLength = deductionsArray?.length;
+    deductionsArray?.insert(
+      deductionsArrayLength,
+      this.createDeductionForm(obj)
+    );
   }
 
   // actual form structure that is going to be added
-  createDeductionForm() {
+  createDeductionForm(obj?) {
     return this.fb.group({
-      typeOfDeduction: ['Deduction 54F'],
-      purchaseDate: '',
-      costOfNewAsset: 0,
-      CGASAmount: 0,
-      deductionClaimed: 0,
+      typeOfDeduction: obj ? obj?.underSection : ['Deduction 54F'],
+      purchaseDate: obj ? obj?.purchaseDate : null,
+      costOfNewAsset: obj ? obj?.costOfNewAssets : null,
+      CGASAmount: obj ? obj?.investmentInCGAccount : null,
+      deductionClaimed: obj ? obj?.totalDeductionClaimed : null,
     });
   }
 
   //getting the deductions Array
   get getDeductions() {
-    return this.deductionForm.get('deductions') as FormArray;
+    return this.deductionForm?.get('deductions') as FormArray;
   }
 
   // editing the deduction array and enabling the form
   editDeduction(i) {
-    this.getDeductions.enable(i);
+    this.getDeductions?.enable(i);
   }
 
   // calling api to calculate deduction
@@ -167,7 +179,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     let saleValue = 0;
     let expenses = 0;
     this.goldCg.assetDetails.forEach((asset) => {
-      if(asset.gainType === 'LONG'){
+      if (asset.gainType === 'LONG') {
         capitalGain += asset.capitalGain;
         saleValue += asset.purchaseCost;
         expenses += asset.sellExpense;
@@ -223,80 +235,113 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
   // saving the cg
   saveCg() {
-    //re-intialise the ITR objects
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    const deductionsArray = (
+      (this.deductionForm.controls['deductions'] as FormArray)
+        ?.controls[0] as FormGroup
+    )?.controls;
+    const dednArray = [
+      'typeOfDeduction',
+      'purchaseDate',
+      'costOfNewAsset',
+      'deductionClaimed',
+    ];
 
-    this.loading = true;
-    this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
-      (item) => item.assetType !== 'GOLD'
-    );
-    if (this.goldCg?.assetDetails?.length > 0) {
-      this.ITR_JSON.capitalGain.push(this.goldCg);
-    }
-
-    const deductionDetails = (
-      this.deductionForm.controls['deductions'] as FormArray
-    ).getRawValue();
-
-    if (deductionDetails && deductionDetails.length > 0) {
-      const extraDeductionDetails = {
-        srn: 0,
-        underSection: deductionDetails[0].typeOfDeduction,
-        costOfNewAssets: deductionDetails[0].costOfNewAsset,
-        orgAssestTransferDate: null,
-
-        costOfPlantMachinary: null,
-        investmentInCGAccount: deductionDetails[0].CGASAmount,
-        panOfEligibleCompany: null,
-        purchaseDate: deductionDetails[0].purchaseDate,
-        purchaseDatePlantMachine: null,
-        totalDeductionClaimed: deductionDetails[0].deductionClaimed,
-        usedDeduction: null,
-      };
-
-      this.ITR_JSON.capitalGain
-        .filter((item) => item.assetType === 'GOLD')?.[0]
-        ?.deduction?.splice(
-          0,
-          this.ITR_JSON.capitalGain[0].deduction.length,
-          extraDeductionDetails
-        );
+    if (this.deduction) {
+      dednArray?.forEach((element) => {
+        deductionsArray[element].setValidators(Validators.required);
+        deductionsArray[element].updateValueAndValidity();
+      });
     } else {
-      this.ITR_JSON.capitalGain
-        .filter((item) => item.assetType === 'GOLD')?.[0]
-        ?.deduction.splice(0, this.ITR_JSON.capitalGain[0]?.deduction.length);
-
-      const capitalGainArray = this.ITR_JSON.capitalGain;
-      // Filter the capitalGain array based on the assetType 'GOLD'
-      const filteredCapitalGain = capitalGainArray?.filter(
-        (item) => item.assetType === 'GOLD'
-      );
-
-      // Check if the filtered capitalGain array is not empty and assetDetails length is 0
-      if (
-        filteredCapitalGain?.length > 0 &&
-        filteredCapitalGain[0]?.assetDetails?.length === 0
-      ) {
-        const index = capitalGainArray?.indexOf(filteredCapitalGain[0]);
-
-        // Delete the entire element from the capitalGain array
-        capitalGainArray?.splice(index, 1);
-      }
+      dednArray?.forEach((element) => {
+        deductionsArray[element].clearValidators();
+        deductionsArray[element].updateValueAndValidity();
+        deductionsArray[element].reset();
+        this.goldCg.deduction = [];
+      });
     }
 
-    console.log('CG:', this.ITR_JSON.capitalGain);
-    this.utilsService.saveItrObject(this.ITR_JSON).subscribe((result: any) => {
-      console.log(result);
-      this.ITR_JSON = result;
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.ITR_JSON)
+    if (this.deductionForm.valid) {
+      //re-intialise the ITR objects
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+      // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+      this.loading = true;
+      this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(
+        (item) => item.assetType !== 'GOLD'
       );
-      this.utilsService.showSnackBar('Other Assets Saved Successfully');
-      this.loading = false;
-    });
-    console.log('GOLD:', this.goldCg);
+      if (this.goldCg?.assetDetails?.length > 0) {
+        this.ITR_JSON.capitalGain.push(this.goldCg);
+      }
+
+      const deductionDetails = (
+        this.deductionForm.controls['deductions'] as FormArray
+      ).getRawValue();
+
+      if (deductionDetails && deductionDetails.length > 0) {
+        const extraDeductionDetails = {
+          srn: 0,
+          underSection: deductionDetails[0].typeOfDeduction,
+          costOfNewAssets: deductionDetails[0].costOfNewAsset,
+          orgAssestTransferDate: null,
+          costOfPlantMachinary: null,
+          investmentInCGAccount: deductionDetails[0].CGASAmount,
+          panOfEligibleCompany: null,
+          purchaseDate: deductionDetails[0].purchaseDate,
+          purchaseDatePlantMachine: null,
+          totalDeductionClaimed: deductionDetails[0].deductionClaimed,
+          usedDeduction: null,
+        };
+
+        this.ITR_JSON.capitalGain
+          .filter((item) => item.assetType === 'GOLD')?.[0]
+          ?.deduction?.splice(
+            0,
+            this.ITR_JSON.capitalGain[0].deduction.length,
+            extraDeductionDetails
+          );
+      } else {
+        this.ITR_JSON.capitalGain
+          .filter((item) => item.assetType === 'GOLD')?.[0]
+          ?.deduction.splice(0, this.ITR_JSON.capitalGain[0]?.deduction.length);
+
+        const capitalGainArray = this.ITR_JSON.capitalGain;
+        // Filter the capitalGain array based on the assetType 'GOLD'
+        const filteredCapitalGain = capitalGainArray?.filter(
+          (item) => item.assetType === 'GOLD'
+        );
+
+        // Check if the filtered capitalGain array is not empty and assetDetails length is 0
+        if (
+          filteredCapitalGain?.length > 0 &&
+          filteredCapitalGain[0]?.assetDetails?.length === 0
+        ) {
+          const index = capitalGainArray?.indexOf(filteredCapitalGain[0]);
+
+          // Delete the entire element from the capitalGain array
+          capitalGainArray?.splice(index, 1);
+        }
+      }
+
+      console.log('CG:', this.ITR_JSON.capitalGain);
+      this.utilsService
+        .saveItrObject(this.ITR_JSON)
+        .subscribe((result: any) => {
+          console.log(result);
+          this.ITR_JSON = result;
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+          );
+          this.utilsService.showSnackBar('Other Assets Saved Successfully');
+          this.saveAndNext.emit(false);
+          this.loading = false;
+        });
+      console.log('GOLD:', this.goldCg);
+    } else {
+      this.utilsService.showSnackBar(
+        'Please make sure all deduction details are entered correctly'
+      );
+    }
   }
 
   // deleting deduction fields
@@ -396,11 +441,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     this.gridOptions.api?.setRowData(this.createRowData());
   }
 
-  saveAll() {
-    this.saveCg();
-    this.saveAndNext.emit(false);
-  }
-
   otherAssetsCreateColumnDef() {
     return [
       {
@@ -457,6 +497,13 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       {
         headerName: 'Buy Value',
         field: 'purchaseCost',
+        width: 100,
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Indexed cost of acquisition',
+        field: 'indexCostOfAcquisition',
         width: 100,
         editable: false,
         suppressMovable: true,
