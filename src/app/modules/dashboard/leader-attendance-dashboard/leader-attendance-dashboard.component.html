@@ -17,22 +17,24 @@
   <div class="radiusMain">
     <div class="row">
 
-      <div class="col-sm-4">
+      <div class="col-sm-12">
         <!-- <form class="form-inline">
                   <input class="form-control mr-sm-2" type="search" placeholder="Select Filer"
                       aria-label="Search">
               </form> -->
-        <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event, true)"
-          (sendOwner)="fromSme1($event, false)"></app-leader-list-dropdown>
+        <!-- <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event, true)"
+          (sendOwner)="fromSme1($event, false)"></app-leader-list-dropdown> -->
+          <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
+          (sendPrincipleIndividual)="fromPrinciple($event)"[skipChild]= false></app-sme-list-drop-down>
       </div>
-      <div class="col-sm-2">
+      <div class="col-sm-3">
         <div>
           <label for="start-date">Start Date:</label>
           <input type="date" matInput id="date" name="start-date" class="form-control" [formControl]="startDate"
             [min]="minDate" [max]="maxStartDate" (change)="setEndDateValidate(this.startDate)">
         </div>
       </div>
-      <div class="col-sm-2">
+      <div class="col-sm-3">
         <div>
           <label for="end-date">End Date:</label>
           <input type="date" matInput id="date" name="end-date" class="form-control" [formControl]="endDate" [min]="minEndDate"
@@ -47,12 +49,14 @@
               </form>
           </div> -->
 
-       <div class="col-sm-4">
-        <button class="srch-btn"[disabled]="loading"  (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
-
-        <button class="clrLnk1" [disabled]="loading" (click)="this.resetFilters()">
-           Clear form
+       <div class="col-sm-6">
+        <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
+          <i class="fa fa-download" aria-hidden="true"></i> Download File
         </button>
+        <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
+          Clear form
+       </button>
+        <button class="srch-btn mvRth"[disabled]="loading"  (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
       </div>
 
     </div>
@@ -150,7 +154,7 @@
     <div class="col-sm-12">
       <div class="radiusTab1">
         <!-- <div class="tx">Document Uploaded but filing not yet started</div> -->
-
+        <div class="table-container">
         <table class="table table-bordered">
           <thead>
             <tr>
@@ -158,17 +162,30 @@
               <th scope="col">Name of Partners </th>
               <th scope="col">Attendance on Date<br>({{ today | date:'dd MMMM yyyy' }})</th>
               <th scope="col">Assignment Status</th>
-              <th scope="col">Schedule Call Assigned</th>
-              <th scope="col">ITR Filed</th>
-              <th scope="col">Paid Revenue (₹)</th>
-              <th scope="col">Commission Earned (₹)</th>
+              <th scope="col">No of clients assigned<br>(where filer is allotted)</th>
+              <th scope="col">ITR 1 <br>(original + revise)</th>
+              <th scope="col">ITR 2 <br>(original + revise)</th>
+              <th scope="col">ITR 3 <br>(original + revise)</th>
+              <th scope="col">ITR 4 <br>(original + revise)</th>
+              <th scope="col">Other <br>(original + revise)</th>
+              <th scope="col">ITR U</th>
+              <th scope="col">Total ITR Filed</th>
+              <th scope="col">Revenue Generated(filed + pending to file cases)<br>
+                Total amount of paid invoices</th>
+              <th scope="col">Applicable Commission <br>Percentage as on date</th>
+              <th scope="col">Total Commission<br>Earned before TDS</th>
+              <th scope="col">TDS</th>
+              <th scope="col">Total Commission<br>Earned after TDS</th>
+              <th scope="col">Commission Paid</th>
+              <th scope="col">Commission Payable</th>
+              <th scope="col">Average of users Rating</th>
               <!-- <th scope="col">Conversion Ratios</th> -->
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let item of allDetails ; let i = index">
               <td>{{ i+1 }}</td>
-              <td>{{ item.name }}</td>
+              <td>{{ item.nameOfFiler }}</td>
               <td>
                 <span *ngIf="item.hasFilerLoggedInToday; else inactive" class="active-status">Active</span>
                 <ng-template #inactive>
@@ -178,18 +195,44 @@
               <td [ngClass]="{ 'text-success': item.assignmentStatus === 'On', 'text-danger': item.assignmentStatus === 'Off' }">
                 {{ item.assignmentStatus }}
               </td>
-              <td>{{ item.scheduleCallAssigned}}</td>
-              <td [ngClass]="{ 'text-success': item.totalItrFiled }">{{ item.totalItrFiled }}</td>
-              <td>{{ item.totalPaidRevenue }}</td>
-              <td>{{ item.totalCommissionEarned | number:'1.2-2' }}</td>
+              <td>{{ item.numberOfClientsAssigned}}</td>
+              <td>{{ item.itr1}}</td>
+              <td>{{ item.itr2}}</td>
+              <td>{{ item.itr3}}</td>
+              <td>{{ item.itr4}}</td>
+              <td>{{ item.others}}</td>
+              <td>{{ item.itrU}}</td>
+              <td [ngClass]="{ 'text-success': item.totalITRFiled }">{{ item.totalITRFiled }}</td>
+              <td>{{ item.revenueGenerated}}</td>
+              <td>{{ item.applicableCommissionPercentage}}</td>
+              <td>{{ item.totalCommissionEarnedBeforeTDS}}</td>
+              <td>{{ item.tds}}</td>
+              <td>{{ item.totalCommissionEarnedAfterTDS | number:'1.2-2'}}</td>
+              <td>{{ item.commissionPaid | number:'1.2-2' }}</td>
+              <td>{{ item.commissionPayable }}</td>
+              <td>{{ item.averageUserRating }}</td>
+
               <!-- <td>{{'NA'}}</td> -->
             </tr>
             <tr>
-              <td colspan="4"></td>
+              <td colspan="3"></td>
               <td class="text-bold">Grand Total</td>
+              <td class="text-success">{{ grandTotal?.totalNumberOfClientsAssigned }}</td>
+              <td class="text-success">{{ grandTotal?.totalItr1 }}</td>
+              <td class="text-success">{{ grandTotal?.totalItr2 }}</td>
+              <td class="text-success">{{ grandTotal?.totalItr3 }}</td>
+              <td class="text-success">{{ grandTotal?.totalItr4 }}</td>
+              <td class="text-success">{{ grandTotal?.totalItrOthers }}</td>
+              <td class="text-success">{{ grandTotal?.totalItrU }}</td>
               <td class="text-success">{{ grandTotal?.totalItrFiled }}</td>
-              <td class="text-success">{{ grandTotal?.totalPaidRevenue }}</td>
-              <td class="text-success">{{ grandTotal?.totalCommissionEarned | number:'1.2-2' }}</td>
+              <td class="text-success">{{ grandTotal?.totalRevenueGenerated }}</td>
+              <td>{{ 'NA' }}</td>
+              <td class="text-success">{{ grandTotal?.totalCommissionEarnedBeforeTDS | number:'1.2-2' }}</td>
+              <td class="text-success">{{ grandTotal?.totalTds }}</td>
+              <td class="text-success">{{ grandTotal?.totalCommissionEarnedAfterTDS }}</td>
+              <td class="text-success">{{ grandTotal?.totalCommissionPaid }}</td>
+              <td class="text-success">{{ grandTotal?.totalCommissionPayable }}</td>
+              <td class="text-success">{{ grandTotal?.averageUserRating }}</td>
               <!-- <td>{{ 'NA' }}</td> -->
             </tr>
             <tr *ngIf="allDetails?.length === 0 || !allDetails" >
@@ -339,4 +382,5 @@
     </div>
     <!-- Table Ends -->
   </div>
+</div>
 </div>
