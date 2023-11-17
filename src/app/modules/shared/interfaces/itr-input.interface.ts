@@ -118,6 +118,19 @@ export interface ITR_JSON {
   };
 
   agriculturalLandDetails: agriculturalLandDetails[];
+
+  giftTax: {
+    aggregateValueWithoutConsideration: number,
+    aggregateValueWithoutConsiderationNotTaxable: boolean
+    immovablePropertyWithoutConsideration: number,
+    immovablePropertyWithoutConsiderationNotTaxable: boolean,
+    immovablePropertyInadequateConsideration: number,
+    immovablePropertyInadequateConsiderationNotTaxable: boolean,
+    anyOtherPropertyWithoutConsideration: number,
+    anyOtherPropertyWithoutConsiderationNotTaxable: boolean,
+    anyOtherPropertyInadequateConsideration: number,
+    anyOtherPropertyInadequateConsiderationNotTaxable: boolean,
+  };
 }
 
 export interface agriculturalLandDetails {
