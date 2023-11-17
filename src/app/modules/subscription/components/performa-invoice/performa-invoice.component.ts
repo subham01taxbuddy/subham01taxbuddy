@@ -180,13 +180,6 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
       },
       sortable: true,
     };
-    this.activatedRoute.queryParams.subscribe(params => {
-      let mobileNo = params['mobile'];
-      if (mobileNo) {
-        this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
-        this.getInvoice();
-      }
-    });
 
     if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
       this.agentId =  this.loggedInSme[0]?.userId;
@@ -194,7 +187,21 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     } else{
       this.dataOnLoad = false;
     }
-    // this.getInvoice();
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (this.utilService.isNonEmpty(params['name']) || params['mobile'] !== '-') {
+        let name = params['name'];
+        let mobileNo = params['mobile'];
+        if(name){
+          this.invoiceFormGroup.controls['name'].setValue(name);
+        }else if (mobileNo) {
+          this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
+        }
+        if(name || mobileNo){
+          this.getInvoice();
+        }
+      }})
+
   }
 
   decryptPhoneNumber(encryptedPhone: string): string {
@@ -349,6 +356,9 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
       this.filerId = loggedInId ;
       this.searchAsPrinciple =true;
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =false;
     }
 
     if(this.searchBy?.mobile){

@@ -80,6 +80,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
   ];
   clearUserFilter: number;
   searchAsPrinciple :boolean =false
+  partnerType:any;
 
   constructor(
     private reviewService: ReviewService,
@@ -96,7 +97,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private reportService: ReportService,
   ) {
-    this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
+    this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
       columnDefs: this.columnDef(this.allFilerList),
@@ -129,6 +130,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     console.log('loggedIn Sme Details', this.loggedInSme)
     this.roles = this.loggedInSme[0]?.roles
+    this.partnerType = this.loggedInSme[0]?.partnerType
     if (this.roles.includes('ROLE_FILER')) {
       this.searchMenus = [
         { value: 'email', name: 'Email' },
@@ -158,6 +160,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
         this.myItrsList(0, '');
       }
     })
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+      this.agentId =  this.loggedInSme[0]?.userId;
+      this.myItrsList(0, '');
+    }
   }
 
   // ngAfterContentChecked() {
@@ -268,6 +274,14 @@ export class FilingsComponent implements OnInit, OnDestroy {
       let loggedInId = this.utilsService.getLoggedInUserID();
       if(this.roles?.includes('ROLE_LEADER')){
         this.leaderUserId = loggedInId;
+      }
+
+      if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+        this.filerUserId = loggedInId ;
+        this.searchAsPrinciple =true;
+      }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+        this.filerUserId = loggedInId ;
+        this.searchAsPrinciple =false;
       }
 
       if(this.searchBy?.mobileNumber){

@@ -89,7 +89,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     };
     let roles = this.utilsService.getUserRoles();
     let show: boolean;
-    if (roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')) {
+    if (roles.includes('ROLE_ADMIN')) {
       show = true;
     }
     this.scheduleCallGridOptions = <GridOptions>{

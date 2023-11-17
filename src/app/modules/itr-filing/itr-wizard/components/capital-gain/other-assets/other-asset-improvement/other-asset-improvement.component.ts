@@ -225,72 +225,63 @@ export class OtherAssetImprovementComponent implements OnInit {
       'improvementsArray'
     ] as FormGroup;
 
-    if (gainType == 'LONG') {
-      let selectedYear = moment(this.assetsForm.controls['sellDate'].value);
-      let sellFinancialYear =
-        selectedYear.get('month') > 2
-          ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
-          : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
+    let selectedYear = moment(this.assetsForm.controls['sellDate'].value);
+    let sellFinancialYear =
+      selectedYear.get('month') > 2
+        ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
+        : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
 
-      // for improvements indexation
-      let costOfImprovement = parseFloat(
-        improvementsArray.controls['costOfImprovement'].value
-      );
-      let improvementFinancialYear =
-        improvementsArray.controls['financialYearOfImprovement'].value;
+    // for improvements indexation
+    let costOfImprovement = parseFloat(
+      improvementsArray.controls['costOfImprovement'].value
+    );
+    let improvementFinancialYear =
+      improvementsArray.controls['financialYearOfImprovement'].value;
 
-      // for cost of acquisition index
-      let selectedPurchaseYear = moment(
-        this.assetsForm.controls['purchaseDate'].value
-      );
-      let purchaseFinancialYear =
-        selectedPurchaseYear.get('month') > 2
-          ? selectedPurchaseYear.get('year') +
-            '-' +
-            (selectedPurchaseYear.get('year') + 1)
-          : selectedPurchaseYear.get('year') -
-            1 +
-            '-' +
-            selectedPurchaseYear.get('year');
+    // for cost of acquisition index
+    let selectedPurchaseYear = moment(
+      this.assetsForm.controls['purchaseDate'].value
+    );
+    let purchaseFinancialYear =
+      selectedPurchaseYear.get('month') > 2
+        ? selectedPurchaseYear.get('year') +
+          '-' +
+          (selectedPurchaseYear.get('year') + 1)
+        : selectedPurchaseYear.get('year') -
+          1 +
+          '-' +
+          selectedPurchaseYear.get('year');
 
-      let costOfAcquistion = parseFloat(
-        this.assetsForm.controls['purchaseCost'].value
-      );
+    let costOfAcquistion = parseFloat(
+      this.assetsForm.controls['purchaseCost'].value
+    );
 
-      let req = {
-        cost: asset === 'asset' ? costOfAcquistion : costOfImprovement,
-        purchaseOrImprovementFinancialYear:
-          asset === 'asset' ? purchaseFinancialYear : improvementFinancialYear,
-        assetType: this.goldCg.assetType,
-        buyDate: this.assetsForm.controls['purchaseDate'].value,
-        sellDate: this.assetsForm.controls['sellDate'].value,
-        sellFinancialYear: sellFinancialYear,
-      };
+    let req = {
+      cost: asset === 'asset' ? costOfAcquistion : costOfImprovement,
+      purchaseOrImprovementFinancialYear:
+        asset === 'asset' ? purchaseFinancialYear : improvementFinancialYear,
+      assetType: this.goldCg.assetType,
+      buyDate: this.assetsForm.controls['purchaseDate'].value,
+      sellDate: this.assetsForm.controls['sellDate'].value,
+      sellFinancialYear: sellFinancialYear,
+    };
 
-      const param = `/calculate/indexed-cost`;
-      this.itrMsService.postMethod(param, req).subscribe((res: any) => {
-        console.log('INDEX COST : ', res);
+    const param = `/calculate/indexed-cost`;
+    this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+      console.log('INDEX COST : ', res);
 
-        if (asset === 'asset') {
-          this.assetsForm.controls['indexCostOfAcquisition']?.setValue(
-            res.data.costOfAcquisitionOrImprovement
-          );
-        } else {
-          (this.assetsForm.controls['improvementsArray'] as FormGroup).controls[
-            'indexCostOfImprovement'
-          ]?.setValue(res.data.costOfAcquisitionOrImprovement);
-        }
+      if (asset === 'asset') {
+        this.assetsForm.controls['indexCostOfAcquisition']?.setValue(
+          res.data.costOfAcquisitionOrImprovement
+        );
+      } else {
+        (this.assetsForm.controls['improvementsArray'] as FormGroup).controls[
+          'indexCostOfImprovement'
+        ]?.setValue(res.data.costOfAcquisitionOrImprovement);
+      }
 
-        this.calculateCg();
-      });
-    } else {
-      this.utilsService.showSnackBar(
-        'Cost of improvement cannot be claimed for gain Type Short'
-      );
-      (this.assetsForm.controls['improvementsArray'] as FormGroup).controls[
-        'indexCostOfImprovement'
-      ]?.setValue(0);
-    }
+      this.calculateCg();
+    });
   }
 
   calculateCg() {
@@ -481,14 +472,13 @@ export class OtherAssetImprovementComponent implements OnInit {
         filteredCapitalGain[0]?.improvement?.push(this.goldCg?.improvement[0]);
       }
 
-      // setting deduction
-      // if (this.data?.assetIndex >= 0) {
-      //   filteredCapitalGain[0].deduction[this.data.assetIndex] =
-      //     this.goldCg?.deduction?.[0];
-      // } else {
-      //   filteredCapitalGain[0]?.deduction?.push(this.goldCg?.deduction?.[0]);
-      // }
+      // filtering out undefined or null elements from improvement array
+      filteredCapitalGain[0].improvement =
+        filteredCapitalGain[0]?.improvement.filter(
+          (element) => element !== null && element !== undefined
+        );
 
+      // pushing the final asset
       this.ITR_JSON.capitalGain.push(filteredCapitalGain[0]);
       sessionStorage.setItem(
         AppConstants.ITR_JSON,

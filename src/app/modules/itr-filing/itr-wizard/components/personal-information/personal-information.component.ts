@@ -2359,7 +2359,9 @@ export class PersonalInformationComponent implements OnInit {
     if (bankDetails.valid) {
       bankDetails.push(this.createBankDetailsForm());
     } else {
-      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
+        .first()
+        .focus();
       console.log('add above details first');
     }
   }
@@ -2646,8 +2648,13 @@ export class PersonalInformationComponent implements OnInit {
       this.ITR_JSON.panNumber
     );
 
+    this.ITR_JSON.declaration.panNumber = this.ITR_JSON.panNumber;
+
     if (!this.isFormValid()) {
-      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
+        .first()
+        .focus();
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
       this.personalInfoSaved.emit(false);
       return;
     }
@@ -2687,9 +2694,9 @@ export class PersonalInformationComponent implements OnInit {
             JSON.stringify(this.ITR_JSON)
           );
           this.loading = false;
-          this.utilsService.showSnackBar(
-            'Customer profile updated successfully.'
-          );
+          // this.utilsService.showSnackBar(
+          //   'Customer profile updated successfully.'
+          // );
           this.personalInfoSaved.emit(true);
 
           if (!ref) {
@@ -3034,7 +3041,7 @@ export class PersonalInformationComponent implements OnInit {
       const amount = control.get('amount');
       const nature = control.get('nature');
 
-      if (clauseIvFlag.value === 'N' || seventhProvisio139Flag.value === 'N') {
+      if (!clauseIvFlag.value || clauseIvFlag.value === 'N' || seventhProvisio139Flag.value === 'N') {
         // Save the data and clear the form group
         this.clauseiv7provisio139iSaved = amount.value;
         clauseIvFlag.reset();

@@ -134,8 +134,9 @@ export class CreateNewUserComponent implements OnInit {
 
   leaderId: number;
   filerId: number;
+  agentId: number;
   fromSme(event, isLeader) {
-    if (isLeader) {
+    if (isLeader && event && Object.keys(event).length > 0) {
       this.leaderName = event ? event.name : null;
       this.leaderId = event ? event.userId : null;
       if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.leaderId) {
@@ -152,14 +153,14 @@ export class CreateNewUserComponent implements OnInit {
     if (this.filerId) {
       this.disableUserSignUp = false;
       // this.signUpForm.controls['agentUserId'].setValue(this.filerId);
-      this.getSmeRecords(this.filerId);
+      // this.getSmeRecords(this.filerId);
     } else if (this.leaderId) {
       this.disableUserSignUp = true;
       if (this.roles.includes('ROLE_OWNER')) {
         this.disableUserSignUp = false;
       }
       // this.signUpForm.controls['agentUserId'].setValue(this.leaderId);
-      this.getSmeRecords(this.leaderId)
+      // this.getSmeRecords(this.leaderId)
     } else {
       if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
         this.disableUserSignUp = true;
@@ -170,8 +171,6 @@ export class CreateNewUserComponent implements OnInit {
     }
 
   }
-
-  agentId: number;
 
   isAssignedToMe() {
     this.disableUserSignUp = false;
@@ -198,6 +197,7 @@ export class CreateNewUserComponent implements OnInit {
       this.loading = false;
       this.smeInfo = result.data;
       this.services.forEach(item => {
+        this.signUpForm.controls['serviceType'].setValue(null);
         if (item.value === 'ITR' && this.smeInfo[0].serviceEligibility_ITR)
           item.isHide = true;
         if (item.value === 'TPA' && this.smeInfo[0].serviceEligibility_TPA)
@@ -268,7 +268,7 @@ export class CreateNewUserComponent implements OnInit {
         this.utilsService.showSnackBar("User created succesfully.");
       } else {
         this.loading = false;
-        this.utilsService.showSnackBar("Error while assigning user!!! Please select Owner or Filer Name ");
+        this.utilsService.showSnackBar("Error while assigning user!!! Please select leader or Filer Name ");
       }
 
     }, error => {
@@ -335,16 +335,39 @@ export class CreateNewUserComponent implements OnInit {
     }
 
     const selectedServiceType = this.signUpForm.controls['serviceType'].value;
-    if (this.smeServices.every(service => service.serviceType !== selectedServiceType)) {
+    let newServices =[];
+    if(this.smeInfo[0].serviceEligibility_ITR){
+      newServices.push('ITR');
+    }
+    if(this.smeInfo[0].serviceEligibility_TPA){
+      newServices.push('TPA');
+    }
+    if(this.smeInfo[0].serviceEligibility_GST){
+      newServices.push('GST');
+    }
+    if(this.smeInfo[0].serviceEligibility_NOTICE){
+      newServices.push('NOTICE');
+    }
+    if(newServices.includes(selectedServiceType)){
+      this.disableUserSignUp = false;
+    } else {
       if (this.filerId) {
         this.utilsService.showSnackBar("Selected filer doesn't have this service type ");
       } else {
-        this.utilsService.showSnackBar("Selected owner doesn't have this service type ");
+        this.utilsService.showSnackBar("Selected leader doesn't have this service type ");
       }
       this.disableUserSignUp = true;
-    } else {
-      this.disableUserSignUp = false;
     }
+    // if (this.smeServices.every(service => service.serviceType !== selectedServiceType)) {
+    //   if (this.filerId) {
+    //     this.utilsService.showSnackBar("Selected filer doesn't have this service type ");
+    //   } else {
+    //     this.utilsService.showSnackBar("Selected owner doesn't have this service type ");
+    //   }
+    //   this.disableUserSignUp = true;
+    // } else {
+    //   this.disableUserSignUp = false;
+    // }
 
   }
 

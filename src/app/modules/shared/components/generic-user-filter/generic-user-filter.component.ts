@@ -65,6 +65,11 @@ export class GenericUserFilterComponent implements OnInit {
         this.searchValue.setValidators([Validators.required ]);
         this.searchValue.updateValueAndValidity();
         break;
+      case 'emailId':
+        this.searchValue.setValidators([Validators.required, Validators.pattern(AppConstants.emailRegex)]);
+        this.searchValue.updateValueAndValidity();
+        break;
+
 
     }
     var searchBy = {};
