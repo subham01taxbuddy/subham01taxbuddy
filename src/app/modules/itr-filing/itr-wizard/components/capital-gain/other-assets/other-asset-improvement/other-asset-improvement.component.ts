@@ -395,6 +395,7 @@ export class OtherAssetImprovementComponent implements OnInit {
       console.log('GAIN Type : ', res);
 
       this.assetsForm.controls['gainType']?.setValue(res.data.capitalGainType);
+      this.calculateCg();
     });
   }
 
