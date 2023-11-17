@@ -701,6 +701,19 @@ export class UtilsService {
           typeOfLand: null, //"IRG - Irrigated; RF - Rain-fed"
         },
       ],
+
+      giftTax: {
+        aggregateValueWithoutConsideration: 0,
+        aggregateValueWithoutConsiderationNotTaxable: false,
+        immovablePropertyWithoutConsideration: 0,
+        immovablePropertyWithoutConsiderationNotTaxable: false,
+        immovablePropertyInadequateConsideration: 0,
+        immovablePropertyInadequateConsiderationNotTaxable: false,
+        anyOtherPropertyWithoutConsideration: 0,
+        anyOtherPropertyWithoutConsiderationNotTaxable: false,
+        anyOtherPropertyInadequateConsideration: 0,
+        anyOtherPropertyInadequateConsiderationNotTaxable: false,
+      }
     };
 
     return ITR_JSON;
