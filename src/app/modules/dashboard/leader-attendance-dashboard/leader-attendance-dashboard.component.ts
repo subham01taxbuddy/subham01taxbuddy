@@ -290,7 +290,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     param =`/bo/dashboard/attendance-performance-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
     // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'attendance-performance-report', '');
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'attendance-performance-report', '', {});
     this.loading = false;
   }
 
