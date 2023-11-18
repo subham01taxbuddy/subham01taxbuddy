@@ -15,6 +15,7 @@ import { SpeculativeIncomeComponent } from './speculative-income/speculative-inc
 import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
 import { InvestmentsDeductionsComponent } from './investments-deductions/investments-deductions.component';
 import {PersonalInfoComponent} from "./personal-info/personal-info.component";
+import { MoreInfoScheduleAlComponent } from './more-info-schedule-al/more-info-schedule-al.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {PersonalInfoComponent} from "./personal-info/personal-info.component";
     SpeculativeIncomeComponent,
     BalanceSheetComponent,
     InvestmentsDeductionsComponent,
+    MoreInfoScheduleAlComponent,
   ],
   imports: [
     CommonModule,

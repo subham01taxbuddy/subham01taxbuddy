@@ -13,7 +13,6 @@
     text-align: center;
     padding: 0;
     letter-spacing: .4px;
-    @include prefix(transition, all .3s ease-in-out, webkit moz ms o);
 
     &.fixed_width {
         max-width: 170px;
@@ -37,7 +36,7 @@
 .btn__primary {
     background-color: $color-theme;
     color: $color-white;
-    border: 1.5px solid $color-theme;
+    border: 1px solid $color-theme;
     padding: 8px 24px;
     border-radius: 4px;
     line-height: 28px;
@@ -282,7 +281,6 @@
         width: 100%;
         height: 2px;
         background-color: $color-theme;
-        @include prefix(transition, all .3s ease-in-out, webkit moz ms o);
     }
 }
 
