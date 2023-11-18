@@ -34,8 +34,8 @@ label {
 .form-control {
     min-height: 44px;
     border: none;
-    border: 1px solid $color-form-element;
-    background-color: $color-white;
+    border: 1.5px solid #D3D3D3;
+    background-color: transparent;
     border-radius: 4px;
     padding: 8px 12px;
     font-size: 14px;
@@ -46,8 +46,22 @@ label {
         background-color: $color-gray;
         border-color: $color-theme;
     }
+    &.disable{
+        background-color: #D3D3D3;
+    }
 }
 
+// .disable{
+//     background-color: #D3D3D3;
+//     min-height: 44px;
+//     border: none;
+//     border: 1.5px solid #D3D3D3;
+//     border-radius: 4px;
+//     padding: 8px 12px;
+//     font-size: 14px;
+//     font-family: $font-body;
+//     font-size: $body-font-size;
+// }
 textarea.form-control {
     height: 122px;
     padding-top: 10px;

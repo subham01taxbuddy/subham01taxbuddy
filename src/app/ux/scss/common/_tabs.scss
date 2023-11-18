@@ -54,6 +54,56 @@
     }
 }
 
+.tab__white {
+    background-color: $color-white;
+    color: $color-theme;
+    border: 1.5px solid $color-theme;
+    padding: 8px 24px;
+    border-radius:4px 4px 0px 0px;
+    line-height: 28px;
+}
+
+.tab__white:active,
+.tab__white:focus,
+.tab__white:hover {
+    background-color: $color-theme;
+    color: $color-white;
+    border-color: $color-theme;
+}
+
+.tab__white.tab__hover2:active,
+.tab__white.tab__hover2:focus,
+.tab__white.tab__hover2:hover {
+    background-color: $color-theme;
+    color: $color-white;
+    border-color: $color-theme;
+}
+
+.tab__primaray {
+    background-color: $color-theme;
+    color: $color-white;
+    border: 1.5px solid $color-theme;
+    padding: 8px 24px;
+    border-radius:4px 4px 0px 0px;
+    line-height: 28px;
+}
+
+.tab__primaray:active,
+.tab__primaray:focus,
+.tab__primaray:hover {
+    background-color: $color-theme;
+    color: $color-white;
+    border-color: $color-theme;
+}
+
+.tab__primaray.tab__hover2:active,
+.tab__primaray.tab__hover2:focus,
+.tab__primaray.tab__hover2:hover {
+    background-color: $color-theme;
+    color: $color-white;
+    border-color: $color-theme;
+}
+
 /* Mobile Phones and tablets */
 @include xs-sm-screens {
     .nav-tabs .nav__link {

@@ -11,7 +11,10 @@ $color-black: #000000;
 $color-heading: #242426;
 $color-dark: #303030;
 $color-gray: #f9f9f9;
-$color-form-element: #D3D3D3;
+$color-gray-body:#FCFCFC;
+$color-breadcrumb_gray:#F1F1F1;
+$color-form-element: #F3F3F3;
+$color-radio-text: #092A4F;
 /* Font Variables */
 
 $font-heading: "DM Sans", sans-serif;
@@ -24,4 +27,6 @@ $body-font-size: 14px;
 
 $accordian-border-color: #fefefe;
 $accordian-header-bg-color: #DDEDFF;
+$inner-accordian-header-bg-color: #F0F7FF;
+
 $accordian-body-bg-color: $color-white;

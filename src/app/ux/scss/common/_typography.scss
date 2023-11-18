@@ -163,12 +163,11 @@ h6 {
 }
 
 .surround_text {
-    border-radius: 10px;
+    border-radius: 4px;
     padding: 20px;
-    background-color: #ffffff;
+    background-color: transparent;
     color: #cccccc;
-    margin-top: 15px;
-    border: 2px solid #cccccc;
+    border: 1.5px solid #cccccc;
 }
 .fill_surround_text {
     border-radius: 10px;
@@ -179,6 +178,9 @@ h6 {
     border: 2px solid $color-gray;
 }
 
+.align_self{
+align-self: center;
+}
 /* Medium Size Screens */
 @include md-screens {
     .heading__title {
