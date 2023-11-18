@@ -183,7 +183,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   calculateCounts() {
     if(this.allDetails){
     this.partnerCount = this.allDetails?.length;
-    this.activePartnerCount = this.allDetails?.filter(item => item.attendanceOnDateInBo).length;
+    this.activePartnerCount = this.allDetails?.filter(item => item.attendanceOnDateInBo === 'Active').length;
     this.inactivePartnerCount = this.partnerCount - this.activePartnerCount;
     this.assignmentOnCount = this.allDetails?.filter(item => item.assignmentStatus === 'On').length;
     this.assignmentOffCount = this.allDetails?.filter(item => item.assignmentStatus === 'Off').length;
