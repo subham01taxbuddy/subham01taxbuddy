@@ -105,7 +105,7 @@
             </div>
             <div class="col-sm-4">
               <div class="radius1 grBk">
-                <span class="numTxSm grTx">₹ {{service?.revenueGenerated || 'NA'}}</span><br>
+                <span class="numTxSm grTx">₹ {{service?.invoiceAmount || 'NA'}}</span><br>
                 <span class="TxSm">Invoice Amount</span><br>
               </div>
             </div>
@@ -129,7 +129,7 @@
             </div>
             <div class="col-sm-4">
               <div class="radius1 grBk">
-                <span class="numTxSm">{{service?.paidInvoiceCount || 'NA'}}</span><br>
+                <span class="numTxSm">{{service?.noSubscriptionCancellationRequest || 'NA'}}</span><br>
                 <span class="TxSm">No.Subscription cancellation request</span><br>
               </div>
             </div>
@@ -147,7 +147,7 @@
             </div>
             <div class="col-sm-4">
               <div class="radius1 grBk">
-                <span class="numTxSm">{{service?.paidInvoiceCount || 'NA'}}</span><br>
+                <span class="numTxSm">{{service?.noRefundRequest || 'NA'}}</span><br>
                 <span class="TxSm">No. Refund Request</span><br>
               </div>
             </div>
