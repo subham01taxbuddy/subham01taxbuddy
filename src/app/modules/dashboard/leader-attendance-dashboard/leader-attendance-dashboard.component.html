@@ -187,7 +187,7 @@
               <td>{{ i+1 }}</td>
               <td>{{ item.nameOfFiler }}</td>
               <td>
-                <span *ngIf="item.hasFilerLoggedInToday; else inactive" class="active-status">Active</span>
+                <span *ngIf="item.attendanceOnDateInBo === 'Active'; else inactive" class="active-status">Active</span>
                 <ng-template #inactive>
                   <span class="inactive-status">Inactive</span>
                 </ng-template>
