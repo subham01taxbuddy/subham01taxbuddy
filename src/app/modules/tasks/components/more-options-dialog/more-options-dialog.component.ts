@@ -13,7 +13,7 @@ import * as moment from 'moment';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { ReAssignDialogComponent } from '../re-assign-dialog/re-assign-dialog.component';
 declare function we_track(key: string, value: any);
-import {ReviseReturnDialogComponent} from "../../../itr-filing/revise-return-dialog/revise-return-dialog.component";
+import { ReviseReturnDialogComponent } from "../../../itr-filing/revise-return-dialog/revise-return-dialog.component";
 import {
   UpdateManualFilingDialogComponent
 } from "../../../shared/components/update-manual-filing-dialog/update-manual-filing-dialog.component";
@@ -21,6 +21,7 @@ import {
   UpdateNoJsonFilingDialogComponent
 } from "../../../shared/components/update-no-json-filing-dialog/update-no-json-filing-dialog.component";
 import { UpdateItrUFillingDialogComponent } from 'src/app/modules/shared/components/update-ItrU-filling-dialog/update-ItrU-filling-dialog.component';
+import { ReportService } from 'src/app/services/report-service';
 
 @Component({
   selector: 'app-more-options-dialog',
@@ -38,6 +39,8 @@ export class MoreOptionsDialogComponent implements OnInit {
   statusList = [];
   // isDisable = true;
   loggedInUserRoles: any;
+  showInvoiceButton: boolean;
+  navigateToInvoice:boolean
 
   constructor(
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
@@ -47,7 +50,8 @@ export class MoreOptionsDialogComponent implements OnInit {
     private router: Router,
     private userMsService: UserMsService,
     private itrMsService: ItrMsService,
-    public utilsService: UtilsService
+    public utilsService: UtilsService,
+    private reportService: ReportService
   ) {
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createRowData([]),
@@ -65,6 +69,28 @@ export class MoreOptionsDialogComponent implements OnInit {
     // this.getStatus();
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     console.log('data from assigned users', this.data);
+    this.checkSubscriptionForInvoice();
+  }
+
+  checkSubscriptionForInvoice() {
+    const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
+    this.loading = true;
+    //https://dev-api.taxbuddy.com/report/subscription-dashboard-new/3000?userId=8369&serviceType=TPA'
+    let param = '/subscription-dashboard-new/' + loggedInSmeUserId + '?userId=' + this.data?.userId + '&serviceType=' + this.data.serviceType;
+    this.reportService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.showInvoiceButton = true;
+        if(response?.data[0]?.invoiceDetail[0]?.paymentStatus === "Paid"){
+          this.navigateToInvoice = true;
+        }else{
+          this.navigateToInvoice = false;
+        }
+
+      } else {
+        this.showInvoiceButton = false;
+      }
+    });
   }
 
   isApplicable(permissionRoles: any) {
@@ -117,19 +143,46 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   goToInvoice() {
-    this.router.navigate(['/subscription/proforma-invoice'], {
-      queryParams: { mobile: this.data.mobileNumber },
-    });
+    if(this.loggedInUserRoles.includes('ROLE_FILER')){
+    if(this.navigateToInvoice){
+      this.router.navigate(['/subscription/tax-invoice'], {
+        queryParams: { name: this.data.name },
+      });
+    }else{
+      this.router.navigate(['/subscription/proforma-invoice'], {
+        queryParams: { name: this.data.name },
+      });
+    }
+    }else{
+      if(this.navigateToInvoice){
+        this.router.navigate(['/subscription/tax-invoice'], {
+          queryParams: { mobile: this.data.mobileNumber },
+        });
+      }else{
+        this.router.navigate(['/subscription/proforma-invoice'], {
+          queryParams: { mobile: this.data.mobileNumber },
+        });
+      }
+    }
+
     this.dialogRef.close();
   }
 
   goToSubscription() {
-    this.router.navigate(['/subscription/assigned-subscription'], {
-      queryParams: {
-        userMobNo: this.data.mobileNumber,
-        userId: this.data.userId,
-      },
-    });
+    if(this.loggedInUserRoles.includes('ROLE_FILER')){
+      this.router.navigate(['/subscription/assigned-subscription'], {
+        queryParams: {
+          userId: this.data.userId,
+        },
+      });
+    }else{
+      this.router.navigate(['/subscription/assigned-subscription'], {
+        queryParams: {
+          userMobNo: this.data.mobileNumber,
+          userId: this.data.userId,
+        },
+      });
+    }
     // ([`${link.split('?')[0]}`, { queryParams: {id: 37, username: 'jimmy'}}]);
     this.dialogRef.close();
   }
@@ -186,7 +239,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   optService() {
     if (this.utilsService.isNonEmpty(this.selectedService)) {
       this.loading = true;
-      const param = `/agent-assignment-new?userId=${this.data.userId}&assessmentYear=2022-2023&serviceType=${this.selectedService}`;
+      const param = `/leader-assignment?userId=${this.data.userId}&serviceType=${this.selectedService}`;
       this.userMsService.getMethod(param).subscribe(
         (res: any) => {
           this.optedServices();
@@ -232,7 +285,7 @@ export class MoreOptionsDialogComponent implements OnInit {
     );
   }
 
-  checkSubscription(action:string){
+  checkSubscription(action: string) {
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.loading = true;
@@ -244,16 +297,16 @@ export class MoreOptionsDialogComponent implements OnInit {
         response.data.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
-          if(smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR'|| smeSelectedPlan.servicesType === 'ITRU' )){
+          if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR' || smeSelectedPlan.servicesType === 'ITRU')) {
             itrSubscriptionFound = true;
             return;
-          }else if(userSelectedPlan && (userSelectedPlan.servicesType === 'ITR' || userSelectedPlan.servicesType === 'ITRU')){
+          } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITR' || userSelectedPlan.servicesType === 'ITRU')) {
             itrSubscriptionFound = true;
             return;
           }
         });
-        if(itrSubscriptionFound){
-          switch(action){
+        if (itrSubscriptionFound) {
+          switch (action) {
             case 'add-client':
               this.addClient();
               break;
@@ -273,7 +326,7 @@ export class MoreOptionsDialogComponent implements OnInit {
     });
   }
 
-  itruUpdate(){
+  itruUpdate() {
     let disposable = this.dialog.open(UpdateItrUFillingDialogComponent, {
       width: '60%',
       height: 'auto',

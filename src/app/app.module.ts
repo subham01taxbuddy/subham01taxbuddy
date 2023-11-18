@@ -30,6 +30,8 @@ import { environment } from "../environments/environment";
 import { AngularFireMessagingModule, SERVICE_WORKER } from "@angular/fire/compat/messaging";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { SpeedTestModule } from 'ng-speed-test';
+import {  AngularFireRemoteConfigModule, SETTINGS } from '@angular/fire/compat/remote-config';
+import { SubscriptionModule } from './modules/subscription/subscription.module';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,9 @@ import { SpeedTestModule } from 'ng-speed-test';
   ],
   imports: [
     BrowserModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig,
+      ),
+    AngularFireRemoteConfigModule,
     FormsModule,
     HttpClientModule,
     RouterModule.forRoot(appRoutes),
@@ -46,10 +51,11 @@ import { SpeedTestModule } from 'ng-speed-test';
     MatDialogModule,
     AngularFireModule,
     AngularFireMessagingModule,
+    SubscriptionModule,
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideMessaging(() => getMessaging()),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: true, registrationStrategy: 'registerImmediately' }),
-    SpeedTestModule
+    SpeedTestModule,
   ],
   providers: [
     NavbarService,
@@ -58,20 +64,15 @@ import { SpeedTestModule } from 'ng-speed-test';
     ToastMessageService,
     AuthGuard,
     UtilsService,
-    ItrValidationService,
+    ItrValidationService,    
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true,
     },
-    // {
-    //   provide: AmplifyService,
-    //   useFactory: () => {
-    //     return AmplifyModules({
-    //       Auth,
-    //     });
-    //   }
-    // }
+    {
+      provide: SETTINGS, useFactory: () => { minimumFetchIntervalMillis: 60000 }
+    },
     { provide: SERVICE_WORKER, useFactory: () => typeof navigator !== 'undefined' && navigator.serviceWorker?.register('firebase-messaging-sw.js', { scope: '__' }) || undefined },
   ],
   bootstrap: [AppComponent]

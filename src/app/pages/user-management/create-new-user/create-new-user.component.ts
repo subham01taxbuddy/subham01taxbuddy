@@ -2,9 +2,10 @@ import { AppConstants } from './../../../modules/shared/constants';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable, map, startWith } from 'rxjs';
+import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
+import { ReportService } from 'src/app/services/report-service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { environment } from 'src/environments/environment';
 declare function we_track(key: string, value: any);
 export interface Country {
   name: string;
@@ -20,8 +21,13 @@ export class CreateNewUserComponent implements OnInit {
 
   loading!: boolean;
   signUpForm!: FormGroup;
-  services = ['ITR', 'GST', 'TPA', 'NOTICE'];
-  assignedToMe = false;
+  services = [
+    { key: 'ITR', value: 'ITR', isHide: false },
+    { key: 'GST', value: 'GST', isHide: false },
+    { key: 'TPA', value: 'TPA', isHide: false },
+    { key: 'NOTICE', value: 'NOTICE', isHide: false },
+  ];
+  assignedToMe = true;
   disableAssignedToMe = false;
   disableUserSignUp = false;
   assessmentYear: string;
@@ -40,26 +46,32 @@ export class CreateNewUserComponent implements OnInit {
   minNo = 1;
   smeRecords: any;
   smeServices: any;
-  ownerName: any;
+  leaderName: any;
   filerName: any;
+  loggedInUserRoles: any;
+  loggedInId: any;
+  smeInfo: any;
   constructor(
     private fb: FormBuilder,
     private userService: UserMsService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+    private reportService: ReportService
   ) { }
 
   ngOnInit() {
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
+    this.loggedInId = this.utilsService.getLoggedInUserID();
     this.options = this.countryList
     this.getFy();
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
     console.log('roles', this.roles)
-    const loggedInId = this.utilsService.getLoggedInUserID();
     this.signUpForm = this.fb.group({
       panNumber: ['', Validators.pattern(AppConstants.panNumberRegex)],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      middleName: [''],
+      firstName: ['', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
+      lastName: ['', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
+      middleName: ['', Validators.pattern(AppConstants.charRegex)],
       email: ['', [Validators.required, Validators.pattern(AppConstants.emailRegex)]],
       countryCode: ['', Validators.required],
       mobile: ['', Validators.required],
@@ -70,10 +82,21 @@ export class CreateNewUserComponent implements OnInit {
       accessToken: [null],
       initialData: [null],
       fcmId: [null],
-      agentUserId: [loggedInId || null, Validators.required],
+      agentUserId: [this.loggedInId || null, Validators.required],
       language: ['English'],
     });
-
+    if (this.loggedInUserRoles.includes('ROLE_LEADER') || this.loggedInUserRoles.includes('ROLE_FILER')) {
+      this.services.forEach(item => {
+        if (item.value === 'ITR' && this.loggedInSme[0].serviceEligibility_ITR)
+          item.isHide = true;
+        if (item.value === 'TPA' && this.loggedInSme[0].serviceEligibility_TPA)
+          item.isHide = true;
+        if (item.value === 'GST' && this.loggedInSme[0].serviceEligibility_GST)
+          item.isHide = true;
+        if (item.value === 'NOTICE' && this.loggedInSme[0].serviceEligibility_NOTICE)
+          item.isHide = true;
+      });
+    }
     this.filteredOptions = (this.signUpForm.controls['countryCode']).valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -93,9 +116,7 @@ export class CreateNewUserComponent implements OnInit {
     );;
   }
   getCountry(option) {
-    console.log(option)
     this.countryCode = option.code
-    // this.signUpForm.controls['countryCode'].setValue(option.code)
     if (this.countryCode == '91') {
       this.maxNo = 10;
       this.minNo = 10;
@@ -107,103 +128,86 @@ export class CreateNewUserComponent implements OnInit {
 
   async getFy() {
     const fyList = await this.utilsService.getStoredFyList();
-    console.log('fylist', fyList)
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     this.assessmentYear = currentFyDetails[0].assessmentYear
-    console.log("ay", this.assessmentYear)
   }
 
-  ownerId: number;
+  leaderId: number;
   filerId: number;
-  fromSme(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.ownerName = event ? event.name : null;
-      this.ownerId = event ? event.userId : null;
+  agentId: number;
+  fromSme(event, isLeader) {
+    if (isLeader && event && Object.keys(event).length > 0) {
+      this.leaderName = event ? event.name : null;
+      this.leaderId = event ? event.userId : null;
+      if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.leaderId) {
+        this.assignedToMe=false;
+        this.getSmeInfoDetails(this.leaderId);
+      }
     } else {
       this.filerId = event ? event.userId : null;
       this.filerName = event ? event.name : null;
+      if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.filerId) {
+        this.getSmeInfoDetails(this.filerId);
+      }
     }
-
-    // if(this.ownerId && this.filerId){
-    //   this.signUpForm.controls['agentUserId'].setValue(this.filerId);
-    // }
-
     if (this.filerId) {
       this.disableUserSignUp = false;
-      this.signUpForm.controls['agentUserId'].setValue(this.filerId);
-      this.getSmeRecords(this.filerId);
-    } else if (this.ownerId) {
+      // this.signUpForm.controls['agentUserId'].setValue(this.filerId);
+      // this.getSmeRecords(this.filerId);
+    } else if (this.leaderId) {
       this.disableUserSignUp = true;
       if (this.roles.includes('ROLE_OWNER')) {
         this.disableUserSignUp = false;
       }
-      this.signUpForm.controls['agentUserId'].setValue(this.ownerId);
-      this.getSmeRecords(this.ownerId)
+      // this.signUpForm.controls['agentUserId'].setValue(this.leaderId);
+      // this.getSmeRecords(this.leaderId)
     } else {
       if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
         this.disableUserSignUp = true;
       } else {
         this.disableUserSignUp = false;
       }
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.signUpForm.controls['agentUserId'].setValue(loggedInId);
+      // this.signUpForm.controls['agentUserId'].setValue(this.loggedInId);
     }
 
   }
 
-  coOwnerId: number;
-  coFilerId: number;
-  agentId: number;
-
-  fromSme1(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.coOwnerId = event ? event.userId : null;
-    } else {
-      this.coFilerId = event ? event.userId : null;
-    }
-
-    // if(this.coOwnerId && this.coFilerId){
-    //   this.signUpForm.controls['agentUserId'].setValue(this.coFilerId);
-    // }
-
-    if (this.coFilerId) {
-      this.disableUserSignUp = false;
-      this.signUpForm.controls['agentUserId'].setValue(this.coFilerId);
-      this.getSmeRecords(this.coFilerId);
-    } else if (this.coOwnerId) {
-      this.disableUserSignUp = true;
-      if (this.roles.includes('ROLE_OWNER')) {
-        this.disableUserSignUp = false;
-      }
-      this.signUpForm.controls['agentUserId'].setValue(this.coOwnerId);
-      this.getSmeRecords(this.coOwnerId);
-
-    } else {
-      if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
-        this.disableUserSignUp = true;
-      } else {
-        this.disableUserSignUp = false;
-      }
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.signUpForm.controls['agentUserId'].setValue(loggedInId);
-    }
-
-  }
-
-  // fromSme(event) {
-  //   console.log('event value',event)
-  //   this.signUpForm.controls['agentUserId'].setValue(event);
-  // }
   isAssignedToMe() {
     this.disableUserSignUp = false;
     if (!this.assignedToMe) {
-      this.signUpForm.controls['agentUserId'].setValue(null);
+      // this.signUpForm.controls['agentUserId'].setValue(null);
       return;
     }
     const loggedInId = this.utilsService.getLoggedInUserID();
-    this.signUpForm.controls['agentUserId'].setValue(loggedInId);
+    // this.signUpForm.controls['agentUserId'].setValue(loggedInId);
+
+  }
+
+  isApplicable(permissionRoles: any) {
+    return this.roleBaseAuthGuardService.checkHasPermission(
+      this.loggedInUserRoles,
+      permissionRoles
+    );
+  }
+
+  getSmeInfoDetails(userId) {
+    this.loading = true;
+    const param = `/bo/sme-details-new/${userId}`;
+    this.reportService.getMethod(param).subscribe((result: any) => {
+      this.loading = false;
+      this.smeInfo = result.data;
+      this.services.forEach(item => {
+        this.signUpForm.controls['serviceType'].setValue(null);
+        if (item.value === 'ITR' && this.smeInfo[0].serviceEligibility_ITR)
+          item.isHide = true;
+        if (item.value === 'TPA' && this.smeInfo[0].serviceEligibility_TPA)
+          item.isHide = true;
+        if (item.value === 'GST' && this.smeInfo[0].serviceEligibility_GST)
+          item.isHide = true;
+        if (item.value === 'NOTICE' && this.smeInfo[0].serviceEligibility_NOTICE)
+          item.isHide = true;
+      });
+    });
 
   }
 
@@ -226,7 +230,7 @@ export class CreateNewUserComponent implements OnInit {
           'PAN ': this.signUpForm.controls['panNumber'].value,
           'Email Address': this.signUpForm.controls['email'].value,
           'Service Type ': this.signUpForm.controls['serviceType'].value,
-          'Owner': this.ownerName,
+          'Leader': this.leaderName,
           'Filer': this.filerName,
         });
         if (res.status === 406) {
@@ -234,8 +238,7 @@ export class CreateNewUserComponent implements OnInit {
           this.utilsService.showSnackBar(res.message);
           return;
         }
-        this.assignUser(res.userId, this.signUpForm.controls['agentUserId'].value, this.signUpForm.controls['serviceType'].value);
-        console.log('sme user ID under user is going', this.signUpForm.controls['agentUserId'].value)
+        this.assignUser(res.userId, this.signUpForm.controls['serviceType'].value);
       }, (error) => {
         this.loading = false;
         console.log("Error when creating user: ", error);
@@ -245,17 +248,27 @@ export class CreateNewUserComponent implements OnInit {
     }
   }
 
-  assignUser(userId, agentUserId, serviceType) {
-    // https://uat-api.taxbuddy.com/user/agent-assignment-manually-new?userId=9506&assessmentYear=2023-2024&serviceType=ITR&smeUserId=7002
-
-    const param = `/agent-assignment-manually-new?userId=${userId}&assessmentYear=${this.assessmentYear}&serviceType=${serviceType}&smeUserId=${agentUserId}`;
+  assignUser(userId, serviceType) {
+    //'https://dev-api.taxbuddy.com/user/v2/manual-assignment?userId=8729&serviceType=ITR&leaderUserId=8149&filerUserId=8149&statusId=16'
+    let param = `/v2/manual-assignment?userId=${userId}&serviceType=${serviceType}&statusId=16`
+    if (this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      param = param + `&leaderUserId=${this.loggedInId}`;
+    } else if (this.loggedInUserRoles.includes('ROLE_FILER')) {
+      param = param + `&filerUserId=${this.loggedInId}`;
+    } else if (this.loggedInUserRoles.includes('ROLE_ADMIN')) {
+      if (this.filerId) {
+        param = param + `&filerUserId=${this.filerId}`;
+      } else if (this.leaderId) {
+        param = param + `&leaderUserId=${this.leaderId}`;
+      }
+    }
     this.userService.getMethod(param).subscribe((res: any) => {
       if (res.success == true) {
         this.loading = false;
         this.utilsService.showSnackBar("User created succesfully.");
       } else {
         this.loading = false;
-        this.utilsService.showSnackBar("Error while assigning user!!! Please select Owner or Filer Name ");
+        this.utilsService.showSnackBar("Error while assigning user!!! Please select leader or Filer Name ");
       }
 
     }, error => {
@@ -269,14 +282,14 @@ export class CreateNewUserComponent implements OnInit {
     if (this.utilsService.isNonEmpty(pan.value) && pan.valid) {
       this.utilsService.getPanDetails(pan.value).subscribe((result: any) => {
         console.log('userData from PAN: ', result);
-        if(result.isValid && result.isValid === 'INVALID PAN'){
+        if (result.isValid && result.isValid === 'INVALID PAN') {
           this.utilsService.showSnackBar('The PAN number is invalid');
           this.signUpForm.patchValue({
-              firstName: '',
+            firstName: '',
             lastName: '',
             middleName: ''
-              });
-        } else if(result.isValid && result.isValid === 'EXISTING AND VALID'){
+          });
+        } else if (result.isValid && result.isValid === 'EXISTING AND VALID') {
           this.signUpForm.patchValue(result);
         } else {
           this.utilsService.showSnackBar(result.isValid);
@@ -290,9 +303,9 @@ export class CreateNewUserComponent implements OnInit {
   getSmeRecords(agentUserId) {
     const userId = agentUserId;
     const loggedInSmeUserId = this.loggedInSme[0].userId
-    const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
+    const param = `/bo/sme-details-new/${userId}`;
 
-    this.userService.getMethodNew(param).subscribe((result: any) => {
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('sme record by service  -> ', result);
       this.smeRecords = result.data;
       this.smeRecords = this.smeRecords?.filter(element => element.serviceType !== null);
@@ -322,28 +335,40 @@ export class CreateNewUserComponent implements OnInit {
     }
 
     const selectedServiceType = this.signUpForm.controls['serviceType'].value;
-    if (this.smeServices.every(service => service.serviceType !== selectedServiceType)) {
-      if (this.filerId || this.coFilerId) {
+    let newServices =[];
+    if(this.smeInfo[0].serviceEligibility_ITR){
+      newServices.push('ITR');
+    }
+    if(this.smeInfo[0].serviceEligibility_TPA){
+      newServices.push('TPA');
+    }
+    if(this.smeInfo[0].serviceEligibility_GST){
+      newServices.push('GST');
+    }
+    if(this.smeInfo[0].serviceEligibility_NOTICE){
+      newServices.push('NOTICE');
+    }
+    if(newServices.includes(selectedServiceType)){
+      this.disableUserSignUp = false;
+    } else {
+      if (this.filerId) {
         this.utilsService.showSnackBar("Selected filer doesn't have this service type ");
       } else {
-        this.utilsService.showSnackBar("Selected owner doesn't have this service type ");
+        this.utilsService.showSnackBar("Selected leader doesn't have this service type ");
       }
       this.disableUserSignUp = true;
-    } else {
-      this.disableUserSignUp = false;
     }
+    // if (this.smeServices.every(service => service.serviceType !== selectedServiceType)) {
+    //   if (this.filerId) {
+    //     this.utilsService.showSnackBar("Selected filer doesn't have this service type ");
+    //   } else {
+    //     this.utilsService.showSnackBar("Selected owner doesn't have this service type ");
+    //   }
+    //   this.disableUserSignUp = true;
+    // } else {
+    //   this.disableUserSignUp = false;
+    // }
 
   }
 
-  getToggleValue() {
-    console.log('co-owner toggle', this.coOwnerToggle.value)
-    we_track('Co-Owner Toggle', '');
-    if (this.coOwnerToggle.value == true) {
-      this.coOwnerCheck = true;
-    }
-    else {
-      this.coOwnerCheck = false;
-    }
-    // this.getInvoice(true);
-  }
 }

@@ -1,6 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as moment from 'moment';
+import { Observable, map, startWith } from 'rxjs';
+import { User } from 'src/app/modules/subscription/components/assigned-subscription/assigned-subscription.component';
+import { ReportService } from 'src/app/services/report-service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -12,57 +16,93 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class ScheduledCallReassignDialogComponent implements OnInit {
   agentId: number;
   loading: boolean;
-  ownerId: number;
+  leaderId: number;
   filerId: number;
   disableReAssign :boolean =true;
   smeBookedSlots: any[] = [];
+  searchLeader =new FormControl('');
+  filteredLeaders : Observable<any[]>;
+  leaderList :any;
+  leaderNames : User[];
+  leaderOptions :User[] =[];
 
   constructor(
     public dialogRef: MatDialogRef<ScheduledCallReassignDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private userMsService: UserMsService,
-    public utilsService: UtilsService
+    public utilsService: UtilsService,
+    private reportService:ReportService
   ) { }
 
   ngOnInit() {
     console.log('data from parent of call', this.data)
+    this.getLeaderListDropDown();
   }
 
-  fromSme(event, isOwner) {
-    if (isOwner) {
-      this.ownerId = event ? event.userId : null;
-      if(this.ownerId){
-        this.checkOwner(this.ownerId)
-      }
-    } else {
-      this.filerId = event ? event.userId : null;
-    }
-    if (this.filerId) {
-      this.agentId = this.filerId;
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
-    }
+  getLeaderNameId(option){
+    console.log('scheduled call,selected leader ',option);
+    this.leaderId = option?.userId;
+    this.checkOwner(option.userId);
   }
 
-  checkOwner(ownerId){
-    console.log("in check Owner selected owner id ", ownerId);
-    if(ownerId === this.data.allData.ownerUserId){
-      this.utilsService.showSnackBar('Scheduled call already assigned this owner ,please select different owner')
+  getLeaderListDropDown(){
+    // https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000?leader=true&serviceType=ITR
+    const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
+    let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true&serviceType=${this.data.allData.serviceType}`;
+    this.reportService.getMethod(param).subscribe((result: any) => {
+      console.log('new leader list result -> ', result);
+      this.leaderList = result.data;
+      this.leaderNames = this.leaderList.map((item) => {
+        return {name: item.name, userId: item.userId};
+      });
+     this.leaderOptions = this.leaderNames;
+     this.setFilteredLeaders();
+    },error=>{
+      this.utilsService.showSnackBar('Error in API of get leader list');
+    })
+  }
+
+  setFilteredLeaders() {
+    this.filteredLeaders = this.searchLeader.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        console.log('change', value);
+        const name = typeof value === 'string' ? value : value?.name;
+        return name
+          ? this._filter(name as string, this.leaderOptions)
+          : this.leaderOptions.slice();
+      })
+    );
+  }
+
+  displayFn(label: any) {
+    return label ? label : undefined;
+  }
+
+  private _filter(name: string, options): User[] {
+    const filterValue = name.toLowerCase();
+
+    return options.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
+    );
+  }
+
+  checkOwner(leaderId){
+    console.log("in check leader selected leader id ", leaderId);
+    if(leaderId === this.data.allData.leaderUserId){
+      this.utilsService.showSnackBar('Scheduled call already assigned this leader ,please select different leader')
       // alert("You can't assign to yourself");
     }else{
-      this.getSmeBookedSlot(ownerId)
+      this.getSmeBookedSlot(leaderId)
     }
   }
 
   allSlots = [];
 
-  getSmeBookedSlot(ownerUserId) {
+  getSmeBookedSlot(leaderId) {
     //https://uat-api.taxbuddy.com/report/sme-booked-slots?smeUserId=21234
     this.loading=true;
-    let param = `/sme-booked-slots?smeUserId=${ownerUserId}`;
+    let param = `/sme-booked-slots?smeUserId=${leaderId}`;
 
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if (response.success) {
@@ -111,7 +151,7 @@ export class ScheduledCallReassignDialogComponent implements OnInit {
     //PUT 'https://uat-api.taxbuddy.com/gateway/reassign-meeting?userId=1244
     // &newSmeUserId=5334&updateRequestId=dgfbhdzgfbdagbdagdafbdf' \
     this.loading=true;
-    let param = `/gateway/reassign-meeting?userId=${this.data.allData.userId}&newSmeUserId=${this.ownerId}&updateRequestId=${this.data.allData.id}`;
+    let param = `/gateway/reassign-meeting?userId=${this.data.allData.userId}&newSmeUserId=${this.leaderId}&updateRequestId=${this.data.allData.id}`;
     this.userMsService.spamPutMethod(param).subscribe((response: any) => {
       if (response.success) {
         this.loading=false;

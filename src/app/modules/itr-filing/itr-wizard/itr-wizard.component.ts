@@ -499,7 +499,7 @@ export class ItrWizardComponent implements OnInit {
     const param = `tts/outbound-call`;
     const reqBody = {
       agent_number: agentNumber,
-      customer_number: customerNumber,
+      userId: this.ITR_JSON.userId,
     };
     console.log('reqBody:', reqBody);
     this.reviewService.postMethod(param, reqBody).subscribe(

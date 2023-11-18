@@ -285,3 +285,14 @@ th {
 .form-control{
   flex-direction:row;
  }
+
+ .table-container {
+  // max-height: 400px; /* Set the maximum height for the container */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-y: auto; /* Enable vertical scrolling */
+  white-space: nowrap; /* Prevent table cells from wrapping */
+}
+
+.table-container table {
+  min-width: 100%; /* Set the minimum width of the table to ensure horizontal scrolling */
+}

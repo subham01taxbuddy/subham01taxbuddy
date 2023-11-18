@@ -37,16 +37,26 @@ export const environment = {
 		FOLDER_ID: '1DlJN6xgPyrX_ijF7k6q4M_1rwiRFJkGt'
 	},
 
-	firebaseConfig: {
-		apiKey: "AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk",
-		authDomain: "taxbuddy-uat.firebaseapp.com",
-		databaseURL: "https://taxbuddy-uat.firebaseio.com",
-		projectId: "taxbuddy-uat",
-		storageBucket: "taxbuddy-uat.appspot.com",
-		messagingSenderId: "805239680508",
-		appId: "1:805239680508:web:b9258ec04023b0fda05679",
-		measurementId: "G-DMWVKK98X2"
-	},
+	// firebaseConfig: {
+	// 	apiKey: "AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk",
+	// 	authDomain: "taxbuddy-uat.firebaseapp.com",
+	// 	databaseURL: "https://taxbuddy-uat.firebaseio.com",
+	// 	projectId: "taxbuddy-uat",
+	// 	storageBucket: "taxbuddy-uat.appspot.com",
+	// 	messagingSenderId: "805239680508",
+	// 	appId: "1:805239680508:web:b9258ec04023b0fda05679",
+	// 	measurementId: "G-DMWVKK98X2"
+	// },
+  firebaseConfig: {
+    apiKey: "AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk",
+    authDomain: "taxbuddy-uat.firebaseapp.com",
+    databaseURL: "https://taxbuddy-uat.firebaseio.com",
+    projectId: "taxbuddy-uat",
+    storageBucket: "taxbuddy-uat.appspot.com",
+    messagingSenderId: "805239680508",
+    appId: "1:805239680508:web:c5a224dafd6a97bea05679",
+    measurementId: "G-R5JYTLSE8B"
+  },
 
 	s3_cred: {
 		// user_name: "ashish@ssbainnovations.com",

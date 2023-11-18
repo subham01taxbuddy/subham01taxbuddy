@@ -20,6 +20,7 @@ import { Environment } from 'ag-grid-community';
 import { parse } from '@typescript-eslint/parser';
 import { AppSetting } from '../modules/shared/app.setting';
 import { StorageService } from '../modules/shared/services/storage.service';
+import { ReportService } from './report-service';
 import {
   Form,
   FormArray,
@@ -44,7 +45,8 @@ export class UtilsService {
     private dialog: MatDialog,
     private serializer: UrlSerializer,
     private userMsService: UserMsService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private reportService: ReportService
   ) {}
   /**
    * @function isNonEmpty()
@@ -699,6 +701,19 @@ export class UtilsService {
           typeOfLand: null, //"IRG - Irrigated; RF - Rain-fed"
         },
       ],
+
+      giftTax: {
+        aggregateValueWithoutConsideration: 0,
+        aggregateValueWithoutConsiderationNotTaxable: false,
+        immovablePropertyWithoutConsideration: 0,
+        immovablePropertyWithoutConsiderationNotTaxable: false,
+        immovablePropertyInadequateConsideration: 0,
+        immovablePropertyInadequateConsiderationNotTaxable: false,
+        anyOtherPropertyWithoutConsideration: 0,
+        anyOtherPropertyWithoutConsiderationNotTaxable: false,
+        anyOtherPropertyInadequateConsideration: 0,
+        anyOtherPropertyInadequateConsiderationNotTaxable: false,
+      }
     };
 
     return ITR_JSON;
@@ -813,8 +828,9 @@ export class UtilsService {
     }
   }
   async getSmeList() {
-    const param = `/sme/all-list?page=0&size=1000`;
-    return await this.userMsService.getMethod(param).toPromise();
+    // 'https://dev-api.taxbuddy.com/report/bo/sme/all-list?active=true&page=0&pageSize=10' \
+    const param = `/bo/sme/all-list?active=true&page=0&pageSize=10000`;
+    return await this.reportService.getMethod(param).toPromise();
   }
 
   async getStoredAgentList(action?: any) {
@@ -855,8 +871,8 @@ export class UtilsService {
   async getAgentList() {
     //https://uat-api.taxbuddy.com/user/sme-details-new/3000?page=0&size=100&filer=true
     const loggedInUserId = this.getLoggedInUserID();
-    const param = `/sme-details-new/${loggedInUserId}?filer=true`;
-    return await this.userMsService.getMethodNew(param).toPromise();
+    const param = `/bo/sme-details-new/${loggedInUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
+    return await this.reportService.getMethod(param).toPromise();
   }
 
   async getStoredMasterStatusList() {
@@ -955,8 +971,8 @@ export class UtilsService {
   async getMyAgentList() {
     const loggedInUserId = this.getLoggedInUserID();
     //https://api.taxbuddy.com/user/sme-details-new/24346?owner=true&assigned=true
-    const param = `/sme-details-new/${loggedInUserId}?owner=true&assigned=true`;
-    return await this.userMsService.getMethodNew(param).toPromise();
+    const param = `/bo/sme-details-new/${loggedInUserId}?leader=true`;
+    return await this.reportService.getMethod(param).toPromise();
   }
 
   async getCurrentItr(userId: any, ay: any, filingTeamMemberId?: any) {
@@ -1384,13 +1400,25 @@ export class UtilsService {
     }
   }
 
+  getPartnerType() {
+    const loggedInSmeInfo = JSON.parse(
+      sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
+    );
+    if (
+      this.isNonEmpty(loggedInSmeInfo) &&
+      this.isNonEmpty(loggedInSmeInfo[0].partnerType)
+    ) {
+      return loggedInSmeInfo[0].partnerType;
+    }
+  }
+
   async getFilersList() {
     // https://uat-api.taxbuddy.com/user/sme-details-new/3000?filer=true
     let loggedInUserId = environment.admin_id;
     console.log('logged in sme id ', loggedInUserId);
-    const param = `/sme-details-new/${loggedInUserId}?filer=true`;
+    const param = `/bo/sme-details-new/${loggedInUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
     // return await this.userMsService.getMethod(param).toPromise();
-    this.userMsService.getMethodNew(param).subscribe((res: any) => {
+    this.reportService.getMethod(param).subscribe((res: any) => {
       console.log('filer List Result', res);
       if (res.success && res.data instanceof Array) {
         let filerList = res.data;

@@ -11,6 +11,10 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { LeaderListDropdownComponent } from '../../shared/components/leader-list-dropdown/leader-list-dropdown.component';
+import { ReportService } from 'src/app/services/report-service';
+import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { environment } from 'src/environments/environment';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -59,14 +63,19 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   assignmentOffCount: number;
   itrOverview:any;
   allPartnerDetails:any;
+  searchParam: any = {
+    page: 0,
+    pageSize: 50,
+  };
 
   constructor(
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private itrService: ItrMsService,
+    private reportService:ReportService,
     private router: Router,
     public datePipe: DatePipe,
+    private genericCsvService: GenericCsvService,
   ) {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
@@ -76,6 +85,9 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = this.loggedInSmeUserId;
+    }
     this.search();
   }
 
@@ -85,29 +97,29 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   }
 
   getAllPartnerDetails(){
-    // API to get partner commission details by Leader :-
-  // https://uat-api.taxbuddy.com/itr/dashboard/partner-commission?fromDate=2023-04-01&toDate=2023-05-16
-  // &page=0&size=30&leaderUserId=8664
+    // 'https://uat-api.taxbuddy.com/report/bo/dashboard/attendance-performance-report?fromDate=2023-04-01&toDate=2023-11-13&page=0&pageSize=5'
   this.loading = true;
   let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
   let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
   // let leaderUserId = this.loggedInSmeUserId
 
   let param=''
-    let userFilter = '';
-    if (this.leaderId && !this.ownerId) {
+  let userFilter = ''
+    if (this.leaderId && !this.filerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.ownerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
     }
-    // else{
-    //   userFilter += `&leaderUserId=${this.loggedInSmeUserId}`;
-    // }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
 
-    param =`/dashboard/partner-commission?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
+    let data = this.utilsService.createUrlParams(this.searchParam);
 
-    this.userMsService.getMethodNew(param).subscribe((response: any) => {
+    param =`/bo/dashboard/attendance-performance-report?${data}&fromDate=${fromDate}&toDate=${toDate}${userFilter}`
+
+    this.reportService.getMethod(param).subscribe((response: any) => {
       if(response.success == false){
         this.allDetails=null;
         this.calculateCounts();
@@ -115,18 +127,41 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
       }
       if (response.success) {
         this.loading = false;
-        this.allDetails = response.data;
+        this.allDetails = response.data.content;
         this.calculateCounts();
         // this.config.docUpload.totalItems = response.data.totalElements;
-        const totalItrFiled = this.allDetails?.reduce((total, item) => total + item.totalItrFiled, 0);
-        const totalPaidRevenue = this.allDetails?.reduce((total, item) => total + item.totalPaidRevenue, 0);
-        const totalCommissionEarned = this.allDetails?.reduce((total, item) => total + item.totalCommissionEarned, 0);
+        const totalNumberOfClientsAssigned = this.allDetails?.reduce((total, item) => total + item.numberOfClientsAssigned, 0);
+        const totalItr1 = this.allDetails?.reduce((total, item) => total + item.itr1, 0);
+        const totalItr2 = this.allDetails?.reduce((total, item) => total + item.itr2, 0);
+        const totalItr3 = this.allDetails?.reduce((total, item) => total + item.itr3, 0);
+        const totalItr4 = this.allDetails?.reduce((total, item) => total + item.itr4, 0);
+        const totalItrOthers = this.allDetails?.reduce((total, item) => total + item.others, 0);
+        const totalItrU = this.allDetails?.reduce((total, item) => total + item.itrU, 0);
+        const totalItrFiled = this.allDetails?.reduce((total, item) => total + item.totalITRFiled, 0);
+        const totalRevenueGenerated = this.allDetails?.reduce((total, item) => total + item.revenueGenerated, 0);
+        const totalCommissionEarnedBeforeTDS = this.allDetails?.reduce((total, item) => total + item.totalCommissionEarnedBeforeTDS, 0);
+        const totalTds = this.allDetails?.reduce((total, item) => total + item.tds, 0);
+        const totalCommissionEarnedAfterTDS = this.allDetails?.reduce((total, item) => total + item.totalCommissionEarnedAfterTDS, 0);
+        const totalCommissionPaid = this.allDetails?.reduce((total, item) => total + item.commissionPaid, 0);
+        const totalCommissionPayable = this.allDetails?.reduce((total, item) => total + item.commissionPayable, 0);
+        const averageUserRating = this.allDetails?.reduce((total, item) => total + item.averageUserRating, 0);
 
-        // Assign the totals to a property
         this.grandTotal = {
+        totalNumberOfClientsAssigned,
+        totalItr1,
+        totalItr2,
+        totalItr3,
+        totalItr4,
+        totalItrOthers,
+        totalItrU,
         totalItrFiled,
-        totalPaidRevenue,
-        totalCommissionEarned,
+        totalRevenueGenerated,
+        totalCommissionEarnedBeforeTDS,
+        totalTds,
+        totalCommissionEarnedAfterTDS,
+        totalCommissionPaid,
+        totalCommissionPayable,
+        averageUserRating
         };
 
       }else{
@@ -148,7 +183,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   calculateCounts() {
     if(this.allDetails){
     this.partnerCount = this.allDetails?.length;
-    this.activePartnerCount = this.allDetails?.filter(item => item.hasFilerLoggedInToday).length;
+    this.activePartnerCount = this.allDetails?.filter(item => item.attendanceOnDateInBo === 'Active').length;
     this.inactivePartnerCount = this.partnerCount - this.activePartnerCount;
     this.assignmentOnCount = this.allDetails?.filter(item => item.assignmentStatus === 'On').length;
     this.assignmentOffCount = this.allDetails?.filter(item => item.assignmentStatus === 'Off').length;
@@ -199,37 +234,64 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   // }
 
   leaderId: number;
-  ownerId: number;
+  filerId: number;
   agentId: number;
+  searchAsPrinciple:boolean =false;
 
-  fromSme1(event, isOwner) {
-     console.log('sme-drop-down', event, isOwner);
-     if (isOwner) {
+  fromLeader(event) {
+    if(event) {
       this.leaderId = event ? event.userId : null;
-    } else {
-      this.ownerId = event ? event.userId : null;
     }
-    if (this.ownerId) {
-      this.agentId = this.ownerId;
-    } else if (this.leaderId) {
-      this.agentId = this.leaderId;
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
+  }
+  fromPrinciple(event){
+    if(event){
+      if (event?.partnerType === 'PRINCIPAL') {
+        this.filerId = event ? event.userId : null;
+
+        this.searchAsPrinciple = true;
+      } else {
+        this.filerId = event ? event.userId : null;
+
+        this.searchAsPrinciple = false;
+      }
     }
   }
 
-  @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
-    this?.leaderDropDown?.resetDropdown();
+    this?.smeDropDown?.resetDropdown();
     this.search();
   }
 
   setEndDateValidate(startDateVal: any) {
     console.log('startDateVal: ', startDateVal);
     this.minEndDate = startDateVal.value;
+  }
+
+  async downloadReport() {
+    this.loading = true;
+    let param=''
+    let userFilter = ''
+    if (this.leaderId && !this.filerId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+
+    param =`/bo/dashboard/attendance-performance-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
+
+    // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'attendance-performance-report', '', {});
+    this.loading = false;
   }
 
 }

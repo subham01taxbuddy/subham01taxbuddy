@@ -33,6 +33,7 @@ import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RequestManager } from 'src/app/modules/shared/services/request-manager';
+import { ReportService } from 'src/app/services/report-service';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -44,7 +45,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   myItrsGridOptions: GridOptions;
   itrDataList = [];
-  agents = [];
   selectedFilingTeamMemberId: number;
   config: any;
   selectedPageNo = 0;
@@ -62,8 +62,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
     panNumber: null,
     selectedStatusId: 'ALL',
     selectedFyYear: null,
-    ownerUserId: null,
-    filerUserId: null,
   };
 
   allFilerList: any;
@@ -74,6 +72,16 @@ export class FilingsComponent implements OnInit, OnDestroy {
     { value: 'itrType', name: 'ITR Type' },
     { value: 'isRevised', name: 'Return Type' },
   ];
+  searchBy: any = {};
+  searchMenus = [
+    { value: 'mobileNumber', name: 'Mobile No' },
+    { value: 'email', name: 'Email' },
+    { value: 'panNumber', name: 'PAN' }
+  ];
+  clearUserFilter: number;
+  searchAsPrinciple :boolean =false
+  partnerType:any;
+
   constructor(
     private reviewService: ReviewService,
     private itrMsService: ItrMsService,
@@ -87,8 +95,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private cacheManager: CacheManager,
     private http: HttpClient,
+    private reportService: ReportService,
   ) {
-    this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'));
+    this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
       columnDefs: this.columnDef(this.allFilerList),
@@ -121,6 +130,19 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     console.log('loggedIn Sme Details', this.loggedInSme)
     this.roles = this.loggedInSme[0]?.roles
+    this.partnerType = this.loggedInSme[0]?.partnerType
+    if (this.roles.includes('ROLE_FILER')) {
+      this.searchMenus = [
+        { value: 'email', name: 'Email' },
+        { value: 'panNumber', name: 'PAN' }
+      ]
+    }else{
+      this.searchMenus = [
+        { value: 'mobileNumber', name: 'Mobile No' },
+        { value: 'email', name: 'Email' },
+        { value: 'panNumber', name: 'PAN' }
+      ]
+    }
     this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     this.getAgentList();
     this.getMasterStatusList();
@@ -138,6 +160,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
         this.myItrsList(0, '');
       }
     })
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+      this.agentId =  this.loggedInSme[0]?.userId;
+      this.myItrsList(0, '');
+    }
   }
 
   // ngAfterContentChecked() {
@@ -175,25 +201,42 @@ export class FilingsComponent implements OnInit, OnDestroy {
         'ROLE_GST_SL',
         'ROLE_NOTICE_SL',
       ]);
-    if (isAgentListAvailable) {
-      const param = `/sme/${loggedInUserId}/child-details`;
-      this.userMsService.getMethod(param).subscribe((result: any) => {
-        if (result.success) {
-          this.agents = result.data;
-        }
-      });
-    }
   }
 
-  fromOwner(event) {
-    this.searchParams.ownerUserId = event ? event.userId : null;
-    console.log('fromowner:', event);
-    // this.myItrsList(0, this.selectedFilingTeamMemberId);
+  agentId:any;
+  filerUserId: any;
+  leaderUserId:any;
+  fromSme(event, isOwner,fromPrinciple?) {
+    console.log('sme-drop-down', event, isOwner);
+    if (isOwner) {
+      this.leaderUserId = event ? event.userId : null;
+    } else {
+      if(fromPrinciple){
+        if (event?.partnerType === 'PRINCIPAL') {
+          this.filerUserId = event ? event.userId : null;
+          this.searchAsPrinciple = true;
+        } else {
+          this.filerUserId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }else{
+        if(event){
+          this.filerUserId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }
+    }
+    if (this.filerUserId) {
+      this.agentId = this.filerUserId;
+    } else if (this.leaderUserId) {
+      this.agentId = this.leaderUserId;
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    // this.getInvoice();
   }
-  fromFiler(event) {
-    this.searchParams.filerUserId = event ? event.userId : null;
-    // this.myItrsList(0, this.selectedFilingTeamMemberId);
-  }
+
   search() {
     this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
@@ -202,27 +245,25 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.myItrsList(0, this.selectedFilingTeamMemberId);
   }
 
+  maskMobileNumber(mobileNumber) {
+    if (mobileNumber) {
+      return 'X'.repeat(mobileNumber.length);
+    }
+    return '-';
+  }
+
   sortByObject(object) {
     this.sortBy = object;
   }
 
-  coOwnerId: number;
-  coFilerId: number;
-  agentId: number;
+  searchByObject(object) {
+    this.searchBy = object;
+  }
 
-  fromCoOwner(event) {
-    this.coOwnerId = event.userId;
-    // this.myItrsList(0, this.selectedFilingTeamMemberId);
-  }
-  fromCoFiler(event) {
-    this.coFilerId = event.userId;
-    // this.myItrsList(0, this.selectedFilingTeamMemberId);
-  }
+
 
   myItrsList(pageNo, filingTeamMemberId, fromPageChange?) {
-    // https://uat-api.taxbuddy.com/itr/itr-list?pageSize=10&ownerUserId=7522&financialYear=2022-2023&status=ALL
-    // &searchAsCoOwner=true&page=0
-    //https://uat-api.taxbuddy.com/report/itr-list?page=0&pageSize=20&ownerUserId=7521&financialYear=2022-2023&status=ALL
+    // https://dev-api.taxbuddy.com/report/bo/itr-list?page=0&pageSize=20&financialYear=2022-2023&status=ITR_FILED
     if (!fromPageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
@@ -231,42 +272,44 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.loading = true;
     return new Promise((resolve, reject) => {
       let loggedInId = this.utilsService.getLoggedInUserID();
-      let loggedInUserRoles = this.utilsService.getUserRoles();
-
-      if (loggedInUserRoles.includes('ROLE_FILER')) {
-        this.searchParams.filerUserId = loggedInId;
+      if(this.roles?.includes('ROLE_LEADER')){
+        this.leaderUserId = loggedInId;
       }
 
-      if (loggedInUserRoles.includes('ROLE_OWNER')) {
-        this.searchParams.ownerUserId = loggedInId;
+      if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+        this.filerUserId = loggedInId ;
+        this.searchAsPrinciple =true;
+      }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+        this.filerUserId = loggedInId ;
+        this.searchAsPrinciple =false;
       }
 
-      let param = `/itr-list?page=${pageNo}&pageSize=20`;
+      if(this.searchBy?.mobileNumber){
+        this.searchParams.mobileNumber = this.searchBy?.mobileNumber
+      }
+      if(this.searchBy?.email){
+        this.searchParams.email = this.searchBy?.email
+      }
+      if(this.searchBy?.panNumber){
+        this.searchParams.panNumber = this.searchBy?.panNumber
+      }
+
+      let param = `/bo/itr-list?page=${pageNo}&pageSize=20`;
       let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
       if (Object.keys(this.sortBy).length) {
         param = param + sortByJson;
       }
-      if (this.utilsService.isNonEmpty(this.searchParams.filerUserId)) {
-        param = param + `&filerUserId=${this.searchParams.filerUserId}`;
-      }
-      if (this.utilsService.isNonEmpty(this.searchParams.ownerUserId)) {
-        param = param + `&ownerUserId=${this.searchParams.ownerUserId}`;
-      }
 
-      if (this.utilsService.isNonEmpty(this.coOwnerId)) {
-        param = `/itr-list?page=${pageNo}&pageSize=20`;
-        param = param + `&ownerUserId=${this.coOwnerId}`;
-        if (Object.keys(this.sortBy).length) {
-          param = param + sortByJson;
-        }
-      }
+      let userFilter = '';
 
-      if (this.utilsService.isNonEmpty(this.coFilerId)) {
-        // param = `/itr-list?page=${pageNo}&pageSize=20`;
-        param = param + `&filerUserId=${this.coFilerId}`;
-        if (Object.keys(this.sortBy).length) {
-          param = param + sortByJson;
-        }
+      if ((this.leaderUserId && !this.filerUserId)) {
+        userFilter += `&leaderUserId=${this.leaderUserId}`;
+      }
+      if (this.filerUserId && this.searchAsPrinciple === true) {
+        userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerUserId}`;
+      }
+      if (this.filerUserId && this.searchAsPrinciple === false) {
+        userFilter += `&filerUserId=${this.filerUserId}`;
       }
 
       if (this.utilsService.isNonEmpty(this.searchParams.selectedFyYear)) {
@@ -287,19 +330,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
         param = param + `&panNumber=${this.searchParams.panNumber}`;
       }
 
-      if (this.coOwnerToggle.value == true && filingTeamMemberId) {
-        if (this.coOwnerId || this.coFilerId) {
-          param
-        } else {
-          param = param + '&searchAsCoOwner=true';
-        }
-      }
-      else {
-        param;
-      }
-
       console.log('My Params:', param);
-      this.userMsService.getMethodNew(param).subscribe(
+      param= param + `${userFilter}`
+      this.reportService.getMethod(param).subscribe(
         (res: any) => {
           if (res.success == false) {
             this.toastMsgService.alert("error", res.message);
@@ -384,7 +417,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
         ownerUserId: data[i].ownerUserId,
         filerUserId: data[i].filerUserId,
         status: data[i].status,
-        filingTeamMemberId: data[i].filingTeamMemberId
+        filingTeamMemberId: data[i].filingTeamMemberId,
+        leaderName : data[i].leaderName,
+        leaderUserId :data[i].leaderUserId,
       });
     }
     return newData;
@@ -431,6 +466,20 @@ export class FilingsComponent implements OnInit, OnDestroy {
         filterParams: {
           defaultOption: 'startsWith',
           debounceMs: 0,
+        },
+         // code to masking mobile no
+        cellRenderer: (params)=> {
+          const mobileNumber = params.value;
+          if(mobileNumber){
+            if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+              const maskedMobile = this.maskMobileNumber(mobileNumber);
+              return maskedMobile;
+            }else{
+              return mobileNumber;
+            }
+          }else{
+            return '-'
+          }
         },
       },
       {
@@ -496,17 +545,29 @@ export class FilingsComponent implements OnInit, OnDestroy {
           return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
-      // {
-      //   headerName: 'Owner',
-      //   field: 'ownerName',
-      //   cellStyle: { textAlign: 'center' },
-      //   sortable: true,
-      //   filter: 'agTextColumnFilter',
-      //   filterParams: {
-      //     defaultOption: 'startsWith',
-      //     debounceMs: 0,
-      //   },
-      // },
+      {
+        headerName: 'Leader Name',
+        field: 'leaderUserId',
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        } ,
+        valueGetter: function(params) {
+          let createdUserId= parseInt(params?.data?.leaderUserId)
+          let filer1 = filerList;
+          let filer = filer1?.filter((item) => {
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+          console.log('filer', filer);
+          return filer
+        }
+      },
       {
         headerName: 'Filer',
         field: 'filingTeamMemberId',
@@ -1135,24 +1196,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
     const param = `tts/outbound-call`;
     const reqBody = {
       agent_number: agentNumber,
-      customer_number: customerNumber,
+      userId: user.userId,
     };
     console.log('reqBody:', reqBody);
-    // this.userMsService.postMethodAWSURL(param, reqBody).subscribe(
-    //   (result: any) => {
-    //     console.log('Call Result: ', result);
-    //     this.loading = false;
-    //     if (result.success.status) {
-    //       this.toastMsgService.alert('success', result.success.message);
-    //     }
-    //   },
-    //   (error) => {
-    //     this.utilsService.showSnackBar(
-    //       'Error while making call, Please try again.'
-    //     );
-    //     this.loading = false;
-    //   }
-    // );
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
@@ -1208,20 +1254,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       console.log('The dialog was closed');
     });
   }
-  // pageChanged(event) {
-  //   this.config.currentPage = event;
-  //   this.selectedPageNo = event - 1;
-  //   if (this.coOwnerToggle.value == true) {
-  //     this.myItrsList(event - 1, true);
-  //   } else {
-  //     this.myItrsList(event - 1, '');
-  //   }
-  //   // this.myItrsList(
-  //   //   // this.selectedFyYear,
-  //   //   this.selectedPageNo,
-  //   //   this.selectedFilingTeamMemberId
-  //   // );
-  // }
+
 
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
@@ -1241,8 +1274,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
   @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
-  @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.searchParams.selectedStatusId = 'ALL';
     this.config.page = 0;
@@ -1250,21 +1283,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.searchParams.mobileNumber = null;
     this.searchParams.email = null;
     this.searchParams.panNumber = null;
-
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
-
-    if (this.coOwnerDropDown) {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.coOwnerDropDown.resetDropdown();
-      this.coFilerId = null;
-      this.coOwnerId = null;
-      this.searchParams.ownerUserId = loggedInId;
-      this.searchParams.filerUserId = null;
-      this.myItrsList(0, true)
-    } else {
-      this.search();
-    }
   }
 
   eriITRLifeCycleStatus(data) {

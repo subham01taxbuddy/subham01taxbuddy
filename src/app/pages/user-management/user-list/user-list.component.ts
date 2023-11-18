@@ -40,6 +40,8 @@ export class UserListComponent implements OnInit {
   currentUserId: number = 0;
   user_data: any = [];
   key: any;
+  searchBy: any = {};
+  clearUserFilter: number;
   constructor(private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
@@ -76,14 +78,29 @@ export class UserListComponent implements OnInit {
     this.currentUserId = 0;
   }
 
-  advanceSearch(key: any) {
-    this.user_data = [];
-    if (this.searchVal !== "") {
-      if (key === 'emailAddress') {
-        this.searchVal = this.searchVal.toLocaleLowerCase();
+  advanceSearch() {
+    if(Object.keys(this.searchBy).length){
+      this.user_data = [];
+      const searchParam =this.searchBy;
+      const key = Object.keys(searchParam)[0];
+      let value = searchParam[key];
+      if (value !== "") {
+        if (key === 'emailAddress') {
+          value = value.toLocaleLowerCase();
+        }
+        this.getUserSearchList(key, value);
+      }else{
+        this._toastMessageService.alert('error',"Please enter value ");
       }
-      this.getUserSearchList(key, this.searchVal);
+    }else{
+      this._toastMessageService.alert("error",'please select attribute and enter value and then search ' );
     }
+
+  }
+
+  searchByObject(object) {
+    this.searchBy = object;
+    console.log('object from search param ',this.searchBy);
   }
 
   getUserSearchList(key: any, searchValue: any) {

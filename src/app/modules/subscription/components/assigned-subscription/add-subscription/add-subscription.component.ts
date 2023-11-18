@@ -1,11 +1,14 @@
 import { filter } from 'rxjs/operators';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ConfirmModel } from '../assigned-subscription.component';
+import { ReportService } from 'src/app/services/report-service';
+import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
+import { Router } from '@angular/router';
 declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-add-subscription',
@@ -14,7 +17,7 @@ declare function we_track(key: string, value: any);
 })
 export class AddSubscriptionComponent implements OnInit {
   allSubscriptions: any;
-  service: any;
+  service = '';
   serviceDetails: any;
   loading!: boolean;
   loggedInSme: any;
@@ -25,15 +28,70 @@ export class AddSubscriptionComponent implements OnInit {
   subscriptionPlan = new FormControl('', Validators.required);
   selectedPlanInfo: any;
   serviceTypeSelected: boolean;
-  constructor(public dialogRef: MatDialogRef<AddSubscriptionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel, private itrService: ItrMsService, private utilService: UtilsService, private toastMessage: ToastMessageService) {
+  roles: any;
+  isAllowed: boolean = true;
+  smeDetails: any
+  serviceEligibility: any;
+  showMessage = '';
+  partnerType: any;
+  searchAsPrinciple: boolean = false;
+  cancelSubscriptionData: any;
+  constructor(
+    public dialogRef: MatDialogRef<AddSubscriptionComponent>,
+    private dialog: MatDialog,
+    private _toastMessageService: ToastMessageService,
+    private router: Router,
+    private utilsService: UtilsService,
+    private itrMsService: ItrMsService,
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmModel,
+    private itrService: ItrMsService, private utilService: UtilsService,
+    private toastMessage: ToastMessageService, private reportService: ReportService,
+  ) {
     this.getAllPlanInfo();
   }
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     console.log('data -> ', this.data)
-    this.getUserInfoByMobileNum(this.data.mobileNo)
+    this.roles = this.loggedInSme[0]?.roles;
+    this.partnerType = this.loggedInSme[0]?.partnerType;
+    if (this.roles.includes('ROLE_FILER')) {
+      this.isAllowed = false;
+      this.getSmeDetail();
+    }
+    if (this.data.mobileNo) {
+      this.getUserInfoByMobileNum(this.data.mobileNo);
+    } else {
+      this.getUserInfoByMobileNum('', this.data.userId);
+    }
+
+  }
+
+  getSmeDetail() {
+    // https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000'
+    let loggedInSmeUserId = this.loggedInSme[0]?.userId;
+    let param = `/bo/sme-details-new/${loggedInSmeUserId}`
+    this.reportService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.smeDetails = response.data[0];
+        console.log('new sme', this.smeDetails);
+        this.serviceEligibility = this.smeDetails.serviceEligibility_ITR;
+        this.showMessage = 'Disabled plans are not available in your eligibility please contact with your leader'
+      }
+    })
+  }
+
+  isPlanEnabled(plan: any): boolean {
+    if (this.roles.includes('ROLE_FILER')) {
+      if (this.smeDetails?.skillSetPlanIdList) {
+        const planId = plan.planId;
+        return this.smeDetails?.skillSetPlanIdList.includes(planId);
+      }
+      return false;
+    } else {
+      return true;
+    }
   }
 
   getAllPlanInfo() {
@@ -58,29 +116,45 @@ export class AddSubscriptionComponent implements OnInit {
     console.log('selectedPlanInfo -> ', this.selectedPlanInfo);
   }
 
-  getUserInfoByMobileNum(number) {
-    console.log('number', number)
+  getUserInfoByMobileNum(number, userId?) {
+    // https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId
+    let filter = '';
+    if (number) {
+      filter = '&mobileNumber=' + number
+    } else {
+      filter = '&userId=' + userId
+    }
+    let userFilter = ''
+    if (this.roles.includes('ROLE_LEADER')) {
+      userFilter += `&leaderUserId=${loggedInSmeUserId}`;
+
+    }
+    if (this.roles.includes('ROLE_FILER') && this.partnerType != "PRINCIPAL") {
+      userFilter += `&filerUserId=${loggedInSmeUserId}`;
+    }
+
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL") {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeUserId}`;
+    }
+
     this.loading = true;
-    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + number;
-    this.itrService.getMethod(param).subscribe((response: any) => {
+    let param = `/bo/subscription-dashboard-new?page=0&pageSize=20${userFilter}${filter}`;
+    this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      console.log('Get user  by mobile number responce: ', response);
-      this.allSubscriptions = response.data
-      console.log("All Sub", this.allSubscriptions)
-      let smeSelectedPlan = this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan);
-      let userSelectedPlan = this.allSubscriptions?.map((item: any) => item?.userSelectedPlan);
-      if (smeSelectedPlan) {
-        this.service = smeSelectedPlan[0]?.servicesType;
-        this.serviceDetails = smeSelectedPlan[0]?.name;
-      } else if (userSelectedPlan) {
-        this.service = userSelectedPlan[0]?.servicesType;
-        this.serviceDetails = userSelectedPlan[0]?.name;
-      } else {
-        this.service = this.allSubscriptions?.map((item: any) => item?.item?.service);
-        this.serviceDetails = this.allSubscriptions?.map((item: any) => item?.item?.serviceDetail);
+      this.allSubscriptions = response.data.content
+      let smeSelectedPlan = [];
+      smeSelectedPlan = [...smeSelectedPlan, ... this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan).filter(data => {
+        if (data) return data;
+      })];
+      smeSelectedPlan = [...smeSelectedPlan, ...this.allSubscriptions?.map((item: any) => item?.userSelectedPlan).filter(data => {
+        if (data) return data;
+      })];
+      if (smeSelectedPlan.length) {
+        let itrPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'ITR')
+        this.service = itrPlanDetails[0]?.servicesType;
+        this.serviceDetails = itrPlanDetails[0]?.name;
       }
-      console.log("services of user", this.service)
     })
   }
 
@@ -92,39 +166,100 @@ export class AddSubscriptionComponent implements OnInit {
   // }
 
   createSubscription() {
-    this.loading = true
     if (this.utilService.isNonEmpty(this.selectedPlanInfo)) {
-      console.log('selectedPlanInfo -> ', this.selectedPlanInfo);
-      let param = '/subscription/recalculate';
-      // const smeInfo = JSON.parse(localStorage.getItem('UMD'));
-      let reqBody = {
-        userId: this.data.userId,
-        planId: this.selectedPlanInfo.planId,
-        selectedBy: "SME", // USER or SME
-        smeUserId: this?.loggedInSme[0]?.userId
+      if (this.selectedPlanInfo.servicesType === 'ITR') {
+        // https://dev-api.taxbuddy.com/report/bo/subscription/cancel/requests?page=0&pageSize=5&mobileNumber=1348972580
+        let param = `/bo/subscription/cancel/requests?page=0&pageSize=5&serviceType=ITR&mobileNumber=${this.data.mobileNo}`
+
+        this.loading = true;
+        this.reportService.getMethod(param).subscribe(
+          (response: any) => {
+            this.loading = false;
+            if (response.success) {
+              if (response?.data?.content instanceof Array && response?.data?.content?.length > 0) {
+                this.cancelSubscriptionData = response.data.content[0];
+                if (this.cancelSubscriptionData?.cancellationStatus === 'PENDING') {
+                  let dialogRef;
+                  dialogRef = this.dialog.open(ConfirmDialogComponent, {
+                    data: {
+                      title: 'Confirmation',
+                      message: 'This user has an ITR subscription in deletion process pending approval from leader. Creating another subscription for ITR service will RECOVER the earlier subscription and remove it from leaders  deletion approval process. Do you want to continue?',
+                    },
+                  }); dialogRef.afterClosed().subscribe(result => {
+                    if (result === 'YES') {
+                      this.removeCancelSubscription();
+                    } else {
+                      this.dialogRef.close();
+                      this.router.navigate(['subscription/assigned-subscription']);
+                    }
+                  });
+                } else {
+                  this.updateSubscription();
+                }
+              } else {
+                this.updateSubscription();
+                if (response.message !== null) { this._toastMessageService.alert('error', response.message); }
+                else { this._toastMessageService.alert('error', 'No Data Found'); }
+              }
+            } else {
+              this._toastMessageService.alert("error", response.message);
+            }
+          },
+          (error) => {
+            this.loading = false;
+            this._toastMessageService.alert("error", "Error while fetching subscription cancellation requests: Not_found: data not found");
+          }
+        );
+
+      } else {
+        this.updateSubscription();
       }
-      console.log('Req Body: ', reqBody)
-      this.itrService.postMethod(param, reqBody).subscribe((res: any) => {
-        this.loading = false
-        we_track('Create Subscription', {
-          'User Number': this.data.mobileNo,
-          'Service': this.selectedPlanInfo?.servicesType + ' : ' + this.selectedPlanInfo?.name,
-        });
-        console.log('After subscription plan added res:', res);
-        this.dialogRef.close({ event: 'close', data: res });
-        this.toastMessage.alert("success", "Subscription created successfully.")
-        let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
-        console.log('subInfo: ', subInfo)
-      }, error => {
-        this.loading = false
-        console.log('error -> ', error);
-        this.toastMessage.alert("error", this.utilService.showErrorMsg(error.error.status))
-      })
-    }
-    else {
+    } else {
       this.loading = false
       this.toastMessage.alert("error", "Select Plan.")
     }
+  }
+
+  updateSubscription() {
+    this.loading = true;
+    let param = '/subscription/recalculate';
+    let reqBody = {
+      userId: this.data.userId,
+      planId: this.selectedPlanInfo.planId,
+      selectedBy: "SME",
+      smeUserId: this?.loggedInSme[0]?.userId
+    }
+    this.itrService.postMethod(param, reqBody).subscribe((res: any) => {
+      this.loading = false;
+      we_track('Create Subscription', {
+        'User Number': this.data.mobileNo,
+        'Service': this.selectedPlanInfo?.servicesType + ' : ' + this.selectedPlanInfo?.name,
+      });
+      this.dialogRef.close({ event: 'close', data: res });
+      this.toastMessage.alert("success", "Subscription created successfully.")
+      let subInfo = this.selectedBtn + ' userId: ' + this.data.userId;
+    }, error => {
+      this.loading = false
+      this.toastMessage.alert("error", this.utilService.showErrorMsg(error.error.status))
+    })
+  }
+
+  removeCancelSubscription() {
+    // https://dev-api.taxbuddy.com/itr/subscription/cancellation?subscriptionId=2427
+    const param = '/subscription/cancellation?subscriptionId=' + this.cancelSubscriptionData?.subscriptionId
+    this.loading = true;
+    this.itrMsService.patchMethod(param, '').subscribe((result: any) => {
+      this.loading = false;
+      if (result.success) {
+        this.updateSubscription();
+        this.utilsService.showSnackBar(result.message)
+      } else {
+        this.utilsService.showSnackBar(result.message)
+      }
+    }, err => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Failed to delete previous subscription.')
+    });
   }
 
   showSelectedServicePlans(serviceType) {

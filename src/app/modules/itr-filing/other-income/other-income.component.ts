@@ -40,6 +40,22 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       label: 'Royalty Against Patent (80RRB)',
     },
     {
+      value: 'INTEREST_ACCRUED_10_11_I_P',
+      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(11)',
+    },
+    {
+      value: 'INTEREST_ACCRUED_10_11_II_P',
+      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(11)',
+    },
+    {
+      value: 'INTEREST_ACCRUED_10_12_I_P',
+      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(12)',
+    },
+    {
+      value: 'INTEREST_ACCRUED_10_12_II_P',
+      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(12)',
+    },
+    {
       value: 'ANY_OTHER',
       label: 'Any Other Income',
     },
@@ -183,6 +199,18 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.otherIncomesFormArray = this.createOtherIncomeForm();
     this.otherIncomeFormGroup = this.fb.group({
       otherIncomes: this.otherIncomesFormArray,
+      giftTax: this.fb.group({
+        aggregateValueWithoutConsideration: [],
+        aggregateValueWithoutConsiderationNotTaxable: [false],
+        immovablePropertyWithoutConsideration: [],
+        immovablePropertyWithoutConsiderationNotTaxable: [false],
+        immovablePropertyInadequateConsideration: [],
+        immovablePropertyInadequateConsiderationNotTaxable: [false],
+        anyOtherPropertyWithoutConsideration: [],
+        anyOtherPropertyWithoutConsiderationNotTaxable: [false],
+        anyOtherPropertyInadequateConsideration: [],
+        anyOtherPropertyInadequateConsiderationNotTaxable: [false],
+      }),
       dividendIncomes: this.fb.group({
         quarter1: [null],
         quarter2: [null],
@@ -212,8 +240,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.setOtherIncomeValues();
     this.setExemptIncomeValues();
     this.setAgriIncValues();
+    this.validateIncomeValueOnBlur();
   }
-
+  
   private createOtherIncomeForm() {
     const data = [];
     for (let i = 0; i < this.otherIncomeDropdown.length; i++) {
@@ -329,9 +358,25 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    let giftTax = this.otherIncomeFormGroup.get('giftTax') as FormGroup;
+
+    this.Copy_ITR_JSON.giftTax = {
+      aggregateValueWithoutConsideration: giftTax.get("aggregateValueWithoutConsideration").value,
+      aggregateValueWithoutConsiderationNotTaxable: giftTax.get("aggregateValueWithoutConsiderationNotTaxable").value,
+      immovablePropertyWithoutConsideration: giftTax.get("immovablePropertyWithoutConsideration").value,
+      immovablePropertyWithoutConsiderationNotTaxable: giftTax.get("immovablePropertyWithoutConsiderationNotTaxable").value,
+      immovablePropertyInadequateConsideration: giftTax.get("immovablePropertyInadequateConsideration").value,
+      immovablePropertyInadequateConsiderationNotTaxable: giftTax.get("immovablePropertyInadequateConsiderationNotTaxable").value,
+      anyOtherPropertyWithoutConsideration: giftTax.get("anyOtherPropertyWithoutConsideration").value,
+      anyOtherPropertyWithoutConsiderationNotTaxable: giftTax.get("anyOtherPropertyWithoutConsiderationNotTaxable").value,
+      anyOtherPropertyInadequateConsideration: giftTax.get("anyOtherPropertyInadequateConsideration").value,
+      anyOtherPropertyInadequateConsiderationNotTaxable: giftTax.get("anyOtherPropertyInadequateConsiderationNotTaxable").value,
+    }
+    
     let dividendIncomes = this.otherIncomeFormGroup.controls[
       'dividendIncomes'
     ] as FormGroup;
+
     this.Copy_ITR_JSON.dividendIncomes = [
       {
         income: dividendIncomes.controls['quarter1'].value,
@@ -359,7 +404,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         quarter: 5,
       },
     ];
+
     console.log('Copy ITR JSON', this.Copy_ITR_JSON);
+    
     this.loading = true;
     this.Copy_ITR_JSON.incomes = this.Copy_ITR_JSON.incomes?.filter(
       (item: any) =>
@@ -369,7 +416,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         item.incomeType !== 'ANY_OTHER' &&
         item.incomeType !== 'FAMILY_PENSION' &&
         item.incomeType !== 'ROYALTY_US_80RRB' &&
-        item.incomeType !== 'ROYALTY_US_80QQB'
+        item.incomeType !== 'ROYALTY_US_80QQB' && 
+        item.incomeType === 'INTEREST_ACCRUED_10_11_I_P' &&
+        item.incomeType === 'INTEREST_ACCRUED_10_11_II_P' &&
+        item.incomeType === 'INTEREST_ACCRUED_10_12_I_P' &&
+        item.incomeType === 'INTEREST_ACCRUED_10_12_II_P'
     );
     if (!this.Copy_ITR_JSON.incomes) {
       this.Copy_ITR_JSON.incomes = [];
@@ -541,6 +592,10 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
           item.incomeType === 'TAX_REFUND_INTEREST' ||
           item.incomeType === 'ROYALTY_US_80RRB' ||
           item.incomeType === 'ROYALTY_US_80QQB' ||
+          item.incomeType === 'INTEREST_ACCRUED_10_11_I_P' ||
+          item.incomeType === 'INTEREST_ACCRUED_10_11_II_P' ||
+          item.incomeType === 'INTEREST_ACCRUED_10_12_I_P' ||
+          item.incomeType === 'INTEREST_ACCRUED_10_12_II_P' ||
           item.incomeType === 'ANY_OTHER'
       );
       let otherIncomesFormArray = this.otherIncomeFormGroup.controls[
@@ -568,6 +623,21 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       // if (sec17_1.length > 0) {
       //   this.summarySalaryForm.controls['sec17_1'].setValue(sec17_1[0].OthNatOfInc);
       // }
+    }
+
+    if(this.ITR_JSON.giftTax != null){
+      let giftTaxJson =  this.ITR_JSON.giftTax;
+      let giftTax = this.otherIncomeFormGroup.get('giftTax') as FormGroup;
+      giftTax.get("aggregateValueWithoutConsideration").setValue(giftTaxJson.aggregateValueWithoutConsideration);
+      giftTax.get("aggregateValueWithoutConsiderationNotTaxable").setValue(giftTaxJson.aggregateValueWithoutConsiderationNotTaxable);
+      giftTax.get("immovablePropertyWithoutConsideration").setValue(giftTaxJson.immovablePropertyWithoutConsideration);
+      giftTax.get("immovablePropertyWithoutConsiderationNotTaxable").setValue(giftTaxJson.immovablePropertyWithoutConsiderationNotTaxable);
+      giftTax.get("immovablePropertyInadequateConsideration").setValue(giftTaxJson.immovablePropertyInadequateConsideration);
+      giftTax.get("immovablePropertyInadequateConsiderationNotTaxable").setValue(giftTaxJson.immovablePropertyInadequateConsiderationNotTaxable);
+      giftTax.get("anyOtherPropertyWithoutConsideration").setValue(giftTaxJson.anyOtherPropertyWithoutConsideration);
+      giftTax.get("anyOtherPropertyWithoutConsiderationNotTaxable").setValue(giftTaxJson.anyOtherPropertyWithoutConsiderationNotTaxable);
+      giftTax.get("anyOtherPropertyInadequateConsideration").setValue(giftTaxJson.anyOtherPropertyInadequateConsideration);
+      giftTax.get("anyOtherPropertyInadequateConsiderationNotTaxable").setValue(giftTaxJson.anyOtherPropertyInadequateConsiderationNotTaxable);
     }
 
     if (this.ITR_JSON.dividendIncomes instanceof Array) {
@@ -794,4 +864,30 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     }
     return total;
   }
+
+  validateIncomeValueOnBlur(){
+    if(this.otherIncomeFormGroup.get('otherIncomes').value.some((otherIncome: { incomeType: string, incomeValue:any})=> (otherIncome.incomeType === 'INTEREST_ACCRUED_10_11_I_P' || otherIncome.incomeType === 'INTEREST_ACCRUED_10_11_II_P' || otherIncome.incomeType === 'INTEREST_ACCRUED_10_12_I_P'|| otherIncome.incomeType === 'INTEREST_ACCRUED_10_12_II_P') && otherIncome.incomeValue !== null && otherIncome.incomeValue !== '')){
+      const otherIncomes = this.otherIncomeFormGroup.get('otherIncomes') as FormArray;
+      for (let i = 0; i < otherIncomes.length; i++) {
+        const otherIncome = otherIncomes.at(i) as FormGroup;
+        if((otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_I_P' || 
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_II_P' ||
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_I_P' || 
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_II_P') && (otherIncome.get('incomeValue').value === '' || otherIncome.get('incomeValue').value === null)){
+          otherIncome.disable();
+       }
+      }
+    } else{
+      const otherIncomes = this.otherIncomeFormGroup.get('otherIncomes') as FormArray;
+      for (let i = 0; i < otherIncomes.length; i++) {
+        const otherIncome = otherIncomes.at(i) as FormGroup;
+        if(otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_I_P' || 
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_II_P' ||
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_I_P' || 
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_II_P'){
+          otherIncome.enable();
+       }
+    }
+  }
+}
 }

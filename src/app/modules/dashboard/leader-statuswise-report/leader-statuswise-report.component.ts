@@ -11,6 +11,7 @@ import { LeaderListDropdownComponent } from '../../shared/components/leader-list
 import { FormControl } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -52,6 +53,25 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   allDetails:any;
   today: Date;
   data:any;
+  serviceTypes = [
+    {
+      label: 'ITR',
+      value: 'ITR',
+    },
+    // {
+    //   label: 'GST',
+    //   value: 'GST',
+    // },
+    // {
+    //   label: 'NOTICE',
+    //   value: 'NOTICE',
+    // },
+    // {
+    //   label: 'TPA',
+    //   value: 'TPA',
+    // },
+  ];
+  selectedService = new FormControl('');
 
   constructor(
     private userMsService: UserMsService,
@@ -63,53 +83,54 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this.today = new Date();
+    this.selectedService.setValue(this.serviceTypes[0].value);
    }
 
   ngOnInit() {
     this.loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
 
-    if(this.roles.includes('ROLE_OWNER')){
-      this.ownerId= this.loggedInSmeUserId;
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId= this.loggedInSmeUserId;
        this.search();
     }
 
   }
 
   search(){
-    if(this.leaderId || this.ownerId){
+    if(this.leaderId || this.filerId){
       this.getStatusWiseReport();
     }
     else{
-      this. _toastMessageService.alert("error","Please Select Leader / Owner to see the records");
+      this. _toastMessageService.alert("error","Please Select Leader / Filer to see the records");
       return;
     }
 
   }
 
   getStatusWiseReport(){
-    // https://uat-api.taxbuddy.com/report/dashboard/status-wise-report?from=2023-07-03&to=2023-07-03&leaderUserId=7002
+   //'https://uat-api.taxbuddy.com/report/bo/dashboard/status-wise-report?fromDate=2023-04-17&toDate=2023-11-17&leaderUserId=14134' \
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
     let param=''
     let userFilter = '';
-    if (this.leaderId && !this.ownerId) {
+    if (this.leaderId && !this.filerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.ownerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+    let serviceFilter = '';
+    if(this.selectedService.value){
+      serviceFilter +=`&serviceType=${this.selectedService.value}`
     }
 
-    if(this.roles.includes('ROLE_OWNER')){
-      userFilter += `&ownerUserId=${this.loggedInSmeUserId}`
-    }
-    // else{
-    //   userFilter += `&leaderUserId=${this.loggedInSmeUserId}`;
-    // }
-
-    param =`/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
+    param =`/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
 
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if (response.success) {
@@ -136,14 +157,14 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     } else if (this?.allDetails?.statusWiseData?.length > 0 && this?.allDetails?.statusWiseData[0].hasOwnProperty('filerName')) {
       return 'Partner/Filer';
     }else{
-      return 'Owners / Partner Name';
+      return 'Leaders/Filer Name';
     }
      // Return a default column name if needed
   }
 
   getCellValue(item): string {
-    if (item.hasOwnProperty('ownerName')) {
-      return item.ownerName;
+    if (item.hasOwnProperty('leaderName')) {
+      return item.leaderName;
     } else if (item.hasOwnProperty('filerName')) {
       return item.filerName;
     }
@@ -152,23 +173,26 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
 
   leaderId: number;
-  ownerId: number;
+  filerId: number;
   agentId: number;
+  searchAsPrinciple:boolean =false;
 
-  fromSme1(event, isOwner) {
-     console.log('sme-drop-down', event, isOwner);
-     if (isOwner) {
+  fromLeader(event) {
+    if(event) {
       this.leaderId = event ? event.userId : null;
-    } else {
-      this.ownerId = event ? event.userId : null;
     }
-    if (this.ownerId) {
-      this.agentId = this.ownerId;
-    } else if (this.leaderId) {
-      this.agentId = this.leaderId;
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
+  }
+  fromPrinciple(event){
+    if(event){
+      if (event?.partnerType === 'PRINCIPAL') {
+        this.filerId = event ? event.userId : null;
+
+        this.searchAsPrinciple = true;
+      } else {
+        this.filerId = event ? event.userId : null;
+
+        this.searchAsPrinciple = false;
+      }
     }
   }
 
@@ -176,32 +200,36 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     this.loading = true;
     let param=''
     let userFilter = '';
-    if (this.leaderId && !this.ownerId) {
+    if (this.leaderId && !this.filerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.ownerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+    let serviceFilter = '';
+    if(this.selectedService.value){
+      serviceFilter +=`&serviceType = ${this.selectedService.value}`
     }
 
-    if(this.roles.includes('ROLE_OWNER')){
-      userFilter += `&ownerUserId=${this.loggedInSmeUserId}`
-    }
 
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    param =`/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
+    param =`/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
 
     // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'status-wise-report', '', {});
     this.loading = false;
   }
 
-  @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
-    this?.leaderDropDown?.resetDropdown();
-    if(this.roles.includes('ROLE_OWNER')){
+    this?.smeDropDown?.resetDropdown();
+    if(this.roles.includes('ROLE_LEADER')){
       this.search();
     }
     else{

@@ -1,10 +1,12 @@
 import { DatePipe, formatDate } from '@angular/common';
-import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
+import * as moment from 'moment';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
+import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
@@ -52,9 +54,18 @@ export class CreditNoteComponent implements OnInit {
     pageSize: 20,
     mobileNumber: null,
     emailId: null,
+    invoiceNo:null,
   };
   config: any;
   creditNoteInfo: any = [];
+  searchAsPrinciple :boolean =false;
+  searchBy: any = {};
+  searchMenus = [
+    { value: 'mobile', name: 'Mobile No' },
+    { value: 'email', name: 'Email' },
+    { value: 'invoiceNo', name: 'Invoice No' },
+  ];
+  clearUserFilter: number;
 
   creditNoteFormGroup: FormGroup = this.fb.group({
     mobile: new FormControl(''),
@@ -131,19 +142,95 @@ export class CreditNoteComponent implements OnInit {
   ngOnInit() {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
   }
+  searchByObject(object) {
+    this.searchBy = object;
+    console.log('object from search param ',this.searchBy);
+  }
+
+  filerId: number;
+  leaderId: number;
+  agentId: number;
+
+  fromSme(event, isOwner,fromPrinciple?) {
+    console.log('sme-drop-down', event, isOwner);
+    if (isOwner) {
+      this.leaderId = event ? event.userId : null;
+    } else {
+      if(fromPrinciple){
+        if (event?.partnerType === 'PRINCIPAL') {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = true;
+        } else {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }else{
+        if(event){
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }
+    }
+    if (this.filerId) {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+      // this.filerUserId = this.filerId;
+    } else if (this.leaderId) {
+      this.agentId = this.leaderId;
+      // this.getInvoice();
+    } else {
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
+    // this.getInvoice();
+  }
 
   getCreditNote(pageChange?){
-    //'https://uat-api.taxbuddy.com/report/credit-note'
+    // 'https://dev-api.taxbuddy.com/report/bo/credit-note?fromDate=2022-01-10&toDate=2023-10-27' \
     if (!pageChange) {
       this.cacheManager.clearCache();
-      console.log('in clear cache')
     }
     this.loading = true;
     let fromData =this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
      let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
 
+     if(this.searchBy?.mobile){
+      this.mobile.setValue(this.searchBy?.mobile)
+    }
+    if(this.searchBy?.email){
+      this.email.setValue(this.searchBy?.email)
+    }
+    if(this.searchBy?.invoiceNo){
+      this.invoiceNo.setValue(this.searchBy?.invoiceNo)
+    }
+
+    let userFilter = '';
+
+    if ((this.leaderId && !this.filerId)) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+
+    let mobileFilter = '';
+    if (this.utilsService.isNonEmpty(this.mobile.value) && this.mobile.valid) {
+      mobileFilter = '&mobile=' + this.mobile.value;
+    }
+    let emailFilter = '';
+    if (this.utilsService.isNonEmpty(this.email.value) && this.email.valid) {
+      emailFilter = '&email=' + this.email.value.toLocaleLowerCase();
+    }
+    let invoiceFilter = '';
+    if (this.utilsService.isNonEmpty(this.invoiceNo.value)) {
+      invoiceFilter = '&invoiceNo=' + this.invoiceNo.value;
+    }
+
     let data = this.utilsService.createUrlParams(this.searchParam);
-    let param =  `/credit-note?fromDate=${fromData}&toDate=${toData}&${data}`
+    let param =  `/bo/credit-note?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${mobileFilter}${emailFilter}${invoiceFilter}`
 
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -434,14 +521,15 @@ export class CreditNoteComponent implements OnInit {
     }
 
   }
-
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
+    this?.smeDropDown?.resetDropdown();
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
-
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
     this.mobile.setValue(null);
