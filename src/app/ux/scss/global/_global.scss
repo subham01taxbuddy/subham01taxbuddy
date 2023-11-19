@@ -148,3 +148,20 @@ main {
     justify-content: space-between;
     align-items: center;
 }
+
+.action-items {
+    a {
+        display: inline-block;
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+    .action__edit {
+        color: $color-theme;
+    }
+    .action__delete {
+        color: red;
+    }
+}
+.light-gray {
+    color: $color-gray;
+}

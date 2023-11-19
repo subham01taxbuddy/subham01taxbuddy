@@ -25,7 +25,7 @@ import { ScheduleTrComponent } from './schedule-tr/schedule-tr.component';
 import { ScheduleFaComponent } from './schedule-fa/schedule-fa.component';
 import { ScheduleVdaComponent } from './schedule-vda/schedule-vda.component';
 import { ListScheduleComponent } from './list-schedule/list-schedule.component';
-
+import {MatTabsModule} from '@angular/material/tabs';
 @NgModule({
   declarations: [
     UxComponent,
@@ -54,7 +54,8 @@ import { ListScheduleComponent } from './list-schedule/list-schedule.component';
   ],
   imports: [
     CommonModule,
-    UxRoutingModule
+    UxRoutingModule,
+    MatTabsModule
   ]
 })
 export class UxModule { }
