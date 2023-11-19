@@ -17,6 +17,9 @@ import { InvestmentsDeductionsComponent } from './investments-deductions/investm
 import {PersonalInfoComponent} from "./personal-info/personal-info.component";
 import { MoreInfoScheduleAlComponent } from './more-info-schedule-al/more-info-schedule-al.component';
 import { MoreInfoCflComponent } from './more-info-cfl/more-info-cfl.component';
+import { CgUnlistedSecurityComponent } from './cg-unlisted-security/cg-unlisted-security.component';
+import { CgBondsDebtsComponent } from './cg-bonds-debts/cg-bonds-debts.component';
+import { CgZeroCouponsComponent } from './cg-zero-coupons/cg-zero-coupons.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +38,9 @@ import { MoreInfoCflComponent } from './more-info-cfl/more-info-cfl.component';
     InvestmentsDeductionsComponent,
     MoreInfoScheduleAlComponent,
     MoreInfoCflComponent,
+    CgUnlistedSecurityComponent,
+    CgBondsDebtsComponent,
+    CgZeroCouponsComponent,
   ],
   imports: [
     CommonModule,
