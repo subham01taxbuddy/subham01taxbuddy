@@ -16,6 +16,7 @@ import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
 import { InvestmentsDeductionsComponent } from './investments-deductions/investments-deductions.component';
 import {PersonalInfoComponent} from "./personal-info/personal-info.component";
 import { MoreInfoScheduleAlComponent } from './more-info-schedule-al/more-info-schedule-al.component';
+import { MoreInfoCflComponent } from './more-info-cfl/more-info-cfl.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { MoreInfoScheduleAlComponent } from './more-info-schedule-al/more-info-s
     BalanceSheetComponent,
     InvestmentsDeductionsComponent,
     MoreInfoScheduleAlComponent,
+    MoreInfoCflComponent,
   ],
   imports: [
     CommonModule,
