@@ -19,10 +19,25 @@
     }
 
     &.btn__add {
-        padding-left: 20px;
+        padding-left: 30px;
 
         &::before {
             content: "\f067";
+            position: absolute;
+            left: 10px;
+            line-height: 28px;
+            top: 10px;
+            height: 20px;
+            width: 20px;
+            font-family: fontawesome;
+        }
+    }
+
+    &.btn__edit {
+        padding-left: 20px;
+
+        &::before {
+            content: "\f044";
             position: absolute;
             left: 10px;
             line-height: 28px;
@@ -105,7 +120,9 @@
 
 .btn__default {
     background-color: transparent;
-    border: 2px solid $color-theme;
+    border: 1px solid $color-theme;
+    color: $color-theme;
+
 }
 
 .btn__default:active,
