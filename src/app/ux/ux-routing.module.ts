@@ -12,6 +12,7 @@ import {OtherAssetsComponent} from "./other-assets/other-assets.component";
 import {OtherIncomeComponent} from "./other-income/other-income.component";
 import {PresumptiveIncomeComponent} from "./presumptive-income/presumptive-income.component";
 import {SecuritiesComponent} from "./securities/securities.component";
+import { MoreInfoScheduleAlComponent } from './more-info-schedule-al/more-info-schedule-al.component';
 import {SpeculativeIncomeComponent} from "./speculative-income/speculative-income.component";
 
 const routes: Routes = [
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: 'presumptive-income', component: PresumptiveIncomeComponent},
   { path: 'speculative-income', component: SpeculativeIncomeComponent},
   { path: 'securities', component: SecuritiesComponent},
+  { path: 'more-info-schedule-al', component: MoreInfoScheduleAlComponent},
 ];
 
 @NgModule({
