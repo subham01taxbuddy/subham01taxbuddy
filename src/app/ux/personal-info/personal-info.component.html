@@ -1,6 +1,6 @@
 <div class="page-wrapper">
 
-  <!-- left side bar start -->
+  <!-- left side bar start -->/
   <aside class="aside-left">
     <div class="frameL">
 
@@ -79,12 +79,12 @@
             <div class="accordion__item-body">
               <div class="div-6">
                 <div class="form-field">
-                  <div><span class="span">PAN Card </span> <span class="text-wrapper-2">*</span></div>
+                  <div><span class="span">PAN Number </span> <span class="text-wrapper-2">*</span></div>
                   <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp"
                     placeholder="CFGHT8143N">
                 </div>
                 <div class="form-field">
-                  <div><span class="span">Mobile No. </span> <span class="text-wrapper-2">*</span></div>
+                  <div><span class="span">Mobile Number </span> <span class="text-wrapper-2">*</span></div>
                   <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp"
                     placeholder="+91 | 9090909090">
                 </div>
@@ -119,29 +119,35 @@
                 </div>
                 <div class="form-field">
                   <div><span class="span">Residensial Status </span> <span class="text-wrapper-2">*</span></div>
-                  <select class="form-control inpplac" id="exampleFormControlSelect1">
-                    <option>Select</option>
-                    <option>2</option>
-                    <option>3</option>
-                  </select>
+                  <div class="form-control-wrapper select_arrow">
+                    <select class="form-control inpplac " id="exampleFormControlSelect1">
+                      <option>Select</option>
+                      <option>2</option>
+                      <option>3</option>
+                    </select>
+                  </div>
                 </div>
                 <div class="form-field">
                   <div><span class="span">Employer Catagory </span> <span class="text-wrapper-2">*</span></div>
-                  <select class="form-control inpplac" id="exampleFormControlSelect1">
-                    <option>Select</option>
-                    <option>2</option>
-                    <option>3</option>
-                  </select>
+                  <div class="form-control-wrapper select_arrow">
+                    <select class="form-control inpplac " id="exampleFormControlSelect1">
+                      <option>Select</option>
+                      <option>2</option>
+                      <option>3</option>
+                    </select>
+                  </div>
                 </div>
               </div>
               <div class="div-6">
                 <div class="form-field">
                   <div><span class="span">Return Type </span> <span class="text-wrapper-2">*</span></div>
-                  <select class="form-control inpplac" id="exampleFormControlSelect1">
-                    <option>Select</option>
-                    <option>2</option>
-                    <option>3</option>
-                  </select>
+                  <div class="form-control-wrapper select_arrow">
+                    <select class="form-control inpplac " id="exampleFormControlSelect1">
+                      <option>Select</option>
+                      <option>2</option>
+                      <option>3</option>
+                    </select>
+                  </div>
                 </div>
                 <div class="form-field">
                   <div><span class="span">Adhar Number</span> <span class="text-wrapper-2">*</span></div>
@@ -155,24 +161,25 @@
                 </div>
               </div>
               <div class="div-6">
-
                 <div class="form-field">
                   <div><span class="span">Date Of Birth</span> <span class="text-wrapper-2">*</span></div>
-                  <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp"
-                    placeholder="Mumbai">
+                  <div class="form-control-wrapper datepicker">
+                    <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                      aria-describedby="emailHelp">
+                  </div>
                 </div>
                 <div class="form-field">
                   <div><span class="span">Gender</span> <span class="text-wrapper-2">*</span></div>
-                  <select class="form-control inpplac" id="exampleFormControlSelect1">
-                    <option>Select</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Other</option>
-                  </select>
+                  <div class="radio_group">
+                    <input type="radio" class="radio_input" value="Yes">Male
+                    <input type="radio" class="radio_input" value="No">Female
+                    <input type="radio" class="radio_input" value="No">Other
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
           <div class="accordion-item ">
             <h2 class="accordion__item-title">Personal Details</h2>
             <div class="accordion__item-body divider_border">
@@ -187,17 +194,24 @@
                 </div>
                 <div class="form-field">
                   <div><span class="span">Select Country </span> <span class="text-wrapper-2">*</span></div>
-                  <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp"
-                    placeholder="">
+                  <div class="form-control-wrapper select_arrow">
+                    <select class="form-control inpplac " id="exampleFormControlSelect1">
+                      <option>Select</option>
+                      <option>2</option>
+                      <option>3</option>
+                    </select>
+                  </div>
                 </div>
 
                 <div class="form-field">
                   <div><span class="span">Select State </span> <span class="text-wrapper-2">*</span></div>
-                  <select class="form-control inpplac" id="exampleFormControlSelect1">
-                    <option>MH</option>
-                    <option>2</option>
-                    <option>3</option>
-                  </select>
+                  <div class="form-control-wrapper select_arrow">
+                    <select class="form-control inpplac " id="exampleFormControlSelect1">
+                      <option>Select</option>
+                      <option>2</option>
+                      <option>3</option>
+                    </select>
+                  </div>
                 </div>
                 <div class="form-field">
                   <div><span class="span">City</span> <span class="text-wrapper-2">*</span></div>
@@ -228,7 +242,7 @@
               <div class="div-11">
                 <h3>Bank Details</h3>
                 <div class="frame-wrapper-3">
-                  <button class="btn__off_white">+ Add Bank</button>
+                  <button class="btn__white">+ Add Bank</button>
                 </div>
               </div>
               <div>
@@ -261,7 +275,7 @@
                         <input type="checkbox" />
                       </td>
                       <td>
-                        <input type="checkbox" />
+                        <i class="fa-solid fa-trash-can"></i>
                       </td>
                     </tr>
                   </tbody>
@@ -270,64 +284,341 @@
             </div>
             <div class="accordion__item-body divider_border">
               <h3>Filling Section</h3>
-              <div class="surround_text">
-                Are you filing return of income under Seventh proviso to section 139(1) but otherwise not required to
-                furnish return of income?
-              </div>
-              <div class="surround_text">
-                Has incurred expenditure of an amount or aggregate of the amounts exceeding 2 lakh rupees for himself or
-                any other person for travel to a foreign country
-              </div>
-              <div class="surround_text">
-                Has incurred expenditure of an amount or aggregate of the amounts exceeding 1 lakh rupees towards
-                consumption of electricity
-              </div>
-              <div class="surround_text">
-                Fulfils such other conditions as may be prescribed under Rule 12AB
-              </div>
-              <div class="surround_text">
-                Has deposited an amount or aggregate of the amounts exceeding one crore rupees in one or more current
-                accounts maintained with a banking company or a co-operative bank
-              </div>
-            </div>
-            <div class="accordion__item-body divider_border">
-              <h3>Accounting Information</h3>
-              <div class="surround_text">
-                <div class="div-11">
-                  Are you liable to maintain accounts as per section 44AA?
-                  <input type="radio" class="input__radio">
-                  <input type="radio" class="input__radio">
+              <div class="White_box">
+                <div class="row mb-10">
+                  <div class="col-10 ">
+                    <p><span class="span"> Are you filing return of income under Seventh proviso to section 139(1) but
+                        otherwise not required to
+                        furnish return of income?</span></p>
+                  </div>
+                  <div class="col-2">
+                    <div class="radio_group">
+                      <input type="radio" class="radio_input" value="Yes">Yes
+                      <input type="radio" class="radio_input" value="No">No
+                    </div>
+                  </div>
                 </div>
+              </div>
 
+              <div class="White_box">
+                <div class="row mb-10">
+                  <div class="col-10 ">
+                    <p><span class="span"> Has incurred expenditure of an amount or aggregate of the amounts exceeding 2
+                        lakh rupees for himself or
+                        any other person for travel to a foreign country</span></p>
+                  </div>
+                  <div class="col-2">
+                    <div class="radio_group">
+                      <input type="radio" class="radio_input" value="Yes">Yes
+                      <input type="radio" class="radio_input" value="No">No
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="White_box">
+                <div class="row mb-10">
+                  <div class="col-10 ">
+                    <p><span class="span"> Has incurred expenditure of an amount or aggregate of the amounts exceeding 1
+                        lakh rupees towards
+                        consumption of electricity</span></p>
+                  </div>
+                  <div class="col-2">
+                    <div class="radio_group">
+                      <input type="radio" class="radio_input" value="Yes">Yes
+                      <input type="radio" class="radio_input" value="No">No
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="White_box">
+                <div class="row mb-10">
+                  <div class="col-10 ">
+                    <p><span class="span"> Fulfils such other conditions as may be prescribed under Rule 12AB</span></p>
+                  </div>
+                  <div class="col-2">
+                    <div class="radio_group">
+                      <input type="radio" class="radio_input" value="Yes">Yes
+                      <input type="radio" class="radio_input" value="No">No
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="White_box">
+                <div class="row mb-10">
+                  <div class="col-10 ">
+                    <p><span class="span">Has deposited an amount or aggregate of the amounts exceeding one crore rupees
+                        in one or more current
+                        accounts maintained with a banking company or a co-operative bank</span></p>
+                  </div>
+                  <div class="col-2">
+                    <div class="radio_group">
+                      <input type="radio" class="radio_input" value="Yes">Yes
+                      <input type="radio" class="radio_input" value="No">No
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="accordion__item-body ">
+              <h3>Accounting Information</h3>
+              <div class="White_box">
+                <div class="row mb-10">
+                  <div class="col-10 ">
+                    <p><span class="span">Are you liable to maintain accounts as per section 44AA?</span></p>
+                  </div>
+                  <div class="col-2">
+                    <div class="radio_group">
+                      <input type="radio" class="radio_input" value="Yes">Yes
+                      <input type="radio" class="radio_input" value="No">No
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
           <div class="accordion-item ">
             <h2 class="accordion__item-title">Other Information</h2>
             <div class="accordion__item-body">
-              <div class="fill_surround_text">
-                Whether you were director in a company at any time during the previous year?
-                <div class="frame-wrapper-3">
-                  <div class="btn__off_white">+ Add New Company</div>
+              <div class="gray_container">
+                <div class="row mb-10">
+                  <div class="col-10 ">
+                    <p><span class="span">Whether you were director in a company at any time during the previous
+                        year?</span></p>
+                  </div>
+                  <div class="col-2">
+                    <div class="radio_group">
+                      <input type="radio" class="radio_input" value="Yes">Yes
+                      <input type="radio" class="radio_input" value="No">No
+                    </div>
+                  </div>
                 </div>
-                <div class="accordion__item-body">
+                <button class="btn__white">+ Add New Company</button>
+                <div class="White_box">
+                  <div class="row">
+                    <div class="col-10">
+                      <input type="checkbox">
+                    </div>
+                    <div class="col-2">
+                      <button class="btn__white"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                    </div>
+                  </div>
+                  <div class="div-6 ">
+                    <div class="form-field">
+                      <div><span class="span">Name of Company </span> <span class="text-wrapper-2">*</span></div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Name of Spouse">
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">Type of Company </span> <span class="text-wrapper-2">*</span></div>
+                      <div class="form-control-wrapper select_arrow">
+                        <select class="form-control inpplac " id="exampleFormControlSelect1">
+                          <option>Select</option>
+                          <option>2</option>
+                          <option>3</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">Pan of Company</span> <span class="text-wrapper-2">*</span>
+                      </div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Aadhaar number">
+                    </div>
+                  </div>
+                  <div class="div-6 ">
+                    <div class="form-field">
+                      <div><span class="span">Select Shares Type</span> <span class="text-wrapper-2">*</span></div>
+                      <div class="form-control-wrapper select_arrow">
+                        <select class="form-control inpplac " id="exampleFormControlSelect1">
+                          <option>Select</option>
+                          <option>2</option>
+                          <option>3</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">Director Identification Number</span> <span
+                          class="text-wrapper-2">*</span>
+                      </div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Aadhaar number">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-10">
+                      <button class="btn__white"> <i class="fa-solid fa-trash-can"></i> Delete</button>
+                    </div>
+                    <div class="col-2">
+                    </div>
+                  </div>
+                </div>
 
+              </div>
+              <div class="gray_container ">
+                <div class="row mb-10">
+                  <div class="col-10 ">
+                    <p><span class="span"> Have you held unlisted equity shares at any time during the previous
+                        year?</span></p>
+                  </div>
+                  <div class="col-2">
+                    <div class="radio_group">
+                      <input type="radio" class="radio_input" value="Yes">Yes
+                      <input type="radio" class="radio_input" value="No">No
+                    </div>
+                  </div>
+                </div>
+                <button class="btn__white">+ Add unlisted Company</button>
+                <div class="White_box">
+                  <div class="row">
+                    <div class="col-10">
+                      <input type="checkbox">
+                    </div>
+                    <div class="col-2">
+                      <button class="btn__white"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                    </div>
+                  </div>
+                  <div class="div-6 ">
+                    <div class="form-field">
+                      <div><span class="span">Name of Company </span> <span class="text-wrapper-2">*</span></div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Name of Spouse">
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">Type of Company </span> <span class="text-wrapper-2">*</span></div>
+                      <div class="form-control-wrapper select_arrow">
+                        <select class="form-control inpplac " id="exampleFormControlSelect1">
+                          <option>Select</option>
+                          <option>2</option>
+                          <option>3</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">Pan of Company</span> <span class="text-wrapper-2">*</span>
+                      </div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Aadhaar number">
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">Opening no of Shares</span> <span class="text-wrapper-2">*</span>
+                      </div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Aadhaar number">
+                    </div>
+                  </div>
+                  <div class="div-6 ">
+                    <div class="form-field">
+                      <div><span class="span"></span>Opening Cost of acquisition <span class="text-wrapper-2">*</span>
+                      </div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Aadhaar number">
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">No. of shares aquired</span> <span class="text-wrapper-2">*</span>
+                      </div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Aadhaar number">
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">Date of Purches</span> <span class="text-wrapper-2">*</span>
+                      </div>
+                      <div class="form-control-wrapper datepicker">
+                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" placeholder="Aadhaar number">
+                      </div>
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">Face value per share</span> <span class="text-wrapper-2">*</span>
+                      </div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Aadhaar number">
+                    </div>
+                  </div>
+                  <div class="div-6 ">
+                    <div class="form-field">
+                      <div><span class="span"></span>Issue price per share <span class="text-wrapper-2">*</span>
+                      </div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Aadhaar number">
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">No. of shares transferred</span> <span class="text-wrapper-2">*</span>
+                      </div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Aadhaar number">
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">Sale consideration</span> <span class="text-wrapper-2">*</span>
+                      </div>
+                      <div class="form-control-wrapper datepicker">
+                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" placeholder="Aadhaar number">
+                      </div>
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">Face value per share</span> <span class="text-wrapper-2">*</span>
+                      </div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Aadhaar number">
+                    </div>
+                  </div>
+                  <div class="div-6 ">
+                    <div class="form-field">
+                      <div><span class="span"></span>Closing no. of share <span class="text-wrapper-2">*</span>
+                      </div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Aadhaar number">
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">Closing cost of aquisition</span> <span class="text-wrapper-2">*</span>
+                      </div>
+                      <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="Aadhaar number">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-10">
+                      <button class="btn__white"> <i class="fa-solid fa-trash-can"></i> Delete</button>
+                    </div>
+                    <div class="col-2">
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="fill_surround_text ">
-                Have you held unlisted equity shares at any time during the previous year?
-                <div class="frame-wrapper-3">
-                  <div class="btn__off_white">+ Add New Company</div>
+
+              <div class="gray_container ">
+                <div class="row mb-10">
+                  <div class="col-10 ">
+                    <p><span class="span"> Whether you are Partner in firm ?</span></p>
+                  </div>
+                  <div class="col-2">
+                    <div class="radio_group">
+                      <input type="radio" class="radio_input" value="Yes">Yes
+                      <input type="radio" class="radio_input" value="No">No
+                    </div>
+                  </div>
                 </div>
+
+                <button class="btn__white">+ Add New Company</button>
               </div>
-              <div class="fill_surround_text ">
-                Whether you are Partner in firm ?
-                <div class="frame-wrapper-3">
-                  <div class="btn__off_white">+ Add New Company</div>
+              <div class="gray_container ">
+                <div class="row mb-10">
+                  <div class="col-10 ">
+                    <p><span class="span">Are you governed by the Portuguese Civil Code as per section 5A ?</span></p>
+                  </div>
+                  <div class="col-2">
+                    <div class="radio_group">
+                      <input type="radio" class="radio_input" value="Yes">Yes
+                      <input type="radio" class="radio_input" value="No">No
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="fill_surround_text ">
-                Are you governed by the Portuguese Civil Code as per section 5A ?
+
                 <div class="accordion__item-body">
                   <div class="div-6 ">
                     <div class="form-field">

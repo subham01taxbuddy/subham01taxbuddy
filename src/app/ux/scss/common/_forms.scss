@@ -31,10 +31,53 @@ label {
     line-height: 20px;
     padding: 8px 0;
 }
+.form-control-wrapper {
+    position: relative;
+    width: 100%;
+    .form-control {
+        padding-right: 70px;
+    }
+
+    &.datepicker {
+        &:after {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            content: "\f274";
+            font-family: fontawesome;
+            color: $color-theme;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            width: 20px;
+            height: 20px;
+            line-height: 28px;
+            z-index: 999;
+        }
+    }
+
+    &.select_arrow {
+        &:after {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            content: "\f107";
+            font-family: fontawesome;
+            color: $color-theme;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            width: 20px;
+            height: 20px;
+            line-height: 28px;
+            z-index: 999;
+        }
+    }
+}
 .form-control {
     min-height: 44px;
     border: none;
-    border: 1.5px solid #D3D3D3;
+    border: 1.5px solid $color-disabled;
     background-color: transparent;
     border-radius: 4px;
     padding: 8px 12px;
@@ -47,8 +90,9 @@ label {
         border-color: $color-theme;
     }
     &.disable{
-        background-color: #D3D3D3;
+        background-color: $color-disabled;
     }
+    
 }
 
 // .disable{

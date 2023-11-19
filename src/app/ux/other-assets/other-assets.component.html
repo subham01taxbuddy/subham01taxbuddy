@@ -73,8 +73,11 @@
             <div class="space">
                 <div class="div-2">
                     <div class="div-3">
-                        <div class="tab__primaray">Other Assets 1 <i class="fa fa-trash-o delbt"></i> </div>
-                        <button class="tab__white">+ Add Another Assets</button>
+                        <div class="tab__primaray row ">Other Assets 1
+                            <div class="group ml-20"> <img class="material-symbols " src="assets/img/new/del.png" />
+                            </div>
+                        </div>
+                        <div class="tab__white">+ Add Another Assets</div>
                     </div>
                     <div class="wrapper">
                         <div class="accordion-item">
@@ -86,19 +89,25 @@
                                     <div class="form-field">
                                         <div><span class="span">Sale Date </span> <span class="text-wrapper-2">*</span>
                                         </div>
-                                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-                                            aria-describedby="emailHelp" placeholder="₹ Enter Amount">
+                                        <div class="form-control-wrapper datepicker">
+                                            <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                                aria-describedby="emailHelp">
+                                        </div>
                                     </div>
+
                                     <div class="form-field">
                                         <div><span class="span">Buy Date </span> <span class="text-wrapper-2">*</span>
                                         </div>
-                                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-                                            aria-describedby="emailHelp" placeholder="₹ Enter Amount">
+                                        <div class="form-control-wrapper datepicker">
+                                            <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                                aria-describedby="emailHelp">
+                                        </div>
                                     </div>
+
                                     <div class="form-field">
                                         <div><span class="span">Type of gain </span></div>
-                                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-                                            aria-describedby="emailHelp" placeholder="₹ Enter Amount">
+                                        <input type="text" class="form-control inpplac disable" id="exampleInputEmail1"
+                                            aria-describedby="emailHelp" placeholder="" disabled>
                                     </div>
                                 </div>
                                 <div class="gray_container">
@@ -147,49 +156,57 @@
                                     </div>
                                 </div>
                                 <div class="gray_container">
-                                    <div class="div-6">
-                                        <div class="form-field">
-                                            <div><span class="span">Add cost of improvement details? </span><span
-                                                    class="text-wrapper-2">*</span></div>
+                                    <div class="row mb-10">
+                                        <div class="col-10 ">
+                                            <p><span class="span">Add cost of improvement details? </span><span
+                                                    class="text-wrapper-2">*</span></p>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="radio_group">
+                                                <input type="radio" class="radio_input" value="Yes"> Yes
+                                                <input type="radio" class="radio_input" value="No"> No
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="div-6">
-                                        <div class="gray_box">
-                                            <div class="div-6">
-                                                <div class="form-field">
-                                                    <div><span class="span">Cost of improvement </span> <span
-                                                            class="text-wrapper-2">*</span>
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <div class="gray_box">
+                                                <div class="div-6 ">
+                                                    <div class="form-field">
+                                                        <div><span class="normal_text">Cost of improvement </span> <span
+                                                                class="text-wrapper-2">*</span></div>
+
+                                                        <input type="text" class="form-control inpplac"
+                                                            id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                            placeholder="₹ Enter Amount">
                                                     </div>
-                                                    <input type="text" class="form-control inpplac"
-                                                        id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                        placeholder="₹ Enter Amount">
-                                                </div>
-                                                <div class="form-field">
-                                                    <div><span class="span">Year of improvement </span> <span
-                                                            class="text-wrapper-2">*</span>
+                                                    <div class="form-field">
+                                                        <div><span class="normal_text">Year of improvement </span> <span
+                                                                class="text-wrapper-2">*</span></div>
+                                                        <div class="form-control-wrapper select_arrow">
+                                                            <select class="form-control inpplac "
+                                                                id="exampleFormControlSelect1">
+                                                                <option>Select</option>
+                                                                <option>2</option>
+                                                                <option>3</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                    <select class="form-control inpplac" id="exampleFormControlSelect1">
-                                                        <option>Select</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-field">
-                                                    <div><span class="span">Index cost of improvement</span> <span
-                                                            class="text-wrapper-2">*</span>
+                                                    <div class="form-field">
+                                                        <div><span class="normal_text">Index cost of improvement </span>
+                                                            <span class="text-wrapper-2">*</span>
+                                                        </div>
+                                                        <input type="text" class="form-control inpplac disable"
+                                                            id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                            placeholder="" disabled>
                                                     </div>
-                                                    <input type="text" class="form-control inpplac"
-                                                        id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                        placeholder="">
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-field">
-                                            <div class="div-6">
-                                                <button type="button"> <i class="fa fa-trash-o delbt"></i> </button>
-                                                <div class="btn__off_white">
-                                                    +Add Another
-                                                </div>
+                                        <div class="col-3">
+                                            <div class="ml-20">
+                                                <i class="fa fa-trash-o delbt"></i>
+                                                <button class="btn__off_white">+ Add Another</button>
                                             </div>
                                         </div>
                                     </div>
@@ -215,24 +232,29 @@
                             <div class="accordion__item-body">
                                 <div class="div-6">
                                     <div class="form-field">
-                                        <div><span class="span">Type of deduction </span> <span class="text-wrapper-2">*</span></div>
-                                        <select class="form-control inpplac" id="exampleFormControlSelect1">
-                                            <option>Select</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                        </select>
+                                        <div><span class="span">Type of deduction </span> <span
+                                                class="text-wrapper-2">*</span></div>
+                                        <div class="form-control-wrapper select_arrow">
+                                            <select class="form-control inpplac " id="exampleFormControlSelect1">
+                                                <option>Select</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="form-field">
                                         <div><span class="span">Purches date Of New Assets </span> <span
                                                 class="text-wrapper-2">*</span></div>
-                                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-                                            aria-describedby="emailHelp" placeholder="">
+                                        <div class="form-control-wrapper datepicker">
+                                            <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                                aria-describedby="emailHelp">
+                                        </div>
                                     </div>
                                     <div class="form-field">
                                         <div><span class="span">cost Of New Assets</span> <span
                                                 class="text-wrapper-2">*</span></div>
-                                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-                                            aria-describedby="emailHelp" placeholder="">
+                                        <input type="text" class="form-control inpplac disable" id="exampleInputEmail1"
+                                            aria-describedby="emailHelp" placeholder="" disabled>
                                     </div>
                                 </div>
                                 <div class="div-6">
