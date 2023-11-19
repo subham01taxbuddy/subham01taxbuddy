@@ -239,10 +239,10 @@
 
             </div>
             <div class="accordion__item-body divider_border">
-              <div class="div-11">
+              <div class="div-11 mb-20">
                 <h3>Bank Details</h3>
                 <div class="frame-wrapper-3">
-                  <button class="btn__white">+ Add Bank</button>
+                  <button class="btn btn__default btn__add"> Add Bank</button>
                 </div>
               </div>
               <div>
@@ -397,14 +397,16 @@
                     </div>
                   </div>
                 </div>
-                <button class="btn__white">+ Add New Company</button>
+                <div class="clearfix">
+                  <button class="btn btn__default btn__add pull-right"> Add New Company</button>
+                </div>
                 <div class="White_box">
                   <div class="row">
                     <div class="col-10">
                       <input type="checkbox">
                     </div>
                     <div class="col-2">
-                      <button class="btn__white"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                      <button class="btn btn__default btn__edit">Edit</button>
                     </div>
                   </div>
                   <div class="div-6 ">
@@ -451,7 +453,7 @@
                   </div>
                   <div class="row">
                     <div class="col-10">
-                      <button class="btn__white"> <i class="fa-solid fa-trash-can"></i> Delete</button>
+                      <button class="btn__primary"> <i class="fa-solid fa-trash-can"></i> Delete</button>
                     </div>
                     <div class="col-2">
                     </div>
@@ -471,14 +473,14 @@
                     </div>
                   </div>
                 </div>
-                <button class="btn__white">+ Add unlisted Company</button>
+                <button class="btn btn__default btn__add"> Add unlisted Company</button>
                 <div class="White_box">
                   <div class="row">
                     <div class="col-10">
                       <input type="checkbox">
                     </div>
                     <div class="col-2">
-                      <button class="btn__white"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                      <button class="btn btn__default btn__edit"> Edit</button>
                     </div>
                   </div>
                   <div class="div-6 ">
@@ -585,7 +587,7 @@
                   </div>
                   <div class="row">
                     <div class="col-10">
-                      <button class="btn__white"> <i class="fa-solid fa-trash-can"></i> Delete</button>
+                      <button class="btn__primary"> <i class="fa-solid fa-trash-can"></i> Delete</button>
                     </div>
                     <div class="col-2">
                     </div>
@@ -605,14 +607,14 @@
                     </div>
                   </div>
                 </div>
-                <button class="btn__white">+ Add New Firm</button>
+                <button class="btn btn__default btn__add">Add New Firm</button>
                 <div class="White_box">
                   <div class="row">
                     <div class="col-10">
                       <input type="checkbox">
                     </div>
                     <div class="col-2">
-                      <button class="btn__white"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                      <button class="btn btn__default btn__edit">Edit</button>
                     </div>
                   </div>
                   <div class="div-6 ">
@@ -629,7 +631,7 @@
                   </div>
                   <div class="row">
                     <div class="col-10">
-                      <button class="btn__white"> <i class="fa-solid fa-trash-can"></i> Delete</button>
+                      <button class="btn__primary"> <i class="fa-solid fa-trash-can"></i> Delete</button>
                     </div>
                     <div class="col-2">
                     </div>
@@ -650,8 +652,8 @@
                   </div>
                 </div>
 
-                <div class="White_box">
-                  <div class="div-6 ">
+                <div class="White_box  ">
+                  <div class="div-6 mb-20">
                     <div class="form-field">
                       <div><span class="span">Name of Spouse: </span> <span class="text-wrapper-2">*</span></div>
                       <input type="text" class="form-control inpplac" id="exampleInputEmail1"
@@ -670,15 +672,35 @@
                     </div>
                   </div>
 
-                  <div>
-                    Whether books of accounts of a spouse are audited u/s 92E? or Whether your spouse is a partner of a
-                    firm whose accounts are required to be audited u/s 92E under this Act?
+                  <div class="row mb-10  divider_border">
+                    <div class="col-10 ">
+                      <p><span class="span">Whether books of accounts of a spouse are audited u/s 92E? or Whether your
+                          spouse is a partner of a
+                          firm whose accounts are required to be audited u/s 92E under this Act?</span></p>
+                    </div>
+                    <div class="col-2">
+                      <div class="radio_group">
+                        <input type="radio" class="radio_input" value="Yes">Yes
+                        <input type="radio" class="radio_input" value="No">No
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    Whether books of accounts of a spouse are audited u/s 44AB? or Whether your spouse is a partner of a
-                    firm whose accounts are required to be audited u/s 44AB under this Act?
+
+                  <div class="row mb-10 divider_border">
+                    <div class="col-10 ">
+                      <p><span class="span">Whether books of accounts of a spouse are audited u/s 44AB? or Whether your
+                          spouse is a partner of a
+                          firm whose accounts are required to be audited u/s 44AB under this Act?</span></p>
+                    </div>
+                    <div class="col-2">
+                      <div class="radio_group">
+                        <input type="radio" class="radio_input" value="Yes">Yes
+                        <input type="radio" class="radio_input" value="No">No
+                      </div>
+                    </div>
                   </div>
-                  <div class="accordion__item-body divider_border">
+
+                  <div class="gray_box">
                     <h2>1 .House Property</h2>
                     <div class="div-6 ">
                       <div class="form-field">
@@ -710,7 +732,7 @@
                     </div>
                   </div>
 
-                  <div class="accordion__item-body divider_border">
+                  <div class="gray_box">
                     <h2>2 .Business or profession</h2>
                     <div class="div-6 ">
                       <div class="form-field">
@@ -741,7 +763,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="accordion__item-body divider_border">
+
+                  <div class="gray_box">
                     <h2>3 .Capital Gain</h2>
                     <div class="div-6 ">
                       <div class="form-field">
@@ -773,7 +796,7 @@
                     </div>
                   </div>
 
-                  <div class="accordion__item-body divider_border">
+                  <div class="gray_box ">
                     <h2>4 . Other sources</h2>
                     <div class="div-6 ">
                       <div class="form-field">

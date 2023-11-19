@@ -18,6 +18,11 @@ import { CgZeroCouponsComponent } from './cg-zero-coupons/cg-zero-coupons.compon
 import {CgUnlistedSecurityComponent } from './cg-unlisted-security/cg-unlisted-security.component';
 import {CgBondsDebtsComponent} from './cg-bonds-debts/cg-bonds-debts.component';
 import {SpeculativeIncomeComponent} from "./speculative-income/speculative-income.component";
+import { ScheduleFsiComponent } from '../modules/itr-filing/itr-wizard/pages/schedule-fsi/schedule-fsi.component';
+import { ScheduleTrComponent } from './schedule-tr/schedule-tr.component';
+import { ScheduleFaComponent } from './schedule-fa/schedule-fa.component';
+import { ScheduleVdaComponent } from './schedule-vda/schedule-vda.component';
+import { ListScheduleComponent } from './list-schedule/list-schedule.component';
 
 const routes: Routes = [
   { path: '', component: UxComponent },
@@ -38,6 +43,11 @@ const routes: Routes = [
   { path: 'cg-bonds-debts', component: CgBondsDebtsComponent},
   { path: 'cg-unlisted-security', component: CgUnlistedSecurityComponent},
   { path: 'cg-zero-coupons', component: CgZeroCouponsComponent},
+  { path: 'schedule-fsi', component: ScheduleFsiComponent},
+  { path: 'schedule-tr', component: ScheduleTrComponent},
+  { path: 'schedule-fa', component: ScheduleFaComponent},
+  { path: 'schedule-vda', component: ScheduleVdaComponent},
+  { path: 'list-schedule', component: ListScheduleComponent},
 ];
 
 @NgModule({
