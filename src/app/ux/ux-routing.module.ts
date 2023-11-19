@@ -13,7 +13,10 @@ import {OtherIncomeComponent} from "./other-income/other-income.component";
 import {PresumptiveIncomeComponent} from "./presumptive-income/presumptive-income.component";
 import {SecuritiesComponent} from "./securities/securities.component";
 import { MoreInfoScheduleAlComponent } from './more-info-schedule-al/more-info-schedule-al.component';
-import { MoreInfoCflComponent } from './more-info-cfl/more-info-cfl.component'
+import { MoreInfoCflComponent } from './more-info-cfl/more-info-cfl.component';
+import { CgZeroCouponsComponent } from './cg-zero-coupons/cg-zero-coupons.component';
+import {CgUnlistedSecurityComponent } from './cg-unlisted-security/cg-unlisted-security.component';
+import {CgBondsDebtsComponent} from './cg-bonds-debts/cg-bonds-debts.component';
 import {SpeculativeIncomeComponent} from "./speculative-income/speculative-income.component";
 
 const routes: Routes = [
@@ -32,6 +35,9 @@ const routes: Routes = [
   { path: 'securities', component: SecuritiesComponent},
   { path: 'more-info-schedule-al', component: MoreInfoScheduleAlComponent},
   { path: 'more-info-cfl', component: MoreInfoCflComponent},
+  { path: 'cg-bonds-debts', component: CgBondsDebtsComponent},
+  { path: 'cg-unlisted-security', component: CgUnlistedSecurityComponent},
+  { path: 'cg-zero-coupons', component: CgZeroCouponsComponent},
 ];
 
 @NgModule({

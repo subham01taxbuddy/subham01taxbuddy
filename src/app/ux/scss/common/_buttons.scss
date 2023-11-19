@@ -5,14 +5,14 @@
 .btn {
     text-transform: capitalize;
     position: relative;
+    font-family: $font-body;
     font-size: $body-font-size;
-    font-weight: 700;
-    line-height: 48px;
+    font-weight: 500;
+    line-height: 28px;
     border-radius: 4px;
     padding: 8px 24px;
     text-align: center;
     padding: 0;
-    letter-spacing: .4px;
 
     &.fixed_width {
         max-width: 170px;

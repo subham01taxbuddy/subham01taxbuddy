@@ -144,6 +144,7 @@ main {
 }
 .space__between {
     display: flex !important;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
 }
