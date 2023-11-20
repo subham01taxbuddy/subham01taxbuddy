@@ -44,6 +44,9 @@ export class OtherInformationComponent implements OnInit {
   config: any;
   loading = false;
 
+  minDate: Date;
+  maxDate: Date;
+
   sharesTypes = [
     { value: 'LISTED', label: 'Listed' },
     { value: 'UN_LISTED', label: 'Unlisted' },
@@ -122,6 +125,16 @@ export class OtherInformationComponent implements OnInit {
 
   ngOnInit() {
     this.isEditable();
+
+    // Set the minimum to financial year and max to current date
+    const currentYear = new Date().getFullYear() - 1;
+    const thisYearStartDate = new Date(currentYear, 3, 1); // April 1st of the current year
+    const nextYearEndDate = new Date(currentYear + 1, 2, 31); // March 31st of the next year
+
+    console.log(currentYear);
+
+    this.minDate = thisYearStartDate;
+    this.maxDate = nextYearEndDate;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -429,7 +442,6 @@ export class OtherInformationComponent implements OnInit {
     }
   }
 
-
   ChangeDirectorStatus() {
     if (this.Copy_ITR_JSON.systemFlags?.directorInCompany) {
       this.addDirectorDetails('Add director details', 'ADD', null);
@@ -480,15 +492,17 @@ export class OtherInformationComponent implements OnInit {
   addPanValidator(i) {
     const sharesArray = this.getSharesArray;
     if (sharesArray?.controls[i].get('typeOfCompany')?.value === 'D') {
-      sharesArray?.controls[i].get('companyPAN')?.setValidators([
-        Validators.required,
-        Validators.pattern(AppConstants.panNumberRegex),
-      ]);
+      sharesArray?.controls[i]
+        .get('companyPAN')
+        ?.setValidators([
+          Validators.required,
+          Validators.pattern(AppConstants.panNumberRegex),
+        ]);
       sharesArray?.controls[i].get('companyPAN')?.updateValueAndValidity();
     } else {
-      sharesArray?.controls[i].get('companyPAN')?.setValidators([
-        Validators.pattern(AppConstants.panNumberRegex),
-      ]);
+      sharesArray?.controls[i]
+        .get('companyPAN')
+        ?.setValidators([Validators.pattern(AppConstants.panNumberRegex)]);
       sharesArray?.controls[i].get('companyPAN')?.updateValueAndValidity();
     }
   }
@@ -577,7 +591,7 @@ export class OtherInformationComponent implements OnInit {
         console.log('copy of itr json', this.Copy_ITR_JSON);
         this.loading = false;
 
-        if(msg === 'saveAll'){
+        if (msg === 'saveAll') {
           this.otherInfoSaved.emit(true);
           this.utilsService.showSnackBar('All details are saved successfully');
         }
@@ -611,8 +625,13 @@ export class OtherInformationComponent implements OnInit {
     this.saveAllOtherDetails();
   }
 
-  saveAllOtherDetails(){
-    if (!this.schedule5AForm?.valid || !this.firmForm?.valid || !this.sharesForm?.valid || !this.directorForm?.valid){
+  saveAllOtherDetails() {
+    if (
+      !this.schedule5AForm?.valid ||
+      !this.firmForm?.valid ||
+      !this.sharesForm?.valid ||
+      !this.directorForm?.valid
+    ) {
       this.otherInfoSaved.emit(false);
       return;
     }
@@ -663,19 +682,25 @@ export class OtherInformationComponent implements OnInit {
 
       this.Copy_ITR_JSON.schedule5a = schedule5a;
     } else {
-      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
+        .first()
+        .focus();
     }
 
     // saving director details
     if (this.directorForm?.valid) {
       console.log('SaveDirectorDetails', this.directorForm?.getRawValue());
-      const directorsArray = <FormArray>this.directorForm?.get('directorsArray');
+      const directorsArray = <FormArray>(
+        this.directorForm?.get('directorsArray')
+      );
       this.Copy_ITR_JSON.directorInCompany = directorsArray?.getRawValue();
 
       this.Copy_ITR_JSON.systemFlags.directorInCompany =
         this.Copy_ITR_JSON?.directorInCompany?.length > 0 ? true : false;
     } else {
-      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
+        .first()
+        .focus();
     }
 
     // save unlisted details
@@ -687,7 +712,9 @@ export class OtherInformationComponent implements OnInit {
       this.Copy_ITR_JSON.systemFlags.haveUnlistedShares =
         this.Copy_ITR_JSON?.unlistedSharesDetails?.length > 0 ? true : false;
     } else {
-      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
+        .first()
+        .focus();
     }
 
     // save firm details
@@ -696,24 +723,39 @@ export class OtherInformationComponent implements OnInit {
       const firmsArray = <FormArray>this.firmForm?.get('firmsArray');
       this.Copy_ITR_JSON.partnerInFirms = firmsArray?.getRawValue();
 
-      if (this.Copy_ITR_JSON?.partnerInFirms && this.Copy_ITR_JSON?.partnerInFirms?.length === 0) {
+      if (
+        this.Copy_ITR_JSON?.partnerInFirms &&
+        this.Copy_ITR_JSON?.partnerInFirms?.length === 0
+      ) {
         this.Copy_ITR_JSON.partnerInFirmFlag = 'N';
       } else {
         this.Copy_ITR_JSON.partnerInFirmFlag = 'Y';
       }
     } else {
-      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
+        .first()
+        .focus();
     }
 
-    if (this.schedule5AForm?.valid && this.firmForm?.valid && this.sharesForm?.valid && this.directorForm?.valid){
+    if (
+      this.schedule5AForm?.valid &&
+      this.firmForm?.valid &&
+      this.sharesForm?.valid &&
+      this.directorForm?.valid
+    ) {
       this.serviceCall('saveAll');
     } else {
       this.otherInfoSaved.emit(false);
     }
   }
 
-  isFormValid(){
-    return this.schedule5AForm?.valid && this.firmForm?.valid && this.sharesForm?.valid && this.directorForm?.valid;
+  isFormValid() {
+    return (
+      this.schedule5AForm?.valid &&
+      this.firmForm?.valid &&
+      this.sharesForm?.valid &&
+      this.directorForm?.valid
+    );
   }
 
   // get functions
