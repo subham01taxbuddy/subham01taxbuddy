@@ -452,7 +452,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           debounceMs: 0,
         },
         cellRenderer: function (params) {
-          return `< a href = "mailto:${params.value}" > ${params.value} </a>`
+          return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
       {
@@ -747,7 +747,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
-        width: 170,
+        width: 220,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
