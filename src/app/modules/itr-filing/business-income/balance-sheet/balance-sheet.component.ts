@@ -442,7 +442,10 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         Validators.pattern(AppConstants.numericRegex),
       ],
       totalAssets: [obj?.totalAssets],
-      GSTRNumber: [obj?.GSTRNumber],
+      GSTRNumber: [
+        obj?.GSTRNumber,
+        Validators.pattern(AppConstants.gstrReg),
+      ],
       grossTurnOverAmount: [obj?.grossTurnOverAmount],
       difference: [obj?.difference || 0],
     });
@@ -530,7 +533,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   onContinue() {
     let valid: boolean = false;
     if (this.ITR_JSON?.liableSection44AAflag === 'Y') {
-      if (this.assetLiabilitiesForm?.controls['difference']?.value === 0) {
+      if (this.assetLiabilitiesForm?.controls['difference']?.value === 0 && this.natOfBusinessDtlForm.valid) {
         valid = true;
       } else {
         valid = false;
@@ -548,12 +551,12 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       }
     }
 
-    if (this.assetLiabilitiesForm.valid && this.natOfBusinessDtlForm.valid) {
+    if (this.assetLiabilitiesForm.valid) {
       valid = true;
     } else {
       valid = false;
       this.utilsService.showSnackBar(
-        'Please make sure all the details of nature of business and balance sheet are entered correctly'
+        'Please make sure all the details of balance sheet are entered correctly'
       );
     }
 
