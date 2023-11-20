@@ -129,9 +129,14 @@ export class DeclarationComponent implements OnInit {
       this.declarationsForm.controls['panNumber'].setValue(
         this.ITR_JSON.panNumber
       );
-      this.declarationsForm?.controls['place']?.setValue(
-        this.ITR_JSON?.address?.city
-      );
+      if (
+        !this.declarationsForm?.controls['place'].value ||
+        this.declarationsForm?.controls['place'].value === ''
+      ) {
+        this.declarationsForm?.controls['place']?.setValue(
+          this.ITR_JSON?.address?.city
+        );
+      }
     } else {
       if (this.ITR_JSON.family.length > 0) {
         for (let i = 0; i <= this.ITR_JSON.family.length; i++) {
@@ -157,9 +162,11 @@ export class DeclarationComponent implements OnInit {
         Validators.required,
         Validators.pattern(AppConstants.panIndividualRegex),
       ]);
-      this.declarationsForm?.controls['place']?.setValue(
-        this.ITR_JSON?.address?.city
-      );
+      if (!this.declarationsForm?.controls['place']) {
+        this.declarationsForm?.controls['place']?.setValue(
+          this.ITR_JSON?.address?.city
+        );
+      }
     }
   }
 
