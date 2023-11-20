@@ -281,11 +281,24 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   checkSubscription(data: any) {
+    const loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.loading = true;
-    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + data?.mobileNumber;
-    this.itrMsService.getMethod(param).subscribe((response: any) => {
+    let param;
+    if (this.loggedInUserRoles.includes('ROLE_FILER')) {
+      if (loggedInSme[0].partnerType === 'PRINCIPAL') {
+        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&searchAsPrincipal=true&userId=` + data?.userId;
+      } else {
+        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&userId=` + data?.userId;
+      }
+    } else if (this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      param = `/bo/subscription-dashboard-new?leaderUserId=${loggedInSmeUserId}&mobileNumber=` + data?.mobileNumber;
+    } else {
+      param = `/bo/subscription-dashboard-new?mobileNumber=` + data?.mobileNumber;
+    }
+    this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.data instanceof Array && response.data.length > 0) {
         console.log(response);
