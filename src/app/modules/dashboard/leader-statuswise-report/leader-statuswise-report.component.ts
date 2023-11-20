@@ -220,7 +220,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     param =`/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
 
     // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'status-wise-report', '');
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'status-wise-report', '', {});
     this.loading = false;
   }
 

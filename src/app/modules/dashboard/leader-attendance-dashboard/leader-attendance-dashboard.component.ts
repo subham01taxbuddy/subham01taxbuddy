@@ -183,7 +183,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   calculateCounts() {
     if(this.allDetails){
     this.partnerCount = this.allDetails?.length;
-    this.activePartnerCount = this.allDetails?.filter(item => item.hasFilerLoggedInToday).length;
+    this.activePartnerCount = this.allDetails?.filter(item => item.attendanceOnDateInBo === 'Active').length;
     this.inactivePartnerCount = this.partnerCount - this.activePartnerCount;
     this.assignmentOnCount = this.allDetails?.filter(item => item.assignmentStatus === 'On').length;
     this.assignmentOffCount = this.allDetails?.filter(item => item.assignmentStatus === 'Off').length;
@@ -290,7 +290,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     param =`/bo/dashboard/attendance-performance-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
     // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'attendance-performance-report', '');
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'attendance-performance-report', '', {});
     this.loading = false;
   }
 

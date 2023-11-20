@@ -1874,11 +1874,65 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.saveAndNext.emit(false);
   }
 
+  updatingReliefSections(section, sectionAck, sectionDate) {
+    const control = this.summaryToolReliefsForm.get([sectionAck]);
+    this.ITR_JSON[section] = Number(
+      this.summaryToolReliefsForm?.value[section]
+    );
+
+    if (
+      control?.value &&
+      control?.value !== null &&
+      control?.value.toString().length !== 15
+    ) {
+      control?.setValidators([
+        Validators.minLength(15),
+        Validators.maxLength(15),
+      ]);
+      control?.updateValueAndValidity();
+    } else {
+      control?.clearValidators();
+      control?.updateValueAndValidity();
+    }
+
+    console.log(control);
+    if (this.ITR_JSON[section] && this.ITR_JSON[section] > 0) {
+      this.ITR_JSON[sectionAck] = Number(
+        this.summaryToolReliefsForm?.value[sectionAck]
+      );
+      this.ITR_JSON[sectionDate] =
+        this.summaryToolReliefsForm?.value[sectionDate];
+    } else {
+      this.ITR_JSON[sectionAck] = null;
+      this.ITR_JSON[sectionDate] = null;
+    }
+  }
+
   gotoSummary() {
     this.loading = true;
-    console.log('this.regimeSelectionForm', this.regimeSelectionForm);
-    console.log('this.summaryToolReliefsForm', this.summaryToolReliefsForm);
 
+    //section89
+    this.updatingReliefSections(
+      'section89',
+      'acknowledgement89',
+      'acknowledgementDate89'
+    );
+
+    // section90
+    this.updatingReliefSections(
+      'section90',
+      'acknowledgement90',
+      'acknowledgementDate90'
+    );
+
+    // section91
+    this.updatingReliefSections(
+      'section91',
+      'acknowledgement91',
+      'acknowledgementDate91'
+    );
+
+    // setting other
     this.ITR_JSON.optionForCurrentAY =
       this.regimeSelectionForm.getRawValue().optionForCurrentAY;
 
@@ -1893,48 +1947,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.ITR_JSON.regime =
       this.regimeSelectionForm.getRawValue().optionForCurrentAY.currentYearRegime;
 
-    this.ITR_JSON.section89 = Number(
-      this.summaryToolReliefsForm?.value?.section89
-    );
-    if (this.ITR_JSON.section89 && this.ITR_JSON.section89 > 0) {
-      this.ITR_JSON.acknowledgement89 = Number(
-        this.summaryToolReliefsForm?.value?.acknowledgement89
-      );
-      this.ITR_JSON.acknowledgementDate89 =
-        this.summaryToolReliefsForm?.value?.acknowledgementDate89;
-    } else {
-      this.ITR_JSON.acknowledgement89 = null;
-      this.ITR_JSON.acknowledgementDate89 = null;
-    }
-
-    this.ITR_JSON.section90 = Number(
-      this.summaryToolReliefsForm?.value?.section90
-    );
-    if (this.ITR_JSON.section90 && this.ITR_JSON.section90 > 0) {
-      this.ITR_JSON.acknowledgement90 = Number(
-        this.summaryToolReliefsForm?.value?.acknowledgement90
-      );
-      this.ITR_JSON.acknowledgementDate90 =
-        this.summaryToolReliefsForm?.value?.acknowledgementDate90;
-    } else {
-      this.ITR_JSON.acknowledgement90 = null;
-      this.ITR_JSON.acknowledgementDate90 = null;
-    }
-
-    this.ITR_JSON.section91 = Number(
-      this.summaryToolReliefsForm?.value?.section91
-    );
-    if (this.ITR_JSON.section91 && this.ITR_JSON.section91 > 0) {
-      this.ITR_JSON.acknowledgement91 = Number(
-        this.summaryToolReliefsForm?.value?.acknowledgement91
-      );
-      this.ITR_JSON.acknowledgementDate91 =
-        this.summaryToolReliefsForm?.value?.acknowledgementDate91;
-    } else {
-      this.ITR_JSON.acknowledgement91 = null;
-      this.ITR_JSON.acknowledgementDate91 = null;
-    }
-
+    // saving - calling the save api
     if (this.regimeSelectionForm.valid && this.summaryToolReliefsForm.valid) {
       this.submitted = false;
 

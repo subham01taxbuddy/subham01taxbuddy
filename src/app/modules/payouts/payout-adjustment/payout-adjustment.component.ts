@@ -22,6 +22,7 @@ export class PayoutAdjustmentComponent implements OnInit {
   downloadURL:any;
   showMessage ='';
   searchAsPrinciple :boolean =false;
+  isInternal = true;
 
   constructor(
     private itrMsService: ItrMsService,
