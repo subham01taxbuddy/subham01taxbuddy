@@ -452,7 +452,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           debounceMs: 0,
         },
         cellRenderer: function (params) {
-          return `< a href = "mailto:${params.value}" > ${params.value} </a>`
+          return `<a href="mailto:${params.value}">${params.value}</a>`
         }
       },
       {
