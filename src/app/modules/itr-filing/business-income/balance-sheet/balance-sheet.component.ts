@@ -548,10 +548,50 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       }
     }
 
+    if (this.assetLiabilitiesForm.valid && this.natOfBusinessDtlForm.valid) {
+      valid = true;
+    } else {
+      valid = false;
+      this.utilsService.showSnackBar(
+        'Please make sure all the details of nature of business and balance sheet are entered correctly'
+      );
+    }
+
     if (valid) {
       this.loading = true;
       this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+      if (!this.Copy_ITR_JSON.business) {
+        this.Copy_ITR_JSON.business = {
+          presumptiveIncomes: [],
+          financialParticulars: {
+            difference: null,
+            id: null,
+            grossTurnOverAmount: null,
+            membersOwnCapital: null,
+            securedLoans: null,
+            unSecuredLoans: null,
+            advances: null,
+            sundryCreditorsAmount: null,
+            otherLiabilities: null,
+            totalCapitalLiabilities: null,
+            fixedAssets: null,
+            inventories: null,
+            sundryDebtorsAmount: null,
+            balanceWithBank: null,
+            cashInHand: null,
+            loanAndAdvances: null,
+            otherAssets: null,
+            totalAssets: null,
+            investment: null,
+            GSTRNumber: null,
+          },
+          businessDescription: [],
+          fixedAssetsDetails: [],
+          profitLossACIncomes: [],
+        };
+      }
 
       this.Copy_ITR_JSON.business.businessDescription =
         this.natOfBusinessDtlsArray.value;
