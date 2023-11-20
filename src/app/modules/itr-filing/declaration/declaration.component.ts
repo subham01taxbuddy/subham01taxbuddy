@@ -73,7 +73,7 @@ export class DeclarationComponent implements OnInit {
       }
 
       const declarationKeys = Object.values(copy);
-      let deduction = false;
+      let valueBoolean = false;
       for (const keyValue of declarationKeys) {
         const value = keyValue;
         if (
@@ -82,12 +82,12 @@ export class DeclarationComponent implements OnInit {
           value === '' ||
           value === 0
         ) {
-          deduction = true;
+          valueBoolean = true;
           break;
         }
       }
 
-      if (!deduction) {
+      if (!valueBoolean) {
         this.declarationsForm.controls['panNumber'].setValue(
           this.ITR_JSON.declaration.panNumber
         );
@@ -129,6 +129,9 @@ export class DeclarationComponent implements OnInit {
       this.declarationsForm.controls['panNumber'].setValue(
         this.ITR_JSON.panNumber
       );
+      this.declarationsForm?.controls['place']?.setValue(
+        this.ITR_JSON?.address?.city
+      );
     } else {
       if (this.ITR_JSON.family.length > 0) {
         for (let i = 0; i <= this.ITR_JSON.family.length; i++) {
@@ -154,6 +157,9 @@ export class DeclarationComponent implements OnInit {
         Validators.required,
         Validators.pattern(AppConstants.panIndividualRegex),
       ]);
+      this.declarationsForm?.controls['place']?.setValue(
+        this.ITR_JSON?.address?.city
+      );
     }
   }
 
@@ -167,6 +173,7 @@ export class DeclarationComponent implements OnInit {
       : '';
     return name + ' ' + mName + ' ' + lName;
   }
+
   setChildOf(family, type) {
     if (type === 'INDIVIDUAL') {
       if (this.utilsService.isNonEmpty(family.fatherName)) {
@@ -180,6 +187,7 @@ export class DeclarationComponent implements OnInit {
         : '';
     }
   }
+
   initCap(control) {
     control.setValue(this.titleCasePipe.transform(control.value));
   }
