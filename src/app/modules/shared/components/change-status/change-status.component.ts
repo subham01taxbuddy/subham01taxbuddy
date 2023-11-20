@@ -71,7 +71,7 @@ export class ChangeStatusComponent implements OnInit {
 
   getStatus() {
     // 'https://dev-api.taxbuddy.com/user/itr-status-master/source/BACK_OFFICE?userId=8664&serviceType=ITR'
-    let param = '/itr-status-master/source/BACK_OFFICE?userId=' + this.data.userId + '&serviceType=' + this.data.serviceType;
+    let param = '/itr-status-master/source/BACK_OFFICE?userId=' + this.data.userId + '&serviceType=' + this.data.serviceType + '&itrChatInitiated=' + this.data.itrChatInitiated;
     this.userService.getMethod(param).subscribe(
       (response) => {
         console.log('status response: ', response);
@@ -229,4 +229,5 @@ export interface ConfirmModel {
   serviceType: any;
   mode: any;
   userInfo: any;
+  itrChatInitiated?: boolean;
 }
