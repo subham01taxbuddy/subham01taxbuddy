@@ -22,8 +22,9 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   @Output() sendFilerList = new EventEmitter<any>();
   @Input() showOwnerList = false;
   @Input() showOnlyOwnerList = false;
-  @Input() skipChild =true;
+  @Input() skipChild = true;
   @Input() listType = 'ALL';
+  @Input() isInternal: boolean;
 
   smeList: any[] = [];
   searchChild = new FormControl('');
@@ -273,6 +274,9 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     } else {
       param = `/bo/sme-details-new/${loggedInSmeUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
     }
+    if (this.isInternal) {
+      param = param + '&internal=false';
+    }
 
     this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('principle/individual list result -> ', result);
@@ -346,7 +350,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     this.leaderDetails = null;
     this.principleIndividualDetails = null;
     this.childDetails = null;
-    this.showChildFilter =false;
+    this.showChildFilter = false;
   }
 
   ngOnChanges() {
