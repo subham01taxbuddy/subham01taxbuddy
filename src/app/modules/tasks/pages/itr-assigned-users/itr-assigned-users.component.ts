@@ -747,7 +747,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
-        width: 170,
+        width: 220,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
