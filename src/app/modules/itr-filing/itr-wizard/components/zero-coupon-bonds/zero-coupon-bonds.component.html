@@ -135,7 +135,7 @@
                   <mat-label>Buy Date*</mat-label>
                   <mat-form-field appearance="outline">
                     <input
-                      [max]="maxPurchaseDate"
+                      [max]="bonds.get('sellDate').value"
                       matInput
                       class="input-field"
                       readonly
