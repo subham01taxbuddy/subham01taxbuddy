@@ -68,7 +68,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
         this.addMoreSalary();
       }
     } else if (this.showHeadOfIncome === 'TDTSP') {
-      if (this.data.assetIndex !== null) {
+      if (this.data.assetIndex !== null && this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB) {
         this.addMoreSalary(this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB[this.data.assetIndex]);
       } else {
         this.addMoreSalary();
@@ -115,7 +115,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     if (this.showHeadOfIncome === 'TDTS') {
       return this.fb.group({
         hasEdit: [item ? item.hasEdit : false],
-        srNo: [item ? item.srNo : this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A.length],
+        srNo: [item ? item.srNo : this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A?.length],
         deductorTAN: [item ? item.deductorTAN : '', [Validators.required, Validators.pattern(AppConstants.tanNumberRegex)]],
         deductorName: [item ? item.deductorName : '', [Validators.required]],
         totalAmountCredited: [item ? item.totalAmountCredited : null, Validators.required],
@@ -125,7 +125,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     } else if (this.showHeadOfIncome === 'TDTSP') {
       return this.fb.group({
         hasEdit: [item ? item.hasEdit : false],
-        srNo: [item ? item.srNo : this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB.length],
+        srNo: [item ? item.srNo : this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB?.length],
         deductorPAN: [item ? item.deductorPAN : '', [Validators.required, Validators.pattern(AppConstants.panNumberRegex)]],
         deductorName: [item ? item.deductorName : '', [Validators.required, Validators.pattern(AppConstants.charRegex)]],
         totalAmountCredited: [item ? item.totalAmountCredited : null, Validators.required],
