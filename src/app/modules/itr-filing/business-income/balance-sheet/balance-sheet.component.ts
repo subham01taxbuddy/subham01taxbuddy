@@ -528,16 +528,27 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   }
 
   onContinue() {
-    if (
-      this.assetLiabilitiesForm.valid ||
-      this.natOfBusinessDtlForm.valid ||
-      (this.assetLiabilitiesForm.controls['cashInHand'].valid &&
+    let valid: boolean = false;
+    if (this.ITR_JSON?.liableSection44AAflag === 'Y') {
+      if (this.assetLiabilitiesForm?.controls['difference']?.value === 0) {
+        valid = true;
+      } else {
+        valid = false;
+      }
+    } else {
+      if (
+        this.assetLiabilitiesForm.controls['cashInHand'].valid &&
         this.assetLiabilitiesForm.controls['sundryDebtorsAmount'].valid &&
         this.assetLiabilitiesForm.controls['sundryCreditorsAmount'].valid &&
-        this.assetLiabilitiesForm.controls['inventories'].valid) ||
-      (this.ITR_JSON?.liableSection44AAflag === 'Y'
-        && this.assetLiabilitiesForm?.controls['difference']?.value === 0)
-    ) {
+        this.assetLiabilitiesForm.controls['inventories'].valid
+      ) {
+        valid = true;
+      } else {
+        valid = false;
+      }
+    }
+
+    if (valid) {
       this.loading = true;
       this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
