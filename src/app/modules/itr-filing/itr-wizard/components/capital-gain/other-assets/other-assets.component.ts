@@ -126,7 +126,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
     // initiating deduction form
     this.deductionForm = this.fb.group({ deductions: this.fb.array([]) });
-    const dednDetails = this.goldCg?.deduction[0];
+    const dednDetails = this.goldCg?.deduction ? this.goldCg?.deduction[0] : null;
 
     if (
       dednDetails?.totalDeductionClaimed &&

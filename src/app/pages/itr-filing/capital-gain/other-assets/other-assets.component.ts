@@ -542,7 +542,7 @@ export class OtherAssetsComponent implements OnInit {
         suppressMovable: true,
       },
       {
-        headerName: 'Amount deposited in CGAS before due date',
+        headerName: 'CGAS Amount Deposited Before Due Date',
         field: 'investmentInCGAccount',
         editable: false,
         suppressMovable: true,
