@@ -141,25 +141,17 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     },
     {
       id: null,
-      seqNum: 12,
-      value: 'SECOND_PROVISO_CGOV',
-      label:
-        'Second Proviso CGOV - compensation under a scheme approved by the central Govt - 10(10B)',
-      detailed: false,
-    },
-    {
-      id: null,
       seqNum: 14,
       value: 'FIRST_PROVISO',
       label:
-        'First Proviso - Compensation limit notified by CG in the official gazette, First Provisio 10(10Bi)',
+        '10(10B)(i) - First Proviso: Compensation limit notified by CG in the official Gazette',
       detailed: false,
     },
     {
       id: null,
       seqNum: 13,
       value: 'SECOND_PROVISO',
-      label: 'Second proviso - Compensation limit notified by CG, 10(10Bii)',
+      label: '10(10B)(ii) - Second Proviso: Compensation under a scheme approved by the Central Government',
       detailed: false,
     },
     {
