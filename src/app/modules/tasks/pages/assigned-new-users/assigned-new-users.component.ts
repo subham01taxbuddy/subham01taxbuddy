@@ -75,7 +75,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   clearUserFilter: number;
   partnerType: any;
   iframe: HTMLIFrameElement;
-  hideKmCloseIcon: boolean;
+  hideKmCloseIcon: boolean = true;
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -1122,28 +1122,25 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   }
 
   openConversation(id) {
-    this.hideKmCloseIcon=false;
-
+    this.hideKmCloseIcon = false;
     let loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-
     const baseUrl = "https://dashboard-proxy.kommunicate.io";
     const userEmail = loginSmeDetails[0].email;
     const userAccessToken = `${sessionStorage.getItem("kmAuthToken")}&appId=${environment.kmAppId}`;
     const groupToOpen = id;
-
     this.iframe = document.createElement("iframe");
-    this.iframe.setAttribute('src', `${baseUrl}/login?email=${userEmail}&password=${userAccessToken}&loginType=custom&referrer=/conversations/${groupToOpen}?showConversationSectionOnly=true`)
+    // this.iframe.setAttribute('src', `${baseUrl}/login?email=${userEmail}&password=${userAccessToken}&loginType=custom&referrer=/conversations/${groupToOpen}?showConversationSectionOnly=true`)
+    this.iframe.setAttribute('src', `${baseUrl}/conversations/${groupToOpen}?showConversationSectionOnly=true`)
+    // this.iframe.setAttribute('src', 'https://dashboard-proxy.kommunicate.io/conversations/95702751?showConversationSectionOnly=true')
     this.iframe.setAttribute('class', 'iframe-height');
     let viewbox = document.getElementById('km-viewbox');
-    // viewbox.innerHTML = "";
     viewbox.append(this.iframe);
   }
 
 
   closeChat() {
-    // this.isChatOpen = false;
     this.iframe.setAttribute('class', 'hideKmChat');
-    this.hideKmCloseIcon=true;
+    this.hideKmCloseIcon = true;
   }
 
   moreOptions(client) {

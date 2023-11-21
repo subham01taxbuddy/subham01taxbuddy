@@ -16,6 +16,7 @@ import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-b
 import { RequestManager } from "../../../shared/services/request-manager";
 import { SpeedTestService } from 'ng-speed-test';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+import { environment } from 'src/environments/environment';
 
 declare let $: any;
 declare function we_login(userId: string);
@@ -415,7 +416,9 @@ export class LoginComponent implements OnInit {
         if (response.success) {
           this.utilsService.showSnackBar(response.message);
           sessionStorage.setItem('kmAuthToken', response?.data?.token);
-          // this.validateAuthToken(response?.data?.token);
+          if (response?.data?.token) {
+            this.loginKommunicateSdk(response?.data?.token);
+          }
         } else {
           this.utilsService.showSnackBar(response.message);
         }
@@ -426,25 +429,16 @@ export class LoginComponent implements OnInit {
       });
   }
 
-  validateAuthToken(authToken) {
-    // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/validate-token
-    this.loading = true;
-    let reqBody = {
-      "authToken": authToken
-    }
-    this.reviewService.postKmMethod('', reqBody).subscribe(
-      (response: any) => {
-        this.loading = false;
-        if (response.success) {
-          this.utilsService.showSnackBar(response.message);
-        } else {
-          this.utilsService.showSnackBar(response.message);
-        }
-      },
-      (error) => {
-        this.loading = false;
-        this.utilsService.showSnackBar('Failed to validate the kommunicate auth token');
-      });
+  loginKommunicateSdk(token) {
+    let loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    const baseUrl = "https://dashboard-proxy.kommunicate.io";
+    const userEmail = loginSmeDetails[0].email;
+    const userAccessToken = `${token}&appId=${environment.kmAppId}`;
+    let iframe = document.createElement("iframe");
+    iframe.setAttribute('src', `${baseUrl}/login?email=${userEmail}&password=${userAccessToken}?showConversationSectionOnly=true`)
+    let viewbox = document.getElementById('km-viewbox');
+    viewbox.append(iframe);
+    iframe.setAttribute('class', 'hideKmChat');
   }
 
   mode: string = 'SIGN_IN';
