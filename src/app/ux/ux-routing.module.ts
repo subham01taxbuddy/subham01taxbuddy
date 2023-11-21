@@ -18,7 +18,7 @@ import { CgZeroCouponsComponent } from './cg-zero-coupons/cg-zero-coupons.compon
 import {CgUnlistedSecurityComponent } from './cg-unlisted-security/cg-unlisted-security.component';
 import {CgBondsDebtsComponent} from './cg-bonds-debts/cg-bonds-debts.component';
 import {SpeculativeIncomeComponent} from "./speculative-income/speculative-income.component";
-import { ScheduleFsiComponent } from '../modules/itr-filing/itr-wizard/pages/schedule-fsi/schedule-fsi.component';
+import { ScheduleFsiComponent } from './schedule-fsi/schedule-fsi.component';
 import { ScheduleTrComponent } from './schedule-tr/schedule-tr.component';
 import { ScheduleFaComponent } from './schedule-fa/schedule-fa.component';
 import { ScheduleVdaComponent } from './schedule-vda/schedule-vda.component';

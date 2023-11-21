@@ -118,6 +118,10 @@
     margin: 12px 0;
     width: 100%;
 }
+
+.min-width{
+    min-width: 220px;
+  }
 @media (min-width: 992px) {
     .col-lg-5th {
         -ms-flex: 0 0 20%;
