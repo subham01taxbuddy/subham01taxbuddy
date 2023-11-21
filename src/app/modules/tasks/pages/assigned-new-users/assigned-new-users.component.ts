@@ -652,7 +652,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Start Filing',
-        hide:true,
+        hide: true,
         width: 90,
         sortable: true,
         pinned: 'right',
@@ -1061,7 +1061,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         clientName: client.name,
         serviceType: client.serviceType,
         mode: mode,
-        userInfo: client
+        userInfo: client,
+        itrChatInitiated: false
       }
     })
 

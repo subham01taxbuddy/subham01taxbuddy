@@ -281,15 +281,28 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   checkSubscription(data: any) {
+    const loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.loading = true;
-    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + data?.mobileNumber;
-    this.itrMsService.getMethod(param).subscribe((response: any) => {
+    let param;
+    if (this.loggedInUserRoles.includes('ROLE_FILER')) {
+      if (loggedInSme[0].partnerType === 'PRINCIPAL') {
+        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&searchAsPrincipal=true&userId=${data?.userId}&page=0&pageSize=10`;
+      } else {
+        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&userId=${data?.userId}&page=0&pageSize=10`;
+      }
+    } else if (this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      param = `/bo/subscription-dashboard-new?leaderUserId=${loggedInSmeUserId}&mobileNumber=${data?.mobileNumber}&page=0&pageSize=10`;
+    } else {
+      param = `/bo/subscription-dashboard-new?mobileNumber=${data?.mobileNumber}&page=0&pageSize=10`;
+    }
+    this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      if (response.data instanceof Array && response.data.length > 0) {
+      if (response.data.content instanceof Array && response.data.content.length > 0) {
         console.log(response);
-        response.data.forEach((item: any) => {
+        response.data.content.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
           if (smeSelectedPlan && smeSelectedPlan.servicesType === 'ITR') {
@@ -734,7 +747,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
-        width: 170,
+        width: 220,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -1185,7 +1198,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         clientName: client.name,
         serviceType: client.serviceType,
         mode: mode,
-        userInfo: client
+        userInfo: client,
+        itrChatInitiated: true
       }
     })
 

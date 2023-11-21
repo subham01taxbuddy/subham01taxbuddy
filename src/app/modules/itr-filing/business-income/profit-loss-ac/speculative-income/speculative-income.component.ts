@@ -151,7 +151,7 @@ export class SpeculativeIncomeComponent implements OnInit {
       grossProfit?.setValidators(Validators.max(turnoverValue));
       grossProfit?.updateValueAndValidity();
     } else {
-      grossProfit?.removeValidators(Validators.max(turnoverValue));
+      grossProfit?.clearValidators();
       grossProfit?.updateValueAndValidity();
     }
   }

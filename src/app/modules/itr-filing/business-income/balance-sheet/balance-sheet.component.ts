@@ -442,7 +442,10 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         Validators.pattern(AppConstants.numericRegex),
       ],
       totalAssets: [obj?.totalAssets],
-      GSTRNumber: [obj?.GSTRNumber],
+      GSTRNumber: [
+        obj?.GSTRNumber,
+        Validators.pattern(AppConstants.gstrReg),
+      ],
       grossTurnOverAmount: [obj?.grossTurnOverAmount],
       difference: [obj?.difference || 0],
     });
@@ -528,19 +531,70 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   }
 
   onContinue() {
-    if (
-      this.assetLiabilitiesForm.valid ||
-      this.natOfBusinessDtlForm.valid ||
-      (this.assetLiabilitiesForm.controls['cashInHand'].valid &&
+    let valid: boolean = false;
+    if (this.ITR_JSON?.liableSection44AAflag === 'Y') {
+      if (this.assetLiabilitiesForm?.controls['difference']?.value === 0 && this.natOfBusinessDtlForm.valid) {
+        valid = true;
+      } else {
+        valid = false;
+      }
+    } else {
+      if (
+        this.assetLiabilitiesForm.controls['cashInHand'].valid &&
         this.assetLiabilitiesForm.controls['sundryDebtorsAmount'].valid &&
         this.assetLiabilitiesForm.controls['sundryCreditorsAmount'].valid &&
-        this.assetLiabilitiesForm.controls['inventories'].valid) ||
-      (this.ITR_JSON?.liableSection44AAflag === 'Y'
-        && this.assetLiabilitiesForm?.controls['difference']?.value === 0)
-    ) {
+        this.assetLiabilitiesForm.controls['inventories'].valid
+      ) {
+        valid = true;
+      } else {
+        valid = false;
+      }
+    }
+
+    if (this.assetLiabilitiesForm.valid) {
+      valid = true;
+    } else {
+      valid = false;
+      this.utilsService.showSnackBar(
+        'Please make sure all the details of balance sheet are entered correctly'
+      );
+    }
+
+    if (valid) {
       this.loading = true;
       this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+      if (!this.Copy_ITR_JSON.business) {
+        this.Copy_ITR_JSON.business = {
+          presumptiveIncomes: [],
+          financialParticulars: {
+            difference: null,
+            id: null,
+            grossTurnOverAmount: null,
+            membersOwnCapital: null,
+            securedLoans: null,
+            unSecuredLoans: null,
+            advances: null,
+            sundryCreditorsAmount: null,
+            otherLiabilities: null,
+            totalCapitalLiabilities: null,
+            fixedAssets: null,
+            inventories: null,
+            sundryDebtorsAmount: null,
+            balanceWithBank: null,
+            cashInHand: null,
+            loanAndAdvances: null,
+            otherAssets: null,
+            totalAssets: null,
+            investment: null,
+            GSTRNumber: null,
+          },
+          businessDescription: [],
+          fixedAssetsDetails: [],
+          profitLossACIncomes: [],
+        };
+      }
 
       this.Copy_ITR_JSON.business.businessDescription =
         this.natOfBusinessDtlsArray.value;
