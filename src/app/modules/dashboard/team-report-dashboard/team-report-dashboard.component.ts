@@ -224,7 +224,7 @@ export class TeamReportDashboardComponent implements OnInit {
             this.commissionData.itr2 +
             this.commissionData.itr3 +
             this.commissionData.itr4 +
-            this.commissionData.itrOther +
+            this.commissionData.itrU +
             this.commissionData.originalReturnOther;
           this.totalRevised =
             this.commissionData.itr1_revised +
