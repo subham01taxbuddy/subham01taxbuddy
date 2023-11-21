@@ -10071,13 +10071,7 @@ body[dir=rtl] .checkbox[checked=true] {
   width: 600px;
 }
 
-.kmFrame {
-  position: fixed;
-  z-index: 11111;
-  bottom: 2px;
-  border: 2px inset;
-  border-radius: 4px;
-}
+
 
 .close-kmChat {
   position: absolute;
@@ -10089,8 +10083,4 @@ body[dir=rtl] .checkbox[checked=true] {
 
 .kmIcon {
   background-color: red;
-}
-
-.hideKmChat{
-  display: none;
 }

@@ -1128,20 +1128,20 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     const userEmail = loginSmeDetails[0].email;
     const userAccessToken = `${sessionStorage.getItem("kmAuthToken")}&appId=${environment.kmAppId}`;
     const groupToOpen = id;
-    this.iframe = document.createElement("iframe");
-    // this.iframe.setAttribute('src', `${baseUrl}/login?email=${userEmail}&password=${userAccessToken}&loginType=custom&referrer=/conversations/${groupToOpen}?showConversationSectionOnly=true`)
+    this.iframe = document.getElementById('km-iframe') as HTMLIFrameElement;
+    if (!this.iframe) {
+      this.iframe = document.createElement("iframe");
+      this.iframe.setAttribute('class', 'iframe-height');
+      this.iframe.setAttribute('id', 'km-iframe');
+    }
     this.iframe.setAttribute('src', `${baseUrl}/conversations/${groupToOpen}?showConversationSectionOnly=true`)
-    // this.iframe.setAttribute('src', 'https://dashboard-proxy.kommunicate.io/conversations/95702751?showConversationSectionOnly=true')
-    this.iframe.setAttribute('class', 'iframe-height');
-    let viewbox = document.getElementById('km-viewbox');
-    viewbox.append(this.iframe);
+    if (!document.getElementById('km-iframe')) {
+      let viewbox = document.getElementById('km-viewbox');
+      viewbox.append(this.iframe);
+    }
+    (document.getElementById('km-viewbox') as HTMLElement).style.display = 'block';
   }
 
-
-  closeChat() {
-    this.iframe.setAttribute('class', 'hideKmChat');
-    this.hideKmCloseIcon = true;
-  }
 
   moreOptions(client) {
     console.log('client', client)

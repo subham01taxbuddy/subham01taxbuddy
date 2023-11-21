@@ -436,9 +436,10 @@ export class LoginComponent implements OnInit {
     const userAccessToken = `${token}&appId=${environment.kmAppId}`;
     let iframe = document.createElement("iframe");
     iframe.setAttribute('src', `${baseUrl}/login?email=${userEmail}&password=${userAccessToken}?showConversationSectionOnly=true`)
+    iframe.setAttribute('class', 'iframe-height');
+    iframe.setAttribute('id', 'km-iframe');
     let viewbox = document.getElementById('km-viewbox');
     viewbox.append(iframe);
-    iframe.setAttribute('class', 'hideKmChat');
   }
 
   mode: string = 'SIGN_IN';
