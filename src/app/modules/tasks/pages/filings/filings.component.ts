@@ -60,7 +60,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     mobileNumber: null,
     email: null,
     panNumber: null,
-    selectedStatusId: 'ALL',
+    selectedStatusId: 'ITR_FILED',
     selectedFyYear: null,
   };
 
@@ -145,7 +145,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     }
     this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     this.getAgentList();
-    this.getMasterStatusList();
+    // this.getMasterStatusList();
     this.activatedRoute.queryParams.subscribe(params => {
       this.searchVal = params['mobileNumber'];
       this.searchStatusId = params['statusId'];
@@ -1277,7 +1277,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
   resetFilters() {
     this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
-    this.searchParams.selectedStatusId = 'ALL';
+    this.searchParams.selectedStatusId = 'ITR_FILED';
     this.config.page = 0;
     this.config.itemsPerPage = 10;
     this.searchParams.mobileNumber = null;
