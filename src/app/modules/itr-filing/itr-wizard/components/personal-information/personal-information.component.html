@@ -513,7 +513,7 @@
                       placeholder="Nature"
                       name="nature[i]"
                       formControlName="nature"
-                      (valueChange)="onSelectionChange($event)"
+                      (selectionChange)="onSelectionChange($event.value)"
                     >
                       <mat-option
                         *ngFor="

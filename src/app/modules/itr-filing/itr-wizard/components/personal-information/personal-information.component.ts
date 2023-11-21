@@ -3086,8 +3086,12 @@ export class PersonalInformationComponent implements OnInit {
       3: [Validators.required, Validators.min(5000000)],
     };
 
-    if (value) {
+    if (value || value === 0) {
       let control = clauseIvArray?.controls.find((item) => {
+        if (isNaN(item.value.nature)) {
+          item.value.nature = 0;
+        }
+
         if (item.value.nature === value) {
           return item;
         }

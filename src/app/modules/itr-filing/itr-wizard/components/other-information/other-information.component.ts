@@ -22,6 +22,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { setTimeout } from 'timers';
 
 @Component({
   selector: 'app-other-information',
@@ -407,8 +408,9 @@ export class OtherInformationComponent implements OnInit {
 
   checkPAN() {
     const panOfSpouse = this.schedule5AForm.get('panOfSpouse');
+    const panOfSpouseValue = this.schedule5AForm.get('panOfSpouse').value.toUpperCase();
     // pan should not be same as self Pan validation
-    if (panOfSpouse.value === this.ITR_JSON.panNumber) {
+    if (panOfSpouseValue === this.ITR_JSON.panNumber) {
       this.panRepeat = true;
     } else {
       this.panRepeat = false;
