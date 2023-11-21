@@ -65,9 +65,10 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  maxDate = new Date(2024, 2, 31);
+  maxStartDate = new Date()
+  maxDate =this.maxStartDate
   minDate = new Date(2023, 3, 1);
-  toDateMin: any;
+  toDateMin = this.minDate;
   roles: any;
   allFilerList: any;
   searchParam: any = {

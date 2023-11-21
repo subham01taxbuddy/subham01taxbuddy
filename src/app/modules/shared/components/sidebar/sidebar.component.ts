@@ -89,7 +89,7 @@ export class SidebarComponent {
         },
         { name: 'ITR Assigned Users', url: '/tasks/itr-assigned-users', roles: [] },
         { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
-        { name: 'ITRs', url: '/tasks/filings', roles: [] },
+        { name: 'Filed ITRs', url: '/tasks/filings', roles: [] },
         // {
         //   name: 'Exceptions', url: '/tasks/exceptions', roles: [],
         //   // submenu: [
@@ -124,7 +124,7 @@ export class SidebarComponent {
       roles: [],
       submenu: [
         { name: 'Assign Subscription', url: '/subscription/assigned-subscription', roles: [] },
-        { name: 'Cancel Subscription', url: '/subscription/cancel-subscription', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Deleted Subscription', url: '/subscription/cancel-subscription', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     },
     {

@@ -713,6 +713,7 @@
                     name="panNumber"
                     class="input-field"
                     maxlength="10"
+                    required
                   />
                   <mat-error
                     *ngIf="director.get('panNumber').hasError('pattern')"
@@ -826,15 +827,21 @@
                   class="input-field"
                   formControlName="panOfSpouse"
                   maxlength="10"
+                  (input)="checkPAN()"
                   required
                 />
-                <mat-error
-                  *ngIf="
-                    schedule5AForm.controls['panOfSpouse'].hasError('pattern')
-                  "
-                  >Enter valid PAN (e.g XXXXX1234X)
-                </mat-error>
               </mat-form-field>
+
+              <mat-error
+                *ngIf="
+                  schedule5AForm.controls['panOfSpouse'].hasError('pattern')
+                "
+                >Enter valid PAN (e.g XXXXX1234X)
+              </mat-error>
+              
+              <mat-error *ngIf="panRepeat">
+                PAN of spouse can't be same as user PAN.</mat-error
+              >
             </div>
             <div class="col-sm-4 spsTp">
               <mat-label class="inputLabel"
@@ -849,9 +856,29 @@
                   name="AadhaarNumberOfTheSpouse"
                   class="input-field"
                   formControlName="aadhaarOfSpouse"
-                  maxlength="200"
+                  maxlength="12"
                 />
               </mat-form-field>
+
+              <mat-error
+                *ngIf="
+                  schedule5AForm.controls['aadhaarOfSpouse'].hasError(
+                    'minlength'
+                  )
+                "
+              >
+                Please enter valid aadhaar number
+              </mat-error>
+
+              <mat-error
+                *ngIf="
+                  schedule5AForm.controls['aadhaarOfSpouse'].hasError(
+                    'maxlength'
+                  )
+                "
+              >
+                Please enter valid aadhaar number
+              </mat-error>
             </div>
 
             <div class="col-sm-12 spsTp">
