@@ -29,6 +29,8 @@ import { AgTooltipComponent } from "../../../shared/components/ag-tooltip/ag-too
 import { ReAssignActionDialogComponent } from '../../components/re-assign-action-dialog/re-assign-action-dialog.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import * as moment from 'moment';
+import { DomSanitizer } from '@angular/platform-browser';
+
 declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-assigned-new-users',
@@ -72,6 +74,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   ];
   clearUserFilter: number;
   partnerType: any;
+  iframe: HTMLIFrameElement;
+  hideKmCloseIcon: boolean;
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -86,6 +90,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     private requestManager: RequestManager,
     private cacheManager: CacheManager,
     private userService: UserMsService,
+    private sanitizer: DomSanitizer,
+
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
@@ -1090,6 +1096,10 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     disposable.afterClosed().subscribe(result => {
     });
   }
+
+  isChatOpen = false;
+  kommChatLink = null;
+
   openChat(client) {
     let disposable = this.dialog.open(ChatOptionsDialogComponent, {
       width: '50%',
@@ -1102,11 +1112,39 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
+      if (result.id) {
+        this.isChatOpen = true;
+        this.openConversation(result.id)
+        this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
+      }
     });
 
   }
 
+  openConversation(id) {
+    this.hideKmCloseIcon=false;
 
+    let loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+
+    const baseUrl = "https://dashboard-proxy.kommunicate.io";
+    const userEmail = loginSmeDetails[0].email;
+    const userAccessToken = `${sessionStorage.getItem("kmAuthToken")}&appId=${environment.kmAppId}`;
+    const groupToOpen = id;
+
+    this.iframe = document.createElement("iframe");
+    this.iframe.setAttribute('src', `${baseUrl}/login?email=${userEmail}&password=${userAccessToken}&loginType=custom&referrer=/conversations/${groupToOpen}?showConversationSectionOnly=true`)
+    this.iframe.setAttribute('class', 'iframe-height');
+    let viewbox = document.getElementById('km-viewbox');
+    // viewbox.innerHTML = "";
+    viewbox.append(this.iframe);
+  }
+
+
+  closeChat() {
+    // this.isChatOpen = false;
+    this.iframe.setAttribute('class', 'hideKmChat');
+    this.hideKmCloseIcon=true;
+  }
 
   moreOptions(client) {
     console.log('client', client)

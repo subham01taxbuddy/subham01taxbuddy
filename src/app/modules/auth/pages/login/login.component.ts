@@ -15,6 +15,7 @@ import { ValidateOtpByWhatAppComponent } from '../../components/validate-otp-by-
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { RequestManager } from "../../../shared/services/request-manager";
 import { SpeedTestService } from 'ng-speed-test';
+import { ReviewService } from 'src/app/modules/review/services/review.service';
 
 declare let $: any;
 declare function we_login(userId: string);
@@ -48,7 +49,8 @@ export class LoginComponent implements OnInit {
     private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
     private requestManager: RequestManager,
-    private speedTestService: SpeedTestService
+    private speedTestService: SpeedTestService,
+    private reviewService: ReviewService
   ) {
     NavbarService.getInstance().component_link = this.component_link;
 
@@ -92,7 +94,7 @@ export class LoginComponent implements OnInit {
       this.registerLogin(userId);
       this.utilsService.getStoredSmeList();
       this.getAgentList();
-
+      this.generateKmAuthToken();
       let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
         'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];
       let roles = res.data[0]?.roles;
@@ -105,11 +107,11 @@ export class LoginComponent implements OnInit {
         // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
         //   this.router.navigate(['pages/tpa-interested']);
         //   this.utilsService.logAction(jhi.userId, 'login')
-      }else if(roles.indexOf("ROLE_FILER") !== -1){
+      } else if (roles.indexOf("ROLE_FILER") !== -1) {
         this.router.navigate(['/tasks/itr-assigned-users']);
         this.utilsService.logAction(userId, 'login');
 
-      }else if (allowedRoles.some(item => roles.includes(item))) {
+      } else if (allowedRoles.some(item => roles.includes(item))) {
         this.router.navigate(['/tasks/assigned-users-new']);
       } else {
         if (roles.length > 0)
@@ -401,6 +403,48 @@ export class LoginComponent implements OnInit {
         }
       }
     })
+  }
+
+  generateKmAuthToken() {
+    //'https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/sme-authtoken'
+    this.loading = true;
+    let param = `kommunicate/sme-authtoken`;
+    this.reviewService.postMethod(param, '').subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          this.utilsService.showSnackBar(response.message);
+          sessionStorage.setItem('kmAuthToken', response?.data?.token);
+          // this.validateAuthToken(response?.data?.token);
+        } else {
+          this.utilsService.showSnackBar(response.message);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to generate the kommunicate auth token');
+      });
+  }
+
+  validateAuthToken(authToken) {
+    // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/validate-token
+    this.loading = true;
+    let reqBody = {
+      "authToken": authToken
+    }
+    this.reviewService.postKmMethod('', reqBody).subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          this.utilsService.showSnackBar(response.message);
+        } else {
+          this.utilsService.showSnackBar(response.message);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to validate the kommunicate auth token');
+      });
   }
 
   mode: string = 'SIGN_IN';
