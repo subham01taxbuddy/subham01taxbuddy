@@ -713,6 +713,7 @@
                     name="panNumber"
                     class="input-field"
                     maxlength="10"
+                    required
                   />
                   <mat-error
                     *ngIf="director.get('panNumber').hasError('pattern')"
@@ -852,6 +853,26 @@
                   maxlength="200"
                 />
               </mat-form-field>
+
+              <mat-error
+                *ngIf="
+                  schedule5AForm.controls['aadhaarOfSpouse'].hasError(
+                    'minlength'
+                  )
+                "
+              >
+                Please enter valid aadhaar number
+              </mat-error>
+
+              <mat-error
+                *ngIf="
+                  schedule5AForm.controls['aadhaarOfSpouse'].hasError(
+                    'maxlength'
+                  )
+                "
+              >
+                Please enter valid aadhaar number
+              </mat-error>
             </div>
 
             <div class="col-sm-12 spsTp">
