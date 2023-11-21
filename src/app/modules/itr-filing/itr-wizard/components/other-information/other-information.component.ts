@@ -32,6 +32,7 @@ export class OtherInformationComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
   @Input() isEditOther = false;
   @Output() otherInfoSaved = new EventEmitter<boolean>();
+  panRepeat: boolean = false;
 
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -404,6 +405,16 @@ export class OtherInformationComponent implements OnInit {
     });
   }
 
+  checkPAN() {
+    const panOfSpouse = this.schedule5AForm.get('panOfSpouse');
+    // pan should not be same as self Pan validation
+    if (panOfSpouse.value === this.ITR_JSON.panNumber) {
+      this.panRepeat = true;
+    } else {
+      this.panRepeat = false;
+    }
+  }
+
   // change functions
   changeGovernedByPortugueseStatus() {
     const panOfSpouse = this.schedule5AForm.get('panOfSpouse');
@@ -771,7 +782,8 @@ export class OtherInformationComponent implements OnInit {
       this.schedule5AForm?.valid &&
       this.firmForm?.valid &&
       this.sharesForm?.valid &&
-      this.directorForm?.valid
+      this.directorForm?.valid &&
+      !this.panRepeat
     ) {
       this.serviceCall('saveAll');
     } else {
