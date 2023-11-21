@@ -22,6 +22,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { setTimeout } from 'timers';
 
 @Component({
   selector: 'app-other-information',
@@ -32,6 +33,7 @@ export class OtherInformationComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
   @Input() isEditOther = false;
   @Output() otherInfoSaved = new EventEmitter<boolean>();
+  panRepeat: boolean = false;
 
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -43,6 +45,9 @@ export class OtherInformationComponent implements OnInit {
 
   config: any;
   loading = false;
+
+  minDate: Date;
+  maxDate: Date;
 
   sharesTypes = [
     { value: 'LISTED', label: 'Listed' },
@@ -122,6 +127,17 @@ export class OtherInformationComponent implements OnInit {
 
   ngOnInit() {
     this.isEditable();
+
+    // Set the minimum to financial year and max to current date
+    const currentYear = new Date().getFullYear() - 1;
+    const thisYearStartDate = new Date(currentYear, 3, 1); // April 1st of the current year
+    const nextYearEndDate = new Date(currentYear + 1, 2, 31); // March 31st of the next year
+
+    console.log(currentYear);
+
+    this.minDate = thisYearStartDate;
+    this.maxDate = nextYearEndDate;
+    this.changeGovernedByPortugueseStatus();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -390,14 +406,43 @@ export class OtherInformationComponent implements OnInit {
     });
   }
 
+  checkPAN() {
+    const panOfSpouse = this.schedule5AForm.get('panOfSpouse');
+    const panOfSpouseValue = this.schedule5AForm.get('panOfSpouse').value.toUpperCase();
+    // pan should not be same as self Pan validation
+    if (panOfSpouseValue === this.ITR_JSON.panNumber) {
+      this.panRepeat = true;
+    } else {
+      this.panRepeat = false;
+    }
+  }
+
   // change functions
   changeGovernedByPortugueseStatus() {
-    console.log(
-      'changeGovernedByPortugueseStatus: ' +
-        this.Copy_ITR_JSON.portugeseCC5AFlag
-    );
+    const panOfSpouse = this.schedule5AForm.get('panOfSpouse');
+    const aadhaarOfSpouse = this.schedule5AForm.get('aadhaarOfSpouse');
+    const nameOfSpouse = this.schedule5AForm.get('nameOfSpouse');
+
     if (this.Copy_ITR_JSON.portugeseCC5AFlag === 'Y') {
       this.schedule5AForm.get('isGovernedByPortuguese').setValue('Y');
+
+      panOfSpouse.setValidators(
+        Validators.compose([
+          Validators.required,
+          Validators.pattern(AppConstants.panNumberRegex),
+        ])
+      );
+      panOfSpouse.updateValueAndValidity();
+
+      aadhaarOfSpouse.setValidators(
+        Validators.compose([Validators.minLength(12), Validators.maxLength(12)])
+      );
+      aadhaarOfSpouse.updateValueAndValidity();
+
+      this.validationHp();
+      this.validationCg();
+      this.validationBusiness();
+      this.validationOth();
     } else {
       this.schedule5AForm.reset();
       this.schedule5AForm.get('isGovernedByPortuguese').setValue('N');
@@ -405,6 +450,17 @@ export class OtherInformationComponent implements OnInit {
       this.schedule5AForm.get('businessOrProfession').reset();
       this.schedule5AForm.get('capitalGain').reset();
       this.schedule5AForm.get('otherSource').reset();
+
+      panOfSpouse.clearValidators();
+      panOfSpouse.updateValueAndValidity();
+      aadhaarOfSpouse.clearValidators();
+      aadhaarOfSpouse.updateValueAndValidity();
+      nameOfSpouse?.clearValidators();
+      nameOfSpouse.updateValueAndValidity();
+      this.validationHp();
+      this.validationCg();
+      this.validationBusiness();
+      this.validationOth();
 
       this.Copy_ITR_JSON.schedule5a = {
         nameOfSpouse: '',
@@ -428,7 +484,6 @@ export class OtherInformationComponent implements OnInit {
       }
     }
   }
-
 
   ChangeDirectorStatus() {
     if (this.Copy_ITR_JSON.systemFlags?.directorInCompany) {
@@ -480,15 +535,17 @@ export class OtherInformationComponent implements OnInit {
   addPanValidator(i) {
     const sharesArray = this.getSharesArray;
     if (sharesArray?.controls[i].get('typeOfCompany')?.value === 'D') {
-      sharesArray?.controls[i].get('companyPAN')?.setValidators([
-        Validators.required,
-        Validators.pattern(AppConstants.panNumberRegex),
-      ]);
+      sharesArray?.controls[i]
+        .get('companyPAN')
+        ?.setValidators([
+          Validators.required,
+          Validators.pattern(AppConstants.panNumberRegex),
+        ]);
       sharesArray?.controls[i].get('companyPAN')?.updateValueAndValidity();
     } else {
-      sharesArray?.controls[i].get('companyPAN')?.setValidators([
-        Validators.pattern(AppConstants.panNumberRegex),
-      ]);
+      sharesArray?.controls[i]
+        .get('companyPAN')
+        ?.setValidators([Validators.pattern(AppConstants.panNumberRegex)]);
       sharesArray?.controls[i].get('companyPAN')?.updateValueAndValidity();
     }
   }
@@ -577,7 +634,7 @@ export class OtherInformationComponent implements OnInit {
         console.log('copy of itr json', this.Copy_ITR_JSON);
         this.loading = false;
 
-        if(msg === 'saveAll'){
+        if (msg === 'saveAll') {
           this.otherInfoSaved.emit(true);
           this.utilsService.showSnackBar('All details are saved successfully');
         }
@@ -611,8 +668,13 @@ export class OtherInformationComponent implements OnInit {
     this.saveAllOtherDetails();
   }
 
-  saveAllOtherDetails(){
-    if (!this.schedule5AForm?.valid || !this.firmForm?.valid || !this.sharesForm?.valid || !this.directorForm?.valid){
+  saveAllOtherDetails() {
+    if (
+      !this.schedule5AForm?.valid ||
+      !this.firmForm?.valid ||
+      !this.sharesForm?.valid ||
+      !this.directorForm?.valid
+    ) {
       this.otherInfoSaved.emit(false);
       return;
     }
@@ -663,19 +725,25 @@ export class OtherInformationComponent implements OnInit {
 
       this.Copy_ITR_JSON.schedule5a = schedule5a;
     } else {
-      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
+        .first()
+        .focus();
     }
 
     // saving director details
     if (this.directorForm?.valid) {
       console.log('SaveDirectorDetails', this.directorForm?.getRawValue());
-      const directorsArray = <FormArray>this.directorForm?.get('directorsArray');
+      const directorsArray = <FormArray>(
+        this.directorForm?.get('directorsArray')
+      );
       this.Copy_ITR_JSON.directorInCompany = directorsArray?.getRawValue();
 
       this.Copy_ITR_JSON.systemFlags.directorInCompany =
         this.Copy_ITR_JSON?.directorInCompany?.length > 0 ? true : false;
     } else {
-      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
+        .first()
+        .focus();
     }
 
     // save unlisted details
@@ -687,7 +755,9 @@ export class OtherInformationComponent implements OnInit {
       this.Copy_ITR_JSON.systemFlags.haveUnlistedShares =
         this.Copy_ITR_JSON?.unlistedSharesDetails?.length > 0 ? true : false;
     } else {
-      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
+        .first()
+        .focus();
     }
 
     // save firm details
@@ -696,24 +766,40 @@ export class OtherInformationComponent implements OnInit {
       const firmsArray = <FormArray>this.firmForm?.get('firmsArray');
       this.Copy_ITR_JSON.partnerInFirms = firmsArray?.getRawValue();
 
-      if (this.Copy_ITR_JSON?.partnerInFirms && this.Copy_ITR_JSON?.partnerInFirms?.length === 0) {
+      if (
+        this.Copy_ITR_JSON?.partnerInFirms &&
+        this.Copy_ITR_JSON?.partnerInFirms?.length === 0
+      ) {
         this.Copy_ITR_JSON.partnerInFirmFlag = 'N';
       } else {
         this.Copy_ITR_JSON.partnerInFirmFlag = 'Y';
       }
     } else {
-      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
+        .first()
+        .focus();
     }
 
-    if (this.schedule5AForm?.valid && this.firmForm?.valid && this.sharesForm?.valid && this.directorForm?.valid){
+    if (
+      this.schedule5AForm?.valid &&
+      this.firmForm?.valid &&
+      this.sharesForm?.valid &&
+      this.directorForm?.valid &&
+      !this.panRepeat
+    ) {
       this.serviceCall('saveAll');
     } else {
       this.otherInfoSaved.emit(false);
     }
   }
 
-  isFormValid(){
-    return this.schedule5AForm?.valid && this.firmForm?.valid && this.sharesForm?.valid && this.directorForm?.valid;
+  isFormValid() {
+    return (
+      this.schedule5AForm?.valid &&
+      this.firmForm?.valid &&
+      this.sharesForm?.valid &&
+      this.directorForm?.valid
+    );
   }
 
   // get functions
@@ -771,17 +857,30 @@ export class OtherInformationComponent implements OnInit {
   ) {
     const receiptValue = parseFloat(receiptControl?.value);
     const apportionedValue = parseFloat(apportionedControl?.value);
-
-    if (apportionedValue > receiptValue) {
-      apportionedControl?.setValidators(Validators.max(receiptValue));
-      apportionedControl.updateValueAndValidity();
-    }
-
     const tdsReceiptValue = parseFloat(tdsReceiptControl?.value);
     const tdsApportionedValue = parseFloat(tdsApportionedControl?.value);
 
-    if (tdsApportionedValue > tdsReceiptValue) {
-      tdsApportionedControl?.setValidators(Validators.max(tdsReceiptValue));
+    if (this.Copy_ITR_JSON.portugeseCC5AFlag === 'Y') {
+      if (apportionedValue > receiptValue) {
+        apportionedControl?.setValidators(Validators.max(receiptValue));
+        apportionedControl.updateValueAndValidity();
+      }
+
+      if (tdsApportionedValue > tdsReceiptValue) {
+        tdsApportionedControl?.setValidators(Validators.max(tdsReceiptValue));
+        tdsApportionedControl.updateValueAndValidity();
+      }
+    } else {
+      tdsReceiptControl?.clearValidators();
+      tdsReceiptControl?.updateValueAndValidity();
+
+      receiptControl?.clearValidators();
+      receiptControl?.updateValueAndValidity();
+
+      apportionedControl?.clearValidators();
+      apportionedControl.updateValueAndValidity();
+
+      tdsApportionedControl?.clearValidators();
       tdsApportionedControl.updateValueAndValidity();
     }
   }

@@ -2304,6 +2304,120 @@
                             }}
                           </td>
                         </tr>
+
+                        <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.aggregateValueWithoutConsideration ||
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.immovablePropertyInadequateConsideration || 
+                                finalCalculations?.otherIncome?.otherIncomes
+                                ?.immovablePropertyWithoutConsideration ||
+                                finalCalculations?.otherIncome?.otherIncomes
+                                ?.anyOtherPropertyInadequateConsideration ||
+                                finalCalculations?.otherIncome?.otherIncomes
+                                ?.anyOtherPropertyWithoutConsideration
+                            "
+                          >
+                            <th colspan="2">Gift Income</th>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.aggregateValueWithoutConsideration
+                            "
+                          >
+                            <td>Money received without consideration</td>
+
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.aggregateValueWithoutConsideration
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.immovablePropertyWithoutConsideration
+                            "
+                          >
+                            <td>Immovable property received without consideration	
+                            </td>
+
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.immovablePropertyWithoutConsideration
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.immovablePropertyInadequateConsideration
+                            "
+                          >
+                            <td>Immovable property received for inadequate consideration</td>
+
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.immovablePropertyInadequateConsideration
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.anyOtherPropertyWithoutConsideration
+                            "
+                          >
+                            <td>Any Other property received without consideration</td>
+
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.anyOtherPropertyWithoutConsideration
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.anyOtherPropertyInadequateConsideration
+                            "
+                          >
+                            <td>Any Other property received for inadequate consideration</td>
+
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.anyOtherPropertyInadequateConsideration
+                                )
+                              }}
+                            </td>
+                          </tr>
+
                           <tr>
                             <th>Total</th>
                             <th>

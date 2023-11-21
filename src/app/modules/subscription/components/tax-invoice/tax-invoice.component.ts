@@ -55,11 +55,12 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  maxDate = new Date(2024, 2, 31);
+  maxStartDate = new Date()
+  maxDate =this.maxStartDate
   minDate = new Date(2023, 3, 1);
   // maxDate: any = new Date();
   allFilerList: any;
-  toDateMin: any;
+  toDateMin = this.minDate;
   roles: any;
   ownerList: any;
   ownerNames: User[];

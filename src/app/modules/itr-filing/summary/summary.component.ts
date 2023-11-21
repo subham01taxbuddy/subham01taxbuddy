@@ -227,7 +227,12 @@ export class SummaryComponent implements OnInit {
         pfInterest1012IIP?: number,
         anyOtherInterest: number;
         familyPension: number;
-        dividendIncome: number;
+        aggregateValueWithoutConsideration?: number,
+        immovablePropertyWithoutConsideration?: number,
+        immovablePropertyInadequateConsideration?: number,
+        anyOtherPropertyWithoutConsideration?: number
+        anyOtherPropertyInadequateConsideration?: number,
+        dividendIncome: number; 
       };
       otherIncomeTotal: number;
     };
@@ -3879,6 +3884,31 @@ export class SummaryComponent implements OnInit {
                           (val) => val.incomeType === 'INTEREST_ACCRUED_10_12_II_P'
                         )?.amount,
 
+                        aggregateValueWithoutConsideration:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                          (val) => val.incomeType === 'AGGREGATE_VALUE_WITHOUT_CONS'
+                        )?.amount,
+
+                        immovablePropertyWithoutConsideration:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                          (val) => val.incomeType === 'IMMOV_PROP_WITHOUT_CONS'
+                        )?.amount,
+
+                        immovablePropertyInadequateConsideration:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                          (val) => val.incomeType === 'IMMOV_PROP_INADEQ_CONS'
+                        )?.amount,
+
+                        anyOtherPropertyWithoutConsideration:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                          (val) => val.incomeType === 'ANY_OTHER_PROP_WITHOUT_CONS'
+                        )?.amount,
+
+                        anyOtherPropertyInadequateConsideration:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                          (val) => val.incomeType === 'ANY_OTHER_PROP_INADEQ_CONS'
+                        )?.amount,
+
                       anyOtherInterest:
                         this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                           (val) => val.incomeType === 'ANY_OTHER'
@@ -5447,6 +5477,31 @@ export class SummaryComponent implements OnInit {
                         pfInterest1012IIP:
                         this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                           (val) => val.incomeType === 'INTEREST_ACCRUED_10_12_II_P'
+                        )?.amount,
+
+                        aggregateValueWithoutConsideration:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                          (val) => val.incomeType === 'AGGREGATE_VALUE_WITHOUT_CONS'
+                        )?.amount,
+
+                        immovablePropertyWithoutConsideration:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                          (val) => val.incomeType === 'IMMOV_PROP_WITHOUT_CONS'
+                        )?.amount,
+
+                        immovablePropertyInadequateConsideration:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                          (val) => val.incomeType === 'IMMOV_PROP_INADEQ_CONS'
+                        )?.amount,
+
+                        anyOtherPropertyWithoutConsideration:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                          (val) => val.incomeType === 'ANY_OTHER_PROP_WITHOUT_CONS'
+                        )?.amount,
+
+                        anyOtherPropertyInadequateConsideration:
+                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                          (val) => val.incomeType === 'ANY_OTHER_PROP_INADEQ_CONS'
                         )?.amount,
 
                     anyOtherInterest:

@@ -51,7 +51,7 @@ export class TcsComponent implements OnInit {
       this.Copy_ITR_JSON.taxPaid?.tcs &&
       this.Copy_ITR_JSON.taxPaid?.tcs.length > 0
     ) {
-      this.Copy_ITR_JSON.taxPaid.tcs.forEach((item) => {
+      this.Copy_ITR_JSON.taxPaid?.tcs?.forEach((item) => {
         this.addMoreSalary(item);
       });
     } else {
@@ -94,7 +94,7 @@ export class TcsComponent implements OnInit {
     }
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
-      srNo: [item ? item.srNo : this.Copy_ITR_JSON.taxPaid?.tcs.length],
+      srNo: [item ? item.srNo : this.Copy_ITR_JSON.taxPaid?.tcs?.length],
       collectorTAN: [
         item ? item.collectorTAN : '',
         [Validators.required, Validators.pattern(AppConstants.tanNumberRegex)],

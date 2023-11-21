@@ -238,16 +238,18 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   maskMobileNumber(originalMobileNumber: string): string {
     if (originalMobileNumber && originalMobileNumber.length >= 10) {
-      const maskedPart = '*'.repeat(originalMobileNumber.length - 4);
-      const lastFourDigits = originalMobileNumber.slice(-4);
-      return maskedPart + lastFourDigits;
+      let maskedNo ='X'.repeat(originalMobileNumber.length);
+      return maskedNo
     }
     return originalMobileNumber;
   }
 
+  unMaskedMobileNo:any;
+
   setFormValues(data) {
     console.log('data', data);
     this.userName.setValue(data?.fName + ' ' + data?.lName);
+    this.unMaskedMobileNo = data?.mobileNumber
     if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
       this.mobileNumber.setValue(data?.mobileNumber);
     } else {
@@ -328,7 +330,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   get zipcode() {
     return this.personalInfoForm.controls['zipcode'] as FormControl;
   }
- 
+
   get filerName() {
     return this.personalInfoForm.controls['filerName'] as FormControl;
   }
@@ -1017,7 +1019,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       aadharNumber: this.selectedUserInfo.aadharNumber,
       panNumber: this.selectedUserInfo.panNumber,
       imageURL: this.selectedUserInfo.imageURL,
-      mobileNumber: this.mobileNumber.value,
+      mobileNumber: this.unMaskedMobileNo,
       residentialStatus: this.selectedUserInfo.residentialStatus,
       zohoDeskId: this.selectedUserInfo.zohoDeskId,
       address: [

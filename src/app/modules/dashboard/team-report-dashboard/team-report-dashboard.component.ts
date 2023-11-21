@@ -9,6 +9,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { LeaderListDropdownComponent } from '../../shared/components/leader-list-dropdown/leader-list-dropdown.component';
+import { ReportService } from 'src/app/services/report-service';
 
 export const MY_FORMATS = {
   parse: {
@@ -37,35 +38,36 @@ export const MY_FORMATS = {
 })
 export class TeamReportDashboardComponent implements OnInit {
   loading = false;
-  loggedInSmeUserId:any;
-  roles:any;
+  loggedInSmeUserId: any;
+  roles: any;
   // maxDate = new Date(2024,2,31);
   // minDate = new Date(2023, 3, 1);
   minDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
   maxStartDate = new Date().toISOString().slice(0, 10);
-  minEndDate= new Date().toISOString().slice(0, 10);
+  minEndDate = new Date().toISOString().slice(0, 10);
   startDate = new FormControl('');
   endDate = new FormControl('');
-  invoiceData:any;
-  docUploadedData:any;
-  summaryConfirmationData:any;
-  eVerificationPendingData:any;
-  scheduleCallData:any;
-  commissionData:any;
-  operationTeamData:any;
-  partnersAssignmentData:any;
+  invoiceData: any;
+  docUploadedData: any;
+  summaryConfirmationData: any;
+  eVerificationPendingData: any;
+  scheduleCallData: any;
+  commissionData: any;
+  operationTeamData: any;
+  partnersAssignmentData: any;
   today: Date;
-  totalOriginal:number;
-  totalRevised:number;
+  totalOriginal: number;
+  totalRevised: number;
+  scheduledCallData:any;
 
   constructor(
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private itrService: ItrMsService,
+    private reportService:ReportService,
     private router: Router,
-    public datePipe: DatePipe,
+    public datePipe: DatePipe
   ) {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
@@ -75,30 +77,30 @@ export class TeamReportDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = this.loggedInSmeUserId;
+    }
     this.search();
   }
 
-  search(){
+  search() {
     this.getInvoiceReports();
     this.getOperationTeamDetails();
-    this.getPartnersAssignmentDetails();
+    // this.getPartnersAssignmentDetails();
     this.getTotalCommission();
+    this.getScheduledCallDetails();
   }
 
   leaderId: number;
   ownerId: number;
   agentId: number;
 
-  fromSme1(event, isOwner) {
-     console.log('sme-drop-down', event, isOwner);
-     if (isOwner) {
+  fromSme1(event) {
+    console.log('sme-drop-down', event);
+    if (event) {
       this.leaderId = event ? event.userId : null;
-    } else {
-      this.ownerId = event ? event.userId : null;
     }
-    if (this.ownerId) {
-      this.agentId = this.ownerId;
-    } else if (this.leaderId) {
+    if (this.leaderId) {
       this.agentId = this.leaderId;
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
@@ -106,130 +108,26 @@ export class TeamReportDashboardComponent implements OnInit {
     }
   }
 
-  getInvoiceReports(){
-      // API to get invoice report for dashboard of leader
-      // https://uat-api.taxbuddy.com/user/dashboard/invoice-report?leaderUserId=2132&fromDate=2023-05-05&toDate=2023-05-05&serviceType=ITR
-
+  getInvoiceReports() {
+    // API to get invoice report for dashboard of leader
+    //'https://uat-api.taxbuddy.com/report/bo/dashboard/invoice-report?fromDate=2023-09-01&toDate=2023-11-08&serviceType=ITR'
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    let leaderUserId = this.loggedInSmeUserId;
-    let serviceType = 'ITR';
 
-    let param=''
+    let param = '';
     let userFilter = '';
-    if (this.leaderId && !this.ownerId) {
+    if (this.leaderId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.ownerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
-    }
 
-    param = `/dashboard/invoice-report?fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR${userFilter}`
+    param = `/bo/dashboard/invoice-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
 
-    this.userMsService.getMethodNew(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
-         this.invoiceData = response.data;
-
-      }else{
-        this.loading = false;
-        this. _toastMessageService.alert("error",response.message);
-      }
-    },(error) => {
-      this.loading = false;
-      this. _toastMessageService.alert("error","Error");
-    })
-  }
-
-  getOperationTeamDetails(){
-    // API to get operation team
-    // https://uat-api.taxbuddy.com/user/dashboard/sme-report?leaderUserId=8585
-    this.loading = true;
-    let param=''
-    let userFilter = '';
-    if (this.leaderId && !this.ownerId) {
-      userFilter += `?leaderUserId=${this.leaderId}`;
-    }
-    if (this.ownerId) {
-      userFilter += `?ownerUserId=${this.ownerId}`;
-    }
-
-    param = `/dashboard/sme-report${userFilter}`
-
-    this.userMsService.getMethodNew(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
-         this.operationTeamData = response.data;
-
-      }else{
-        this.loading = false;
-        this. _toastMessageService.alert("error",response.message);
-      }
-    },(error) => {
-      this.loading = false;
-      this. _toastMessageService.alert("error","Error");
-    })
-  }
-
-  getPartnersAssignmentDetails(){
-    // API to get Filers/Partners Assignment (ITR)
-    // https://uat-api.taxbuddy.com/user/dashboard/filers-partnerAssignment?fromDate=2020-01-01&toDate=2020-01-31
-
-    this.loading = true;
-    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    let param=''
-    let userFilter = '';
-    if (this.leaderId && !this.ownerId) {
-      userFilter += `&leaderUserId=${this.leaderId}`;
-    }
-    if (this.ownerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
-    }
-
-    param = `/dashboard/filers-partnerAssignment?fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR${userFilter}`
-
-    this.userMsService.getMethodNew(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
-         this.partnersAssignmentData = response.data;
-
-      }else{
-        this.loading = false;
-        this. _toastMessageService.alert("error",response.message);
-      }
-    },(error) => {
-      this.loading = false;
-      this. _toastMessageService.alert("error","Error");
-    })
-
-  }
-
-  getTotalCommission(){
-    // API to get totalcommission
-    //https://uat-api.taxbuddy.com/itr/dashboard/partner-commission-cumulative?fromDate=2023-04-01&toDate=2023-05-16
-    this.loading = true;
-    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    let param=''
-    let userFilter = '';
-    if (this.leaderId && !this.ownerId) {
-      userFilter += `&leaderUserId=${this.leaderId}`;
-    }
-    if (this.ownerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
-    }
-
-    param = `/dashboard/partner-commission-cumulative?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
-
-    this.userMsService.getMethodNew(param).subscribe(
+    this.reportService.getMethod(param).subscribe(
       (response: any) => {
+        this.loading = false;
         if (response.success) {
-          this.commissionData = response?.data;
-          this.totalOriginal = this.commissionData.itr1 + this.commissionData.itr2 + this.commissionData.itr3 + this.commissionData.itr4 + this.commissionData.itrOther + this.commissionData.itrU ;
-          this.totalRevised = this.commissionData.itr1_revised + this.commissionData.itr2_revised + this.commissionData.itr3_revised + this.commissionData.itr4_revised ;
-          console.log('original items',this.totalOriginal);
+          this.invoiceData = response.data;
         } else {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
@@ -237,12 +135,147 @@ export class TeamReportDashboardComponent implements OnInit {
       },
       (error) => {
         this.loading = false;
-        this._toastMessageService.alert('error', "Error while filer commission report: Not_found: Data not found");
+        this._toastMessageService.alert('error', 'Error');
       }
     );
-
   }
 
+  getOperationTeamDetails() {
+    // API to get operation team
+    // 'https://uat-api.taxbuddy.com/report/bo/dashboard/sme-report'
+    this.loading = true;
+    let param = '';
+    let userFilter = '';
+    if (this.leaderId) {
+      userFilter += `?leaderUserId=${this.leaderId}`;
+    }
+    param = `/bo/dashboard/sme-report${userFilter}`;
+
+    this.reportService.getMethod(param).subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          this.operationTeamData = response.data;
+        } else {
+          this.loading = false;
+          this._toastMessageService.alert('error', response.message);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert('error', 'Error');
+      }
+    );
+  }
+
+  getPartnersAssignmentDetails() {
+    // API to get Filers/Partners Assignment (ITR)
+    // https://uat-api.taxbuddy.com/user/dashboard/filers-partnerAssignment?fromDate=2020-01-01&toDate=2020-01-31
+
+    this.loading = true;
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    let param = '';
+    let userFilter = '';
+    if (this.leaderId && !this.ownerId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.ownerId) {
+      userFilter += `&ownerUserId=${this.ownerId}`;
+    }
+    param = `/dashboard/filers-partnerAssignment?fromDate=${fromDate}&toDate=${toDate}&serviceType=ITR${userFilter}`;
+    this.userMsService.getMethodNew(param).subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          this.partnersAssignmentData = response.data;
+        } else {
+          this.loading = false;
+          this._toastMessageService.alert('error', response.message);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert('error', 'Error');
+      }
+    );
+  }
+
+  getTotalCommission() {
+    // API to get totalcommission
+    // 'https://uat-api.taxbuddy.com/report/bo/dashboard/partner-commission-cumulative?fromDate=2023-04-01&toDate=2023-11-13' \
+    this.loading = true;
+    let fromDate =this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    let param = '';
+    let userFilter = '';
+    if (this.leaderId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+
+    param = `/bo/dashboard/partner-commission-cumulative?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
+
+    this.reportService.getMethod(param).subscribe(
+      (response: any) => {
+        if (response.success) {
+          this.commissionData = response?.data;
+          this.totalOriginal =
+            this.commissionData.itr1 +
+            this.commissionData.itr2 +
+            this.commissionData.itr3 +
+            this.commissionData.itr4 +
+            this.commissionData.itrU +
+            this.commissionData.originalReturnOther;
+          this.totalRevised =
+            this.commissionData.itr1_revised +
+            this.commissionData.itr2_revised +
+            this.commissionData.itr3_revised +
+            this.commissionData.itr4_revised +
+            this.commissionData.reviseReturnOther;
+          console.log('original items', this.totalOriginal);
+        } else {
+          this.loading = false;
+          this._toastMessageService.alert('error', response.message);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert(
+          'error',
+          'Error while filer commission report: Not_found: Data not found'
+        );
+      }
+    );
+  }
+
+  getScheduledCallDetails(){
+    //'https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?fromDate=2023-04-01&toDate=2023-11-13' \
+    this.loading = true;
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    let param = '';
+    let userFilter = '';
+    if (this.leaderId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+
+    param = `/bo/dashboard/schedule-call?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
+    this.reportService.getMethod(param).subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          this.scheduledCallData = response.data;
+        } else {
+          this.loading = false;
+          this._toastMessageService.alert('error', response.message);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert('error', 'Error');
+      }
+    );
+  }
 
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {

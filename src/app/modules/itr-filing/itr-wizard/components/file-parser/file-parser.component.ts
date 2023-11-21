@@ -234,8 +234,8 @@ export class FileParserComponent implements OnInit {
                     //filter out all other cg data except the one we get from cg statement
                     let otherCgData = this.ITR_JSON.capitalGain.filter(
                       (item: any) =>
-                        item.assetType === 'EQUITY_SHARES_LISTED' &&
-                        item.assetType === 'GOLD'
+                        item.assetType !== 'EQUITY_SHARES_LISTED' &&
+                        item.assetType !== 'GOLD'
                     );
                     if (result.data.capitalGain) {
                       result.data.capitalGain.forEach((cgObject) => {

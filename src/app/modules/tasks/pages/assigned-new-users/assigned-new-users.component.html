@@ -106,5 +106,19 @@
 
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
 
+
+    <div  class="panel kmFrame" id="km-viewbox">
+      <button *ngIf="!hideKmCloseIcon" class="close-kmChat" (click)="closeChat()"><i class="fa fa-close kmIcon"></i> </button>
+    </div>
+
   </div>
+
+  <!-- <ng-template cdkConnectedOverlay [cdkConnectedOverlayOpen]="isChatOpen"> -->
+    <!-- <button (click)="closeChat()"> <i class="fa fa-close"></i> </button>
+    <iframe class='chat-overlay' src='https://dashboard-proxy.kommunicate.io/login?showConversationSectionOnly=true'
+      id='custom-dashboard'></iframe> -->
+
+
+  <!-- </ng-template> -->
+
 </div>

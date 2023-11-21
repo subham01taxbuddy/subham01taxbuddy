@@ -199,6 +199,18 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.otherIncomesFormArray = this.createOtherIncomeForm();
     this.otherIncomeFormGroup = this.fb.group({
       otherIncomes: this.otherIncomesFormArray,
+      giftTax: this.fb.group({
+        aggregateValueWithoutConsideration: [],
+        aggregateValueWithoutConsiderationNotTaxable: [false],
+        immovablePropertyWithoutConsideration: [],
+        immovablePropertyWithoutConsiderationNotTaxable: [false],
+        immovablePropertyInadequateConsideration: [],
+        immovablePropertyInadequateConsiderationNotTaxable: [false],
+        anyOtherPropertyWithoutConsideration: [],
+        anyOtherPropertyWithoutConsiderationNotTaxable: [false],
+        anyOtherPropertyInadequateConsideration: [],
+        anyOtherPropertyInadequateConsiderationNotTaxable: [false],
+      }),
       dividendIncomes: this.fb.group({
         quarter1: [null],
         quarter2: [null],
@@ -230,7 +242,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.setAgriIncValues();
     this.validateIncomeValueOnBlur();
   }
-
+  
   private createOtherIncomeForm() {
     const data = [];
     for (let i = 0; i < this.otherIncomeDropdown.length; i++) {
@@ -346,9 +358,25 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    let giftTax = this.otherIncomeFormGroup.get('giftTax') as FormGroup;
+
+    this.Copy_ITR_JSON.giftTax = {
+      aggregateValueWithoutConsideration: giftTax.get("aggregateValueWithoutConsideration").value,
+      aggregateValueWithoutConsiderationNotTaxable: giftTax.get("aggregateValueWithoutConsiderationNotTaxable").value,
+      immovablePropertyWithoutConsideration: giftTax.get("immovablePropertyWithoutConsideration").value,
+      immovablePropertyWithoutConsiderationNotTaxable: giftTax.get("immovablePropertyWithoutConsiderationNotTaxable").value,
+      immovablePropertyInadequateConsideration: giftTax.get("immovablePropertyInadequateConsideration").value,
+      immovablePropertyInadequateConsiderationNotTaxable: giftTax.get("immovablePropertyInadequateConsiderationNotTaxable").value,
+      anyOtherPropertyWithoutConsideration: giftTax.get("anyOtherPropertyWithoutConsideration").value,
+      anyOtherPropertyWithoutConsiderationNotTaxable: giftTax.get("anyOtherPropertyWithoutConsiderationNotTaxable").value,
+      anyOtherPropertyInadequateConsideration: giftTax.get("anyOtherPropertyInadequateConsideration").value,
+      anyOtherPropertyInadequateConsiderationNotTaxable: giftTax.get("anyOtherPropertyInadequateConsiderationNotTaxable").value,
+    }
+    
     let dividendIncomes = this.otherIncomeFormGroup.controls[
       'dividendIncomes'
     ] as FormGroup;
+
     this.Copy_ITR_JSON.dividendIncomes = [
       {
         income: dividendIncomes.controls['quarter1'].value,
@@ -376,7 +404,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         quarter: 5,
       },
     ];
+
     console.log('Copy ITR JSON', this.Copy_ITR_JSON);
+    
     this.loading = true;
     this.Copy_ITR_JSON.incomes = this.Copy_ITR_JSON.incomes?.filter(
       (item: any) =>
@@ -593,6 +623,21 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       // if (sec17_1.length > 0) {
       //   this.summarySalaryForm.controls['sec17_1'].setValue(sec17_1[0].OthNatOfInc);
       // }
+    }
+
+    if(this.ITR_JSON.giftTax != null){
+      let giftTaxJson =  this.ITR_JSON.giftTax;
+      let giftTax = this.otherIncomeFormGroup.get('giftTax') as FormGroup;
+      giftTax.get("aggregateValueWithoutConsideration").setValue(giftTaxJson.aggregateValueWithoutConsideration);
+      giftTax.get("aggregateValueWithoutConsiderationNotTaxable").setValue(giftTaxJson.aggregateValueWithoutConsiderationNotTaxable);
+      giftTax.get("immovablePropertyWithoutConsideration").setValue(giftTaxJson.immovablePropertyWithoutConsideration);
+      giftTax.get("immovablePropertyWithoutConsiderationNotTaxable").setValue(giftTaxJson.immovablePropertyWithoutConsiderationNotTaxable);
+      giftTax.get("immovablePropertyInadequateConsideration").setValue(giftTaxJson.immovablePropertyInadequateConsideration);
+      giftTax.get("immovablePropertyInadequateConsiderationNotTaxable").setValue(giftTaxJson.immovablePropertyInadequateConsiderationNotTaxable);
+      giftTax.get("anyOtherPropertyWithoutConsideration").setValue(giftTaxJson.anyOtherPropertyWithoutConsideration);
+      giftTax.get("anyOtherPropertyWithoutConsiderationNotTaxable").setValue(giftTaxJson.anyOtherPropertyWithoutConsiderationNotTaxable);
+      giftTax.get("anyOtherPropertyInadequateConsideration").setValue(giftTaxJson.anyOtherPropertyInadequateConsideration);
+      giftTax.get("anyOtherPropertyInadequateConsiderationNotTaxable").setValue(giftTaxJson.anyOtherPropertyInadequateConsiderationNotTaxable);
     }
 
     if (this.ITR_JSON.dividendIncomes instanceof Array) {

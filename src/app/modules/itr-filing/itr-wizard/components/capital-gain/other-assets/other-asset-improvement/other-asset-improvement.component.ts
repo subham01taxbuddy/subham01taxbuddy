@@ -395,6 +395,7 @@ export class OtherAssetImprovementComponent implements OnInit {
       console.log('GAIN Type : ', res);
 
       this.assetsForm.controls['gainType']?.setValue(res.data.capitalGainType);
+      this.calculateCg();
     });
   }
 
@@ -474,7 +475,7 @@ export class OtherAssetImprovementComponent implements OnInit {
 
       // filtering out undefined or null elements from improvement array
       filteredCapitalGain[0].improvement =
-        filteredCapitalGain[0]?.improvement.filter(
+        filteredCapitalGain[0]?.improvement?.filter(
           (element) => element !== null && element !== undefined
         );
 

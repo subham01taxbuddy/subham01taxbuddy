@@ -135,7 +135,7 @@
                   <mat-label>Buy Date*</mat-label>
                   <mat-form-field appearance="outline">
                     <input
-                      [max]="maxPurchaseDate"
+                      [max]="bonds.get('sellDate').value"
                       matInput
                       class="input-field"
                       readonly
@@ -394,7 +394,7 @@
             </mat-form-field>
           </div>
           <div class="col-sm-4 spsTp">
-            <mat-label>Amount deposited on CGAS*</mat-label>
+            <mat-label>CGAS Amount Deposited Before Due Date*</mat-label>
             <mat-form-field appearance="outline">
               <input
                 matInput

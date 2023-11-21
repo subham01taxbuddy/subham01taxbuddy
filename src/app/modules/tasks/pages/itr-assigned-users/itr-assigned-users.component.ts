@@ -136,13 +136,13 @@ export class ItrAssignedUsersComponent implements OnInit {
   requestManagerSubscription: Subscription;
   dataOnLoad = true;
   ngOnInit() {
-     if (this.loggedInUserRoles.includes('ROLE_FILER')) {
+    if (this.loggedInUserRoles.includes('ROLE_FILER')) {
       this.searchMenus = [
         { value: 'name', name: 'User Name' },
         { value: 'emailId', name: 'Email' },
         { value: 'panNumber', name: 'PAN' }
       ]
-    }else{
+    } else {
       this.searchMenus = [
         { value: 'name', name: 'User Name' },
         { value: 'emailId', name: 'Email' },
@@ -167,7 +167,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       }
       else {
         if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
-          this.filerId = this.agentId ;
+          this.filerId = this.agentId;
           this.partnerType = this.utilsService.getPartnerType();
           this.search();
         } else {
@@ -281,15 +281,28 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   checkSubscription(data: any) {
+    const loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+
     let itrSubscriptionFound = false;
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.loading = true;
-    let param = `/subscription-dashboard-new/${loggedInSmeUserId}?mobileNumber=` + data?.mobileNumber;
-    this.itrMsService.getMethod(param).subscribe((response: any) => {
+    let param;
+    if (this.loggedInUserRoles.includes('ROLE_FILER')) {
+      if (loggedInSme[0].partnerType === 'PRINCIPAL') {
+        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&searchAsPrincipal=true&userId=${data?.userId}&page=0&pageSize=10`;
+      } else {
+        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&userId=${data?.userId}&page=0&pageSize=10`;
+      }
+    } else if (this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      param = `/bo/subscription-dashboard-new?leaderUserId=${loggedInSmeUserId}&mobileNumber=${data?.mobileNumber}&page=0&pageSize=10`;
+    } else {
+      param = `/bo/subscription-dashboard-new?mobileNumber=${data?.mobileNumber}&page=0&pageSize=10`;
+    }
+    this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      if (response.data instanceof Array && response.data.length > 0) {
+      if (response.data.content instanceof Array && response.data.content.length > 0) {
         console.log(response);
-        response.data.forEach((item: any) => {
+        response.data.content.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
           if (smeSelectedPlan && smeSelectedPlan.servicesType === 'ITR') {
@@ -455,16 +468,16 @@ export class ItrAssignedUsersComponent implements OnInit {
           debounceMs: 0,
         },
         // code to masking mobile no
-        cellRenderer: (params)=> {
+        cellRenderer: (params) => {
           const mobileNumber = params.value;
-          if(mobileNumber){
-            if(!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')){
+          if (mobileNumber) {
+            if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
               const maskedMobile = this.maskMobileNumber(mobileNumber);
               return maskedMobile;
-            }else{
+            } else {
               return mobileNumber;
             }
-          }else{
+          } else {
             return '-'
           }
         },
@@ -709,31 +722,32 @@ export class ItrAssignedUsersComponent implements OnInit {
       },
       {
         headerName: 'Update Status',
+        // field: 'statusName',
         editable: false,
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
           let statusText = '';
-          if (itrStatus.length !== 0) {
-            const nameArray = itrStatus.filter(
-              (item: any) => item.statusId === params.data.statusId
-            );
-            if (nameArray.length !== 0) {
-              statusSequence = nameArray[0].sequence;
-              statusText = nameArray[0].statusName;
-            } else {
-              statusText = '-';
-            }
-          } else {
-            statusText = params.data.statusId;
-          }
+          // if (itrStatus.length !== 0) {
+          //   const nameArray = itrStatus.filter(
+          //     (item: any) => item.statusId === params.data.statusId
+          //   );
+          //   if (nameArray.length !== 0) {
+          //     statusSequence = nameArray[0].sequence;
+          //     statusText = nameArray[0].statusName;
+          //   } else {
+          //     statusText = '-';
+          //   }
+          // } else {
+          statusText = params.data.statusName;
+          // }
           return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
           style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
           <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
            </button>`;
         },
-        width: 170,
+        width: 220,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -899,6 +913,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         callerAgentUserId: userData[i].filerUserId,
         statusId: userData[i].statusId,
         statusUpdatedDate: userData[i].statusUpdatedDate,
+        statusName: userData[i].statusName,
         panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
         eriClientValidUpto: userData[i].eriClientValidUpto,
         language: userData[i].language,
@@ -1183,7 +1198,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         clientName: client.name,
         serviceType: client.serviceType,
         mode: mode,
-        userInfo: client
+        userInfo: client,
+        itrChatInitiated: true
       }
     })
 
@@ -1269,7 +1285,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.searchParam.emailId = null;
     if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
       this.agentId = this.utilsService.getLoggedInUserID();
-      this.filerId = this.filerId = this.agentId ;
+      this.filerId = this.filerId = this.agentId;
       this.partnerType = this.utilsService.getPartnerType();
     }
     this?.smeDropDown?.resetDropdown();
@@ -1277,10 +1293,10 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (this.dataOnLoad) {
       this.search();
     } else {
-        //clear grid for loaded data
+      //clear grid for loaded data
       this.usersGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
-      }
+    }
   }
 
   search(form?, isAgent?, pageChange?) {
