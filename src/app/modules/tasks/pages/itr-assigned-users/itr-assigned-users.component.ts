@@ -1198,7 +1198,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         clientName: client.name,
         serviceType: client.serviceType,
         mode: mode,
-        userInfo: client
+        userInfo: client,
+        itrChatInitiated: true
       }
     })
 
