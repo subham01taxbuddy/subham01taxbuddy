@@ -42,7 +42,7 @@ export class CreateNewUserComponent implements OnInit {
   countryCode: any;
   options: Country[] = []
   filteredOptions: Observable<any[]>;
-  maxNo = 50;
+  maxNo = 10;
   minNo = 1;
   smeRecords: any;
   smeServices: any;
@@ -106,6 +106,11 @@ export class CreateNewUserComponent implements OnInit {
           : this.options.slice();
       }
       ));
+
+    const defaultCountry = this.countryDropdown.find(country => country.countryName === 'INDIA');
+    this.signUpForm.get('countryCode').setValue(defaultCountry ? defaultCountry.countryName : null);
+    this.countryCode = defaultCountry.countryCode
+
   }
 
   private _filter(name: string, options): Country[] {
