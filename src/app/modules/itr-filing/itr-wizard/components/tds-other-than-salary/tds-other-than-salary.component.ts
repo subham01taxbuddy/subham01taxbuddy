@@ -166,6 +166,11 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.COPY_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.loading = true;
+    if(!this.COPY_ITR_JSON.taxPaid){
+      this.COPY_ITR_JSON.taxPaid = {
+        onSalary: [], otherThanSalary16A: [], otherThanSalary26QB: [], otherThanTDSTCS: [], paidRefund: [], tcs: []
+      }
+    }
     if (this.salaryForm.valid) {
       if (this.showHeadOfIncome === 'TDTS') {
         this.COPY_ITR_JSON.taxPaid.otherThanSalary16A = (this.salaryForm.controls['salaryArray'] as FormArray).getRawValue();

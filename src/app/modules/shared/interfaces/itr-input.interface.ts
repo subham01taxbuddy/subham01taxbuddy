@@ -557,7 +557,8 @@ export interface AssetDetails {
   sellValuePerUnit: number;
   purchaseValuePerUnit: number;
   isUploaded: boolean;
-  hasIndexation: boolean;
+  isIndexationBenefitAvailable: boolean;
+  whetherDebenturesAreListed: boolean;
   algorithm: string;
   fmvAsOn31Jan2018: string;
   indexCostOfAcquisition: number;

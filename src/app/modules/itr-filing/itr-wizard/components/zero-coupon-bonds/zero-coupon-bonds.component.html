@@ -43,7 +43,48 @@
                 class="ml130"
               >
               </mat-checkbox>
+
               <div class="row cardClr">
+                <div class="row" *ngIf="bondType === 'bonds'">
+                  <div class="col-sm-6 isDeduction">
+                    Is indexation benefit available?
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-radio-group
+                      name="isIndexationBenefitAvailable[i]"
+                      formControlName="isIndexationBenefitAvailable"
+                      class="mvRth"
+                    >
+                      <mat-radio-button [value]="true" labelPosition="before"
+                      >Yes
+                      </mat-radio-button>
+                      <mat-radio-button [value]="false" labelPosition="before"
+                      >No</mat-radio-button
+                      >
+                    </mat-radio-group>
+                  </div>
+                </div>
+
+                <div class="row spsTp" *ngIf="bondType === 'bonds' && !bonds.get('isIndexationBenefitAvailable').value">
+                  <div class="col-sm-6 isDeduction">
+                    Are the debentures listed?
+                  </div>
+                  <div class="col-sm-6">
+                    <mat-radio-group
+                      name="whetherDebenturesAreListed[i]"
+                      formControlName="whetherDebenturesAreListed"
+                      class="mvRth"
+                    >
+                      <mat-radio-button [value]="true" labelPosition="before"
+                      >Yes
+                      </mat-radio-button>
+                      <mat-radio-button [value]="false" labelPosition="before"
+                      >No</mat-radio-button
+                      >
+                    </mat-radio-group>
+                  </div>
+                </div>
+
                 <div class="col-sm-4">
                   <mat-label>Sale Date*</mat-label>
                   <mat-form-field appearance="outline">
@@ -116,10 +157,10 @@
                       class="input-field"
                       digitsOnly
                       (change)="calculateTotalCG(bonds)"
-                      placeholder="Cost of improvement without indexation"
+                      placeholder= "{{getPlaceholderImprovement(bonds)}}"
                       formControlName="costOfImprovement"
                       maxlength="14"
-                      matTooltip="Cost of improvement without indexation"
+                      matTooltip="{{getPlaceholderImprovement(bonds)}}"
                       matTooltipClass="tab-tooltip"
                       matTooltipPosition="above"
                     />
@@ -165,10 +206,10 @@
                       matInput
                       class="input-field"
                       digitsOnly
-                      matTooltip="Cost of Acquisition without indexation (Purchase value)"
+                      matTooltip="{{getPlaceholderPurchase(bonds)}}"
                       matTooltipClass="tab-tooltip"
                       matTooltipPosition="above"
-                      placeholder="Cost of Acquisition without indexation (Purchase value)"
+                      placeholder="{{getPlaceholderPurchase(bonds)}}"
                       (change)="calculateTotalCG(bonds)"
                       formControlName="purchaseCost"
                       maxlength="14"
@@ -239,6 +280,37 @@
                     >
                   </mat-form-field>
                 </div>
+
+                <div class="spsTp">
+
+                  <div class="flex justify-between p-[30px] back-foot">
+                    <button class="lgtBtn">
+                      <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
+                      <span class="font-semibold" (click)="goBack()"
+                      >&nbsp;Back to Capital Gain Topics</span
+                      >
+                    </button>
+
+                    <button class="saveBtnIn">
+                      <span class="font-semibold" (click)="saveAll()">Save All</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mrgArd">
+                <div class="flex justify-between p-[30px] back-foot">
+                    <button class="lgtBtn">
+                      <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
+                      <span class="font-semibold" (click)="goBack()"
+                      >&nbsp;Back to Capital Gain Topics</span
+                      >
+                    </button>
+
+                    <button class="saveBtnIn">
+                      <span class="font-semibold" (click)="saveAll()">Save All</span>
+                    </button>
+                </div>
               </div>
             </div>
             <div class="row spsTp bdrTp">
@@ -264,17 +336,7 @@
                   (pageChange)="pageChanged($event)"
                 ></pagination-controls>
               </div>
-              <div class="col-sm-3">
-                <button
-                  type="submit"
-                  mat-stroked-button
-                  class="tbd-btn save-btn mvRth"
-                  [disabled]="bondsForm.invalid"
-                  (click)="save('bonds')"
-                >
-                  Save
-                </button>
-              </div>
+
             </div>
           </div>
         </form>

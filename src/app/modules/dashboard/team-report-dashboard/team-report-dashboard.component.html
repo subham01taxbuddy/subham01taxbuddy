@@ -110,10 +110,10 @@
               </div>
             </div>
             <div class="col-sm-4">
-              <!-- <div class="radius1 grBk">
-                <span class="numTxSm grTx">₹ {{service?.revenueGenerated || 'NA'}}</span><br>
-                <span class="TxSm">Revenue Generated</span><br>
-              </div> -->
+              <div class="radius1 grBk">
+                <span class="numTxSm grTx">₹ {{service?.paidInvoiceAmountByPaymentDate || 'NA'}}</span><br>
+                <span class="TxSm">Total Payment Received(basis paid date)</span><br>
+              </div>
             </div>
             <div class="col-sm-4">
               <div class="radius1 RedBk">
@@ -136,13 +136,13 @@
             <div class="col-sm-4">
               <div class="radius1 grBk">
                 <span class="numTxSm grTx">{{service?.paidInvoiceCount || 'NA'}}</span><br>
-                <span class="TxSm">Paid Invoices</span><br>
+                <span class="TxSm">Paid Invoices(Basis created date)</span><br>
               </div>
             </div>
             <div class="col-sm-4">
               <div class="radius1 grBk">
                 <span class="numTxSm grTx">₹ {{service?.paidAmount || 'NA'}}</span><br>
-                <span class="TxSm">Paid Amount</span><br>
+                <span class="TxSm">Paid Amount(Basis created date)</span><br>
               </div>
             </div>
             <div class="col-sm-4">
@@ -295,8 +295,8 @@
       </div>
       <div class="col-sm-12 mt-3">
         <div class="radius">
-          <span class="TxHd"><i class="fa-solid fa-phone" aria-hidden="true"></i> Schedule call </span>&nbsp;
-          <span class="numTxBg"></span>
+          <span class="TxHd"><i class="fa-solid fa-phone" aria-hidden="true"></i> Schedule call : </span>&nbsp;
+          <span class="numTxBg">{{totalScheduledCall || 'NA'}}</span>
           <div class="row">
             <div class="col-sm-6">
               <div class="radius1">
