@@ -821,8 +821,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   deleteSubscription(subscription) {
     this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        title: 'Cancel Subscription!',
-        message: 'Are you sure you want to Cancel the Subscription?',
+        title: 'Delete Subscription!',
+        message: 'Are you sure you want to Delete the Subscription?',
       },
 
     });
@@ -840,7 +840,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
             // we_track('Cancel Subscription  ', {
             //   'User number ': subscription.mobileNumber,
             // });
-            this._toastMessageService.alert('success', 'Subscription will be canceled/Deleted onces your Owner Approves it.');
+            this._toastMessageService.alert('success', 'Subscription will be Canceled/Deleted onces your Leader Approves it.');
             this.getAssignedSubscription(0)
           },
           (error) => {

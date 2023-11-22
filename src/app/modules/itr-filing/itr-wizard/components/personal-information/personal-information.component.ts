@@ -13,6 +13,7 @@ import {
   FormBuilder,
   FormArray,
   ValidationErrors,
+  FormControl,
 } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -3041,7 +3042,11 @@ export class PersonalInformationComponent implements OnInit {
       const amount = control.get('amount');
       const nature = control.get('nature');
 
-      if (!clauseIvFlag.value || clauseIvFlag.value === 'N' || seventhProvisio139Flag.value === 'N') {
+      if (
+        !clauseIvFlag.value ||
+        clauseIvFlag.value === 'N' ||
+        seventhProvisio139Flag.value === 'N'
+      ) {
         // Save the data and clear the form group
         this.clauseiv7provisio139iSaved = amount.value;
         clauseIvFlag.reset();
@@ -3081,11 +3086,20 @@ export class PersonalInformationComponent implements OnInit {
       3: [Validators.required, Validators.min(5000000)],
     };
 
-    if (value) {
-      let amount = (clauseIvArray?.controls[value] as FormGroup)?.get('amount');
-      if (amount) {
-        amount.setValidators(validatorMap[value] || []);
-        amount.updateValueAndValidity();
+    if (value || value === 0) {
+      let control = clauseIvArray?.controls.find((item) => {
+        if (isNaN(item.value.nature)) {
+          item.value.nature = 0;
+        }
+
+        if (item.value.nature === value) {
+          return item;
+        }
+      });
+      let amountControl = (control as FormGroup).controls['amount'];
+      if (amountControl) {
+        amountControl.setValidators(validatorMap[value] || []);
+        amountControl.updateValueAndValidity();
       }
     }
   }
