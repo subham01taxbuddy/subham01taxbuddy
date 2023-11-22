@@ -889,10 +889,10 @@ export class ScheduleFaComponent implements OnInit {
       const formArray = this.scheduleFa.get(formArrayName) as FormArray;
 
       for (let i = formArray.length - 1; i >= 0; i--) {
-        const control = formArray.at(i) as FormGroup;
-        const value = control.get('countryCode');
+        const control = formArray?.at(i) as FormGroup;
+        const value = control?.get('countryCode');
 
-        if (!value.value) {
+        if (!value?.value) {
           formArray.removeAt(i);
         }
       }
