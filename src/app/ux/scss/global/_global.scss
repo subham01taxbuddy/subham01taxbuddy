@@ -141,6 +141,7 @@ select {
 main {
     width: 80% !important;
     padding: 0 30px;
+    overflow: auto;
 }
 .space__between {
     display: flex !important;

@@ -1735,7 +1735,7 @@ main {
     flex-direction: column;
     align-items: flex-start;
     gap: 32px;
-    padding: 32px;
+    padding: 24px;
     position: relative;
     background-color: #ffffff;
     border-radius: 0px 0px 8px 8px;
@@ -2447,7 +2447,7 @@ main {
   position: relative;
   bottom: 0;
   right: 15px;
-  border: 3px solid #f1f1f1;
+  /* border: 3px solid #f1f1f1; */
   z-index: 9;
 }
 .inpplac{
@@ -2492,10 +2492,11 @@ main {
         padding: 8px 8px 8px 24px;
         flex: 1;
         flex-grow: 1;
-        background-color: #bdd5f0;
+        background-color: #3E82CD;
         border-radius: 4px 4px 0px 0px;
         display: flex;
         position: relative;
+        color: white;
       }
       
       .frameS .field-text {

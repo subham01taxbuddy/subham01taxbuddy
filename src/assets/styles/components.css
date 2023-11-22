@@ -1361,9 +1361,9 @@
 
 /* TABLE */
 
-.table {
+/* .table {
   min-width: 630px;
-}
+} */
 
 .table__row {
   display: flex;

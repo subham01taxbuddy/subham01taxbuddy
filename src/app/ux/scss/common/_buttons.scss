@@ -14,12 +14,17 @@
     text-align: center;
     padding: 0;
 
+    &.mini{
+        padding: 4px 16px;
+        line-height: 20px;
+    }
+
     &.fixed_width {
         max-width: 170px;
     }
 
     &.btn__add {
-        padding-left: 20px;
+        padding-left: 30px;
 
         &::before {
             content: "\f067";
@@ -35,7 +40,6 @@
 
     &.btn__edit {
         padding-left: 20px;
-
         &::before {
             content: "\f044";
             position: absolute;
