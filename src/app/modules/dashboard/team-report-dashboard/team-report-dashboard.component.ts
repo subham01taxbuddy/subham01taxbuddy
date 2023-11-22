@@ -60,6 +60,7 @@ export class TeamReportDashboardComponent implements OnInit {
   totalOriginal: number;
   totalRevised: number;
   scheduledCallData:any;
+  totalScheduledCall:any
 
   constructor(
     private userMsService: UserMsService,
@@ -265,6 +266,10 @@ export class TeamReportDashboardComponent implements OnInit {
         this.loading = false;
         if (response.success) {
           this.scheduledCallData = response.data;
+          this.totalScheduledCall =
+            this.scheduleCallData?.callsAssigned_Open +
+            this.scheduleCallData?.done +
+            this.scheduleCallData?.followUp ;
         } else {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);
