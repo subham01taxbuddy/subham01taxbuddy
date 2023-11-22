@@ -476,8 +476,12 @@ export class ZeroCouponBondsComponent
         );
         const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
         let debsList = [];
-        let maxGold = this.Copy_ITR_JSON.capitalGain[goldIndex].assetDetails.map(
-          element => element.srn).reduce((previousValue, currentValue) => previousValue > currentValue ? previousValue : currentValue);
+        let maxGold = 0;
+        if(this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails) {
+          maxGold = this.Copy_ITR_JSON.capitalGain[goldIndex].assetDetails.map(
+            element => element.srn).reduce((previousValue, currentValue) =>
+            previousValue > currentValue ? previousValue : currentValue);
+        }
         bondsArray.controls.forEach((element) => {
           if((element as FormGroup).controls['isIndexationBenefitAvailable'].value === true) {
             (element as FormGroup).controls['indexCostOfAcquisition'].setValue(
@@ -485,7 +489,7 @@ export class ZeroCouponBondsComponent
 
 
             //check if existing GOLD assets already have the srn for current form
-            let srnCheck = this.Copy_ITR_JSON.capitalGain[goldIndex].assetDetails.filter(e => e.srn === (element as FormGroup).controls['srn'].value);
+            let srnCheck = this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e => e.srn === (element as FormGroup).controls['srn'].value);
 
             if(srnCheck && srnCheck.length > 0){
               let newSrn = Math.max(bondsArray.length,maxGold+1, debsList.length);
