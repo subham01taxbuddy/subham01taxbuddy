@@ -109,6 +109,8 @@ export class ZeroCouponBondsComponent
             );
             if (filterImp.length > 0) {
               element['costOfImprovement'] = filterImp[0].costOfImprovement;
+              element['indexCostOfImprovement'] = filterImp[0].indexCostOfImprovement;
+              element['dateOfImprovement'] = filterImp[0].dateOfImprovement;
 
               if(element.isIndexationBenefitAvailable === true) {
                 this.addMoreBondsData(element);
@@ -157,6 +159,7 @@ export class ZeroCouponBondsComponent
       this.deduction = false;
     }
 
+    this.getImprovementYears();
     // this.onChanges();
   }
 
@@ -241,10 +244,12 @@ export class ZeroCouponBondsComponent
       sellValuePerUnit: [item ? item.sellValuePerUnit : null],
       purchaseDate: [item ? item.purchaseDate : null, Validators.required],
       indexCostOfAcquisition: [item ? item.indexCostOfAcquisition : null],
+      dateOfImprovement: [item ? item.dateOfImprovement : null],
       costOfImprovement: [
         item ? item.costOfImprovement : null,
         [Validators.pattern(AppConstants.amountWithDecimal)],
       ],
+      indexCostOfImprovement:[item ? item.indexCostOfImprovement : null],
       sellDate: [item ? item.sellDate : null, Validators.required],
       sellValue: [item ? item.sellValue : null],
       sellExpense: [item ? item.sellExpense : null],
@@ -346,7 +351,7 @@ export class ZeroCouponBondsComponent
         improvement: [
           {
             srn: bonds.controls['srn'].value,
-            dateOfImprovement: '',
+            dateOfImprovement: bonds.controls['dateOfImprovement'].value,
             costOfImprovement: bonds.controls['costOfImprovement'].value,
           },
         ],
@@ -430,9 +435,9 @@ export class ZeroCouponBondsComponent
           let costOfImprovement = (element as FormGroup).controls['costOfImprovement'].value;
           bondImprovement.push({
             srn: (element as FormGroup).controls['srn'].value,
-            dateOfImprovement: null,
-            indexCostOfImprovement: (element as FormGroup).controls['isIndexationBenefitAvailable'].value ? costOfImprovement : null,
-            costOfImprovement: costOfImprovement,
+            dateOfImprovement: (element as FormGroup).controls['dateOfImprovement'].value,
+            indexCostOfImprovement: (element as FormGroup).controls['indexCostOfImprovement'].value,
+            costOfImprovement: (element as FormGroup).controls['costOfImprovement'].value,
           });
           bondsList.push((element as FormGroup).getRawValue());
         }
@@ -478,15 +483,15 @@ export class ZeroCouponBondsComponent
         let debsList = [];
         let maxGold = 0;
         if(this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails) {
-          maxGold = this.Copy_ITR_JSON.capitalGain[goldIndex].assetDetails.map(
-            element => element.srn).reduce((previousValue, currentValue) =>
-            previousValue > currentValue ? previousValue : currentValue);
+          let tempArray = this.Copy_ITR_JSON.capitalGain[goldIndex].assetDetails.map(
+            element => element.srn);
+          if(tempArray && tempArray.length) {
+            maxGold = tempArray.reduce((previousValue, currentValue) =>
+              previousValue > currentValue ? previousValue : currentValue);
+          }
         }
         bondsArray.controls.forEach((element) => {
           if((element as FormGroup).controls['isIndexationBenefitAvailable'].value === true) {
-            (element as FormGroup).controls['indexCostOfAcquisition'].setValue(
-              (element as FormGroup).controls['purchaseCost'].value);
-
 
             //check if existing GOLD assets already have the srn for current form
             let srnCheck = this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e => e.srn === (element as FormGroup).controls['srn'].value);
@@ -499,8 +504,8 @@ export class ZeroCouponBondsComponent
             let costOfImprovement = (element as FormGroup).controls['costOfImprovement'].value;
             bondImprovement.push({
               srn: (element as FormGroup).controls['srn'].value,
-              dateOfImprovement: null,
-              indexCostOfImprovement: (element as FormGroup).controls['isIndexationBenefitAvailable'].value ? costOfImprovement : null,
+              dateOfImprovement: (element as FormGroup).controls['dateOfImprovement'].value,
+              indexCostOfImprovement: (element as FormGroup).controls['indexCostOfImprovement'].value,
               costOfImprovement: costOfImprovement,
             });
 
@@ -566,6 +571,124 @@ export class ZeroCouponBondsComponent
         }
       );
     }
+  }
+
+  improvementYears = [];
+
+  getImprovementYears() {
+    const param = `/capital-gain/improvement/financial-years`;
+    this.itrMsService.getMethod(param).subscribe((res: any) => {
+      if (res.success) {
+        this.improvementYears = res.data;
+        console.log(res);
+
+        const assetDetails = <FormArray>this.bondsForm.get('bondsArray') as FormArray;
+        let purchaseDate = (assetDetails.controls[0] as FormGroup).controls['purchaseDate'].value;
+        let purchaseYear = new Date(purchaseDate).getFullYear();
+        let purchaseMonth = new Date(purchaseDate).getMonth();
+
+        console.log(
+          this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
+        );
+        console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
+        if (purchaseMonth > 2) {
+          if (
+            this.improvementYears.indexOf(
+              purchaseYear + '-' + (purchaseYear + 1)
+            ) >= 0
+          ) {
+            this.improvementYears = this.improvementYears.splice(
+              this.improvementYears.indexOf(
+                purchaseYear + '-' + (purchaseYear + 1)
+              )
+            );
+          }
+        } else {
+          if (
+            this.improvementYears.indexOf(
+              purchaseYear - 1 + '-' + purchaseYear
+            ) >= 0
+          ) {
+            this.improvementYears = this.improvementYears.splice(
+              this.improvementYears.indexOf(
+                purchaseYear - 1 + '-' + purchaseYear
+              )
+            );
+          }
+        }
+
+        // sessionStorage.setItem('improvementYears', res.data)
+      }
+    });
+  }
+
+  minImprovementDate: any;
+  calMinImproveDate(purchaseDate, bonds) {
+    if (this.utilsService.isNonEmpty(purchaseDate)) {
+      this.minImprovementDate = new Date(purchaseDate);
+      this.getImprovementYears();
+      //this.calculateCapitalGain(formGroupName, '', index);
+      this.calculateIndexCost(bonds);
+    }
+  }
+  calculateIndexCost(asset, type?) {
+    let gainType = asset.controls['gainType'].value;
+
+    let selectedYear = moment(asset.controls['sellDate'].value);
+    let sellFinancialYear =
+      selectedYear.get('month') > 2
+        ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
+        : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
+
+    // for improvements indexation
+    let costOfImprovement = parseFloat(
+      asset.controls['costOfImprovement'].value
+    );
+    let improvementFinancialYear = asset.controls['dateOfImprovement'].value;
+
+    // for cost of acquisition index
+    let selectedPurchaseYear = moment(
+      asset.controls['purchaseDate'].value
+    );
+    let purchaseFinancialYear =
+      selectedPurchaseYear.get('month') > 2
+        ? selectedPurchaseYear.get('year') +
+        '-' +
+        (selectedPurchaseYear.get('year') + 1)
+        : selectedPurchaseYear.get('year') -
+        1 +
+        '-' +
+        selectedPurchaseYear.get('year');
+
+    let costOfAcquistion = parseFloat(
+      asset.controls['purchaseCost'].value
+    );
+
+    let req = {
+      cost: type === 'asset' ? costOfAcquistion : costOfImprovement,
+      purchaseOrImprovementFinancialYear:
+        type === 'asset' ? purchaseFinancialYear : improvementFinancialYear,
+      assetType: 'GOLD',
+      buyDate: asset.controls['purchaseDate'].value,
+      sellDate: asset.controls['sellDate'].value,
+      sellFinancialYear: sellFinancialYear,
+    };
+
+    const param = `/calculate/indexed-cost`;
+    this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+      console.log('INDEX COST : ', res);
+
+      if (type === 'asset') {
+        asset.controls['indexCostOfAcquisition']?.setValue(
+          res.data.costOfAcquisitionOrImprovement
+        );
+      } else {
+        asset.controls[
+          'indexCostOfImprovement'
+          ]?.setValue(res.data.costOfAcquisitionOrImprovement);
+      }
+
+    });
   }
 
   initDeductionForm(obj?): FormGroup {

@@ -121,6 +121,33 @@
                   </mat-form-field>
                 </div>
 
+                <div class="col-sm-4">
+                  <mat-label>Buy Date*</mat-label>
+                  <mat-form-field appearance="outline">
+                    <input
+                      [max]="bonds.get('sellDate').value"
+                      matInput
+                      class="input-field"
+                      readonly
+                      placeholder="Buy Date"
+                      (dateChange)="getGainType(bonds); calculateTotalCG(bonds); calMinImproveDate(bonds.get('purchaseDate').value, bonds);calculateIndexCost(bonds, 'asset')"
+                      formControlName="purchaseDate"
+                      name="purchaseDate"
+                      [matDatepicker]="purchaseDate"
+                      required
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="purchaseDate"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #purchaseDate></mat-datepicker>
+                    <mat-error
+                      *ngIf="bonds.get('purchaseDate').hasError('required')"
+                    >Please select date</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+
                 <!--sale value-->
                 <div class="col-sm-4">
                   <mat-label>Sale value*</mat-label>
@@ -149,18 +176,40 @@
                     >
                   </mat-form-field>
                 </div>
-                <div class="col-sm-4">
+
+                <!--Improvement-->
+                <div class="col-sm-4 spsTp" *ngIf="bonds.get('isIndexationBenefitAvailable').value">
+                  <mat-label>
+                    &nbsp;&nbsp; Year Of Improvement
+                  </mat-label>
+                  <mat-form-field class="input-field-width">
+                    <mat-select
+                      name="improve[i]"
+                      formControlName="dateOfImprovement"
+                      required
+                      (selectionChange)="calculateIndexCost(bonds)"
+                    >
+                      <mat-option
+                        [value]="year"
+                        *ngFor="let year of improvementYears"
+                      >
+                        {{ year }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 spsTp">
                   <mat-label>Cost of improvement</mat-label>
                   <mat-form-field appearance="outline">
                     <input
                       matInput
                       class="input-field"
                       digitsOnly
-                      (change)="calculateTotalCG(bonds)"
-                      placeholder= "{{getPlaceholderImprovement(bonds)}}"
+                      (change)="calculateTotalCG(bonds);calculateIndexCost(bonds)"
+                      placeholder= "Cost of improvement without indexation"
                       formControlName="costOfImprovement"
                       maxlength="14"
-                      matTooltip="{{getPlaceholderImprovement(bonds)}}"
+                      matTooltip="Cost of improvement without indexation"
                       matTooltipClass="tab-tooltip"
                       matTooltipPosition="above"
                     />
@@ -172,32 +221,21 @@
                     >
                   </mat-form-field>
                 </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Buy Date*</mat-label>
+                <div class="col-sm-4 spsTp" *ngIf="bonds.get('isIndexationBenefitAvailable').value">
+                  <mat-label>Indexed Cost of improvement</mat-label>
                   <mat-form-field appearance="outline">
                     <input
-                      [max]="bonds.get('sellDate').value"
                       matInput
                       class="input-field"
-                      readonly
-                      placeholder="Buy Date"
-                      (dateChange)="getGainType(bonds); calculateTotalCG(bonds)"
-                      formControlName="purchaseDate"
-                      name="purchaseDate"
-                      [matDatepicker]="purchaseDate"
-                      required
+                      name="improve[i]"
+                      formControlName="indexCostOfImprovement"
+                      maxlength="14"
+                      type="number"
+                      [disabled]
                     />
-                    <mat-datepicker-toggle
-                      matSuffix
-                      [for]="purchaseDate"
-                    ></mat-datepicker-toggle>
-                    <mat-datepicker #purchaseDate></mat-datepicker>
-                    <mat-error
-                      *ngIf="bonds.get('purchaseDate').hasError('required')"
-                      >Please select date</mat-error
-                    >
                   </mat-form-field>
                 </div>
+
                 <!--cost of acquisition-->
                 <div class="col-sm-4 spsTp">
                   <mat-label>Cost of Acquisition*</mat-label>
@@ -210,7 +248,7 @@
                       matTooltipClass="tab-tooltip"
                       matTooltipPosition="above"
                       placeholder="{{getPlaceholderPurchase(bonds)}}"
-                      (change)="calculateTotalCG(bonds)"
+                      (change)="calculateTotalCG(bonds); calculateIndexCost(bonds, 'asset')"
                       formControlName="purchaseCost"
                       maxlength="14"
                       required
@@ -219,6 +257,20 @@
                       *ngIf="bonds.get('purchaseCost').hasError('required')"
                       >Please enter cost of acquisition</mat-error
                     >
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-4 spsTp" *ngIf="bonds.get('isIndexationBenefitAvailable').value">
+                  <mat-label> Indexed cost of acquisition</mat-label>
+                  <mat-form-field class="input-field-width" appearance="outline">
+                    <input
+                      matInput
+                      digitsOnly
+                      formControlName="indexCostOfAcquisition"
+                      placeholder="Indexed cost of acquistion"
+                      name="indexCostOfAcquisition[i]"
+                      class="input-field"
+                      readonly
+                    />
                   </mat-form-field>
                 </div>
                 <div class="col-sm-4 spsTp">
