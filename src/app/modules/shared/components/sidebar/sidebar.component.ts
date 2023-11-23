@@ -85,7 +85,7 @@ export class SidebarComponent {
       roles: [],
       submenu: [
         {
-          name: 'My Users (All Services)', url: '/tasks/assigned-users-new', roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+          name: 'My Users (All Services)', url: '/tasks/assigned-users-new', roles: [],
         },
         { name: 'ITR Assigned Users', url: '/tasks/itr-assigned-users', roles: [] },
         { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
@@ -111,9 +111,9 @@ export class SidebarComponent {
       url: null,
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: [
-        { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles:[] },
         { name: 'Assigned SME', url: '/sme-management-new/assignedsme', roles: [] },
-        { name: 'Resigned SME', url: '/sme-management-new/resignedsme', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] }
+        { name: 'Resigned SME', url: '/sme-management-new/resignedsme', roles: [] }
       ]
     },
     {

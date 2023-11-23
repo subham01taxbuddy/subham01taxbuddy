@@ -14,6 +14,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
   templateUrl: './prefill-data.component.html',
   styleUrls: ['./prefill-data.component.scss']
 })
+//not used
 export class PrefillDataComponent implements OnInit, OnDestroy {
   loading = false;
   selectedOtpOption = "A";
@@ -189,7 +190,7 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
   async fetchUpdatedITR() {
     const fyList = await this.utilsService.getStoredFyList();
     const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
-    
+
     const param = `/itr?userId=${this.data.userId}&assessmentYear=${currentFyDetails[0].assessmentYear}&itrId=${this.data.itrId}`;
     this.itrMsService.getMethod(param).subscribe(async (result: any) => {
       console.log('My ITR by user Id and Assessment Years=', result);
@@ -202,14 +203,14 @@ export class PrefillDataComponent implements OnInit, OnDestroy {
         //multiple ITRs found, invalid case
         this.utilsService.showErrorMsg('Something went wrong. Please try again.');
       }
-      
+
     }, async (error:any) => {
       console.log('Error:', error);
       this.loading = false;
       this.utilsService.showErrorMsg('Something went wrong. Please try again.');
     });
-    
+
   }
-  
+
 }
 
