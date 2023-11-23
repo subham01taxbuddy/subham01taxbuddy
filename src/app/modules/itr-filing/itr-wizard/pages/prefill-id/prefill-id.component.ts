@@ -13,6 +13,7 @@ import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confir
 import { UserMsService } from '../../../../../services/user-ms.service';
 import * as moment from 'moment/moment';
 import { NonNullExpression } from 'typescript';
+import {AisCredsDialogComponent} from "../../../../../pages/itr-filing/ais-creds-dialog/ais-creds-dialog.component";
 
 @Component({
   selector: 'app-prefill-id',
@@ -52,6 +53,7 @@ export class PrefillIdComponent implements OnInit {
     private userService: UserMsService,
     public utilsService: UtilsService,
     private dialog: MatDialog,
+    private aisDialog: MatDialog,
     private titlecasePipe: TitleCasePipe
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -61,6 +63,7 @@ export class PrefillIdComponent implements OnInit {
     );
   }
 
+  customerName:any;
   ngOnInit(): void {
     let name = this.getCustomerName();
     this.utilsService
@@ -70,15 +73,16 @@ export class PrefillIdComponent implements OnInit {
         (this.userProfile = result),
           console.log(this.userProfile, 'USERPROFILE');
 
+        this.customerName = this.utilsService.isNonEmpty(name)
+          ? name
+          : result.fName + ' ' + result.lName;
         this.data = {
           userId: this.ITR_JSON.userId,
           panNumber: result.panNumber
             ? result.panNumber
             : this.ITR_JSON.panNumber,
           assessmentYear: this.ITR_JSON.assessmentYear,
-          name: this.utilsService.isNonEmpty(name)
-            ? name
-            : result.fName + ' ' + result.lName,
+          name: this.customerName,
           itrId: this.ITR_JSON.itrId,
           eriClientValidUpto: result.eriClientValidUpto,
         };
@@ -5578,7 +5582,42 @@ export class PrefillIdComponent implements OnInit {
     this.downloadPrefill = true;
   }
 
-  sendEmail(uploadedJson) {
+  addAisCredentials() {
+
+    const dialogRef = this.dialog.open(AisCredsDialogComponent, {
+      width: '500px',
+      data: {
+        name: this.customerName,
+        userId: this.data.userId,
+      },
+    });
+
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+      if (result === 'YES') {
+        this.ITR_JSON = this.utilsService.createEmptyJson(
+          this.userProfile,
+          this.ITR_JSON.assessmentYear,
+          this.ITR_JSON.financialYear,
+          this.ITR_JSON.itrId,
+          this.ITR_JSON.filingTeamMemberId,
+          this.ITR_JSON.id,
+          this.ITR_JSON
+        );
+
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_JSON)
+        );
+
+        document.getElementById('input-utility-file-jsonfile-id').click();
+      }
+    });
+
+  }
+
+  sendEmail(uploadedJson){
     this.loading = true;
 
     var data = new FormData();
