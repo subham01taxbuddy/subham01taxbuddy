@@ -14,6 +14,7 @@ export class AisCredsDialogComponent implements OnInit {
 
   private decryptionKey = 'cYDffVW+lRRd2BKa0ZTEpJwEmrsLme/t7s6808uX';
   showPassword: boolean = false;
+  showProgress: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<AisCredsDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
@@ -51,7 +52,7 @@ export class AisCredsDialogComponent implements OnInit {
 
   viewPassword(){
     this.showPassword = !this.showPassword;
-    this.logPasswordAction('VIEW');
+    this.logPasswordAction('READ');
   }
 
   copyPassword(){
@@ -78,6 +79,9 @@ export class AisCredsDialogComponent implements OnInit {
     let url = '/validate-it-password';
     this.userService.postMethod(url, request).subscribe((result: any) => {
       console.log(result);
+      this.utilsService.showSnackBar(result.message);
+      this.startTimer();
+      this.showProgress = true;
     });
   }
 
@@ -92,8 +96,36 @@ export class AisCredsDialogComponent implements OnInit {
     this.userService.postMethod(url, request).subscribe((result: any) => {
       console.log(result);
       this.utilsService.showSnackBar(result.message);
+      this.startTimer();
+      this.showProgress = true;
     });
   }
+
+  interval;
+  timeLeft = 120;
+  retryCount = 0;
+  startTimer() {
+    this.timeLeft = 120;
+    this.retryCount = 0;
+    this.interval = setInterval(() => {
+      if(this.timeLeft > 0) {
+        this.timeLeft--;
+      } else {
+        this.getUserCreds();
+        this.retryCount++;
+      }
+      if(this.retryCount === 3){
+        this.pauseTimer();
+        this.updateClicked = false;
+        this.showProgress = false;
+      }
+    },1000)
+  }
+
+  pauseTimer() {
+    clearInterval(this.interval);
+  }
+
   decryptPassword(encryptedPwd){
     let ciphertext = CryptoJS.enc.Base64.parse(encryptedPwd);
     const cipherParams = CryptoJS.lib.CipherParams.create({ ciphertext });
