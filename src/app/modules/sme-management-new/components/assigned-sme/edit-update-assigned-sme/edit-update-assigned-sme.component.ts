@@ -403,9 +403,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       this.smeObj['languages'] = [];
     }
     if (langControl.value) {
-      this.smeObj['skillSetPlanIdList'].push(language);
+      this.smeObj['languages'].push(language);
     } else {
-      this.smeObj['skillSetPlanIdList'].remove(language);
+      let index = this.smeObj['languages'].indexOf(language);
+      this.smeObj['languages'].splice(index, 1);
     }
   }
 
@@ -419,7 +420,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
   onItrTypeCheckboxChange(itrType: string) {
     const itrTypeControl = this.getItrTypeControl(itrType);
-    debugger
     if (!this.smeObj['skillSetPlanIdList']) {
       this.smeObj['skillSetPlanIdList'] = [];
     }
@@ -435,7 +435,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     } else {
       this.itrPlanList.forEach(element => {
         if (element.name === itrType) {
-          this.smeObj['skillSetPlanIdList'].remove(element.planId);
+          let index = this.smeObj['skillSetPlanIdList'].indexOf(element.planId);
+          this.smeObj['skillSetPlanIdList'].splice(index, 1);
         }
       });
     }
@@ -453,6 +454,18 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.getDurationControl(duration).setValue(false);
       }
     });
+    let timeDuration = [{ key: "15 Min", value: 15 }, { key: "30 Min", value: 30 }, { key: "45 Min", value: 45 }, { key: "60 Min", value: 60 },]
+    const duration = this.getDurationControl(selectedDuration);
+    if (duration.value) {
+      timeDuration.forEach(element => {
+        if (element.key === selectedDuration) {
+          this.smeObj['inactivityTimeInMinutes'] = element.value;
+        }
+      });
+    } else {
+      this.smeObj['inactivityTimeInMinutes'] = null;
+    }
+
   }
 
   getCaseLimitControl(limit: string): FormControl {
@@ -465,6 +478,18 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.getCaseLimitControl(limit).setValue(false);
       }
     });
+
+    let allCases = [{ key: "5 Cases", value: 5 }, { key: "10 Cases", value: 10 }, { key: "15 Cases", value: 15 }, { key: "20 Cases", value: 20 }, { key: "30 Cases", value: 30 }, { key: "50 Cases", value: 50 },]
+    const limit = this.getCaseLimitControl(selectedLimit);
+    if (limit.value) {
+      allCases.forEach(element => {
+        if (element.key === selectedLimit) {
+          this.smeObj['activeCaseMaxCapacity'] = element.value;
+        }
+      });
+    } else {
+      this.smeObj['activeCaseMaxCapacity'] = null;
+    }
   }
 
   smeFormGroup: FormGroup = this.fb.group({
