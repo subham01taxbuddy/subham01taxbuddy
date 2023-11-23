@@ -215,9 +215,11 @@ export class SharesAndEquityComponent
       );
     }
     let ltcg = 0;
+    let costOfImprovements: any = 0;
     if (data.length > 0) {
       data.forEach((obj: any) => {
         assetDetails = obj.assetDetails;
+        costOfImprovements = data[0].improvement;
         console.log(assetDetails);
         assetDetails.forEach((element: any) => {
           if (element.brokerName == this.selectedBroker) {
@@ -230,6 +232,13 @@ export class SharesAndEquityComponent
             if (filterImp?.length > 0) {
               element['costOfImprovement'] = filterImp[0].costOfImprovement;
             }
+            costOfImprovements.forEach((item) => {
+              if (!element?.improvementsArray) {
+                if (element.srn === item.srn) {
+                  element['improvementsArray'] = item;
+                }
+              }
+            });
             this.addMoreData(element);
           }
         });
