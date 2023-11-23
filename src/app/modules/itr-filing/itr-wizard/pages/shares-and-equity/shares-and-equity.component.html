@@ -546,7 +546,7 @@
               >
             </mat-form-field>
           </div>
-          <div class="col-sm-4">
+          <div class="col-sm-4" *ngIf="bondType !== 'listed'">
             <mat-label>Indexed cost of acquisition</mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -556,8 +556,7 @@
                 name="indexCostOfAcquisition"
                 maxlength="14"
                 (change)="
-                  calculateTotalCG(selectedFormGroup);
-                  calculateDeductionGain()
+                  calculateTotalCG(selectedFormGroup); calculateDeductionGain()
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
