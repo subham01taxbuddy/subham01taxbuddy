@@ -100,7 +100,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     let ltcg = 0;
     let stcg = 0;
     this.goldCg.assetDetails.forEach((asset) => {
-      if(asset.isIndexationBenefitAvailable !== true) {
+      if (asset.isIndexationBenefitAvailable !== true) {
         let copy: any = {};
         Object.assign(copy, asset);
         copy.hasEdit = false;
@@ -128,7 +128,9 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
 
     // initiating deduction form
     this.deductionForm = this.fb.group({ deductions: this.fb.array([]) });
-    const dednDetails = this.goldCg?.deduction ? this.goldCg?.deduction[0] : null;
+    const dednDetails = this.goldCg?.deduction
+      ? this.goldCg?.deduction[0]
+      : null;
 
     if (
       dednDetails?.totalDeductionClaimed &&
@@ -181,7 +183,10 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     let saleValue = 0;
     let expenses = 0;
     this.goldCg.assetDetails.forEach((asset) => {
-      if (asset.isIndexationBenefitAvailable !== true && asset.gainType === 'LONG') {
+      if (
+        asset.isIndexationBenefitAvailable !== true &&
+        asset.gainType === 'LONG'
+      ) {
         capitalGain += asset.capitalGain;
         saleValue += asset.purchaseCost;
         expenses += asset.sellExpense;
@@ -431,7 +436,9 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       }
     });
     this.goldCg.assetDetails = this.goldCg.assetDetails.filter(
-      (asset) => !selected.includes(asset?.srn) && asset.isIndexationBenefitAvailable !== true
+      (asset) =>
+        !selected.includes(asset?.srn) &&
+        asset.isIndexationBenefitAvailable !== true
     );
     this.assetList = this.assetList.filter((asset) => asset?.hasEdit != true);
 
@@ -473,11 +480,26 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       //   suppressMovable: true,
       // },
       {
-        headerName: 'Buy Date / Date of Acquisition',
-        field: 'purchaseDate',
-        width: 120,
+        headerName: 'Sale Value',
+        field: 'sellValue',
+        width: 100,
         editable: false,
         suppressMovable: true,
+      },
+      {
+        headerName: 'Indexed cost of acquisition',
+        field: 'indexCostOfAcquisition',
+        width: 150,
+        editable: false,
+        suppressMovable: true,
+      },
+      {
+        headerName: 'Buy Date / Date of Acquisition',
+        field: 'purchaseDate',
+        width: 150,
+        editable: false,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
         cellRenderer: (params) => {
           return params.data.purchaseDate
             ? new Date(params.data.purchaseDate).toLocaleDateString('en-IN')
@@ -485,9 +507,16 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         },
       },
       {
+        headerName: 'Indexed cost of Improvement',
+        field: 'indexCostOfImprovement',
+        width: 150,
+        editable: false,
+        suppressMovable: true,
+      },
+      {
         headerName: 'Sale Date / Date of Transfer',
         field: 'sellDate',
-        width: 120,
+        width: 150,
         editable: false,
         suppressMovable: true,
         cellRenderer: (params) => {
@@ -499,20 +528,6 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       {
         headerName: 'Buy Value',
         field: 'purchaseCost',
-        width: 100,
-        editable: false,
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Indexed cost of acquisition',
-        field: 'indexCostOfAcquisition',
-        width: 100,
-        editable: false,
-        suppressMovable: true,
-      },
-      {
-        headerName: 'Sale Value',
-        field: 'sellValue',
         width: 100,
         editable: false,
         suppressMovable: true,
