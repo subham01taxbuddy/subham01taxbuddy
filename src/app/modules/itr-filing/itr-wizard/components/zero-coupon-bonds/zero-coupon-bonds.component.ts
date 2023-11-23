@@ -634,6 +634,10 @@ export class ZeroCouponBondsComponent
     }
   }
   calculateIndexCost(asset, type?) {
+    if(!asset.controls['isIndexationBenefitAvailable'].value){
+      this.calculateTotalCG(asset);
+      return;
+    }
     let gainType = asset.controls['gainType'].value;
 
     let selectedYear = moment(asset.controls['sellDate'].value);
