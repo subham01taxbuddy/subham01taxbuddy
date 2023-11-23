@@ -183,7 +183,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     this.goldCg.assetDetails.forEach((asset) => {
       if (asset.isIndexationBenefitAvailable !== true && asset.gainType === 'LONG') {
         capitalGain += asset.capitalGain;
-        saleValue += asset.purchaseCost;
+        saleValue += asset.sellValue;
         expenses += asset.sellExpense;
       }
     });
