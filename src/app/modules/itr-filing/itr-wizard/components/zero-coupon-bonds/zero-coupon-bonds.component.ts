@@ -341,18 +341,20 @@ export class ZeroCouponBondsComponent
   calculateTotalCG(bonds) {
     if (bonds.valid) {
       const param = '/singleCgCalculate';
+      let type = bonds.controls['isIndexationBenefitAvailable'].value === true ? 'GOLD' :
+        this.bondType === 'bonds' ? 'BONDS' : 'ZERO_COUPON_BONDS';
       let request = {
         assessmentYear: '2022-2023',
         assesseeType: 'INDIVIDUAL',
         residentialStatus: 'RESIDENT',
-        assetType: this.bondType === 'bonds' ? 'BONDS' : 'ZERO_COUPON_BONDS',
+        assetType: type,
         assetDetails: [bonds.getRawValue()],
-
         improvement: [
           {
             srn: bonds.controls['srn'].value,
             dateOfImprovement: bonds.controls['dateOfImprovement'].value,
             costOfImprovement: bonds.controls['costOfImprovement'].value,
+            indexCostOfImprovement: bonds.controls['indexCostOfImprovement'].value,
           },
         ],
       };
@@ -688,6 +690,7 @@ export class ZeroCouponBondsComponent
           ]?.setValue(res.data.costOfAcquisitionOrImprovement);
       }
 
+      this.calculateTotalCG(asset);
     });
   }
 

@@ -130,7 +130,7 @@
                       class="input-field"
                       readonly
                       placeholder="Buy Date"
-                      (dateChange)="getGainType(bonds); calculateTotalCG(bonds); calMinImproveDate(bonds.get('purchaseDate').value, bonds);calculateIndexCost(bonds, 'asset')"
+                      (dateChange)="getGainType(bonds); calMinImproveDate(bonds.get('purchaseDate').value, bonds);calculateIndexCost(bonds, 'asset')"
                       formControlName="purchaseDate"
                       name="purchaseDate"
                       [matDatepicker]="purchaseDate"
@@ -205,7 +205,7 @@
                       matInput
                       class="input-field"
                       digitsOnly
-                      (change)="calculateTotalCG(bonds);calculateIndexCost(bonds)"
+                      (change)="calculateIndexCost(bonds)"
                       placeholder= "Cost of improvement without indexation"
                       formControlName="costOfImprovement"
                       maxlength="14"
@@ -248,7 +248,7 @@
                       matTooltipClass="tab-tooltip"
                       matTooltipPosition="above"
                       placeholder="{{getPlaceholderPurchase(bonds)}}"
-                      (change)="calculateTotalCG(bonds); calculateIndexCost(bonds, 'asset')"
+                      (change)="calculateIndexCost(bonds, 'asset')"
                       formControlName="purchaseCost"
                       maxlength="14"
                       required
