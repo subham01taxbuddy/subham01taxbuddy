@@ -92,8 +92,33 @@ export class AisCredsDialogComponent implements OnInit {
     this.userService.postMethod(url, request).subscribe((result: any) => {
       console.log(result);
       this.utilsService.showSnackBar(result.message);
+      this.startTimer();
     });
   }
+
+  interval;
+  timeLeft = 120;
+  retryCount = 0;
+  startTimer() {
+    this.timeLeft = 120;
+    this.retryCount = 0;
+    this.interval = setInterval(() => {
+      if(this.timeLeft > 0) {
+        this.timeLeft--;
+      } else {
+        this.getUserCreds();
+        this.retryCount++;
+      }
+      if(this.retryCount === 3){
+        this.pauseTimer();
+      }
+    },1000)
+  }
+
+  pauseTimer() {
+    clearInterval(this.interval);
+  }
+
   decryptPassword(encryptedPwd){
     let ciphertext = CryptoJS.enc.Base64.parse(encryptedPwd);
     const cipherParams = CryptoJS.lib.CipherParams.create({ ciphertext });
