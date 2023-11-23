@@ -5618,11 +5618,10 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 keys.ExemptIncAgriOthUs10Total
-                                  ? keys.ExemptIncAgriOthUs10Total
+                                  ? keys.ExemptIncAgriOthUs10Total + finalCalculations.giftExemptIncome
                                   : getExemptIncomeTotal() +
-                                    finalCalculations?.exemptIncome?.total
-                              }}</label
-                            >
+                                    finalCalculations?.exemptIncome?.total + finalCalculations.giftExemptIncome
+                              }}</label>
                           </div>
                         </div>
                       </div>
@@ -5647,6 +5646,26 @@
                                 >₹</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(exempt.OthAmount)
+                              }}
+                            </td>
+                          </tr>
+                          <tr *ngIf="finalCalculations.giftExemptIncome > 0">
+                            <td>Gift u/s 56(2)(x)</td>
+                            <td class="">
+                              <i class="material-icons" style="font-size: 15px"
+                                >₹</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(finalCalculations.giftExemptIncome)
+                              }}
+                            </td>
+                          </tr>
+                          <tr *ngIf="finalCalculations.profitShareAmount > 0">
+                            <td>Firm profit share</td>
+                            <td class="">
+                              <i class="material-icons" style="font-size: 15px"
+                                >₹</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(finalCalculations.profitShareAmount)
                               }}
                             </td>
                           </tr>
