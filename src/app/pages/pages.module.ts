@@ -44,6 +44,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { NeedHelpComponent } from './need-help/need-help.component';
 import {FormControlTypePipe} from "../pipes/formcontroltype.pipe";
+import { AisCredsDialogComponent } from './itr-filing/ais-creds-dialog/ais-creds-dialog.component';
 
 
 Auth.configure(environment.AMPLIFY_CONFIG);
@@ -93,6 +94,7 @@ export const MY_FORMATS = {
     AgGridCheckboxComponent,
     ValidateOtpByWhatAppComponent,
     NeedHelpComponent,
+    AisCredsDialogComponent,
   ],
   entryComponents: [
     ConfirmationModalComponent,

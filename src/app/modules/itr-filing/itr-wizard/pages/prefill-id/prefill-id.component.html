@@ -24,6 +24,16 @@
           <div class="flex flex-col items-center">
             <div class="flex flex-row items-center space-between">
               <button
+                class="lgtBtn"
+                type="button"
+                (click)="addAisCredentials()"
+              >
+                <span class="font-semibold">
+                  AIS Credentials
+                </span>
+              </button>
+
+              <button
                 class="lgtBtn btn1"
                 type="button"
                 (click)="addClientOverBot()"
