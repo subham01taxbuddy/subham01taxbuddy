@@ -85,7 +85,7 @@ export class SidebarComponent {
       roles: [],
       submenu: [
         {
-          name: 'My Users (All Services)', url: '/tasks/assigned-users-new', roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
+          name: 'My Users (All Services)', url: '/tasks/assigned-users-new', roles: [],
         },
         { name: 'ITR Assigned Users', url: '/tasks/itr-assigned-users', roles: [] },
         { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },

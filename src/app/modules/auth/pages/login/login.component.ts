@@ -108,9 +108,9 @@ export class LoginComponent implements OnInit {
         // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
         //   this.router.navigate(['pages/tpa-interested']);
         //   this.utilsService.logAction(jhi.userId, 'login')
-      } else if (roles.indexOf("ROLE_FILER") !== -1) {
-        this.router.navigate(['/tasks/itr-assigned-users']);
-        this.utilsService.logAction(userId, 'login');
+      // } else if (roles.indexOf("ROLE_FILER") !== -1) {
+      //   this.router.navigate(['/tasks/itr-assigned-users']);
+      //   this.utilsService.logAction(userId, 'login');
 
       } else if (allowedRoles.some(item => roles.includes(item))) {
         this.router.navigate(['/tasks/assigned-users-new']);

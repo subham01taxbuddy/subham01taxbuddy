@@ -50,11 +50,14 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     { label: 'Tax Payable / (Refund)', old: 0, new: 0 },
   ];
 
+  
   loading: boolean = false;
   ITR_JSON: ITR_JSON;
   errorMessage: string;
   newSummaryIncome: any;
   oldSummaryIncome: any;
+  assessment; any;
+  bfla: any;
   assesssmentYear: any[] = [];
   lastAssesssmentYear: string;
   itrType: any;
@@ -566,7 +569,25 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     this.initForm();
     this.getITRType();
     this.onChanges();
-
+    this.bfla = {
+      cgPastYearLossesSetoff: {
+        totalLTCGLoss: 0,
+        totalSTCGLoss: 0,
+        ltcgSetoffWithLtcg10Per: 0,
+        ltcgSetoffWithLtcg20Per: 0,
+        stcgSetoffWithLtcg10Per: 0,
+        stcgSetoffWithLtcg20Per: 0,
+        stcg15Per: 0,
+        stcgAppRate: 0
+      },
+      cgTaxableIncomeAfterSetoff:{
+        ltcg10Per: 0,
+        ltcg20Per: 0,
+        stcg15Per: 0,
+        stcgAppRate: 0
+      }
+    };
+    this.assessment = {};
     this.lastAssesssmentYear = '2022-23';
     this.assesssmentYear = [
       { assesssmentYear: '2022-23' },
@@ -1360,6 +1381,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             console.log('result is=====', result);
             this.newSummaryIncome = result.data.newRegime;
             this.oldSummaryIncome = result.data.oldRegime;
+
             this.particularsArray = [
               {
                 label: 'Income from Salary',
@@ -1479,6 +1501,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                     : '(' + this.newSummaryIncome?.taxSummary?.taxRefund + ')',
               },
             ];
+
+            this.assessment = this.ITR_JSON.regime ==='NEW' ? this.newSummaryIncome: this.oldSummaryIncome;
+            this.setBfla();
             this.loading = false;
             this.utilsService.showSnackBar(
               'The uploaded JSON has been edited, the Taxbuddy calculations are being displayed now and not the calculations of uploaded Json'
@@ -1504,6 +1529,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           console.log('result is=====', result);
           this.newSummaryIncome = result.data.newRegime;
           this.oldSummaryIncome = result.data.oldRegime;
+         
           this.particularsArray = [
             {
               label: 'Income from Salary',
@@ -1618,6 +1644,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
                   : '(' + this.newSummaryIncome?.taxSummary?.taxRefund + ')',
             },
           ];
+
+          this.assessment = this.ITR_JSON.regime ==='NEW' ? this.newSummaryIncome: this.oldSummaryIncome;
+          this.setBfla();
           this.loading = false;
           this.utilsService.showSnackBar(
             'The below displayed calculations are as of Taxbuddys calculation'
@@ -2099,6 +2128,27 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       return capitalGain;
     }
   }
+
+  setBfla() {
+    this.bfla.cgPastYearLossesSetoff = {
+        totalLTCGLoss: this.assessment?.pastYearLosses?.reduce((total, element) => total + (element?.LTCGLoss), 0),
+        totalSTCGLoss: this.assessment?.pastYearLosses?.reduce((total, element) => total + (element?.STCGLoss), 0),
+        ltcgSetoffWithLtcg10Per: this.assessment?.pastYearLosses?.reduce((total, element) => total + (element?.ltcgSetOffWithCurrentYearLTCG10PerIncome), 0),
+        ltcgSetoffWithLtcg20Per: this.assessment?.pastYearLosses?.reduce((total, element) => total + (element?.ltcgSetOffWithCurrentYearLTCG20PerIncome), 0),
+        stcgSetoffWithLtcg10Per: this.assessment?.pastYearLosses?.reduce((total, element) => total + (element?.stcgSetOffWithCurrentYearLTCG10PerIncome), 0),
+        stcgSetoffWithLtcg20Per: this.assessment?.pastYearLosses?.reduce((total, element) => total + (element?.stcgSetOffWithCurrentYearLTCG20PerIncome), 0),
+        stcg15Per: this.assessment?.pastYearLosses?.reduce((total, element) => total + (element?.setOffWithCurrentYearSTCG15PerIncome || 0), 0),
+        stcgAppRate: this.assessment?.pastYearLosses?.reduce((total, element) => total + (element?.setOffWithCurrentYearSTCGAppRateIncome || 0), 0)
+      };
+
+      this.bfla.cgTaxableIncomeAfterSetoff = {
+        ltcg10Per: this.assessment?.currentYearLossesSetoff.ltcg10PerCYLA.incomeCYLA.currentYearIncomeAfterSetoff - this.bfla.cgPastYearLossesSetoff.ltcgSetoffWithLtcg10Per - this.bfla.cgPastYearLossesSetoff.stcgSetoffWithLtcg10Per,
+        ltcg20Per: this.assessment?.currentYearLossesSetoff.ltcg20PerCYLA.incomeCYLA.currentYearIncomeAfterSetoff - this.bfla.cgPastYearLossesSetoff.ltcgSetoffWithLtcg20Per - this.bfla.cgPastYearLossesSetoff.stcgSetoffWithLtcg20Per,
+        stcg15Per: this.assessment?.currentYearLossesSetoff.stcg15PerCYLA.incomeCYLA.currentYearIncomeAfterSetoff - this.bfla.cgPastYearLossesSetoff.stcg15Per,
+        stcgAppRate: this.assessment?.currentYearLossesSetoff.stcgAppRateCYLA.incomeCYLA.currentYearIncomeAfterSetoff - this.bfla.cgPastYearLossesSetoff.stcgAppRate
+      };
+  }
+
 }
 
 function getCFL(cfl: any): number {

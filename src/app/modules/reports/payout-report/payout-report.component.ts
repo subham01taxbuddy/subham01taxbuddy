@@ -373,7 +373,7 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
       userFilter += `filerUserId=${this.filerId}`;
     }
     param = `/payout/report?${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report');
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report','', {});
     this.loading = false;
     this.showCsvMessage = false;
   }

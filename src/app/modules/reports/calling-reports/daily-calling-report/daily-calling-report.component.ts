@@ -47,10 +47,10 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
-  minEndDate = new Date();
   maxStartDate = new Date();
-  maxDate = new Date(2024, 2, 31);
+  maxDate = this.maxStartDate;
   minDate = new Date(2023, 3, 1);
+  minEndDate = this.minDate;
   dailyCallingReport: any;
   config: any;
   searchParam: any = {
@@ -70,6 +70,8 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     { value: 'noOfMissedCall', name: 'No. of Missed calls' }
   ];
   sortBy: any = {};
+  searchAsPrinciple :boolean =false;
+  partnerType:any;
   constructor(
     public datePipe: DatePipe,
     private userMsService: UserMsService,
@@ -103,14 +105,16 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
+    this.partnerType = this.loggedInSme[0]?.partnerType
 
-    if (this.roles?.includes('ROLE_OWNER')) {
-      this.ownerId = this.loggedInSme[0].userId;
+    if (this.roles?.includes('ROLE_LEADER')) {
+      this.leaderId = this.loggedInSme[0].userId;
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
 
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+      this.agentId =  this.loggedInSme[0]?.userId;
       this.showReports();
     } else {
       this.dataOnLoad = false;
@@ -118,23 +122,34 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     // this.showReports();
   }
 
-  ownerId: number;
+  leaderId: number;
   filerId: number;
   agentId: number;
 
-  fromSme(event, isOwner) {
+  fromSme(event, isOwner,fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
-      this.ownerId = event ? event.userId : null;
+      this.leaderId = event ? event.userId : null;
     } else {
-      this.filerId = event ? event.userId : null;
+      if(fromPrinciple){
+        if (event?.partnerType === 'PRINCIPAL') {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = true;
+        } else {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }else{
+        if(event){
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }
     }
     if (this.filerId) {
       this.agentId = this.filerId;
-
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
-
+    } else if (this.leaderId) {
+      this.agentId = this.leaderId;
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
@@ -147,8 +162,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   }
 
   showReports(pageNumber?) {
-    // https://uat-api.taxbuddy.com/report/calling-report/daily-calling-report?fromDate=2023-04-01&toDate=2023-05-16
-    // https://uat-api.taxbuddy.com/report/calling-report/daily-calling-report?filerUserId=11029&page=0&pageSize=10&fromDate=2023-05-01&toDate=2023-05-24&ownerUserId=7521
+    // https://uat-api.taxbuddy.com/report/bo/calling-report/daily-calling-report?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
     if (!pageNumber) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
@@ -156,35 +170,53 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    // let leaderUserId = this.loggedInSmeUserId;
+    let loggedInId = this.utilsService.getLoggedInUserID();
+
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
+
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =true;
+
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =false;
+    }
 
     let param = ''
     let userFilter = '';
-    if (this.ownerId && !this.filerId && !pageNumber) {
+    if (this.leaderId && !this.filerId && !pageNumber) {
       this.searchParam.page = 0;
       this.config.currentPage = 1
-      userFilter += `&ownerUserId=${this.ownerId}`;
-
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
-    if (this.ownerId && pageNumber) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.leaderId && pageNumber) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
-    if (this.filerId && !pageNumber) {
+    if (this.filerId && this.searchAsPrinciple === true && !pageNumber) {
+      this.searchParam.page = 0;
+      this.config.currentPage = 1
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true && pageNumber) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false && !pageNumber) {
       this.searchParam.page = 0;
       this.config.currentPage = 1
       userFilter += `&filerUserId=${this.filerId}`;
-
     }
-
-    if (this.filerId && pageNumber) {
+    if (this.filerId && this.searchAsPrinciple === false && pageNumber) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
     // this.searchParam.page = pageNumber ? pageNumber - 1 : 0;
     let data = this.utilsService.createUrlParams(this.searchParam);
-    param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
+    param = `/bo/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
@@ -210,16 +242,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
       this.loading = false;
       this._toastMessageService.alert("error", "Error");
     });
-
-
   }
-
-  // createRowData(callingData:any){
-  //   const rowData: any[] = [];
-
-
-  //   return callingData;
-  // }
 
   createRowData(callingData) {
     console.log('callingRepoInfo -> ', callingData);
@@ -373,8 +396,8 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     this.showCsvMessage = true;
     let param = ''
     let userFilter = '';
-    if (this.ownerId && !this.filerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.leaderId && !this.filerId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
     if (this.filerId) {
       userFilter += `&filerUserId=${this.filerId}`;
@@ -382,7 +405,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
+    param = `/bo/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'daily-calling-report', '', this.sortBy);
     this.loading = false;
     this.showCsvMessage = false;
@@ -397,8 +420,8 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
     this?.smeDropDown?.resetDropdown();
-    if (this.roles?.includes('ROLE_OWNER')) {
-      this.ownerId = this.loggedInSme[0].userId;
+    if (this.roles?.includes('ROLE_LEADER')) {
+      this.leaderId = this.loggedInSme[0].userId;
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
