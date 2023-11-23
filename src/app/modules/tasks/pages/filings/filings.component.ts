@@ -34,6 +34,7 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RequestManager } from 'src/app/modules/shared/services/request-manager';
 import { ReportService } from 'src/app/services/report-service';
+import { GenericCsvService } from 'src/app/services/generic-csv.service';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -96,6 +97,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private http: HttpClient,
     private reportService: ReportService,
+    private genericCsvService: GenericCsvService,
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
     this.myItrsGridOptions = <GridOptions>{
@@ -373,6 +375,34 @@ export class FilingsComponent implements OnInit, OnDestroy {
     });
   }
 
+  async downloadReport() {
+    this.loading = true;
+    let userFilter = '';
+      if ((this.leaderUserId && !this.filerUserId)) {
+        userFilter += `&leaderUserId=${this.leaderUserId}`;
+      }
+      if (this.filerUserId && this.searchAsPrinciple === true) {
+        userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerUserId}`;
+      }
+      if (this.filerUserId && this.searchAsPrinciple === false) {
+        userFilter += `&filerUserId=${this.filerUserId}`;
+      }
+      let status = ''
+      if (this.utilsService.isNonEmpty(this.searchParams.selectedStatusId)) {
+        status +=`&status=${this.searchParams.selectedStatusId}`;
+      }
+      let financialYear = '';
+      if (this.utilsService.isNonEmpty(this.searchParams.selectedFyYear)) {
+      financialYear += `?financialYear=${this.searchParams.selectedFyYear}`;
+      }
+    let param=''
+
+    param =`/bo/itr-list${financialYear}${status}${userFilter}`
+
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'Filed-ITR', '', {});
+    this.loading = false;
+  }
+
   fromFy(event) {
     this.searchParams.selectedFyYear = event;
     this.selectedPageNo = 0;
@@ -420,6 +450,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         filingTeamMemberId: data[i].filingTeamMemberId,
         leaderName : data[i].leaderName,
         leaderUserId :data[i].leaderUserId,
+        filingSource:data[i].filingSource,
       });
     }
     return newData;
@@ -502,6 +533,17 @@ export class FilingsComponent implements OnInit, OnDestroy {
         width: 100,
         valueFormatter: (data) =>
           data.value ? moment(data.value).format('DD MMM YYYY') : null,
+      },
+      {
+        headerName: 'Filing Mode',
+        field: 'filingSource',
+        cellStyle: { textAlign: 'center' },
+        width: 120,
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          defaultOption: 'startsWith',
+          debounceMs: 0,
+        },
       },
       {
         headerName: 'Return Type',

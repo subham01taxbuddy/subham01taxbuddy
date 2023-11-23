@@ -43,12 +43,16 @@
               </div>
               <div class="col-sm-6">
                 <div class="col-sm-12">
+                  <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
+                    <i class="fa fa-download" aria-hidden="true"></i> Download File
+                  </button>
                   <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
                     Clear form
                   </button>
                   <button class="srch-btn mvRth" [disabled]="loading" (click)="this.search()">
                     <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
                   </button>
+
                 </div>
                 <div class="col-sm-12 row">
                   <span class="note1 note">
