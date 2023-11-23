@@ -14,6 +14,7 @@ export class AisCredsDialogComponent implements OnInit {
 
   private decryptionKey = 'cYDffVW+lRRd2BKa0ZTEpJwEmrsLme/t7s6808uX';
   showPassword: boolean = false;
+  showProgress: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<AisCredsDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
@@ -51,7 +52,7 @@ export class AisCredsDialogComponent implements OnInit {
 
   viewPassword(){
     this.showPassword = !this.showPassword;
-    this.logPasswordAction('VIEW');
+    this.logPasswordAction('READ');
   }
 
   copyPassword(){
@@ -78,6 +79,9 @@ export class AisCredsDialogComponent implements OnInit {
     let url = '/validate-it-password';
     this.userService.postMethod(url, request).subscribe((result: any) => {
       console.log(result);
+      this.utilsService.showSnackBar(result.message);
+      this.startTimer();
+      this.showProgress = true;
     });
   }
 
@@ -93,6 +97,7 @@ export class AisCredsDialogComponent implements OnInit {
       console.log(result);
       this.utilsService.showSnackBar(result.message);
       this.startTimer();
+      this.showProgress = true;
     });
   }
 
@@ -111,6 +116,8 @@ export class AisCredsDialogComponent implements OnInit {
       }
       if(this.retryCount === 3){
         this.pauseTimer();
+        this.updateClicked = false;
+        this.showProgress = false;
       }
     },1000)
   }
