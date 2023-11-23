@@ -10051,3 +10051,36 @@ body[dir=rtl] .checkbox[checked=true] {
 .bulk {
   padding: 6px 15px !important;
 }
+
+.chat-overlay {
+  margin-top: 20px;
+  display: block;
+  max-height: calc(100% - 30px) !important;
+  border: none;
+  position: fixed;
+  z-index: 2243000;
+  bottom: 10px;
+  height: 375px;
+  width: 375px;
+  transition: unset;
+}
+
+
+.iframe-height {
+  height: 45vw;
+  width: 600px;
+}
+
+
+
+.close-kmChat {
+  position: absolute;
+  top: -7px;
+  left: -2px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.kmIcon {
+  background-color: red;
+}

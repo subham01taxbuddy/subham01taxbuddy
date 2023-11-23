@@ -88,6 +88,14 @@ export class TokenInterceptor implements HttpInterceptor {
           environment: environment.environment
         },
       });
+    }
+    else if (request.url.startsWith(environment.validate_km_token)) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ` + TOKEN,
+          'API-Key': '65041ba789abcf021392ac6a'
+        },
+      });
     } else if (request.url.startsWith(environment.ITR_LIFECYCLE)) {
       request = request.clone({
         setHeaders: {

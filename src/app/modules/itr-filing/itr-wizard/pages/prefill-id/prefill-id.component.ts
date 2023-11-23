@@ -3953,6 +3953,8 @@ export class PrefillIdComponent implements OnInit {
                             sellValuePerUnit: null,
                             purchaseValuePerUnit: null,
                             algorithm: 'cgProperty',
+                            isIndexationBenefitAvailable: null,
+                            whetherDebenturesAreListed: null,
                             fmvAsOn31Jan2018: null,
                             capitalGain:
                               zcb.Proviso112Applicabledtls?.CapgainonAssets,
@@ -4050,6 +4052,8 @@ export class PrefillIdComponent implements OnInit {
                         sellValuePerUnit: null,
                         purchaseValuePerUnit: null,
                         algorithm: 'cgProperty',
+                        isIndexationBenefitAvailable: null,
+                        whetherDebenturesAreListed: null,
                         fmvAsOn31Jan2018: null,
                         capitalGain: SaleofBondsDebntr?.CapgainonAssets,
                         cgBeforeDeduction: SaleofBondsDebntr?.CapgainonAssets,
@@ -4137,6 +4141,8 @@ export class PrefillIdComponent implements OnInit {
                         sellValuePerUnit: null,
                         purchaseValuePerUnit: null,
                         algorithm: 'cgProperty',
+                        isIndexationBenefitAvailable: null,
+                        whetherDebenturesAreListed: null,
                         fmvAsOn31Jan2018: null,
                         capitalGain: SaleofAssetNA?.CapgainonAssets,
                         cgBeforeDeduction: SaleofAssetNA?.CapgainonAssets,
@@ -4274,6 +4280,8 @@ export class PrefillIdComponent implements OnInit {
                             sellValuePerUnit: null,
                             purchaseValuePerUnit: null,
                             algorithm: 'cgProperty',
+                            isIndexationBenefitAvailable: null,
+                            whetherDebenturesAreListed: null,
                             fmvAsOn31Jan2018: null,
                             capitalGain: landAndBuilding?.Balance,
                             cgBeforeDeduction: landAndBuilding?.Balance,
@@ -4313,7 +4321,6 @@ export class PrefillIdComponent implements OnInit {
                     if (itrObjEquity112a) {
                       itrObjEquity112a?.assetDetails.push({
                         id: null,
-                        hasIndexation: null,
                         isUploaded: null,
                         srn: null,
                         description: null,
@@ -4333,6 +4340,8 @@ export class PrefillIdComponent implements OnInit {
                           equityLtcg?.AcquisitionCost /
                           equityLtcg?.NumSharesUnits,
                         algorithm: 'cgSharesMF',
+                        isIndexationBenefitAvailable: null,
+                        whetherDebenturesAreListed: null,
                         fmvAsOn31Jan2018: equityLtcg?.FairMktValuePerShareunit,
                         capitalGain: equityLtcg.Balance,
                         cgBeforeDeduction: equityLtcg.Balance,
@@ -4397,6 +4406,8 @@ export class PrefillIdComponent implements OnInit {
                               equityLtcg?.AcquisitionCost /
                               equityLtcg?.NumSharesUnits,
                             algorithm: 'cgSharesMF',
+                            isIndexationBenefitAvailable: null,
+                            whetherDebenturesAreListed: null,
                             fmvAsOn31Jan2018:
                               equityLtcg?.FairMktValuePerShareunit,
                             capitalGain: equityLtcg.Balance,
@@ -4494,6 +4505,8 @@ export class PrefillIdComponent implements OnInit {
                         sellValuePerUnit: null,
                         purchaseValuePerUnit: null,
                         algorithm: 'cgProperty',
+                        isIndexationBenefitAvailable: null,
+                        whetherDebenturesAreListed: null,
                         fmvAsOn31Jan2018: null,
                         capitalGain: SaleOnOtherAssets?.CapgainonAssets,
                         cgBeforeDeduction: SaleOnOtherAssets?.CapgainonAssets,
@@ -4527,7 +4540,6 @@ export class PrefillIdComponent implements OnInit {
                     if (itrObjEquity111a) {
                       itrObjEquity111a?.assetDetails?.push({
                         id: null,
-                        hasIndexation: null,
                         isUploaded: null,
                         srn: null,
                         description: null,
@@ -4550,6 +4562,8 @@ export class PrefillIdComponent implements OnInit {
                         purchaseValuePerUnit:
                           equityStcg.EquityMFonSTTDtls.DeductSec48?.AquisitCost,
                         algorithm: 'cgSharesMF',
+                        isIndexationBenefitAvailable: null,
+                        whetherDebenturesAreListed: null,
                         fmvAsOn31Jan2018: null,
                         capitalGain:
                           equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
@@ -4624,6 +4638,8 @@ export class PrefillIdComponent implements OnInit {
                               equityStcg.EquityMFonSTTDtls.DeductSec48
                                 ?.AquisitCost,
                             algorithm: 'cgSharesMF',
+                            isIndexationBenefitAvailable: null,
+                            whetherDebenturesAreListed: null,
                             fmvAsOn31Jan2018: null,
                             capitalGain:
                               equityStcg.EquityMFonSTTDtls?.CapgainonAssets,
@@ -4756,6 +4772,8 @@ export class PrefillIdComponent implements OnInit {
                               sellValuePerUnit: null,
                               purchaseValuePerUnit: null,
                               algorithm: 'cgProperty',
+                              isIndexationBenefitAvailable: null,
+                              whetherDebenturesAreListed: null,
                               fmvAsOn31Jan2018: null,
                               capitalGain: landAndBuilding?.Balance,
                               cgBeforeDeduction: landAndBuilding?.Balance,

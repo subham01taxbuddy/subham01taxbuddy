@@ -15,14 +15,16 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <div class="col-sm-12 bckClr" >
-              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
-                (sendPrincipleIndividual)="fromSme($event, false,true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+            <div class="col-sm-3 bckClr" *ngIf="roles.includes('ROLE_ADMIN')" >
+              <!-- <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                (sendPrincipleIndividual)="fromSme($event, false,true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down> -->
+               <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event)"
+             [showOwnerList]="true"></app-leader-list-dropdown>
             </div>
             <!-- <div class="filter__col card__col-sm-3 card__col-xs-12">
               <app-service-drop-down (sendService)="fromServiceType($event)" [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
             </div> -->
-            <div class="col-sm-3 spsTp">
+            <div class="col-sm-3 " style="margin-top: 10px;">
               <mat-label>Select Status</mat-label>
               <mat-form-field appearance="outline">
                 <mat-select placeholder="Select Status" [(ngModel)]="searchParam.statusId">
@@ -32,7 +34,7 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-9 ">
+            <div class="col-6 ">
               <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                   (onChange)="searchByObject($event)"></app-generic-user-filter>
           </div>

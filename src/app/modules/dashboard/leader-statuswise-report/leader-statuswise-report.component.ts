@@ -58,18 +58,19 @@ export class LeaderStatuswiseReportComponent implements OnInit {
       label: 'ITR',
       value: 'ITR',
     },
-    // {
-    //   label: 'GST',
-    //   value: 'GST',
-    // },
-    // {
-    //   label: 'NOTICE',
-    //   value: 'NOTICE',
-    // },
-    // {
-    //   label: 'TPA',
-    //   value: 'TPA',
-    // },
+    {
+      label: 'TPA',
+      value: 'TPA',
+    },
+    {
+      label: 'GST',
+      value: 'GST',
+    },
+    {
+      label: 'NOTICE',
+      value: 'NOTICE',
+    },
+
   ];
   selectedService = new FormControl('');
 
@@ -108,14 +109,20 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
   }
 
-  getStatusWiseReport(){
-   //'https://uat-api.taxbuddy.com/report/bo/dashboard/status-wise-report?fromDate=2023-04-17&toDate=2023-11-17&leaderUserId=14134' \
+  selectedServiceType: string;
+  columns: string[];
+  dataKeys: string[];
+  grandTotalKeys: string[];
+  grandTotal: any;
+
+  getStatusWiseReport() {
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    let param=''
+    let param = '';
     let userFilter = '';
+
     if (this.leaderId && !this.filerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
@@ -126,29 +133,109 @@ export class LeaderStatuswiseReportComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
     let serviceFilter = '';
-    if(this.selectedService.value){
-      serviceFilter +=`&serviceType=${this.selectedService.value}`
+    if (this.selectedService.value) {
+      serviceFilter += `&serviceType=${this.selectedService.value}`
     }
 
-    param =`/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
+    param = `/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
 
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if (response.success) {
         this.loading = false;
-        this.allDetails = response?.data?.content[0];
-        this.data = response?.data?.content[0];
 
-      }else{
-        this.data=null;
-         this.loading = false;
-         this. _toastMessageService.alert("error",response.message);
-       }
-    },(error) => {
-      this.data=null;
+        const columnMap: Record<string, Record<string, string>> = {
+          ITR: {
+            filerName:'filerName',
+            open: 'open',
+            notInterested: 'notInterested',
+            chatInitiated: 'chatInitiated',
+            chatResolve: 'chatResolve',
+            interested: 'interested',
+            documentsUploaded :'documentsUploaded',
+            proformaInvoiceSent : 'proformaInvoiceSent',
+            paymentReceived :'paymentReceived',
+            upgradedInvoiceSent:'upgradedInvoiceSent',
+            preparingItr : 'preparingItr',
+            waitingForConfirmation :'waitingForConfirmation',
+            itrConfirmationReceived :'itrConfirmationReceived',
+            itrFiledEverificationPending :'itrFiledEverificationPending',
+            itrFiledEverificationCompleted :'itrFiledEverificationCompleted',
+            backOutWithoutRefund:'backOutWithoutRefund',
+            backOutWithRefund:'backOutWithRefund',
+          },
+          TPA: {
+            filerName: 'filerName',
+            open: 'open',
+            notInterested: 'notInterested',
+            interested: 'interested',
+            documentsUploaded :'documentsUploaded',
+            proformaInvoiceSent : 'proformaInvoiceSent',
+            paymentReceived :'paymentReceived',
+            backOut:'backOut',
+          },
+          NOTICE: {
+            filerName: 'filerName',
+            open: 'open',
+            notInterested: 'notInterested',
+            interested: 'interested',
+            documentsUploaded :'documentsUploaded',
+            proformaInvoiceSent : 'proformaInvoiceSent',
+            paymentReceived :'paymentReceived',
+            converted:'converted',
+            followUp:'followUp',
+            noticeResponseFiled:'noticeResponseFiled',
+            partResponseFiled:'partResponseFiled',
+            noticeWIP:'noticeWIP',
+            noticeClosed:'noticeClosed',
+            noticeReopen:'noticeReopen',
+            backOut:'backOut'
+          },
+          GST: {
+            filerName: 'filerName',
+            open: 'open',
+            interested: 'interested',
+            notInterested: 'notInterested',
+            proformaInvoiceSent: 'proformaInvoiceSent',
+            paymentReceived: 'paymentReceived',
+            followUp : 'followUp',
+            converted:'converted',
+            activeClientReturn : 'activeClientReturn',
+            registrationDone :'registrationDone',
+            gstCancelled:'gstCancelled',
+            backOut:'backOut'
+          },
+
+        };
+
+        const selectedServiceMap = columnMap[this.selectedService.value];
+
+        if (selectedServiceMap) {
+          this.columns = Object.values(selectedServiceMap);
+          this.dataKeys = Object.values(selectedServiceMap);
+          this.data = response?.data?.content[0];
+          this.grandTotal = response?.data?.content[0].total;
+          this.grandTotalKeys = Object.keys(this.grandTotal);
+        } else {
+          // Handle the case when the selected service type is not found in columnMap
+          console.error('Selected service type not found in columnMap');
+        }
+
+      } else {
+        this.data = null;
+        this.grandTotal =null;
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
+      this.data = null;
       this.loading = false;
-      this. _toastMessageService.alert("error","Error");
+      this._toastMessageService.alert("error", "Error");
     });
+  }
 
+  addSpaces(text: string): string {
+    // Use a regular expression to add spaces between words in the text
+    return text.replace(/([a-z])([A-Z])/g, '$1 $2').toUpperCase();
   }
 
   getColumnName(): string {
@@ -242,5 +329,6 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     console.log('startDateVal: ', startDateVal);
     this.minEndDate = startDateVal.value;
   }
+
 
 }

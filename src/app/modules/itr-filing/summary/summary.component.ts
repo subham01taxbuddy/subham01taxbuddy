@@ -651,6 +651,8 @@ export class SummaryComponent implements OnInit {
       ];
       total: number;
     };
+    giftExemptIncome?: number;
+    profitShareAmount?: number;
   };
   natureOfBusiness: any = [];
   business44adDetails: any = [];
@@ -5234,6 +5236,8 @@ export class SummaryComponent implements OnInit {
                       0
                     ),
                   },
+                  giftExemptIncome: getTotalGiftExemptIncome(this.finalSummary?.itr?.giftTax),
+                  profitShareAmount: this.finalSummary.assessment?.scheduleIF?.totalProfitShareAmount
                 };
                 console.log(this.finalCalculations, 'finalCalculations');
                 this.loading = false;
@@ -6824,6 +6828,8 @@ export class SummaryComponent implements OnInit {
                     0
                   ),
                 },
+                giftExemptIncome: getTotalGiftExemptIncome(this.finalSummary?.itr?.giftTax),
+                profitShareAmount: this.finalSummary.assessment?.scheduleIF?.totalProfitShareAmount
               };
 
               console.log(this.finalCalculations, 'finalCalculations');
@@ -7535,3 +7541,24 @@ export class SummaryComponent implements OnInit {
 function getTotalBusinessIncome(summaryBusinessIncome: any): number {
   return Math.max(summaryBusinessIncome.totalBusinessIncome, 0);
 }
+
+function getTotalGiftExemptIncome(giftTax: any): number {
+  let totalGiftExemptIncome = 0;
+  if(giftTax.aggregateValueWithoutConsiderationNotTaxable)
+    totalGiftExemptIncome += giftTax.aggregateValueWithoutConsideration;
+
+  if(giftTax.immovablePropertyWithoutConsiderationNotTaxable)
+    totalGiftExemptIncome += giftTax.immovablePropertyWithoutConsideration;
+
+  if(giftTax.immovablePropertyInadequateConsiderationNotTaxable)
+    totalGiftExemptIncome += giftTax.immovablePropertyInadequateConsideration;
+
+  if(giftTax.anyOtherPropertyWithoutConsiderationNotTaxable)
+    totalGiftExemptIncome += giftTax.anyOtherPropertyWithoutConsideration;
+
+  if(giftTax.anyOtherPropertyInadequateConsiderationNotTaxable)
+    totalGiftExemptIncome += giftTax.anyOtherPropertyInadequateConsideration;
+
+  return totalGiftExemptIncome;
+}
+

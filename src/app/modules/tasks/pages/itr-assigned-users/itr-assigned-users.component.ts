@@ -289,14 +289,14 @@ export class ItrAssignedUsersComponent implements OnInit {
     let param;
     if (this.loggedInUserRoles.includes('ROLE_FILER')) {
       if (loggedInSme[0].partnerType === 'PRINCIPAL') {
-        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&searchAsPrincipal=true&userId=${data?.userId}&page=0&pageSize=10`;
+        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&searchAsPrincipal=true&userId=${data?.userId}&page=0&pageSize=100`;
       } else {
-        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&userId=${data?.userId}&page=0&pageSize=10`;
+        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&userId=${data?.userId}&page=0&pageSize=100`;
       }
     } else if (this.loggedInUserRoles.includes('ROLE_LEADER')) {
-      param = `/bo/subscription-dashboard-new?leaderUserId=${loggedInSmeUserId}&mobileNumber=${data?.mobileNumber}&page=0&pageSize=10`;
+      param = `/bo/subscription-dashboard-new?leaderUserId=${loggedInSmeUserId}&mobileNumber=${data?.mobileNumber}&page=0&pageSize=100`;
     } else {
-      param = `/bo/subscription-dashboard-new?mobileNumber=${data?.mobileNumber}&page=0&pageSize=10`;
+      param = `/bo/subscription-dashboard-new?mobileNumber=${data?.mobileNumber}&page=0&pageSize=100`;
     }
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
