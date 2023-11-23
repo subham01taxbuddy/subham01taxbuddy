@@ -39,22 +39,22 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       value: 'ROYALTY_US_80RRB',
       label: 'Royalty Against Patent (80RRB)',
     },
-    // {
-    //   value: 'INTEREST_ACCRUED_10_11_I_P',
-    //   label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(11)',
-    // },
-    // {
-    //   value: 'INTEREST_ACCRUED_10_11_II_P',
-    //   label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(11)',
-    // },
-    // {
-    //   value: 'INTEREST_ACCRUED_10_12_I_P',
-    //   label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(12)',
-    // },
-    // {
-    //   value: 'INTEREST_ACCRUED_10_12_II_P',
-    //   label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(12)',
-    // },
+    {
+      value: 'INTEREST_ACCRUED_10_11_I_P',
+      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(11)',
+    },
+    {
+      value: 'INTEREST_ACCRUED_10_11_II_P',
+      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(11)',
+    },
+    {
+      value: 'INTEREST_ACCRUED_10_12_I_P',
+      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(12)',
+    },
+    {
+      value: 'INTEREST_ACCRUED_10_12_II_P',
+      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(12)',
+    },
     {
       value: 'ANY_OTHER',
       label: 'Any Other Income',

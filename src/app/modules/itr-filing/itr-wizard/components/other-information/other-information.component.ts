@@ -22,6 +22,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { setTimeout } from 'timers';
 
 @Component({
   selector: 'app-other-information',
@@ -32,6 +33,7 @@ export class OtherInformationComponent implements OnInit {
   @Output() saveAndNext = new EventEmitter<any>();
   @Input() isEditOther = false;
   @Output() otherInfoSaved = new EventEmitter<boolean>();
+  panRepeat: boolean = false;
 
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -135,6 +137,7 @@ export class OtherInformationComponent implements OnInit {
 
     this.minDate = thisYearStartDate;
     this.maxDate = nextYearEndDate;
+    this.changeGovernedByPortugueseStatus();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -403,14 +406,43 @@ export class OtherInformationComponent implements OnInit {
     });
   }
 
+  checkPAN() {
+    const panOfSpouse = this.schedule5AForm.get('panOfSpouse');
+    const panOfSpouseValue = this.schedule5AForm.get('panOfSpouse').value.toUpperCase();
+    // pan should not be same as self Pan validation
+    if (panOfSpouseValue === this.ITR_JSON.panNumber) {
+      this.panRepeat = true;
+    } else {
+      this.panRepeat = false;
+    }
+  }
+
   // change functions
   changeGovernedByPortugueseStatus() {
-    console.log(
-      'changeGovernedByPortugueseStatus: ' +
-        this.Copy_ITR_JSON.portugeseCC5AFlag
-    );
+    const panOfSpouse = this.schedule5AForm.get('panOfSpouse');
+    const aadhaarOfSpouse = this.schedule5AForm.get('aadhaarOfSpouse');
+    const nameOfSpouse = this.schedule5AForm.get('nameOfSpouse');
+
     if (this.Copy_ITR_JSON.portugeseCC5AFlag === 'Y') {
       this.schedule5AForm.get('isGovernedByPortuguese').setValue('Y');
+
+      panOfSpouse.setValidators(
+        Validators.compose([
+          Validators.required,
+          Validators.pattern(AppConstants.panNumberRegex),
+        ])
+      );
+      panOfSpouse.updateValueAndValidity();
+
+      aadhaarOfSpouse.setValidators(
+        Validators.compose([Validators.minLength(12), Validators.maxLength(12)])
+      );
+      aadhaarOfSpouse.updateValueAndValidity();
+
+      this.validationHp();
+      this.validationCg();
+      this.validationBusiness();
+      this.validationOth();
     } else {
       this.schedule5AForm.reset();
       this.schedule5AForm.get('isGovernedByPortuguese').setValue('N');
@@ -418,6 +450,17 @@ export class OtherInformationComponent implements OnInit {
       this.schedule5AForm.get('businessOrProfession').reset();
       this.schedule5AForm.get('capitalGain').reset();
       this.schedule5AForm.get('otherSource').reset();
+
+      panOfSpouse.clearValidators();
+      panOfSpouse.updateValueAndValidity();
+      aadhaarOfSpouse.clearValidators();
+      aadhaarOfSpouse.updateValueAndValidity();
+      nameOfSpouse?.clearValidators();
+      nameOfSpouse.updateValueAndValidity();
+      this.validationHp();
+      this.validationCg();
+      this.validationBusiness();
+      this.validationOth();
 
       this.Copy_ITR_JSON.schedule5a = {
         nameOfSpouse: '',
@@ -741,7 +784,8 @@ export class OtherInformationComponent implements OnInit {
       this.schedule5AForm?.valid &&
       this.firmForm?.valid &&
       this.sharesForm?.valid &&
-      this.directorForm?.valid
+      this.directorForm?.valid &&
+      !this.panRepeat
     ) {
       this.serviceCall('saveAll');
     } else {
@@ -813,17 +857,30 @@ export class OtherInformationComponent implements OnInit {
   ) {
     const receiptValue = parseFloat(receiptControl?.value);
     const apportionedValue = parseFloat(apportionedControl?.value);
-
-    if (apportionedValue > receiptValue) {
-      apportionedControl?.setValidators(Validators.max(receiptValue));
-      apportionedControl.updateValueAndValidity();
-    }
-
     const tdsReceiptValue = parseFloat(tdsReceiptControl?.value);
     const tdsApportionedValue = parseFloat(tdsApportionedControl?.value);
 
-    if (tdsApportionedValue > tdsReceiptValue) {
-      tdsApportionedControl?.setValidators(Validators.max(tdsReceiptValue));
+    if (this.Copy_ITR_JSON.portugeseCC5AFlag === 'Y') {
+      if (apportionedValue > receiptValue) {
+        apportionedControl?.setValidators(Validators.max(receiptValue));
+        apportionedControl.updateValueAndValidity();
+      }
+
+      if (tdsApportionedValue > tdsReceiptValue) {
+        tdsApportionedControl?.setValidators(Validators.max(tdsReceiptValue));
+        tdsApportionedControl.updateValueAndValidity();
+      }
+    } else {
+      tdsReceiptControl?.clearValidators();
+      tdsReceiptControl?.updateValueAndValidity();
+
+      receiptControl?.clearValidators();
+      receiptControl?.updateValueAndValidity();
+
+      apportionedControl?.clearValidators();
+      apportionedControl.updateValueAndValidity();
+
+      tdsApportionedControl?.clearValidators();
       tdsApportionedControl.updateValueAndValidity();
     }
   }
