@@ -472,7 +472,7 @@
     </div>
     <!-- </form> -->
     <div style="text-align: center;  margin-top: 40px;">
-      <button class="tbd-btn" (click)="updateSmeDetails()">Save </button>
+      <button class="tbd-btn" [disabled]="!smeObj?.internal" (click)="updateSmeDetails()">Save </button>
       <button class="tbd-btn" (click)="cancelUpdate()">Cancel </button>
 
     </div>
