@@ -156,6 +156,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       }
       else {
         if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
+          this.filerId = this.agentId;
+          this.partnerType = this.utilsService.getPartnerType();
           this.search();
         } else {
           this.dataOnLoad = false;
@@ -469,7 +471,18 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         field: 'leaderName',
         width: 110,
         suppressMovable: true,
-        hide: !showOwnerCols,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Filer Name',
+        field: 'filerName',
+        width: 110,
+        suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -755,7 +768,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         assessmentYear: userData[i].assessmentYear,
         callerAgentName: userData[i].filerName,
         leaderName: userData[i].leaderName,
-        filerName: userData[i].filerName,
+        filerName: userData[i].filerName ? userData[i].filerName : '-',
         callerAgentNumber: userData[i].filerMobile,
         callerAgentUserId: userData[i].filerUserId,
         statusId: userData[i].statusId,
@@ -1150,10 +1163,11 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
     this.getStatus();
-    if (this.coOwnerDropDown) {
-      this.coOwnerDropDown.resetDropdown();
-      this.search('', true);
-    } else {
+    if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      this.agentId = this.utilsService.getLoggedInUserID();
+      this.filerId = this.filerId = this.agentId;
+      this.partnerType = this.utilsService.getPartnerType();
+    }
       if (this.dataOnLoad) {
         this.search();
       } else {
@@ -1161,7 +1175,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         this.usersGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
       }
-    }
+
 
   }
 
