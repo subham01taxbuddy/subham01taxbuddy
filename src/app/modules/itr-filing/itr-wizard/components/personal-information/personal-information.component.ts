@@ -80,6 +80,7 @@ export class PersonalInformationComponent implements OnInit {
   fillingMaxDate: any = new Date();
   config: any;
   selectedIndexes: number[] = [];
+  selectionChangeValue: number = 0;
 
   countryDropdown = [
     {
@@ -2918,7 +2919,7 @@ export class PersonalInformationComponent implements OnInit {
     this.seventhProviso139.get(controlName).updateValueAndValidity();
   }
 
-  // 1
+  // 0
   seventhProvisio139() {
     const seventhProvisio139 = this.seventhProviso139;
     const seventhProvisio139Flag =
@@ -2964,7 +2965,7 @@ export class PersonalInformationComponent implements OnInit {
     }
   }
 
-  // 2
+  // 1
   incrExpAggAmt2LkTrvFrgnCntryFlgSaved: any;
   strIncrExpAggAmt2LkTrvFrgnCntryFlg() {
     const seventhProvisio139 = this.seventhProviso139;
@@ -2985,7 +2986,7 @@ export class PersonalInformationComponent implements OnInit {
     } else {
       this.setValidator(twoLakhsFlagKey, [
         Validators.required,
-        Validators.min(200000),
+        Validators.min(200001),
       ]);
 
       // Check if there is saved data and populate the form group
@@ -2996,7 +2997,7 @@ export class PersonalInformationComponent implements OnInit {
     }
   }
 
-  // 3
+  // 2
   incrExpAggAmt1LkElctrctyPrYrFlgSaved: any;
   strIncrExpAggAmt1LkElctrctyPrYrFlg() {
     const seventhProvisio139 = this.seventhProviso139;
@@ -3017,7 +3018,7 @@ export class PersonalInformationComponent implements OnInit {
     } else {
       this.setValidator(oneLakhsFlagKey, [
         Validators.required,
-        Validators.min(100000),
+        Validators.min(100001),
       ]);
 
       // Check if there is saved data and populate the form group
@@ -3028,7 +3029,7 @@ export class PersonalInformationComponent implements OnInit {
     }
   }
 
-  // 4
+  // 3
   clauseiv7provisio139iSaved: any;
   clauseiv7provisio139i() {
     const seventhProvisio139 = this.seventhProviso139;
@@ -3074,37 +3075,42 @@ export class PersonalInformationComponent implements OnInit {
     });
   }
 
-  // 4 on selection change
-  onSelectionChange(value) {
-    console.log(value);
+  // 3 on selection change
+  onSelectionChange(value?) {
     const clauseIvArray = this.getClauseiv7provisio139iDtls;
 
     const validatorMap = {
-      0: [Validators.required, Validators.min(6000000)],
-      1: [Validators.required, Validators.min(1000000)],
-      2: [Validators.required, Validators.min(25000)],
-      3: [Validators.required, Validators.min(5000000)],
+      0: [Validators.required, Validators.min(6000001)],
+      1: [Validators.required, Validators.min(1000001)],
+      2: [Validators.required, Validators.min(25001)],
+      3: [Validators.required, Validators.min(5000001)],
     };
 
-    if (value || value === 0) {
+    if (value) {
+      this.selectionChangeValue = value;
+    }
+
+    if (this.selectionChangeValue || this.selectionChangeValue === 0) {
       let control = clauseIvArray?.controls.find((item) => {
         if (isNaN(item.value.nature)) {
           item.value.nature = 0;
         }
 
-        if (item.value.nature === value) {
+        if (item.value.nature === this.selectionChangeValue) {
           return item;
         }
       });
       let amountControl = (control as FormGroup).controls['amount'];
       if (amountControl) {
-        amountControl.setValidators(validatorMap[value] || []);
+        amountControl.setValidators(
+          validatorMap[this.selectionChangeValue] || []
+        );
         amountControl.updateValueAndValidity();
       }
     }
   }
 
-  // 5
+  // 4
   depAmtAggAmtExcd1CrPrYrFlgSaved: any;
   strDepAmtAggAmtExcd1CrPrYrFlg() {
     const seventhProvisio139 = this.seventhProviso139;
@@ -3125,7 +3131,7 @@ export class PersonalInformationComponent implements OnInit {
     } else {
       this.setValidator(oneCroreFlagKey, [
         Validators.required,
-        Validators.min(10000000),
+        Validators.min(10000001),
       ]);
 
       // Check if there is saved data and populate the form group
