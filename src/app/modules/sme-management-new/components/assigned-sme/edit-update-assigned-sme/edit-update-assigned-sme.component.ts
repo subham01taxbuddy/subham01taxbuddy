@@ -83,6 +83,11 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   accountTypeDropdown: any;
   isBankValid: boolean;
   validateBankDetails: any;
+  hideAssignmentOnOff: boolean;
+  disableItrService: boolean;
+  disableTpaService: boolean;
+  disableNoticeService: boolean;
+  hideOtherServicesForFiler: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -133,6 +138,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     // this.roles.patchValue(this.smeObj);
     // this.services.patchValue(this.smeObj);
     // this.getSmeRecords();
+    this.smeObj.roles.includes('ROLE_LEADER') ? this.hideAssignmentOnOff = true : false;
     this.setSmeRoles();
     this.getSmePartnerType();
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
@@ -190,13 +196,14 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   setFormDetails() {
-    if (this.smeObj.roles.includes('ROLE_FILER') && !this.smeObj.internal) {
+    if (this.smeObj.roles.includes('ROLE_FILER')) {
       this.tpa.disable();
       this.notice.disable();
       this.gst.disable();
       this.wb.disable();
       this.pd.disable();
       this.mf.disable();
+      this.hideOtherServicesForFiler = true;
     }
     this.mobileNumber.setValue(this.smeObj?.mobileNumber ? this.smeObj?.mobileNumber : '');
     if (this.smeObj?.['partnerDetails']) {
@@ -240,6 +247,11 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     if (this.smeObj?.['serviceEligibility_NOTICE']) {
       this.noticeToggle.setValue((this.smeObj?.['serviceEligibility_NOTICE'].assignmentStart) ? true : false);
     }
+
+    this.disableItrService = (this.itr.value && this.hideAssignmentOnOff) ? true : false;
+    this.disableTpaService = (this.tpa.value && this.hideAssignmentOnOff) ? true : false;
+    this.disableNoticeService = (this.notice.value && this.hideAssignmentOnOff) ? true : false;
+
     if (this.smeObj?.languages.length) {
       this.langList.forEach(item => {
         this.smeObj?.languages.forEach(element => {
@@ -654,7 +666,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   serviceRecords: any[] = [];
 
   serviceUpdated(serviceType, service: FormControl, assignment: FormControl) {
-    let assignmentStart = assignment.value ? assignment.value : false;
+    let assignmentStart;
+    if (this.hideAssignmentOnOff) {
+      assignmentStart = true;
+    } else {
+      assignmentStart = assignment.value ? assignment.value : false;
+    }
     if (service.value) {
       if (!this.smeObj[serviceType]) {
         this.smeObj[serviceType] = {
