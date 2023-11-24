@@ -3,6 +3,7 @@
   padding: 30px;
   margin-top: 20px;
 }
+
 .example-section {
   margin: 12px 0;
 }
@@ -33,6 +34,7 @@ ul {
   text-align: center;
   color: #7E7E8F;
 }
+
 .my-table {
   margin-top: 15px;
   margin-left: 15px;
@@ -40,7 +42,8 @@ ul {
   width: 80%;
 }
 
-.my-table th, .my-table td {
+.my-table th,
+.my-table td {
   padding: 4px;
   text-align: center;
 }
@@ -57,7 +60,8 @@ table {
   width: 80%;
 }
 
-th, td {
+th,
+td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
@@ -85,9 +89,26 @@ tr:hover {
 }
 
 .center-checkbox {
- margin-top: 100px;
- margin-left: 50px;
+  margin-top: 100px;
+  margin-left: 50px;
 }
+
 .spacer {
   margin-left: 15px;
+}
+
+.bankDetails {
+  border: 2px solid;
+  padding: 20px 20px 30px 20px;
+  border-radius: 10px;
+}
+
+.add-id {
+  display: flex;
+  justify-content: space-between;
+}
+
+.verifyBank {
+  display: flex;
+  justify-content: center;
 }
