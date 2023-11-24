@@ -301,7 +301,8 @@
           </span>
           <div class="row">
             <section class="example-section" [formGroup]="services">
-              <p><mat-checkbox [formControl]="itr" [disabled]="smeObj?.roles.includes('ROLE_FILER') || disableItrService"
+              <p><mat-checkbox [formControl]="itr"
+                  [disabled]="smeObj?.roles.includes('ROLE_FILER') || disableItrService"
                   (change)="serviceUpdated('serviceEligibility_ITR', itr, itrToggle)">ITR</mat-checkbox><mat-slide-toggle
                   *ngIf="itr.value && !hideAssignmentOnOff" [formControl]="itrToggle"
                   style="float:right ; margin-right: 10px;"
@@ -316,8 +317,9 @@
               <!--                <mat-slide-toggle *ngIf="nri.value" [formControl]="nriToggle"  style="float:right ; margin-right: 10px;"-->
               <!--                                  (change)="assignmentUpdated('NRI', nri, nriToggle)"></mat-slide-toggle></p><hr>-->
 
-              <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="tpa" (change)="serviceUpdated('serviceEligibility_TPA', tpa, tpaToggle)"
-                  [disabled]="disableTpaService">Tax Planing
+              <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="tpa"
+                  (change)="serviceUpdated('serviceEligibility_TPA', tpa, tpaToggle)" [disabled]="disableTpaService">Tax
+                  Planing
                   (TPA)/NPS </mat-checkbox>
                 <mat-slide-toggle *ngIf="tpa.value  && !hideAssignmentOnOff" [formControl]="tpaToggle"
                   style="float:right ; margin-right: 10px;"
@@ -325,7 +327,8 @@
               </p>
               <hr *ngIf="!hideOtherServicesForFiler">
 
-              <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="notice" [disabled]="disableNoticeService"
+              <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="notice"
+                  [disabled]="disableNoticeService"
                   (change)="serviceUpdated('serviceEligibility_NOTICE', notice, noticeToggle)">Notice</mat-checkbox>
                 <mat-slide-toggle *ngIf="notice.value && !hideAssignmentOnOff" [formControl]="noticeToggle"
                   style="float:right ; margin-right: 10px;"
@@ -388,7 +391,9 @@
             <section class="example-section">
               <div *ngFor="let lang of langList" class="lang-checkbox">
                 <p>
-                  <mat-checkbox [formControl]="getLanguageControl(lang)" (change)="onLanguageCheckboxChange(lang)">
+                  <mat-checkbox [formControl]="getLanguageControl(lang)"
+                    [disabled]="languageForm.controls[lang].status==='DISABLED'"
+                    (change)="onLanguageCheckboxChange(lang)">
                     <span class="spacer">{{ lang }}</span></mat-checkbox>
                 </p>
               </div>
