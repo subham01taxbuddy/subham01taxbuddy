@@ -14,6 +14,8 @@ import { UserMsService } from '../../../../../services/user-ms.service';
 import * as moment from 'moment/moment';
 import { NonNullExpression } from 'typescript';
 import {AisCredsDialogComponent} from "../../../../../pages/itr-filing/ais-creds-dialog/ais-creds-dialog.component";
+import {Storage} from "@aws-amplify/storage";
+import {environment} from "../../../../../../environments/environment";
 
 @Component({
   selector: 'app-prefill-id',
@@ -26,9 +28,12 @@ export class PrefillIdComponent implements OnInit {
   @Output() jsonUploaded: EventEmitter<any> = new EventEmitter();
   @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
   downloadPrefillChecked: boolean = false;
+  downloadAisChecked: boolean = false;
   uploadPrefillChecked: boolean = false;
+  uploadAisChecked: boolean = false;
   uploadJsonChecked: boolean = false;
   downloadPrefill: boolean = false;
+  downloadAis: boolean = false;
   uploadDoc: any;
   loading = false;
   showEriView = false;
@@ -1216,7 +1221,7 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
-  // mapping the uploaded json. Main funciton of parsing
+  // mapping the uploaded json. Main function of parsing
   mapItrJson(ItrJSON: any) {
     try {
       // ITR_Obj IS THE TB ITR OBJECT
@@ -5465,6 +5470,9 @@ export class PrefillIdComponent implements OnInit {
   upload(type: string) {
     if (type == 'pre-filled') {
       document.getElementById('input-jsonfile-id').click();
+    } else if (type == 'ais') {
+      document.getElementById('input-aisjson-id').click();
+      return;
     } else if (type == 'utility') {
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         width: '500px',
@@ -5582,6 +5590,7 @@ export class PrefillIdComponent implements OnInit {
     this.downloadPrefill = true;
   }
 
+  /*****AIS code starts*****/
   addAisCredentials() {
 
     const dialogRef = this.dialog.open(AisCredsDialogComponent, {
@@ -5616,6 +5625,67 @@ export class PrefillIdComponent implements OnInit {
     });
 
   }
+
+  downloadAisOpt() {
+    this.downloadAis = true;
+    this.addAisCredentials();
+  }
+
+  uploadAisJsonFile(event: Event) {
+    let file = (event.target as HTMLInputElement).files;
+    console.log('File in ais', file);
+    if (file.length > 0) {
+      this.uploadDoc = file.item(0);
+
+      Storage.configure({
+        AWSS3: {
+          bucket: 'everification.taxbuddy.com',
+          region: environment.s3_cred.region
+        }
+      });
+      Storage.put('AIS/' + this.uploadDoc.name, this.uploadDoc, {
+        contentType: this.uploadDoc.type
+      })
+        .then((result: any) => {
+          if (result && result.key) {
+              this.loading = false;
+              console.log('After AIS json upload -> ', result)
+
+          } else {
+            this.loading = false;
+            this.utilsService.showSnackBar("Error while uploading ais json");
+          }
+        })
+        .catch((err: any) => {
+          this.loading = false;
+          this.utilsService.showSnackBar("Error while uploading ais json" + JSON.stringify(err));
+        });
+      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+
+      //read the file to get details upload and validate
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        let jsonRes = e.target.result;
+        console.log('fileText:',jsonRes);
+
+        // let panNo = JSONData.personalInfo?.pan;
+        // let mobileNo = JSONData.personalInfo?.address?.mobileNo;
+        // if (panNo !== this.data?.panNumber) {
+        //   this.toastMessageService.alert(
+        //     'error',
+        //     'PAN Number from profile and PAN number from json are different please confirm once.'
+        //   );
+        //   console.log('PAN mismatch');
+        //   return;
+        // } else {
+        //   this.uploadPrefillJson();
+        // }
+      };
+      reader.readAsText(this.uploadDoc);
+    }
+  }
+
+  /*****AIS code ends*****/
 
   sendEmail(uploadedJson){
     this.loading = true;
@@ -5757,28 +5827,4 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
-  // upload(type: string) {
-  //   if (type == 'pre-filled') {
-  //     document.getElementById('input-jsonfile-id').click();
-  //   } else if (type == 'utility') {
-  //     document.getElementById('input-utility-file-jsonfile-id').click();
-  //     const dialogRef = this.dialog.open(KommunicateDialogComponent, {
-  //       width: '250px',
-  //       data: {
-  //         message:
-  //           'Once you upload a JSON all the existing changes if any will be discarded, and you cannot edit the details once you have uploaded the JSON. If edit is done, the TaxBuddy JSON will be generated and the same will be filed.',
-  //       },
-  //     });
-
-  //     dialogRef.afterClosed().subscribe((result) => {
-  //       if (result === 'yes') {
-  //         this.utilsService.createEmptyJson(
-  //           this.ITR_JSON.userId,
-  //           this.ITR_JSON.assessmentYear,
-  //           this.ITR_JSON.financialYear
-  //         );
-  //       }
-  //     });
-  //   }
-  // }
 }
