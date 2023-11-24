@@ -75,10 +75,14 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   itrTypeForm: FormGroup;
   inactivityTimeForm: FormGroup;
   inactivityTimeDuration = ["15 Min", "30 Min", "45 Min", "60 Min"];
+  additionalId = [{ key: 'Yes', value: true, status: false }, { key: 'No', value: false, status: false }];
   caseLimit = ["5 Cases", "10 Cases", "15 Cases", "20 Cases", "30 Cases", "50 Cases"];
   caseLimitForm: FormGroup;
   itrPlanList: any;
   allSmeList: any;
+  accountTypeDropdown: any;
+  isBankValid: boolean;
+  validateBankDetails: any;
 
   constructor(
     private fb: FormBuilder,
@@ -131,6 +135,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     // this.getSmeRecords();
     this.setSmeRoles();
     this.getSmePartnerType();
+    if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
+      this.getAccountType();
+    }
   }
 
   displayFn(user: User): string {
@@ -196,6 +203,20 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       this.smeFormGroup.controls['state'].setValue(this.smeObj?.['partnerDetails'].state);
       this.smeFormGroup.controls['city'].setValue(this.smeObj?.['partnerDetails'].city);
       this.smeFormGroup.controls['pin'].setValue(this.smeObj?.['partnerDetails'].pin);
+      this.additionalId.forEach(element => {
+        if (element.value === this.smeObj?.['partnerDetails'].additionalIdsRequired) {
+          element.status = true;
+        }
+      });
+      this.smeFormGroup.controls['additionalIdsCount'].setValue(this.smeObj?.['partnerDetails'].additionalIdsCount);
+      this.smeFormGroup.controls['pan'].setValue(this.smeObj?.['partnerDetails'].pan);
+      this.smeFormGroup.controls['gstin'].setValue(this.smeObj?.['partnerDetails'].gstin);
+
+      if (this.smeObj?.['partnerDetails'].bankDetails) {
+        this.bankDetailsFormGroup.controls['accountNumber'].setValue(this.smeObj?.['partnerDetails'].bankDetails.accountNumber);
+        this.bankDetailsFormGroup.controls['ifsCode'].setValue(this.smeObj?.['partnerDetails'].bankDetails.ifsCode);
+        this.bankDetailsFormGroup.controls['accountType'].setValue(this.smeObj?.['partnerDetails'].bankDetails.accountType);
+      }
     }
 
     this.allSmeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
@@ -260,6 +281,31 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     }
   }
 
+  changeToUpper(control) {
+    control.setValue(control.value.toUpperCase());
+  }
+
+  trimValue(controlName) {
+    controlName.setValue(controlName.value.trim());
+  }
+  checkGstin() {
+    if (this.smeFormGroup.controls['gstin'].value && this.smeFormGroup.controls['gstin'].value.substring(2, 12) !== this.smeFormGroup.controls['pan'].value) {
+      this.gstin.setErrors({ 'invalid': true });
+    } else {
+      this.gstin.setErrors(null);
+    }
+  }
+
+  getAccountType() {
+    const param = '/fnbmaster';
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      sessionStorage.setItem('MastersDataForUpdateProfile', JSON.stringify(result));
+      console.log('master data==', result);
+      this.accountTypeDropdown = result.bankAccountType;
+    }, error => {
+      console.log('getting failed==', error);
+    });
+  }
   setFormValues(data) {
     // this.mobileNumber.setValue(data.mobileNumber)
     // this.parentName.setValue(data.parentName)
@@ -505,8 +551,27 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     principalName: new FormControl(''),
     pin: new FormControl(''),
     city: new FormControl(''),
-
+    additionalIdsCount: new FormControl(''),
+    pan: new FormControl(''),
+    gstin: new FormControl('')
   })
+
+  bankDetailsFormGroup: FormGroup = this.fb.group({
+    accountType: ['', [Validators.required]],
+    ifsCode: ['', [Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]],
+    accountNumber: ['', [Validators.required]],
+  })
+
+  get additionalIdsCount() {
+    return this.smeFormGroup.controls['additionalIdsCount'] as FormControl
+  }
+
+  get pan() {
+    return this.smeFormGroup.controls['pan'] as FormControl
+  }
+  get gstin() {
+    return this.smeFormGroup.controls['gstin'] as FormControl
+  }
 
   get mobileNumber() {
     return this.smeFormGroup.controls['mobileNumber'] as FormControl
@@ -890,6 +955,31 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     //   this.serviceApiCall(finalReq);
     // }
     debugger
+    if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
+      if (!this.isBankValid) {
+        this.utilsService.showSnackBar('Please provide valid bank details to continue.');
+        return;
+      } else {
+        if (!this.smeObj?.['partnerDetails'].bankDetails) {
+          this.smeObj['partnerDetails']['bankDetails'] = {
+            "accountType": this.bankDetailsFormGroup.controls['accountType'].value,
+            "ifsCode": this.bankDetailsFormGroup.controls['ifsCode'].value,
+            "name": this.validateBankDetails.name,
+            "accountNumber": this.bankDetailsFormGroup.controls['accountNumber'].value,
+            "countryName": "",
+            "branchName": this.validateBankDetails.bank_name,
+            "branchCity": this.validateBankDetails.city,
+            "id": null
+          }
+        } else {
+          this.smeObj['partnerDetails'].bankDetails.accountType = this.bankDetailsFormGroup.controls['accountType'].value;
+          this.smeObj['partnerDetails'].bankDetails.accountNumber = this.bankDetailsFormGroup.controls['accountNumber'].value;
+          this.smeObj['partnerDetails'].bankDetails.ifsCode = this.bankDetailsFormGroup.controls['ifsCode'].value;
+        }
+        this.smeObj['partnerDetails'].gstin = this.smeFormGroup.controls['gstin'].value;
+      }
+    }
+
     if (this.callingNumber.valid) {
       this.smeObj.callingNumber = this.callingNumber.value;
       this.serviceApiCall(this.smeObj);
@@ -1043,6 +1133,38 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
   // this.leaveStartDate = moment(new Date(this.form.controls.myDate.value)).format("YYYY/MM/DD").toString();
 
+
+  verifyBankDetails() {
+    if (this.bankDetailsFormGroup.valid) {
+      let accountNumber = this.bankDetailsFormGroup.controls['accountNumber'].value;
+      let ifsc = this.bankDetailsFormGroup.controls['ifsCode'].value;
+      let param = `/validate-bankDetails?account_number=${accountNumber}&ifsc=${ifsc}&consent=Y`;
+
+      this.userMsService.getMethod(param).subscribe((res: any) => {
+        console.log(res);
+        if (res.data && res.success) {
+          if (res.data?.data?.code === '1000') {
+            //valid bank details
+            this.isBankValid = true;
+            this.validateBankDetails = res.data?.data?.bank_account_data;
+            this.utilsService.showSnackBar(`${res.data.data.message}`);
+          } else {
+            //bank details are invalid
+            this.isBankValid = false;
+            this.utilsService.showSnackBar(`${res.data.data.message} Please provide correct details`);
+            return;
+          }
+        } else {
+          //bank details are invalid
+          this.isBankValid = false;
+          this.utilsService.showSnackBar(`${res.data.data.message} Please provide correct details`);
+          return;
+        }
+      });
+    } else {
+      this.bankDetailsFormGroup.markAllAsTouched();
+    }
+  }
 }
 export interface SmeObj {
   userId: number

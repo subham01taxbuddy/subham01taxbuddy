@@ -354,7 +354,7 @@ export class ZeroCouponBondsComponent
             srn: bonds.controls['srn'].value,
             dateOfImprovement: bonds.controls['dateOfImprovement'].value,
             costOfImprovement: bonds.controls['costOfImprovement'].value,
-            indexCostOfImprovement: bonds.controls['indexCostOfImprovement'].value,
+            indexCostOfImprovement: bonds.controls['isIndexationBenefitAvailable'].value ? bonds.controls['indexCostOfImprovement'].value : 0,
           },
         ],
       };
@@ -635,6 +635,7 @@ export class ZeroCouponBondsComponent
   }
   calculateIndexCost(asset, type?) {
     if(!asset.controls['isIndexationBenefitAvailable'].value){
+      asset.controls['indexCostOfAcquisition'].setValue(0);
       this.calculateTotalCG(asset);
       return;
     }
