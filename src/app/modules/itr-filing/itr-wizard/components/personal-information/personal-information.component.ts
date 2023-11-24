@@ -3076,9 +3076,8 @@ export class PersonalInformationComponent implements OnInit {
   }
 
   // 3 on selection change
-  onSelectionChange(value?) {
+  onSelectionChange(index?) {
     const clauseIvArray = this.getClauseiv7provisio139iDtls;
-
     const validatorMap = {
       0: [Validators.required, Validators.min(6000001)],
       1: [Validators.required, Validators.min(1000001)],
@@ -3086,28 +3085,12 @@ export class PersonalInformationComponent implements OnInit {
       3: [Validators.required, Validators.min(5000001)],
     };
 
-    if (value) {
-      this.selectionChangeValue = value;
-    }
+    let control = clauseIvArray?.controls[index];
+    let selectionValue = (control as FormGroup)?.controls['nature'];
+    let amountControl = (control as FormGroup)?.controls['amount'];
 
-    if (this.selectionChangeValue || this.selectionChangeValue === 0) {
-      let control = clauseIvArray?.controls.find((item) => {
-        if (isNaN(item.value.nature)) {
-          item.value.nature = 0;
-        }
-
-        if (item.value.nature === this.selectionChangeValue) {
-          return item;
-        }
-      });
-      let amountControl = (control as FormGroup).controls['amount'];
-      if (amountControl) {
-        amountControl.setValidators(
-          validatorMap[this.selectionChangeValue] || []
-        );
-        amountControl.updateValueAndValidity();
-      }
-    }
+    amountControl?.setValidators(validatorMap[selectionValue.value] || []);
+    amountControl?.updateValueAndValidity();
   }
 
   // 4
