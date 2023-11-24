@@ -755,6 +755,12 @@
             <hr />
           </div>
         </form>
+        <div class="question-label"
+              style="margin-bottom: 10px; padding: 5px; background: #eaeaea">
+              <strong> Capital gain inter/Intra headset off and quarterwise bifurcation </strong>
+              <mat-label><b>Note:</b> Calculations are according to the Old regime(by default) please select regime and save the page.<br>
+                 Come back again to check calculations according to the selected regime.</mat-label>
+        </div>
 
         <div class="table-responsive">
         <table class="table table-bordered">
@@ -989,6 +995,112 @@
           </tbody>
         </table>
       </div>
+      <hr />
+
+      <div class="question-label"
+      style="margin-bottom: 10px; padding: 5px; background: #eaeaea">
+      <strong> Quarterwise breakup of column (9) </strong>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr class="table-head">
+            <th>Sr. No</th>
+            <th>Type of Capital Gain</th>
+            <th>Upto 15 Jun</th>
+            <th>16 Jun -15 Sep</th>
+            <th>16 Sep - 15 Dec</th>
+            <th>16 Dec - 15 Mar</th>
+            <th>16 Mar - 31 Mar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1
+            </td>
+            <td> Short-term capital gain at 15%	
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcg15PerUpto15Jun}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcg15Per16JunTo15Sep}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcg15Per16SepTo15Dec}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcg15Per16DecTo15Mar}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcg15Per16MarTo31Mar}}
+            </td>
+          </tr>
+          <tr>
+            <td>2
+            </td>
+            <td>Short-term capital gain at Applicable rate
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcgAppRateUpto15Jun}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcgAppRate16JunTo15Sep}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcgAppRate16SepTo15Dec}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcgAppRate16DecTo15Mar}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcgAppRate16MarTo31Mar}}
+            </td>
+          </tr>
+          <tr>
+            <td>3
+            </td>
+            <td>Long Term Capital gain at 10%	
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg10PerUpto15Jun}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg10Per16JunTo15Sep}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg10Per16SepTo15Dec}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg10Per16DecTo15Mar}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg10Per16MarTo31Mar}}
+            </td>
+          </tr>
+          <tr>
+            <td>4
+            </td>
+            <td>Long Term Capital gain at 20%	
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg20PerUpto15Jun}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg20Per16JunTo15Sep}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg20Per16SepTo15Dec}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg20Per16DecTo15Mar}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg20Per16MarTo31Mar}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <hr />
       </div>
     </div>
   </div>
