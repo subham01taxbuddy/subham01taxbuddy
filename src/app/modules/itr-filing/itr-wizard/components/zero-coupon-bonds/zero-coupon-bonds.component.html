@@ -191,7 +191,7 @@
                     >
                       <mat-option
                         [value]="year"
-                        *ngFor="let year of improvementYears"
+                        *ngFor="let year of getYearsList(bonds)"
                       >
                         {{ year }}
                       </mat-option>
@@ -231,7 +231,7 @@
                       formControlName="indexCostOfImprovement"
                       maxlength="14"
                       type="number"
-                      [disabled]
+                      readonly
                     />
                   </mat-form-field>
                 </div>

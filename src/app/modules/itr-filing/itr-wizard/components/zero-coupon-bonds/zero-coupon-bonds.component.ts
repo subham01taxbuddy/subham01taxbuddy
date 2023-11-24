@@ -583,45 +583,47 @@ export class ZeroCouponBondsComponent
       if (res.success) {
         this.improvementYears = res.data;
         console.log(res);
-
-        const assetDetails = <FormArray>this.bondsForm.get('bondsArray') as FormArray;
-        let purchaseDate = (assetDetails.controls[0] as FormGroup).controls['purchaseDate'].value;
-        let purchaseYear = new Date(purchaseDate).getFullYear();
-        let purchaseMonth = new Date(purchaseDate).getMonth();
-
-        console.log(
-          this.improvementYears.indexOf(purchaseYear + '-' + (purchaseYear + 1))
-        );
-        console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
-        if (purchaseMonth > 2) {
-          if (
-            this.improvementYears.indexOf(
-              purchaseYear + '-' + (purchaseYear + 1)
-            ) >= 0
-          ) {
-            this.improvementYears = this.improvementYears.splice(
-              this.improvementYears.indexOf(
-                purchaseYear + '-' + (purchaseYear + 1)
-              )
-            );
-          }
-        } else {
-          if (
-            this.improvementYears.indexOf(
-              purchaseYear - 1 + '-' + purchaseYear
-            ) >= 0
-          ) {
-            this.improvementYears = this.improvementYears.splice(
-              this.improvementYears.indexOf(
-                purchaseYear - 1 + '-' + purchaseYear
-              )
-            );
-          }
-        }
-
-        // sessionStorage.setItem('improvementYears', res.data)
       }
     });
+  }
+
+  getYearsList(bonds){
+    let yearsList = [];
+    yearsList = yearsList.concat(this.improvementYears);
+    let purchaseDate = (bonds as FormGroup).controls['purchaseDate'].value;
+    let purchaseYear = new Date(purchaseDate).getFullYear();
+    let purchaseMonth = new Date(purchaseDate).getMonth();
+
+    console.log(
+      yearsList.indexOf(purchaseYear + '-' + (purchaseYear + 1))
+    );
+    console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
+    if (purchaseMonth > 2) {
+      if (
+        yearsList.indexOf(
+          purchaseYear + '-' + (purchaseYear + 1)
+        ) >= 0
+      ) {
+        yearsList = yearsList.splice(
+          yearsList.indexOf(
+            purchaseYear + '-' + (purchaseYear + 1)
+          )
+        );
+      }
+    } else {
+      if (
+        yearsList.indexOf(
+          purchaseYear - 1 + '-' + purchaseYear
+        ) >= 0
+      ) {
+        yearsList = yearsList.splice(
+          yearsList.indexOf(
+            purchaseYear - 1 + '-' + purchaseYear
+          )
+        );
+      }
+    }
+    return yearsList;
   }
 
   minImprovementDate: any;
