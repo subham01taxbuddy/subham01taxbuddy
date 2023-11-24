@@ -151,7 +151,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       id: null,
       seqNum: 13,
       value: 'SECOND_PROVISO',
-      label: '10(10B)(ii) - Second Proviso: Compensation under a scheme approved by the Central Government',
+      label:
+        '10(10B)(ii) - Second Proviso: Compensation under a scheme approved by the Central Government',
       detailed: false,
     },
     {
@@ -1062,7 +1063,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             // totalSalExempt = totalSalExempt + Number(this.salaryGridOptions.rowData[i].exemptAmount);
 
             if (
-              this.bifurcationResult?.SEC17_1.total > 0 ||
+              this.bifurcationResult?.SEC17_1.total ||
+              this.bifurcationResult?.SEC17_1.total === 0 ||
               this.bifurcationResult?.SEC17_1.value > 0
             ) {
               const bifurcationValues = this.bifurcationResult?.SEC17_1.value;
@@ -1098,7 +1100,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             });
 
             if (
-              this.bifurcationResult?.SEC17_2.total > 0 ||
+              this.bifurcationResult?.SEC17_2.total ||
+              this.bifurcationResult?.SEC17_2.total === 0 ||
               this.bifurcationResult?.SEC17_2.value > 0
             ) {
               const bifurcationValues = this.bifurcationResult?.SEC17_2.value;
@@ -1134,7 +1137,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             });
 
             if (
-              this.bifurcationResult?.SEC17_3.total > 0 ||
+              this.bifurcationResult?.SEC17_3.total ||
+              this.bifurcationResult?.SEC17_3.total === 0 ||
               this.bifurcationResult?.SEC17_3.value > 0
             ) {
               const bifurcationValues = this.bifurcationResult?.SEC17_3.value;

@@ -58,6 +58,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
   oldSummaryIncome: any;
   assessment; any;
   bfla: any;
+  cgQuarterWiseBreakUp:any;
   assesssmentYear: any[] = [];
   lastAssesssmentYear: string;
   itrType: any;
@@ -587,6 +588,30 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
         stcgAppRate: 0
       }
     };
+
+    this.cgQuarterWiseBreakUp = {
+      stcg15PerUpto15Jun: 0,
+      stcg15Per16JunTo15Sep: 0,
+      stcg15Per16SepTo15Dec: 0,
+      stcg15Per16DecTo15Mar: 0,
+      stcg15Per16MarTo31Mar: 0,
+      stcgAppRateUpto15Jun: 0,
+      stcgAppRate16JunTo15Sep: 0,
+      stcgAppRate16SepTo15Dec: 0,
+      stcgAppRate16DecTo15Mar: 0,
+      stcgAppRate16MarTo31Mar: 0,
+      ltcg10PerUpto15Jun: 0,
+      ltcg10Per16JunTo15Sep: 0,
+      ltcg10Per16SepTo15Dec: 0,
+      ltcg10Per16DecTo15Mar: 0,
+      ltcg10Per16MarTo31Mar: 0,
+      ltcg20PerUpto15Jun: 0,
+      ltcg20Per16JunTo15Sep: 0,
+      ltcg20Per16SepTo15Dec: 0,
+      ltcg20Per16DecTo15Mar: 0,
+      ltcg20Per16MarTo31Mar: 0,
+    }
+
     this.assessment = {};
     this.lastAssesssmentYear = '2022-23';
     this.assesssmentYear = [
@@ -1504,6 +1529,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
             this.assessment = this.ITR_JSON.regime ==='NEW' ? this.newSummaryIncome: this.oldSummaryIncome;
             this.setBfla();
+            this.setCgQuarterWiseBreakUp();
             this.loading = false;
             this.utilsService.showSnackBar(
               'The uploaded JSON has been edited, the Taxbuddy calculations are being displayed now and not the calculations of uploaded Json'
@@ -1647,6 +1673,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
           this.assessment = this.ITR_JSON.regime ==='NEW' ? this.newSummaryIncome: this.oldSummaryIncome;
           this.setBfla();
+          this.setCgQuarterWiseBreakUp();
           this.loading = false;
           this.utilsService.showSnackBar(
             'The below displayed calculations are as of Taxbuddys calculation'
@@ -2149,6 +2176,36 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       };
   }
 
+  setCgQuarterWiseBreakUp(){
+    let capitalGains = this.assessment.summaryIncome.cgIncomeN.capitalGain;
+
+    this.cgQuarterWiseBreakUp = {
+      stcg15PerUpto15Jun: getCgQuarterWise(capitalGains, 15, "2022-03-31T18:30:00.000Z", "2022-06-15T18:30:00.000Z"),
+      stcg15Per16JunTo15Sep: getCgQuarterWise(capitalGains, 15, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
+      stcg15Per16SepTo15Dec: getCgQuarterWise(capitalGains, 15, "2022-09-15T18:30:00.000Z", "2022-12-15T18:30:00.000Z"),
+      stcg15Per16DecTo15Mar: getCgQuarterWise(capitalGains, 15, "2022-12-15T18:30:00.000Z", "2023-03-15T18:30:00.000Z"),
+      stcg15Per16MarTo31Mar: getCgQuarterWise(capitalGains, 15, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
+
+      stcgAppRateUpto15Jun: getCgQuarterWise(capitalGains, -1, "2022-03-31T18:30:00.000Z", "2022-06-15T18:30:00.000Z"),
+      stcgAppRate16JunTo15Sep: getCgQuarterWise(capitalGains, -1, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
+      stcgAppRate16SepTo15Dec: getCgQuarterWise(capitalGains, -1, "2022-09-15T18:30:00.000Z", "2022-12-15T18:30:00.000Z"),
+      stcgAppRate16DecTo15Mar: getCgQuarterWise(capitalGains, -1, "2022-12-15T18:30:00.000Z", "2023-03-15T18:30:00.000Z"),
+      stcgAppRate16MarTo31Mar: getCgQuarterWise(capitalGains, -1, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
+
+      ltcg10PerUpto15Jun: getCgQuarterWise(capitalGains, 10, "2022-03-31T18:30:00.000Z", "2022-06-15T18:30:00.000Z"),
+      ltcg10Per16JunTo1515Sep: getCgQuarterWise(capitalGains, 10, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
+      ltcg10Per16SepTo15Dec: getCgQuarterWise(capitalGains, 10, "2022-09-15T18:30:00.000Z", "2022-12-15T18:30:00.000Z"),
+      ltcg10Per16DecTo15Mar: getCgQuarterWise(capitalGains, 10, "2022-12-15T18:30:00.000Z", "2023-03-15T18:30:00.000Z"),
+      ltcg10Per16MarTo31Mar: getCgQuarterWise(capitalGains, 10, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
+
+      ltcg20PerUpto15Jun: getCgQuarterWise(capitalGains, 20, "2022-03-31T18:30:00.000Z", "2022-06-15T18:30:00.000Z"),
+      ltcg20Per16JunTo1515Sep: getCgQuarterWise(capitalGains, 20, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
+      ltcg20Per16SepTo15Dec: getCgQuarterWise(capitalGains, 20, "2022-09-15T18:30:00.000Z", "2022-12-15T18:30:00.000Z"),
+      ltcg20Per16DecTo15Mar: getCgQuarterWise(capitalGains, 20, "2022-12-15T18:30:00.000Z", "2023-03-15T18:30:00.000Z"),
+      ltcg20Per16MarTo31Mar: getCgQuarterWise(capitalGains, 20, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
+    }
+  }
+
 }
 
 function getCFL(cfl: any): number {
@@ -2161,4 +2218,8 @@ function getCFL(cfl: any): number {
       cfl.broughtForwordBusinessLoss
     );
   else return 0;
+}
+
+function getCgQuarterWise(capitalGains: Array<any>, taxRate: number, startDate: string, endDate: string) {
+  return capitalGains.filter(item=>item.taxRate === taxRate && item.sellDate>=startDate && item.sellDate<endDate).reduce((total, element) => total + (Math.abs(element?.belAdjustmentAmount)+element?.cgIncome || 0), 0);
 }

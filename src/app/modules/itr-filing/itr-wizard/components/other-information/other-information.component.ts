@@ -408,7 +408,9 @@ export class OtherInformationComponent implements OnInit {
 
   checkPAN() {
     const panOfSpouse = this.schedule5AForm.get('panOfSpouse');
-    const panOfSpouseValue = this.schedule5AForm.get('panOfSpouse').value.toUpperCase();
+    const panOfSpouseValue = this.schedule5AForm
+      .get('panOfSpouse')
+      .value.toUpperCase();
     // pan should not be same as self Pan validation
     if (panOfSpouseValue === this.ITR_JSON.panNumber) {
       this.panRepeat = true;
@@ -444,13 +446,7 @@ export class OtherInformationComponent implements OnInit {
       this.validationBusiness();
       this.validationOth();
     } else {
-      this.schedule5AForm.reset();
       this.schedule5AForm.get('isGovernedByPortuguese').setValue('N');
-      this.schedule5AForm.get('houseProperty').reset();
-      this.schedule5AForm.get('businessOrProfession').reset();
-      this.schedule5AForm.get('capitalGain').reset();
-      this.schedule5AForm.get('otherSource').reset();
-
       panOfSpouse.clearValidators();
       panOfSpouse.updateValueAndValidity();
       aadhaarOfSpouse.clearValidators();
@@ -864,10 +860,16 @@ export class OtherInformationComponent implements OnInit {
       if (apportionedValue > receiptValue) {
         apportionedControl?.setValidators(Validators.max(receiptValue));
         apportionedControl.updateValueAndValidity();
+      } else {
+        apportionedControl?.clearValidators();
+        apportionedControl.updateValueAndValidity();
       }
 
       if (tdsApportionedValue > tdsReceiptValue) {
         tdsApportionedControl?.setValidators(Validators.max(tdsReceiptValue));
+        tdsApportionedControl.updateValueAndValidity();
+      } else {
+        tdsApportionedControl?.clearValidators();
         tdsApportionedControl.updateValueAndValidity();
       }
     } else {
