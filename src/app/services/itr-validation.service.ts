@@ -3,15 +3,17 @@ import {
   ItrValidationObject,
   ItrValidations,
 } from '../modules/shared/interfaces/itr-validation.interface';
-import {UtilsService} from "./utils.service";
-import {ITR_JSON} from "../modules/shared/interfaces/itr-input.interface";
+import { UtilsService } from './utils.service';
+import { ITR_JSON } from '../modules/shared/interfaces/itr-input.interface';
 
 @Injectable()
 export class ItrValidationService {
   currentAssessmentYear: any;
   currentFinancialYear: any;
-  constructor(private itrValidations: ItrValidations,
-              private utilService: UtilsService) {}
+  constructor(
+    private itrValidations: ItrValidations,
+    private utilService: UtilsService
+  ) {}
 
   getErrorMessages(errorCode: string) {
     const errorDetails: any = this.itrValidations.getErrorSchedule(errorCode);
@@ -373,7 +375,6 @@ export class ItrValidationService {
         }
       }
 
-
       // salary
       {
         if (key === 'employers') {
@@ -399,54 +400,64 @@ export class ItrValidationService {
               }
 
               //check allowances
-              if(employerCategory === 'GOVERNMENT' ||
-                employerCategory === 'CENTRAL_GOVT'){
+              if (
+                employerCategory === 'GOVERNMENT' ||
+                employerCategory === 'CENTRAL_GOVT'
+              ) {
                 //leave encashment allowed
-                element?.allowance?.forEach(allowance =>{
-                  if(allowance.allowanceType === 'LEAVE_ENCASHMENT' &&
-                    this.utilService.isNonZero(allowance.exemptAmount)){
-                    leavesEncashTaken ++;
+                element?.allowance?.forEach((allowance) => {
+                  if (
+                    allowance.allowanceType === 'LEAVE_ENCASHMENT' &&
+                    this.utilService.isNonZero(allowance.exemptAmount)
+                  ) {
+                    leavesEncashTaken++;
                   }
-                  if(allowance.allowanceType === 'GRATUITY' &&
-                    this.utilService.isNonZero(allowance.exemptAmount)){
-                    gratuityTaken ++;
+                  if (
+                    allowance.allowanceType === 'GRATUITY' &&
+                    this.utilService.isNonZero(allowance.exemptAmount)
+                  ) {
+                    gratuityTaken++;
                   }
                 });
               } else {
-                element?.allowance?.forEach(allowance =>{
-                  if(allowance.allowanceType === 'LEAVE_ENCASHMENT' &&
-                    this.utilService.isNonZero(allowance.exemptAmount)){
-                      leavesEncashAmount += allowance.exemptAmount;
-                      leavesEncashTaken ++;
-                    }
-                  if(allowance.allowanceType === 'GRATUITY' &&
-                    this.utilService.isNonZero(allowance.exemptAmount)){
-                      gratuityAmount += allowance.exemptAmount;
-                      gratuityTaken ++;
-                    }
+                element?.allowance?.forEach((allowance) => {
+                  if (
+                    allowance.allowanceType === 'LEAVE_ENCASHMENT' &&
+                    this.utilService.isNonZero(allowance.exemptAmount)
+                  ) {
+                    leavesEncashAmount += allowance.exemptAmount;
+                    leavesEncashTaken++;
+                  }
+                  if (
+                    allowance.allowanceType === 'GRATUITY' &&
+                    this.utilService.isNonZero(allowance.exemptAmount)
+                  ) {
+                    gratuityAmount += allowance.exemptAmount;
+                    gratuityTaken++;
+                  }
                 });
               }
-              if(leavesEncashAmount > 300000){
+              if (leavesEncashAmount > 300000) {
                 const error = this.getErrorMessages('E45');
                 errorList.push(error);
               }
-              if(gratuityAmount > 2000000){
+              if (gratuityAmount > 2000000) {
                 const error = this.getErrorMessages('E47');
                 errorList.push(error);
               }
             });
 
-            if(leavesEncashTaken > 1){
+            if (leavesEncashTaken > 1) {
               const error = this.getErrorMessages('E44');
               errorList.push(error);
             }
-            if(gratuityTaken > 1){
+            if (gratuityTaken > 1) {
               const error = this.getErrorMessages('E46');
               errorList.push(error);
             }
             if (Object?.keys(missingDetails)?.length === 0) {
               console.log('all employer details are present');
-            } else if(itrType === '2' || itrType === '3'){
+            } else if (itrType === '2' || itrType === '3') {
               const employerNamesWithMissingDetails =
                 Object.keys(missingDetails);
 
@@ -478,14 +489,16 @@ export class ItrValidationService {
               }
             });
 
-            if (hpDetailsMissing?.length > 0 && (itrType === '2' || itrType === '3')) {
+            if (
+              hpDetailsMissing?.length > 0 &&
+              (itrType === '2' || itrType === '3')
+            ) {
               const error = this.getErrorMessages('E17');
               errorList.push(error);
             }
           }
         }
       }
-
 
       if (itrType === '3') {
         if (key === 'business') {
@@ -505,14 +518,14 @@ export class ItrValidationService {
             // obj[key]?.profitLossACIncomes?.length > 0 ||
             obj[key]?.presumptiveIncomes?.length > 0
           ) {
-            obj[key]?.presumptiveIncomes.forEach(element => {
+            obj[key]?.presumptiveIncomes.forEach((element) => {
               if (!this.utilService.isNonEmpty(element.natureOfBusiness)) {
                 // if there is nothing present then below error will be pushed
                 const error = this.getErrorMessages('E23');
                 errorList.push(error);
               } else if (!this.utilService.isNonEmpty(element.tradeName)) {
-                  const error = this.getErrorMessages('E24');
-                  errorList.push(error);
+                const error = this.getErrorMessages('E24');
+                errorList.push(error);
               }
             });
           }
@@ -561,7 +574,7 @@ export class ItrValidationService {
                 element?.assessmentYear !== this.currentAssessmentYear ||
                 element?.assesseeType !== 'INDIVIDUAL' ||
                 element?.residentialStatus !== 'RESIDENT' ||
-                (!this.utilService.isNonEmpty(element?.assetType));
+                !this.utilService.isNonEmpty(element?.assetType);
 
               // if (capitalGainBasicDetails) {
               //   const error = this.getErrorMessages('E34');
@@ -608,7 +621,7 @@ export class ItrValidationService {
               // const assetDetails for different type gains
               let assetType = element?.assetType;
               // for buyerDetails array
-              if(assetType === 'PLOT_OF_LAND') {
+              if (assetType === 'PLOT_OF_LAND') {
                 const buyersDetailsArray = element?.buyersDetails;
                 if (buyersDetailsArray && buyersDetailsArray?.length > 0) {
                   const buyersDetailsArrayStat: boolean =
@@ -828,6 +841,23 @@ export class ItrValidationService {
 
   removeNullProperties(obj) {
     for (const key in obj) {
+      // business
+      if (
+        key === 'businessDescription' &&
+        Array.isArray(obj[key]) &&
+        obj[key]?.length > 0
+      ) {
+        obj[key]?.forEach((element, i) => {
+          if (
+            !element?.businessDescription &&
+            !element?.natureOfBusiness &&
+            !element?.tradeName
+          ) {
+            delete obj[key][i];
+          }
+        });
+      }
+
       // pastYear Losses
       if (key === 'pastYearLosses') {
         if (obj[key] === null || obj[key].length === 0) {
@@ -951,13 +981,15 @@ export class ItrValidationService {
           const profitLossACIncomes = obj[key][i]?.incomes;
           if (
             (obj[key][i]?.netProfitfromNonSpeculativeIncome === 0 ||
-              obj[key][i]?.netProfitfromNonSpeculativeIncome === null) && obj[key][i]?.businessType === 'NONSPECULATIVEINCOME'
+              obj[key][i]?.netProfitfromNonSpeculativeIncome === null) &&
+            obj[key][i]?.businessType === 'NONSPECULATIVEINCOME'
           ) {
             delete obj[key][i];
           }
           if (
             (obj[key][i]?.netProfitfromSpeculativeIncome === 0 ||
-              obj[key][i]?.netProfitfromSpeculativeIncome === null) && obj[key][i]?.businessType === 'SPECULATIVEINCOME'
+              obj[key][i]?.netProfitfromSpeculativeIncome === null) &&
+            obj[key][i]?.businessType === 'SPECULATIVEINCOME'
           ) {
             delete obj[key][i];
           }
@@ -1186,17 +1218,24 @@ export class ItrValidationService {
     return financialYear - 1 + '-' + financialYear; // Format: 2022-2023 for FY 2022-23
   }
 
-  removeDuplicateCg(ITR_JSON: ITR_JSON){
-    let cgTypes = ['PLOT_OF_LAND', 'EQUITY_SHARES_LISTED', 'EQUITY_SHARES_UNLISTED', 'BONDS', 'ZERO_COUPON_BONDS', 'GOLD'];
-    cgTypes.forEach(element =>{
+  removeDuplicateCg(ITR_JSON: ITR_JSON) {
+    let cgTypes = [
+      'PLOT_OF_LAND',
+      'EQUITY_SHARES_LISTED',
+      'EQUITY_SHARES_UNLISTED',
+      'BONDS',
+      'ZERO_COUPON_BONDS',
+      'GOLD',
+    ];
+    cgTypes.forEach((element) => {
       let filtered = ITR_JSON.capitalGain?.filter(
         (item) => item.assetType === element
       );
-      if(filtered.length > 0){
+      if (filtered.length > 0) {
         let nonFiltered = ITR_JSON.capitalGain?.filter(
           (item) => item.assetType !== element
         );
-        if(!nonFiltered){
+        if (!nonFiltered) {
           nonFiltered = [];
         }
         nonFiltered.push(filtered[0]);
