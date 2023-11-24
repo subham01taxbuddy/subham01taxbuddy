@@ -234,24 +234,26 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     });
 
     this.itr.setValue((this.smeObj?.['serviceEligibility_ITR']) ? true : false);
-    this.itrToggle.setValue((this.smeObj?.['serviceEligibility_ITR'].assignmentStart) ? true : false);
+    this.itrToggle.setValue((this.smeObj?.['assignmentOffByLeader']) ? true : false);
     this.gst.setValue((this.smeObj?.['serviceEligibility_GST']) ? true : false);
     if (this.smeObj?.['serviceEligibility_GST']) {
-      this.gstToggle.setValue((this.smeObj?.['serviceEligibility_GST'].assignmentStart) ? true : false);
+      // this.gstToggle.setValue((this.smeObj?.['serviceEligibility_GST'].assignmentStart) ? true : false);
     }
     this.tpa.setValue((this.smeObj?.['serviceEligibility_TPA']) ? true : false);
     if (this.smeObj?.['serviceEligibility_TPA']) {
-      this.tpaToggle.setValue((this.smeObj?.['serviceEligibility_TPA'].assignmentStart) ? true : false);
+      // this.tpaToggle.setValue((this.smeObj?.['serviceEligibility_TPA'].assignmentStart) ? true : false);
     }
     this.notice.setValue((this.smeObj?.['serviceEligibility_NOTICE']) ? true : false);
     if (this.smeObj?.['serviceEligibility_NOTICE']) {
-      this.noticeToggle.setValue((this.smeObj?.['serviceEligibility_NOTICE'].assignmentStart) ? true : false);
+      // this.noticeToggle.setValue((this.smeObj?.['serviceEligibility_NOTICE'].assignmentStart) ? true : false);
     }
 
     this.disableItrService = (this.itr.value && this.hideAssignmentOnOff) ? true : false;
     this.disableTpaService = (this.tpa.value && this.hideAssignmentOnOff) ? true : false;
     this.disableNoticeService = (this.notice.value && this.hideAssignmentOnOff) ? true : false;
-
+    if (!this.smeObj?.languages) {
+      this.smeObj.languages = ['English'];
+    }
     if (this.smeObj?.languages.length) {
       this.langList.forEach(item => {
         this.smeObj?.languages.forEach(element => {
@@ -261,6 +263,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         })
       })
     }
+    this.languageForm.controls['English'].setValue(true);
+    this.languageForm.controls['English'].disable();
+
 
     if (this.smeObj?.['inactivityTimeInMinutes']) {
       let timeDuration = [{ key: "15 Min", value: 15 }, { key: "30 Min", value: 30 }, { key: "45 Min", value: 45 }, { key: "60 Min", value: 60 },]
@@ -458,7 +463,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   onLanguageCheckboxChange(language: string) {
     const langControl = this.getLanguageControl(language);
     if (!this.smeObj['languages']) {
-      this.smeObj['languages'] = [];
+      this.smeObj['languages'] = ['English'];
     }
     if (langControl.value) {
       this.smeObj['languages'].push(language);
@@ -507,6 +512,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   onDurationCheckboxChange(selectedDuration: string) {
+    debugger
     this.inactivityTimeDuration.forEach((duration) => {
       if (duration !== selectedDuration) {
         this.getDurationControl(duration).setValue(false);
@@ -625,7 +631,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   assignmentUpdated(serviceType, service: FormControl, assignment: FormControl) {
-    this.smeObj[serviceType].assignmentStart = assignment.value;
+    this.smeObj['assignmentOffByLeader'] = assignment.value;
   }
 
   // smeInfoUpdateServiceCall(serviceRecord, serviceCheckBox, assignmentToggle) {
@@ -666,16 +672,16 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   serviceRecords: any[] = [];
 
   serviceUpdated(serviceType, service: FormControl, assignment: FormControl) {
-    let assignmentStart;
-    if (this.hideAssignmentOnOff) {
-      assignmentStart = true;
-    } else {
-      assignmentStart = assignment.value ? assignment.value : false;
-    }
+    // let assignmentStart;
+    // if (this.hideAssignmentOnOff) {
+    //   assignmentStart = true;
+    // } else {
+    //   assignmentStart = assignment.value ? assignment.value : false;
+    // }
     if (service.value) {
       if (!this.smeObj[serviceType]) {
         this.smeObj[serviceType] = {
-          "assignmentStart": assignmentStart,
+          "assignmentStart": true,
           "roundRobinLeaderCount": 0,
           "roundRobinCount": 0,
           "botId": null,
@@ -972,9 +978,20 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     //   this.serviceApiCall(finalReq);
     // }
     debugger
+
+    if (this.smeObj.roles.includes('ROLE_FILER')) {
+      if (this.smeObj['languages'].length) {
+        const lang = this.smeObj['languages'].filter(element => element === 'English')
+        if (!lang.length) {
+          this.smeObj['languages'].push('English');
+        }
+      } else {
+        this.smeObj['languages'] = ['English'];
+      }
+    }
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
       if (!this.isBankValid) {
-        this.utilsService.showSnackBar('Please provide valid bank details to continue.');
+        this.utilsService.showSnackBar('Please verify bank details to continue.');
         return;
       } else {
         if (!this.smeObj?.['partnerDetails'].bankDetails) {
