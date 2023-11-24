@@ -34,6 +34,7 @@ export class OtherInformationComponent implements OnInit {
   @Input() isEditOther = false;
   @Output() otherInfoSaved = new EventEmitter<boolean>();
   panRepeat: boolean = false;
+  panPartnerRepeat: boolean = false;
 
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -406,16 +407,29 @@ export class OtherInformationComponent implements OnInit {
     });
   }
 
-  checkPAN() {
+  checkPAN(index?) {
     const panOfSpouse = this.schedule5AForm.get('panOfSpouse');
     const panOfSpouseValue = this.schedule5AForm
       .get('panOfSpouse')
+      .value.toUpperCase();
+
+    const partnerPan = (
+      this.firmForm.controls['firmsArray'] as FormArray
+    ).controls[index]
+      .get('panNumber')
       .value.toUpperCase();
     // pan should not be same as self Pan validation
     if (panOfSpouseValue === this.ITR_JSON.panNumber) {
       this.panRepeat = true;
     } else {
       this.panRepeat = false;
+    }
+
+    // pan should not be same as self Pan validation
+    if (partnerPan === this.ITR_JSON.panNumber) {
+      this.panPartnerRepeat = true;
+    } else {
+      this.panPartnerRepeat = false;
     }
   }
 
@@ -781,7 +795,8 @@ export class OtherInformationComponent implements OnInit {
       this.firmForm?.valid &&
       this.sharesForm?.valid &&
       this.directorForm?.valid &&
-      !this.panRepeat
+      !this.panRepeat &&
+      !this.panPartnerRepeat
     ) {
       this.serviceCall('saveAll');
     } else {
