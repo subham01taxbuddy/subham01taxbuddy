@@ -977,22 +977,30 @@ export class ItrValidationService {
         Array.isArray(obj[key]) &&
         obj[key]?.length > 0
       ) {
-        for (let i = 0; i < obj[key]?.length; i++) {
-          const profitLossACIncomes = obj[key][i]?.incomes;
-          if (
-            (obj[key][i]?.netProfitfromNonSpeculativeIncome === 0 ||
-              obj[key][i]?.netProfitfromNonSpeculativeIncome === null) &&
-            obj[key][i]?.businessType === 'NONSPECULATIVEINCOME'
-          ) {
-            delete obj[key][i];
-          }
-          if (
-            (obj[key][i]?.netProfitfromSpeculativeIncome === 0 ||
-              obj[key][i]?.netProfitfromSpeculativeIncome === null) &&
-            obj[key][i]?.businessType === 'SPECULATIVEINCOME'
-          ) {
-            delete obj[key][i];
-          }
+        let profitLossAC = obj[key];
+        let specIncIndex = profitLossAC.findIndex(
+          (item) => item.businessType === 'SPECULATIVEINCOME'
+        );
+        let nonSpecIndex = profitLossAC.findIndex(
+          (item) => item.businessType === 'NONSPECULATIVEINCOME'
+        );
+
+        if (
+          specIncIndex !== -1 &&
+          (profitLossAC[specIncIndex]?.netProfitfromSpeculativeIncome === 0 ||
+            profitLossAC[specIncIndex]?.netProfitfromSpeculativeIncome === null)
+        ) {
+          delete profitLossAC[specIncIndex];
+        }
+
+        if (
+          nonSpecIndex !== -1 &&
+          (profitLossAC[nonSpecIndex]?.netProfitfromNonSpeculativeIncome ===
+            0 ||
+            profitLossAC[nonSpecIndex]?.netProfitfromNonSpeculativeIncome ===
+              null)
+        ) {
+          delete profitLossAC[nonSpecIndex];
         }
       }
 
