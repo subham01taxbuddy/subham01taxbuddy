@@ -864,13 +864,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           const HOUSE_RENT = parseFloat(FormValues?.salary[0]?.HOUSE_RENT);
 
           let lowerOf = Math.min(
-            BASIC_SALARY !== 0 ? BASIC_SALARY / 2 : Infinity,
-            HOUSE_RENT !== 0 ? HOUSE_RENT : Infinity
+            BASIC_SALARY !== 0 ? BASIC_SALARY / 2 : BASIC_SALARY,
+            HOUSE_RENT
           );
 
-          if (BASIC_SALARY === 0 && HOUSE_RENT === 0) {
-            lowerOf = 0;
-          }
           this.setValidator('HOUSE_RENT', Validators.max(lowerOf));
 
           if (
@@ -911,14 +908,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           const gratuity = parseFloat(FormValues?.salary[0]?.GRATUITY);
           const fixedLimit = 2000000;
 
-          let lowerOf = Math.min(
-            gratuity !== 0 ? gratuity : Infinity,
-            fixedLimit
-          );
+          let lowerOf = Math.min(gratuity, fixedLimit);
 
-          if (gratuity === 0) {
-            lowerOf = fixedLimit;
-          }
           this.setValidator('GRATUITY', Validators.max(lowerOf));
 
           if (
@@ -961,14 +952,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           );
           const fixedLimit = 300000;
 
-          let lowerOf = Math.min(
-            leaveEncash !== 0 ? leaveEncash : Infinity,
-            fixedLimit
-          );
-
-          if (leaveEncash === 0) {
-            lowerOf = fixedLimit;
-          }
+          let lowerOf = Math.min(leaveEncash, fixedLimit);
 
           // lower of 3 lakhs only applicable for non government employees
           if (
@@ -1022,6 +1006,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   }
 
   saveEmployerDetails() {
+    this.validations();
     if (this.employerDetailsFormGroup.valid && this.allowanceFormGroup.valid) {
       this.checkGrossSalary();
 
