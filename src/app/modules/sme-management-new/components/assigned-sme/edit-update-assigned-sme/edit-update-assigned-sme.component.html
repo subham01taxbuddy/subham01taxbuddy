@@ -55,47 +55,6 @@
 
           </mat-form-field>
         </div>
-        <!-- <div class="col-sm-4" *ngIf="false">
-          <mat-label> Language </mat-label>
-          <mat-form-field appearance="outline">
-            <mat-select [formControl]="languages" multiple>
-              <mat-select-trigger>
-                {{languages.value ? languages.value : ''}}
-
-              </mat-select-trigger>
-              <mat-option *ngFor="let lang of langList" [value]="lang"> {{lang}}</mat-option>
-            </mat-select>
-
-          </mat-form-field>
-        </div> -->
-        <!-- <div class="col-sm-4" *ngIf="false">
-          <mat-label> Referred Person </mat-label>
-          <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Referred person" [formControl]="referredBy" class="input-field" />
-
-          </mat-form-field>
-        </div> -->
-        <!-- <div class="col-sm-4" *ngIf="false">
-          <mat-label> Income Tax Expertise </mat-label>
-          <mat-form-field appearance="outline">
-            <mat-select [formControl]="itrTypes" multiple>
-              <mat-select-trigger>
-                {{itrTypes.value ? itrTypes.value : ''}}
-
-              </mat-select-trigger>
-              <mat-option *ngFor="let itrType of itrTypeList" [value]="itrType.value"> {{itrType.display}}</mat-option> -->
-        <!-- <mat-select-trigger>
-                <span *ngFor="let item of itrTypes.value; ">
-                  itr-{{item || ''}} <span>,</span>
-                </span>
-              </mat-select-trigger>
-              <mat-option *ngFor="let topping of itrTypesData" [value]="topping">itr-{{topping}}</mat-option> -->
-        <!-- </mat-select> -->
-        <!-- <mat-error
-            *ngIf="itrTypes?.hasError('required') ">
-            This field is required</mat-error> -->
-        <!-- </mat-form-field>
-        </div> -->
       </div>
 
       <div class="row">
@@ -108,7 +67,7 @@
           </mat-form-field>
         </div>
         <div class="col-sm-4">
-          <mat-label> Referred by whom from taxbuddy?  </mat-label>
+          <mat-label> Referred by whom from taxbuddy? </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Referred person" [formControl]="referredBy" class="input-field"
               readonly />
@@ -127,33 +86,9 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <!-- <div class="col-sm-4" *ngIf="false">
-          <mat-label> State </mat-label>
-          <mat-form-field appearance="outline">
-            <mat-select placeholder="Select state" name="state" [formControl]="state">
-              <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
-                {{ state.stateName | titlecase }}
-              </mat-option>
-            </mat-select>
-
-          </mat-form-field>
-        </div> -->
-        <!-- <div class="col-sm-4" *ngIf="false">
-          <mat-label> Search Team Lead (TL)/ Owner </mat-label>
-          <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="" [formControl]="parentName" class="input-field" readonly />
-
-          </mat-form-field>
-        </div> -->
       </div>
     </div>
-    <!-- </form> -->
     <hr>
-    <!-- <div class="row">
-      <div class="col-sm-10" style="margin-top: 10px;">
-        <b style="font-size: 20px">Company Details: </b>
-      </div>
-    </div> -->
     <div class="row">
       <div class="col-sm-6">
         <div class="card">
@@ -303,67 +238,57 @@
             <section class="example-section" [formGroup]="services">
               <p><mat-checkbox [formControl]="itr"
                   [disabled]="smeObj?.roles.includes('ROLE_FILER') || disableItrService"
-                  (change)="serviceUpdated('serviceEligibility_ITR', itr, itrToggle)">ITR</mat-checkbox><mat-slide-toggle
+                  (change)="serviceUpdated('serviceEligibility_ITR', itr)">ITR</mat-checkbox><mat-slide-toggle
                   *ngIf="itr.value && !hideAssignmentOnOff" [formControl]="itrToggle"
-                  style="float:right ; margin-right: 10px;"
-                  (change)="assignmentUpdated('serviceEligibility_ITR', itr, itrToggle)"></mat-slide-toggle>
-                <!-- <mat-chip-list><mat-chip class="select-chip" *ngIf="itr.value" disableRipple
-                    [selected]="nriServiceToggle" (click)="nriUpdated($event, itr)"><i class="fa fa-check"
-                      *ngIf="nriServiceToggle"></i>NRI</mat-chip></mat-chip-list> -->
+                  style="float:right ; margin-right: 10px;" (change)="assignmentUpdated(itrToggle)"></mat-slide-toggle>
               </p>
               <hr>
 
-              <!--              <p><mat-checkbox [formControl]="nri" (change)="serviceUpdated('NRI', nri, nriToggle)">NRI</mat-checkbox>-->
-              <!--                <mat-slide-toggle *ngIf="nri.value" [formControl]="nriToggle"  style="float:right ; margin-right: 10px;"-->
-              <!--                                  (change)="assignmentUpdated('NRI', nri, nriToggle)"></mat-slide-toggle></p><hr>-->
-
               <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="tpa"
-                  (change)="serviceUpdated('serviceEligibility_TPA', tpa, tpaToggle)" [disabled]="disableTpaService">Tax
+                  (change)="serviceUpdated('serviceEligibility_TPA', tpa)" [disabled]="disableTpaService">Tax
                   Planing
                   (TPA)/NPS </mat-checkbox>
                 <mat-slide-toggle *ngIf="tpa.value  && !hideAssignmentOnOff" [formControl]="tpaToggle"
-                  style="float:right ; margin-right: 10px;"
-                  (change)="assignmentUpdated('serviceEligibility_TPA', tpa, tpaToggle)"></mat-slide-toggle>
+                  style="float:right ; margin-right: 10px;" (change)="assignmentUpdated( tpaToggle)"></mat-slide-toggle>
               </p>
               <hr *ngIf="!hideOtherServicesForFiler">
 
               <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="notice"
                   [disabled]="disableNoticeService"
-                  (change)="serviceUpdated('serviceEligibility_NOTICE', notice, noticeToggle)">Notice</mat-checkbox>
+                  (change)="serviceUpdated('serviceEligibility_NOTICE', notice)">Notice</mat-checkbox>
                 <mat-slide-toggle *ngIf="notice.value && !hideAssignmentOnOff" [formControl]="noticeToggle"
                   style="float:right ; margin-right: 10px;"
-                  (change)="assignmentUpdated('serviceEligibility_NOTICE', notice, noticeToggle)"></mat-slide-toggle>
+                  (change)="assignmentUpdated( noticeToggle)"></mat-slide-toggle>
               </p>
               <hr *ngIf="!hideOtherServicesForFiler">
 
               <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="gst"
-                  (change)="serviceUpdated('serviceEligibility_GST', gst, gstToggle)">GST</mat-checkbox>
+                  (change)="serviceUpdated('serviceEligibility_GST', gst)">GST</mat-checkbox>
                 <mat-slide-toggle *ngIf="gst.value && !hideAssignmentOnOff" [formControl]="gstToggle"
-                  style="float:right ; margin-right: 10px;"
-                  (change)="assignmentUpdated('serviceEligibility_GST', gst, gstToggle)"></mat-slide-toggle>
+                  style="float:right ; margin-right: 10px;" (change)="assignmentUpdated( gstToggle)"></mat-slide-toggle>
               </p>
               <hr *ngIf="!hideOtherServicesForFiler">
 
               <!-- needed in future -->
               <div *ngIf="false">
-                <p><mat-checkbox [formControl]="wb" (change)="serviceUpdated('WB', wb, wbToggle)">Wealth
+                <p><mat-checkbox [formControl]="wb" (change)="serviceUpdated('WB', wb)">Wealth
                     Builder(WB)</mat-checkbox>
                   <mat-slide-toggle *ngIf="wb.value" [formControl]="wbToggle" style="float:right ; margin-right: 10px;"
-                    (change)="assignmentUpdated('WB', wb, wbToggle)"></mat-slide-toggle>
+                    (change)="assignmentUpdated( wbToggle)"></mat-slide-toggle>
                 </p>
                 <hr>
 
-                <p><mat-checkbox [formControl]="pd" (change)="serviceUpdated('PD', pd, pdToggle)">Portfolio
+                <p><mat-checkbox [formControl]="pd" (change)="serviceUpdated('PD', pd)">Portfolio
                     Doctor(PD)</mat-checkbox>
                   <mat-slide-toggle *ngIf="pd.value" [formControl]="pdToggle" style="float:right ; margin-right: 10px;"
-                    (change)="assignmentUpdated('PD', pd, pdToggle)"></mat-slide-toggle>
+                    (change)="assignmentUpdated(pdToggle)"></mat-slide-toggle>
                 </p>
                 <hr>
 
-                <p><mat-checkbox [formControl]="mf" (change)="serviceUpdated('MF', mf, mfToggle)">Mutual Fund (MF)
+                <p><mat-checkbox [formControl]="mf" (change)="serviceUpdated('MF', mf)">Mutual Fund (MF)
                     Advisor</mat-checkbox>
                   <mat-slide-toggle *ngIf="mf.value" [formControl]="mfToggle" style="float:right ; margin-right: 10px;"
-                    (change)="assignmentUpdated('MF', mf, mfToggle)"></mat-slide-toggle>
+                    (change)="assignmentUpdated( mfToggle)"></mat-slide-toggle>
                 </p>
                 <hr>
               </div>
@@ -427,9 +352,9 @@
             <section class="example-section">
               <div *ngFor="let duration of inactivityTimeDuration" class="duration-checkbox">
                 <p>
-                  <mat-checkbox [formControl]="getDurationControl(duration)"
-                    (change)="onDurationCheckboxChange(duration)">
-                    <span class="spacer">{{ duration }}</span>
+                  <mat-checkbox [formControl]="getDurationControl(duration.key)"
+                    (change)="onDurationCheckboxChange($event,duration.key)">
+                    <span class="spacer">{{ duration.key }}</span>
                   </mat-checkbox>
                 </p>
               </div>
@@ -444,8 +369,9 @@
             <section class="example-section">
               <div *ngFor="let limit of caseLimit" class="case-limit-checkbox">
                 <p>
-                  <mat-checkbox [formControl]="getCaseLimitControl(limit)" (change)="onCaseLimitCheckboxChange(limit)">
-                    <span class="spacer">{{ limit }}</span>
+                  <mat-checkbox [formControl]="getCaseLimitControl(limit.key)"
+                    (change)="onCaseLimitCheckboxChange($event,limit.key)">
+                    <span class="spacer">{{ limit.key }}</span>
                   </mat-checkbox>
                 </p>
               </div>
@@ -456,22 +382,8 @@
     </div>
 
     <hr>
-    <!-- <form [formGroup]="otherSmeInfo"> -->
     <div class="container" style="margin-top: 20px;">
       <div class="row">
-        <!-- <div class="col-sm-4" *ngIf="checkRoles?.includes('ROLE_OWNER')">
-          <mat-label> Add Co-Owner </mat-label>
-          <mat-form-field appearance="outline" class="class1">
-            <input type="text" matInput [formControl]="coOwner" [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name"
-                (click)="getownerNameId(option)">
-                {{option.name}}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-hint><b>To change co-owner please remove first co-owner name and save</b></mat-hint>
-          </mat-form-field>
-        </div> -->
         <div class="col-sm-3">
           <mat-label>Parent Name </mat-label>
           <mat-form-field appearance="outline">
