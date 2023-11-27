@@ -262,7 +262,7 @@
               </p>
               <hr *ngIf="!hideOtherServicesForFiler">
 
-              <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="gst"
+              <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="gst" [disabled]="disableGstService"
                   (change)="serviceUpdated('serviceEligibility_GST', gst)">GST</mat-checkbox>
                 <mat-slide-toggle *ngIf="gst.value && !hideAssignmentOnOff" [formControl]="gstToggle"
                   style="float:right ; margin-right: 10px;" (change)="assignmentUpdated( gstToggle)"></mat-slide-toggle>

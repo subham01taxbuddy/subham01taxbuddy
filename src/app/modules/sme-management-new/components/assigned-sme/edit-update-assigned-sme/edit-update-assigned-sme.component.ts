@@ -92,6 +92,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   disableTpaService: boolean;
   disableNoticeService: boolean;
   hideOtherServicesForFiler: boolean;
+  disableGstService: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -213,7 +214,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     });
 
     this.itr.setValue((this.smeObj?.['serviceEligibility_ITR']) ? true : false);
-    this.itrToggle.setValue((this.smeObj?.['assignmentOffByLeader']) ? true : false);
+    this.itrToggle.setValue((this.smeObj?.['assignmentOffByLeader']) ? false : true);
     this.gst.setValue((this.smeObj?.['serviceEligibility_GST']) ? true : false);
     if (this.smeObj?.['serviceEligibility_GST']) {
       // this.gstToggle.setValue((this.smeObj?.['serviceEligibility_GST'].assignmentStart) ? true : false);
@@ -230,6 +231,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.disableItrService = (this.itr.value && this.hideAssignmentOnOff) ? true : false;
     this.disableTpaService = (this.tpa.value && this.hideAssignmentOnOff) ? true : false;
     this.disableNoticeService = (this.notice.value && this.hideAssignmentOnOff) ? true : false;
+    this.disableGstService = (this.gst.value && this.hideAssignmentOnOff) ? true : false;
     if (!this.smeObj?.languages) {
       this.smeObj.languages = ['English'];
     }
@@ -571,7 +573,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   assignmentUpdated(assignment: FormControl) {
-    this.smeObj['assignmentOffByLeader'] = assignment.value;
+    this.smeObj['assignmentOffByLeader'] = !assignment.value;
   }
 
   serviceRecords: any[] = [];
