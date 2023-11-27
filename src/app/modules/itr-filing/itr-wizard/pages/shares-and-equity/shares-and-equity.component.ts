@@ -163,11 +163,12 @@ export class SharesAndEquityComponent
       );
     }
     if (data.length > 0) {
-      data.forEach((obj) => {
+      data.forEach((obj, index) => {
         obj.assetDetails.forEach((security: any) => {
           let broker = security.brokerName;
           let gainType = security.gainType;
           let capitalGain = security.capitalGain;
+          let deduction = data?.[index]?.deduction?.[0]?.totalDeductionClaimed;
           let filtered = this.brokerList.filter(
             (item) => item.brokerName === broker
           );
@@ -184,6 +185,7 @@ export class SharesAndEquityComponent
               brokerName: broker,
               LTCG: gainType === 'LONG' ? capitalGain : 0,
               STCG: gainType === 'SHORT' ? capitalGain : 0,
+              deduction: deduction ? deduction : 0,
             });
             this.brokerSelected.push(false);
           }
@@ -1072,17 +1074,22 @@ export class SharesAndEquityComponent
   totalCg: TotalCg = {
     ltcg: 0,
     stcg: 0,
+    deduction: 0,
   };
   getSecuritiesCg() {
     let ltcg = 0;
     let stcg = 0;
+    let deduction = 0;
+    
     this.brokerList.forEach((broker) => {
       ltcg += broker.LTCG;
       stcg += broker.STCG;
+      deduction += broker.deduction;
     });
 
     this.totalCg.ltcg = ltcg;
     this.totalCg.stcg = stcg;
+    this.totalCg.deduction = deduction;
     return this.totalCg;
   }
 
@@ -1224,12 +1231,18 @@ export class SharesAndEquityComponent
   updateDeductionUI() {
     const totalCg = this.getSecuritiesCg();
     let total = totalCg.ltcg + totalCg.stcg;
+    let deduction = totalCg.deduction;
+
     if (total <= 0) {
-      this.deduction = false;
       this.isDisable = true;
     } else {
-      this.deduction = totalCg.ltcg > 0;
       this.isDisable = totalCg.ltcg <= 0;
+    }
+
+    if (deduction && deduction > 0) {
+      this.deduction = true;
+    } else {
+      this.deduction = false;
     }
   }
 

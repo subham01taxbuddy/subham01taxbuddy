@@ -663,7 +663,7 @@ export class ScheduleFaComponent implements OnInit {
   createForms(assetType: string, asset: any[]) {
     console.log('creatingForms:', asset, assetType);
     const formArray = this.scheduleFa?.controls[assetType] as FormArray;
-
+    formArray.clear();
     if (assetType === 'depositoryAccounts') {
       this.updateMultipleTypeForm(asset, assetType);
     }
@@ -794,6 +794,7 @@ export class ScheduleFaComponent implements OnInit {
         formArray.push(formGroup);
       }
     });
+    console.log(formArray);
   }
 
   // adding whole section
