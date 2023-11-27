@@ -267,9 +267,10 @@ export class TeamReportDashboardComponent implements OnInit {
         if (response.success) {
           this.scheduledCallData = response.data;
           this.totalScheduledCall =
-            this.scheduleCallData?.callsAssigned_Open +
-            this.scheduleCallData?.done +
-            this.scheduleCallData?.followUp ;
+            response.data.callsAssigned_Open +
+            response.data.done +
+            response.data.followUp ;
+
         } else {
           this.loading = false;
           this._toastMessageService.alert('error', response.message);

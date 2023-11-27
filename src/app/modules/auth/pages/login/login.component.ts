@@ -108,9 +108,9 @@ export class LoginComponent implements OnInit {
         // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
         //   this.router.navigate(['pages/tpa-interested']);
         //   this.utilsService.logAction(jhi.userId, 'login')
-      } else if (roles.indexOf("ROLE_FILER") !== -1) {
-        this.router.navigate(['/tasks/itr-assigned-users']);
-        this.utilsService.logAction(userId, 'login');
+      // } else if (roles.indexOf("ROLE_FILER") !== -1) {
+      //   this.router.navigate(['/tasks/itr-assigned-users']);
+      //   this.utilsService.logAction(userId, 'login');
 
       } else if (allowedRoles.some(item => roles.includes(item))) {
         this.router.navigate(['/tasks/assigned-users-new']);
@@ -434,12 +434,19 @@ export class LoginComponent implements OnInit {
     const baseUrl = "https://dashboard-proxy.kommunicate.io";
     const userEmail = loginSmeDetails[0].email;
     const userAccessToken = `${token}&appId=${environment.kmAppId}`;
-    let iframe = document.createElement("iframe");
+    let iframe = document.getElementById('km-iframe') as HTMLIFrameElement;
+    if (!iframe) {
+      iframe = document.createElement("iframe");
+      iframe.setAttribute('class', 'iframe-height');
+      iframe.setAttribute('id', 'km-iframe');
+    }
+    
+    
     iframe.setAttribute('src', `${baseUrl}/login?email=${userEmail}&password=${userAccessToken}?showConversationSectionOnly=true`)
-    iframe.setAttribute('class', 'iframe-height');
-    iframe.setAttribute('id', 'km-iframe');
-    let viewbox = document.getElementById('km-viewbox');
-    viewbox.append(iframe);
+    if (!document.getElementById('km-iframe')) {
+      let viewbox = document.getElementById('km-viewbox');
+      viewbox.append(iframe);
+    }
   }
 
   mode: string = 'SIGN_IN';

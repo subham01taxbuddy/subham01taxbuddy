@@ -279,8 +279,8 @@
     >
   </button>
 
-  <button class="saveBtnIn">
-    <span class="font-semibold" (click)="saveAll()">Save All</span>
+  <button class="saveBtnIn" (click)="saveAll()">
+    <span class="font-semibold">Save All</span>
   </button>
 </div>
 
@@ -546,7 +546,7 @@
               >
             </mat-form-field>
           </div>
-          <div class="col-sm-4">
+          <div class="col-sm-4" *ngIf="bondType !== 'listed'">
             <mat-label>Indexed cost of acquisition</mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -555,9 +555,9 @@
                 placeholder="Indexed Cost Of Acquisition"
                 name="indexCostOfAcquisition"
                 maxlength="14"
+                readonly
                 (change)="
-                  calculateTotalCG(selectedFormGroup);
-                  calculateDeductionGain()
+                  calculateTotalCG(selectedFormGroup); calculateDeductionGain()
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />

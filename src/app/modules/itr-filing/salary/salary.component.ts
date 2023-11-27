@@ -151,7 +151,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       id: null,
       seqNum: 13,
       value: 'SECOND_PROVISO',
-      label: '10(10B)(ii) - Second Proviso: Compensation under a scheme approved by the Central Government',
+      label:
+        '10(10B)(ii) - Second Proviso: Compensation under a scheme approved by the Central Government',
       detailed: false,
     },
     {
@@ -863,13 +864,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           const HOUSE_RENT = parseFloat(FormValues?.salary[0]?.HOUSE_RENT);
 
           let lowerOf = Math.min(
-            BASIC_SALARY !== 0 ? BASIC_SALARY / 2 : Infinity,
-            HOUSE_RENT !== 0 ? HOUSE_RENT : Infinity
+            BASIC_SALARY !== 0 ? BASIC_SALARY / 2 : BASIC_SALARY,
+            HOUSE_RENT
           );
 
-          if (BASIC_SALARY === 0 && HOUSE_RENT === 0) {
-            lowerOf = 0;
-          }
           this.setValidator('HOUSE_RENT', Validators.max(lowerOf));
 
           if (
@@ -910,14 +908,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           const gratuity = parseFloat(FormValues?.salary[0]?.GRATUITY);
           const fixedLimit = 2000000;
 
-          let lowerOf = Math.min(
-            gratuity !== 0 ? gratuity : Infinity,
-            fixedLimit
-          );
+          let lowerOf = Math.min(gratuity, fixedLimit);
 
-          if (gratuity === 0) {
-            lowerOf = fixedLimit;
-          }
           this.setValidator('GRATUITY', Validators.max(lowerOf));
 
           if (
@@ -960,14 +952,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           );
           const fixedLimit = 300000;
 
-          let lowerOf = Math.min(
-            leaveEncash !== 0 ? leaveEncash : Infinity,
-            fixedLimit
-          );
-
-          if (leaveEncash === 0) {
-            lowerOf = fixedLimit;
-          }
+          let lowerOf = Math.min(leaveEncash, fixedLimit);
 
           // lower of 3 lakhs only applicable for non government employees
           if (
@@ -1021,6 +1006,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   }
 
   saveEmployerDetails() {
+    this.validations();
     if (this.employerDetailsFormGroup.valid && this.allowanceFormGroup.valid) {
       this.checkGrossSalary();
 
@@ -1062,7 +1048,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             // totalSalExempt = totalSalExempt + Number(this.salaryGridOptions.rowData[i].exemptAmount);
 
             if (
-              this.bifurcationResult?.SEC17_1.total > 0 ||
+              this.bifurcationResult?.SEC17_1.total ||
+              this.bifurcationResult?.SEC17_1.total === 0 ||
               this.bifurcationResult?.SEC17_1.value > 0
             ) {
               const bifurcationValues = this.bifurcationResult?.SEC17_1.value;
@@ -1098,7 +1085,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             });
 
             if (
-              this.bifurcationResult?.SEC17_2.total > 0 ||
+              this.bifurcationResult?.SEC17_2.total ||
+              this.bifurcationResult?.SEC17_2.total === 0 ||
               this.bifurcationResult?.SEC17_2.value > 0
             ) {
               const bifurcationValues = this.bifurcationResult?.SEC17_2.value;
@@ -1134,7 +1122,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             });
 
             if (
-              this.bifurcationResult?.SEC17_3.total > 0 ||
+              this.bifurcationResult?.SEC17_3.total ||
+              this.bifurcationResult?.SEC17_3.total === 0 ||
               this.bifurcationResult?.SEC17_3.value > 0
             ) {
               const bifurcationValues = this.bifurcationResult?.SEC17_3.value;

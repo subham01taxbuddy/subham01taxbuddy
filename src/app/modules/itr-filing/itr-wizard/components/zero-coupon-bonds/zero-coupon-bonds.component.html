@@ -130,7 +130,7 @@
                       class="input-field"
                       readonly
                       placeholder="Buy Date"
-                      (dateChange)="getGainType(bonds); calculateTotalCG(bonds); calMinImproveDate(bonds.get('purchaseDate').value, bonds);calculateIndexCost(bonds, 'asset')"
+                      (dateChange)="getGainType(bonds); calMinImproveDate(bonds.get('purchaseDate').value, bonds);calculateIndexCost(bonds, 'asset')"
                       formControlName="purchaseDate"
                       name="purchaseDate"
                       [matDatepicker]="purchaseDate"
@@ -157,7 +157,7 @@
                       class="input-field"
                       name="assets[i]"
                       (change)="
-                        calculateTotalCG(bonds); calculateDeductionGain()
+                        calculateTotalCG(bonds);
                       "
                       placeholder="Sale value/Full value consideration"
                       digitsOnly
@@ -191,7 +191,7 @@
                     >
                       <mat-option
                         [value]="year"
-                        *ngFor="let year of improvementYears"
+                        *ngFor="let year of getYearsList(bonds)"
                       >
                         {{ year }}
                       </mat-option>
@@ -205,7 +205,7 @@
                       matInput
                       class="input-field"
                       digitsOnly
-                      (change)="calculateTotalCG(bonds);calculateIndexCost(bonds)"
+                      (change)="calculateIndexCost(bonds)"
                       placeholder= "Cost of improvement without indexation"
                       formControlName="costOfImprovement"
                       maxlength="14"
@@ -231,7 +231,7 @@
                       formControlName="indexCostOfImprovement"
                       maxlength="14"
                       type="number"
-                      [disabled]
+                      readonly
                     />
                   </mat-form-field>
                 </div>
@@ -248,7 +248,7 @@
                       matTooltipClass="tab-tooltip"
                       matTooltipPosition="above"
                       placeholder="{{getPlaceholderPurchase(bonds)}}"
-                      (change)="calculateTotalCG(bonds); calculateIndexCost(bonds, 'asset')"
+                      (change)="calculateIndexCost(bonds, 'asset')"
                       formControlName="purchaseCost"
                       maxlength="14"
                       required

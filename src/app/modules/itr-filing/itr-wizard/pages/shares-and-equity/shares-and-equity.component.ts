@@ -71,6 +71,8 @@ export class SharesAndEquityComponent
   improvementYears = [];
   financialyears = [];
   @Input() goldCg: NewCapitalGain;
+  saveClicked: boolean = false;
+  formToBeShownAfterSaveAll: Array<any> = [];
 
   constructor(
     private fb: FormBuilder,
@@ -84,23 +86,6 @@ export class SharesAndEquityComponent
     super();
     this.getImprovementYears();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    let listedData = this.ITR_JSON.capitalGain?.filter(
-      (item) => item.assetType === 'GOLD'
-    );
-    if (listedData?.length > 0) {
-      this.goldCg = listedData[0];
-    } else {
-      this.goldCg = {
-        assessmentYear: this.ITR_JSON.assessmentYear,
-        assesseeType: this.ITR_JSON.assesseeType,
-        residentialStatus: this.ITR_JSON.residentialStatus,
-        assetType: 'GOLD',
-        assetDetails: [],
-        improvement: [],
-        deduction: [],
-        buyersDetails: [],
-      };
-    }
 
     // DATE VALIDATIONS
     // Set the minimum to January 1st 20 years in the past and December 31st a year in the future.
@@ -153,42 +138,7 @@ export class SharesAndEquityComponent
 
     this.securitiesForm.disable();
     this.initDetailedForm(this.Copy_ITR_JSON);
-
-    // setting deduction
-    const equitySharesListed = this.ITR_JSON.capitalGain?.find(
-      (assetType) => assetType.assetType === 'EQUITY_SHARES_LISTED'
-    );
-
-    if (equitySharesListed?.deduction?.length > 0) {
-      const deductionStat: boolean = equitySharesListed?.deduction?.some(
-        (element) => element?.purchaseDate
-      );
-      if (deductionStat) {
-        this.deduction = true;
-      } else {
-        this.deduction = false;
-      }
-    } else {
-      this.deduction = false;
-    }
-
-    // setting improvement flag
-    const equitySharesUnlisted = this.ITR_JSON.capitalGain?.find(
-      (assetType) => assetType.assetType === 'EQUITY_SHARES_UNLISTED'
-    );
-
-    if (equitySharesUnlisted?.improvement?.length > 0) {
-      const improvementStat: boolean = equitySharesListed?.improvement?.some(
-        (element) => element?.indexCostOfImprovement
-      );
-      if (improvementStat) {
-        this.isImprovement?.setValue(true);
-      } else {
-        this.isImprovement?.setValue(false);
-      }
-    } else {
-      this.isImprovement?.setValue(false);
-    }
+    this.valueChanges();
   }
 
   // -----------------FORMS-----------------------
@@ -198,13 +148,11 @@ export class SharesAndEquityComponent
     });
   }
 
-  initDetailedForm(itrObject: ITR_JSON) {
-    let assetDetails;
+  initBrokerList(itrObject: ITR_JSON) {
     let data;
-    const securitiesArray = <FormArray>(
-      this.securitiesForm.get('securitiesArray')
-    );
-    securitiesArray.clear();
+
+    this.brokerList = [];
+    this.brokerSelected = [];
     if (this.bondType === 'listed') {
       data = itrObject.capitalGain.filter(
         (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
@@ -214,27 +162,34 @@ export class SharesAndEquityComponent
         (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
       );
     }
-    let ltcg = 0;
     if (data.length > 0) {
-      data.forEach((obj: any) => {
-        assetDetails = obj.assetDetails;
-        console.log(assetDetails);
-        assetDetails.forEach((element: any) => {
-          if (element.brokerName == this.selectedBroker) {
-            const filterImp = obj.improvement?.filter(
-              (data) => data.srn == element.srn
-            );
-            if (element.gainType === 'LONG') {
-              ltcg += element.capitalGain;
+      data.forEach((obj, index) => {
+        obj.assetDetails.forEach((security: any) => {
+          let broker = security.brokerName;
+          let gainType = security.gainType;
+          let capitalGain = security.capitalGain;
+          let deduction = data?.[index]?.deduction?.[0]?.totalDeductionClaimed;
+          let filtered = this.brokerList.filter(
+            (item) => item.brokerName === broker
+          );
+          if (filtered && filtered.length > 0) {
+            //update existing item
+            if (gainType === 'LONG') {
+              filtered[0].LTCG = filtered[0].LTCG + capitalGain;
+            } else {
+              filtered[0].STCG = filtered[0].STCG + capitalGain;
             }
-            if (filterImp?.length > 0) {
-              element['costOfImprovement'] = filterImp[0].costOfImprovement;
-            }
-            this.addMoreData(element);
+            // brokerList.splice(brokerList.indexOf(filtered[0], ))
+          } else {
+            this.brokerList.push({
+              brokerName: broker,
+              LTCG: gainType === 'LONG' ? capitalGain : 0,
+              STCG: gainType === 'SHORT' ? capitalGain : 0,
+              deduction: deduction ? deduction : 0,
+            });
+            this.brokerSelected.push(false);
           }
         });
-
-        // setting deduction
         if (obj.deduction) {
           obj.deduction.forEach((element: any) => {
             this.deductionForm = this.initDeductionForm(element);
@@ -242,32 +197,15 @@ export class SharesAndEquityComponent
         } else {
           this.deductionForm = this.initDeductionForm();
         }
-
-        // updating deduction UI
         this.updateDeductionUI();
-
-        //// HAVE TO DO SOMETHING SIMILAR FOR IMPROVEMENT
       });
+    } else {
+      if (!this.compactView) {
+        this.compactView = false;
+        this.addMoreData();
+      }
     }
-  }
-
-  initDeductionForm(obj?): FormGroup {
-    return this.fb.group({
-      hasEdit: [obj ? obj.hasEdit : false],
-      srn: [obj ? obj.srn : 0],
-      underSection: ['Deduction 54F'],
-      orgAssestTransferDate: [obj ? obj.orgAssestTransferDate : null],
-      panOfEligibleCompany: [obj ? obj.panOfEligibleCompany : null],
-      purchaseDatePlantMachine: [obj ? obj.purchaseDatePlantMachine : null],
-      purchaseDate: [obj ? obj.purchaseDate : null, Validators.required],
-      costOfNewAssets: [obj ? obj.costOfNewAssets : null, Validators.required],
-      investmentInCGAccount: [
-        obj ? obj.investmentInCGAccount : null,
-        Validators.required,
-      ],
-      totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null],
-      costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
-    });
+    this.updateDeductionUI();
   }
 
   createForm(srn, item?): FormGroup {
@@ -281,6 +219,9 @@ export class SharesAndEquityComponent
             Validators.required,
             Validators.pattern(AppConstants.amountWithoutDecimal),
           ];
+
+    this.formToBeShownAfterSaveAll?.push(item);
+
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
       brokerName: [item ? item.brokerName : ''],
@@ -327,13 +268,92 @@ export class SharesAndEquityComponent
     });
   }
 
-  // ADD FUNCTIONS
+  initDetailedForm(itrObject: ITR_JSON) {
+    let assetDetails;
+    let data;
+    const securitiesArray = <FormArray>(
+      this.securitiesForm.get('securitiesArray')
+    );
+    securitiesArray.clear();
+    if (this.bondType === 'listed') {
+      data = itrObject.capitalGain.filter(
+        (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
+      );
+    } else if (this.bondType === 'unlisted') {
+      data = itrObject.capitalGain.filter(
+        (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
+      );
+    }
+    let ltcg = 0;
+    let costOfImprovements: any = 0;
+    if (data.length > 0) {
+      data.forEach((obj: any) => {
+        assetDetails = obj.assetDetails;
+        costOfImprovements = data[0].improvement;
+        console.log(assetDetails);
+        assetDetails.forEach((element: any) => {
+          if (element.brokerName == this.selectedBroker) {
+            const filterImp = obj.improvement?.filter(
+              (data) => data.srn == element.srn
+            );
+            if (element.gainType === 'LONG') {
+              ltcg += element.capitalGain;
+            }
+            if (filterImp?.length > 0) {
+              element['costOfImprovement'] = filterImp[0].costOfImprovement;
+            }
+            costOfImprovements?.forEach((item) => {
+              if (!element?.improvementsArray) {
+                if (element?.srn === item?.srn) {
+                  element['improvementsArray'] = item;
+                }
+              }
+            });
+            this.addMoreData(element);
+          }
+        });
+
+        // setting deduction
+        if (obj.deduction) {
+          obj.deduction.forEach((element: any) => {
+            this.deductionForm = this.initDeductionForm(element);
+          });
+        } else {
+          this.deductionForm = this.initDeductionForm();
+        }
+
+        // updating deduction UI
+        this.updateDeductionUI();
+      });
+    }
+  }
+
+  initDeductionForm(obj?): FormGroup {
+    return this.fb.group({
+      hasEdit: [obj ? obj.hasEdit : false],
+      srn: [obj ? obj.srn : 0],
+      underSection: ['Deduction 54F'],
+      orgAssestTransferDate: [obj ? obj.orgAssestTransferDate : null],
+      panOfEligibleCompany: [obj ? obj.panOfEligibleCompany : null],
+      purchaseDatePlantMachine: [obj ? obj.purchaseDatePlantMachine : null],
+      purchaseDate: [obj ? obj.purchaseDate : null, Validators.required],
+      costOfNewAssets: [obj ? obj.costOfNewAssets : null, Validators.required],
+      investmentInCGAccount: [
+        obj ? obj.investmentInCGAccount : null,
+        Validators.required,
+      ],
+      totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null],
+      costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
+    });
+  }
+
+  // ==================== ADD FUNCTIONS====================
   addDialogRef: MatDialogRef<any>;
   addMore() {
     this.compactView = false;
     this.isAdd = true;
     const securitiesArray = <FormArray>(
-      this.securitiesForm.get('securitiesArray')
+      this.securitiesForm?.get('securitiesArray')
     );
     this.selectedFormGroup = this.createForm(securitiesArray.length);
     this.addDialogRef = this.dialog.open(this.editEquity);
@@ -354,8 +374,8 @@ export class SharesAndEquityComponent
           );
         }
         if (data.length > 0) {
-          data.forEach((obj) => {
-            obj.assetDetails.push(result);
+          data?.forEach((obj) => {
+            obj?.assetDetails?.push(result);
           });
         } else {
           let cg: NewCapitalGain = {
@@ -402,7 +422,93 @@ export class SharesAndEquityComponent
     });
   }
 
-  // CALCULATION FUNCTIONS
+  addMoreData(item?) {
+    const securitiesArray = <FormArray>(
+      this.securitiesForm.get('securitiesArray')
+    );
+    securitiesArray.insert(0, this.createForm(securitiesArray.length, item));
+  }
+
+  // ===============EDIT FUNCTIONS=============================
+  editSecuritiesForm(params: any) {
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'edit':
+          if (this.saveClicked || this.bondType === 'listed') {
+            this.selectedFormGroup = params.data;
+          } else {
+            let index = params?.data?.controls['srn']?.value;
+            this.formToBeShownAfterSaveAll = this.filterLatestBySrn(
+              this.formToBeShownAfterSaveAll
+            );
+            this.formToBeShownAfterSaveAll?.forEach((element) => {
+              delete element?.improvementsArray?.srn;
+              delete element?.improvementsArray?.dateOfImprovement;
+            });
+
+            params?.data?.controls['improvementsArray']?.setValue(
+              this.formToBeShownAfterSaveAll[index]?.improvementsArray
+            );
+            if (
+              params.data?.controls['improvementsArray']?.value
+                .indexCostOfImprovement
+            ) {
+              this.isImprovement.setValue(true);
+            }
+            this.selectedFormGroup = params.data;
+          }
+          this.addDialogRef = this.dialog.open(this.editEquity);
+          this.addDialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+              result.hasEdit = false;
+              let data;
+              let securitiesIndex;
+              let itrObject = this.Copy_ITR_JSON;
+
+              if (!itrObject.capitalGain) {
+                itrObject.capitalGain = [];
+              }
+              if (this.bondType === 'listed') {
+                securitiesIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
+                  (element) => element.assetType === 'EQUITY_SHARES_LISTED'
+                );
+                data = this.Copy_ITR_JSON.capitalGain.filter(
+                  (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
+                );
+              } else if (this.bondType === 'unlisted') {
+                securitiesIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
+                  (element) => element.assetType === 'EQUITY_SHARES_UNLISTED'
+                );
+                data = this.Copy_ITR_JSON.capitalGain.filter(
+                  (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
+                );
+
+                data[0].improvement = [result.improvementsArray];
+              }
+              let filtered = data[0].assetDetails.filter(
+                (element) => element.srn !== result.srn
+              );
+              if (!filtered) {
+                filtered = [];
+              }
+              filtered.push(result);
+              this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails =
+                filtered;
+              this.initBrokerList(this.Copy_ITR_JSON);
+              this.initDetailedForm(this.Copy_ITR_JSON);
+              this.selectedFormGroup.controls['hasEdit'].setValue(null);
+              this.equityGridOptions.api?.setRowData(
+                this.getSecuritiesArray.controls
+              );
+            }
+          });
+          break;
+      }
+    }
+  }
+
+  // ======================CALCULATION FUNCTIONS============================
   calculateFMV(securities) {
     if (
       securities.controls['isinCode'].valid &&
@@ -547,77 +653,82 @@ export class SharesAndEquityComponent
     }
 
     if (type === 'forIndexation' || type === 'forBoth') {
-      let improvementsArray = this.selectedFormGroup.controls[
-        'improvementsArray'
-      ] as FormGroup;
+      if (this.bondType !== 'listed') {
+        let improvementsArray = this.selectedFormGroup?.controls[
+          'improvementsArray'
+        ] as FormGroup;
 
-      let selectedYear = moment(
-        this.selectedFormGroup.controls['sellDate'].value
-      );
+        let selectedYear = moment(
+          this.selectedFormGroup?.controls['sellDate']?.value
+        );
 
-      let sellFinancialYear =
-        selectedYear.get('month') > 2
-          ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
-          : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
+        let sellFinancialYear =
+          selectedYear.get('month') > 2
+            ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
+            : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
 
-      // for improvements indexation
-      let costOfImprovement = parseFloat(
-        improvementsArray.controls['costOfImprovement'].value
-      );
-      let improvementFinancialYear =
-        improvementsArray.controls['financialYearOfImprovement'].value;
+        // for improvements indexation
+        let costOfImprovement = parseFloat(
+          improvementsArray?.controls['costOfImprovement'].value
+        );
+        let improvementFinancialYear =
+          improvementsArray?.controls['financialYearOfImprovement'].value;
 
-      // for cost of acquisition index
-      let selectedPurchaseYear = moment(
-        this.selectedFormGroup.controls['purchaseDate'].value
-      );
-      let purchaseFinancialYear =
-        selectedPurchaseYear.get('month') > 2
-          ? selectedPurchaseYear.get('year') +
-            '-' +
-            (selectedPurchaseYear.get('year') + 1)
-          : selectedPurchaseYear.get('year') -
-            1 +
-            '-' +
-            selectedPurchaseYear.get('year');
+        // for cost of acquisition index
+        let selectedPurchaseYear = moment(
+          this.selectedFormGroup?.controls['purchaseDate'].value
+        );
+        let purchaseFinancialYear =
+          selectedPurchaseYear.get('month') > 2
+            ? selectedPurchaseYear.get('year') +
+              '-' +
+              (selectedPurchaseYear.get('year') + 1)
+            : selectedPurchaseYear.get('year') -
+              1 +
+              '-' +
+              selectedPurchaseYear.get('year');
 
-      let costOfAcquistion = parseFloat(
-        this.selectedFormGroup.controls['purchaseCost'].value
-      );
+        let costOfAcquistion = parseFloat(
+          this.selectedFormGroup?.controls['purchaseCost'].value
+        );
 
-      let req = {
-        cost:
-          typeOfIndexation !== 'improvement'
-            ? costOfAcquistion
-            : costOfImprovement,
-        purchaseOrImprovementFinancialYear:
-          typeOfIndexation !== 'improvement'
-            ? purchaseFinancialYear
-            : improvementFinancialYear,
-        assetType: this.goldCg.assetType,
-        buyDate: this.selectedFormGroup.controls['purchaseDate'].value,
-        sellDate: this.selectedFormGroup.controls['sellDate'].value,
-        sellFinancialYear: sellFinancialYear,
-      };
+        let req = {
+          cost:
+            typeOfIndexation !== 'improvement'
+              ? costOfAcquistion
+              : costOfImprovement,
+          purchaseOrImprovementFinancialYear:
+            typeOfIndexation !== 'improvement'
+              ? purchaseFinancialYear
+              : improvementFinancialYear,
+          assetType:
+            this.bondType === 'listed'
+              ? 'EQUITY_SHARES_LISTED'
+              : 'EQUITY_SHARES_UNLISTED',
+          buyDate: this.selectedFormGroup?.controls['purchaseDate'].value,
+          sellDate: this.selectedFormGroup?.controls['sellDate'].value,
+          sellFinancialYear: sellFinancialYear,
+        };
 
-      const param = `/calculate/indexed-cost`;
-      this.itrMsService.postMethod(param, req).subscribe((res: any) => {
-        console.log('INDEX COST : ', res);
+        const param = `/calculate/indexed-cost`;
+        this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+          console.log('INDEX COST : ', res);
 
-        if (typeOfIndexation !== 'improvement') {
-          this.selectedFormGroup.controls['indexCostOfAcquisition']?.setValue(
-            res.data.costOfAcquisitionOrImprovement
-          );
-          this.calculateTotalCG(securities);
-        } else {
-          (
-            this.selectedFormGroup.controls['improvementsArray'] as FormGroup
-          ).controls['indexCostOfImprovement']?.setValue(
-            res.data.costOfAcquisitionOrImprovement
-          );
-          this.calculateTotalCG(securities);
-        }
-      });
+          if (typeOfIndexation !== 'improvement') {
+            this.selectedFormGroup?.controls[
+              'indexCostOfAcquisition'
+            ]?.setValue(res?.data?.costOfAcquisitionOrImprovement);
+            this.calculateTotalCG(securities);
+          } else {
+            (
+              this.selectedFormGroup?.controls['improvementsArray'] as FormGroup
+            )?.controls['indexCostOfImprovement']?.setValue(
+              res?.data?.costOfAcquisitionOrImprovement
+            );
+            this.calculateTotalCG(securities);
+          }
+        });
+      }
     }
   }
 
@@ -626,9 +737,8 @@ export class SharesAndEquityComponent
     if (securities.valid) {
       const param = '/singleCgCalculate';
       let securitiesImprovement =
-        securities.controls['improvementsArray'].value;
-      securitiesImprovement.srn = securities.controls['srn'].value;
-      // delete securities.controls['improvementsArray'];
+        securities?.controls['improvementsArray']?.value;
+      securitiesImprovement.srn = securities?.controls['srn']?.value;
 
       let request = {
         assessmentYear: '2022-2023',
@@ -659,13 +769,13 @@ export class SharesAndEquityComponent
       this.itrMsService.postMethod(param, request).subscribe(
         (res: any) => {
           this.loading = false;
-          if (res.assetDetails[0].capitalGain) {
-            securities.controls['capitalGain'].setValue(
-              res.assetDetails[0].capitalGain
+          if (res?.assetDetails[0]?.capitalGain) {
+            securities?.controls['capitalGain']?.setValue(
+              res?.assetDetails[0]?.capitalGain
             );
           } else {
             this.loading = false;
-            securities.controls['capitalGain'].setValue(0);
+            securities?.controls['capitalGain']?.setValue(0);
           }
 
           if (this.bondType === 'listed') {
@@ -709,7 +819,7 @@ export class SharesAndEquityComponent
     }
   }
 
-  // SAVE FUNCTION
+  // ================================SAVE FUNCTION===============================
   save(type?) {
     this.loading = true;
     if (type === 'securities') {
@@ -746,7 +856,7 @@ export class SharesAndEquityComponent
         });
       }
       const securitiesImprovement =
-        this.securitiesForm.get('improvementsArray').value;
+        this.securitiesForm?.get('improvementsArray')?.value;
       // if (assetDetails.length > 0) {
       //   this.deductionForm.reset();
       // }
@@ -829,11 +939,13 @@ export class SharesAndEquityComponent
           'improvementsArray'
         ].value;
 
-        securitiesImprovement.push({
+        securitiesImprovement?.push({
           srn: (element as FormGroup).controls['srn'].value,
           dateOfImprovement: securityImprovement?.dateOfImprovement,
           costOfImprovement: securityImprovement?.costOfImprovement,
           indexCostOfImprovement: securityImprovement?.indexCostOfImprovement,
+          financialYearOfImprovement:
+            securityImprovement?.financialYearOfImprovement,
         });
       });
 
@@ -887,11 +999,6 @@ export class SharesAndEquityComponent
           }
 
           this.Copy_ITR_JSON.capitalGain[securitiesIndex] = sameData;
-          console.log(
-            otherData,
-            sameData,
-            this.Copy_ITR_JSON.capitalGain[securitiesIndex]
-          );
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
         } else {
           let otherData = this.Copy_ITR_JSON.capitalGain[
@@ -943,7 +1050,7 @@ export class SharesAndEquityComponent
     }
   }
 
-  // GET FUNCTIONS
+  // =================GET FUNCTIONS=====================
   getFileParserData() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
@@ -967,17 +1074,22 @@ export class SharesAndEquityComponent
   totalCg: TotalCg = {
     ltcg: 0,
     stcg: 0,
+    deduction: 0,
   };
   getSecuritiesCg() {
     let ltcg = 0;
     let stcg = 0;
+    let deduction = 0;
+    
     this.brokerList.forEach((broker) => {
       ltcg += broker.LTCG;
       stcg += broker.STCG;
+      deduction += broker.deduction;
     });
 
     this.totalCg.ltcg = ltcg;
     this.totalCg.stcg = stcg;
+    this.totalCg.deduction = deduction;
     return this.totalCg;
   }
 
@@ -1063,7 +1175,7 @@ export class SharesAndEquityComponent
     });
   }
 
-  // DELETE FUNCTIONS
+  // ===================DELETE FUNCTIONS======================
   deleteBroker() {
     let brokerNames = [];
     for (let i = 0; i < this.brokerSelected.length; i++) {
@@ -1109,7 +1221,7 @@ export class SharesAndEquityComponent
     this.equityGridOptions.api?.setRowData(this.getSecuritiesArray.controls);
   }
 
-  // OTHER FUNCTIONS
+  // ====================OTHER FUNCTIONS======================
   calMaxPurchaseDate(sellDate) {
     if (this.utilsService.isNonEmpty(sellDate)) {
       this.maxPurchaseDate = sellDate;
@@ -1117,15 +1229,20 @@ export class SharesAndEquityComponent
   }
 
   updateDeductionUI() {
-    this.getSecuritiesCg();
-    if (this.totalCg.ltcg + this.totalCg.stcg <= 0) {
-      this.deduction = false;
+    const totalCg = this.getSecuritiesCg();
+    let total = totalCg.ltcg + totalCg.stcg;
+    let deduction = totalCg.deduction;
+
+    if (total <= 0) {
       this.isDisable = true;
     } else {
-      if (this.deduction) {
-        this.deduction = this.totalCg.ltcg > 0;
-      }
-      this.isDisable = this.totalCg.ltcg <= 0;
+      this.isDisable = totalCg.ltcg <= 0;
+    }
+
+    if (deduction && deduction > 0) {
+      this.deduction = true;
+    } else {
+      this.deduction = false;
     }
   }
 
@@ -1296,64 +1413,6 @@ export class SharesAndEquityComponent
     ];
   }
 
-  initBrokerList(itrObject: ITR_JSON) {
-    let data;
-
-    this.brokerList = [];
-    this.brokerSelected = [];
-    if (this.bondType === 'listed') {
-      data = itrObject.capitalGain.filter(
-        (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
-      );
-    } else if (this.bondType === 'unlisted') {
-      data = itrObject.capitalGain.filter(
-        (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
-      );
-    }
-    if (data.length > 0) {
-      data.forEach((obj) => {
-        obj.assetDetails.forEach((security: any) => {
-          let broker = security.brokerName;
-          let gainType = security.gainType;
-          let capitalGain = security.capitalGain;
-          let filtered = this.brokerList.filter(
-            (item) => item.brokerName === broker
-          );
-          if (filtered && filtered.length > 0) {
-            //update existing item
-            if (gainType === 'LONG') {
-              filtered[0].LTCG = filtered[0].LTCG + capitalGain;
-            } else {
-              filtered[0].STCG = filtered[0].STCG + capitalGain;
-            }
-            // brokerList.splice(brokerList.indexOf(filtered[0], ))
-          } else {
-            this.brokerList.push({
-              brokerName: broker,
-              LTCG: gainType === 'LONG' ? capitalGain : 0,
-              STCG: gainType === 'SHORT' ? capitalGain : 0,
-            });
-            this.brokerSelected.push(false);
-          }
-        });
-        if (obj.deduction) {
-          obj.deduction.forEach((element: any) => {
-            this.deductionForm = this.initDeductionForm(element);
-          });
-        } else {
-          this.deductionForm = this.initDeductionForm();
-        }
-        this.updateDeductionUI();
-      });
-    } else {
-      if (!this.compactView) {
-        this.compactView = false;
-        this.addMoreData();
-      }
-    }
-    this.updateDeductionUI();
-  }
-
   isBrokerSelected() {
     return this.brokerSelected.filter((value) => value === true).length > 0;
   }
@@ -1397,9 +1456,40 @@ export class SharesAndEquityComponent
     this.initBrokerList(this.Copy_ITR_JSON);
   }
 
+  valueChanges() {
+    this.isImprovement?.valueChanges?.subscribe((value) => {
+      let improvementsFormArray = this.selectedFormGroup.controls[
+        'improvementsArray'
+      ] as FormGroup;
+
+      if (value === false) {
+        improvementsFormArray.controls['financialYearOfImprovement'].setValue(
+          null
+        );
+        improvementsFormArray.controls[
+          'financialYearOfImprovement'
+        ].clearValidators();
+        improvementsFormArray.controls[
+          'financialYearOfImprovement'
+        ].updateValueAndValidity();
+        improvementsFormArray.controls['costOfImprovement'].setValue(null);
+        improvementsFormArray.controls['indexCostOfImprovement'].setValue(null);
+        this.calculateTotalCG(this.selectedFormGroup);
+      } else {
+        improvementsFormArray.controls[
+          'financialYearOfImprovement'
+        ].addValidators(Validators.required);
+        improvementsFormArray.controls[
+          'financialYearOfImprovement'
+        ].updateValueAndValidity();
+      }
+    });
+  }
+
   dialogSaveClicked() {
     if (this.selectedFormGroup.valid) {
       this.addDialogRef.close(this.selectedFormGroup.value);
+      this.saveClicked = true;
     } else {
       $('input.ng-invalid').first().focus();
     }
@@ -1429,72 +1519,20 @@ export class SharesAndEquityComponent
     }
   }
 
-  editSecuritiesForm(params: any) {
-    console.log(event);
-    if (params.event.target !== undefined) {
-      const actionType = params.event.target.getAttribute('data-action-type');
-      switch (actionType) {
-        case 'edit':
-          this.selectedFormGroup = params.data;
-          this.addDialogRef = this.dialog.open(this.editEquity);
-          this.addDialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-              result.hasEdit = false;
-              let data;
-              let securitiesIndex;
-              let itrObject = this.Copy_ITR_JSON;
-
-              if (!itrObject.capitalGain) {
-                itrObject.capitalGain = [];
-              }
-              if (this.bondType === 'listed') {
-                securitiesIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
-                  (element) => element.assetType === 'EQUITY_SHARES_LISTED'
-                );
-                data = this.Copy_ITR_JSON.capitalGain.filter(
-                  (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
-                );
-              } else if (this.bondType === 'unlisted') {
-                securitiesIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
-                  (element) => element.assetType === 'EQUITY_SHARES_UNLISTED'
-                );
-                data = this.Copy_ITR_JSON.capitalGain.filter(
-                  (item: any) => item.assetType === 'EQUITY_SHARES_UNLISTED'
-                );
-
-                data[0].improvement = [result.improvementsArray];
-              }
-              let filtered = data[0].assetDetails.filter(
-                (element) => element.srn !== result.srn
-              );
-              if (!filtered) {
-                filtered = [];
-              }
-              filtered.push(result);
-              this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails =
-                filtered;
-              this.initBrokerList(this.Copy_ITR_JSON);
-              this.initDetailedForm(this.Copy_ITR_JSON);
-              this.selectedFormGroup.controls['hasEdit'].setValue(null);
-              this.equityGridOptions.api?.setRowData(
-                this.getSecuritiesArray.controls
-              );
-            }
-          });
-          break;
+  // Function to filter and keep only the latest object for each "srn"
+  filterLatestBySrn = (array) => {
+    const latestBySrn = array.reduce((acc, obj) => {
+      if (!acc[obj.srn] || acc[obj.srn].timestamp < obj.timestamp) {
+        acc[obj.srn] = obj;
       }
-    }
-  }
+      return acc;
+    }, {});
+
+    return Object.values(latestBySrn);
+  };
 
   openDialogWithTemplateRef(templateRef: TemplateRef<any>) {
     this.dialog.open(templateRef);
-  }
-
-  addMoreData(item?) {
-    const securitiesArray = <FormArray>(
-      this.securitiesForm.get('securitiesArray')
-    );
-    securitiesArray.insert(0, this.createForm(securitiesArray.length, item));
   }
 
   equitySelected() {

@@ -713,13 +713,20 @@
                     name="panNumber"
                     class="input-field"
                     maxlength="10"
+                    (input)="checkPAN(i)"
                     required
                   />
-                  <mat-error
-                    *ngIf="director.get('panNumber').hasError('pattern')"
-                    >Enter valid PAN number.
-                  </mat-error>
                 </mat-form-field>
+                <mat-error
+                *ngIf="
+                  director.get('panNumber').hasError('pattern')
+                  
+                "
+                >Enter valid PAN number.
+              </mat-error>
+                <mat-error *ngIf="panPartnerRepeat">
+                  PAN of Partner can't be same as user PAN.</mat-error
+                >
               </div>
             </div>
           </div>
@@ -838,7 +845,7 @@
                 "
                 >Enter valid PAN (e.g XXXXX1234X)
               </mat-error>
-              
+
               <mat-error *ngIf="panRepeat">
                 PAN of spouse can't be same as user PAN.</mat-error
               >
@@ -960,6 +967,7 @@
                       name="incomeReceived"
                       formControlName="incomeReceived"
                       maxlength="10"
+                      (input)="validationHp()"
                       required
                     />
                     <mat-error
@@ -1021,6 +1029,7 @@
                       name="tdsDeductedAmount"
                       formControlName="tdsDeductedAmount"
                       maxlength="10"
+                      (input)="validationHp()"
                       required
                     />
                     <mat-error
@@ -1092,6 +1101,7 @@
                       name="incomeReceived"
                       formControlName="incomeReceived"
                       maxlength="10"
+                      (input)="validationBusiness()"
                       required
                     />
                     <mat-error
@@ -1153,6 +1163,7 @@
                       name="tdsDeductedAmount"
                       formControlName="tdsDeductedAmount"
                       maxlength="10"
+                      (input)="validationBusiness()"
                       required
                     />
                     <mat-error
@@ -1224,6 +1235,7 @@
                       name="incomeReceived"
                       formControlName="incomeReceived"
                       maxlength="10"
+                      (input)="validationCg()"
                       required
                     />
                     <mat-error
@@ -1285,6 +1297,7 @@
                       name="tdsDeductedAmount"
                       formControlName="tdsDeductedAmount"
                       maxlength="10"
+                      (input)="validationCg()"
                       required
                     />
                     <mat-error
@@ -1356,6 +1369,7 @@
                       name="incomeReceived"
                       formControlName="incomeReceived"
                       maxlength="10"
+                      (input)="validationOth()"
                       required
                     />
                     <mat-error
@@ -1417,6 +1431,7 @@
                       name="tdsDeductedAmount"
                       formControlName="tdsDeductedAmount"
                       maxlength="10"
+                      (input)="validationOth()"
                       required
                     />
                     <mat-error

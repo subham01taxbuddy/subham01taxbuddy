@@ -879,7 +879,6 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       this.mobileNumber = this.searchVal
     }
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId
-    debugger
     if (this.roles.includes('ROLE_FILER')) {
       this.openAddSubscriptionDialog();
     } else {
