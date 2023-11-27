@@ -16,6 +16,7 @@ import { NonNullExpression } from 'typescript';
 import {AisCredsDialogComponent} from "../../../../../pages/itr-filing/ais-creds-dialog/ais-creds-dialog.component";
 import {Storage} from "@aws-amplify/storage";
 import {environment} from "../../../../../../environments/environment";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Component({
   selector: 'app-prefill-id',
@@ -59,7 +60,8 @@ export class PrefillIdComponent implements OnInit {
     public utilsService: UtilsService,
     private dialog: MatDialog,
     private aisDialog: MatDialog,
-    private titlecasePipe: TitleCasePipe
+    private titlecasePipe: TitleCasePipe,
+    private httpClient: HttpClient
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     sessionStorage.setItem(
@@ -5637,52 +5639,52 @@ export class PrefillIdComponent implements OnInit {
     if (file.length > 0) {
       this.uploadDoc = file.item(0);
 
-      Storage.configure({
-        AWSS3: {
-          bucket: 'everification.taxbuddy.com',
-          region: environment.s3_cred.region
-        }
-      });
-      Storage.put('AIS/' + this.uploadDoc.name, this.uploadDoc, {
-        contentType: this.uploadDoc.type
-      })
-        .then((result: any) => {
-          if (result && result.key) {
-              this.loading = false;
-              console.log('After AIS json upload -> ', result)
-
+      let reqUrl = `/cloud/signed-s3-url-by-type?fileName=${this.uploadDoc.name}`;
+      this.itrMsService.getMethod(reqUrl).subscribe((result: any) => {
+          if (result && result.data) {
+            let signedUrl = result.data.s3SignedUrl
+            this.uploadFileS3(this.uploadDoc, signedUrl);
           } else {
             this.loading = false;
             this.utilsService.showSnackBar("Error while uploading ais json");
           }
-        })
-        .catch((err: any) => {
+        }, ((err: any) => {
           this.loading = false;
           this.utilsService.showSnackBar("Error while uploading ais json" + JSON.stringify(err));
-        });
-      this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+        })
+      );
 
       //read the file to get details upload and validate
       const reader = new FileReader();
       reader.onload = (e: any) => {
         let jsonRes = e.target.result;
         console.log('fileText:',jsonRes);
-
-        // let panNo = JSONData.personalInfo?.pan;
-        // let mobileNo = JSONData.personalInfo?.address?.mobileNo;
-        // if (panNo !== this.data?.panNumber) {
-        //   this.toastMessageService.alert(
-        //     'error',
-        //     'PAN Number from profile and PAN number from json are different please confirm once.'
-        //   );
-        //   console.log('PAN mismatch');
-        //   return;
-        // } else {
-        //   this.uploadPrefillJson();
-        // }
       };
       reader.readAsText(this.uploadDoc);
     }
+  }
+
+  uploadFileS3(uploadDoc, signedUrl){
+
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'text/plain');
+    headers = headers.append('Accept', 'text/plain');
+    headers = headers.append('X-Upload-Content-Length', uploadDoc.size.toString());
+    headers = headers.append('X-Upload-Content-Type', 'application/octet-stream');
+    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
+    this.httpClient.put(signedUrl, uploadDoc, {headers: headers}).subscribe((result: any) => {
+      if (result && result.key) {
+        this.loading = false;
+        console.log('After AIS json upload -> ', result)
+
+      } else {
+        this.loading = false;
+        this.utilsService.showSnackBar("Error while uploading ais json");
+      }
+    },(err: any) => {
+      this.loading = false;
+      this.utilsService.showSnackBar("Error while uploading ais json" + JSON.stringify(err));
+    });
   }
 
   /*****AIS code ends*****/
