@@ -93,6 +93,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   disableNoticeService: boolean;
   hideOtherServicesForFiler: boolean;
   disableGstService: boolean;
+  hideSectionForAdmin: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -131,6 +132,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.smeFormGroup.patchValue(this.smeObj);
     this.otherSmeInfo.patchValue(this.smeObj);
     this.smeObj?.roles.includes('ROLE_LEADER') ? this.hideAssignmentOnOff = true : false;
+    this.smeObj?.roles.includes('ROLE_ADMIN') ? this.hideSectionForAdmin = true : false;
     this.setSmeRoles();
     this.getSmePartnerType();
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
