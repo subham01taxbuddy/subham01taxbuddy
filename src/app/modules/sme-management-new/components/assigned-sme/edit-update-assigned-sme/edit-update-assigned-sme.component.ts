@@ -95,6 +95,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   disableGstService: boolean;
   hideSectionForAdmin: boolean;
   smeDetails: any;
+  isBankDetailsFormChange: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -547,7 +548,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
   bankDetailsFormGroup: FormGroup = this.fb.group({
     accountType: ['', [Validators.required]],
-    ifsCode: ['', [Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]],
+    ifsCode: ['', [Validators.required, Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]],
     accountNumber: ['', [Validators.required]],
   })
 
@@ -701,6 +702,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     });
   }
 
+  updateBankDetailsForm() {
+    this.isBankDetailsFormChange = true;
+  }
+
   updateSmeDetails() {
     if (this.smeObj?.roles.includes('ROLE_FILER')) {
       if (this.smeObj['languages'].length) {
@@ -727,7 +732,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       return;
     }
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
-      if (!this.isBankValid) {
+      debugger
+      if (this.isBankDetailsFormChange || this.bankDetailsFormGroup.invalid) {
         this.utilsService.showSnackBar('Please verify bank details to continue.');
         return;
       } else {
@@ -875,6 +881,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
           if (res.data?.data?.code === '1000') {
             //valid bank details
             this.isBankValid = true;
+            this.isBankDetailsFormChange = false;
             this.validateBankDetails = res.data?.data?.bank_account_data;
             this.utilsService.showSnackBar(`${res.data.data.message}`);
           } else {
