@@ -94,6 +94,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   hideOtherServicesForFiler: boolean;
   disableGstService: boolean;
   hideSectionForAdmin: boolean;
+  smeDetails: any;
 
   constructor(
     private fb: FormBuilder,
@@ -102,7 +103,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private location: Location,
     private router: Router,
-    private itrMsService: ItrMsService
+    private itrMsService: ItrMsService,
+    private reportService: ReportService
   ) {
     this.smeObj = JSON.parse(sessionStorage.getItem('smeObject'))?.data;
     this.languageForm = this.fb.group({});
@@ -148,19 +150,44 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       this.itrPlanList = response;
       if (this.itrPlanList.length) {
         this.itrPlanList = this.itrPlanList.filter(element => element.name != 'Business and Profession with Balance sheet & PNL- Rs. 3499');
-        this.itrPlanList.forEach(element => {
-          this.irtTypeCapability.push(element.name);
-          this.irtTypeCapability.forEach((itrType) => {
-            this.itrTypeForm.addControl(itrType, new FormControl(false));
-          })
-          this.setPlanDetails();
-        });
+        if (this.smeObj?.['partnerType'] === 'CHILD') {
+          this.getPrincipalDetails(this.itrPlanList);
+        } else {
+          this.itrPlanList.forEach(element => {
+            this.irtTypeCapability.push(element.name);
+            this.irtTypeCapability.forEach((itrType) => {
+              this.itrTypeForm.addControl(itrType, new FormControl(false));
+            })
+            this.setPlanDetails();
+          });
+        }
       }
     },
       error => {
         this.loading = false;
         this.utilsService.showSnackBar('Failed to get selected plan details');
       });
+
+  }
+  getPrincipalDetails(itrPlanList) {
+    let param = `/bo/sme-details-new/${this.smeObj?.['parentPrincipalUserId']}`
+    this.reportService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.smeDetails = response.data[0];
+        itrPlanList.forEach(element => {
+          this.smeDetails?.skillSetPlanIdList.forEach(item => {
+            if (element.planId === item) {
+              this.irtTypeCapability.push(element.name);
+              this.irtTypeCapability.forEach((itrType) => {
+                this.itrTypeForm.addControl(itrType, new FormControl(false));
+              })
+            }
+          });
+          this.setPlanDetails();
+        });
+      }
+    })
   }
 
   setSmeRoles() {
@@ -694,6 +721,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.utilsService.showSnackBar('Cases Limit for ITR Filers (Work Load) should not be zero');
         return;
       }
+    }
+    if (this.smeObj?.['skillSetPlanIdList'].length === 0 || !this.smeObj?.['skillSetPlanIdList']) {
+      this.utilsService.showSnackBar('Please select at least one ITR type');
+      return;
     }
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
       if (!this.isBankValid) {
