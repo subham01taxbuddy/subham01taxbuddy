@@ -103,6 +103,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     private router: Router,
     private itrMsService: ItrMsService
   ) {
+    this.smeObj = JSON.parse(sessionStorage.getItem('smeObject'))?.data;
     this.languageForm = this.fb.group({});
     this.langList.forEach((lang) => {
       this.languageForm.addControl(lang, new FormControl(false));
@@ -127,7 +128,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.loggedInSmeRoles = this.loggedInSme[0]?.roles;
-    this.smeObj = JSON.parse(sessionStorage.getItem('smeObject'))?.data;
     this.smeFormGroup.patchValue(this.smeObj);
     this.otherSmeInfo.patchValue(this.smeObj);
     this.smeObj?.roles.includes('ROLE_LEADER') ? this.hideAssignmentOnOff = true : false;
@@ -673,8 +673,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   updateSmeDetails() {
-    debugger
-
     if (this.smeObj?.roles.includes('ROLE_FILER')) {
       if (this.smeObj['languages'].length) {
         const lang = this.smeObj['languages'].filter(element => element === 'English')
