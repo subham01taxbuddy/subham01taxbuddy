@@ -117,7 +117,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.caseLimit.forEach((limit) => {
       this.caseLimitForm.addControl(limit.key, new FormControl(false));
     });
-    if (this.smeObj.roles.includes('ROLE_FILER')) {
+    if (this.smeObj?.roles.includes('ROLE_FILER')) {
       this.getPlanDetails();
     }
   }
@@ -129,7 +129,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     this.smeObj = JSON.parse(sessionStorage.getItem('smeObject'))?.data;
     this.smeFormGroup.patchValue(this.smeObj);
     this.otherSmeInfo.patchValue(this.smeObj);
-    this.smeObj.roles.includes('ROLE_LEADER') ? this.hideAssignmentOnOff = true : false;
+    this.smeObj?.roles.includes('ROLE_LEADER') ? this.hideAssignmentOnOff = true : false;
     this.setSmeRoles();
     this.getSmePartnerType();
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
@@ -161,11 +161,11 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   setSmeRoles() {
-    this.admin.setValue(this.smeObj.roles.includes('ROLE_ADMIN') ? true : false);
-    this.leader.setValue(this.smeObj.roles.includes('ROLE_LEADER') ? true : false);
-    this.filerIndividual.setValue(this.smeObj.roles.includes('ROLE_FILER') && this.smeObj?.['partnerType'] === 'INDIVIDUAL' ? true : false);
-    this.filerPrinciple.setValue(this.smeObj.roles.includes('ROLE_FILER') && this.smeObj?.['partnerType'] === 'PRINCIPAL' ? true : false);
-    this.filerChild.setValue(this.smeObj.roles.includes('ROLE_FILER') && this.smeObj?.['partnerType'] === 'CHILD' ? true : false);
+    this.admin.setValue(this.smeObj?.roles.includes('ROLE_ADMIN') ? true : false);
+    this.leader.setValue(this.smeObj?.roles.includes('ROLE_LEADER') ? true : false);
+    this.filerIndividual.setValue(this.smeObj?.roles.includes('ROLE_FILER') && this.smeObj?.['partnerType'] === 'INDIVIDUAL' ? true : false);
+    this.filerPrinciple.setValue(this.smeObj?.roles.includes('ROLE_FILER') && this.smeObj?.['partnerType'] === 'PRINCIPAL' ? true : false);
+    this.filerChild.setValue(this.smeObj?.roles.includes('ROLE_FILER') && this.smeObj?.['partnerType'] === 'CHILD' ? true : false);
   }
 
   getSmePartnerType() {
@@ -175,7 +175,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   setFormDetails() {
-    if (this.smeObj.roles.includes('ROLE_FILER')) {
+    if (this.smeObj?.roles.includes('ROLE_FILER')) {
       this.tpa.disable();
       this.notice.disable();
       this.gst.disable();
@@ -673,7 +673,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   updateSmeDetails() {
     debugger
 
-    if (this.smeObj.roles.includes('ROLE_FILER')) {
+    if (this.smeObj?.roles.includes('ROLE_FILER')) {
       if (this.smeObj['languages'].length) {
         const lang = this.smeObj['languages'].filter(element => element === 'English')
         if (!lang.length) {
