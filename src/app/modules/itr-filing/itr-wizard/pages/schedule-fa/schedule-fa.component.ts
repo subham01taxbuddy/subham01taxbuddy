@@ -93,6 +93,7 @@ export class ScheduleFaComponent implements OnInit {
   scheduleFa: FormGroup;
   isPanelOpen: boolean = false;
   maxPurchaseDate: any;
+  selectedIndexes: number[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -1158,6 +1159,36 @@ export class ScheduleFaComponent implements OnInit {
 
   // Have to implement this, if yes then have to show questions else not
   handleSelectionChange(event) {}
+
+  // Function to toggle selected index
+  toggleSelectedIndex(index: number) {
+    const idx = this.selectedIndexes.indexOf(index);
+    if (idx > -1) {
+      this.selectedIndexes.splice(idx, 1);
+    } else {
+      this.selectedIndexes.push(index);
+    }
+  }
+
+  delete(formArrayName, type) {
+    if (type === 'account') {
+      const toDelete = this.scheduleFa.get(formArrayName).get(type);
+      console.log(toDelete);
+    } else {
+      const formArraytoDelete = this.scheduleFa.get(formArrayName) as FormArray;
+      const formInItrObject =
+        this.Copy_ITR_JSON.foreignIncome.foreignAssets[formArrayName];
+
+      formInItrObject?.forEach((element, i) => {
+        if (this.selectedIndexes.includes(i)) {
+          formArraytoDelete.removeAt(i);
+        }
+      });
+
+      console.log(this.scheduleFa);
+      this.saveAll();
+    }
+  }
 }
 
 // TO-DO

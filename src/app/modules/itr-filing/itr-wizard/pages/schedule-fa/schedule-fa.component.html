@@ -48,6 +48,16 @@
               [formGroupName]="i"
             >
               <br />
+              <!-- checkbox -->
+              <div class="custom-control custom-checkbox">
+                <input
+                  class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                  type="checkbox"
+                  (click)="$event.stopPropagation()"
+                  [checked]="selectedIndexes.includes(i)"
+                  (click)="toggleSelectedIndex(i)"
+                />
+              </div>
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
                 <!-- Country Code Input -->
@@ -113,6 +123,23 @@
                 >
                   + Add
                 </button>
+              </div>
+
+              <button
+                class="delete-btn"
+                (click)="delete('depositoryAccounts', 'account')"
+              >
+                <i class="fa fa-trash" aria-hidden="true"></i> DeleteAccount
+              </button>
+
+              <div class="custom-control custom-checkbox">
+                <input
+                  class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                  type="checkbox"
+                  (click)="$event.stopPropagation()"
+                  [checked]="selectedIndexes.includes(i)"
+                  (click)="toggleSelectedIndex(i)"
+                />
               </div>
 
               <!-- Account Array Input -->
@@ -228,6 +255,12 @@
                 </div>
               </div>
             </div>
+            <button
+              class="delete-btn"
+              (click)="delete('depositoryAccounts', 'formArray')"
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i> DeleteFormArray
+            </button>
           </form>
         </div>
 
@@ -1513,7 +1546,9 @@
                   </div>
                   <br />
                   <div
-                    *ngIf="accountCtrl?.get('isTaxableinYourHand')?.value === 'Y'"
+                    *ngIf="
+                      accountCtrl?.get('isTaxableinYourHand')?.value === 'Y'
+                    "
                   >
                     <div class="flex gap-[25px]">
                       <!-- accruedIncome -->
