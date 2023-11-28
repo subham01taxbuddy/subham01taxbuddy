@@ -13,7 +13,7 @@ font-weight: bold;">Re-Assign: {{data.clientName}}</label><button style="float: 
   <div class="col-sm-12" *ngIf="showLeaderFiler">
     <div>
       <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
-      (sendPrincipleIndividual)="fromPrinciple($event)"[skipChild]= false></app-sme-list-drop-down>
+      (sendPrincipleIndividual)="fromPrinciple($event)" (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
     </div>
   </div>
   <div class="col-sm-3">
