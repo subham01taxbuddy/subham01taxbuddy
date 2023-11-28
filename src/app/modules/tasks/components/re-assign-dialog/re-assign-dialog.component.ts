@@ -1,3 +1,4 @@
+import { event } from 'jquery';
 import { UtilsService } from 'src/app/services/utils.service';
 import { UserMsService } from './../../../../services/user-ms.service';
 import { Component, Inject, OnInit } from '@angular/core';
@@ -114,6 +115,13 @@ export class ReAssignDialogComponent implements OnInit {
     }
   }
 
+  fromChild(event){
+    if(event){
+      this.filerId = event ? event.userId : null;
+    }
+
+  }
+
   fromSme(event, isOwner) {
 
     console.log('sme-drop-down', event, isOwner);
@@ -173,7 +181,7 @@ export class ReAssignDialogComponent implements OnInit {
         this.loading = false;
         this.dialogRef.close({ event: 'close', data: 'success' });
         if (res.success == false) {
-          this.utilsService.showSnackBar('User re-assignment failed, please try for another leader/filer')
+          this.utilsService.showSnackBar(res.error)
           console.log(res.message)
         }
       }, error => {
