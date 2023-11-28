@@ -333,8 +333,8 @@
                 placeholder="DD/MM/YYYY"
                 (dateChange)="
                   calculateGainTypeOrIndexCost(
-                    'forGainType',
-                    '',
+                    'forBoth',
+                    'indexCostOfAcquisition',
                     selectedFormGroup
                   );
                   calculateTotalCG(selectedFormGroup);
@@ -371,8 +371,8 @@
                 readonly
                 (dateChange)="
                   calculateGainTypeOrIndexCost(
-                    'forGainType',
-                    '',
+                    'forBoth',
+                    'indexCostOfAcquisition',
                     selectedFormGroup
                   );
                   calculateTotalCG(selectedFormGroup);
@@ -501,7 +501,7 @@
                     '',
                     selectedFormGroup
                   );
-                  calculateTotalCG(selectedFormGroup);
+                  calculateTotalCG(selectedFormGroup)
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
@@ -554,9 +554,7 @@
                 name="indexCostOfAcquisition"
                 maxlength="14"
                 readonly
-                (change)="
-                  calculateTotalCG(selectedFormGroup)
-                "
+                (change)="calculateTotalCG(selectedFormGroup)"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-error
@@ -577,9 +575,7 @@
                 name="sellExpense"
                 maxlength="14"
                 digitsOnly
-                (change)="
-                  calculateTotalCG(selectedFormGroup)
-                "
+                (change)="calculateTotalCG(selectedFormGroup)"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-error
