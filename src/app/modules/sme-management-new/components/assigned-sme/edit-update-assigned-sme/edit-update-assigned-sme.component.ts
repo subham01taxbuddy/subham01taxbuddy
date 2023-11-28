@@ -726,11 +726,13 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.utilsService.showSnackBar('Cases Limit for ITR Filers (Work Load) should not be zero');
         return;
       }
+
+      if (!this.smeObj?.['skillSetPlanIdList'] || this.smeObj?.['skillSetPlanIdList'].length === 0) {
+        this.utilsService.showSnackBar('Please select at least one ITR type');
+        return;
+      }
     }
-    if (this.smeObj?.['skillSetPlanIdList'].length === 0 || !this.smeObj?.['skillSetPlanIdList']) {
-      this.utilsService.showSnackBar('Please select at least one ITR type');
-      return;
-    }
+
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
       if (this.isBankDetailsFormChange || this.bankDetailsFormGroup.invalid) {
         this.utilsService.showSnackBar('Please verify bank details to continue.');
