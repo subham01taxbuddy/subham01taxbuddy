@@ -185,40 +185,44 @@ export class SpeculativeIncomeComponent implements OnInit {
         this.Copy_ITR_JSON.business.profitLossACIncomes.push(
           specBusinessIncome
         );
-      } else {
-        specBusiness[0].incomes = [];
+      }
 
-        (
-          this.specIncomeForm.controls['specIncomesArray'] as FormArray
-        ).controls.forEach((form: FormGroup) => {
-          specBusiness[0].incomes.push(form.value);
-        });
-
-        console.log(specBusiness);
-        let grossProfit = 0;
-        let netIncome = 0;
-
-        specBusiness[0].incomes.forEach((element) => {
-          grossProfit += element.grossProfit;
-          netIncome += element.grossProfit - element.expenditure;
-        });
-        console.log(grossProfit, netIncome, 'totalOfGP');
-
-        specBusiness[0].totalgrossProfitFromSpeculativeIncome = grossProfit;
-        specBusiness[0].netProfitfromSpeculativeIncome = netIncome;
-
-        let index = this.Copy_ITR_JSON.business.profitLossACIncomes.findIndex(
-          (item) => item?.businessType === 'SPECULATIVEINCOME'
+      if (specBusiness.length === 0) {
+        specBusiness = this.Copy_ITR_JSON.business?.profitLossACIncomes?.filter(
+          (acIncome) => acIncome?.businessType === 'SPECULATIVEINCOME'
         );
+      }
 
-        if (index || index === 0) {
-          this.Copy_ITR_JSON.business.profitLossACIncomes[index] =
-            specBusiness[0];
-        } else {
-          this.Copy_ITR_JSON.business.profitLossACIncomes?.push(
-            specBusiness[0]
-          );
-        }
+      specBusiness[0].incomes = [];
+
+      (
+        this.specIncomeForm?.controls['specIncomesArray'] as FormArray
+      )?.controls?.forEach((form: FormGroup) => {
+        specBusiness[0]?.incomes?.push(form?.value);
+      });
+
+      console.log(specBusiness);
+      let grossProfit = 0;
+      let netIncome = 0;
+
+      specBusiness[0]?.incomes?.forEach((element) => {
+        grossProfit += element?.grossProfit;
+        netIncome += element?.grossProfit - element?.expenditure;
+      });
+      console.log(grossProfit, netIncome, 'totalOfGP');
+
+      specBusiness[0].totalgrossProfitFromSpeculativeIncome = grossProfit;
+      specBusiness[0].netProfitfromSpeculativeIncome = netIncome;
+
+      let index = this.Copy_ITR_JSON.business?.profitLossACIncomes?.findIndex(
+        (item) => item?.businessType === 'SPECULATIVEINCOME'
+      );
+
+      if (index || index === 0) {
+        this.Copy_ITR_JSON.business.profitLossACIncomes[index] =
+          specBusiness[0];
+      } else {
+        this.Copy_ITR_JSON.business.profitLossACIncomes?.push(specBusiness[0]);
       }
 
       console.log(this.Copy_ITR_JSON);
