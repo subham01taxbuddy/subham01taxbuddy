@@ -333,8 +333,8 @@
                 placeholder="DD/MM/YYYY"
                 (dateChange)="
                   calculateGainTypeOrIndexCost(
-                    'forBoth',
-                    'indexCostOfAcquisition',
+                    'forGainType',
+                    '',
                     selectedFormGroup
                   );
                   calculateTotalCG(selectedFormGroup);
@@ -371,8 +371,8 @@
                 readonly
                 (dateChange)="
                   calculateGainTypeOrIndexCost(
-                    'forBoth',
-                    'indexCostOfAcquisition',
+                    'forGainType',
+                    '',
                     selectedFormGroup
                   );
                   calculateTotalCG(selectedFormGroup);
@@ -501,7 +501,7 @@
                     '',
                     selectedFormGroup
                   );
-                  calculateTotalCG(selectedFormGroup)
+                  calculateTotalCG(selectedFormGroup);
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
@@ -544,13 +544,7 @@
               >
             </mat-form-field>
           </div>
-          <div
-            class="col-sm-4"
-            *ngIf="
-              bondType !== 'listed' &&
-              selectedFormGroup?.controls['gainType'].value === 'LONG'
-            "
-          >
+          <div class="col-sm-4" *ngIf="bondType !== 'listed'">
             <mat-label>Indexed cost of acquisition</mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -560,7 +554,9 @@
                 name="indexCostOfAcquisition"
                 maxlength="14"
                 readonly
-                (change)="calculateTotalCG(selectedFormGroup)"
+                (change)="
+                  calculateTotalCG(selectedFormGroup)
+                "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-error
@@ -581,7 +577,9 @@
                 name="sellExpense"
                 maxlength="14"
                 digitsOnly
-                (change)="calculateTotalCG(selectedFormGroup)"
+                (change)="
+                  calculateTotalCG(selectedFormGroup)
+                "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-error
@@ -700,13 +698,6 @@
                         placeholder="Year of Improvement"
                         name="financialYearOfImprovement"
                         formControlName="financialYearOfImprovement"
-                        (blur)="
-                          calculateGainTypeOrIndexCost(
-                            'forIndexation',
-                            'improvement',
-                            selectedFormGroup
-                          )
-                        "
                         required
                       >
                         <mat-option

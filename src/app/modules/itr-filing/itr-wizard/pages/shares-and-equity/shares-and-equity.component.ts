@@ -503,7 +503,7 @@ export class SharesAndEquityComponent
               );
               if (this.deduction && this.deductionForm.valid) {
                 this.calculateDeductionGain();
-              } else if (!this.deductionForm.valid && this.deduction) {
+              } else {
                 this.utilsService.showSnackBar(
                   'Please make sure deduction details are entered correctly'
                 );
@@ -658,103 +658,83 @@ export class SharesAndEquityComponent
         });
       }
     }
-    this.getImprovementYears();
 
     if (type === 'forIndexation' || type === 'forBoth') {
       if (this.bondType !== 'listed') {
-        if (securities.controls['gainType'].value === 'LONG') {
-          let improvementsArray = this.selectedFormGroup?.controls[
-            'improvementsArray'
-          ] as FormGroup;
+        let improvementsArray = this.selectedFormGroup?.controls[
+          'improvementsArray'
+        ] as FormGroup;
 
-          let selectedYear = moment(
-            this.selectedFormGroup?.controls['sellDate']?.value
-          );
+        let selectedYear = moment(
+          this.selectedFormGroup?.controls['sellDate']?.value
+        );
 
-          let sellFinancialYear =
-            selectedYear.get('month') > 2
-              ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
-              : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
+        let sellFinancialYear =
+          selectedYear.get('month') > 2
+            ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
+            : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
 
-          // for improvements indexation
-          let costOfImprovement = parseFloat(
-            improvementsArray?.controls['costOfImprovement'].value
-          );
-          let improvementFinancialYear =
-            improvementsArray?.controls['financialYearOfImprovement'].value;
+        // for improvements indexation
+        let costOfImprovement = parseFloat(
+          improvementsArray?.controls['costOfImprovement'].value
+        );
+        let improvementFinancialYear =
+          improvementsArray?.controls['financialYearOfImprovement'].value;
 
-          // for cost of acquisition index
-          let selectedPurchaseYear = moment(
-            this.selectedFormGroup?.controls['purchaseDate'].value
-          );
-          let purchaseFinancialYear =
-            selectedPurchaseYear.get('month') > 2
-              ? selectedPurchaseYear.get('year') +
-                '-' +
-                (selectedPurchaseYear.get('year') + 1)
-              : selectedPurchaseYear.get('year') -
-                1 +
-                '-' +
-                selectedPurchaseYear.get('year');
+        // for cost of acquisition index
+        let selectedPurchaseYear = moment(
+          this.selectedFormGroup?.controls['purchaseDate'].value
+        );
+        let purchaseFinancialYear =
+          selectedPurchaseYear.get('month') > 2
+            ? selectedPurchaseYear.get('year') +
+              '-' +
+              (selectedPurchaseYear.get('year') + 1)
+            : selectedPurchaseYear.get('year') -
+              1 +
+              '-' +
+              selectedPurchaseYear.get('year');
 
-          let costOfAcquistion = parseFloat(
-            this.selectedFormGroup?.controls['purchaseCost'].value
-          );
+        let costOfAcquistion = parseFloat(
+          this.selectedFormGroup?.controls['purchaseCost'].value
+        );
 
-          let req = {
-            cost:
-              typeOfIndexation !== 'improvement'
-                ? costOfAcquistion
-                : costOfImprovement,
-            purchaseOrImprovementFinancialYear:
-              typeOfIndexation !== 'improvement'
-                ? purchaseFinancialYear
-                : improvementFinancialYear,
-            assetType:
-              this.bondType === 'listed'
-                ? 'EQUITY_SHARES_LISTED'
-                : 'EQUITY_SHARES_UNLISTED',
-            buyDate: this.selectedFormGroup?.controls['purchaseDate'].value,
-            sellDate: this.selectedFormGroup?.controls['sellDate'].value,
-            sellFinancialYear: sellFinancialYear,
-          };
+        let req = {
+          cost:
+            typeOfIndexation !== 'improvement'
+              ? costOfAcquistion
+              : costOfImprovement,
+          purchaseOrImprovementFinancialYear:
+            typeOfIndexation !== 'improvement'
+              ? purchaseFinancialYear
+              : improvementFinancialYear,
+          assetType:
+            this.bondType === 'listed'
+              ? 'EQUITY_SHARES_LISTED'
+              : 'EQUITY_SHARES_UNLISTED',
+          buyDate: this.selectedFormGroup?.controls['purchaseDate'].value,
+          sellDate: this.selectedFormGroup?.controls['sellDate'].value,
+          sellFinancialYear: sellFinancialYear,
+        };
 
-          const param = `/calculate/indexed-cost`;
-          this.itrMsService.postMethod(param, req).subscribe((res: any) => {
-            console.log('INDEX COST : ', res);
+        const param = `/calculate/indexed-cost`;
+        this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+          console.log('INDEX COST : ', res);
 
-            if (typeOfIndexation !== 'improvement') {
-              this.selectedFormGroup?.controls[
-                'indexCostOfAcquisition'
-              ]?.setValue(res?.data?.costOfAcquisitionOrImprovement);
-              this.calculateTotalCG(securities);
-            } else {
-              (
-                this.selectedFormGroup?.controls[
-                  'improvementsArray'
-                ] as FormGroup
-              )?.controls['indexCostOfImprovement']?.setValue(
-                res?.data?.costOfAcquisitionOrImprovement
-              );
-              this.calculateTotalCG(securities);
-            }
-          });
-        } else if (typeOfIndexation !== 'improvement') {
-          this.selectedFormGroup?.controls['indexCostOfAcquisition']?.setValue(
-            0
-          );
-          this.getImprovementYears();
-          this.calculateTotalCG(securities);
-        } else {
-          (
-            this.selectedFormGroup?.controls['improvementsArray'] as FormGroup
-          )?.controls['indexCostOfImprovement']?.setValue(
-            (this.selectedFormGroup?.controls['improvementsArray'] as FormGroup)
-              ?.controls['costOfImprovement']?.value
-          );
-          this.getImprovementYears();
-          this.calculateTotalCG(securities);
-        }
+          if (typeOfIndexation !== 'improvement') {
+            this.selectedFormGroup?.controls[
+              'indexCostOfAcquisition'
+            ]?.setValue(res?.data?.costOfAcquisitionOrImprovement);
+            this.calculateTotalCG(securities);
+          } else {
+            (
+              this.selectedFormGroup?.controls['improvementsArray'] as FormGroup
+            )?.controls['indexCostOfImprovement']?.setValue(
+              res?.data?.costOfAcquisitionOrImprovement
+            );
+            this.calculateTotalCG(securities);
+          }
+        });
       }
     }
   }
@@ -882,30 +862,9 @@ export class SharesAndEquityComponent
           assetDetails = assetDetails.concat(obj.assetDetails);
         });
       }
-
-      const securitiesImprovement = [];
-
-      const securitiesArray = <FormArray>(
-        this.securitiesForm.get('securitiesArray')
-      );
-      securitiesArray.controls.forEach((element) => {
-        let securityImprovement = (element as FormGroup).controls[
-          'improvementsArray'
-        ].value;
-
-        securitiesImprovement?.push({
-          srn: (element as FormGroup).controls['srn'].value,
-          dateOfImprovement: securityImprovement?.dateOfImprovement,
-          costOfImprovement: securityImprovement?.costOfImprovement,
-          indexCostOfImprovement: securityImprovement?.indexCostOfImprovement,
-          financialYearOfImprovement:
-            securityImprovement?.financialYearOfImprovement,
-        });
-      });
-
-      // const securitiesImprovement =
-      //   this.securitiesForm?.get('improvementsArray')?.value;
-      // // if (assetDetails.length > 0) {
+      const securitiesImprovement =
+        this.securitiesForm?.get('improvementsArray')?.value;
+      // if (assetDetails.length > 0) {
       //   this.deductionForm.reset();
       // }
 
@@ -927,21 +886,6 @@ export class SharesAndEquityComponent
         assetDetails: assetDetails,
       };
       console.log('securitiesData', securitiesData);
-
-      securitiesData.improvement.forEach((element) => {
-        securitiesData.assetDetails.forEach((item) => {
-          if (element.srn === item.srn) {
-            item.costOfImprovement = element.indexCostOfImprovement;
-          }
-        });
-      });
-
-      securitiesData.assetDetails.forEach((element) => {
-        if (element.gainType === 'SHORT') {
-          element.indexCostOfAcquisition = 0;
-        }
-      });
-      console.log(securitiesData);
 
       if (securitiesIndex >= 0) {
         if (securitiesData.assetDetails.length > 0) {
@@ -1072,21 +1016,7 @@ export class SharesAndEquityComponent
             }
           }
 
-          sameData.improvement.forEach((element) => {
-            sameData.assetDetails.forEach((item) => {
-              if (element.srn === item.srn) {
-                item.costOfImprovement = element.indexCostOfImprovement;
-              }
-            });
-          });
-
-          sameData.assetDetails.forEach((element) => {
-            if (element.gainType === 'SHORT') {
-              element.indexCostOfAcquisition = 0;
-            }
-          });
           this.Copy_ITR_JSON.capitalGain[securitiesIndex] = sameData;
-
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
         } else {
           let otherData = this.Copy_ITR_JSON.capitalGain[
