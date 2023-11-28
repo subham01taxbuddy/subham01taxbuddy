@@ -332,7 +332,11 @@
                 [matDatepicker]="sellDate"
                 placeholder="DD/MM/YYYY"
                 (dateChange)="
-                  calculateGainType(selectedFormGroup);
+                  calculateGainTypeOrIndexCost(
+                    'forGainType',
+                    '',
+                    selectedFormGroup
+                  );
                   calculateTotalCG(selectedFormGroup);
                   calMaxPurchaseDate(selectedFormGroup.get('sellDate').value)
                 "
@@ -366,8 +370,13 @@
                 placeholder="DD/MM/YYYY"
                 readonly
                 (dateChange)="
-                  calculateGainType(selectedFormGroup);
-                  calculateTotalCG(selectedFormGroup)
+                  calculateGainTypeOrIndexCost(
+                    'forGainType',
+                    '',
+                    selectedFormGroup
+                  );
+                  calculateTotalCG(selectedFormGroup);
+                  getImprovementYears()
                 "
               />
               <mat-datepicker-toggle
@@ -487,9 +496,12 @@
                   this.bondType === 'listed'
                 "
                 (change)="
-                  calculateGainType(selectedFormGroup);
+                  calculateGainTypeOrIndexCost(
+                    'forGainType',
+                    '',
+                    selectedFormGroup
+                  );
                   calculateTotalCG(selectedFormGroup);
-                  calculateDeductionGain()
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
@@ -516,9 +528,34 @@
                   this.bondType === 'listed'
                 "
                 (change)="
-                  calculateGainType(selectedFormGroup);
-                  calculateTotalCG(selectedFormGroup);
-                  calculateDeductionGain()
+                  calculateGainTypeOrIndexCost(
+                    'forBoth',
+                    'indexCostOfAcquisition',
+                    selectedFormGroup
+                  )
+                "
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              />
+              <mat-error
+                *ngIf="
+                  selectedFormGroup.get('purchaseCost').hasError('pattern')
+                "
+                >Enter valid amount.</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4" *ngIf="bondType !== 'listed'">
+            <mat-label>Indexed cost of acquisition</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                formControlName="indexCostOfAcquisition"
+                placeholder="Indexed Cost Of Acquisition"
+                name="indexCostOfAcquisition"
+                maxlength="14"
+                readonly
+                (change)="
+                  calculateTotalCG(selectedFormGroup)
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
@@ -541,7 +578,7 @@
                 maxlength="14"
                 digitsOnly
                 (change)="
-                  calculateTotalCG(selectedFormGroup); calculateDeductionGain()
+                  calculateTotalCG(selectedFormGroup)
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
