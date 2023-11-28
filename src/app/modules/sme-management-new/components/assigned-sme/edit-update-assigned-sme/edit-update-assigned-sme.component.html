@@ -190,7 +190,8 @@
               </mat-form-field>
             </div>
             <div class="row mt-3 verifyBank">
-              <button class="col-2 tbd-btn" mat-raised-button color="primary" (click)="verifyBankDetails()">verify
+              <button class="col-2 tbd-btn" mat-raised-button color="primary"
+                [disabled]="bankDetailsFormGroup.invalid || loading" (click)="verifyBankDetails()">verify
               </button>
             </div>
           </div>
