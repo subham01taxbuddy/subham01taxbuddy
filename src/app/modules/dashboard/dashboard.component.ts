@@ -138,7 +138,7 @@ export class DashboardComponent implements OnInit {
     },
     eVerificationPending: {
       page: 0,
-      size: 5,
+      pageSize: 5,
     },
     scheduleCall: {
       page: 0,
