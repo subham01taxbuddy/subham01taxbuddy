@@ -134,7 +134,7 @@ export class DashboardComponent implements OnInit {
     },
     summaryConfirmation: {
       page: 0,
-      size: 5,
+      pageSize: 5,
     },
     eVerificationPending: {
       page: 0,
