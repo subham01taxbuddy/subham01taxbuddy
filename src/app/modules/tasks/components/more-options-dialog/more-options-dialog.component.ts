@@ -393,6 +393,7 @@ export class MoreOptionsDialogComponent implements OnInit {
         serviceType: this.data.serviceType,
         ownerName: this.data.ownerName,
         filerName: this.data.filerName,
+        filerUserId :this.data.filerUserId,
         userInfo: this.data
       },
     });
