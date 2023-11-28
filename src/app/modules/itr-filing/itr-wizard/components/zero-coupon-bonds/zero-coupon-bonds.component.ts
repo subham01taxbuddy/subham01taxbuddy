@@ -387,6 +387,7 @@ export class ZeroCouponBondsComponent
             bonds.controls['capitalGain'].setValue(0);
           }
           this.updateDeductionUI();
+          this.calculateDeductionGain();
         },
         (error) => {
           this.loading = false;

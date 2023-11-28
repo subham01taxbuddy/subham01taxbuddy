@@ -13,7 +13,7 @@
           <mat-label> Mobile No </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Mobile No" [formControl]="mobileNumber" class="input-field"
-              maxlength="10" minlength="6" trim [numbersOnly]="true" required readonly />
+              maxlength="10" minlength="6" trim [numbersOnly]="true" readonly />
           </mat-form-field>
         </div>
         <div class="col-sm-4">
@@ -37,7 +37,7 @@
           <mat-label> Pin Code </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="pin" [formControl]="pin" class="input-field" maxlength="10"
-              minlength="6" trim digitsOnly required readonly />
+              minlength="6" trim digitsOnly readonly />
 
           </mat-form-field>
         </div>
@@ -129,7 +129,7 @@
             this PAN</mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Pan" [formControl]="pan" class="input-field" maxlength="10" trim
-              required readonly />
+              readonly />
           </mat-form-field>
         </div>
 
@@ -150,7 +150,8 @@
               <mat-form-field appearance="outline">
                 <input type="text" matInput placeholder="Account No" formControlName="accountNumber" class="input-field"
                   trim [numbersOnly]="true" required maxlength="20" minlength="3"
-                  (blur)="trimValue(bankDetailsFormGroup.controls['accountNumber'])" />
+                  (blur)="trimValue(bankDetailsFormGroup.controls['accountNumber'])"
+                  (change)="updateBankDetailsForm()" />
                 <mat-error class="mt-3"
                   *ngIf="bankDetailsFormGroup.controls['accountNumber'].hasError('pattern') || bankDetailsFormGroup.controls['accountNumber'].hasError('minlength') || bankDetailsFormGroup.controls['accountNumber'].hasError('maxlength')">
                   Account number should be 3-20 digits.</mat-error>
@@ -165,7 +166,7 @@
                 <input type="text" matInput placeholder="IFSC code"
                   (blur)="trimValue(bankDetailsFormGroup.controls['ifsCode'])"
                   (keyup)="changeToUpper(bankDetailsFormGroup.controls['ifsCode'])" formControlName="ifsCode"
-                  class="input-field" maxLength="11" trim required />
+                  class="input-field" maxLength="11" trim required (change)="updateBankDetailsForm()" />
                 <mat-error class="mt-3" *ngIf="bankDetailsFormGroup.controls['ifsCode'].hasError('pattern')">Enter
                   valid
                   IFSC.</mat-error>
@@ -178,7 +179,8 @@
             <div class="col-sm-3">
               <mat-label> Type of Account* </mat-label>
               <mat-form-field appearance="outline">
-                <mat-select placeholder="Account Type" name="accountType" formControlName="accountType" required>
+                <mat-select placeholder="Account Type" name="accountType" formControlName="accountType" required
+                  (selectionChange)="updateBankDetailsForm()">
                   <mat-option *ngFor="let account of accountTypeDropdown" [value]="account.value">
                     {{ account.label }}
                   </mat-option>
@@ -188,7 +190,8 @@
               </mat-form-field>
             </div>
             <div class="row mt-3 verifyBank">
-              <button class="col-2 tbd-btn" mat-raised-button color="primary" (click)="verifyBankDetails()">verify
+              <button class="col-2 tbd-btn" mat-raised-button color="primary"
+                [disabled]="bankDetailsFormGroup.invalid || loading" (click)="verifyBankDetails()">verify
               </button>
             </div>
           </div>
@@ -196,7 +199,7 @@
       </div>
     </div>
 
-    <div class="row mt-3" *ngIf="!smeObj?.internal && smeObj?.['partnerType']!=='CHILD'">
+    <div class="row mt-3" *ngIf="!smeObj?.internal && smeObj?.['partnerType']==='PRINCIPAL'">
       <div class="col-sm-4">
         <div class="card">
           <b style="font-size: 18px">Additional ID's Required?</b>
@@ -216,7 +219,7 @@
         <mat-label> No of additional Id's required </mat-label>
         <mat-form-field appearance="outline">
           <input type="text" matInput placeholder="Mobile No" [formControl]="additionalIdsCount" class="input-field"
-            maxlength="10" minlength="6" trim [numbersOnly]="true" required readonly />
+            maxlength="10" minlength="6" trim [numbersOnly]="true" readonly />
         </mat-form-field>
       </div>
     </div>
@@ -384,7 +387,7 @@
     <hr>
     <div class="container" style="margin-top: 20px;">
       <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-3" *ngIf="!hideSectionForAdmin">
           <mat-label>Parent Name </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Name" [formControl]="parentName" class="input-field" readonly />

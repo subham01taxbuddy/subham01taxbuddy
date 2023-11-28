@@ -93,6 +93,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   disableNoticeService: boolean;
   hideOtherServicesForFiler: boolean;
   disableGstService: boolean;
+  hideSectionForAdmin: boolean;
+  smeDetails: any;
+  isBankDetailsFormChange: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -101,8 +104,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     private _toastMessageService: ToastMessageService,
     private location: Location,
     private router: Router,
-    private itrMsService: ItrMsService
+    private itrMsService: ItrMsService,
+    private reportService: ReportService
   ) {
+    this.smeObj = JSON.parse(sessionStorage.getItem('smeObject'))?.data;
     this.languageForm = this.fb.group({});
     this.langList.forEach((lang) => {
       this.languageForm.addControl(lang, new FormControl(false));
@@ -127,10 +132,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.loggedInSmeRoles = this.loggedInSme[0]?.roles;
-    this.smeObj = JSON.parse(sessionStorage.getItem('smeObject'))?.data;
     this.smeFormGroup.patchValue(this.smeObj);
     this.otherSmeInfo.patchValue(this.smeObj);
     this.smeObj?.roles.includes('ROLE_LEADER') ? this.hideAssignmentOnOff = true : false;
+    this.smeObj?.roles.includes('ROLE_ADMIN') ? this.hideSectionForAdmin = true : false;
     this.setSmeRoles();
     this.getSmePartnerType();
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
@@ -146,19 +151,44 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       this.itrPlanList = response;
       if (this.itrPlanList.length) {
         this.itrPlanList = this.itrPlanList.filter(element => element.name != 'Business and Profession with Balance sheet & PNL- Rs. 3499');
-        this.itrPlanList.forEach(element => {
-          this.irtTypeCapability.push(element.name);
-          this.irtTypeCapability.forEach((itrType) => {
-            this.itrTypeForm.addControl(itrType, new FormControl(false));
-          })
-          this.setPlanDetails();
-        });
+        if (this.smeObj?.['partnerType'] === 'CHILD') {
+          this.getPrincipalDetails(this.itrPlanList);
+        } else {
+          this.itrPlanList.forEach(element => {
+            this.irtTypeCapability.push(element.name);
+            this.irtTypeCapability.forEach((itrType) => {
+              this.itrTypeForm.addControl(itrType, new FormControl(false));
+            })
+            this.setPlanDetails();
+          });
+        }
       }
     },
       error => {
         this.loading = false;
         this.utilsService.showSnackBar('Failed to get selected plan details');
       });
+
+  }
+  getPrincipalDetails(itrPlanList) {
+    let param = `/bo/sme-details-new/${this.smeObj?.['parentPrincipalUserId']}`
+    this.reportService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.smeDetails = response.data[0];
+        itrPlanList.forEach(element => {
+          this.smeDetails?.skillSetPlanIdList.forEach(item => {
+            if (element.planId === item) {
+              this.irtTypeCapability.push(element.name);
+              this.irtTypeCapability.forEach((itrType) => {
+                this.itrTypeForm.addControl(itrType, new FormControl(false));
+              })
+            }
+          });
+          this.setPlanDetails();
+        });
+      }
+    })
   }
 
   setSmeRoles() {
@@ -518,7 +548,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
 
   bankDetailsFormGroup: FormGroup = this.fb.group({
     accountType: ['', [Validators.required]],
-    ifsCode: ['', [Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]],
+    ifsCode: ['', [Validators.required, Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]],
     accountNumber: ['', [Validators.required]],
   })
 
@@ -672,9 +702,11 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     });
   }
 
-  updateSmeDetails() {
-    debugger
+  updateBankDetailsForm() {
+    this.isBankDetailsFormChange = true;
+  }
 
+  updateSmeDetails() {
     if (this.smeObj?.roles.includes('ROLE_FILER')) {
       if (this.smeObj['languages'].length) {
         const lang = this.smeObj['languages'].filter(element => element === 'English')
@@ -695,8 +727,12 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         return;
       }
     }
+    if (this.smeObj?.['skillSetPlanIdList'].length === 0 || !this.smeObj?.['skillSetPlanIdList']) {
+      this.utilsService.showSnackBar('Please select at least one ITR type');
+      return;
+    }
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
-      if (!this.isBankValid) {
+      if (this.isBankDetailsFormChange || this.bankDetailsFormGroup.invalid) {
         this.utilsService.showSnackBar('Please verify bank details to continue.');
         return;
       } else {
@@ -734,7 +770,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         }
       }, 500);
     }
-    // }
   }
 
   cancelUpdate() {
@@ -784,31 +819,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     }
   }
 
-  getCoOwnerHistory() {
-    // 'https://uat-api.taxbuddy.com/user/coOwner-details/10341'
-    const userId = this.smeObj.userId;
-    const param = `/coOwner-details/${userId}`;
-    this.loading = true;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('get Co-Owner history  -> ', result);
-      this.loading = false;
-      this.coOwnerData = (result.data);
-      // let datePipe = new DatePipe('en-IN')
-
-      // this.coOwnerData={
-      //   "Co-Owner-Name" : (result?.data?.coOwnerName) || 'NA',
-      //   "Start Date" :(datePipe.transform(result?.data?.coOwnershipStartDateTime,'dd/MM/yyyy')) || 'NA',
-      //   "End Date" : (datePipe.transform(result?.data?.coOwnershipEndDateTime,'dd/MM/yyyy')) || 'NA',
-      // }
-
-      // if (result.success === false) {
-      //     this._toastMessageService.alert('false', result.message
-      //     );
-      // }
-
-    })
-    this.loading = false
-  }
 
   convertToDDMMYY(date) {
     if (this.utilsService.isNonEmpty(date)) {
@@ -829,21 +839,19 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     console.log(date)
   }
 
-  // this.leaveStartDate = moment(new Date(this.form.controls.myDate.value)).format("YYYY/MM/DD").toString();
-
-
   verifyBankDetails() {
     if (this.bankDetailsFormGroup.valid) {
+      this.loading = true;
       let accountNumber = this.bankDetailsFormGroup.controls['accountNumber'].value;
       let ifsc = this.bankDetailsFormGroup.controls['ifsCode'].value;
       let param = `/validate-bankDetails?account_number=${accountNumber}&ifsc=${ifsc}&consent=Y`;
-
       this.userMsService.getMethod(param).subscribe((res: any) => {
-        console.log(res);
+        this.loading = false;
         if (res.data && res.success) {
           if (res.data?.data?.code === '1000') {
             //valid bank details
             this.isBankValid = true;
+            this.isBankDetailsFormChange = false;
             this.validateBankDetails = res.data?.data?.bank_account_data;
             this.utilsService.showSnackBar(`${res.data.data.message}`);
           } else {

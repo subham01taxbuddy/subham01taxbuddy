@@ -13,6 +13,10 @@ import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confir
 import { UserMsService } from '../../../../../services/user-ms.service';
 import * as moment from 'moment/moment';
 import { NonNullExpression } from 'typescript';
+import {AisCredsDialogComponent} from "../../../../../pages/itr-filing/ais-creds-dialog/ais-creds-dialog.component";
+import {Storage} from "@aws-amplify/storage";
+import {environment} from "../../../../../../environments/environment";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Component({
   selector: 'app-prefill-id',
@@ -25,9 +29,12 @@ export class PrefillIdComponent implements OnInit {
   @Output() jsonUploaded: EventEmitter<any> = new EventEmitter();
   @Output() skipPrefill: EventEmitter<any> = new EventEmitter();
   downloadPrefillChecked: boolean = false;
+  downloadAisChecked: boolean = false;
   uploadPrefillChecked: boolean = false;
+  uploadAisChecked: boolean = false;
   uploadJsonChecked: boolean = false;
   downloadPrefill: boolean = false;
+  downloadAis: boolean = false;
   uploadDoc: any;
   loading = false;
   showEriView = false;
@@ -52,7 +59,9 @@ export class PrefillIdComponent implements OnInit {
     private userService: UserMsService,
     public utilsService: UtilsService,
     private dialog: MatDialog,
-    private titlecasePipe: TitleCasePipe
+    private aisDialog: MatDialog,
+    private titlecasePipe: TitleCasePipe,
+    private httpClient: HttpClient
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     sessionStorage.setItem(
@@ -61,6 +70,7 @@ export class PrefillIdComponent implements OnInit {
     );
   }
 
+  customerName:any;
   ngOnInit(): void {
     let name = this.getCustomerName();
     this.utilsService
@@ -70,15 +80,16 @@ export class PrefillIdComponent implements OnInit {
         (this.userProfile = result),
           console.log(this.userProfile, 'USERPROFILE');
 
+        this.customerName = this.utilsService.isNonEmpty(name)
+          ? name
+          : result.fName + ' ' + result.lName;
         this.data = {
           userId: this.ITR_JSON.userId,
           panNumber: result.panNumber
             ? result.panNumber
             : this.ITR_JSON.panNumber,
           assessmentYear: this.ITR_JSON.assessmentYear,
-          name: this.utilsService.isNonEmpty(name)
-            ? name
-            : result.fName + ' ' + result.lName,
+          name: this.customerName,
           itrId: this.ITR_JSON.itrId,
           eriClientValidUpto: result.eriClientValidUpto,
         };
@@ -1212,7 +1223,7 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
-  // mapping the uploaded json. Main funciton of parsing
+  // mapping the uploaded json. Main function of parsing
   mapItrJson(ItrJSON: any) {
     try {
       // ITR_Obj IS THE TB ITR OBJECT
@@ -5465,6 +5476,9 @@ export class PrefillIdComponent implements OnInit {
   upload(type: string) {
     if (type == 'pre-filled') {
       document.getElementById('input-jsonfile-id').click();
+    } else if (type == 'ais') {
+      document.getElementById('input-aisjson-id').click();
+      return;
     } else if (type == 'utility') {
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         width: '500px',
@@ -5582,7 +5596,110 @@ export class PrefillIdComponent implements OnInit {
     this.downloadPrefill = true;
   }
 
-  sendEmail(uploadedJson) {
+  /*****AIS code starts*****/
+  addAisCredentials() {
+
+    const dialogRef = this.dialog.open(AisCredsDialogComponent, {
+      width: '500px',
+      data: {
+        name: this.customerName,
+        userId: this.data.userId,
+      },
+    });
+
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+      if (result === 'YES') {
+        this.ITR_JSON = this.utilsService.createEmptyJson(
+          this.userProfile,
+          this.ITR_JSON.assessmentYear,
+          this.ITR_JSON.financialYear,
+          this.ITR_JSON.itrId,
+          this.ITR_JSON.filingTeamMemberId,
+          this.ITR_JSON.id,
+          this.ITR_JSON
+        );
+
+        sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_JSON)
+        );
+
+        document.getElementById('input-utility-file-jsonfile-id').click();
+      }
+    });
+
+  }
+
+  downloadAisOpt() {
+    this.downloadAis = true;
+    this.addAisCredentials();
+  }
+
+  uploadAisJsonFile(event: Event) {
+    let file = (event.target as HTMLInputElement).files;
+    console.log('File in ais', file);
+    if (file.length > 0) {
+      this.uploadDoc = file.item(0);
+
+      let reqUrl = `/cloud/signed-s3-url-by-type?fileName=${this.uploadDoc.name}`;
+      this.itrMsService.getMethod(reqUrl).subscribe((result: any) => {
+          if (result && result.data) {
+            let signedUrl = result.data.s3SignedUrl
+            this.uploadFileS3(this.uploadDoc, signedUrl);
+          } else {
+            this.loading = false;
+            this.utilsService.showSnackBar("Error while uploading ais json");
+          }
+        }, ((err: any) => {
+          this.loading = false;
+          this.utilsService.showSnackBar("Error while uploading ais json" + JSON.stringify(err));
+        })
+      );
+
+      //read the file to get details upload and validate
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        let jsonRes = e.target.result;
+        console.log('fileText:',jsonRes);
+      };
+      reader.readAsText(this.uploadDoc);
+    }
+  }
+
+  uploadFileS3(uploadDoc, signedUrl){
+
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/json');
+    headers = headers.append('Accept', 'application/json');
+    headers = headers.append('X-Upload-Content-Length', uploadDoc.size.toString());
+    headers = headers.append('X-Upload-Content-Type', 'application/octet-stream');
+    // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
+    this.httpClient.put(signedUrl, uploadDoc, {headers: headers}).subscribe((result: any) => {
+      //call the decrypt api
+      let url = '/upload-ais-json';
+      let request = {
+        userId: this.data.userId,
+        fileName: uploadDoc.name
+      }
+      this.itrMsService.postMethod(url, request).subscribe((result: any)=>{
+        this.loading = false;
+        console.log(result);
+      }, error => {
+        console.log('error in decrypting ais json', error);
+        this.loading = false;
+        this.utilsService.showSnackBar(error.error.message);
+      });
+    },(err: any) => {
+      this.loading = false;
+      this.utilsService.showSnackBar("Error while uploading ais json" + JSON.stringify(err));
+    });
+  }
+
+  /*****AIS code ends*****/
+
+  sendEmail(uploadedJson){
     this.loading = true;
 
     var data = new FormData();
@@ -5722,28 +5839,4 @@ export class PrefillIdComponent implements OnInit {
     }
   }
 
-  // upload(type: string) {
-  //   if (type == 'pre-filled') {
-  //     document.getElementById('input-jsonfile-id').click();
-  //   } else if (type == 'utility') {
-  //     document.getElementById('input-utility-file-jsonfile-id').click();
-  //     const dialogRef = this.dialog.open(KommunicateDialogComponent, {
-  //       width: '250px',
-  //       data: {
-  //         message:
-  //           'Once you upload a JSON all the existing changes if any will be discarded, and you cannot edit the details once you have uploaded the JSON. If edit is done, the TaxBuddy JSON will be generated and the same will be filed.',
-  //       },
-  //     });
-
-  //     dialogRef.afterClosed().subscribe((result) => {
-  //       if (result === 'yes') {
-  //         this.utilsService.createEmptyJson(
-  //           this.ITR_JSON.userId,
-  //           this.ITR_JSON.assessmentYear,
-  //           this.ITR_JSON.financialYear
-  //         );
-  //       }
-  //     });
-  //   }
-  // }
 }
