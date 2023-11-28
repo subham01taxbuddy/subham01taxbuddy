@@ -4,9 +4,10 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
-import { GridOptions } from 'ag-grid-community';
+import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import * as moment from 'moment';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
+import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
@@ -79,28 +80,38 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
   selectedLangControl = new FormControl('');
   itrCapabilities: any = [];
   selectedITRCapabilityControl = new FormControl('');
+  allFilerList: any;
+  itrPlanList: any;
   constructor(
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private router: Router,
-    private http: HttpClient,
-    private matDialog: MatDialog,
     private reviewService: ReviewService,
     private genericCsvService: GenericCsvService,
     private cacheManager: CacheManager,
     private itrService: ItrMsService,
     private reportService: ReportService,
+    private itrMsService: ItrMsService,
     @Inject(LOCALE_ID) private locale: string
   ) {
+    this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'));
+    this.getPlanDetails();
     this.smeListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.smeCreateColumnDef(),
+      columnDefs: [],
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => { },
 
       sortable: true,
+      defaultColDef: {
+        resizable: true,
+        cellRendererFramework: AgTooltipComponent,
+        cellRendererParams: (params: ICellRendererParams) => {
+          this.formatToolTip(params.data);
+        },
+      },
     };
     this.config = {
       itemsPerPage: 15,
@@ -129,6 +140,13 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
       this.dataOnLoad = false;
     }
   }
+
+  formatToolTip(params: any) {
+    let temp = params.value;
+    const lineBreak = false;
+    return { temp, lineBreak };
+  }
+
   clearValue() {
     this.searchVal = "";
     this.leaderId = null;
@@ -549,7 +567,25 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     this.sortBy = object;
   }
 
-  smeCreateColumnDef() {
+  getPlanDetails() {
+    this.loading = true;
+    let param = '/plans-master?serviceType=ITR&isActive=true';
+    this.itrMsService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      this.itrPlanList = response;
+      if (this.itrPlanList.length) {
+        this.itrPlanList = this.itrPlanList.filter(element => element.name != 'Business and Profession with Balance sheet & PNL- Rs. 3499');
+        this.smeListGridOptions.api.setColumnDefs(
+          this.smeCreateColumnDef(this.allFilerList, this.itrPlanList));
+      }
+    },
+      error => {
+        this.loading = false;
+      });
+
+  }
+
+  smeCreateColumnDef(allFilerList, itrPlanList) {
     return [
       {
         field: 'selection',
@@ -631,6 +667,44 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+      },
+      {
+        headerName: 'Parent Name/Leader Name',
+        field: 'parentName',
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'left', 'font-weight': 'bold' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Principal Name',
+        field: 'parentPrincipalUserId',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function (params) {
+          let createdUserId = parseInt(params?.data?.parentPrincipalUserId)
+          if (params?.data?.parentPrincipalUserId) {
+            let filer1 = allFilerList;
+            let filer = filer1?.filter((item) => {
+              return item.userId === createdUserId;
+            }).map((item) => {
+              return item.name;
+            });
+            return filer
+          } else {
+            return '-'
+          }
+        }
       },
       // {
       //   headerName: 'Roles',
@@ -839,18 +913,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           return session
         }
       },
-      {
-        headerName: 'Parent Name',
-        field: 'parentName',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'left', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
+
       {
         headerName: 'Language Proficiency',
         field: 'languages',
@@ -862,6 +925,33 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+      },
+      {
+        headerName: 'ITR Capabilities',
+        // field: 'skillSetPlanIdList',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function (params) {
+          if (params?.data?.skillSetPlanIdList) {
+            let plans = [];
+            itrPlanList?.forEach(element => {
+              params?.data?.skillSetPlanIdList.forEach(skill => {
+                if (element.planId === skill) {
+                  plans.push(element.name);
+                }
+              });
+            });
+            return plans.toString();
+          } else {
+            return '-'
+          }
+        }
       },
       {
         headerName: 'Call',
