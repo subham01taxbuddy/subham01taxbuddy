@@ -410,23 +410,23 @@ export class OtherInformationComponent implements OnInit {
   checkPAN(index?) {
     const panOfSpouse = this.schedule5AForm.get('panOfSpouse');
     const panOfSpouseValue = this.schedule5AForm
-      .get('panOfSpouse')
-      .value.toUpperCase();
+      ?.get('panOfSpouse')
+      ?.value?.toUpperCase();
 
     const partnerPan = (
       this.firmForm.controls['firmsArray'] as FormArray
-    ).controls[index ? index : 0]
-      .get('panNumber')
-      .value.toUpperCase();
+    )?.controls[index ? index : 0]
+      ?.get('panNumber')
+      ?.value?.toUpperCase();
     // pan should not be same as self Pan validation
-    if (panOfSpouseValue === this.ITR_JSON.panNumber) {
+    if (panOfSpouseValue && panOfSpouseValue === this.ITR_JSON.panNumber) {
       this.panRepeat = true;
     } else {
       this.panRepeat = false;
     }
 
     // pan should not be same as self Pan validation
-    if (partnerPan === this.ITR_JSON.panNumber) {
+    if (partnerPan && partnerPan === this.ITR_JSON.panNumber) {
       this.panPartnerRepeat = true;
     } else {
       this.panPartnerRepeat = false;
@@ -691,7 +691,6 @@ export class OtherInformationComponent implements OnInit {
     }
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    
 
     // Saving scheduleFaForm detail
     if (this.schedule5AForm?.valid) {
