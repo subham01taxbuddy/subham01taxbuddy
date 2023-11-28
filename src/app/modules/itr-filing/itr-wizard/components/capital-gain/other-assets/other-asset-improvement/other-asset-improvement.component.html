@@ -22,7 +22,8 @@
                 (blur)="calculateGainType()"
                 (dateChange)="
                   calculateGainType();
-                  calMaxPurchaseDate(assetsForm.get('sellDate')?.value)
+                  calMaxPurchaseDate(assetsForm.get('sellDate')?.value);
+                  calculateIndexCost('asset')
                 "
                 [min]="minDate"
                 [max]="maxDate"
@@ -45,7 +46,11 @@
                 [matDatepicker]="purchaseDate"
                 placeholder="Buy Date / Date of Acquisition"
                 (blur)="getImprovementYears(); calculateGainType()"
-                (dateChange)="getImprovementYears(); calculateGainType()"
+                (dateChange)="
+                  getImprovementYears();
+                  calculateGainType();
+                  calculateIndexCost('asset')
+                "
                 [max]="maxPurchaseDate"
               />
               <mat-datepicker-toggle
