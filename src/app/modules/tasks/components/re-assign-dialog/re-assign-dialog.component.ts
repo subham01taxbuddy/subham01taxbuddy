@@ -18,12 +18,18 @@ export class ReAssignDialogComponent implements OnInit {
   reAssignedFilerName: any;
   showOnlyLeader:boolean =false;
   showLeaderFiler : boolean = false;
+  isServiceGst:boolean =false;
 
   constructor(public dialogRef: MatDialogRef<ReAssignDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private userMsService: UserMsService,
     public utilsService: UtilsService
   ) {
+    if(this.data.serviceType === 'GST'){
+      this.isServiceGst=true;
+    }else{
+      this.serviceType =false;
+    }
     console.log('Selected UserID for reassignment',
       this.data.userId);
   }

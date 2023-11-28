@@ -5671,20 +5671,26 @@ export class PrefillIdComponent implements OnInit {
   uploadFileS3(uploadDoc, signedUrl){
 
     let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'text/plain');
-    headers = headers.append('Accept', 'text/plain');
+    headers = headers.append('Content-Type', 'application/json');
+    headers = headers.append('Accept', 'application/json');
     headers = headers.append('X-Upload-Content-Length', uploadDoc.size.toString());
     headers = headers.append('X-Upload-Content-Type', 'application/octet-stream');
     // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
     this.httpClient.put(signedUrl, uploadDoc, {headers: headers}).subscribe((result: any) => {
-      if (result && result.key) {
-        this.loading = false;
-        console.log('After AIS json upload -> ', result)
-
-      } else {
-        this.loading = false;
-        this.utilsService.showSnackBar("Error while uploading ais json");
+      //call the decrypt api
+      let url = '/upload-ais-json';
+      let request = {
+        userId: this.data.userId,
+        fileName: uploadDoc.name
       }
+      this.itrMsService.postMethod(url, request).subscribe((result: any)=>{
+        this.loading = false;
+        console.log(result);
+      }, error => {
+        console.log('error in decrypting ais json', error);
+        this.loading = false;
+        this.utilsService.showSnackBar(error.error.message);
+      });
     },(err: any) => {
       this.loading = false;
       this.utilsService.showSnackBar("Error while uploading ais json" + JSON.stringify(err));

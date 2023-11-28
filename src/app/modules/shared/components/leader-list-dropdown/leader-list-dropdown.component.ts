@@ -17,6 +17,7 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
   @Output() sendOwner = new EventEmitter<any>();
   @Input() disabled: any;
   @Input() showOwnerList =false;
+  @Input() forGstServiceType: boolean =false;
 
   smeList: any[] = [];
   searchOwner = new FormControl('');
@@ -135,9 +136,15 @@ export class LeaderListDropdownComponent implements OnInit,OnChanges {
 
   getLeaders() {
     // 'https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000?leader=true' \
+    //'https://api.taxbuddy.com/report/bo/sme-details-new/1067?leader=true&serviceType=GST
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
     let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
+
+    if (this.forGstServiceType) {
+      param = param + '&serviceType=GST';
+    }
+
     this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('new leader list result -> ', result);
       this.leaderList = result.data;

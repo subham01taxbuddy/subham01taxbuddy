@@ -7,7 +7,7 @@ font-weight: bold;">Re-Assign: {{data.clientName}}</label><button style="float: 
   <div class="col-sm-6" *ngIf="showOnlyLeader">
     <div >
       <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromOnlyLeader($event)"
-      [showOwnerList]="true"></app-leader-list-dropdown>
+      [showOwnerList]="true" [forGstServiceType]="isServiceGst"></app-leader-list-dropdown>
     </div>
   </div>
   <div class="col-sm-12" *ngIf="showLeaderFiler">
