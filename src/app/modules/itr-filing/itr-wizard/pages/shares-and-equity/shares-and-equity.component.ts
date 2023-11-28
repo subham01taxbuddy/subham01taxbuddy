@@ -501,6 +501,13 @@ export class SharesAndEquityComponent
               this.equityGridOptions.api?.setRowData(
                 this.getSecuritiesArray.controls
               );
+              if (this.deduction && this.deductionForm.valid) {
+                this.calculateDeductionGain();
+              } else {
+                this.utilsService.showSnackBar(
+                  'Please make sure deduction details are entered correctly'
+                );
+              }
             }
           });
           break;
@@ -860,6 +867,11 @@ export class SharesAndEquityComponent
       // if (assetDetails.length > 0) {
       //   this.deductionForm.reset();
       // }
+
+      let deductions: any;
+      if (assetDetails?.length > 0 && this.deduction) {
+        deductions = this.deductionForm.getRawValue();
+      }
       const securitiesData = {
         assessmentYear: this.ITR_JSON.assessmentYear,
         assesseeType: this.ITR_JSON.assesseeType,
@@ -868,7 +880,7 @@ export class SharesAndEquityComponent
           this.bondType === 'listed'
             ? 'EQUITY_SHARES_LISTED'
             : 'EQUITY_SHARES_UNLISTED',
-        deduction: !this.deduction ? [] : [this.deductionForm.getRawValue()],
+        deduction: deductions ? [deductions] : [],
         improvement: securitiesImprovement,
         buyersDetails: [],
         assetDetails: assetDetails,
@@ -952,6 +964,12 @@ export class SharesAndEquityComponent
       if (!securitiesArray.value) {
         this.deductionForm.reset();
       }
+
+      let deductions: any;
+      if (securitiesArray.length > 0 && this.deduction) {
+        deductions = this.deductionForm.getRawValue();
+      }
+
       const securitiesData = {
         assessmentYear: this.ITR_JSON.assessmentYear,
         assesseeType: this.ITR_JSON.assesseeType,
@@ -960,7 +978,7 @@ export class SharesAndEquityComponent
           this.bondType === 'listed'
             ? 'EQUITY_SHARES_LISTED'
             : 'EQUITY_SHARES_UNLISTED',
-        deduction: !this.deduction ? [] : [this.deductionForm.getRawValue()],
+        deduction: deductions ? [deductions] : [],
         improvement: securitiesImprovement,
         buyersDetails: [],
         assetDetails: securitiesArray.getRawValue(),
@@ -1008,6 +1026,10 @@ export class SharesAndEquityComponent
           );
           this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails =
             otherData;
+          if (otherData?.length === 0) {
+            this.Copy_ITR_JSON.capitalGain[securitiesIndex].deduction = [];
+            this.Copy_ITR_JSON.capitalGain[securitiesIndex].improvement = [];
+          }
         }
       } else {
         if (securitiesData.assetDetails.length > 0) {
@@ -1080,7 +1102,7 @@ export class SharesAndEquityComponent
     let ltcg = 0;
     let stcg = 0;
     let deduction = 0;
-    
+
     this.brokerList.forEach((broker) => {
       ltcg += broker.LTCG;
       stcg += broker.STCG;
@@ -1219,6 +1241,7 @@ export class SharesAndEquityComponent
       (item: FormGroup) => item.controls['hasEdit'].value !== true
     );
     this.equityGridOptions.api?.setRowData(this.getSecuritiesArray.controls);
+    this.updateDeductionUI();
   }
 
   // ====================OTHER FUNCTIONS======================

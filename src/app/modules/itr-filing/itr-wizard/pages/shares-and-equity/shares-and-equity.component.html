@@ -502,7 +502,6 @@
                     selectedFormGroup
                   );
                   calculateTotalCG(selectedFormGroup);
-                  calculateDeductionGain()
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
@@ -533,8 +532,7 @@
                     'forBoth',
                     'indexCostOfAcquisition',
                     selectedFormGroup
-                  );
-                  calculateDeductionGain()
+                  )
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
@@ -557,7 +555,7 @@
                 maxlength="14"
                 readonly
                 (change)="
-                  calculateTotalCG(selectedFormGroup); calculateDeductionGain()
+                  calculateTotalCG(selectedFormGroup)
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
@@ -580,7 +578,7 @@
                 maxlength="14"
                 digitsOnly
                 (change)="
-                  calculateTotalCG(selectedFormGroup); calculateDeductionGain()
+                  calculateTotalCG(selectedFormGroup)
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
