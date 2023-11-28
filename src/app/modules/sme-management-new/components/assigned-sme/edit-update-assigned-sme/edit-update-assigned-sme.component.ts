@@ -732,7 +732,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       return;
     }
     if (!this.smeObj?.internal && this.smeObj?.['partnerType'] !== 'CHILD') {
-      debugger
       if (this.isBankDetailsFormChange || this.bankDetailsFormGroup.invalid) {
         this.utilsService.showSnackBar('Please verify bank details to continue.');
         return;
@@ -771,7 +770,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         }
       }, 500);
     }
-    // }
   }
 
   cancelUpdate() {
@@ -821,31 +819,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     }
   }
 
-  getCoOwnerHistory() {
-    // 'https://uat-api.taxbuddy.com/user/coOwner-details/10341'
-    const userId = this.smeObj.userId;
-    const param = `/coOwner-details/${userId}`;
-    this.loading = true;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('get Co-Owner history  -> ', result);
-      this.loading = false;
-      this.coOwnerData = (result.data);
-      // let datePipe = new DatePipe('en-IN')
-
-      // this.coOwnerData={
-      //   "Co-Owner-Name" : (result?.data?.coOwnerName) || 'NA',
-      //   "Start Date" :(datePipe.transform(result?.data?.coOwnershipStartDateTime,'dd/MM/yyyy')) || 'NA',
-      //   "End Date" : (datePipe.transform(result?.data?.coOwnershipEndDateTime,'dd/MM/yyyy')) || 'NA',
-      // }
-
-      // if (result.success === false) {
-      //     this._toastMessageService.alert('false', result.message
-      //     );
-      // }
-
-    })
-    this.loading = false
-  }
 
   convertToDDMMYY(date) {
     if (this.utilsService.isNonEmpty(date)) {
@@ -866,17 +839,14 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     console.log(date)
   }
 
-  // this.leaveStartDate = moment(new Date(this.form.controls.myDate.value)).format("YYYY/MM/DD").toString();
-
-
   verifyBankDetails() {
     if (this.bankDetailsFormGroup.valid) {
+      this.loading = true;
       let accountNumber = this.bankDetailsFormGroup.controls['accountNumber'].value;
       let ifsc = this.bankDetailsFormGroup.controls['ifsCode'].value;
       let param = `/validate-bankDetails?account_number=${accountNumber}&ifsc=${ifsc}&consent=Y`;
-
       this.userMsService.getMethod(param).subscribe((res: any) => {
-        console.log(res);
+        this.loading = false;
         if (res.data && res.success) {
           if (res.data?.data?.code === '1000') {
             //valid bank details
