@@ -1030,36 +1030,44 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         'salaryDetails'
       ] as FormArray;
 
-      let perquisitesAmount = 0;
       let basicSalaryAmount = 0;
+      let perquisitesAmount = 0;
+      let profitsInLieuAmount = 0;
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       for (let i = 0; i < salaryDetails.controls.length; i++) {
         let salary = salaryDetails.controls[i] as FormGroup;
         if (
-          this.utilsService.isNonEmpty(salary.controls['salaryValue'].value)
+          this.utilsService.isNonEmpty(salary?.controls['salaryValue']?.value)
         ) {
-          if (salary.controls['salaryType'].value === 'SEC17_1') {
-            basicSalaryAmount = salary.controls['salaryValue'].value;
-            this.localEmployer.salary.push({
-              salaryType: 'SEC17_1',
-              taxableAmount: Number(salary.controls['salaryValue'].value),
-              exemptAmount: 0, //Number(this.salaryGridOptions.rowData[i].exemptAmount)
-            });
+          if (salary?.controls['salaryType']?.value === 'SEC17_1') {
+            basicSalaryAmount = Number(salary?.controls['salaryValue']?.value);
+            if (basicSalaryAmount && basicSalaryAmount !== 0) {
+              this.localEmployer.salary.push({
+                salaryType: 'SEC17_1',
+                taxableAmount: basicSalaryAmount,
+                exemptAmount: 0, //Number(this.salaryGridOptions.rowData[i].exemptAmount)
+              });
+            }
             // totalSalExempt = totalSalExempt + Number(this.salaryGridOptions.rowData[i].exemptAmount);
 
+            console.log(this.localEmployer);
             if (
-              this.bifurcationResult?.SEC17_1.total ||
-              this.bifurcationResult?.SEC17_1.total === 0 ||
-              this.bifurcationResult?.SEC17_1.value > 0
+              this.bifurcationResult?.SEC17_1?.total ||
+              this.bifurcationResult?.SEC17_1?.total === 0 ||
+              this.bifurcationResult?.SEC17_1?.value > 0
             ) {
-              const bifurcationValues = this.bifurcationResult?.SEC17_1.value;
+              const salaryValues = this.utilsService.getSalaryValues()?.salary;
+
+              const bifurcationValues = this.bifurcationResult?.SEC17_1?.value
+                ? this.bifurcationResult?.SEC17_1?.value
+                : salaryValues[0];
 
               for (const key in bifurcationValues) {
                 if (bifurcationValues.hasOwnProperty(key)) {
                   const element = parseFloat(bifurcationValues[key]);
                   console.log(element);
                   if (element && element !== 0) {
-                    this.localEmployer.salary.push({
+                    this.localEmployer?.salary?.push({
                       salaryType: key,
                       taxableAmount: element,
                       exemptAmount: 0,
@@ -1067,6 +1075,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
                   }
                 }
               }
+              console.log(this.localEmployer);
             } else if (
               this.ITR_JSON?.employers[this.currentIndex]?.salary.length > 1 &&
               this.valueChanged === false
@@ -1076,27 +1085,35 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             }
           }
 
-          if (salary.controls['salaryType'].value === 'SEC17_2') {
-            perquisitesAmount = salary.controls['salaryValue'].value;
-            this.localEmployer.perquisites.push({
-              perquisiteType: 'SEC17_2',
-              taxableAmount: Number(salary.controls['salaryValue'].value),
-              exemptAmount: 0, //Number(this.salaryGridOptions.rowData[i].exemptAmount)
-            });
+          if (salary?.controls['salaryType']?.value === 'SEC17_2') {
+            perquisitesAmount = Number(salary?.controls['salaryValue']?.value);
+            if (perquisitesAmount && perquisitesAmount !== 0) {
+              this.localEmployer?.perquisites?.push({
+                perquisiteType: 'SEC17_2',
+                taxableAmount: perquisitesAmount,
+                exemptAmount: 0, //Number(this.salaryGridOptions.rowData[i].exemptAmount)
+              });
+            }
 
+            console.log(this.localEmployer);
             if (
-              this.bifurcationResult?.SEC17_2.total ||
-              this.bifurcationResult?.SEC17_2.total === 0 ||
-              this.bifurcationResult?.SEC17_2.value > 0
+              this.bifurcationResult?.SEC17_2?.total ||
+              this.bifurcationResult?.SEC17_2?.total === 0 ||
+              this.bifurcationResult?.SEC17_2?.value > 0
             ) {
-              const bifurcationValues = this.bifurcationResult?.SEC17_2.value;
+              const perquisitesValues =
+                this.utilsService.getSalaryValues()?.perquisites;
+
+              const bifurcationValues = this.bifurcationResult?.SEC17_2?.value
+                ? this.bifurcationResult?.SEC17_2?.value
+                : perquisitesValues[0];
 
               for (const key in bifurcationValues) {
                 if (bifurcationValues.hasOwnProperty(key)) {
                   const element = parseFloat(bifurcationValues[key]);
                   console.log(element);
                   if (element && element !== 0) {
-                    this.localEmployer.perquisites.push({
+                    this.localEmployer?.perquisites?.push({
                       perquisiteType: key,
                       taxableAmount: element,
                       exemptAmount: 0,
@@ -1104,6 +1121,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
                   }
                 }
               }
+              console.log(this.localEmployer);
             } else if (
               this.ITR_JSON?.employers[this.currentIndex]?.perquisites?.length >
                 1 &&
@@ -1115,25 +1133,34 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           }
 
           if (salary.controls['salaryType'].value === 'SEC17_3') {
-            this.localEmployer.profitsInLieuOfSalaryType.push({
-              salaryType: 'SEC17_3',
-              taxableAmount: Number(salary.controls['salaryValue'].value),
-              exemptAmount: 0, //Number(this.salaryGridOptions.rowData[i].exemptAmount)
-            });
+            profitsInLieuAmount = Number(salary.controls['salaryValue'].value);
+            if (profitsInLieuAmount && profitsInLieuAmount !== 0) {
+              this.localEmployer?.profitsInLieuOfSalaryType?.push({
+                salaryType: 'SEC17_3',
+                taxableAmount: profitsInLieuAmount,
+                exemptAmount: 0, //Number(this.salaryGridOptions.rowData[i].exemptAmount)
+              });
+            }
 
+            console.log(this.localEmployer);
             if (
               this.bifurcationResult?.SEC17_3.total ||
               this.bifurcationResult?.SEC17_3.total === 0 ||
               this.bifurcationResult?.SEC17_3.value > 0
             ) {
-              const bifurcationValues = this.bifurcationResult?.SEC17_3.value;
+              const profitsInLieuValues =
+                this.utilsService.getSalaryValues()?.profitsInLieu;
+
+              const bifurcationValues = this.bifurcationResult?.SEC17_3?.value
+                ? this.bifurcationResult?.SEC17_3?.value
+                : profitsInLieuValues[0];
 
               for (const key in bifurcationValues) {
                 if (bifurcationValues.hasOwnProperty(key)) {
                   const element = parseFloat(bifurcationValues[key]);
                   console.log(element);
                   if (element && element !== 0) {
-                    this.localEmployer.profitsInLieuOfSalaryType.push({
+                    this.localEmployer?.profitsInLieuOfSalaryType?.push({
                       salaryType: key,
                       taxableAmount: element,
                       exemptAmount: 0,
@@ -1141,6 +1168,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
                   }
                 }
               }
+              console.log(this.localEmployer);
             } else if (
               this.ITR_JSON?.employers[this.currentIndex]
                 ?.profitsInLieuOfSalaryType?.length > 1 &&
@@ -1367,6 +1395,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   }
 
   serviceCall() {
+    console.log(this.localEmployer);
     if (!this.freeze) {
       this.Copy_ITR_JSON = JSON.parse(
         sessionStorage.getItem(AppConstants.ITR_JSON)
