@@ -415,7 +415,7 @@ export class OtherInformationComponent implements OnInit {
 
     const partnerPan = (
       this.firmForm.controls['firmsArray'] as FormArray
-    ).controls[index]
+    ).controls[index ? index : 0]
       .get('panNumber')
       .value.toUpperCase();
     // pan should not be same as self Pan validation
@@ -679,6 +679,7 @@ export class OtherInformationComponent implements OnInit {
   }
 
   saveAllOtherDetails() {
+    this.checkPAN();
     if (
       !this.schedule5AForm?.valid ||
       !this.firmForm?.valid ||
@@ -690,6 +691,7 @@ export class OtherInformationComponent implements OnInit {
     }
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    
 
     // Saving scheduleFaForm detail
     if (this.schedule5AForm?.valid) {
