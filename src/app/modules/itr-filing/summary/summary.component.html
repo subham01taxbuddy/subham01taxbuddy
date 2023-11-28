@@ -3084,96 +3084,96 @@
                       class="table table-bordered table-striped table-hover"
                       style="margin-top: 20px"
                     >
-                      <tbody>
+                      
+                        <thead>
                         <tr>
-                          <td><b>Loss Of Current Year </b></td>
+                          <td><b>Losses Of Last Year </b></td>
+                          <td><b>Relevant AY</b></td>
+                          <td><b>Setoff Against</b></td>
                           <td><b>Amount Adjusted</b></td>
                         </tr>
-                        <tr
-                          *ngIf="
-                            finalCalculations?.BroughtFwdLossesSetoff
-                              ?.BroughtFwdLossesSetoffDtls?.hpLoss !== 0
-                          "
-                        >
-                          <td>House Property</td>
+                        </thead>
+                        <tbody *ngFor="
+                        let pyl of finalSummary?.assessment
+                          ?.pastYearLosses">
+                        <tr *ngIf="pyl.housePropertyLoss > 0 && pyl.setOffWithCurrentYearHPIncome > 0">
+                          <td>House Property Loss</td>
+                          <td>{{pyl.assessmentPastYear}}</td>
+                          <td>House Property Income</td>
                           <td>
-                            Rs
-                            {{
-                              utilsService.currencyFormatter(
-                                finalCalculations?.BroughtFwdLossesSetoff
-                                  ?.BroughtFwdLossesSetoffDtls?.hpLoss
-                              )
-                            }}
+                            Rs {{utilsService.currencyFormatter(pyl.setOffWithCurrentYearHPIncome)}}
                           </td>
                         </tr>
-                        <tr
-                          *ngIf="
-                            finalCalculations?.BroughtFwdLossesSetoff
-                              ?.BroughtFwdLossesSetoffDtls?.stLoss !== 0
-                          "
-                        >
-                          <td>Short Term Loss</td>
-                          <td>
-                            Rs
-                            {{
-                              utilsService.currencyFormatter(
-                                finalCalculations?.BroughtFwdLossesSetoff
-                                  ?.BroughtFwdLossesSetoffDtls?.stLoss
-                              )
-                            }}
-                          </td>
-                        </tr>
-                        <tr
-                          *ngIf="
-                            finalCalculations?.BroughtFwdLossesSetoff
-                              ?.BroughtFwdLossesSetoffDtls?.ltLoss !== 0
-                          "
-                        >
-                          <td>Long Term Loss</td>
-                          <td>
-                            Rs
-                            {{
-                              utilsService.currencyFormatter(
-                                finalCalculations?.BroughtFwdLossesSetoff
-                                  ?.BroughtFwdLossesSetoffDtls?.ltLoss
-                              )
-                            }}
-                          </td>
-                        </tr>
-                        <tr
-                          *ngIf="
-                            finalCalculations?.BroughtFwdLossesSetoff
-                              ?.BroughtFwdLossesSetoffDtls?.businessLoss !== 0
-                          "
-                        >
+                        <tr *ngIf="pyl.broughtForwordBusinessLoss > 0 && pyl.setOffWithCurrentYearBroughtForwordBusinessIncome > 0">
                           <td>Non Speculative Loss</td>
+                          <td>{{pyl.assessmentPastYear}}</td>
+                          <td>Non Speculative Income</td>
                           <td>
-                            Rs
-                            {{
-                              utilsService.currencyFormatter(
-                                finalCalculations?.BroughtFwdLossesSetoff
-                                  ?.BroughtFwdLossesSetoffDtls?.businessLoss
-                              )
-                            }}
+                            Rs {{utilsService.currencyFormatter(pyl.setOffWithCurrentYearBroughtForwordBusinessIncome)}}
                           </td>
                         </tr>
-                        <tr
-                          *ngIf="
-                            finalCalculations?.BroughtFwdLossesSetoff
-                              ?.BroughtFwdLossesSetoffDtls
-                              ?.speculativeBusinessLoss !== 0
-                          "
-                        >
-                          <td>Speculative Loss</td>
+                        <tr *ngIf="pyl.broughtForwordBusinessLoss > 0 && pyl.nonSpecBusSetOffWithCurrentYearSpecBusIncome > 0">
+                          <td>Non Speculative Loss</td>
+                          <td>{{pyl.assessmentPastYear}}</td>
+                          <td>Speculative Income</td>
                           <td>
-                            Rs
-                            {{
-                              utilsService.currencyFormatter(
-                                finalCalculations?.BroughtFwdLossesSetoff
-                                  ?.BroughtFwdLossesSetoffDtls
-                                  ?.speculativeBusinessLoss
-                              )
-                            }}
+                            Rs {{utilsService.currencyFormatter(pyl.nonSpecBusSetOffWithCurrentYearSpecBusIncome)}}
+                          </td>
+                        </tr>
+                        <tr *ngIf="pyl.speculativeBusinessLoss > 0 && pyl.specBusSetOffWithCurrentYearSpecBusIncome > 0">
+                          <td>Speculative Loss</td>
+                          <td>{{pyl.assessmentPastYear}}</td>
+                          <td>Speculative Income</td>
+                          <td>
+                            Rs {{utilsService.currencyFormatter(pyl.specBusSetOffWithCurrentYearSpecBusIncome)}}
+                          </td>
+                        </tr>
+                        <tr *ngIf="pyl.STCGLoss > 0 && pyl.setOffWithCurrentYearSTCGAppRateIncome > 0">
+                          <td>Short Term Loss</td>
+                          <td>{{pyl.assessmentPastYear}}</td>
+                          <td>Short Term Capital Gain @ Applicable Rate</td>
+                          <td>
+                            Rs {{utilsService.currencyFormatter(pyl.setOffWithCurrentYearSTCGAppRateIncome)}}
+                          </td>
+                        </tr>
+                        <tr *ngIf="pyl.STCGLoss > 0 && pyl.setOffWithCurrentYearSTCG15PerIncome > 0">
+                          <td>Short Term Loss</td>
+                          <td>{{pyl.assessmentPastYear}}</td>
+                          <td>Short Term Capital Gain @ 15%</td>
+                          <td>
+                            Rs {{utilsService.currencyFormatter(pyl.setOffWithCurrentYearSTCG15PerIncome)}}
+                          </td>
+                        </tr>
+                        <tr *ngIf="pyl.STCGLoss > 0 && pyl.stcgSetOffWithCurrentYearLTCG10PerIncome > 0">
+                          <td>Short Term Loss</td>
+                          <td>{{pyl.assessmentPastYear}}</td>
+                          <td>Long Term Capital Gain @ 10%</td>
+                          <td>
+                            Rs {{utilsService.currencyFormatter(pyl.stcgSetOffWithCurrentYearLTCG10PerIncome)}}
+                          </td>
+                        </tr>
+                        <tr *ngIf="pyl.STCGLoss > 0 && pyl.stcgSetOffWithCurrentYearLTCG20PerIncome > 0">
+                          <td>Short Term Loss</td>
+                          <td>{{pyl.assessmentPastYear}}</td>
+                          <td>Long Term Capital Gain @ 20%</td>
+                          <td>
+                            Rs {{utilsService.currencyFormatter(pyl.stcgSetOffWithCurrentYearLTCG20PerIncome)}}
+                          </td>
+                        </tr>
+                        <tr *ngIf="pyl.LTCGLoss > 0 && pyl.ltcgSetOffWithCurrentYearLTCG10PerIncome > 0">
+                          <td>Long Term Loss</td>
+                          <td>{{pyl.assessmentPastYear}}</td>
+                          <td>Long Term Capital Gain @ 10%</td>
+                          <td>
+                            Rs {{utilsService.currencyFormatter(pyl.ltcgSetOffWithCurrentYearLTCG10PerIncome)}}
+                          </td>
+                        </tr>
+                        <tr *ngIf="pyl.LTCGLoss > 0 && pyl.ltcgSetOffWithCurrentYearLTCG20PerIncome > 0">
+                          <td>Long Term Loss</td>
+                          <td>{{pyl.assessmentPastYear}}</td>
+                          <td>Long Term Capital Gain @ 20%</td>
+                          <td>
+                            Rs {{utilsService.currencyFormatter(pyl.ltcgSetOffWithCurrentYearLTCG20PerIncome)}}
                           </td>
                         </tr>
                       </tbody>
