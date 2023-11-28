@@ -47,7 +47,7 @@ export class ReAssignDialogComponent implements OnInit {
       this.showOnlyLeader = false;
     }
 
-    if(this.data.filerName === '-' || this.data.filerName ===null ){
+    if(this.data.filerUserId === '-' || this.data.filerUserId ===null ){
       this.showOnlyLeader = true;
       this.showLeaderFiler =false;
     }else{

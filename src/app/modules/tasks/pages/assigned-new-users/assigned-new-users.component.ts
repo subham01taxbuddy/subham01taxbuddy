@@ -787,7 +787,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         openItrId: userData[i].openItrId,
         lastFiledItrId: userData[i].lastFiledItrId,
         conversationWithFiler: userData[i].conversationWithFiler,
-        ownerUserId: userData[i].ownerUserId
+        ownerUserId: userData[i].ownerUserId,
+        filerUserId : userData[i].filerUserId,
       })
       userArray.push(userInfo);
     }
