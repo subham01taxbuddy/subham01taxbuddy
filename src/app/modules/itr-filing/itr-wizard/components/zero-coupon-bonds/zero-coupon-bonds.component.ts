@@ -629,7 +629,7 @@ export class ZeroCouponBondsComponent
     this.itrMsService.getMethod(param).subscribe((res: any) => {
       if (res.success) {
         this.improvementYears = res.data;
-        console.log(res);
+        // console.log(res);
       }
     });
   }
@@ -641,8 +641,8 @@ export class ZeroCouponBondsComponent
     let purchaseYear = new Date(purchaseDate).getFullYear();
     let purchaseMonth = new Date(purchaseDate).getMonth();
 
-    console.log(yearsList.indexOf(purchaseYear + '-' + (purchaseYear + 1)));
-    console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
+    // console.log(yearsList.indexOf(purchaseYear + '-' + (purchaseYear + 1)));
+    // console.log('FY : ', purchaseYear + '-' + (purchaseYear + 1));
     if (purchaseMonth > 2) {
       if (yearsList.indexOf(purchaseYear + '-' + (purchaseYear + 1)) >= 0) {
         yearsList = yearsList.splice(
