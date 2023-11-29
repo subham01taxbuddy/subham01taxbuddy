@@ -400,6 +400,9 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         }
         this.createRowData();
         this.gridOptions.api?.setRowData(this.assetList);
+        if (this.deduction && this.deductionForm.valid) {
+          this.calculateDeduction();
+        }
       }
     });
     // this.goldCg.deduction.push(result.deduction);
