@@ -50,7 +50,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     { label: 'Tax Payable / (Refund)', old: 0, new: 0 },
   ];
 
-  
+
   loading: boolean = false;
   ITR_JSON: ITR_JSON;
   errorMessage: string;
@@ -526,6 +526,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       this.newRegimeLabel = 'Not eligible to opt';
       currAssmntYr.setValue('NEW');
       currAssmntYr.disable();
+      this.showCurrentAYOptions = false;
     }
 
     if (optIn && !optOut) {
@@ -1555,7 +1556,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           console.log('result is=====', result);
           this.newSummaryIncome = result.data.newRegime;
           this.oldSummaryIncome = result.data.oldRegime;
-         
+
           this.particularsArray = [
             {
               label: 'Income from Salary',
@@ -2119,10 +2120,8 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  setFilingDate() {
-    var id = (
-      this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
-    ).controls['acknowledgementNumber'].value;
+  setFilingDate(formGroup: any) {
+    var id = (formGroup as FormGroup).controls['acknowledgementNumber'].value;
     var lastSix = id.toString().substr(id.length - 6);
     var day = lastSix.slice(0, 2);
     var month = lastSix.slice(2, 4);
@@ -2130,9 +2129,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     let dateString = `20${year}-${month}-${day}`;
     console.log(dateString, year, month, day);
 
-    (
-      this.regimeSelectionForm.controls['everOptedNewRegime'] as FormGroup
-    ).controls['date'].setValue(moment(dateString).toDate());
+    (formGroup as FormGroup).controls['date'].setValue(moment(dateString).toDate());
   }
 
   getCrypto(summary, type) {
