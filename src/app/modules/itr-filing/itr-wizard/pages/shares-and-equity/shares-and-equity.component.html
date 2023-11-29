@@ -544,7 +544,13 @@
               >
             </mat-form-field>
           </div>
-          <div class="col-sm-4" *ngIf="bondType !== 'listed'">
+          <div
+            class="col-sm-4"
+            *ngIf="
+              bondType !== 'listed' &&
+              selectedFormGroup?.controls['gainType'].value === 'LONG'
+            "
+          >
             <mat-label>Indexed cost of acquisition</mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -694,6 +700,13 @@
                         placeholder="Year of Improvement"
                         name="financialYearOfImprovement"
                         formControlName="financialYearOfImprovement"
+                        (blur)="
+                          calculateGainTypeOrIndexCost(
+                            'forIndexation',
+                            'improvement',
+                            selectedFormGroup
+                          )
+                        "
                         required
                       >
                         <mat-option
