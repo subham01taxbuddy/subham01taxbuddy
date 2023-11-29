@@ -14,6 +14,8 @@ export class ReAssignActionDialogComponent implements OnInit {
   loading: boolean;
   ownerId: number;
   filerId: number;
+  leaderId :number;
+  searchAsPrinciple:boolean = false;
   ownerDropDownType = 'ASSIGNED';
   loggedInUserRoles:any;
   constructor(
@@ -52,6 +54,31 @@ export class ReAssignActionDialogComponent implements OnInit {
       }
     });
 
+  }
+
+  fromLeader(event) {
+    if(event) {
+      this.leaderId = event ? event.userId : null;
+    }
+  }
+  fromPrinciple(event){
+    if(event){
+      if (event?.partnerType === 'PRINCIPAL') {
+        this.filerId = event ? event.userId : null;
+
+        this.searchAsPrinciple = true;
+      } else {
+        this.filerId = event ? event.userId : null;
+
+        this.searchAsPrinciple = false;
+      }
+    }
+  }
+
+  fromChild(event){
+    if(event){
+      this.filerId = event ? event.userId : null;
+    }
   }
 
   fromSme(event, isOwner) {
