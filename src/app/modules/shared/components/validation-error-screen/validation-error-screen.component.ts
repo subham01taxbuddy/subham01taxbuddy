@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ValidationErrorScreenComponent implements OnInit {
   errors: any;
+  apiErrors: any;
   itrType: any;
   @Output() saveAndNext = new EventEmitter<any>();
   ITR_JSON: ITR_JSON;
@@ -29,6 +30,7 @@ export class ValidationErrorScreenComponent implements OnInit {
     this.route.paramMap.subscribe((params) => {
       const state = window.history.state;
       this.errors = state.validationErrors;
+      this.apiErrors = state.apiErrors;
       this.itrType = this.errors[0]?.itrType;
     });
     console.log(this.errors, 'errors to be displayed');
