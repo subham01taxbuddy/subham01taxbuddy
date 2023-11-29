@@ -51,7 +51,6 @@
                   </div>
                   <div class="col-sm-6">
                     <mat-radio-group
-                      name="isIndexationBenefitAvailable[i]"
                       formControlName="isIndexationBenefitAvailable"
                       class="mvRth"
                     >
@@ -71,7 +70,6 @@
                   </div>
                   <div class="col-sm-6">
                     <mat-radio-group
-                      name="whetherDebenturesAreListed[i]"
                       formControlName="whetherDebenturesAreListed"
                       class="mvRth"
                     >
@@ -266,7 +264,7 @@
                       matInput
                       digitsOnly
                       formControlName="indexCostOfAcquisition"
-                      placeholder="Indexed cost of acquistion"
+                      placeholder="Indexed cost of acquisition"
                       name="indexCostOfAcquisition[i]"
                       class="input-field"
                       readonly
@@ -558,19 +556,7 @@
         </div>
       </div>
     </form>
-    <div class="row spsTp bdrTp" *ngIf="deduction">
-      <div class="col-sm-9"></div>
-      <div class="col-sm-3">
-        <button
-          type="submit"
-          class="tbd-btn save-btn mvRth"
-          [disabled]="deductionForm.invalid"
-          (click)="save()"
-        >
-          Save
-        </button>
-      </div>
-    </div>
+
 
     <div class="flex justify-between p-[30px] back-foot">
       <button class="lgtBtn">
