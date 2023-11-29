@@ -398,7 +398,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">User Name</th>
-              <th scope="col">Contact Number</th>
+              <!-- <th scope="col">Contact Number</th> -->
               <th scope="col">Payment Received Date</th>
             </tr>
           </thead>
@@ -406,8 +406,8 @@
             <tr *ngFor="let item of paymentReceivedData?.content | paginate:config.paymentReceived; let i = index">
               <td>{{ i+1 }}</td>
               <td>{{ item.userName }}</td>
-              <td><a [routerLink]="['/tasks/assigned-users-new']" [queryParams]="{mobileNumber: item.contactNumber}">{{
-                  item.contactNumber }}</a></td>
+              <!-- <td><a [routerLink]="['/tasks/assigned-users-new']" [queryParams]="{mobileNumber: item.contactNumber}">{{
+                  item.contactNumber }}</a></td> -->
               <td>{{ item.paymentRecivedDate | date:'d/M/yy, h:mm a':'UTC' }}</td>
             </tr>
             <tr *ngIf="paymentReceivedData?.content?.length === 0">
@@ -431,7 +431,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">User Name</th>
-              <th scope="col">Contact Number</th>
+              <!-- <th scope="col">Contact Number</th> -->
               <th scope="col">Summary Sent Date</th>
             </tr>
           </thead>
@@ -440,8 +440,8 @@
               *ngFor="let item of summaryConfirmationData?.content | paginate:config.summaryConfirmation; let i = index">
               <td>{{ i+1 }}</td>
               <td>{{ item.userName }}</td>
-              <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{
-                  item.contactNumber }}</a></td>
+              <!-- <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{
+                  item.contactNumber }}</a></td> -->
               <td>{{ item.summarySentDate | date:'d/M/yy, h:mm a':'UTC' }}</td>
             </tr>
             <tr *ngIf="summaryConfirmationData?.content?.length === 0">
@@ -466,7 +466,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">User Name</th>
-              <th scope="col">Contact Number</th>
+              <!-- <th scope="col">Contact Number</th> -->
               <th scope="col">ITR Filed date</th>
             </tr>
           </thead>
@@ -475,8 +475,8 @@
               *ngFor="let item of eVerificationPendingData?.content | paginate:config.eVerificationPending; let i = index">
               <td>{{ i+1 }}</td>
               <td>{{ item.userName }}</td>
-              <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{
-                  item.contactNumber }}</a></td>
+              <!-- <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{
+                  item.contactNumber }}</a></td> -->
               <td>{{ item.itrFiledDate | date:'d/M/yy, h:mm a':'UTC' }}</td>
             </tr>
             <tr *ngIf="eVerificationPendingData?.content?.length === 0">

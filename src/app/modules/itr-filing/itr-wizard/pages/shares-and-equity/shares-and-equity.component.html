@@ -333,8 +333,6 @@
                 placeholder="DD/MM/YYYY"
                 (dateChange)="
                   calculateGainTypeOrIndexCost(
-                    'forBoth',
-                    'indexCostOfAcquisition',
                     selectedFormGroup
                   );
                   calculateTotalCG(selectedFormGroup);
@@ -371,8 +369,6 @@
                 readonly
                 (dateChange)="
                   calculateGainTypeOrIndexCost(
-                    'forBoth',
-                    'indexCostOfAcquisition',
                     selectedFormGroup
                   );
                   calculateTotalCG(selectedFormGroup);
@@ -497,8 +493,6 @@
                 "
                 (change)="
                   calculateGainTypeOrIndexCost(
-                    'forGainType',
-                    '',
                     selectedFormGroup
                   );
                   calculateTotalCG(selectedFormGroup)
@@ -529,8 +523,6 @@
                 "
                 (change)="
                   calculateGainTypeOrIndexCost(
-                    'forBoth',
-                    'indexCostOfAcquisition',
                     selectedFormGroup
                   )
                 "
@@ -702,8 +694,6 @@
                         formControlName="financialYearOfImprovement"
                         (blur)="
                           calculateGainTypeOrIndexCost(
-                            'forIndexation',
-                            'improvement',
                             selectedFormGroup
                           )
                         "
@@ -732,8 +722,6 @@
                         name="costOfImprovement"
                         (blur)="
                           calculateGainTypeOrIndexCost(
-                            'forIndexation',
-                            'improvement',
                             selectedFormGroup
                           )
                         "
