@@ -100,6 +100,7 @@ export class ZeroCouponBondsComponent
           (item: any) => item.assetType === 'ZERO_COUPON_BONDS'
         );
       }
+      this.deduction = false;
       if (indexedDebData.length > 0) {
         indexedDebData.forEach((obj: any) => {
           assetDetails = obj.assetDetails;
@@ -118,6 +119,12 @@ export class ZeroCouponBondsComponent
               }
             }
           });
+          if (obj.deduction) {
+            obj.deduction.forEach((element: any) => {
+              this.deductionForm = this.initDeductionForm(element);
+            });
+            this.deduction = true;
+          }
         });
       }
       if (data.length > 0) {
@@ -137,8 +144,7 @@ export class ZeroCouponBondsComponent
             obj.deduction.forEach((element: any) => {
               this.deductionForm = this.initDeductionForm(element);
             });
-          } else {
-            this.deductionForm = this.initDeductionForm();
+            this.deduction = true;
           }
           this.updateDeductionUI();
         });
@@ -146,17 +152,6 @@ export class ZeroCouponBondsComponent
     } else {
       this.addMoreBondsData();
       this.isDisable = true;
-    }
-
-    // setting deduction
-    const bondsDeben = this.ITR_JSON.capitalGain?.find(
-      (assetType) => assetType.assetType === 'BONDS'
-    );
-
-    if (bondsDeben?.deduction?.length > 0) {
-      this.deduction = true;
-    } else {
-      this.deduction = false;
     }
 
     this.getImprovementYears();
@@ -475,9 +470,9 @@ export class ZeroCouponBondsComponent
         }
       });
 
-      if (!bondsList || bondsList.length === 0) {
-        this.deductionForm.reset();
-      }
+      // if (!bondsList || bondsList.length === 0) {
+      //   this.deductionForm.reset();
+      // }
       const bondData = {
         assessmentYear: this.ITR_JSON.assessmentYear,
         assesseeType: this.ITR_JSON.assesseeType,
