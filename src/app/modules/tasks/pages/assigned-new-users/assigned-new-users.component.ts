@@ -106,7 +106,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && rowNode.data.statusId != 11) : false;
         }
         else {
-          return rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' : false;
+          return rowNode.data ? this.showReassignmentBtn.length : false;
         }
       },
       onGridReady: params => {
@@ -410,28 +410,28 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
-      // {
-      //   field: 'Re Assign',
-      //   headerCheckboxSelection: true,
-      //   width: 110,
-      //   hide: !this.showReassignmentBtn.length,
-      //   pinned: 'left',
-      //   checkboxSelection: (params) => {
-      //     if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-      //       return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
-      //     } else {
-      //       return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
-      //     }
-      //   },
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center',
-      //       display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center',
-      //     };
-      //   },
-      // },
+      {
+        field: 'Re Assign',
+        headerCheckboxSelection: true,
+        width: 110,
+        hide: !this.showReassignmentBtn.length,
+        pinned: 'left',
+        checkboxSelection: (params) => {
+          if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
+            return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
+          } else {
+            return  this.showReassignmentBtn.length
+          }
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
       {
         headerName: 'Client Name',
         field: 'name',
@@ -738,11 +738,11 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     ];
   }
 
-  actionWithReassignment() {
+  reassignmentForFiler() {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     console.log(selectedRows);
     if (selectedRows.length === 0) {
-      this.utilsService.showSnackBar('Please select entries to Re-assign');
+      this.utilsService.showSnackBar('Please select entries to Re-Assign');
       return;
     }
     let invoices = selectedRows.flatMap(item => item.invoiceNo);
@@ -789,6 +789,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         conversationWithFiler: userData[i].conversationWithFiler,
         ownerUserId: userData[i].ownerUserId,
         filerUserId : userData[i].filerUserId,
+        leaderUserId :userData[i].leaderUserId,
       })
       userArray.push(userInfo);
     }
