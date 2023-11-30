@@ -531,37 +531,96 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
   async downloadReport() {
     this.loading = true;
     this.showCsvMessage = true;
-    const loggedInSmeUserId = this.loggedInSme[0].userId
-
-    if (this.coOwnerToggle.value == false) {
-      this.agentId = loggedInSmeUserId;
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    if (this.roles.includes('ROLE_LEADER')) {
+      this.leaderId = loggedInId;
+    }
+    let userFilter = '';
+    if ((this.leaderId && !this.filerId)) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    let userFilter = ''
-    if (this.leaderId) {
-      userFilter = '&leaderView=true&smeUserId=' + this.leaderId;
+
+    let mobileFilter = '';
+    if (this.searchBy?.mobileNumber) {
+      mobileFilter = '&mobileNumber=' + (this.searchBy?.mobileNumber);
     }
-    if (this.ownerId) {
-      userFilter = '&ownerView=true&smeUserId=' + this.ownerId;
+    let komEmailFilter = '';
+    if (this.searchBy?.kommunicateEmailId) {
+      komEmailFilter = '&kommunicateEmailId=' + this.searchBy?.kommunicateEmailId;
+    }
+    let smeEmailFilter = '';
+    if (this.searchBy?.smeOfficialEmailId) {
+      smeEmailFilter = '&smeOfficialEmailId=' + this.searchBy?.smeOfficialEmailId;
+    }
+    let nameFilter = '';
+    if (this.searchBy?.name) {
+      nameFilter = '&name=' + this.searchBy?.name;
     }
 
-    let param = ''
-    if (this.key && this.searchVal) {
-      param = `/sme-details-new/${this.agentId}?assigned=true&${this.key}=${this.searchVal}`
-    } else {
-      param = `/sme-details-new/${this.agentId}?assigned=true${userFilter}`;
+    let roleFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectRole.value) && this.selectRole.valid)) {
+      roleFilter = this.selectRole.value;
+    }
+    let languageFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedLangControl.value) && this.selectedLangControl.valid)) {
+      languageFilter = '&languages=' + this.selectedLangControl.value;
+    }
+    let capabilityFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedITRCapabilityControl.value) && this.selectedITRCapabilityControl.valid)) {
+      capabilityFilter = '&skillSetPlanIdList=' + this.selectedITRCapabilityControl.value;
     }
 
-    if (this.coOwnerToggle.value == true && this.coOwnerToggle.value == true) {
-      param = param + '&searchAsCoOwner=true';
-    }
-    else {
-      param;
-    }
+
+    let param = `/bo/sme-details?assigned=true${userFilter}${roleFilter}${languageFilter}${capabilityFilter}${mobileFilter}${komEmailFilter}${smeEmailFilter}${nameFilter}`;
+
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-sme-report', '', this.sortBy);
-    this.loading = false;
-    this.showCsvMessage = false;
+      this.loading = false;
+      this.showCsvMessage = false;
+
+
   }
+
+  // async downloadReport() {
+  //   this.loading = true;
+  //   this.showCsvMessage = true;
+  //   const loggedInSmeUserId = this.loggedInSme[0].userId
+
+  //   if (this.coOwnerToggle.value == false) {
+  //     this.agentId = loggedInSmeUserId;
+  //   }
+
+  //   let userFilter = ''
+  //   if (this.leaderId) {
+  //     userFilter = '&leaderView=true&smeUserId=' + this.leaderId;
+  //   }
+  //   if (this.ownerId) {
+  //     userFilter = '&ownerView=true&smeUserId=' + this.ownerId;
+  //   }
+
+  //   let param = ''
+  //   if (this.key && this.searchVal) {
+  //     param = `/sme-details-new/${this.agentId}?assigned=true&${this.key}=${this.searchVal}`
+  //   } else {
+  //     param = `/sme-details-new/${this.agentId}?assigned=true${userFilter}`;
+  //   }
+
+  //   if (this.coOwnerToggle.value == true && this.coOwnerToggle.value == true) {
+  //     param = param + '&searchAsCoOwner=true';
+  //   }
+  //   else {
+  //     param;
+  //   }
+  //   await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-sme-report', '', this.sortBy);
+  //   this.loading = false;
+  //   this.showCsvMessage = false;
+  // }
 
   sortByObject(object) {
     this.sortBy = object;

@@ -219,69 +219,117 @@ export class OtherAssetImprovementComponent implements OnInit {
     });
   }
 
-  calculateIndexCost(asset?) {
-    let gainType = this.assetsForm.controls['gainType'].value;
-    let improvementsArray = this.assetsForm.controls[
-      'improvementsArray'
-    ] as FormGroup;
-
-    let selectedYear = moment(this.assetsForm.controls['sellDate'].value);
-    let sellFinancialYear =
-      selectedYear.get('month') > 2
-        ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
-        : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
-
-    // for improvements indexation
-    let costOfImprovement = parseFloat(
-      improvementsArray.controls['costOfImprovement'].value
-    );
-    let improvementFinancialYear =
-      improvementsArray.controls['financialYearOfImprovement'].value;
-
-    // for cost of acquisition index
-    let selectedPurchaseYear = moment(
-      this.assetsForm.controls['purchaseDate'].value
-    );
-    let purchaseFinancialYear =
-      selectedPurchaseYear.get('month') > 2
-        ? selectedPurchaseYear.get('year') +
-          '-' +
-          (selectedPurchaseYear.get('year') + 1)
-        : selectedPurchaseYear.get('year') -
-          1 +
-          '-' +
-          selectedPurchaseYear.get('year');
-
-    let costOfAcquistion = parseFloat(
-      this.assetsForm.controls['purchaseCost'].value
-    );
-
+  // calculatte gainType
+  calculateGainType() {
+    let purchaseDate = this.assetsForm.controls['purchaseDate'].value;
+    let sellDate = this.assetsForm.controls['sellDate'].value;
     let req = {
-      cost: asset === 'asset' ? costOfAcquistion : costOfImprovement,
-      purchaseOrImprovementFinancialYear:
-        asset === 'asset' ? purchaseFinancialYear : improvementFinancialYear,
-      assetType: this.goldCg.assetType,
-      buyDate: this.assetsForm.controls['purchaseDate'].value,
-      sellDate: this.assetsForm.controls['sellDate'].value,
-      sellFinancialYear: sellFinancialYear,
+      assetType: this.assetType,
+      buyDate: moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
+      sellDate: moment(new Date(sellDate)).format('YYYY-MM-DD'),
     };
-
     const param = `/calculate/indexed-cost`;
     this.itrMsService.postMethod(param, req).subscribe((res: any) => {
-      console.log('INDEX COST : ', res);
+      console.log('GAIN Type : ', res);
+      this.assetsForm.controls['gainType']?.setValue(res.data.capitalGainType);
+      this.calculateCoaIndexation(res.data.capitalGainType);
+      this.calculateCoiIndexation(res.data.capitalGainType);
+    });
+  }
 
-      if (asset === 'asset') {
+  // calculating cost of acquistion indexation
+  calculateCoaIndexation(gainType) {
+    if (gainType === 'LONG') {
+      let selectedYear = moment(this.assetsForm.controls['sellDate'].value);
+      let sellFinancialYear =
+        selectedYear.get('month') > 2
+          ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
+          : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
+      // for cost of acquisition index
+      let selectedPurchaseYear = moment(
+        this.assetsForm.controls['purchaseDate'].value
+      );
+      let purchaseFinancialYear =
+        selectedPurchaseYear.get('month') > 2
+          ? selectedPurchaseYear.get('year') +
+            '-' +
+            (selectedPurchaseYear.get('year') + 1)
+          : selectedPurchaseYear.get('year') -
+            1 +
+            '-' +
+            selectedPurchaseYear.get('year');
+      let costOfAcquistion = parseFloat(
+        this.assetsForm.controls['purchaseCost'].value
+      );
+      let req = {
+        cost: costOfAcquistion,
+        purchaseOrImprovementFinancialYear: purchaseFinancialYear,
+        assetType: this.goldCg.assetType,
+        buyDate: this.assetsForm.controls['purchaseDate'].value,
+        sellDate: this.assetsForm.controls['sellDate'].value,
+        sellFinancialYear: sellFinancialYear,
+      };
+
+      const param = `/calculate/indexed-cost`;
+      this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+        console.log('INDEX COST : ', res);
         this.assetsForm.controls['indexCostOfAcquisition']?.setValue(
           res.data.costOfAcquisitionOrImprovement
         );
-      } else {
+      });
+    } else {
+      this.assetsForm?.controls['indexCostOfAcquisition']?.setValue(0);
+      this.getImprovementYears();
+      this.calculateCg();
+    }
+  }
+
+  // calculating cost of improvement indexation
+  calculateCoiIndexation(gainType) {
+    if (gainType === 'LONG') {
+      let improvementsArray = this.assetsForm.controls[
+        'improvementsArray'
+      ] as FormGroup;
+      let selectedYear = moment(this.assetsForm.controls['sellDate'].value);
+      let sellFinancialYear =
+        selectedYear.get('month') > 2
+          ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
+          : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
+      // for improvements indexation
+      let costOfImprovement = parseFloat(
+        improvementsArray.controls['costOfImprovement'].value
+      );
+      let improvementFinancialYear =
+        improvementsArray.controls['financialYearOfImprovement'].value;
+      let req = {
+        cost: costOfImprovement,
+        purchaseOrImprovementFinancialYear: improvementFinancialYear,
+        assetType: this.goldCg.assetType,
+        buyDate: this.assetsForm.controls['purchaseDate'].value,
+        sellDate: this.assetsForm.controls['sellDate'].value,
+        sellFinancialYear: sellFinancialYear,
+      };
+
+      const param = `/calculate/indexed-cost`;
+      this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+        console.log('INDEX COST : ', res);
         (this.assetsForm.controls['improvementsArray'] as FormGroup).controls[
           'indexCostOfImprovement'
         ]?.setValue(res.data.costOfAcquisitionOrImprovement);
-      }
-
+        this.getImprovementYears();
+        this.calculateCg();
+      });
+    } else {
+      (this.assetsForm?.controls['improvementsArray'] as FormGroup)?.controls[
+        'indexCostOfImprovement'
+      ]?.setValue(
+        (this.assetsForm?.controls['improvementsArray'] as FormGroup)?.controls[
+          'costOfImprovement'
+        ]?.value
+      );
+      this.getImprovementYears();
       this.calculateCg();
-    });
+    }
   }
 
   calculateCg() {
@@ -366,37 +414,11 @@ export class OtherAssetImprovementComponent implements OnInit {
             res?.improvement[0]
           );
         }
-
-        // setting deduction details
-        // if (res.deduction[0]) {
-        //   this.goldCg?.deduction?.splice(this.assetIndex, 1, res.deduction[0]);
-        // }
       },
       (error) => {
         this.loading = false;
       }
     );
-  }
-
-  calculateGainType() {
-    let purchaseDate = this.assetsForm.controls['purchaseDate'].value;
-    let sellDate = this.assetsForm.controls['sellDate'].value;
-    let req = {
-      assetType: this.assetType,
-      buyDate: moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
-      sellDate: moment(new Date(sellDate)).format('YYYY-MM-DD'),
-    };
-
-    console.log(req.buyDate);
-    console.log(req.sellDate);
-
-    const param = `/calculate/indexed-cost`;
-    this.itrMsService.postMethod(param, req).subscribe((res: any) => {
-      console.log('GAIN Type : ', res);
-
-      this.assetsForm.controls['gainType']?.setValue(res.data.capitalGainType);
-      this.calculateCg();
-    });
   }
 
   pageChanged(event) {

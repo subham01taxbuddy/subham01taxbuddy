@@ -180,7 +180,7 @@
                       matInput
                       maxlength="15"
                       minlength="15"
-                      (blur)="setFilingDate()"
+                      (blur)="setFilingDate(regimeSelectionForm.controls['everOptedNewRegime'])"
                       name="acknowledgementNumber"
                       formControlName="acknowledgementNumber"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -331,7 +331,7 @@
                       matInput
                       maxlength="15"
                       minlength="15"
-                      (blur)="setFilingDate()"
+                      (blur)="setFilingDate(regimeSelectionForm.controls['everOptedOutOfNewRegime'])"
                       name="acknowledgementNumber"
                       formControlName="acknowledgementNumber"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -445,7 +445,7 @@
                       matInput
                       maxlength="15"
                       minlength="15"
-                      (blur)="setFilingDate()"
+                      (blur)="setFilingDate(regimeSelectionForm.controls['optionForCurrentAY'])"
                       name="acknowledgementNumber"
                       formControlName="acknowledgementNumber"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -1017,7 +1017,7 @@
           <tr>
             <td>1
             </td>
-            <td> Short-term capital gain at 15%	
+            <td> Short-term capital gain at 15%
             </td>
             <td>
               {{cgQuarterWiseBreakUp.stcg15PerUpto15Jun}}
@@ -1059,7 +1059,7 @@
           <tr>
             <td>3
             </td>
-            <td>Long Term Capital gain at 10%	
+            <td>Long Term Capital gain at 10%
             </td>
             <td>
               {{cgQuarterWiseBreakUp.ltcg10PerUpto15Jun}}
@@ -1080,7 +1080,7 @@
           <tr>
             <td>4
             </td>
-            <td>Long Term Capital gain at 20%	
+            <td>Long Term Capital gain at 20%
             </td>
             <td>
               {{cgQuarterWiseBreakUp.ltcg20PerUpto15Jun}}
