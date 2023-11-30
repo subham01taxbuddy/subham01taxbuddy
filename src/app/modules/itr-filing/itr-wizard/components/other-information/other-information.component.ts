@@ -34,6 +34,7 @@ export class OtherInformationComponent implements OnInit {
   @Input() isEditOther = false;
   @Output() otherInfoSaved = new EventEmitter<boolean>();
   panRepeat: boolean = false;
+  panPartnerRepeat: boolean = false;
 
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -406,14 +407,29 @@ export class OtherInformationComponent implements OnInit {
     });
   }
 
-  checkPAN() {
+  checkPAN(index?) {
     const panOfSpouse = this.schedule5AForm.get('panOfSpouse');
-    const panOfSpouseValue = this.schedule5AForm.get('panOfSpouse').value.toUpperCase();
+    const panOfSpouseValue = this.schedule5AForm
+      ?.get('panOfSpouse')
+      ?.value?.toUpperCase();
+
+    const partnerPan = (
+      this.firmForm.controls['firmsArray'] as FormArray
+    )?.controls[index ? index : 0]
+      ?.get('panNumber')
+      ?.value?.toUpperCase();
     // pan should not be same as self Pan validation
-    if (panOfSpouseValue === this.ITR_JSON.panNumber) {
+    if (panOfSpouseValue && panOfSpouseValue === this.ITR_JSON.panNumber) {
       this.panRepeat = true;
     } else {
       this.panRepeat = false;
+    }
+
+    // pan should not be same as self Pan validation
+    if (partnerPan && partnerPan === this.ITR_JSON.panNumber) {
+      this.panPartnerRepeat = true;
+    } else {
+      this.panPartnerRepeat = false;
     }
   }
 
@@ -444,13 +460,7 @@ export class OtherInformationComponent implements OnInit {
       this.validationBusiness();
       this.validationOth();
     } else {
-      this.schedule5AForm.reset();
       this.schedule5AForm.get('isGovernedByPortuguese').setValue('N');
-      this.schedule5AForm.get('houseProperty').reset();
-      this.schedule5AForm.get('businessOrProfession').reset();
-      this.schedule5AForm.get('capitalGain').reset();
-      this.schedule5AForm.get('otherSource').reset();
-
       panOfSpouse.clearValidators();
       panOfSpouse.updateValueAndValidity();
       aadhaarOfSpouse.clearValidators();
@@ -669,6 +679,7 @@ export class OtherInformationComponent implements OnInit {
   }
 
   saveAllOtherDetails() {
+    this.checkPAN();
     if (
       !this.schedule5AForm?.valid ||
       !this.firmForm?.valid ||
@@ -785,7 +796,8 @@ export class OtherInformationComponent implements OnInit {
       this.firmForm?.valid &&
       this.sharesForm?.valid &&
       this.directorForm?.valid &&
-      !this.panRepeat
+      !this.panRepeat &&
+      !this.panPartnerRepeat
     ) {
       this.serviceCall('saveAll');
     } else {
@@ -864,10 +876,16 @@ export class OtherInformationComponent implements OnInit {
       if (apportionedValue > receiptValue) {
         apportionedControl?.setValidators(Validators.max(receiptValue));
         apportionedControl.updateValueAndValidity();
+      } else {
+        apportionedControl?.clearValidators();
+        apportionedControl.updateValueAndValidity();
       }
 
       if (tdsApportionedValue > tdsReceiptValue) {
         tdsApportionedControl?.setValidators(Validators.max(tdsReceiptValue));
+        tdsApportionedControl.updateValueAndValidity();
+      } else {
+        tdsApportionedControl?.clearValidators();
         tdsApportionedControl.updateValueAndValidity();
       }
     } else {
