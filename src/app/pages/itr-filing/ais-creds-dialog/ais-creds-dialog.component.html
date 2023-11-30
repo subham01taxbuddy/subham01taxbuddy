@@ -1,4 +1,10 @@
 <div>
+  <div class="row dialog-button">
+    <div class="sub_btn top-space" style="text-align: right;">
+      <button class="tbd-btn-secondary" (click)="dialogRef.close()" mat-dialog-close>
+        <i class="fa fa-close"></i></button>
+    </div>
+  </div>
   <h3>AIS Credentials for {{data.name}}</h3>
 </div>
 <div onmousedown='return false;' onselectstart='return false;'>
