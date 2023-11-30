@@ -25,6 +25,8 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   @Input() skipChild = true;
   @Input() listType = 'ALL';
   @Input() isInternal: boolean;
+  @Input() disableLeader : boolean =false;
+  @Input() selectedLeader :any;
 
   smeList: any[] = [];
   searchChild = new FormControl('');
@@ -54,11 +56,18 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
 
   constructor(public utilsService: UtilsService,
     private userMsService: UserMsService,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private utilService: UtilsService,
   ) {
   }
 
   ngOnInit() {
+    if(this.disableLeader && this.selectedLeader){
+      let userId = this.selectedLeader.leaderUserId;
+      let name = this.selectedLeader.leaderName;
+      this.leaderDetails = this.leaderDetails || [];
+      this.leaderDetails.push({ name, userId });
+    }
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
     this.partnerType = this.loggedInSme[0]?.partnerType;
@@ -268,9 +277,14 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     // if(this.listType === 'ALL') {
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     let param = '';
+    let selectedLeader
+    if (this.leaderDetails && this.leaderDetails.length > 0){
+       selectedLeader = this.leaderDetails[0]?.userId
+    }
+    let leaderUserId = this.leaderDetails?.userId || selectedLeader ;
 
-    if (this.leaderDetails?.userId) {
-      param = `/bo/sme-details-new/${this.leaderDetails?.userId}?partnerType=INDIVIDUAL,PRINCIPAL`;
+    if (leaderUserId) {
+      param = `/bo/sme-details-new/${leaderUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
     } else {
       param = `/bo/sme-details-new/${loggedInSmeUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
     }
