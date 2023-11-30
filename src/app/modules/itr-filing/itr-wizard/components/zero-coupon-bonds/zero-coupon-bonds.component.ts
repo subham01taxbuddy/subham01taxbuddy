@@ -107,8 +107,8 @@ export class ZeroCouponBondsComponent
       this.deduction = false;
       if (indexedDebData?.length > 0) {
         indexedDebData.forEach((obj: any) => {
-          assetDetails = obj.assetDetails;
-          assetDetails.forEach((element: any) => {
+          assetDetails = obj?.assetDetails;
+          assetDetails?.forEach((element: any) => {
             const filterImp = obj.improvement.filter(
               (data) => data.srn == element.srn
             );
@@ -160,8 +160,7 @@ export class ZeroCouponBondsComponent
           }
         });
       }
-
-      if (data.length > 0) {
+      if (data && data.length > 0) {
         data.forEach((obj: any) => {
           assetDetails = obj.assetDetails;
           assetDetails.forEach((element: any) => {
@@ -719,13 +718,15 @@ export class ZeroCouponBondsComponent
           }
         }
       } else {
-        let goldIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
-          (element) => element.assetType === 'GOLD'
+        let goldIndex = this.Copy_ITR_JSON?.capitalGain?.findIndex(
+          (element) => element?.assetType === 'GOLD'
         );
-        this.Copy_ITR_JSON.capitalGain[goldIndex].assetDetails =
-          this.Copy_ITR_JSON.capitalGain[goldIndex].assetDetails.filter(
-            (element) => !element.isIndexationBenefitAvailable
-          );
+        if (goldIndex !== -1) {
+          this.Copy_ITR_JSON.capitalGain[goldIndex].assetDetails =
+            this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails?.filter(
+              (element) => !element?.isIndexationBenefitAvailable
+            );
+        }
       }
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
         (result: any) => {

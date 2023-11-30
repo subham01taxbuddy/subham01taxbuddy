@@ -12,8 +12,8 @@
           *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
           <button class="tbd-btn bulk spRt col-sm-4" style="float:right" disabled
             (click)="$event.stopPropagation(); openBulkReAssignment()">Bulk Re-Assignment to Leader</button>
-          <button class="tbd-btn bulk spRt col-sm-4" style="float:right" disabled
-            (click)="$event.stopPropagation(); openBulkReAssignment()">Bulk Re-Assignment to Filer</button>
+          <button class="tbd-btn bulk spRt col-sm-4" style="float:right"
+            (click)="$event.stopPropagation(); reassignmentForFiler()">Bulk Re-Assignment to Filer(with in a team)</button>
         </div>
       </mat-expansion-panel-header>
       <div class="rowClr">
@@ -107,7 +107,7 @@
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
 
 
-   
+
 
   </div>
 

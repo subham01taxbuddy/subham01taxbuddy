@@ -47,57 +47,7 @@
             [formGroupName]="i"
           >
             <div class="row">
-              <div class="col-sm-4 spsTp">
-                <mat-label>Date of Acquisition</mat-label>
-                <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    [max]="maxPurchaseDate"
-                    [min]="minPurchaseDate"
-                    formControlName="purchaseDate"
-                    name="asset[i]"
-                    readonly
-                    [matDatepicker]="purchaseDate"
-                    placeholder="Date of Acquisition"
-                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
-                    (dateChange)="
-                      calMinImproveDate(
-                        asset.get('purchaseDate').value,
-                        this.immovableForm,
-                        i
-                      )
-                    "
-                    (dateInput)="
-                      calMinImproveDate(
-                        asset.get('purchaseDate').value,
-                        this.immovableForm,
-                        i
-                      )
-                    "
-                    (blur)="
-                      calMinImproveDate(
-                        asset.get('purchaseDate').value,
-                        this.immovableForm,
-                        i
-                      )
-                    "
-                    required
-                  />
-                  <mat-datepicker-toggle
-                    matSuffix
-                    [for]="purchaseDate"
-                  ></mat-datepicker-toggle>
-                  <mat-datepicker #purchaseDate></mat-datepicker>
-                  <mat-error
-                    *ngIf="
-                      asset.get('purchaseDate').hasError('matDatepickerMax') ||
-                      asset.get('purchaseDate').hasError('matDatepickerMin')
-                    "
-                  >
-                    Invalid Date of Purchase
-                  </mat-error>
-                </mat-form-field>
-              </div>
+              <!-- date of sale -->
               <div class="col-sm-4 spsTp">
                 <mat-label>Date of Sale</mat-label>
                 <mat-form-field appearance="outline">
@@ -151,6 +101,59 @@
                 </mat-form-field>
               </div>
 
+              <!-- date of acquisition -->
+              <div class="col-sm-4 spsTp">
+                <mat-label>Date of Acquisition</mat-label>
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    [max]="maxPurchaseDate"
+                    [min]="minPurchaseDate"
+                    formControlName="purchaseDate"
+                    name="asset[i]"
+                    readonly
+                    [matDatepicker]="purchaseDate"
+                    placeholder="Date of Acquisition"
+                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
+                    (dateChange)="
+                      calMinImproveDate(
+                        asset.get('purchaseDate').value,
+                        this.immovableForm,
+                        i
+                      )
+                    "
+                    (dateInput)="
+                      calMinImproveDate(
+                        asset.get('purchaseDate').value,
+                        this.immovableForm,
+                        i
+                      )
+                    "
+                    (blur)="
+                      calMinImproveDate(
+                        asset.get('purchaseDate').value,
+                        this.immovableForm,
+                        i
+                      )
+                    "
+                    required
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="purchaseDate"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #purchaseDate></mat-datepicker>
+                  <mat-error
+                    *ngIf="
+                      asset.get('purchaseDate').hasError('matDatepickerMax') ||
+                      asset.get('purchaseDate').hasError('matDatepickerMin')
+                    "
+                  >
+                    Invalid Date of Purchase
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
               <!-- Full Value of Sale received/receivable -->
               <div class="col-sm-4 spsTp">
                 <mat-label>Full Value of Sale received/receivable</mat-label>
@@ -163,7 +166,10 @@
                     placeholder="Full Value of Sale received/receivable"
                     name="asset[i]"
                     formControlName="sellValue"
-                    (change)="calculateCapitalGain(this.immovableForm, '', i); updateSaleValue('saleValueChange')"
+                    (change)="
+                      calculateCapitalGain(this.immovableForm, '', i);
+                      updateSaleValue('saleValueChange')
+                    "
                     required
                   />
                 </mat-form-field>
