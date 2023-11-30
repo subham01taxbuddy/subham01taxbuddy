@@ -102,7 +102,7 @@ export class DashboardComponent implements OnInit {
     this.getPaymentReceivedList('paymentReceived');
     this.getSummaryConfirmationList('summaryConfirmation');
     this.getItrFilledEVerificationPendingList('eVerificationPending');
-    // this.getPartnerCommission();
+    this.getPartnerCommission();
     // this.getItrUserOverview();
   }
 
@@ -158,7 +158,7 @@ export class DashboardComponent implements OnInit {
       this.getCallingSummary();
       this.getStatuswiseCount();
       this.getInvoiceReports();
-      // this.getPartnerCommission();
+      this.getPartnerCommission();
       this.getPaymentReceivedList('paymentReceived');
       this.getSummaryConfirmationList('summaryConfirmation');
       this.getItrFilledEVerificationPendingList('eVerificationPending');
@@ -451,33 +451,47 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  // getPartnerCommission() {
-  //   // https://uat-api.taxbuddy.com/itr/dashboard/partner-commission?filerUserId=7002&fromDate=2023-01-01&toDate=2023-05-11
-  //   // https://uat-api.taxbuddy.com/itr/dashboard/partner-commission/{filerUserId}?fromDate=2023-05-06&toDate=2023-05-06
-  //   let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-  //   let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-  //   this.loading = true;
-  //   let filerUserId = this.loggedInSmeUserId;
+  getPartnerCommission() {
+    ///report/bo/dashboard/partner-commission-cumulative?fromDate=2023-04-01&toDate=2023-11-30&filerUserId=61645
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    this.loading = true;
+    let filerUserId = '';
+    let userFilter='';
+    if(this.filerId){
+      if(this.searchAsPrinciple === true){
+        userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+      }else{
+        userFilter += `&filerUserId=${this.filerId}`;
+      }
+    }else{
+      filerUserId=this.loggedInSmeUserId;
+      if(this.searchAsPrinciple === true){
+        userFilter += `&searchAsPrincipal=true&filerUserId=${filerUserId}`;
+      }else{
+        userFilter += `&filerUserId=${filerUserId}`;
+      }
+    }
 
-  //   let param = `/dashboard/partner-commission?filerUserId=${filerUserId}&fromDate=${fromDate}&toDate=${toDate}`;
+    let param = `/bo/dashboard/partner-commission-cumulative?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
 
-  //   this.userMsService.getMethodNew(param).subscribe(
-  //     (response: any) => {
-  //       if (response.success) {
-  //         this.commissionData = response?.data;
-  //         this.totalOriginal = this.commissionData.itr1 + this.commissionData.itr2 + this.commissionData.itr3 + this.commissionData.itr4 + this.commissionData.itrOther + this.commissionData.itrU ;
-  //         this.totalRevised = this.commissionData.itr1_revised + this.commissionData.itr2_revised + this.commissionData.itr3_revised + this.commissionData.itr4_revised ;
-  //       } else {
-  //         this.loading = false;
-  //         this._toastMessageService.alert('error', response.message);
-  //       }
-  //     },
-  //     (error) => {
-  //       this.loading = false;
-  //       this._toastMessageService.alert('error', "Error while filer commission report: Not_found: Data not found");
-  //     }
-  //   );
-  // }
+    this.userMsService.getMethodNew(param).subscribe(
+      (response: any) => {
+        if (response.success) {
+          this.commissionData = response?.data;
+          this.totalOriginal = this.commissionData.itr1 + this.commissionData.itr2 + this.commissionData.itr3 + this.commissionData.itr4 + this.commissionData.itrOther + this.commissionData.itrU ;
+          this.totalRevised = this.commissionData.itr1_revised + this.commissionData.itr2_revised + this.commissionData.itr3_revised + this.commissionData.itr4_revised ;
+        } else {
+          this.loading = false;
+          this._toastMessageService.alert('error', response.message);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert('error', "Error while filer commission report: Not_found: Data not found");
+      }
+    );
+  }
 
   // getItrUserOverview() {
   //   // https://uat-api.taxbuddy.com/itr/dashboard/itr-users-overview?fromDate=2023-04-01&toDate=2023-05-16
