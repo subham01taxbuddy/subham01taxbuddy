@@ -8,7 +8,6 @@
     <mat-expansion-panel
       [expanded]="step === 0"
       (opened)="setStep(0)"
-      (closed)="closed()"
       hideToggle
       class="hide-close"
     >
@@ -210,7 +209,7 @@
                         <td>
                           <mat-form-field appearance="outline">
                             <input
-                              formControlName="grossAnnualRentReceived"
+                              formControlName="annualRentReceived"
                               matInput
                               placeholder="{{
                                 housePropertyForm.controls['propertyType']
@@ -240,7 +239,7 @@
                             <mat-error
                               *ngIf="
                                 housePropertyForm.controls[
-                                  'grossAnnualRentReceived'
+                                  'annualRentReceived'
                                 ].hasError('pattern')
                               "
                             >
@@ -249,7 +248,7 @@
                             <mat-error
                               *ngIf="
                                 housePropertyForm.controls[
-                                  'grossAnnualRentReceived'
+                                  'annualRentReceived'
                                 ].hasError('min')
                               "
                             >
@@ -258,12 +257,43 @@
                             <mat-error
                               *ngIf="
                                 housePropertyForm.controls[
-                                  'grossAnnualRentReceived'
+                                  'annualRentReceived'
                                 ].hasError('required')
                               "
                             >
                               Gross Rent is required in LOP & DLOP
                             </mat-error>
+                          </mat-form-field>
+                        </td>
+                      </tr>
+
+                      <!-- Your % share  -->
+                      <tr *ngIf="isCoOwners.value">
+                        <th scope="row">
+                          <mat-label> Your share on rent received </mat-label>
+                        </th>
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <input
+                              formControlName="rentPercentage"
+                              matInput
+                              currencyMask
+                              placeholder="Your share of rent received"
+                              name="rentPercentage"
+                              class="input-field"
+                              maxlength="11"
+                              digitsOnly
+                              (blur)="calAnnualValue()"
+                            />
+                            <mat-error
+                              *ngIf="
+                                housePropertyForm.controls[
+                                  'rentPercentage'
+                                ].hasError('pattern')
+                              "
+                            >
+                              Enter positive amount without decimal.</mat-error
+                            >
                           </mat-form-field>
                         </td>
                       </tr>
@@ -322,13 +352,12 @@
                               class="input-field"
                               maxlength="11"
                               digitsOnly
-                              (blur)="calAnnualValue()"
+                              readonly
                             />
                           </mat-form-field>
                         </td>
                       </tr>
 
-                      <br />
                       <!-- standard deduction  -->
                       <tr>
                         <th scope="row">
@@ -347,7 +376,7 @@
                               class="input-field"
                               maxlength="11"
                               digitsOnly
-                              (blur)="calAnnualValue()"
+                              readonly
                             />
                           </mat-form-field>
                         </td>
@@ -358,6 +387,51 @@
                     <tr>
                       <th scope="row">
                         <mat-label>Interest paid during the year</mat-label>
+                        <!-- 80ee&80eea  -->
+                        <div
+                          *ngIf="housePropertyForm.get('interestAmount').value > 200000"
+                          style="padding-top: 20px"
+                        >
+                          <mat-radio-group
+                            [formControl]="
+                              housePropertyForm.get('isEligibleFor80EE')
+                                | formControlType
+                            "
+                            (change)="EeEaValueChanges()"
+                          >
+                            <div class="customradiobtn bdr_btm">
+                              <mat-radio-button
+                                style="margin: 0"
+                                [value]="''"
+                                class="right-mrgn"
+                                >None</mat-radio-button
+                              >
+                            </div>
+                            <br />
+                            <div class="customradiobtn bdr_btm">
+                              <mat-radio-button
+                                style="margin: 0"
+                                [value]="'80EE'"
+                                class="right-mrgn"
+                                [disabled]="EEStatus"
+                                >Interest on loan taken for residential house
+                                property (80EE)</mat-radio-button
+                              >
+                            </div>
+                            <br />
+                            <div class="customradiobtn">
+                              <mat-radio-button
+                                style="margin: 0"
+                                [value]="'80EEA'"
+                                class="right-mrgn"
+                                [disabled]="EAStatus"
+                                >Deduction in respect of interest on loan taken
+                                for certain house property
+                                (80EEA)</mat-radio-button
+                              >
+                            </div>
+                          </mat-radio-group>
+                        </div>
                       </th>
 
                       <td>
@@ -395,6 +469,67 @@
                     </tr>
 
                     <br />
+                    <ng-container
+                      *ngIf="
+                        housePropertyForm.controls['propertyType'].value ===
+                          'LOP' ||
+                        housePropertyForm.controls['propertyType'].value ===
+                          'DLOP'
+                      "
+                    >
+                      <!-- Annual Value  -->
+                      <tr>
+                        <th scope="row">
+                          <mat-label> Annual Value </mat-label>
+                        </th>
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <input
+                              matInput
+                              placeholder="Annual Value"
+                              [(ngModel)]="annualValue"
+                              [ngModelOptions]="{ standalone: true }"
+                              matTooltipClass="tab-tooltip"
+                              matTooltip="Gross rent received - Tax paid on local authorities"
+                              name="annualValue"
+                              class="input-field"
+                              maxlength="11"
+                              digitsOnly
+                              disabled
+                            />
+                            <mat-hint
+                              >Gross rent received - Tax paid on local
+                              authorities</mat-hint
+                            >
+                          </mat-form-field>
+                        </td>
+                      </tr>
+
+                      <!-- 30% of annual value  -->
+                      <tr>
+                        <th scope="row">
+                          <mat-label>30% of Annual value</mat-label>
+                        </th>
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <input
+                              matInput
+                              placeholder="30% of Annual value"
+                              [(ngModel)]="thirtyPctOfAnnualValue"
+                              [ngModelOptions]="{ standalone: true }"
+                              name="thirtyPctOfAV"
+                              class="input-field"
+                              maxlength="11"
+                              digitsOnly
+                              disabled
+                            />
+                            <mat-hint>30% of Annual value</mat-hint>
+                          </mat-form-field>
+                        </td>
+                      </tr>
+                    </ng-container>
+
+                    <br />
                     <!-- Arrears Amount -->
                     <tr>
                       <th scope="row">
@@ -410,7 +545,7 @@
                             class="input-field"
                             maxlength="11"
                             digitsOnly
-                            (blur)="calTotalArrValue()"
+                            (blur)="calculateArrears30()"
                           />
                           <mat-hint>Arrears Amount</mat-hint>
                         </mat-form-field>
@@ -447,6 +582,7 @@
                             name="eligible80EEAmount"
                             class="input-field"
                             digitsOnly
+                            readonly
                           />
                         </mat-form-field>
                       </td>
@@ -467,6 +603,7 @@
                             name="eligible80EEAAmount"
                             class="input-field"
                             digitsOnly
+                            readonly
                           />
                         </mat-form-field>
                       </td>
