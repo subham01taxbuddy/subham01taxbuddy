@@ -5595,6 +5595,10 @@ export class PrefillIdComponent implements OnInit {
   /*****AIS code starts*****/
   addAisCredentials() {
 
+    if(!this.utilsService.isNonEmpty(this.ITR_JSON.panNumber) && !this.utilsService.isNonEmpty(this.userProfile.panNumber)){
+      this.utilsService.showSnackBar("User PAN is not available. Please update PAN in user profile.");
+      return;
+    }
     const dialogRef = this.dialog.open(AisCredsDialogComponent, {
       width: '500px',
       data: {
