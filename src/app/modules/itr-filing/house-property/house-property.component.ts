@@ -121,7 +121,6 @@ export class HousePropertyComponent implements OnInit {
         haveUnlistedShares: false,
       };
     }
-
   }
 
   ngOnInit() {
@@ -222,61 +221,100 @@ export class HousePropertyComponent implements OnInit {
     if (type === 2 || type === 3) {
       return this.fb.group({
         propertyType: ['', Validators.required],
+        principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
+        grossAnnualRentReceived: [null],
+        propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
+        nav: null,
+
+        // intereset details
+        standardDeduction: null,
+        interestAmount: [
+          '',
+          [
+            Validators.pattern(
+              AppConstants.numericRegex
+            ) /* , Validators.min(1) */,
+          ],
+        ],
+        interest24bAmount: [
+          '',
+          [
+            Validators.pattern(
+              AppConstants.numericRegex
+            ) /* , Validators.min(1) */,
+          ],
+        ],
+
+        // arrears details
+        arrearsUnrealizedRentReceived: [''],
+        totalArrearsUnrealizedRentReceived: [''],
+
+        // 80ee and 80eea details
+        eligible80EEAmount: null,
+        eligible80EEAAmount: null,
+
+        // property details
         address: ['', Validators.required],
         city: [
           '',
-          Validators.compose([
-            Validators.required,
-            Validators.pattern(AppConstants.charRegex),
-          ]),
+          Validators.required,
+          Validators.compose([Validators.pattern(AppConstants.charRegex)]),
         ],
         state: ['', Validators.required],
         country: ['', Validators.required],
         pinCode: [
           '',
+          Validators.required,
           Validators.compose([
-            Validators.required,
             Validators.maxLength(6),
             Validators.pattern(AppConstants.PINCode),
           ]),
         ],
-        grossAnnualRentReceived: [null],
-        grossAnnualRentReceivedTotal: null,
-        annualRentReceived: [
-          null,
-          [
-            Validators.required,
-            Validators.pattern(AppConstants.numericRegex),
-            Validators.min(1),
-          ],
-        ],
-        rentPercentage: [{ value: null, disabled: true }],
-        propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
-        totalArrearsUnrealizedRentReceived: [''],
-        arrearsUnrealizedRentReceived: [''],
-        isEligibleFor80EE: [null],
-        // isEligibleFor80EEA: [false],
-        loans: this.fb.array([
-          this.fb.group({
-            loanType: ['HOUSING'],
-            principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
-            interestAmount: [
-              '',
-              [
-                Validators.pattern(
-                  AppConstants.numericRegex
-                ) /* , Validators.min(1) */,
-              ],
-            ],
-          }),
-        ]),
+
+        // other details
+        loanType: ['HOUSING'],
         coOwners: this.fb.array([]),
         tenant: this.fb.array([]),
         ownerPercentage: [],
+        rentPercentage: [],
       });
     } else {
       return this.fb.group({
         propertyType: ['', Validators.required],
+        principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
+        grossAnnualRentReceived: [null],
+        propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
+        nav: null,
+
+        // intereset details
+        standardDeduction: null,
+        interestAmount: [
+          '',
+          [
+            Validators.pattern(
+              AppConstants.numericRegex
+            ) /* , Validators.min(1) */,
+          ],
+        ],
+        interest24bAmount: [
+          '',
+          [
+            Validators.pattern(
+              AppConstants.numericRegex
+            ) /* , Validators.min(1) */,
+          ],
+        ],
+
+        // arrears details
+        arrearsUnrealizedRentReceived: [''],
+        totalArrearsUnrealizedRentReceived: [''],
+
+        // 80ee and 80eea details
+        eligible80EEAmount: null,
+        eligible80EEAAmount: null,
+
+        // if type 2 || 3 have to set this as mandatory
+        // property details
         address: [''],
         city: [
           '',
@@ -291,42 +329,17 @@ export class HousePropertyComponent implements OnInit {
             Validators.pattern(AppConstants.PINCode),
           ]),
         ],
-        grossAnnualRentReceived: [null],
-        grossAnnualRentReceivedTotal: null,
-        annualRentReceived: [
-          null,
-          [
-            Validators.required,
-            Validators.pattern(AppConstants.numericRegex),
-            Validators.min(1),
-          ],
-        ],
-        rentPercentage: [{ value: null, disabled: true }],
-        propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
-        isEligibleFor80EE: [''],
-        // isEligibleFor80EEA: [false],
-        loans: this.fb.array([
-          this.fb.group({
-            loanType: ['HOUSING'],
-            principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
-            interestAmount: [
-              '',
-              [
-                Validators.pattern(
-                  AppConstants.numericRegex
-                ) /* , Validators.min(1) */,
-              ],
-            ],
-          }),
-        ]),
+
+        // other details
+        loanType: ['HOUSING'],
         coOwners: this.fb.array([]),
         tenant: this.fb.array([]),
         ownerPercentage: [],
-        totalArrearsUnrealizedRentReceived: [''],
-        arrearsUnrealizedRentReceived: [''],
+        rentPercentage: [],
       });
     }
   }
+
   createTenantForm(obj: { name?: string; panNumber?: string } = {}): FormGroup {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
@@ -584,7 +597,6 @@ export class HousePropertyComponent implements OnInit {
 
     this.EeEaValueChanges();
     this.chekIsSOPAdded();
-
   }
 
   haveCoOwners() {
@@ -684,20 +696,23 @@ export class HousePropertyComponent implements OnInit {
       for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
         if (this.ITR_JSON.houseProperties[i].propertyType === 'SOP') {
           this.isSelfOccupied++;
-          if(this.storedIndex != i) {
-            this.sopInterestClaimed = this.ITR_JSON.houseProperties[i].loans[0]?.interestAmount;
+          if (this.storedIndex != i) {
+            this.sopInterestClaimed =
+              this.ITR_JSON.houseProperties[i].loans[0]?.interestAmount;
           }
           // break;
         }
       }
     }
     let typeOfHp = this.housePropertyForm.controls['propertyType'].value;
-    if(typeOfHp === 'SOP') {
+    if (typeOfHp === 'SOP') {
       console.log('updating validations');
       (
         (this.housePropertyForm.controls['loans'] as FormGroup)
           .controls[0] as FormGroup
-      ).controls['interestAmount'].setValidators([Validators.max(200000 - this.sopInterestClaimed)]);
+      ).controls['interestAmount'].setValidators([
+        Validators.max(200000 - this.sopInterestClaimed),
+      ]);
       (
         (this.housePropertyForm.controls['loans'] as FormGroup)
           .controls[0] as FormGroup
@@ -706,6 +721,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   isDisable = false;
+  
   changePropType(type, mode?) {
     console.log(type);
     this.isDisable = false;
@@ -759,7 +775,9 @@ export class HousePropertyComponent implements OnInit {
       (
         (this.housePropertyForm.controls['loans'] as FormGroup)
           .controls[0] as FormGroup
-      ).controls['interestAmount'].setValidators([Validators.max(200000 - this.sopInterestClaimed)]);
+      ).controls['interestAmount'].setValidators([
+        Validators.max(200000 - this.sopInterestClaimed),
+      ]);
       (
         (this.housePropertyForm.controls['loans'] as FormGroup)
           .controls[0] as FormGroup
@@ -1105,26 +1123,7 @@ export class HousePropertyComponent implements OnInit {
       }
     });
   }
-  // serviceCall(request, ref) {
-  //   this.loading = true;
-  //   const param = '/taxitr?type=houseProperties';
-  //   this.itrMsService.postMethod(param, request).subscribe((result: ITR_JSON) => {
-  //     this.ITR_JSON = result;
-  //     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-  //     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-  //     if (ref === 'DELETE') {
-  //       this.utilsService.showSnackBar('House Property income deleted successfully.');
-  //       this.housePropertyForm = this.createHousePropertyForm();
-  //     } else {
-  //       this.utilsService.showSnackBar('House Property income updated successfully.');
-  //     }
-  //     this.loading = false;
-  //   }, error => {
-  //     this.loading = false;
-  //     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-  //     this.utilsService.showSnackBar('Failed to update House Property income.');
-  //   });
-  // }
+
   getHpTaxableIncome() {
     let taxable = 0;
     for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
@@ -1173,18 +1172,6 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  calTotalArrValue() {
-    let arrearsUnrealizedRentReceived =
-      this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived']
-        .value -
-      this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived']
-        .value *
-        0.3;
-    console.log(arrearsUnrealizedRentReceived);
-    this.housePropertyForm.controls['arrearsUnrealizedRentReceived'].setValue(
-      arrearsUnrealizedRentReceived
-    );
-  }
   // Function to set the stored values
   setStoredValues(i: any, v: string) {
     this.storedIndex = i;
@@ -1310,4 +1297,26 @@ export class HousePropertyComponent implements OnInit {
   goBack() {
     this.saveAndNext.emit(true);
   }
+
+  calculateNav() {}
+
+  calculateStandardDeduction() {}
+
+  calculateInterest24b() {}
+
+  calculateArrears30() {}
+  calTotalArrValue() {
+    let arrearsUnrealizedRentReceived =
+      this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived']
+        .value -
+      this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived']
+        .value *
+        0.3;
+    console.log(arrearsUnrealizedRentReceived);
+    this.housePropertyForm.controls['arrearsUnrealizedRentReceived'].setValue(
+      arrearsUnrealizedRentReceived
+    );
+  }
+
+  calculate80eeOr80eea() {}
 }
