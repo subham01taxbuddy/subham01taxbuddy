@@ -14,7 +14,7 @@
     text-align: center;
     padding: 0;
 
-    &.mini{
+    &.mini {
         padding: 4px 16px;
         line-height: 20px;
     }
@@ -40,6 +40,7 @@
 
     &.btn__edit {
         padding-left: 20px;
+
         &::before {
             content: "\f044";
             position: absolute;
@@ -171,8 +172,8 @@
     padding: 6px 10px;
     border-radius: 4px;
     line-height: 28px;
-    margin:  20px 10px;
-    gap:16px;
+    margin: 20px 10px;
+    gap: 16px;
     font-weight: 500;
     font-size: 12px;
 }
@@ -335,4 +336,54 @@
 
 .btn i~span {
     margin-left: 6px;
+}
+
+.side_btn {
+    font-family: $font-body;
+    text-align: center;
+    background-color: $bgcolor-sidebutton;
+    color: $color-sidebutton;
+    padding: 5px 0px 5px 0px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+    position: fixed;
+    top: 125px;
+    right: -65px;
+    width: 170px;
+    height: 40px;
+    text-orientation: sideways-right;
+    font-weight: 700;
+    transform: rotate(-90deg);
+    border-radius: 4px;
+
+    &.btn__summary {
+        padding-left: 30px;
+
+        &::before {
+            content: "\f00b";
+            position: absolute;
+            left: 10px;
+            line-height: 28px;
+            top: 10px;
+            height: 20px;
+            width: 20px;
+            font-family: fontawesome;
+        }
+    }
+
+    &.btn__edit {
+        padding-left: 20px;
+
+        &::before {
+            content: "\f044";
+            position: absolute;
+            left: 10px;
+            line-height: 28px;
+            top: 10px;
+            height: 20px;
+            width: 20px;
+            font-family: fontawesome;
+        }
+    }
 }

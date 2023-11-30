@@ -4,7 +4,9 @@
 .breadcrumb {
     background-color: $color-breadcrumb_gray;
     padding: 8px 24px;
-    margin: 0px 0px 12px 0px;
+    margin: 0px 0px 12px 30px;
+    position: absolute;
+    width: 80%;
 }
 
 .breadcrumb-item {

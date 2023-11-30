@@ -139,9 +139,11 @@ select {
 }
 
 main {
-    width: 80% !important;
+    // width: 80% !important;
     padding: 0 30px;
     overflow: auto;
+    position: relative;
+    top: 60px;
 }
 .space__between {
     display: flex !important;

@@ -61,8 +61,8 @@
         </div>
     </aside>
     <!-- left side bar ends -->
-    <!-- main area -->
-    <main>
+
+    <div class="main-content">
         <!-- breadcrumb area -->
         <div class="breadcrumb">
             <div class="breadcrumb-item">Prefill Data</div>
@@ -70,273 +70,278 @@
             <div class="breadcrumb-item">Salary</div>
         </div>
         <!-- breadcrumb area ends -->
-        <div class="frameC">
-            <h1 class="heading__title"> Listed Securities/Equity/Mutual Funds</h1>
-            <div class="space">
-                <div class="wrapper">
-                    <div class="accordion-item">
-                        <h2 class="accordion__item-title">
-                            Direct Upload From Statement
-                        </h2>
-                        <div class="accordion__item-body">
-                            <div class="surround_text">
-                                <div class="row mb-20">
-                                    <div class="col-5 align_self">
-                                        <p class="normal_text">Upload Capital Gain/F&O Statement</p>
+        <!-- main area -->
+        <main>
+            <div class="frameC">
+                <h1 class="heading__title"> Listed Securities/Equity/Mutual Funds</h1>
+                <div class="space">
+                    <div class="wrapper">
+                        <div class="accordion-item">
+                            <h2 class="accordion__item-title">
+                                Direct Upload From Statement
+                            </h2>
+                            <div class="accordion__item-body">
+                                <div class="surround_text">
+                                    <div class="row mb-20">
+                                        <div class="col-5 align_self">
+                                            <p class="normal_text">Upload Capital Gain/F&O Statement</p>
+                                        </div>
+                                        <div class="col-7">
+                                            <button class="btn btn__primary"><i
+                                                    class="fa-solid fa-arrow-up-from-bracket"></i> Manual
+                                                Upload</button>
+                                            <button class="btn btn__primary"><i class="fa-regular fa-cloud"></i> Upload
+                                                From
+                                                Cloud</button>
+                                        </div>
                                     </div>
-                                    <div class="col-7">
-                                        <button class="btn btn__primary"><i
-                                                class="fa-solid fa-arrow-up-from-bracket"></i> Manual Upload</button>
-                                        <button class="btn btn__primary"><i class="fa-regular fa-cloud"></i> Upload From
-                                            Cloud</button>
-                                    </div>
-                                </div>
 
-                                <div class="row">
-                                    <div class="col-7 align_self">
-                                        <p class="normal_text">Use Taxbuddy Template</p>
-                                    </div>
-                                    <div class="col-5">
-                                        <button class="btn btn__primary"><i class="fa fa-download"
-                                                aria-hidden="true"></i> Download Taxbuddy Template</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item">
-                        <h2 class="accordion__item-title">
-                            Manual Update
-                        </h2>
-                        <div class="accordion__item-body">
-                            <div class="div-6">
-                                <div class="form-field">
-                                    <div><span class="span">Sale Date </span> <span class="text-wrapper-2">*</span>
-                                    </div>
-                                    <input type="date" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="DD/MM/YYYY">
-                                </div>
-                                <div class="form-field">
-                                    <div><span class="span">Buy Date </span> <span class="text-wrapper-2">*</span></div>
-                                    <input type="date" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="DD/MM/YYYY">
-                                </div>
-                                <div class="form-field">
-                                    <div><span class="span">Type of gain </span></div>
-                                    <input type="text" class="form-control inpplac disable" id="exampleInputEmail1"
-                                        aria-describedby="emailHelp" disabled>
-                                </div>
-                            </div>
-                            <div class="gray_container">
-                                <div class="div-6 mb-20">
-                                    <div class="form-field">
-                                        <div><span class="normal_text">Save Value</span> <span
-                                                class="text-wrapper-2">*</span> </div>
-                                    </div>
-                                    <div class="form-field">
-                                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-                                            aria-describedby="emailHelp" placeholder="₹ Enter Amount">
-                                    </div>
-                                </div>
-                                <div class="div-6 mb-20">
-                                    <div class="form-field">
-                                        <div><span class="normal_text">Buy Value</span> <span
-                                                class="text-wrapper-2">*</span> </div>
-                                    </div>
-                                    <div class="form-field">
-                                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-                                            aria-describedby="emailHelp" placeholder="₹ Enter Amount">
-                                    </div>
-                                </div>
-                                <div class="div-6 mb-20">
-                                    <div class="form-field">
-                                        <div><span class="normal_text">Expenses</span> <span
-                                                class="text-wrapper-2">*</span> </div>
-                                    </div>
-                                    <div class="form-field">
-                                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-                                            aria-describedby="emailHelp" placeholder="₹ Enter Amount">
-                                    </div>
-                                </div>
-
-                                <div class="accordion-item">
-                                    <h2 class="accordion-title">
-                                        Gain Amount
-                                        <button type="button" class="accordion-btn" data-bs-toggle="collapse"
-                                            data-bs-target="#collapseTwo">
-                                            ₹ 56,000
-                                        </button>
-                                    </h2>
-                                </div>
-                            </div>
-                            <div class="White_box">
-                                <div class="row mb-10">
-                                    <div class="col-10 ">
-                                        <p><span class="span">Add Deduction Details u/s 54F?<span
-                                                    class="text-wrapper-2">*</span></span></p>
-                                    </div>
-                                    <div class="col-2">
-                                        <div class="radio_group">
-                                            <input type="radio" class="radio_input" value="Yes">Yes
-                                            <input type="radio" class="radio_input" value="No">No
+                                    <div class="row">
+                                        <div class="col-7 align_self">
+                                            <p class="normal_text">Use Taxbuddy Template</p>
+                                        </div>
+                                        <div class="col-5">
+                                            <button class="btn btn__primary"><i class="fa fa-download"
+                                                    aria-hidden="true"></i> Download Taxbuddy Template</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-title">
-                                    Net Capital Gain Amount
-                                    <button type="button" class="accordion-btn" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseTwo">
-                                        ₹ 53,560
-                                    </button>
-                                </h2>
-                            </div>
-                            <div class="out-box">
-                                <div class="box-left">
-                                    <button class="btn btn__white">cancel</button>
-                                </div>
-                                <div class="box-right">
-                                    <button class="btn btn__primary">Save Details</button>
-                                </div>
-                            </div>
                         </div>
-                    </div>
 
-                    <div class="accordion-item">
-                        <h2 class="accordion__item-title">
-                            Listed Securities(Equity shares/ Equity Mutual Funds)
-                        </h2>
-                        <div class="accordion__item-body">
-                            <mat-tab-group mat-align-tabs="start">
-                                <mat-tab label="All Securities">
-                                    <div class="table-wrapper">
-                                        <table class="table table-bordered mb-20">
-                                            <thead>
-                                                <tr class="table-head thead-light">
-                                                    <th class="text-center" scope="col"></th>
-                                                    <th class="text-center" scope="col">Script name</th>
-                                                    <th class="text-center" scope="col">Sale Value</th>
-                                                    <th class="text-center" scope="col"> Buy Value</th>
-                                                    <th class="text-center" scope="col"> Expenses</th>
-                                                    <th class="text-center" scope="col"> Type of gain</th>
-                                                    <th class="text-center" scope="col"> Gain Amount</th>
-                                                    <th class="text-center" scope="col"> Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <input type="checkbox">
-                                                    </td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td class="action-items">
-                                                        <a class="action__edit"><i class="fa fa-pencil"></i></a>
-                                                        <a class="action__delete"><i class="fa fa-trash-o"></i></a>
-
-                                                    </td>
-
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input type="checkbox">
-                                                    </td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td class="action-items">
-                                                        <a class="action__edit"><i class="fa fa-pencil"></i></a>
-                                                        <a class="action__delete"><i class="fa fa-trash-o"></i></a>
-
-                                                    </td>
-
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input type="checkbox">
-                                                    </td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td class="action-items">
-                                                        <a class="action__edit"><i class="fa fa-pencil"></i></a>
-                                                        <a class="action__delete"><i class="fa fa-trash-o"></i></a>
-
-                                                    </td>
-
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input type="checkbox">
-                                                    </td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td class="action-items">
-                                                        <a class="action__edit"><i class="fa fa-pencil"></i></a>
-                                                        <a class="action__delete"><i class="fa fa-trash-o"></i></a>
-
-                                                    </td>
-
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input type="checkbox">
-                                                    </td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td>AS_PBLISHER</td>
-                                                    <td class="action-items">
-                                                        <a class="action__edit"><i class="fa fa-pencil"></i></a>
-                                                        <a class="action__delete"><i class="fa fa-trash-o"></i></a>
-
-                                                    </td>
-
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                        <div class="accordion-item">
+                            <h2 class="accordion__item-title">
+                                Manual Update
+                            </h2>
+                            <div class="accordion__item-body">
+                                <div class="div-6">
+                                    <div class="form-field">
+                                        <div><span class="span">Sale Date </span> <span class="text-wrapper-2">*</span>
+                                        </div>
+                                        <input type="date" class="form-control inpplac" id="exampleInputEmail1"
+                                            aria-describedby="emailHelp" placeholder="DD/MM/YYYY">
+                                    </div>
+                                    <div class="form-field">
+                                        <div><span class="span">Buy Date </span> <span class="text-wrapper-2">*</span>
+                                        </div>
+                                        <input type="date" class="form-control inpplac" id="exampleInputEmail1"
+                                            aria-describedby="emailHelp" placeholder="DD/MM/YYYY">
+                                    </div>
+                                    <div class="form-field">
+                                        <div><span class="span">Type of gain </span></div>
+                                        <input type="text" class="form-control inpplac disable" id="exampleInputEmail1"
+                                            aria-describedby="emailHelp" disabled>
+                                    </div>
+                                </div>
+                                <div class="gray_container">
+                                    <div class="div-6 mb-20">
+                                        <div class="form-field">
+                                            <div><span class="normal_text">Save Value</span> <span
+                                                    class="text-wrapper-2">*</span> </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                                aria-describedby="emailHelp" placeholder="₹ Enter Amount">
+                                        </div>
+                                    </div>
+                                    <div class="div-6 mb-20">
+                                        <div class="form-field">
+                                            <div><span class="normal_text">Buy Value</span> <span
+                                                    class="text-wrapper-2">*</span> </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                                aria-describedby="emailHelp" placeholder="₹ Enter Amount">
+                                        </div>
+                                    </div>
+                                    <div class="div-6 mb-20">
+                                        <div class="form-field">
+                                            <div><span class="normal_text">Expenses</span> <span
+                                                    class="text-wrapper-2">*</span> </div>
+                                        </div>
+                                        <div class="form-field">
+                                            <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                                aria-describedby="emailHelp" placeholder="₹ Enter Amount">
+                                        </div>
                                     </div>
 
-                                </mat-tab>
-                                <mat-tab label="By Broker">Content for Broker</mat-tab>\
-                            </mat-tab-group>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-title">
+                                            Gain Amount
+                                            <button type="button" class="accordion-btn" data-bs-toggle="collapse"
+                                                data-bs-target="#collapseTwo">
+                                                ₹ 56,000
+                                            </button>
+                                        </h2>
+                                    </div>
+                                </div>
+                                <div class="White_box">
+                                    <div class="row mb-10">
+                                        <div class="col-10 ">
+                                            <p><span class="span">Add Deduction Details u/s 54F?<span
+                                                        class="text-wrapper-2">*</span></span></p>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="radio_group">
+                                                <input type="radio" class="radio_input" value="Yes">Yes
+                                                <input type="radio" class="radio_input" value="No">No
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-title">
+                                        Net Capital Gain Amount
+                                        <button type="button" class="accordion-btn" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseTwo">
+                                            ₹ 53,560
+                                        </button>
+                                    </h2>
+                                </div>
+                                <div class="out-box">
+                                    <div class="box-left">
+                                        <button class="btn btn__white">cancel</button>
+                                    </div>
+                                    <div class="box-right">
+                                        <button class="btn btn__primary">Save Details</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="out-box">
-                        <div class="box-left">
-                            <button class="btn btn__white">Back</button>
+                        <div class="accordion-item">
+                            <h2 class="accordion__item-title">
+                                Listed Securities(Equity shares/ Equity Mutual Funds)
+                            </h2>
+                            <div class="accordion__item-body">
+                                <mat-tab-group mat-align-tabs="start">
+                                    <mat-tab label="All Securities">
+                                        <div class="table-wrapper">
+                                            <table class="table table-bordered mb-20">
+                                                <thead>
+                                                    <tr class="table-head thead-light">
+                                                        <th class="text-center" scope="col"></th>
+                                                        <th class="text-center" scope="col">Script name</th>
+                                                        <th class="text-center" scope="col">Sale Value</th>
+                                                        <th class="text-center" scope="col"> Buy Value</th>
+                                                        <th class="text-center" scope="col"> Expenses</th>
+                                                        <th class="text-center" scope="col"> Type of gain</th>
+                                                        <th class="text-center" scope="col"> Gain Amount</th>
+                                                        <th class="text-center" scope="col"> Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="checkbox">
+                                                        </td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td class="action-items">
+                                                            <a class="action__edit"><i class="fa fa-pencil"></i></a>
+                                                            <a class="action__delete"><i class="fa fa-trash-o"></i></a>
+
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="checkbox">
+                                                        </td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td class="action-items">
+                                                            <a class="action__edit"><i class="fa fa-pencil"></i></a>
+                                                            <a class="action__delete"><i class="fa fa-trash-o"></i></a>
+
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="checkbox">
+                                                        </td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td class="action-items">
+                                                            <a class="action__edit"><i class="fa fa-pencil"></i></a>
+                                                            <a class="action__delete"><i class="fa fa-trash-o"></i></a>
+
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="checkbox">
+                                                        </td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td class="action-items">
+                                                            <a class="action__edit"><i class="fa fa-pencil"></i></a>
+                                                            <a class="action__delete"><i class="fa fa-trash-o"></i></a>
+
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="checkbox">
+                                                        </td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td>AS_PBLISHER</td>
+                                                        <td class="action-items">
+                                                            <a class="action__edit"><i class="fa fa-pencil"></i></a>
+                                                            <a class="action__delete"><i class="fa fa-trash-o"></i></a>
+
+                                                        </td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </mat-tab>
+                                    <mat-tab label="By Broker">Content for Broker</mat-tab>\
+                                </mat-tab-group>
+                            </div>
                         </div>
-                        <div class="box-right">
-                            <button class="btn btn__primary">Save & View Summary</button>
+
+                        <div class="out-box">
+                            <div class="box-left">
+                                <button class="btn btn__white">Back</button>
+                            </div>
+                            <div class="box-right">
+                                <button class="btn btn__primary">Save & View Summary</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
-
+        </main>
+    </div>
     <!-- right side summary -->
     <aside class="aside-right">
-        <button class="open-button" onclick="openForm()"><img class="icoSum" src="assets/img/new/summary.png">
-            <div class="txAln">Show Summary</div>
-        </button>
+        <button class="side_btn btn__summary" onclick="openForm()">Show Summary</button>
         <div class="form-popup" id="myForm">
             <div class="frameS">
                 <div class="contents-wrapper">

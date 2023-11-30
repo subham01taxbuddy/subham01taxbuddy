@@ -59,8 +59,8 @@
         </div>
     </aside>
     <!-- left side bar ends -->
-    <!-- main area -->
-    <main>
+
+    <div class="main-content">
         <!-- breadcrumb area -->
         <div class="breadcrumb">
             <div class="breadcrumb-item">Prefill Data</div>
@@ -68,122 +68,123 @@
             <div class="breadcrumb-item">Crypto/Vda</div>
         </div>
         <!-- breadcrumb area ends -->
+        <!-- main area -->
+        <main>
+            <div class="frameC">
+                <h1 class="heading__title">Schedule VDA</h1>
+                <div class="space">
+                    <span class="normal_text">Income from transfer of Virtual Digital Assets</span>
+                    <div class="wrapper">
+                        <div class="accordion-item">
+                            <h2 class="accordion__item-title space__between">
+                                <span class="box-left">
+                                    Crypto - Schedule VDA
+                                </span>
+                                <button class="btn btn__default btn__add">Add</button>
+                            </h2>
 
-        <div class="frameC">
-            <h1 class="heading__title">Schedule VDA</h1>
-            <div class="space">
-                <span class="normal_text">Income from transfer of Virtual Digital Assets</span>
-                <div class="wrapper">
-                    <div class="accordion-item">
-                        <h2 class="accordion__item-title space__between">
-                            <span class="box-left">
-                                Crypto - Schedule VDA
-                            </span>
-                            <button class="btn btn__default btn__add">Add</button>
-                        </h2>
+                            <div class="accordion__item-body">
+                                <div class="row border">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead class="divider_border">
+                                                <tr>
+                                                    <th class="text-left mr-20"></th>
+                                                    <th class="text-left mr-20 min-width">DATE OF ACQUISITION (2)</th>
+                                                    <th class="text-left mr-20 min-width">DATE OF TRANSFER (3)</th>
+                                                    <th class="text-left mr-20 min-width">HEAD UNDER WHICH INCOME
+                                                        TO BE TAXED<br /> (BUSINESS/CAPITAL GAIN) (4)
+                                                    </th>
+                                                    <th class="text-left mr-20 min-width">COST OF ACQUISITION (5)</th>
+                                                    <th class="text-left mr-20 min-width">CONSIDERATION RECEVIED (6)
+                                                    </th>
+                                                    <th class="text-left mr-20 min-width">INCOME
+                                                        (ENTER NIL IN CASE OF LOSS) (7)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox">
+                                                    </td>
+                                                    <td>
+                                                        <input type="date" class="form-control inpplac"
+                                                            id="exampleInputEmail1" aria-describedby="emailHelp">
+                                                    </td>
+                                                    <td>
+                                                        <input type="date" class="form-control inpplac"
+                                                            id="exampleInputEmail1" aria-describedby="emailHelp">
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-control-wrapper select_arrow">
+                                                            <select class="form-control inpplac "
+                                                                id="exampleFormControlSelect1">
+                                                                <option>Select</option>
+                                                                <option>2</option>
+                                                                <option>3</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control inpplac mb-20"
+                                                            id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                            placeholder="Tax Identification Number">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control inpplac mb-20"
+                                                            id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                            placeholder="Tax Identification Number">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control inpplac mb-20"
+                                                            id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                            placeholder="Tax Identification Number">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <span class="normal_text">Total (Sum of all Positive Incomes of
+                                                            Business Income in Col. 7)</span>
+                                                    </td>
+                                                    <td>
 
-                        <div class="accordion__item-body">
-                            <div class="row border">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead class="divider_border">
-                                            <tr>
-                                                <th class="text-left mr-20"></th>
-                                                <th class="text-left mr-20 min-width">DATE OF ACQUISITION (2)</th>
-                                                <th class="text-left mr-20 min-width">DATE OF TRANSFER (3)</th>
-                                                <th class="text-left mr-20 min-width">HEAD UNDER WHICH INCOME
-                                                    TO BE TAXED<br /> (BUSINESS/CAPITAL GAIN) (4)
-                                                </th>
-                                                <th class="text-left mr-20 min-width">COST OF ACQUISITION (5)</th>
-                                                <th class="text-left mr-20 min-width">CONSIDERATION RECEVIED (6)</th>
-                                                <th class="text-left mr-20 min-width">INCOME
-                                                    (ENTER NIL IN CASE OF LOSS) (7)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <input type="checkbox">
-                                                </td>
-                                                <td>
-                                                    <input type="date" class="form-control inpplac"
-                                                        id="exampleInputEmail1" aria-describedby="emailHelp">
-                                                </td>
-                                                <td>
-                                                    <input type="date" class="form-control inpplac"
-                                                        id="exampleInputEmail1" aria-describedby="emailHelp">
-                                                </td>
-                                                <td>
-                                                    <div class="form-control-wrapper select_arrow">
-                                                        <select class="form-control inpplac "
-                                                            id="exampleFormControlSelect1">
-                                                            <option>Select</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <input type="text" class="form-control inpplac mb-20"
-                                                        id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                        placeholder="Tax Identification Number">
-                                                </td>
-                                                <td>
-                                                    <input type="text" class="form-control inpplac mb-20"
-                                                        id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                        placeholder="Tax Identification Number">
-                                                </td>
-                                                <td>
-                                                    <input type="text" class="form-control inpplac mb-20"
-                                                        id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                        placeholder="Tax Identification Number">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6">
-                                                    <span class="normal_text">Total (Sum of all Positive Incomes of
-                                                        Business Income in Col. 7)</span>
-                                                </td>
-                                                <td>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <span class="normal_text">Total (Sum of all Positive Incomes of
+                                                            Capital Gain in Col. 7)</span>
+                                                    </td>
+                                                    <td>
 
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6">
-                                                    <span class="normal_text">Total (Sum of all Positive Incomes of
-                                                        Capital Gain in Col. 7)</span>
-                                                </td>
-                                                <td>
-
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
+                                <button class="btn btn__white mt-20"><i class="fa-solid fa-trash-can"></i>
+                                    Delete</button>
                             </div>
-                            <button class="btn btn__white mt-20"><i class="fa-solid fa-trash-can"></i> Delete</button>
                         </div>
-                    </div>
 
-                    <div class="out-box">
-                        <div class="box-left">
-                            <button class="btn btn__white">Back</button>
-                        </div>
-                        <div class="box-right">
-                            <button class="btn btn__primary">Save & View Summary</button>
+                        <div class="out-box">
+                            <div class="box-left">
+                                <button class="btn btn__white">Back</button>
+                            </div>
+                            <div class="box-right">
+                                <button class="btn btn__primary">Save & View Summary</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
-
+        </main>
+    </div>
 
     <!-- right side summary -->
     <aside class="aside-right">
-        <button class="open-button" onclick="openForm()"><img class="icoSum" src="assets/img/new/summary.png">
-            <div class="txAln">Show Summary</div>
-        </button>
+        <button class="side_btn btn__summary" onclick="openForm()">Show Summary</button>
         <div class="form-popup" id="myForm">
             <div class="frameS">
                 <div class="contents-wrapper">
