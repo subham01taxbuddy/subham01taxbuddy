@@ -745,15 +745,29 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     console.log(selectedRows);
     if (selectedRows.length === 0) {
-      this.utilsService.showSnackBar('Please select entries to Re-Assign');
+      this.utilsService.showSnackBar('Please select entries from table to Re-Assign');
       return;
     }
+
+    const uniqueLeaderUserIds = new Set(selectedRows.map(row => row.leaderUserId));
+    if (uniqueLeaderUserIds.size !== 1) {
+      this.utilsService.showSnackBar('Please select entries with the same Leader, Please Filter further for leader ');
+      return;
+    }
+
+    const itrRows = selectedRows.filter(row => row.serviceType === 'ITR');
+
+    if (itrRows.length === 0) {
+      this.utilsService.showSnackBar('Please select entries with Service Type "ITR"');
+      return;
+    }
+
     let invoices = selectedRows.flatMap(item => item.invoiceNo);
     let disposable = this.dialog.open(ReAssignActionDialogComponent, {
       width: '65%',
       height: 'auto',
       data: {
-        data: selectedRows
+        data: itrRows
       },
     });
     disposable.afterClosed().subscribe((result) => {
