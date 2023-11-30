@@ -581,8 +581,8 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     let param = `/bo/sme-details?assigned=true${userFilter}${roleFilter}${languageFilter}${capabilityFilter}${mobileFilter}${komEmailFilter}${smeEmailFilter}${nameFilter}`;
 
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-sme-report', '', this.sortBy);
-      this.loading = false;
-      this.showCsvMessage = false;
+    this.loading = false;
+    this.showCsvMessage = false;
 
 
   }
@@ -914,7 +914,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: (params: any) => {
           const smeData = params?.data;
-
           const serviceTypes = [
             { key: 'serviceEligibility_ITR', displayName: 'ITR' },
             { key: 'serviceEligibility_TPA', displayName: 'TPA' },
@@ -925,24 +924,28 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           let result = [];
           serviceTypes.forEach(serviceType => {
             if (smeData[serviceType.key]) {
-              if (smeData['assignmentOffByLeader']) {
-                result.push(
-                  `<li><i style="color:red;" class="fa fa-circle-xmark" aria-hidden="true"></i> ${serviceType.displayName}</li>`
-                );
+              if (smeData.roles.includes('ROLE_FILER')) {
+                if (smeData['assignmentOffByLeader']) {
+                  result.push(
+                    `<li><i style="color:red;" class="fa fa-circle-xmark" aria-hidden="true"></i> ${serviceType.displayName}</li>`
+                  );
+                } else {
+                  result.push(
+                    `<li><i class="fa fa-check-circle" aria-hidden="true"></i> ${serviceType.displayName}</li>`
+                  );
+                }
               } else {
-                result.push(
-                  `<li><i class="fa fa-check-circle" aria-hidden="true"></i> ${serviceType.displayName}</li>`
-                );
+                if (smeData[serviceType.key].assignmentStart) {
+                  result.push(
+                    `<li><i class="fa fa-check-circle" aria-hidden="true"></i> ${serviceType.displayName}</li>`
+                  );
+                } else {
+                  result.push(
+                    `<li><i style="color:red;" class="fa fa-circle-xmark" aria-hidden="true"></i>${serviceType.displayName}</li>`
+                  );
+                }
               }
-              // if (smeData[serviceType.key].assignmentStart) {
-              //   result.push(
-              //     `<li><i class="fa fa-check-circle" aria-hidden="true"></i> ${serviceType.displayName}</li>`
-              //   );
-              // } else {
-              //   result.push(
-              //     `<li>${serviceType.displayName}</li>`
-              //   );
-              // }
+
             }
           });
 
