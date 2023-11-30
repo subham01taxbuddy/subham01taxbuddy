@@ -41,19 +41,23 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     },
     {
       value: 'INTEREST_ACCRUED_10_11_I_P',
-      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(11)',
+      label:
+        'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(11)',
     },
     {
       value: 'INTEREST_ACCRUED_10_11_II_P',
-      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(11)',
+      label:
+        'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(11)',
     },
     {
       value: 'INTEREST_ACCRUED_10_12_I_P',
-      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(12)',
+      label:
+        'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(12)',
     },
     {
       value: 'INTEREST_ACCRUED_10_12_II_P',
-      label: 'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(12)',
+      label:
+        'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(12)',
     },
     {
       value: 'ANY_OTHER',
@@ -361,17 +365,37 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     let giftTax = this.otherIncomeFormGroup.get('giftTax') as FormGroup;
 
     this.Copy_ITR_JSON.giftTax = {
-      aggregateValueWithoutConsideration: giftTax.get("aggregateValueWithoutConsideration").value,
-      aggregateValueWithoutConsiderationNotTaxable: giftTax.get("aggregateValueWithoutConsiderationNotTaxable").value,
-      immovablePropertyWithoutConsideration: giftTax.get("immovablePropertyWithoutConsideration").value,
-      immovablePropertyWithoutConsiderationNotTaxable: giftTax.get("immovablePropertyWithoutConsiderationNotTaxable").value,
-      immovablePropertyInadequateConsideration: giftTax.get("immovablePropertyInadequateConsideration").value,
-      immovablePropertyInadequateConsiderationNotTaxable: giftTax.get("immovablePropertyInadequateConsiderationNotTaxable").value,
-      anyOtherPropertyWithoutConsideration: giftTax.get("anyOtherPropertyWithoutConsideration").value,
-      anyOtherPropertyWithoutConsiderationNotTaxable: giftTax.get("anyOtherPropertyWithoutConsiderationNotTaxable").value,
-      anyOtherPropertyInadequateConsideration: giftTax.get("anyOtherPropertyInadequateConsideration").value,
-      anyOtherPropertyInadequateConsiderationNotTaxable: giftTax.get("anyOtherPropertyInadequateConsiderationNotTaxable").value,
-    }
+      aggregateValueWithoutConsideration: giftTax.get(
+        'aggregateValueWithoutConsideration'
+      ).value,
+      aggregateValueWithoutConsiderationNotTaxable: giftTax.get(
+        'aggregateValueWithoutConsiderationNotTaxable'
+      ).value,
+      immovablePropertyWithoutConsideration: giftTax.get(
+        'immovablePropertyWithoutConsideration'
+      ).value,
+      immovablePropertyWithoutConsiderationNotTaxable: giftTax.get(
+        'immovablePropertyWithoutConsiderationNotTaxable'
+      ).value,
+      immovablePropertyInadequateConsideration: giftTax.get(
+        'immovablePropertyInadequateConsideration'
+      ).value,
+      immovablePropertyInadequateConsiderationNotTaxable: giftTax.get(
+        'immovablePropertyInadequateConsiderationNotTaxable'
+      ).value,
+      anyOtherPropertyWithoutConsideration: giftTax.get(
+        'anyOtherPropertyWithoutConsideration'
+      ).value,
+      anyOtherPropertyWithoutConsiderationNotTaxable: giftTax.get(
+        'anyOtherPropertyWithoutConsiderationNotTaxable'
+      ).value,
+      anyOtherPropertyInadequateConsideration: giftTax.get(
+        'anyOtherPropertyInadequateConsideration'
+      ).value,
+      anyOtherPropertyInadequateConsiderationNotTaxable: giftTax.get(
+        'anyOtherPropertyInadequateConsiderationNotTaxable'
+      ).value,
+    };
 
     let dividendIncomes = this.otherIncomeFormGroup.controls[
       'dividendIncomes'
@@ -625,19 +649,43 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       // }
     }
 
-    if(this.ITR_JSON.giftTax != null){
-      let giftTaxJson =  this.ITR_JSON.giftTax;
+    if (this.ITR_JSON.giftTax != null) {
+      let giftTaxJson = this.ITR_JSON.giftTax;
       let giftTax = this.otherIncomeFormGroup.get('giftTax') as FormGroup;
-      giftTax.get("aggregateValueWithoutConsideration").setValue(giftTaxJson.aggregateValueWithoutConsideration);
-      giftTax.get("aggregateValueWithoutConsiderationNotTaxable").setValue(giftTaxJson.aggregateValueWithoutConsiderationNotTaxable);
-      giftTax.get("immovablePropertyWithoutConsideration").setValue(giftTaxJson.immovablePropertyWithoutConsideration);
-      giftTax.get("immovablePropertyWithoutConsiderationNotTaxable").setValue(giftTaxJson.immovablePropertyWithoutConsiderationNotTaxable);
-      giftTax.get("immovablePropertyInadequateConsideration").setValue(giftTaxJson.immovablePropertyInadequateConsideration);
-      giftTax.get("immovablePropertyInadequateConsiderationNotTaxable").setValue(giftTaxJson.immovablePropertyInadequateConsiderationNotTaxable);
-      giftTax.get("anyOtherPropertyWithoutConsideration").setValue(giftTaxJson.anyOtherPropertyWithoutConsideration);
-      giftTax.get("anyOtherPropertyWithoutConsiderationNotTaxable").setValue(giftTaxJson.anyOtherPropertyWithoutConsiderationNotTaxable);
-      giftTax.get("anyOtherPropertyInadequateConsideration").setValue(giftTaxJson.anyOtherPropertyInadequateConsideration);
-      giftTax.get("anyOtherPropertyInadequateConsiderationNotTaxable").setValue(giftTaxJson.anyOtherPropertyInadequateConsiderationNotTaxable);
+      giftTax
+        .get('aggregateValueWithoutConsideration')
+        .setValue(giftTaxJson.aggregateValueWithoutConsideration);
+      giftTax
+        .get('aggregateValueWithoutConsiderationNotTaxable')
+        .setValue(giftTaxJson.aggregateValueWithoutConsiderationNotTaxable);
+      giftTax
+        .get('immovablePropertyWithoutConsideration')
+        .setValue(giftTaxJson.immovablePropertyWithoutConsideration);
+      giftTax
+        .get('immovablePropertyWithoutConsiderationNotTaxable')
+        .setValue(giftTaxJson.immovablePropertyWithoutConsiderationNotTaxable);
+      giftTax
+        .get('immovablePropertyInadequateConsideration')
+        .setValue(giftTaxJson.immovablePropertyInadequateConsideration);
+      giftTax
+        .get('immovablePropertyInadequateConsiderationNotTaxable')
+        .setValue(
+          giftTaxJson.immovablePropertyInadequateConsiderationNotTaxable
+        );
+      giftTax
+        .get('anyOtherPropertyWithoutConsideration')
+        .setValue(giftTaxJson.anyOtherPropertyWithoutConsideration);
+      giftTax
+        .get('anyOtherPropertyWithoutConsiderationNotTaxable')
+        .setValue(giftTaxJson.anyOtherPropertyWithoutConsiderationNotTaxable);
+      giftTax
+        .get('anyOtherPropertyInadequateConsideration')
+        .setValue(giftTaxJson.anyOtherPropertyInadequateConsideration);
+      giftTax
+        .get('anyOtherPropertyInadequateConsiderationNotTaxable')
+        .setValue(
+          giftTaxJson.anyOtherPropertyInadequateConsiderationNotTaxable
+        );
     }
 
     if (this.ITR_JSON.dividendIncomes instanceof Array) {
@@ -865,29 +913,58 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     return total;
   }
 
-  validateIncomeValueOnBlur(){
-    if(this.otherIncomeFormGroup.get('otherIncomes').value.some((otherIncome: { incomeType: string, incomeValue:any})=> (otherIncome.incomeType === 'INTEREST_ACCRUED_10_11_I_P' || otherIncome.incomeType === 'INTEREST_ACCRUED_10_11_II_P' || otherIncome.incomeType === 'INTEREST_ACCRUED_10_12_I_P'|| otherIncome.incomeType === 'INTEREST_ACCRUED_10_12_II_P') && otherIncome.incomeValue !== null && otherIncome.incomeValue !== '')){
-      const otherIncomes = this.otherIncomeFormGroup.get('otherIncomes') as FormArray;
+  validateIncomeValueOnBlur() {
+    if (
+      this.otherIncomeFormGroup
+        .get('otherIncomes')
+        .value.some(
+          (otherIncome: { incomeType: string; incomeValue: any }) =>
+            (otherIncome.incomeType === 'INTEREST_ACCRUED_10_11_I_P' ||
+              otherIncome.incomeType === 'INTEREST_ACCRUED_10_11_II_P' ||
+              otherIncome.incomeType === 'INTEREST_ACCRUED_10_12_I_P' ||
+              otherIncome.incomeType === 'INTEREST_ACCRUED_10_12_II_P') &&
+            otherIncome.incomeValue !== null &&
+            otherIncome.incomeValue !== ''
+        )
+    ) {
+      const otherIncomes = this.otherIncomeFormGroup.get(
+        'otherIncomes'
+      ) as FormArray;
       for (let i = 0; i < otherIncomes.length; i++) {
         const otherIncome = otherIncomes.at(i) as FormGroup;
-        if((otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_I_P' ||
-            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_II_P' ||
-            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_I_P' ||
-            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_II_P') && (otherIncome.get('incomeValue').value === '' || otherIncome.get('incomeValue').value === null)){
+        if (
+          (otherIncome.get('incomeType').value ===
+            'INTEREST_ACCRUED_10_11_I_P' ||
+            otherIncome.get('incomeType').value ===
+              'INTEREST_ACCRUED_10_11_II_P' ||
+            otherIncome.get('incomeType').value ===
+              'INTEREST_ACCRUED_10_12_I_P' ||
+            otherIncome.get('incomeType').value ===
+              'INTEREST_ACCRUED_10_12_II_P') &&
+          (otherIncome.get('incomeValue').value === '' ||
+            otherIncome.get('incomeValue').value === null)
+        ) {
           otherIncome.disable();
-       }
+        }
       }
-    } else{
-      const otherIncomes = this.otherIncomeFormGroup.get('otherIncomes') as FormArray;
+    } else {
+      const otherIncomes = this.otherIncomeFormGroup.get(
+        'otherIncomes'
+      ) as FormArray;
       for (let i = 0; i < otherIncomes.length; i++) {
         const otherIncome = otherIncomes.at(i) as FormGroup;
-        if(otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_I_P' ||
-            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_II_P' ||
-            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_I_P' ||
-            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_II_P'){
+        if (
+          otherIncome.get('incomeType').value ===
+            'INTEREST_ACCRUED_10_11_I_P' ||
+          otherIncome.get('incomeType').value ===
+            'INTEREST_ACCRUED_10_11_II_P' ||
+          otherIncome.get('incomeType').value ===
+            'INTEREST_ACCRUED_10_12_I_P' ||
+          otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_II_P'
+        ) {
           otherIncome.enable();
-       }
+        }
+      }
     }
   }
-}
 }
