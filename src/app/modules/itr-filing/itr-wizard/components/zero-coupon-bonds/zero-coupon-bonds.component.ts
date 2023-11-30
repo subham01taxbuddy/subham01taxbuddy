@@ -88,6 +88,7 @@ export class ZeroCouponBondsComponent
       let assetDetails;
       let data;
       let indexedDebData;
+      let zcbData;
       if (this.bondType === 'bonds') {
         data = this.Copy_ITR_JSON.capitalGain.filter(
           (item: any) => item.assetType === 'BONDS'
@@ -95,12 +96,16 @@ export class ZeroCouponBondsComponent
         indexedDebData = this.Copy_ITR_JSON.capitalGain.filter(
           (item: any) => item.assetType === 'GOLD'
         );
+        zcbData = this.Copy_ITR_JSON.capitalGain.filter(
+          (item: any) => item.assetType === 'ZERO_COUPON_BONDS'
+        );
       } else if (this.bondType === 'zeroCouponBonds') {
         data = this.Copy_ITR_JSON.capitalGain.filter(
           (item: any) => item.assetType === 'ZERO_COUPON_BONDS'
         );
       }
-      if (indexedDebData && indexedDebData?.length > 0) {
+      this.deduction = false;
+      if (indexedDebData?.length > 0) {
         indexedDebData.forEach((obj: any) => {
           assetDetails = obj?.assetDetails;
           assetDetails?.forEach((element: any) => {
@@ -126,6 +131,35 @@ export class ZeroCouponBondsComponent
           }
         });
       }
+
+      if (zcbData?.length > 0) {
+        zcbData.forEach((obj: any) => {
+          assetDetails = obj.assetDetails;
+          assetDetails.forEach((element: any) => {
+            const filterImp = obj.improvement.filter(
+              (data) => data.srn == element.srn
+            );
+            if (filterImp.length > 0) {
+              element['costOfImprovement'] = filterImp[0].costOfImprovement;
+              element['indexCostOfImprovement'] =
+                filterImp[0].indexCostOfImprovement;
+              element['dateOfImprovement'] = filterImp[0].dateOfImprovement;
+
+            }
+            if (this.bondType === 'zeroCouponBonds' && !element.whetherDebenturesAreListed) {
+              this.addMoreBondsData(element);
+            } else if(this.bondType === 'bonds' && element.whetherDebenturesAreListed){
+              this.addMoreBondsData(element);
+            }
+          });
+          if (obj.deduction) {
+            obj.deduction.forEach((element: any) => {
+              this.deductionForm = this.initDeductionForm(element);
+            });
+            this.deduction = true;
+          }
+        });
+      }
       if (data && data.length > 0) {
         data.forEach((obj: any) => {
           assetDetails = obj.assetDetails;
@@ -136,6 +170,10 @@ export class ZeroCouponBondsComponent
             if (filterImp.length > 0) {
               element['costOfImprovement'] = filterImp[0].costOfImprovement;
 
+            }
+            if (this.bondType === 'zeroCouponBonds' && !element.whetherDebenturesAreListed) {
+              this.addMoreBondsData(element);
+            } else if(this.bondType === 'bonds' && !element.whetherDebenturesAreListed){
               this.addMoreBondsData(element);
             }
           });
@@ -446,9 +484,13 @@ export class ZeroCouponBondsComponent
       const bondImprovement = [];
       const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
       let bondsList = [];
+      if(this.bondType !== 'bonds'){
+        bondsList = this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails;
+      }
       bondsArray.controls.forEach((element) => {
         if (
           !(element as FormGroup).controls['isIndexationBenefitAvailable'].value
+          && !(element as FormGroup).controls['whetherDebenturesAreListed'].value
         ) {
           let costOfImprovement = (element as FormGroup).controls[
             'costOfImprovement'
@@ -503,6 +545,10 @@ export class ZeroCouponBondsComponent
       let indexedDebList = bondsArray
         .getRawValue()
         .filter((element) => element.isIndexationBenefitAvailable === true);
+      //here we need to check for debentures which are listed
+      let zcbDebList = bondsArray
+        .getRawValue()
+        .filter((element) => element.whetherDebenturesAreListed === true);
       if (indexedDebList?.length > 0) {
         let goldIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
           (element) => element.assetType === 'GOLD'
@@ -581,6 +627,90 @@ export class ZeroCouponBondsComponent
             this.Copy_ITR_JSON.capitalGain[goldIndex] = debData;
           } else {
             this.Copy_ITR_JSON.capitalGain.splice(goldIndex, 1);
+          }
+        } else {
+          if (debData.assetDetails.length > 0) {
+            this.Copy_ITR_JSON.capitalGain?.push(debData);
+          }
+        }
+      } else if(zcbDebList?.length > 0){
+        let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
+          (element) => element.assetType === 'ZERO_COUPON_BONDS'
+        );
+        const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
+        let zcbList = [];
+        let maxZcb = 0;
+        if (this.Copy_ITR_JSON.capitalGain[zcbIndex]?.assetDetails) {
+          let tempArray = this.Copy_ITR_JSON.capitalGain[
+            zcbIndex
+            ].assetDetails.map((element) => element.srn);
+          if (tempArray && tempArray.length) {
+            maxZcb = tempArray.reduce((previousValue, currentValue) =>
+              previousValue > currentValue ? previousValue : currentValue
+            );
+          }
+        }
+        bondsArray.controls.forEach((element) => {
+          if (
+            (element as FormGroup).controls['whetherDebenturesAreListed']
+              .value === true
+          ) {
+            //check if existing GOLD assets already have the srn for current form
+            let srnCheck = this.Copy_ITR_JSON.capitalGain[
+              zcbIndex
+              ]?.assetDetails.filter(
+              (e) => e.srn === (element as FormGroup).controls['srn'].value
+            );
+
+            if (srnCheck && srnCheck.length > 0) {
+              let newSrn = Math.max(
+                bondsArray.length,
+                maxZcb + 1,
+                zcbList.length
+              );
+              (element as FormGroup).controls['srn'].setValue(newSrn);
+            }
+
+            let costOfImprovement = (element as FormGroup).controls[
+              'costOfImprovement'
+              ].value;
+            bondImprovement.push({
+              srn: (element as FormGroup).controls['srn'].value,
+              dateOfImprovement: (element as FormGroup).controls[
+                'dateOfImprovement'
+                ].value,
+              indexCostOfImprovement: (element as FormGroup).controls[
+                'indexCostOfImprovement'
+                ].value,
+              costOfImprovement: costOfImprovement,
+            });
+
+            zcbList.push((element as FormGroup).getRawValue());
+          }
+        });
+
+        const debData = {
+          assessmentYear: this.ITR_JSON.assessmentYear,
+          assesseeType: this.ITR_JSON.assesseeType,
+          residentialStatus: this.ITR_JSON.residentialStatus,
+          assetType: 'ZERO_COUPON_BONDS',
+          deduction:
+            this.deductionForm.invalid || !this.deduction
+              ? []
+              : [this.deductionForm.getRawValue()],
+          improvement: bondImprovement,
+          buyersDetails: [],
+          assetDetails: zcbList,
+        };
+
+        if (!bondsArray.value) {
+          this.deductionForm.value([]);
+        }
+        if (zcbIndex >= 0) {
+          if (debData.assetDetails.length > 0) {
+            this.Copy_ITR_JSON.capitalGain[zcbIndex] = debData;
+          } else {
+            this.Copy_ITR_JSON.capitalGain.splice(zcbIndex, 1);
           }
         } else {
           if (debData.assetDetails.length > 0) {
