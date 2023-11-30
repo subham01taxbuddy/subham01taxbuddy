@@ -91,12 +91,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-          return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && rowNode.data.statusId != 11) : false;
-        }
-        else {
-          return rowNode.data ? this.showReassignmentBtn.length : false;
-        }
+        return rowNode.data ? this.showReassignmentBtn.length : false;
       },
       onGridReady: params => {
       },

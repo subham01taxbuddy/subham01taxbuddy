@@ -95,12 +95,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-          return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && rowNode.data.statusId != 11) : false;
-        }
-        else {
-          return rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' : false;
-        }
+        return rowNode.data ? (this.showReassignmentBtn.length  && rowNode.data.statusId != 11 && rowNode.data.statusId != 35) : false;
       },
       onGridReady: params => {
       },
@@ -406,28 +401,24 @@ export class ItrAssignedUsersComponent implements OnInit {
     let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
-      // {
-      //   field: 'Re Assign',
-      //   headerCheckboxSelection: true,
-      //   width: 110,
-      //   hide: !this.showReassignmentBtn.length,
-      //   pinned: 'left',
-      //   checkboxSelection: (params) => {
-      //     if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-      //       return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
-      //     } else {
-      //       return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
-      //     }
-      //   },
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center',
-      //       display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center',
-      //     };
-      //   },
-      // },
+      {
+        field: 'Re Assign',
+        headerCheckboxSelection: true,
+        width: 110,
+        hide: !this.showReassignmentBtn.length,
+        pinned: 'left',
+        checkboxSelection: (params) => {
+          return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11 ;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
       {
         headerName: 'Client Name',
         field: 'name',
@@ -872,14 +863,20 @@ export class ItrAssignedUsersComponent implements OnInit {
     ];
   }
 
-  actionWithReassignment() {
+  reassignmentForFiler() {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     console.log(selectedRows);
     if (selectedRows.length === 0) {
-      this.utilsService.showSnackBar('Please select entries to Re-assign');
+      this.utilsService.showSnackBar('Please select entries from table to Re-Assign');
       return;
     }
-    let invoices = selectedRows.flatMap(item => item.invoiceNo);
+
+    const uniqueLeaderUserIds = new Set(selectedRows.map(row => row.leaderUserId));
+    if (uniqueLeaderUserIds.size !== 1) {
+      this.utilsService.showSnackBar('Please select entries with the same Leader, Please Filter further for leader ');
+      return;
+    }
+
     let disposable = this.dialog.open(ReAssignActionDialogComponent, {
       width: '65%',
       height: 'auto',
@@ -922,7 +919,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         lastFiledItrId: userData[i].lastFiledItrId,
         conversationWithFiler: userData[i].conversationWithFiler,
         ownerUserId: userData[i].ownerUserId,
-        filerUserId:userData[i].filerUserId
+        filerUserId:userData[i].filerUserId,
+        leaderUserId :userData[i].leaderUserId,
       })
       userArray.push(userInfo);
     }

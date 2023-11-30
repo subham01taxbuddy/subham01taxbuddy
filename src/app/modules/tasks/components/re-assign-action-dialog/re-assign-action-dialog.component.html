@@ -21,6 +21,9 @@ font-weight: bold;">Bulk Re-Assignment For Filer </label><button style="float: r
     </div>
 </div>
 <span class="loader-text" *ngIf="progressMessage">{{progressMessage}}</span>
+<span class="note1 note">
+  Note :“Only those users will be reassign for which filer has the capabilities, others will be ignored”
+</span>
 
 
 <ng-template #errorTableTemplate>
