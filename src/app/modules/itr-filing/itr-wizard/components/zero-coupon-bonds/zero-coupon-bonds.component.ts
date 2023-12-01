@@ -350,8 +350,14 @@ export class ZeroCouponBondsComponent
       let param = '/calculate/indexed-cost';
       let purchaseDate = bonds.controls['purchaseDate'].value;
       let sellDate = bonds.controls['sellDate'].value;
+      let type =
+        bonds.controls['isIndexationBenefitAvailable'].value === true
+          ? 'GOLD'
+          : this.bondType === 'zeroCouponBonds'
+            ? 'ZERO_COUPON_BONDS'
+            : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
       let request = {
-        assetType: this.bondType === 'bonds' ? 'BONDS' : 'ZERO_COUPON_BONDS',
+        assetType: type,
         buyDate: moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
         sellDate: moment(new Date(sellDate)).format('YYYY-MM-DD'),
       };
