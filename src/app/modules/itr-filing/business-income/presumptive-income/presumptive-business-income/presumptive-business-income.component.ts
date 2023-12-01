@@ -114,9 +114,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       ],
       cashPreIncome: [cash ? cash.presumptiveIncome : 0],
     });
-    form.controls['natureOfBusiness'].setValue(
-      income?.natureOfBusiness || null
-    );
     return form;
   }
 
@@ -157,7 +154,8 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       this.busIncomeForm.get('busIncomeFormArray')
     );
     busIncomeFormArray.controls = busIncomeFormArray.controls.filter(
-      element => !(element as FormGroup).controls['hasEdit'].value);
+      (element) => !(element as FormGroup).controls['hasEdit'].value
+    );
     this.config.totalItems = busIncomeFormArray.controls.length;
   }
 
@@ -372,8 +370,9 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       let presBusinessArray = this.ITR_JSON.business?.presumptiveIncomes;
 
       // form values
-      let BusinessFormIncome =
-        (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).getRawValue();
+      let BusinessFormIncome = (
+        this.busIncomeForm.controls['busIncomeFormArray'] as FormArray
+      ).getRawValue();
 
       // array that will be stored unde presumptive income
       let presBusinessIncome = [];
@@ -496,7 +495,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       sessionStorage.setItem('ITR_JSON', JSON.stringify(this.Copy_ITR_JSON));
       this.loading = false;
       this.presBusinessSaved.emit(true);
-
     } else {
       const busIncomeArray = this.getBusIncomeArray;
 

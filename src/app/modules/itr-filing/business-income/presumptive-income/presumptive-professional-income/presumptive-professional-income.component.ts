@@ -54,19 +54,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
-    let natureOfBusiness = JSON.parse(
-      sessionStorage.getItem('NATURE_OF_BUSINESS')
-    );
-    if (natureOfBusiness) {
-      this.natureOfBusinessList = natureOfBusiness.filter(
-        (item: any) => item.section === '44ADA'
-      );
-      console.log(this.natureOfBusinessList, 'natureOfbusinessList');
-    } else {
-      // this.getMastersData();
-      // this.dataSource;
-    }
   }
 
   ngOnInit(): void {
@@ -131,9 +118,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
         income?.incomes[0]?.minimumPresumptiveIncome || 0,
       ],
     });
-    form.controls['natureOfBusiness'].setValue(
-      income?.natureOfBusiness || null
-    );
     return form;
   }
 
@@ -235,12 +219,12 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   ////// OLD CODE
-  getBusinessName(data) {
-    let business = this.natureOfBusinessList?.filter(
-      (item: any) => item.code === data.natureOfBusiness
-    );
-    return business && business[0] ? (business[0] as any).label : null;
-  }
+  // getBusinessName(data) {
+  //   let business = this.natureOfBusinessList?.filter(
+  //     (item: any) => item.code === data.natureOfBusiness
+  //   );
+  //   return business && business[0] ? (business[0] as any).label : null;
+  // }
 
   displayedColumns: string[] = [
     'select',
