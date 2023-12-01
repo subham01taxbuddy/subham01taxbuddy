@@ -20,6 +20,8 @@ export class ReAssignDialogComponent implements OnInit {
   showOnlyLeader:boolean =false;
   showLeaderFiler : boolean = false;
   isServiceGst:boolean =false;
+  roles:any;
+  parentId:any;
 
   constructor(public dialogRef: MatDialogRef<ReAssignDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -36,6 +38,9 @@ export class ReAssignDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    let loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    this.parentId = loginSmeDetails[0].parentId
+    this.roles= this.utilsService.getUserRoles();
     console.log('data from more opt', this.data)
     console.log('Selected User Service ', this.data.serviceType)
     // this.ownerId=this.data.ownerId;
@@ -47,7 +52,7 @@ export class ReAssignDialogComponent implements OnInit {
       this.showOnlyLeader = false;
     }
 
-    if(this.data.filerUserId === '-' || this.data.filerUserId ===null ){
+    if(this.data.filerUserId === '-' || this.data.filerUserId === null ){
       this.showOnlyLeader = true;
       this.showLeaderFiler =false;
     }else{
