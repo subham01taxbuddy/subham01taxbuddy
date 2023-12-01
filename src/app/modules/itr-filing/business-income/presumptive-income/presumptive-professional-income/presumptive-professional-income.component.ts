@@ -174,7 +174,8 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       this.profIncomeForm.get('profIncomeFormArray')
     );
     profIncomeFormArray.controls = profIncomeFormArray.controls.filter(
-      element => !(element as FormGroup).controls['hasEdit'].value);
+      (element) => !(element as FormGroup).controls['hasEdit'].value
+    );
     this.config.totalItems = profIncomeFormArray.controls.length;
   }
 
@@ -472,8 +473,9 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
       let profBusiness = this.ITR_JSON.business?.presumptiveIncomes;
 
       // form values
-      let profBusinessFormIncome =
-        (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).getRawValue();
+      let profBusinessFormIncome = (
+        this.profIncomeForm.controls['profIncomeFormArray'] as FormArray
+      ).getRawValue();
 
       // array that will be stored unde presumptive income
       let presBusinessIncome = [];
