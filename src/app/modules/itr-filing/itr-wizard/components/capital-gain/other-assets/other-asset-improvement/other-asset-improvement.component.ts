@@ -277,6 +277,8 @@ export class OtherAssetImprovementComponent implements OnInit {
           res.data.costOfAcquisitionOrImprovement
         );
       });
+      this.assetsForm.updateValueAndValidity();
+      this.calculateCg();
     } else {
       this.assetsForm?.controls['indexCostOfAcquisition']?.setValue(0);
       this.getImprovementYears();
