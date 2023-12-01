@@ -386,9 +386,9 @@ export class ZeroCouponBondsComponent
       let type =
         bonds.controls['isIndexationBenefitAvailable'].value === true
           ? 'GOLD'
-          : this.bondType === 'bonds'
-          ? 'BONDS'
-          : 'ZERO_COUPON_BONDS';
+          : this.bondType === 'zeroCouponBonds'
+          ? 'ZERO_COUPON_BONDS'
+          : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
       let request = {
         assessmentYear: '2022-2023',
         assesseeType: 'INDIVIDUAL',
