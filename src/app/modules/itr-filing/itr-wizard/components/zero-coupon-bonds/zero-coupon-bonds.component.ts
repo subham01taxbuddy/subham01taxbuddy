@@ -332,6 +332,11 @@ export class ZeroCouponBondsComponent
     bondsArray.controls = bondsArray.controls.filter(
       (element) => !(element as FormGroup).controls['hasEdit'].value
     );
+    if(bondsArray.length == 0){
+      this.deductionForm.reset();
+      this.deduction = false;
+      this.isDisable = true;
+    }
   }
 
   pageChanged(event) {
@@ -728,7 +733,7 @@ export class ZeroCouponBondsComponent
         let goldIndex = this.Copy_ITR_JSON?.capitalGain?.findIndex(
           (element) => element?.assetType === 'GOLD'
         );
-        if (goldIndex !== -1) {
+        if (goldIndex !== -1 && indexedDebList?.length == 0) {
           this.Copy_ITR_JSON.capitalGain[goldIndex].assetDetails =
             this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails?.filter(
               (element) => !element?.isIndexationBenefitAvailable
