@@ -19,11 +19,9 @@
                 name="sellDate"
                 [matDatepicker]="sellDate"
                 placeholder="Sale Date/Date of Transfer"
-                (blur)="calculateGainType()"
                 (dateChange)="
                   calculateGainType();
-                  calMaxPurchaseDate(assetsForm.get('sellDate')?.value);
-                  calculateIndexCost('asset')
+                  calMaxPurchaseDate(assetsForm.get('sellDate')?.value)
                 "
                 [min]="minDate"
                 [max]="maxDate"
@@ -45,12 +43,7 @@
                 name="purchaseDate"
                 [matDatepicker]="purchaseDate"
                 placeholder="Buy Date / Date of Acquisition"
-                (blur)="getImprovementYears(); calculateGainType()"
-                (dateChange)="
-                  getImprovementYears();
-                  calculateGainType();
-                  calculateIndexCost('asset')
-                "
+                (dateChange)="getImprovementYears(); calculateGainType()"
                 [max]="maxPurchaseDate"
               />
               <mat-datepicker-toggle
@@ -74,8 +67,7 @@
                 class="input-field"
                 maxlength="14"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                (blur)="calculateCg()"
-                (change)="calculateIndexCost('asset')"
+                (blur)="calculateGainType()"
               />
 
               <!-- <mat-error
@@ -90,7 +82,10 @@
           </div>
 
           <!-- indexed cost of acquisition  -->
-          <div class="col-sm-4">
+          <div
+            class="col-sm-4"
+            *ngIf="assetsForm.controls['gainType'].value === 'LONG'"
+          >
             <mat-label> Indexed cost of acquisition</mat-label>
             <mat-form-field class="input-field-width" appearance="outline">
               <input
@@ -146,7 +141,7 @@
                 class="input-field"
                 maxlength="14"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                (blur)="calculateCg()"
+                (blur)="calculateGainType()"
               />
               <!-- <mat-error
                 *ngIf="
@@ -230,6 +225,11 @@
                       placeholder="Year of Improvement"
                       name="financialYearOfImprovement"
                       formControlName="financialYearOfImprovement"
+                      (blur)="
+                        calculateCoiIndexation(
+                          assetsForm.controls['gainType'].value
+                        )
+                      "
                       required
                     >
                       <mat-option
@@ -253,7 +253,11 @@
                       formControlName="costOfImprovement"
                       placeholder="Cost Of Improvement"
                       name="costOfImprovement"
-                      (blur)="calculateIndexCost()"
+                      (blur)="
+                        calculateCoiIndexation(
+                          assetsForm.controls['gainType'].value
+                        )
+                      "
                       class="input-field"
                       maxlength="14"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
