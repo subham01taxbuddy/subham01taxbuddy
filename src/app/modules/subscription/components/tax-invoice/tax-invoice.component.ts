@@ -56,7 +56,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   totalInvoice = 0;
   loggedInSme: any;
   maxStartDate = new Date()
-  maxDate =this.maxStartDate
+  maxDate = this.maxStartDate
   minDate = new Date(2023, 3, 1);
   // maxDate: any = new Date();
   allFilerList: any;
@@ -78,7 +78,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     statusId: null,
     page: 0,
     pageSize: 20,
-    serviceType:null,
+    serviceType: null,
     mobileNumber: null,
     emailId: null,
   };
@@ -115,13 +115,14 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     { value: 'total', name: 'Amount Payable' },
   ];
   dataOnLoad = true;
-  searchAsPrinciple :boolean =false;
+  searchAsPrinciple: boolean = false;
   searchBy: any = {};
   searchMenus = [];
   clearUserFilter: number;
   itrStatus: any = [];
   ogStatusList: any = [];
-  partnerType:any;
+  partnerType: any;
+  loginSmeDetails: any;
 
   constructor(
     private fb: FormBuilder,
@@ -134,12 +135,12 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     @Inject(LOCALE_ID) private locale: string,
     private activatedRoute: ActivatedRoute,
     private cacheManager: CacheManager,
-    private reportService:ReportService,
-    private mobileEncryptDecryptService :MobileEncryptDecryptService,
+    private reportService: ReportService,
+    private mobileEncryptDecryptService: MobileEncryptDecryptService,
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
     console.log('new Filer List ', this.allFilerList)
-
+    this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.invoiceListGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.invoicesCreateColumnDef(this.allFilerList),
@@ -188,7 +189,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         { value: 'email', name: 'Email' },
         { value: 'invoiceNo', name: 'Invoice No' },
       ]
-    }else{
+    } else {
       this.searchMenus = [
         { value: 'name', name: 'User Name' },
         { value: 'email', name: 'Email' },
@@ -216,27 +217,28 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     this.endDate.setValue(new Date());
 
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
-      this.agentId =  this.loggedInSme[0]?.userId;
+      this.agentId = this.loggedInSme[0]?.userId;
       this.getInvoice();
     } else {
       this.dataOnLoad = false;
     }
     this.activatedRoute.queryParams.subscribe(params => {
-    if (this.utilService.isNonEmpty(params['name']) || params['mobile'] !== '-' || params['invoiceNo'] ) {
-      let name = params['name'];
-      let mobileNo = params['mobile'];
-      let invNo = params['invoiceNo'];
-      if(name){
-        this.invoiceFormGroup.controls['name'].setValue(name);
-      }else if (mobileNo) {
-        this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
-      }else if (invNo) {
-        this.invoiceFormGroup.controls['invoiceNo'].setValue(invNo);
+      if (this.utilService.isNonEmpty(params['name']) || params['mobile'] !== '-' || params['invoiceNo']) {
+        let name = params['name'];
+        let mobileNo = params['mobile'];
+        let invNo = params['invoiceNo'];
+        if (name) {
+          this.invoiceFormGroup.controls['name'].setValue(name);
+        } else if (mobileNo) {
+          this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
+        } else if (invNo) {
+          this.invoiceFormGroup.controls['invoiceNo'].setValue(invNo);
+        }
+        if (name || mobileNo || invNo) {
+          this.getInvoice();
+        }
       }
-      if(name || mobileNo || invNo){
-        this.getInvoice();
-      }
-    }})
+    })
 
   }
 
@@ -273,15 +275,15 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
 
   searchByObject(object) {
     this.searchBy = object;
-    console.log('object from search param ',this.searchBy);
+    console.log('object from search param ', this.searchBy);
   }
 
-  fromSme(event, isOwner,fromPrinciple?) {
+  fromSme(event, isOwner, fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.leaderId = event ? event.userId : null;
     } else {
-      if(fromPrinciple){
+      if (fromPrinciple) {
         if (event?.partnerType === 'PRINCIPAL') {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = true;
@@ -289,8 +291,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
-      }else{
-        if(event){
+      } else {
+        if (event) {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
@@ -381,32 +383,32 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     this.loading = true;
 
     let status = this.status.value;
-    let fromData =this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
 
     let loggedInId = this.utilService.getLoggedInUserID();
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.leaderId = loggedInId
     }
 
-    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =true;
-    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =false;
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = true;
+    } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = false;
     }
 
-    if(this.searchBy?.mobile){
+    if (this.searchBy?.mobile) {
       this.mobile.setValue(this.searchBy?.mobile)
     }
-    if(this.searchBy?.email){
+    if (this.searchBy?.email) {
       this.email.setValue(this.searchBy?.email)
     }
-    if(this.searchBy?.invoiceNo){
+    if (this.searchBy?.invoiceNo) {
       this.invoiceNo.setValue(this.searchBy?.invoiceNo)
     }
-    if(this.searchBy?.name){
+    if (this.searchBy?.name) {
       this.name.setValue(this.searchBy?.name)
     }
 
@@ -441,9 +443,9 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     }
 
     let nameFilter = '';
-    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['name'].value)){
-      this.searchParam.page = 0 ;
-      nameFilter ='&name=' + this.invoiceFormGroup.controls['name'].value;
+    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['name'].value)) {
+      this.searchParam.page = 0;
+      nameFilter = '&name=' + this.invoiceFormGroup.controls['name'].value;
     }
 
     let data = this.utilService.createUrlParams(this.searchParam);
@@ -514,7 +516,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
           total: userInvoices[i].total,
           razorpayReferenceId: this.utilService.isNonEmpty(userInvoices[i].razorpayReferenceId) ? userInvoices[i].razorpayReferenceId : '-',
           paymentId: this.utilService.isNonEmpty(userInvoices[i].paymentId) ? userInvoices[i].paymentId : '-',
-          leaderName :userInvoices[i].leaderName,
+          leaderName: userInvoices[i].leaderName,
         })
       invoices.push(updateInvoice)
     }
@@ -529,36 +531,30 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   }
 
   downloadInvoicesSummary() {
-    console.log('this.summaryDetailForm.value: ', this.invoiceFormGroup);
+    // https://uat-api.taxbuddy.com/report/invoice/csv-report?page=0&pageSize=20&paymentStatus=Paid&fromDate=2023-04-01&toDate=2023-12-01
     if (this.invoiceFormGroup.valid) {
-      console.log(this.invoiceFormGroup.value);
-      // let fromData = this.invoiceFormGroup.value.fromDate;
-      // let toData = this.invoiceFormGroup.value.toDate;
-      let fromData = this.datePipe.transform(
-        this.startDate.value,
-        'yyyy-MM-dd'
-      );
-      let toData = this.datePipe.transform(
-        this.endDate.value,
-        'yyyy-MM-dd'
-      );
+      let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd');
+      let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
+
+      let param = '/report/invoice/csv-report?fromDate=' + fromDate + '&toDate=' + toDate;
+
       if (this.utilService.isNonEmpty(this.status.value)) {
-        location.href =
-          environment.url +
-          '/itr/invoice/csv-report?fromDate=' +
-          fromData +
-          '&toDate=' +
-          toData +
-          '&paymentStatus=' +
-          this.status.value;
-      } else {
-        location.href =
-          environment.url +
-          '/itr/invoice/csv-report?fromDate=' +
-          fromData +
-          '&toDate=' +
-          toData;
+        param = param + '&paymentStatus=' + this.status.value;
       }
+      if (Object.keys(this.searchBy).length) {
+        let searchByKey = Object.keys(this.searchBy);
+        let searchByValue = Object.values(this.searchBy);
+        param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
+      }
+      if (this.loginSmeDetails[0].roles.includes('ROLE_ADMIN')) {
+        param = param;
+      } else if (this.loginSmeDetails[0].roles.includes('ROLE_LEADER')) {
+        param = param + '&leaderUserId=' + this.loginSmeDetails[0].userId;
+      } else if (this.loginSmeDetails[0].roles.includes('ROLE_FILER')) {
+        param = param + '&filerUserId=' + this.loginSmeDetails[0].userId;
+      }
+
+      location.href = environment.url + param;
     }
   }
 
@@ -636,16 +632,16 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         // },
 
         // code to masking mobile no
-        cellRenderer: (params)=> {
+        cellRenderer: (params) => {
           const mobileNumber = params.value;
-          if(mobileNumber){
-            if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+          if (mobileNumber) {
+            if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
               const maskedMobile = this.maskMobileNumber(mobileNumber);
               return maskedMobile;
-            }else{
+            } else {
               return mobileNumber;
             }
-          }else{
+          } else {
             return '-'
           }
         },
@@ -923,7 +919,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      this.getInvoice( event);
+      this.getInvoice(event);
     }
   }
 
