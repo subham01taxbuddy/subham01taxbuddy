@@ -11,7 +11,7 @@
     </div>
   </div>
   <span *ngIf="((data.serviceType === 'ITR' && data.itrObjectStatus !== 'ITR_FILED')
-              ||  data.serviceType !== 'ITR') &&  !loggedInUserRoles?.includes('ROLE_FILER')">
+              ||  data.serviceType !== 'ITR') &&  partnerType !== 'CHILD' ">
     <button type="button" class="tbd-btn-small" title="Re Assignment" (click)="reAssignUser()">
       Re Assign <i class="fa fa-refresh" aria-hidden="true" data-action-type="re-assign"></i>
     </button>
