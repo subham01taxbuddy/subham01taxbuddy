@@ -633,7 +633,8 @@ export class ZeroCouponBondsComponent
             this.Copy_ITR_JSON.capitalGain?.push(debData);
           }
         }
-      } else if(zcbDebList?.length > 0){
+      }
+      if(zcbDebList?.length > 0){
         let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
           (element) => element.assetType === 'ZERO_COUPON_BONDS'
         );
