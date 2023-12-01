@@ -10,8 +10,8 @@
         <!-- Added some disable button Implementation pending -->
         <div class="col-sm-8"
           *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
-          <button class="tbd-btn bulk spRt col-sm-4" style="float:right" disabled
-            (click)="$event.stopPropagation(); openBulkReAssignment()">Bulk Re-Assignment to Leader</button>
+          <button class="tbd-btn bulk spRt col-sm-4" style="float:right"
+            (click)="$event.stopPropagation(); reassignmentForLeader()">Bulk Re-Assignment to Leader</button>
           <button class="tbd-btn bulk spRt col-sm-4" style="float:right"
             (click)="$event.stopPropagation(); reassignmentForFiler()">Bulk Re-Assignment to Filer(with in a team)</button>
         </div>

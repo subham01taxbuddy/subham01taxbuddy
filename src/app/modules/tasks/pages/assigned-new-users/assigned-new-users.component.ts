@@ -736,6 +736,21 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     ];
   }
 
+  reassignmentForLeader(){
+    let selectedRows = this.usersGridOptions.api.getSelectedRows();
+    if (selectedRows.length === 0) {
+      this.utilsService.showSnackBar('Please select entries from table to Re-Assign');
+      return;
+    }
+
+    const uniqueLeaderUserIds = new Set(selectedRows.map(row => row.leaderUserId));
+    if (uniqueLeaderUserIds.size !== 1) {
+      this.utilsService.showSnackBar('Please select entries with the same Leader, Please Filter further for leader ');
+      return;
+    }
+
+  }
+
   reassignmentForFiler() {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     console.log(selectedRows);
