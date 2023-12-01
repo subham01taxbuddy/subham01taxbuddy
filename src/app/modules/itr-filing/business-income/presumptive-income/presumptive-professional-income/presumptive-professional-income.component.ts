@@ -445,6 +445,22 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   }
 
   onContinue() {
+    // form values
+    let profBusinessFormIncome = (
+      this.profIncomeForm.controls['profIncomeFormArray'] as FormArray
+    ).getRawValue();
+
+    let receiptsTotal = profBusinessFormIncome.reduce(
+      (acc, value) => acc + parseFloat(value?.receipts),
+      0
+    );
+
+    if (receiptsTotal > 5000000) {
+      this.utilsService.showSnackBar(
+        'Please make sure that the receipts total in Professional details is within the specified limit'
+      );
+      return;
+    }
     this.loading = true;
     this.submitted = true;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
@@ -455,11 +471,6 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
       // all the arrays with type professional under presumptive income
       let profBusiness = this.ITR_JSON.business?.presumptiveIncomes;
-
-      // form values
-      let profBusinessFormIncome = (
-        this.profIncomeForm.controls['profIncomeFormArray'] as FormArray
-      ).getRawValue();
 
       // array that will be stored unde presumptive income
       let presBusinessIncome = [];
