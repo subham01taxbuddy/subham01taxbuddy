@@ -108,9 +108,9 @@ export class LoginComponent implements OnInit {
         // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
         //   this.router.navigate(['pages/tpa-interested']);
         //   this.utilsService.logAction(jhi.userId, 'login')
-      // } else if (roles.indexOf("ROLE_FILER") !== -1) {
-      //   this.router.navigate(['/tasks/itr-assigned-users']);
-      //   this.utilsService.logAction(userId, 'login');
+        // } else if (roles.indexOf("ROLE_FILER") !== -1) {
+        //   this.router.navigate(['/tasks/itr-assigned-users']);
+        //   this.utilsService.logAction(userId, 'login');
 
       } else if (allowedRoles.some(item => roles.includes(item))) {
         this.router.navigate(['/tasks/assigned-users-new']);
@@ -400,10 +400,20 @@ export class LoginComponent implements OnInit {
           console.log('Error:', event.error);
           this._toastMessageService.alert("error", event.error.error.error);
         } else {
+          if (event?.result?.data[0].roles.includes('ROLE_FILER')) {
+            this.assignUnassignedUsersToFiler(event.result.data[0]);
+          }
           console.log('Success:', event.result);
         }
       }
     })
+  }
+
+  assignUnassignedUsersToFiler(filerDetails) {
+    let param = '/v2/assign-unassigned-users?filerUserId=' + filerDetails.userId;
+    this.userMsService.getMethod(param).subscribe(
+      (response: any) => {
+      });
   }
 
   generateKmAuthToken() {
@@ -440,8 +450,8 @@ export class LoginComponent implements OnInit {
       iframe.setAttribute('class', 'iframe-height');
       iframe.setAttribute('id', 'km-iframe');
     }
-    
-    
+
+
     iframe.setAttribute('src', `${baseUrl}/login?email=${userEmail}&password=${userAccessToken}?showConversationSectionOnly=true`)
     if (!document.getElementById('km-iframe')) {
       let viewbox = document.getElementById('km-viewbox');

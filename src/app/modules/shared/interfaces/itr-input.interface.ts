@@ -85,8 +85,10 @@ export interface ITR_JSON {
   totalLossCarriedForwardedToFutureYears?: TotalLossCarriedForwardedToFutureYears;
 
   prefillDate: string;
+  aisLastUploadedDownloadedDate: string;
   prefillData: any;
   prefillDataSource: string;
+  aisDataSource: string;
   everOptedNewRegime: OptedInNewRegime;
   everOptedOutOfNewRegime: OptedOutNewRegime;
   optionForCurrentAY: CurrentNewRegime;

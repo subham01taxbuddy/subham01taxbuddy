@@ -646,8 +646,10 @@ export class UtilsService {
       movableAsset: [],
       immovableAsset: [],
       prefillDate: itrJson ? itrJson.prefillDate : null,
+      aisLastUploadedDownloadedDate: itrJson ? itrJson.aisLastUploadedDownloadedDate : null,
       prefillData: itrJson ? itrJson.prefillData : null,
       prefillDataSource: itrJson ? itrJson.prefillDataSource : null,
+      aisDataSource: itrJson ? itrJson.aisDataSource : null,
       everOptedNewRegime: {
         acknowledgementNumber: '',
         assessmentYear: '',

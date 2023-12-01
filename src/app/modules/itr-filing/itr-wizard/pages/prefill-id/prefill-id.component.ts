@@ -5690,6 +5690,7 @@ export class PrefillIdComponent implements OnInit {
       this.itrMsService.postMethod(url, request).subscribe((result: any)=>{
         this.loading = false;
         console.log(result);
+        this.utilsService.showSnackBar('AIS json uploaded successfully');
       }, error => {
         console.log('error in decrypting ais json', error);
         this.loading = false;
