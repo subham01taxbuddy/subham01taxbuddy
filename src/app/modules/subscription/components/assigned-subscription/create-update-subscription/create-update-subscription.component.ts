@@ -238,13 +238,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   maskMobileNumber(originalMobileNumber: string): string {
     if (originalMobileNumber && originalMobileNumber.length >= 10) {
-      let maskedNo ='X'.repeat(originalMobileNumber.length);
+      let maskedNo = 'X'.repeat(originalMobileNumber.length);
       return maskedNo
     }
     return originalMobileNumber;
   }
 
-  unMaskedMobileNo:any;
+  unMaskedMobileNo: any;
 
   setFormValues(data) {
     console.log('data', data);
@@ -807,6 +807,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       planId: selectedPlan,
       selectedBy: 'SME',
       smeUserId: this?.loggedInSme[0]?.userId,
+      subscriptionId: this.userSubscription.subscriptionId,
+      promoCode: this.selectedPromoCode,
+      removePromoCode: false
     };
 
     this.itrService.postMethod(param, request).subscribe(
@@ -1107,7 +1110,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         reminderEmail: this.reminderEmail.value,
         reminderMobileNumber: this.reminderMobileNumber.value,
         subscriptionId: this.subscriptionObj.subscriptionId,
-        removePromoCode: this.isPromoRemoved
+        removePromoCode: this.selectedPromoCode ? this.isPromoRemoved : true
       };
       console.log('Req Body: ', reqBody);
       let requestData = JSON.parse(JSON.stringify(reqBody));

@@ -109,10 +109,10 @@ export class ZeroCouponBondsComponent
         indexedDebData.forEach((obj: any) => {
           assetDetails = obj?.assetDetails;
           assetDetails?.forEach((element: any) => {
-            const filterImp = obj.improvement.filter(
+            const filterImp = obj?.improvement?.filter(
               (data) => data.srn == element.srn
             );
-            if (filterImp.length > 0) {
+            if (filterImp?.length > 0) {
               element['costOfImprovement'] = filterImp[0].costOfImprovement;
               element['indexCostOfImprovement'] =
                 filterImp[0].indexCostOfImprovement;
@@ -123,7 +123,7 @@ export class ZeroCouponBondsComponent
               }
             }
           });
-          if (obj.deduction) {
+          if (obj.deduction && obj.deduction.length > 0) {
             obj.deduction.forEach((element: any) => {
               this.deductionForm = this.initDeductionForm(element);
             });
@@ -152,7 +152,7 @@ export class ZeroCouponBondsComponent
               this.addMoreBondsData(element);
             }
           });
-          if (obj.deduction) {
+          if (obj.deduction && obj.deduction.length > 0) {
             obj.deduction.forEach((element: any) => {
               this.deductionForm = this.initDeductionForm(element);
             });
@@ -177,7 +177,7 @@ export class ZeroCouponBondsComponent
               this.addMoreBondsData(element);
             }
           });
-          if (obj.deduction) {
+          if (obj.deduction && obj.deduction.length > 0) {
             obj.deduction.forEach((element: any) => {
               this.deductionForm = this.initDeductionForm(element);
             });
@@ -386,9 +386,9 @@ export class ZeroCouponBondsComponent
       let type =
         bonds.controls['isIndexationBenefitAvailable'].value === true
           ? 'GOLD'
-          : this.bondType === 'bonds'
-          ? 'BONDS'
-          : 'ZERO_COUPON_BONDS';
+          : this.bondType === 'zeroCouponBonds'
+          ? 'ZERO_COUPON_BONDS'
+          : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
       let request = {
         assessmentYear: '2022-2023',
         assesseeType: 'INDIVIDUAL',
@@ -633,7 +633,8 @@ export class ZeroCouponBondsComponent
             this.Copy_ITR_JSON.capitalGain?.push(debData);
           }
         }
-      } else if(zcbDebList?.length > 0){
+      }
+      if(zcbDebList?.length > 0){
         let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
           (element) => element.assetType === 'ZERO_COUPON_BONDS'
         );
@@ -725,6 +726,15 @@ export class ZeroCouponBondsComponent
           this.Copy_ITR_JSON.capitalGain[goldIndex].assetDetails =
             this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails?.filter(
               (element) => !element?.isIndexationBenefitAvailable
+            );
+        }
+        let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
+          (element) => element.assetType === 'ZERO_COUPON_BONDS'
+        );
+        if (zcbIndex !== -1) {
+          this.Copy_ITR_JSON.capitalGain[zcbIndex].assetDetails =
+            this.Copy_ITR_JSON.capitalGain[zcbIndex]?.assetDetails?.filter(
+              (element) => !element?.whetherDebenturesAreListed
             );
         }
       }
