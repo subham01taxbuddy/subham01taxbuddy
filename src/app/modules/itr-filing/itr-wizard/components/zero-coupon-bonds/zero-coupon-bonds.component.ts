@@ -727,6 +727,15 @@ export class ZeroCouponBondsComponent
               (element) => !element?.isIndexationBenefitAvailable
             );
         }
+        let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
+          (element) => element.assetType === 'ZERO_COUPON_BONDS'
+        );
+        if (zcbIndex !== -1) {
+          this.Copy_ITR_JSON.capitalGain[zcbIndex].assetDetails =
+            this.Copy_ITR_JSON.capitalGain[zcbIndex]?.assetDetails?.filter(
+              (element) => !element?.whetherDebenturesAreListed
+            );
+        }
       }
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
         (result: any) => {
