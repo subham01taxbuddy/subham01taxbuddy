@@ -27,6 +27,8 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
   @Input() isInternal: boolean;
   @Input() disableLeader : boolean =false;
   @Input() selectedLeader :any;
+  @Input() showAllToLeader:boolean =false;
+  @Input() parentId :any;
 
   smeList: any[] = [];
   searchChild = new FormControl('');
@@ -72,7 +74,7 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     this.roles = this.loggedInSme[0]?.roles;
     this.partnerType = this.loggedInSme[0]?.partnerType;
 
-    if (this.roles.includes('ROLE_ADMIN')) {
+    if (this.roles.includes('ROLE_ADMIN') || this.showAllToLeader) {
       this.getLeaders();
       this.getPrincipleIndividuals();
       this.setFilteredPrincipleIndividuals();
@@ -280,6 +282,9 @@ export class SmeListDropDownComponent implements OnInit, OnChanges {
     let selectedLeader
     if (this.leaderDetails && this.leaderDetails.length > 0){
        selectedLeader = this.leaderDetails[0]?.userId
+    }
+    if(this.parentId){
+      selectedLeader = this.parentId
     }
     let leaderUserId = this.leaderDetails?.userId || selectedLeader ;
 
