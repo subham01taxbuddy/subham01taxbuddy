@@ -807,6 +807,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       planId: selectedPlan,
       selectedBy: 'SME',
       smeUserId: this?.loggedInSme[0]?.userId,
+      subscriptionId: this.userSubscription.subscriptionId,
+      promoCode: this.selectedPromoCode,
+      removePromoCode: false
     };
 
     this.itrService.postMethod(param, request).subscribe(
