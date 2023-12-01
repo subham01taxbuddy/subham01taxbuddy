@@ -86,8 +86,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   smeDetails: any;
   showMessage = '';
   serviceEligibility: any;
-  originalPersonalInfoFormValues: any;
-  isValueChanged :boolean =false;
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -181,30 +179,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     this.getAllPlanInfo(this.serviceType);
     this.getLeaderFilerName();
     this.setFormValues(this.selectedUserInfo);
-
-    this.originalPersonalInfoFormValues = this.personalInfoForm.value;
-    this.personalInfoForm.valueChanges.subscribe((event) => {
-      console.log('event from valuechanges ',event)
-      if(this.isValueChanged){
-        this.changesMade = Object.keys(this.originalPersonalInfoFormValues).some(key => this.personalInfoForm.value[key] !=
-          this.originalPersonalInfoFormValues[key])
-      }
-      console.log('changemode form ',this.changesMade)
-    });
-    this.otherInfoForm.valueChanges.subscribe(() => {
-      // this.changesMade = false;
-      // if (this.changesMade) {
-      //   this.changesMade = true;
-      // }
-    });
-    this.gstFormGroup.valueChanges.subscribe(() => {
-      this.changesMade = false;
-      if (this.changesMade) {
-        this.changesMade = true;
-      }
-    });
   }
-
 
   displayFn(label: any) {
     return label ? label : undefined;
@@ -679,6 +654,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           this.personalInfoForm.patchValue(this.selectedUserInfo); // all
           // this.otherDetailsForm.patchValue(this.selectedUserInfo);
           this.setFormValues(this.selectedUserInfo);
+          this.onValueChanges();
           this.updateIgstFlag();
           if (
             this.utilsService.isNonEmpty(this.selectedUserInfo) &&
@@ -1219,8 +1195,21 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   changesMade: boolean = false;
 
+  onValueChanges(){
+    this.personalInfoForm.valueChanges.subscribe((event) => {
+      console.log('event from valuechanges ', event);
+      this.changesMade = true;
+      console.log('changemode form ', this.changesMade);
+    });
+    this.otherInfoForm.valueChanges.subscribe(() => {
+      this.changesMade = true;
+    });
+    this.gstFormGroup.valueChanges.subscribe(() => {
+      this.changesMade = true;
+    });
+  }
+
   cancel() {
-    // this.isValueChanged =true;
     if (this.changesMade) {
       this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
         data: {
