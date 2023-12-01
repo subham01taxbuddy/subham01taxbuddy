@@ -109,10 +109,10 @@ export class ZeroCouponBondsComponent
         indexedDebData.forEach((obj: any) => {
           assetDetails = obj?.assetDetails;
           assetDetails?.forEach((element: any) => {
-            const filterImp = obj.improvement.filter(
+            const filterImp = obj?.improvement?.filter(
               (data) => data.srn == element.srn
             );
-            if (filterImp.length > 0) {
+            if (filterImp?.length > 0) {
               element['costOfImprovement'] = filterImp[0].costOfImprovement;
               element['indexCostOfImprovement'] =
                 filterImp[0].indexCostOfImprovement;
