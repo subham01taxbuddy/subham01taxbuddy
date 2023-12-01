@@ -1250,7 +1250,7 @@ export class SharesAndEquityComponent
       this.financialyears = res.data;
       this.improvementYears = this.financialyears;
       // sessionStorage.setItem('improvementYears', res.data)
-      let purchaseDate = this.selectedFormGroup.getRawValue().purchaseDate;
+      let purchaseDate = this.selectedFormGroup?.getRawValue().purchaseDate;
       let purchaseYear = new Date(purchaseDate).getFullYear();
       let purchaseMonth = new Date(purchaseDate).getMonth();
 

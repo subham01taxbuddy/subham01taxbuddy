@@ -41,6 +41,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   loggedInUserRoles: any;
   showInvoiceButton: boolean;
   navigateToInvoice:boolean
+  partnerType: any;
 
   constructor(
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
@@ -67,6 +68,7 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   ngOnInit() {
     // this.getStatus();
+    this.partnerType =this.utilsService.getPartnerType();
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     console.log('data from assigned users', this.data);
     this.checkSubscriptionForInvoice();

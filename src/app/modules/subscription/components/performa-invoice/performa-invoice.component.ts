@@ -58,7 +58,7 @@ export interface User {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class PerformaInvoiceComponent implements OnInit,OnDestroy{
+export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   loading!: boolean;
   invoiceData = [];
   invoiceInfo: any = [];
@@ -66,7 +66,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
   totalInvoice = 0;
   loggedInSme: any;
   maxStartDate = new Date()
-  maxDate =this.maxStartDate
+  maxDate = this.maxStartDate
   minDate = new Date(2023, 3, 1);
   toDateMin = this.minDate;
   roles: any;
@@ -112,13 +112,14 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     { value: 'total', name: 'Amount Payable' },
   ];
   dataOnLoad = true;
-  searchAsPrinciple :boolean =false;
+  searchAsPrinciple: boolean = false;
   searchBy: any = {};
   searchMenus = [];
   clearUserFilter: number;
   itrStatus: any = [];
   ogStatusList: any = [];
-  partnerType:any;
+  partnerType: any;
+  loginSmeDetails: any;
 
   constructor(
     private reviewService: ReviewService,
@@ -132,9 +133,10 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     @Inject(LOCALE_ID) private locale: string,
     private activatedRoute: ActivatedRoute,
     private cacheManager: CacheManager,
-    private mobileEncryptDecryptService :MobileEncryptDecryptService,
+    private mobileEncryptDecryptService: MobileEncryptDecryptService,
   ) {
     // this.getAgentList();
+    this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
     this.status.setValue(this.Status[0].value);
@@ -163,7 +165,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
         { value: 'email', name: 'Email' },
         { value: 'txbdyInvoiceId', name: 'Invoice No' },
       ]
-    }else{
+    } else {
       this.searchMenus = [
         { value: 'name', name: 'User Name' },
         { value: 'email', name: 'Email' },
@@ -182,10 +184,10 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
       sortable: true,
     };
 
-    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
-      this.agentId =  this.loggedInSme[0]?.userId;
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+      this.agentId = this.loggedInSme[0]?.userId;
       this.getInvoice();
-    } else{
+    } else {
       this.dataOnLoad = false;
     }
 
@@ -193,15 +195,16 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
       if (this.utilService.isNonEmpty(params['name']) || params['mobile'] !== '-') {
         let name = params['name'];
         let mobileNo = params['mobile'];
-        if(name){
+        if (name) {
           this.invoiceFormGroup.controls['name'].setValue(name);
-        }else if (mobileNo) {
+        } else if (mobileNo) {
           this.invoiceFormGroup.controls['mobile'].setValue(mobileNo);
         }
-        if(name || mobileNo){
+        if (name || mobileNo) {
           this.getInvoice();
         }
-      }})
+      }
+    })
 
   }
 
@@ -242,15 +245,15 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
 
   searchByObject(object) {
     this.searchBy = object;
-    console.log('object from search param ',this.searchBy);
+    console.log('object from search param ', this.searchBy);
   }
 
-  fromSme(event, isOwner,fromPrinciple?) {
+  fromSme(event, isOwner, fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.leaderId = event ? event.userId : null;
     } else {
-      if(fromPrinciple){
+      if (fromPrinciple) {
         if (event?.partnerType === 'PRINCIPAL') {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = true;
@@ -258,8 +261,8 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
-      }else{
-        if(event){
+      } else {
+        if (event) {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
@@ -341,37 +344,37 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     this.config.totalItems = 0;
   }
 
-  getInvoice(isCoOwner?, agentId?,pageChange?) {
+  getInvoice(isCoOwner?, agentId?, pageChange?) {
     // https://dev-api.taxbuddy.com/report/bo/v1/invoice?fromDate=2023-04-01&toDate=2023-10-24&page=0&pageSize=20&paymentStatus=Unpaid%2CFailed
-    if(!pageChange){
+    if (!pageChange) {
       this.cacheManager.clearCache();
     }
     this.loading = true;
     let status = this.status.value;
-    let fromData =this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
     let loggedInId = this.utilService.getLoggedInUserID();
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.leaderId = loggedInId
     }
-    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =true;
-    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =false;
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = true;
+    } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = false;
     }
 
-    if(this.searchBy?.mobile){
+    if (this.searchBy?.mobile) {
       this.mobile.setValue(this.searchBy?.mobile)
     }
-    if(this.searchBy?.email){
+    if (this.searchBy?.email) {
       this.email.setValue(this.searchBy?.email)
     }
-    if(this.searchBy?.txbdyInvoiceId){
+    if (this.searchBy?.txbdyInvoiceId) {
       this.txbdyInvoiceId.setValue(this.searchBy?.txbdyInvoiceId)
     }
-    if(this.searchBy?.name){
+    if (this.searchBy?.name) {
       this.name.setValue(this.searchBy?.name)
     }
 
@@ -393,27 +396,27 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     }
 
     let mobileFilter = '';
-    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['mobile'].value) &&this.invoiceFormGroup.controls['mobile'].valid) {
-      this.searchParam.page = 0 ;
+    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['mobile'].value) && this.invoiceFormGroup.controls['mobile'].valid) {
+      this.searchParam.page = 0;
       mobileFilter = '&mobile=' + this.invoiceFormGroup.controls['mobile'].value;
     }
 
     let emailFilter = '';
     if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['email'].value) && this.invoiceFormGroup.controls['email'].valid) {
-      this.searchParam.page = 0 ;
+      this.searchParam.page = 0;
       emailFilter = '&email=' + this.invoiceFormGroup.controls['email'].value.toLocaleLowerCase();
     }
 
     let invoiceFilter = '';
-    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['txbdyInvoiceId'].value)){
-      this.searchParam.page = 0 ;
-      invoiceFilter ='&txbdyInvoiceId=' + this.invoiceFormGroup.controls['txbdyInvoiceId'].value;
+    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['txbdyInvoiceId'].value)) {
+      this.searchParam.page = 0;
+      invoiceFilter = '&txbdyInvoiceId=' + this.invoiceFormGroup.controls['txbdyInvoiceId'].value;
     }
 
     let nameFilter = '';
-    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['name'].value)){
-      this.searchParam.page = 0 ;
-      nameFilter ='&name=' + this.invoiceFormGroup.controls['name'].value;
+    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['name'].value)) {
+      this.searchParam.page = 0;
+      nameFilter = '&name=' + this.invoiceFormGroup.controls['name'].value;
     }
 
     let data = this.utilService.createUrlParams(this.searchParam);
@@ -437,7 +440,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
         this.cacheManager.initializeCache(this.invoiceData);
 
         const currentPageNumber = pageChange || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber,this.invoiceData);
+        this.cacheManager.cachePageContent(currentPageNumber, this.invoiceData);
         this.config.currentPage = currentPageNumber;
 
         if (this.invoiceData.length == 0) {
@@ -483,7 +486,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
         ifaLeadClient: userInvoices[i].ifaLeadClient,
         total: userInvoices[i].total,
         paymentLink: userInvoices[i].paymentLink,
-        leaderName :userInvoices[i].leaderName,
+        leaderName: userInvoices[i].leaderName,
       });
       invoices.push(updateInvoice);
     }
@@ -498,33 +501,33 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
   }
 
   downloadInvoicesSummary() {
-    console.log('this.summaryDetailForm.value: ', this.invoiceFormGroup);
+    // https://uat-api.taxbuddy.com/report/invoice/csv-report?page=0&pageSize=20&paymentStatus=Unpaid,Failed&fromDate=2023-04-01&toDate=2023-12-01
     if (this.invoiceFormGroup.valid) {
-      console.log(this.invoiceFormGroup.value);
-      // let fromData = this.invoiceFormGroup.value.fromDate;
-      // let toData = this.invoiceFormGroup.value.toDate;
-      let fromData = this.datePipe.transform(
+      let fromDate = this.datePipe.transform(
         this.startDate.value,
         'yyyy-MM-dd'
       );
-      let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
+      let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
+
+      let param = '/report/invoice/csv-report?fromDate=' + fromDate + '&toDate=' + toDate;
+
       if (this.utilService.isNonEmpty(this.status.value)) {
-        location.href =
-          environment.url +
-          '/itr/invoice/csv-report?fromDate=' +
-          fromData +
-          '&toDate=' +
-          toData +
-          '&paymentStatus=' +
-          this.status.value;
-      } else {
-        location.href =
-          environment.url +
-          '/itr/invoice/csv-report?fromDate=' +
-          fromData +
-          '&toDate=' +
-          toData;
+        param = param + '&paymentStatus=' + this.status.value;
       }
+      if (Object.keys(this.searchBy).length) {
+        let searchByKey = Object.keys(this.searchBy);
+        let searchByValue = Object.values(this.searchBy);
+        param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
+      }
+      if (this.loginSmeDetails[0].roles.includes('ROLE_ADMIN')) {
+        param = param;
+      } else if (this.loginSmeDetails[0].roles.includes('ROLE_LEADER')) {
+        param = param + '&leaderUserId=' + this.loginSmeDetails[0].userId;
+      } else if (this.loginSmeDetails[0].roles.includes('ROLE_FILER')) {
+        param = param + '&filerUserId=' + this.loginSmeDetails[0].userId;
+      }
+
+      location.href = environment.url + param;
     }
   }
 
@@ -603,16 +606,16 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
         // },
 
         // code to masking mobile no
-        cellRenderer: (params)=> {
+        cellRenderer: (params) => {
           const mobileNumber = params.value;
-          if(mobileNumber){
-            if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+          if (mobileNumber) {
+            if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
               const maskedMobile = this.maskMobileNumber(mobileNumber);
               return maskedMobile;
-            }else{
+            } else {
               return mobileNumber;
             }
-          }else{
+          } else {
             return '-'
           }
         },
@@ -809,13 +812,13 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          if(!params.data.paymentLink){
+          if (!params.data.paymentLink) {
             return `<button type="button" class="action_icon add_button" title="By clicking on Generate Link you will be able to create razor pay link."
             style="border: none;
             background: transparent; font-size: 16px; cursor:pointer; color: #04a4bc; text-align:center;">
             <i class="fa-thin fa-link fa-beat" data-action-type="generate-link"></i>
            </button>`;
-          }else{
+          } else {
             return '-'
           }
 
@@ -917,26 +920,26 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     }
   }
 
-  generateLink(data){
+  generateLink(data) {
     //'https://uat-api.taxbuddy.com/itr/v1/invoice/payment-link/create
-    this.loading =true ;
+    this.loading = true;
     const reqBody = {
-      txbdyInvoiceId : data.txbdyInvoiceId
-     };
-     const param = `/v1/invoice/payment-link/create`;
-     this.itrService.postMethod(param,reqBody).subscribe((result: any) => {
-     this.loading = false;
-     if (result.success) {
+      txbdyInvoiceId: data.txbdyInvoiceId
+    };
+    const param = `/v1/invoice/payment-link/create`;
+    this.itrService.postMethod(param, reqBody).subscribe((result: any) => {
       this.loading = false;
-      this.getInvoice();
-      this._toastMessageService.alert('success','Razor pay link generated successfully');
-      }else{
+      if (result.success) {
+        this.loading = false;
+        this.getInvoice();
+        this._toastMessageService.alert('success', 'Razor pay link generated successfully');
+      } else {
         this.loading = false;
         this._toastMessageService.alert('error', 'there is problem in create Razor pay link');
       }
-     },(error) => {
+    }, (error) => {
       this.loading = false;
-      this._toastMessageService.alert('error','there is problem in create Razor pay link.');
+      this._toastMessageService.alert('error', 'there is problem in create Razor pay link.');
     })
 
   }
@@ -967,10 +970,10 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     );
   }
 
-  sendWhatsAppReminder(data){
+  sendWhatsAppReminder(data) {
     // https://api.taxbuddy.com/itr/invoice/send-invoice-whatsapp?txbdyInvoiceId=60429
     this.loading = true;
-    const param =`/invoice/send-invoice-whatsapp?txbdyInvoiceId=${data.txbdyInvoiceId}`
+    const param = `/invoice/send-invoice-whatsapp?txbdyInvoiceId=${data.txbdyInvoiceId}`
     this.itrService.getMethod(param).subscribe(
       (result: any) => {
         this.loading = false;
@@ -1078,7 +1081,7 @@ export class PerformaInvoiceComponent implements OnInit,OnDestroy{
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      this.getInvoice('', '',event);
+      this.getInvoice('', '', event);
     }
   }
 
