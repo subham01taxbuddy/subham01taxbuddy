@@ -256,16 +256,16 @@
                       </button>
                     </div>
                     <div
-                      *ngIf="false && ITR_JSON?.prefillDate !== null"
+                      *ngIf="ITR_JSON?.aisLastUploadedDownloadedDate !== null"
                       style="font-size: 12px"
                     >
                       Last
                       {{
-                      this.ITR_JSON?.prefillDataSource === "UPLOAD"
+                      this.ITR_JSON?.aisDataSource === "UPLOAD"
                         ? "uploaded"
                         : "generated"
                       }}
-                      on {{ this.ITR_JSON?.prefillDate | date }}
+                      on {{ this.ITR_JSON?.aisLastUploadedDownloadedDate | date }}
                     </div>
                   </div>
                 </div>

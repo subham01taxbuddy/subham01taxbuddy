@@ -179,11 +179,13 @@
                     >
                       <ng-container *ngIf="id === i">
                         ({{
-                          percentage.natOfBusiness ===
-                          profIncomeFormArray.controls[i].get(
+                          percentage?.natOfBusiness ===
+                          profIncomeFormArray?.controls[i]?.get(
                             "natureOfBusiness"
-                          ).value
-                            ? percentage.percentage
+                          )?.value
+                            ? percentage?.percentage
+                              ? percentage?.percentage
+                              : 0
                             : 0
                         }}%)
                       </ng-container>
