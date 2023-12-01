@@ -386,9 +386,9 @@ export class ZeroCouponBondsComponent
       let type =
         bonds.controls['isIndexationBenefitAvailable'].value === true
           ? 'GOLD'
-          : this.bondType === 'bonds'
-          ? 'BONDS'
-          : 'ZERO_COUPON_BONDS';
+          : this.bondType === 'zeroCouponBonds'
+          ? 'ZERO_COUPON_BONDS'
+          : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
       let request = {
         assessmentYear: '2022-2023',
         assesseeType: 'INDIVIDUAL',
@@ -633,7 +633,8 @@ export class ZeroCouponBondsComponent
             this.Copy_ITR_JSON.capitalGain?.push(debData);
           }
         }
-      } else if(zcbDebList?.length > 0){
+      }
+      if(zcbDebList?.length > 0){
         let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
           (element) => element.assetType === 'ZERO_COUPON_BONDS'
         );

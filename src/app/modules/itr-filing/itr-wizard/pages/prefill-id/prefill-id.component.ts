@@ -5691,6 +5691,16 @@ export class PrefillIdComponent implements OnInit {
         this.loading = false;
         console.log(result);
         this.utilsService.showSnackBar('AIS json uploaded successfully');
+        const param = `/itr?userId=${this.ITR_JSON.userId}&assessmentYear=${this.ITR_JSON.assessmentYear}&itrId=${this.ITR_JSON.itrId}`;
+        this.itrMsService.getMethod(param).subscribe(async (res: any) => {
+          if(res && res.length == 1){
+            this.ITR_JSON = res[0];
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_JSON)
+            );
+          }
+        });
       }, error => {
         console.log('error in decrypting ais json', error);
         this.loading = false;
