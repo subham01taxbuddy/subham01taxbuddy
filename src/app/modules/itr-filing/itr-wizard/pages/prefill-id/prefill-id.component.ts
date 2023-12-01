@@ -3833,21 +3833,25 @@ export class PrefillIdComponent implements OnInit {
             console.log(vdaDetails, 'jsonVdaDetails');
 
             if (vdaDetails) {
-              const vdaToPush = vdaDetails.map((vda, index) => {
+              const vdaToPush = vdaDetails?.map((vda, index) => {
+                // Check if ConsidReceived is a string before applying replace
+                const sellValue =
+                  vda?.ConsidReceived && typeof vda.ConsidReceived === 'string'
+                    ? parseFloat(vda.ConsidReceived.replace(/,/g, ''))
+                    : vda?.ConsidReceived;
+
                 return {
                   algorithm: 'vdaCrypto',
                   capitalGain: vda?.IncomeFromVDA,
                   gainType: 'NA',
                   headOfIncome: vda?.HeadUndIncTaxed,
-                  purchaseCost: parseFloat(vda.AcquisitionCost),
+                  purchaseCost: parseFloat(vda?.AcquisitionCost),
                   purchaseDate: vda?.DateofAcquisition,
-                  purchaseValuePerUnit: parseFloat(vda.AcquisitionCost),
-                  sellDate: vda.DateofTransfer,
+                  purchaseValuePerUnit: parseFloat(vda?.AcquisitionCost),
+                  sellDate: vda?.DateofTransfer,
                   sellOrBuyQuantity: 1,
-                  sellValue: parseFloat(vda.ConsidReceived.replace(/,/g, '')),
-                  sellValuePerUnit: parseFloat(
-                    vda.ConsidReceived.replace(/,/g, '')
-                  ),
+                  sellValue: sellValue,
+                  sellValuePerUnit: sellValue,
                   srn: index++,
                 };
               });
@@ -5686,6 +5690,17 @@ export class PrefillIdComponent implements OnInit {
       this.itrMsService.postMethod(url, request).subscribe((result: any)=>{
         this.loading = false;
         console.log(result);
+        this.utilsService.showSnackBar('AIS json uploaded successfully');
+        const param = `/itr?userId=${this.ITR_JSON.userId}&assessmentYear=${this.ITR_JSON.assessmentYear}&itrId=${this.ITR_JSON.itrId}`;
+        this.itrMsService.getMethod(param).subscribe(async (res: any) => {
+          if(res && res.length == 1){
+            this.ITR_JSON = res[0];
+            sessionStorage.setItem(
+              AppConstants.ITR_JSON,
+              JSON.stringify(this.ITR_JSON)
+            );
+          }
+        });
       }, error => {
         console.log('error in decrypting ais json', error);
         this.loading = false;
