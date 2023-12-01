@@ -1,5 +1,5 @@
 import { state } from '@angular/animations';
-import { data } from 'jquery';
+import { data, event } from 'jquery';
 import {
   FormBuilder,
   FormControl,
@@ -655,6 +655,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           this.personalInfoForm.patchValue(this.selectedUserInfo); // all
           // this.otherDetailsForm.patchValue(this.selectedUserInfo);
           this.setFormValues(this.selectedUserInfo);
+          this.onValueChanges();
           this.updateIgstFlag();
           if (
             this.utilsService.isNonEmpty(this.selectedUserInfo) &&
@@ -1190,6 +1191,41 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       }
     });
 
+  }
+
+  changesMade: boolean = false;
+
+  onValueChanges(){
+    this.personalInfoForm.valueChanges.subscribe((event) => {
+      console.log('event from valuechanges ', event);
+      this.changesMade = true;
+      console.log('changemode form ', this.changesMade);
+    });
+    this.otherInfoForm.valueChanges.subscribe(() => {
+      this.changesMade = true;
+    });
+    this.gstFormGroup.valueChanges.subscribe(() => {
+      this.changesMade = true;
+    });
+  }
+
+  cancel() {
+    if (this.changesMade) {
+      this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Cancel!',
+          message: 'Changes have not been saved. Are you sure you want to cancel?',
+        },
+
+      });
+      this.dialogRef.afterClosed().subscribe(result => {
+        if (result === 'YES') {
+          this.location.back();
+        }
+      })
+    } else {
+      this.location.back();
+    }
   }
 }
 
