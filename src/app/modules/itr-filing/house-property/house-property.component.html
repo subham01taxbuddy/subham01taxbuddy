@@ -389,7 +389,10 @@
                         <mat-label>Interest paid during the year</mat-label>
                         <!-- 80ee&80eea  -->
                         <div
-                          *ngIf="housePropertyForm.get('interestAmount').value > 200000"
+                          *ngIf="
+                            housePropertyForm.get('interestAmount').value >
+                            200000
+                          "
                           style="padding-top: 20px"
                         >
                           <mat-radio-group
@@ -446,6 +449,7 @@
                             maxlength="11"
                             digitsOnly
                             (blur)="calAnnualValue()"
+                            (input)="calculateInterestOrDeduction()"
                           />
                           <mat-hint>Interest paid during the year</mat-hint>
                         </mat-form-field>
@@ -740,7 +744,7 @@
                     name="pinCode"
                     class="input-field"
                     formControlName="pinCode"
-                    (blur)="updateDataByPincode()"
+                    (blur)="getCityData()"
                     style="line-height: 21px"
                   />
                   <mat-error
@@ -1249,9 +1253,8 @@
   </mat-accordion>
   <div class="flex justify-between p-[30px] back-foot">
     <!-- <a class="btn btn-cancel">Cancel</a> -->
-    <button class="lgtBtn" (click)="goBack()">
-      <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-      <span class="font-semibold">&nbsp;Back to Main Page</span>
+    <button (click)="goBack()" class="lgtBtn">
+      <mat-icon class="icoAdj">keyboard_backspace</mat-icon> Back to Source Page
     </button>
     <button
       *ngIf="hpView === 'FORM'"
