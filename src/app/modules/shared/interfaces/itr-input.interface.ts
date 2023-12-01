@@ -122,16 +122,16 @@ export interface ITR_JSON {
   agriculturalLandDetails: agriculturalLandDetails[];
 
   giftTax: {
-    aggregateValueWithoutConsideration: number,
-    aggregateValueWithoutConsiderationNotTaxable: boolean
-    immovablePropertyWithoutConsideration: number,
-    immovablePropertyWithoutConsiderationNotTaxable: boolean,
-    immovablePropertyInadequateConsideration: number,
-    immovablePropertyInadequateConsiderationNotTaxable: boolean,
-    anyOtherPropertyWithoutConsideration: number,
-    anyOtherPropertyWithoutConsiderationNotTaxable: boolean,
-    anyOtherPropertyInadequateConsideration: number,
-    anyOtherPropertyInadequateConsiderationNotTaxable: boolean,
+    aggregateValueWithoutConsideration: number;
+    aggregateValueWithoutConsiderationNotTaxable: boolean;
+    immovablePropertyWithoutConsideration: number;
+    immovablePropertyWithoutConsiderationNotTaxable: boolean;
+    immovablePropertyInadequateConsideration: number;
+    immovablePropertyInadequateConsiderationNotTaxable: boolean;
+    anyOtherPropertyWithoutConsideration: number;
+    anyOtherPropertyWithoutConsiderationNotTaxable: boolean;
+    anyOtherPropertyInadequateConsideration: number;
+    anyOtherPropertyInadequateConsiderationNotTaxable: boolean;
   };
 }
 
@@ -491,6 +491,8 @@ export interface HouseProperties {
   coOwners: CoOwners[];
   ownerPercentage: number;
   loans: Loans[];
+  eligible80EEAAmount?: any;
+  eligible80EEAmount?: any;
 }
 
 export interface PresumptiveIncomes {
