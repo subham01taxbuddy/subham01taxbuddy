@@ -1,5 +1,5 @@
 import { state } from '@angular/animations';
-import { data } from 'jquery';
+import { data, event } from 'jquery';
 import {
   FormBuilder,
   FormControl,
@@ -86,6 +86,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   smeDetails: any;
   showMessage = '';
   serviceEligibility: any;
+  originalPersonalInfoFormValues: any;
+  isValueChanged :boolean =false;
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -179,7 +181,30 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     this.getAllPlanInfo(this.serviceType);
     this.getLeaderFilerName();
     this.setFormValues(this.selectedUserInfo);
+
+    this.originalPersonalInfoFormValues = this.personalInfoForm.value;
+    this.personalInfoForm.valueChanges.subscribe((event) => {
+      console.log('event from valuechanges ',event)
+      if(this.isValueChanged){
+        this.changesMade = Object.keys(this.originalPersonalInfoFormValues).some(key => this.personalInfoForm.value[key] !=
+          this.originalPersonalInfoFormValues[key])
+      }
+      console.log('changemode form ',this.changesMade)
+    });
+    this.otherInfoForm.valueChanges.subscribe(() => {
+      // this.changesMade = false;
+      // if (this.changesMade) {
+      //   this.changesMade = true;
+      // }
+    });
+    this.gstFormGroup.valueChanges.subscribe(() => {
+      this.changesMade = false;
+      if (this.changesMade) {
+        this.changesMade = true;
+      }
+    });
   }
+
 
   displayFn(label: any) {
     return label ? label : undefined;
@@ -1190,6 +1215,28 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       }
     });
 
+  }
+
+  changesMade: boolean = false;
+
+  cancel() {
+    // this.isValueChanged =true;
+    if (this.changesMade) {
+      this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Cancel!',
+          message: 'Changes have not been saved. Are you sure you want to cancel?',
+        },
+
+      });
+      this.dialogRef.afterClosed().subscribe(result => {
+        if (result === 'YES') {
+          this.location.back();
+        }
+      })
+    } else {
+      this.location.back();
+    }
   }
 }
 
