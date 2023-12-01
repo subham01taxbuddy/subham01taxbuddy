@@ -358,6 +358,26 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   onContinue() {
+    let BusinessFormIncome = (
+      this.busIncomeForm.controls['busIncomeFormArray'] as FormArray
+    ).getRawValue();
+
+    let bankReceiptsTotal = BusinessFormIncome.reduce(
+      (acc, value) => acc + parseFloat(value?.bankReceipts),
+      0
+    );
+    let cashReceiptsTotal = BusinessFormIncome.reduce(
+      (acc, value) => acc + parseFloat(value?.cashReceipts),
+      0
+    );
+
+    if (bankReceiptsTotal + cashReceiptsTotal > 20000000) {
+      this.utilsService.showSnackBar(
+        'Please make sure that the receipts total in Business details is within the specified limit'
+      );
+      return;
+    }
+
     this.loading = true;
     this.submitted = true;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
@@ -370,9 +390,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       let presBusinessArray = this.ITR_JSON.business?.presumptiveIncomes;
 
       // form values
-      let BusinessFormIncome = (
-        this.busIncomeForm.controls['busIncomeFormArray'] as FormArray
-      ).getRawValue();
 
       // array that will be stored unde presumptive income
       let presBusinessIncome = [];
