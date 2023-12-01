@@ -692,6 +692,30 @@ export class OtherInformationComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
+    if (this.Copy_ITR_JSON.systemFlags) {
+      if (!this.Copy_ITR_JSON.systemFlags?.directorInCompany) {
+        this.Copy_ITR_JSON.systemFlags.directorInCompany = false;
+      }
+    } else {
+      this.Copy_ITR_JSON.systemFlags = {
+        hasSalary: false,
+        hasHouseProperty: false,
+        hasMultipleProperties: false,
+        hasForeignAssets: false,
+        hasCapitalGain: false,
+        hasBroughtForwardLosses: false,
+        hasAgricultureIncome: false,
+        hasOtherIncome: false,
+        hasParentOverSixty: false,
+        hasBusinessProfessionIncome: false,
+        hasFutureOptionsIncome: false,
+        hasNRIIncome: false,
+        hraAvailed: false,
+        directorInCompany: false,
+        haveUnlistedShares: false,
+      };
+    }
+
     // Saving scheduleFaForm detail
     if (this.schedule5AForm?.valid) {
       console.log('ScheduleFASave', this.schedule5AForm?.getRawValue());
