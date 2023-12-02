@@ -601,6 +601,10 @@ export class ZeroCouponBondsComponent
               costOfImprovement: costOfImprovement,
             });
 
+            //Ashwini: This adjustment is done to persist indexed cost of improvement for backend cg calculations
+            (element as FormGroup).controls['costOfImprovement'].setValue(
+              (element as FormGroup).controls['indexCostOfImprovement'].value);
+
             debsList.push((element as FormGroup).getRawValue());
           }
         });
