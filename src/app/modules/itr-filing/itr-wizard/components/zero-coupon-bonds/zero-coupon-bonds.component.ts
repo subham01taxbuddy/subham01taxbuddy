@@ -123,12 +123,6 @@ export class ZeroCouponBondsComponent
               }
             }
           });
-          if (obj.deduction && obj.deduction.length > 0) {
-            obj.deduction.forEach((element: any) => {
-              this.deductionForm = this.initDeductionForm(element);
-            });
-            this.deduction = true;
-          }
         });
       }
 
@@ -152,12 +146,7 @@ export class ZeroCouponBondsComponent
               this.addMoreBondsData(element);
             }
           });
-          if (obj.deduction && obj.deduction.length > 0) {
-            obj.deduction.forEach((element: any) => {
-              this.deductionForm = this.initDeductionForm(element);
-            });
-            this.deduction = true;
-          }
+
         });
       }
       if (data && data.length > 0) {
@@ -621,10 +610,7 @@ export class ZeroCouponBondsComponent
           assesseeType: this.ITR_JSON.assesseeType,
           residentialStatus: this.ITR_JSON.residentialStatus,
           assetType: 'GOLD',
-          deduction:
-            this.deductionForm.invalid || !this.deduction
-              ? []
-              : [this.deductionForm.getRawValue()],
+          deduction: goldIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[goldIndex].deduction : [],
           improvement: bondImprovement,
           buyersDetails: [],
           assetDetails: debsList,
@@ -706,10 +692,8 @@ export class ZeroCouponBondsComponent
           assesseeType: this.ITR_JSON.assesseeType,
           residentialStatus: this.ITR_JSON.residentialStatus,
           assetType: 'ZERO_COUPON_BONDS',
-          deduction:
-            this.deductionForm.invalid || !this.deduction
-              ? []
-              : [this.deductionForm.getRawValue()],
+          deduction: zcbIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[zcbIndex].deduction
+              : [],
           improvement: bondImprovement,
           buyersDetails: [],
           assetDetails: zcbList,
