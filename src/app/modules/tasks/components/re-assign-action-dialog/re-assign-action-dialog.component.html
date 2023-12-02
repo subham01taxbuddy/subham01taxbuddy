@@ -1,30 +1,30 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<label style="font-size: 18px;
-font-weight: bold;">Bulk Re-Assignment For Filer </label><button style="float: right;" mat-dialog-close tabindex="-1"
-    class="tbd-btn-close close"><i class="fa fa-times" aria-hidden="true"></i></button>
-<div class="row spsTp bdrTp">
-    <!-- <div class="col-sm-12 ">
-      <span class="note1" style="margin-left: 33%;;">
-        Note : Invoice created User wont be re-assigned* to different filer
-      </span>
-    </div> -->
+
+<div *ngIf="data.mode !== 'leaderAssignment'">
+  <label style="font-size: 18px;
+      font-weight: bold;">Bulk Re-Assignment For Filer </label><button style="float: right;" mat-dialog-close
+    tabindex="-1" class="tbd-btn-close close"><i class="fa fa-times" aria-hidden="true"></i></button>
+  <div class="row spsTp bdrTp">
     <div class="clo-sm-12">
       <span style="font-weight: bold; font-size: 16px;">Leader Name : {{data.data[0].leaderName}} </span>
     </div>
 
     <div class="col-sm-9 spsTp">
-      <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [disableLeader]= true [selectedLeader] =data.data[0]
-      (sendPrincipleIndividual)="fromPrinciple($event)" (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
+      <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [disableLeader]=true
+        [selectedLeader]=data.data[0] (sendPrincipleIndividual)="fromPrinciple($event)"
+        (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
     </div>
     <div class="col-sm-3">
-        <button class="tbd-btn save-btn spsTp2" (click)="reAssignmentForFiler()" [disabled]="loading">Re-Assignment</button>
+      <button class="tbd-btn save-btn spsTp2" (click)="reAssignmentForFiler()"
+        [disabled]="loading">Re-Assignment</button>
     </div>
-</div>
-<span class="loader-text" *ngIf="progressMessage">{{progressMessage}}</span>
-<span class="note1 note">
-  Note :“Only those users will be reassign for which filer has the capabilities, others will be ignored”
-</span>
+  </div>
+  <span class="loader-text" *ngIf="progressMessage">{{progressMessage}}</span>
+  <span class="note1 note">
+    Note :“Only those users will be reassign for which filer has the capabilities, others will be ignored”
+  </span>
 
+</div>
 
 <ng-template #errorTableTemplate>
   <div class="error-table-container">
@@ -47,3 +47,31 @@ font-weight: bold;">Bulk Re-Assignment For Filer </label><button style="float: r
   </div>
 </ng-template>
 
+<div *ngIf="data.mode === 'leaderAssignment'">
+  <label style="font-size: 18px;
+    font-weight: bold;">Bulk Re-Assignment For Leader </label>
+  <button style="float: right;" mat-dialog-close tabindex="-1" class="tbd-btn-close close"><i class="fa fa-times"
+      aria-hidden="true"></i></button>
+
+  <div class="row spsTp bdrTp">
+    <div class="clo-sm-12">
+      <span style="font-weight: bold; font-size: 16px;">Previous Leader Name : {{data.data[0].leaderName}} </span>
+    </div>
+
+    <div class="col-sm-9 spsTp" *ngIf="loggedInUserRoles.includes('ROLE_ADMIN')">
+      <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
+        [selectedLeader]=data.data[0] (sendPrincipleIndividual)="fromPrinciple($event)"
+        (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
+    </div>
+    <div class="col-sm-9 spsTp" *ngIf="loggedInUserRoles.includes('ROLE_LEADER')">
+      <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [showAllToLeader] =true
+      (sendPrincipleIndividual)="fromPrinciple($event)" (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
+    </div>
+    <div class="col-sm-3">
+      <button class="tbd-btn save-btn spsTp2" (click)="reAssignmentForLeader()"
+        [disabled]="loading">Re-Assignment</button>
+    </div>
+  </div>
+
+
+</div>

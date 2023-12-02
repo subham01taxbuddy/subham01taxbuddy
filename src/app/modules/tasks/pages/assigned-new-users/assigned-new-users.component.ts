@@ -755,6 +755,21 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       return;
     }
 
+    let disposable = this.dialog.open(ReAssignActionDialogComponent, {
+      width: '65%',
+      height: 'auto',
+      data: {
+        data: selectedRows,
+        mode: 'leaderAssignment'
+      },
+    });
+    disposable.afterClosed().subscribe((result) => {
+      console.log('result of reassign user ', result);
+      if (result?.data === 'success') {
+        this.search();
+      }
+    });
+
   }
 
   reassignmentForFiler() {
