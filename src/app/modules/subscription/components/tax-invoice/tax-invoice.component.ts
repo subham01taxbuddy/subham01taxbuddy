@@ -541,18 +541,45 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       if (this.utilService.isNonEmpty(this.status.value)) {
         param = param + '&paymentStatus=' + this.status.value;
       }
+      if (this.searchParam.serviceType) {
+        param = param + '&serviceType=' + this.searchParam.serviceType;
+      }
+      let loggedInId = this.utilService.getLoggedInUserID();
+      if (this.roles.includes('ROLE_LEADER')) {
+        this.leaderId = loggedInId
+      }
+      if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+        this.filerId = loggedInId;
+        this.searchAsPrinciple = true;
+      } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+        this.filerId = loggedInId;
+        this.searchAsPrinciple = false;
+      }
+
+      let userFilter = '';
+      if ((this.leaderId && !this.filerId)) {
+        userFilter += `&leaderUserId=${this.leaderId}`;
+      }
+      if (this.filerId && this.searchAsPrinciple === true) {
+        userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+      }
+      if (this.filerId && this.searchAsPrinciple === false) {
+        userFilter += `&filerUserId=${this.filerId}`;
+      }
+      param = param + userFilter;
+
       if (Object.keys(this.searchBy).length) {
         let searchByKey = Object.keys(this.searchBy);
         let searchByValue = Object.values(this.searchBy);
         param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
       }
-      if (this.loginSmeDetails[0].roles.includes('ROLE_ADMIN')) {
-        param = param;
-      } else if (this.loginSmeDetails[0].roles.includes('ROLE_LEADER')) {
-        param = param + '&leaderUserId=' + this.loginSmeDetails[0].userId;
-      } else if (this.loginSmeDetails[0].roles.includes('ROLE_FILER')) {
-        param = param + '&filerUserId=' + this.loginSmeDetails[0].userId;
-      }
+      // if (this.loginSmeDetails[0].roles.includes('ROLE_ADMIN')) {
+      //   param = param;
+      // } else if (this.loginSmeDetails[0].roles.includes('ROLE_LEADER')) {
+      //   param = param + '&leaderUserId=' + this.loginSmeDetails[0].userId;
+      // } else if (this.loginSmeDetails[0].roles.includes('ROLE_FILER')) {
+      //   param = param + '&filerUserId=' + this.loginSmeDetails[0].userId;
+      // }
 
       location.href = environment.url + param;
     }
