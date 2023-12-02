@@ -452,7 +452,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     this.itrService.postMethod(param, request).subscribe((res: any) => {
       console.log('remove promo res', res);
       this.appliedPromo = res.promoCode;
-      console.log('removed promo', this.appliedPromo);
       if (res['Error']) {
         this.utilsService.showSnackBar(res['Error']);
         return;
@@ -1089,7 +1088,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         userId: this.userSubscription.userId,
         planId: this.userSubscription.smeSelectedPlan.planId,
         selectedBy: 'SME',
-        promoCode: this.appliedPromo,
+        // promoCode: this.appliedPromo,
         smeUserId: this?.loggedInSme[0]?.userId,
         item: {
           itemDescription: this.description?.value,
@@ -1110,7 +1109,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         reminderEmail: this.reminderEmail.value,
         reminderMobileNumber: this.reminderMobileNumber.value,
         subscriptionId: this.subscriptionObj.subscriptionId,
-        removePromoCode: this.isPromoRemoved
+        removePromoCode: this.selectedPromoCode ? this.isPromoRemoved : true,
+        promoCode: this.selectedPromoCode
       };
       console.log('Req Body: ', reqBody);
       let requestData = JSON.parse(JSON.stringify(reqBody));
@@ -1190,6 +1190,41 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       }
     });
 
+  }
+
+  changesMade: boolean = false;
+
+  onValueChanges() {
+    this.personalInfoForm.valueChanges.subscribe((event) => {
+      console.log('event from valuechanges ', event);
+      this.changesMade = true;
+      console.log('changemode form ', this.changesMade);
+    });
+    this.otherInfoForm.valueChanges.subscribe(() => {
+      this.changesMade = true;
+    });
+    this.gstFormGroup.valueChanges.subscribe(() => {
+      this.changesMade = true;
+    });
+  }
+
+  cancel() {
+    if (this.changesMade) {
+      this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Cancel!',
+          message: 'Changes have not been saved. Are you sure you want to cancel?',
+        },
+
+      });
+      this.dialogRef.afterClosed().subscribe(result => {
+        if (result === 'YES') {
+          this.location.back();
+        }
+      })
+    } else {
+      this.location.back();
+    }
   }
 }
 
