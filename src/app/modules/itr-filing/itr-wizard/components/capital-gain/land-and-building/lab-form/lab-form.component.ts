@@ -400,7 +400,11 @@ export class LabFormComponent implements OnInit {
       sellValuePerUnit: [obj?.sellValuePerUnit],
       purchaseValuePerUnit: [obj?.purchaseValuePerUnit],
       isUploaded: [obj?.isUploaded ? obj?.isUploaded : false],
-      isIndexationBenefitAvailable: [obj?.isIndexationBenefitAvailable ? obj?.isIndexationBenefitAvailable : false],
+      isIndexationBenefitAvailable: [
+        obj?.isIndexationBenefitAvailable
+          ? obj?.isIndexationBenefitAvailable
+          : false,
+      ],
       description: [obj ? obj?.description : des, Validators.required], // TODO commented,
       gainType: [obj?.gainType],
       sellDate: [obj?.sellDate, Validators.required],
@@ -814,159 +818,6 @@ export class LabFormComponent implements OnInit {
     }
   }
 
-  calculateCapitalGain(formGroupName, val, index) {
-    console.log(formGroupName, formGroupName.getRawValue(), index);
-    if (!index) {
-      index = 0;
-    }
-
-    if (
-      formGroupName.controls['assetDetails'].controls[0].controls['sellValue']
-        .valid &&
-      formGroupName.controls['assetDetails'].controls[0].controls[
-        'stampDutyValue'
-      ].valid
-    )
-      this.calculateFVOC(
-        parseFloat(
-          formGroupName.controls['assetDetails'].controls[0].controls[
-            'stampDutyValue'
-          ].value
-        ),
-        parseFloat(
-          formGroupName.controls['assetDetails'].controls[0].controls[
-            'sellValue'
-          ].value
-        )
-      );
-
-    if (
-      formGroupName.controls['assetDetails'].controls[0].controls['sellDate']
-        .valid /* && formGroupName.controls['sellValue'].valid */ /* formGroupName.controls['stampDutyValue'].valid
-    && formGroupName.controls['valueInConsideration'].valid && */ &&
-      formGroupName.controls['assetDetails'].controls[0].controls['sellExpense']
-        .valid &&
-      formGroupName.controls['assetDetails'].controls[0].controls[
-        'purchaseDate'
-      ].valid &&
-      formGroupName.controls['assetDetails'].controls[0].controls[
-        'purchaseCost'
-      ].valid
-    ) {
-      Object.assign(
-        this.cgArrayElement.assetDetails[this.currentCgIndex],
-        formGroupName.getRawValue().assetDetails[0]
-      );
-      this.cgArrayElement.assetType = this.assetType.value;
-      this.cgArrayElement.assetDetails[this.currentCgIndex].srn =
-        this.currentCgIndex;
-      this.cgArrayElement.assetDetails[this.currentCgIndex].algorithm =
-        'cgProperty';
-
-      let tempImprovements = [];
-      this.cgArrayElement.assetDetails.forEach((asset) => {
-        //find improvement
-        let improvements = this.cgArrayElement.improvement.filter(
-          (imp) => imp.srn == asset.srn
-        );
-        if (!improvements || improvements.length == 0) {
-          let improvement = {
-            indexCostOfImprovement: 0,
-            id: asset.srn,
-            dateOfImprovement: ' ',
-            costOfImprovement: 0,
-            financialYearOfImprovement: null,
-            srn: asset.srn,
-          };
-          tempImprovements.push(improvement);
-        } else {
-          tempImprovements = tempImprovements.concat(improvements);
-        }
-      });
-      this.cgArrayElement.improvement = tempImprovements;
-      if (this.isDeductions.value) {
-        const deductions = <FormArray>this.immovableForm.get('deductions');
-        let ded = [];
-        deductions.controls.forEach((obj: FormGroup) => {
-          ded.push(obj.value);
-        });
-        this.cgArrayElement.deduction = ded;
-      } else {
-        this.cgArrayElement.deduction = [];
-      }
-      if (this.cgArrayElement.deduction?.length == 0) {
-        this.cgArrayElement.deduction = null;
-      }
-      console.log(
-        'Calculate capital gain here',
-        this.cgArrayElement,
-        formGroupName.getRawValue()
-      );
-      Object.assign(this.calculateCGRequest, this.cgArrayElement);
-      console.log('cg request', this.calculateCGRequest);
-      // this.utilsService.openLoaderDialog();
-      const param = '/singleCgCalculate';
-      this.cgOutput = [];
-      this.busyGain = true;
-      this.itrMsService.postMethod(param, this.calculateCGRequest).subscribe(
-        (result: any) => {
-          console.log('Drools Result=', result);
-          this.cgOutput = result;
-          if (
-            this.cgOutput.assetDetails instanceof Array &&
-            this.cgOutput.assetDetails.length > 0
-          ) {
-            const output = this.cgOutput.assetDetails.filter(
-              (item) =>
-                item.srn ===
-                this.cgArrayElement.assetDetails[this.currentCgIndex].srn
-            )[0];
-            // this.amount = output.cgIncome;
-            Object.assign(
-              this.cgArrayElement.assetDetails[this.currentCgIndex],
-              this.cgOutput.assetDetails[this.currentCgIndex]
-            );
-            if (this.cgOutput.deduction) {
-              Object.assign(
-                this.cgArrayElement.deduction,
-                this.cgOutput.deduction
-              );
-            }
-            this.createAssetDetailsForm(
-              this.cgArrayElement.assetDetails[this.currentCgIndex]
-            );
-            this.investmentsCreateRowData();
-            // this.cgArrayElement.assetDetails[0].gainType = output?.gainType;
-            this.indexCostOfAcquisition.setValue(
-              output?.indexCostOfAcquisition
-            );
-
-            //calculate total capital Gain
-            this.totalCg = 0;
-            this.cgArrayElement.assetDetails.forEach((item) => {
-              this.totalCg += item.capitalGain;
-            });
-          }
-          this.busyGain = false;
-
-          if (val === 'SAVE') {
-            this.saveImmovableCG(formGroupName, index);
-          }
-        },
-        (error) => {
-          // Write a code here for calculating gain failed msg
-          this.utilsService.showSnackBar(
-            'Calculate gain failed please try again.'
-          );
-          // this.utilsService.disposable.unsubscribe();
-          this.busyGain = false;
-        }
-      );
-    } else {
-      // $('input.ng-invalid').first().focus();
-    }
-  }
-
   mergeImprovements() {
     let otherImprovements = this.cgArrayElement.improvement.filter(
       (imp) => imp.srn != this.data.assetSelected?.srn
@@ -1249,66 +1100,6 @@ export class LabFormComponent implements OnInit {
     this.calculateDeduction(index);
   }
 
-  calculateDeduction(index) {
-    //itr/calculate/capital-gain/deduction
-
-    const assetDetails = (
-      this.immovableForm.controls['assetDetails'] as FormArray
-    ).controls[0] as FormGroup;
-    console.log(this.currentCgIndex);
-
-    const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
-      .controls[index] as FormGroup;
-
-    let saleValue = assetDetails.controls['valueInConsideration'].value
-      ? assetDetails.controls['valueInConsideration'].value
-      : 0;
-    let expenses = assetDetails.controls['sellExpense'].value
-      ? assetDetails.controls['sellExpense'].value
-      : 0;
-    const param = '/calculate/capital-gain/deduction';
-    let request = {
-      capitalGain:
-        this.cgArrayElement?.assetDetails[this.currentCgIndex]
-          ?.cgBeforeDeduction,
-      capitalGainDeductions: [
-        {
-          deductionSection: `SECTION_${deductionForm.controls['underSection'].value}`,
-          costOfNewAsset: deductionForm.controls['costOfNewAssets'].value,
-          cgasDepositedAmount:
-            deductionForm.controls['investmentInCGAccount'].value,
-          saleValue: saleValue,
-          expenses: expenses,
-        },
-      ],
-    };
-    this.itrMsService.postMethod(param, request).subscribe(
-      (result: any) => {
-        console.log('Deductions result=', result);
-        if (result?.success) {
-          let finalResult = result.data.filter(
-            (item) =>
-              item.deductionSection ===
-              `SECTION_${deductionForm.controls['underSection'].value}`
-          )[0];
-          deductionForm.controls['totalDeductionClaimed'].setValue(
-            finalResult?.deductionAmount
-          );
-          this.calculateCapitalGain(
-            this.immovableForm,
-            '',
-            this.currentCgIndex
-          );
-        } else {
-          deductionForm.controls['totalDeductionClaimed'].setValue(0);
-        }
-      },
-      (error) => {
-        this.utilsService.showSnackBar('Failed to get deductions.');
-      }
-    );
-  }
-
   saveImmovableCG(formGroupName, index) {
     //re-intialise the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -1347,8 +1138,9 @@ export class LabFormComponent implements OnInit {
         this.cgArrayElement.assetType = this.assetType.value;
         this.cgArrayElement.assetDetails[this.currentCgIndex].algorithm =
           'cgProperty'; //this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].algorithm;
-        this.cgArrayElement.assetDetails[this.currentCgIndex].isIndexationBenefitAvailable =
-          false; //this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].hasIndexation;
+        this.cgArrayElement.assetDetails[
+          this.currentCgIndex
+        ].isIndexationBenefitAvailable = false; //this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].hasIndexation;
 
         let filtered = this.cgArrayElement.improvement.filter(
           (imp) => imp.srn != this.currentCgIndex
@@ -1513,6 +1305,61 @@ export class LabFormComponent implements OnInit {
     });
   }
 
+  deleteDeduction(index) {
+    console.log('Remove Index', index);
+    const deductions = <FormArray>this.immovableForm.get('deductions');
+    deductions.removeAt(index);
+    console.log(deductions.length);
+
+    if (deductions.length === 0) {
+      this.isDeductions.setValue(false);
+    }
+    this.calculateCapitalGain(this.immovableForm, '', this.currentCgIndex);
+  }
+
+  pageChanged(event) {
+    this.config.currentPage = event;
+  }
+
+  fieldGlobalIndex(index) {
+    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
+  }
+
+  calculateFVOC(sdv: number, saleConsideration: number) {
+    const threshold = saleConsideration * 1.1; // 110% of Sale Consideration
+
+    if (sdv > threshold) {
+      // SDV is greater than 110% of Sale Consideration, so take it as FVOC
+      const valueInConsideration = (
+        this.immovableForm.controls['assetDetails'] as FormGroup
+      ).controls[0].get('valueInConsideration');
+
+      console.log(valueInConsideration);
+      valueInConsideration.setValue(sdv);
+    } else {
+      // SDV is up to 110% of Sale Consideration, so take Sale Consideration as FVOC
+      const valueInConsideration = (
+        this.immovableForm.controls['assetDetails'] as FormGroup
+      ).controls[0].get('valueInConsideration');
+
+      console.log(valueInConsideration);
+      valueInConsideration.setValue(saleConsideration);
+    }
+  }
+
+  changeAddress(event, inputField) {
+    const value = inputField === 'state' ? event?.value : event?.target?.value;
+
+    const buyersDetails = <FormArray>this.immovableForm?.get('buyersDetails');
+    buyersDetails?.controls?.forEach((element, i) => {
+      (element as FormGroup)?.controls[inputField]?.setValue(value);
+      if (inputField === 'pin') {
+        this.updateDataByPincode(i);
+      }
+    });
+  }
+
+  // calculate functions
   calculateIndexCost(index) {
     if (!index) {
       index = 0;
@@ -1576,63 +1423,223 @@ export class LabFormComponent implements OnInit {
             console.log('gain type in else', this.cgArrayElement.assetDetails);
           }
           console.log('gain type', this.cgArrayElement.assetDetails);
+          this.calculateDeduction(index);
           this.calculateCapitalGain(this.immovableForm, '', index);
         }
       });
     }
   }
 
-  deleteDeduction(index) {
-    console.log('Remove Index', index);
-    const deductions = <FormArray>this.immovableForm.get('deductions');
-    deductions.removeAt(index);
-    console.log(deductions.length);
-
-    if (deductions.length === 0) {
-      this.isDeductions.setValue(false);
+  calculateCapitalGain(formGroupName, val, index) {
+    console.log(formGroupName, formGroupName.getRawValue(), index);
+    if (!index) {
+      index = 0;
     }
-    this.calculateCapitalGain(this.immovableForm, '', this.currentCgIndex);
-  }
 
-  pageChanged(event) {
-    this.config.currentPage = event;
-  }
+    if (
+      formGroupName.controls['assetDetails'].controls[0].controls['sellValue']
+        .valid &&
+      formGroupName.controls['assetDetails'].controls[0].controls[
+        'stampDutyValue'
+      ].valid
+    )
+      this.calculateFVOC(
+        parseFloat(
+          formGroupName.controls['assetDetails'].controls[0].controls[
+            'stampDutyValue'
+          ].value
+        ),
+        parseFloat(
+          formGroupName.controls['assetDetails'].controls[0].controls[
+            'sellValue'
+          ].value
+        )
+      );
 
-  fieldGlobalIndex(index) {
-    return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
-  }
+    if (
+      formGroupName.controls['assetDetails'].controls[0].controls['sellDate']
+        .valid /* && formGroupName.controls['sellValue'].valid */ /* formGroupName.controls['stampDutyValue'].valid
+    && formGroupName.controls['valueInConsideration'].valid && */ &&
+      formGroupName.controls['assetDetails'].controls[0].controls['sellExpense']
+        .valid &&
+      formGroupName.controls['assetDetails'].controls[0].controls[
+        'purchaseDate'
+      ].valid &&
+      formGroupName.controls['assetDetails'].controls[0].controls[
+        'purchaseCost'
+      ].valid
+    ) {
+      Object.assign(
+        this.cgArrayElement.assetDetails[this.currentCgIndex],
+        formGroupName.getRawValue().assetDetails[0]
+      );
+      this.cgArrayElement.assetType = this.assetType.value;
+      this.cgArrayElement.assetDetails[this.currentCgIndex].srn =
+        this.currentCgIndex;
+      this.cgArrayElement.assetDetails[this.currentCgIndex].algorithm =
+        'cgProperty';
 
-  calculateFVOC(sdv: number, saleConsideration: number) {
-    const threshold = saleConsideration * 1.1; // 110% of Sale Consideration
-
-    if (sdv > threshold) {
-      // SDV is greater than 110% of Sale Consideration, so take it as FVOC
-      const valueInConsideration = (
-        this.immovableForm.controls['assetDetails'] as FormGroup
-      ).controls[0].get('valueInConsideration');
-
-      console.log(valueInConsideration);
-      valueInConsideration.setValue(sdv);
-    } else {
-      // SDV is up to 110% of Sale Consideration, so take Sale Consideration as FVOC
-      const valueInConsideration = (
-        this.immovableForm.controls['assetDetails'] as FormGroup
-      ).controls[0].get('valueInConsideration');
-
-      console.log(valueInConsideration);
-      valueInConsideration.setValue(saleConsideration);
-    }
-  }
-
-  changeAddress(event, inputField) {
-    const value = inputField === 'state' ? event?.value : event?.target?.value;
-
-    const buyersDetails = <FormArray>this.immovableForm?.get('buyersDetails');
-    buyersDetails?.controls?.forEach((element, i) => {
-      (element as FormGroup)?.controls[inputField]?.setValue(value);
-      if (inputField === 'pin') {
-        this.updateDataByPincode(i);
+      let tempImprovements = [];
+      this.cgArrayElement.assetDetails.forEach((asset) => {
+        //find improvement
+        let improvements = this.cgArrayElement.improvement.filter(
+          (imp) => imp.srn == asset.srn
+        );
+        if (!improvements || improvements.length == 0) {
+          let improvement = {
+            indexCostOfImprovement: 0,
+            id: asset.srn,
+            dateOfImprovement: ' ',
+            costOfImprovement: 0,
+            financialYearOfImprovement: null,
+            srn: asset.srn,
+          };
+          tempImprovements.push(improvement);
+        } else {
+          tempImprovements = tempImprovements.concat(improvements);
+        }
+      });
+      this.cgArrayElement.improvement = tempImprovements;
+      if (this.isDeductions.value) {
+        const deductions = <FormArray>this.immovableForm.get('deductions');
+        let ded = [];
+        deductions.controls.forEach((obj: FormGroup) => {
+          ded.push(obj.value);
+        });
+        this.cgArrayElement.deduction = ded;
+      } else {
+        this.cgArrayElement.deduction = [];
       }
-    });
+      if (this.cgArrayElement.deduction?.length == 0) {
+        this.cgArrayElement.deduction = null;
+      }
+      console.log(
+        'Calculate capital gain here',
+        this.cgArrayElement,
+        formGroupName.getRawValue()
+      );
+      Object.assign(this.calculateCGRequest, this.cgArrayElement);
+      console.log('cg request', this.calculateCGRequest);
+      // this.utilsService.openLoaderDialog();
+      const param = '/singleCgCalculate';
+      this.cgOutput = [];
+      this.busyGain = true;
+      this.itrMsService.postMethod(param, this.calculateCGRequest).subscribe(
+        (result: any) => {
+          console.log('Drools Result=', result);
+          this.cgOutput = result;
+          if (
+            this.cgOutput.assetDetails instanceof Array &&
+            this.cgOutput.assetDetails.length > 0
+          ) {
+            const output = this.cgOutput.assetDetails.filter(
+              (item) =>
+                item.srn ===
+                this.cgArrayElement.assetDetails[this.currentCgIndex].srn
+            )[0];
+            // this.amount = output.cgIncome;
+            Object.assign(
+              this.cgArrayElement.assetDetails[this.currentCgIndex],
+              this.cgOutput.assetDetails[this.currentCgIndex]
+            );
+            if (this.cgOutput.deduction) {
+              Object.assign(
+                this.cgArrayElement.deduction,
+                this.cgOutput.deduction
+              );
+            }
+            this.createAssetDetailsForm(
+              this.cgArrayElement.assetDetails[this.currentCgIndex]
+            );
+            this.investmentsCreateRowData();
+            // this.cgArrayElement.assetDetails[0].gainType = output?.gainType;
+            this.indexCostOfAcquisition.setValue(
+              output?.indexCostOfAcquisition
+            );
+
+            //calculate total capital Gain
+            this.totalCg = 0;
+            this.cgArrayElement.assetDetails.forEach((item) => {
+              this.totalCg += item.capitalGain;
+            });
+          }
+          this.busyGain = false;
+
+          if (val === 'SAVE') {
+            this.saveImmovableCG(formGroupName, index);
+          }
+        },
+        (error) => {
+          // Write a code here for calculating gain failed msg
+          this.utilsService.showSnackBar(
+            'Calculate gain failed please try again.'
+          );
+          // this.utilsService.disposable.unsubscribe();
+          this.busyGain = false;
+        }
+      );
+    } else {
+      // $('input.ng-invalid').first().focus();
+    }
+  }
+
+  calculateDeduction(index) {
+    //itr/calculate/capital-gain/deduction
+
+    const assetDetails = (
+      this.immovableForm.controls['assetDetails'] as FormArray
+    ).controls[0] as FormGroup;
+    console.log(this.currentCgIndex);
+
+    const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
+      .controls[index] as FormGroup;
+
+    let saleValue = assetDetails.controls['valueInConsideration'].value
+      ? assetDetails.controls['valueInConsideration'].value
+      : 0;
+    let expenses = assetDetails.controls['sellExpense'].value
+      ? assetDetails.controls['sellExpense'].value
+      : 0;
+    const param = '/calculate/capital-gain/deduction';
+    let request = {
+      capitalGain:
+        this.cgArrayElement?.assetDetails[this.currentCgIndex]
+          ?.cgBeforeDeduction,
+      capitalGainDeductions: [
+        {
+          deductionSection: `SECTION_${deductionForm.controls['underSection'].value}`,
+          costOfNewAsset: deductionForm.controls['costOfNewAssets'].value,
+          cgasDepositedAmount:
+            deductionForm.controls['investmentInCGAccount'].value,
+          saleValue: saleValue,
+          expenses: expenses,
+        },
+      ],
+    };
+    this.itrMsService.postMethod(param, request).subscribe(
+      (result: any) => {
+        console.log('Deductions result=', result);
+        if (result?.success) {
+          let finalResult = result.data.filter(
+            (item) =>
+              item.deductionSection ===
+              `SECTION_${deductionForm.controls['underSection'].value}`
+          )[0];
+          deductionForm.controls['totalDeductionClaimed'].setValue(
+            finalResult?.deductionAmount
+          );
+          this.calculateCapitalGain(
+            this.immovableForm,
+            '',
+            this.currentCgIndex
+          );
+        } else {
+          deductionForm.controls['totalDeductionClaimed'].setValue(0);
+        }
+      },
+      (error) => {
+        this.utilsService.showSnackBar('Failed to get deductions.');
+      }
+    );
   }
 }
