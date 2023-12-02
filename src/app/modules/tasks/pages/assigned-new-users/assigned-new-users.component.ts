@@ -66,12 +66,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     { value: 'createdDate', name: 'Creation Date' }
   ];
   searchBy: any = {};
-  searchMenus = [
-    { value: 'name', name: 'User Name' },
-    { value: 'emailId', name: 'Email' },
-    { value: 'mobileNumber', name: 'Mobile No' },
-    { value: 'panNumber', name: 'PAN' }
-  ];
+  searchMenus = [];
   clearUserFilter: number;
   partnerType: any;
   iframe: HTMLIFrameElement;
@@ -102,12 +97,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-          return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && rowNode.data.statusId != 11) : false;
-        }
-        else {
-          return rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' : false;
-        }
+        return rowNode.data ? this.showReassignmentBtn.length : false;
       },
       onGridReady: params => {
       },
@@ -143,6 +133,20 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   requestManagerSubscription: Subscription;
   dataOnLoad = true;
   ngOnInit() {
+    if (this.loggedInUserRoles.includes('ROLE_FILER')) {
+      this.searchMenus = [
+        { value: 'name', name: 'User Name' },
+        { value: 'emailId', name: 'Email' },
+        { value: 'panNumber', name: 'PAN' }
+      ]
+    } else {
+      this.searchMenus = [
+        { value: 'name', name: 'User Name' },
+        { value: 'emailId', name: 'Email' },
+        { value: 'mobileNumber', name: 'Mobile No' },
+        { value: 'panNumber', name: 'PAN' }
+      ]
+    }
     const userId = this.utilsService.getLoggedInUserID();
     this.agentId = userId;
     this.getStatus();
@@ -162,6 +166,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       }
       else {
         if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
+          this.filerId = this.agentId;
+          this.partnerType = this.utilsService.getPartnerType();
           this.search();
         } else {
           this.dataOnLoad = false;
@@ -408,28 +414,28 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
-      // {
-      //   field: 'Re Assign',
-      //   headerCheckboxSelection: true,
-      //   width: 110,
-      //   hide: !this.showReassignmentBtn.length,
-      //   pinned: 'left',
-      //   checkboxSelection: (params) => {
-      //     if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-      //       return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
-      //     } else {
-      //       return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
-      //     }
-      //   },
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center',
-      //       display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center',
-      //     };
-      //   },
-      // },
+      {
+        field: 'Re Assign',
+        headerCheckboxSelection: true,
+        width: 110,
+        hide: !this.showReassignmentBtn.length,
+        pinned: 'left',
+        checkboxSelection: (params) => {
+          if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
+            return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
+          } else {
+            return  this.showReassignmentBtn.length
+          }
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
       {
         headerName: 'Client Name',
         field: 'name',
@@ -475,7 +481,18 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         field: 'leaderName',
         width: 110,
         suppressMovable: true,
-        hide: !showOwnerCols,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Filer Name',
+        field: 'filerName',
+        width: 110,
+        suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -725,19 +742,33 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     ];
   }
 
-  actionWithReassignment() {
+  reassignmentForFiler() {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     console.log(selectedRows);
     if (selectedRows.length === 0) {
-      this.utilsService.showSnackBar('Please select entries to Re-assign');
+      this.utilsService.showSnackBar('Please select entries from table to Re-Assign');
       return;
     }
+
+    const uniqueLeaderUserIds = new Set(selectedRows.map(row => row.leaderUserId));
+    if (uniqueLeaderUserIds.size !== 1) {
+      this.utilsService.showSnackBar('Please select entries with the same Leader, Please Filter further for leader ');
+      return;
+    }
+
+    const itrRows = selectedRows.filter(row => row.serviceType === 'ITR');
+
+    if (itrRows.length === 0) {
+      this.utilsService.showSnackBar('Please select entries with Service Type "ITR"');
+      return;
+    }
+
     let invoices = selectedRows.flatMap(item => item.invoiceNo);
     let disposable = this.dialog.open(ReAssignActionDialogComponent, {
       width: '65%',
       height: 'auto',
       data: {
-        data: selectedRows
+        data: itrRows
       },
     });
     disposable.afterClosed().subscribe((result) => {
@@ -761,7 +792,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         assessmentYear: userData[i].assessmentYear,
         callerAgentName: userData[i].filerName,
         leaderName: userData[i].leaderName,
-        filerName: userData[i].filerName,
+        filerName: userData[i].filerName ? userData[i].filerName : '-',
         callerAgentNumber: userData[i].filerMobile,
         callerAgentUserId: userData[i].filerUserId,
         statusId: userData[i].statusId,
@@ -774,7 +805,9 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         openItrId: userData[i].openItrId,
         lastFiledItrId: userData[i].lastFiledItrId,
         conversationWithFiler: userData[i].conversationWithFiler,
-        ownerUserId: userData[i].ownerUserId
+        ownerUserId: userData[i].ownerUserId,
+        filerUserId : userData[i].filerUserId,
+        leaderUserId :userData[i].leaderUserId,
       })
       userArray.push(userInfo);
     }
@@ -1128,20 +1161,20 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     const userEmail = loginSmeDetails[0].email;
     const userAccessToken = `${sessionStorage.getItem("kmAuthToken")}&appId=${environment.kmAppId}`;
     const groupToOpen = id;
-    this.iframe = document.createElement("iframe");
-    // this.iframe.setAttribute('src', `${baseUrl}/login?email=${userEmail}&password=${userAccessToken}&loginType=custom&referrer=/conversations/${groupToOpen}?showConversationSectionOnly=true`)
+    this.iframe = document.getElementById('km-iframe') as HTMLIFrameElement;
+    if (!this.iframe) {
+      this.iframe = document.createElement("iframe");
+      this.iframe.setAttribute('class', 'iframe-height');
+      this.iframe.setAttribute('id', 'km-iframe');
+    }
     this.iframe.setAttribute('src', `${baseUrl}/conversations/${groupToOpen}?showConversationSectionOnly=true`)
-    // this.iframe.setAttribute('src', 'https://dashboard-proxy.kommunicate.io/conversations/95702751?showConversationSectionOnly=true')
-    this.iframe.setAttribute('class', 'iframe-height');
-    let viewbox = document.getElementById('km-viewbox');
-    viewbox.append(this.iframe);
+    if (!document.getElementById('km-iframe')) {
+      let viewbox = document.getElementById('km-viewbox');
+      viewbox.append(this.iframe);
+    }
+    (document.getElementById('km-viewbox') as HTMLElement).style.display = 'block';
   }
 
-
-  closeChat() {
-    this.iframe.setAttribute('class', 'hideKmChat');
-    this.hideKmCloseIcon = true;
-  }
 
   moreOptions(client) {
     console.log('client', client)
@@ -1185,10 +1218,11 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
     this.getStatus();
-    if (this.coOwnerDropDown) {
-      this.coOwnerDropDown.resetDropdown();
-      this.search('', true);
-    } else {
+    if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
+      this.agentId = this.utilsService.getLoggedInUserID();
+      this.filerId = this.filerId = this.agentId;
+      this.partnerType = this.utilsService.getPartnerType();
+    }
       if (this.dataOnLoad) {
         this.search();
       } else {
@@ -1196,7 +1230,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         this.usersGridOptions.api?.setRowData(this.createRowData([]));
         this.config.totalItems = 0;
       }
-    }
+
 
   }
 

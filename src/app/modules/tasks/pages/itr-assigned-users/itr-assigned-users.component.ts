@@ -95,12 +95,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-          return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' && rowNode.data.statusId != 11) : false;
-        }
-        else {
-          return rowNode.data ? this.showReassignmentBtn.length && rowNode.data.serviceType === 'ITR' : false;
-        }
+        return rowNode.data ? (this.showReassignmentBtn.length  && rowNode.data.statusId != 11 && rowNode.data.statusId != 35) : false;
       },
       onGridReady: params => {
       },
@@ -289,14 +284,14 @@ export class ItrAssignedUsersComponent implements OnInit {
     let param;
     if (this.loggedInUserRoles.includes('ROLE_FILER')) {
       if (loggedInSme[0].partnerType === 'PRINCIPAL') {
-        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&searchAsPrincipal=true&userId=${data?.userId}&page=0&pageSize=10`;
+        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&searchAsPrincipal=true&userId=${data?.userId}&page=0&pageSize=100`;
       } else {
-        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&userId=${data?.userId}&page=0&pageSize=10`;
+        param = `/bo/subscription-dashboard-new?filerUserId=${loggedInSmeUserId}&userId=${data?.userId}&page=0&pageSize=100`;
       }
     } else if (this.loggedInUserRoles.includes('ROLE_LEADER')) {
-      param = `/bo/subscription-dashboard-new?leaderUserId=${loggedInSmeUserId}&mobileNumber=${data?.mobileNumber}&page=0&pageSize=10`;
+      param = `/bo/subscription-dashboard-new?leaderUserId=${loggedInSmeUserId}&mobileNumber=${data?.mobileNumber}&page=0&pageSize=100`;
     } else {
-      param = `/bo/subscription-dashboard-new?mobileNumber=${data?.mobileNumber}&page=0&pageSize=10`;
+      param = `/bo/subscription-dashboard-new?mobileNumber=${data?.mobileNumber}&page=0&pageSize=100`;
     }
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -406,28 +401,24 @@ export class ItrAssignedUsersComponent implements OnInit {
     let filtered = this.loggedInUserRoles.filter(item => item === 'ROLE_ADMIN' || item === 'ROLE_LEADER' || item === 'ROLE_OWNER');
     let showOwnerCols = filtered && filtered.length > 0 ? true : false;
     return [
-      // {
-      //   field: 'Re Assign',
-      //   headerCheckboxSelection: true,
-      //   width: 110,
-      //   hide: !this.showReassignmentBtn.length,
-      //   pinned: 'left',
-      //   checkboxSelection: (params) => {
-      //     if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
-      //       return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
-      //     } else {
-      //       return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length
-      //     }
-      //   },
-      //   cellStyle: function (params: any) {
-      //     return {
-      //       textAlign: 'center',
-      //       display: 'flex',
-      //       'align-items': 'center',
-      //       'justify-content': 'center',
-      //     };
-      //   },
-      // },
+      {
+        field: 'Re Assign',
+        headerCheckboxSelection: true,
+        width: 110,
+        hide: !this.showReassignmentBtn.length,
+        pinned: 'left',
+        checkboxSelection: (params) => {
+          return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11 ;
+        },
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
       {
         headerName: 'Client Name',
         field: 'name',
@@ -872,14 +863,20 @@ export class ItrAssignedUsersComponent implements OnInit {
     ];
   }
 
-  actionWithReassignment() {
+  reassignmentForFiler() {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     console.log(selectedRows);
     if (selectedRows.length === 0) {
-      this.utilsService.showSnackBar('Please select entries to Re-assign');
+      this.utilsService.showSnackBar('Please select entries from table to Re-Assign');
       return;
     }
-    let invoices = selectedRows.flatMap(item => item.invoiceNo);
+
+    const uniqueLeaderUserIds = new Set(selectedRows.map(row => row.leaderUserId));
+    if (uniqueLeaderUserIds.size !== 1) {
+      this.utilsService.showSnackBar('Please select entries with the same Leader, Please Filter further for leader ');
+      return;
+    }
+
     let disposable = this.dialog.open(ReAssignActionDialogComponent, {
       width: '65%',
       height: 'auto',
@@ -921,7 +918,9 @@ export class ItrAssignedUsersComponent implements OnInit {
         openItrId: userData[i].openItrId,
         lastFiledItrId: userData[i].lastFiledItrId,
         conversationWithFiler: userData[i].conversationWithFiler,
-        ownerUserId: userData[i].ownerUserId
+        ownerUserId: userData[i].ownerUserId,
+        filerUserId:userData[i].filerUserId,
+        leaderUserId :userData[i].leaderUserId,
       })
       userArray.push(userInfo);
     }
@@ -1029,6 +1028,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     headers = headers.append('environment', environment.lifecycleEnv);
     headers = headers.append('Authorization', 'Bearer ' + TOKEN);
     this.rowData = data;
+    this.loading = true;
     this.requestManager.addRequest(this.LIFECYCLE,
       this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
     we_track('Start Filing', {

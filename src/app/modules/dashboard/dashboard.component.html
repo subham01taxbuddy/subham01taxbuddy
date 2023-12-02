@@ -362,12 +362,30 @@
     </div>
     <div class="col-sm-6" *ngIf="!hideCommission">
       <div class="radius">
-        <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Commission Earned</span>&nbsp;
-        <span class="numTxBg">₹ {{(commissionData?.totalCommissionEarned | number:'1.2-2') || 'NA'}}</span>
+        <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Commission</span>&nbsp;
+        <!-- <span class="numTxBg">₹ {{(commissionData?.totalCommissionEarned | number:'1.2-2') || 'NA'}}</span> -->
         <div class="row">
+          <div class="col-sm-4">
+            <div class="radius1 grBk">
+            <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarnedBeforeTDS | number:'1.2-2') || 'NA'}}</span><br>
+            <span class="TxSm">Total Commission Earned Before TDS</span><br>
+          </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="radius1 grBk">
+            <span class="numTxSm grTx"> ₹ {{(commissionData?.tdsOnCommission | number:'1.2-2') || 'NA'}}</span><br>
+            <span class="TxSm">TDS on Commission</span><br>
+          </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="radius1 grBk">
+            <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarnedAfterTDS | number:'1.2-2') || 'NA'}}</span><br>
+            <span class="TxSm">Total Commission Earned After TDS</span><br>
+          </div>
+          </div>
           <div class="col-sm-6">
             <div class="radius1 grBk">
-              <span class="numTxSm grTx">{{(commissionData?.totalCommissionReceived | number:'1.2-2') || 'NA'}}
+              <span class="numTxSm grTx">{{(commissionData?.paid | number:'1.2-2') || 'NA'}}
               </span><br>
               <span class="TxSm">Received</span><br>
               <span class="grytx">Amount Approved</span>
@@ -375,13 +393,14 @@
           </div>
           <div class="col-sm-6">
             <div class="radius1 OrgBk">
-              <span class="numTxSm OrgTx">{{(commissionData?.totalCommissionReceivable | number:'1.2-2') ||
+              <span class="numTxSm OrgTx">{{(commissionData?.payable | number:'1.2-2') ||
                 'NA'}}</span><br>
               <span class="TxSm">Receivable</span><br>
               <span class="grytx">Approval in Progress</span>
             </div>
           </div>
-        </div>
+
+          </div>
       </div>
     </div>
   </div>
@@ -398,7 +417,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">User Name</th>
-              <th scope="col">Contact Number</th>
+              <!-- <th scope="col">Contact Number</th> -->
               <th scope="col">Payment Received Date</th>
             </tr>
           </thead>
@@ -406,8 +425,8 @@
             <tr *ngFor="let item of paymentReceivedData?.content | paginate:config.paymentReceived; let i = index">
               <td>{{ i+1 }}</td>
               <td>{{ item.userName }}</td>
-              <td><a [routerLink]="['/tasks/assigned-users-new']" [queryParams]="{mobileNumber: item.contactNumber}">{{
-                  item.contactNumber }}</a></td>
+              <!-- <td><a [routerLink]="['/tasks/assigned-users-new']" [queryParams]="{mobileNumber: item.contactNumber}">{{
+                  item.contactNumber }}</a></td> -->
               <td>{{ item.paymentRecivedDate | date:'d/M/yy, h:mm a':'UTC' }}</td>
             </tr>
             <tr *ngIf="paymentReceivedData?.content?.length === 0">
@@ -431,7 +450,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">User Name</th>
-              <th scope="col">Contact Number</th>
+              <!-- <th scope="col">Contact Number</th> -->
               <th scope="col">Summary Sent Date</th>
             </tr>
           </thead>
@@ -440,8 +459,8 @@
               *ngFor="let item of summaryConfirmationData?.content | paginate:config.summaryConfirmation; let i = index">
               <td>{{ i+1 }}</td>
               <td>{{ item.userName }}</td>
-              <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{
-                  item.contactNumber }}</a></td>
+              <!-- <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{
+                  item.contactNumber }}</a></td> -->
               <td>{{ item.summarySentDate | date:'d/M/yy, h:mm a':'UTC' }}</td>
             </tr>
             <tr *ngIf="summaryConfirmationData?.content?.length === 0">
@@ -466,7 +485,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">User Name</th>
-              <th scope="col">Contact Number</th>
+              <!-- <th scope="col">Contact Number</th> -->
               <th scope="col">ITR Filed date</th>
             </tr>
           </thead>
@@ -475,8 +494,8 @@
               *ngFor="let item of eVerificationPendingData?.content | paginate:config.eVerificationPending; let i = index">
               <td>{{ i+1 }}</td>
               <td>{{ item.userName }}</td>
-              <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{
-                  item.contactNumber }}</a></td>
+              <!-- <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{
+                  item.contactNumber }}</a></td> -->
               <td>{{ item.itrFiledDate | date:'d/M/yy, h:mm a':'UTC' }}</td>
             </tr>
             <tr *ngIf="eVerificationPendingData?.content?.length === 0">

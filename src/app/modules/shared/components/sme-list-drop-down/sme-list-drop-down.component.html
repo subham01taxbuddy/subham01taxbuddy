@@ -1,10 +1,10 @@
 
 <div>
   <div class="row" class="row" *ngIf="roles?.includes('ROLE_ADMIN')">
-    <div class="col-sm-4">
+    <div class="col-sm-4" *ngIf="!disableLeader">
       <mat-label> Search By Leader </mat-label>
       <mat-form-field appearance="outline" class="customBg">
-        <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto" (blur)="setList()" />
+        <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto"  (blur)="setList()" />
         <mat-autocomplete #auto>
           <mat-option *ngFor="let option of filteredLeaders | async" [value]="option.name"
             (click)="getLeaderNameId(option);">
@@ -41,6 +41,18 @@
 
   </div>
   <div class="row" class="row" *ngIf="roles?.includes('ROLE_LEADER')">
+    <div class="col-sm-4" *ngIf="showAllToLeader">
+      <mat-label> Search By Leader </mat-label>
+      <mat-form-field appearance="outline" class="customBg">
+        <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto"  (blur)="setList()" />
+        <mat-autocomplete #auto>
+          <mat-option *ngFor="let option of filteredLeaders | async" [value]="option.name"
+            (click)="getLeaderNameId(option);">
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
     <div class="col-sm-4">
       <mat-label> Search By Principal/Individual </mat-label>
       <mat-form-field appearance="outline" class="customBg">
@@ -68,7 +80,7 @@
     </div>
   </div>
   <div class="row" *ngIf="partnerType ==='PRINCIPAL'" >
-    <div class="col-sm-4">
+    <div class="col-sm-4" *ngIf="!showAllToLeader">
       <mat-label> Search By Child </mat-label>
       <mat-form-field appearance="outline" class="customBg">
         <input type="text" matInput [formControl]="searchChild" [matAutocomplete]="auto2" />
@@ -81,5 +93,36 @@
       </mat-form-field>
     </div>
   </div>
+
+  <div *ngIf="showAllToLeader && (partnerType ==='PRINCIPAL' || partnerType ==='INDIVIDUAL')">
+    <div class="row">
+      <div class="col-sm-4">
+        <mat-label> Search By Principal/Individual </mat-label>
+        <mat-form-field appearance="outline" class="customBg">
+          <input type="text" matInput [formControl]="searchPrincipleIndividual" [matAutocomplete]="auto1"
+            (blur)="setList2()" />
+          <mat-autocomplete #auto1>
+            <mat-option *ngFor="let option1 of filteredPrincipleIndividuals | async" [value]="option1.name"
+              (click)="getPrincipleNameId(option1);">
+              {{ option1.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-4" *ngIf="showChildFilter">
+        <mat-label> Search By Child </mat-label>
+        <mat-form-field appearance="outline" class="customBg">
+          <input type="text" matInput [formControl]="searchChild" [matAutocomplete]="auto2" />
+          <mat-autocomplete #auto2>
+            <mat-option *ngFor="let option2 of filteredChild | async" [value]="option2.name"
+              (click)="getChildNameId(option2)">
+              {{ option2.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
 
 </div>

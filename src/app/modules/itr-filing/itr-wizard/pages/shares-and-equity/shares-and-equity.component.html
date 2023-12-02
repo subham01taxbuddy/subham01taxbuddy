@@ -279,8 +279,8 @@
     >
   </button>
 
-  <button class="saveBtnIn">
-    <span class="font-semibold" (click)="saveAll()">Save All</span>
+  <button class="saveBtnIn" (click)="saveAll()">
+    <span class="font-semibold">Save All</span>
   </button>
 </div>
 
@@ -332,7 +332,9 @@
                 [matDatepicker]="sellDate"
                 placeholder="DD/MM/YYYY"
                 (dateChange)="
-                  calculateGainType(selectedFormGroup);
+                  calculateGainTypeOrIndexCost(
+                    selectedFormGroup
+                  );
                   calculateTotalCG(selectedFormGroup);
                   calMaxPurchaseDate(selectedFormGroup.get('sellDate').value)
                 "
@@ -366,8 +368,11 @@
                 placeholder="DD/MM/YYYY"
                 readonly
                 (dateChange)="
-                  calculateGainType(selectedFormGroup);
-                  calculateTotalCG(selectedFormGroup)
+                  calculateGainTypeOrIndexCost(
+                    selectedFormGroup
+                  );
+                  calculateTotalCG(selectedFormGroup);
+                  getImprovementYears()
                 "
               />
               <mat-datepicker-toggle
@@ -487,9 +492,10 @@
                   this.bondType === 'listed'
                 "
                 (change)="
-                  calculateGainType(selectedFormGroup);
-                  calculateTotalCG(selectedFormGroup);
-                  calculateDeductionGain()
+                  calculateGainTypeOrIndexCost(
+                    selectedFormGroup
+                  );
+                  calculateTotalCG(selectedFormGroup)
                 "
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
@@ -516,10 +522,37 @@
                   this.bondType === 'listed'
                 "
                 (change)="
-                  calculateGainType(selectedFormGroup);
-                  calculateTotalCG(selectedFormGroup);
-                  calculateDeductionGain()
+                  calculateGainTypeOrIndexCost(
+                    selectedFormGroup
+                  )
                 "
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              />
+              <mat-error
+                *ngIf="
+                  selectedFormGroup.get('purchaseCost').hasError('pattern')
+                "
+                >Enter valid amount.</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <div
+            class="col-sm-4"
+            *ngIf="
+              bondType !== 'listed' &&
+              selectedFormGroup?.controls['gainType'].value === 'LONG'
+            "
+          >
+            <mat-label>Indexed cost of acquisition</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                formControlName="indexCostOfAcquisition"
+                placeholder="Indexed Cost Of Acquisition"
+                name="indexCostOfAcquisition"
+                maxlength="14"
+                readonly
+                (change)="calculateTotalCG(selectedFormGroup)"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-error
@@ -540,9 +573,7 @@
                 name="sellExpense"
                 maxlength="14"
                 digitsOnly
-                (change)="
-                  calculateTotalCG(selectedFormGroup); calculateDeductionGain()
-                "
+                (change)="calculateTotalCG(selectedFormGroup)"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-error
@@ -618,6 +649,108 @@
                     >Enter valid amount.</mat-error
                   >
                 </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <!-- improvements -->
+          <div *ngIf="this.bondType !== 'listed'">
+            <hr class="linSps" />
+            <!-- cost-of-improvement  -->
+            <div formGroupName="improvementsArray">
+              <!-- co-owner yes-no selection  -->
+              <div class="row linSps">
+                <div class="col-sm-9">
+                  <mat-label class="txStyls"
+                    >Add details of cost of improvements?*</mat-label
+                  >
+                </div>
+                <div class="col-sm-3">
+                  <mat-radio-group [formControl]="isImprovement">
+                    <mat-radio-button
+                      [value]="true"
+                      style="margin-left: 0px"
+                      labelPosition="before"
+                      >Yes </mat-radio-button
+                    >&nbsp;&nbsp;&nbsp;
+                    <mat-radio-button [value]="false" labelPosition="before"
+                      >No</mat-radio-button
+                    >
+                  </mat-radio-group>
+                </div>
+              </div>
+
+              <div *ngIf="isImprovement.value">
+                <div class="row">
+                  <div class="col-sm-4 spsTp">
+                    <mat-label>Year Of Improvement</mat-label>
+                    <mat-form-field
+                      class="input-field-width"
+                      appearance="outline"
+                    >
+                      <mat-select
+                        placeholder="Year of Improvement"
+                        name="financialYearOfImprovement"
+                        formControlName="financialYearOfImprovement"
+                        (blur)="
+                          calculateGainTypeOrIndexCost(
+                            selectedFormGroup
+                          )
+                        "
+                        required
+                      >
+                        <mat-option
+                          [value]="year"
+                          *ngFor="let year of improvementYears"
+                        >
+                          {{ year }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-4 spsTp">
+                    <mat-label>Cost of Improvement</mat-label>
+                    <mat-form-field
+                      class="input-field-width"
+                      appearance="outline"
+                    >
+                      <input
+                        matInput
+                        digitsOnly
+                        formControlName="costOfImprovement"
+                        placeholder="Cost Of Improvement"
+                        name="costOfImprovement"
+                        (blur)="
+                          calculateGainTypeOrIndexCost(
+                            selectedFormGroup
+                          )
+                        "
+                        class="input-field"
+                        maxlength="14"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-4 spsTp">
+                    <mat-label>Cost of Improvement with Indexation</mat-label>
+                    <mat-form-field
+                      class="input-field-width"
+                      appearance="outline"
+                    >
+                      <input
+                        matInput
+                        digitsOnly
+                        formControlName="indexCostOfImprovement"
+                        placeholder="Cost Of Improvement with Indexation"
+                        name="indexCostOfImprovement"
+                        class="input-field"
+                        maxlength="14"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        readonly
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

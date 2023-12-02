@@ -180,7 +180,7 @@
                       matInput
                       maxlength="15"
                       minlength="15"
-                      (blur)="setFilingDate()"
+                      (blur)="setFilingDate(regimeSelectionForm.controls['everOptedNewRegime'])"
                       name="acknowledgementNumber"
                       formControlName="acknowledgementNumber"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -331,7 +331,7 @@
                       matInput
                       maxlength="15"
                       minlength="15"
-                      (blur)="setFilingDate()"
+                      (blur)="setFilingDate(regimeSelectionForm.controls['everOptedOutOfNewRegime'])"
                       name="acknowledgementNumber"
                       formControlName="acknowledgementNumber"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -445,7 +445,7 @@
                       matInput
                       maxlength="15"
                       minlength="15"
-                      (blur)="setFilingDate()"
+                      (blur)="setFilingDate(regimeSelectionForm.controls['optionForCurrentAY'])"
                       name="acknowledgementNumber"
                       formControlName="acknowledgementNumber"
                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -755,6 +755,352 @@
             <hr />
           </div>
         </form>
+        <div class="question-label"
+              style="margin-bottom: 10px; padding: 5px; background: #eaeaea">
+              <strong> Capital gain inter/Intra headset off and quarterwise bifurcation </strong>
+              <mat-label><b>Note:</b> Calculations are according to the Old regime(by default) please select regime and save the page.<br>
+                 Come back again to check calculations according to the selected regime.</mat-label>
+        </div>
+
+        <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead style="text-align: center;">
+            <tr class="table-head">
+              <th rowspan="2" colspan="2" class="th-positon-relative">Head of income</th>
+              <th rowspan="2">Income of<br> current year<br> (1)</th>
+              <th colspan="2">Long term loss of
+                the <br>current year set off</th>
+              <th colspan="2">Short Term loss of
+                the <br>current year set off</th>
+              <th rowspan="2">Current year’s <br>Income remaining <br>after set off<br>
+                (6)= 1-2-3-4-5</th>
+              <th colspan="2">Current Year's <br>Inter Head Set off<br>
+                (7)</th>
+              <th colspan="2">Past year's <br>losses to be set off<br>
+                (8)</th>
+              <th rowspan="2">Taxable Income <br>after set off<br>
+                (9)=6-7(i)-7(ii)-8(i)-8(ii)
+                </th>
+            </tr>
+            <tr class="table-head">
+              <th>
+                10%<br>
+                (2)
+              </th>
+              <th>
+                20%<br>
+                (3)
+              </th>
+              <th>
+                15%<br>
+                (4)
+              </th>
+              <th>
+                Applicable rate<br>
+                (5)
+              </th>
+              <th>
+                House proprty<br>
+                (i)
+              </th>
+              <th>
+                Busines and<br> profession
+                (ii)
+              </th>
+              <th>
+                Long Term<br>(i)
+              </th>
+              <th>
+                Short Term<br>(ii)
+              </th>
+            </tr>
+          </thead>
+          <tbody class="text-bold-center">
+            <tr>
+              <td colspan="2">Losses to be settoff
+              </td>
+              <td>
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLossSetOff.ltclSetOff10Per)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLossSetOff.ltclSetOff20Per)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLossSetOff.stclSetoff15Per)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLossSetOff.stclSetoffAppRate)}}
+              </td>
+              <td>
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.totalCurrentYearHpLoss)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.totalCurrentYearBusinessLoss)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.totalLTCGLoss)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.totalSTCGLoss)}}
+              </td>
+              <td>
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="2">Long term
+              </td>
+              <td>10%
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.currentYearIncome)}}
+              </td>
+              <td>NA
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.ltclSetOff10Per)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcg15Per.ltclSetOff10Per)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcgAppRate.ltclSetOff10Per)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.currentYearCapitalGain)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.ltcg10PerCYLA.incomeCYLA.hpLossSetoff)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.ltcg10PerCYLA.incomeCYLA.businessLossSetoff)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.ltcgSetoffWithLtcg10Per)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.stcgSetoffWithLtcg10Per)}}
+              </td>
+              <td>{{utilsService.currencyFormatter(bfla.cgTaxableIncomeAfterSetoff.ltcg10Per)}}
+              </td>
+            </tr>
+            <tr>
+              <td>20%
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.currentYearIncome)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.ltclSetOff20Per)}}
+              </td>
+              <td>NA
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcg15Per.ltclSetOff20Per)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcgAppRate.ltclSetOff20Per)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.currentYearCapitalGain)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.ltcg20PerCYLA.incomeCYLA.hpLossSetoff)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.ltcg20PerCYLA.incomeCYLA.businessLossSetoff)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.ltcgSetoffWithLtcg20Per)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.stcgSetoffWithLtcg20Per)}}
+              </td>
+              <td>{{utilsService.currencyFormatter(bfla.cgTaxableIncomeAfterSetoff.ltcg20Per)}}
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="2">Short Term
+              </td>
+              <td>15%
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcg15Per.currentYearIncome)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.stclSetoff15Per)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.stclSetoff15Per)}}
+              </td>
+              <td>NA
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcgAppRate.stclSetoff15Per)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcg15Per.currentYearCapitalGain)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.stcg15PerCYLA.incomeCYLA.hpLossSetoff)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.stcg15PerCYLA.incomeCYLA.businessLossSetoff)}}
+              </td>
+              <td>NA
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.stcg15Per)}}
+              </td>
+              <td>{{utilsService.currencyFormatter(bfla.cgTaxableIncomeAfterSetoff.stcg15Per)}}
+              </td>
+            </tr>
+            <tr>
+              <td>Applicable Rate
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcgAppRate.currentYearIncome)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg10Per.stclSetoffAppRate)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgLtcg20Per.stclSetoffAppRate)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcg15Per.stclSetoffAppRate)}}
+              </td>
+              <td>NA
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.summaryIncome?.cgIncomeN?.cgCurrentYearLosses.cgStcgAppRate.currentYearCapitalGain)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.stcgAppRateCYLA.incomeCYLA.hpLossSetoff)}}
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(assessment.currentYearLossesSetoff?.stcgAppRateCYLA.incomeCYLA.businessLossSetoff)}}
+              </td>
+              <td>NA
+              </td>
+              <td>
+                {{utilsService.currencyFormatter(bfla.cgPastYearLossesSetoff.stcgAppRate)}}
+              </td>
+              <td>{{utilsService.currencyFormatter(bfla.cgTaxableIncomeAfterSetoff.stcgAppRate)}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <hr />
+
+      <div class="question-label"
+      style="margin-bottom: 10px; padding: 5px; background: #eaeaea">
+      <strong> Quarterwise breakup of column (9) </strong>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr class="table-head">
+            <th>Sr. No</th>
+            <th>Type of Capital Gain</th>
+            <th>Upto 15 Jun</th>
+            <th>16 Jun -15 Sep</th>
+            <th>16 Sep - 15 Dec</th>
+            <th>16 Dec - 15 Mar</th>
+            <th>16 Mar - 31 Mar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1
+            </td>
+            <td> Short-term capital gain at 15%
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcg15PerUpto15Jun}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcg15Per16JunTo15Sep}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcg15Per16SepTo15Dec}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcg15Per16DecTo15Mar}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcg15Per16MarTo31Mar}}
+            </td>
+          </tr>
+          <tr>
+            <td>2
+            </td>
+            <td>Short-term capital gain at Applicable rate
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcgAppRateUpto15Jun}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcgAppRate16JunTo15Sep}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcgAppRate16SepTo15Dec}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcgAppRate16DecTo15Mar}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.stcgAppRate16MarTo31Mar}}
+            </td>
+          </tr>
+          <tr>
+            <td>3
+            </td>
+            <td>Long Term Capital gain at 10%
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg10PerUpto15Jun}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg10Per16JunTo15Sep}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg10Per16SepTo15Dec}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg10Per16DecTo15Mar}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg10Per16MarTo31Mar}}
+            </td>
+          </tr>
+          <tr>
+            <td>4
+            </td>
+            <td>Long Term Capital gain at 20%
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg20PerUpto15Jun}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg20Per16JunTo15Sep}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg20Per16SepTo15Dec}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg20Per16DecTo15Mar}}
+            </td>
+            <td>
+              {{cgQuarterWiseBreakUp.ltcg20Per16MarTo31Mar}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <hr />
       </div>
     </div>
   </div>

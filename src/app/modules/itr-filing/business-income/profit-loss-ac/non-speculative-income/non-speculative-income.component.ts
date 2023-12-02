@@ -287,7 +287,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         this.Copy_ITR_JSON.business.profitLossACIncomes = profitLossACIncomes;
       } else {
         let data = this.Copy_ITR_JSON?.business?.profitLossACIncomes.filter(
-          (item: any) => item.businessType != 'NONSPECULATIVEINCOME'
+          (item: any) => item.businessType !== 'NONSPECULATIVEINCOME'
         );
         this.Copy_ITR_JSON.business.profitLossACIncomes =
           data.concat(profitLossACIncomes);

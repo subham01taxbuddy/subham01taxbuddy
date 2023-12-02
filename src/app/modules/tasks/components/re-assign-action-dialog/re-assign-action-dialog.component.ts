@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -14,13 +14,19 @@ export class ReAssignActionDialogComponent implements OnInit {
   loading: boolean;
   ownerId: number;
   filerId: number;
+  leaderId :number;
+  searchAsPrinciple:boolean = false;
   ownerDropDownType = 'ASSIGNED';
   loggedInUserRoles:any;
+  showErrorTable: boolean = false;
+  errorData:any;
+  @ViewChild('errorTableTemplate') errorTableTemplate: TemplateRef<any>;
   constructor(
     public dialogRef: MatDialogRef<ReAssignActionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private userMsService: UserMsService,
     private utilsService: UtilsService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -54,6 +60,31 @@ export class ReAssignActionDialogComponent implements OnInit {
 
   }
 
+  fromLeader(event) {
+    if(event) {
+      this.leaderId = event ? event.userId : null;
+    }
+  }
+  fromPrinciple(event){
+    if(event){
+      if (event?.partnerType === 'PRINCIPAL') {
+        this.filerId = event ? event.userId : null;
+
+        this.searchAsPrinciple = true;
+      } else {
+        this.filerId = event ? event.userId : null;
+
+        this.searchAsPrinciple = false;
+      }
+    }
+  }
+
+  fromChild(event){
+    if(event){
+      this.filerId = event ? event.userId : null;
+    }
+  }
+
   fromSme(event, isOwner) {
     if (isOwner) {
       this.ownerId = event ? event.userId : null;
@@ -78,31 +109,48 @@ export class ReAssignActionDialogComponent implements OnInit {
     }
   }
 
-  // reAssignment() {
-  //   if (this.filerId) {
-  //     let userIdList = [];
-  //     this.data.data.forEach(item => {
-  //       userIdList.push(item.userId);
-  //     });
-  //     // https://uat-api.taxbuddy.com/user/user-action-with-assignment?toFilerUserId=6999&userIdList=1312,23231,4321
-  //     let param = '/user-action-with-assignment?toFilerUserId=' + this.filerId + '&userIdList=' + userIdList.toString();
-  //     this.userMsService.getMethod(param).subscribe((result: any) => {
-  //       this.loading = false;
-  //       if (result.success) {
-  //         this.utilsService.showSnackBar(result.message);
-  //         this.dialogRef.close({ event: 'close', data: 'success' });
-  //       } else {
-  //         this.utilsService.showSnackBar(result.message);
-  //       }
-  //     }, error => {
-  //       this.loading = false;
-  //       this.utilsService.showSnackBar(error.error.error);
-  //     });
-  //   } else {
-  //     this.utilsService.showSnackBar('Please select Filer Name');
-  //   }
-  // }
+  reAssignmentForFiler() {
+    //https://uat-api.taxbuddy.com/user/v2/bulk-reassignment-to-filer?userIdList=14157,14159&filerUserId=14129
+    if (this.filerId) {
+      let userIdList = [];
+      this.data.data.forEach(item => {
+        userIdList.push(item.userId);
+      });
+      this.loading=true;
+      let param = '/v2/bulk-reassignment-to-filer?userIdList=' + userIdList.toString() + '&filerUserId=' + this.filerId ;
+      this.userMsService.getMethod(param).subscribe((result: any) => {
+        this.loading = false;
+        if (result.data && result.data.length === 0) {
+          this.utilsService.showSnackBar('User re-assignment completed successfully');
+          this.dialogRef.close({ event: 'close', data: 'success' });
+        } else if (result.data && result.data.length > 0) {
+          this.showErrorTable = true;
+          this.errorData = result.data;
+          const dialogRef1 = this.dialog.open(this.errorTableTemplate, {
+            width: '50%',
+            height: 'auto',
+            data: {
+              data: result.data
+            },
+          });
+        }else{
+          this.loading = false;
+          this.utilsService.showSnackBar(result.error)
+        }
+      }, error => {
+        this.loading = false;
+        this.utilsService.showSnackBar(error.error.error);
+      });
+    } else {
+      this.loading = false;
+      this.utilsService.showSnackBar('Please select Filer Name');
+    }
+  }
 
+  closeErrorTable(){
+    this.dialogRef.close({ event: 'close', data: 'success' });
+    this.dialog.closeAll();
+  }
 
 progressMessage: string = '';
 

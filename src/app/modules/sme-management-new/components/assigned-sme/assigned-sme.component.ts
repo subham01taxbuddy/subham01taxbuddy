@@ -4,11 +4,10 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
-import { GridOptions } from 'ag-grid-community';
+import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import * as moment from 'moment';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
-import { CoOwnerListDropDownComponent } from 'src/app/modules/shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
-import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
+import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
@@ -64,7 +63,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     { value: 'roles', name: 'Roles' },
     { value: 'parentName', name: 'Parent Name' },
   ];
-  selectRoleFilter =[
+  selectRoleFilter = [
     { value: '&roles=ROLE_LEADER&internal=true', name: 'Leader- Internal' },
     { value: '&roles=ROLE_FILER&partnerType=INDIVIDUAL&internal=true', name: 'Filer Individual- Internal' },
     { value: '&roles=ROLE_FILER&partnerType=INDIVIDUAL&internal=false', name: 'Filer Individual- External' },
@@ -73,36 +72,46 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
 
   ]
   langList = [
-    'English','Hindi', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Kashmiri', 'Kannada',
+    'English', 'Hindi', 'Assamese', 'Bangla', 'Bodo', 'Dogri', 'Gujarati', 'Kashmiri', 'Kannada',
     'Konkani', 'Maithili', 'Malayalam', 'Manipuri', 'Marathi', 'Nepali', 'Oriya', 'Punjabi', 'Tamil', 'Telugu',
     'Santali', 'Sindhi', 'Urdu'
   ];
   selectRole = new FormControl();
   selectedLangControl = new FormControl('');
-  itrCapabilities:any =[];
+  itrCapabilities: any = [];
   selectedITRCapabilityControl = new FormControl('');
+  allFilerList: any;
+  itrPlanList: any;
   constructor(
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private router: Router,
-    private http: HttpClient,
-    private matDialog: MatDialog,
     private reviewService: ReviewService,
     private genericCsvService: GenericCsvService,
     private cacheManager: CacheManager,
     private itrService: ItrMsService,
-    private reportService:ReportService,
+    private reportService: ReportService,
+    private itrMsService: ItrMsService,
     @Inject(LOCALE_ID) private locale: string
   ) {
+    this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'));
+    this.getPlanDetails();
     this.smeListGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: this.smeCreateColumnDef(),
+      columnDefs: [],
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => { },
 
       sortable: true,
+      defaultColDef: {
+        resizable: true,
+        cellRendererFramework: AgTooltipComponent,
+        cellRendererParams: (params: ICellRendererParams) => {
+          this.formatToolTip(params.data);
+        },
+      },
     };
     this.config = {
       itemsPerPage: 15,
@@ -131,6 +140,13 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
       this.dataOnLoad = false;
     }
   }
+
+  formatToolTip(params: any) {
+    let temp = params.value;
+    const lineBreak = false;
+    return { temp, lineBreak };
+  }
+
   clearValue() {
     this.searchVal = "";
     this.leaderId = null;
@@ -138,7 +154,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     this.showError = false;
     this?.smeDropDown?.resetDropdown();
   }
-  allPlans:any;
+  allPlans: any;
 
   getAllPlanInfo() {
     let serviceType = "ITR"
@@ -158,10 +174,10 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         } else {
           this.allPlans = [plans];
         }
-         this.itrCapabilities = this.allPlans.map((plan: any) => ({
+        this.itrCapabilities = this.allPlans.map((plan: any) => ({
           planId: plan.planId,
           name: plan.name,
-           }));
+        }));
       })
 
   }
@@ -172,17 +188,17 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     console.log('Selected Language:', event.value);
   }
 
-  getRoleValue(role){
+  getRoleValue(role) {
 
   }
 
-  getPlanFilterValue(planValue){
+  getPlanFilterValue(planValue) {
 
   }
 
   advanceSearch() {
-      this.getSmeList();
-      this.getCount();
+    this.getSmeList();
+    this.getCount();
   }
 
   // advanceSearch(key: any) {
@@ -271,23 +287,23 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
   leaderId: number;
   ownerId: number;
   smeUserId: number;
-  filerId:number;
-  searchAsPrinciple :boolean =false;
+  filerId: number;
+  searchAsPrinciple: boolean = false;
   searchBy: any = {};
 
 
   searchByObject(object) {
     this.searchBy = object;
-    console.log('object from search param ',this.searchBy);
+    console.log('object from search param ', this.searchBy);
   }
 
   fromLeader(event) {
-    if(event) {
+    if (event) {
       this.leaderId = event ? event.userId : null;
     }
   }
-  fromPrinciple(event){
-    if(event){
+  fromPrinciple(event) {
+    if (event) {
       if (event?.partnerType === 'PRINCIPAL') {
         this.filerId = event ? event.userId : null;
 
@@ -308,9 +324,9 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     }
     this.loading = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
-      if(this.roles.includes('ROLE_LEADER')){
-        this.leaderId = loggedInId;
-      }
+    if (this.roles.includes('ROLE_LEADER')) {
+      this.leaderId = loggedInId;
+    }
     let userFilter = '';
     if ((this.leaderId && !this.filerId)) {
       userFilter += `&leaderUserId=${this.leaderId}`;
@@ -323,33 +339,33 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     }
 
     let mobileFilter = '';
-    if(this.searchBy?.mobileNumber ){
-      mobileFilter = '&mobileNumber=' +(this.searchBy?.mobileNumber);
+    if (this.searchBy?.mobileNumber) {
+      mobileFilter = '&mobileNumber=' + (this.searchBy?.mobileNumber);
     }
     let komEmailFilter = '';
-    if(this.searchBy?.kommunicateEmailId){
-      komEmailFilter = '&kommunicateEmailId=' +this.searchBy?.kommunicateEmailId;
+    if (this.searchBy?.kommunicateEmailId) {
+      komEmailFilter = '&kommunicateEmailId=' + this.searchBy?.kommunicateEmailId;
     }
     let smeEmailFilter = '';
-    if(this.searchBy?.smeOfficialEmailId){
-      smeEmailFilter = '&smeOfficialEmailId=' +this.searchBy?.smeOfficialEmailId;
+    if (this.searchBy?.smeOfficialEmailId) {
+      smeEmailFilter = '&smeOfficialEmailId=' + this.searchBy?.smeOfficialEmailId;
     }
     let nameFilter = '';
-    if(this.searchBy?.name){
-      nameFilter ='&name=' + this.searchBy?.name;
+    if (this.searchBy?.name) {
+      nameFilter = '&name=' + this.searchBy?.name;
     }
 
-    let roleFilter ='';
-    if((this.utilsService.isNonEmpty(this.selectRole.value) && this.selectRole.valid)){
+    let roleFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectRole.value) && this.selectRole.valid)) {
       roleFilter = this.selectRole.value;
     }
-    let languageFilter ='';
-    if((this.utilsService.isNonEmpty(this.selectedLangControl.value) && this.selectedLangControl.valid)){
-      languageFilter ='&languages=' +this.selectedLangControl.value;
+    let languageFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedLangControl.value) && this.selectedLangControl.valid)) {
+      languageFilter = '&languages=' + this.selectedLangControl.value;
     }
-    let  capabilityFilter ='';
-    if((this.utilsService.isNonEmpty(this.selectedITRCapabilityControl.value) && this.selectedITRCapabilityControl.valid)){
-      capabilityFilter ='&skillSetPlanIdList=' +this.selectedITRCapabilityControl.value;
+    let capabilityFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedITRCapabilityControl.value) && this.selectedITRCapabilityControl.valid)) {
+      capabilityFilter = '&skillSetPlanIdList=' + this.selectedITRCapabilityControl.value;
     }
 
     let data = this.utilsService.createUrlParams(this.searchParam);
@@ -425,9 +441,9 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     this.loading = true;
     let param = '';
     let loggedInId = this.utilsService.getLoggedInUserID();
-      if(this.roles.includes('ROLE_LEADER')){
-        this.leaderId = loggedInId;
-      }
+    if (this.roles.includes('ROLE_LEADER')) {
+      this.leaderId = loggedInId;
+    }
     let countFilter = '&onlyCount=true';
     let userFilter = '';
     if ((this.leaderId && !this.filerId)) {
@@ -440,33 +456,33 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
       userFilter += `&filerUserId=${this.filerId}`;
     }
     let mobileFilter = '';
-    if(this.searchBy?.mobileNumber ){
-      mobileFilter = '&mobileNumber=' +(this.searchBy?.mobileNumber);
+    if (this.searchBy?.mobileNumber) {
+      mobileFilter = '&mobileNumber=' + (this.searchBy?.mobileNumber);
     }
     let komEmailFilter = '';
-    if(this.searchBy?.kommunicateEmailId){
-      komEmailFilter = '&kommunicateEmailId=' +this.searchBy?.kommunicateEmailId;
+    if (this.searchBy?.kommunicateEmailId) {
+      komEmailFilter = '&kommunicateEmailId=' + this.searchBy?.kommunicateEmailId;
     }
     let smeEmailFilter = '';
-    if(this.searchBy?.smeOfficialEmailId){
-      smeEmailFilter = '&smeOfficialEmailId=' +this.searchBy?.smeOfficialEmailId;
+    if (this.searchBy?.smeOfficialEmailId) {
+      smeEmailFilter = '&smeOfficialEmailId=' + this.searchBy?.smeOfficialEmailId;
     }
     let nameFilter = '';
-    if(this.searchBy?.name){
-      nameFilter ='&name=' + this.searchBy?.name;
+    if (this.searchBy?.name) {
+      nameFilter = '&name=' + this.searchBy?.name;
     }
 
-    let roleFilter ='';
-    if((this.utilsService.isNonEmpty(this.selectRole.value) && this.selectRole.valid)){
+    let roleFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectRole.value) && this.selectRole.valid)) {
       roleFilter = this.selectRole.value;
     }
-    let languageFilter ='';
-    if((this.utilsService.isNonEmpty(this.selectedLangControl.value) && this.selectedLangControl.valid)){
-      languageFilter ='&languages=' +this.selectedLangControl.value;
+    let languageFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedLangControl.value) && this.selectedLangControl.valid)) {
+      languageFilter = '&languages=' + this.selectedLangControl.value;
     }
-    let  capabilityFilter ='';
-    if((this.utilsService.isNonEmpty(this.selectedITRCapabilityControl.value) && this.selectedITRCapabilityControl.valid)){
-      capabilityFilter ='&skillSetPlanIdList=' +this.selectedITRCapabilityControl.value;
+    let capabilityFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedITRCapabilityControl.value) && this.selectedITRCapabilityControl.valid)) {
+      capabilityFilter = '&skillSetPlanIdList=' + this.selectedITRCapabilityControl.value;
     }
 
     let data = this.utilsService.createUrlParams(this.searchParam);
@@ -515,43 +531,120 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
   async downloadReport() {
     this.loading = true;
     this.showCsvMessage = true;
-    const loggedInSmeUserId = this.loggedInSme[0].userId
-
-    if (this.coOwnerToggle.value == false) {
-      this.agentId = loggedInSmeUserId;
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    if (this.roles.includes('ROLE_LEADER')) {
+      this.leaderId = loggedInId;
+    }
+    let userFilter = '';
+    if ((this.leaderId && !this.filerId)) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    let userFilter = ''
-    if (this.leaderId) {
-      userFilter = '&leaderView=true&smeUserId=' + this.leaderId;
+
+    let mobileFilter = '';
+    if (this.searchBy?.mobileNumber) {
+      mobileFilter = '&mobileNumber=' + (this.searchBy?.mobileNumber);
     }
-    if (this.ownerId) {
-      userFilter = '&ownerView=true&smeUserId=' + this.ownerId;
+    let komEmailFilter = '';
+    if (this.searchBy?.kommunicateEmailId) {
+      komEmailFilter = '&kommunicateEmailId=' + this.searchBy?.kommunicateEmailId;
+    }
+    let smeEmailFilter = '';
+    if (this.searchBy?.smeOfficialEmailId) {
+      smeEmailFilter = '&smeOfficialEmailId=' + this.searchBy?.smeOfficialEmailId;
+    }
+    let nameFilter = '';
+    if (this.searchBy?.name) {
+      nameFilter = '&name=' + this.searchBy?.name;
     }
 
-    let param = ''
-    if (this.key && this.searchVal) {
-      param = `/sme-details-new/${this.agentId}?assigned=true&${this.key}=${this.searchVal}`
-    } else {
-      param = `/sme-details-new/${this.agentId}?assigned=true${userFilter}`;
+    let roleFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectRole.value) && this.selectRole.valid)) {
+      roleFilter = this.selectRole.value;
+    }
+    let languageFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedLangControl.value) && this.selectedLangControl.valid)) {
+      languageFilter = '&languages=' + this.selectedLangControl.value;
+    }
+    let capabilityFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedITRCapabilityControl.value) && this.selectedITRCapabilityControl.valid)) {
+      capabilityFilter = '&skillSetPlanIdList=' + this.selectedITRCapabilityControl.value;
     }
 
-    if (this.coOwnerToggle.value == true && this.coOwnerToggle.value == true) {
-      param = param + '&searchAsCoOwner=true';
-    }
-    else {
-      param;
-    }
+
+    let param = `/bo/sme-details?assigned=true${userFilter}${roleFilter}${languageFilter}${capabilityFilter}${mobileFilter}${komEmailFilter}${smeEmailFilter}${nameFilter}`;
+
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-sme-report', '', this.sortBy);
     this.loading = false;
     this.showCsvMessage = false;
+
+
   }
+
+  // async downloadReport() {
+  //   this.loading = true;
+  //   this.showCsvMessage = true;
+  //   const loggedInSmeUserId = this.loggedInSme[0].userId
+
+  //   if (this.coOwnerToggle.value == false) {
+  //     this.agentId = loggedInSmeUserId;
+  //   }
+
+  //   let userFilter = ''
+  //   if (this.leaderId) {
+  //     userFilter = '&leaderView=true&smeUserId=' + this.leaderId;
+  //   }
+  //   if (this.ownerId) {
+  //     userFilter = '&ownerView=true&smeUserId=' + this.ownerId;
+  //   }
+
+  //   let param = ''
+  //   if (this.key && this.searchVal) {
+  //     param = `/sme-details-new/${this.agentId}?assigned=true&${this.key}=${this.searchVal}`
+  //   } else {
+  //     param = `/sme-details-new/${this.agentId}?assigned=true${userFilter}`;
+  //   }
+
+  //   if (this.coOwnerToggle.value == true && this.coOwnerToggle.value == true) {
+  //     param = param + '&searchAsCoOwner=true';
+  //   }
+  //   else {
+  //     param;
+  //   }
+  //   await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-sme-report', '', this.sortBy);
+  //   this.loading = false;
+  //   this.showCsvMessage = false;
+  // }
 
   sortByObject(object) {
     this.sortBy = object;
   }
 
-  smeCreateColumnDef() {
+  getPlanDetails() {
+    this.loading = true;
+    let param = '/plans-master?serviceType=ITR&isActive=true';
+    this.itrMsService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      this.itrPlanList = response;
+      if (this.itrPlanList.length) {
+        this.itrPlanList = this.itrPlanList.filter(element => element.name != 'Business and Profession with Balance sheet & PNL- Rs. 3499');
+        this.smeListGridOptions.api.setColumnDefs(
+          this.smeCreateColumnDef(this.allFilerList, this.itrPlanList));
+      }
+    },
+      error => {
+        this.loading = false;
+      });
+
+  }
+
+  smeCreateColumnDef(allFilerList, itrPlanList) {
     return [
       {
         field: 'selection',
@@ -634,6 +727,44 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
       },
+      {
+        headerName: 'Parent Name/Leader Name',
+        field: 'parentName',
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'left', 'font-weight': 'bold' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Principal Name',
+        field: 'parentPrincipalUserId',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function (params) {
+          let createdUserId = parseInt(params?.data?.parentPrincipalUserId)
+          if (params?.data?.parentPrincipalUserId) {
+            let filer1 = allFilerList;
+            let filer = filer1?.filter((item) => {
+              return item.userId === createdUserId;
+            }).map((item) => {
+              return item.name;
+            });
+            return filer
+          } else {
+            return '-'
+          }
+        }
+      },
       // {
       //   headerName: 'Roles',
       //   field: 'roles',
@@ -667,16 +798,16 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           let role = '';
           if (user.filer === true && user.partnerType === 'INDIVIDUAL' && user.internal === false) {
             role = 'Filer Individual - External';
-          } else if(user.filer === true && user.partnerType === 'INDIVIDUAL' && user.internal === true){
+          } else if (user.filer === true && user.partnerType === 'INDIVIDUAL' && user.internal === true) {
             role = 'Filer Individual - Internal';
-          }else if(user.leader === true  && user.internal === true){
+          } else if (user.leader === true && user.internal === true) {
             role = ' Leader- Internal';
-          }else if(user.admin === true  && user.internal === true){
+          } else if (user.admin === true && user.internal === true) {
             role = ' Admin- Internal';
-          }else if(user.filer === true && user.partnerType === 'PRINCIPAL' && user.internal === false){
+          } else if (user.filer === true && user.partnerType === 'PRINCIPAL' && user.internal === false) {
             role = 'Filer Principal/Firm- External ';
-          }else if(user.filer === true && user.partnerType === 'CHILD' && user.internal === false){
-            role = 'Filer Assistantt- External ';
+          } else if (user.filer === true && user.partnerType === 'CHILD' && user.internal === false) {
+            role = 'Filer Assistant- External ';
           }
           return `<span>${role}</span>`;
         }
@@ -783,7 +914,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         cellRenderer: (params: any) => {
           const smeData = params?.data;
-
           const serviceTypes = [
             { key: 'serviceEligibility_ITR', displayName: 'ITR' },
             { key: 'serviceEligibility_TPA', displayName: 'TPA' },
@@ -794,15 +924,28 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           let result = [];
           serviceTypes.forEach(serviceType => {
             if (smeData[serviceType.key]) {
-              if (smeData[serviceType.key].assignmentStart) {
-                result.push(
-                  `<li><i class="fa fa-check-circle" aria-hidden="true"></i> ${serviceType.displayName}</li>`
-                );
+              if (smeData.roles.includes('ROLE_FILER')) {
+                if (smeData['assignmentOffByLeader']) {
+                  result.push(
+                    `<li><i style="color:red;" class="fa fa-circle-xmark" aria-hidden="true"></i> ${serviceType.displayName}</li>`
+                  );
+                } else {
+                  result.push(
+                    `<li><i class="fa fa-check-circle" aria-hidden="true"></i> ${serviceType.displayName}</li>`
+                  );
+                }
               } else {
-                result.push(
-                  `<li>${serviceType.displayName}</li>`
-                );
+                if (smeData[serviceType.key].assignmentStart) {
+                  result.push(
+                    `<li><i class="fa fa-check-circle" aria-hidden="true"></i> ${serviceType.displayName}</li>`
+                  );
+                } else {
+                  result.push(
+                    `<li><i style="color:red;" class="fa fa-circle-xmark" aria-hidden="true"></i>${serviceType.displayName}</li>`
+                  );
+                }
               }
+
             }
           });
 
@@ -812,17 +955,27 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
 
       },
       {
-        headerName: 'Parent Name',
-        field: 'parentName',
-        width: 120,
+        headerName: 'Session',
+        field: 'session',
+        width: 100,
         suppressMovable: true,
-        cellStyle: { textAlign: 'left', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellRenderer: (params: any) => {
+          const smeData = params?.data;
+          let session;
+          if (smeData.roles.includes('ROLE_FILER')) {
+            if (smeData['serviceEligibility_ITR'].assignmentStart) {
+              session = 'Active'
+            } else if (!smeData['serviceEligibility_ITR'].assignmentStart) {
+              session = 'In-Active'
+            }
+          } else {
+            session = '-'
+          }
+          return session
+        }
       },
+
       {
         headerName: 'Language Proficiency',
         field: 'languages',
@@ -834,6 +987,33 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
         },
+      },
+      {
+        headerName: 'ITR Capabilities',
+        // field: 'skillSetPlanIdList',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        valueGetter: function (params) {
+          if (params?.data?.skillSetPlanIdList) {
+            let plans = [];
+            itrPlanList?.forEach(element => {
+              params?.data?.skillSetPlanIdList.forEach(skill => {
+                if (element.planId === skill) {
+                  plans.push(element.name);
+                }
+              });
+            });
+            return plans.toString();
+          } else {
+            return '-'
+          }
+        }
       },
       {
         headerName: 'Call',
@@ -913,7 +1093,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     const param = `tts/outbound-call`;
     const reqBody = {
       "agent_number": agentNumber,
-         "userId": data.userId,
+      "userId": data.userId,
     }
 
     this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
@@ -995,15 +1175,15 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     this?.smeDropDown?.resetDropdown();
     this.searchBy = {};
     this.sortBy = {};
-      if (this.dataOnLoad) {
-        this.getSmeList();
-      } else {
-        //clear grid for loaded data
-        this.smeListGridOptions.api?.setRowData(this.createRowData([]));
-        this.smeListLength = 0;
-      }
-      this.getCount();
-   }
+    if (this.dataOnLoad) {
+      this.getSmeList();
+    } else {
+      //clear grid for loaded data
+      this.smeListGridOptions.api?.setRowData(this.createRowData([]));
+      this.smeListLength = 0;
+    }
+    this.getCount();
+  }
 
   ngOnDestroy() {
     this.cacheManager.clearCache();

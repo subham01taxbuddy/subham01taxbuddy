@@ -10,32 +10,43 @@ import {AppConstants} from "../../constants";
   styleUrls: ['./service-drop-down.component.scss']
 })
 export class ServiceDropDownComponent implements OnInit {
-
   @Output() sendService = new EventEmitter<any>();
+  loggedInUserRoles:any;
 
-  serviceTypes = [
-    {
-      label: 'ITR',
-      value: 'ITR',
-    },
-    {
-      label: 'GST',
-      value: 'GST',
-    },
-    {
-      label: 'NOTICE',
-      value: 'NOTICE',
-    },
-    {
-      label: 'TPA',
-      value: 'TPA',
-    },
-  ];
+  serviceTypes = [];
   selectedService = new FormControl('', []);
   constructor(public utilsService: UtilsService,
               private itrMsService: ItrMsService) { }
 
   ngOnInit() {
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
+    if (this.loggedInUserRoles.includes('ROLE_FILER')) {
+      this.serviceTypes = [
+        {
+          label: 'ITR',
+          value: 'ITR',
+        },
+      ];
+    }else{
+      this.serviceTypes =[
+        {
+          label: 'ITR',
+          value: 'ITR',
+        },
+        {
+          label: 'GST',
+          value: 'GST',
+        },
+        {
+          label: 'NOTICE',
+          value: 'NOTICE',
+        },
+        {
+          label: 'TPA',
+          value: 'TPA',
+        },
+      ]
+    }
     this.setDropDown();
   }
 

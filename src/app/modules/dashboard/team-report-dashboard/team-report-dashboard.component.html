@@ -13,34 +13,6 @@
     </div>
 
     <div class="col-sm-12">
-      <div class="radius" *ngIf="false">
-        <div class="row">
-          <div class="col-sm-0">
-            <!-- <form class="form-inline"> -->
-              <!-- <div>
-                <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-              </div> -->
-            <!-- </form> -->
-          </div>
-          <div class="col-sm-4">
-            <div>
-              <label for="start-date">Start Date:</label>
-              <input matInput type="date" id="date" name="start-date" class="form-control" [formControl]="startDate"
-                [min]="minDate" [max]="maxDate" (change)="setEndDateValidate(this.startDate)">
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div>
-              <label for="end-date">End Date:</label>
-              <input matInput type="date" id="date" name="end-date" class="form-control" [formControl]="endDate"
-                [min]="minEndDate" [max]="maxDate">
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <button class="srch-btn" [disabled]="loading"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
-          </div>
-        </div>
-      </div>
 
       <div class="radiusMain">
         <div class="row">
@@ -88,7 +60,7 @@
     </div>
 
 
-    <div class="col-sm-6" *ngIf="invoiceData">
+    <div class="col-sm-6">
       <div class="radius" >
         <span class="TxHd"><i class="fa fa-file-o"></i> Invoices -</span>&nbsp;
         <span class="numTxBg"></span>
@@ -110,10 +82,10 @@
               </div>
             </div>
             <div class="col-sm-4">
-              <!-- <div class="radius1 grBk">
-                <span class="numTxSm grTx">₹ {{service?.revenueGenerated || 'NA'}}</span><br>
-                <span class="TxSm">Revenue Generated</span><br>
-              </div> -->
+              <div class="radius1 grBk">
+                <span class="numTxSm grTx">₹ {{service?.paidInvoiceAmountByPaymentDate || 'NA'}}</span><br>
+                <span class="TxSm">Total Payment Received(basis paid date)</span><br>
+              </div>
             </div>
             <div class="col-sm-4">
               <div class="radius1 RedBk">
@@ -136,13 +108,13 @@
             <div class="col-sm-4">
               <div class="radius1 grBk">
                 <span class="numTxSm grTx">{{service?.paidInvoiceCount || 'NA'}}</span><br>
-                <span class="TxSm">Paid Invoices</span><br>
+                <span class="TxSm">Paid Invoices(Basis created date)</span><br>
               </div>
             </div>
             <div class="col-sm-4">
               <div class="radius1 grBk">
                 <span class="numTxSm grTx">₹ {{service?.paidAmount || 'NA'}}</span><br>
-                <span class="TxSm">Paid Amount</span><br>
+                <span class="TxSm">Paid Amount(Basis created date)</span><br>
               </div>
             </div>
             <div class="col-sm-4">
@@ -295,8 +267,8 @@
       </div>
       <div class="col-sm-12 mt-3">
         <div class="radius">
-          <span class="TxHd"><i class="fa-solid fa-phone" aria-hidden="true"></i> Schedule call </span>&nbsp;
-          <span class="numTxBg"></span>
+          <span class="TxHd"><i class="fa-solid fa-phone" aria-hidden="true"></i> Schedule call : </span>&nbsp;
+          <span class="numTxBg">{{totalScheduledCall || 'NA'}}</span>
           <div class="row">
             <div class="col-sm-6">
               <div class="radius1">
@@ -325,6 +297,48 @@
           </div>
         </div>
       </div>
+      <div class="col-sm-12 mt-3">
+        <div class="radius">
+          <span class="TxHd"><i class="fa fa-percent" aria-hidden="true"></i> Total Commission</span>&nbsp;
+          <!-- <span class="numTxBg">27,315</span> -->
+          <!-- Inside Row -->
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="radius1 grBk">
+              <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarnedBeforeTDS | number:'1.2-2') || 'NA'}}</span><br>
+              <span class="TxSm">Total Commission Earned Before TDS</span><br>
+            </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="radius1 grBk">
+              <span class="numTxSm grTx"> ₹ {{(commissionData?.tdsOnCommission | number:'1.2-2') || 'NA'}}</span><br>
+              <span class="TxSm">TDS on Commission</span><br>
+            </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="radius1 grBk">
+              <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarnedAfterTDS | number:'1.2-2') || 'NA'}}</span><br>
+              <span class="TxSm">Total Commission Earned After TDS</span><br>
+            </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="radius1 grBk">
+              <span class="numTxSm grTx">₹ {{(commissionData?.paid | number:'1.2-2') || 'NA'}}</span><br>
+              <span class="TxSm">Paid</span><br>
+            </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="radius1 OrgBk">
+              <span class="numTxSm OrgTx">₹ {{(commissionData?.payable | number:'1.2-2') || 'NA'}}</span><br>
+              <span class="TxSm">Payable </span><br>
+            </div>
+            </div>
+
+            </div>
+          <!-- Inside Row Ends -->
+        </div>
+      </div>
+
     </div>
     </div>
 
@@ -365,37 +379,7 @@
       </div>
     <!-- Inside Row Ends -->
   </div>
-</div><div class="col-sm-4" *ngIf="false">
-    <div class="radius">
-      <span class="TxHd"><i class="fa fa-percent" aria-hidden="true"></i> Total Commission</span>&nbsp;
-      <!-- <span class="numTxBg">27,315</span> -->
-      <!-- Inside Row -->
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="radius1 grBk">
-          <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarned | number:'1.2-2') || 'NA'}}</span><br>
-          <span class="TxSm">Total Commission Earned</span><br>
-        </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="radius1 grBk">
-          <span class="numTxSm grTx">₹ {{(commissionData?.receivedAmount | number:'1.2-2') || 'NA'}}</span><br>
-          <span class="TxSm">Paid</span><br>
-        </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="radius1 OrgBk">
-          <span class="numTxSm OrgTx">₹ {{(commissionData?.receivableAmount | number:'1.2-2') || 'NA'}}</span><br>
-          <span class="TxSm">Payable </span><br>
-        </div>
-        </div>
-
-        </div>
-      <!-- Inside Row Ends -->
-    </div>
   </div>
-
-
 </div>
 </div>
 

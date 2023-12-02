@@ -1,5 +1,5 @@
 import { state } from '@angular/animations';
-import { data } from 'jquery';
+import { data, event } from 'jquery';
 import {
   FormBuilder,
   FormControl,
@@ -238,13 +238,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   maskMobileNumber(originalMobileNumber: string): string {
     if (originalMobileNumber && originalMobileNumber.length >= 10) {
-      let maskedNo ='X'.repeat(originalMobileNumber.length);
+      let maskedNo = 'X'.repeat(originalMobileNumber.length);
       return maskedNo
     }
     return originalMobileNumber;
   }
 
-  unMaskedMobileNo:any;
+  unMaskedMobileNo: any;
 
   setFormValues(data) {
     console.log('data', data);
@@ -655,6 +655,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           this.personalInfoForm.patchValue(this.selectedUserInfo); // all
           // this.otherDetailsForm.patchValue(this.selectedUserInfo);
           this.setFormValues(this.selectedUserInfo);
+          this.onValueChanges();
           this.updateIgstFlag();
           if (
             this.utilsService.isNonEmpty(this.selectedUserInfo) &&
@@ -807,6 +808,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       planId: selectedPlan,
       selectedBy: 'SME',
       smeUserId: this?.loggedInSme[0]?.userId,
+      subscriptionId: this.userSubscription.subscriptionId,
+      promoCode: this.selectedPromoCode,
+      removePromoCode: false
     };
 
     this.itrService.postMethod(param, request).subscribe(
@@ -1107,7 +1111,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         reminderEmail: this.reminderEmail.value,
         reminderMobileNumber: this.reminderMobileNumber.value,
         subscriptionId: this.subscriptionObj.subscriptionId,
-        removePromoCode: this.isPromoRemoved
+        removePromoCode: this.selectedPromoCode ? this.isPromoRemoved : true
       };
       console.log('Req Body: ', reqBody);
       let requestData = JSON.parse(JSON.stringify(reqBody));
@@ -1187,6 +1191,41 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       }
     });
 
+  }
+
+  changesMade: boolean = false;
+
+  onValueChanges(){
+    this.personalInfoForm.valueChanges.subscribe((event) => {
+      console.log('event from valuechanges ', event);
+      this.changesMade = true;
+      console.log('changemode form ', this.changesMade);
+    });
+    this.otherInfoForm.valueChanges.subscribe(() => {
+      this.changesMade = true;
+    });
+    this.gstFormGroup.valueChanges.subscribe(() => {
+      this.changesMade = true;
+    });
+  }
+
+  cancel() {
+    if (this.changesMade) {
+      this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Cancel!',
+          message: 'Changes have not been saved. Are you sure you want to cancel?',
+        },
+
+      });
+      this.dialogRef.afterClosed().subscribe(result => {
+        if (result === 'YES') {
+          this.location.back();
+        }
+      })
+    } else {
+      this.location.back();
+    }
   }
 }
 

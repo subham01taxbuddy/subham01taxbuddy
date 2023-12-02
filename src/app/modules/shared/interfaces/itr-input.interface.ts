@@ -85,8 +85,10 @@ export interface ITR_JSON {
   totalLossCarriedForwardedToFutureYears?: TotalLossCarriedForwardedToFutureYears;
 
   prefillDate: string;
+  aisLastUploadedDownloadedDate: string;
   prefillData: any;
   prefillDataSource: string;
+  aisDataSource: string;
   everOptedNewRegime: OptedInNewRegime;
   everOptedOutOfNewRegime: OptedOutNewRegime;
   optionForCurrentAY: CurrentNewRegime;
@@ -120,16 +122,16 @@ export interface ITR_JSON {
   agriculturalLandDetails: agriculturalLandDetails[];
 
   giftTax: {
-    aggregateValueWithoutConsideration: number,
-    aggregateValueWithoutConsiderationNotTaxable: boolean
-    immovablePropertyWithoutConsideration: number,
-    immovablePropertyWithoutConsiderationNotTaxable: boolean,
-    immovablePropertyInadequateConsideration: number,
-    immovablePropertyInadequateConsiderationNotTaxable: boolean,
-    anyOtherPropertyWithoutConsideration: number,
-    anyOtherPropertyWithoutConsiderationNotTaxable: boolean,
-    anyOtherPropertyInadequateConsideration: number,
-    anyOtherPropertyInadequateConsiderationNotTaxable: boolean,
+    aggregateValueWithoutConsideration: number;
+    aggregateValueWithoutConsiderationNotTaxable: boolean;
+    immovablePropertyWithoutConsideration: number;
+    immovablePropertyWithoutConsiderationNotTaxable: boolean;
+    immovablePropertyInadequateConsideration: number;
+    immovablePropertyInadequateConsiderationNotTaxable: boolean;
+    anyOtherPropertyWithoutConsideration: number;
+    anyOtherPropertyWithoutConsiderationNotTaxable: boolean;
+    anyOtherPropertyInadequateConsideration: number;
+    anyOtherPropertyInadequateConsiderationNotTaxable: boolean;
   };
 }
 
@@ -489,6 +491,8 @@ export interface HouseProperties {
   coOwners: CoOwners[];
   ownerPercentage: number;
   loans: Loans[];
+  eligible80EEAAmount?: any;
+  eligible80EEAmount?: any;
 }
 
 export interface PresumptiveIncomes {
@@ -557,7 +561,8 @@ export interface AssetDetails {
   sellValuePerUnit: number;
   purchaseValuePerUnit: number;
   isUploaded: boolean;
-  hasIndexation: boolean;
+  isIndexationBenefitAvailable: boolean;
+  whetherDebenturesAreListed: boolean;
   algorithm: string;
   fmvAsOn31Jan2018: string;
   indexCostOfAcquisition: number;

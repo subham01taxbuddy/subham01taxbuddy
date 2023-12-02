@@ -17,6 +17,7 @@ import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import * as moment from 'moment';
 import { ReportService } from 'src/app/services/report-service';
+import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -182,27 +183,17 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     }
   }
 
-  coOwnerId: number;
-  coFilerId: number;
-
-  fromSme1(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.coOwnerId = event ? event.userId : null;
-    } else {
-      this.coFilerId = event ? event.userId : null;
+  fromSme1(event) {
+    console.log('sme-drop-down', event);
+    if (event) {
+      this.leaderId = event ? event.userId : null;
     }
-    if (this.coFilerId) {
-      this.agentId = this.coFilerId;
-      // this.search('agent');
-    } else if (this.coOwnerId) {
-      this.agentId = this.coOwnerId;
-      //  this.search('agent');
+    if (this.leaderId) {
+      this.agentId = this.leaderId;
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    //  this.search('agent');
   }
 
     search(form?, isAgent?, pageChange?) {
@@ -823,6 +814,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
     this.clearUserFilter = moment.now().valueOf();
     this.searchParam.page = 0;
@@ -834,6 +826,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
     this.userInfoLength = 0;
     this.config.totalItems = 0;
     this?.smeDropDown?.resetDropdown();
+    this?.leaderDropDown?.resetDropdown();
     this.searchBy ={};
     this.agentId = this.utilsService.getLoggedInUserID();
   }
