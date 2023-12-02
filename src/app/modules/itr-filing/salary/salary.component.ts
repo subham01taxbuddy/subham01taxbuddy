@@ -1007,26 +1007,26 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
   saveEmployerDetails() {
     this.validations();
-    if (this.employerDetailsFormGroup.valid && this.allowanceFormGroup.valid) {
+    if (this.employerDetailsFormGroup?.valid && this.allowanceFormGroup?.valid) {
       this.checkGrossSalary();
 
       this.localEmployer.address =
-        this.employerDetailsFormGroup.controls['address'].value;
+        this.employerDetailsFormGroup?.controls['address']?.value;
       this.localEmployer.employerName =
-        this.employerDetailsFormGroup.controls['employerName'].value;
+        this.employerDetailsFormGroup?.controls['employerName']?.value;
       this.localEmployer.state =
-        this.employerDetailsFormGroup.controls['state'].value;
+        this.employerDetailsFormGroup?.controls['state']?.value;
       this.localEmployer.pinCode =
-        this.employerDetailsFormGroup.controls['pinCode'].value;
+        this.employerDetailsFormGroup?.controls['pinCode']?.value;
       this.localEmployer.city =
-        this.employerDetailsFormGroup.controls['city'].value;
+        this.employerDetailsFormGroup?.controls['city']?.value;
       this.localEmployer.employerTAN =
-        this.employerDetailsFormGroup.controls['employerTAN'].value;
+        this.employerDetailsFormGroup?.controls['employerTAN']?.value;
       this.localEmployer.salary = [];
       this.localEmployer.perquisites = [];
       this.localEmployer.profitsInLieuOfSalaryType = [];
 
-      let salaryDetails = this.employerDetailsFormGroup.controls[
+      let salaryDetails = this.employerDetailsFormGroup?.controls[
         'salaryDetails'
       ] as FormArray;
 
@@ -1034,8 +1034,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       let perquisitesAmount = 0;
       let profitsInLieuAmount = 0;
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-      for (let i = 0; i < salaryDetails.controls.length; i++) {
-        let salary = salaryDetails.controls[i] as FormGroup;
+      for (let i = 0; i < salaryDetails?.controls.length; i++) {
+        let salary = salaryDetails?.controls[i] as FormGroup;
         if (
           this.utilsService.isNonEmpty(salary?.controls['salaryValue']?.value)
         ) {
@@ -1133,7 +1133,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           }
 
           if (salary.controls['salaryType'].value === 'SEC17_3') {
-            profitsInLieuAmount = Number(salary.controls['salaryValue'].value);
+            profitsInLieuAmount = Number(salary?.controls['salaryValue']?.value);
             if (profitsInLieuAmount && profitsInLieuAmount !== 0) {
               this.localEmployer?.profitsInLieuOfSalaryType?.push({
                 salaryType: 'SEC17_3',
@@ -1144,9 +1144,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
             console.log(this.localEmployer);
             if (
-              this.bifurcationResult?.SEC17_3.total ||
-              this.bifurcationResult?.SEC17_3.total === 0 ||
-              this.bifurcationResult?.SEC17_3.value > 0
+              this.bifurcationResult?.SEC17_3?.total ||
+              this.bifurcationResult?.SEC17_3?.total === 0 ||
+              this.bifurcationResult?.SEC17_3?.value > 0
             ) {
               const profitsInLieuValues =
                 this.utilsService.getSalaryValues()?.profitsInLieu;
@@ -1184,7 +1184,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       }
 
       if (
-        this.deductionsFormGroup.controls['entertainmentAllow'].value >
+        this.deductionsFormGroup?.controls['entertainmentAllow']?.value >
         Math.min(basicSalaryAmount / 5, this.maxEA)
       ) {
         this.utilsService.showSnackBar(
@@ -1199,19 +1199,19 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       for (
         let i = 0;
         i <
-        (this.allowanceFormGroup.controls['allowances'] as FormArray).controls
+        (this.allowanceFormGroup?.controls['allowances'] as FormArray)?.controls
           .length;
         i++
       ) {
         let allowance = (
           this.allowanceFormGroup.controls['allowances'] as FormArray
         ).controls[i] as FormGroup;
-        if (this.utilsService.isNonZero(allowance.value.allowValue)) {
+        if (this.utilsService.isNonZero(allowance?.value?.allowValue)) {
           if (
-            allowance.controls['allowType'].value ===
+            allowance?.controls['allowType']?.value ===
               'NON_MONETARY_PERQUISITES' &&
-            allowance.controls['allowValue'].value !== 0 &&
-            allowance.controls['allowValue'].value > perquisitesAmount
+            allowance?.controls['allowValue']?.value !== 0 &&
+            allowance?.controls['allowValue']?.value > perquisitesAmount
           ) {
             this.utilsService.showSnackBar(
               'Tax paid by employer on non-monetary perquisites u/s 10CC cannot exceed the amount of Perquisites - Salary 17(2)'
@@ -1219,8 +1219,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             return;
           }
           if (
-            allowance.controls['allowType'].value === 'HOUSE_RENT' &&
-            allowance.controls['allowValue'].value > basicSalaryAmount / 2
+            allowance?.controls['allowType']?.value === 'HOUSE_RENT' &&
+            allowance?.controls['allowValue']?.value > basicSalaryAmount / 2
           ) {
             this.utilsService.showSnackBar(
               'HRA cannot be more than 50% of Salary u/s 17(1).'
@@ -1228,9 +1228,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             return;
           }
           if (
-            allowance.controls['allowType'].value ===
+            allowance?.controls['allowType']?.value ===
               'NON_MONETARY_PERQUISITES' &&
-            allowance.controls['allowValue'].value !== 0 &&
+            allowance?.controls['allowValue']?.value !== 0 &&
             perquisitesAmount === 0
           ) {
             this.utilsService.showSnackBar(
@@ -1239,10 +1239,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             return;
           }
           if (
-            allowance.controls['allowType'].value === 'COMPENSATION_ON_VRS' &&
-            allowance.controls['allowValue'].value !== 0 &&
-            (this.allowanceFormGroup.controls['vrsLastYear'].value === true ||
-              this.allowanceFormGroup.controls['sec89'].value === true)
+            allowance?.controls['allowType']?.value === 'COMPENSATION_ON_VRS' &&
+            allowance?.controls['allowValue']?.value !== 0 &&
+            (this.allowanceFormGroup?.controls['vrsLastYear']?.value === true ||
+              this.allowanceFormGroup?.controls['sec89']?.value === true)
           ) {
             this.utilsService.showSnackBar(
               'VRS exemption cannot be claimed again in this year'
@@ -1250,26 +1250,26 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             return;
           }
 
-          const allowancesArray = this.allowanceFormGroup.get(
+          const allowancesArray = this.allowanceFormGroup?.get(
             'allowances'
           ) as FormArray;
 
-          const firstProviso = allowancesArray.controls.find(
-            (element) => element.value.allowType === 'FIRST_PROVISO'
+          const firstProviso = allowancesArray?.controls?.find(
+            (element) => element?.value?.allowType === 'FIRST_PROVISO'
           );
 
-          const secondProviso = allowancesArray.controls.find(
-            (element) => element.value.allowType === 'SECOND_PROVISO'
+          const secondProviso = allowancesArray?.controls?.find(
+            (element) => element?.value?.allowType === 'SECOND_PROVISO'
           );
 
-          const compensationVrs = allowancesArray.controls.find(
-            (element) => element.value.allowType === 'COMPENSATION_ON_VRS'
+          const compensationVrs = allowancesArray?.controls?.find(
+            (element) => element?.value?.allowType === 'COMPENSATION_ON_VRS'
           );
 
           let array = [
-            parseFloat(firstProviso?.value.allowValue),
-            parseFloat(secondProviso?.value.allowValue),
-            parseFloat(compensationVrs?.value.allowValue),
+            parseFloat(firstProviso?.value?.allowValue),
+            parseFloat(secondProviso?.value?.allowValue),
+            parseFloat(compensationVrs?.value?.allowValue),
           ];
 
           let count = 0;
@@ -1286,22 +1286,22 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
             this.freeze = false;
           }
 
-          this.localEmployer.allowance.push({
-            allowanceType: allowance.controls['allowType'].value,
+          this.localEmployer?.allowance?.push({
+            allowanceType: allowance?.controls['allowType']?.value,
             taxableAmount: 0,
-            exemptAmount: Number(allowance.controls['allowValue'].value),
+            exemptAmount: Number(allowance?.controls['allowValue']?.value),
           });
 
           if (
-            allowance.controls['allowType'].value !== 'REMUNERATION_REC' &&
-            allowance.controls['allowType'].value !== 'US_10_7'
+            allowance?.controls['allowType']?.value !== 'REMUNERATION_REC' &&
+            allowance?.controls['allowType']?.value !== 'US_10_7'
           ) {
             totalAllowExempt =
-              totalAllowExempt + Number(allowance.controls['allowValue'].value);
+              totalAllowExempt + Number(allowance?.controls['allowValue']?.value);
           } else {
             othTotalAllowExempt =
               othTotalAllowExempt +
-              Number(allowance.controls['allowValue'].value);
+              Number(allowance?.controls['allowValue']?.value);
           }
         }
       }
@@ -1333,44 +1333,44 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         this.utilsService.isNonZero(totalAllowExempt) ||
         this.utilsService.isNonZero(totalAllowExempt)
       ) {
-        this.localEmployer.allowance.push({
+        this.localEmployer?.allowance?.push({
           allowanceType: 'ALL_ALLOWANCES',
           taxableAmount: 0,
           exemptAmount: totalAllowExempt + othTotalAllowExempt,
         });
       }
 
-      if (!this.utilsService.isNonEmpty(this.localEmployer.deductions)) {
+      if (!this.utilsService.isNonEmpty(this.localEmployer?.deductions)) {
         this.localEmployer.deductions = [];
       }
-      this.localEmployer.deductions = this.localEmployer.deductions.filter(
-        (item: any) => item.deductionType !== 'PROFESSIONAL_TAX'
+      this.localEmployer.deductions = this.localEmployer?.deductions?.filter(
+        (item: any) => item?.deductionType !== 'PROFESSIONAL_TAX'
       );
       if (
-        this.deductionsFormGroup.controls['professionalTax'].value !== null &&
-        this.deductionsFormGroup.controls['professionalTax'].value !== ''
+        this.deductionsFormGroup?.controls['professionalTax']?.value !== null &&
+        this.deductionsFormGroup?.controls['professionalTax']?.value !== ''
       ) {
-        this.localEmployer.deductions.push({
+        this.localEmployer?.deductions?.push({
           deductionType: 'PROFESSIONAL_TAX',
           taxableAmount: 0,
           exemptAmount: Number(
-            this.deductionsFormGroup.controls['professionalTax'].value
+            this.deductionsFormGroup?.controls['professionalTax']?.value
           ),
         });
       }
-      this.localEmployer.deductions = this.localEmployer.deductions.filter(
-        (item: any) => item.deductionType !== 'ENTERTAINMENT_ALLOW'
+      this.localEmployer.deductions = this.localEmployer?.deductions?.filter(
+        (item: any) => item?.deductionType !== 'ENTERTAINMENT_ALLOW'
       );
       if (
-        this.deductionsFormGroup.controls['entertainmentAllow'].value !==
+        this.deductionsFormGroup?.controls['entertainmentAllow']?.value !==
           null &&
-        this.deductionsFormGroup.controls['entertainmentAllow'].value !== ''
+        this.deductionsFormGroup?.controls['entertainmentAllow']?.value !== ''
       ) {
-        this.localEmployer.deductions.push({
+        this.localEmployer?.deductions?.push({
           deductionType: 'ENTERTAINMENT_ALLOW',
           taxableAmount: 0,
           exemptAmount: Number(
-            this.deductionsFormGroup.controls['entertainmentAllow'].value
+            this.deductionsFormGroup?.controls['entertainmentAllow']?.value
           ),
         });
       }

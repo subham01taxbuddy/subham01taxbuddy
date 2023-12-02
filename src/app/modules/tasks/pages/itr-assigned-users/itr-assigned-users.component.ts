@@ -863,6 +863,36 @@ export class ItrAssignedUsersComponent implements OnInit {
     ];
   }
 
+  reassignmentForLeader(){
+    let selectedRows = this.usersGridOptions.api.getSelectedRows();
+    if (selectedRows.length === 0) {
+      this.utilsService.showSnackBar('Please select entries from table to Re-Assign');
+      return;
+    }
+
+    const uniqueLeaderUserIds = new Set(selectedRows.map(row => row.leaderUserId));
+    if (uniqueLeaderUserIds.size !== 1) {
+      this.utilsService.showSnackBar('Please select entries with the same Leader, Please Filter further for leader ');
+      return;
+    }
+
+    let disposable = this.dialog.open(ReAssignActionDialogComponent, {
+      width: '65%',
+      height: 'auto',
+      data: {
+        data: selectedRows,
+        mode: 'leaderAssignment'
+      },
+    });
+    disposable.afterClosed().subscribe((result) => {
+      console.log('result of reassign user ', result);
+      if (result?.data === 'success') {
+        this.search();
+      }
+    });
+
+  }
+
   reassignmentForFiler() {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     console.log(selectedRows);

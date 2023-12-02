@@ -1403,7 +1403,7 @@ export class HousePropertyComponent implements OnInit {
     let propertyType = this.housePropertyForm?.controls['propertyType'];
 
     if (propertyType?.value === 'SOP') {
-      interest24b?.setValue(parseFloat(interest?.value));
+      interest24b?.setValue(parseFloat(interest?.value ? interest?.value : 0));
       interest24b?.updateValueAndValidity();
 
       interest.setValidators([Validators.max(200000)]);
@@ -1415,9 +1415,15 @@ export class HousePropertyComponent implements OnInit {
       eligible80EEAAmount?.setValue(0);
       eligible80EEAAmount?.updateValueAndValidity();
       return;
-    } else {
+    } else if (
+      propertyType?.value === 'SOP' ||
+      propertyType?.value === 'DLOP'
+    ) {
       interest.clearValidators();
       interest.updateValueAndValidity();
+    } else {
+      interest24b?.setValue(parseFloat(interest?.value ? interest?.value : 0));
+      interest24b?.updateValueAndValidity();
     }
 
     if (eligible80EE?.value === '80EE') {
