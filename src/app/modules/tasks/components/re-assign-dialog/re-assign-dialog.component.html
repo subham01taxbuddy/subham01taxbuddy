@@ -4,6 +4,9 @@ font-weight: bold;">Re-Assign: {{data.clientName}}</label><button style="float: 
   class="tbd-btn-close close"><i class="fa fa-times" aria-hidden="true"></i></button>
 <div class="row spsTp bdrTp">
   <!-- <label style="font-size: 14px;font-weight:normal; color:red;"> * Please select Both Owner And filer Name </label> -->
+  <div class="clo-sm-12" *ngIf="roles.includes('ROLE_FILER')">
+    <span style="font-weight: bold; font-size: 16px;">Leader Name : {{data.userInfo.leaderName}} </span>
+  </div>
   <div class="col-sm-6" *ngIf="showOnlyLeader">
     <div >
       <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromOnlyLeader($event)"
