@@ -59,13 +59,25 @@
     </div>
 
     <div class="col-sm-9 spsTp" *ngIf="loggedInUserRoles.includes('ROLE_ADMIN')">
-      <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
+      <div class="col-sm-6" *ngIf="data.data[0].serviceType !== 'ITR'">
+        <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromLeader($event)"
+        [showOwnerList]="true"></app-leader-list-dropdown>
+      </div>
+      <div *ngIf="data.data[0].serviceType === 'ITR'">
+        <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
         [selectedLeader]=data.data[0] (sendPrincipleIndividual)="fromPrinciple($event)"
         (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
+      </div>
     </div>
     <div class="col-sm-9 spsTp" *ngIf="loggedInUserRoles.includes('ROLE_LEADER')">
-      <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [showAllToLeader] =true
-      (sendPrincipleIndividual)="fromPrinciple($event)" (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
+      <div class="col-sm-6" *ngIf="data.data[0].serviceType !== 'ITR'">
+        <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromLeader($event)"
+        [showOwnerList]="true"></app-leader-list-dropdown>
+      </div>
+      <div *ngIf="data.data[0].serviceType === 'ITR'">
+        <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [showAllToLeader] =true
+        (sendPrincipleIndividual)="fromPrinciple($event)" (sendFiler)="fromChild($event)"></app-sme-list-drop-down>
+      </div>
     </div>
     <div class="col-sm-3">
       <button class="tbd-btn save-btn spsTp2" (click)="reAssignmentForLeader()"

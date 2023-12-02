@@ -744,9 +744,14 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     }
 
     const uniqueLeaderUserIds = new Set(selectedRows.map(row => row.leaderUserId));
-    if (uniqueLeaderUserIds.size !== 1) {
-      this.utilsService.showSnackBar('Please select entries with the same Leader, Please Filter further for leader ');
-      return;
+    const uniqueServiceType = new Set(selectedRows.map(row => row.serviceType))
+
+    if((uniqueLeaderUserIds.size !== 1) || (uniqueServiceType.size !==1)){
+      if(this.loggedInUserRoles.includes('ROLE_ADMIN')){
+        this.utilsService.showSnackBar('Please filter 1 leader and 1 service and the bulk re-assignment to leader')
+      }else{
+        this.utilsService.showSnackBar('Please filter 1 service and then try the bulk re-assignment to leader');
+      }      return;
     }
 
     let disposable = this.dialog.open(ReAssignActionDialogComponent, {
@@ -775,24 +780,22 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     }
 
     const uniqueLeaderUserIds = new Set(selectedRows.map(row => row.leaderUserId));
-    if (uniqueLeaderUserIds.size !== 1) {
-      this.utilsService.showSnackBar('Please select entries with the same Leader, Please Filter further for leader ');
+    const serviceType = selectedRows.map(row => row.serviceType);
+
+    if ((uniqueLeaderUserIds.size !== 1) || serviceType.some(type => type !== 'ITR')) {
+      if(this.loggedInUserRoles.includes('ROLE_ADMIN')){
+        this.utilsService.showSnackBar('Please filter 1 leader and ITR service and then try the bulk re-assignment to Filer')
+      }else{
+        this.utilsService.showSnackBar('Please filter ITR service and then try the bulk re-assignment to Filer');
+      }
       return;
     }
 
-    const itrRows = selectedRows.filter(row => row.serviceType === 'ITR');
-
-    if (itrRows.length === 0) {
-      this.utilsService.showSnackBar('Please select entries with Service Type "ITR"');
-      return;
-    }
-
-    let invoices = selectedRows.flatMap(item => item.invoiceNo);
     let disposable = this.dialog.open(ReAssignActionDialogComponent, {
       width: '65%',
       height: 'auto',
       data: {
-        data: itrRows
+        data: selectedRows
       },
     });
     disposable.afterClosed().subscribe((result) => {
