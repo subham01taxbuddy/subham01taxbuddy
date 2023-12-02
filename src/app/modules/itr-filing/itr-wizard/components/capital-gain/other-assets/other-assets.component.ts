@@ -94,6 +94,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   totalCg: TotalCg = {
     ltcg: 0,
     stcg: 0,
+    deduction: 0
   };
   createRowData() {
     this.assetList = [];
