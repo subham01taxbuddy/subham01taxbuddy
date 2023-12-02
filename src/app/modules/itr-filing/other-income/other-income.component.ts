@@ -782,14 +782,17 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     if (item) {
       if (this.getAgriIncomeArray.valid) {
         const formGroup = this.fb.group({
-          nameOfDistrict: item ? item.nameOfDistrict : null,
-          pinCode: item ? item.pinCode : null,
+          nameOfDistrict: [
+            item ? item.nameOfDistrict : null,
+            Validators.required,
+          ],
+          pinCode: [item ? item.pinCode : null, Validators.required],
           landInAcre: [
             item?.landInAcre === 0 ? null : item?.landInAcre,
             Validators.required,
           ],
           owner: [item ? item.owner : null, Validators.required],
-          typeOfLand: item ? item.typeOfLand : null,
+          typeOfLand: [item ? item.typeOfLand : null, Validators.required],
         });
         this.getAgriIncomeArray.push(formGroup);
       } else {
@@ -799,11 +802,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       }
     } else {
       const formGroup = this.fb.group({
-        nameOfDistrict: null,
-        pinCode: null,
+        nameOfDistrict: [null, Validators.required],
+        pinCode: [null, Validators.required],
         landInAcre: [null, Validators.required],
         owner: [null, Validators.required],
-        typeOfLand: null,
+        typeOfLand: [null, Validators.required],
       });
       this.getAgriIncomeArray.push(formGroup);
     }
