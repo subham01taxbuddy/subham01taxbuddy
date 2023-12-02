@@ -1058,6 +1058,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     headers = headers.append('environment', environment.lifecycleEnv);
     headers = headers.append('Authorization', 'Bearer ' + TOKEN);
     this.rowData = data;
+    this.loading = true;
     this.requestManager.addRequest(this.LIFECYCLE,
       this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
     we_track('Start Filing', {
