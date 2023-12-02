@@ -876,6 +876,7 @@ export class LabFormComponent implements OnInit {
           this.improvements.push(improvementDetails.getRawValue());
         }
         this.mergeImprovements();
+        this.calculateIndexCost(index);
         this.calculateCapitalGain(formGroupName, '', index);
       });
     }
@@ -1423,8 +1424,8 @@ export class LabFormComponent implements OnInit {
             console.log('gain type in else', this.cgArrayElement.assetDetails);
           }
           console.log('gain type', this.cgArrayElement.assetDetails);
-          this.calculateDeduction(index);
           this.calculateCapitalGain(this.immovableForm, '', index);
+          this.calculateDeduction(index);
         }
       });
     }
