@@ -16,8 +16,10 @@
         <div class="surround">
           <div class="row">
             <div class="col-sm-12 bckClr">
-              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
-                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+              <div class="col-sm-6">
+                <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event)"
+                [showOwnerList]="true"></app-leader-list-dropdown>
+              </div>
             </div>
             <div class="col-sm-12 spsTp bdrTp">
               <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()"

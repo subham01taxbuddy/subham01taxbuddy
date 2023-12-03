@@ -7,11 +7,36 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { environment } from 'src/environments/environment';
 import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
+import { FormControl } from '@angular/forms';
+import { DatePipe } from '@angular/common';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-payout-report',
   templateUrl: './payout-report.component.html',
-  styleUrls: ['./payout-report.component.scss']
+  styleUrls: ['./payout-report.component.scss'],
+  providers: [
+    DatePipe,
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
 export class PayoutReportComponent implements OnInit,OnDestroy {
   loading = false;
@@ -28,16 +53,31 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
   roles: any;
   loggedInSme: any;
   showCsvMessage: boolean;
+  statusList = [
+    { value: '', name: 'All' },
+    { value: 'tdsApplicable', name: 'TDS Applicable' },
+    { value: 'tdsNotApplicable', name: 'TDS Not Applicable' },
+  ];
+  searchAsPrinciple: boolean = false;
+  selectedStatus = new FormControl();
+  startDate = new FormControl('');
+  endDate = new FormControl('');
+  minEndDate = new Date();
+  maxStartDate =new Date();
+  maxDate = new Date(2024, 2, 31);
+  minDate = new Date(2023, 3, 1);
 
   constructor(
+    public datePipe: DatePipe,
     private utilsService: UtilsService,
     private reportService: ReportService,
     private _toastMessageService: ToastMessageService,
     private genericCsvService: GenericCsvService,
     private cacheManager: CacheManager,
   ) {
-    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    this.roles = this.loggedInSme[0]?.roles;
+    this.startDate.setValue(new Date());
+    this.endDate.setValue(new Date());
+
     this.payoutReportGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reportsCodeColumnDef(),
@@ -58,66 +98,98 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit() {
-    // this.showReports();
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    this.roles = this.loggedInSme[0]?.roles;
   }
 
-  ownerId: number;
+  getStatusValue(item){
+
+  }
+
+  setToDateValidation(FromDate) {
+    console.log('FromDate: ', FromDate);
+    this.minEndDate = FromDate;
+  }
+
+  leaderId: number;
   filerId: number;
   agentId: number;
+  fromLeader(event) {
+    if (event) {
+      this.leaderId = event ? event.userId : null;
+      console.log('fromowner:', event);
+      this.agentId = this.leaderId;
 
-  fromSme(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.ownerId = event ? event.userId : null;
-    } else {
-      this.filerId = event ? event.userId : null;
     }
-    if (this.filerId) {
+  }
+  fromPrinciple(event) {
+    if (event) {
+      if (event?.partnerType === 'PRINCIPAL') {
+        this.filerId = event ? event.userId : null;
+        this.searchAsPrinciple = true;
+      } else {
+        this.filerId = event ? event.userId : null;
+        this.searchAsPrinciple = false;
+      }
       this.agentId = this.filerId;
-
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
-
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
     }
-
+  }
+  fromFiler(event) {
+    if (event) {
+      this.filerId = event ? event.userId : null;
+      this.agentId = this.filerId;
+      // let statusFilter = this.selectedStatus ? `&status=${this.selectedStatus}` : '';
+      // let queryString = this.filerId ? `&filerUserId=${this.filerId}${statusFilter}` : `${statusFilter}`;
+      // this.serviceCall('');
+    }
   }
 
   showReports(pageChange?) {
-    // http://localhost:9055/report/payout/report?page=0&pageSize=20&ownerUserId=304829
+    //'https://uat-api.taxbuddy.com/report/payout/report?toDate=2023-11-10&fromDate=2023-04-01&page=0&pageSize=20' \
     if(!pageChange){
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
     this.loading = true;
-
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let param = '';
     let userFilter = '';
 
-    if (this.ownerId && !this.filerId && !pageChange) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.leaderId && !this.filerId && !pageChange) {
       this.searchParam.page = 0;
       this.config.currentPage = 1
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
-    if (this.ownerId && pageChange) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.leaderId && pageChange) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
-    if (this.filerId && !pageChange) {
-      userFilter += `&filerUserId=${this.filerId}`;
+    if (this.filerId && this.searchAsPrinciple === true && !pageChange) {
       this.searchParam.page = 0;
-      this.config.currentPage = 1;
+      this.config.currentPage = 1
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true && pageChange) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false && !pageChange) {
+      this.searchParam.page = 0;
+      this.config.currentPage = 1
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false && pageChange) {
+      userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    if (this.filerId && pageChange) {
-      userFilter += `&filerUserId=${this.filerId}`;
+    let statusFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectedStatus.value) && this.selectedStatus.valid)) {
+      statusFilter += `&status=${this.selectedStatus.value}`;
     }
 
     let data = this.utilsService.createUrlParams(this.searchParam);
-    param = `/payout/report?${data}${userFilter}`;
+    param = `/payout/report??fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
 
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -207,28 +279,30 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
         },
       },
       {
-        headerName: 'Owner Name',
-        field: 'ownerName',
-        width: 150,
+        headerName: 'Role',
+        field: 'role',
+        sortable: true,
+        width: 200,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        },
+        }
       },
       {
-        headerName: 'Total Number of filings',
+        headerName: 'Total Number of ITR filed',
         field: 'numberOfFiling',
-        width: 180,
+        sortable: true,
+        width: 200,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        },
+        }
       },
       {
         headerName: 'Total Commission Earned',
@@ -243,9 +317,9 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
         },
       },
       {
-        headerName: 'Total Commission Earned-Post TDS',
-        field: 'totalCommissionEarnedTds',
-        width: 260,
+        headerName: 'Total TDS',
+        field: 'totalTDS',
+        width: 160,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -255,9 +329,9 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
         },
       },
       {
-        headerName: 'Total TDS',
-        field: 'totalTDS',
-        width: 160,
+        headerName: 'Total Commission After TDS',
+        field: 'totalCommissionEarnedTds',
+        width: 260,
         suppressMovable: true,
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         filter: "agTextColumnFilter",
@@ -280,6 +354,7 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
         headerName: 'Slab 0-50 40:60',
         headerClass: 'centered-header',
         children: [
+
           {
             headerName: 'No Of filling',
             field: 'slabOneCount',
@@ -288,9 +363,23 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
           {
-            headerName: 'Earning',
+            headerName: 'Total Commission Earned',
+            field: '',
+            width: 190,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+          {
+            headerName: 'Total TDS',
+            field: '',
+            width: 110,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+          {
+            headerName: 'Total Commission After TDS',
             field: 'slabOneEarning',
-            width: 80,
+            width: 200,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
@@ -312,15 +401,29 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
         children: [
           {
             headerName: 'No Of filling',
-            field: 'slabTwoCount',
+            field: 'slabOneCount',
             width: 110,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
           {
-            headerName: 'Earning',
-            field: 'slabTwoEarning',
-            width: 80,
+            headerName: 'Total Commission Earned',
+            field: '',
+            width: 190,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+          {
+            headerName: 'Total TDS',
+            field: '',
+            width: 110,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+          {
+            headerName: 'Total Commission After TDS',
+            field: 'slabOneEarning',
+            width: 200,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
@@ -342,15 +445,29 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
         children: [
           {
             headerName: 'No Of filling',
-            field: 'slabThreeCount',
+            field: 'slabOneCount',
             width: 110,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
           {
-            headerName: 'Earning',
-            field: 'slabThreeEarning',
-            width: 130,
+            headerName: 'Total Commission Earned',
+            field: '',
+            width: 190,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+          {
+            headerName: 'Total TDS',
+            field: '',
+            width: 110,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+          {
+            headerName: 'Total Commission After TDS',
+            field: 'slabOneEarning',
+            width: 200,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
@@ -366,12 +483,16 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
     let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
-    if (this.ownerId && !this.filerId) {
-      userFilter += `ownerUserId=${this.ownerId}`;
+    if (this.leaderId && !this.filerId ) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.filerId) {
-      userFilter += `filerUserId=${this.filerId}`;
+    if (this.filerId && this.searchAsPrinciple === true ) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
     }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+
     param = `/payout/report?${userFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report','', {});
     this.loading = false;
@@ -380,16 +501,14 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.selectedStatus.setValue(null);
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
     this?.smeDropDown?.resetDropdown();
-    //  if (this.roles?.includes('ROLE_OWNER')) {
-    //    this.ownerId = this.loggedInSme[0].userId;
-    //  } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
-    //    this.filerId = this.loggedInSme[0].userId;
-    //  }
+    this.startDate.setValue(new Date());
+    this.endDate.setValue(new Date());
     this.config.totalCommissionEarned = 0;
     this.config.totalPartnersPaid=0;
     this.payoutReportGridOptions.api?.setRowData(this.createRowData([]));
@@ -397,12 +516,6 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
     // this.showReports();
   }
 
-  // pageChanged(event) {
-  //   let pageChange = event
-  //   this.config.currentPage = event;
-  //   this.searchParam.page = event - 1;
-  //   this.showReports(pageChange);
-  // }
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {

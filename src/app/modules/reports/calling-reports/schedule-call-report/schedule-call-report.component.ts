@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { GridOptions } from 'ag-grid-community';
+import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { JsonToCsvService } from 'src/app/modules/shared/services/json-to-csv.service';
@@ -84,79 +85,56 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
 
-    if (this.roles?.includes('ROLE_OWNER')) {
-      this.ownerId = this.loggedInSme[0].userId;
-    } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
-      this.filerId = this.loggedInSme[0].userId;
+    if (this.roles?.includes('ROLE_LEADER')) {
+      this.leaderId = this.loggedInSme[0].userId;
     }
-
-    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
-      this.showReports();
-    } else{
-      this.dataOnLoad = false;
-    }
+    this.dataOnLoad = false;
     // this.showReports();
   }
 
-  ownerId: number;
+  leaderId: number;
   filerId: number;
   agentId: number;
 
-  fromSme(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.ownerId = event ? event.userId : null;
-    } else {
-      this.filerId = event ? event.userId : null;
+  fromSme1(event) {
+    console.log('sme-drop-down', event);
+    if (event) {
+      this.leaderId = event ? event.userId : null;
     }
-    if (this.filerId) {
-      this.agentId = this.filerId;
-
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
-
+    if (this.leaderId) {
+      this.agentId = this.leaderId;
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-
   }
 
   showReports(pageChange?) {
-    // https://uat-api.taxbuddy.com/report/calling-report/schedule-call-report?page=0&pageSize=30&leaderUserId=9362'
+    // https://uat-api.taxbuddy.com/report/bo/calling-report/schedule-call-report?leaderUserId=1064
     if(!pageChange){
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
     this.loading = true;
-    // let loggedInId = this.utilsService.getLoggedInUserID();
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
+
     let param = ''
     let userFilter = '';
-    if (this.ownerId && !this.filerId && !pageChange) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.leaderId  && !pageChange) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
       this.searchParam.page = 0;
       this.config.currentPage = 1
     }
 
-    if (this.ownerId && pageChange) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.leaderId && pageChange) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
-
-    if (this.filerId && !pageChange) {
-      userFilter += `&filerUserId=${this.filerId}`;
-      this.searchParam.page = 0;
-      this.config.currentPage = 1
-    }
-
-    if (this.filerId && pageChange) {
-      userFilter += `&filerUserId=${this.filerId}`;
-    }
-    // else{
-    //   userFilter += `&leaderUserId=${loggedInId}`
-    // }
 
     let data = this.utilsService.createUrlParams(this.searchParam);
-    param = `/calling-report/schedule-call-report?${data}${userFilter}`;
+    param = `/bo/calling-report/schedule-call-report?${data}${userFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
@@ -200,7 +178,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
   reportsCodeColumnDef() {
     return [
       {
-        headerName: 'Filer Name',
+        headerName: 'Leader Name',
         field: 'filerName',
         sortable: true,
         width: 200,
@@ -240,7 +218,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
         }
       },
       {
-        headerName: 'No Call schedule for Later(next day)',
+        headerName: 'No Call schedule for next day',
         field: 'noOfCallScheduleForLater',
         sortable: true,
         width: 180,
@@ -288,30 +266,30 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
     this.loading = true;
     this.showCsvMessage = true;
     let param = ''
+
     let userFilter = '';
-    if (this.ownerId && !this.filerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
-    }
-    if (this.filerId) {
-      userFilter += `&filerUserId=${this.filerId}`;
+
+    if (this.leaderId) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
-    param = `/calling-report/schedule-call-report?${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'schedule-call-report');
+    param = `/bo/calling-report/schedule-call-report?${userFilter}`;
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'schedule-call-report','',{});
 
     this.loading = false;
     this.showCsvMessage = false;
   }
 
-  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
+    this?.leaderDropDown?.resetDropdown();
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1
-    this?.smeDropDown?.resetDropdown();
-    if (this.roles?.includes('ROLE_OWNER')) {
-      this.ownerId = this.loggedInSme[0].userId;
+
+    if (this.roles?.includes('ROLE_LEADER')) {
+      this.leaderId = this.loggedInSme[0].userId;
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
