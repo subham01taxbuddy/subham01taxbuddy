@@ -61,7 +61,6 @@
                     [matDatepicker]="sellDate"
                     placeholder="Date of Sale"
                     (blur)="this.calculateIndexCost(i)"
-                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
                     (dateChange)="
                       calMaxPurchaseDate(
                         asset.get('sellDate').value,
@@ -114,7 +113,7 @@
                     readonly
                     [matDatepicker]="purchaseDate"
                     placeholder="Date of Acquisition"
-                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
+                    (change)="this.calculateIndexCost(i)"
                     (dateChange)="
                       calMinImproveDate(
                         asset.get('purchaseDate').value,
@@ -167,7 +166,7 @@
                     name="asset[i]"
                     formControlName="sellValue"
                     (change)="
-                      calculateCapitalGain(this.immovableForm, '', i);
+                      this.calculateIndexCost(i);
                       updateSaleValue('saleValueChange')
                     "
                     required
@@ -187,7 +186,7 @@
                     placeholder="Stamp duty value"
                     name="asset[i]"
                     formControlName="stampDutyValue"
-                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
+                    (change)="this.calculateIndexCost(i)"
                     required
                   />
                 </mat-form-field>
@@ -206,7 +205,7 @@
                     placeholder="Value of Sale Consideration u/s 50C"
                     name="asset[i]"
                     formControlName="valueInConsideration"
-                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
+                    (change)="this.calculateIndexCost(i)"
                     required
                     readonly
                   />
@@ -278,8 +277,7 @@
                     class="input-field"
                     maxlength="14"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    (blur)="calculateCapitalGain(this.immovableForm, '', i)"
-                    (change)="calculateCapitalGain(this.immovableForm, '', i)"
+                    (blur)="this.calculateIndexCost(i)"
                     (focusin)="reset(asset.get('sellExpense'))"
                   />
                   <mat-error

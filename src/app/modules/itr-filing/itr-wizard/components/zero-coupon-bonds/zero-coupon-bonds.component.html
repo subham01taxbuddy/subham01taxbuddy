@@ -55,16 +55,22 @@
                       class="mvRth"
                     >
                       <mat-radio-button [value]="true" labelPosition="before"
-                      >Yes
+                        >Yes
                       </mat-radio-button>
                       <mat-radio-button [value]="false" labelPosition="before"
-                      >No</mat-radio-button
+                        >No</mat-radio-button
                       >
                     </mat-radio-group>
                   </div>
                 </div>
 
-                <div class="row spsTp" *ngIf="bondType === 'bonds' && !bonds.get('isIndexationBenefitAvailable').value">
+                <div
+                  class="row spsTp"
+                  *ngIf="
+                    bondType === 'bonds' &&
+                    !bonds.get('isIndexationBenefitAvailable').value
+                  "
+                >
                   <div class="col-sm-6 isDeduction">
                     Are the debentures listed?
                   </div>
@@ -74,10 +80,10 @@
                       class="mvRth"
                     >
                       <mat-radio-button [value]="true" labelPosition="before"
-                      >Yes
+                        >Yes
                       </mat-radio-button>
                       <mat-radio-button [value]="false" labelPosition="before"
-                      >No</mat-radio-button
+                        >No</mat-radio-button
                       >
                     </mat-radio-group>
                   </div>
@@ -92,8 +98,7 @@
                       matInput
                       class="input-field"
                       (dateChange)="
-                        getGainType(bonds);
-                        calculateTotalCG(bonds);
+                        getGainType(i);
                         calMaxPurchaseDate(
                           bonds.get('sellDate').value,
                           this.bondsForm,
@@ -128,7 +133,13 @@
                       class="input-field"
                       readonly
                       placeholder="Buy Date"
-                      (dateChange)="getGainType(bonds); calMinImproveDate(bonds.get('purchaseDate').value, bonds);calculateIndexCost(bonds, 'asset')"
+                      (dateChange)="
+                        getGainType(i);
+                        calMinImproveDate(
+                          bonds.get('purchaseDate').value,
+                          bonds, i
+                        )
+                      "
                       formControlName="purchaseDate"
                       name="purchaseDate"
                       [matDatepicker]="purchaseDate"
@@ -141,7 +152,7 @@
                     <mat-datepicker #purchaseDate></mat-datepicker>
                     <mat-error
                       *ngIf="bonds.get('purchaseDate').hasError('required')"
-                    >Please select date</mat-error
+                      >Please select date</mat-error
                     >
                   </mat-form-field>
                 </div>
@@ -154,9 +165,7 @@
                       matInput
                       class="input-field"
                       name="assets[i]"
-                      (change)="
-                        calculateTotalCG(bonds);
-                      "
+                      (change)="getGainType(i)"
                       placeholder="Sale value/Full value consideration"
                       digitsOnly
                       formControlName="valueInConsideration"
@@ -176,15 +185,16 @@
                 </div>
 
                 <!--Improvement-->
-                <div class="col-sm-4 spsTp" *ngIf="bonds.get('isIndexationBenefitAvailable').value">
-                  <mat-label>
-                    &nbsp;&nbsp; Year Of Improvement
-                  </mat-label>
+                <div
+                  class="col-sm-4 spsTp"
+                  *ngIf="bonds.get('isIndexationBenefitAvailable').value"
+                >
+                  <mat-label> &nbsp;&nbsp; Year Of Improvement </mat-label>
                   <mat-form-field class="input-field-width">
                     <mat-select
                       name="improve[i]"
                       formControlName="dateOfImprovement"
-                      (selectionChange)="calculateIndexCost(bonds)"
+                      (selectionChange)="getGainType(i)"
                     >
                       <mat-option
                         [value]="year"
@@ -202,8 +212,8 @@
                       matInput
                       class="input-field"
                       digitsOnly
-                      (change)="calculateIndexCost(bonds)"
-                      placeholder= "Cost of improvement without indexation"
+                      (change)="getGainType(i)"
+                      placeholder="Cost of improvement without indexation"
                       formControlName="costOfImprovement"
                       maxlength="14"
                       matTooltip="Cost of improvement without indexation"
@@ -218,7 +228,10 @@
                     >
                   </mat-form-field>
                 </div>
-                <div class="col-sm-4 spsTp" *ngIf="bonds.get('isIndexationBenefitAvailable').value">
+                <div
+                  class="col-sm-4 spsTp"
+                  *ngIf="bonds.get('isIndexationBenefitAvailable').value"
+                >
                   <mat-label>Indexed Cost of improvement</mat-label>
                   <mat-form-field appearance="outline">
                     <input
@@ -241,11 +254,11 @@
                       matInput
                       class="input-field"
                       digitsOnly
-                      matTooltip="{{getPlaceholderPurchase(bonds)}}"
+                      matTooltip="{{ getPlaceholderPurchase(bonds) }}"
                       matTooltipClass="tab-tooltip"
                       matTooltipPosition="above"
-                      placeholder="{{getPlaceholderPurchase(bonds)}}"
-                      (change)="calculateIndexCost(bonds, 'asset')"
+                      placeholder="{{ getPlaceholderPurchase(bonds) }}"
+                      (change)="getGainType(i)"
                       formControlName="purchaseCost"
                       maxlength="14"
                       required
@@ -256,9 +269,15 @@
                     >
                   </mat-form-field>
                 </div>
-                <div class="col-sm-4 spsTp" *ngIf="bonds.get('isIndexationBenefitAvailable').value">
+                <div
+                  class="col-sm-4 spsTp"
+                  *ngIf="bonds.get('isIndexationBenefitAvailable').value"
+                >
                   <mat-label> Indexed cost of acquisition</mat-label>
-                  <mat-form-field class="input-field-width" appearance="outline">
+                  <mat-form-field
+                    class="input-field-width"
+                    appearance="outline"
+                  >
                     <input
                       matInput
                       digitsOnly
@@ -278,9 +297,7 @@
                       class="input-field"
                       name="assets[i]"
                       placeholder="Expense"
-                      (change)="
-                        calculateTotalCG(bonds); calculateDeductionGain()
-                      "
+                      (change)="getGainType(i)"
                       formControlName="sellExpense"
                       maxlength="14"
                       digitsOnly
@@ -321,7 +338,7 @@
                       formControlName="capitalGain"
                       maxlength="14"
                       readonly
-                      (change)="calculateDeductionGain()"
+                      (change)="getGainType(i)"
                     />
                     <mat-error
                       *ngIf="bonds.get('capitalGain').hasError('required')"
@@ -331,17 +348,18 @@
                 </div>
 
                 <div class="spsTp">
-
                   <div class="flex justify-between p-[30px] back-foot">
                     <button class="lgtBtn">
                       <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
                       <span class="font-semibold" (click)="goBack()"
-                      >&nbsp;Back to Capital Gain Topics</span
+                        >&nbsp;Back to Capital Gain Topics</span
                       >
                     </button>
 
                     <button class="saveBtnIn">
-                      <span class="font-semibold" (click)="saveAll()">Save All</span>
+                      <span class="font-semibold" (click)="saveAll()"
+                        >Save All</span
+                      >
                     </button>
                   </div>
                 </div>
@@ -349,16 +367,18 @@
 
               <div class="mrgArd">
                 <div class="flex justify-between p-[30px] back-foot">
-                    <button class="lgtBtn">
-                      <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-                      <span class="font-semibold" (click)="goBack()"
+                  <button class="lgtBtn">
+                    <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
+                    <span class="font-semibold" (click)="goBack()"
                       >&nbsp;Back to Capital Gain Topics</span
-                      >
-                    </button>
+                    >
+                  </button>
 
-                    <button class="saveBtnIn">
-                      <span class="font-semibold" (click)="saveAll()">Save All</span>
-                    </button>
+                  <button class="saveBtnIn">
+                    <span class="font-semibold" (click)="saveAll()"
+                      >Save All</span
+                    >
+                  </button>
                 </div>
               </div>
             </div>
@@ -385,7 +405,6 @@
                   (pageChange)="pageChanged($event)"
                 ></pagination-controls>
               </div>
-
             </div>
           </div>
         </form>
@@ -555,7 +574,6 @@
         </div>
       </div>
     </form>
-
 
     <div class="flex justify-between p-[30px] back-foot">
       <button class="lgtBtn">

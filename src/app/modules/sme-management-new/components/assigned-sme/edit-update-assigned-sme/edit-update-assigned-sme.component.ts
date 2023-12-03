@@ -294,6 +294,8 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       });
     }
     this.joiningDate.setValue(moment(this.smeObj?.joiningDate, 'DD/MM/YYYY').toDate())
+    this.minDate = moment(this.smeObj?.joiningDate, 'DD/MM/YYYY').toDate();
+
   }
 
   setPlanDetails() {
@@ -686,19 +688,17 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       resigningDate: ResigningDate
     }
     this.userMsService.postMethod(param, request).subscribe((result: any) => {
-      console.log('updated resigned status  -> ', result);
       if (result.success) {
-        this.loading = false;
+        // this.loading = false;
         this.utilsService.showSnackBar(result.data.message);
-        this.location.back();
+        // this.location.back();
       } else {
-        this.loading = false;
+        // this.loading = false;
         this.utilsService.showSnackBar(result.message);
       }
     }, (error) => {
-      this.loading = false;
+      // this.loading = false;
       this.utilsService.showSnackBar(error.error.message);
-      console.log(error);
     });
   }
 
@@ -707,6 +707,18 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   }
 
   updateSmeDetails() {
+    const ResigningDate = this.convertToDDMMYY(this.resigningDate.value);
+
+    if (this.smeFormGroup.valid && this.roles.valid) {
+
+      if (ResigningDate) {
+        //mark SME as resigned
+        // this.loading = true;
+        this.updateResignedStatus();
+        this.cancelUpdate();
+        return;
+      }
+    }
     if (this.smeObj?.roles.includes('ROLE_FILER')) {
       if (this.smeObj['languages'].length) {
         const lang = this.smeObj['languages'].filter(element => element === 'English')
