@@ -48,7 +48,7 @@ export class GenericCsvService {
       await this.getData(baseUrl, paramUrl).then((data: number) => { this.count = data });
     }
     if (this.data.length) {
-      this.jsonToCsvService.downloadFile(this.data, name, fields);
+      this.jsonToCsvService.downloadFile(this.data, fields, name);
     } else {
       this._toastMessageService.alert('error', "There is no records found");
       return

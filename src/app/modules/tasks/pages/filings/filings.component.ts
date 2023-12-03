@@ -80,8 +80,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
     { value: 'panNumber', name: 'PAN' }
   ];
   clearUserFilter: number;
-  searchAsPrinciple :boolean =false
-  partnerType:any;
+  searchAsPrinciple: boolean = false
+  partnerType: any;
 
   constructor(
     private reviewService: ReviewService,
@@ -138,7 +138,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         { value: 'email', name: 'Email' },
         { value: 'panNumber', name: 'PAN' }
       ]
-    }else{
+    } else {
       this.searchMenus = [
         { value: 'mobileNumber', name: 'Mobile No' },
         { value: 'email', name: 'Email' },
@@ -163,7 +163,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       }
     })
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
-      this.agentId =  this.loggedInSme[0]?.userId;
+      this.agentId = this.loggedInSme[0]?.userId;
       this.myItrsList(0, '');
     }
   }
@@ -205,15 +205,15 @@ export class FilingsComponent implements OnInit, OnDestroy {
       ]);
   }
 
-  agentId:any;
+  agentId: any;
   filerUserId: any;
-  leaderUserId:any;
-  fromSme(event, isOwner,fromPrinciple?) {
+  leaderUserId: any;
+  fromSme(event, isOwner, fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.leaderUserId = event ? event.userId : null;
     } else {
-      if(fromPrinciple){
+      if (fromPrinciple) {
         if (event?.partnerType === 'PRINCIPAL') {
           this.filerUserId = event ? event.userId : null;
           this.searchAsPrinciple = true;
@@ -221,8 +221,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
           this.filerUserId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
-      }else{
-        if(event){
+      } else {
+        if (event) {
           this.filerUserId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
@@ -274,25 +274,25 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.loading = true;
     return new Promise((resolve, reject) => {
       let loggedInId = this.utilsService.getLoggedInUserID();
-      if(this.roles?.includes('ROLE_LEADER')){
+      if (this.roles?.includes('ROLE_LEADER')) {
         this.leaderUserId = loggedInId;
       }
 
-      if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
-        this.filerUserId = loggedInId ;
-        this.searchAsPrinciple =true;
-      }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
-        this.filerUserId = loggedInId ;
-        this.searchAsPrinciple =false;
+      if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+        this.filerUserId = loggedInId;
+        this.searchAsPrinciple = true;
+      } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+        this.filerUserId = loggedInId;
+        this.searchAsPrinciple = false;
       }
 
-      if(this.searchBy?.mobileNumber){
+      if (this.searchBy?.mobileNumber) {
         this.searchParams.mobileNumber = this.searchBy?.mobileNumber
       }
-      if(this.searchBy?.email){
+      if (this.searchBy?.email) {
         this.searchParams.email = this.searchBy?.email
       }
-      if(this.searchBy?.panNumber){
+      if (this.searchBy?.panNumber) {
         this.searchParams.panNumber = this.searchBy?.panNumber
       }
 
@@ -333,7 +333,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       }
 
       console.log('My Params:', param);
-      param= param + `${userFilter}`
+      param = param + `${userFilter}`
       this.reportService.getMethod(param).subscribe(
         (res: any) => {
           if (res.success == false) {
@@ -378,28 +378,50 @@ export class FilingsComponent implements OnInit, OnDestroy {
   async downloadReport() {
     this.loading = true;
     let userFilter = '';
-      if ((this.leaderUserId && !this.filerUserId)) {
-        userFilter += `&leaderUserId=${this.leaderUserId}`;
-      }
-      if (this.filerUserId && this.searchAsPrinciple === true) {
-        userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerUserId}`;
-      }
-      if (this.filerUserId && this.searchAsPrinciple === false) {
-        userFilter += `&filerUserId=${this.filerUserId}`;
-      }
-      let status = ''
-      if (this.utilsService.isNonEmpty(this.searchParams.selectedStatusId)) {
-        status +=`&status=${this.searchParams.selectedStatusId}`;
-      }
-      let financialYear = '';
-      if (this.utilsService.isNonEmpty(this.searchParams.selectedFyYear)) {
+    if ((this.leaderUserId && !this.filerUserId)) {
+      userFilter += `&leaderUserId=${this.leaderUserId}`;
+    }
+    if (this.filerUserId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerUserId}`;
+    }
+    if (this.filerUserId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerUserId}`;
+    }
+    let status = ''
+    if (this.utilsService.isNonEmpty(this.searchParams.selectedStatusId)) {
+      status += `&status=${this.searchParams.selectedStatusId}`;
+    }
+    let financialYear = '';
+    if (this.utilsService.isNonEmpty(this.searchParams.selectedFyYear)) {
       financialYear += `?financialYear=${this.searchParams.selectedFyYear}`;
-      }
-    let param=''
+    }
+    let param = ''
 
-    param =`/bo/itr-list${financialYear}${status}${userFilter}`
-
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'Filed-ITR', '', {});
+    param = `/bo/itr-list${financialYear}${status}${userFilter}`
+    if (Object.keys(this.sortBy).length) {
+      let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+      param = param + sortByJson;
+    }
+    
+    if (Object.keys(this.searchBy).length) {
+      let searchByKey = Object.keys(this.searchBy);
+      let searchByValue = Object.values(this.searchBy);
+      param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
+    }
+    let fieldName = [
+      { key: 'family[0].fName', value: 'Client Name' },
+      { key: 'contactNumber', value: 'Mobile No' },
+      { key: 'itrType', value: 'ITR Type' },
+      { key: 'eFillingDate', value: 'Filing Date' },
+      { key: 'filingSource', value: 'Filing Mode' },
+      { key: 'isRevised', value: 'Return Type' },
+      { key: 'panNumber', value: 'Pan Number' },
+      { key: 'email', value: 'Email' },
+      { key: 'leaderUserId', value: 'Leader Name' },
+      { key: 'filingTeamMemberId', value: 'Filer Name' },
+      { key: 'itrId', value: 'ITR ID' }
+    ]
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'Filed-ITR', fieldName, {});
     this.loading = false;
   }
 
@@ -448,9 +470,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
         filerUserId: data[i].filerUserId,
         status: data[i].status,
         filingTeamMemberId: data[i].filingTeamMemberId,
-        leaderName : data[i].leaderName,
-        leaderUserId :data[i].leaderUserId,
-        filingSource:data[i].filingSource,
+        leaderName: data[i].leaderName,
+        leaderUserId: data[i].leaderUserId,
+        filingSource: data[i].filingSource,
       });
     }
     return newData;
@@ -498,17 +520,17 @@ export class FilingsComponent implements OnInit, OnDestroy {
           defaultOption: 'startsWith',
           debounceMs: 0,
         },
-         // code to masking mobile no
-        cellRenderer: (params)=> {
+        // code to masking mobile no
+        cellRenderer: (params) => {
           const mobileNumber = params.value;
-          if(mobileNumber){
-            if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+          if (mobileNumber) {
+            if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
               const maskedMobile = this.maskMobileNumber(mobileNumber);
               return maskedMobile;
-            }else{
+            } else {
               return mobileNumber;
             }
-          }else{
+          } else {
             return '-'
           }
         },
@@ -597,9 +619,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
         filterParams: {
           filterOptions: ["contains", "notContains"],
           debounceMs: 0
-        } ,
-        valueGetter: function(params) {
-          let createdUserId= parseInt(params?.data?.leaderUserId)
+        },
+        valueGetter: function (params) {
+          let createdUserId = parseInt(params?.data?.leaderUserId)
           let filer1 = filerList;
           let filer = filer1?.filter((item) => {
             return item.userId === createdUserId;
