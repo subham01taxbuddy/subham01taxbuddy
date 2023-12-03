@@ -16,11 +16,22 @@
         <div class="surround">
           <div class="row">
             <div class="col-sm-12 bckClr">
-              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
-                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+              (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
 
-            <div class="col-sm-6 spsTp">
+            <div class="col-sm-4 ">
+              <mat-label>Select Role</mat-label>
+              <mat-form-field appearance="outline">
+                  <mat-select (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
+                    [ngClass]="{'error': showError && (selectRole.invalid || !searchVal)}">
+                    <mat-option *ngFor="let drop of selectRoleFilter" [value]="drop.value" (click)="getRoleValue(drop)">
+                     {{ drop.name }}
+                    </mat-option>
+                  </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>From Date</mat-label>
                 <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxStartDate"
@@ -30,7 +41,7 @@
                 <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
               </mat-form-field>
             </div>
-            <div class="col-sm-6 spsTp">
+            <div class="col-sm-4 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>To Date</mat-label>
                 <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxDate"

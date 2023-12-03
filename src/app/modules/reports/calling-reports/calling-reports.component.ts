@@ -1,3 +1,4 @@
+import { UtilsService } from 'src/app/services/utils.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./calling-reports.component.scss']
 })
 export class CallingReportsComponent implements OnInit {
-
-  constructor() { }
+  roles:any;
+  constructor(private UtilsService :UtilsService) { }
 
   ngOnInit() {
+    this.roles =this.UtilsService.getUserRoles();
   }
 
 }
