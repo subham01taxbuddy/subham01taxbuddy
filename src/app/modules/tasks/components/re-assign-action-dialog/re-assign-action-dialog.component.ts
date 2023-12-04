@@ -155,20 +155,9 @@ export class ReAssignActionDialogComponent implements OnInit {
       this.data.data.forEach(item => {
         userIdList.push(item.userId);
       });
-      let serviceTypeList =[];
-      this.data.data.forEach(item =>{
-        serviceTypeList.push(item.serviceType)
-      })
-      console.log('service TYpe List ',serviceTypeList)
 
      this.loading=true;
-     let serviceType = '';
-
-      if (serviceTypeList.every(type => type === 'GST')) {
-        serviceType = 'GST';
-      } else {
-        serviceType = 'ITR';
-      }
+     let serviceType = this.data.data[0].serviceType;
      let userFilter =''
      if(this.leaderId ){
       userFilter +=`&leaderUserId=${this.leaderId}`
