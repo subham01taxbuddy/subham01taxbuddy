@@ -133,6 +133,7 @@ export class ReAssignActionDialogComponent implements OnInit {
             data: {
               data: result.data
             },
+            disableClose :true
           });
         }else{
           this.loading = false;
@@ -181,6 +182,7 @@ export class ReAssignActionDialogComponent implements OnInit {
           data: {
             data: result.data
           },
+          disableClose :true
         });
       }else{
         this.loading = false;
