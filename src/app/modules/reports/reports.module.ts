@@ -16,6 +16,7 @@ import { MissedChatReportComponent } from './missed-chat-report/missed-chat-repo
 import { RevenueReportComponent } from './revenue-report/revenue-report.component';
 import { PayoutReportComponent } from './payout-report/payout-report.component';
 import { UsersItrPaymentDoneComponent } from './users-itr-payment-done/users-itr-payment-done.component';
+import { PaymentReceivedComponent } from './payment-received/payment-received.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { UsersItrPaymentDoneComponent } from './users-itr-payment-done/users-itr
     RevenueReportComponent,
     PayoutReportComponent,
     UsersItrPaymentDoneComponent,
+    PaymentReceivedComponent,
   ],
   entryComponents: [
     ReportsComponent,

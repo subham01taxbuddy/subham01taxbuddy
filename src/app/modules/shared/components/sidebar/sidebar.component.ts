@@ -214,7 +214,8 @@ export class SidebarComponent {
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
         { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
         { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN'] },
-        { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        // { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Payment Received', url: '/reports/payment-received', roles: ['ROLE_ADMIN'] },
       ]
     },
     {
