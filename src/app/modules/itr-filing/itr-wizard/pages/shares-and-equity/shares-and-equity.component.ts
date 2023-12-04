@@ -503,7 +503,7 @@ export class SharesAndEquityComponent
               );
               if (this.deduction && this.deductionForm.valid) {
                 this.calculateDeductionGain();
-              } else {
+              } else if (!this.deductionForm.valid && this.deduction) {
                 this.utilsService.showSnackBar(
                   'Please make sure deduction details are entered correctly'
                 );
@@ -609,134 +609,171 @@ export class SharesAndEquityComponent
     }
   }
 
-  calculateGainTypeOrIndexCost(type, typeOfIndexation?, securities?) {
-    if (type === 'forGainType' || type === 'forBoth') {
-      let purchaseDate = securities.controls['purchaseDate'].value;
-      let sellDate = securities.controls['sellDate'].value;
-      if (securities.controls['purchaseDate'].valid) {
-        this.buyDateBefore31stJan =
-          new Date(purchaseDate) < new Date('02/01/2018');
+  // calculating gainType
+  calculateGainType(securities?) {
+    let purchaseDate = securities.controls['purchaseDate'].value;
+    let sellDate = securities.controls['sellDate'].value;
+    if (securities.controls['purchaseDate'].valid) {
+      this.buyDateBefore31stJan =
+        new Date(purchaseDate) < new Date('02/01/2018');
 
-        securities.controls['sellOrBuyQuantity'].setValue(1);
-        securities.controls['purchaseValuePerUnit'].setValue(
-          securities.controls['purchaseCost'].value
-        );
-        securities.controls['sellValuePerUnit'].setValue(
-          securities.controls['sellValue'].value
-        );
-        if (this.buyDateBefore31stJan && this.bondType === 'listed') {
-          securities.controls['isinCode'].setValidators([Validators.required]);
-          securities.controls['isinCode'].updateValueAndValidity();
-        } else {
+      securities.controls['sellOrBuyQuantity'].setValue(1);
+      securities.controls['purchaseValuePerUnit'].setValue(
+        securities.controls['purchaseCost'].value
+      );
+      securities.controls['sellValuePerUnit'].setValue(
+        securities.controls['sellValue'].value
+      );
+      if (this.buyDateBefore31stJan && this.bondType === 'listed') {
+        securities.controls['isinCode'].setValidators([Validators.required]);
+        securities.controls['isinCode'].updateValueAndValidity();
+      } else {
+        securities.controls['isinCode'].setValue('');
+        securities.controls['nameOfTheUnits'].setValue('');
+        securities.controls['fmvAsOn31Jan2018'].setValue('');
+
+        securities.controls['isinCode'].removeValidators([Validators.required]);
+        securities.controls['isinCode'].updateValueAndValidity();
+      }
+    }
+    if (purchaseDate && sellDate) {
+      let req = {
+        assetType:
+          this.bondType === 'listed'
+            ? 'EQUITY_SHARES_LISTED'
+            : 'EQUITY_SHARES_UNLISTED',
+        buyDate: moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
+        sellDate: moment(new Date(sellDate)).format('YYYY-MM-DD'),
+      };
+      const param = `/calculate/indexed-cost`;
+      this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+        securities.controls['gainType'].setValue(res.data.capitalGainType);
+        securities.controls['gainType'].updateValueAndValidity();
+        this.calculateCoaIndexation(res.data.capitalGainType);
+        this.calculateCoiIndexation(res.data.capitalGainType);
+        if (res.data.capitalGainType === 'SHORT') {
           securities.controls['isinCode'].setValue('');
           securities.controls['nameOfTheUnits'].setValue('');
           securities.controls['fmvAsOn31Jan2018'].setValue('');
-
-          securities.controls['isinCode'].removeValidators([
-            Validators.required,
-          ]);
-          securities.controls['isinCode'].updateValueAndValidity();
         }
-      }
-      if (purchaseDate && sellDate) {
-        let req = {
-          assetType:
-            this.bondType === 'listed'
-              ? 'EQUITY_SHARES_LISTED'
-              : 'EQUITY_SHARES_UNLISTED',
-          buyDate: moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
-          sellDate: moment(new Date(sellDate)).format('YYYY-MM-DD'),
-        };
-        const param = `/calculate/indexed-cost`;
-        this.itrMsService.postMethod(param, req).subscribe((res: any) => {
-          securities.controls['gainType'].setValue(res.data.capitalGainType);
-          if (res.data.capitalGainType === 'SHORT') {
-            securities.controls['isinCode'].setValue('');
-            securities.controls['nameOfTheUnits'].setValue('');
-            securities.controls['fmvAsOn31Jan2018'].setValue('');
-          }
-        });
-      }
+      });
     }
+  }
 
-    if (type === 'forIndexation' || type === 'forBoth') {
-      if (this.bondType !== 'listed') {
-        let improvementsArray = this.selectedFormGroup?.controls[
-          'improvementsArray'
-        ] as FormGroup;
+  // calculating cos of acquistion indexation
+  calculateCoaIndexation(gainType) {
+    if (gainType === 'LONG' && this.bondType !== 'listed') {
+      let selectedYear = moment(
+        this.selectedFormGroup?.controls['sellDate']?.value
+      );
+      let sellFinancialYear =
+        selectedYear.get('month') > 2
+          ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
+          : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
+      // for cost of acquisition index
+      let selectedPurchaseYear = moment(
+        this.selectedFormGroup?.controls['purchaseDate'].value
+      );
+      let purchaseFinancialYear =
+        selectedPurchaseYear.get('month') > 2
+          ? selectedPurchaseYear.get('year') +
+            '-' +
+            (selectedPurchaseYear.get('year') + 1)
+          : selectedPurchaseYear.get('year') -
+            1 +
+            '-' +
+            selectedPurchaseYear.get('year');
+      let costOfAcquistion = parseFloat(
+        this.selectedFormGroup?.controls['purchaseCost'].value
+      );
+      let req = {
+        cost: costOfAcquistion,
+        purchaseOrImprovementFinancialYear: purchaseFinancialYear,
+        assetType:
+          this.bondType === 'listed'
+            ? 'EQUITY_SHARES_LISTED'
+            : 'EQUITY_SHARES_UNLISTED',
+        buyDate: this.selectedFormGroup?.controls['purchaseDate'].value,
+        sellDate: this.selectedFormGroup?.controls['sellDate'].value,
+        sellFinancialYear: sellFinancialYear,
+      };
 
-        let selectedYear = moment(
-          this.selectedFormGroup?.controls['sellDate']?.value
+      const param = `/calculate/indexed-cost`;
+      this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+        console.log('INDEX COST : ', res);
+        this.selectedFormGroup?.controls['indexCostOfAcquisition']?.setValue(
+          res?.data?.costOfAcquisitionOrImprovement
         );
-
-        let sellFinancialYear =
-          selectedYear.get('month') > 2
-            ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
-            : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
-
-        // for improvements indexation
-        let costOfImprovement = parseFloat(
-          improvementsArray?.controls['costOfImprovement'].value
-        );
-        let improvementFinancialYear =
-          improvementsArray?.controls['financialYearOfImprovement'].value;
-
-        // for cost of acquisition index
-        let selectedPurchaseYear = moment(
-          this.selectedFormGroup?.controls['purchaseDate'].value
-        );
-        let purchaseFinancialYear =
-          selectedPurchaseYear.get('month') > 2
-            ? selectedPurchaseYear.get('year') +
-              '-' +
-              (selectedPurchaseYear.get('year') + 1)
-            : selectedPurchaseYear.get('year') -
-              1 +
-              '-' +
-              selectedPurchaseYear.get('year');
-
-        let costOfAcquistion = parseFloat(
-          this.selectedFormGroup?.controls['purchaseCost'].value
-        );
-
-        let req = {
-          cost:
-            typeOfIndexation !== 'improvement'
-              ? costOfAcquistion
-              : costOfImprovement,
-          purchaseOrImprovementFinancialYear:
-            typeOfIndexation !== 'improvement'
-              ? purchaseFinancialYear
-              : improvementFinancialYear,
-          assetType:
-            this.bondType === 'listed'
-              ? 'EQUITY_SHARES_LISTED'
-              : 'EQUITY_SHARES_UNLISTED',
-          buyDate: this.selectedFormGroup?.controls['purchaseDate'].value,
-          sellDate: this.selectedFormGroup?.controls['sellDate'].value,
-          sellFinancialYear: sellFinancialYear,
-        };
-
-        const param = `/calculate/indexed-cost`;
-        this.itrMsService.postMethod(param, req).subscribe((res: any) => {
-          console.log('INDEX COST : ', res);
-
-          if (typeOfIndexation !== 'improvement') {
-            this.selectedFormGroup?.controls[
-              'indexCostOfAcquisition'
-            ]?.setValue(res?.data?.costOfAcquisitionOrImprovement);
-            this.calculateTotalCG(securities);
-          } else {
-            (
-              this.selectedFormGroup?.controls['improvementsArray'] as FormGroup
-            )?.controls['indexCostOfImprovement']?.setValue(
-              res?.data?.costOfAcquisitionOrImprovement
-            );
-            this.calculateTotalCG(securities);
-          }
-        });
-      }
+        this.getImprovementYears();
+        this.calculateTotalCG(this.selectedFormGroup);
+      });
+    } else if (this.bondType === 'listed') {
+      console.log('listed');
+    } else {
+      this.selectedFormGroup?.controls['indexCostOfAcquisition']?.setValue(0);
+      this.getImprovementYears();
+      this.calculateTotalCG(this.selectedFormGroup);
     }
+  }
+
+  // calculating cost of improvement indexation
+  calculateCoiIndexation(gainType) {
+    if (gainType === 'LONG' && this.bondType !== 'listed') {
+      let improvementsArray = this.selectedFormGroup?.controls[
+        'improvementsArray'
+      ] as FormGroup;
+      let selectedYear = moment(
+        this.selectedFormGroup?.controls['sellDate']?.value
+      );
+      let sellFinancialYear =
+        selectedYear.get('month') > 2
+          ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
+          : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
+      // for improvements indexation
+      let costOfImprovement = parseFloat(
+        improvementsArray?.controls['costOfImprovement'].value
+      );
+      let improvementFinancialYear =
+        improvementsArray?.controls['financialYearOfImprovement'].value;
+      let req = {
+        cost: costOfImprovement,
+        purchaseOrImprovementFinancialYear: improvementFinancialYear,
+        assetType:
+          this.bondType === 'listed'
+            ? 'EQUITY_SHARES_LISTED'
+            : 'EQUITY_SHARES_UNLISTED',
+        buyDate: this.selectedFormGroup?.controls['purchaseDate'].value,
+        sellDate: this.selectedFormGroup?.controls['sellDate'].value,
+        sellFinancialYear: sellFinancialYear,
+      };
+
+      const param = `/calculate/indexed-cost`;
+      this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+        console.log('INDEX COST : ', res);
+        (
+          this.selectedFormGroup?.controls['improvementsArray'] as FormGroup
+        )?.controls['indexCostOfImprovement']?.setValue(
+          res?.data?.costOfAcquisitionOrImprovement
+        );
+        this.getImprovementYears();
+        this.calculateTotalCG(this.selectedFormGroup);
+      });
+    } else if (this.bondType === 'listed') {
+      console.log('listed');
+    } else {
+      (
+        this.selectedFormGroup?.controls['improvementsArray'] as FormGroup
+      )?.controls['indexCostOfImprovement']?.setValue(
+        (this.selectedFormGroup?.controls['improvementsArray'] as FormGroup)
+          ?.controls['costOfImprovement']?.value
+      );
+      this.getImprovementYears();
+      this.calculateTotalCG(this.selectedFormGroup);
+    }
+  }
+
+  calculateGainTypeOrIndexCost(securities?) {
+    this.calculateGainType(securities);
   }
 
   calculateTotalCG(securities) {
@@ -862,9 +899,30 @@ export class SharesAndEquityComponent
           assetDetails = assetDetails.concat(obj.assetDetails);
         });
       }
-      const securitiesImprovement =
-        this.securitiesForm?.get('improvementsArray')?.value;
-      // if (assetDetails.length > 0) {
+
+      const securitiesImprovement = [];
+
+      const securitiesArray = <FormArray>(
+        this.securitiesForm.get('securitiesArray')
+      );
+      securitiesArray.controls.forEach((element) => {
+        let securityImprovement = (element as FormGroup).controls[
+          'improvementsArray'
+        ].value;
+
+        securitiesImprovement?.push({
+          srn: (element as FormGroup).controls['srn'].value,
+          dateOfImprovement: securityImprovement?.dateOfImprovement,
+          costOfImprovement: securityImprovement?.costOfImprovement,
+          indexCostOfImprovement: securityImprovement?.indexCostOfImprovement,
+          financialYearOfImprovement:
+            securityImprovement?.financialYearOfImprovement,
+        });
+      });
+
+      // const securitiesImprovement =
+      //   this.securitiesForm?.get('improvementsArray')?.value;
+      // // if (assetDetails.length > 0) {
       //   this.deductionForm.reset();
       // }
 
@@ -886,6 +944,21 @@ export class SharesAndEquityComponent
         assetDetails: assetDetails,
       };
       console.log('securitiesData', securitiesData);
+
+      securitiesData.improvement.forEach((element) => {
+        securitiesData.assetDetails.forEach((item) => {
+          if (element.srn === item.srn) {
+            item.costOfImprovement = element.indexCostOfImprovement;
+          }
+        });
+      });
+
+      securitiesData.assetDetails.forEach((element) => {
+        if (element.gainType === 'SHORT') {
+          element.indexCostOfAcquisition = 0;
+        }
+      });
+      console.log(securitiesData);
 
       if (securitiesIndex >= 0) {
         if (securitiesData.assetDetails.length > 0) {
@@ -1016,7 +1089,21 @@ export class SharesAndEquityComponent
             }
           }
 
+          sameData.improvement.forEach((element) => {
+            sameData.assetDetails.forEach((item) => {
+              if (element.srn === item.srn) {
+                item.costOfImprovement = element.indexCostOfImprovement;
+              }
+            });
+          });
+
+          sameData.assetDetails.forEach((element) => {
+            if (element.gainType === 'SHORT') {
+              element.indexCostOfAcquisition = 0;
+            }
+          });
           this.Copy_ITR_JSON.capitalGain[securitiesIndex] = sameData;
+
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
         } else {
           let otherData = this.Copy_ITR_JSON.capitalGain[
@@ -1163,7 +1250,7 @@ export class SharesAndEquityComponent
       this.financialyears = res.data;
       this.improvementYears = this.financialyears;
       // sessionStorage.setItem('improvementYears', res.data)
-      let purchaseDate = this.selectedFormGroup.getRawValue().purchaseDate;
+      let purchaseDate = this.selectedFormGroup?.getRawValue().purchaseDate;
       let purchaseYear = new Date(purchaseDate).getFullYear();
       let purchaseMonth = new Date(purchaseDate).getMonth();
 
