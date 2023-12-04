@@ -456,7 +456,26 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
     param = `/bo/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'daily-calling-report', '', this.sortBy);
+
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
+
+    let fieldName = [
+      { key: 'filerName', value: 'Leader/Filer Name' },
+      { key: 'role', value: 'Role' },
+      { key: 'outboundCalls', value: 'Outbound Call' },
+      { key: 'outboundConnected', value: 'Outbound Connected' },
+      { key: 'outboundAnsweredRatio', value: 'Outbound Answered Ratio' },
+      { key: 'inboundCalls', value: 'Inbound Call' },
+      { key: 'inboundConnected', value: 'Inbound Connected' },
+      { key: 'inboundAnsweredRatio', value: 'Inbound Answered Ratio' },
+      { key: 'noOfMissedCall', value: 'No of Missed Call' },
+      { key: 'parentName', value: 'Parent Name' },
+    ]
+
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'daily-calling-report', fieldName,{});
     this.loading = false;
     this.showCsvMessage = false;
   }
