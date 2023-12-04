@@ -69,9 +69,20 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     { value: 'inboundAnsweredRatio', name: 'Inbound answered Ratio' },
     { value: 'noOfMissedCall', name: 'No. of Missed calls' }
   ];
+  selectRoleFilter = [
+    { value: '&roles=ROLE_LEADER&internal=true', name: 'Leader- Internal' },
+    { value: '&roles=ROLE_FILER&partnerType=INDIVIDUAL&internal=true', name: 'Filer Individual- Internal' },
+    { value: '&roles=ROLE_FILER&partnerType=INDIVIDUAL&internal=false', name: 'Filer Individual- External' },
+    { value: '&roles=ROLE_FILER&partnerType=PRINCIPAL&internal=false', name: ' Filer Principal/Firm- External' },
+    { value: '&roles=ROLE_FILER&partnerType=CHILD &internal=false', name: ' Filer Assistant- External' },
+
+  ]
   sortBy: any = {};
   searchAsPrinciple :boolean =false;
   partnerType:any;
+  selectRole = new FormControl();
+  searchVal: string = "";
+  showError: boolean = false;
   constructor(
     public datePipe: DatePipe,
     private userMsService: UserMsService,
@@ -120,6 +131,17 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
       this.dataOnLoad = false;
     }
     // this.showReports();
+  }
+
+  clearValue() {
+    this.searchVal = "";
+    this.leaderId = null;
+    this.filerId = null;
+    this.showError = false;
+    this?.smeDropDown?.resetDropdown();
+  }
+  getRoleValue(role) {
+
   }
 
   leaderId: number;
@@ -214,9 +236,14 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
+    let roleFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectRole.value) && this.selectRole.valid)) {
+      roleFilter = this.selectRole.value;
+    }
+
     // this.searchParam.page = pageNumber ? pageNumber - 1 : 0;
     let data = this.utilsService.createUrlParams(this.searchParam);
-    param = `/bo/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
+    param = `/bo/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}`;
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
@@ -258,6 +285,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         inboundAnsweredRatio: callingData[i].inboundAnsweredRatio,
         noOfMissedCall: callingData[i].noOfMissedCall,
         parentName: callingData[i].parentName,
+        role:callingData[i].role,
         // icPct: callingData[i].inboundCall > 0 ? ((callingData[i].inboundAnsweredCall / callingData[i].inboundCall) * 100).toFixed(2) : 0.00,
       })
       callingRepoInfoArray.push(agentReportInfo);
@@ -269,11 +297,24 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   reportsCodeColumnDef() {
     return [
       {
-        headerName: 'Filer Name',
+        headerName: 'Leader/Filer Name',
         field: 'filerName',
         sortable: true,
         width: 150,
         pinned: 'left',
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Role',
+        field: 'role',
+        sortable: true,
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -396,16 +437,25 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     this.showCsvMessage = true;
     let param = ''
     let userFilter = '';
-    if (this.leaderId && !this.filerId) {
+    if (this.leaderId && !this.filerId ) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.filerId) {
+    if (this.filerId && this.searchAsPrinciple === true ) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
+
+    let roleFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectRole.value) && this.selectRole.valid)) {
+      roleFilter = this.selectRole.value;
+    }
+
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    param = `/bo/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
+    param = `/bo/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'daily-calling-report', '', this.sortBy);
     this.loading = false;
     this.showCsvMessage = false;
@@ -414,6 +464,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
     this.cacheManager.clearCache();
+    this.selectRole.setValue(null);
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.config.currentPage = 1

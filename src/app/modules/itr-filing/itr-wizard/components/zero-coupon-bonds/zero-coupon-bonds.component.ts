@@ -715,12 +715,12 @@ export class ZeroCouponBondsComponent
   }
 
   minImprovementDate: any;
-  calMinImproveDate(purchaseDate, bonds) {
+  calMinImproveDate(purchaseDate, bonds, index) {
     if (this.utilsService.isNonEmpty(purchaseDate)) {
       this.minImprovementDate = new Date(purchaseDate);
       this.getImprovementYears();
       //this.calculateCapitalGain(formGroupName, '', index);
-      this.calculateAcqIndexCost(bonds);
+      this.calculateAcqIndexCost(index);
     }
   }
 
@@ -781,7 +781,7 @@ export class ZeroCouponBondsComponent
         (result: any) => {
           if (result.success) {
             bonds.controls['gainType'].setValue(result.data.capitalGainType);
-            if (result.data.capitalGainType === 'LONG') {
+            if (result.data.capitalGainType === 'LONG' && this.bondType !== 'bonds') {
               bonds.get('isIndexationBenefitAvailable').setValue(true);
             }
             this.calculateAcqIndexCost(i, result.data.capitalGainType);
@@ -861,7 +861,7 @@ export class ZeroCouponBondsComponent
 
   calculateImprovement(i, type?) {
     let asset = this.getBondsArray?.controls[i] as FormGroup;
-    if (type === 'LONG') {
+    if (type === 'LONG' && asset.controls['isIndexationBenefitAvailable'].value) {
       // for improvements indexation
       let costOfImprovement = parseFloat(
         asset.controls['costOfImprovement'].value
