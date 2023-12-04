@@ -111,7 +111,7 @@ export class SidebarComponent {
       url: null,
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: [
-        { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles:[] },
+        { name: 'Unassigned SME', url: '/sme-management-new/unassignedsme', roles: [] },
         { name: 'Assigned SME', url: '/sme-management-new/assignedsme', roles: [] },
         { name: 'Resigned SME', url: '/sme-management-new/resignedsme', roles: [] }
       ]
@@ -215,6 +215,14 @@ export class SidebarComponent {
         // { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
         { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN'] },
         // { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+      ]
+    },
+    {
+      name: 'Other Report', active: false, url: null, roles: ['ROLE_ADMIN'],
+      submenu: [
+        { name: 'Proforma Invoice', url: '/reports/proforma-invoice', roles: [] },
+        { name: 'Payment Received', url: '/reports/payment-received', roles: [] },
+        { name: 'TDS Report', url: '/reports/tds-report', roles: [] },
       ]
     },
     {
