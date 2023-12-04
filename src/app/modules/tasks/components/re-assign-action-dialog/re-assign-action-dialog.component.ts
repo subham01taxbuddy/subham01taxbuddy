@@ -23,6 +23,7 @@ export class ReAssignActionDialogComponent implements OnInit {
   @ViewChild('errorTableTemplate') errorTableTemplate: TemplateRef<any>;
   constructor(
     public dialogRef: MatDialogRef<ReAssignActionDialogComponent>,
+    private dialogRef1: MatDialogRef<any>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private userMsService: UserMsService,
     private utilsService: UtilsService,
@@ -126,8 +127,8 @@ export class ReAssignActionDialogComponent implements OnInit {
         } else if (result.data && result.data.length > 0) {
           this.showErrorTable = true;
           this.errorData = result.data;
-          const dialogRef1 = this.dialog.open(this.errorTableTemplate, {
-            width: '50%',
+           this.dialogRef1 = this.dialog.open(this.errorTableTemplate, {
+            width: '65%',
             height: 'auto',
             data: {
               data: result.data
@@ -174,8 +175,8 @@ export class ReAssignActionDialogComponent implements OnInit {
       } else if (result.data && result.data.length > 0) {
         this.showErrorTable = true;
         this.errorData = result.data;
-        const dialogRef = this.dialog.open(this.errorTableTemplate, {
-          width: '50%',
+         this.dialogRef1 = this.dialog.open(this.errorTableTemplate, {
+          width: '65%',
           height: 'auto',
           data: {
             data: result.data
@@ -200,7 +201,7 @@ export class ReAssignActionDialogComponent implements OnInit {
 
   closeErrorTable(){
     this.dialogRef.close({ event: 'close', data: 'success' });
-    this.dialog.closeAll();
+    this.dialogRef1.close();
   }
 
 progressMessage: string = '';
