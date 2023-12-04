@@ -88,7 +88,6 @@ export class ZeroCouponBondsComponent
       let assetDetails;
       let data;
       let indexedDebData;
-      let zcbData;
       if (this.bondType === 'bonds') {
         data = this.Copy_ITR_JSON.capitalGain.filter(
           (item: any) => item.assetType === 'BONDS'
@@ -96,23 +95,19 @@ export class ZeroCouponBondsComponent
         indexedDebData = this.Copy_ITR_JSON.capitalGain.filter(
           (item: any) => item.assetType === 'GOLD'
         );
-        zcbData = this.Copy_ITR_JSON.capitalGain.filter(
-          (item: any) => item.assetType === 'ZERO_COUPON_BONDS'
-        );
       } else if (this.bondType === 'zeroCouponBonds') {
         data = this.Copy_ITR_JSON.capitalGain.filter(
           (item: any) => item.assetType === 'ZERO_COUPON_BONDS'
         );
       }
-      this.deduction = false;
-      if (indexedDebData?.length > 0) {
+      if (indexedDebData && indexedDebData?.length > 0) {
         indexedDebData.forEach((obj: any) => {
           assetDetails = obj?.assetDetails;
           assetDetails?.forEach((element: any) => {
-            const filterImp = obj?.improvement?.filter(
+            const filterImp = obj.improvement.filter(
               (data) => data.srn == element.srn
             );
-            if (filterImp?.length > 0) {
+            if (filterImp.length > 0) {
               element['costOfImprovement'] = filterImp[0].costOfImprovement;
               element['indexCostOfImprovement'] =
                 filterImp[0].indexCostOfImprovement;
@@ -123,35 +118,12 @@ export class ZeroCouponBondsComponent
               }
             }
           });
-        });
-      }
-
-      if (zcbData?.length > 0) {
-        zcbData.forEach((obj: any) => {
-          assetDetails = obj.assetDetails;
-          assetDetails.forEach((element: any) => {
-            const filterImp = obj.improvement.filter(
-              (data) => data.srn == element.srn
-            );
-            if (filterImp.length > 0) {
-              element['costOfImprovement'] = filterImp[0].costOfImprovement;
-              element['indexCostOfImprovement'] =
-                filterImp[0].indexCostOfImprovement;
-              element['dateOfImprovement'] = filterImp[0].dateOfImprovement;
-            }
-            if (
-              this.bondType === 'zeroCouponBonds' &&
-              !element.whetherDebenturesAreListed
-            ) {
-              this.addMoreBondsData(element);
-            } else if (
-              this.bondType === 'bonds' &&
-              element.whetherDebenturesAreListed
-            ) {
-              this.addMoreBondsData(element);
-            }
-          });
-
+          if (obj.deduction) {
+            obj.deduction.forEach((element: any) => {
+              this.deductionForm = this.initDeductionForm(element);
+            });
+            this.deduction = true;
+          }
         });
       }
       if (data && data.length > 0) {
@@ -163,20 +135,11 @@ export class ZeroCouponBondsComponent
             );
             if (filterImp.length > 0) {
               element['costOfImprovement'] = filterImp[0].costOfImprovement;
-            }
-            if (
-              this.bondType === 'zeroCouponBonds' &&
-              !element.whetherDebenturesAreListed
-            ) {
-              this.addMoreBondsData(element);
-            } else if (
-              this.bondType === 'bonds' &&
-              !element.whetherDebenturesAreListed
-            ) {
+
               this.addMoreBondsData(element);
             }
           });
-          if (obj.deduction && obj.deduction.length > 0) {
+          if (obj.deduction) {
             obj.deduction.forEach((element: any) => {
               this.deductionForm = this.initDeductionForm(element);
             });
@@ -331,11 +294,6 @@ export class ZeroCouponBondsComponent
     bondsArray.controls = bondsArray.controls.filter(
       (element) => !(element as FormGroup).controls['hasEdit'].value
     );
-    if (bondsArray.length == 0) {
-      this.deductionForm.reset();
-      this.deduction = false;
-      this.isDisable = true;
-    }
   }
 
   pageChanged(event) {
@@ -344,6 +302,96 @@ export class ZeroCouponBondsComponent
 
   fieldGlobalIndex(index) {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
+  }
+
+  getGainType(bonds) {
+    if (
+      bonds.controls['purchaseDate'].value &&
+      bonds.controls['sellDate'].value
+    ) {
+      let param = '/calculate/indexed-cost';
+      let purchaseDate = bonds.controls['purchaseDate'].value;
+      let sellDate = bonds.controls['sellDate'].value;
+      let request = {
+        assetType: this.bondType === 'bonds' ? 'BONDS' : 'ZERO_COUPON_BONDS',
+        buyDate: moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
+        sellDate: moment(new Date(sellDate)).format('YYYY-MM-DD'),
+      };
+      this.loading = true;
+      this.itrMsService.postMethod(param, request).subscribe(
+        (result: any) => {
+          if (result.success) {
+            bonds.controls['gainType'].setValue(result.data.capitalGainType);
+            this.loading = false;
+          } else {
+            this.loading = false;
+            this.toastMsgService.alert(
+              'error',
+              'failed to calculate Type of gain.'
+            );
+          }
+        },
+        (error) => {
+          this.loading = false;
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate Type of gain.'
+          );
+        }
+      );
+    }
+  }
+
+  calculateTotalCG(bonds) {
+    if (bonds.valid) {
+      const param = '/singleCgCalculate';
+      let type =
+        bonds.controls['isIndexationBenefitAvailable'].value === true
+          ? 'GOLD'
+          : this.bondType === 'bonds'
+          ? 'BONDS'
+          : 'ZERO_COUPON_BONDS';
+      let request = {
+        assessmentYear: '2022-2023',
+        assesseeType: 'INDIVIDUAL',
+        residentialStatus: 'RESIDENT',
+        assetType: type,
+        assetDetails: [bonds.getRawValue()],
+        improvement: [
+          {
+            srn: bonds.controls['srn'].value,
+            dateOfImprovement: bonds.controls['dateOfImprovement'].value,
+            costOfImprovement: bonds.controls['costOfImprovement'].value,
+            indexCostOfImprovement: bonds.controls[
+              'isIndexationBenefitAvailable'
+            ].value
+              ? bonds.controls['indexCostOfImprovement'].value
+              : 0,
+          },
+        ],
+      };
+      this.itrMsService.postMethod(param, request).subscribe(
+        (res: any) => {
+          this.loading = false;
+          if (res.assetDetails[0].capitalGain) {
+            bonds.controls['capitalGain'].setValue(
+              res.assetDetails[0].capitalGain
+            );
+          } else {
+            bonds.controls['capitalGain'].setValue(0);
+          }
+          this.updateDeductionUI();
+          this.calculateDeductionGain();
+        },
+        (error) => {
+          this.loading = false;
+          this.toastMsgService.alert(
+            'error',
+            'failed to calculate total capital gain.'
+          );
+        }
+      );
+    }
   }
 
   totalCg: TotalCg = {
@@ -398,14 +446,9 @@ export class ZeroCouponBondsComponent
       const bondImprovement = [];
       const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
       let bondsList = [];
-      if (this.bondType !== 'bonds') {
-        bondsList = this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails;
-      }
       bondsArray.controls.forEach((element) => {
         if (
-          !(element as FormGroup).controls['isIndexationBenefitAvailable']
-            .value &&
-          !(element as FormGroup).controls['whetherDebenturesAreListed'].value
+          !(element as FormGroup).controls['isIndexationBenefitAvailable'].value
         ) {
           let costOfImprovement = (element as FormGroup).controls[
             'costOfImprovement'
@@ -460,10 +503,6 @@ export class ZeroCouponBondsComponent
       let indexedDebList = bondsArray
         .getRawValue()
         .filter((element) => element.isIndexationBenefitAvailable === true);
-      //here we need to check for debentures which are listed
-      let zcbDebList = bondsArray
-        .getRawValue()
-        .filter((element) => element.whetherDebenturesAreListed === true);
       if (indexedDebList?.length > 0) {
         let goldIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
           (element) => element.assetType === 'GOLD'
@@ -516,10 +555,6 @@ export class ZeroCouponBondsComponent
               costOfImprovement: costOfImprovement,
             });
 
-            //Ashwini: This adjustment is done to persist indexed cost of improvement for backend cg calculations
-            (element as FormGroup).controls['costOfImprovement'].setValue(
-              (element as FormGroup).controls['indexCostOfImprovement'].value);
-
             debsList.push((element as FormGroup).getRawValue());
           }
         });
@@ -529,7 +564,10 @@ export class ZeroCouponBondsComponent
           assesseeType: this.ITR_JSON.assesseeType,
           residentialStatus: this.ITR_JSON.residentialStatus,
           assetType: 'GOLD',
-          deduction: goldIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[goldIndex].deduction : [],
+          deduction:
+            this.deductionForm.invalid || !this.deduction
+              ? []
+              : [this.deductionForm.getRawValue()],
           improvement: bondImprovement,
           buyersDetails: [],
           assetDetails: debsList,
@@ -549,106 +587,14 @@ export class ZeroCouponBondsComponent
             this.Copy_ITR_JSON.capitalGain?.push(debData);
           }
         }
-      }
-      if (zcbDebList?.length > 0) {
-        let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
-          (element) => element.assetType === 'ZERO_COUPON_BONDS'
-        );
-        const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
-        let zcbList = [];
-        let maxZcb = 0;
-        if (this.Copy_ITR_JSON.capitalGain[zcbIndex]?.assetDetails) {
-          let tempArray = this.Copy_ITR_JSON.capitalGain[
-            zcbIndex
-          ].assetDetails.map((element) => element.srn);
-          if (tempArray && tempArray.length) {
-            maxZcb = tempArray.reduce((previousValue, currentValue) =>
-              previousValue > currentValue ? previousValue : currentValue
-            );
-          }
-        }
-        bondsArray.controls.forEach((element) => {
-          if (
-            (element as FormGroup).controls['whetherDebenturesAreListed']
-              .value === true
-          ) {
-            //check if existing GOLD assets already have the srn for current form
-            let srnCheck = this.Copy_ITR_JSON.capitalGain[
-              zcbIndex
-            ]?.assetDetails.filter(
-              (e) => e.srn === (element as FormGroup).controls['srn'].value
-            );
-
-            if (srnCheck && srnCheck.length > 0) {
-              let newSrn = Math.max(
-                bondsArray.length,
-                maxZcb + 1,
-                zcbList.length
-              );
-              (element as FormGroup).controls['srn'].setValue(newSrn);
-            }
-
-            let costOfImprovement = (element as FormGroup).controls[
-              'costOfImprovement'
-            ].value;
-            bondImprovement.push({
-              srn: (element as FormGroup).controls['srn'].value,
-              dateOfImprovement: (element as FormGroup).controls[
-                'dateOfImprovement'
-              ].value,
-              indexCostOfImprovement: (element as FormGroup).controls[
-                'indexCostOfImprovement'
-              ].value,
-              costOfImprovement: costOfImprovement,
-            });
-
-            zcbList.push((element as FormGroup).getRawValue());
-          }
-        });
-
-        const debData = {
-          assessmentYear: this.ITR_JSON.assessmentYear,
-          assesseeType: this.ITR_JSON.assesseeType,
-          residentialStatus: this.ITR_JSON.residentialStatus,
-          assetType: 'ZERO_COUPON_BONDS',
-          deduction: zcbIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[zcbIndex].deduction
-              : [],
-          improvement: bondImprovement,
-          buyersDetails: [],
-          assetDetails: zcbList,
-        };
-
-        if (!bondsArray.value) {
-          this.deductionForm.value([]);
-        }
-        if (zcbIndex >= 0) {
-          if (debData.assetDetails.length > 0) {
-            this.Copy_ITR_JSON.capitalGain[zcbIndex] = debData;
-          } else {
-            this.Copy_ITR_JSON.capitalGain.splice(zcbIndex, 1);
-          }
-        } else {
-          if (debData.assetDetails.length > 0) {
-            this.Copy_ITR_JSON.capitalGain?.push(debData);
-          }
-        }
       } else {
         let goldIndex = this.Copy_ITR_JSON?.capitalGain?.findIndex(
           (element) => element?.assetType === 'GOLD'
         );
-        if (goldIndex !== -1 && indexedDebList?.length == 0) {
+        if (goldIndex !== -1) {
           this.Copy_ITR_JSON.capitalGain[goldIndex].assetDetails =
             this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails?.filter(
               (element) => !element?.isIndexationBenefitAvailable
-            );
-        }
-        let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
-          (element) => element.assetType === 'ZERO_COUPON_BONDS'
-        );
-        if (zcbIndex !== -1) {
-          this.Copy_ITR_JSON.capitalGain[zcbIndex].assetDetails =
-            this.Copy_ITR_JSON.capitalGain[zcbIndex]?.assetDetails?.filter(
-              (element) => !element?.whetherDebenturesAreListed
             );
         }
       }
@@ -715,13 +661,74 @@ export class ZeroCouponBondsComponent
   }
 
   minImprovementDate: any;
-  calMinImproveDate(purchaseDate, bonds, index) {
+  calMinImproveDate(purchaseDate, bonds) {
     if (this.utilsService.isNonEmpty(purchaseDate)) {
       this.minImprovementDate = new Date(purchaseDate);
       this.getImprovementYears();
       //this.calculateCapitalGain(formGroupName, '', index);
-      this.calculateAcqIndexCost(index);
+      this.calculateIndexCost(bonds);
     }
+  }
+  calculateIndexCost(asset, type?) {
+    if (!asset.controls['isIndexationBenefitAvailable'].value) {
+      asset.controls['indexCostOfAcquisition'].setValue(0);
+      this.calculateTotalCG(asset);
+      return;
+    }
+    let gainType = asset.controls['gainType'].value;
+
+    let selectedYear = moment(asset.controls['sellDate'].value);
+    let sellFinancialYear =
+      selectedYear.get('month') > 2
+        ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
+        : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
+
+    // for improvements indexation
+    let costOfImprovement = parseFloat(
+      asset.controls['costOfImprovement'].value
+    );
+    let improvementFinancialYear = asset.controls['dateOfImprovement'].value;
+
+    // for cost of acquisition index
+    let selectedPurchaseYear = moment(asset.controls['purchaseDate'].value);
+    let purchaseFinancialYear =
+      selectedPurchaseYear.get('month') > 2
+        ? selectedPurchaseYear.get('year') +
+          '-' +
+          (selectedPurchaseYear.get('year') + 1)
+        : selectedPurchaseYear.get('year') -
+          1 +
+          '-' +
+          selectedPurchaseYear.get('year');
+
+    let costOfAcquistion = parseFloat(asset.controls['purchaseCost'].value);
+
+    let req = {
+      cost: type === 'asset' ? costOfAcquistion : costOfImprovement,
+      purchaseOrImprovementFinancialYear:
+        type === 'asset' ? purchaseFinancialYear : improvementFinancialYear,
+      assetType: 'GOLD',
+      buyDate: asset.controls['purchaseDate'].value,
+      sellDate: asset.controls['sellDate'].value,
+      sellFinancialYear: sellFinancialYear,
+    };
+
+    const param = `/calculate/indexed-cost`;
+    this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+      console.log('INDEX COST : ', res);
+
+      if (type === 'asset') {
+        asset.controls['indexCostOfAcquisition']?.setValue(
+          res.data.costOfAcquisitionOrImprovement
+        );
+      } else {
+        asset.controls['indexCostOfImprovement']?.setValue(
+          res.data.costOfAcquisitionOrImprovement
+        );
+      }
+
+      this.calculateTotalCG(asset);
+    });
   }
 
   initDeductionForm(obj?): FormGroup {
@@ -741,161 +748,6 @@ export class ZeroCouponBondsComponent
       totalDeductionClaimed: [obj ? obj.totalDeductionClaimed : null],
       costOfPlantMachinary: [obj ? obj.costOfPlantMachinary : null],
     });
-  }
-
-  goBack() {
-    this.saveAndNext.emit(false);
-  }
-
-  saveAll() {
-    this.save('bonds');
-    this.saveAndNext.emit(false);
-  }
-
-  // calculation functions
-  getGainType(i) {
-    let bonds = this.getBondsArray?.controls[i] as FormGroup;
-    if (
-      bonds.controls['purchaseDate'].value &&
-      bonds.controls['sellDate'].value
-    ) {
-      let param = '/calculate/indexed-cost';
-      let purchaseDate = bonds.controls['purchaseDate'].value;
-      let sellDate = bonds.controls['sellDate'].value;
-      let type =
-        bonds.controls['isIndexationBenefitAvailable'].value === true
-          ? 'GOLD'
-          : this.bondType === 'zeroCouponBonds'
-          ? 'ZERO_COUPON_BONDS'
-          : bonds.controls['whetherDebenturesAreListed'].value
-          ? 'ZERO_COUPON_BONDS'
-          : 'BONDS';
-      let request = {
-        assetType: type,
-        buyDate: moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
-        sellDate: moment(new Date(sellDate)).format('YYYY-MM-DD'),
-      };
-
-      this.loading = true;
-      this.itrMsService.postMethod(param, request).subscribe(
-        (result: any) => {
-          if (result.success) {
-            bonds.controls['gainType'].setValue(result.data.capitalGainType);
-            if (result.data.capitalGainType === 'LONG' && this.bondType !== 'bonds') {
-              bonds.get('isIndexationBenefitAvailable').setValue(true);
-            }
-            this.calculateAcqIndexCost(i, result.data.capitalGainType);
-            this.calculateImprovement(i, result.data.capitalGainType);
-            this.loading = false;
-          } else {
-            this.loading = false;
-            this.toastMsgService.alert(
-              'error',
-              'failed to calculate Type of gain.'
-            );
-          }
-        },
-        (error) => {
-          this.loading = false;
-          this.toastMsgService.alert(
-            'error',
-            'failed to calculate Type of gain.'
-          );
-        }
-      );
-    }
-  }
-
-  calculateAcqIndexCost(i, type?) {
-    let asset = this.getBondsArray?.controls[i] as FormGroup;
-    if (!asset?.controls['isIndexationBenefitAvailable'].value) {
-      asset.controls['indexCostOfAcquisition'].setValue(0);
-      this.calculateTotalCG(asset);
-      return;
-    }
-
-    if (type === 'LONG') {
-      let selectedYear = moment(asset.controls['sellDate'].value);
-      let sellFinancialYear =
-        selectedYear.get('month') > 2
-          ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
-          : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
-      // for cost of acquisition index
-      let selectedPurchaseYear = moment(asset.controls['purchaseDate'].value);
-      let purchaseFinancialYear =
-        selectedPurchaseYear.get('month') > 2
-          ? selectedPurchaseYear.get('year') +
-            '-' +
-            (selectedPurchaseYear.get('year') + 1)
-          : selectedPurchaseYear.get('year') -
-            1 +
-            '-' +
-            selectedPurchaseYear.get('year');
-      let costOfAcquistion = parseFloat(asset.controls['purchaseCost'].value);
-
-      let req = {
-        cost: costOfAcquistion,
-        purchaseOrImprovementFinancialYear: purchaseFinancialYear,
-        assetType: 'GOLD',
-        buyDate: asset.controls['purchaseDate'].value,
-        sellDate: asset.controls['sellDate'].value,
-        sellFinancialYear: sellFinancialYear,
-      };
-
-      const param = `/calculate/indexed-cost`;
-      this.itrMsService.postMethod(param, req).subscribe((res: any) => {
-        console.log('INDEX COST : ', res);
-
-        asset.controls['indexCostOfAcquisition']?.setValue(
-          res.data.costOfAcquisitionOrImprovement
-        );
-        this.calculateTotalCG(asset);
-      });
-    } else {
-      asset.controls['indexCostOfAcquisition']?.setValue(
-        asset.controls['purchaseCost'].value
-      );
-      this.calculateTotalCG(asset);
-    }
-  }
-
-  calculateImprovement(i, type?) {
-    let asset = this.getBondsArray?.controls[i] as FormGroup;
-    if (type === 'LONG' && asset.controls['isIndexationBenefitAvailable'].value) {
-      // for improvements indexation
-      let costOfImprovement = parseFloat(
-        asset.controls['costOfImprovement'].value
-      );
-      let improvementFinancialYear = asset.controls['dateOfImprovement'].value;
-      let selectedYear = moment(asset.controls['sellDate'].value);
-      let sellFinancialYear =
-        selectedYear.get('month') > 2
-          ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
-          : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
-
-      let req = {
-        cost: costOfImprovement,
-        purchaseOrImprovementFinancialYear: improvementFinancialYear,
-        assetType: 'GOLD',
-        buyDate: asset.controls['purchaseDate'].value,
-        sellDate: asset.controls['sellDate'].value,
-        sellFinancialYear: sellFinancialYear,
-      };
-
-      const param = `/calculate/indexed-cost`;
-      this.itrMsService.postMethod(param, req).subscribe((res: any) => {
-        console.log('INDEX COST : ', res);
-        asset.controls['indexCostOfImprovement']?.setValue(
-          res.data.costOfAcquisitionOrImprovement
-        );
-        this.calculateTotalCG(asset);
-      });
-    } else {
-      asset.controls['indexCostOfImprovement']?.setValue(
-        asset.controls['costOfImprovement'].value
-      );
-      this.calculateTotalCG(asset);
-    }
   }
 
   calculateDeductionGain() {
@@ -944,14 +796,7 @@ export class ZeroCouponBondsComponent
               this.deductionForm.controls['totalDeductionClaimed'].setValue(
                 result.data[0].deductionAmount
               );
-              this.calculateTotalCG(
-                (this.bondsForm.controls['bondsArray'] as FormArray).controls
-              );
-              this.updateDeductionUI();
             } else {
-              this.utilsService.showSnackBar(
-                'Failed to calculate Deduction Gain'
-              );
               this.deductionForm.controls['totalDeductionClaimed'].setValue(0);
             }
           }
@@ -960,65 +805,19 @@ export class ZeroCouponBondsComponent
           this.loading = false;
           this.toastMsgService.alert(
             'error',
-            'Failed to calculate Deduction Gain'
+            'failed to calculate Deduction Gain.'
           );
         }
       );
     }
   }
 
-  calculateTotalCG(bonds) {
-    if (bonds.valid) {
-      const param = '/singleCgCalculate';
-      let type =
-        bonds.controls['isIndexationBenefitAvailable'].value === true
-          ? 'GOLD'
-          : this.bondType === 'zeroCouponBonds'
-          ? 'ZERO_COUPON_BONDS'
-          : bonds.controls['whetherDebenturesAreListed'].value
-          ? 'ZERO_COUPON_BONDS'
-          : 'BONDS';
-      let request = {
-        assessmentYear: '2022-2023',
-        assesseeType: 'INDIVIDUAL',
-        residentialStatus: 'RESIDENT',
-        assetType: type,
-        assetDetails: [bonds.getRawValue()],
-        improvement: [
-          {
-            srn: bonds.controls['srn'].value,
-            dateOfImprovement: bonds.controls['dateOfImprovement'].value,
-            costOfImprovement: bonds.controls['costOfImprovement'].value,
-            indexCostOfImprovement: bonds.controls[
-              'isIndexationBenefitAvailable'
-            ].value
-              ? bonds.controls['indexCostOfImprovement'].value
-              : 0,
-          },
-        ],
-        deduction: [this.deductionForm.getRawValue()],
-      };
-      this.itrMsService.postMethod(param, request).subscribe(
-        (res: any) => {
-          this.loading = false;
-          if (res.assetDetails[0].capitalGain) {
-            bonds.controls['capitalGain'].setValue(
-              res.assetDetails[0].capitalGain
-            );
-            this.calculateDeductionGain();
-            this.updateDeductionUI();
-          } else {
-            bonds.controls['capitalGain'].setValue(0);
-          }
-        },
-        (error) => {
-          this.loading = false;
-          this.toastMsgService.alert(
-            'error',
-            'failed to calculate total capital gain.'
-          );
-        }
-      );
-    }
+  goBack() {
+    this.saveAndNext.emit(false);
+  }
+
+  saveAll() {
+    this.save('bonds');
+    this.saveAndNext.emit(false);
   }
 }

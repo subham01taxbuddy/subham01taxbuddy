@@ -491,8 +491,6 @@ export interface HouseProperties {
   coOwners: CoOwners[];
   ownerPercentage: number;
   loans: Loans[];
-  eligible80EEAAmount?: any;
-  eligible80EEAmount?: any;
 }
 
 export interface PresumptiveIncomes {
@@ -561,8 +559,7 @@ export interface AssetDetails {
   sellValuePerUnit: number;
   purchaseValuePerUnit: number;
   isUploaded: boolean;
-  isIndexationBenefitAvailable: boolean;
-  whetherDebenturesAreListed: boolean;
+  hasIndexation: boolean;
   algorithm: string;
   fmvAsOn31Jan2018: string;
   indexCostOfAcquisition: number;

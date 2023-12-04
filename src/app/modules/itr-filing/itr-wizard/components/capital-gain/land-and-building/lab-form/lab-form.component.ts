@@ -362,8 +362,6 @@ export class LabFormComponent implements OnInit {
       isUploaded: false,
       hasIndexation: false,
       algorithm: 'cgProperty',
-      isIndexationBenefitAvailable: null,
-      whetherDebenturesAreListed: null,
       capitalGain: 0,
       cgBeforeDeduction: 0,
       grandFatheredValue: 0,
@@ -400,7 +398,7 @@ export class LabFormComponent implements OnInit {
       sellValuePerUnit: [obj?.sellValuePerUnit],
       purchaseValuePerUnit: [obj?.purchaseValuePerUnit],
       isUploaded: [obj?.isUploaded ? obj?.isUploaded : false],
-      isIndexationBenefitAvailable: [obj?.isIndexationBenefitAvailable ? obj?.isIndexationBenefitAvailable : false],
+      hasIndexation: [obj?.hasIndexation ? obj?.hasIndexation : false],
       description: [obj ? obj?.description : des, Validators.required], // TODO commented,
       gainType: [obj?.gainType],
       sellDate: [obj?.sellDate, Validators.required],
@@ -1347,7 +1345,7 @@ export class LabFormComponent implements OnInit {
         this.cgArrayElement.assetType = this.assetType.value;
         this.cgArrayElement.assetDetails[this.currentCgIndex].algorithm =
           'cgProperty'; //this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].algorithm;
-        this.cgArrayElement.assetDetails[this.currentCgIndex].isIndexationBenefitAvailable =
+        this.cgArrayElement.assetDetails[this.currentCgIndex].hasIndexation =
           false; //this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].hasIndexation;
 
         let filtered = this.cgArrayElement.improvement.filter(

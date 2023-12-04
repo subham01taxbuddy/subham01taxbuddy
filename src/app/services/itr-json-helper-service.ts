@@ -1,12 +1,14 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from "@angular/core";
 
 @Injectable()
 export class ItrJsonHelperService {
-  getTotalCg() {}
+
+  getTotalCg(){
+
+  }
 }
 
 export class TotalCg {
   ltcg: number;
-  stcg: number;
-  deduction: number;
+  stcg:number;
 }
