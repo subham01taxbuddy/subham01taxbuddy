@@ -189,7 +189,7 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
     }
 
     let data = this.utilsService.createUrlParams(this.searchParam);
-    param = `/payout/report??fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
+    param = `/payout/report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
 
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
