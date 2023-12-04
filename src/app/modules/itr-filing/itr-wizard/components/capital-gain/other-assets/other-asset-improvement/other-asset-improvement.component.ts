@@ -231,21 +231,25 @@ export class OtherAssetImprovementComponent implements OnInit {
     });
 
     if (impObj && impObj?.length > 0) {
-      impObj?.forEach((element, index) => {
+      impObj?.forEach((element) => {
         if (element.srn === this.assetIndex) {
-          const improvementsFormGroup = this.createImprovementsArray(index);
+          const improvementsFormGroup = this.createImprovementsArray(element);
           (assetsForm.get('improvementsArray') as FormArray).push(
             improvementsFormGroup
           );
         }
       });
+    } else {
+      const improvementsFormGroup = this.createImprovementsArray();
+      (assetsForm.get('improvementsArray') as FormArray).push(
+        improvementsFormGroup
+      );
     }
 
     return assetsForm;
   }
 
-  createImprovementsArray(index?) {
-    let impObj: any = index >= 0 ? this.goldCg?.improvement[index] : null;
+  createImprovementsArray(impObj?) {
     const improvementsArray = this.fb.group({
       financialYearOfImprovement: [
         impObj ? impObj?.financialYearOfImprovement : '',
@@ -443,12 +447,23 @@ export class OtherAssetImprovementComponent implements OnInit {
 
     // setting the correct index for calculations
     delete cgObject?.improvementsArray;
-    if (improvement && improvement.length > 0) {
-      improvement.forEach((element) => {
-        element.srn = this.assetIndex;
-      });
+    if (this.assetIndex || this.assetIndex === 0) {
+      cgObject.srn = this.assetIndex;
+      if (improvement && improvement.length > 0) {
+        improvement.forEach((element) => {
+          element.srn = this.assetIndex;
+        });
+      } else {
+        this.goldCg.improvement = [];
+      }
     } else {
-      this.goldCg.improvement = [];
+      if (improvement && improvement.length > 0) {
+        improvement.forEach((element) => {
+          element.srn = cgObject?.srn;
+        });
+      } else {
+        this.goldCg.improvement = [];
+      }
     }
 
     this.loading = true;
@@ -513,12 +528,8 @@ export class OtherAssetImprovementComponent implements OnInit {
         }
 
         // setting improvement details
-        if (res?.improvement[0]) {
-          this.goldCg?.improvement?.splice(
-            this.assetIndex,
-            1,
-            res?.improvement[0]
-          );
+        if (res?.improvement) {
+          this.goldCg.improvement = res?.improvement;
         }
       },
       (error) => {
@@ -539,25 +550,22 @@ export class OtherAssetImprovementComponent implements OnInit {
     const improvementsArray = this.assetsForm.controls[
       'improvementsArray'
     ] as FormArray;
+
     const coiArray = [
       'financialYearOfImprovement',
       'costOfImprovement',
       'indexCostOfImprovement',
     ];
 
-    if (this.isImprovement.value) {
-      if (improvementsArray?.controls?.length > 0) {
-        improvementsArray?.controls?.forEach((item) => {
-          let element = (item as FormGroup).controls;
+    if (this.isImprovement.value && improvementsArray?.controls?.length > 0) {
+      improvementsArray?.controls?.forEach((item) => {
+        let element = (item as FormGroup).controls;
 
-          coiArray.forEach((item) => {
-            element[item]?.setValidators(Validators.required);
-            element[item]?.updateValueAndValidity();
-          });
+        coiArray.forEach((item) => {
+          element[item]?.setValidators(Validators.required);
+          element[item]?.updateValueAndValidity();
         });
-      } else {
-        this.goldCg.improvement = [];
-      }
+      });
     } else {
       if (improvementsArray?.controls?.length > 0) {
         improvementsArray?.controls?.forEach((item) => {
@@ -610,21 +618,26 @@ export class OtherAssetImprovementComponent implements OnInit {
       }
 
       // setting improvements
-      if (this.goldCg?.improvement?.length > 0) {
-        filteredCapitalGain[0].improvement = [];
-        this.goldCg?.improvement?.forEach((element) => {
-          filteredCapitalGain[0]?.improvement?.push(element);
-        });
+      let filteredImprovement = filteredCapitalGain[0]?.improvement?.filter(
+        (element) => element.srn !== this.data?.assetIndex
+      );
 
-        // filtering out undefined or null elements from improvement array
-        filteredCapitalGain[0].improvement =
-          filteredCapitalGain[0]?.improvement?.filter(
-            (element) => element !== null && element !== undefined
-          );
-      } else {
-        this.goldCg.improvement = [];
-        filteredCapitalGain[0].improvement = [];
-      }
+      improvementsArray?.value?.filter(
+        (element) => element.srn !== this.data?.assetIndex
+      );
+
+      improvementsArray?.value?.forEach((element) => {
+        element.srn = this.data?.assetIndex;
+        filteredImprovement.push(element);
+      });
+
+      filteredCapitalGain[0].improvement = filteredImprovement;
+
+      // filtering out undefined or null elements from improvement array
+      filteredCapitalGain[0].improvement =
+        filteredCapitalGain[0]?.improvement?.filter(
+          (element) => element !== null && element !== undefined
+        );
 
       // pushing the final asset
       this.ITR_JSON.capitalGain.push(filteredCapitalGain[0]);
