@@ -34,10 +34,12 @@
     <table class="error-table">
       <tr>
         <th>User Name</th>
+        <th>Mobile No.</th>
         <th>Reason</th>
       </tr>
       <tr *ngFor="let item of errorData">
         <td>{{ item.userName }}</td>
+        <td>{{ item.mobileNumber }}</td>
         <td>{{ item.reason }}</td>
       </tr>
     </table>
