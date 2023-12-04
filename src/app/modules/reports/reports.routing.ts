@@ -11,6 +11,8 @@ import { RevenueReportComponent } from './revenue-report/revenue-report.componen
 import { PayoutReportComponent } from './payout-report/payout-report.component';
 import { UsersItrPaymentDoneComponent } from './users-itr-payment-done/users-itr-payment-done.component';
 import { PaymentReceivedComponent } from './payment-received/payment-received.component';
+import { ProformaInvoiceComponent } from './proforma-invoice/proforma-invoice.component';
+import { TdsReportComponent } from './tds-report/tds-report.component';
 
 
 const routes: Routes = [
@@ -70,6 +72,14 @@ const routes: Routes = [
         path:'payment-received',
         component: PaymentReceivedComponent,
       },
+      {
+        path:'proforma-invoice',
+        component:ProformaInvoiceComponent,
+      },
+      {
+        path:'tds-report',
+        component:TdsReportComponent,
+      }
     ],
 
   },

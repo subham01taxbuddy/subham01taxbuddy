@@ -16,11 +16,10 @@ export const MY_FORMATS = {
     monthYearA11yLabel: 'MMMM YYYY',
   },
 };
-
 @Component({
-  selector: 'app-payment-received',
-  templateUrl: './payment-received.component.html',
-  styleUrls: ['./payment-received.component.scss'],
+  selector: 'app-proforma-invoice',
+  templateUrl: './proforma-invoice.component.html',
+  styleUrls: ['./proforma-invoice.component.scss'],
   providers: [
     DatePipe,
     {
@@ -31,7 +30,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class PaymentReceivedComponent implements OnInit {
+export class ProformaInvoiceComponent implements OnInit {
   startDate = new FormControl('');
   endDate = new FormControl('');
   minEndDate = new Date();
@@ -55,11 +54,11 @@ export class PaymentReceivedComponent implements OnInit {
   }
 
   downloadReport() {
-    // https://api.taxbuddy.com/report/bo/payment-received-status-report?toDate=2023-12-02&fromDate=2023-09-01
+    // 'https://uat-api.taxbuddy.com/report/bo/proforma-invoice-send-report?fromDate=2023-12-01&toDate=2023-12-04'    
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    let param = `/report/bo/payment-received-status-report?fromDate=${fromDate}&toDate=${toDate}`;
+    let param = `/report/bo/proforma-invoice-send-report?fromDate=${fromDate}&toDate=${toDate}`;
     location.href = environment.url + param;
   }
 }
