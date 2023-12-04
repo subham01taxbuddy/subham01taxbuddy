@@ -534,22 +534,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           if (params.data.tdsCode === 'tdsOtherThanSalary16A') {
-            let hoi = headOfIncomeDropdownTDS2.filter(
+            return headOfIncomeDropdownTDS2.filter(
               (item) => item.code === params.data.headOfIncome
-            );
-            if(hoi.isNonEmpty)
-              hoi[0].name;
-            else
-              "";
+            )[0].name;
           }
           if (params.data.tdsCode === 'tdsOtherThanSalaryPanBased') {
-            let hoi = headOfIncomeDropdownTDS3.filter(
+            return headOfIncomeDropdownTDS3.filter(
               (item) => item.code === params.data.headOfIncome
-            );
-            if(hoi.isNonEmpty)
-              hoi[0].name;
-            else
-              "";
+            )[0].name;
           }
           return '';
         },
