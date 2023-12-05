@@ -48,7 +48,74 @@ export class TeamReportDashboardComponent implements OnInit {
   minEndDate = new Date().toISOString().slice(0, 10);
   startDate = new FormControl('');
   endDate = new FormControl('');
-  invoiceData: any;
+  invoiceData =
+    [
+      {
+        "noSubscriptionCancellationRequest": 0,
+        "noRefundRequest": 0,
+        "paidInvoiceCountByPaymentDate": 0,
+        "paidInvoiceAmountByPaymentDate": 0,
+        "invoiceRaised": 0,
+        "invoiceAmount": 0,
+        "paidInvoiceCount": 0,
+        "unpaidInvoiceCount": 0,
+        "paidAmount": 0,
+        "unpaidAmount": 0,
+        "serviceType": "ITR"
+      },
+      {
+        "noSubscriptionCancellationRequest": 0,
+        "noRefundRequest": 0,
+        "paidInvoiceCountByPaymentDate": 0,
+        "paidInvoiceAmountByPaymentDate": 0,
+        "invoiceRaised": 0,
+        "invoiceAmount": 0,
+        "paidInvoiceCount": 0,
+        "unpaidInvoiceCount": 0,
+        "paidAmount": 0,
+        "unpaidAmount": 0,
+        "serviceType": "GST"
+      },
+      {
+        "noSubscriptionCancellationRequest": 0,
+        "noRefundRequest": 0,
+        "paidInvoiceCountByPaymentDate": 0,
+        "paidInvoiceAmountByPaymentDate": 0,
+        "invoiceRaised": 0,
+        "invoiceAmount": 0,
+        "paidInvoiceCount": 0,
+        "unpaidInvoiceCount": 1,
+        "paidAmount": 0,
+        "unpaidAmount": 0,
+        "serviceType": "NOTICE"
+      },
+      {
+        "noSubscriptionCancellationRequest": 0,
+        "noRefundRequest": 0,
+        "paidInvoiceCountByPaymentDate": 0,
+        "paidInvoiceAmountByPaymentDate": 0,
+        "invoiceRaised": 0,
+        "invoiceAmount": 0,
+        "paidInvoiceCount": 0,
+        "unpaidInvoiceCount": 0,
+        "paidAmount": 0,
+        "unpaidAmount": 0,
+        "serviceType": "TPA"
+      },
+      {
+        "noSubscriptionCancellationRequest": 0,
+        "noRefundRequest": 0,
+        "paidInvoiceCountByPaymentDate": 0,
+        "paidInvoiceAmountByPaymentDate": 0,
+        "invoiceRaised": 0,
+        "invoiceAmount": 0,
+        "paidInvoiceCount": 0,
+        "unpaidInvoiceCount": 0,
+        "paidAmount": 0,
+        "unpaidAmount": 0,
+        "serviceType": "OTHER"
+      }
+    ];
   docUploadedData: any;
   summaryConfirmationData: any;
   eVerificationPendingData: any;
@@ -59,14 +126,14 @@ export class TeamReportDashboardComponent implements OnInit {
   today: Date;
   totalOriginal: number;
   totalRevised: number;
-  scheduledCallData:any;
-  totalScheduledCall:any
+  scheduledCallData: any;
+  totalScheduledCall: any
 
   constructor(
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
-    private reportService:ReportService,
+    private reportService: ReportService,
     private router: Router,
     public datePipe: DatePipe
   ) {
@@ -78,7 +145,7 @@ export class TeamReportDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.leaderId = this.loggedInSmeUserId;
     }
     this.search();
@@ -206,7 +273,7 @@ export class TeamReportDashboardComponent implements OnInit {
     // API to get totalcommission
     // 'https://uat-api.taxbuddy.com/report/bo/dashboard/partner-commission-cumulative?fromDate=2023-04-01&toDate=2023-11-13' \
     this.loading = true;
-    let fromDate =this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let param = '';
     let userFilter = '';
@@ -249,7 +316,7 @@ export class TeamReportDashboardComponent implements OnInit {
     );
   }
 
-  getScheduledCallDetails(){
+  getScheduledCallDetails() {
     //'https://uat-api.taxbuddy.com/report/bo/dashboard/schedule-call?fromDate=2023-04-01&toDate=2023-11-13' \
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
@@ -269,7 +336,7 @@ export class TeamReportDashboardComponent implements OnInit {
           this.totalScheduledCall =
             response.data.callsAssigned_Open +
             response.data.done +
-            response.data.followUp ;
+            response.data.followUp;
 
         } else {
           this.loading = false;

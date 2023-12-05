@@ -152,8 +152,8 @@
         <div class="table-container">
           <table class="table table-bordered">
             <thead>
-              <tr>
-                <th scope="col">#</th>
+              <tr *ngIf="columns">
+                <th scope="col">Sr.No</th>
                 <th scope="col" *ngFor="let column of columns">{{ addSpaces(column) }}</th>
               </tr>
             </thead>
