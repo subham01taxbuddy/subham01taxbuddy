@@ -23,6 +23,7 @@ export class ReAssignActionDialogComponent implements OnInit {
   @ViewChild('errorTableTemplate') errorTableTemplate: TemplateRef<any>;
   constructor(
     public dialogRef: MatDialogRef<ReAssignActionDialogComponent>,
+    private dialogRef1: MatDialogRef<any>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private userMsService: UserMsService,
     private utilsService: UtilsService,
@@ -126,12 +127,13 @@ export class ReAssignActionDialogComponent implements OnInit {
         } else if (result.data && result.data.length > 0) {
           this.showErrorTable = true;
           this.errorData = result.data;
-          const dialogRef1 = this.dialog.open(this.errorTableTemplate, {
-            width: '50%',
+           this.dialogRef1 = this.dialog.open(this.errorTableTemplate, {
+            width: '65%',
             height: 'auto',
             data: {
               data: result.data
             },
+            disableClose :true
           });
         }else{
           this.loading = false;
@@ -155,20 +157,9 @@ export class ReAssignActionDialogComponent implements OnInit {
       this.data.data.forEach(item => {
         userIdList.push(item.userId);
       });
-      let serviceTypeList =[];
-      this.data.data.forEach(item =>{
-        serviceTypeList.push(item.serviceType)
-      })
-      console.log('service TYpe List ',serviceTypeList)
 
      this.loading=true;
-     let serviceType = '';
-
-      if (serviceTypeList.every(type => type === 'GST')) {
-        serviceType = 'GST';
-      } else {
-        serviceType = 'ITR';
-      }
+     let serviceType = this.data.data[0].serviceType;
      let userFilter =''
      if(this.leaderId ){
       userFilter +=`&leaderUserId=${this.leaderId}`
@@ -185,12 +176,13 @@ export class ReAssignActionDialogComponent implements OnInit {
       } else if (result.data && result.data.length > 0) {
         this.showErrorTable = true;
         this.errorData = result.data;
-        const dialogRef = this.dialog.open(this.errorTableTemplate, {
-          width: '50%',
+         this.dialogRef1 = this.dialog.open(this.errorTableTemplate, {
+          width: '65%',
           height: 'auto',
           data: {
             data: result.data
           },
+          disableClose :true
         });
       }else{
         this.loading = false;
@@ -211,7 +203,7 @@ export class ReAssignActionDialogComponent implements OnInit {
 
   closeErrorTable(){
     this.dialogRef.close({ event: 'close', data: 'success' });
-    this.dialog.closeAll();
+    this.dialogRef1.close();
   }
 
 progressMessage: string = '';
