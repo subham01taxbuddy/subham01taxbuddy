@@ -1005,23 +1005,61 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   async downloadReport() {
     // 'https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20'
     this.loading = true;
-    console.log('this.queryParam:', this.queryParam);
-    this.loading = true;
-    this.showCsvMessage = true;
-    let userFilter = ''
-    if (this.leaderId && !this.filerId) {
-      userFilter += `leaderUserId=${this.leaderId}`;
+
+    const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
+    if (this.roles.includes('ROLE_LEADER')) {
+      this.leaderId = loggedInSmeUserId
+    }
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInSmeUserId) {
+      this.filerId = loggedInSmeUserId;
+      this.searchAsPrinciple = true;
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInSmeUserId){
+      this.filerId = loggedInSmeUserId ;
+      this.searchAsPrinciple =false;
+    }
+
+    let userFilter = '';
+    if ((this.leaderId && !this.filerId)) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
     if (this.filerId && this.searchAsPrinciple === true) {
-      userFilter += `searchAsPrincipal=true&filerUserId=${this.filerId}`;
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
     }
-    if (this.filerId && this.searchAsPrinciple === false) {
-      userFilter += `filerUserId=${this.filerId}`;
+    if ((this.filerId && this.searchAsPrinciple === false)) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+    let service = ''
+    if (this.utilsService.isNonEmpty(this.searchParam.serviceType)) {
+      service += `&serviceType=${this.searchParam.serviceType}`;
     }
 
-    var param = `/bo/subscription-dashboard-new?${userFilter}`;
+    var param = `/bo/subscription-dashboard-new?${userFilter}${service}`;
 
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-subscription-report', '', this.sortBy);
+    if (Object.keys(this.sortBy).length) {
+      let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+      param = param + sortByJson;
+    }
+
+    if (Object.keys(this.searchBy).length) {
+      let searchByKey = Object.keys(this.searchBy);
+      let searchByValue = Object.values(this.searchBy);
+      param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
+    }
+
+    let fieldName = [
+      { key: 'userId', value: 'User Id' },
+      { key: 'userName', value: 'User Name' },
+      { key: 'userSelectedPlan?.name', value: 'User Selected' },
+      { key: 'smeSelectedPlan?.name', value: 'SME Selected' },
+      { key: 'serviceType', value: 'Service Type' },
+      { key: 'promoCode', value: 'Promo Code' },
+      { key: 'invoiceAmount', value: 'Subscription Amount' },
+      { key: 'invoiceDetail[0].invoiceNo', value: 'Invoice No' },
+      { key: 'leaderName', value: 'Leader Name' },
+      { key: 'assigneeName', value: 'Filer Name' },
+    ]
+
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-subscription-report',fieldName,{});
     this.loading = false;
   }
 

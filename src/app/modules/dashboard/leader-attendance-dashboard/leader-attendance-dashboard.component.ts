@@ -289,8 +289,30 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
 
     param =`/bo/dashboard/attendance-performance-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
 
+    let fieldName = [
+      { key: 'nameOfFiler', value: 'Name of Partners' },
+      { key: 'attendanceOnDateInBo', value: 'Attendance on Date(today)' },
+      { key: 'assignmentStatus', value: 'Assignment Status' },
+      { key: 'numberOfClientsAssigned', value: 'No of clients assigned(where filer is allotted)' },
+      { key: 'itr1', value: 'ITR 1(original + revise)' },
+      { key: 'itr2', value: 'ITR 2(original + revise)' },
+      { key: 'itr3', value: 'ITR 3(original + revise)' },
+      { key: 'itr4', value: 'ITR 4(original + revise)' },
+      { key: 'others', value: 'Other(original + revise)' },
+      { key: 'itrU', value: 'ITR U' },
+      { key: 'totalITRFiled', value: 'Total ITR Filed' },
+      { key: 'revenueGenerated', value: 'Revenue Generated(filed + pending to file cases) Total amount of paid invoices' },
+      { key: 'applicableCommissionPercentage', value: 'Applicable Commission Percentage as on date' },
+      { key: 'totalCommissionEarnedBeforeTDS', value: 'Total Commission Earned before TDS' },
+      { key: 'tds', value: 'TDS' },
+      { key: 'totalCommissionEarnedAfterTDS', value: 'Total Commission Earned after TDS' },
+      { key: 'commissionPaid', value: 'Commission Paid' },
+      { key: 'commissionPayable', value: 'Commission Payable' },
+      { key: 'averageUserRating', value: 'Average of users Rating' },
+    ]
+
     // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'attendance-performance-report', '', {});
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'attendance-performance-report', fieldName, {});
     this.loading = false;
   }
 

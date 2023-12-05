@@ -291,30 +291,64 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
   async downloadReport() {
     this.loading = true;
-
     this.showCsvMessage = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
-    let param = `/${this.agentId}/user-list-new?active=false`;
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
 
-    if (this.coOwnerToggle.value == true) {
-      param = param + '&searchAsCoOwner=true';
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =true;
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =false;
     }
-    if (this.coOwnerToggle.value == true && loggedInId !== this.agentId) {
-      param = `/${this.agentId}/user-list-new?active=false`;
+    let leaderFilter = ''
+    if (this.leaderId) {
+      leaderFilter = `&leaderUserId=${this.leaderId}`
     }
-    if (this.searchParam.emailId) {
-      param = param + '&emailId=' + this.searchParam.emailId.toLocaleLowerCase();
+    let filerFilter ='';
+    if(this.filerId && this.searchAsPrinciple === true){
+      leaderFilter ='';
+      filerFilter=`&searchAsPrincipal=true&filerUserId=${this.filerId}`
     }
-    if (this.searchParam.mobileNumber) {
-      param = param + '&mobileNumber=' + this.searchParam.mobileNumber;
+    if(this.filerId && this.searchAsPrinciple === false){
+      leaderFilter ='';
+      filerFilter=`&filerUserId=${this.filerId}`
     }
-    if (this.searchParam.statusId) {
-      param = param + '&statusId=' + this.searchParam.statusId;
+
+    let status = ''
+    if (this.utilsService.isNonEmpty(this.searchParam.statusId)) {
+      status += `&status=${this.searchParam.statusId}`;
     }
-    else {
-      param;
+
+    let param = `/bo/user-list-new?active=false${leaderFilter}${filerFilter}${status}`;
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
     }
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'potential-user', '', this.sortBy);
+
+    if (Object.keys(this.searchBy).length) {
+      let searchByKey = Object.keys(this.searchBy);
+      let searchByValue = Object.values(this.searchBy);
+      param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
+    }
+
+    let fieldName = [
+      { key: 'name', value: 'Name' },
+      { key: 'mobileNumber', value: 'Mobile No' },
+      { key: 'email', value: 'Email' },
+      { key: 'source', value: 'Status' },
+      { key: 'eriClientValidUpto', value: 'ERI Client' },
+      { key: 'panNumber', value: 'PAN Number' },
+      { key: 'createdDate', value: 'Created Date' },
+      { key: 'userId', value: 'User Id' },
+      { key: 'leaderName', value: 'Leader Name' },
+      { key: 'filerName', value: 'Filer Name' },
+    ]
+
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'potential-user', fieldName,{});
     this.loading = false;
     this.showCsvMessage = false;
   }

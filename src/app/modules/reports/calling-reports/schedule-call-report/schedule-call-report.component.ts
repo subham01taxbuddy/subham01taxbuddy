@@ -265,7 +265,12 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
   async downloadReport() {
     this.loading = true;
     this.showCsvMessage = true;
-    let param = ''
+    let param = '';
+
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
 
     let userFilter = '';
 
@@ -274,7 +279,17 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
     }
 
     param = `/bo/calling-report/schedule-call-report?${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'schedule-call-report','',{});
+
+    let fieldName = [
+      { key: 'filerName', value: 'Leader Name' },
+      { key: 'totalScheduleCallAssigned', value: 'Total Schedule call assigned' },
+      { key: 'noOfCallDone', value: 'No of call Done' },
+      { key: 'noOfCallScheduleForLater', value: 'No Call schedule for next day' },
+      { key: 'noOfCallNotDone', value: 'No of call not done' },
+      { key: 'parentName', value: 'Parent Name' },
+    ]
+
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'schedule-call-report',fieldName,{});
 
     this.loading = false;
     this.showCsvMessage = false;
