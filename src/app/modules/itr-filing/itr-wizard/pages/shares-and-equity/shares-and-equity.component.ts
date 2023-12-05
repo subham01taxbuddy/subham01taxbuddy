@@ -1211,7 +1211,7 @@ export class SharesAndEquityComponent
     //Ashwini: Removing rounding off of the values after discussion with Gitanjali
     if (this.bondType === 'listed') {
       this.selectedFormGroup.controls['sellValue'].setValue(
-        saleValue.toFixed(2)
+        saleValue.toFixed()
       );
     } else {
       this.selectedFormGroup.controls['sellValue'].setValue(
@@ -1233,7 +1233,7 @@ export class SharesAndEquityComponent
 
     if (this.bondType === 'listed') {
       this.selectedFormGroup.controls['purchaseCost'].setValue(
-        purchaseValue.toFixed(2)
+        purchaseValue.toFixed()
       );
     } else {
       this.selectedFormGroup.controls['purchaseCost'].setValue(
