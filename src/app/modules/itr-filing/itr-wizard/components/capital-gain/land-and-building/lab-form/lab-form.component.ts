@@ -1373,62 +1373,60 @@ export class LabFormComponent implements OnInit {
       selectedYear.get('month') > 2
         ? selectedYear.get('year') + '-' + (selectedYear.get('year') + 1)
         : selectedYear.get('year') - 1 + '-' + selectedYear.get('year');
-    if (assetDetails.controls['purchaseCost'].value) {
-      let req = {
-        cost: assetDetails.controls['purchaseCost'].value,
-        // "purchaseOrImprovementFinancialYear": "2002-2003",
-        assetType: 'PLOT_OF_LAND',
-        buyDate: moment(assetDetails.controls['purchaseDate'].value).format(
-          'YYYY-MM-DD'
-        ),
-        sellDate: moment(assetDetails.controls['sellDate'].value).format(
-          'YYYY-MM-DD'
-        ),
-        sellFinancialYear: sellFinancialYear,
-      };
-      const param = `/calculate/indexed-cost`;
-      this.itrMsService.postMethod(param, req).subscribe((res: any) => {
-        console.log('INDEX COST : ', res);
-        if (res.data.capitalGainType) {
-          if (res.data.capitalGainType === 'LONG') {
-            assetDetails.controls['indexCostOfAcquisition'].setValue(
-              res.data.costOfAcquisitionOrImprovement
-            );
-          } else {
-            assetDetails.controls['indexCostOfAcquisition'].setValue(
-              assetDetails.controls['purchaseCost'].value
-            );
-          }
-          assetDetails.controls['gainType'].setValue(res.data.capitalGainType);
-          //this.cgArrayElement.assetDetails[0].indexCostOfAcquisition = res.data.costOfAcquisitionOrImprovement;
-          if (
-            this.cgArrayElement.assetDetails &&
-            this.cgArrayElement.assetDetails.length > 0
-          ) {
-            console.log('in if', res.data.capitalGainType);
-            //this.cgArrayElement.assetDetails[0].gainType = res.data.capitalGainType;
-            Object.assign(
-              this.cgArrayElement.assetDetails[this.currentCgIndex],
-              assetDetails.getRawValue()
-            );
-            console.log(
-              'updated assetDetails',
-              this.cgArrayElement.assetDetails[this.currentCgIndex]
-            );
-            //assetDetails.setValue(this.cgArrayElement.assetDetails[0]);
-          } else {
-            console.log('in else');
-            this.cgArrayElement.assetDetails.push(assetDetails.getRawValue());
-            this.cgArrayElement.assetDetails[this.currentCgIndex].gainType =
-              res.data.capitalGainType;
-            console.log('gain type in else', this.cgArrayElement.assetDetails);
-          }
-          console.log('gain type', this.cgArrayElement.assetDetails);
-          this.calculateCapitalGain(this.immovableForm, '', index);
-          this.calculateDeduction(index);
+    let req = {
+      cost: assetDetails.controls['purchaseCost'].value,
+      // "purchaseOrImprovementFinancialYear": "2002-2003",
+      assetType: 'PLOT_OF_LAND',
+      buyDate: moment(assetDetails.controls['purchaseDate'].value).format(
+        'YYYY-MM-DD'
+      ),
+      sellDate: moment(assetDetails.controls['sellDate'].value).format(
+        'YYYY-MM-DD'
+      ),
+      sellFinancialYear: sellFinancialYear,
+    };
+    const param = `/calculate/indexed-cost`;
+    this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+      console.log('INDEX COST : ', res);
+      if (res.data.capitalGainType) {
+        if (res.data.capitalGainType === 'LONG') {
+          assetDetails.controls['indexCostOfAcquisition'].setValue(
+            res.data.costOfAcquisitionOrImprovement
+          );
+        } else {
+          assetDetails.controls['indexCostOfAcquisition'].setValue(
+            assetDetails.controls['purchaseCost'].value
+          );
         }
-      });
-    }
+        assetDetails.controls['gainType'].setValue(res.data.capitalGainType);
+        //this.cgArrayElement.assetDetails[0].indexCostOfAcquisition = res.data.costOfAcquisitionOrImprovement;
+        if (
+          this.cgArrayElement.assetDetails &&
+          this.cgArrayElement.assetDetails.length > 0
+        ) {
+          console.log('in if', res.data.capitalGainType);
+          //this.cgArrayElement.assetDetails[0].gainType = res.data.capitalGainType;
+          Object.assign(
+            this.cgArrayElement.assetDetails[this.currentCgIndex],
+            assetDetails.getRawValue()
+          );
+          console.log(
+            'updated assetDetails',
+            this.cgArrayElement.assetDetails[this.currentCgIndex]
+          );
+          //assetDetails.setValue(this.cgArrayElement.assetDetails[0]);
+        } else {
+          console.log('in else');
+          this.cgArrayElement.assetDetails.push(assetDetails.getRawValue());
+          this.cgArrayElement.assetDetails[this.currentCgIndex].gainType =
+            res.data.capitalGainType;
+          console.log('gain type in else', this.cgArrayElement.assetDetails);
+        }
+        console.log('gain type', this.cgArrayElement.assetDetails);
+        this.calculateCapitalGain(this.immovableForm, '', index);
+        this.calculateDeduction(index);
+      }
+    });
   }
 
   calculateCapitalGain(formGroupName, val, index) {
