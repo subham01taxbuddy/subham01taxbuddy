@@ -82,6 +82,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
   clearUserFilter: number;
   searchAsPrinciple: boolean = false
   partnerType: any;
+  showCsvMessage: boolean;
 
   constructor(
     private reviewService: ReviewService,
@@ -377,6 +378,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
   async downloadReport() {
     this.loading = true;
+    this.showCsvMessage = true;
     let userFilter = '';
     if ((this.leaderUserId && !this.filerUserId)) {
       userFilter += `&leaderUserId=${this.leaderUserId}`;
@@ -423,6 +425,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     ]
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'Filed-ITR', fieldName, {});
     this.loading = false;
+    this.showCsvMessage = false;
   }
 
   fromFy(event) {

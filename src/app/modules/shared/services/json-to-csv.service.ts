@@ -57,7 +57,12 @@ export class JsonToCsvService {
               line += ', ';
             }
           } else {
-            line += ',' + array[i][data[0]][data[1]];
+            if (array[i][data[0]]) {
+              line += ',' + array[i][data[0]][data[1]];
+            } else {
+              line += ', ';
+            }
+            // line += ',' + array[i][data[0]][data[1]];
           }
         } else {
           line += ',' + array[i][head];

@@ -149,7 +149,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         this.advanceSearch();
       }
     });
-    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER') && !this.userId){
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER') && !this.userId) {
       this.agentId = this.loggedInSme[0]?.userId;
       this.getAssignedSubscription(0);
     } else {
@@ -226,9 +226,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInSmeUserId) {
       this.filerId = loggedInSmeUserId;
       this.searchAsPrinciple = true;
-    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInSmeUserId){
-      this.filerId = loggedInSmeUserId ;
-      this.searchAsPrinciple =false;
+    } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInSmeUserId) {
+      this.filerId = loggedInSmeUserId;
+      this.searchAsPrinciple = false;
     }
 
     let userIdFilter = '';
@@ -312,7 +312,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           //   this.createRowData([])
           // );
           // this.config.totalItems = 0;
-          if(response?.data?.content?.length === 0 ){
+          if (response?.data?.content?.length === 0) {
             this._toastMessageService.alert('error', "Subscription not found");
             this.config.totalItems = 0;
             this.subscriptionListGridOptions.api?.setRowData(
@@ -960,7 +960,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       this.config.currentPage = event;
     } else {
       this.config.currentPage = event;
-      this.searchParam.page =event-1
+      this.searchParam.page = event - 1
       // this.selectedPageNo = event - 1;
       this.getAssignedSubscription(event - 1, '', '', 'fromPageChange');
     }
@@ -1005,6 +1005,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   async downloadReport() {
     // 'https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20'
     this.loading = true;
+    this.showCsvMessage = true;
 
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     if (this.roles.includes('ROLE_LEADER')) {
@@ -1013,9 +1014,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInSmeUserId) {
       this.filerId = loggedInSmeUserId;
       this.searchAsPrinciple = true;
-    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInSmeUserId){
-      this.filerId = loggedInSmeUserId ;
-      this.searchAsPrinciple =false;
+    } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInSmeUserId) {
+      this.filerId = loggedInSmeUserId;
+      this.searchAsPrinciple = false;
     }
 
     let userFilter = '';
@@ -1049,18 +1050,22 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     let fieldName = [
       { key: 'userId', value: 'User Id' },
       { key: 'userName', value: 'User Name' },
-      { key: 'userSelectedPlan?.name', value: 'User Selected' },
-      { key: 'smeSelectedPlan?.name', value: 'SME Selected' },
+      { key: 'userSelectedPlan.name', value: 'User Selected Plan' },
+      { key: 'smeSelectedPlan.name', value: 'SME Selected Plan' },
       { key: 'serviceType', value: 'Service Type' },
       { key: 'promoCode', value: 'Promo Code' },
-      { key: 'invoiceAmount', value: 'Subscription Amount' },
+      { key: 'smeSelectedPlan.totalAmount', value: 'Sme Selected Total Amount' },
+      { key: 'promoApplied.discountedAmount', value: 'Sme Selected discounted Amount' },
+      { key: 'userSelectedPlan.totalAmount', value: 'User Selected Total Amount' },
+      { key: 'promoApplied.discountedAmount', value: 'User Selected discounted Amount' },
       { key: 'invoiceDetail[0].invoiceNo', value: 'Invoice No' },
       { key: 'leaderName', value: 'Leader Name' },
       { key: 'assigneeName', value: 'Filer Name' },
     ]
 
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-subscription-report',fieldName,{});
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-subscription-report', fieldName, {});
     this.loading = false;
+    this.showCsvMessage = false;
   }
 
   getToggleValue() {
