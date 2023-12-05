@@ -5672,7 +5672,7 @@
                               }}
                             </td>
                           </tr>
-                          <tr *ngIf="finalCalculations?.giftExemptIncome > 0">
+                          <tr *ngIf="finalCalculations?.giftExemptIncome && finalCalculations?.giftExemptIncome > 0">
                             <td>Gift u/s 56(2)(x)</td>
                             <td class="">
                               <i class="material-icons" style="font-size: 15px"
@@ -5682,7 +5682,7 @@
                               }}
                             </td>
                           </tr>
-                          <tr *ngIf="finalCalculations && finalCalculations.profitShareAmount > 0">
+                          <tr *ngIf="finalCalculations?.profitShareAmount && finalCalculations.profitShareAmount > 0">
                             <td>Firm profit share</td>
                             <td class="">
                               <i class="material-icons" style="font-size: 15px"

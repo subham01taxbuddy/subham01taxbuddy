@@ -806,7 +806,7 @@ export class ScheduleFaComponent implements OnInit {
     if (newFormGroup) {
       const formArray = this.scheduleFa.get(section) as FormArray;
       if (formArray.valid) {
-        formArray.push(newFormGroup);
+        formArray.push(newFormGroup.controls[0]);
       } else {
         this.utilsService.showSnackBar(
           'Please make sure that all the existing details are entered correctly'
@@ -816,10 +816,15 @@ export class ScheduleFaComponent implements OnInit {
   }
 
   // adding nested form array
-  add(section) {
-    const accountControls = (this.scheduleFa.get(section) as FormArray)
-      .at(0)
-      .get('account') as FormArray;
+  add(section, i) {
+    let accountControls: any;
+    if (section === 'depositoryAccounts') {
+      accountControls = this.getAccountControls(i);
+    } else if (section === 'signingAuthorityDetails') {
+      accountControls = this.getSigningAuthAccountControls(i);
+    } else if (section === 'custodialAccounts') {
+      accountControls = this.getCustodialAccountControls(i);
+    }
 
     if (accountControls.valid) {
       if (section === 'depositoryAccounts') {
@@ -1181,10 +1186,18 @@ export class ScheduleFaComponent implements OnInit {
   }
 
   // TO-DO =================pass index of edit, allow one edit only
-  get getAccountControls() {
-    return (this.scheduleFa.get('depositoryAccounts') as FormArray)
-      .at(0)
-      .get('account') as FormArray;
+  getAccountControls(i: number): FormArray {
+    const depositoryAccounts = this.scheduleFa.get(
+      'depositoryAccounts'
+    ) as FormArray;
+
+    if (depositoryAccounts.at(i) instanceof FormGroup) {
+      return (depositoryAccounts.at(i) as FormGroup).get(
+        'account'
+      ) as FormArray;
+    } else {
+      return this.fb.array([]); // or return an empty FormArray if needed
+    }
   }
 
   get getEquityAndDebtInterest() {
@@ -1219,22 +1232,34 @@ export class ScheduleFaComponent implements OnInit {
     return this.scheduleFa.get('signingAuthorityDetails') as FormArray;
   }
 
-  // TO-DO =================pass index of edit, allow one edit only
-  get getSigningAuthAccountControls() {
-    return (this.scheduleFa.get('signingAuthorityDetails') as FormArray)
-      .at(0)
-      .get('account') as FormArray;
+  getSigningAuthAccountControls(i: number): FormArray {
+    const signingAuthAccounts = this.scheduleFa.get(
+      'signingAuthorityDetails'
+    ) as FormArray;
+
+    if (signingAuthAccounts.at(i) instanceof FormGroup) {
+      return (signingAuthAccounts.at(i) as FormGroup).get(
+        'account'
+      ) as FormArray;
+    } else {
+      return this.fb.array([]); // or return an empty FormArray if needed
+    }
   }
 
   get getCustodialAccounts() {
     return this.scheduleFa?.get('custodialAccounts') as FormArray;
   }
 
-  // TO-DO =================pass index of edit, allow one edit only
-  get getCustodialAccountControls() {
-    return (this.scheduleFa.get('custodialAccounts') as FormArray)
-      .at(0)
-      .get('account') as FormArray;
+  getCustodialAccountControls(i: number): FormArray {
+    const custodialAccounts = this.scheduleFa.get(
+      'custodialAccounts'
+    ) as FormArray;
+
+    if (custodialAccounts.at(i) instanceof FormGroup) {
+      return (custodialAccounts.at(i) as FormGroup).get('account') as FormArray;
+    } else {
+      return this.fb.array([]); // or return an empty FormArray if needed
+    }
   }
 
   // OTHER SECTION
@@ -1291,16 +1316,21 @@ export class ScheduleFaComponent implements OnInit {
           : this.selectedIndexes
         ).includes(i)
       ) {
-        if (
-          !(type === 'account' && i === formAcctArrayToDltCntrls.length - 1)
-        ) {
+        if (type === 'account') {
+          if (formAcctArrayToDltCntrls.length > 0) {
+            formArrayOrAccountToDelete.removeAt(i);
+            this.utilsService.showSnackBar(
+              `Details deleted Successfully ${formArrayName}`
+            );
+          } else {
+            this.utilsService.showSnackBar(
+              `Atleast one account detail is required for ${formArrayName}`
+            );
+          }
+        } else {
           formArrayOrAccountToDelete.removeAt(i);
           this.utilsService.showSnackBar(
             `Details deleted Successfully ${formArrayName}`
-          );
-        } else {
-          this.utilsService.showSnackBar(
-            `Atleast one account detail is required for ${formArrayName}`
           );
         }
       }

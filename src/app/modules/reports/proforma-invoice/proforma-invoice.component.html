@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col-sm-6">
+        <h4>Proforma Invoice Sent Report:</h4>
+    </div>
+</div>
+<div class="mrgArdTog2">
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel [expanded]=true>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon> arrow_forward_ios </mat-icon>
+                    Filter - List of users in status of proforma Invoice Sent:
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="rowClr">
+                <div class="surround">
+                    <div class="row">
+                        <div class="col-sm-4 spsTp">
+                            <mat-form-field appearance="outline">
+                                <mat-label>From Date</mat-label>
+                                <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate"
+                                    [max]="maxStartDate" autocomplete="off"
+                                    (dateChange)="setToDateValidation(startDate.value)" />
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                                <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-4 spsTp">
+                            <mat-form-field appearance="outline">
+                                <mat-label>To Date</mat-label>
+                                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
+                                    [max]="maxDate" autocomplete="off" />
+                                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                <mat-datepicker #picker2></mat-datepicker>
+                                <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                                <mat-error *ngIf="endDate.hasError('min')">To date always greater than from
+                                    date</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-4">
+                            <button class="srch-btn mvRth spsTp" [disabled]="loading" (click)="downloadReport()">
+                                <i class="fa fa-download" aria-hidden="true"></i> Download File
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

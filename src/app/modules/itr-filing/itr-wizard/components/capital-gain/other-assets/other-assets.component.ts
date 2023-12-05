@@ -516,6 +516,11 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 150,
         editable: false,
         suppressMovable: true,
+        cellRenderer: (params) => {
+          return params.data.costOfImprovement
+            ? params.data.costOfImprovement
+            : '';
+        },
       },
       {
         headerName: 'Sale Date / Date of Transfer',
