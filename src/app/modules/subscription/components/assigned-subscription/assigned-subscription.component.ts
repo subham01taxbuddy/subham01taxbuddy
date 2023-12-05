@@ -1005,6 +1005,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   async downloadReport() {
     // 'https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20'
     this.loading = true;
+    this.showCsvMessage = true;
 
     const loggedInSmeUserId = this?.loggedInSme[0]?.userId;
     if (this.roles.includes('ROLE_LEADER')) {
@@ -1049,8 +1050,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     let fieldName = [
       { key: 'userId', value: 'User Id' },
       { key: 'userName', value: 'User Name' },
-      { key: 'userSelectedPlan?.name', value: 'User Selected' },
-      { key: 'smeSelectedPlan?.name', value: 'SME Selected' },
+      { key: 'userSelectedPlan.name', value: 'User Selected Plan' },
+      { key: 'smeSelectedPlan.name', value: 'SME Selected' },
       { key: 'serviceType', value: 'Service Type' },
       { key: 'promoCode', value: 'Promo Code' },
       { key: 'invoiceAmount', value: 'Subscription Amount' },
@@ -1061,6 +1062,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-subscription-report',fieldName,{});
     this.loading = false;
+    this.showCsvMessage = false;
   }
 
   getToggleValue() {
