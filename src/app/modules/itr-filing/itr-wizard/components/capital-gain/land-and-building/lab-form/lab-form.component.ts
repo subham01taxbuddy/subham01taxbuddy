@@ -1424,11 +1424,11 @@ export class LabFormComponent implements OnInit {
         }
         console.log('gain type', this.cgArrayElement.assetDetails);
         this.calculateCapitalGain(this.immovableForm, '', index);
-        this.calculateDeduction(index);
       }
     });
   }
 
+   calculateCapitalGainOnceCalled:boolean = false;
   calculateCapitalGain(formGroupName, val, index) {
     console.log(formGroupName, formGroupName.getRawValue(), index);
     if (!index) {
@@ -1561,6 +1561,8 @@ export class LabFormComponent implements OnInit {
             this.cgArrayElement.assetDetails.forEach((item) => {
               this.totalCg += item.capitalGain;
             });
+
+            this.calculateDeduction(index);
           }
           this.busyGain = false;
 
@@ -1582,9 +1584,7 @@ export class LabFormComponent implements OnInit {
     }
   }
 
-  calculateDeduction(index) {
-    //itr/calculate/capital-gain/deduction
-
+  calculateDeduction(index, singleCg?) {
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
     ).controls[0] as FormGroup;
@@ -1627,11 +1627,13 @@ export class LabFormComponent implements OnInit {
           deductionForm.controls['totalDeductionClaimed'].setValue(
             finalResult?.deductionAmount
           );
-          this.calculateCapitalGain(
-            this.immovableForm,
-            '',
-            this.currentCgIndex
-          );
+          if (singleCg === 'singleCg') {
+            this.calculateCapitalGain(
+              this.immovableForm,
+              '',
+              this.currentCgIndex
+            );
+          }
         } else {
           deductionForm.controls['totalDeductionClaimed'].setValue(0);
         }
