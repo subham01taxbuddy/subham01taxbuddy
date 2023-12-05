@@ -37,13 +37,15 @@ export class FileParserComponent implements OnInit {
 
   initBrokerData() {
     this.brokerData = [
-      {
-        name: '5Paisa',
-        label: '5 Paisa',
-        loading: false,
-        filesUploaded: [],
-        steps: './assets/files/Steps to download 5 Paisa.pdf',
-      },
+        //commenting for this release
+      // {
+      //   name: '5Paisa',
+      //   label: '5 Paisa',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: './assets/files/Steps to download 5 Paisa.pdf',
+      // },
+        //not supported
       // {
       //   name: 'IIFL',
       //   label: 'IIFL',
@@ -51,13 +53,14 @@ export class FileParserComponent implements OnInit {
       //   filesUploaded: [],
       //   steps: '',
       // },
-      {
-        name: 'Angel',
-        label: 'Angel One',
-        loading: false,
-        filesUploaded: [],
-        steps: './assets/files/Steps to download Angel One.pdf',
-      },
+      //commenting for this release
+      // {
+      //   name: 'Angel',
+      //   label: 'Angel One',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: './assets/files/Steps to download Angel One.pdf',
+      // },
       {
         name: 'Paytm',
         label: 'PayTm',
@@ -65,20 +68,22 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
         steps: './assets/files/Steps to download PayTM.pdf',
       },
-      {
-        name: 'Axis',
-        label: 'Axis Broker',
-        loading: false,
-        filesUploaded: [],
-        steps: '',
-      },
-      {
-        name: 'Upstox',
-        label: 'Upstox',
-        loading: false,
-        filesUploaded: [],
-        steps: './assets/files/Steps to download upstox statement.pdf',
-      },
+      //commenting for this release
+      // {
+      //   name: 'Axis',
+      //   label: 'Axis Broker',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: '',
+      // },
+      //commenting for this release
+      // {
+      //   name: 'Upstox',
+      //   label: 'Upstox',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: './assets/files/Steps to download upstox statement.pdf',
+      // },
       {
         name: 'Groww',
         label: 'Groww',
@@ -93,13 +98,15 @@ export class FileParserComponent implements OnInit {
         filesUploaded: [],
         steps: './assets/files/Steps to download Zerodha statement.pdf',
       },
-      {
-        name: 'ICICI',
-        label: 'ICICI Bank',
-        loading: false,
-        filesUploaded: [],
-        steps: './assets/files/Steps to download ICICI Statement.pdf',
-      },
+      //commenting for this release
+      // {
+      //   name: 'ICICI',
+      //   label: 'ICICI Bank',
+      //   loading: false,
+      //   filesUploaded: [],
+      //   steps: './assets/files/Steps to download ICICI Statement.pdf',
+      // },
+        //not supported
       // {
       //   name: 'Jainam',
       //   label: 'Jainam',
@@ -143,12 +150,11 @@ export class FileParserComponent implements OnInit {
     }
   }
 
-  cloudUpload(brokerName) {
-    this.brokerName = brokerName;
+  cloudUpload() {
     this.openDialog();
   }
 
-  upload(brokerName) {
+  upload() {
     //check if there is data of capital gains
     let data = this.ITR_JSON.capitalGain.filter(
       (item: any) => item.assetType === 'EQUITY_SHARES_LISTED'
@@ -159,7 +165,6 @@ export class FileParserComponent implements OnInit {
       );
     }
 
-    this.brokerName = brokerName;
     document.getElementById('input-file-id').click();
   }
 
@@ -188,7 +193,7 @@ export class FileParserComponent implements OnInit {
     let brokerIndex = (this.brokerData as []).findIndex(
       (item: any) => item.name === this.brokerName
     );
-    this.brokerData[brokerIndex].loading = true;
+
     const formData = new FormData();
     if (document) {
       formData.append('file', document);
@@ -202,12 +207,12 @@ export class FileParserComponent implements OnInit {
     // formData.append("formCode", this.ITR_JSON.itrType);
     // formData.append("ay", annualYear);
     // formData.append("filingTypeCd", this.ITR_JSON.isRevised === "N" ? "O" : "R");
-    formData.append('brokerName', this.brokerName);
+    // formData.append('brokerName', this.brokerName);
     formData.append('userId', this.ITR_JSON.userId.toString());
     let param = '/upload-excel';
     this.itrService.postMethod(param, formData).subscribe(
       (res: any) => {
-        this.loading = false;
+        // this.loading = false;
         //   this.isValidateJson = true;
         console.log('uploadDocument response =>', res);
         if (this.utilService.isNonEmpty(res)) {
@@ -217,9 +222,9 @@ export class FileParserComponent implements OnInit {
               (broker) => broker.name === this.brokerName
             )[0];
             if (this.uploadDoc) {
-              selectedBroker.filesUploaded.push(this.uploadDoc.name);
+              this.filesUploaded.push(this.uploadDoc.name);
             } else {
-              selectedBroker.filesUploaded.push(res.data.documentName);
+              this.filesUploaded.push(res.data.documentName);
             }
 
             //fetch uploaded files data converted to ITR compatible
@@ -228,8 +233,8 @@ export class FileParserComponent implements OnInit {
               .getCgSummary(this.ITR_JSON.userId.toString(), annualYear)
               .subscribe(
                 (result: any) => {
-                  this.brokerData[brokerIndex].loading = false;
                   if (result.success) {
+                    this.loading = false;
                     if (!this.ITR_JSON.capitalGain) {
                       this.ITR_JSON.capitalGain = [];
                     }
@@ -268,7 +273,6 @@ export class FileParserComponent implements OnInit {
                     );
                     this.newDataAvailable.emit(true);
                   } else {
-                    this.brokerData[brokerIndex].loading = false;
                     this.loading = false;
                     //   this.isValidateJson = false;
                     this.utilService.showSnackBar(
@@ -277,7 +281,6 @@ export class FileParserComponent implements OnInit {
                   }
                 },
                 (error) => {
-                  this.brokerData[brokerIndex].loading = false;
                   this.loading = false;
                   //   this.isValidateJson = false;
                   this.utilService.showSnackBar(
@@ -286,7 +289,7 @@ export class FileParserComponent implements OnInit {
                 }
               );
           } else {
-            this.brokerData[brokerIndex].loading = false;
+            this.loading = false;
             this.utilService.showSnackBar(
               res.message
             );
