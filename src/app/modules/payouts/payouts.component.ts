@@ -243,7 +243,8 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   }
 
   getSearchList(key: any, searchValue: any) {
-
+    this.searchVal = searchValue;
+    this.key = key;
     let queryString = '';
     if (this.utilsService.isNonEmpty(searchValue)) {
       queryString = `&${key}=${searchValue}`;
@@ -954,9 +955,37 @@ export class PayoutsComponent implements OnInit, OnDestroy {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    const param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}${statusFilter}${payOutStatusFilter}${userFilter}`;
+    let queryString = '';
+    if (this.utilsService.isNonEmpty(this.searchVal)) {
+      queryString = `&${this.key}=${this.searchVal}`;
+    }
 
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report', '');
+    let param = `/bo/itr-filing-credit?fromDate=${fromData}&toDate=${toData}${statusFilter}${payOutStatusFilter}${userFilter}${queryString}`;
+
+
+    let fieldName = [
+      { key: 'filerUserId', value: 'Filer Name' },
+      { key: 'leaderUserId', value: 'Leader Name' },
+      { key: 'userName', value: 'User Name' },
+      { key: 'userMobileNumber', value: 'User Phone Number' },
+      { key: 'serviceType', value: 'Service Type' },
+      { key: 'filingSource', value: 'Filing Source' },
+      { key: 'ackNumber', value: 'Ack No' },
+      { key: 'ackNumber', value: 'Date of Filing' },
+      { key: 'invoiceNo', value: 'Invoice List' },
+      { key: 'invoiceDate', value: 'Tax Invoice Date' },
+      { key: 'invoiceAmount', value: 'Invoice Amount' },
+      { key: 'gstAmount', value: 'GST Amount' },
+      { key: 'amountwithoutGST', value: 'Without GST Amount' },
+      { key: 'commissionPercentage', value: 'Commission %' },
+      { key: 'commissionEarned', value: 'Commission Earned' },
+      { key: 'tdsOnCommissionEarned', value: 'TDS Amount' },
+      { key: 'commissionPayable', value: 'Final Amount To Pay' },
+      { key: 'commissionPaymentStatus', value: 'Payout Status' },
+      { key: 'commissionPaymentApprovedBy', value: 'Approved By' },
+      { key: 'commissionPaymentApprovalDate', value: 'Approved Date' },
+    ]
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report',fieldName,{});
     this.loading = false;
     this.showCsvMessage = false;
   }
