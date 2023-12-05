@@ -1,22 +1,17 @@
-import { state } from '@angular/animations';
-import { data, event } from 'jquery';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { ActivatedRoute } from '@angular/router';
 import { map, Observable, startWith } from 'rxjs';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { Schedules } from 'src/app/modules/shared/interfaces/schedules';
 import { Location } from '@angular/common';
-import { filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { ReportService } from 'src/app/services/report-service';
@@ -27,8 +22,7 @@ declare function we_track(key: string, value: any);
   templateUrl: './create-update-subscription.component.html',
   styleUrls: ['./create-update-subscription.component.scss'],
 })
-export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
-  subId: any;
+export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, AfterViewInit {
   searchedPromoCode = new FormControl('', Validators.required);
   filteredOptions!: Observable<any[]>;
   serviceDetails = [];
@@ -46,7 +40,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   loggedInSme: any;
   allPlans: any;
   maxEndDate: any;
-  minEndDate: any;
   selectedPromoCode = '';
   appliedPromo: any;
   allPromoCodes: any[] = [];
@@ -87,13 +80,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   showMessage = '';
   serviceEligibility: any;
   constructor(
-    private route: ActivatedRoute,
     private fb: FormBuilder,
     public utilsService: UtilsService,
     private itrService: ItrMsService,
     private userService: UserMsService,
     private toastMessage: ToastMessageService,
-    private schedules: Schedules,
     public location: Location,
     private dialog: MatDialog,
     private reportService: ReportService
@@ -102,10 +93,15 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
 
   }
+  ngAfterViewInit(): void {
+    setTimeout(()=>{
+    this.onPersonalInfoFormChanges();
+    this.onOtherInfoFormChange();
+  },7000);
+  }
 
   ngOnInit() {
     this.getAllPromoCode();
-
     this.subType = (this.subscriptionObjType = JSON.parse(
       sessionStorage.getItem('subscriptionObject')
     )?.type);
@@ -122,7 +118,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     this.filteredOptions = this.searchedPromoCode.valueChanges.pipe(
       startWith(''),
       map((value) => {
-        console.log(value, this.allPromoCodes);
         return value;
       }),
       map((code) => {
@@ -133,8 +128,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     this.createSubscriptionObj = JSON.parse(
       sessionStorage.getItem('createSubscriptionObject')
     )?.data;
-    console.log('createSubscriptionObject', this.createSubscriptionObj);
-
+ 
     if (!this.createSubscriptionObj) {
       this.subscriptionObj = JSON.parse(
         sessionStorage.getItem('subscriptionObject')
@@ -142,7 +136,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       if (this.subscriptionObj?.['invoiceAmount']) {
         this.invoiceAmount = this.subscriptionObj['invoiceAmount'];
       }
-      console.log('subscriptionObj', this.subscriptionObj);
     } else {
       this.subscriptionObj = this.createSubscriptionObj;
       this.userSubscription = this.createSubscriptionObj;
@@ -156,26 +149,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
     if (this.subscriptionObj != null) {
       this.personalInfoForm.patchValue(this.subscriptionObj);
-      // this.otherInfoForm.patchValue(this.subscriptionObj);
       if (this.subscriptionObj.subscriptionId !== 0) {
         this.getUserPlanInfo(this.subscriptionObj?.subscriptionId);
       } else {
         this.getFy();
       }
     }
-    // if(this.createSubscriptionObj !=null){
-    //   this.personalInfoForm.patchValue(this.createSubscriptionObj);
-    //   // this.otherInfoForm.patchValue(this.createSubscriptionObj);
-    //   this.gstUserInfoByUserId(this.createSubscriptionObj?.userId);
-    //   this.userSubscription=this.createSubscriptionObj;
-    //   this.smeSelectedPlanId=this?.createSubscriptionObj?.smeSelectedPlan?.planId;
-    //   // this.service=this.createSubscriptionObj?.smeSelectedPlan?.servicesType;
-    //   this.serviceType = this.createSubscriptionObj?.smeSelectedPlan?.servicesType;
-    //   // this.setServiceDetails()
-    //   // this.serviceDetail=this.createSubscriptionObj.item.serviceDetail;
-    // }
-
-
+   
     this.getAllPlanInfo(this.serviceType);
     this.getLeaderFilerName();
     this.setFormValues(this.selectedUserInfo);
@@ -217,7 +197,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       );
       if (pCode.length !== 0) {
         this.selectedPromoCode = pCode[0].code;
-        console.log('smeCode on blur = ', pCode);
       } else {
         this.searchedPromoCode.setErrors({ invalid: true });
       }
@@ -228,9 +207,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     await this.utilsService
       .getPincodeData(this.personalInfoForm.controls['pin'])
       .then((result) => {
-        console.log('pindata', result);
         this.city.setValue(result.city);
-        // this.country.setValue(result.countryCode);
         this.state.setValue(result.stateCode);
         this.updateIgstFlag();
       });
@@ -247,7 +224,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   unMaskedMobileNo: any;
 
   setFormValues(data) {
-    console.log('data', data);
     this.userName.setValue(data?.fName + ' ' + data?.lName);
     this.unMaskedMobileNo = data?.mobileNumber
     if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
@@ -353,39 +329,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   get sacNumber() {
     return this.otherInfoForm.controls['sacNumber'] as FormControl;
   }
-  // otherDetailsForm:FormGroup = this.fb.group({
-  //   service :new FormControl(''),
-  //   serviceDetails:new FormControl(''),
-  //   sacNumber:new FormControl(''),
-  //   financialYear: new FormControl(''),
-  //   description:new FormControl('')
-  // })
-  // get service() {
-  //   return this.otherDetailsForm.controls['service'] as FormControl;
-  // }
-  // get serviceDetails() {
-  //   return this.otherDetailsForm.controls['serviceDetails'] as FormControl;
-  // }
-  // get sacNumber() {
-  //   return this.otherDetailsForm.controls['sacNumber'] as FormControl;
-  // }
-  // get financialYear() {
-  //   return this.otherDetailsForm.controls['financialYear'] as FormControl;
-  // }
-  // get description() {
-  //   return this.otherDetailsForm.controls['description'] as FormControl;
-  // }
-
-  gstFormGroup: FormGroup = this.fb.group({
-    startDate: new FormControl(''),
-    endDate: new FormControl(''),
-  });
-  get startDate() {
-    return this.gstFormGroup.controls['startDate'] as FormControl;
-  }
-  get endDate() {
-    return this.gstFormGroup.controls['endDate'] as FormControl;
-  }
 
   getAllPromoCode() {
     let param = '/promocodes?isActive=true';
@@ -405,7 +348,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   isPromoRemoved = false;
   applyPromo(selectedPlan) {
-    console.log('selectedPromoCode:', this.selectedPromoCode);
     this.smeSelectedPlanId = selectedPlan;
     const param = `/subscription/recalculate`;
     const request = {
@@ -418,9 +360,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       removePromoCode: false
     };
     this.itrService.postMethod(param, request).subscribe((res: any) => {
-      console.log('apply promo res', res);
       this.appliedPromo = res.promoCode;
-      console.log('applied promo', this.appliedPromo);
       if (res['Error']) {
         this.utilsService.showSnackBar(res['Error']);
         return;
@@ -428,7 +368,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.isPromoRemoved = false;
       this.userSubscription = res;
       this.setFinalPricing();
-      console.log('PROMO code applied', res);
       this.utilsService.showSnackBar(
         `Promo Code ${this.selectedPromoCode} applied successfully!`
       );
@@ -436,8 +375,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   removePromoCode(selectedPlan) {
-    // if (this.userSubscription.subscriptionId && this.userSubscription.subscriptionId > 0) {
-    console.log('selectedPromoCode:', this.selectedPromoCode);
     this.smeSelectedPlanId = selectedPlan;
     const param = `/subscription/recalculate`;
     const request = {
@@ -450,7 +387,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       removePromoCode: true
     };
     this.itrService.postMethod(param, request).subscribe((res: any) => {
-      console.log('remove promo res', res);
       this.appliedPromo = res.promoCode;
       if (res['Error']) {
         this.utilsService.showSnackBar(res['Error']);
@@ -463,12 +399,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.userSubscription = res;
       this.setFinalPricing();
     });
-    // }
-    /*else {
-      this.selectedPromoCode = '';
-      this.searchedPromoCode.reset();
-      this.applySmeSelectedPlan(this.userSubscription.smeSelectedPlan.planId);
-    }*/
   }
 
   getExactPromoDiscount() {
@@ -498,7 +428,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   showPromoCode(code) {
-    console.log('selected promo code Id: ', code);
     this.promoCodeInfo = this.allPromoCodes.filter(
       (item: any) => item.code === code
     )[0];
@@ -507,8 +436,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   async getFy() {
     const fyList = await this.utilsService.getStoredFyList();
-    console.log('fylist', fyList)
-    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     this.AssessmentYear = currentFyDetails[0].assessmentYear
     console.log("ay", this.AssessmentYear)
     this.getLeaderFiler();
@@ -549,7 +477,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         this.assessmentYear.setValue(subscription.item.financialYear);
         this.filerName.setValue(subscription.assigneeName);
         this.leaderName.setValue(subscription.leaderName);
-
         let myDate = new Date();
         console.log(myDate.getMonth(), myDate.getDate(), myDate.getFullYear());
         if (
@@ -618,7 +545,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       },
       (error) => {
         this.loading = false;
-        console.log('Error during: ', error);
       }
     );
   }
@@ -628,13 +554,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     this.changeService();
     switch (this.serviceType) {
       case 'ITR':
-        //set plan list for service details and selected plan as seletced detail
         this.serviceDetail = this.userSubscription.smeSelectedPlan
           ? this.userSubscription.smeSelectedPlan.name
           : this.userSubscription.userSelectedPlan.name;
         break;
       case 'ITRU':
-        //set plan list for service details and selected plan as seletced detail
         this.serviceDetail = this.userSubscription.smeSelectedPlan
           ? this.userSubscription.smeSelectedPlan.name
           : this.userSubscription.userSelectedPlan.name;
@@ -652,9 +576,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           this.selectedUserInfo = res.records[0];
           console.log('this.selectedUserInfo:', this.selectedUserInfo);
           this.personalInfoForm.patchValue(this.selectedUserInfo); // all
-          // this.otherDetailsForm.patchValue(this.selectedUserInfo);
           this.setFormValues(this.selectedUserInfo);
-          this.onValueChanges();
           this.updateIgstFlag();
           if (
             this.utilsService.isNonEmpty(this.selectedUserInfo) &&
@@ -729,8 +651,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.showIgst = false;
     }
   }
-  // selectedPlan=this.sourcesList.filter((item:any) => item.selected===true)
-
+  
   getAllPlanInfo(serviceType) {
     let param = '/plans-master';
     let selected = '';
@@ -755,7 +676,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
     this.itrService.getMethod(param).subscribe(
       (plans: any) => {
-        console.log(' all plans', plans);
         if (plans instanceof Array) {
           const activePlans = plans.filter(
             (item: any) => item.isActive === true
@@ -846,7 +766,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       },
       (error) => {
         this.loading = false;
-        console.log('SME Selected plan error:', error);
       }
     );
   }
@@ -880,12 +799,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.filteredFinancialYears = this.financialYear;
     }
     const serviceArray = [
-      //   { service: 'ITR Filing', details: 'ITR-1 filing (FY 21-22)/ (AY 2022-23)' },
-      // { service: 'ITR Filing', details: 'ITR-2 filing (FY 21-22)/ (AY 2022-23)' },
-      // { service: 'ITR Filing', details: 'ITR-3 filing (FY 21-22)/ (AY 2022-23)' },
-      // { service: 'ITR Filing', details: 'ITR-4 filing (FY 21-22)/ (AY 2022-23)' },
-      // { service: 'ITR Filing', details: 'ITR-5 filing (FY 21-22)/ (AY 2022-23)' },
-      // { service: 'ITR Filing', details: 'ITR Filing' },
       { service: 'GST', details: 'GST Registration' },
       { service: 'GST', details: 'GST Annual Subscription' },
       { service: 'GST', details: 'GSTR Annual return' },
@@ -957,15 +870,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     }
   }
 
-  // selectedPlan() {
-  //   this.selectedPlanInfo = this.userSubscription.smeSelectedPlanId;
-  //   console.log('selectedPlanInfo -> ', this.selectedPlanInfo);
-
-  // }
 
   getLeaderFilerName() {
-    // const loggedInSmeUserId=this?.loggedInSme[0]?.userId
-
     let param = `/bo/sme-details-new/${this.subscriptionObj?.subscriptionAssigneeId}`;
     this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('owner filer name  -> ', result);
@@ -1059,7 +965,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     this.userService.putMethod(param, reqBody).subscribe(
       (res: any) => {
         this.loading = false;
-        console.log('user upadted res: ', res);
         this.loading = false;
         this.toastMessage.alert('success', 'user details updated successfully');
       },
@@ -1089,7 +994,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         userId: this.userSubscription.userId,
         planId: this.userSubscription.smeSelectedPlan.planId,
         selectedBy: 'SME',
-        // promoCode: this.appliedPromo,
         smeUserId: this?.loggedInSme[0]?.userId,
         item: {
           itemDescription: this.description?.value,
@@ -1195,20 +1099,19 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   changesMade: boolean = false;
 
-  onValueChanges(){
+  onPersonalInfoFormChanges() {
     this.personalInfoForm.valueChanges.subscribe((event) => {
-      console.log('event from valuechanges ', event);
-      this.changesMade = true;
-      console.log('changemode form ', this.changesMade);
-    });
-    this.otherInfoForm.valueChanges.subscribe(() => {
-      this.changesMade = true;
-    });
-    this.gstFormGroup.valueChanges.subscribe(() => {
       this.changesMade = true;
     });
   }
 
+  onOtherInfoFormChange() {
+    this.otherInfoForm.valueChanges.subscribe(() => {
+      this.changesMade = true;
+    });
+  }
+
+  
   cancel() {
     if (this.changesMade) {
       this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
