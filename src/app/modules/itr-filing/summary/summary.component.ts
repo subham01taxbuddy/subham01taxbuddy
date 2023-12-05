@@ -182,6 +182,12 @@ export class SummaryComponent implements OnInit {
       orgAckNumber: any;
       bankAccountNumber: any;
       bankName: any;
+      JurisdictionResPrevYrDtls?: [
+        {
+          JurisdictionResidence?: any;
+          TIN?: any;
+        }
+      ];
     };
     salary: {
       employers: [
@@ -2037,6 +2043,14 @@ export class SummaryComponent implements OnInit {
                       ?.PartA_GEN1?.FilingStatus?.ResidentialStatus === 'NRI'
                   ? 'Non-Resident'
                   : 'Non-Ordinary Resident',
+
+              JurisdictionResPrevYrDtls:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.FilingStatus?.ResidentialStatus === 'NRI'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.FilingStatus?.JurisdictionResPrevYr
+                      ?.JurisdictionResPrevYrDtls
+                  : null,
 
               returnType:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
