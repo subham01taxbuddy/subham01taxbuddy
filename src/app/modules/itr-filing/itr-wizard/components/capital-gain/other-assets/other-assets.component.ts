@@ -110,13 +110,12 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     });
     this.totalCg.ltcg = ltcg;
     this.totalCg.stcg = stcg;
-    if(this.totalCg.ltcg <= 0){
+    if (this.totalCg.ltcg <= 0) {
       this.deductionForm?.reset();
       this.isDisable = true;
-      this.deduction=false;
+      this.deduction = false;
     } else {
       this.isDisable = false;
-      this.deduction=true;
     }
     return this.assetList;
   }
@@ -161,7 +160,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
   // actual form structure that is going to be added
   createDeductionForm(obj?) {
     return this.fb.group({
-      typeOfDeduction: obj ? obj?.underSection : ['Deduction 54F'],
+      typeOfDeduction: 'Deduction 54F',
       purchaseDate: obj ? obj?.purchaseDate : null,
       costOfNewAsset: obj ? obj?.costOfNewAssets : null,
       CGASAmount: obj ? obj?.investmentInCGAccount : null,
@@ -288,7 +287,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       if (deductionDetails && deductionDetails.length > 0) {
         const extraDeductionDetails = {
           srn: 0,
-          underSection: deductionDetails[0].typeOfDeduction,
+          underSection: 'Deduction 54F',
           costOfNewAssets: deductionDetails[0].costOfNewAsset,
           orgAssestTransferDate: null,
           costOfPlantMachinary: null,
