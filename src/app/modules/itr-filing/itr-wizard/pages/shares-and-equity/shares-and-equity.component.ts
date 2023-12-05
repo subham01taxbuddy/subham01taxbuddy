@@ -708,7 +708,7 @@ export class SharesAndEquityComponent
         this.calculateTotalCG(this.selectedFormGroup);
       });
     } else if (this.bondType === 'listed') {
-      console.log('listed');
+      this.calculateTotalCG(this.selectedFormGroup);
     } else {
       this.selectedFormGroup?.controls['indexCostOfAcquisition']?.setValue(0);
       this.getImprovementYears();
@@ -759,7 +759,7 @@ export class SharesAndEquityComponent
         this.calculateTotalCG(this.selectedFormGroup);
       });
     } else if (this.bondType === 'listed') {
-      console.log('listed');
+      this.calculateTotalCG(this.selectedFormGroup);
     } else {
       (
         this.selectedFormGroup?.controls['improvementsArray'] as FormGroup
@@ -1102,7 +1102,7 @@ export class SharesAndEquityComponent
               element.indexCostOfAcquisition = 0;
             }
           });
-          this.Copy_ITR_JSON.capitalGain[securitiesIndex] = sameData;
+          // this.Copy_ITR_JSON.capitalGain[securitiesIndex] = sameData;
 
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
         } else {

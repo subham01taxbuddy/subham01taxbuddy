@@ -7,7 +7,7 @@
         <li class="tab__item" routerLinkActive="tab__item_active" *ngIf="false">
             <a class="tab__link" routerLink="/reports/calling-reports/missed-inbound-calls">Missed Inbound Calls</a>
         </li>
-        <li class="tab__item" routerLinkActive="tab__item_active" *ngIf="roles.includes('ROLE_ADMIN') || roles.includes('ROLE_LEADER')">
+        <li class="tab__item" routerLinkActive="tab__item_active" *ngIf="roles.includes('ROLE_ADMIN')">
           <a class="tab__link" routerLink="/reports/calling-reports/schedule-call-report">Schedule Call Report</a>
         </li>
       </ul>
