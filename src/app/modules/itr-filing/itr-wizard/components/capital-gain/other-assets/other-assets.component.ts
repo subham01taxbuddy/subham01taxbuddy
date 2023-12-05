@@ -110,7 +110,14 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     });
     this.totalCg.ltcg = ltcg;
     this.totalCg.stcg = stcg;
-    this.isDisable = this.totalCg.ltcg <= 0 ? true : false;
+    if(this.totalCg.ltcg <= 0){
+      this.deductionForm?.reset();
+      this.isDisable = true;
+      this.deduction=false;
+    } else {
+      this.isDisable = false;
+      this.deduction=true;
+    }
     return this.assetList;
   }
 
