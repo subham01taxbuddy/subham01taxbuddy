@@ -351,6 +351,7 @@ export class ZeroCouponBondsComponent
   totalCg: TotalCg = {
     ltcg: 0,
     stcg: 0,
+    deduction: 0
   };
   getBondsCg() {
     let ltcg = 0;
