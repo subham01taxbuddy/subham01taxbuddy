@@ -13,6 +13,8 @@ import { UsersItrPaymentDoneComponent } from './users-itr-payment-done/users-itr
 import { PaymentReceivedComponent } from './payment-received/payment-received.component';
 import { ProformaInvoiceComponent } from './proforma-invoice/proforma-invoice.component';
 import { TdsReportComponent } from './tds-report/tds-report.component';
+import { MissedChatListComponent } from './missed-chat-list/missed-chat-list.component';
+import { MissedInboundCallListComponent } from './missed-inbound-call-list/missed-inbound-call-list.component';
 
 
 const routes: Routes = [
@@ -79,7 +81,15 @@ const routes: Routes = [
       {
         path:'tds-report',
         component:TdsReportComponent,
-      }
+      },
+      {
+        path: 'missed-inbound-calls-list',
+        component: MissedInboundCallListComponent,
+      },
+      {
+        path: 'missed-chat-list',
+        component: MissedChatListComponent,
+      },
     ],
 
   },

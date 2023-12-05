@@ -209,12 +209,14 @@ export class SidebarComponent {
       url: null,
       roles: [],
       submenu: [
-        { name: 'Calling Report', url: '/reports/calling-reports', roles: [] },
-        { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: [] },
-        { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: [] },
+        { name: 'Calling Report', url: '/reports/calling-reports', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
+        { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
+        { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
         // { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
-        { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN'] },
+        { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
         // { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Missed Inbound Calls', url: '/reports/missed-inbound-calls-list', roles: ['ROLE_LEADER','ROLE_FILER'] },
+        { name: 'Missed Chat List', url: '/reports/missed-chat-list', roles: ['ROLE_LEADER','ROLE_FILER'] },
       ]
     },
     {
