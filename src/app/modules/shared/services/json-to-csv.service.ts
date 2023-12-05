@@ -65,7 +65,11 @@ export class JsonToCsvService {
             // line += ',' + array[i][data[0]][data[1]];
           }
         } else {
-          line += ',' + array[i][head];
+          if ((array[i][head]) instanceof Array) {
+            line += ',' + array[i][head].join(' ');
+          } else {
+            line += ',' + array[i][head];
+          }
         }
       }
       str += line + '\r\n';
