@@ -800,7 +800,7 @@ export class ZeroCouponBondsComponent
   }
 
   minImprovementDate: any;
-  calMinImproveDate(purchaseDate, bonds, index) {
+  calMinImproveDate(purchaseDate, bonds, index?) {
     if (this.utilsService.isNonEmpty(purchaseDate)) {
       this.minImprovementDate = new Date(purchaseDate);
       this.getImprovementYears();
