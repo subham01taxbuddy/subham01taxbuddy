@@ -8,5 +8,5 @@ export class ItrJsonHelperService {
 export class TotalCg {
   ltcg: number;
   stcg: number;
-  deduction: number;
+  deduction?: number;
 }
