@@ -340,13 +340,13 @@ header {
   border-right:  1px solid #ededed;
   background: #36c;
   flex: 1 0 10%;
-  padding: 1rem;
+  padding: 1rem!important;
   width:20%;
 }
 .frameL {
     flex-direction: column;
     gap: 18px;
-    padding: 15px;
+    padding: 15px!important;
     background-color: #1b67b9;
     display: inline-flex;
     align-items: flex-start;
@@ -468,14 +468,14 @@ header {
     left: 0;
     background-color: #f1f1f1;
     border-radius: 4px;
-    margin:10px 10px 10px 0px;
+    margin:10px 10px 10px 0px!important;
   }
   .frameB {
     display: inline-flex;
     align-items: flex-start;
     gap: 8px;
     position: relative;
-    padding: 10px 0px 0px 15px;
+    padding: 10px 0px 0px 15px!important;
   }
   
   .frameB .large-title {
@@ -509,7 +509,7 @@ header {
 
 /* center css starts */
 main {
-  margin: 0px 10px 0px 10px;
+  margin: 0px 10px 0px 10px!important;
   width: 100%;
 }
 
@@ -1175,8 +1175,21 @@ main {
 
   
   .accordion-button {
-  background-color: #E8E8E8!important;
+    font-family: "DM Sans", sans-serif;
+    color: #303030;
+    font-weight: 500;
+    line-height: 28px!important;
+    font-size: 12px;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    background-color: #DDEDFF;
+    padding: 8px 24px!important;
+    border-radius: 4px 4px 0px 0px!important;
 }
+
+
+
 
 .btnIco {
     height: 38px;
@@ -2446,8 +2459,8 @@ main {
   display: none;
   position: relative;
   bottom: 0;
-  top:60px;
-  right: 15px;
+  top: 3px;
+  right: -16px;
   /* border: 3px solid #f1f1f1; */
   z-index: 9;
 }
@@ -2466,7 +2479,7 @@ main {
   border-right: 1px solid #ededed;
   background: #ffffff;
   flex: 1 0 0%;
-  padding: 1rem;
+  padding: 1rem!important;
 }
     .frameS {
         flex-direction: column;
@@ -2493,7 +2506,7 @@ main {
         padding: 8px 8px 8px 24px;
         flex: 1;
         flex-grow: 1;
-        background-color: #3E82CD;
+        background-color: #BDD5F0;        
         border-radius: 4px 4px 0px 0px;
         display: flex;
         position: relative;
@@ -2661,7 +2674,7 @@ main {
 
       .open-button {
         border-radius: 4px;
-        background: #BDD5F0;
+        background: #BDD5F0 !important;
         color: white;
         padding: 5px 0px 5px 0px;
         border: none;
@@ -2681,7 +2694,7 @@ main {
       .icoSum {
         width: 15px;
         transform: rotate(-90deg);
-        margin: 10px 10px 10px 10px;
+        margin: 10px 10px 10px 10px!important;
       }
       .clos{
         width:12px;
