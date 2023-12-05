@@ -497,6 +497,9 @@
                   );
                   calculateTotalCG(selectedFormGroup)
                 "
+                type="number"
+                step="1"
+                onkeydown="if(event.key==='.'){event.preventDefault();}"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-error
@@ -526,6 +529,9 @@
                     selectedFormGroup
                   )
                 "
+                type="number"
+                step="1"
+                onkeydown="if(event.key==='.'){event.preventDefault();}"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               />
               <mat-error

@@ -298,16 +298,83 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     }
     let serviceFilter = '';
     if(this.selectedService.value){
-      serviceFilter +=`&serviceType = ${this.selectedService.value}`
+      serviceFilter +=`&serviceType=${this.selectedService.value}`
     }
 
+    let fieldName = [];
+
+    if (this.selectedService.value === 'ITR') {
+      fieldName = [
+        { key: 'filerName', value: 'Filer Name' },
+        { key: 'open', value: 'Open' },
+        { key: 'notInterested', value: 'Not Interested' },
+        { key: 'chatInitiated', value: 'Chat Initiated' },
+        { key: 'chatResolve', value: 'Chat Resolve' },
+        { key: 'interested', value: 'Interested' },
+        { key: 'documentsUploaded', value: 'Documents Uploaded' },
+        { key: 'proformaInvoiceSent', value: 'Proforma Invoice Sent' },
+        { key: 'paymentReceived', value: 'Payment Received' },
+        { key: 'upgradedInvoiceSent', value: 'Upgraded Invoice Sent' },
+        { key: 'preparingItr', value: 'Preparing ITR' },
+        { key: 'waitingForConfirmation', value: 'Waiting For Confirmation' },
+        { key: 'itrConfirmationReceived', value: 'ITR Confirmation Received' },
+        { key: 'itrFiledEverificationCompleted', value: 'ITR Filed & Verification Completed' },
+        { key: 'itrFiledEverificationPending', value: 'ITR Filed & Verification Pending' },
+        { key: 'backOutWithoutRefund', value: 'Back Out Without Refund' },
+        { key: 'backOutWithRefund', value: 'Back Out With Refund' },
+      ];
+    } else if (this.selectedService.value === 'TPA') {
+      fieldName = [
+        { key: 'filerName', value: 'Filer Name' },
+        { key: 'open', value: 'Open' },
+        { key: 'notInterested', value: 'Not Interested' },
+        { key: 'interested', value: 'Interested' },
+        { key: 'documentsUploaded', value: 'Documents Uploaded' },
+        { key: 'proformaInvoiceSent', value: 'Proforma Invoice Sent' },
+        { key: 'paymentReceived', value: 'Payment Received' },
+        { key: 'backOut', value: 'Back Out' },
+      ];
+    } else if (this.selectedService.value === 'NOTICE') {
+      fieldName = [
+        { key: 'filerName', value: 'Filer Name' },
+        { key: 'open', value: 'Open' },
+        { key: 'notInterested', value: 'Not Interested' },
+        { key: 'interested', value: 'Interested' },
+        { key: 'documentsUploaded', value: 'Documents Uploaded' },
+        { key: 'proformaInvoiceSent', value: 'Proforma Invoice Sent' },
+        { key: 'paymentReceived', value: 'Payment Received' },
+        { key: 'converted', value: 'Converted' },
+        { key: 'followUp', value: 'Follow Up' },
+        { key: 'noticeResponseFiled', value: 'Notice Response Filed' },
+        { key: 'partResponseFiled', value: 'Part Response Filed' },
+        { key: 'noticeWIP', value: 'Notice Work in Progress' },
+        { key: 'noticeClosed', value: 'Notice Closed' },
+        { key: 'noticeReopen', value: 'Notice Reopen' },
+        { key: 'backOut', value: 'Back Out' },
+      ];
+    } else if (this.selectedService.value === 'GST') {
+      fieldName = [
+        { key: 'filerName', value: 'Filer Name' },
+        { key: 'open', value: 'Open' },
+        { key: 'interested', value: 'Interested' },
+        { key: 'notInterested', value: 'Not Interested' },
+        { key: 'proformaInvoiceSent', value: 'Proforma Invoice Sent' },
+        { key: 'paymentReceived', value: 'Payment Received' },
+        { key: 'followUp', value: 'Follow Up' },
+        { key: 'converted', value: 'Converted' },
+        { key: 'activeClientReturn', value: 'Active Client Return' },
+        { key: 'registrationDone', value: 'Registration Done' },
+        { key: 'gstCancelled', value: 'GST Cancelled' },
+        { key: 'backOut', value: 'Back Out' },
+      ];
+    }
 
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     param =`/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
 
     // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'status-wise-report', '', {});
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'status-wise-report',fieldName, {});
     this.loading = false;
   }
 

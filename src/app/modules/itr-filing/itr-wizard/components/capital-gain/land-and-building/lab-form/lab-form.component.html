@@ -113,7 +113,7 @@
                     readonly
                     [matDatepicker]="purchaseDate"
                     placeholder="Date of Acquisition"
-                    (change)="this.calculateIndexCost(i)"
+                    (blur)="this.calculateIndexCost(i)"
                     (dateChange)="
                       calMinImproveDate(
                         asset.get('purchaseDate').value,
@@ -165,9 +165,9 @@
                     placeholder="Full Value of Sale received/receivable"
                     name="asset[i]"
                     formControlName="sellValue"
-                    (change)="
-                      this.calculateIndexCost(i);
-                      updateSaleValue('saleValueChange')
+                    (blur)="
+                      updateSaleValue('saleValueChange');
+                      this.calculateIndexCost(i)
                     "
                     required
                   />
@@ -186,7 +186,7 @@
                     placeholder="Stamp duty value"
                     name="asset[i]"
                     formControlName="stampDutyValue"
-                    (change)="this.calculateIndexCost(i)"
+                    (blur)="this.calculateIndexCost(i)"
                     required
                   />
                 </mat-form-field>
@@ -205,7 +205,7 @@
                     placeholder="Value of Sale Consideration u/s 50C"
                     name="asset[i]"
                     formControlName="valueInConsideration"
-                    (change)="this.calculateIndexCost(i)"
+                    (blur)="this.calculateIndexCost(i)"
                     required
                     readonly
                   />
@@ -502,7 +502,7 @@
                         name="underSection"
                         formControlName="underSection"
                         (selectionChange)="changeInvestmentSection('HTML', i)"
-                        (change)="calculateDeduction(i)"
+                        (blur)="calculateDeduction(i)"
                       >
                         <mat-option
                           value="54"
@@ -574,7 +574,6 @@
                         class="input-field"
                         required
                         (blur)="calculateDeduction(i)"
-                        (change)="calculateDeduction(i)"
                       />
                     </mat-form-field>
                   </div>
@@ -591,7 +590,6 @@
                     <mat-form-field appearance="outline">
                       <input
                         (blur)="calculateDeduction(i)"
-                        (change)="calculateDeduction(i)"
                         matInput
                         class="input-field"
                         name="deductions[i]"
