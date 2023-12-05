@@ -189,7 +189,7 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
     }
 
     let data = this.utilsService.createUrlParams(this.searchParam);
-    param = `/payout/report??fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
+    param = `/payout/report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
 
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -228,12 +228,13 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
     console.log('payoutRepoInfo -> ', payoutData);
     var payoutRepoInfoArray = [];
     for (let i = 0; i < payoutData.length; i++) {
-      let agentReportInfo = Object.assign({}, payoutRepoInfoArray[i], {
+      let agentReportInfo = {
         filerName: payoutData[i].filerName,
+        leaderName: payoutData[i].leaderName, // Assuming leaderName should be different from filerName
         ownerName: payoutData[i].ownerName,
         totalCommissionEarned: payoutData[i].totalCommissionEarned,
         totalCommissionEarnedTds: payoutData[i].totalCommissionEarnedTds,
-        totalTDS : payoutData[i].totalTDS,
+        totalTDS: payoutData[i].totalTDS,
         numberOfFiling: payoutData[i].numberOfFiling,
         slabOneCount: payoutData[i].slabOneCount,
         slabOneEarning: payoutData[i].slabOneEarning,
@@ -241,12 +242,20 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
         slabTwoEarning: payoutData[i].slabTwoEarning,
         slabThreeCount: payoutData[i].slabThreeCount,
         slabThreeEarning: payoutData[i].slabThreeEarning,
-      })
+        role: payoutData[i].role,
+        slabOneTDS: payoutData[i].slabOneTDS ,
+        slabOneEarningAfterTds: payoutData[i].slabOneEarningAfterTds,
+        slabTwoTDS: payoutData[i].slabTwoTDS,
+        slabTwoEarningAfterTds: payoutData[i].slabTwoEarningAfterTds,
+        slabThreeTDS: payoutData[i].slabThreeTDS,
+        slabThreeEarningAfterTds: payoutData[i].slabThreeEarningAfterTds,
+      };
       payoutRepoInfoArray.push(agentReportInfo);
     }
-    console.log('payoutRepoInfoArray-> ', payoutRepoInfoArray)
+    console.log('payoutRepoInfoArray-> ', payoutRepoInfoArray);
     return payoutRepoInfoArray;
   }
+
 
   reportsCodeColumnDef() {
     return [
@@ -364,21 +373,21 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
           },
           {
             headerName: 'Total Commission Earned',
-            field: '',
+            field: 'slabOneEarning',
             width: 190,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
           {
             headerName: 'Total TDS',
-            field: '',
+            field: 'slabOneTDS',
             width: 110,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
           {
             headerName: 'Total Commission After TDS',
-            field: 'slabOneEarning',
+            field: 'slabOneEarningAfterTds',
             width: 200,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -396,33 +405,33 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
         },
       },
       {
-        headerName: 'Slab 51 - 100',
+        headerName: 'Slab 51-100 , 50:50',
         headerClass: 'centered-header',
         children: [
           {
             headerName: 'No Of filling',
-            field: 'slabOneCount',
+            field: 'slabTwoCount',
             width: 110,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
           {
             headerName: 'Total Commission Earned',
-            field: '',
+            field: 'slabTwoEarning',
             width: 190,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
           {
             headerName: 'Total TDS',
-            field: '',
+            field: 'slabTwoTDS',
             width: 110,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
           {
             headerName: 'Total Commission After TDS',
-            field: 'slabOneEarning',
+            field: 'slabTwoEarningAfterTds',
             width: 200,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -440,39 +449,51 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
         },
       },
       {
-        headerName: 'Slab > 100',
+        headerName: 'Slab >100, 60:40',
         headerClass: 'centered-header',
         children: [
           {
             headerName: 'No Of filling',
-            field: 'slabOneCount',
+            field: 'slabThreeCount',
             width: 110,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
           {
             headerName: 'Total Commission Earned',
-            field: '',
+            field: 'slabThreeEarning',
             width: 190,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
           {
             headerName: 'Total TDS',
-            field: '',
+            field: 'slabThreeTDS',
             width: 110,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
           {
             headerName: 'Total Commission After TDS',
-            field: 'slabOneEarning',
+            field: 'slabThreeEarningAfterTds',
             width: 200,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
         ]
-      }
+      },
+      {
+        headerName: 'Parent Name',
+        field: 'leaderName',
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+      },
     ]
   }
 
@@ -494,7 +515,32 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
     }
 
     param = `/payout/report?${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report','', {});
+
+    let fieldName = [
+      { key: 'filerName', value: 'filerName' },
+      { key: 'role', value: 'Role' },
+      { key: 'numberOfFiling', value: 'Total Number of ITR filed' },
+      { key: 'totalCommissionEarned', value: 'Total Commission Earned' },
+      { key: 'totalTDS', value: 'Total TDS' },
+      { key: 'totalCommissionEarnedTds', value: 'Total Commission After TDS' },
+      { key: 'slabOneCount', value: 'Slab 0-50 40:60 (No Of filling)' },
+      { key: 'slabOneEarning', value: 'Slab 0-50 40:60 (Total Commission Earned)' },
+      { key: 'slabOneTDS', value: 'Slab 0-50 40:60 (Total TDS)' },
+      { key: 'slabOneEarningAfterTds', value: 'Slab 0-50 40:60 (Total Commission After TDS)' },
+
+      { key: 'slabTwoCount', value: 'Slab 51-100 50:50 (No Of filling)' },
+      { key: 'slabTwoEarning', value: 'Slab 51-100 50:50 (Total Commission Earned)' },
+      { key: 'slabTwoTDS', value: 'Slab 51-100 50:50 (Total TDS)' },
+      { key: 'slabTwoEarningAfterTds', value: 'Slab 51-100 50:50 (Total Commission After TDS)' },
+
+      { key: 'slabThreeCount', value: 'Slab >100 60:40 (No Of filling)' },
+      { key: 'slabThreeEarning', value: 'Slab >100 60:40 (Total Commission Earned)' },
+      { key: 'slabThreeTDS', value: 'Slab >100 60:40 (Total TDS)' },
+      { key: 'slabThreeEarningAfterTds', value: 'Slab >100 60:40 (Total Commission After TDS)' },
+
+      { key: 'leaderName', value: 'Parent Name' },
+    ]
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report',fieldName, {});
     this.loading = false;
     this.showCsvMessage = false;
   }

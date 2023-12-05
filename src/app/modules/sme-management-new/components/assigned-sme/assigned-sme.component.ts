@@ -577,10 +577,29 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
       capabilityFilter = '&skillSetPlanIdList=' + this.selectedITRCapabilityControl.value;
     }
 
-
     let param = `/bo/sme-details?assigned=true${userFilter}${roleFilter}${languageFilter}${capabilityFilter}${mobileFilter}${komEmailFilter}${smeEmailFilter}${nameFilter}`;
 
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-sme-report', '', this.sortBy);
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
+
+    let fieldName = [
+      { key: 'mobileNumber', value: 'Mobile No' },
+      { key: 'name', value: 'Name' },
+      { key: 'callingNumber', value: 'Calling No' },
+      { key: 'smeOfficialEmail', value: 'Official Mail ID' },
+      { key: 'email', value: 'Komm ID' },
+      { key: 'parentName', value: 'Parent Name/Leader Name' },
+      { key: 'parentPrincipalUserId', value: 'Principal Name' },
+      { key: 'roles', value: 'Role' },
+      { key: 'services', value: 'Assigned Services' },
+      { key: 'session', value: 'Session' },
+      { key: 'languages', value: 'Language Proficiency' },
+      { key: 'skillSetPlanIdList', value: 'ITR Capabilities' }
+    ]
+
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'assigned-sme-report', fieldName, {});
     this.loading = false;
     this.showCsvMessage = false;
 
