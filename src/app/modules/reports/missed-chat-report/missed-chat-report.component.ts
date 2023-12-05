@@ -255,6 +255,20 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
     this.showCsvMessage = true;
     let param = ''
     let userFilter = '';
+    let loggedInId = this.utilsService.getLoggedInUserID();
+
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
+
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =true;
+
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =false;
+    }
 
     if (this.leaderId && !this.filerId ) {
       userFilter += `&leaderUserId=${this.leaderId}`;
@@ -275,7 +289,15 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
     param = `/bo/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'missed-chat-report', '',{});
+
+
+    let fieldName = [
+      { key: 'noOfMissedChat', value: 'No of missed chat' },
+      { key: 'filerName', value: 'Leader/Filer Name' },
+      { key: 'role', value: 'Role' },
+      { key: 'parentName', value: 'Parent Name' },
+    ]
+   await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'missed-chat-report', fieldName,{});
     this.loading = false;
     this.showCsvMessage = false;
   }

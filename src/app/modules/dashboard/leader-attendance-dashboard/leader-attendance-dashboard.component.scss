@@ -78,11 +78,6 @@
     background-color: #fff9f2;
 }
 
-input {
-    border: 1px solid #cccccc !important;
-    padding: 5px !important;
-}
-
 .mvup {
     margin-top: -128px;
 }
@@ -251,8 +246,8 @@ th {
     margin-left: -75px;
 }
 
-.proceed1-custom{
-  background-color: #04a4bc !important;
+.proceed1-custom {
+    background-color: #04a4bc !important;
     color: #ffffff !important;
     border-radius: 5px;
     padding: 6px;
@@ -276,23 +271,28 @@ th {
 }
 
 .active-status {
-  color: green;
+    color: green;
 }
 
 .inactive-status {
-  color: red;
+    color: red;
 }
-.form-control{
-  flex-direction:row;
- }
 
- .table-container {
-  // max-height: 400px; /* Set the maximum height for the container */
-  overflow-x: auto; /* Enable horizontal scrolling */
-  overflow-y: auto; /* Enable vertical scrolling */
-  white-space: nowrap; /* Prevent table cells from wrapping */
+.form-control {
+    flex-direction: row;
+}
+
+.table-container {
+    // max-height: 400px; /* Set the maximum height for the container */
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    white-space: nowrap;
+    /* Prevent table cells from wrapping */
 }
 
 .table-container table {
-  min-width: 100%; /* Set the minimum width of the table to ensure horizontal scrolling */
+    min-width: 100%;
+    /* Set the minimum width of the table to ensure horizontal scrolling */
 }

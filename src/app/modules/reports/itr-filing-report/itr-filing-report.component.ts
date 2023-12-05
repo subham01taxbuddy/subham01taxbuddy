@@ -612,7 +612,19 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
   async downloadReport() {
     this.loading = true;
     this.showCsvMessage = true;
-    let param = ''
+    let param = '';
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =true;
+
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =false;
+    }
     let userFilter = '';
     if (this.leaderId && !this.filerId ) {
       userFilter += `&leaderUserId=${this.leaderId}`;
@@ -637,7 +649,32 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
     param = `/bo/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}${viewFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'itr-filing-report','',{});
+
+    let fieldName = [
+      { key: 'filerName', value: 'Leader/Filer Name' },
+      { key: 'role', value: 'Role' },
+      { key: 'itr1Original', value: 'ITR-1(Original)' },
+      { key: 'itr1Revise', value: 'ITR-1(Revised)' },
+      { key: 'itr2Original', value: 'ITR-2(Original)' },
+      { key: 'itr2Revise', value: 'ITR-2(Revised)' },
+      { key: 'itr3Original', value: 'ITR-3(Original)' },
+      { key: 'itr3Revise', value: 'ITR-3(Revised)' },
+      { key: 'itr4Original', value: 'ITR-4(Original)' },
+      { key: 'itr4Revise', value: 'ITR-4(Revised)' },
+      { key: 'itrOthersOriginal', value: 'Others ITR(Original)' },
+      { key: 'itrOthersRevise', value: 'Others ITR(Revised)' },
+      { key: 'itrU', value: 'ITR U' },
+      { key: 'totalItrFiled', value: 'Total ITR Filed' },
+      { key: 'itr1Payment', value: 'ITR 1 Payment' },
+      { key: 'itr2Payment', value: 'ITR 2 Payment' },
+      { key: 'itr3Payment', value: 'ITR 3 Payment' },
+      { key: 'itr4Payment', value: 'ITR 4 Payment' },
+      { key: 'otherPayment', value: 'Other ITR Payment' },
+      { key: 'itrUPayment', value: 'ITR U Payment' },
+      { key: 'totalPayment', value: 'Total Payment' },
+      { key: 'leaderName', value: 'Parent Name' },
+    ]
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'itr-filing-report',fieldName,{});
     this.loading = false;
     this.showCsvMessage = false;
   }
