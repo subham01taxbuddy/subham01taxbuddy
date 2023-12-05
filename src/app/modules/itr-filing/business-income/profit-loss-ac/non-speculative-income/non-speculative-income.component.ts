@@ -97,7 +97,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
 
         this.totalNetProfit = data[0].netProfitfromNonSpeculativeIncome;
         let expenseList = data[0].expenses;
-        expenseList.forEach((element) => {
+        expenseList?.forEach((element) => {
           this.addExpenseForm(element);
         });
       } else {
