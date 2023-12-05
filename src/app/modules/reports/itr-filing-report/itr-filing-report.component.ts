@@ -171,10 +171,18 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
       this.agentId = loggedInId;
     }
 
-    if (this.leaderId || this.filerId) {
-      this.disableCheckboxes = true;
-    } else {
-      this.disableCheckboxes = false;
+    if(this.roles.includes('ROLE_ADMIN')){
+      if (this.leaderId || this.filerId) {
+        this.disableCheckboxes = true;
+      } else {
+        this.disableCheckboxes = false;
+      }
+    }else if(this.roles?.includes('ROLE_LEADER')){
+      if (this.filerId) {
+        this.disableCheckboxes = true;
+      } else {
+        this.disableCheckboxes = false;
+      }
     }
 
   }
