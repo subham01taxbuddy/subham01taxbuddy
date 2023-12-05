@@ -43,46 +43,7 @@
                 class="ml130"
               >
               </mat-checkbox>
-
               <div class="row cardClr">
-                <div class="row" *ngIf="bondType === 'bonds'">
-                  <div class="col-sm-6 isDeduction">
-                    Is indexation benefit available?
-                  </div>
-                  <div class="col-sm-6">
-                    <mat-radio-group
-                      formControlName="isIndexationBenefitAvailable"
-                      class="mvRth"
-                    >
-                      <mat-radio-button [value]="true" labelPosition="before"
-                        >Yes
-                      </mat-radio-button>
-                      <mat-radio-button [value]="false" labelPosition="before"
-                        >No</mat-radio-button
-                      >
-                    </mat-radio-group>
-                  </div>
-                </div>
-
-                <div class="row spsTp" *ngIf="bondType === 'bonds' && !bonds.get('isIndexationBenefitAvailable').value">
-                  <div class="col-sm-6 isDeduction">
-                    Are the debentures listed?
-                  </div>
-                  <div class="col-sm-6">
-                    <mat-radio-group
-                      formControlName="whetherDebenturesAreListed"
-                      class="mvRth"
-                    >
-                      <mat-radio-button [value]="true" labelPosition="before"
-                      >Yes
-                      </mat-radio-button>
-                      <mat-radio-button [value]="false" labelPosition="before"
-                      >No</mat-radio-button
-                      >
-                    </mat-radio-group>
-                  </div>
-                </div>
-
                 <div class="col-sm-4">
                   <mat-label>Sale Date*</mat-label>
                   <mat-form-field appearance="outline">
@@ -119,33 +80,6 @@
                   </mat-form-field>
                 </div>
 
-                <div class="col-sm-4">
-                  <mat-label>Buy Date*</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      [max]="bonds.get('sellDate').value"
-                      matInput
-                      class="input-field"
-                      readonly
-                      placeholder="Buy Date"
-                      (dateChange)="getGainType(bonds); calMinImproveDate(bonds.get('purchaseDate').value, bonds);calculateIndexCost(bonds, 'asset')"
-                      formControlName="purchaseDate"
-                      name="purchaseDate"
-                      [matDatepicker]="purchaseDate"
-                      required
-                    />
-                    <mat-datepicker-toggle
-                      matSuffix
-                      [for]="purchaseDate"
-                    ></mat-datepicker-toggle>
-                    <mat-datepicker #purchaseDate></mat-datepicker>
-                    <mat-error
-                      *ngIf="bonds.get('purchaseDate').hasError('required')"
-                    >Please select date</mat-error
-                    >
-                  </mat-form-field>
-                </div>
-
                 <!--sale value-->
                 <div class="col-sm-4">
                   <mat-label>Sale value*</mat-label>
@@ -155,7 +89,7 @@
                       class="input-field"
                       name="assets[i]"
                       (change)="
-                        calculateTotalCG(bonds);
+                        calculateTotalCG(bonds); calculateDeductionGain()
                       "
                       placeholder="Sale value/Full value consideration"
                       digitsOnly
@@ -174,36 +108,15 @@
                     >
                   </mat-form-field>
                 </div>
-
-                <!--Improvement-->
-                <div class="col-sm-4 spsTp" *ngIf="bonds.get('isIndexationBenefitAvailable').value">
-                  <mat-label>
-                    &nbsp;&nbsp; Year Of Improvement
-                  </mat-label>
-                  <mat-form-field class="input-field-width">
-                    <mat-select
-                      name="improve[i]"
-                      formControlName="dateOfImprovement"
-                      (selectionChange)="calculateIndexCost(bonds)"
-                    >
-                      <mat-option
-                        [value]="year"
-                        *ngFor="let year of getYearsList(bonds)"
-                      >
-                        {{ year }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
+                <div class="col-sm-4">
                   <mat-label>Cost of improvement</mat-label>
                   <mat-form-field appearance="outline">
                     <input
                       matInput
                       class="input-field"
                       digitsOnly
-                      (change)="calculateIndexCost(bonds)"
-                      placeholder= "Cost of improvement without indexation"
+                      (change)="calculateTotalCG(bonds)"
+                      placeholder="Cost of improvement without indexation"
                       formControlName="costOfImprovement"
                       maxlength="14"
                       matTooltip="Cost of improvement without indexation"
@@ -218,21 +131,32 @@
                     >
                   </mat-form-field>
                 </div>
-                <div class="col-sm-4 spsTp" *ngIf="bonds.get('isIndexationBenefitAvailable').value">
-                  <mat-label>Indexed Cost of improvement</mat-label>
+                <div class="col-sm-4 spsTp">
+                  <mat-label>Buy Date*</mat-label>
                   <mat-form-field appearance="outline">
                     <input
+                      [max]="bonds.get('sellDate').value"
                       matInput
                       class="input-field"
-                      name="improve[i]"
-                      formControlName="indexCostOfImprovement"
-                      maxlength="14"
-                      type="number"
                       readonly
+                      placeholder="Buy Date"
+                      (dateChange)="getGainType(bonds); calculateTotalCG(bonds)"
+                      formControlName="purchaseDate"
+                      name="purchaseDate"
+                      [matDatepicker]="purchaseDate"
+                      required
                     />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="purchaseDate"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #purchaseDate></mat-datepicker>
+                    <mat-error
+                      *ngIf="bonds.get('purchaseDate').hasError('required')"
+                      >Please select date</mat-error
+                    >
                   </mat-form-field>
                 </div>
-
                 <!--cost of acquisition-->
                 <div class="col-sm-4 spsTp">
                   <mat-label>Cost of Acquisition*</mat-label>
@@ -241,11 +165,11 @@
                       matInput
                       class="input-field"
                       digitsOnly
-                      matTooltip="{{getPlaceholderPurchase(bonds)}}"
+                      matTooltip="Cost of Acquisition without indexation (Purchase value)"
                       matTooltipClass="tab-tooltip"
                       matTooltipPosition="above"
-                      placeholder="{{getPlaceholderPurchase(bonds)}}"
-                      (change)="calculateIndexCost(bonds, 'asset')"
+                      placeholder="Cost of Acquisition without indexation (Purchase value)"
+                      (change)="calculateTotalCG(bonds)"
                       formControlName="purchaseCost"
                       maxlength="14"
                       required
@@ -254,20 +178,6 @@
                       *ngIf="bonds.get('purchaseCost').hasError('required')"
                       >Please enter cost of acquisition</mat-error
                     >
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp" *ngIf="bonds.get('isIndexationBenefitAvailable').value">
-                  <mat-label> Indexed cost of acquisition</mat-label>
-                  <mat-form-field class="input-field-width" appearance="outline">
-                    <input
-                      matInput
-                      digitsOnly
-                      formControlName="indexCostOfAcquisition"
-                      placeholder="Indexed cost of acquisition"
-                      name="indexCostOfAcquisition[i]"
-                      class="input-field"
-                      readonly
-                    />
                   </mat-form-field>
                 </div>
                 <div class="col-sm-4 spsTp">
@@ -329,37 +239,6 @@
                     >
                   </mat-form-field>
                 </div>
-
-                <div class="spsTp">
-
-                  <div class="flex justify-between p-[30px] back-foot">
-                    <button class="lgtBtn">
-                      <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-                      <span class="font-semibold" (click)="goBack()"
-                      >&nbsp;Back to Capital Gain Topics</span
-                      >
-                    </button>
-
-                    <button class="saveBtnIn">
-                      <span class="font-semibold" (click)="saveAll()">Save All</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="mrgArd">
-                <div class="flex justify-between p-[30px] back-foot">
-                    <button class="lgtBtn">
-                      <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-                      <span class="font-semibold" (click)="goBack()"
-                      >&nbsp;Back to Capital Gain Topics</span
-                      >
-                    </button>
-
-                    <button class="saveBtnIn">
-                      <span class="font-semibold" (click)="saveAll()">Save All</span>
-                    </button>
-                </div>
               </div>
             </div>
             <div class="row spsTp bdrTp">
@@ -385,7 +264,17 @@
                   (pageChange)="pageChanged($event)"
                 ></pagination-controls>
               </div>
-
+              <div class="col-sm-3">
+                <button
+                  type="submit"
+                  mat-stroked-button
+                  class="tbd-btn save-btn mvRth"
+                  [disabled]="bondsForm.invalid"
+                  (click)="save('bonds')"
+                >
+                  Save
+                </button>
+              </div>
             </div>
           </div>
         </form>
@@ -555,7 +444,19 @@
         </div>
       </div>
     </form>
-
+    <div class="row spsTp bdrTp" *ngIf="deduction">
+      <div class="col-sm-9"></div>
+      <div class="col-sm-3">
+        <button
+          type="submit"
+          class="tbd-btn save-btn mvRth"
+          [disabled]="deductionForm.invalid"
+          (click)="save()"
+        >
+          Save
+        </button>
+      </div>
+    </div>
 
     <div class="flex justify-between p-[30px] back-foot">
       <button class="lgtBtn">
