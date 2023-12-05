@@ -128,7 +128,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.createSubscriptionObj = JSON.parse(
       sessionStorage.getItem('createSubscriptionObject')
     )?.data;
- 
+
     if (!this.createSubscriptionObj) {
       this.subscriptionObj = JSON.parse(
         sessionStorage.getItem('subscriptionObject')
@@ -155,7 +155,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.getFy();
       }
     }
-   
+
     this.getAllPlanInfo(this.serviceType);
     this.getLeaderFilerName();
     this.setFormValues(this.selectedUserInfo);
@@ -651,7 +651,7 @@ const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
       this.showIgst = false;
     }
   }
-  
+
   getAllPlanInfo(serviceType) {
     let param = '/plans-master';
     let selected = '';
@@ -1103,6 +1103,10 @@ const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     this.personalInfoForm.valueChanges.subscribe((event) => {
       this.changesMade = true;
     });
+
+    this.searchedPromoCode.valueChanges.subscribe(() => {
+      this.changesMade = true;
+    });
   }
 
   onOtherInfoFormChange() {
@@ -1111,7 +1115,10 @@ const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     });
   }
 
-  
+  onNgModelChange() {
+    this.changesMade = true;
+  }
+
   cancel() {
     if (this.changesMade) {
       this.dialogRef = this.dialog.open(ConfirmDialogComponent, {

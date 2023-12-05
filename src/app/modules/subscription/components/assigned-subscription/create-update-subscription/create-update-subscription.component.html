@@ -230,7 +230,7 @@
                 {{showMessage}}</span>
               <mat-label>Select Plan</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select matInput placeholder="Select Plan" [(ngModel)]="smeSelectedPlanId" autocomplete="off">
+                <mat-select matInput placeholder="Select Plan" [(ngModel)]="smeSelectedPlanId" (ngModelChange)="onNgModelChange()" autocomplete="off">
                   <mat-option *ngFor="let plan of allPlans" [value]="plan?.planId" [disabled]="plan.disable">
                     {{ plan.name }}
                   </mat-option>
@@ -349,12 +349,12 @@
                 </div>
                 <div class="col-sm-5">
                   <button class="btn" style="background: #00aeca; border-radius: 2px"
-                    (click)="applyPromo(smeSelectedPlanId)" [disabled]="!smeSelectedPlanId">
+                    (click)="applyPromo(smeSelectedPlanId); onNgModelChange()" [disabled]="!smeSelectedPlanId">
                     Apply
                   </button>
                   &nbsp;
                   <button [disabled]="!selectedPromoCode" class="btn" style="background: #00aeca; border-radius: 2px"
-                    (click)="removePromoCode(smeSelectedPlanId)" type="reset">
+                    (click)="removePromoCode(smeSelectedPlanId); onNgModelChange()" type="reset">
                     Remove
                   </button>
                 </div>
@@ -428,7 +428,7 @@
             <div class="col-sm-6">
               <mat-label>Select Service</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select [(ngModel)]="service" [ngModelOptions]="{ standalone: true }" matInput
+                <mat-select [(ngModel)]="service" (ngModelChange)="onNgModelChange()" [ngModelOptions]="{ standalone: true }" matInput
                   placeholder="Select Service" autocomplete="off" (selectionChange)="changeService()"
                   [disabled]="isButtonDisable">
                   <mat-option value="ITR"> ITR Filing </mat-option>
@@ -451,7 +451,7 @@
             <div class="col-sm-6">
               <mat-label>Service Detail</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select [(ngModel)]="serviceDetail" [ngModelOptions]="{ standalone: true }"
+                <mat-select [(ngModel)]="serviceDetail" (ngModelChange)="onNgModelChange()" [ngModelOptions]="{ standalone: true }"
                   (selectionChange)="onUpdateGstNoValidation()" placeholder="Select Service Detail" autocomplete="off"
                   required>
                   <mat-option *ngFor="let details of serviceDetails" [value]="details.details">
