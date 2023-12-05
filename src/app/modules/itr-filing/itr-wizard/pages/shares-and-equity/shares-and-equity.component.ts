@@ -1102,7 +1102,7 @@ export class SharesAndEquityComponent
               element.indexCostOfAcquisition = 0;
             }
           });
-          this.Copy_ITR_JSON.capitalGain[securitiesIndex] = sameData;
+          // this.Copy_ITR_JSON.capitalGain[securitiesIndex] = sameData;
 
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
         } else {
