@@ -83,7 +83,7 @@ export class OtherAssetImprovementComponent implements OnInit {
     this.addMoreOtherAssetsForm(this.assetIndex);
 
     // setting improvement flag
-    this.goldCg?.improvement.forEach((element) => {
+    this.goldCg?.improvement?.forEach((element) => {
       if (
         element &&
         element.indexCostOfImprovement &&
