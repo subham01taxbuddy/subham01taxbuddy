@@ -1,15 +1,15 @@
 <!-- Operation Team Report -->
 <div>
-<div class="row rowClr">
+  <div class="row rowClr">
 
     <div class="col-sm-9 spTpL">
-        <h5 class="bdrbl1">Team Report:</h5>
+      <h5 class="bdrbl1">Team Report:</h5>
     </div>
 
     <div class="col-sm-3 spTpR" *ngIf="false">
-        <button class="icoBt"><i class="fa fa-download" aria-hidden="true"></i></button>
-        <button class="icoBt"><i class="fa fa-print" aria-hidden="true"></i></button>
-        <button class="icoBt"><i class="fa fa-share-alt" aria-hidden="true"></i></button>
+      <button class="icoBt"><i class="fa fa-download" aria-hidden="true"></i></button>
+      <button class="icoBt"><i class="fa fa-print" aria-hidden="true"></i></button>
+      <button class="icoBt"><i class="fa fa-share-alt" aria-hidden="true"></i></button>
     </div>
 
     <div class="col-sm-12">
@@ -22,21 +22,30 @@
                           aria-label="Search">
                   </form> -->
             <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event)"
-             [showOwnerList]="true"></app-leader-list-dropdown>
+              [showOwnerList]="true"></app-leader-list-dropdown>
           </div>
-          <div class="col-sm-2">
-            <div>
-              <label for="start-date">Start Date:</label>
-              <input type="date" matInput id="date" name="start-date" class="form-control" [formControl]="startDate"
-                [min]="minDate" [max]="maxStartDate" (change)="setEndDateValidate(this.startDate)">
-            </div>
+
+          <div class="col-sm-2 spsTp">
+            <mat-form-field appearance="outline">
+              <mat-label>Start Date:</mat-label>
+              <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxStartDate"
+                autocomplete="off" (dateChange)="setEndDateValidate(this.startDate)" />
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+              <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+            </mat-form-field>
           </div>
-          <div class="col-sm-2">
-            <div>
-              <label for="end-date">End Date:</label>
-              <input type="date" matInput id="date" name="end-date" class="form-control" [formControl]="endDate" [min]="minEndDate"
-                [max]="maxDate">
-            </div>
+
+          <div class="col-sm-2 spsTp">
+            <mat-form-field appearance="outline">
+              <mat-label>End Date:</mat-label>
+              <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxDate"
+                autocomplete="off" />
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+              <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+              <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+            </mat-form-field>
           </div>
 
           <!-- <div class="col-sm-4">
@@ -46,12 +55,11 @@
                   </form>
               </div> -->
 
-           <div class="col-sm-4">
-                  <button class="srch-btn" [disabled]="loading"  (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
-          <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button> -->
-
-            <button class="clrLnk1" [disabled]="loading"  (click)="this.resetFilters()">
-               Clear form
+          <div class="col-sm-3 mt-2">
+            <button class="srch-btn" [disabled]="loading" (click)="search()"><i class="fa fa-search"
+                aria-hidden="true"></i> Search </button>
+            <button class="clrLnk1" [disabled]="loading" (click)="this.resetFilters()">
+              Clear form
             </button>
           </div>
 
@@ -61,350 +69,355 @@
 
 
     <div class="col-sm-6">
-      <div class="radius" >
+      <div class="radius">
         <span class="TxHd"><i class="fa fa-file-o"></i> Invoices -</span>&nbsp;
         <span class="numTxBg"></span>
         <div *ngFor="let service of invoiceData">
-        <!-- Inside Row -->
-        <div class="invoice-border-radius mt-3">
-          <span class="TxHd111">{{ service.serviceType }} Invoice</span>
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="radius1">
-                <span class="numTxSm">{{ service.invoiceRaised || 'NA' }}</span><br>
-                <span class="TxSm">Invoice Raised</span>
+          <!-- Inside Row -->
+          <div class="invoice-border-radius mt-3">
+            <span class="TxHd111">{{ service.serviceType }} Invoice</span>
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="radius1">
+                  <span class="numTxSm">{{ service.invoiceRaised || 'NA' }}</span><br>
+                  <span class="TxSm">Invoice Raised</span>
+                </div>
               </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1 grBk">
-                <span class="numTxSm grTx">₹ {{service?.invoiceAmount || 'NA'}}</span><br>
-                <span class="TxSm">Invoice Amount</span><br>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm grTx">₹ {{service?.invoiceAmount || 'NA'}}</span><br>
+                  <span class="TxSm">Invoice Amount</span><br>
+                </div>
               </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1 grBk">
-                <span class="numTxSm grTx">₹ {{service?.paidInvoiceAmountByPaymentDate || 'NA'}}</span><br>
-                <span class="TxSm">Total Payment Received(basis paid date)</span><br>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm grTx">₹ {{service?.paidInvoiceAmountByPaymentDate || 'NA'}}</span><br>
+                  <span class="TxSm">Total Payment Received(basis paid date)</span><br>
+                </div>
               </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1 RedBk">
-                <span class="numTxSm redTx1">{{service?.unpaidInvoiceCount || 'NA'}}</span><br>
-                <span class="TxSm">Unpaid Invoices</span><br>
+              <div class="col-sm-4">
+                <div class="radius1 RedBk">
+                  <span class="numTxSm redTx1">{{service?.unpaidInvoiceCount || 'NA'}}</span><br>
+                  <span class="TxSm">Unpaid Invoices</span><br>
+                </div>
               </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1 RedBk">
-                <span class="numTxSm redTx1">₹ {{service?.unpaidAmount || 'NA'}}</span><br>
-                <span class="TxSm">Unpaid Amount</span>
+              <div class="col-sm-4">
+                <div class="radius1 RedBk">
+                  <span class="numTxSm redTx1">₹ {{service?.unpaidAmount || 'NA'}}</span><br>
+                  <span class="TxSm">Unpaid Amount</span>
+                </div>
               </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1 grBk">
-                <span class="numTxSm">{{service?.noSubscriptionCancellationRequest || 'NA'}}</span><br>
-                <span class="TxSm">No.Subscription cancellation request</span><br>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm">{{service?.noSubscriptionCancellationRequest || 'NA'}}</span><br>
+                  <span class="TxSm">No.Subscription cancellation request</span><br>
+                </div>
               </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1 grBk">
-                <span class="numTxSm grTx">{{service?.paidInvoiceCount || 'NA'}}</span><br>
-                <span class="TxSm">Paid Invoices(Basis created date)</span><br>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm grTx">{{service?.paidInvoiceCount || 'NA'}}</span><br>
+                  <span class="TxSm">Paid Invoices(Basis created date)</span><br>
+                </div>
               </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1 grBk">
-                <span class="numTxSm grTx">₹ {{service?.paidAmount || 'NA'}}</span><br>
-                <span class="TxSm">Paid Amount(Basis created date)</span><br>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm grTx">₹ {{service?.paidAmount || 'NA'}}</span><br>
+                  <span class="TxSm">Paid Amount(Basis created date)</span><br>
+                </div>
               </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1 grBk">
-                <span class="numTxSm">{{service?.noRefundRequest || 'NA'}}</span><br>
-                <span class="TxSm">No. Refund Request</span><br>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm">{{service?.noRefundRequest || 'NA'}}</span><br>
+                  <span class="TxSm">No. Refund Request</span><br>
+                </div>
               </div>
             </div>
           </div>
+          <!-- Inside Row Ends -->
         </div>
-        <!-- Inside Row Ends -->
-      </div>
       </div>
     </div>
 
 
-      <div class="col-sm-6">
-        <div class="row">
+    <div class="col-sm-6">
+      <div class="row">
         <div class="col-sm-12">
-        <div class="radius">
-          <span class="TxHd"><i class="fa fa-users" aria-hidden="true"></i> Operation Team - As On ({{ today | date:'dd MMMM yyyy' }})</span>&nbsp;
-          <span class="numTxBg"></span>
-          <!-- Inside Row -->
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="radius1">
-              <span class="numTxSm">{{operationTeamData?.totalSMEs || 'NA'}}</span><br>
-              <span class="TxSm">Total SME's</span><br>
+          <div class="radius">
+            <span class="TxHd"><i class="fa fa-users" aria-hidden="true"></i> Operation Team - As On ({{ today |
+              date:'dd MMMM yyyy' }})</span>&nbsp;
+            <span class="numTxBg"></span>
+            <!-- Inside Row -->
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="radius1">
+                  <span class="numTxSm">{{operationTeamData?.totalSMEs || 'NA'}}</span><br>
+                  <span class="TxSm">Total SME's</span><br>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1">
+                  <span class="numTxSm">{{operationTeamData?.internalFiler || 'NA'}}</span><br>
+                  <span class="TxSm">Internal Filer</span><br>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1">
+                  <span class="numTxSm">{{operationTeamData?.leaders || 'NA'}}</span><br>
+                  <span class="TxSm">Leaders</span><br>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="radius1">
+                  <span class="numTxSm">{{operationTeamData?.externalFiler || 'NA'}}</span><br>
+                  <span class="TxSm">External Filers</span><br>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="radius1">
+                  <span class="numTxSm">{{operationTeamData?.individualFilers || 'NA'}}</span><br>
+                  <span class="TxSm">Individual Filers</span>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="radius1">
+                  <span class="numTxSm">{{operationTeamData?.principalFilers || 'NA'}}</span><br>
+                  <span class="TxSm">Principal Filers</span>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="radius1">
+                  <span class="numTxSm">{{operationTeamData?.assistantFilers || 'NA'}}</span><br>
+                  <span class="TxSm">Assistant Filers</span>
+                </div>
+              </div>
             </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1">
-              <span class="numTxSm">{{operationTeamData?.internalFiler || 'NA'}}</span><br>
-              <span class="TxSm">Internal Filer</span><br>
-            </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1">
-              <span class="numTxSm">{{operationTeamData?.leaders || 'NA'}}</span><br>
-              <span class="TxSm">Leaders</span><br>
-            </div>
-            </div>
-            <div class="col-sm-3">
-              <div class="radius1">
-              <span class="numTxSm">{{operationTeamData?.externalFiler || 'NA'}}</span><br>
-              <span class="TxSm">External Filers</span><br>
-            </div>
-            </div>
-            <div class="col-sm-3">
-              <div class="radius1">
-              <span class="numTxSm">{{operationTeamData?.individualFilers || 'NA'}}</span><br>
-              <span class="TxSm">Individual Filers</span>
-            </div>
-            </div>
-            <div class="col-sm-3">
-              <div class="radius1">
-              <span class="numTxSm">{{operationTeamData?.principalFilers || 'NA'}}</span><br>
-              <span class="TxSm">Principal Filers</span>
-            </div>
-            </div>
-            <div class="col-sm-3">
-              <div class="radius1">
-              <span class="numTxSm">{{operationTeamData?.assistantFilers || 'NA'}}</span><br>
-              <span class="TxSm">Assistant Filers</span>
-            </div>
-            </div>
-            </div>
-          <!-- Inside Row Ends -->
+            <!-- Inside Row Ends -->
+          </div>
         </div>
-      </div>
-      <div class="col-sm-12 mt-3">
-        <div class="radius">
-          <span class="TxHd"><i class="fa fa-handshake-o"></i> Total ITR Filed</span>&nbsp;
-          <span class="numTxBg">{{commissionData?.totalItrFiled || 'NA'}}</span>
-          <!-- Inside Row -->
-          <div class="row">
-            <span class="TxHd">Original Returns:<span class="numTxBg">{{totalOriginal || 'NA'}}</span></span>
-            <div class="col-sm-4">
-              <div class="radius1">
-              <span class="numTxSm">{{commissionData?.itr1 || 'NA'}}</span><br>
-              <span class="TxSm">ITR1</span><br>
-            </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1">
-              <span class="numTxSm">{{commissionData?.itr2 || 'NA'}}</span><br>
-              <span class="TxSm">ITR2</span><br>
-            </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1">
-              <span class="numTxSm">{{commissionData?.itr3 || 'NA'}}</span><br>
-              <span class="TxSm">ITR3</span><br>
-            </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1">
-              <span class="numTxSm">{{commissionData?.itr4 || 'NA'}}</span><br>
-              <span class="TxSm">ITR4</span><br>
-            </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1">
-              <span class="numTxSm">{{commissionData?.originalReturnOther || 'NA'}}</span><br>
-              <span class="TxSm">Other</span>
-            </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1">
-              <span class="numTxSm">{{commissionData?.itrU || 'NA'}}</span><br>
-              <span class="TxSm">ITR U</span><br>
-            </div>
-            </div>
+        <div class="col-sm-12 mt-3">
+          <div class="radius">
+            <span class="TxHd"><i class="fa fa-handshake-o"></i> Total ITR Filed</span>&nbsp;
+            <span class="numTxBg">{{commissionData?.totalItrFiled || 'NA'}}</span>
+            <!-- Inside Row -->
+            <div class="row">
+              <span class="TxHd">Original Returns:<span class="numTxBg">{{totalOriginal || 'NA'}}</span></span>
+              <div class="col-sm-4">
+                <div class="radius1">
+                  <span class="numTxSm">{{commissionData?.itr1 || 'NA'}}</span><br>
+                  <span class="TxSm">ITR1</span><br>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1">
+                  <span class="numTxSm">{{commissionData?.itr2 || 'NA'}}</span><br>
+                  <span class="TxSm">ITR2</span><br>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1">
+                  <span class="numTxSm">{{commissionData?.itr3 || 'NA'}}</span><br>
+                  <span class="TxSm">ITR3</span><br>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1">
+                  <span class="numTxSm">{{commissionData?.itr4 || 'NA'}}</span><br>
+                  <span class="TxSm">ITR4</span><br>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1">
+                  <span class="numTxSm">{{commissionData?.originalReturnOther || 'NA'}}</span><br>
+                  <span class="TxSm">Other</span>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1">
+                  <span class="numTxSm">{{commissionData?.itrU || 'NA'}}</span><br>
+                  <span class="TxSm">ITR U</span><br>
+                </div>
+              </div>
             </div>
             <div class="row" style="margin-top: 10px;">
               <span class="TxHd">Revised Returns: <span class="numTxBg">{{totalRevised || 'NA'}}</span></span>
               <div class="col-sm-3">
                 <div class="radius1">
-                <span class="numTxSm">{{commissionData?.itr1_revised || 'NA'}}</span><br>
-                <span class="TxSm">ITR1</span><br>
-              </div>
-              </div>
-              <div class="col-sm-3">
-                <div class="radius1">
-                <span class="numTxSm">{{commissionData?.itr2_revised || 'NA'}}</span><br>
-                <span class="TxSm">ITR2</span><br>
-              </div>
+                  <span class="numTxSm">{{commissionData?.itr1_revised || 'NA'}}</span><br>
+                  <span class="TxSm">ITR1</span><br>
+                </div>
               </div>
               <div class="col-sm-3">
                 <div class="radius1">
-                <span class="numTxSm">{{commissionData?.itr3_revised || 'NA'}}</span><br>
-                <span class="TxSm">ITR3</span><br>
-              </div>
-              </div>
-              <div class="col-sm-3">
-                <div class="radius1">
-                <span class="numTxSm">{{commissionData?.itr4_revised || 'NA'}}</span><br>
-                <span class="TxSm">ITR4</span><br>
-              </div>
+                  <span class="numTxSm">{{commissionData?.itr2_revised || 'NA'}}</span><br>
+                  <span class="TxSm">ITR2</span><br>
+                </div>
               </div>
               <div class="col-sm-3">
                 <div class="radius1">
-                <span class="numTxSm">{{commissionData?.reviseReturnOther || 'NA'}}</span><br>
-                <span class="TxSm">Other</span><br>
+                  <span class="numTxSm">{{commissionData?.itr3_revised || 'NA'}}</span><br>
+                  <span class="TxSm">ITR3</span><br>
+                </div>
               </div>
+              <div class="col-sm-3">
+                <div class="radius1">
+                  <span class="numTxSm">{{commissionData?.itr4_revised || 'NA'}}</span><br>
+                  <span class="TxSm">ITR4</span><br>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="radius1">
+                  <span class="numTxSm">{{commissionData?.reviseReturnOther || 'NA'}}</span><br>
+                  <span class="TxSm">Other</span><br>
+                </div>
               </div>
             </div>
-          <!-- Inside Row Ends -->
+            <!-- Inside Row Ends -->
+          </div>
         </div>
-      </div>
-      <div class="col-sm-12 mt-3">
-        <div class="radius">
-          <span class="TxHd"><i class="fa-solid fa-phone" aria-hidden="true"></i> Schedule call : </span>&nbsp;
-          <span class="numTxBg">{{totalScheduledCall || 'NA'}}</span>
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="radius1">
-              <span class="numTxSm">{{scheduledCallData?.callsAssigned_Open || 'NA'}}</span><br>
-              <span class="TxSm">Calls Assigned/Open</span><br>
-            </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="radius1">
-              <span class="numTxSm grTx">₹ {{scheduledCallData?.revenueGeneratedFromScheduleCall || 'NA'}}</span><br>
-              <span class="TxSm ">Revenue Generated from Schedule call(amount)</span><br>
-            </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="radius1">
-              <span class="numTxSm">{{scheduledCallData?.done || 'NA'}}</span><br>
-              <span class="TxSm">Calls Done</span><br>
-            </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="radius1">
-              <span class="numTxSm">{{scheduledCallData?.followUp || 'NA'}}</span><br>
-              <span class="TxSm">Calls Follow-Up</span><br>
-            </div>
+        <div class="col-sm-12 mt-3">
+          <div class="radius">
+            <span class="TxHd"><i class="fa-solid fa-phone" aria-hidden="true"></i> Schedule call : </span>&nbsp;
+            <span class="numTxBg">{{totalScheduledCall || 'NA'}}</span>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="radius1">
+                  <span class="numTxSm">{{scheduledCallData?.callsAssigned_Open || 'NA'}}</span><br>
+                  <span class="TxSm">Calls Assigned/Open</span><br>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="radius1">
+                  <span class="numTxSm grTx">₹ {{scheduledCallData?.revenueGeneratedFromScheduleCall ||
+                    'NA'}}</span><br>
+                  <span class="TxSm ">Revenue Generated from Schedule call(amount)</span><br>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="radius1">
+                  <span class="numTxSm">{{scheduledCallData?.done || 'NA'}}</span><br>
+                  <span class="TxSm">Calls Done</span><br>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="radius1">
+                  <span class="numTxSm">{{scheduledCallData?.followUp || 'NA'}}</span><br>
+                  <span class="TxSm">Calls Follow-Up</span><br>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-sm-12 mt-3">
-        <div class="radius">
-          <span class="TxHd"><i class="fa fa-percent" aria-hidden="true"></i> Total Commission</span>&nbsp;
-          <!-- <span class="numTxBg">27,315</span> -->
-          <!-- Inside Row -->
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="radius1 grBk">
-              <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarnedBeforeTDS | number:'1.2-2') || 'NA'}}</span><br>
-              <span class="TxSm">Total Commission Earned Before TDS</span><br>
-            </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1 grBk">
-              <span class="numTxSm grTx"> ₹ {{(commissionData?.tdsOnCommission | number:'1.2-2') || 'NA'}}</span><br>
-              <span class="TxSm">TDS on Commission</span><br>
-            </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1 grBk">
-              <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarnedAfterTDS | number:'1.2-2') || 'NA'}}</span><br>
-              <span class="TxSm">Total Commission Earned After TDS</span><br>
-            </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="radius1 grBk">
-              <span class="numTxSm grTx">₹ {{(commissionData?.paid | number:'1.2-2') || 'NA'}}</span><br>
-              <span class="TxSm">Paid</span><br>
-            </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="radius1 OrgBk">
-              <span class="numTxSm OrgTx">₹ {{(commissionData?.payable | number:'1.2-2') || 'NA'}}</span><br>
-              <span class="TxSm">Payable </span><br>
-            </div>
-            </div>
+        <div class="col-sm-12 mt-3">
+          <div class="radius">
+            <span class="TxHd"><i class="fa fa-percent" aria-hidden="true"></i> Total Commission</span>&nbsp;
+            <!-- <span class="numTxBg">27,315</span> -->
+            <!-- Inside Row -->
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarnedBeforeTDS | number:'1.2-2') ||
+                    'NA'}}</span><br>
+                  <span class="TxSm">Total Commission Earned Before TDS</span><br>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm grTx"> ₹ {{(commissionData?.tdsOnCommission | number:'1.2-2') ||
+                    'NA'}}</span><br>
+                  <span class="TxSm">TDS on Commission</span><br>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius1 grBk">
+                  <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarnedAfterTDS | number:'1.2-2') ||
+                    'NA'}}</span><br>
+                  <span class="TxSm">Total Commission Earned After TDS</span><br>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="radius1 grBk">
+                  <span class="numTxSm grTx">₹ {{(commissionData?.paid | number:'1.2-2') || 'NA'}}</span><br>
+                  <span class="TxSm">Paid</span><br>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="radius1 OrgBk">
+                  <span class="numTxSm OrgTx">₹ {{(commissionData?.payable | number:'1.2-2') || 'NA'}}</span><br>
+                  <span class="TxSm">Payable </span><br>
+                </div>
+              </div>
 
             </div>
-          <!-- Inside Row Ends -->
+            <!-- Inside Row Ends -->
+          </div>
         </div>
-      </div>
 
+      </div>
     </div>
+
+
+
+    <div class="col-sm-4" *ngIf="false">
+      <div class="radius">
+        <span class="TxHd"><i class="fa fa-user" aria-hidden="true"></i> Filers/Partners Assignment (ITR)</span>&nbsp;
+        <span class="numTxBg"></span>
+        <!-- Inside Row -->
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="radius1">
+              <span class="numTxSm grTx">{{partnersAssignmentData?.activePartners || 'NA'}}</span><br>
+              <span class="TxSm">Active Partners</span>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="radius1">
+              <span class="numTxSm grTx">{{partnersAssignmentData?.assignmentOn || 'NA'}}</span><br>
+              <span class="TxSm">Assignment On</span><br>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="radius1">
+              <span class="numTxSm OrgTx">{{partnersAssignmentData?.inactivePartners || 'NA'}}</span><br>
+              <span class="TxSm">Inactive Partners</span><br>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="radius1">
+              <span class="numTxSm OrgTx">{{partnersAssignmentData?.assignmentOff || 'NA'}}</span><br>
+              <span class="TxSm">Assignment Off</span><br>
+            </div>
+          </div>
+
+
+        </div>
+        <!-- Inside Row Ends -->
+      </div>
     </div>
-
-
-
-  <div class="col-sm-4" *ngIf="false">
-  <div class="radius">
-    <span class="TxHd"><i class="fa fa-user" aria-hidden="true"></i> Filers/Partners Assignment (ITR)</span>&nbsp;
-    <span class="numTxBg"></span>
-    <!-- Inside Row -->
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="radius1">
-        <span class="numTxSm grTx">{{partnersAssignmentData?.activePartners || 'NA'}}</span><br>
-        <span class="TxSm">Active Partners</span>
-      </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="radius1">
-        <span class="numTxSm grTx">{{partnersAssignmentData?.assignmentOn || 'NA'}}</span><br>
-        <span class="TxSm">Assignment On</span><br>
-      </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="radius1">
-        <span class="numTxSm OrgTx">{{partnersAssignmentData?.inactivePartners || 'NA'}}</span><br>
-        <span class="TxSm">Inactive Partners</span><br>
-      </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="radius1">
-        <span class="numTxSm OrgTx">{{partnersAssignmentData?.assignmentOff || 'NA'}}</span><br>
-        <span class="TxSm">Assignment Off</span><br>
-      </div>
-      </div>
-
-
-      </div>
-    <!-- Inside Row Ends -->
   </div>
-  </div>
-</div>
 </div>
 
 <!-- My Team Report -->
 <div *ngIf="false">
-<div class="row rowClr">
+  <div class="row rowClr">
 
     <div class="col-sm-9 spTpL">
-        <h5 class="bdrbl1">My Team Report:</h5>
+      <h5 class="bdrbl1">My Team Report:</h5>
     </div>
 
     <div class="col-sm-3 spTpR">
-        <button class="icoBt"><i class="fa fa-download" aria-hidden="true"></i></button>
-        <button class="icoBt"><i class="fa fa-print" aria-hidden="true"></i></button>
-        <button class="icoBt"><i class="fa fa-share-alt" aria-hidden="true"></i></button>
+      <button class="icoBt"><i class="fa fa-download" aria-hidden="true"></i></button>
+      <button class="icoBt"><i class="fa fa-print" aria-hidden="true"></i></button>
+      <button class="icoBt"><i class="fa fa-share-alt" aria-hidden="true"></i></button>
     </div>
 
     <div class="col-sm-12">
       <div class="radius">
         <div class="row">
-            <div class="col-sm-3">
-                <form class="form-inline">
-                <input class="form-control mr-sm-2" type="search" placeholder="Select Owner" aria-label="Search">
-                </form>
-            </div>
+          <div class="col-sm-3">
+            <form class="form-inline">
+              <input class="form-control mr-sm-2" type="search" placeholder="Select Owner" aria-label="Search">
+            </form>
+          </div>
           <div class="col-sm-3">
             <div>
               <label for="start-date">Start Date:</label>
@@ -420,202 +433,204 @@
             </div>
           </div>
           <div class="col-sm-3">
-            <button class="srch-btn" [disabled]="loading"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
+            <button class="srch-btn" [disabled]="loading"><i class="fa fa-search" aria-hidden="true"></i> Search
+            </button>
           </div>
         </div>
       </div>
     </div>
 
 
-      <div class="col-sm-6">
-        <div class="radius">
-          <span class="TxHd"><i class="fa fa-file-o"></i> Invoice</span>&nbsp;
-          <span class="numTxBg">91</span>
-          <!-- Inside Row -->
-          <div class="row">
-            <div class="col-sm-12">
-                <div class="radius1">
-                <span class="numTxSm">91</span><br>
-                <span class="TxSm">Invoice Raised</span>
-              </div>
-              </div>
-            <div class="col-sm-6">
-              <div class="radius1 grBk">
+    <div class="col-sm-6">
+      <div class="radius">
+        <span class="TxHd"><i class="fa fa-file-o"></i> Invoice</span>&nbsp;
+        <span class="numTxBg">91</span>
+        <!-- Inside Row -->
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="radius1">
+              <span class="numTxSm">91</span><br>
+              <span class="TxSm">Invoice Raised</span>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="radius1 grBk">
               <span class="numTxSm grTx">₹54,630</span><br>
               <span class="TxSm">Revenue Generated</span><br>
             </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="radius1 grBk">
+          </div>
+          <div class="col-sm-6">
+            <div class="radius1 grBk">
               <span class="numTxSm grTx">61</span><br>
               <span class="TxSm">Paid Invoices</span><br>
             </div>
-            </div>
+          </div>
 
-            </div>
-          <!-- Inside Row Ends -->
         </div>
+        <!-- Inside Row Ends -->
       </div>
+    </div>
 
-      <div class="col-sm-6">
-        <div class="radius">
-          <span class="TxHd"><i class="fa fa-users" aria-hidden="true"></i> Operation Team</span>&nbsp;
-          <span class="numTxBg">180</span>
-          <!-- Inside Row -->
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="radius1">
+    <div class="col-sm-6">
+      <div class="radius">
+        <span class="TxHd"><i class="fa fa-users" aria-hidden="true"></i> Operation Team</span>&nbsp;
+        <span class="numTxBg">180</span>
+        <!-- Inside Row -->
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="radius1">
               <span class="numTxSm">30</span><br>
               <span class="TxSm">Total SME's</span><br>
             </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1">
+          </div>
+          <div class="col-sm-4">
+            <div class="radius1">
               <span class="numTxSm">30</span><br>
               <span class="TxSm">Internal SME's</span><br>
             </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1">
+          </div>
+          <div class="col-sm-4">
+            <div class="radius1">
               <span class="numTxSm">30</span><br>
               <span class="TxSm">Partner</span><br>
             </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1">
+          </div>
+          <div class="col-sm-4">
+            <div class="radius1">
               <span class="numTxSm">30</span><br>
               <span class="TxSm">Leaders</span><br>
             </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1">
+          </div>
+          <div class="col-sm-4">
+            <div class="radius1">
               <span class="numTxSm">30</span><br>
               <span class="TxSm">Owners</span>
             </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="radius1">
+          </div>
+          <div class="col-sm-4">
+            <div class="radius1">
               <span class="numTxSm">30</span><br>
               <span class="TxSm">Filers/Partners</span>
             </div>
+          </div>
+        </div>
+        <!-- Inside Row Ends -->
+      </div>
+    </div>
+
+
+
+    <div class="col-sm-4">
+      <div class="radius">
+        <span class="TxHd"><i class="fa fa-user" aria-hidden="true"></i> Filers/Partners Assignment (ITR)</span>&nbsp;
+        <span class="numTxBg">120</span>
+        <!-- Inside Row -->
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="radius1">
+              <span class="numTxSm grTx">30</span><br>
+              <span class="TxSm">Active Partners</span>
             </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="radius1">
+              <span class="numTxSm grTx">30</span><br>
+              <span class="TxSm">Assignment On</span><br>
             </div>
-          <!-- Inside Row Ends -->
-        </div>
-      </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="radius1">
+              <span class="numTxSm OrgTx">30</span><br>
+              <span class="TxSm">Inactive Partners</span><br>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="radius1">
+              <span class="numTxSm OrgTx">30</span><br>
+              <span class="TxSm">Assignment Off</span><br>
+            </div>
+          </div>
 
 
-
-  <div class="col-sm-4">
-  <div class="radius">
-    <span class="TxHd"><i class="fa fa-user" aria-hidden="true"></i> Filers/Partners Assignment (ITR)</span>&nbsp;
-    <span class="numTxBg">120</span>
-    <!-- Inside Row -->
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="radius1">
-        <span class="numTxSm grTx">30</span><br>
-        <span class="TxSm">Active Partners</span>
-      </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="radius1">
-        <span class="numTxSm grTx">30</span><br>
-        <span class="TxSm">Assignment On</span><br>
-      </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="radius1">
-        <span class="numTxSm OrgTx">30</span><br>
-        <span class="TxSm">Inactive Partners</span><br>
-      </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="radius1">
-        <span class="numTxSm OrgTx">30</span><br>
-        <span class="TxSm">Assignment Off</span><br>
-      </div>
-      </div>
-
-
-      </div>
-    <!-- Inside Row Ends -->
-  </div>
-</div><div class="col-sm-4">
-    <div class="radius">
-      <span class="TxHd"><i class="fa fa-percent" aria-hidden="true"></i> Total Commission</span>&nbsp;
-      <!-- <span class="numTxBg">27,315</span> -->
-      <!-- Inside Row -->
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="radius1 grBk">
-          <span class="numTxSm grTx">27,315</span><br>
-          <span class="TxSm">Total Commission Earned (18K)</span><br>
         </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="radius1 grBk">
-          <span class="numTxSm grTx">9</span><br>
-          <span class="TxSm">Paid (10K)</span><br>
-        </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="radius1 OrgBk">
-          <span class="numTxSm OrgTx">30.33</span><br>
-          <span class="TxSm">Payable (8K)</span><br>
-        </div>
-        </div>
+        <!-- Inside Row Ends -->
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="radius">
+        <span class="TxHd"><i class="fa fa-percent" aria-hidden="true"></i> Total Commission</span>&nbsp;
+        <!-- <span class="numTxBg">27,315</span> -->
+        <!-- Inside Row -->
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="radius1 grBk">
+              <span class="numTxSm grTx">27,315</span><br>
+              <span class="TxSm">Total Commission Earned (18K)</span><br>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="radius1 grBk">
+              <span class="numTxSm grTx">9</span><br>
+              <span class="TxSm">Paid (10K)</span><br>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="radius1 OrgBk">
+              <span class="numTxSm OrgTx">30.33</span><br>
+              <span class="TxSm">Payable (8K)</span><br>
+            </div>
+          </div>
 
         </div>
-      <!-- Inside Row Ends -->
+        <!-- Inside Row Ends -->
+      </div>
+    </div>
+
+    <div class="col-sm-4">
+      <div class="radius">
+        <span class="TxHd"><i class="fa fa-handshake-o"></i> Total ITR Filed(Original Returns)</span>&nbsp;
+        <span class="numTxBg">73</span>
+        <!-- Inside Row -->
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="radius1">
+              <span class="numTxSm">28</span><br>
+              <span class="TxSm">ITR1</span><br>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="radius1">
+              <span class="numTxSm">11</span><br>
+              <span class="TxSm">ITR2</span><br>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="radius1">
+              <span class="numTxSm">16</span><br>
+              <span class="TxSm">ITR3</span><br>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="radius1">
+              <span class="numTxSm">16</span><br>
+              <span class="TxSm">ITR4</span><br>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="radius1">
+              <span class="numTxSm">2</span><br>
+              <span class="TxSm">Other</span>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="radius1">
+              <span class="numTxSm">2</span><br>
+              <span class="TxSm">ITR U</span><br>
+            </div>
+          </div>
+        </div>
+        <!-- Inside Row Ends -->
+      </div>
     </div>
   </div>
-
-  <div class="col-sm-4">
-    <div class="radius">
-      <span class="TxHd"><i class="fa fa-handshake-o"></i> Total ITR Filed(Original Returns)</span>&nbsp;
-      <span class="numTxBg">73</span>
-      <!-- Inside Row -->
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="radius1">
-          <span class="numTxSm">28</span><br>
-          <span class="TxSm">ITR1</span><br>
-        </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="radius1">
-          <span class="numTxSm">11</span><br>
-          <span class="TxSm">ITR2</span><br>
-        </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="radius1">
-          <span class="numTxSm">16</span><br>
-          <span class="TxSm">ITR3</span><br>
-        </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="radius1">
-          <span class="numTxSm">16</span><br>
-          <span class="TxSm">ITR4</span><br>
-        </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="radius1">
-          <span class="numTxSm">2</span><br>
-          <span class="TxSm">Other</span>
-        </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="radius1">
-          <span class="numTxSm">2</span><br>
-          <span class="TxSm">ITR U</span><br>
-        </div>
-        </div>
-        </div>
-      <!-- Inside Row Ends -->
-    </div>
-  </div>
-</div>
 </div>
