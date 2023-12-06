@@ -447,9 +447,11 @@ export class SharesAndEquityComponent
               delete element?.improvementsArray?.dateOfImprovement;
             });
 
-            params?.data?.controls['improvementsArray']?.setValue(
-              this.formToBeShownAfterSaveAll[index]?.improvementsArray
-            );
+            if(this.formToBeShownAfterSaveAll[index]?.improvementsArray) {
+              params?.data?.controls['improvementsArray']?.setValue(
+                  this.formToBeShownAfterSaveAll[index]?.improvementsArray
+              );
+            }
             if (
               params.data?.controls['improvementsArray']?.value
                 .indexCostOfImprovement
