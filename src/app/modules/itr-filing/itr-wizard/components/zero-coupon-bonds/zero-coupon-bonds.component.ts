@@ -182,6 +182,7 @@ export class ZeroCouponBondsComponent
 
     this.getImprovementYears();
     // this.onChanges();
+    this.updateDeductionUI();
   }
 
   updateDeductionUI() {
