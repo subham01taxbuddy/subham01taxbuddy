@@ -60,131 +60,150 @@
         </div>
     </aside>
     <!-- left side bar ends -->
-    <div class="main-content">
-        <!-- breadcrumb area -->
-        <div class="breadcrumb">
-            <div class="breadcrumb-item">Prefill Data</div>
-            <div class="breadcrumb-item">Sources of Income</div>
-            <div class="breadcrumb-item">Capital Gain</div>
-        </div>
-        <!-- breadcrumb area ends -->
         <!-- main area -->
         <main>
+    <!-- breadcrumb area -->
+          <div class="rectangleB">
+            <div class="frameB">
+                <div class="large-title">Prefill Data</div>
+                <div class="text-wrapper">&gt;</div>
+                <div class="large-title">Sources of Income</div>
+                <div class="text-wrapper">&gt;</div>
+                <div class="large-title">Capital Gain</div>
+            </div>
+            </div>
+    <!-- breadcrumb area ends -->
             <div class="frameC">
                 <h1 class="heading__title">Unlisted Securities (Shares not listed) </h1>
                 <div class="space">
                     <div class="wrapper">
-                        <div class="accordion-item ">
-                            <h2 class="accordion__item-title space__between">
-                                <span class="box-left">
-                                    Unlisted Securities (Shares not listed)
-                                </span>
-                                <button class="btn btn__default btn__add">Add</button>
-                            </h2>
-                            <div class="accordion__item-body">
-                                <!-- Start - This code can be used in popup for add button-->
-                                <div class="gray_container">
-                                    <div class="div-6">
-                                        <div class="form-field">
-                                            <div><span class="span">Scrip name </span> <span
-                                                    class="text-wrapper-2">*</span>
-                                            </div>
-                                            <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-                                                aria-describedby="emailHelp" placeholder="Scrip name ">
-                                        </div>
-                                        <div class="form-field">
-                                            <div><span class="span">Sale Date </span> <span
-                                                    class="text-wrapper-2">*</span>
-                                            </div>
-                                            <input type="date" class="form-control inpplac" id="exampleInputEmail1"
-                                                aria-describedby="emailHelp" placeholder="DD/MM/YYYY">
-                                        </div>
-                                        <div class="form-field">
-                                            <div><span class="span">Buy Date </span> <span
-                                                    class="text-wrapper-2">*</span>
-                                            </div>
-                                            <input type="date" class="form-control inpplac" id="exampleInputEmail1"
-                                                aria-describedby="emailHelp" placeholder="DD/MM/YYYY">
-                                        </div>
+                        <div class="div-4">
+                            <div class="frame-wrapper-2A">
+                            <div class="accordion" id="myAccordion"> 
 
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading1">
+                                      <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapse1"><span class="box-left">
+                                            Unlisted Securities (Shares Not Listed)
+                                        </span> <button class="btn btn__default btn__add btn-rt">Add</button> </button>
+    
+                    
+                                    </h2>
+                                    <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                                        <div class="accordion__item-body">
+                                            <!-- Start - This code can be used in popup for add button-->
+                                            <div class="gray_container">
+                                                <div class="div-6">
+                                                    <div class="form-field">
+                                                        <div><span class="span">Scrip name </span> <span
+                                                                class="text-wrapper-2">*</span>
+                                                        </div>
+                                                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                                            aria-describedby="emailHelp" placeholder="Scrip name ">
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <div><span class="span">Sale Date </span> <span
+                                                                class="text-wrapper-2">*</span>
+                                                        </div>
+                                                        <input type="date" class="form-control inpplac" id="exampleInputEmail1"
+                                                            aria-describedby="emailHelp" placeholder="DD/MM/YYYY">
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <div><span class="span">Buy Date </span> <span
+                                                                class="text-wrapper-2">*</span>
+                                                        </div>
+                                                        <input type="date" class="form-control inpplac" id="exampleInputEmail1"
+                                                            aria-describedby="emailHelp" placeholder="DD/MM/YYYY">
+                                                    </div>
+            
+                                                </div>
+                                                <div class="div-6">
+                                                    <div class="form-field">
+                                                        <div><span class="span">Sale Value </span> <span
+                                                                class="text-wrapper-2">*</span>
+                                                        </div>
+                                                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                                            aria-describedby="emailHelp" placeholder="Sale Value">
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <div><span class="span">Buy Value </span> <span
+                                                                class="text-wrapper-2">*</span>
+                                                        </div>
+                                                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                                            aria-describedby="emailHelp" placeholder="Buy Value">
+                                                    </div>
+                                                    <div class="form-field">
+                                                        <div><span class="span">Expenses </span> <span
+                                                                class="text-wrapper-2">*</span>
+                                                        </div>
+                                                        <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                                            aria-describedby="emailHelp" placeholder="Expenses">
+                                                    </div>
+                                                </div>
+                                                <div class="div-6">
+                                                    <button class="btn btn__primary">Save</button>
+                                                </div>
+                                            </div>
+                                            <!-- End - This code can be used in popup for add button-->
+                                            <div class="table-wrapper">
+                                                <table class="table table-bordered mb-20">
+                                                    <thead>
+                                                        <tr class="table-head">
+                                                            <th class="text-center">ACTION</th>
+                                                            <th class="text-center">Scrip name</th>
+                                                            <th class="text-center">Buy/Sell Quantity</th>
+                                                            <th class="text-center">Sale Date</th>
+                                                            <th class="text-center">Sale Price</th>
+                                                            <th class="text-center">Sale Value</th>
+                                                            <th class="text-center"> Buy Date</th>
+                                                            <th class="text-center"> Buy Price</th>
+                                                            <th class="text-center"> Buy Value</th>
+                                                            <th class="text-center"> Expenses</th>
+                                                            <th class="text-center"> Type of Capital gain</th>
+                                                            <th class="text-center"> Edit</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td colspan="12">No records found
+                                                            </td>
+            
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="row">
+                                                <div class="space__between">
+                                                    <button _ngcontent-njk-c373="" class="btn__white"><i _ngcontent-njk-c373=""
+                                                            class="fa-solid fa-trash-can"></i> Delete</button>
+                                                    <button _ngcontent-njk-c373="" class="btn__white"><i _ngcontent-njk-c373=""
+                                                            class="fa-solid fa-back"></i> Back to Broker</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="div-6">
-                                        <div class="form-field">
-                                            <div><span class="span">Sale Value </span> <span
-                                                    class="text-wrapper-2">*</span>
-                                            </div>
-                                            <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-                                                aria-describedby="emailHelp" placeholder="Sale Value">
-                                        </div>
-                                        <div class="form-field">
-                                            <div><span class="span">Buy Value </span> <span
-                                                    class="text-wrapper-2">*</span>
-                                            </div>
-                                            <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-                                                aria-describedby="emailHelp" placeholder="Buy Value">
-                                        </div>
-                                        <div class="form-field">
-                                            <div><span class="span">Expenses </span> <span
-                                                    class="text-wrapper-2">*</span>
-                                            </div>
-                                            <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-                                                aria-describedby="emailHelp" placeholder="Expenses">
-                                        </div>
+                                  </div>
+
+                                  <div class="White_box space__between">
+                                    <div>
+                                        Add deduction under section 54F?
+                                        <i class="fa fa-info-circle"> </i>
                                     </div>
-                                    <div class="div-6">
-                                        <button class="btn btn__primary">Save</button>
+                                    <div class="action-items">
+                                        <span><input type="radio" value="Yes"> Yes </span>&nbsp;/&nbsp; <span><input
+                                                type="radio" value="No"> No </span>
                                     </div>
                                 </div>
-                                <!-- End - This code can be used in popup for add button-->
-                                <div class="table-wrapper">
-                                    <table class="table table-bordered mb-20">
-                                        <thead>
-                                            <tr class="table-head">
-                                                <th class="text-center">ACTION</th>
-                                                <th class="text-center">Scrip name</th>
-                                                <th class="text-center">Buy/Sell Quantity</th>
-                                                <th class="text-center">Sale Date</th>
-                                                <th class="text-center">Sale Price</th>
-                                                <th class="text-center">Sale Value</th>
-                                                <th class="text-center"> Buy Date</th>
-                                                <th class="text-center"> Buy Price</th>
-                                                <th class="text-center"> Buy Value</th>
-                                                <th class="text-center"> Expenses</th>
-                                                <th class="text-center"> Type of Capital gain</th>
-                                                <th class="text-center"> Edit</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td colspan="12">No records found
-                                                </td>
 
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="row">
-                                    <div class="space__between">
-                                        <button _ngcontent-njk-c373="" class="btn__white"><i _ngcontent-njk-c373=""
-                                                class="fa-solid fa-trash-can"></i> Delete</button>
-                                        <button _ngcontent-njk-c373="" class="btn__white"><i _ngcontent-njk-c373=""
-                                                class="fa-solid fa-back"></i> Back to Broker</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                    </div>
+                    </div>
 
-                        <div class="White_box space__between">
-                            <div>
-                                Add deduction under section 54F?
-                                <i class="fa fa-info-circle"> </i>
-                            </div>
-                            <div class="action-items">
-                                <span><input type="radio" value="Yes"> Yes </span>&nbsp;/&nbsp; <span><input
-                                        type="radio" value="No"> No </span>
-                            </div>
-                        </div>
 
+
+
+             
 
                         <div class="out-box">
                             <div class="box-left">
@@ -198,82 +217,82 @@
                 </div>
             </div>
         </main>
-    </div>
+  
 
-    <!-- right side summary -->
-    <aside class="aside-right">
-        <button class="side_btn btn__summary" onclick="openForm()">Show Summary</button>
-        <div class="form-popup" id="myForm">
-            <div class="frameS">
-                <div class="contents-wrapper">
-                    <h2 class="sidebar_item-title" onclick="closeForm()">Summary</h2>
+   <!-- right side summary -->
+   <aside class="aside-right">
+    <button class="side_btn btn__summary" onclick="openForm()">Show Summary</button>
+    <div class="form-popup" id="myForm">
+        <div class="frameS">
+            <div class="contents-wrapper">
+                <h2 class="sidebar_item-title" onclick="closeForm()">Summary</h2>
+            </div>
+            <div class="space">
+                <div class="divider_border">
+                    <div class="div mb-20">
+                        <div class="field-wrapper ">
+                            <div class="field-2">
+                                <div class="field-label-2 hedTx">Particulars</div>
+                                <div class="field-label-3 hedTx">All Employers</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="space">
-                    <div class="divider_border">
-                        <div class="div mb-20">
-                            <div class="field-wrapper ">
-                                <div class="field-2">
-                                    <div class="field-label-2 hedTx">Particulars</div>
-                                    <div class="field-label-3 hedTx">All Employers</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="div divider_border">
-                        <div class="field-wrapper">
-                            <div class="field-2">
-                                <div class="field-label-2">17 (1)</div>
-                                <div class="field-label-3">₹ 40,00,000</div>
-                            </div>
-                        </div>
-                        <div class="field-wrapper">
-                            <div class="field-2">
-                                <div class="field-label-2">17 (2)</div>
-                                <div class="field-label-3">₹0</div>
-                            </div>
-                        </div>
-                        <div class="field-wrapper">
-                            <div class="field-2">
-                                <div class="field-label-2">17 (3)</div>
-                                <div class="field-label-3">₹0</div>
-                            </div>
-                        </div>
-                        <div class="field-wrapper">
-                            <div class="field-2">
-                                <div class="field-label-2">Gross Salary</div>
-                                <div class="field-label-3">₹0</div>
-                            </div>
-                        </div>
-                        <div class="field-wrapper">
-                            <div class="field-2">
-                                <div class="field-label-2">Exemptions u/s 10</div>
-                                <div class="field-label-3">₹0</div>
-                            </div>
-                        </div>
-                        <div class="field-wrapper">
-                            <div class="field-2">
-                                <div class="field-label-2">Net Salary</div>
-                                <div class="field-label-3">₹ 50,000</div>
-                            </div>
-                        </div>
-                        <div class="field-wrapper">
-                            <div class="field-2">
-                                <div class="field-label-2">Deduction u/s 16</div>
-                                <div class="field-label-3">₹ 50,000</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <img class="img" src="img/line-2.svg" /> -->
+                <div class="div divider_border">
                     <div class="field-wrapper">
                         <div class="field-2">
-                            <div class="field-label-2 hedTx">Taxable Salary</div>
-                            <div class="field-label-3 hedTx">₹ 39,50,000</div>
+                            <div class="field-label-2">17 (1)</div>
+                            <div class="field-label-3">₹ 40,00,000</div>
                         </div>
+                    </div>
+                    <div class="field-wrapper">
+                        <div class="field-2">
+                            <div class="field-label-2">17 (2)</div>
+                            <div class="field-label-3">₹0</div>
+                        </div>
+                    </div>
+                    <div class="field-wrapper">
+                        <div class="field-2">
+                            <div class="field-label-2">17 (3)</div>
+                            <div class="field-label-3">₹0</div>
+                        </div>
+                    </div>
+                    <div class="field-wrapper">
+                        <div class="field-2">
+                            <div class="field-label-2">Gross Salary</div>
+                            <div class="field-label-3">₹0</div>
+                        </div>
+                    </div>
+                    <div class="field-wrapper">
+                        <div class="field-2">
+                            <div class="field-label-2">Exemptions u/s 10</div>
+                            <div class="field-label-3">₹0</div>
+                        </div>
+                    </div>
+                    <div class="field-wrapper">
+                        <div class="field-2">
+                            <div class="field-label-2">Net Salary</div>
+                            <div class="field-label-3">₹ 50,000</div>
+                        </div>
+                    </div>
+                    <div class="field-wrapper">
+                        <div class="field-2">
+                            <div class="field-label-2">Deduction u/s 16</div>
+                            <div class="field-label-3">₹ 50,000</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <img class="img" src="img/line-2.svg" /> -->
+                <div class="field-wrapper">
+                    <div class="field-2">
+                        <div class="field-label-2 hedTx">Taxable Salary</div>
+                        <div class="field-label-3 hedTx">₹ 39,50,000</div>
                     </div>
                 </div>
             </div>
         </div>
-    </aside>
-    <!-- right side summary ends-->
+    </div>
+</aside>
+<!-- right side summary ends-->
 </div>
 <!-- main area ends -->
