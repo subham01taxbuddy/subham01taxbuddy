@@ -15,6 +15,8 @@ import { ValidateOtpByWhatAppComponent } from '../../components/validate-otp-by-
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { RequestManager } from "../../../shared/services/request-manager";
 import { SpeedTestService } from 'ng-speed-test';
+import { ReviewService } from 'src/app/modules/review/services/review.service';
+import { environment } from 'src/environments/environment';
 
 declare let $: any;
 declare function we_login(userId: string);
@@ -48,7 +50,8 @@ export class LoginComponent implements OnInit {
     private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
     private requestManager: RequestManager,
-    private speedTestService: SpeedTestService
+    private speedTestService: SpeedTestService,
+    private reviewService: ReviewService
   ) {
     NavbarService.getInstance().component_link = this.component_link;
 
@@ -92,7 +95,7 @@ export class LoginComponent implements OnInit {
       this.registerLogin(userId);
       this.utilsService.getStoredSmeList();
       this.getAgentList();
-
+      this.generateKmAuthToken();
       let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
         'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];
       let roles = res.data[0]?.roles;
@@ -105,6 +108,10 @@ export class LoginComponent implements OnInit {
         // } else if (jhi.role.indexOf("ROLE_TPA_SME") !== -1) {
         //   this.router.navigate(['pages/tpa-interested']);
         //   this.utilsService.logAction(jhi.userId, 'login')
+        // } else if (roles.indexOf("ROLE_FILER") !== -1) {
+        //   this.router.navigate(['/tasks/itr-assigned-users']);
+        //   this.utilsService.logAction(userId, 'login');
+
       } else if (allowedRoles.some(item => roles.includes(item))) {
         this.router.navigate(['/tasks/assigned-users-new']);
       } else {
@@ -161,9 +168,9 @@ export class LoginComponent implements OnInit {
     });
     this.speedTest();
   }
-  internetSpeed:any = -1;
+  internetSpeed: any = -1;
   speedIterations = 2;
-  speedTest(){
+  speedTest() {
     this.speedTestService.getMbps(
       {
         iterations: 1,
@@ -173,7 +180,7 @@ export class LoginComponent implements OnInit {
       (speed) => {
         console.log('Your speed is ' + Number(speed));
         this.internetSpeed = Number(speed).toFixed(2);
-        if(this.speedIterations > 0) {
+        if (this.speedIterations > 0) {
           this.speedIterations--;
           this.speedTest();
         }
@@ -223,7 +230,7 @@ export class LoginComponent implements OnInit {
   }
 
   public onSubmit() {
-    if(this.isMobileBrowser()){
+    if (this.isMobileBrowser()) {
       return;
     }
     this.form.controls['passphrase'].setValidators([Validators.required, Validators.minLength(6)]);
@@ -384,18 +391,72 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.loading = true;
-    const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
+    // const param = `/sme-details-new/${userId}?smeUserId=${userId}`;
+    const param = `/bo/sme-details-new/${userId}`;
     this.requestManager.addRequest(this.SME_INFO, this.userMsService.getMethodNew(param));
     this.requestManager.requestCompleted.subscribe((event) => {
       if (event.api === this.SME_INFO) {
         if (event.error) {
           console.log('Error:', event.error);
           this._toastMessageService.alert("error", event.error.error.error);
-        }else {
+        } else {
+          if (event?.result?.data[0].roles.includes('ROLE_FILER')) {
+            this.assignUnassignedUsersToFiler(event.result.data[0]);
+          }
           console.log('Success:', event.result);
         }
       }
     })
+  }
+
+  assignUnassignedUsersToFiler(filerDetails) {
+    let param = '/v2/assign-unassigned-users?filerUserId=' + filerDetails.userId;
+    this.userMsService.getMethod(param).subscribe(
+      (response: any) => {
+      });
+  }
+
+  generateKmAuthToken() {
+    //'https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/sme-authtoken'
+    this.loading = true;
+    let param = `kommunicate/sme-authtoken`;
+    this.reviewService.postMethod(param, '').subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          this.utilsService.showSnackBar(response.message);
+          sessionStorage.setItem('kmAuthToken', response?.data?.token);
+          if (response?.data?.token) {
+            this.loginKommunicateSdk(response?.data?.token);
+          }
+        } else {
+          this.utilsService.showSnackBar(response.message);
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to generate the kommunicate auth token');
+      });
+  }
+
+  loginKommunicateSdk(token) {
+    let loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+    const baseUrl = "https://dashboard-proxy.kommunicate.io";
+    const userEmail = loginSmeDetails[0].email;
+    const userAccessToken = `${token}&appId=${environment.kmAppId}`;
+    let iframe = document.getElementById('km-iframe') as HTMLIFrameElement;
+    if (!iframe) {
+      iframe = document.createElement("iframe");
+      iframe.setAttribute('class', 'iframe-height');
+      iframe.setAttribute('id', 'km-iframe');
+    }
+
+
+    iframe.setAttribute('src', `${baseUrl}/login?email=${userEmail}&password=${userAccessToken}?showConversationSectionOnly=true`)
+    if (!document.getElementById('km-iframe')) {
+      let viewbox = document.getElementById('km-viewbox');
+      viewbox.append(iframe);
+    }
   }
 
   mode: string = 'SIGN_IN';

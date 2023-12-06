@@ -48,8 +48,18 @@
               [formGroupName]="i"
             >
               <br />
+
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <!-- checkbox -->
+                <input
+                  class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                  type="checkbox"
+                  (click)="$event.stopPropagation()"
+                  [checked]="selectedIndexes.includes(i)"
+                  (click)="toggleSelectedIndex(i)"
+                />
+
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -109,7 +119,7 @@
                 <button
                   class="flex lgtBtn justify-content-end align-items-center"
                   style="height: 100%"
-                  (click)="add('depositoryAccounts')"
+                  (click)="add('depositoryAccounts', i)"
                 >
                   + Add
                 </button>
@@ -123,7 +133,7 @@
               >
                 <div
                   *ngFor="
-                    let accountCtrl of getAccountControls.controls;
+                    let accountCtrl of getAccountControls(i).controls;
                     let j = index
                   "
                   [formGroupName]="j"
@@ -132,12 +142,19 @@
                     class="flex gap-[25px] align-items-center"
                     style="margin-bottom: 10px"
                   >
+                    <input
+                      class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                      type="checkbox"
+                      (click)="$event.stopPropagation()"
+                      [checked]="selectedAccountIndexes.includes(j)"
+                      (click)="toggleSelectedAccountIndex(j)"
+                    />
+
                     <!-- Account Number Input -->
                     <mat-form-field appearance="outline">
                       <mat-label>Account Number</mat-label>
                       <input
                         matInput
-                        name="accountNumber[j]"
                         formControlName="accountNumber"
                         digitsOnly
                         required
@@ -149,7 +166,6 @@
                       <mat-label>Status</mat-label>
                       <mat-select
                         matInput
-                        name="status[j]"
                         formControlName="status"
                         required
                       >
@@ -169,7 +185,6 @@
                       <input
                         matInput
                         placeholder="DD/MM/YYYY"
-                        name="accountOpeningDate[j]"
                         [matDatepicker]="dateofFilling"
                         autocomplete="off"
                         formControlName="accountOpeningDate"
@@ -190,7 +205,6 @@
                       <mat-label>Peak Balance during the period</mat-label>
                       <input
                         matInput
-                        name="peakBalance[j]"
                         formControlName="peakBalance"
                         digitsOnly
                         required
@@ -202,7 +216,6 @@
                       <mat-label>Closing Balance</mat-label>
                       <input
                         matInput
-                        name="closingBalance[j]"
                         formControlName="closingBalance"
                         digitsOnly
                         required
@@ -217,7 +230,6 @@
                       </mat-label>
                       <input
                         matInput
-                        name="grossInterestPaid[j]"
                         formControlName="grossInterestPaid"
                         digitsOnly
                         required
@@ -226,8 +238,22 @@
                   </div>
                   <br />
                 </div>
+                <button
+                  class="delete-btn"
+                  style="width: 15%"
+                  (click)="delete('depositoryAccounts', 'account', i)"
+                >
+                  <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                </button>
               </div>
             </div>
+            <button
+              class="delete-btn"
+              style="width: 15%; margin: 10px"
+              (click)="delete('depositoryAccounts', 'formArray')"
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+            </button>
           </form>
         </div>
 
@@ -251,8 +277,17 @@
               [formGroupName]="i"
             >
               <br />
+
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <!-- checkbox -->
+                <input
+                  class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                  type="checkbox"
+                  (click)="$event.stopPropagation()"
+                  [checked]="selectedIndexes.includes(i)"
+                  (click)="toggleSelectedIndex(i)"
+                />
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -312,7 +347,7 @@
                 <button
                   class="flex lgtBtn justify-content-end align-items-center"
                   style="height: 100%"
-                  (click)="add('custodialAccounts')"
+                  (click)="add('custodialAccounts', i)"
                 >
                   + Add
                 </button>
@@ -326,7 +361,7 @@
               >
                 <div
                   *ngFor="
-                    let accountCtrl of getCustodialAccountControls?.controls;
+                    let accountCtrl of getCustodialAccountControls(i)?.controls;
                     let j = index
                   "
                   [formGroupName]="j"
@@ -335,6 +370,13 @@
                     class="flex gap-[25px] align-items-center"
                     style="margin-bottom: 10px"
                   >
+                    <input
+                      class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                      type="checkbox"
+                      (click)="$event.stopPropagation()"
+                      [checked]="selectedAccountIndexes.includes(j)"
+                      (click)="toggleSelectedAccountIndex(j)"
+                    />
                     <!-- Account Number Input -->
                     <mat-form-field appearance="outline">
                       <mat-label>Account Number</mat-label>
@@ -444,8 +486,22 @@
                   </div>
                   <br />
                 </div>
+                <button
+                  class="delete-btn"
+                  style="width: 15%"
+                  (click)="delete('custodialAccounts', 'account', i)"
+                >
+                  <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                </button>
               </div>
             </div>
+            <button
+              class="delete-btn"
+              style="width: 15%; margin: 10px"
+              (click)="delete('custodialAccounts', 'formArray')"
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+            </button>
           </form>
         </div>
 
@@ -469,8 +525,18 @@
               [formGroupName]="i"
             >
               <br />
+
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <!-- checkbox -->
+                <input
+                  class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                  type="checkbox"
+                  (click)="$event.stopPropagation()"
+                  [checked]="selectedIndexes.includes(i)"
+                  (click)="toggleSelectedIndex(i)"
+                />
+
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -632,6 +698,13 @@
                 </mat-form-field>
               </div>
             </div>
+            <button
+              class="delete-btn"
+              style="width: 15%; margin: 10px"
+              (click)="delete('equityAndDebtInterest', 'formArray')"
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+            </button>
           </form>
         </div>
 
@@ -655,8 +728,17 @@
               [formGroupName]="i"
             >
               <br />
+
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <!-- checkbox -->
+                <input
+                  class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                  type="checkbox"
+                  (click)="$event.stopPropagation()"
+                  [checked]="selectedIndexes.includes(i)"
+                  (click)="toggleSelectedIndex(i)"
+                />
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -764,6 +846,13 @@
                 </mat-form-field>
               </div>
             </div>
+            <button
+              class="delete-btn"
+              style="width: 15%; margin: 10px"
+              (click)="delete('cashValueInsurance', 'formArray')"
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+            </button>
           </form>
         </div>
 
@@ -787,8 +876,17 @@
               [formGroupName]="i"
             >
               <br />
+
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <!-- checkbox -->
+                <input
+                  class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                  type="checkbox"
+                  (click)="$event.stopPropagation()"
+                  [checked]="selectedIndexes.includes(i)"
+                  (click)="toggleSelectedIndex(i)"
+                />
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -969,6 +1067,13 @@
                 </mat-form-field>
               </div>
             </div>
+            <button
+              class="delete-btn"
+              style="width: 15%; margin: 10px"
+              (click)="delete('financialInterestDetails', 'formArray')"
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+            </button>
           </form>
         </div>
 
@@ -992,8 +1097,17 @@
               [formGroupName]="i"
             >
               <br />
+
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <!-- checkbox -->
+                <input
+                  class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                  type="checkbox"
+                  (click)="$event.stopPropagation()"
+                  [checked]="selectedIndexes.includes(i)"
+                  (click)="toggleSelectedIndex(i)"
+                />
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -1158,6 +1272,13 @@
                 </mat-form-field>
               </div>
             </div>
+            <button
+              class="delete-btn"
+              style="width: 15%; margin: 10px"
+              (click)="delete('immovablePropertryDetails', 'formArray')"
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+            </button>
           </form>
         </div>
 
@@ -1181,8 +1302,17 @@
               [formGroupName]="i"
             >
               <br />
+
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <!-- checkbox -->
+                <input
+                  class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                  type="checkbox"
+                  (click)="$event.stopPropagation()"
+                  [checked]="selectedIndexes.includes(i)"
+                  (click)="toggleSelectedIndex(i)"
+                />
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -1348,6 +1478,13 @@
                 </mat-form-field>
               </div>
             </div>
+            <button
+              class="delete-btn"
+              style="width: 15%; margin: 10px"
+              (click)="delete('capitalAssetsDetails', 'formArray')"
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+            </button>
           </form>
         </div>
 
@@ -1371,8 +1508,17 @@
               [formGroupName]="i"
             >
               <br />
+
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <!-- checkbox -->
+                <input
+                  class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                  type="checkbox"
+                  (click)="$event.stopPropagation()"
+                  [checked]="selectedIndexes.includes(i)"
+                  (click)="toggleSelectedIndex(i)"
+                />
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -1435,7 +1581,7 @@
                 <button
                   class="flex lgtBtn justify-content-end align-items-center"
                   style="height: 100%"
-                  (click)="add('signingAuthorityDetails')"
+                  (click)="add('signingAuthorityDetails', i)"
                 >
                   + Add
                 </button>
@@ -1449,7 +1595,7 @@
               >
                 <div
                   *ngFor="
-                    let accountCtrl of getSigningAuthAccountControls?.controls;
+                    let accountCtrl of getSigningAuthAccountControls(i)?.controls;
                     let j = index
                   "
                   [formGroupName]="j"
@@ -1458,6 +1604,13 @@
                     class="flex gap-[25px] align-items-center"
                     style="margin-bottom: 10px"
                   >
+                    <input
+                      class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                      type="checkbox"
+                      (click)="$event.stopPropagation()"
+                      [checked]="selectedAccountIndexes.includes(j)"
+                      (click)="toggleSelectedAccountIndex(j)"
+                    />
                     <!-- Account holder name -->
                     <mat-form-field appearance="outline">
                       <mat-label>Name of the account holder</mat-label>
@@ -1513,7 +1666,9 @@
                   </div>
                   <br />
                   <div
-                    *ngIf="accountCtrl?.get('isTaxableinYourHand')?.value === 'Y'"
+                    *ngIf="
+                      accountCtrl?.get('isTaxableinYourHand')?.value === 'Y'
+                    "
                   >
                     <div class="flex gap-[25px]">
                       <!-- accruedIncome -->
@@ -1574,8 +1729,22 @@
                   </div>
                   <br />
                 </div>
+                <button
+                  class="delete-btn"
+                  style="width: 15%"
+                  (click)="delete('signingAuthorityDetails', 'account', i)"
+                >
+                  <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                </button>
               </div>
             </div>
+            <button
+              class="delete-btn"
+              style="width: 15%; margin: 10px"
+              (click)="delete('signingAuthorityDetails', 'formArray')"
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+            </button>
           </form>
         </div>
 
@@ -1599,8 +1768,17 @@
               [formGroupName]="i"
             >
               <br />
+
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <!-- checkbox -->
+                <input
+                  class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                  type="checkbox"
+                  (click)="$event.stopPropagation()"
+                  [checked]="selectedIndexes.includes(i)"
+                  (click)="toggleSelectedIndex(i)"
+                />
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -1831,6 +2009,13 @@
                 </mat-form-field>
               </div>
             </div>
+            <button
+              class="delete-btn"
+              style="width: 15%; margin: 10px"
+              (click)="delete('trustsDetails', 'formArray')"
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+            </button>
           </form>
         </div>
 
@@ -1854,8 +2039,18 @@
               [formGroupName]="i"
             >
               <br />
+
               <!-- Country Name Input -->
               <div class="flex gap-[25px]" style="margin-bottom: 10px">
+                <!-- checkbox -->
+                <input
+                  class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                  type="checkbox"
+                  (click)="$event.stopPropagation()"
+                  [checked]="selectedIndexes.includes(i)"
+                  (click)="toggleSelectedIndex(i)"
+                />
+
                 <!-- Country Code Input -->
                 <mat-form-field appearance="outline">
                   <mat-label>Country Code</mat-label>
@@ -2003,14 +2198,13 @@
                 </mat-form-field>
               </div>
             </div>
-            <div class="flex justify-content-end align-items-center">
-              <button
-                class="flex lgtBtn justify-content-start align-items-center"
-                style="height: 100%"
-              >
-                <i class="fa fa-close" aria-hidden="true">&nbsp;</i> Delete
-              </button>
-            </div>
+            <button
+              class="delete-btn"
+              style="width: 15%; margin: 10px"
+              (click)="delete('otherIncomeDetails', 'formArray')"
+            >
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+            </button>
           </form>
         </div>
       </mat-expansion-panel>

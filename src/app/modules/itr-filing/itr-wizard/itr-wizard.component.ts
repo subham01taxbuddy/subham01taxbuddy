@@ -192,6 +192,20 @@ export class ItrWizardComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // if (this.jsonUploaded) {
 
+    this.itrMsService.getMethod(`/validate/${this.ITR_JSON.itrId}`).subscribe((result:any)=>{
+      console.log(result);
+      // if(result.success){
+        if (result.data.errors.length > 0) {
+          this.breadcrumb = null;
+          this.showIncomeSources = false;
+          this.selectedSchedule = 'Validation Errors';
+          this.router.navigate(['/itr-filing/itr/validation-errors'], {
+            state: { apiErrors: result.data.errors },
+          });
+        }
+      // }
+    });
+
     if (this.validationErrors?.length > 0) {
       this.breadcrumb = null;
       this.showIncomeSources = false;
@@ -499,7 +513,7 @@ export class ItrWizardComponent implements OnInit {
     const param = `tts/outbound-call`;
     const reqBody = {
       agent_number: agentNumber,
-      customer_number: customerNumber,
+      userId: this.ITR_JSON.userId,
     };
     console.log('reqBody:', reqBody);
     this.reviewService.postMethod(param, reqBody).subscribe(

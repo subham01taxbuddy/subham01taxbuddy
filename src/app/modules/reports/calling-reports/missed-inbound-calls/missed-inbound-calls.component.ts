@@ -358,7 +358,7 @@ export class MissedInboundCallsComponent implements OnInit,OnDestroy {
     const param = `tts/outbound-call`;
     const reqBody = {
       agent_number: agentNumber,
-      customer_number: customerNumber,
+      userId: params.userId,
     };
     console.log('reqBody:', reqBody);
 

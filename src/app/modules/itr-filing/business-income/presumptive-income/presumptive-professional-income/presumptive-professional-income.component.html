@@ -30,186 +30,203 @@
         "
         [formGroupName]="fieldGlobalIndex(i)"
       >
-        <div class="row specBk" style="justify-content: space-between">
-          <div class="col-sm-1" style="padding: 0px">
-            <mat-checkbox
-              name="hasEdit[i]"
-              formControlName="hasEdit"
-              class="tpBtn1"
-            >
-            </mat-checkbox>
-          </div>
-
-          <div class="col-sm-2" style="padding-left: 0px">
-            <app-business-input-autocomplete
-              [businessType]="'44ADA'"
-              [selectedInput]="
-                profIncomeFormArray.controls[fieldGlobalIndex(i)].get(
-                  'natureOfBusiness'
-                ).value
-              "
-              (businessSelected)="businessClicked($event, i)"
-            >
-            </app-business-input-autocomplete>
-            <mat-error
-              *ngIf="
-                (profIncomeFormArray.controls[i].get('natureOfBusiness')
-                  .touched ||
-                  submitted) &&
-                profIncomeFormArray.controls[i]
-                  .get('natureOfBusiness')
-                  .hasError('required')
-              "
-              >Please select</mat-error
-            >
-          </div>
-
-          <div class="col-sm-2">
-            <mat-label>Trade Name</mat-label>
-            <mat-form-field appearance="outline">
-              <input
-                formControlName="tradeName"
-                matInput
-                name="tradeName[i]"
-                class="input-field"
-                required
-              />
-            </mat-form-field>
-            <mat-error
-              *ngIf="
-                (profIncomeFormArray.controls[i].get('tradeName').touched ||
-                  submitted) &&
-                profIncomeFormArray.controls[i]
-                  .get('tradeName')
-                  .hasError('required')
-              "
-              >Please enter the amount</mat-error
-            >
-          </div>
-
-          <!-- businessDescription -->
-          <div class="col-sm-3">
-            <mat-label>Business Description</mat-label>
-            <mat-form-field appearance="outline">
-              <input
-                matInput
-                class="input-field"
-                formControlName="description"
-                name="description[i]"
-              />
-            </mat-form-field>
-          </div>
-
-
-          <div class="col-sm-2">
-            <mat-label>Gross Receipt</mat-label>
-            <mat-form-field appearance="outline">
-              <input
-                formControlName="receipts"
-                matInput
-                name="receipts[i]"
-                class="input-field"
-                required
-                digitsOnly
-                (change)="calculatePresumptive($event, i, true)"
-              />
-            </mat-form-field>
-            <mat-error
-              *ngIf="
-                (profIncomeFormArray.controls[i].get('receipts').touched ||
-                  submitted) &&
-                profIncomeFormArray.controls[i]
-                  .get('receipts')
-                  .hasError('required')
-              "
-              >Please enter the amount</mat-error
-            >
-            <mat-error
-              *ngIf="
-                (profIncomeFormArray.controls[i].get('receipts').touched ||
-                  submitted) &&
-                profIncomeFormArray.controls[i].get('receipts').hasError('max')
-              "
-              >Gross receipts amount cannot be more than 50,00,000
-            </mat-error>
-          </div>
-
-          <div class="col-sm-2">
-            <mat-label>Minimum Income (50%)</mat-label>
-            <mat-form-field appearance="outline">
-              <input
-                formControlName="minimumPresumptiveIncome"
-                matInput
-                name="minimumPresumptiveIncome[i]"
-                class="input-field"
-                required
-                digitsOnly
-                readonly
-              />
-            </mat-form-field>
-            <mat-error
-              *ngIf="
-                (profIncomeFormArray.controls[i].get('minimumPresumptiveIncome')
-                  .touched ||
-                  submitted) &&
-                profIncomeFormArray.controls[i]
-                  .get('minimumPresumptiveIncome')
-                  .hasError('required')
-              "
-              >Please enter the amount</mat-error
-            >
-          </div>
-
-          <div class="col-sm-2">
-            <mat-label
-              >Income
-              <ng-container
-                *ngFor="let percentage of percentage; let id = index"
+        <div class="row specBk">
+          <div class="flex">
+            <!-- checkbox -->
+            <div class="col-sm-1" style="padding: 0px">
+              <mat-checkbox
+                name="hasEdit[i]"
+                formControlName="hasEdit"
+                class="tpBtn1"
               >
-                <ng-container *ngIf="id === i">
-                  ({{
-                    percentage.natOfBusiness ===
-                    profIncomeFormArray.controls[i].get("natureOfBusiness")
-                      .value
-                      ? percentage.percentage
-                      : 0
-                  }}%)
-                </ng-container>
-              </ng-container>
-            </mat-label>
-            <mat-form-field appearance="outline">
-              <input
-                formControlName="presumptiveIncome"
-                matInput
-                name="presumptiveIncome[i]"
-                class="input-field"
-                required
-                digitsOnly
-                (change)="calculatePresumptive($event, i)"
-              />
-            </mat-form-field>
-            <mat-error
-              *ngIf="
-                (profIncomeFormArray.controls[i].get('presumptiveIncome')
-                  .touched ||
-                  submitted) &&
-                profIncomeFormArray.controls[i]
-                  .get('presumptiveIncome')
-                  .hasError('min')
-              "
-              >Amount should be greater than {{ amountFifty }}
-            </mat-error>
-            <mat-error
-              *ngIf="
-                (profIncomeFormArray.controls[i].get('presumptiveIncome')
-                  .touched ||
-                  submitted) &&
-                profIncomeFormArray.controls[i]
-                  .get('presumptiveIncome')
-                  .hasError('max')
-              "
-              >Amount cannot be greater than {{ amountFiftyMax }}
-            </mat-error>
+              </mat-checkbox>
+            </div>
+            <!-- otherInputs -->
+            <div style="width: 100%">
+              <div class="detail">
+                <div class="col-sm-3" style="padding-left: 0px">
+                  <app-business-input-autocomplete
+                    [businessType]="'44ADA'"
+                    [selectedInput]="
+                      profIncomeFormArray.controls[fieldGlobalIndex(i)].get(
+                        'natureOfBusiness'
+                      ).value
+                    "
+                    (businessSelected)="businessClicked($event, i)"
+                  >
+                  </app-business-input-autocomplete>
+                  <mat-error
+                    *ngIf="
+                      (profIncomeFormArray.controls[i].get('natureOfBusiness')
+                        .touched ||
+                        submitted) &&
+                      profIncomeFormArray.controls[i]
+                        .get('natureOfBusiness')
+                        .hasError('required')
+                    "
+                    >Please select</mat-error
+                  >
+                </div>
+
+                <div class="col-sm-3">
+                  <mat-label>Trade Name</mat-label>
+                  <mat-form-field appearance="outline">
+                    <input
+                      formControlName="tradeName"
+                      matInput
+                      name="tradeName[i]"
+                      class="input-field"
+                      required
+                    />
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      (profIncomeFormArray.controls[i].get('tradeName')
+                        .touched ||
+                        submitted) &&
+                      profIncomeFormArray.controls[i]
+                        .get('tradeName')
+                        .hasError('required')
+                    "
+                    >Please enter the amount</mat-error
+                  >
+                </div>
+
+                <!-- businessDescription -->
+                <div class="col-sm-3">
+                  <mat-label>Business Description</mat-label>
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      class="input-field"
+                      formControlName="description"
+                      name="description[i]"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="detail">
+                <div class="col-sm-3">
+                  <mat-label>Gross Receipt</mat-label>
+                  <mat-form-field appearance="outline">
+                    <input
+                      formControlName="receipts"
+                      matInput
+                      name="receipts[i]"
+                      class="input-field"
+                      required
+                      digitsOnly
+                      (change)="calculatePresumptive($event, i, true)"
+                    />
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      (profIncomeFormArray.controls[i].get('receipts')
+                        .touched ||
+                        submitted) &&
+                      profIncomeFormArray.controls[i]
+                        .get('receipts')
+                        .hasError('required')
+                    "
+                    >Please enter the amount</mat-error
+                  >
+                  <mat-error
+                    *ngIf="
+                      (profIncomeFormArray.controls[i].get('receipts')
+                        .touched ||
+                        submitted) &&
+                      profIncomeFormArray.controls[i]
+                        .get('receipts')
+                        .hasError('max')
+                    "
+                    >Gross receipts amount cannot be more than 50,00,000
+                  </mat-error>
+                </div>
+
+                <div class="col-sm-3">
+                  <mat-label>Minimum Income (50%)</mat-label>
+                  <mat-form-field appearance="outline">
+                    <input
+                      formControlName="minimumPresumptiveIncome"
+                      matInput
+                      name="minimumPresumptiveIncome[i]"
+                      class="input-field"
+                      required
+                      digitsOnly
+                      readonly
+                    />
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      (profIncomeFormArray.controls[i].get(
+                        'minimumPresumptiveIncome'
+                      ).touched ||
+                        submitted) &&
+                      profIncomeFormArray.controls[i]
+                        .get('minimumPresumptiveIncome')
+                        .hasError('required')
+                    "
+                    >Please enter the amount</mat-error
+                  >
+                </div>
+
+                <div class="col-sm-3">
+                  <mat-label
+                    >Income
+                    <ng-container
+                      *ngFor="let percentage of percentage; let id = index"
+                    >
+                      <ng-container *ngIf="id === i">
+                        ({{
+                          percentage?.natOfBusiness ===
+                          profIncomeFormArray?.controls[i]?.get(
+                            "natureOfBusiness"
+                          )?.value
+                            ? percentage?.percentage
+                              ? percentage?.percentage
+                              : 0
+                            : 0
+                        }}%)
+                      </ng-container>
+                    </ng-container>
+                  </mat-label>
+                  <mat-form-field appearance="outline">
+                    <input
+                      formControlName="presumptiveIncome"
+                      matInput
+                      name="presumptiveIncome[i]"
+                      class="input-field"
+                      required
+                      digitsOnly
+                      (change)="calculatePresumptive($event, i)"
+                    />
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      (profIncomeFormArray.controls[i].get('presumptiveIncome')
+                        .touched ||
+                        submitted) &&
+                      profIncomeFormArray.controls[i]
+                        .get('presumptiveIncome')
+                        .hasError('min')
+                    "
+                    >Amount should be greater than {{ amountFifty }}
+                  </mat-error>
+                  <mat-error
+                    *ngIf="
+                      (profIncomeFormArray.controls[i].get('presumptiveIncome')
+                        .touched ||
+                        submitted) &&
+                      profIncomeFormArray.controls[i]
+                        .get('presumptiveIncome')
+                        .hasError('max')
+                    "
+                    >Amount cannot be greater than {{ amountFiftyMax }}
+                  </mat-error>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -40,9 +40,15 @@
             </mat-form-field>
         </div>
 
-        <div class="col-sm-2">
+        <div class="col-sm-2" style="margin-right: 25px;">
             <button mat-raised-button color="primary" (click)="addStatus()" tabindex="1">{{data.mode}}</button>
         </div>
+        <div class="col-sm-2" *ngIf="data.userInfo.statusId === 39">
+          <button mat-raised-button  (click)="undoStatus()" tabindex="1">undo status</button>
+        </div>
+        <span class="note1 note" style="flex-basis: content;" *ngIf="data.userInfo.statusId === 39">
+          Note - Status will be changed to previous saved status
+        </span>
 
     </div>
     </form>

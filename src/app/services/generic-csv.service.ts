@@ -15,6 +15,7 @@ export class GenericCsvService {
   data = [];
   count: number;
   roles: any;
+  smeList: any;
   constructor(
     private httpClient: HttpClient,
     private jsonToCsvService: JsonToCsvService,
@@ -22,6 +23,7 @@ export class GenericCsvService {
     private utilsService: UtilsService,
   ) {
     this.roles = this.utilsService.getUserRoles();
+    this.smeList = JSON.parse(sessionStorage.getItem('SME_LIST'))
   }
 
   async downloadReport(baseUrl: string, param: string, page: number, name: any, fields?: any, sortBy?: any) {
@@ -44,17 +46,37 @@ export class GenericCsvService {
     await this.getData(baseUrl, paramUrl).then((data: number) => { this.count = data });
     page += 1;
     for (; page < this.count; page++) {
-      paramUrl =  Object.keys(sortBy).length ? `${param}${addOn}sortBy=${sortJson}&page=${page}&size=${this.size}&pageSize=${this.pageSize}` : `${param}${addOn}page=${page}&size=${this.size}&pageSize=${this.pageSize}`;
+      paramUrl = Object.keys(sortBy).length ? `${param}${addOn}sortBy=${sortJson}&page=${page}&size=${this.size}&pageSize=${this.pageSize}` : `${param}${addOn}page=${page}&size=${this.size}&pageSize=${this.pageSize}`;
       await this.getData(baseUrl, paramUrl).then((data: number) => { this.count = data });
     }
     if (this.data.length) {
-      this.jsonToCsvService.downloadFile(this.data, name, fields);
+      if (name === 'Filed-ITR') {
+        this.mapUserIdToName();
+      }
+      this.jsonToCsvService.downloadFile(this.data, fields, name);
     } else {
       this._toastMessageService.alert('error', "There is no records found");
       return
     }
     // subject.next(true);
     // return subject.asObservable();
+  }
+
+  mapUserIdToName() {
+    debugger
+    this.smeList.forEach((item) => {
+      this.data.forEach((element) => {
+        if (item.userId === element.leaderUserId)
+          element['leaderUserId'] = item.name;
+        if (item.userId === element.filingTeamMemberId)
+          element['filingTeamMemberId'] = item.name;
+        if (element.isRevised === 'Y') {
+          element['isRevised'] = 'Revised';
+        } else {
+          element['isRevised'] = 'Original';
+        }
+      })
+    });
   }
 
   async getData(baseUrl, param) {

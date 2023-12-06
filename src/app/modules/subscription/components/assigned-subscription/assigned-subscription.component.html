@@ -1,6 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-
-<!-- New Open Close Filter Starts -->
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
+  move
+  away from the page...</span>
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
     <mat-expansion-panel [expanded]="!dataOnLoad">
@@ -13,63 +14,37 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
-              <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner
-              </mat-slide-toggle>
+            <div class="col-sm-12 bckClr" >
+              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
-
-            <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
-              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromSme($event, true)"
-                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-            </div>
-            <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-              <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromSme1($event, true)"
-                (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
-            </div>
-            <div class="col-sm-6 spsTp">
-              <mat-label> Financial Year </mat-label>
+            <div class="col-sm-2">
+              <label class="input__label" for="attr">Financial Year </label>
               <mat-form-field appearance="outline" class="customBg">
                 <input type="text" matInput [formControl]="assessmentYear" readonly>
-                <!-- <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off" required>
-                       <mat-option *ngFor="let year of financialYear" [value]="year.financialYear">
-                         {{year.financialYear}}
-                       </mat-option>
-                     </mat-select> -->
               </mat-form-field>
             </div>
-            <div class="col-sm-6 spsTp" *ngIf="false">
-              <mat-label> Search by Name </mat-label>
-              <mat-form-field appearance="outline" class="customBg">
-                <input type="text" matInput [formControl]="searchName" [matAutocomplete]="auto">
-                <button [disabled]="loading" (click)="searchByName()" mat-button matSuffix mat-icon-button>
-                  <mat-icon style="color: #00AECA">search</mat-icon>
-                </button>
-                <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let option  of filteredOptions | async" [value]="option.name"
-                    (click)="getFilerNameId(option)">
-                    {{option.name}}
+            <!-- <div class="col-sm-2">
+              <label class="input__label" for="attr">Service TYpe</label>
+              <mat-form-field appearance="outline" class="class1">
+                <mat-select placeholder="" [formControl]="serviceType" required>
+                  <mat-option *ngFor="let service of services" [disabled]="service.isHide" [value]="service.value">
+                    <span> {{service.key}}</span>
                   </mat-option>
-                </mat-autocomplete>
+                </mat-select>
               </mat-form-field>
+            </div> -->
+            <div class="col-sm-3">
+              <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+                [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
             </div>
-            <div class="col-sm-6 spsTp">
-              <mat-label> Search Mobile Number</mat-label>
-              <mat-form-field appearance="outline" class="customBg">
-                <input type="text" matInput [formControl]="mobileNumber" digitsOnly>
-                <!-- <button [disabled]="loading" (click)="search(0,mobileNumber.value)" mat-button matSuffix mat-icon-button>
-               <mat-icon style="color: #00AECA">search</mat-icon>
-             </button> -->
-                <!-- <mat-icon matSuffix>search</mat-icon> -->
-                <!-- <mat-autocomplete #auto="matAutocomplete">
-             <mat-option *ngFor="let option  of filteredOptions | async" [value]="option" (click)="getownerNameId(option)">
-               {{option.name}}
-             </mat-option>
-           </mat-autocomplete> -->
-              </mat-form-field>
+            <div class="col-7">
+              <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                (onChange)="searchByObject($event)"></app-generic-user-filter>
             </div>
             <div class="row spsTp bdrTp">
-              <div class="col-6" *ngIf="false">
-                <app-generic-sorting [sortingParameter]="sortMenus"
+              <div class="col-6">
+                <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                   (onChange)="sortByObject($event)"></app-generic-sorting>
               </div>
               <div class="col-sm-6">
@@ -80,7 +55,7 @@
                   <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
                     <i class="fa fa-download" aria-hidden="true"></i> Download File
                   </button>
-                  <button class="srch-btn mvRth" [disabled]="loading" (click)="search(0,mobileNumber.value)"><i
+                  <button class="srch-btn mvRth" [disabled]="loading" (click)="search(0,'')"><i
                       class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</button>
                   <button *ngIf="isAllowed" class="srch-btn mvRth" (click)="createSub()"> Create Subscription </button>
                 </div>
@@ -97,9 +72,7 @@
     </mat-expansion-panel>
   </mat-accordion>
 </div>
-<!-- New Open Close Filter Ends -->
 
-<!-- Table Below -->
 <div class="tableSpc">
   <div class="row">
     <div class="col-sm-8">
@@ -107,8 +80,19 @@
         Assigned Subscription Details:
       </div>
     </div>
-    <div class="col-sm-4">
-      <!-- <div class="count"> Total Count: <b>{{config.totalItems}}</b></div>  -->
+  </div>
+  <div class="row note-box">
+    <div class="col-sm-12">
+      <div class="note1 note">
+        <span class="txTit" style="font-size: 15px;">Delete Subscription means-</span>
+        Use this to delete all records related to that subscription including invoice (paid or unpaid) & If invoice is paid then to generate full amount of refund request
+      </div>
+    </div>
+    <div class="col-sm-12">
+      <div class="note1 note">
+        <span class="txTit" style="font-size: 15px;">Update or Revise Subscription means-</span>
+        Use this to upgrade or downgrade plan or to make changes in promo code. If invoice paid and plan downgraded before filing ITR partial refund request will generate.
+      </div>
     </div>
   </div>
 

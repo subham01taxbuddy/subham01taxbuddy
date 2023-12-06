@@ -58,18 +58,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       currentPage: 1,
     };
 
-    let natureOfBusiness = JSON.parse(
-      sessionStorage.getItem('NATURE_OF_BUSINESS')
-    );
-
-    let businessDescripCode = this.ITR_JSON.business?.businessDescription;
-    if (natureOfBusiness) {
-      this.natureOfBusinessDropdownAll = natureOfBusiness;
-      // Allowing to select one dropdown only once. // TO DO
-    } else {
-      this.getMastersData();
-    }
-
     this.dataSource = new MatTableDataSource(
       this.ITR_JSON?.business?.businessDescription
     );
@@ -81,11 +69,11 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     }
     // this.getLiabilitiesAssets();
 
-    let natOfBussiness = this.ITR_JSON.business?.businessDescription;
+    let natOfBusiness = this.ITR_JSON.business?.businessDescription;
     this.natOfBusinessDtlsArray = new FormArray([]);
-    if (natOfBussiness && natOfBussiness.length > 0) {
+    if (natOfBusiness && natOfBusiness.length > 0) {
       let index = 0;
-      for (let detail of natOfBussiness) {
+      for (let detail of natOfBusiness) {
         let form = this.createNatOfBusinessForm(index++, detail);
         this.natOfBusinessDtlsArray.push(form);
       }
@@ -148,30 +136,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       natOfBusinessDtlsArray.controls.filter(
         (element) => (element as FormGroup).controls['hasEdit'].value === true
       ).length > 0
-    );
-  }
-
-  getMastersData() {
-    this.loading = true;
-    const param = '/itrmaster';
-    this.itrMsService.getMethod(param).subscribe(
-      (result: any) => {
-        this.natureOfBusinessDropdownAll = result.natureOfBusiness;
-        this.loading = false;
-        sessionStorage.setItem(
-          'NATURE_OF_BUSINESS',
-          JSON.stringify(this.natureOfBusinessDropdownAll)
-        );
-        // this.natureOfProfessionDropdown = this.natureOfBusinessDropdownAll.filter((item: any) => item.section === '44ADA');
-        sessionStorage.setItem('MASTER', JSON.stringify(result));
-      },
-      (error) => {
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Failed to get nature of Business list, please try again.'
-        );
-        this.utilsService.smoothScrollToTop();
-      }
     );
   }
 
@@ -442,7 +406,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         Validators.pattern(AppConstants.numericRegex),
       ],
       totalAssets: [obj?.totalAssets],
-      GSTRNumber: [obj?.GSTRNumber],
+      GSTRNumber: [obj?.GSTRNumber, Validators.pattern(AppConstants.gstrReg)],
       grossTurnOverAmount: [obj?.grossTurnOverAmount],
       difference: [obj?.difference || 0],
     });
@@ -528,20 +492,73 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   }
 
   onContinue() {
-    if (
-      this.assetLiabilitiesForm.valid ||
-      this.natOfBusinessDtlForm.valid ||
-      (this.assetLiabilitiesForm.controls['cashInHand'].valid &&
+    let valid: boolean = false;
+    if (this.assetLiabilitiesForm.valid) {
+      valid = true;
+    } else {
+      valid = false;
+      this.utilsService.showSnackBar(
+        'Please make sure all the details of balance sheet are entered correctly'
+      );
+    }
+
+    if (this.ITR_JSON?.liableSection44AAflag === 'Y') {
+      if (
+        this.assetLiabilitiesForm?.controls['difference']?.value === 0 &&
+        this.natOfBusinessDtlForm.valid
+      ) {
+        valid = true;
+      } else {
+        valid = false;
+      }
+    } else {
+      if (
+        this.assetLiabilitiesForm.controls['cashInHand'].valid &&
         this.assetLiabilitiesForm.controls['sundryDebtorsAmount'].valid &&
         this.assetLiabilitiesForm.controls['sundryCreditorsAmount'].valid &&
-        this.assetLiabilitiesForm.controls['inventories'].valid) ||
-      this.ITR_JSON?.liableSection44AAflag === 'Y'
-        ? this.assetLiabilitiesForm?.controls['difference']?.value === 0
-        : true
-    ) {
+        this.assetLiabilitiesForm.controls['inventories'].valid
+      ) {
+        valid = true;
+      } else {
+        valid = false;
+      }
+    }
+
+    if (valid) {
       this.loading = true;
       this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
       this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+      if (!this.Copy_ITR_JSON.business) {
+        this.Copy_ITR_JSON.business = {
+          presumptiveIncomes: [],
+          financialParticulars: {
+            difference: null,
+            id: null,
+            grossTurnOverAmount: null,
+            membersOwnCapital: null,
+            securedLoans: null,
+            unSecuredLoans: null,
+            advances: null,
+            sundryCreditorsAmount: null,
+            otherLiabilities: null,
+            totalCapitalLiabilities: null,
+            fixedAssets: null,
+            inventories: null,
+            sundryDebtorsAmount: null,
+            balanceWithBank: null,
+            cashInHand: null,
+            loanAndAdvances: null,
+            otherAssets: null,
+            totalAssets: null,
+            investment: null,
+            GSTRNumber: null,
+          },
+          businessDescription: [],
+          fixedAssetsDetails: [],
+          profitLossACIncomes: [],
+        };
+      }
 
       this.Copy_ITR_JSON.business.businessDescription =
         this.natOfBusinessDtlsArray.value;
@@ -560,6 +577,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
           );
           console.log('Balance Sheet=', result);
           this.utilsService.smoothScrollToTop();
+          this.saveAndNext.emit(true);
         },
         (error) => {
           this.loading = false;

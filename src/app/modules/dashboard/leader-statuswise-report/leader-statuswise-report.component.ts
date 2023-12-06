@@ -11,6 +11,7 @@ import { LeaderListDropdownComponent } from '../../shared/components/leader-list
 import { FormControl } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 
 export const MY_FORMATS = {
   parse: {
@@ -52,6 +53,26 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   allDetails:any;
   today: Date;
   data:any;
+  serviceTypes = [
+    {
+      label: 'ITR',
+      value: 'ITR',
+    },
+    {
+      label: 'TPA',
+      value: 'TPA',
+    },
+    {
+      label: 'GST',
+      value: 'GST',
+    },
+    {
+      label: 'NOTICE',
+      value: 'NOTICE',
+    },
+
+  ];
+  selectedService = new FormControl('');
 
   constructor(
     private userMsService: UserMsService,
@@ -63,71 +84,158 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this.today = new Date();
+    this.selectedService.setValue(this.serviceTypes[0].value);
    }
 
   ngOnInit() {
     this.loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
 
-    if(this.roles.includes('ROLE_OWNER')){
-      this.ownerId= this.loggedInSmeUserId;
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId= this.loggedInSmeUserId;
        this.search();
     }
 
   }
 
   search(){
-    if(this.leaderId || this.ownerId){
+    if(this.leaderId || this.filerId){
       this.getStatusWiseReport();
     }
     else{
-      this. _toastMessageService.alert("error","Please Select Leader / Owner to see the records");
+      this. _toastMessageService.alert("error","Please Select Leader / Filer to see the records");
       return;
     }
 
   }
 
-  getStatusWiseReport(){
-    // https://uat-api.taxbuddy.com/report/dashboard/status-wise-report?from=2023-07-03&to=2023-07-03&leaderUserId=7002
+  selectedServiceType: string;
+  columns: string[];
+  dataKeys: string[];
+  grandTotalKeys: string[];
+  grandTotal: any;
+
+  getStatusWiseReport() {
     this.loading = true;
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    let param=''
+    let param = '';
     let userFilter = '';
-    if (this.leaderId && !this.ownerId) {
+
+    if (this.leaderId && !this.filerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.ownerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+    let serviceFilter = '';
+    if (this.selectedService.value) {
+      serviceFilter += `&serviceType=${this.selectedService.value}`
     }
 
-    if(this.roles.includes('ROLE_OWNER')){
-      userFilter += `&ownerUserId=${this.loggedInSmeUserId}`
-    }
-    // else{
-    //   userFilter += `&leaderUserId=${this.loggedInSmeUserId}`;
-    // }
-
-    param =`/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
+    param = `/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
 
     this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if (response.success) {
         this.loading = false;
-        this.allDetails = response?.data?.content[0];
-        this.data = response?.data?.content[0];
 
-      }else{
-        this.data=null;
-         this.loading = false;
-         this. _toastMessageService.alert("error",response.message);
-       }
-    },(error) => {
-      this.data=null;
+        const columnMap: Record<string, Record<string, string>> = {
+          ITR: {
+            filerName:'filerName',
+            open: 'open',
+            notInterested: 'notInterested',
+            chatInitiated: 'chatInitiated',
+            chatResolve: 'chatResolve',
+            interested: 'interested',
+            documentsUploaded :'documentsUploaded',
+            proformaInvoiceSent : 'proformaInvoiceSent',
+            paymentReceived :'paymentReceived',
+            upgradedInvoiceSent:'upgradedInvoiceSent',
+            preparingItr : 'preparingItr',
+            waitingForConfirmation :'waitingForConfirmation',
+            itrConfirmationReceived :'itrConfirmationReceived',
+            itrFiledEverificationCompleted :'itrFiledEverificationCompleted',
+            itrFiledEverificationPending :'itrFiledEverificationPending',
+            backOutWithoutRefund:'backOutWithoutRefund',
+            backOutWithRefund:'backOutWithRefund',
+          },
+          TPA: {
+            filerName: 'filerName',
+            open: 'open',
+            notInterested: 'notInterested',
+            interested: 'interested',
+            documentsUploaded :'documentsUploaded',
+            proformaInvoiceSent : 'proformaInvoiceSent',
+            paymentReceived :'paymentReceived',
+            backOut:'backOut',
+          },
+          NOTICE: {
+            filerName: 'filerName',
+            open: 'open',
+            notInterested: 'notInterested',
+            interested: 'interested',
+            documentsUploaded :'documentsUploaded',
+            proformaInvoiceSent : 'proformaInvoiceSent',
+            paymentReceived :'paymentReceived',
+            converted:'converted',
+            followUp:'followUp',
+            noticeResponseFiled:'noticeResponseFiled',
+            partResponseFiled:'partResponseFiled',
+            noticeWIP:'noticeWIP',
+            noticeClosed:'noticeClosed',
+            noticeReopen:'noticeReopen',
+            backOut:'backOut'
+          },
+          GST: {
+            filerName: 'filerName',
+            open: 'open',
+            interested: 'interested',
+            notInterested: 'notInterested',
+            proformaInvoiceSent: 'proformaInvoiceSent',
+            paymentReceived: 'paymentReceived',
+            followUp : 'followUp',
+            converted:'converted',
+            activeClientReturn : 'activeClientReturn',
+            registrationDone :'registrationDone',
+            gstCancelled:'gstCancelled',
+            backOut:'backOut'
+          },
+
+        };
+
+        const selectedServiceMap = columnMap[this.selectedService.value];
+
+        if (selectedServiceMap) {
+          this.columns = Object.values(selectedServiceMap);
+          this.dataKeys = Object.values(selectedServiceMap);
+          this.data = response?.data?.content[0];
+          this.grandTotal = response?.data?.content[0].total;
+          this.grandTotalKeys = Object.keys(this.grandTotal);
+        } else {
+          // Handle the case when the selected service type is not found in columnMap
+          console.error('Selected service type not found in columnMap');
+        }
+
+      } else {
+        this.data = null;
+        this.grandTotal =null;
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
+      this.data = null;
       this.loading = false;
-      this. _toastMessageService.alert("error","Error");
+      this._toastMessageService.alert("error", "Error");
     });
+  }
 
+  addSpaces(text: string): string {
+    // Use a regular expression to add spaces between words in the text
+    return text.replace(/([a-z])([A-Z])/g, '$1 $2').toUpperCase();
   }
 
   getColumnName(): string {
@@ -136,14 +244,14 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     } else if (this?.allDetails?.statusWiseData?.length > 0 && this?.allDetails?.statusWiseData[0].hasOwnProperty('filerName')) {
       return 'Partner/Filer';
     }else{
-      return 'Owners / Partner Name';
+      return 'Leaders/Filer Name';
     }
      // Return a default column name if needed
   }
 
   getCellValue(item): string {
-    if (item.hasOwnProperty('ownerName')) {
-      return item.ownerName;
+    if (item.hasOwnProperty('leaderName')) {
+      return item.leaderName;
     } else if (item.hasOwnProperty('filerName')) {
       return item.filerName;
     }
@@ -152,23 +260,26 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
 
   leaderId: number;
-  ownerId: number;
+  filerId: number;
   agentId: number;
+  searchAsPrinciple:boolean =false;
 
-  fromSme1(event, isOwner) {
-     console.log('sme-drop-down', event, isOwner);
-     if (isOwner) {
+  fromLeader(event) {
+    if(event) {
       this.leaderId = event ? event.userId : null;
-    } else {
-      this.ownerId = event ? event.userId : null;
     }
-    if (this.ownerId) {
-      this.agentId = this.ownerId;
-    } else if (this.leaderId) {
-      this.agentId = this.leaderId;
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
+  }
+  fromPrinciple(event){
+    if(event){
+      if (event?.partnerType === 'PRINCIPAL') {
+        this.filerId = event ? event.userId : null;
+
+        this.searchAsPrinciple = true;
+      } else {
+        this.filerId = event ? event.userId : null;
+
+        this.searchAsPrinciple = false;
+      }
     }
   }
 
@@ -176,32 +287,103 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     this.loading = true;
     let param=''
     let userFilter = '';
-    if (this.leaderId && !this.ownerId) {
+    if (this.leaderId && !this.filerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.ownerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.filerId && this.searchAsPrinciple === true) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+    let serviceFilter = '';
+    if(this.selectedService.value){
+      serviceFilter +=`&serviceType=${this.selectedService.value}`
     }
 
-    if(this.roles.includes('ROLE_OWNER')){
-      userFilter += `&ownerUserId=${this.loggedInSmeUserId}`
+    let fieldName = [];
+
+    if (this.selectedService.value === 'ITR') {
+      fieldName = [
+        { key: 'filerName', value: 'Filer Name' },
+        { key: 'open', value: 'Open' },
+        { key: 'notInterested', value: 'Not Interested' },
+        { key: 'chatInitiated', value: 'Chat Initiated' },
+        { key: 'chatResolve', value: 'Chat Resolve' },
+        { key: 'interested', value: 'Interested' },
+        { key: 'documentsUploaded', value: 'Documents Uploaded' },
+        { key: 'proformaInvoiceSent', value: 'Proforma Invoice Sent' },
+        { key: 'paymentReceived', value: 'Payment Received' },
+        { key: 'upgradedInvoiceSent', value: 'Upgraded Invoice Sent' },
+        { key: 'preparingItr', value: 'Preparing ITR' },
+        { key: 'waitingForConfirmation', value: 'Waiting For Confirmation' },
+        { key: 'itrConfirmationReceived', value: 'ITR Confirmation Received' },
+        { key: 'itrFiledEverificationCompleted', value: 'ITR Filed & Verification Completed' },
+        { key: 'itrFiledEverificationPending', value: 'ITR Filed & Verification Pending' },
+        { key: 'backOutWithoutRefund', value: 'Back Out Without Refund' },
+        { key: 'backOutWithRefund', value: 'Back Out With Refund' },
+      ];
+    } else if (this.selectedService.value === 'TPA') {
+      fieldName = [
+        { key: 'filerName', value: 'Filer Name' },
+        { key: 'open', value: 'Open' },
+        { key: 'notInterested', value: 'Not Interested' },
+        { key: 'interested', value: 'Interested' },
+        { key: 'documentsUploaded', value: 'Documents Uploaded' },
+        { key: 'proformaInvoiceSent', value: 'Proforma Invoice Sent' },
+        { key: 'paymentReceived', value: 'Payment Received' },
+        { key: 'backOut', value: 'Back Out' },
+      ];
+    } else if (this.selectedService.value === 'NOTICE') {
+      fieldName = [
+        { key: 'filerName', value: 'Filer Name' },
+        { key: 'open', value: 'Open' },
+        { key: 'notInterested', value: 'Not Interested' },
+        { key: 'interested', value: 'Interested' },
+        { key: 'documentsUploaded', value: 'Documents Uploaded' },
+        { key: 'proformaInvoiceSent', value: 'Proforma Invoice Sent' },
+        { key: 'paymentReceived', value: 'Payment Received' },
+        { key: 'converted', value: 'Converted' },
+        { key: 'followUp', value: 'Follow Up' },
+        { key: 'noticeResponseFiled', value: 'Notice Response Filed' },
+        { key: 'partResponseFiled', value: 'Part Response Filed' },
+        { key: 'noticeWIP', value: 'Notice Work in Progress' },
+        { key: 'noticeClosed', value: 'Notice Closed' },
+        { key: 'noticeReopen', value: 'Notice Reopen' },
+        { key: 'backOut', value: 'Back Out' },
+      ];
+    } else if (this.selectedService.value === 'GST') {
+      fieldName = [
+        { key: 'filerName', value: 'Filer Name' },
+        { key: 'open', value: 'Open' },
+        { key: 'interested', value: 'Interested' },
+        { key: 'notInterested', value: 'Not Interested' },
+        { key: 'proformaInvoiceSent', value: 'Proforma Invoice Sent' },
+        { key: 'paymentReceived', value: 'Payment Received' },
+        { key: 'followUp', value: 'Follow Up' },
+        { key: 'converted', value: 'Converted' },
+        { key: 'activeClientReturn', value: 'Active Client Return' },
+        { key: 'registrationDone', value: 'Registration Done' },
+        { key: 'gstCancelled', value: 'GST Cancelled' },
+        { key: 'backOut', value: 'Back Out' },
+      ];
     }
 
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    param =`/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`
+    param =`/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
 
     // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'status-wise-report', '');
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'status-wise-report',fieldName, {});
     this.loading = false;
   }
 
-  @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
+  @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
-    this?.leaderDropDown?.resetDropdown();
-    if(this.roles.includes('ROLE_OWNER')){
+    this?.smeDropDown?.resetDropdown();
+    if(this.roles.includes('ROLE_LEADER')){
       this.search();
     }
     else{
@@ -214,5 +396,6 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     console.log('startDateVal: ', startDateVal);
     this.minEndDate = startDateVal.value;
   }
+
 
 }

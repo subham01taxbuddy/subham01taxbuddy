@@ -182,6 +182,12 @@ export class SummaryComponent implements OnInit {
       orgAckNumber: any;
       bankAccountNumber: any;
       bankName: any;
+      JurisdictionResPrevYrDtls?: [
+        {
+          JurisdictionResidence?: any;
+          TIN?: any;
+        }
+      ];
     };
     salary: {
       employers: [
@@ -221,9 +227,20 @@ export class SummaryComponent implements OnInit {
         taxRefund: number;
         Qqb80: number;
         Rrb80: number;
+        pfInterest1011IP?: number;
+        pfInterest1011IIP?: number;
+        pfInterest1012IP?: number;
+        pfInterest1012IIP?: number;
         anyOtherInterest: number;
         familyPension: number;
+        aggregateValueWithoutConsideration?: number;
+        immovablePropertyWithoutConsideration?: number;
+        immovablePropertyInadequateConsideration?: number;
+        anyOtherPropertyWithoutConsideration?: number;
+        anyOtherPropertyInadequateConsideration?: number;
         dividendIncome: number;
+        winningFromLotteries?: any;
+        incFromOwnAndMaintHorses?: any;
       };
       otherIncomeTotal: number;
     };
@@ -642,9 +659,12 @@ export class SummaryComponent implements OnInit {
       ];
       total: number;
     };
+    giftExemptIncome?: number;
+    profitShareAmount?: number;
   };
   natureOfBusiness: any = [];
   business44adDetails: any = [];
+  countryCodeList: any;
 
   constructor(
     private itrMsService: ItrMsService,
@@ -677,7 +697,7 @@ export class SummaryComponent implements OnInit {
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
     this.loading = true;
-
+    this.countryCodeList = this.utilsService.getCountryCodeList();
     this.calculations();
 
     // Setting the ITR Type in ITR Object and updating the ITR_Type
@@ -2027,6 +2047,21 @@ export class SummaryComponent implements OnInit {
                   ? 'Non-Resident'
                   : 'Non-Ordinary Resident',
 
+              JurisdictionResPrevYrDtls:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.FilingStatus?.ResidentialStatus === 'NRI'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][
+                      this.itrType
+                    ]?.PartA_GEN1?.FilingStatus?.JurisdictionResPrevYr?.JurisdictionResPrevYrDtls?.map(
+                      (element) => ({
+                        JurisdictionResidence: this.getCountry(
+                          element?.JurisdictionResidence
+                        ),
+                        TIN: element?.TIN,
+                      })
+                    )
+                  : null,
+
               returnType:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
                   ?.FilingStatus?.ReturnFileSec === 11
@@ -2208,7 +2243,9 @@ export class SummaryComponent implements OnInit {
                     ?.IncOthThanOwnRaceHorse?.FamilyPension -
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                       ?.ScheduleOS?.IncOthThanOwnRaceHorse?.Deductions
-                      ?.DeductionUs57iia),
+                      ?.DeductionUs57iia) -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncFromOwnHorse?.BalanceOwnRaceHorse,
 
                 dividendIncome:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
@@ -2219,6 +2256,29 @@ export class SummaryComponent implements OnInit {
                     ?.IncOthThanOwnRaceHorse?.FamilyPension -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.Deductions?.DeductionUs57iia,
+
+                winningFromLotteries: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleOS?.IncFrmLottery?.DateRange
+                  ? Object.values(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleOS.IncFrmLottery.DateRange
+                    ).reduce(
+                      (total: any, value: any) =>
+                        total +
+                        (typeof value === 'number'
+                          ? value
+                          : (parseFloat(value) as number) || 0),
+                      0
+                    )
+                  : null,
+
+                incFromOwnAndMaintHorses: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleOS?.IncFromOwnHorse?.BalanceOwnRaceHorse
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleOS?.IncFromOwnHorse?.BalanceOwnRaceHorse
+                  : null,
               },
 
               otherIncomeTotal:
@@ -3654,2142 +3714,356 @@ export class SummaryComponent implements OnInit {
           this.loading = false;
         }
       } else {
-        const param = '/tax';
-        this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
-          (result: any) => {
-            // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
-            console.log('result is=====', result);
-
-            this.summaryIncome = result.summaryIncome;
-            const sumParam = `/itr-summary?itrId=${this.ITR_JSON.itrId}&itrSummaryId=0`;
-            this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
-              this.finalSummary = summary;
-              console.log('SUMMARY Result=> ', summary);
-              if (summary) {
-                this.losses = summary.assessment;
-                for (
-                  let i = 0;
-                  i < this.losses?.carryForwordLosses?.length;
-                  i++
-                ) {
-                  this.totalCarryForword =
-                    this.totalCarryForword +
-                    this.losses.carryForwordLosses[i].totalLoss;
-                }
-                this.summaryDetail = summary.assessment.taxSummary;
-                this.taxable = this.summaryDetail.taxpayable;
-                this.refund = this.summaryDetail.taxRefund;
-                this.deductionDetail =
-                  summary.assessment.summaryDeductions?.filter(
-                    (item: any) =>
-                      item.sectionType !== '80C' &&
-                      item.sectionType !== '80CCC' &&
-                      item.sectionType !== '80CCD1' &&
-                      item.sectionType !== '80GAGTI'
-                  );
-                this.capitalGain =
-                  summary.assessment.summaryIncome?.cgIncomeN.capitalGain;
-                this.totalLoss = summary.assessment.currentYearLosses;
-                this.show = true;
-                sessionStorage.setItem(
-                  'ITR_SUMMARY_JSON',
-                  JSON.stringify(this.summaryDetail)
-                );
-
-                this.losses?.pastYearLosses?.forEach((item: any) => {
-                  this.hpLoss =
-                    this.hpLoss + item.setOffWithCurrentYearHPIncome;
-                  this.stLoss =
-                    this.stLoss + item.setOffWithCurrentYearSTCGIncome;
-                  this.ltLoss =
-                    this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
-                });
-
-                this.getBusinessDetails();
-
-                this.finalCalculations = {
-                  personalInfo: {
-                    name: this.ITR_JSON?.family[0]?.fName
-                      ? this.ITR_JSON?.family[0]?.fName
-                      : '' + this.ITR_JSON?.family[0]?.mName
-                      ? this.ITR_JSON?.family[0]?.mName
-                      : '' + this.ITR_JSON?.family[0]?.lName
-                      ? this.ITR_JSON?.family[0]?.lName
-                      : '',
-
-                    aadhaarNumber: this.ITR_JSON?.aadharNumber,
-
-                    mobileNumber: this.ITR_JSON?.contactNumber,
-
-                    resStatus: this.ITR_JSON?.residentialStatus,
-
-                    returnType:
-                      this.ITR_JSON.isDefective === 'Y'
-                        ? 'Defective'
-                        : this.ITR_JSON?.isRevised === 'Y'
-                        ? 'Revised'
-                        : 'Original',
-
-                    Address:
-                      this.ITR_JSON.address?.flatNo +
-                      this.ITR_JSON.address?.premisesName +
-                      this.ITR_JSON.address?.area +
-                      this.ITR_JSON.address?.city +
-                      '' +
-                      this.ITR_JSON.address?.pinCode,
-
-                    dob: this.ITR_JSON?.family[0]?.dateOfBirth,
-
-                    panNumber: this.ITR_JSON?.panNumber,
-
-                    email: this.ITR_JSON?.email,
-
-                    itrType: this.ITR_JSON?.itrType,
-
-                    orgAckNumber:
-                      this.ITR_JSON.isRevised === 'Y'
-                        ? this.ITR_JSON.orgITRAckNum
-                        : this.ITR_JSON?.ackNumber
-                        ? this.ITR_JSON?.ackNumber
-                        : 'NA',
-
-                    bankAccountNumber: this.ITR_JSON.bankDetails.find(
-                      (item) => item.hasRefund === true
-                    )?.accountNumber,
-                    bankName: this.ITR_JSON.bankDetails.find(
-                      (item) => item.hasRefund === true
-                    )?.name,
-                  },
-                  salary: {
-                    employers:
-                      this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.employers.map(
-                        (
-                          {
-                            totalPTDuctionsExemptIncome,
-                            totalAllowanceExemptIncome,
-                            totalETDuctionsExemptIncome,
-                            taxableIncome,
-                            standardDeduction,
-                            employerName,
-                            salary,
-                            profitsInLieuOfSalaryType,
-                            perquisites,
-                          },
-                          index
-                        ) => {
-                          return {
-                            employerNo: index,
-                            employerName: employerName,
-                            grossSalary: salary[0]?.taxableAmount
-                              ? salary[0]?.taxableAmount
-                              : 0 + profitsInLieuOfSalaryType[0]?.taxableAmount
-                              ? profitsInLieuOfSalaryType[0]?.taxableAmount
-                              : 0 + perquisites[0]?.taxableAmount
-                              ? perquisites[0]?.taxableAmount
-                              : 0,
-                            exemptAllowance: totalAllowanceExemptIncome,
-                            professionalTax: totalPTDuctionsExemptIncome,
-                            entAllowance: totalETDuctionsExemptIncome,
-                            standardDeduction: standardDeduction,
-                            taxableSalary: taxableIncome,
-                          };
-                        }
-                      ),
-
-                    salaryTotalIncome:
-                      this.finalSummary?.assessment?.taxSummary?.salary,
-                  },
-                  houseProperties: {
-                    houseProps:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryHpIncome?.houseProperties.map(
-                        (
-                          {
-                            propertyType,
-                            grossAnnualRentReceived,
-                            propertyTax,
-                            annualValue,
-                            exemptIncome,
-                            loans,
-                            taxableIncome,
-                          },
-                          index
-                        ) => {
-                          return {
-                            hpNo: index,
-                            typeOfHp: propertyType,
-                            grossRentReceived: grossAnnualRentReceived,
-                            taxesPaid: propertyTax,
-                            annualValue: annualValue,
-                            hpStandardDeduction: exemptIncome,
-                            hpinterest: loans[0]?.interestAmount,
-                            hpNetIncome: taxableIncome,
-                            hpIncome: taxableIncome,
-                          };
-                        }
-                      ),
-                    hpTotalIncome: Math.max(
-                      this.finalSummary?.assessment?.taxSummary
-                        .housePropertyIncome,
-                      0
-                    ),
-                  },
-                  otherIncome: {
-                    otherIncomes: {
-                      saving:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'SAVING_INTEREST'
-                        )?.amount,
-
-                      intFromDeposit:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'FD_RD_INTEREST'
-                        )?.amount,
-
-                      taxRefund:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'TAX_REFUND_INTEREST'
-                        )?.amount,
-
-                      Qqb80:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'ROYALTY_US_80QQB'
-                        )?.amount,
-
-                      Rrb80:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'ROYALTY_US_80RRB'
-                        )?.amount,
-
-                      anyOtherInterest:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'ANY_OTHER'
-                        )?.amount,
-
-                      familyPension:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'FAMILY_PENSION'
-                        )?.taxableAmount,
-
-                      dividendIncome:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                          (val) => val.incomeType === 'DIVIDEND'
-                        )?.amount,
-                    },
-
-                    otherIncomeTotal:
-                      this.finalSummary?.assessment?.taxSummary.otherIncome,
-                  },
-                  businessIncome: {
-                    businessIncomeDetails: {
-                      business44AD: this.business44adDetails,
-
-                      business44ADA:
-                        this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                          ?.filter(
-                            (element) =>
-                              element?.businessType === 'PROFESSIONAL'
-                          )
-                          .map((element) => ({
-                            businessSection: element?.businessType,
-                            natureOfBusinessCode: this.natureOfBusiness?.find(
-                              (item) => {
-                                return (
-                                  item?.code === element?.natureOfBusinessCode
-                                );
-                              }
-                            )?.label,
-                            tradeName: element?.tradeName,
-                            grossTurnover: element?.receipts,
-                            TaxableIncome: element?.presumptiveIncome,
-                          })),
-
-                      nonSpecIncome: {
-                        businessSection: 'Non Speculative Income',
-                        natureOfBusinessCode: 'nonSpec',
-                        tradeName: 'Non Speculative Income',
-                        grossTurnover:
-                          this.ITR_JSON?.business?.profitLossACIncomes
-                            ?.find(
-                              (element) =>
-                                element?.businessType === 'NONSPECULATIVEINCOME'
-                            )
-                            ?.incomes?.reduce(
-                              (sum, obj) => Number(sum) + Number(obj?.turnOver),
-                              0
-                            ),
-                        TaxableIncome:
-                          this.ITR_JSON?.business?.profitLossACIncomes?.find(
-                            (element) =>
-                              element?.businessType === 'NONSPECULATIVEINCOME'
-                          )?.netProfitfromNonSpeculativeIncome,
-                      },
-
-                      specIncome: {
-                        businessSection: null,
-                        natureOfBusinessCode: null,
-                        tradeName: null,
-                        grossTurnover: null,
-                        TaxableIncome: null,
-                      },
-
-                      // crypto gain
-                      crypto: {
-                        cryptoDetails: this.finalSummary?.itr?.capitalGain
-                          ?.find((item) => {
-                            return item?.assetType === 'VDA';
-                          })
-                          ?.assetDetails?.filter((element) => {
-                            return element?.headOfIncome === 'BI';
-                          })
-                          ?.map((element, index) => {
-                            return {
-                              srNo: index + 1,
-                              buyDate: element?.purchaseDate,
-                              sellDate: element?.sellDate,
-                              headOfIncome:
-                                element?.headOfIncome === 'BI'
-                                  ? 'Business or Profession'
-                                  : 'Capital Gain',
-                              buyValue: element?.purchaseCost,
-                              SaleValue: element?.sellValue,
-                              income: element?.capitalGain,
-                            };
-                          }),
-                      },
-
-                      incomeFromFirm: {
-                        salary: this.finalSummary?.itr?.partnerFirms?.reduce(
-                          (total, element) => total + element?.salary,
-                          0
-                        ),
-                        bonus: this.finalSummary?.itr?.partnerFirms?.reduce(
-                          (total, element) => total + element?.bonus,
-                          0
-                        ),
-                        commission:
-                          this.finalSummary?.itr?.partnerFirms?.reduce(
-                            (total, element) => total + element?.commission,
-                            0
-                          ),
-                        interest: this.finalSummary?.itr?.partnerFirms?.reduce(
-                          (total, element) => total + element?.interest,
-                          0
-                        ),
-                        others: this.finalSummary?.itr?.partnerFirms?.reduce(
-                          (total, element) => total + element?.others,
-                          0
-                        ),
-                      },
-
-                      // total crypto gain
-                      totalCryptoIncome: this.finalSummary?.itr?.capitalGain
-                        ?.find((item) => {
-                          return item?.assetType === 'VDA';
-                        })
-                        ?.assetDetails?.filter((element) => {
-                          return element?.headOfIncome === 'BI';
-                        })
-                        ?.reduce(
-                          (total, element) => total + element?.capitalGain,
-                          0
-                        )
-                        ? this.finalSummary?.itr?.capitalGain
-                            ?.find((item) => {
-                              return item?.assetType === 'VDA';
-                            })
-                            ?.assetDetails?.filter((element) => {
-                              return element?.headOfIncome === 'BI';
-                            })
-                            ?.reduce(
-                              (total, element) => total + element?.capitalGain,
-                              0
-                            )
-                        : 0,
-                    },
-                    businessIncomeTotal:
-                      this.finalSummary?.assessment?.taxSummary?.businessIncome,
-                  },
-                  capitalGain: {
-                    // short term gain
-                    shortTerm: {
-                      ShortTerm15Per:
-                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                          ?.filter((item: any) => item?.taxRate === 15)
-                          .map((element) => ({
-                            nameOfAsset:
-                              element?.assetType === 'GOLD'
-                                ? 'Other Assets'
-                                : element.assetType,
-                            capitalGain:
-                              element.netSellValue -
-                              element.purchesCost -
-                              element.saleExpense -
-                              element.costOfImprovement,
-                            Deduction: element.deductionAmount,
-                            netCapitalGain:
-                              element.netSellValue -
-                              element.purchesCost -
-                              element.saleExpense -
-                              element.costOfImprovement -
-                              element.deductionAmount,
-                          })),
-                      ShortTerm15PerTotal:
-                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                          ?.filter((item: any) => item?.taxRate === 15)
-                          .reduce((total, element) => {
-                            const cgIncome =
-                              element.netSellValue -
-                              element.purchesCost -
-                              element.saleExpense -
-                              element.costOfImprovement -
-                              element.deductionAmount;
-
-                            return total + cgIncome;
-                          }, 0),
-
-                      ShortTerm30Per: [
-                        {
-                          nameOfAsset: '',
-                          capitalGain: 0,
-                          Deduction: 0,
-                          netCapitalGain: 0,
-                        },
-                      ],
-                      ShortTerm30PerTotal: 0,
-                      ShortTermAppSlabRate:
-                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                          ?.filter((item: any) => item?.taxRate === -1)
-                          .map((element) => ({
-                            nameOfAsset:
-                              element?.assetType === 'GOLD'
-                                ? 'Other Assets'
-                                : element.assetType,
-                            capitalGain:
-                              element.netSellValue -
-                              element.purchesCost -
-                              element.saleExpense -
-                              element.costOfImprovement,
-                            Deduction: element.deductionAmount,
-                            netCapitalGain:
-                              element.netSellValue -
-                              element.purchesCost -
-                              element.saleExpense -
-                              element.costOfImprovement -
-                              element.deductionAmount,
-                          })),
-                      ShortTermAppSlabRateTotal:
-                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                          ?.filter((item: any) => item?.taxRate === -1)
-                          .reduce((total, element) => {
-                            const cgIncome =
-                              element.netSellValue -
-                              element.purchesCost -
-                              element.saleExpense -
-                              element.costOfImprovement -
-                              element.deductionAmount;
-
-                            return total + cgIncome;
-                          }, 0),
-                      ShortTermSplRateDTAA: [
-                        {
-                          nameOfAsset: '',
-                          capitalGain: 0,
-                          Deduction: 0,
-                          netCapitalGain: 0,
-                        },
-                      ],
-                      ShortTermSplRateDTAATotal: 0,
-                    },
-                    // total short term gain
-                    totalShortTerm:
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter(
-                          (item: any) =>
-                            item?.taxRate === -1 || item?.taxRate === 15
-                        )
-                        .reduce((total, element) => {
-                          const incomeAfterInternalSetOff =
-                            element.incomeAfterInternalSetOff;
-                          console.log(element, 'element');
-                          console.log(
-                            incomeAfterInternalSetOff,
-                            'incomeAfterInternalSetOff'
-                          );
-
-                          return total + incomeAfterInternalSetOff;
-                        }, 0),
-
-                    // long term gain
-                    longTerm: {
-                      LongTerm10Per:
-                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                          ?.filter((item: any) => item?.taxRate === 10)
-                          .map((element) => ({
-                            nameOfAsset:
-                              element?.assetType === 'GOLD'
-                                ? 'Other Assets'
-                                : element.assetType,
-                            capitalGain:
-                              element.netSellValue -
-                              element.purchesCost -
-                              element.saleExpense -
-                              element.costOfImprovement,
-                            Deduction: element.deductionAmount,
-                            netCapitalGain:
-                              element.netSellValue -
-                              element.purchesCost -
-                              element.saleExpense -
-                              element.costOfImprovement -
-                              element.deductionAmount,
-                          })),
-                      LongTerm10PerTotal:
-                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                          ?.filter((item: any) => item?.taxRate === 10)
-                          .reduce((total, element) => {
-                            const cgIncome =
-                              element.netSellValue -
-                              element.purchesCost -
-                              element.saleExpense -
-                              element.costOfImprovement -
-                              element.deductionAmount;
-
-                            return total + cgIncome;
-                          }, 0),
-                      LongTerm20Per:
-                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                          ?.filter((item: any) => item?.taxRate === 20)
-                          .map((element) => ({
-                            nameOfAsset:
-                              element?.assetType === 'GOLD'
-                                ? 'Other Assets'
-                                : element.assetType,
-                            capitalGain:
-                              element.netSellValue -
-                              (element.indexCostOfAcquisition > 0
-                                ? element.indexCostOfAcquisition
-                                : element.purchesCost) -
-                              element.saleExpense -
-                              element.costOfImprovement,
-                            Deduction: element.deductionAmount,
-                            netCapitalGain:
-                              element.netSellValue -
-                              (element.indexCostOfAcquisition > 0
-                                ? element.indexCostOfAcquisition
-                                : element.purchesCost) -
-                              element.saleExpense -
-                              element.costOfImprovement -
-                              element.deductionAmount,
-                          })),
-                      LongTerm20PerTotal:
-                        this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                          ?.filter((item: any) => item?.taxRate === 20)
-                          .reduce((total, element) => {
-                            const cgIncome =
-                              element.netSellValue -
-                              (element.indexCostOfAcquisition > 0
-                                ? element.indexCostOfAcquisition
-                                : element.purchesCost) -
-                              element.saleExpense -
-                              element.costOfImprovement -
-                              element.deductionAmount;
-
-                            return total + cgIncome;
-                          }, 0),
-                      LongTermSplRateDTAA: [
-                        {
-                          nameOfAsset: '',
-                          capitalGain: 0,
-                          Deduction: 0,
-                          netCapitalGain: 0,
-                        },
-                      ],
-                      LongTermSplRateDTAATotal: 0,
-                    },
-                    // total long term gain
-                    totalLongTerm:
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter(
-                          (item: any) =>
-                            item?.taxRate === 10 || item?.taxRate === 20
-                        )
-                        .reduce((total, element) => {
-                          const incomeAfterInternalSetOff =
-                            element.incomeAfterInternalSetOff;
-                          console.log(element, 'element');
-                          console.log(
-                            incomeAfterInternalSetOff,
-                            'incomeAfterInternalSetOff'
-                          );
-
-                          return total + incomeAfterInternalSetOff;
-                        }, 0),
-
-                    // crypto gain
-                    crypto: {
-                      cryptoDetails: this.finalSummary?.itr?.capitalGain
-                        ?.find((item) => {
-                          return item?.assetType === 'VDA';
-                        })
-                        ?.assetDetails?.filter((element) => {
-                          return element?.headOfIncome === 'CG';
-                        })
-                        ?.map((element, index) => {
-                          return {
-                            srNo: index + 1,
-                            buyDate: element?.purchaseDate,
-                            sellDate: element?.sellDate,
-                            headOfIncome:
-                              element?.headOfIncome === 'BI'
-                                ? 'Business or Profession'
-                                : 'Capital Gain',
-                            buyValue: element?.purchaseCost,
-                            SaleValue: element?.sellValue,
-                            income: element?.capitalGain,
-                          };
-                        }),
-                    },
-                    // total crypto gain
-                    totalCryptoIncome: this.finalSummary?.itr?.capitalGain
-                      ?.find((item) => {
-                        return item?.assetType === 'VDA';
-                      })
-                      ?.assetDetails?.filter((element) => {
-                        return element?.headOfIncome === 'CG';
-                      })
-                      ?.reduce(
-                        (total, element) => total + element?.capitalGain,
-                        0
-                      )
-                      ? this.finalSummary?.itr?.capitalGain
-                          ?.find((item) => {
-                            return item?.assetType === 'VDA';
-                          })
-                          ?.assetDetails?.filter((element) => {
-                            return element?.headOfIncome === 'CG';
-                          })
-                          ?.reduce(
-                            (total, element) => total + element?.capitalGain,
-                            0
-                          )
-                      : 0,
-
-                    // total capital gain
-                    totalCapitalGain:
-                      this.finalSummary?.assessment?.taxSummary?.capitalGain,
-                  },
-                  totalHeadWiseIncome:
-                    this.finalSummary?.assessment?.taxSummary?.totalIncome,
-
-                  currentYearLosses: {
-                    currentYearLossesSetOff: [
-                      {
-                        houseProperty:
-                          this.finalSummary?.assessment?.taxSummary
-                            ?.currentYearIFHPSetOff,
-                        businessSetOff:
-                          this.finalSummary?.assessment?.taxSummary
-                            ?.currentYearIFBFSetOff,
-                        otherThanHpBusiness: 0,
-                      },
-                    ],
-                    totalCurrentYearSetOff:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.currentYearIFHPSetOff +
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.currentYearIFBFSetOff,
-                  },
-                  balanceAfterSetOffCurrentYearLosses:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.balanceAfterSetOffCurrentYearLosses,
-
-                  BroughtFwdLossesSetoff: {
-                    BroughtFwdLossesSetoffDtls: {
-                      hpLoss: this.losses?.pastYearLosses?.reduce(
-                        (total, item) =>
-                          total + item?.setOffWithCurrentYearHPIncome,
-                        0
-                      ),
-                      stLoss: this.losses?.pastYearLosses?.reduce(
-                        (total, item) =>
-                          total + item?.setOffWithCurrentYearSTCGIncome,
-                        0
-                      ),
-                      ltLoss: this.losses?.pastYearLosses?.reduce(
-                        (total, item) =>
-                          total + item?.setOffWithCurrentYearLTCGIncome,
-                        0
-                      ),
-                      businessLoss: this.losses?.pastYearLosses?.reduce(
-                        (total, item) =>
-                          total +
-                          item?.setOffWithCurrentYearBroughtForwordBusinessIncome,
-                        0
-                      ),
-                      speculativeBusinessLoss:
-                        this.losses?.pastYearLosses?.reduce(
-                          (total, item) =>
-                            total +
-                            item?.setOffWithCurrentYearSpeculativeBusinessIncome,
-                          0
-                        ),
-                    },
-                    BroughtFwdLossesSetoffTotal: Number(
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.totalBroughtForwordSetOff
-                    ),
-                  },
-                  grossTotalIncome:
-                    this.finalSummary?.assessment?.taxSummary?.grossTotalIncome,
-                  totalSpecialRateIncome:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.totalSpecialRateIncome,
-                  deductions: {
-                    deductionDtls: this.finalSummary?.assessment
-                      ?.summaryDeductions
-                      ? (Object?.entries(
-                          this.finalSummary?.assessment?.summaryDeductions
-                        )
-                          ?.filter(
-                            (item: any) =>
-                              item[1].sectionType !== '80C' &&
-                              item[1].sectionType !== '80CCC' &&
-                              item[1].sectionType !== '80CCD1' &&
-                              item[1].sectionType !== '80GAGTI'
-                          )
-                          .map(([key, item]) => ({
-                            name: (
-                              item as { notes: string; eligibleAmount: number }
-                            ).notes,
-                            amount: (
-                              item as { notes: string; eligibleAmount: number }
-                            ).eligibleAmount,
-                          })) as {
-                          name: String;
-                          amount: number;
-                        }[])
-                      : [],
-                    deductionTotal:
-                      this.finalSummary?.assessment?.taxSummary?.totalDeduction,
-                  },
-                  totalIncome:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.totalIncomeAfterDeductionIncludeSR,
-                  specialRateChargeable:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.specialIncomeAfterAdjBaseLimit,
-                  netAgricultureIncome:
-                    this.finalSummary?.itr?.exemptIncomes?.find(
-                      (agri) => agri.natureDesc === 'AGRI'
-                    )?.amount > 5000
-                      ? this.finalSummary?.itr?.exemptIncomes?.find(
-                          (agri) => agri.natureDesc === 'AGRI'
-                        )?.amount
-                      : 0,
-                  aggregateIncome:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.aggregateIncomeXml,
-                  //TODO:Shrikant remove the placeholder object
-                  lossesToBeCarriedForward: {
-                    cflDtls: [
-                      {
-                        assessmentPastYear: 0,
-                        housePropertyLoss: 0,
-                        STCGLoss: 0,
-                        LTCGLoss: 0,
-                        BusLossOthThanSpecLossCF: 0,
-                        LossFrmSpecBusCF: 0,
-                        LossFrmSpecifiedBusCF: 0,
-                        OthSrcLoss: 0,
-                        pastYear: 0,
-                        totalLoss: 0,
-                      },
-                    ],
-                    lossSetOffDuringYear: 0,
-                    cflTotal: 0,
-                  },
-                  scheduleCflDetails: {
-                    LossCFFromPrev12thYearFromAY: {
-                      dateOfFiling: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                    },
-                    LossCFFromPrev11thYearFromAY: {
-                      dateOfFiling: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                    },
-                    LossCFFromPrev10thYearFromAY: {
-                      dateOfFiling: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                    },
-                    LossCFFromPrev9thYearFromAY: {
-                      dateOfFiling: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                    },
-                    LossCFFromPrev8thYearFromAY: {
-                      dateOfFiling:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2015-16'
-                        )?.dateOfFiling,
-                      hpLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2015-16'
-                        )?.housePropertyLoss,
-                      broughtForwardBusLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2015-16'
-                        )?.broughtForwordBusinessLoss,
-                      BusLossOthThanSpecifiedLossCF: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                      stcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2015-16'
-                        )?.STCGLoss,
-                      ltcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2015-16'
-                        )?.LTCGLoss,
-                    },
-                    LossCFFromPrev7thYearFromAY: {
-                      dateOfFiling:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2016-17'
-                        )?.dateOfFiling,
-                      hpLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2016-17'
-                        )?.housePropertyLoss,
-                      broughtForwardBusLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2016-17'
-                        )?.broughtForwordBusinessLoss,
-                      BusLossOthThanSpecifiedLossCF: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                      stcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2016-17'
-                        )?.STCGLoss,
-                      ltcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2016-17'
-                        )?.LTCGLoss,
-                    },
-                    LossCFFromPrev6thYearFromAY: {
-                      dateOfFiling:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2017-18'
-                        )?.dateOfFiling,
-                      hpLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2017-18'
-                        )?.housePropertyLoss,
-                      broughtForwardBusLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2017-18'
-                        )?.broughtForwordBusinessLoss,
-                      BusLossOthThanSpecifiedLossCF: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                      stcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2017-18'
-                        )?.STCGLoss,
-                      ltcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2017-18'
-                        )?.LTCGLoss,
-                    },
-                    LossCFFromPrev5thYearFromAY: {
-                      dateOfFiling:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2018-19'
-                        )?.dateOfFiling,
-                      hpLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2018-19'
-                        )?.housePropertyLoss,
-                      broughtForwardBusLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2018-19'
-                        )?.broughtForwordBusinessLoss,
-                      BusLossOthThanSpecifiedLossCF: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                      stcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2018-19'
-                        )?.STCGLoss,
-                      ltcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2018-19'
-                        )?.LTCGLoss,
-                    },
-                    LossCFFromPrev4thYearFromAY: {
-                      dateOfFiling:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2019-20'
-                        )?.dateOfFiling,
-                      hpLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2019-20'
-                        )?.housePropertyLoss,
-                      broughtForwardBusLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2019-20'
-                        )?.broughtForwordBusinessLoss,
-                      BusLossOthThanSpecifiedLossCF: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                      stcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2019-20'
-                        )?.STCGLoss,
-                      ltcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2019-20'
-                        )?.LTCGLoss,
-                      OthSrcLossRaceHorseCF: 0,
-                      lossFromSpeculativeBus:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2019-20'
-                        )?.speculativeBusinessLoss,
-                    },
-                    LossCFFromPrev3rdYearFromAY: {
-                      dateOfFiling:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2020-21'
-                        )?.dateOfFiling,
-                      hpLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2020-21'
-                        )?.housePropertyLoss,
-                      broughtForwardBusLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2020-21'
-                        )?.broughtForwordBusinessLoss,
-                      BusLossOthThanSpecifiedLossCF: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                      stcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2020-21'
-                        )?.STCGLoss,
-                      ltcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2020-21'
-                        )?.LTCGLoss,
-                      OthSrcLossRaceHorseCF: 0,
-                      lossFromSpeculativeBus:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2020-21'
-                        )?.speculativeBusinessLoss,
-                    },
-                    LossCFPrevAssmntYear: {
-                      dateOfFiling:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2021-22'
-                        )?.dateOfFiling,
-                      hpLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2021-22'
-                        )?.housePropertyLoss,
-                      broughtForwardBusLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2021-22'
-                        )?.broughtForwordBusinessLoss,
-                      BusLossOthThanSpecifiedLossCF: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                      stcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2021-22'
-                        )?.STCGLoss,
-                      ltcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2021-22'
-                        )?.LTCGLoss,
-                      OthSrcLossRaceHorseCF: 0,
-                      lossFromSpeculativeBus:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2021-22'
-                        )?.speculativeBusinessLoss,
-                    },
-                    LossCFCurrentAssmntYear: {
-                      dateOfFiling:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2022-23'
-                        )?.dateOfFiling,
-                      hpLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2022-23'
-                        )?.housePropertyLoss,
-                      broughtForwardBusLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2022-23'
-                        )?.broughtForwordBusinessLoss,
-                      BusLossOthThanSpecifiedLossCF: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                      stcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2022-23'
-                        )?.STCGLoss,
-                      ltcgLoss:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2022-23'
-                        )?.LTCGLoss,
-                      OthSrcLossRaceHorseCF: 0,
-                      lossFromSpeculativeBus:
-                        this.finalSummary?.assessment?.pastYearLosses?.find(
-                          (year) => year.assessmentPastYear === '2022-23'
-                        )?.speculativeBusinessLoss,
-                    },
-                    TotalOfBFLossesEarlierYrs: {
-                      totalBroughtForwardHpLoss:
-                        this.finalSummary?.assessment?.totalOfEarlierYearLosses
-                          ?.housePropertyLoss,
-                      totalBroughtForwardBusLoss:
-                        this.finalSummary?.assessment?.totalOfEarlierYearLosses
-                          ?.broughtForwordBusinessLoss,
-                      totalBroughtForwardBusLossOthThanSpecifiedLossCF: 0,
-                      totalBroughtForwardLossFrmSpecifiedBusCF: 0,
-                      totalBroughtForwardStcgLoss:
-                        this.finalSummary?.assessment?.totalOfEarlierYearLosses
-                          ?.STCGLoss,
-                      totalBroughtForwardLtcgLoss:
-                        this.finalSummary?.assessment?.totalOfEarlierYearLosses
-                          ?.LTCGLoss,
-                      totalBroughtForwardOthSrcLossRaceHorseCF: 0,
-                      totalBroughtForwardLossSpeculativeBus:
-                        this.finalSummary?.assessment?.totalOfEarlierYearLosses
-                          ?.speculativeBusinessLoss,
-                    },
-                    AdjTotBFLossInBFLA: {
-                      adjInBflHpLoss:
-                        this.finalSummary?.assessment
-                          ?.adjustmentofLossesInScheduleBFLA?.housePropertyLoss,
-                      adjInBflBusLossOthThanSpecifiedLossCF:
-                        this.finalSummary?.assessment
-                          ?.adjustmentofLossesInScheduleBFLA
-                          ?.broughtForwordBusinessLoss,
-                      adjInBflLossFrmSpecifiedBusCF: 0,
-                      adjInBflStcgLoss:
-                        this.finalSummary?.assessment
-                          ?.adjustmentofLossesInScheduleBFLA?.STCGLoss,
-                      adjInBflLtcgLoss:
-                        this.finalSummary?.assessment
-                          ?.adjustmentofLossesInScheduleBFLA?.LTCGLoss,
-                      adjInBflOthSrcLossRaceHorseCF: 0,
-                      adjInBflSpeculativeBus:
-                        this.finalSummary?.assessment
-                          ?.adjustmentofLossesInScheduleBFLA
-                          ?.speculativeBusinessLoss,
-                    },
-                    CurrentAYloss: {
-                      currentAyHpLoss:
-                        this.finalSummary?.assessment?.currentYearLosses
-                          ?.housePropertyLoss,
-                      currentAyBusLossOthThanSpecifiedLossCF:
-                        this.finalSummary?.assessment?.currentYearLosses
-                          ?.businessLoss,
-                      currentAyLossFrmSpecifiedBusCF: 0,
-                      currentAyStcgLoss:
-                        this.finalSummary?.assessment?.currentYearLosses
-                          ?.STCGLoss,
-                      currentAyLtcgLoss:
-                        this.finalSummary?.assessment?.currentYearLosses
-                          ?.LTCGLoss,
-                      currentAyOthSrcLossRaceHorseCF: 0,
-                      currentAySpeculativeBus:
-                        this.finalSummary?.assessment?.currentYearLosses
-                          ?.speculativeLoss,
-                    },
-                    TotalLossCFSummary: {
-                      totalLossCFHpLoss:
-                        this.finalSummary?.assessment
-                          ?.totalLossCarriedForwardedToFutureYears
-                          ?.housePropertyLoss,
-                      totalLossCFBusLossOthThanSpecifiedLossCF:
-                        this.finalSummary?.assessment
-                          ?.totalLossCarriedForwardedToFutureYears
-                          ?.broughtForwordBusinessLoss,
-                      totalLossCFLossFrmSpecifiedBusCF: 0,
-                      totalLossCFStcgLoss:
-                        this.finalSummary?.assessment
-                          ?.totalLossCarriedForwardedToFutureYears?.STCGLoss,
-                      totalLossCFLtcgLoss:
-                        this.finalSummary?.assessment
-                          ?.totalLossCarriedForwardedToFutureYears?.LTCGLoss,
-                      totalLossCFOthSrcLossRaceHorseCF: 0,
-                      totalLossCFSpeculativeBus:
-                        this.finalSummary?.assessment
-                          ?.totalLossCarriedForwardedToFutureYears
-                          ?.speculativeBusinessLoss,
-                    },
-                    TotalOfAllLossCFSummary:
-                      this.finalSummary?.assessment
-                        ?.totalLossCarriedForwardedToFutureYears
-                        ?.housePropertyLoss +
-                      this.finalSummary?.assessment
-                        ?.totalLossCarriedForwardedToFutureYears?.STCGLoss +
-                      this.finalSummary?.assessment
-                        ?.totalLossCarriedForwardedToFutureYears?.LTCGLoss +
-                      this.finalSummary?.assessment
-                        ?.totalLossCarriedForwardedToFutureYears
-                        ?.speculativeBusinessLoss +
-                      this.finalSummary?.assessment
-                        ?.totalLossCarriedForwardedToFutureYears
-                        ?.broughtForwordBusinessLoss,
-                  },
-                  totalTax: {
-                    taxAtNormalRate:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxAtNormalRate,
-                    taxAtSpecialRate:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxAtSpecialRate,
-                    rebateOnAgricultureIncome:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.rebateOnAgricultureIncome,
-                    totalTax:
-                      this.finalSummary?.assessment?.taxSummary?.totalTax,
-                  },
-                  rebateUnderSection87A:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.rebateUnderSection87A,
-                  taxAfterRebate:
-                    this.finalSummary?.assessment?.taxSummary?.taxAfterRebate,
-                  surcharge:
-                    this.finalSummary?.assessment?.taxSummary?.surcharge,
-                  eductionCess:
-                    this.finalSummary?.assessment?.taxSummary?.cessAmount,
-                  grossTaxLiability:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.grossTaxLiability,
-                  taxRelief: {
-                    taxReliefUnder89:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder89,
-                    taxReliefUnder90_90A:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder90_90A,
-                    taxReliefUnder91:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder91,
-                    totalRelief: this.finalSummary?.assessment?.taxSummary
-                      ?.taxReliefUnder89
-                      ? this.finalSummary?.assessment?.taxSummary
-                          ?.taxReliefUnder89
-                      : 0 +
-                        this.finalSummary?.assessment?.taxSummary
-                          ?.taxReliefUnder90_90A
-                      ? this.finalSummary?.assessment?.taxSummary
-                          ?.taxReliefUnder90_90A
-                      : 0 +
-                        this.finalSummary?.assessment?.taxSummary
-                          ?.taxReliefUnder91
-                      ? this.finalSummary?.assessment?.taxSummary
-                          ?.taxReliefUnder91
-                      : 0,
-                  },
-                  netTaxLiability:
-                    this.finalSummary?.assessment?.taxSummary?.netTaxLiability,
-                  interestAndFee: {
-                    interest234C: {
-                      q1: this.finalSummary?.assessment?.summaryQuarter234c
-                        ?.quarterDitailsQ1?.intrest,
-                      q2: this.finalSummary?.assessment?.summaryQuarter234c
-                        ?.quarterDitailsQ2?.intrest,
-                      q3: this.finalSummary?.assessment?.summaryQuarter234c
-                        ?.quarterDitailsQ3?.intrest,
-                      q4: this.finalSummary?.assessment?.summaryQuarter234c
-                        ?.quarterDitailsQ4?.intrest,
-                      q5: this.finalSummary?.assessment?.summaryQuarter234c
-                        ?.quarterDitailsQ5?.intrest,
-                    },
-                    total234A: this.finalSummary?.assessment?.taxSummary?.s234A,
-                    total234B: this.finalSummary?.assessment?.taxSummary?.s234B,
-                    total234C: this.finalSummary?.assessment?.taxSummary?.s234C,
-                    total234F: this.finalSummary?.assessment?.taxSummary?.s234F,
-                    totalInterestAndFee:
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.interestAndFeesPayable,
-                  },
-                  aggregateLiability:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.agrigateLiability,
-                  taxPaid: {
-                    onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
-                      ? (Object.entries(
-                          this.finalSummary?.itr?.taxPaid?.onSalary
-                        )?.map(([key, item]) => ({
-                          deductorName: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                            }
-                          ).deductorName,
-                          deductorTAN: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                            }
-                          ).deductorTAN,
-                          totalAmountCredited: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                            }
-                          ).totalAmountCredited,
-                          totalTdsDeposited: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                            }
-                          ).totalTdsDeposited,
-                        })) as {
-                          deductorName: String;
-                          deductorTAN: String;
-                          totalAmountCredited: Number;
-                          totalTdsDeposited: Number;
-                        }[])
-                      : null,
-                    totalOnSalary:
-                      this.finalSummary?.itr?.taxPaid?.onSalary?.reduce(
-                        (total, item) => total + item?.totalTdsDeposited,
-                        0
-                      ),
-
-                    otherThanSalary16A: this.finalSummary?.itr?.taxPaid
-                      ?.otherThanSalary16A
-                      ? (Object.entries(
-                          this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
-                        )?.map(([key, item]) => ({
-                          deductorName: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              headOfIncome: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: any;
-                            }
-                          ).deductorName,
-                          deductorTAN: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              headOfIncome: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: any;
-                            }
-                          ).deductorTAN,
-                          totalAmountCredited: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              headOfIncome: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: any;
-                            }
-                          ).totalAmountCredited,
-                          totalTdsDeposited: (
-                            item as {
-                              deductorName: String;
-                              deductorTAN: String;
-                              headOfIncome: String;
-                              id: any;
-                              srNo: any;
-                              taxDeduction: any;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: any;
-                            }
-                          ).totalTdsDeposited,
-                        })) as {
-                          deductorName: String;
-                          deductorTAN: String;
-                          totalAmountCredited: Number;
-                          totalTdsDeposited: Number;
-                        }[])
-                      : null,
-
-                    totalOtherThanSalary16A:
-                      this.finalSummary?.itr?.taxPaid?.otherThanSalary16A?.reduce(
-                        (total, item) => total + item?.totalTdsDeposited,
-                        0
-                      ),
-
-                    otherThanSalary26QB: this.finalSummary?.itr?.taxPaid
-                      ?.otherThanSalary26QB
-                      ? (Object.entries(
-                          this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
-                        )?.map(([key, item]) => ({
-                          deductorName: (
-                            item as {
-                              deductorName: String;
-                              deductorPAN: String;
-                              headOfIncome: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: null;
-                            }
-                          ).deductorName,
-                          deductorTAN: (
-                            item as {
-                              deductorName: String;
-                              deductorPAN: String;
-                              headOfIncome: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: null;
-                            }
-                          ).deductorPAN,
-                          totalAmountCredited: (
-                            item as {
-                              deductorName: String;
-                              deductorPAN: String;
-                              headOfIncome: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: null;
-                            }
-                          ).totalAmountCredited,
-                          totalTdsDeposited: (
-                            item as {
-                              deductorName: String;
-                              deductorPAN: String;
-                              headOfIncome: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountCredited: Number;
-                              totalTdsDeposited: Number;
-                              uniqueTDSCerNo: null;
-                            }
-                          ).totalTdsDeposited,
-                        })) as {
-                          deductorName: String;
-                          deductorTAN: String;
-                          totalAmountCredited: Number;
-                          totalTdsDeposited: Number;
-                        }[])
-                      : null,
-
-                    totalOtherThanSalary26QB:
-                      this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB?.reduce(
-                        (total, item) => total + item?.totalTdsDeposited,
-                        0
-                      ),
-
-                    tcs: this.finalSummary?.itr?.taxPaid?.tcs
-                      ? (Object.entries(
-                          this.finalSummary?.itr?.taxPaid?.tcs
-                        )?.map(([key, item]) => ({
-                          deductorName: (
-                            item as {
-                              collectorName: String;
-                              collectorTAN: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountPaid: Number;
-                              totalTaxCollected: Number;
-                              totalTcsDeposited: Number;
-                            }
-                          ).collectorName,
-                          deductorTAN: (
-                            item as {
-                              collectorName: String;
-                              collectorTAN: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountPaid: Number;
-                              totalTaxCollected: Number;
-                              totalTcsDeposited: Number;
-                            }
-                          ).collectorTAN,
-                          totalAmountCredited: (
-                            item as {
-                              collectorName: String;
-                              collectorTAN: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountPaid: Number;
-                              totalTaxCollected: Number;
-                              totalTcsDeposited: Number;
-                            }
-                          ).totalAmountPaid,
-                          totalTdsDeposited: (
-                            item as {
-                              collectorName: String;
-                              collectorTAN: String;
-                              id: null;
-                              srNo: null;
-                              taxDeduction: null;
-                              totalAmountPaid: Number;
-                              totalTaxCollected: Number;
-                              totalTcsDeposited: Number;
-                            }
-                          ).totalTcsDeposited,
-                        })) as {
-                          deductorName: String;
-                          deductorTAN: String;
-                          totalAmountCredited: Number;
-                          totalTdsDeposited: Number;
-                        }[])
-                      : null,
-                    totalTcs: this.finalSummary?.itr?.taxPaid?.tcs?.reduce(
-                      (total, item) => total + item?.totalTcsDeposited,
-                      0
-                    ),
-
-                    otherThanTDSTCS: this.finalSummary?.itr?.taxPaid
-                      ?.otherThanTDSTCS
-                      ? (Object.entries(
-                          this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS
-                        )?.map(([key, item]) => ({
-                          bsrCode: (
-                            item as {
-                              bsrCode: String;
-                              challanNumber: Number;
-                              dateOfDeposit: Date;
-                              educationCess: any;
-                              id: any;
-                              majorHead: any;
-                              minorHead: any;
-                              other: any;
-                              srNo: any;
-                              surcharge: any;
-                              tax: any;
-                              totalTax: Number;
-                            }
-                          ).bsrCode,
-                          date: (
-                            item as {
-                              bsrCode: String;
-                              challanNumber: Number;
-                              dateOfDeposit: Date;
-                              educationCess: any;
-                              id: any;
-                              majorHead: any;
-                              minorHead: any;
-                              other: any;
-                              srNo: any;
-                              surcharge: any;
-                              tax: any;
-                              totalTax: Number;
-                            }
-                          ).dateOfDeposit,
-                          challanNo: (
-                            item as {
-                              bsrCode: String;
-                              challanNumber: Number;
-                              dateOfDeposit: Date;
-                              educationCess: any;
-                              id: any;
-                              majorHead: any;
-                              minorHead: any;
-                              other: any;
-                              srNo: any;
-                              surcharge: any;
-                              tax: any;
-                              totalTax: Number;
-                            }
-                          ).challanNumber,
-                          amount: (
-                            item as {
-                              bsrCode: String;
-                              challanNumber: Number;
-                              dateOfDeposit: Date;
-                              educationCess: any;
-                              id: any;
-                              majorHead: any;
-                              minorHead: any;
-                              other: any;
-                              srNo: any;
-                              surcharge: any;
-                              tax: any;
-                              totalTax: Number;
-                            }
-                          ).totalTax,
-                        })) as {
-                          bsrCode: String;
-                          date: Date;
-                          challanNo: Number;
-                          amount: Number;
-                        }[])
-                      : null,
-
-                    totalOtherThanTDSTCS:
-                      this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS?.reduce(
-                        (total, item) => total + item?.totalTax,
-                        0
-                      ),
-
-                    totalTaxesPaid:
-                      this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
-                  },
-                  amountPayable:
-                    this.finalSummary?.assessment?.taxSummary?.taxpayable,
-                  amountRefund:
-                    this.finalSummary?.assessment?.taxSummary?.taxRefund,
-
-                  exemptIncome: {
-                    partnerFirms: this.finalSummary?.itr?.partnerFirms
-                      ?.map((element, index) => {
-                        return {
-                          srNo: index + 1,
-                          name: element.name,
-                          panNumber: element.panNumber,
-                          profitShareAmount: element.profitShareAmount,
-                        };
-                      })
-                      .flat(),
-                    total: this.finalSummary?.itr?.partnerFirms?.reduce(
-                      (total, item) => total + item?.profitShareAmount,
-                      0
-                    ),
-                  },
-                };
-                console.log(this.finalCalculations, 'finalCalculations');
-                this.loading = false;
-              } else {
-                this.loading = false;
-                this.errorMessage =
-                  'We are unable to display your summary,Please try again later.';
-                this.utilsService.showErrorMsg(this.errorMessage);
-              }
-            });
-          },
-          (error) => {
-            this.loading = false;
-            this.show = false;
-            this.errorMessage =
-              'We are processing your request, Please wait......';
-            if (error) {
-              this.errorMessage =
-                'We are unable to display your summary,Please try again later.';
-            }
-            console.log('In error method===', error);
-          }
-        );
+        this.taxbuddyCalculations();
       }
     } else {
-      const param = '/tax';
-      this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
-        (result: any) => {
-          // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
-          console.log('result is=====', result);
-          this.summaryIncome = result.summaryIncome;
-          const sumParam = `/itr-summary?itrId=${this.ITR_JSON.itrId}&itrSummaryId=0`;
-          this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
-            this.finalSummary = summary;
-            console.log('SUMMARY Result=> ', summary);
-            if (summary) {
-              this.losses = summary.assessment;
-              for (
-                let i = 0;
-                i < this.losses?.carryForwordLosses?.length;
-                i++
-              ) {
-                this.totalCarryForword =
-                  this.totalCarryForword +
-                  this.losses.carryForwordLosses[i].totalLoss;
-              }
-              this.summaryDetail = summary.assessment.taxSummary;
-              this.taxable = this.summaryDetail.taxpayable;
+      this.taxbuddyCalculations();
+    }
+  }
 
-              this.refund = this.summaryDetail.taxRefund;
-              this.deductionDetail =
-                summary.assessment.summaryDeductions?.filter(
-                  (item: any) =>
-                    item.sectionType !== '80C' &&
-                    item.sectionType !== '80CCC' &&
-                    item.sectionType !== '80CCD1' &&
-                    item.sectionType !== '80GAGTI'
-                );
-              this.capitalGain =
-                summary.assessment.summaryIncome?.cgIncomeN.capitalGain;
-              this.totalLoss = summary.assessment.currentYearLosses;
-              this.show = true;
-              sessionStorage.setItem(
-                'ITR_SUMMARY_JSON',
-                JSON.stringify(this.summaryDetail)
-              );
+  taxbuddyCalculations() {
+    const param = '/tax';
+    this.itrMsService.postMethod(param, this.ITR_JSON).subscribe(
+      (result: any) => {
+        // http://localhost:9050/itr/itr-summary?itrId=253&itrSummaryId=0
+        console.log('result is=====', result);
+        this.summaryIncome = result.summaryIncome;
+        const sumParam = `/itr-summary?itrId=${this.ITR_JSON.itrId}&itrSummaryId=0`;
+        this.itrMsService.getMethod(sumParam).subscribe((summary: any) => {
+          this.finalSummary = summary;
+          console.log('SUMMARY Result=> ', summary);
+          if (summary) {
+            this.losses = summary.assessment;
+            for (let i = 0; i < this.losses?.carryForwordLosses?.length; i++) {
+              this.totalCarryForword =
+                this.totalCarryForword +
+                this.losses.carryForwordLosses[i].totalLoss;
+            }
+            this.summaryDetail = summary.assessment.taxSummary;
+            this.taxable = this.summaryDetail.taxpayable;
 
-              this.losses?.pastYearLosses?.forEach((item: any) => {
-                this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
-                this.stLoss =
-                  this.stLoss + item.setOffWithCurrentYearSTCGIncome;
-                this.ltLoss =
-                  this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
-              });
-              this.loading = false;
+            this.refund = this.summaryDetail.taxRefund;
+            this.deductionDetail = summary.assessment.summaryDeductions?.filter(
+              (item: any) =>
+                item.sectionType !== '80C' &&
+                item.sectionType !== '80CCC' &&
+                item.sectionType !== '80CCD1' &&
+                item.sectionType !== '80GAGTI'
+            );
+            this.capitalGain =
+              summary.assessment.summaryIncome?.cgIncomeN.capitalGain;
+            this.totalLoss = summary.assessment.currentYearLosses;
+            this.show = true;
+            sessionStorage.setItem(
+              'ITR_SUMMARY_JSON',
+              JSON.stringify(this.summaryDetail)
+            );
 
-              this.getBusinessDetails();
+            this.losses?.pastYearLosses?.forEach((item: any) => {
+              this.hpLoss = this.hpLoss + item.setOffWithCurrentYearHPIncome;
+              this.stLoss = this.stLoss + item.setOffWithCurrentYearSTCGIncome;
+              this.ltLoss = this.ltLoss + item.setOffWithCurrentYearLTCGIncome;
+            });
+            this.loading = false;
 
-              this.finalCalculations = {
-                personalInfo: {
-                  name: this.ITR_JSON?.family[0]?.fName
-                    ? this.ITR_JSON?.family[0]?.fName
-                    : '' + this.ITR_JSON?.family[0]?.mName
-                    ? this.ITR_JSON?.family[0]?.mName
-                    : '' + this.ITR_JSON?.family[0]?.lName
-                    ? this.ITR_JSON?.family[0]?.lName
-                    : '',
+            this.getBusinessDetails();
 
-                  aadhaarNumber: this.ITR_JSON?.aadharNumber,
+            this.finalCalculations = {
+              personalInfo: {
+                name: this.ITR_JSON?.family[0]?.fName
+                  ? this.ITR_JSON?.family[0]?.fName
+                  : '' + this.ITR_JSON?.family[0]?.mName
+                  ? this.ITR_JSON?.family[0]?.mName
+                  : '' + this.ITR_JSON?.family[0]?.lName
+                  ? this.ITR_JSON?.family[0]?.lName
+                  : '',
 
-                  mobileNumber: this.ITR_JSON?.contactNumber,
+                aadhaarNumber: this.ITR_JSON?.aadharNumber,
 
-                  resStatus: this.ITR_JSON?.residentialStatus,
+                mobileNumber: this.ITR_JSON?.contactNumber,
 
-                  returnType:
-                    this.ITR_JSON.isDefective === 'Y'
-                      ? 'Defective'
-                      : this.ITR_JSON?.isRevised === 'Y'
-                      ? 'Revised'
-                      : 'Original',
+                resStatus: this.ITR_JSON?.residentialStatus,
 
-                  Address:
-                    this.ITR_JSON.address?.flatNo +
-                    this.ITR_JSON.address?.premisesName +
-                    this.ITR_JSON.address?.area +
-                    this.ITR_JSON.address?.city +
-                    '' +
-                    this.ITR_JSON.address?.pinCode,
+                returnType:
+                  this.ITR_JSON.isDefective === 'Y'
+                    ? 'Defective'
+                    : this.ITR_JSON?.isRevised === 'Y'
+                    ? 'Revised'
+                    : 'Original',
 
-                  dob: this.ITR_JSON?.family[0]?.dateOfBirth,
+                Address:
+                  this.ITR_JSON.address?.flatNo +
+                  this.ITR_JSON.address?.premisesName +
+                  this.ITR_JSON.address?.area +
+                  this.ITR_JSON.address?.city +
+                  '' +
+                  this.ITR_JSON.address?.pinCode,
 
-                  panNumber: this.ITR_JSON?.panNumber,
+                dob: this.ITR_JSON?.family[0]?.dateOfBirth,
 
-                  email: this.ITR_JSON?.email,
+                panNumber: this.ITR_JSON?.panNumber,
 
-                  itrType: this.ITR_JSON?.itrType,
+                email: this.ITR_JSON?.email,
 
-                  orgAckNumber:
-                    this.ITR_JSON.isRevised === 'Y'
-                      ? this.ITR_JSON.orgITRAckNum
-                      : this.ITR_JSON?.ackNumber
-                      ? this.ITR_JSON?.ackNumber
-                      : 'NA',
+                itrType: this.finalSummary?.itr?.itrType,
 
-                  bankAccountNumber: this.ITR_JSON.bankDetails.find(
-                    (item) => item.hasRefund === true
-                  )?.accountNumber,
-                  bankName: this.ITR_JSON.bankDetails.find(
-                    (item) => item.hasRefund === true
-                  )?.name,
-                },
-                salary: {
-                  employers:
-                    this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.employers.map(
-                      (
-                        {
-                          totalPTDuctionsExemptIncome,
-                          totalAllowanceExemptIncome,
-                          totalETDuctionsExemptIncome,
-                          taxableIncome,
-                          standardDeduction,
-                          employerName,
+                orgAckNumber:
+                  this.ITR_JSON.isRevised === 'Y'
+                    ? this.ITR_JSON.orgITRAckNum
+                    : this.ITR_JSON?.ackNumber
+                    ? this.ITR_JSON?.ackNumber
+                    : 'NA',
+
+                bankAccountNumber: this.ITR_JSON.bankDetails.find(
+                  (item) => item.hasRefund === true
+                )?.accountNumber,
+                bankName: this.ITR_JSON.bankDetails.find(
+                  (item) => item.hasRefund === true
+                )?.name,
+              },
+              salary: {
+                employers:
+                  this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.employers.map(
+                    (
+                      {
+                        totalPTDuctionsExemptIncome,
+                        totalAllowanceExemptIncome,
+                        totalETDuctionsExemptIncome,
+                        taxableIncome,
+                        standardDeduction,
+                        employerName,
+                        salary,
+                        profitsInLieuOfSalaryType,
+                        perquisites,
+                      },
+                      index
+                    ) => {
+                      return {
+                        employerNo: index,
+                        employerName: employerName,
+                        grossSalary: this.getGrossSalary(
                           salary,
                           profitsInLieuOfSalaryType,
-                          perquisites,
-                        },
-                        index
-                      ) => {
-                        return {
-                          employerNo: index,
-                          employerName: employerName,
-                          grossSalary: salary[0]?.taxableAmount
-                            ? salary[0]?.taxableAmount
-                            : 0 + profitsInLieuOfSalaryType[0]?.taxableAmount
-                            ? profitsInLieuOfSalaryType[0]?.taxableAmount
-                            : 0 + perquisites[0]?.taxableAmount
-                            ? perquisites[0]?.taxableAmount
-                            : 0,
-                          exemptAllowance: totalAllowanceExemptIncome,
-                          professionalTax: totalPTDuctionsExemptIncome,
-                          entAllowance: totalETDuctionsExemptIncome,
-                          standardDeduction: standardDeduction,
-                          taxableSalary: taxableIncome,
-                        };
-                      }
-                    ),
-
-                  salaryTotalIncome:
-                    this.finalSummary?.assessment?.taxSummary?.salary,
-                },
-                houseProperties: {
-                  houseProps:
-                    this.finalSummary?.assessment?.summaryIncome?.summaryHpIncome?.houseProperties.map(
-                      (
-                        {
-                          propertyType,
-                          grossAnnualRentReceived,
-                          propertyTax,
-                          annualValue,
-                          exemptIncome,
-                          loans,
-                          taxableIncome,
-                        },
-                        index
-                      ) => {
-                        return {
-                          hpNo: index,
-                          typeOfHp: propertyType,
-                          grossRentReceived: grossAnnualRentReceived,
-                          taxesPaid: propertyTax,
-                          annualValue: annualValue,
-                          hpStandardDeduction: exemptIncome,
-                          hpinterest: loans[0]?.interestAmount,
-                          hpNetIncome: taxableIncome,
-                          hpIncome: taxableIncome,
-                        };
-                      }
-                    ),
-                  hpTotalIncome: Math.max(
-                    this.finalSummary?.assessment?.taxSummary
-                      .housePropertyIncome,
-                    0
+                          perquisites
+                        ),
+                        exemptAllowance: totalAllowanceExemptIncome,
+                        professionalTax: totalPTDuctionsExemptIncome,
+                        entAllowance: totalETDuctionsExemptIncome,
+                        standardDeduction: standardDeduction,
+                        taxableSalary: taxableIncome,
+                      };
+                    }
                   ),
-                },
-                otherIncome: {
-                  otherIncomes: {
-                    saving:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'SAVING_INTEREST'
-                      )?.amount,
 
-                    intFromDeposit:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'FD_RD_INTEREST'
-                      )?.amount,
-
-                    taxRefund:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'TAX_REFUND_INTEREST'
-                      )?.amount,
-
-                    Qqb80:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'ROYALTY_US_80QQB'
-                      )?.amount,
-
-                    Rrb80:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'ROYALTY_US_80RRB'
-                      )?.amount,
-
-                    anyOtherInterest:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'ANY_OTHER'
-                      )?.amount,
-
-                    familyPension:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'FAMILY_PENSION'
-                      )?.taxableAmount,
-
-                    dividendIncome:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
-                        (val) => val.incomeType === 'DIVIDEND'
-                      )?.amount,
-                  },
-
-                  otherIncomeTotal:
-                    this.finalSummary?.assessment?.taxSummary.otherIncome,
-                },
-                businessIncome: {
-                  businessIncomeDetails: {
-                    business44AD: this.business44adDetails,
-
-                    business44ADA:
-                      this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
-                        ?.filter(
-                          (element) => element?.businessType === 'PROFESSIONAL'
-                        )
-                        .map((element) => ({
-                          businessSection: element?.businessType,
-                          natureOfBusinessCode: this.natureOfBusiness?.find(
-                            (item) => {
-                              return (
-                                item?.code === element?.natureOfBusinessCode
-                              );
-                            }
-                          )?.label,
-                          tradeName: element?.tradeName,
-                          grossTurnover: element?.receipts,
-                          TaxableIncome: element?.presumptiveIncome,
-                        })),
-
-                    nonSpecIncome: {
-                      businessSection: 'Non Speculative Income',
-                      natureOfBusinessCode: 'nonSpec',
-                      tradeName: 'Non Speculative Income',
-                      grossTurnover:
-                        this.ITR_JSON?.business?.profitLossACIncomes
-                          ?.find(
-                            (element) =>
-                              element?.businessType === 'NONSPECULATIVEINCOME'
-                          )
-                          ?.incomes?.reduce(
-                            (sum, obj) => Number(sum) + Number(obj?.turnOver),
-                            0
-                          ),
-                      TaxableIncome:
-                        this.ITR_JSON?.business?.profitLossACIncomes?.find(
-                          (element) =>
-                            element?.businessType === 'NONSPECULATIVEINCOME'
-                        )?.netProfitfromNonSpeculativeIncome,
-                    },
-
-                    specIncome: {
-                      businessSection: 'Speculative Income',
-                      natureOfBusinessCode: 'spec',
-                      tradeName: 'Speculative Income',
-                      grossTurnover:
-                        this.ITR_JSON?.business?.profitLossACIncomes
-                          ?.find(
-                            (element) =>
-                              element?.businessType === 'SPECULATIVEINCOME'
-                          )
-                          ?.incomes?.reduce(
-                            (sum, obj) => Number(sum) + Number(obj?.turnOver),
-                            0
-                          ),
-                      TaxableIncome:
-                        this.ITR_JSON?.business?.profitLossACIncomes?.find(
-                          (element) =>
-                            element?.businessType === 'SPECULATIVEINCOME'
-                        )?.netProfitfromSpeculativeIncome,
-                    },
-
-                    incomeFromFirm: {
-                      salary: this.finalSummary?.itr?.partnerFirms?.reduce(
-                        (total, element) => total + element?.salary,
-                        0
-                      ),
-                      bonus: this.finalSummary?.itr?.partnerFirms?.reduce(
-                        (total, element) => total + element?.bonus,
-                        0
-                      ),
-                      commission: this.finalSummary?.itr?.partnerFirms?.reduce(
-                        (total, element) => total + element?.commission,
-                        0
-                      ),
-                      interest: this.finalSummary?.itr?.partnerFirms?.reduce(
-                        (total, element) => total + element?.interest,
-                        0
-                      ),
-                      others: this.finalSummary?.itr?.partnerFirms?.reduce(
-                        (total, element) => total + element?.others,
-                        0
-                      ),
-                    },
-
-                    // crypto gain
-                    crypto: {
-                      cryptoDetails: this.finalSummary?.itr?.capitalGain
-                        ?.find((item) => {
-                          return item?.assetType === 'VDA';
-                        })
-                        ?.assetDetails.filter((element) => {
-                          return element?.headOfIncome === 'BI';
-                        })
-                        ?.map((element, index) => {
-                          return {
-                            srNo: index + 1,
-                            buyDate: element?.purchaseDate,
-                            sellDate: element?.sellDate,
-                            headOfIncome:
-                              element?.headOfIncome === 'BI'
-                                ? 'Business or Profession'
-                                : 'Capital Gain',
-                            buyValue: element?.purchaseCost,
-                            SaleValue: element?.sellValue,
-                            income: element?.capitalGain,
-                          };
-                        }),
-                    },
-
-                    // total crypto gain
-                    totalCryptoIncome: this.finalSummary?.itr?.capitalGain
-                      ?.find((item) => {
-                        return item?.assetType === 'VDA';
-                      })
-                      ?.assetDetails.filter((element) => {
-                        return element?.headOfIncome === 'BI';
-                      })
-                      ?.reduce(
-                        (total, element) => total + element?.capitalGain,
-                        0
-                      )
-                      ? this.finalSummary?.itr?.capitalGain
-                          ?.find((item) => {
-                            return item?.assetType === 'VDA';
-                          })
-                          ?.assetDetails.filter((element) => {
-                            return element?.headOfIncome === 'BI';
-                          })
-                          ?.reduce(
-                            (total, element) => total + element?.capitalGain,
-                            0
-                          )
-                      : 0,
-                  },
-                  businessIncomeTotal:
-                    this.finalSummary?.assessment?.taxSummary?.businessIncome,
-                },
-                capitalGain: {
-                  // short term gain
-                  shortTerm: {
-                    ShortTerm15Per:
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter((item: any) => item?.taxRate === 15)
-                        .map((element) => ({
-                          nameOfAsset:
-                            element?.assetType === 'GOLD'
-                              ? 'Other Assets'
-                              : element.assetType,
-                          capitalGain:
-                            element.netSellValue -
-                            element.purchesCost -
-                            element.saleExpense -
-                            element.costOfImprovement,
-                          Deduction: element.deductionAmount,
-                          netCapitalGain:
-                            element.netSellValue -
-                            element.purchesCost -
-                            element.saleExpense -
-                            element.costOfImprovement -
-                            element.deductionAmount,
-                        })),
-                    ShortTerm15PerTotal:
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter((item: any) => item?.taxRate === 15)
-                        .reduce((total, element) => {
-                          const cgIncome =
-                            element.netSellValue -
-                            element.purchesCost -
-                            element.saleExpense -
-                            element.costOfImprovement -
-                            element.deductionAmount;
-
-                          return total + cgIncome;
-                        }, 0),
-
-                    ShortTerm30Per: [
+                salaryTotalIncome:
+                  this.finalSummary?.assessment?.taxSummary?.salary,
+              },
+              houseProperties: {
+                houseProps:
+                  this.finalSummary?.assessment?.summaryIncome?.summaryHpIncome?.houseProperties.map(
+                    (
                       {
-                        nameOfAsset: '',
-                        capitalGain: 0,
-                        Deduction: 0,
-                        netCapitalGain: 0,
+                        propertyType,
+                        grossAnnualRentReceived,
+                        propertyTax,
+                        annualValue,
+                        exemptIncome,
+                        loans,
+                        taxableIncome,
                       },
-                    ],
-                    ShortTerm30PerTotal: 0,
-                    ShortTermAppSlabRate:
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter((item: any) => item?.taxRate === -1)
-                        .map((element) => ({
-                          nameOfAsset:
-                            element?.assetType === 'GOLD'
-                              ? 'Other Assets'
-                              : element.assetType,
-                          capitalGain:
-                            element.netSellValue -
-                            element.purchesCost -
-                            element.saleExpense -
-                            element.costOfImprovement,
-                          Deduction: element.deductionAmount,
-                          netCapitalGain:
-                            element.netSellValue -
-                            element.purchesCost -
-                            element.saleExpense -
-                            element.costOfImprovement -
-                            element.deductionAmount,
-                        })),
-                    ShortTermAppSlabRateTotal:
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter((item: any) => item?.taxRate === -1)
-                        .reduce((total, element) => {
-                          const cgIncome =
-                            element.netSellValue -
-                            element.purchesCost -
-                            element.saleExpense -
-                            element.costOfImprovement -
-                            element.deductionAmount;
+                      index
+                    ) => {
+                      return {
+                        hpNo: index,
+                        typeOfHp: propertyType,
+                        grossRentReceived: grossAnnualRentReceived,
+                        taxesPaid: propertyTax,
+                        annualValue: annualValue,
+                        hpStandardDeduction: exemptIncome,
+                        hpinterest: loans[0]?.interestAmount,
+                        hpNetIncome: taxableIncome,
+                        hpIncome: taxableIncome,
+                      };
+                    }
+                  ),
+                hpTotalIncome: Math.max(
+                  this.finalSummary?.assessment?.taxSummary.housePropertyIncome,
+                  0
+                ),
+              },
+              otherIncome: {
+                otherIncomes: {
+                  saving:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'SAVING_INTEREST'
+                    )?.amount,
 
-                          return total + cgIncome;
-                        }, 0),
-                    ShortTermSplRateDTAA: [
-                      {
-                        nameOfAsset: '',
-                        capitalGain: 0,
-                        Deduction: 0,
-                        netCapitalGain: 0,
-                      },
-                    ],
-                    ShortTermSplRateDTAATotal: 0,
-                  },
-                  // total short term gain
-                  totalShortTerm:
-                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                  intFromDeposit:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'FD_RD_INTEREST'
+                    )?.amount,
+
+                  taxRefund:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'TAX_REFUND_INTEREST'
+                    )?.amount,
+
+                  Qqb80:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'ROYALTY_US_80QQB'
+                    )?.amount,
+
+                  Rrb80:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'ROYALTY_US_80RRB'
+                    )?.amount,
+                  pfInterest1011IP:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'INTEREST_ACCRUED_10_11_I_P'
+                    )?.amount,
+
+                  pfInterest1011IIP:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'INTEREST_ACCRUED_10_11_II_P'
+                    )?.amount,
+
+                  pfInterest1012IP:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'INTEREST_ACCRUED_10_12_I_P'
+                    )?.amount,
+
+                  pfInterest1012IIP:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'INTEREST_ACCRUED_10_12_II_P'
+                    )?.amount,
+
+                  aggregateValueWithoutConsideration:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'AGGREGATE_VALUE_WITHOUT_CONS'
+                    )?.amount,
+
+                  immovablePropertyWithoutConsideration:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'IMMOV_PROP_WITHOUT_CONS'
+                    )?.amount,
+
+                  immovablePropertyInadequateConsideration:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'IMMOV_PROP_INADEQ_CONS'
+                    )?.amount,
+
+                  anyOtherPropertyWithoutConsideration:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'ANY_OTHER_PROP_WITHOUT_CONS'
+                    )?.amount,
+
+                  anyOtherPropertyInadequateConsideration:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'ANY_OTHER_PROP_INADEQ_CONS'
+                    )?.amount,
+
+                  anyOtherInterest:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'ANY_OTHER'
+                    )?.amount,
+
+                  familyPension:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'FAMILY_PENSION'
+                    )?.taxableAmount,
+
+                  dividendIncome:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
+                      (val) => val.incomeType === 'DIVIDEND'
+                    )?.amount,
+                },
+
+                otherIncomeTotal:
+                  this.finalSummary?.assessment?.taxSummary.otherIncome,
+              },
+              businessIncome: {
+                businessIncomeDetails: {
+                  business44AD: this.business44adDetails,
+
+                  business44ADA:
+                    this.finalSummary?.assessment?.summaryIncome?.summaryBusinessIncome?.incomes
                       ?.filter(
-                        (item: any) =>
-                          item?.taxRate === -1 || item?.taxRate === 15
+                        (element) => element?.businessType === 'PROFESSIONAL'
                       )
-                      .reduce((total, element) => {
-                        const incomeAfterInternalSetOff =
-                          element.incomeAfterInternalSetOff;
-                        console.log(element, 'element');
-                        console.log(
-                          incomeAfterInternalSetOff,
-                          'incomeAfterInternalSetOff'
-                        );
+                      .map((element) => ({
+                        businessSection: element?.businessType,
+                        natureOfBusinessCode: this.natureOfBusiness?.find(
+                          (item) => {
+                            return item?.code === element?.natureOfBusinessCode;
+                          }
+                        )?.label,
+                        tradeName: element?.tradeName,
+                        grossTurnover: element?.receipts,
+                        TaxableIncome: element?.presumptiveIncome,
+                      })),
 
-                        return total + incomeAfterInternalSetOff;
-                      }, 0),
-
-                  // long term gain
-                  longTerm: {
-                    LongTerm10Per:
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter((item: any) => item?.taxRate === 10)
-                        .map((element) => ({
-                          nameOfAsset:
-                            element?.assetType === 'GOLD'
-                              ? 'Other Assets'
-                              : element.assetType,
-                          capitalGain:
-                            element.netSellValue -
-                            element.purchesCost -
-                            element.saleExpense -
-                            element.costOfImprovement,
-                          Deduction: element.deductionAmount,
-                          netCapitalGain:
-                            element.netSellValue -
-                            element.purchesCost -
-                            element.saleExpense -
-                            element.costOfImprovement -
-                            element.deductionAmount,
-                        })),
-                    LongTerm10PerTotal:
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter((item: any) => item?.taxRate === 10)
-                        .reduce((total, element) => {
-                          const cgIncome =
-                            element.netSellValue -
-                            element.purchesCost -
-                            element.saleExpense -
-                            element.costOfImprovement -
-                            element.deductionAmount;
-
-                          return total + cgIncome;
-                        }, 0),
-                    LongTerm20Per:
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter((item: any) => item?.taxRate === 20)
-                        .map((element) => ({
-                          nameOfAsset:
-                            element?.assetType === 'GOLD'
-                              ? 'Other Assets'
-                              : element.assetType,
-                          capitalGain:
-                            element.netSellValue -
-                            (element.indexCostOfAcquisition > 0
-                              ? element.indexCostOfAcquisition
-                              : element.purchesCost) -
-                            element.saleExpense -
-                            element.costOfImprovement,
-                          Deduction: element.deductionAmount,
-                          netCapitalGain:
-                            element.netSellValue -
-                            (element.indexCostOfAcquisition > 0
-                              ? element.indexCostOfAcquisition
-                              : element.purchesCost) -
-                            element.saleExpense -
-                            element.costOfImprovement -
-                            element.deductionAmount,
-                        })),
-                    LongTerm20PerTotal:
-                      this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                        ?.filter((item: any) => item?.taxRate === 20)
-                        .reduce((total, element) => {
-                          const cgIncome =
-                            element.netSellValue -
-                            (element.indexCostOfAcquisition > 0
-                              ? element.indexCostOfAcquisition
-                              : element.purchesCost) -
-                            element.saleExpense -
-                            element.costOfImprovement -
-                            element.deductionAmount;
-
-                          return total + cgIncome;
-                        }, 0),
-                    LongTermSplRateDTAA: [
-                      {
-                        nameOfAsset: '',
-                        capitalGain: 0,
-                        Deduction: 0,
-                        netCapitalGain: 0,
-                      },
-                    ],
-                    LongTermSplRateDTAATotal: 0,
+                  nonSpecIncome: {
+                    businessSection: 'Non Speculative Income',
+                    natureOfBusinessCode: 'nonSpec',
+                    tradeName: 'Non Speculative Income',
+                    grossTurnover: this.ITR_JSON?.business?.profitLossACIncomes
+                      ?.find(
+                        (element) =>
+                          element?.businessType === 'NONSPECULATIVEINCOME'
+                      )
+                      ?.incomes?.reduce(
+                        (sum, obj) => Number(sum) + Number(obj?.turnOver),
+                        0
+                      ),
+                    TaxableIncome:
+                      this.ITR_JSON?.business?.profitLossACIncomes?.find(
+                        (element) =>
+                          element?.businessType === 'NONSPECULATIVEINCOME'
+                      )?.netProfitfromNonSpeculativeIncome,
                   },
-                  // total long term gain
-                  totalLongTerm:
-                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
-                      ?.filter(
-                        (item: any) =>
-                          item?.taxRate === 10 || item?.taxRate === 20
-                      )
-                      .reduce((total, element) => {
-                        const incomeAfterInternalSetOff =
-                          element.incomeAfterInternalSetOff;
-                        console.log(element, 'element');
-                        console.log(
-                          incomeAfterInternalSetOff,
-                          'incomeAfterInternalSetOff'
-                        );
 
-                        return total + incomeAfterInternalSetOff;
-                      }, 0),
+                  specIncome: {
+                    businessSection: 'Speculative Income',
+                    natureOfBusinessCode: 'spec',
+                    tradeName: 'Speculative Income',
+                    grossTurnover: this.ITR_JSON?.business?.profitLossACIncomes
+                      ?.find(
+                        (element) =>
+                          element?.businessType === 'SPECULATIVEINCOME'
+                      )
+                      ?.incomes?.reduce(
+                        (sum, obj) => Number(sum) + Number(obj?.turnOver),
+                        0
+                      ),
+                    TaxableIncome:
+                      this.ITR_JSON?.business?.profitLossACIncomes?.find(
+                        (element) =>
+                          element?.businessType === 'SPECULATIVEINCOME'
+                      )?.netProfitfromSpeculativeIncome,
+                  },
+
+                  incomeFromFirm: {
+                    salary: this.finalSummary?.itr?.partnerFirms?.reduce(
+                      (total, element) => total + element?.salary,
+                      0
+                    ),
+                    bonus: this.finalSummary?.itr?.partnerFirms?.reduce(
+                      (total, element) => total + element?.bonus,
+                      0
+                    ),
+                    commission: this.finalSummary?.itr?.partnerFirms?.reduce(
+                      (total, element) => total + element?.commission,
+                      0
+                    ),
+                    interest: this.finalSummary?.itr?.partnerFirms?.reduce(
+                      (total, element) => total + element?.interest,
+                      0
+                    ),
+                    others: this.finalSummary?.itr?.partnerFirms?.reduce(
+                      (total, element) => total + element?.others,
+                      0
+                    ),
+                  },
 
                   // crypto gain
                   crypto: {
@@ -5797,8 +4071,8 @@ export class SummaryComponent implements OnInit {
                       ?.find((item) => {
                         return item?.assetType === 'VDA';
                       })
-                      ?.assetDetails?.filter((element) => {
-                        return element?.headOfIncome === 'CG';
+                      ?.assetDetails.filter((element) => {
+                        return element?.headOfIncome === 'BI';
                       })
                       ?.map((element, index) => {
                         return {
@@ -5815,13 +4089,14 @@ export class SummaryComponent implements OnInit {
                         };
                       }),
                   },
+
                   // total crypto gain
                   totalCryptoIncome: this.finalSummary?.itr?.capitalGain
                     ?.find((item) => {
                       return item?.assetType === 'VDA';
                     })
-                    ?.assetDetails?.filter((element) => {
-                      return element?.headOfIncome === 'CG';
+                    ?.assetDetails.filter((element) => {
+                      return element?.headOfIncome === 'BI';
                     })
                     ?.reduce(
                       (total, element) => total + element?.capitalGain,
@@ -5831,744 +4106,990 @@ export class SummaryComponent implements OnInit {
                         ?.find((item) => {
                           return item?.assetType === 'VDA';
                         })
-                        ?.assetDetails?.filter((element) => {
-                          return element?.headOfIncome === 'CG';
+                        ?.assetDetails.filter((element) => {
+                          return element?.headOfIncome === 'BI';
                         })
                         ?.reduce(
                           (total, element) => total + element?.capitalGain,
                           0
                         )
                     : 0,
-
-                  // total capital gain
-                  totalCapitalGain:
-                    this.finalSummary?.assessment?.taxSummary?.capitalGain,
                 },
-                totalHeadWiseIncome:
-                  this.finalSummary?.assessment?.taxSummary?.totalIncome,
+                businessIncomeTotal:
+                  this.finalSummary?.assessment?.taxSummary?.businessIncome,
+              },
+              capitalGain: {
+                // short term gain
+                shortTerm: {
+                  ShortTerm15Per:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter((item: any) => item?.taxRate === 15)
+                      .map((element) => ({
+                        nameOfAsset:
+                          element?.assetType === 'GOLD'
+                            ? 'Other Assets'
+                            : element.assetType,
+                        capitalGain:
+                          element.netSellValue -
+                          element.purchesCost -
+                          element.saleExpense -
+                          element.costOfImprovement,
+                        Deduction: element.deductionAmount,
+                        netCapitalGain:
+                          element.netSellValue -
+                          element.purchesCost -
+                          element.saleExpense -
+                          element.costOfImprovement -
+                          element.deductionAmount,
+                      })),
+                  ShortTerm15PerTotal:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter((item: any) => item?.taxRate === 15)
+                      .reduce((total, element) => {
+                        const cgIncome =
+                          element.netSellValue -
+                          element.purchesCost -
+                          element.saleExpense -
+                          element.costOfImprovement -
+                          element.deductionAmount;
 
-                currentYearLosses: {
-                  currentYearLossesSetOff: [
+                        return total + cgIncome;
+                      }, 0),
+
+                  ShortTerm30Per: [
                     {
-                      houseProperty:
-                        this.finalSummary?.assessment?.taxSummary
-                          ?.currentYearIFHPSetOff,
-                      businessSetOff:
-                        this.finalSummary?.assessment?.taxSummary
-                          ?.currentYearIFBFSetOff,
-                      otherThanHpBusiness: 0,
+                      nameOfAsset: '',
+                      capitalGain: 0,
+                      Deduction: 0,
+                      netCapitalGain: 0,
                     },
                   ],
-                  totalCurrentYearSetOff:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.currentYearIFHPSetOff +
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.currentYearIFBFSetOff,
-                },
-                balanceAfterSetOffCurrentYearLosses:
-                  this.finalSummary?.assessment?.taxSummary
-                    ?.balanceAfterSetOffCurrentYearLosses,
+                  ShortTerm30PerTotal: 0,
+                  ShortTermAppSlabRate:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter((item: any) => item?.taxRate === -1)
+                      .map((element) => ({
+                        nameOfAsset:
+                          element?.assetType === 'GOLD'
+                            ? 'Other Assets'
+                            : element.assetType,
+                        capitalGain:
+                          element.netSellValue -
+                          element.purchesCost -
+                          element.saleExpense -
+                          element.costOfImprovement,
+                        Deduction: element.deductionAmount,
+                        netCapitalGain:
+                          element.netSellValue -
+                          element.purchesCost -
+                          element.saleExpense -
+                          element.costOfImprovement -
+                          element.deductionAmount,
+                      })),
+                  ShortTermAppSlabRateTotal:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter((item: any) => item?.taxRate === -1)
+                      .reduce((total, element) => {
+                        const cgIncome =
+                          element.netSellValue -
+                          element.purchesCost -
+                          element.saleExpense -
+                          element.costOfImprovement -
+                          element.deductionAmount;
 
-                BroughtFwdLossesSetoff: {
-                  BroughtFwdLossesSetoffDtls: {
-                    hpLoss: this.losses?.pastYearLosses?.reduce(
-                      (total, item) =>
-                        total + item?.setOffWithCurrentYearHPIncome,
-                      0
-                    ),
-                    stLoss: this.losses?.pastYearLosses?.reduce(
-                      (total, item) =>
-                        total + item?.setOffWithCurrentYearSTCGIncome,
-                      0
-                    ),
-                    ltLoss: this.losses?.pastYearLosses?.reduce(
-                      (total, item) =>
-                        total + item?.setOffWithCurrentYearLTCGIncome,
-                      0
-                    ),
-                    businessLoss: this.losses?.pastYearLosses?.reduce(
-                      (total, item) =>
-                        total +
-                        item?.setOffWithCurrentYearBroughtForwordBusinessIncome,
-                      0
-                    ),
-                    speculativeBusinessLoss:
-                      this.losses?.pastYearLosses?.reduce(
-                        (total, item) =>
-                          total +
-                          item?.setOffWithCurrentYearSpeculativeBusinessIncome,
+                        return total + cgIncome;
+                      }, 0),
+                  ShortTermSplRateDTAA: [
+                    {
+                      nameOfAsset: '',
+                      capitalGain: 0,
+                      Deduction: 0,
+                      netCapitalGain: 0,
+                    },
+                  ],
+                  ShortTermSplRateDTAATotal: 0,
+                },
+                // total short term gain
+                totalShortTerm:
+                  this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                    ?.filter(
+                      (item: any) =>
+                        item?.taxRate === -1 || item?.taxRate === 15
+                    )
+                    .reduce((total, element) => {
+                      const incomeAfterInternalSetOff =
+                        element.incomeAfterInternalSetOff;
+                      console.log(element, 'element');
+                      console.log(
+                        incomeAfterInternalSetOff,
+                        'incomeAfterInternalSetOff'
+                      );
+
+                      return total + incomeAfterInternalSetOff;
+                    }, 0),
+
+                // long term gain
+                longTerm: {
+                  LongTerm10Per:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter((item: any) => item?.taxRate === 10)
+                      .map((element) => ({
+                        nameOfAsset:
+                          element?.assetType === 'GOLD'
+                            ? 'Other Assets'
+                            : element.assetType,
+                        capitalGain:
+                          element.netSellValue -
+                          (element.indexCostOfAcquisition > 0
+                            ? element.indexCostOfAcquisition
+                            : element.purchesCost) -
+                          element.saleExpense -
+                          element.costOfImprovement,
+                        Deduction: element.deductionAmount,
+                        netCapitalGain:
+                          element.netSellValue -
+                          (element.indexCostOfAcquisition > 0
+                            ? element.indexCostOfAcquisition
+                            : element.purchesCost) -
+                          element.saleExpense -
+                          element.costOfImprovement -
+                          element.deductionAmount,
+                      })),
+                  LongTerm10PerTotal:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter((item: any) => item?.taxRate === 10)
+                      .reduce((total, element) => {
+                        const cgIncome =
+                          element.netSellValue -
+                          (element.indexCostOfAcquisition > 0
+                            ? element.indexCostOfAcquisition
+                            : element.purchesCost) -
+                          element.saleExpense -
+                          element.costOfImprovement -
+                          element.deductionAmount;
+
+                        return total + cgIncome;
+                      }, 0),
+                  LongTerm20Per:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter((item: any) => item?.taxRate === 20)
+                      .map((element) => ({
+                        nameOfAsset:
+                          element?.assetType === 'GOLD'
+                            ? 'Other Assets'
+                            : element.assetType,
+                        capitalGain:
+                          element.netSellValue -
+                          (element.indexCostOfAcquisition > 0
+                            ? element.indexCostOfAcquisition
+                            : element.purchesCost) -
+                          element.saleExpense -
+                          element.costOfImprovement,
+                        Deduction: element.deductionAmount,
+                        netCapitalGain:
+                          element.netSellValue -
+                          (element.indexCostOfAcquisition > 0
+                            ? element.indexCostOfAcquisition
+                            : element.purchesCost) -
+                          element.saleExpense -
+                          element.costOfImprovement -
+                          element.deductionAmount,
+                      })),
+                  LongTerm20PerTotal:
+                    this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                      ?.filter((item: any) => item?.taxRate === 20)
+                      .reduce((total, element) => {
+                        const cgIncome =
+                          element.netSellValue -
+                          (element.indexCostOfAcquisition > 0
+                            ? element.indexCostOfAcquisition
+                            : element.purchesCost) -
+                          element.saleExpense -
+                          element.costOfImprovement -
+                          element.deductionAmount;
+
+                        return total + cgIncome;
+                      }, 0),
+                  LongTermSplRateDTAA: [
+                    {
+                      nameOfAsset: '',
+                      capitalGain: 0,
+                      Deduction: 0,
+                      netCapitalGain: 0,
+                    },
+                  ],
+                  LongTermSplRateDTAATotal: 0,
+                },
+                // total long term gain
+                totalLongTerm:
+                  this.finalSummary?.assessment?.summaryIncome?.cgIncomeN?.capitalGain
+                    ?.filter(
+                      (item: any) =>
+                        item?.taxRate === 10 || item?.taxRate === 20
+                    )
+                    .reduce((total, element) => {
+                      const incomeAfterInternalSetOff =
+                        element.incomeAfterInternalSetOff;
+                      console.log(element, 'element');
+                      console.log(
+                        incomeAfterInternalSetOff,
+                        'incomeAfterInternalSetOff'
+                      );
+
+                      return total + incomeAfterInternalSetOff;
+                    }, 0),
+
+                // crypto gain
+                crypto: {
+                  cryptoDetails: this.finalSummary?.itr?.capitalGain
+                    ?.find((item) => {
+                      return item?.assetType === 'VDA';
+                    })
+                    ?.assetDetails?.filter((element) => {
+                      return element?.headOfIncome === 'CG';
+                    })
+                    ?.map((element, index) => {
+                      return {
+                        srNo: index + 1,
+                        buyDate: element?.purchaseDate,
+                        sellDate: element?.sellDate,
+                        headOfIncome:
+                          element?.headOfIncome === 'BI'
+                            ? 'Business or Profession'
+                            : 'Capital Gain',
+                        buyValue: element?.purchaseCost,
+                        SaleValue: element?.sellValue,
+                        income: element?.capitalGain,
+                      };
+                    }),
+                },
+                // total crypto gain
+                totalCryptoIncome: this.finalSummary?.itr?.capitalGain
+                  ?.find((item) => {
+                    return item?.assetType === 'VDA';
+                  })
+                  ?.assetDetails?.filter((element) => {
+                    return element?.headOfIncome === 'CG';
+                  })
+                  ?.reduce((total, element) => total + element?.capitalGain, 0)
+                  ? this.finalSummary?.itr?.capitalGain
+                      ?.find((item) => {
+                        return item?.assetType === 'VDA';
+                      })
+                      ?.assetDetails?.filter((element) => {
+                        return element?.headOfIncome === 'CG';
+                      })
+                      ?.reduce(
+                        (total, element) => total + element?.capitalGain,
                         0
-                      ),
+                      )
+                  : 0,
+
+                // total capital gain
+                totalCapitalGain:
+                  this.finalSummary?.assessment?.taxSummary?.capitalGain,
+              },
+              totalHeadWiseIncome:
+                this.finalSummary?.assessment?.taxSummary?.totalIncome,
+
+              currentYearLosses: {
+                currentYearLossesSetOff: [
+                  {
+                    houseProperty:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.currentYearIFHPSetOff,
+                    businessSetOff:
+                      this.finalSummary?.assessment?.taxSummary
+                        ?.currentYearIFBFSetOff,
+                    otherThanHpBusiness: 0,
                   },
-                  BroughtFwdLossesSetoffTotal: Number(
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.totalBroughtForwordSetOff
+                ],
+                totalCurrentYearSetOff:
+                  this.finalSummary?.assessment?.taxSummary
+                    ?.currentYearIFHPSetOff +
+                  this.finalSummary?.assessment?.taxSummary
+                    ?.currentYearIFBFSetOff,
+              },
+              balanceAfterSetOffCurrentYearLosses:
+                this.finalSummary?.assessment?.taxSummary
+                  ?.balanceAfterSetOffCurrentYearLosses,
+
+              BroughtFwdLossesSetoff: {
+                BroughtFwdLossesSetoffDtls: {
+                  hpLoss: this.losses?.pastYearLosses?.reduce(
+                    (total, item) =>
+                      total + item?.setOffWithCurrentYearHPIncome,
+                    0
+                  ),
+                  stLoss: this.losses?.pastYearLosses?.reduce(
+                    (total, item) =>
+                      total + item?.setOffWithCurrentYearSTCGIncome,
+                    0
+                  ),
+                  ltLoss: this.losses?.pastYearLosses?.reduce(
+                    (total, item) =>
+                      total + item?.setOffWithCurrentYearLTCGIncome,
+                    0
+                  ),
+                  businessLoss: this.losses?.pastYearLosses?.reduce(
+                    (total, item) =>
+                      total +
+                      item?.setOffWithCurrentYearBroughtForwordBusinessIncome,
+                    0
+                  ),
+                  speculativeBusinessLoss: this.losses?.pastYearLosses?.reduce(
+                    (total, item) =>
+                      total +
+                      item?.setOffWithCurrentYearSpeculativeBusinessIncome,
+                    0
                   ),
                 },
-                grossTotalIncome:
-                  this.finalSummary?.assessment?.taxSummary?.grossTotalIncome,
-                totalSpecialRateIncome:
+                BroughtFwdLossesSetoffTotal: Number(
                   this.finalSummary?.assessment?.taxSummary
-                    ?.totalSpecialRateIncome,
-                deductions: {
-                  deductionDtls: this.finalSummary?.assessment
-                    ?.summaryDeductions
-                    ? (Object?.entries(
-                        this.finalSummary?.assessment?.summaryDeductions
+                    ?.totalBroughtForwordSetOff
+                ),
+              },
+              grossTotalIncome:
+                this.finalSummary?.assessment?.taxSummary?.grossTotalIncome,
+              totalSpecialRateIncome:
+                this.finalSummary?.assessment?.taxSummary
+                  ?.totalSpecialRateIncome,
+              deductions: {
+                deductionDtls: this.finalSummary?.assessment?.summaryDeductions
+                  ? (Object?.entries(
+                      this.finalSummary?.assessment?.summaryDeductions
+                    )
+                      ?.filter(
+                        (item: any) =>
+                          item[1].sectionType !== '80C' &&
+                          item[1].sectionType !== '80CCC' &&
+                          item[1].sectionType !== '80CCD1' &&
+                          item[1].sectionType !== '80GAGTI'
                       )
-                        ?.filter(
-                          (item: any) =>
-                            item[1].sectionType !== '80C' &&
-                            item[1].sectionType !== '80CCC' &&
-                            item[1].sectionType !== '80CCD1' &&
-                            item[1].sectionType !== '80GAGTI'
-                        )
-                        .map(([key, item]) => ({
-                          name: (
-                            item as { notes: string; eligibleAmount: number }
-                          ).notes,
-                          amount: (
-                            item as { notes: string; eligibleAmount: number }
-                          ).eligibleAmount,
-                        })) as {
-                        name: String;
-                        amount: number;
-                      }[])
-                    : [],
-                  deductionTotal:
-                    this.finalSummary?.assessment?.taxSummary?.totalDeduction,
-                },
-                totalIncome:
-                  this.finalSummary?.assessment?.taxSummary
-                    ?.totalIncomeAfterDeductionIncludeSR,
-                specialRateChargeable:
-                  this.finalSummary?.assessment?.taxSummary
-                    ?.specialIncomeAfterAdjBaseLimit,
-                netAgricultureIncome:
-                  this.finalSummary?.itr?.exemptIncomes?.find(
-                    (agri) => agri.natureDesc === 'AGRI'
-                  )?.amount > 5000
-                    ? this.finalSummary?.itr?.exemptIncomes?.find(
-                        (agri) => agri.natureDesc === 'AGRI'
-                      )?.amount
-                    : 0,
-                aggregateIncome:
-                  this.finalSummary?.assessment?.taxSummary?.aggregateIncomeXml,
-                lossesToBeCarriedForward: {
-                  //TODO:Shrikant remove the placeholder object
-                  cflDtls: [
-                    {
-                      assessmentPastYear: 0,
-                      housePropertyLoss: 0,
-                      STCGLoss: 0,
-                      LTCGLoss: 0,
-                      BusLossOthThanSpecLossCF: 0,
-                      LossFrmSpecBusCF: 0,
-                      LossFrmSpecifiedBusCF: 0,
-                      OthSrcLoss: 0,
-                      pastYear: 0,
-                      totalLoss: 0,
-                    },
-                  ],
-                  lossSetOffDuringYear: 0,
-                  cflTotal: 0,
-                },
+                      .map(([key, item]) => ({
+                        name: (
+                          item as { notes: string; eligibleAmount: number }
+                        ).notes,
+                        amount: (
+                          item as { notes: string; eligibleAmount: number }
+                        ).eligibleAmount,
+                      })) as {
+                      name: String;
+                      amount: number;
+                    }[])
+                  : [],
+                deductionTotal:
+                  this.finalSummary?.assessment?.taxSummary?.totalDeduction,
+              },
+              totalIncome:
+                this.finalSummary?.assessment?.taxSummary
+                  ?.totalIncomeAfterDeductionIncludeSR,
+              specialRateChargeable:
+                this.finalSummary?.assessment?.taxSummary
+                  ?.specialIncomeAfterAdjBaseLimit,
+              netAgricultureIncome:
+                this.finalSummary?.itr?.exemptIncomes?.find(
+                  (agri) => agri.natureDesc === 'AGRI'
+                )?.amount > 5000
+                  ? this.finalSummary?.itr?.exemptIncomes?.find(
+                      (agri) => agri.natureDesc === 'AGRI'
+                    )?.amount
+                  : 0,
+              aggregateIncome:
+                this.finalSummary?.assessment?.taxSummary?.aggregateIncomeXml,
+              lossesToBeCarriedForward: {
                 //TODO:Shrikant remove the placeholder object
-                scheduleCflDetails: {
-                  LossCFFromPrev12thYearFromAY: {
-                    dateOfFiling: 0,
+                cflDtls: [
+                  {
+                    assessmentPastYear: 0,
+                    housePropertyLoss: 0,
+                    STCGLoss: 0,
+                    LTCGLoss: 0,
+                    BusLossOthThanSpecLossCF: 0,
+                    LossFrmSpecBusCF: 0,
                     LossFrmSpecifiedBusCF: 0,
+                    OthSrcLoss: 0,
+                    pastYear: 0,
+                    totalLoss: 0,
                   },
-                  LossCFFromPrev11thYearFromAY: {
-                    dateOfFiling: 0,
-                    LossFrmSpecifiedBusCF: 0,
-                  },
-                  LossCFFromPrev10thYearFromAY: {
-                    dateOfFiling: 0,
-                    LossFrmSpecifiedBusCF: 0,
-                  },
-                  LossCFFromPrev9thYearFromAY: {
-                    dateOfFiling: 0,
-                    LossFrmSpecifiedBusCF: 0,
-                  },
-                  LossCFFromPrev8thYearFromAY: {
-                    dateOfFiling:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2015-16'
-                      )?.dateOfFiling,
-                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                ],
+                lossSetOffDuringYear: 0,
+                cflTotal: 0,
+              },
+              //TODO:Shrikant remove the placeholder object
+              scheduleCflDetails: {
+                LossCFFromPrev12thYearFromAY: {
+                  dateOfFiling: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                },
+                LossCFFromPrev11thYearFromAY: {
+                  dateOfFiling: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                },
+                LossCFFromPrev10thYearFromAY: {
+                  dateOfFiling: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                },
+                LossCFFromPrev9thYearFromAY: {
+                  dateOfFiling: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                },
+                LossCFFromPrev8thYearFromAY: {
+                  dateOfFiling:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
                       (year) => year.assessmentPastYear === '2015-16'
-                    )?.housePropertyLoss,
-                    broughtForwardBusLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2015-16'
-                      )?.broughtForwordBusinessLoss,
-                    BusLossOthThanSpecifiedLossCF: 0,
-                    LossFrmSpecifiedBusCF: 0,
-                    stcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2015-16'
-                      )?.STCGLoss,
-                    ltcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2015-16'
-                      )?.LTCGLoss,
-                  },
-                  LossCFFromPrev7thYearFromAY: {
-                    dateOfFiling:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2016-17'
-                      )?.dateOfFiling,
-                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    )?.dateOfFiling,
+                  hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2015-16'
+                  )?.housePropertyLoss,
+                  broughtForwardBusLoss:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2015-16'
+                    )?.broughtForwordBusinessLoss,
+                  BusLossOthThanSpecifiedLossCF: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                  stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2015-16'
+                  )?.STCGLoss,
+                  ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2015-16'
+                  )?.LTCGLoss,
+                },
+                LossCFFromPrev7thYearFromAY: {
+                  dateOfFiling:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
                       (year) => year.assessmentPastYear === '2016-17'
-                    )?.housePropertyLoss,
-                    broughtForwardBusLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2016-17'
-                      )?.broughtForwordBusinessLoss,
-                    BusLossOthThanSpecifiedLossCF: 0,
-                    LossFrmSpecifiedBusCF: 0,
-                    stcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2016-17'
-                      )?.STCGLoss,
-                    ltcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2016-17'
-                      )?.LTCGLoss,
-                  },
-                  LossCFFromPrev6thYearFromAY: {
-                    dateOfFiling:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2017-18'
-                      )?.dateOfFiling,
-                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    )?.dateOfFiling,
+                  hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2016-17'
+                  )?.housePropertyLoss,
+                  broughtForwardBusLoss:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2016-17'
+                    )?.broughtForwordBusinessLoss,
+                  BusLossOthThanSpecifiedLossCF: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                  stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2016-17'
+                  )?.STCGLoss,
+                  ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2016-17'
+                  )?.LTCGLoss,
+                },
+                LossCFFromPrev6thYearFromAY: {
+                  dateOfFiling:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
                       (year) => year.assessmentPastYear === '2017-18'
-                    )?.housePropertyLoss,
-                    broughtForwardBusLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2017-18'
-                      )?.broughtForwordBusinessLoss,
-                    BusLossOthThanSpecifiedLossCF: 0,
-                    LossFrmSpecifiedBusCF: 0,
-                    stcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2017-18'
-                      )?.STCGLoss,
-                    ltcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2017-18'
-                      )?.LTCGLoss,
-                  },
-                  LossCFFromPrev5thYearFromAY: {
-                    dateOfFiling:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2018-19'
-                      )?.dateOfFiling,
-                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    )?.dateOfFiling,
+                  hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2017-18'
+                  )?.housePropertyLoss,
+                  broughtForwardBusLoss:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2017-18'
+                    )?.broughtForwordBusinessLoss,
+                  BusLossOthThanSpecifiedLossCF: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                  stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2017-18'
+                  )?.STCGLoss,
+                  ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2017-18'
+                  )?.LTCGLoss,
+                },
+                LossCFFromPrev5thYearFromAY: {
+                  dateOfFiling:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
                       (year) => year.assessmentPastYear === '2018-19'
-                    )?.housePropertyLoss,
-                    broughtForwardBusLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2018-19'
-                      )?.broughtForwordBusinessLoss,
-                    BusLossOthThanSpecifiedLossCF: 0,
-                    LossFrmSpecifiedBusCF: 0,
-                    stcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2018-19'
-                      )?.STCGLoss,
-                    ltcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2018-19'
-                      )?.LTCGLoss,
-                  },
-                  LossCFFromPrev4thYearFromAY: {
-                    dateOfFiling:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2019-20'
-                      )?.dateOfFiling,
-                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    )?.dateOfFiling,
+                  hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2018-19'
+                  )?.housePropertyLoss,
+                  broughtForwardBusLoss:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2018-19'
+                    )?.broughtForwordBusinessLoss,
+                  BusLossOthThanSpecifiedLossCF: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                  stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2018-19'
+                  )?.STCGLoss,
+                  ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2018-19'
+                  )?.LTCGLoss,
+                },
+                LossCFFromPrev4thYearFromAY: {
+                  dateOfFiling:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
                       (year) => year.assessmentPastYear === '2019-20'
-                    )?.housePropertyLoss,
-                    broughtForwardBusLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2019-20'
-                      )?.broughtForwordBusinessLoss,
-                    BusLossOthThanSpecifiedLossCF: 0,
-                    LossFrmSpecifiedBusCF: 0,
-                    stcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2019-20'
-                      )?.STCGLoss,
-                    ltcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2019-20'
-                      )?.LTCGLoss,
-                    OthSrcLossRaceHorseCF: 0,
-                    lossFromSpeculativeBus:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2019-20'
-                      )?.speculativeBusinessLoss,
-                  },
-                  LossCFFromPrev3rdYearFromAY: {
-                    dateOfFiling:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2020-21'
-                      )?.dateOfFiling,
-                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    )?.dateOfFiling,
+                  hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2019-20'
+                  )?.housePropertyLoss,
+                  broughtForwardBusLoss:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2019-20'
+                    )?.broughtForwordBusinessLoss,
+                  BusLossOthThanSpecifiedLossCF: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                  stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2019-20'
+                  )?.STCGLoss,
+                  ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2019-20'
+                  )?.LTCGLoss,
+                  OthSrcLossRaceHorseCF: 0,
+                  lossFromSpeculativeBus:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2019-20'
+                    )?.speculativeBusinessLoss,
+                },
+                LossCFFromPrev3rdYearFromAY: {
+                  dateOfFiling:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
                       (year) => year.assessmentPastYear === '2020-21'
-                    )?.housePropertyLoss,
-                    broughtForwardBusLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2020-21'
-                      )?.broughtForwordBusinessLoss,
-                    BusLossOthThanSpecifiedLossCF: 0,
-                    LossFrmSpecifiedBusCF: 0,
-                    stcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2020-21'
-                      )?.STCGLoss,
-                    ltcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2020-21'
-                      )?.LTCGLoss,
-                    OthSrcLossRaceHorseCF: 0,
-                    lossFromSpeculativeBus:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2020-21'
-                      )?.speculativeBusinessLoss,
-                  },
-                  LossCFPrevAssmntYear: {
-                    dateOfFiling:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2021-22'
-                      )?.dateOfFiling,
-                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    )?.dateOfFiling,
+                  hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2020-21'
+                  )?.housePropertyLoss,
+                  broughtForwardBusLoss:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2020-21'
+                    )?.broughtForwordBusinessLoss,
+                  BusLossOthThanSpecifiedLossCF: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                  stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2020-21'
+                  )?.STCGLoss,
+                  ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2020-21'
+                  )?.LTCGLoss,
+                  OthSrcLossRaceHorseCF: 0,
+                  lossFromSpeculativeBus:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2020-21'
+                    )?.speculativeBusinessLoss,
+                },
+                LossCFPrevAssmntYear: {
+                  dateOfFiling:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
                       (year) => year.assessmentPastYear === '2021-22'
-                    )?.housePropertyLoss,
-                    broughtForwardBusLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2021-22'
-                      )?.broughtForwordBusinessLoss,
-                    BusLossOthThanSpecifiedLossCF: 0,
-                    LossFrmSpecifiedBusCF: 0,
-                    stcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2021-22'
-                      )?.STCGLoss,
-                    ltcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2021-22'
-                      )?.LTCGLoss,
-                    OthSrcLossRaceHorseCF: 0,
-                    lossFromSpeculativeBus:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2021-22'
-                      )?.speculativeBusinessLoss,
-                  },
-                  LossCFCurrentAssmntYear: {
-                    dateOfFiling:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2022-23'
-                      )?.dateOfFiling,
-                    hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    )?.dateOfFiling,
+                  hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2021-22'
+                  )?.housePropertyLoss,
+                  broughtForwardBusLoss:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2021-22'
+                    )?.broughtForwordBusinessLoss,
+                  BusLossOthThanSpecifiedLossCF: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                  stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2021-22'
+                  )?.STCGLoss,
+                  ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2021-22'
+                  )?.LTCGLoss,
+                  OthSrcLossRaceHorseCF: 0,
+                  lossFromSpeculativeBus:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2021-22'
+                    )?.speculativeBusinessLoss,
+                },
+                LossCFCurrentAssmntYear: {
+                  dateOfFiling:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
                       (year) => year.assessmentPastYear === '2022-23'
-                    )?.housePropertyLoss,
-                    broughtForwardBusLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2022-23'
-                      )?.broughtForwordBusinessLoss,
-                    BusLossOthThanSpecifiedLossCF: 0,
-                    LossFrmSpecifiedBusCF: 0,
-                    stcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2022-23'
-                      )?.STCGLoss,
-                    ltcgLoss:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2022-23'
-                      )?.LTCGLoss,
-                    OthSrcLossRaceHorseCF: 0,
-                    lossFromSpeculativeBus:
-                      this.finalSummary?.assessment?.pastYearLosses?.find(
-                        (year) => year.assessmentPastYear === '2022-23'
-                      )?.speculativeBusinessLoss,
-                  },
-                  TotalOfBFLossesEarlierYrs: {
-                    totalBroughtForwardHpLoss:
-                      this.finalSummary?.assessment?.totalOfEarlierYearLosses
-                        ?.housePropertyLoss,
-                    totalBroughtForwardBusLoss:
-                      this.finalSummary?.assessment?.totalOfEarlierYearLosses
-                        ?.broughtForwordBusinessLoss,
-                    totalBroughtForwardBusLossOthThanSpecifiedLossCF: 0,
-                    totalBroughtForwardLossFrmSpecifiedBusCF: 0,
-                    totalBroughtForwardStcgLoss:
-                      this.finalSummary?.assessment?.totalOfEarlierYearLosses
-                        ?.STCGLoss,
-                    totalBroughtForwardLtcgLoss:
-                      this.finalSummary?.assessment?.totalOfEarlierYearLosses
-                        ?.LTCGLoss,
-                    totalBroughtForwardOthSrcLossRaceHorseCF: 0,
-                    totalBroughtForwardLossSpeculativeBus:
-                      this.finalSummary?.assessment?.totalOfEarlierYearLosses
-                        ?.speculativeBusinessLoss,
-                  },
-                  AdjTotBFLossInBFLA: {
-                    adjInBflHpLoss:
-                      this.finalSummary?.assessment
-                        ?.adjustmentofLossesInScheduleBFLA?.housePropertyLoss,
-                    adjInBflBusLossOthThanSpecifiedLossCF:
-                      this.finalSummary?.assessment
-                        ?.adjustmentofLossesInScheduleBFLA
-                        ?.broughtForwordBusinessLoss,
-                    adjInBflLossFrmSpecifiedBusCF: 0,
-                    adjInBflStcgLoss:
-                      this.finalSummary?.assessment
-                        ?.adjustmentofLossesInScheduleBFLA?.STCGLoss,
-                    adjInBflLtcgLoss:
-                      this.finalSummary?.assessment
-                        ?.adjustmentofLossesInScheduleBFLA?.LTCGLoss,
-                    adjInBflOthSrcLossRaceHorseCF: 0,
-                    adjInBflSpeculativeBus:
-                      this.finalSummary?.assessment
-                        ?.adjustmentofLossesInScheduleBFLA
-                        ?.speculativeBusinessLoss,
-                  },
-                  CurrentAYloss: {
-                    currentAyHpLoss:
-                      this.finalSummary?.assessment?.currentYearLosses
-                        ?.housePropertyLoss,
-                    currentAyBusLossOthThanSpecifiedLossCF:
-                      this.finalSummary?.assessment?.currentYearLosses
-                        ?.businessLoss,
-                    currentAyLossFrmSpecifiedBusCF: 0,
-                    currentAyStcgLoss:
-                      this.finalSummary?.assessment?.currentYearLosses
-                        ?.STCGLoss,
-                    currentAyLtcgLoss:
-                      this.finalSummary?.assessment?.currentYearLosses
-                        ?.LTCGLoss,
-                    currentAyOthSrcLossRaceHorseCF: 0,
-                    currentAySpeculativeBus:
-                      this.finalSummary?.assessment?.currentYearLosses
-                        ?.speculativeLoss,
-                  },
-                  TotalLossCFSummary: {
-                    totalLossCFHpLoss:
-                      this.finalSummary?.assessment
-                        ?.totalLossCarriedForwardedToFutureYears
-                        ?.housePropertyLoss,
-                    totalLossCFBusLossOthThanSpecifiedLossCF:
-                      this.finalSummary?.assessment
-                        ?.totalLossCarriedForwardedToFutureYears
-                        ?.broughtForwordBusinessLoss,
-                    totalLossCFLossFrmSpecifiedBusCF: 0,
-                    totalLossCFStcgLoss:
-                      this.finalSummary?.assessment
-                        ?.totalLossCarriedForwardedToFutureYears?.STCGLoss,
-                    totalLossCFLtcgLoss:
-                      this.finalSummary?.assessment
-                        ?.totalLossCarriedForwardedToFutureYears?.LTCGLoss,
-                    totalLossCFOthSrcLossRaceHorseCF: 0,
-                    totalLossCFSpeculativeBus:
-                      this.finalSummary?.assessment
-                        ?.totalLossCarriedForwardedToFutureYears
-                        ?.speculativeBusinessLoss,
-                  },
-                  TotalOfAllLossCFSummary:
+                    )?.dateOfFiling,
+                  hpLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2022-23'
+                  )?.housePropertyLoss,
+                  broughtForwardBusLoss:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2022-23'
+                    )?.broughtForwordBusinessLoss,
+                  BusLossOthThanSpecifiedLossCF: 0,
+                  LossFrmSpecifiedBusCF: 0,
+                  stcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2022-23'
+                  )?.STCGLoss,
+                  ltcgLoss: this.finalSummary?.assessment?.pastYearLosses?.find(
+                    (year) => year.assessmentPastYear === '2022-23'
+                  )?.LTCGLoss,
+                  OthSrcLossRaceHorseCF: 0,
+                  lossFromSpeculativeBus:
+                    this.finalSummary?.assessment?.pastYearLosses?.find(
+                      (year) => year.assessmentPastYear === '2022-23'
+                    )?.speculativeBusinessLoss,
+                },
+                TotalOfBFLossesEarlierYrs: {
+                  totalBroughtForwardHpLoss:
+                    this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                      ?.housePropertyLoss,
+                  totalBroughtForwardBusLoss:
+                    this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                      ?.broughtForwordBusinessLoss,
+                  totalBroughtForwardBusLossOthThanSpecifiedLossCF: 0,
+                  totalBroughtForwardLossFrmSpecifiedBusCF: 0,
+                  totalBroughtForwardStcgLoss:
+                    this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                      ?.STCGLoss,
+                  totalBroughtForwardLtcgLoss:
+                    this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                      ?.LTCGLoss,
+                  totalBroughtForwardOthSrcLossRaceHorseCF: 0,
+                  totalBroughtForwardLossSpeculativeBus:
+                    this.finalSummary?.assessment?.totalOfEarlierYearLosses
+                      ?.speculativeBusinessLoss,
+                },
+                AdjTotBFLossInBFLA: {
+                  adjInBflHpLoss:
+                    this.finalSummary?.assessment
+                      ?.adjustmentofLossesInScheduleBFLA?.housePropertyLoss,
+                  adjInBflBusLossOthThanSpecifiedLossCF:
+                    this.finalSummary?.assessment
+                      ?.adjustmentofLossesInScheduleBFLA
+                      ?.broughtForwordBusinessLoss,
+                  adjInBflLossFrmSpecifiedBusCF: 0,
+                  adjInBflStcgLoss:
+                    this.finalSummary?.assessment
+                      ?.adjustmentofLossesInScheduleBFLA?.STCGLoss,
+                  adjInBflLtcgLoss:
+                    this.finalSummary?.assessment
+                      ?.adjustmentofLossesInScheduleBFLA?.LTCGLoss,
+                  adjInBflOthSrcLossRaceHorseCF: 0,
+                  adjInBflSpeculativeBus:
+                    this.finalSummary?.assessment
+                      ?.adjustmentofLossesInScheduleBFLA
+                      ?.speculativeBusinessLoss,
+                },
+                CurrentAYloss: {
+                  currentAyHpLoss:
+                    this.finalSummary?.assessment?.currentYearLosses
+                      ?.housePropertyLoss,
+                  currentAyBusLossOthThanSpecifiedLossCF:
+                    this.finalSummary?.assessment?.currentYearLosses
+                      ?.businessLoss,
+                  currentAyLossFrmSpecifiedBusCF: 0,
+                  currentAyStcgLoss:
+                    this.finalSummary?.assessment?.currentYearLosses?.STCGLoss,
+                  currentAyLtcgLoss:
+                    this.finalSummary?.assessment?.currentYearLosses?.LTCGLoss,
+                  currentAyOthSrcLossRaceHorseCF: 0,
+                  currentAySpeculativeBus:
+                    this.finalSummary?.assessment?.currentYearLosses
+                      ?.speculativeLoss,
+                },
+                TotalLossCFSummary: {
+                  totalLossCFHpLoss:
                     this.finalSummary?.assessment
                       ?.totalLossCarriedForwardedToFutureYears
-                      ?.housePropertyLoss +
-                    this.finalSummary?.assessment
-                      ?.totalLossCarriedForwardedToFutureYears?.STCGLoss +
-                    this.finalSummary?.assessment
-                      ?.totalLossCarriedForwardedToFutureYears?.LTCGLoss +
-                    this.finalSummary?.assessment
-                      ?.totalLossCarriedForwardedToFutureYears
-                      ?.speculativeBusinessLoss +
+                      ?.housePropertyLoss,
+                  totalLossCFBusLossOthThanSpecifiedLossCF:
                     this.finalSummary?.assessment
                       ?.totalLossCarriedForwardedToFutureYears
                       ?.broughtForwordBusinessLoss,
+                  totalLossCFLossFrmSpecifiedBusCF: 0,
+                  totalLossCFStcgLoss:
+                    this.finalSummary?.assessment
+                      ?.totalLossCarriedForwardedToFutureYears?.STCGLoss,
+                  totalLossCFLtcgLoss:
+                    this.finalSummary?.assessment
+                      ?.totalLossCarriedForwardedToFutureYears?.LTCGLoss,
+                  totalLossCFOthSrcLossRaceHorseCF: 0,
+                  totalLossCFSpeculativeBus:
+                    this.finalSummary?.assessment
+                      ?.totalLossCarriedForwardedToFutureYears
+                      ?.speculativeBusinessLoss,
                 },
-                totalTax: {
-                  taxAtNormalRate:
-                    this.finalSummary?.assessment?.taxSummary?.taxAtNormalRate,
-                  taxAtSpecialRate:
-                    this.finalSummary?.assessment?.taxSummary?.taxAtSpecialRate,
-                  rebateOnAgricultureIncome:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.rebateOnAgricultureIncome,
-                  totalTax: this.finalSummary?.assessment?.taxSummary?.totalTax,
-                },
-                rebateUnderSection87A:
+                TotalOfAllLossCFSummary:
+                  this.finalSummary?.assessment
+                    ?.totalLossCarriedForwardedToFutureYears
+                    ?.housePropertyLoss +
+                  this.finalSummary?.assessment
+                    ?.totalLossCarriedForwardedToFutureYears?.STCGLoss +
+                  this.finalSummary?.assessment
+                    ?.totalLossCarriedForwardedToFutureYears?.LTCGLoss +
+                  this.finalSummary?.assessment
+                    ?.totalLossCarriedForwardedToFutureYears
+                    ?.speculativeBusinessLoss +
+                  this.finalSummary?.assessment
+                    ?.totalLossCarriedForwardedToFutureYears
+                    ?.broughtForwordBusinessLoss,
+              },
+              totalTax: {
+                taxAtNormalRate:
+                  this.finalSummary?.assessment?.taxSummary?.taxAtNormalRate,
+                taxAtSpecialRate:
+                  this.finalSummary?.assessment?.taxSummary?.taxAtSpecialRate,
+                rebateOnAgricultureIncome:
                   this.finalSummary?.assessment?.taxSummary
-                    ?.rebateUnderSection87A,
-                taxAfterRebate:
-                  this.finalSummary?.assessment?.taxSummary?.taxAfterRebate,
-                surcharge: this.finalSummary?.assessment?.taxSummary?.surcharge,
-                eductionCess:
-                  this.finalSummary?.assessment?.taxSummary?.cessAmount,
-                grossTaxLiability:
-                  this.finalSummary?.assessment?.taxSummary?.grossTaxLiability,
-                taxRelief: {
-                  taxReliefUnder89:
-                    this.finalSummary?.assessment?.taxSummary?.taxReliefUnder89,
-                  taxReliefUnder90_90A:
+                    ?.rebateOnAgricultureIncome,
+                totalTax: this.finalSummary?.assessment?.taxSummary?.totalTax,
+              },
+              rebateUnderSection87A:
+                this.finalSummary?.assessment?.taxSummary
+                  ?.rebateUnderSection87A,
+              taxAfterRebate:
+                this.finalSummary?.assessment?.taxSummary?.taxAfterRebate,
+              surcharge: this.finalSummary?.assessment?.taxSummary?.surcharge,
+              eductionCess:
+                this.finalSummary?.assessment?.taxSummary?.cessAmount,
+              grossTaxLiability:
+                this.finalSummary?.assessment?.taxSummary?.grossTaxLiability,
+              taxRelief: {
+                taxReliefUnder89:
+                  this.finalSummary?.assessment?.taxSummary?.taxReliefUnder89,
+                taxReliefUnder90_90A:
+                  this.finalSummary?.assessment?.taxSummary
+                    ?.taxReliefUnder90_90A,
+                taxReliefUnder91:
+                  this.finalSummary?.assessment?.taxSummary?.taxReliefUnder91,
+                totalRelief: this.finalSummary?.assessment?.taxSummary
+                  ?.taxReliefUnder89
+                  ? this.finalSummary?.assessment?.taxSummary?.taxReliefUnder89
+                  : 0 +
                     this.finalSummary?.assessment?.taxSummary
-                      ?.taxReliefUnder90_90A,
-                  taxReliefUnder91:
-                    this.finalSummary?.assessment?.taxSummary?.taxReliefUnder91,
-                  totalRelief: this.finalSummary?.assessment?.taxSummary
-                    ?.taxReliefUnder89
-                    ? this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder89
-                    : 0 +
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder90_90A
-                    ? this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder90_90A
-                    : 0 +
-                      this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder91
-                    ? this.finalSummary?.assessment?.taxSummary
-                        ?.taxReliefUnder91
-                    : 0,
+                      ?.taxReliefUnder90_90A
+                  ? this.finalSummary?.assessment?.taxSummary
+                      ?.taxReliefUnder90_90A
+                  : 0 +
+                    this.finalSummary?.assessment?.taxSummary?.taxReliefUnder91
+                  ? this.finalSummary?.assessment?.taxSummary?.taxReliefUnder91
+                  : 0,
+              },
+              netTaxLiability:
+                this.finalSummary?.assessment?.taxSummary?.netTaxLiability,
+              interestAndFee: {
+                interest234C: {
+                  q1: this.finalSummary?.assessment?.summaryQuarter234c
+                    ?.quarterDitailsQ1?.intrest,
+                  q2: this.finalSummary?.assessment?.summaryQuarter234c
+                    ?.quarterDitailsQ2?.intrest,
+                  q3: this.finalSummary?.assessment?.summaryQuarter234c
+                    ?.quarterDitailsQ3?.intrest,
+                  q4: this.finalSummary?.assessment?.summaryQuarter234c
+                    ?.quarterDitailsQ4?.intrest,
+                  q5: this.finalSummary?.assessment?.summaryQuarter234c
+                    ?.quarterDitailsQ5?.intrest,
                 },
-                netTaxLiability:
-                  this.finalSummary?.assessment?.taxSummary?.netTaxLiability,
-                interestAndFee: {
-                  interest234C: {
-                    q1: this.finalSummary?.assessment?.summaryQuarter234c
-                      ?.quarterDitailsQ1?.intrest,
-                    q2: this.finalSummary?.assessment?.summaryQuarter234c
-                      ?.quarterDitailsQ2?.intrest,
-                    q3: this.finalSummary?.assessment?.summaryQuarter234c
-                      ?.quarterDitailsQ3?.intrest,
-                    q4: this.finalSummary?.assessment?.summaryQuarter234c
-                      ?.quarterDitailsQ4?.intrest,
-                    q5: this.finalSummary?.assessment?.summaryQuarter234c
-                      ?.quarterDitailsQ5?.intrest,
-                  },
-                  total234A: this.finalSummary?.assessment?.taxSummary?.s234A,
-                  total234B: this.finalSummary?.assessment?.taxSummary?.s234B,
-                  total234C: this.finalSummary?.assessment?.taxSummary?.s234C,
-                  total234F: this.finalSummary?.assessment?.taxSummary?.s234F,
-                  totalInterestAndFee:
-                    this.finalSummary?.assessment?.taxSummary
-                      ?.interestAndFeesPayable,
-                },
-                aggregateLiability:
-                  this.finalSummary?.assessment?.taxSummary?.agrigateLiability,
-                taxPaid: {
-                  onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
-                    ? (Object.entries(
-                        this.finalSummary?.itr?.taxPaid?.onSalary
-                      )?.map(([key, item]) => ({
-                        deductorName: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                          }
-                        ).deductorName,
-                        deductorTAN: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                          }
-                        ).deductorTAN,
-                        totalAmountCredited: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                          }
-                        ).totalAmountCredited,
-                        totalTdsDeposited: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                          }
-                        ).totalTdsDeposited,
-                      })) as {
-                        deductorName: String;
-                        deductorTAN: String;
-                        totalAmountCredited: Number;
-                        totalTdsDeposited: Number;
-                      }[])
-                    : null,
-                  totalOnSalary:
-                    this.finalSummary?.itr?.taxPaid?.onSalary?.reduce(
-                      (total, item) => total + item?.totalTdsDeposited,
-                      0
-                    ),
+                total234A: this.finalSummary?.assessment?.taxSummary?.s234A,
+                total234B: this.finalSummary?.assessment?.taxSummary?.s234B,
+                total234C: this.finalSummary?.assessment?.taxSummary?.s234C,
+                total234F: this.finalSummary?.assessment?.taxSummary?.s234F,
+                totalInterestAndFee:
+                  this.finalSummary?.assessment?.taxSummary
+                    ?.interestAndFeesPayable,
+              },
+              aggregateLiability:
+                this.finalSummary?.assessment?.taxSummary?.agrigateLiability,
+              taxPaid: {
+                onSalary: this.finalSummary?.itr?.taxPaid?.onSalary
+                  ? (Object.entries(
+                      this.finalSummary?.itr?.taxPaid?.onSalary
+                    )?.map(([key, item]) => ({
+                      deductorName: (
+                        item as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          id: any;
+                          srNo: any;
+                          taxDeduction: any;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                        }
+                      ).deductorName,
+                      deductorTAN: (
+                        item as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          id: any;
+                          srNo: any;
+                          taxDeduction: any;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                        }
+                      ).deductorTAN,
+                      totalAmountCredited: (
+                        item as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          id: any;
+                          srNo: any;
+                          taxDeduction: any;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                        }
+                      ).totalAmountCredited,
+                      totalTdsDeposited: (
+                        item as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          id: any;
+                          srNo: any;
+                          taxDeduction: any;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                        }
+                      ).totalTdsDeposited,
+                    })) as {
+                      deductorName: String;
+                      deductorTAN: String;
+                      totalAmountCredited: Number;
+                      totalTdsDeposited: Number;
+                    }[])
+                  : null,
+                totalOnSalary:
+                  this.finalSummary?.itr?.taxPaid?.onSalary?.reduce(
+                    (total, item) => total + item?.totalTdsDeposited,
+                    0
+                  ),
 
-                  otherThanSalary16A: this.finalSummary?.itr?.taxPaid
-                    ?.otherThanSalary16A
-                    ? (Object.entries(
-                        this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
-                      )?.map(([key, item]) => ({
-                        deductorName: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            headOfIncome: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: any;
-                          }
-                        ).deductorName,
-                        deductorTAN: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            headOfIncome: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: any;
-                          }
-                        ).deductorTAN,
-                        totalAmountCredited: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            headOfIncome: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: any;
-                          }
-                        ).totalAmountCredited,
-                        totalTdsDeposited: (
-                          item as {
-                            deductorName: String;
-                            deductorTAN: String;
-                            headOfIncome: String;
-                            id: any;
-                            srNo: any;
-                            taxDeduction: any;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: any;
-                          }
-                        ).totalTdsDeposited,
-                      })) as {
-                        deductorName: String;
-                        deductorTAN: String;
-                        totalAmountCredited: Number;
-                        totalTdsDeposited: Number;
-                      }[])
-                    : null,
+                otherThanSalary16A: this.finalSummary?.itr?.taxPaid
+                  ?.otherThanSalary16A
+                  ? (Object.entries(
+                      this.finalSummary?.itr?.taxPaid?.otherThanSalary16A
+                    )?.map(([key, item]) => ({
+                      deductorName: (
+                        item as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          headOfIncome: String;
+                          id: any;
+                          srNo: any;
+                          taxDeduction: any;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                          uniqueTDSCerNo: any;
+                        }
+                      ).deductorName,
+                      deductorTAN: (
+                        item as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          headOfIncome: String;
+                          id: any;
+                          srNo: any;
+                          taxDeduction: any;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                          uniqueTDSCerNo: any;
+                        }
+                      ).deductorTAN,
+                      totalAmountCredited: (
+                        item as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          headOfIncome: String;
+                          id: any;
+                          srNo: any;
+                          taxDeduction: any;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                          uniqueTDSCerNo: any;
+                        }
+                      ).totalAmountCredited,
+                      totalTdsDeposited: (
+                        item as {
+                          deductorName: String;
+                          deductorTAN: String;
+                          headOfIncome: String;
+                          id: any;
+                          srNo: any;
+                          taxDeduction: any;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                          uniqueTDSCerNo: any;
+                        }
+                      ).totalTdsDeposited,
+                    })) as {
+                      deductorName: String;
+                      deductorTAN: String;
+                      totalAmountCredited: Number;
+                      totalTdsDeposited: Number;
+                    }[])
+                  : null,
 
-                  totalOtherThanSalary16A:
-                    this.finalSummary?.itr?.taxPaid?.otherThanSalary16A?.reduce(
-                      (total, item) => total + item?.totalTdsDeposited,
-                      0
-                    ),
+                totalOtherThanSalary16A:
+                  this.finalSummary?.itr?.taxPaid?.otherThanSalary16A?.reduce(
+                    (total, item) => total + item?.totalTdsDeposited,
+                    0
+                  ),
 
-                  otherThanSalary26QB: this.finalSummary?.itr?.taxPaid
-                    ?.otherThanSalary26QB
-                    ? (Object.entries(
-                        this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
-                      )?.map(([key, item]) => ({
-                        deductorName: (
-                          item as {
-                            deductorName: String;
-                            deductorPAN: String;
-                            headOfIncome: String;
-                            id: null;
-                            srNo: null;
-                            taxDeduction: null;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: null;
-                          }
-                        ).deductorName,
-                        deductorTAN: (
-                          item as {
-                            deductorName: String;
-                            deductorPAN: String;
-                            headOfIncome: String;
-                            id: null;
-                            srNo: null;
-                            taxDeduction: null;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: null;
-                          }
-                        ).deductorPAN,
-                        totalAmountCredited: (
-                          item as {
-                            deductorName: String;
-                            deductorPAN: String;
-                            headOfIncome: String;
-                            id: null;
-                            srNo: null;
-                            taxDeduction: null;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: null;
-                          }
-                        ).totalAmountCredited,
-                        totalTdsDeposited: (
-                          item as {
-                            deductorName: String;
-                            deductorPAN: String;
-                            headOfIncome: String;
-                            id: null;
-                            srNo: null;
-                            taxDeduction: null;
-                            totalAmountCredited: Number;
-                            totalTdsDeposited: Number;
-                            uniqueTDSCerNo: null;
-                          }
-                        ).totalTdsDeposited,
-                      })) as {
-                        deductorName: String;
-                        deductorTAN: String;
-                        totalAmountCredited: Number;
-                        totalTdsDeposited: Number;
-                      }[])
-                    : null,
+                otherThanSalary26QB: this.finalSummary?.itr?.taxPaid
+                  ?.otherThanSalary26QB
+                  ? (Object.entries(
+                      this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB
+                    )?.map(([key, item]) => ({
+                      deductorName: (
+                        item as {
+                          deductorName: String;
+                          deductorPAN: String;
+                          headOfIncome: String;
+                          id: null;
+                          srNo: null;
+                          taxDeduction: null;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                          uniqueTDSCerNo: null;
+                        }
+                      ).deductorName,
+                      deductorTAN: (
+                        item as {
+                          deductorName: String;
+                          deductorPAN: String;
+                          headOfIncome: String;
+                          id: null;
+                          srNo: null;
+                          taxDeduction: null;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                          uniqueTDSCerNo: null;
+                        }
+                      ).deductorPAN,
+                      totalAmountCredited: (
+                        item as {
+                          deductorName: String;
+                          deductorPAN: String;
+                          headOfIncome: String;
+                          id: null;
+                          srNo: null;
+                          taxDeduction: null;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                          uniqueTDSCerNo: null;
+                        }
+                      ).totalAmountCredited,
+                      totalTdsDeposited: (
+                        item as {
+                          deductorName: String;
+                          deductorPAN: String;
+                          headOfIncome: String;
+                          id: null;
+                          srNo: null;
+                          taxDeduction: null;
+                          totalAmountCredited: Number;
+                          totalTdsDeposited: Number;
+                          uniqueTDSCerNo: null;
+                        }
+                      ).totalTdsDeposited,
+                    })) as {
+                      deductorName: String;
+                      deductorTAN: String;
+                      totalAmountCredited: Number;
+                      totalTdsDeposited: Number;
+                    }[])
+                  : null,
 
-                  totalOtherThanSalary26QB:
-                    this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB?.reduce(
-                      (total, item) => total + item?.totalTdsDeposited,
-                      0
-                    ),
+                totalOtherThanSalary26QB:
+                  this.finalSummary?.itr?.taxPaid?.otherThanSalary26QB?.reduce(
+                    (total, item) => total + item?.totalTdsDeposited,
+                    0
+                  ),
 
-                  tcs: this.finalSummary?.itr?.taxPaid?.tcs
-                    ? (Object.entries(
-                        this.finalSummary?.itr?.taxPaid?.tcs
-                      )?.map(([key, item]) => ({
+                tcs: this.finalSummary?.itr?.taxPaid?.tcs
+                  ? (Object.entries(this.finalSummary?.itr?.taxPaid?.tcs)?.map(
+                      ([key, item]) => ({
                         deductorName: (
                           item as {
                             collectorName: String;
@@ -6617,149 +5138,165 @@ export class SummaryComponent implements OnInit {
                             totalTcsDeposited: Number;
                           }
                         ).totalTcsDeposited,
-                      })) as {
-                        deductorName: String;
-                        deductorTAN: String;
-                        totalAmountCredited: Number;
-                        totalTdsDeposited: Number;
-                      }[])
-                    : null,
-                  totalTcs: this.finalSummary?.itr?.taxPaid?.tcs?.reduce(
-                    (total, item) => total + item?.totalTcsDeposited,
+                      })
+                    ) as {
+                      deductorName: String;
+                      deductorTAN: String;
+                      totalAmountCredited: Number;
+                      totalTdsDeposited: Number;
+                    }[])
+                  : null,
+                totalTcs: this.finalSummary?.itr?.taxPaid?.tcs?.reduce(
+                  (total, item) => total + item?.totalTcsDeposited,
+                  0
+                ),
+
+                otherThanTDSTCS: this.finalSummary?.itr?.taxPaid
+                  ?.otherThanTDSTCS
+                  ? (Object.entries(
+                      this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS
+                    )?.map(([key, item]) => ({
+                      bsrCode: (
+                        item as {
+                          bsrCode: String;
+                          challanNumber: Number;
+                          dateOfDeposit: Date;
+                          educationCess: any;
+                          id: any;
+                          majorHead: any;
+                          minorHead: any;
+                          other: any;
+                          srNo: any;
+                          surcharge: any;
+                          tax: any;
+                          totalTax: Number;
+                        }
+                      ).bsrCode,
+                      date: (
+                        item as {
+                          bsrCode: String;
+                          challanNumber: Number;
+                          dateOfDeposit: Date;
+                          educationCess: any;
+                          id: any;
+                          majorHead: any;
+                          minorHead: any;
+                          other: any;
+                          srNo: any;
+                          surcharge: any;
+                          tax: any;
+                          totalTax: Number;
+                        }
+                      ).dateOfDeposit,
+                      challanNo: (
+                        item as {
+                          bsrCode: String;
+                          challanNumber: Number;
+                          dateOfDeposit: Date;
+                          educationCess: any;
+                          id: any;
+                          majorHead: any;
+                          minorHead: any;
+                          other: any;
+                          srNo: any;
+                          surcharge: any;
+                          tax: any;
+                          totalTax: Number;
+                        }
+                      ).challanNumber,
+                      amount: (
+                        item as {
+                          bsrCode: String;
+                          challanNumber: Number;
+                          dateOfDeposit: Date;
+                          educationCess: any;
+                          id: any;
+                          majorHead: any;
+                          minorHead: any;
+                          other: any;
+                          srNo: any;
+                          surcharge: any;
+                          tax: any;
+                          totalTax: Number;
+                        }
+                      ).totalTax,
+                    })) as {
+                      bsrCode: String;
+                      date: Date;
+                      challanNo: Number;
+                      amount: Number;
+                    }[])
+                  : null,
+
+                totalOtherThanTDSTCS:
+                  this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS?.reduce(
+                    (total, item) => total + item?.totalTax,
                     0
                   ),
 
-                  otherThanTDSTCS: this.finalSummary?.itr?.taxPaid
-                    ?.otherThanTDSTCS
-                    ? (Object.entries(
-                        this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS
-                      )?.map(([key, item]) => ({
-                        bsrCode: (
-                          item as {
-                            bsrCode: String;
-                            challanNumber: Number;
-                            dateOfDeposit: Date;
-                            educationCess: any;
-                            id: any;
-                            majorHead: any;
-                            minorHead: any;
-                            other: any;
-                            srNo: any;
-                            surcharge: any;
-                            tax: any;
-                            totalTax: Number;
-                          }
-                        ).bsrCode,
-                        date: (
-                          item as {
-                            bsrCode: String;
-                            challanNumber: Number;
-                            dateOfDeposit: Date;
-                            educationCess: any;
-                            id: any;
-                            majorHead: any;
-                            minorHead: any;
-                            other: any;
-                            srNo: any;
-                            surcharge: any;
-                            tax: any;
-                            totalTax: Number;
-                          }
-                        ).dateOfDeposit,
-                        challanNo: (
-                          item as {
-                            bsrCode: String;
-                            challanNumber: Number;
-                            dateOfDeposit: Date;
-                            educationCess: any;
-                            id: any;
-                            majorHead: any;
-                            minorHead: any;
-                            other: any;
-                            srNo: any;
-                            surcharge: any;
-                            tax: any;
-                            totalTax: Number;
-                          }
-                        ).challanNumber,
-                        amount: (
-                          item as {
-                            bsrCode: String;
-                            challanNumber: Number;
-                            dateOfDeposit: Date;
-                            educationCess: any;
-                            id: any;
-                            majorHead: any;
-                            minorHead: any;
-                            other: any;
-                            srNo: any;
-                            surcharge: any;
-                            tax: any;
-                            totalTax: Number;
-                          }
-                        ).totalTax,
-                      })) as {
-                        bsrCode: String;
-                        date: Date;
-                        challanNo: Number;
-                        amount: Number;
-                      }[])
-                    : null,
+                totalTaxesPaid:
+                  this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
+              },
+              amountPayable:
+                this.finalSummary?.assessment?.taxSummary?.taxpayable,
+              amountRefund:
+                this.finalSummary?.assessment?.taxSummary?.taxRefund,
 
-                  totalOtherThanTDSTCS:
-                    this.finalSummary?.itr?.taxPaid?.otherThanTDSTCS?.reduce(
-                      (total, item) => total + item?.totalTax,
-                      0
-                    ),
+              exemptIncome: {
+                partnerFirms: this.finalSummary?.itr?.partnerFirms
+                  ?.map((element, index) => {
+                    return {
+                      srNo: index + 1,
+                      name: element.name,
+                      panNumber: element.panNumber,
+                      profitShareAmount: element.profitShareAmount,
+                    };
+                  })
+                  .flat(),
+                total: this.finalSummary?.itr?.partnerFirms?.reduce(
+                  (total, item) => total + item?.profitShareAmount,
+                  0
+                ),
+              },
+              giftExemptIncome: getTotalGiftExemptIncome(
+                this.finalSummary?.itr?.giftTax
+              ),
+              profitShareAmount:
+                this.finalSummary.assessment?.scheduleIF
+                  ?.totalProfitShareAmount,
+            };
 
-                  totalTaxesPaid:
-                    this.finalSummary?.assessment?.taxSummary?.totalTaxesPaid,
-                },
-                amountPayable:
-                  this.finalSummary?.assessment?.taxSummary?.taxpayable,
-                amountRefund:
-                  this.finalSummary?.assessment?.taxSummary?.taxRefund,
-
-                exemptIncome: {
-                  partnerFirms: this.finalSummary?.itr?.partnerFirms
-                    ?.map((element, index) => {
-                      return {
-                        srNo: index + 1,
-                        name: element.name,
-                        panNumber: element.panNumber,
-                        profitShareAmount: element.profitShareAmount,
-                      };
-                    })
-                    .flat(),
-                  total: this.finalSummary?.itr?.partnerFirms?.reduce(
-                    (total, item) => total + item?.profitShareAmount,
-                    0
-                  ),
-                },
-              };
-
-              console.log(this.finalCalculations, 'finalCalculations');
-            } else {
-              this.loading = false;
-              this.errorMessage =
-                'We are unable to display your summary,Please try again later.';
-              this.utilsService.showErrorMsg(this.errorMessage);
-            }
-          });
-        },
-        (error) => {
-          this.loading = false;
-          this.show = false;
-          this.errorMessage =
-            'We are processing your request, Please wait......';
-          if (error) {
+            console.log(this.finalCalculations, 'finalCalculations');
+          } else {
+            this.loading = false;
             this.errorMessage =
               'We are unable to display your summary,Please try again later.';
+            this.utilsService.showErrorMsg(this.errorMessage);
           }
-          console.log('In error method===', error);
+        });
+      },
+      (error) => {
+        this.loading = false;
+        this.show = false;
+        this.errorMessage = 'We are processing your request, Please wait......';
+        if (error) {
+          this.errorMessage =
+            'We are unable to display your summary,Please try again later.';
         }
-      );
-    }
+        console.log('In error method===', error);
+      }
+    );
+  }
+
+  private getGrossSalary(salary, profitsInLieuOfSalaryType, perquisites) {
+    let gross = salary[0]?.taxableAmount ? salary[0]?.taxableAmount : 0;
+    let profit = profitsInLieuOfSalaryType[0]?.taxableAmount
+      ? profitsInLieuOfSalaryType[0]?.taxableAmount
+      : 0;
+    let perquisite = perquisites[0]?.taxableAmount
+      ? perquisites[0]?.taxableAmount
+      : 0;
+    return gross + profit + perquisite;
   }
 
   getUserName(type) {
@@ -7435,8 +5972,41 @@ export class SummaryComponent implements OnInit {
     const business44AD = Object.values(combinedObjects);
     this.business44adDetails = business44AD;
   }
+
+  getCountry(code) {
+    const countryCodeList = this.countryCodeList;
+
+    for (const countryString of countryCodeList) {
+      const [countryCode, countryName] = countryString.split(':');
+      if (countryCode === code.toString()) {
+        return `${countryCode}- ${countryName}`;
+      }
+    }
+
+    return 'Country not found';
+  }
 }
 
 function getTotalBusinessIncome(summaryBusinessIncome: any): number {
   return Math.max(summaryBusinessIncome.totalBusinessIncome, 0);
+}
+
+function getTotalGiftExemptIncome(giftTax: any): number {
+  let totalGiftExemptIncome = 0;
+  if (giftTax?.aggregateValueWithoutConsiderationNotTaxable)
+    totalGiftExemptIncome += giftTax.aggregateValueWithoutConsideration;
+
+  if (giftTax?.immovablePropertyWithoutConsiderationNotTaxable)
+    totalGiftExemptIncome += giftTax.immovablePropertyWithoutConsideration;
+
+  if (giftTax?.immovablePropertyInadequateConsiderationNotTaxable)
+    totalGiftExemptIncome += giftTax.immovablePropertyInadequateConsideration;
+
+  if (giftTax?.anyOtherPropertyWithoutConsiderationNotTaxable)
+    totalGiftExemptIncome += giftTax.anyOtherPropertyWithoutConsideration;
+
+  if (giftTax?.anyOtherPropertyInadequateConsiderationNotTaxable)
+    totalGiftExemptIncome += giftTax.anyOtherPropertyInadequateConsideration;
+
+  return totalGiftExemptIncome;
 }

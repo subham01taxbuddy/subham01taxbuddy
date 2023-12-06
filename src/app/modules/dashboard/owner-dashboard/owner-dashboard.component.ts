@@ -10,6 +10,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Router } from '@angular/router';
+import { ReportService } from 'src/app/services/report-service';
 
 export const MY_FORMATS = {
   parse: {
@@ -73,6 +74,7 @@ export class OwnerDashboardComponent implements OnInit {
     private itrService: ItrMsService,
     private router: Router,
     public datePipe: DatePipe,
+    private reportService:ReportService
   ) {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
@@ -97,9 +99,9 @@ export class OwnerDashboardComponent implements OnInit {
     // API to get filers under owner-
     // https://dev-api.taxbuddy.com/user/sme-details-new/8078?owner=true&assigned=true
 
-    let param = `/sme-details-new/${this.loggedInSmeUserId}?filer=true`;
+    let param = `/bo/sme-details-new/${this.loggedInSmeUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
 
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+    this.reportService.getMethod(param).subscribe((result: any) => {
       this.options1 = [];
       console.log('filer list result -> ', result);
       this.filerList = result.data;

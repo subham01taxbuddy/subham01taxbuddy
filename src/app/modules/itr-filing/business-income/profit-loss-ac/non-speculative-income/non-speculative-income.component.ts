@@ -97,7 +97,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
 
         this.totalNetProfit = data[0].netProfitfromNonSpeculativeIncome;
         let expenseList = data[0].expenses;
-        expenseList.forEach((element) => {
+        expenseList?.forEach((element) => {
           this.addExpenseForm(element);
         });
       } else {
@@ -105,7 +105,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         form.enable();
         this.nonspecIncomeFormArray.push(form);
       }
-    }/* else {
+    } /* else {
       let form = this.createNonSpecIncomeForm(0, null);
       form.enable();
       this.nonspecIncomeFormArray.push(form);
@@ -144,7 +144,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       purchase: [income?.purchase],
       netIncome: [0],
       cogc: [0],
-      expenditure: [income?.expenditure == null?0:income?.expenditure],
+      expenditure: [income?.expenditure == null ? 0 : income?.expenditure],
     });
   }
 
@@ -212,6 +212,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       specIncome.controls['grossProfit'].value -
         specIncome.controls['expenditure'].value
     );
+    this.calculateNetProfit();
   }
 
   calculateNetProfit(index?) {
@@ -260,7 +261,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    if(this.profitLossForm.valid) {
+    if (this.profitLossForm.valid) {
       this.loading = true;
       this.calculateNetProfit();
       const row = this.profitLossForm.getRawValue();
@@ -279,27 +280,29 @@ export class NonSpeculativeIncomeComponent implements OnInit {
           financialParticulars: undefined,
           fixedAssetsDetails: [],
           presumptiveIncomes: [],
-          profitLossACIncomes: []
+          profitLossACIncomes: [],
         };
       }
       if (!this.Copy_ITR_JSON?.business?.profitLossACIncomes) {
         this.Copy_ITR_JSON.business.profitLossACIncomes = profitLossACIncomes;
       } else {
         let data = this.Copy_ITR_JSON?.business?.profitLossACIncomes.filter(
-          (item: any) => item.businessType != 'NONSPECULATIVEINCOME'
+          (item: any) => item.businessType !== 'NONSPECULATIVEINCOME'
         );
         this.Copy_ITR_JSON.business.profitLossACIncomes =
           data.concat(profitLossACIncomes);
       }
       console.log(this.Copy_ITR_JSON);
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.Copy_ITR_JSON)
+      );
 
       return true;
     } else {
       $('input.ng-invalid').first().focus();
       return false;
     }
-
   }
 
   ngDoCheck() {

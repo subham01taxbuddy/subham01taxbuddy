@@ -15,6 +15,8 @@ export const environment = {
 	webportal_url: 'https://uat-itr.taxbuddy.com',
 	lifecycleUrl: "https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status",
 	lifecycleEnv: "qa",
+	validate_km_token: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/validate-token",
+	kmAppId: "3f4d0cc30b95c4deb37639d7cc350c728",
 	idleTimeMins: 30,
 	ITR_LIFECYCLE: "https://e2gqddb7dcvllacrbnpqjnc53a0oetmd.lambda-url.ap-south-1.on.aws",
 	upload_file: 'https://z6sphosqllkzc7ty53ygn7scqa0vnbtf.lambda-url.ap-south-1.on.aws/',
@@ -37,16 +39,26 @@ export const environment = {
 		FOLDER_ID: '1DlJN6xgPyrX_ijF7k6q4M_1rwiRFJkGt'
 	},
 
-	firebaseConfig: {
-		apiKey: "AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk",
-		authDomain: "taxbuddy-uat.firebaseapp.com",
-		databaseURL: "https://taxbuddy-uat.firebaseio.com",
-		projectId: "taxbuddy-uat",
-		storageBucket: "taxbuddy-uat.appspot.com",
-		messagingSenderId: "805239680508",
-		appId: "1:805239680508:web:b9258ec04023b0fda05679",
-		measurementId: "G-DMWVKK98X2"
-	},
+	// firebaseConfig: {
+	// 	apiKey: "AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk",
+	// 	authDomain: "taxbuddy-uat.firebaseapp.com",
+	// 	databaseURL: "https://taxbuddy-uat.firebaseio.com",
+	// 	projectId: "taxbuddy-uat",
+	// 	storageBucket: "taxbuddy-uat.appspot.com",
+	// 	messagingSenderId: "805239680508",
+	// 	appId: "1:805239680508:web:b9258ec04023b0fda05679",
+	// 	measurementId: "G-DMWVKK98X2"
+	// },
+  firebaseConfig: {
+    apiKey: "AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk",
+    authDomain: "taxbuddy-uat.firebaseapp.com",
+    databaseURL: "https://taxbuddy-uat.firebaseio.com",
+    projectId: "taxbuddy-uat",
+    storageBucket: "taxbuddy-uat.appspot.com",
+    messagingSenderId: "805239680508",
+    appId: "1:805239680508:web:c5a224dafd6a97bea05679",
+    measurementId: "G-R5JYTLSE8B"
+  },
 
 	s3_cred: {
 		// user_name: "ashish@ssbainnovations.com",

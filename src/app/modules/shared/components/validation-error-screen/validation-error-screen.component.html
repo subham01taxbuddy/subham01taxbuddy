@@ -6,7 +6,22 @@
   class="spc-blw"
   style="margin: 15px 25px; background-color: white; padding: 25px"
 >
-  <div class="com_model perBx">
+  <div *ngIf="apiErrors">
+    <div class="container">
+      <div
+        class="alert alert-danger"
+        role="alert"
+        style="display: inline-block">
+        <strong style="font-size: 18px"> Validation Errors - {{ apiErrors?.length }} found</strong>
+        <ul>
+          <li *ngFor="let error of apiErrors">
+            {{error}}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="com_model perBx" *ngIf="errors">
     <div class="container">
       <div
         class="alert alert-danger"

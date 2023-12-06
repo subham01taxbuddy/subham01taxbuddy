@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { LabFormComponent } from './lab-form.component';
+import { MissedInboundCallListComponent } from './missed-inbound-call-list.component';
 
-describe('LabFormComponent', () => {
-  let component: LabFormComponent;
-  let fixture: ComponentFixture<LabFormComponent>;
+describe('MissedInboundCallListComponent', () => {
+  let component: MissedInboundCallListComponent;
+  let fixture: ComponentFixture<MissedInboundCallListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LabFormComponent ]
+      declarations: [ MissedInboundCallListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LabFormComponent);
+    fixture = TestBed.createComponent(MissedInboundCallListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -20,7 +20,14 @@ import { Environment } from 'ag-grid-community';
 import { parse } from '@typescript-eslint/parser';
 import { AppSetting } from '../modules/shared/app.setting';
 import { StorageService } from '../modules/shared/services/storage.service';
-import {Form, FormArray, FormControl, FormGroup, ValidationErrors} from "@angular/forms";
+import { ReportService } from './report-service';
+import {
+  Form,
+  FormArray,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+} from '@angular/forms';
 
 @Injectable()
 export class UtilsService {
@@ -29,7 +36,8 @@ export class UtilsService {
   private subject = new Subject<any>();
   uploadedJson: any;
   jsonData: any;
-  value:any;
+  value: any;
+  salaryValues: any;
   constructor(
     private snackBar: MatSnackBar,
     private itrMsService: ItrMsService,
@@ -37,7 +45,8 @@ export class UtilsService {
     private dialog: MatDialog,
     private serializer: UrlSerializer,
     private userMsService: UserMsService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private reportService: ReportService
   ) {}
   /**
    * @function isNonEmpty()
@@ -637,8 +646,12 @@ export class UtilsService {
       movableAsset: [],
       immovableAsset: [],
       prefillDate: itrJson ? itrJson.prefillDate : null,
+      aisLastUploadedDownloadedDate: itrJson
+        ? itrJson.aisLastUploadedDownloadedDate
+        : null,
       prefillData: itrJson ? itrJson.prefillData : null,
       prefillDataSource: itrJson ? itrJson.prefillDataSource : null,
+      aisDataSource: itrJson ? itrJson.aisDataSource : null,
       everOptedNewRegime: {
         acknowledgementNumber: '',
         assessmentYear: '',
@@ -692,6 +705,19 @@ export class UtilsService {
           typeOfLand: null, //"IRG - Irrigated; RF - Rain-fed"
         },
       ],
+
+      giftTax: {
+        aggregateValueWithoutConsideration: 0,
+        aggregateValueWithoutConsiderationNotTaxable: false,
+        immovablePropertyWithoutConsideration: 0,
+        immovablePropertyWithoutConsiderationNotTaxable: false,
+        immovablePropertyInadequateConsideration: 0,
+        immovablePropertyInadequateConsiderationNotTaxable: false,
+        anyOtherPropertyWithoutConsideration: 0,
+        anyOtherPropertyWithoutConsiderationNotTaxable: false,
+        anyOtherPropertyInadequateConsideration: 0,
+        anyOtherPropertyInadequateConsiderationNotTaxable: false,
+      },
     };
 
     return ITR_JSON;
@@ -806,8 +832,9 @@ export class UtilsService {
     }
   }
   async getSmeList() {
-    const param = `/sme/all-list?page=0&size=1000`;
-    return await this.userMsService.getMethod(param).toPromise();
+    // 'https://dev-api.taxbuddy.com/report/bo/sme/all-list?active=true&page=0&pageSize=10' \
+    const param = `/bo/sme/all-list?active=true&page=0&pageSize=10000`;
+    return await this.reportService.getMethod(param).toPromise();
   }
 
   async getStoredAgentList(action?: any) {
@@ -848,8 +875,8 @@ export class UtilsService {
   async getAgentList() {
     //https://uat-api.taxbuddy.com/user/sme-details-new/3000?page=0&size=100&filer=true
     const loggedInUserId = this.getLoggedInUserID();
-    const param = `/sme-details-new/${loggedInUserId}?filer=true`;
-    return await this.userMsService.getMethodNew(param).toPromise();
+    const param = `/bo/sme-details-new/${loggedInUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
+    return await this.reportService.getMethod(param).toPromise();
   }
 
   async getStoredMasterStatusList() {
@@ -948,8 +975,8 @@ export class UtilsService {
   async getMyAgentList() {
     const loggedInUserId = this.getLoggedInUserID();
     //https://api.taxbuddy.com/user/sme-details-new/24346?owner=true&assigned=true
-    const param = `/sme-details-new/${loggedInUserId}?owner=true&assigned=true`;
-    return await this.userMsService.getMethodNew(param).toPromise();
+    const param = `/bo/sme-details-new/${loggedInUserId}?leader=true`;
+    return await this.reportService.getMethod(param).toPromise();
   }
 
   async getCurrentItr(userId: any, ay: any, filingTeamMemberId?: any) {
@@ -1377,13 +1404,25 @@ export class UtilsService {
     }
   }
 
+  getPartnerType() {
+    const loggedInSmeInfo = JSON.parse(
+      sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
+    );
+    if (
+      this.isNonEmpty(loggedInSmeInfo) &&
+      this.isNonEmpty(loggedInSmeInfo[0].partnerType)
+    ) {
+      return loggedInSmeInfo[0].partnerType;
+    }
+  }
+
   async getFilersList() {
     // https://uat-api.taxbuddy.com/user/sme-details-new/3000?filer=true
     let loggedInUserId = environment.admin_id;
     console.log('logged in sme id ', loggedInUserId);
-    const param = `/sme-details-new/${loggedInUserId}?filer=true`;
+    const param = `/bo/sme-details-new/${loggedInUserId}?partnerType=INDIVIDUAL,PRINCIPAL`;
     // return await this.userMsService.getMethod(param).toPromise();
-    this.userMsService.getMethodNew(param).subscribe((res: any) => {
+    this.reportService.getMethod(param).subscribe((res: any) => {
       console.log('filer List Result', res);
       if (res.success && res.data instanceof Array) {
         let filerList = res.data;
@@ -1411,46 +1450,311 @@ export class UtilsService {
 
   private dataSubject = new Subject<any>();
 
-  sendData(data: any, component:string) {
-    this.dataSubject.next({data, component});
+  sendData(data: any, component: string) {
+    this.dataSubject.next({ data, component });
   }
 
   getData() {
     return this.dataSubject.asObservable();
   }
 
-  highlightInvalidFormFields(formGroup: FormGroup){
+  setSalaryValues(values) {
+    this.salaryValues = values;
+  }
+
+  getSalaryValues() {
+    return this.salaryValues;
+  }
+
+  highlightInvalidFormFields(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach((key) => {
-      if(formGroup.get(key) instanceof FormControl) {
-        const controlErrors: ValidationErrors =
-          formGroup.get(key).errors;
+      if (formGroup.get(key) instanceof FormControl) {
+        const controlErrors: ValidationErrors = formGroup.get(key).errors;
         if (controlErrors != null) {
           console.log(formGroup);
           Object.keys(controlErrors).forEach((keyError) => {
             console.log(
-              'Key control: ' + key + ', keyError: ' + keyError + ', err value: ',
+              'Key control: ' +
+                key +
+                ', keyError: ' +
+                keyError +
+                ', err value: ',
               controlErrors[keyError]
             );
             formGroup.controls[key].markAsTouched();
             return;
           });
         }
-      } else if(formGroup.get(key) instanceof FormGroup){
+      } else if (formGroup.get(key) instanceof FormGroup) {
         this.highlightInvalidFormFields(formGroup.get(key) as FormGroup);
-      } else if(formGroup.get(key) instanceof FormArray){
+      } else if (formGroup.get(key) instanceof FormArray) {
         let formArray = formGroup.get(key) as FormArray;
-        formArray.controls.forEach(element =>{
+        formArray.controls.forEach((element) => {
           this.highlightInvalidFormFields(element as FormGroup);
         });
       }
     });
   }
 
-  setChange(value){
-    return this.value = value;
+  setChange(value) {
+    return (this.value = value);
   }
 
-  getChange(){
+  getChange() {
     return this.value;
+  }
+
+  getCountryCodeList() {
+    return [
+      '93:AFGHANISTAN',
+      '1001:ÅLAND ISLANDS',
+      '355:ALBANIA',
+      '213:ALGERIA',
+      '684:AMERICAN SAMOA',
+      '376:ANDORRA',
+      '244:ANGOLA',
+      '1264:ANGUILLA',
+      '1010:ANTARCTICA',
+      '1268:ANTIGUA AND BARBUDA',
+      '54:ARGENTINA',
+      '374:ARMENIA',
+      '297:ARUBA',
+      '61:AUSTRALIA',
+      '43:AUSTRIA',
+      '994:AZERBAIJAN',
+      '1242:BAHAMAS',
+      '973:BAHRAIN',
+      '880:BANGLADESH',
+      '1246:BARBADOS',
+      '375:BELARUS',
+      '32:BELGIUM',
+      '501:BELIZE',
+      '229:BENIN',
+      '1441:BERMUDA',
+      '975:BHUTAN',
+      '591:BOLIVIA (PLURINATIONAL STATE OF)',
+      '1002:BONAIRE, SINT EUSTATIUS AND SABA',
+      '387:BOSNIA AND HERZEGOVINA',
+      '267:BOTSWANA',
+      '1003:BOUVET ISLAND',
+      '55:BRAZIL',
+      '1014:BRITISH INDIAN OCEAN TERRITORY',
+      '673:BRUNEI DARUSSALAM',
+      '359:BULGARIA',
+      '226:BURKINA FASO',
+      '257:BURUNDI',
+      '238:CABO VERDE',
+      '855:CAMBODIA',
+      '237:CAMEROON',
+      '1:CANADA',
+      '1345:CAYMAN ISLANDS',
+      '236:CENTRAL AFRICAN REPUBLIC',
+      '235:CHAD',
+      '56:CHILE',
+      '86:CHINA',
+      '9:CHRISTMAS ISLAND',
+      '672:COCOS (KEELING) ISLANDS',
+      '57:COLOMBIA',
+      '270:COMOROS',
+      '242:CONGO',
+      '243:CONGO (DEMOCRATIC REPUBLIC OF THE)',
+      '682:COOK ISLANDS',
+      '506:COSTA RICA',
+      "225:CÔTE D'IVOIRE",
+      '385:CROATIA',
+      '53:CUBA',
+      '1015:CURAÇAO',
+      '357:CYPRUS',
+      '420:CZECHIA',
+      '45:DENMARK',
+      '253:DJIBOUTI',
+      '1767:DOMINICA',
+      '1809:DOMINICAN REPUBLIC',
+      '593:ECUADOR',
+      '20:EGYPT',
+      '503:EL SALVADOR',
+      '240:EQUATORIAL GUINEA',
+      '291:ERITREA',
+      '372:ESTONIA',
+      '251:ETHIOPIA',
+      '500:FALKLAND ISLANDS (MALVINAS)',
+      '298:FAROE ISLANDS',
+      '679:FIJI',
+      '358:FINLAND',
+      '33:FRANCE',
+      '594:FRENCH GUIANA',
+      '689:FRENCH POLYNESIA',
+      '1004:FRENCH SOUTHERN TERRITORIES',
+      '241:GABON',
+      '220:GAMBIA',
+      '995:GEORGIA',
+      '49:GERMANY',
+      '233:GHANA',
+      '350:GIBRALTAR',
+      '30:GREECE',
+      '299:GREENLAND',
+      '1473:GRENADA',
+      '590:GUADELOUPE',
+      '1671:GUAM',
+      '502:GUATEMALA',
+      '1481:GUERNSEY',
+      '224:GUINEA',
+      '245:GUINEA-BISSAU',
+      '592:GUYANA',
+      '509:HAITI',
+      '1005:HEARD ISLAND AND MCDONALD ISLANDS',
+      '6:HOLY SEE',
+      '504:HONDURAS',
+      '852:HONG KONG',
+      '36:HUNGARY',
+      '354:ICELAND',
+      '62:INDONESIA',
+      '98:IRAN (ISLAMIC REPUBLIC OF)',
+      '964:IRAQ',
+      '353:IRELAND',
+      '1624:ISLE OF MAN',
+      '972:ISRAEL',
+      '5:ITALY',
+      '1876:JAMAICA',
+      '81:JAPAN',
+      '1534:JERSEY',
+      '962:JORDAN',
+      '7:KAZAKHSTAN',
+      '254:KENYA',
+      '686:KIRIBATI',
+      "850:KOREA(DEMOCRATIC PEOPLE'S REPUBLIC OF)",
+      '82:KOREA (REPUBLIC OF)',
+      '965:KUWAIT',
+      '996:KYRGYZSTAN',
+      "856:LAO PEOPLE'S DEMOCRATIC REPUBLIC",
+      '371:LATVIA',
+      '961:LEBANON',
+      '266:LESOTHO',
+      '231:LIBERIA',
+      '218:LIBYA',
+      '423:LIECHTENSTEIN',
+      '370:LITHUANIA',
+      '352:LUXEMBOURG',
+      '853:MACAO',
+      '389:MACEDONIA(THE FORMER YUGOSLAV REPUBLIC OF)',
+      '261:MADAGASCAR',
+      '256:MALAWI',
+      '60:MALAYSIA',
+      '960:MALDIVES',
+      '223:MALI',
+      '356:MALTA',
+      '692:MARSHALL ISLANDS',
+      '596:MARTINIQUE',
+      '222:MAURITANIA',
+      '230:MAURITIUS',
+      '269:MAYOTTE',
+      '52:MEXICO',
+      '691:MICRONESIA (FEDERATED STATES OF)',
+      '373:MOLDOVA (REPUBLIC OF)',
+      '377:MONACO',
+      '976:MONGOLIA',
+      '382:MONTENEGRO',
+      '1664:MONTSERRAT',
+      '212:MOROCCO',
+      '258:MOZAMBIQUE',
+      '95:MYANMAR',
+      '264:NAMIBIA',
+      '674:NAURU',
+      '977:NEPAL',
+      '31:NETHERLANDS',
+      '687:NEW CALEDONIA',
+      '64:NEW ZEALAND',
+      '505:NICARAGUA',
+      '227:NIGER',
+      '234:NIGERIA',
+      '683:NIUE',
+      '15:NORFOLK ISLAND',
+      '1670:NORTHERN MARIANA ISLANDS',
+      '47:NORWAY',
+      '968:OMAN',
+      '92:PAKISTAN',
+      '680:PALAU',
+      '970:PALESTINE, STATE OF',
+      '507:PANAMA',
+      '675:PAPUA NEW GUINEA',
+      '595:PARAGUAY',
+      '51:PERU',
+      '63:PHILIPPINES',
+      '1011:PITCAIRN',
+      '48:POLAND',
+      '14:PORTUGAL',
+      '1787:PUERTO RICO',
+      '974:QATAR',
+      '262:RÉUNION',
+      '40:ROMANIA',
+      '8:RUSSIAN FEDERATION',
+      '250:RWANDA',
+      '1006:SAINT BARTHÉLEMY',
+      '290: SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA',
+      '1869:SAINT KITTS AND NEVIS',
+      '1758:SAINT LUCIA',
+      '1007:SAINT MARTIN (FRENCH PART)',
+      '508:SAINT PIERRE AND MIQUELON',
+      '1784:SAINT VINCENT AND THE GRENADINES',
+      '685:SAMOA',
+      '378:SAN MARINO',
+      '239:SAO TOME AND PRINCIPE',
+      '966:SAUDI ARABIA',
+      '221:SENEGAL',
+      '381:SERBIA',
+      '248:SEYCHELLES',
+      '232:SIERRA LEONE',
+      '65:SINGAPORE',
+      '1721:SINT MAARTEN (DUTCH PART)',
+      '421:SLOVAKIA',
+      '386:SLOVENIA',
+      '677:SOLOMON ISLANDS',
+      '252:SOMALIA',
+      '28:SOUTH AFRICA',
+      '1008:SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS',
+      '211:SOUTH SUDAN',
+      '35:SPAIN',
+      '94:SRI LANKA',
+      '249:SUDAN',
+      '597:SURINAME',
+      '1012:SVALBARD AND JAN MAYEN',
+      '268:SWAZILAND',
+      '46:SWEDEN',
+      '41:SWITZERLAND',
+      '963:SYRIAN ARAB REPUBLIC',
+      '886:TAIWAN, PROVINCE OF CHINA[A]',
+      '992:TAJIKISTAN',
+      '255:TANZANIA, UNITED REPUBLIC OF',
+      '66:THAILAND',
+      '670:TIMOR-LESTE (EAST TIMOR)',
+      '228:TOGO',
+      '690:TOKELAU',
+      '676:TONGA',
+      '1868:TRINIDAD AND TOBAGO',
+      '216:TUNISIA',
+      '90:TURKEY',
+      '993:TURKMENISTAN',
+      '1649:TURKS AND CAICOS ISLANDS',
+      '688:TUVALU',
+      '256:UGANDA',
+      '380:UKRAINE',
+      '971:UNITED ARAB EMIRATES',
+      '44:UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND',
+      '2:UNITED STATES OF AMERICA',
+      '1009:UNITED STATES MINOR OUTLYING ISLANDS',
+      '598:URUGUAY',
+      '998:UZBEKISTAN',
+      '678:VANUATU',
+      '58:VENEZUELA (BOLIVARIAN REPUBLIC OF)',
+      '84:VIET NAM',
+      '1284:VIRGIN ISLANDS (BRITISH)',
+      '1340:VIRGIN ISLANDS (U.S.)',
+      '681:WALLIS AND FUTUNA',
+      '1013:WESTERN SAHARA',
+      '967:YEMEN',
+      '260:ZAMBIA',
+      '263:ZIMBABWE',
+      '9999:OTHERS',
+    ];
   }
 }

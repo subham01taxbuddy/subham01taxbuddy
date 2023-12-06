@@ -61,6 +61,19 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
   roles: any;
   dataOnLoad = true;
   showCsvMessage: boolean;
+  selectRoleFilter = [
+    { value: '&roles=ROLE_LEADER&internal=true', name: 'Leader- Internal' },
+    { value: '&roles=ROLE_FILER&partnerType=INDIVIDUAL&internal=true', name: 'Filer Individual- Internal' },
+    { value: '&roles=ROLE_FILER&partnerType=INDIVIDUAL&internal=false', name: 'Filer Individual- External' },
+    { value: '&roles=ROLE_FILER&partnerType=PRINCIPAL&internal=false', name: ' Filer Principal/Firm- External' },
+    { value: '&roles=ROLE_FILER&partnerType=CHILD &internal=false', name: ' Filer Assistant- External' },
+
+  ]
+  selectRole = new FormControl();
+  searchVal: string = "";
+  showError: boolean = false;
+  searchAsPrinciple :boolean =false;
+  partnerType:any;
   constructor(
     public datePipe: DatePipe,
     private genericCsvService: GenericCsvService,
@@ -93,13 +106,15 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
+    this.partnerType = this.loggedInSme[0]?.partnerType;
 
-    if (this.roles?.includes('ROLE_OWNER')) {
-      this.ownerId = this.loggedInSme[0].userId;
+    if (this.roles?.includes('ROLE_LEADER')) {
+      this.leaderId = this.loggedInSme[0].userId;
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+      this.agentId =  this.loggedInSme[0]?.userId;
       this.showReports();
     } else {
       this.dataOnLoad = false;
@@ -107,23 +122,45 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
     // this.showReports()
   }
 
-  ownerId: number;
+  clearValue() {
+    this.searchVal = "";
+    this.leaderId = null;
+    this.filerId = null;
+    this.showError = false;
+    this?.smeDropDown?.resetDropdown();
+  }
+  getRoleValue(role) {
+
+  }
+
+  leaderId: number;
   filerId: number;
   agentId: number;
 
-  fromSme(event, isOwner) {
+  fromSme(event, isOwner,fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
-      this.ownerId = event ? event.userId : null;
+      this.leaderId = event ? event.userId : null;
     } else {
-      this.filerId = event ? event.userId : null;
+      if(fromPrinciple){
+        if (event?.partnerType === 'PRINCIPAL') {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = true;
+        } else {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }else{
+        if(event){
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }
     }
     if (this.filerId) {
       this.agentId = this.filerId;
-
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
-
+    } else if (this.leaderId) {
+      this.agentId = this.leaderId;
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
@@ -132,40 +169,65 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
   }
 
   showReports(pageChange?) {
-    //https://uat-api.taxbuddy.com/report/calling-report/missed-chat-report?fromDate=2023-04-01&toDate=2023-05-27&page=0&pageSize=20&filerUserId=7523'
+    // https://uat-api.taxbuddy.com/report/bo/calling-report/missed-chat-report?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
     if(!pageChange){
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
     this.loading = true;
-    // let loggedInId = this.utilsService.getLoggedInUserID();
+    let loggedInId = this.utilsService.getLoggedInUserID();
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
+
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =true;
+
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =false;
+    }
+
     let param = ''
     let userFilter = '';
-    if (this.ownerId && !this.filerId && !pageChange) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.leaderId && !this.filerId && !pageChange) {
       this.searchParam.page = 0;
       this.config.currentPage = 1
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
-    if (this.ownerId && pageChange) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.leaderId && pageChange) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
-    if (this.filerId && !pageChange) {
-      userFilter += `&filerUserId=${this.filerId}`;
+    if (this.filerId && this.searchAsPrinciple === true && !pageChange) {
       this.searchParam.page = 0;
-      this.config.currentPage = 1;
+      this.config.currentPage = 1
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true && pageChange) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false && !pageChange) {
+      this.searchParam.page = 0;
+      this.config.currentPage = 1
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false && pageChange) {
+      userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    if (this.filerId && pageChange) {
-      userFilter += `&filerUserId=${this.filerId}`;
+    let roleFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectRole.value) && this.selectRole.valid)) {
+      roleFilter = this.selectRole.value;
     }
 
     let data = this.utilsService.createUrlParams(this.searchParam);
 
-    param = `/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}`;
+    param = `/bo/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}`;
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
@@ -193,18 +255,49 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
     this.showCsvMessage = true;
     let param = ''
     let userFilter = '';
-    if (this.ownerId && !this.filerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    let loggedInId = this.utilsService.getLoggedInUserID();
+
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
     }
-    if (this.filerId) {
+
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =true;
+
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =false;
+    }
+
+    if (this.leaderId && !this.filerId ) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true ) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
       userFilter += `&filerUserId=${this.filerId}`;
+    }
+
+    let roleFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectRole.value) && this.selectRole.valid)) {
+      roleFilter = this.selectRole.value;
     }
 
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    param = `/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'missed-chat-report', '');
+    param = `/bo/calling-report/missed-chat-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}`;
+
+
+    let fieldName = [
+      { key: 'noOfMissedChat', value: 'No of missed chat' },
+      { key: 'filerName', value: 'Leader/Filer Name' },
+      { key: 'role', value: 'Role' },
+      { key: 'parentName', value: 'Parent Name' },
+    ]
+   await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'missed-chat-report', fieldName,{});
     this.loading = false;
     this.showCsvMessage = false;
   }
@@ -217,6 +310,7 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
         noOfMissedChat: missedChatData[i].noOfMissedChat,
         filerName: missedChatData[i].filerName,
         parentName: missedChatData[i].parentName,
+        role:missedChatData[i].role,
       })
       missedChatRepoInfoArray.push(agentReportInfo);
     }
@@ -240,10 +334,23 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
         },
       },
       {
-        headerName: 'Filer Name',
+        headerName: 'Leader/Filer Name',
         field: 'filerName',
         sortable: true,
-        width: 350,
+        width: 210,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: 'Role',
+        field: 'role',
+        sortable: true,
+        width: 210,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -270,6 +377,7 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.selectRole.setValue(null);
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
@@ -277,8 +385,8 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
     this?.smeDropDown?.resetDropdown();
-    if (this.roles?.includes('ROLE_OWNER')) {
-      this.ownerId = this.loggedInSme[0].userId;
+    if (this.roles?.includes('ROLE_LEADER')) {
+      this.leaderId = this.loggedInSme[0].userId;
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }

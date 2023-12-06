@@ -70,7 +70,8 @@ export class ChangeStatusComponent implements OnInit {
   }
 
   getStatus() {
-    let param = '/itr-status-master/source/BACK_OFFICE';
+    // 'https://dev-api.taxbuddy.com/user/itr-status-master/source/BACK_OFFICE?userId=8664&serviceType=ITR'
+    let param = '/itr-status-master/source/BACK_OFFICE?userId=' + this.data.userId + '&serviceType=' + this.data.serviceType + '&itrChatInitiated=' + this.data.itrChatInitiated;
     this.userService.getMethod(param).subscribe(
       (response) => {
         console.log('status response: ', response);
@@ -220,6 +221,49 @@ export class ChangeStatusComponent implements OnInit {
       }
     }
   }
+
+  undoStatus(){
+    // 'https://uat-api.taxbuddy.com/user/previous-status' \
+    this.loading = true;
+    let param = '/previous-status';
+    let reqBody={
+      userId:this.data.userInfo.userId,
+      serviceType:this.data.userInfo.serviceType,
+      assessmentYear:this.data.userInfo.assessmentYear
+    }
+    this.userService.postMethod(param,reqBody).subscribe(
+      (response:any) => {
+        console.log('undo Status response: ', response);
+        this.loading = false;
+        if(response.success){
+          this._toastMessageService.alert(
+            'success',response.message
+          );
+        }else{
+          this._toastMessageService.alert(
+            'error',
+            'There is some issue to Update Status information.'
+          );
+        }
+
+        setTimeout(() => {
+          this.dialogRef.close({
+            event: 'close',
+            data: 'statusChanged',
+            responce: response,
+          });
+        }, 3000);
+
+      },(error) => {
+        this.loading = false;
+        this._toastMessageService.alert(
+          'error',
+          'There is some issue to Update Status information.'
+        );
+      })
+
+  }
+
 }
 
 export interface ConfirmModel {
@@ -228,4 +272,6 @@ export interface ConfirmModel {
   serviceType: any;
   mode: any;
   userInfo: any;
+  itrChatInitiated?: boolean;
+  selectedStatus:any;
 }

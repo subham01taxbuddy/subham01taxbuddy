@@ -21,6 +21,8 @@ export class PayoutAdjustmentComponent implements OnInit {
   showAdd = false;
   downloadURL:any;
   showMessage ='';
+  searchAsPrinciple :boolean =false;
+  isInternal = true;
 
   constructor(
     private itrMsService: ItrMsService,
@@ -33,7 +35,7 @@ export class PayoutAdjustmentComponent implements OnInit {
   search() {
     //https://k42t7a34l7qzlxodv3c6hbj5om0cbvac.lambda-url.ap-south-1.on.aws/?userId=10488'
     this.loading = true;
-    let userId = this.agentId;
+    let userId = this.filerId || this.leaderId;
 
     if (userId) {
       let param = `?userId=${userId}`;
@@ -69,28 +71,49 @@ export class PayoutAdjustmentComponent implements OnInit {
     }
   }
 
-  ownerId: number;
   filerId: number;
   agentId: number;
   partnerName: any;
+  leaderId: number;
 
-  fromSme(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.ownerId = event ? event.userId : null;
-    } else {
-      this.filerId = event ? event.userId : null;
-      this.partnerName = event ? event.name : null;
-    }
-    if (this.filerId) {
-      this.agentId = this.filerId;
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
+  // fromSme(event, isOwner) {
+  //   console.log('sme-drop-down', event, isOwner);
+  //   if (isOwner) {
+  //     this.ownerId = event ? event.userId : null;
+  //   } else {
+  //     this.filerId = event ? event.userId : null;
+  //     this.partnerName = event ? event.name : null;
+  //   }
+  //   if (this.filerId) {
+  //     this.agentId = this.filerId;
+  //   } else if (this.ownerId) {
+  //     this.agentId = this.ownerId;
+  //   } else {
+  //     let loggedInId = this.utilsService.getLoggedInUserID();
+  //     this.agentId = loggedInId;
+  //   }
+  // }
+
+
+  fromLeader(event) {
+    if(event) {
+      this.leaderId = event ? event.userId : null;
     }
   }
+  fromPrinciple(event){
+    if(event){
+      if (event?.partnerType === 'PRINCIPAL') {
+        this.filerId = event ? event.userId : null;
+        this.partnerName = event ? event.name : null;
+        this.searchAsPrinciple = true;
+      } else {
+        this.filerId = event ? event.userId : null;
+        this.partnerName = event ? event.name : null;
+        this.searchAsPrinciple = false;
+      }
+    }
+  }
+
 
   addAdjustment(templateRef) {
     if (this.filerId && this.showAdd == true) {
@@ -212,7 +235,7 @@ export class PayoutAdjustmentComponent implements OnInit {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
     this.filerId = null;
-    this.ownerId = null;
+    this.leaderId = null;
     this?.smeDropDown?.resetDropdown();
     this.adjustmentDetails = null;
     this.reason.setValue(null);

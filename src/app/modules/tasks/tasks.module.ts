@@ -1,6 +1,6 @@
 import { AssignedUsersComponent } from './pages/assigned-users/assigned-users.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxLoadingModule } from 'ngx-loading';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
@@ -18,57 +18,61 @@ import { ExceptionsComponent } from './pages/exceptions/exceptions.component';
 import { EriExceptionsComponent } from './pages/exceptions/eri-exceptions/eri-exceptions.component';
 import { EVerificationDialogComponent } from './components/e-verification-dialog/e-verification-dialog.component';
 import { ItrLifecycleDialogComponent } from './components/itr-lifecycle-dialog/itr-lifecycle-dialog.component';
-import {AssignedNewUsersComponent} from "./pages/assigned-new-users/assigned-new-users.component";
+import { AssignedNewUsersComponent } from "./pages/assigned-new-users/assigned-new-users.component";
 import { PotentialUserComponent } from './pages/potential-user/potential-user.component';
 import { BulkReAssignDialogComponent } from './components/bulk-re-assign-dialog/bulk-re-assign-dialog.component';
 import { ItrStatusDialogComponent } from './components/itr-status-dialog/itr-status-dialog.component';
 import { ReAssignActionDialogComponent } from './components/re-assign-action-dialog/re-assign-action-dialog.component';
 import { ChatOptionsDialogComponent } from './components/chat-options/chat-options-dialog.component';
 import { ScheduledCallReassignDialogComponent } from './components/scheduled-call-reassign-dialog/scheduled-call-reassign-dialog.component';
+import { ItrAssignedUsersComponent } from './pages/itr-assigned-users/itr-assigned-users.component';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TasksRoutingModule,
-        NgxLoadingModule.forRoot({}),
-        SharedModule,
-        AgGridModule,
-        MaterialModule,
-        NgxPaginationModule
-    ],
-    declarations: [
-        TasksComponent,
-        AssignedUsersComponent,
-        AssignedNewUsersComponent,
-        ScheduledCallComponent,
-        ReAssignDialogComponent,
-        FilingsComponent,
-        MoreOptionsDialogComponent,
-        SignUpExceptionsComponent,
-        ExceptionsComponent,
-        EriExceptionsComponent,
-        EVerificationDialogComponent,
-        ItrLifecycleDialogComponent,
-        PotentialUserComponent,
-        BulkReAssignDialogComponent,
-        ItrStatusDialogComponent,
-        ChatOptionsDialogComponent,
-        ReAssignActionDialogComponent,
-        ScheduledCallReassignDialogComponent,
-    ],
-    entryComponents: [
-        ReAssignDialogComponent,
-        MoreOptionsDialogComponent,
-        EVerificationDialogComponent,
-        ItrLifecycleDialogComponent,
-        BulkReAssignDialogComponent
-    ],
-    exports:[
-      MoreOptionsDialogComponent
-    ],
-  schemas:[
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TasksRoutingModule,
+    NgxLoadingModule.forRoot({}),
+    SharedModule,
+    AgGridModule,
+    MaterialModule,
+    NgxPaginationModule,
+    OverlayModule
+  ],
+  declarations: [
+    TasksComponent,
+    AssignedUsersComponent,
+    AssignedNewUsersComponent,
+    ScheduledCallComponent,
+    ReAssignDialogComponent,
+    FilingsComponent,
+    MoreOptionsDialogComponent,
+    SignUpExceptionsComponent,
+    ExceptionsComponent,
+    EriExceptionsComponent,
+    EVerificationDialogComponent,
+    ItrLifecycleDialogComponent,
+    PotentialUserComponent,
+    BulkReAssignDialogComponent,
+    ItrStatusDialogComponent,
+    ChatOptionsDialogComponent,
+    ReAssignActionDialogComponent,
+    ScheduledCallReassignDialogComponent,
+    ItrAssignedUsersComponent,
+  ],
+  entryComponents: [
+    ReAssignDialogComponent,
+    MoreOptionsDialogComponent,
+    EVerificationDialogComponent,
+    ItrLifecycleDialogComponent,
+    BulkReAssignDialogComponent
+  ],
+  exports: [
+    MoreOptionsDialogComponent
+  ],
+  schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ]
 
