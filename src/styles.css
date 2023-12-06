@@ -459,6 +459,11 @@ header {
   }  
 /* Style the left aside ends */
 
+.subTx{
+  font-size:12px;
+  color:#f1f1f1;
+}
+
 /* Bread Crumb Css */
   .rectangleB {
     position: relative;
