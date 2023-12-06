@@ -21,17 +21,17 @@
         <div class="surround">
           <div class="row">
             <div class="col-sm-12 bckClr">
-              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
-              (sendPrincipleIndividual)="fromPrinciple($event)"[skipChild]= false></app-sme-list-drop-down>
+              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [isInternal]="isInternal"
+                (sendPrincipleIndividual)="fromPrinciple($event)" [skipChild]=false></app-sme-list-drop-down>
             </div>
             <div class="col-sm-4">
               <mat-label>Select Status</mat-label>
               <mat-form-field appearance="outline">
-                  <mat-select [formControl]="selectedStatus" #selectRoleKey  [disabled]="true">
-                    <mat-option *ngFor="let drop of statusList" [value]="drop.value" (click)="getStatusValue(drop)">
-                     {{ drop.name }}
-                    </mat-option>
-                  </mat-select>
+                <mat-select [formControl]="selectedStatus" #selectRoleKey [disabled]="true">
+                  <mat-option *ngFor="let drop of statusList" [value]="drop.value" (click)="getStatusValue(drop)">
+                    {{ drop.name }}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
             <div class="col-sm-4 spsTp">
