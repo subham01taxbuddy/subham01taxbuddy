@@ -63,20 +63,28 @@
             "
           >
             <span class="txLf">Jurisdiction of Residence: </span>
+            <br />
             <span
-              class="txMuLf"
+              class="txMuLf" style="margin:0%"
               *ngFor="
                 let jurisdiction of finalCalculations?.personalInfo
                   ?.JurisdictionResPrevYrDtls;
                 let i = index
               "
             >
-              <span>
-                {{ jurisdiction?.JurisdictionResidence }}
-              </span>
-              <span>
-                {{ jurisdiction?.TIN }}
-              </span>
+              <div>
+                <span>
+                  {{ i + 1 }}.
+                </span>
+
+                <span>
+                  {{ jurisdiction?.JurisdictionResidence }}
+                </span>
+
+                <span>
+                  {{ jurisdiction?.TIN }}
+                </span>
+              </div>
             </span>
           </div>
           <div class="txBt">

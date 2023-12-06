@@ -662,6 +662,7 @@ export class SummaryComponent implements OnInit {
   };
   natureOfBusiness: any = [];
   business44adDetails: any = [];
+  countryCodeList: any;
 
   constructor(
     private itrMsService: ItrMsService,
@@ -694,7 +695,7 @@ export class SummaryComponent implements OnInit {
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
     this.loading = true;
-
+    this.countryCodeList = this.utilsService.getCountryCodeList();
     this.calculations();
 
     // Setting the ITR Type in ITR Object and updating the ITR_Type
@@ -2047,9 +2048,16 @@ export class SummaryComponent implements OnInit {
               JurisdictionResPrevYrDtls:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
                   ?.FilingStatus?.ResidentialStatus === 'NRI'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.PartA_GEN1?.FilingStatus?.JurisdictionResPrevYr
-                      ?.JurisdictionResPrevYrDtls
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][
+                      this.itrType
+                    ]?.PartA_GEN1?.FilingStatus?.JurisdictionResPrevYr?.JurisdictionResPrevYrDtls?.map(
+                      (element) => ({
+                        JurisdictionResidence: this.getCountry(
+                          element?.JurisdictionResidence
+                        ),
+                        TIN: element?.TIN,
+                      })
+                    )
                   : null,
 
               returnType:
@@ -5936,6 +5944,19 @@ export class SummaryComponent implements OnInit {
 
     const business44AD = Object.values(combinedObjects);
     this.business44adDetails = business44AD;
+  }
+
+  getCountry(code) {
+    const countryCodeList = this.countryCodeList;
+
+    for (const countryString of countryCodeList) {
+      const [countryCode, countryName] = countryString.split(':');
+      if (countryCode === code.toString()) {
+        return `${countryCode}- ${countryName}`;
+      }
+    }
+
+    return 'Country not found';
   }
 }
 
