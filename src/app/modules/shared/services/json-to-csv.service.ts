@@ -14,7 +14,6 @@ export class JsonToCsvService {
   }
 
   downloadFile(data, fields, filename = 'data') {
-    debugger
     let csvData = this.ConvertToCSV(data, fields);
     console.log(csvData)
     let blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
@@ -66,7 +65,7 @@ export class JsonToCsvService {
           }
         } else {
           if ((array[i][head]) instanceof Array) {
-            line += ',' + array[i][head].join(' ');
+            line += ',' + array[i][head].join('; ');
           } else {
             line += ',' + array[i][head];
           }
