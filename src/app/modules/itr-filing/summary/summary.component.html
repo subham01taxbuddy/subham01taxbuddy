@@ -5584,8 +5584,8 @@
                       </table>
                     </div>
 
-                    <div style="margin-top: 5px; padding: 10px;">
-                      <div class="bxHed" style="margin-top: 0px;">
+                    <div style="margin-top: 5px; padding: 10px">
+                      <div class="bxHed" style="margin-top: 0px">
                         TDS B/F Details (Other Than Salary)
                       </div>
                       <table
@@ -5759,6 +5759,70 @@
                           </tr>
                         </tbody>
                       </table>
+
+                      <div style="padding:20px">
+                        <div class="bxHed">TCS B/F Details</div>
+                        <table
+                          class="table table-bordered table-striped table-hover"
+                        >
+                          <thead>
+                            <tr>
+                              <th style="font-weight: bold; width: 20%">
+                                Year of TDS Deduction
+                              </th>
+                              <th style="font-weight: bold; width: 25%">
+                                TDS Amount
+                              </th>
+                              <th style="font-weight: bold; width: 35%">
+                                Income
+                              </th>
+                              <th style="font-weight: bold; width: 20%">
+                                TDS credit claimed this year
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr
+                              *ngFor="let tcs of finalCalculations?.taxPaid?.tcs"
+                            >
+                              <td>{{ tcs?.DeductedYr }}</td>
+                              <td>
+                                {{
+                                  utilsService.currencyFormatter(
+                                    tcs?.BroughtFwdTDSAmt
+                                  )
+                                }}
+                              </td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    tcs?.TCSAmtCollOwnHand
+                                  )
+                                }}
+                              </td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    tcs?.TCSAmtCollOwnHand
+                                  )
+                                }}
+                              </td>
+                            </tr>
+  
+                            <tr>
+                              <th>Total Amount</th>
+                              <th></th>
+                              <th></th>
+                              <th>
+                                Rs.
+                                {{ finalCalculations?.taxPaid?.totalTcs }}
+                              </th>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
 
                     <!-- othertanTDSTCS -->
