@@ -64,6 +64,19 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
   disableCheckboxes = false;
   dataOnLoad = true;
   showCsvMessage: boolean;
+  selectRoleFilter = [
+    { value: '&roles=ROLE_LEADER&internal=true', name: 'Leader- Internal' },
+    { value: '&roles=ROLE_FILER&partnerType=INDIVIDUAL&internal=true', name: 'Filer Individual- Internal' },
+    { value: '&roles=ROLE_FILER&partnerType=INDIVIDUAL&internal=false', name: 'Filer Individual- External' },
+    { value: '&roles=ROLE_FILER&partnerType=PRINCIPAL&internal=false', name: ' Filer Principal/Firm- External' },
+    { value: '&roles=ROLE_FILER&partnerType=CHILD &internal=false', name: ' Filer Assistant- External' },
+
+  ]
+  selectRole = new FormControl();
+  searchVal: string = "";
+  showError: boolean = false;
+  searchAsPrinciple :boolean =false;
+  partnerType:any;
 
   constructor(
     public datePipe: DatePipe,
@@ -97,14 +110,16 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.roles = this.loggedInSme[0]?.roles;
+    this.partnerType = this.loggedInSme[0]?.partnerType;
 
-    if (this.roles?.includes('ROLE_OWNER')) {
-      this.ownerId = this.loggedInSme[0].userId;
+    if (this.roles?.includes('ROLE_LEADER')) {
+      this.leaderId = this.loggedInSme[0].userId;
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
 
     if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+      this.agentId =  this.loggedInSme[0]?.userId;
       this.showReports();
     } else{
       this.dataOnLoad = false;
@@ -112,56 +127,68 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
     // this.showReports()
   }
 
-  ownerId: number;
+  clearValue() {
+    this.searchVal = "";
+    this.leaderId = null;
+    this.filerId = null;
+    this.showError = false;
+    this?.smeDropDown?.resetDropdown();
+  }
+  getRoleValue(role) {
+
+  }
+
   filerId: number;
   agentId: number;
   leaderId: number;
 
-  fromSme(event, isOwner) {
+  fromSme(event, isOwner,fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
-      this.ownerId = event ? event.userId : null;
-      this.disableCheckboxes = true
+      this.leaderId = event ? event.userId : null;
     } else {
-      this.filerId = event ? event.userId : null;
-
+      if(fromPrinciple){
+        if (event?.partnerType === 'PRINCIPAL') {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = true;
+        } else {
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }else{
+        if(event){
+          this.filerId = event ? event.userId : null;
+          this.searchAsPrinciple = false;
+        }
+      }
     }
     if (this.filerId) {
       this.agentId = this.filerId;
-
-    } else if (this.ownerId) {
-      this.agentId = this.ownerId;
-
+    } else if (this.leaderId) {
+      this.agentId = this.leaderId;
     } else {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
-    if (this.ownerId || this.filerId) {
-      this.disableCheckboxes = true;
-    } else {
-      this.disableCheckboxes = false;
+
+    if(this.roles.includes('ROLE_ADMIN')){
+      if (this.leaderId || this.filerId) {
+        this.disableCheckboxes = true;
+      } else {
+        this.disableCheckboxes = false;
+      }
+    }else if(this.roles?.includes('ROLE_LEADER')){
+      if (this.filerId) {
+        this.disableCheckboxes = true;
+      } else {
+        this.disableCheckboxes = false;
+      }
     }
 
-  }
-
-  fromSme1(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.leaderId = event ? event.userId : null;
-    }
-    if (this.ownerId) {
-      this.agentId = this.ownerId;
-    }
-
-    if (this.leaderId || this.ownerId) {
-      this.disableCheckboxes = true;
-    } else {
-      this.disableCheckboxes = false;
-    }
   }
 
   showReports(pageChange?) {
-    // https://uat-api.taxbuddy.com/report/calling-report/itr-filing-report?fromDate=2023-04-01&toDate=2023-05-27&page=0&pageSize=20&leaderUserId=9523'
+    //https://uat-api.taxbuddy.com/report/bo/calling-report/itr-filing-report?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
     if(!pageChange){
       this.cacheManager.clearCache();
       console.log('in clear cache')
@@ -171,48 +198,54 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    let param = '';
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
+    }
+
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =true;
+
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =false;
+    }
+
+    let param = ''
     let userFilter = '';
-    if (this.ownerId && !this.filerId && !pageChange) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    if (this.leaderId && !this.filerId && !pageChange) {
       this.searchParam.page = 0;
       this.config.currentPage = 1
-    }
-
-    if (this.ownerId && pageChange) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
-    }
-
-    if (this.filerId && !pageChange) {
-      userFilter += `&filerUserId=${this.filerId}`;
-      this.searchParam.page = 0;
-      this.config.currentPage = 1;
-    }
-
-    if (this.filerId && pageChange) {
-      userFilter += `&filerUserId=${this.filerId}`;
-    }
-
-    if (this.leaderId && !pageChange) {
       userFilter += `&leaderUserId=${this.leaderId}`;
-      this.searchParam.page = 0;
-      this.config.currentPage = 1;
     }
 
     if (this.leaderId && pageChange) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
 
-    let viewFilter = '';
-    if (this.ownerView.value === true && !pageChange) {
+    if (this.filerId && this.searchAsPrinciple === true && !pageChange) {
       this.searchParam.page = 0;
-      this.config.currentPage = 1;
-      viewFilter += `&ownerView=${this.ownerView.value}`
+      this.config.currentPage = 1
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
     }
-    if (this.ownerView.value === true && pageChange) {
-      viewFilter += `&ownerView=${this.ownerView.value}`
+    if (this.filerId && this.searchAsPrinciple === true && pageChange) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false && !pageChange) {
+      this.searchParam.page = 0;
+      this.config.currentPage = 1
+      userFilter += `&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false && pageChange) {
+      userFilter += `&filerUserId=${this.filerId}`;
     }
 
+    let roleFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectRole.value) && this.selectRole.valid)) {
+      roleFilter = this.selectRole.value;
+    }
+
+    let viewFilter = '';
     if (this.leaderView.value === true && !pageChange) {
       this.searchParam.page = 0;
       this.config.currentPage = 1;
@@ -224,7 +257,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
 
     let data = this.utilsService.createUrlParams(this.searchParam);
 
-    param = `/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${viewFilter}`;
+    param = `/bo/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}&${data}${userFilter}${roleFilter}${viewFilter}`;
 
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
@@ -254,15 +287,27 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
     for (let i = 0; i < fillingData.length; i++) {
       let agentReportInfo = Object.assign({}, fillingRepoInfoArray[i], {
         filerName: fillingData[i].filerName,
-        itr1: fillingData[i].itr1,
-        itr2: fillingData[i].itr2,
-        itr3: fillingData[i].itr3,
-        itr4: fillingData[i].itr4,
-        otherItr: fillingData[i].otherItr,
-        itrU: fillingData[i].itrU,
-        totalItrFiled: fillingData[i].totalItrFiled,
-        ownerName: fillingData[i].ownerName,
         leaderName: fillingData[i].leaderName,
+        role : fillingData[i].role,
+        itr1Original: fillingData[i].itr1Original,
+        itr1Revise: fillingData[i].itr1Revise,
+        itr1Payment: fillingData[i].itr1Payment,
+        itr2Original: fillingData[i].itr2Original,
+        itr2Revise: fillingData[i].itr2Revise,
+        itr2Payment: fillingData[i].itr2Payment,
+        itr3Original: fillingData[i].itr3Original,
+        itr3Revise: fillingData[i].itr3Revise,
+        itr3Payment: fillingData[i].itr3Payment,
+        itr4Original: fillingData[i].itr4Original,
+        itr4Revise: fillingData[i].itr4Revise,
+        itr4Payment: fillingData[i].itr4Payment,
+        itrOthersOriginal: fillingData[i].itrOthersOriginal,
+        itrOthersRevise: fillingData[i].itrOthersRevise,
+        itrU: fillingData[i].itrU,
+        itrUPayment:fillingData[i].itrUPayment,
+        otherPayment:fillingData[i].otherPayment,
+        totalItrFiled: fillingData[i].totalItrFiled,
+        totalPayment: fillingData[i].totalPayment,
       })
       fillingRepoInfoArray.push(agentReportInfo);
     }
@@ -274,12 +319,27 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
   reportsCodeColumnDef(view) {
     return [
       {
+        headerName: 'Sr. No.',
+        width: 40,
+        pinned: 'left',
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        valueGetter: function (params) {
+          return params.node.rowIndex + 1;
+        }
+      },
+      {
         // headerName: (view == 'leader' ? 'Leader Name' : (view == 'owner' ? 'Owner Name And Team' : 'Filer Name')),
         // headerName: (view === 'leader' ? 'Leader Name ' : 'Filer Name') || (view === 'owner' ? 'Owner Name And Team':'Filer Name'),
         // field: (view === 'leader' ? 'leaderName' : (view === 'owner' ? 'ownerName' : 'filerName')),
 
         headerName: (view === 'leader' ? 'Leader Name' : (view === 'owner' ? 'Owner Name And Team' : 'Filer Name')),
-        field: (view === 'leader' ? 'leaderName' : (view === 'owner' ? 'ownerName' : 'filerName')),
+        field: 'filerName',
         sortable: true,
         width: 150,
         pinned: 'left',
@@ -292,10 +352,10 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
         },
       },
       {
-        headerName: 'Total ITR Filed',
-        field: 'totalItrFiled',
+        headerName: 'Role',
+        field: 'role',
         sortable: true,
-        width: 110,
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -305,10 +365,233 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
         }
       },
       {
-        headerName: 'ITR 1',
-        field: 'itr1',
+        headerName: 'ITR wise filing count',
+        headerClass: 'centered-header',
+        children: [
+          {
+            headerName: 'ITR 1',
+            headerClass: 'centered-header',
+            children: [
+              {
+                headerName :'Original',
+                field: 'itr1Original',
+                sortable: true,
+                width: 80,
+                suppressMovable: true,
+                cellStyle: { textAlign: 'center' },
+              },
+              {
+                headerName :'Revised',
+                field: 'itr1Revise',
+                sortable: true,
+                width: 80,
+                suppressMovable: true,
+                cellStyle: { textAlign: 'center' },
+              }
+            ],
+          },
+          {
+            headerName: 'ITR 2',
+            headerClass: 'centered-header',
+            children: [
+              {
+                headerName :'Original',
+                field: 'itr2Original',
+                sortable: true,
+                width: 80,
+                suppressMovable: true,
+                cellStyle: { textAlign: 'center' },
+              },
+              {
+                headerName :'Revised',
+                field: 'itr2Revise',
+                sortable: true,
+                width: 80,
+                suppressMovable: true,
+                cellStyle: { textAlign: 'center' },
+              }
+            ],
+
+          },
+          {
+            headerName: 'ITR 3',
+            headerClass: 'centered-header',
+            children: [
+              {
+                headerName :'Original',
+                field: 'itr3Original',
+                sortable: true,
+                width: 80,
+                suppressMovable: true,
+                cellStyle: { textAlign: 'center' },
+              },
+              {
+                headerName :'Revised',
+                field: 'itr3Revise',
+                sortable: true,
+                width: 80,
+                suppressMovable: true,
+                cellStyle: { textAlign: 'center' },
+              }
+            ],
+          },
+          {
+            headerName: 'ITR 4',
+            headerClass: 'centered-header',
+            children: [
+              {
+                headerName :'Original',
+                field: 'itr4Original',
+                sortable: true,
+                width: 80,
+                suppressMovable: true,
+                cellStyle: { textAlign: 'center' },
+              },
+              {
+                headerName :'Revised',
+                field: 'itr4Revise',
+                sortable: true,
+                width: 80,
+                suppressMovable: true,
+                cellStyle: { textAlign: 'center' },
+              }
+            ],
+          },
+          {
+            headerName: 'Others ITR',
+            headerClass: 'centered-header',
+            children: [
+              {
+                headerName :'Original',
+                field: 'itrOthersOriginal',
+                sortable: true,
+                width: 80,
+                suppressMovable: true,
+                cellStyle: { textAlign: 'center' },
+              },
+              {
+                headerName :'Revised',
+                field: 'itrOthersRevise',
+                sortable: true,
+                width: 80,
+                suppressMovable: true,
+                cellStyle: { textAlign: 'center' },
+              }
+            ],
+          },
+          {
+            headerName: 'ITR U',
+            field: 'itrU',
+            sortable: true,
+            width: 100,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center' },
+          },
+        ],
+      },
+      {
+        headerName: '',
+        headerClass: 'vertical-line',
+        width: 0,
+        suppressMovable: true,
+        cellStyle: {
+          borderRight: '3px solid #ccc',
+          backgroundColor: '#fff',
+        },
+      },
+      {
+          headerName: 'Total ITR Filed',
+          field: 'totalItrFiled',
+          sortable: true,
+          width: 150,
+          suppressMovable: true,
+          cellStyle: { textAlign: 'center' },
+          filter: "agTextColumnFilter",
+          filterParams: {
+            filterOptions: ["contains", "notContains"],
+            debounceMs: 0
+          }
+        },
+        {
+          headerName: '',
+          headerClass: 'vertical-line',
+          width: 0,
+          suppressMovable: true,
+          cellStyle: {
+            borderRight: '3px solid #ccc',
+            backgroundColor: '#fff',
+          },
+        },
+
+      {
+        headerName: 'ITR wise payment collection',
+        headerClass: 'centered-header',
+        children: [
+          {
+            headerName: 'ITR 1',
+            field: 'itr1Payment',
+            sortable: true,
+            width: 100,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center' },
+          },
+          {
+            headerName: 'ITR 2',
+            field: 'itr2Payment',
+            sortable: true,
+            width: 100,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center' },
+          },
+          {
+            headerName: 'ITR 3',
+            field: 'itr3Payment',
+            sortable: true,
+            width: 100,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center' },
+          },
+          {
+            headerName: 'ITR 4',
+            field: 'itr4Payment',
+            sortable: true,
+            width: 100,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center' },
+          },
+          {
+            headerName: 'Other ITR',
+            field: 'otherPayment',
+            sortable: true,
+            width: 110,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center' },
+          },
+          {
+            headerName: 'ITR U',
+            field: 'itrUPayment',
+            sortable: true,
+            width: 100,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center' },
+          },
+        ]
+      },
+      {
+        headerName: '',
+        headerClass: 'vertical-line',
+        width: 0,
+        suppressMovable: true,
+        cellStyle: {
+          borderRight: '3px solid #ccc',
+          backgroundColor: '#fff',
+        },
+      },
+      {
+        headerName: 'Total Payment',
+        field: 'totalPayment',
         sortable: true,
-        width: 100,
+        width: 150,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -318,87 +601,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
         }
       },
       {
-        headerName: 'ITR 2',
-        field: 'itr2',
-        sortable: true,
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'ITR 3',
-        field: 'itr3',
-        sortable: true,
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'ITR 4',
-        field: 'itr4',
-        sortable: true,
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Other ITR',
-        field: 'otherItr',
-        sortable: true,
-        width: 110,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'ITR U',
-        field: 'itrU',
-        sortable: true,
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Owner Name',
-        field: 'ownerName',
-        hide: view === 'leader' ? true : false,
-        sortable: true,
-        width: 140,
-        pinned: 'right',
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
-      {
-        headerName: 'Leader Name',
+        headerName: 'Parent Name',
         field: 'leaderName',
         sortable: true,
         width: view === 'leader' ? 200 : 140,
@@ -417,24 +620,35 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
   async downloadReport() {
     this.loading = true;
     this.showCsvMessage = true;
-    let param = ''
-    let userFilter = '';
-    if (this.ownerId && !this.filerId) {
-      userFilter += `&ownerUserId=${this.ownerId}`;
+    let param = '';
+    let loggedInId = this.utilsService.getLoggedInUserID();
+    if(this.roles.includes('ROLE_LEADER')){
+      this.leaderId = loggedInId
     }
+    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =true;
 
-    if (this.filerId) {
+    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
+      this.filerId = loggedInId ;
+      this.searchAsPrinciple =false;
+    }
+    let userFilter = '';
+    if (this.leaderId && !this.filerId ) {
+      userFilter += `&leaderUserId=${this.leaderId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === true ) {
+      userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
+    }
+    if (this.filerId && this.searchAsPrinciple === false) {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    if (this.leaderId) {
-      userFilter += `&leaderUserId=${this.leaderId}`;
+    let roleFilter = '';
+    if ((this.utilsService.isNonEmpty(this.selectRole.value) && this.selectRole.valid)) {
+      roleFilter = this.selectRole.value;
     }
-
     let viewFilter = '';
-    if (this.ownerView.value === true) {
-      viewFilter += `&ownerView=${this.ownerView.value}`
-    }
     if (this.leaderView.value === true) {
       viewFilter += `&leaderView=${this.leaderView.value}`
     }
@@ -442,8 +656,33 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    param = `/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${viewFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'itr-filing-report');
+    param = `/bo/calling-report/itr-filing-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${roleFilter}${viewFilter}`;
+
+    let fieldName = [
+      { key: 'filerName', value: 'Leader/Filer Name' },
+      { key: 'role', value: 'Role' },
+      { key: 'itr1Original', value: 'ITR-1(Original)' },
+      { key: 'itr1Revise', value: 'ITR-1(Revised)' },
+      { key: 'itr2Original', value: 'ITR-2(Original)' },
+      { key: 'itr2Revise', value: 'ITR-2(Revised)' },
+      { key: 'itr3Original', value: 'ITR-3(Original)' },
+      { key: 'itr3Revise', value: 'ITR-3(Revised)' },
+      { key: 'itr4Original', value: 'ITR-4(Original)' },
+      { key: 'itr4Revise', value: 'ITR-4(Revised)' },
+      { key: 'itrOthersOriginal', value: 'Others ITR(Original)' },
+      { key: 'itrOthersRevise', value: 'Others ITR(Revised)' },
+      { key: 'itrU', value: 'ITR U' },
+      { key: 'totalItrFiled', value: 'Total ITR Filed' },
+      { key: 'itr1Payment', value: 'ITR 1 Payment' },
+      { key: 'itr2Payment', value: 'ITR 2 Payment' },
+      { key: 'itr3Payment', value: 'ITR 3 Payment' },
+      { key: 'itr4Payment', value: 'ITR 4 Payment' },
+      { key: 'otherPayment', value: 'Other ITR Payment' },
+      { key: 'itrUPayment', value: 'ITR U Payment' },
+      { key: 'totalPayment', value: 'Total Payment' },
+      { key: 'leaderName', value: 'Parent Name' },
+    ]
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'itr-filing-report',fieldName,{});
     this.loading = false;
     this.showCsvMessage = false;
   }
@@ -451,6 +690,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
+    this.selectRole.setValue(null);
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
@@ -463,8 +703,8 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
     this.ownerView.setValue(false);
     this?.smeDropDown?.resetDropdown();
     this?.leaderDropDown?.resetDropdown();
-    if (this.roles?.includes('ROLE_OWNER')) {
-      this.ownerId = this.loggedInSme[0].userId;
+    if (this.roles?.includes('ROLE_LEADER')) {
+      this.leaderId = this.loggedInSme[0].userId;
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }

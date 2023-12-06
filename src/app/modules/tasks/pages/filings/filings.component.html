@@ -1,4 +1,7 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
+  move
+  away from the page...</span>
 <!-- New Open Close Filter Starts -->
 <div class="mrgArdTog">
   <mat-accordion class="headers-align">
@@ -12,78 +15,47 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
-              <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner
-              </mat-slide-toggle>
+            <div class="col-sm-12 bckClr" >
+              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
-
-            <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
-              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event)"
-                (sendFiler)="fromFiler($event)"></app-sme-list-drop-down>
-            </div>
-
-            <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-              <app-co-owner-list-drop-down #coOwnerDropDown (sendCoOwner)="fromCoOwner($event)"
-                (sendCoFiler)="fromCoFiler($event)"></app-co-owner-list-drop-down>
-            </div>
-
-            <div class="col-sm-2 spsTp">
+            <div class="col-sm-3 spsTp">
               <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
             </div>
-            <!--      <div class="filter__col card__col-sm-3 card__col-xs-12" *ngIf="agents.length>0">-->
-            <!--        <app-sme-list-drop-down (sendSme)="fromSme($event)"></app-sme-list-drop-down>-->
-            <!--      </div>-->
-            <div class="col-sm-2 spsTp">
+            <!-- <div class="col-sm-3 spsTp ">
+              <mat-label>Select Status</mat-label>
               <mat-form-field appearance="outline">
-                <mat-label>Select Status</mat-label>
                 <mat-select placeholder="Select Status" [(ngModel)]="searchParams.selectedStatusId">
                   <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
                     {{ status.statusName }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-            </div>
-            <div class="col-sm-2 spsTp">
-              <mat-form-field appearance="outline">
-                <mat-label>Mobile Number: </mat-label>
-                <input matInput placeholder="Enter Mobile Number" type="text" [(ngModel)]="searchParams.mobileNumber"
-                  maxlength="10" digitsOnly />
-              </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-              <mat-form-field appearance="outline">
-                <mat-label>Email Address: </mat-label>
-                <input matInput placeholder="Enter Email Address" [(ngModel)]="searchParams.email" maxlength="50" />
-              </mat-form-field>
-            </div>
-            <div class="col-sm-2 spsTp">
-              <mat-form-field appearance="outline">
-                <mat-label>PAN</mat-label>
-                <input matInput placeholder="PAN Number" autocomplete="off" type="text" maxlength="10" minlength="10"
-                  upperCase [(ngModel)]="searchParams.panNumber" />
-                <!-- (blur)="getUserInfoByPan(personalInfoForm.controls['panNumber'])"
-                          <mat-error *ngIf="personalInfoForm.controls['panNumber'].hasError('required')">
-                              Enter PAN number
-                          </mat-error>
-                          <mat-error *ngIf="personalInfoForm.controls['panNumber'].hasError('pattern')">
-                              Enter valid PAN
-                              (e.g XXXXX1234X)</mat-error> -->
-              </mat-form-field>
+            </div> -->
+
+            <div class="col-6">
+              <app-generic-user-filter [searchParameter]="searchMenus"
+                  [clearUserFilter]="clearUserFilter"
+                  (onChange)="searchByObject($event)"></app-generic-user-filter>
             </div>
 
             <div class="row spsTp bdrTp">
-              <div class="col-6" *ngIf="false">
-                <app-generic-sorting [sortingParameter]="sortMenus"
+              <div class="col-6">
+                <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                   (onChange)="sortByObject($event)"></app-generic-sorting>
               </div>
               <div class="col-sm-6">
                 <div class="col-sm-12">
+                  <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
+                    <i class="fa fa-download" aria-hidden="true"></i> Download File
+                  </button>
                   <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
                     Clear form
                   </button>
                   <button class="srch-btn mvRth" [disabled]="loading" (click)="this.search()">
                     <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
                   </button>
+
                 </div>
                 <div class="col-sm-12 row">
                   <span class="note1 note">

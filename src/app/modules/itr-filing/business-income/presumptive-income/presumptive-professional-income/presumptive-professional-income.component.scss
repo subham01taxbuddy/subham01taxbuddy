@@ -1,9 +1,17 @@
-th.mat-header-cell, td.mat-cell {
-    text-align: center;
-    border: 1px solid #CCC;
-    padding: 0 !important;
+th.mat-header-cell,
+td.mat-cell {
+  text-align: center;
+  border: 1px solid #ccc;
+  padding: 0 !important;
 }
 
 table {
-    width: 100%;
-    }
+  width: 100%;
+}
+
+.detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}

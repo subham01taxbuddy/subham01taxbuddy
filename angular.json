@@ -94,10 +94,11 @@
               "outputHashing": "all",
               "sourceMap": true,
               "namedChunks": true,
-              "aot": false,
+              "aot": true,
               "extractLicenses": false,
               "vendorChunk": false,
-              "buildOptimizer": false
+              "buildOptimizer": true,
+              "serviceWorker": true
             },
             "staging": {
               "optimization": true,

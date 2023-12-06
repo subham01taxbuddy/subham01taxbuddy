@@ -13,6 +13,7 @@ import {
   FormBuilder,
   FormArray,
   ValidationErrors,
+  FormControl,
 } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -79,6 +80,7 @@ export class PersonalInformationComponent implements OnInit {
   fillingMaxDate: any = new Date();
   config: any;
   selectedIndexes: number[] = [];
+  selectionChangeValue: number = 0;
 
   countryDropdown = [
     {
@@ -2152,22 +2154,22 @@ export class PersonalInformationComponent implements OnInit {
     {
       nature:
         'If his total sales, turnover or gross receipts, as the case maybe, in the business exceeds sixty lakh rupees during the previous year; or',
-      value: '1',
+      value: 0,
     },
     {
       nature:
         'If his total gross receipts in profession exceeds ten lakh rupees during the previous year; or',
-      value: '2',
+      value: 1,
     },
     {
       nature:
         'If the aggregate of tax deducted at source and tax collected at source during the previous year, in the case of the person, is twenty-five thousand rupees (fifty-thousand for resident senior citizen) or more; or',
-      value: '3',
+      value: 2,
     },
     {
       nature:
         'The deposits in one or more savings bank account of the person, in aggregate, is rupees fifty lakh or more, during the previous year.',
-      value: '4',
+      value: 3,
     },
   ];
 
@@ -2288,11 +2290,11 @@ export class PersonalInformationComponent implements OnInit {
       seventhProviso139: this.fb.group({
         seventhProvisio139: 'N',
         strDepAmtAggAmtExcd1CrPrYrFlg: 'N',
-        depAmtAggAmtExcd1CrPrYrFlg: [null, Validators.min(10000000)],
+        depAmtAggAmtExcd1CrPrYrFlg: [null],
         strIncrExpAggAmt2LkTrvFrgnCntryFlg: 'N',
-        incrExpAggAmt2LkTrvFrgnCntryFlg: null,
+        incrExpAggAmt2LkTrvFrgnCntryFlg: [null],
         strIncrExpAggAmt1LkElctrctyPrYrFlg: 'N',
-        incrExpAggAmt1LkElctrctyPrYrFlg: null,
+        incrExpAggAmt1LkElctrctyPrYrFlg: [null],
         clauseiv7provisio139i: 'N',
         clauseiv7provisio139iDtls: this.fb.array([
           this.fb.group({
@@ -2359,7 +2361,9 @@ export class PersonalInformationComponent implements OnInit {
     if (bankDetails.valid) {
       bankDetails.push(this.createBankDetailsForm());
     } else {
-      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
+        .first()
+        .focus();
       console.log('add above details first');
     }
   }
@@ -2646,8 +2650,16 @@ export class PersonalInformationComponent implements OnInit {
       this.ITR_JSON.panNumber
     );
 
+    if(!this.ITR_JSON.declaration){
+      this.ITR_JSON.declaration = {capacity: "", childOf: "", name: "", panNumber: "", place: ""};
+    }
+    this.ITR_JSON.declaration.panNumber = this.ITR_JSON.panNumber;
+
     if (!this.isFormValid()) {
-      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
+      $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
+        .first()
+        .focus();
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
       this.personalInfoSaved.emit(false);
       return;
     }
@@ -2666,6 +2678,13 @@ export class PersonalInformationComponent implements OnInit {
       }
     });
 
+    const clauseIvArray = this.getClauseiv7provisio139iDtls;
+
+    clauseIvArray?.controls.forEach((element, index) => {
+      const value = element.get('nature')?.value;
+      this.onSelectionChange(value);
+    });
+
     if (this.customerProfileForm.valid) {
       this.loading = true;
 
@@ -2680,9 +2699,9 @@ export class PersonalInformationComponent implements OnInit {
             JSON.stringify(this.ITR_JSON)
           );
           this.loading = false;
-          this.utilsService.showSnackBar(
-            'Customer profile updated successfully.'
-          );
+          // this.utilsService.showSnackBar(
+          //   'Customer profile updated successfully.'
+          // );
           this.personalInfoSaved.emit(true);
 
           if (!ref) {
@@ -2696,7 +2715,7 @@ export class PersonalInformationComponent implements OnInit {
       );
     } else {
       this.loading = false;
-      $('input.ng-invalid').first().focus();
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
       this.personalInfoSaved.emit(false);
     }
   }
@@ -2874,13 +2893,16 @@ export class PersonalInformationComponent implements OnInit {
         ClauseIv.removeAt(0);
       }
 
-      classIvDtls?.forEach((element) => {
+      classIvDtls?.forEach((element, i) => {
         const formGroup = this.fb.group({
-          nature: element.nature,
+          nature: parseFloat(element.nature),
           amount: element.amount,
         });
         ClauseIv?.push(formGroup);
         console.log(ClauseIv);
+
+        // setting validators for each input added
+        this.onSelectionChange(i);
       });
     }
   }
@@ -2900,7 +2922,7 @@ export class PersonalInformationComponent implements OnInit {
     this.seventhProviso139.get(controlName).updateValueAndValidity();
   }
 
-  // 1
+  // 0
   seventhProvisio139() {
     const seventhProvisio139 = this.seventhProviso139;
     const seventhProvisio139Flag =
@@ -2918,16 +2940,20 @@ export class PersonalInformationComponent implements OnInit {
       this.clearValidator('strIncrExpAggAmt2LkTrvFrgnCntryFlg');
       this.clearValidator('strIncrExpAggAmt1LkElctrctyPrYrFlg');
       this.clearValidator('clauseiv7provisio139i');
+
+      this.strIncrExpAggAmt2LkTrvFrgnCntryFlg();
+      this.strIncrExpAggAmt1LkElctrctyPrYrFlg();
+      this.clauseiv7provisio139i();
+      this.strDepAmtAggAmtExcd1CrPrYrFlg();
     } else {
       // marking questions as not required if seventhProvisio is yes
-      this.setValidator('strDepAmtAggAmtExcd1CrPrYrFlg', [
-        Validators.required,
-        Validators.min(10000000),
-      ]);
+      this.setValidator('strDepAmtAggAmtExcd1CrPrYrFlg', [Validators.required]);
+
       this.setValidator(
         'strIncrExpAggAmt2LkTrvFrgnCntryFlg',
         Validators.required
       );
+
       this.setValidator(
         'strIncrExpAggAmt1LkElctrctyPrYrFlg',
         Validators.required
@@ -2942,7 +2968,7 @@ export class PersonalInformationComponent implements OnInit {
     }
   }
 
-  // 2
+  // 1
   incrExpAggAmt2LkTrvFrgnCntryFlgSaved: any;
   strIncrExpAggAmt2LkTrvFrgnCntryFlg() {
     const seventhProvisio139 = this.seventhProviso139;
@@ -2961,7 +2987,11 @@ export class PersonalInformationComponent implements OnInit {
       twoLakhsFlag?.setValue('N');
       this.clearValidator(twoLakhsFlagKey);
     } else {
-      this.setValidator(twoLakhsFlagKey, Validators.required);
+      this.setValidator(twoLakhsFlagKey, [
+        Validators.required,
+        Validators.min(200001),
+      ]);
+
       // Check if there is saved data and populate the form group
       if (this.incrExpAggAmt2LkTrvFrgnCntryFlgSaved) {
         twoLakhsValue.patchValue(this.incrExpAggAmt2LkTrvFrgnCntryFlgSaved);
@@ -2970,7 +3000,7 @@ export class PersonalInformationComponent implements OnInit {
     }
   }
 
-  // 3
+  // 2
   incrExpAggAmt1LkElctrctyPrYrFlgSaved: any;
   strIncrExpAggAmt1LkElctrctyPrYrFlg() {
     const seventhProvisio139 = this.seventhProviso139;
@@ -2989,7 +3019,11 @@ export class PersonalInformationComponent implements OnInit {
       oneLakhsFlag?.setValue('N');
       this.clearValidator(oneLakhsFlagKey);
     } else {
-      this.setValidator(oneLakhsFlagKey, Validators.required);
+      this.setValidator(oneLakhsFlagKey, [
+        Validators.required,
+        Validators.min(100001),
+      ]);
+
       // Check if there is saved data and populate the form group
       if (this.incrExpAggAmt1LkElctrctyPrYrFlgSaved) {
         oneLakhsValue.patchValue(this.incrExpAggAmt1LkElctrctyPrYrFlgSaved);
@@ -2998,7 +3032,7 @@ export class PersonalInformationComponent implements OnInit {
     }
   }
 
-  // 4
+  // 3
   clauseiv7provisio139iSaved: any;
   clauseiv7provisio139i() {
     const seventhProvisio139 = this.seventhProviso139;
@@ -3012,16 +3046,28 @@ export class PersonalInformationComponent implements OnInit {
       const amount = control.get('amount');
       const nature = control.get('nature');
 
-      if (clauseIvFlag.value === 'N' || seventhProvisio139Flag.value === 'N') {
+      if (
+        !clauseIvFlag.value ||
+        clauseIvFlag.value === 'N' ||
+        seventhProvisio139Flag.value === 'N'
+      ) {
         // Save the data and clear the form group
         this.clauseiv7provisio139iSaved = amount.value;
-        amount.reset();
+        clauseIvFlag.reset();
+        clauseIvFlag.clearValidators();
         clauseIvFlag.setValue('N');
+
+        amount.reset();
         amount.clearValidators();
+        amount.updateValueAndValidity();
+
+        nature.reset();
         nature.clearValidators();
+        nature.updateValueAndValidity();
       } else {
         amount.setValidators(Validators.required);
         nature.setValidators(Validators.required);
+        clauseIvFlag.setValidators(Validators.required);
 
         // Check if there is saved data and populate the form group
         if (this.clauseiv7provisio139iSaved) {
@@ -3032,7 +3078,25 @@ export class PersonalInformationComponent implements OnInit {
     });
   }
 
-  // 5
+  // 3 on selection change
+  onSelectionChange(index?) {
+    const clauseIvArray = this.getClauseiv7provisio139iDtls;
+    const validatorMap = {
+      0: [Validators.required, Validators.min(6000001)],
+      1: [Validators.required, Validators.min(1000001)],
+      2: [Validators.required, Validators.min(25001)],
+      3: [Validators.required, Validators.min(5000001)],
+    };
+
+    let control = clauseIvArray?.controls[index];
+    let selectionValue = (control as FormGroup)?.controls['nature'];
+    let amountControl = (control as FormGroup)?.controls['amount'];
+
+    amountControl?.setValidators(validatorMap[selectionValue.value] || []);
+    amountControl?.updateValueAndValidity();
+  }
+
+  // 4
   depAmtAggAmtExcd1CrPrYrFlgSaved: any;
   strDepAmtAggAmtExcd1CrPrYrFlg() {
     const seventhProvisio139 = this.seventhProviso139;
@@ -3051,8 +3115,10 @@ export class PersonalInformationComponent implements OnInit {
       oneCroreFlag?.setValue('N');
       this.clearValidator(oneCroreFlagKey);
     } else {
-      this.setValidator(oneCroreFlagKey, Validators.required);
-      this.setValidator(oneCroreFlagKey, Validators.min(10000000));
+      this.setValidator(oneCroreFlagKey, [
+        Validators.required,
+        Validators.min(10000001),
+      ]);
 
       // Check if there is saved data and populate the form group
       if (this.depAmtAggAmtExcd1CrPrYrFlgSaved) {

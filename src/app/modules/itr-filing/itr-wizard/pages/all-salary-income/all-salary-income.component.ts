@@ -40,6 +40,7 @@ export class AllSalaryIncomeComponent
   }
 
   updatingTaxableIncome(save?) {
+    this.taxableIncomes = [];
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // Loop through each index in the ITR_JSON.employers array
     if (save) {
@@ -83,6 +84,7 @@ export class AllSalaryIncomeComponent
     const child: WizardNavigation = componentRef;
     child.saveAndNext.subscribe(() => {
       this.initEmployersList();
+      this.updatingTaxableIncome();
       this.showList = true;
     });
   }
@@ -148,6 +150,7 @@ export class AllSalaryIncomeComponent
               JSON.stringify(this.ITR_JSON)
             );
             this.initEmployersList();
+            this.updatingTaxableIncome();
 
             this.loading = false;
             this.utilsService.showSnackBar('Employer deleted Successfully.');

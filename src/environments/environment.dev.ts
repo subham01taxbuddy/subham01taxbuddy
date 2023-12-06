@@ -6,7 +6,7 @@ export const environment = {
     gst_gov_url: "https://devapi.gst.gov.in",
     ifsc_url: "https://ifsc.razorpay.com",
     amazonaws_url: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com",
-    reviewUrl: "https://dfxi9rg1pf.execute-api.us-east-1.amazonaws.com/dev/",
+    reviewUrl: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/",
     isValidItr:false,
     assistedKmScript: '../assets/assisted-km-script-uat.html',
 	  environment:'DEV',
@@ -14,6 +14,8 @@ export const environment = {
     webportal_url: 'https://uat-itr.taxbuddy.com',
     lifecycleUrl: "https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status",
     lifecycleEnv: "dev",
+    validate_km_token: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/validate-token",
+    kmAppId: "5d1fff0257a39f9bb9699a129da55963",
     idleTimeMins: 30,
     ITR_LIFECYCLE: "https://e2gqddb7dcvllacrbnpqjnc53a0oetmd.lambda-url.ap-south-1.on.aws",
     upload_file: 'https://z6sphosqllkzc7ty53ygn7scqa0vnbtf.lambda-url.ap-south-1.on.aws/',
@@ -43,8 +45,8 @@ export const environment = {
     projectId: "taxbuddy-uat",
     storageBucket: "taxbuddy-uat.appspot.com",
     messagingSenderId: "805239680508",
-    appId: "1:805239680508:web:b9258ec04023b0fda05679",
-    measurementId: "G-DMWVKK98X2"
+    appId: "1:805239680508:web:57f68aeeeed74a4aa05679",
+    measurementId: "G-JD9F7FYVWM"
   },
 
   s3_cred: {

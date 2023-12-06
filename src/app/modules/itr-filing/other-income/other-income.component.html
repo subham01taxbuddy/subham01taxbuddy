@@ -17,7 +17,7 @@
             <table class="table table-bordered" style="width: 100%">
               <thead style="background: #eaeaea">
                 <tr class="table-head">
-                  <th class="text-center">Salary Type</th>
+                  <th class="text-center">Income Type</th>
                   <th class="text-center">Gross Amount</th>
                 </tr>
               </thead>
@@ -42,6 +42,160 @@
                         placeholder=""
                         name="incomeValue[i]"
                         formControlName="incomeValue"
+                        type="number"
+                        class="input-field"
+                        maxlength="125"
+                        (blur)="validateIncomeValueOnBlur()"
+                      />
+                    </mat-form-field>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <hr />
+
+          <div>
+            <div class="subTitle">
+             Income from Gift:
+            </div>
+            <table class="table table-bordered" style="width: 100%">
+              <thead style="background: #eaeaea">
+                <tr class="table-head">
+                  <th></th>
+                  <th class="text-center">Whether GIft is received from Relative</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody formGroupName="giftTax">
+                <tr>
+                  <td>
+                    Money received without consideration
+                  </td>
+                  <td>
+                    <mat-checkbox formControlName="aggregateValueWithoutConsiderationNotTaxable">
+                    </mat-checkbox>
+                  </td>
+                  <td>
+                    <mat-form-field
+                      class="input-field-width"
+                      style="width: 90% !important"
+                    >
+                      <input
+                        type="text"
+                        trim
+                        matInput
+                        placeholder=""
+                        formControlName="aggregateValueWithoutConsideration"
+                        type="number"
+                        class="input-field"
+                        maxlength="125"
+                      />
+                    </mat-form-field>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    Immovable property received without consideration
+                  </td>
+                  <td>
+                    <mat-checkbox formControlName="immovablePropertyWithoutConsiderationNotTaxable">
+                    </mat-checkbox>
+                  </td>
+                  <td>
+                    <mat-form-field
+                      class="input-field-width"
+                      style="width: 90% !important"
+                    >
+                      <input
+                        type="text"
+                        trim
+                        matInput
+                        placeholder=""
+                        formControlName="immovablePropertyWithoutConsideration"
+                        type="number"
+                        class="input-field"
+                        maxlength="125"
+                      />
+                    </mat-form-field>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    Immovable property received for inadequate consideration
+                  </td>
+                  <td>
+                    <mat-checkbox formControlName="immovablePropertyInadequateConsiderationNotTaxable">
+                    </mat-checkbox>
+                  </td>
+                  <td>
+                    <mat-form-field
+                      class="input-field-width"
+                      style="width: 90% !important"
+                    >
+                      <input
+                        type="text"
+                        trim
+                        matInput
+                        placeholder=""
+                        formControlName="immovablePropertyInadequateConsideration"
+                        type="number"
+                        class="input-field"
+                        maxlength="125"
+                      />
+                    </mat-form-field>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    Any Other property received without consideration
+                  </td>
+                  <td>
+                    <mat-checkbox formControlName="anyOtherPropertyWithoutConsiderationNotTaxable">
+                    </mat-checkbox>
+                  </td>
+                  <td>
+                    <mat-form-field
+                      class="input-field-width"
+                      style="width: 90% !important"
+                    >
+                      <input
+                        type="text"
+                        trim
+                        matInput
+                        placeholder=""
+                        formControlName="anyOtherPropertyWithoutConsideration"
+                        type="number"
+                        class="input-field"
+                        maxlength="125"
+                      />
+                    </mat-form-field>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    Any Other property received for inadequate consideration
+                  </td>
+                  <td>
+                    <mat-checkbox formControlName="anyOtherPropertyInadequateConsiderationNotTaxable">
+                    </mat-checkbox>
+                  </td>
+                  <td>
+                    <mat-form-field
+                      class="input-field-width"
+                      style="width: 90% !important"
+                    >
+                      <input
+                        type="text"
+                        trim
+                        matInput
+                        placeholder=""
+                        formControlName="anyOtherPropertyInadequateConsideration"
                         type="number"
                         class="input-field"
                         maxlength="125"
@@ -475,7 +629,6 @@
                               lease*</mat-label
                             >
                             <mat-radio-group
-                              name="owner[j]"
                               formControlName="owner"
                               placeholder="owner"
                               required
@@ -504,7 +657,6 @@
                               rain-fed?
                             </mat-label>
                             <mat-radio-group
-                              name="typeOfLand[j]"
                               formControlName="typeOfLand"
                               placeholder="Type Of Land"
                             >

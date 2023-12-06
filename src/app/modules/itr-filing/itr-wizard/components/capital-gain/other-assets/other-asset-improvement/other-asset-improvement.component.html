@@ -3,13 +3,12 @@
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
 
-<form [formGroup]="assetsForm" style="padding: 0 40px">
+<form [formGroup]="assetsForm" class="scroll" style="padding: 0 40px">
   <!-- otherAssets details  -->
   <div>
     <div>
       <!-- otherAssets  -->
-      <div >
-
+      <div>
         <div class="row cardClr">
           <div class="col-sm-4">
             <mat-label>Sale Date/Date of Transfer</mat-label>
@@ -20,10 +19,10 @@
                 name="sellDate"
                 [matDatepicker]="sellDate"
                 placeholder="Sale Date/Date of Transfer"
-                (blur)="calculateGainType()"
                 (dateChange)="
                   calculateGainType();
-                  calMaxPurchaseDate(assetsForm.get('sellDate')?.value)"
+                  calMaxPurchaseDate(assetsForm.get('sellDate')?.value)
+                "
                 [min]="minDate"
                 [max]="maxDate"
               />
@@ -44,8 +43,7 @@
                 name="purchaseDate"
                 [matDatepicker]="purchaseDate"
                 placeholder="Buy Date / Date of Acquisition"
-                (blur)="getImprovementYears();calculateGainType()"
-                (dateChange)="getImprovementYears();calculateGainType()"
+                (dateChange)="getImprovementYears(); calculateGainType()"
                 [max]="maxPurchaseDate"
               />
               <mat-datepicker-toggle
@@ -69,7 +67,7 @@
                 class="input-field"
                 maxlength="14"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                (blur)="calculateCg()"
+                (blur)="calculateGainType()"
               />
 
               <!-- <mat-error
@@ -82,6 +80,26 @@
               > -->
             </mat-form-field>
           </div>
+
+          <!-- indexed cost of acquisition  -->
+          <div
+            class="col-sm-4"
+            *ngIf="assetsForm.controls['gainType'].value === 'LONG'"
+          >
+            <mat-label> Indexed cost of acquisition</mat-label>
+            <mat-form-field class="input-field-width" appearance="outline">
+              <input
+                matInput
+                digitsOnly
+                formControlName="indexCostOfAcquisition"
+                placeholder="Indexed cost of acquistion"
+                name="indexCostOfAcquisition[i]"
+                class="input-field"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+
           <!-- sale-value  -->
           <div class="col-sm-4 spsTp">
             <mat-label>Sale Value</mat-label>
@@ -123,7 +141,7 @@
                 class="input-field"
                 maxlength="14"
                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                (blur)="calculateCg()"
+                (blur)="calculateGainType()"
               />
               <!-- <mat-error
                 *ngIf="
@@ -172,7 +190,7 @@
 
           <hr class="linSps" />
           <!-- cost-of-improvement  -->
-          <div formGroupName="improvementsArray">
+          <div formArrayName="improvementsArray">
             <!-- co-owner yes-no selection  -->
             <div class="row linSps">
               <div class="col-sm-9">
@@ -196,66 +214,107 @@
             </div>
 
             <div *ngIf="isImprovement.value">
-              <div class="row">
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Year Of Improvement</mat-label>
-                  <mat-form-field
-                    class="input-field-width"
-                    appearance="outline"
-                  >
-                    <mat-select
-                      placeholder="Year of Improvement"
-                      name="financialYearOfImprovement"
-                      formControlName="financialYearOfImprovement"
-                      required
-                    >
-                      <mat-option
-                        [value]="year"
-                        *ngFor="let year of improvementYears"
+              <!-- add more button -->
+              <div>
+                <button class="new-add" (click)="addImprovementsArray()">
+                  <i class="fa fa-plus" aria-hidden="true"></i> Add More
+                </button>
+              </div>
+              <div
+                style="padding: 25px"
+                class="card"
+                *ngFor="
+                  let improve of getImprovementsArray.controls;
+                  let j = index
+                "
+                [formGroupName]="j"
+              >
+                <div>
+                  <!-- form content-->
+                  <div class="row">
+                    <div class="custom-control custom-checkbox">
+                      <input
+                        class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                        type="checkbox"
+                        (click)="$event.stopPropagation()"
+                        [checked]="selectedIndexes.includes(j)"
+                        (click)="toggleSelectedIndex(j)"
+                      />
+                    </div>
+                    <div class="col-sm-4 spsTp">
+                      <mat-label>Year Of Improvement</mat-label>
+                      <mat-form-field
+                        class="input-field-width"
+                        appearance="outline"
                       >
-                        {{ year }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                        <mat-select
+                          placeholder="Year of Improvement"
+                          formControlName="financialYearOfImprovement"
+                          (blur)="
+                            calculateCoiIndexation(
+                              this.assetsForm?.controls['gainType'].value
+                            )
+                          "
+                          required
+                        >
+                          <mat-option
+                            [value]="year"
+                            *ngFor="let year of improvementYears"
+                          >
+                            {{ year }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 spsTp">
+                      <mat-label>Cost of Improvement</mat-label>
+                      <mat-form-field
+                        class="input-field-width"
+                        appearance="outline"
+                      >
+                        <input
+                          matInput
+                          digitsOnly
+                          formControlName="costOfImprovement"
+                          placeholder="Cost Of Improvement"
+                          (blur)="
+                            calculateCoiIndexation(
+                              this.assetsForm?.controls['gainType'].value
+                            )
+                          "
+                          class="input-field"
+                          maxlength="14"
+                          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 spsTp">
+                      <mat-label>Cost of Improvement with Indexation</mat-label>
+                      <mat-form-field
+                        class="input-field-width"
+                        appearance="outline"
+                      >
+                        <input
+                          matInput
+                          digitsOnly
+                          formControlName="indexCostOfImprovement"
+                          placeholder="Cost Of Improvement with Indexation"
+                          class="input-field"
+                          maxlength="14"
+                          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          readonly
+                        />
+                      </mat-form-field>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Cost of Improvement</mat-label>
-                  <mat-form-field
-                    class="input-field-width"
-                    appearance="outline"
-                  >
-                    <input
-                      matInput
-                      digitsOnly
-                      formControlName="costOfImprovement"
-                      placeholder="Cost Of Improvement"
-                      name="costOfImprovement"
-                      (blur)="calculateIndexCost()"
-                      class="input-field"
-                      maxlength="14"
-                      oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    />
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Cost of Improvement with Indexation</mat-label>
-                  <mat-form-field
-                    class="input-field-width"
-                    appearance="outline"
-                  >
-                    <input
-                      matInput
-                      digitsOnly
-                      formControlName="indexCostOfImprovement"
-                      placeholder="Cost Of Improvement with Indexation"
-                      name="indexCostOfImprovement"
-                      class="input-field"
-                      maxlength="14"
-                      oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                      readonly
-                    />
-                  </mat-form-field>
-                </div>
+              </div>
+
+              <!-- // delete button -->
+              <div style="margin-left: 5%">
+                <button class="delete-btn" (click)="deleteImprovementsArray()">
+                  <i class="fa fa-trash fa-lg" aria-hidden="true"></i> Delete
+                </button>
               </div>
             </div>
           </div>
@@ -266,18 +325,17 @@
     </div>
 
     <div class="row spsTp bdrTp">
-<!--      <div class="col-sm-3">-->
-<!--        <button-->
-<!--          type="submit"-->
-<!--          class="delete-btn"-->
-<!--          (click)="deleteOtherAsset(index)"-->
-<!--          [disabled]="!assetSelected()"-->
-<!--        >-->
-<!--          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete-->
-<!--        </button>-->
-<!--      </div>-->
-      <div class="col-sm-6">
-      </div>
+      <!--      <div class="col-sm-3">-->
+      <!--        <button-->
+      <!--          type="submit"-->
+      <!--          class="delete-btn"-->
+      <!--          (click)="deleteOtherAsset(index)"-->
+      <!--          [disabled]="!assetSelected()"-->
+      <!--        >-->
+      <!--          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete-->
+      <!--        </button>-->
+      <!--      </div>-->
+      <div class="col-sm-6"></div>
       <div class="col-sm-3">
         <button class="tbd-btn save-btn mvRth" (click)="saveCg()">Save</button>
       </div>

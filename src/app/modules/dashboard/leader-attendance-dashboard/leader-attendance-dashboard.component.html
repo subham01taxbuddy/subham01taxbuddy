@@ -17,27 +17,37 @@
   <div class="radiusMain">
     <div class="row">
 
-      <div class="col-sm-4">
+      <div class="col-sm-12">
         <!-- <form class="form-inline">
                   <input class="form-control mr-sm-2" type="search" placeholder="Select Filer"
                       aria-label="Search">
               </form> -->
-        <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event, true)"
-          (sendOwner)="fromSme1($event, false)"></app-leader-list-dropdown>
+        <!-- <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event, true)"
+          (sendOwner)="fromSme1($event, false)"></app-leader-list-dropdown> -->
+        <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
+          (sendPrincipleIndividual)="fromPrinciple($event)" [skipChild]=false></app-sme-list-drop-down>
       </div>
-      <div class="col-sm-2">
-        <div>
-          <label for="start-date">Start Date:</label>
-          <input type="date" matInput id="date" name="start-date" class="form-control" [formControl]="startDate"
-            [min]="minDate" [max]="maxStartDate" (change)="setEndDateValidate(this.startDate)">
-        </div>
+      <div class="col-sm-2 spsTp">
+        <mat-form-field appearance="outline">
+          <mat-label>Start Date:</mat-label>
+          <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxStartDate"
+            autocomplete="off" (dateChange)="setEndDateValidate(this.startDate)" />
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+          <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+        </mat-form-field>
       </div>
-      <div class="col-sm-2">
-        <div>
-          <label for="end-date">End Date:</label>
-          <input type="date" matInput id="date" name="end-date" class="form-control" [formControl]="endDate" [min]="minEndDate"
-            [max]="maxDate">
-        </div>
+
+      <div class="col-sm-2 spsTp">
+        <mat-form-field appearance="outline">
+          <mat-label>End Date:</mat-label>
+          <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxDate"
+            autocomplete="off" />
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+          <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+          <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+        </mat-form-field>
       </div>
 
       <!-- <div class="col-sm-4">
@@ -47,11 +57,14 @@
               </form>
           </div> -->
 
-       <div class="col-sm-4">
-        <button class="srch-btn"[disabled]="loading"  (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search </button>
-
-        <button class="clrLnk1" [disabled]="loading" (click)="this.resetFilters()">
-           Clear form
+      <div class="col-sm-6">
+        <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
+          <i class="fa fa-download" aria-hidden="true"></i> Download File
+        </button>
+        <button class="clrLnk mvRth" (click)="this.resetFilters()">
+          Clear form
+        </button>
+        <button class="srch-btn mvRth" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
         </button>
       </div>
 
@@ -150,54 +163,95 @@
     <div class="col-sm-12">
       <div class="radiusTab1">
         <!-- <div class="tx">Document Uploaded but filing not yet started</div> -->
+        <div class="table-container">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name of Partners </th>
+                <th scope="col">Attendance on Date<br>({{ today | date:'dd MMMM yyyy' }})</th>
+                <th scope="col">Assignment Status</th>
+                <th scope="col">No of clients assigned<br>(where filer is allotted)</th>
+                <th scope="col">ITR 1 <br>(original + revise)</th>
+                <th scope="col">ITR 2 <br>(original + revise)</th>
+                <th scope="col">ITR 3 <br>(original + revise)</th>
+                <th scope="col">ITR 4 <br>(original + revise)</th>
+                <th scope="col">Other <br>(original + revise)</th>
+                <th scope="col">ITR U</th>
+                <th scope="col">Total ITR Filed</th>
+                <th scope="col">Revenue Generated(filed + pending to file cases)<br>
+                  Total amount of paid invoices</th>
+                <th scope="col">Applicable Commission <br>Percentage as on date</th>
+                <th scope="col">Total Commission<br>Earned before TDS</th>
+                <th scope="col">TDS</th>
+                <th scope="col">Total Commission<br>Earned after TDS</th>
+                <th scope="col">Commission Paid</th>
+                <th scope="col">Commission Payable</th>
+                <th scope="col">Average of users Rating</th>
+                <!-- <th scope="col">Conversion Ratios</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of allDetails ; let i = index">
+                <td>{{ i+1 }}</td>
+                <td>{{ item.nameOfFiler }}</td>
+                <td>
+                  <span *ngIf="item.attendanceOnDateInBo === 'Active'; else inactive"
+                    class="active-status">Active</span>
+                  <ng-template #inactive>
+                    <span class="inactive-status">Inactive</span>
+                  </ng-template>
+                </td>
+                <td
+                  [ngClass]="{ 'text-success': item.assignmentStatus === 'On', 'text-danger': item.assignmentStatus === 'Off' }">
+                  {{ item.assignmentStatus }}
+                </td>
+                <td>{{ item.numberOfClientsAssigned}}</td>
+                <td>{{ item.itr1}}</td>
+                <td>{{ item.itr2}}</td>
+                <td>{{ item.itr3}}</td>
+                <td>{{ item.itr4}}</td>
+                <td>{{ item.others}}</td>
+                <td>{{ item.itrU}}</td>
+                <td [ngClass]="{ 'text-success': item.totalITRFiled }">{{ item.totalITRFiled }}</td>
+                <td>{{ item.revenueGenerated}}</td>
+                <td>{{ item.applicableCommissionPercentage}}</td>
+                <td>{{ item.totalCommissionEarnedBeforeTDS}}</td>
+                <td>{{ item.tds}}</td>
+                <td>{{ item.totalCommissionEarnedAfterTDS | number:'1.2-2'}}</td>
+                <td>{{ item.commissionPaid | number:'1.2-2' }}</td>
+                <td>{{ item.commissionPayable }}</td>
+                <td>{{ item.averageUserRating }}</td>
 
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Name of Partners </th>
-              <th scope="col">Attendance on Date<br>({{ today | date:'dd MMMM yyyy' }})</th>
-              <th scope="col">Assignment Status</th>
-              <th scope="col">Schedule Call Assigned</th>
-              <th scope="col">ITR Filed</th>
-              <th scope="col">Paid Revenue (₹)</th>
-              <th scope="col">Commission Earned (₹)</th>
-              <!-- <th scope="col">Conversion Ratios</th> -->
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of allDetails ; let i = index">
-              <td>{{ i+1 }}</td>
-              <td>{{ item.name }}</td>
-              <td>
-                <span *ngIf="item.hasFilerLoggedInToday; else inactive" class="active-status">Active</span>
-                <ng-template #inactive>
-                  <span class="inactive-status">Inactive</span>
-                </ng-template>
-              </td>
-              <td [ngClass]="{ 'text-success': item.assignmentStatus === 'On', 'text-danger': item.assignmentStatus === 'Off' }">
-                {{ item.assignmentStatus }}
-              </td>
-              <td>{{ item.scheduleCallAssigned}}</td>
-              <td [ngClass]="{ 'text-success': item.totalItrFiled }">{{ item.totalItrFiled }}</td>
-              <td>{{ item.totalPaidRevenue }}</td>
-              <td>{{ item.totalCommissionEarned | number:'1.2-2' }}</td>
-              <!-- <td>{{'NA'}}</td> -->
-            </tr>
-            <tr>
-              <td colspan="4"></td>
-              <td class="text-bold">Grand Total</td>
-              <td class="text-success">{{ grandTotal?.totalItrFiled }}</td>
-              <td class="text-success">{{ grandTotal?.totalPaidRevenue }}</td>
-              <td class="text-success">{{ grandTotal?.totalCommissionEarned | number:'1.2-2' }}</td>
-              <!-- <td>{{ 'NA' }}</td> -->
-            </tr>
-            <tr *ngIf="allDetails?.length === 0 || !allDetails" >
-              <td colspan="8" class="text-center">
-                No Records Found
-              </td>
-            </tr>
-            <!-- <tr>
+                <!-- <td>{{'NA'}}</td> -->
+              </tr>
+              <tr>
+                <td colspan="3"></td>
+                <td class="text-bold">Grand Total</td>
+                <td class="text-success">{{ grandTotal?.totalNumberOfClientsAssigned }}</td>
+                <td class="text-success">{{ grandTotal?.totalItr1 }}</td>
+                <td class="text-success">{{ grandTotal?.totalItr2 }}</td>
+                <td class="text-success">{{ grandTotal?.totalItr3 }}</td>
+                <td class="text-success">{{ grandTotal?.totalItr4 }}</td>
+                <td class="text-success">{{ grandTotal?.totalItrOthers }}</td>
+                <td class="text-success">{{ grandTotal?.totalItrU }}</td>
+                <td class="text-success">{{ grandTotal?.totalItrFiled }}</td>
+                <td class="text-success">{{ grandTotal?.totalRevenueGenerated }}</td>
+                <td>{{ 'NA' }}</td>
+                <td class="text-success">{{ grandTotal?.totalCommissionEarnedBeforeTDS | number:'1.2-2' }}</td>
+                <td class="text-success">{{ grandTotal?.totalTds }}</td>
+                <td class="text-success">{{ grandTotal?.totalCommissionEarnedAfterTDS }}</td>
+                <td class="text-success">{{ grandTotal?.totalCommissionPaid }}</td>
+                <td class="text-success">{{ grandTotal?.totalCommissionPayable }}</td>
+                <td class="text-success">{{ grandTotal?.averageUserRating }}</td>
+                <!-- <td>{{ 'NA' }}</td> -->
+              </tr>
+              <tr *ngIf="allDetails?.length === 0 || !allDetails">
+                <td colspan="8" class="text-center">
+                  No Records Found
+                </td>
+              </tr>
+              <!-- <tr>
               <th scope="row">1</th>
               <td>D and D Tax consultants</td>
               <td>Active</td>
@@ -318,9 +372,9 @@
               <td><b>10,82,412</b></td>
               <td><b>2,088.30</b></td>
             </tr> -->
-          </tbody>
-        </table>
-        <!-- <nav aria-label="..." class="float-right">
+            </tbody>
+          </table>
+          <!-- <nav aria-label="..." class="float-right">
           <ul class="pagination">
             <li class="page-item disabled">
               <a class="page-link" href="#" tabindex="-1">Previous</a>
@@ -335,8 +389,9 @@
           </ul>
         </nav> -->
 
+        </div>
       </div>
+      <!-- Table Ends -->
     </div>
-    <!-- Table Ends -->
   </div>
 </div>

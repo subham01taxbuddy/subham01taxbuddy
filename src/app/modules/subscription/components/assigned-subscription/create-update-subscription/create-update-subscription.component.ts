@@ -1,47 +1,28 @@
-import { state } from '@angular/animations';
-import { data } from 'jquery';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { ActivatedRoute } from '@angular/router';
 import { map, Observable, startWith } from 'rxjs';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { Schedules } from 'src/app/modules/shared/interfaces/schedules';
 import { Location } from '@angular/common';
-import { filter } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
+import { ReportService } from 'src/app/services/report-service';
 declare function we_track(key: string, value: any);
-// export class Schedules {
-//   public PERSONAL_INFO = 'PERSONAL_INFO';
-//   public OTHER_SOURCES = 'otherSources';
-//   public INVESTMENTS_DEDUCTIONS = 'investmentsDeductions';
-//   public TAXES_PAID = 'taxesPaid';
-//   public DECLARATION = 'declaration';
-//   public SALARY = 'SALARY';
-//   public HOUSE_PROPERTY = 'HOUSE_PROPERTY';
-//   public BUSINESS_INCOME = 'BUSINESS_INCOME';
-//   public CAPITAL_GAIN = 'capitalGain';
-//   public SPECULATIVE_INCOME = 'speculativeIncome';
-//   public FOREIGN_INCOME = 'foreignIncome';
-//   public MORE_INFORMATION = 'moreInformation'
-// }
 
 @Component({
   selector: 'app-create-update-subscription',
   templateUrl: './create-update-subscription.component.html',
   styleUrls: ['./create-update-subscription.component.scss'],
 })
-export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
-  subId: any;
+export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, AfterViewInit {
   searchedPromoCode = new FormControl('', Validators.required);
   filteredOptions!: Observable<any[]>;
   serviceDetails = [];
@@ -59,7 +40,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   loggedInSme: any;
   allPlans: any;
   maxEndDate: any;
-  minEndDate: any;
   selectedPromoCode = '';
   appliedPromo: any;
   allPromoCodes: any[] = [];
@@ -93,24 +73,35 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     { label: 'Monthly', value: 'MONTHLY' },
     { label: 'Quarterly', value: 'QUARTERLY' },
   ];
-
+  roles: any;
   subType: string;
   invoiceAmount: any;
+  smeDetails: any;
+  showMessage = '';
+  serviceEligibility: any;
   constructor(
-    private route: ActivatedRoute,
     private fb: FormBuilder,
     public utilsService: UtilsService,
     private itrService: ItrMsService,
     private userService: UserMsService,
     private toastMessage: ToastMessageService,
-    private schedules: Schedules,
     public location: Location,
     private dialog: MatDialog,
-  ) { }
+    private reportService: ReportService
+  ) {
+    this.roles = this.utilsService.getUserRoles();
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+
+  }
+  ngAfterViewInit(): void {
+    setTimeout(()=>{
+    this.onPersonalInfoFormChanges();
+    this.onOtherInfoFormChange();
+  },7000);
+  }
 
   ngOnInit() {
     this.getAllPromoCode();
-
     this.subType = (this.subscriptionObjType = JSON.parse(
       sessionStorage.getItem('subscriptionObject')
     )?.type);
@@ -120,11 +111,13 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     } else {
       this.isButtonDisable = true;
     }
+    if (this.roles?.includes('ROLE_FILER')) {
+      this.getSmeDetail();
+    }
 
     this.filteredOptions = this.searchedPromoCode.valueChanges.pipe(
       startWith(''),
       map((value) => {
-        console.log(value, this.allPromoCodes);
         return value;
       }),
       map((code) => {
@@ -135,14 +128,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     this.createSubscriptionObj = JSON.parse(
       sessionStorage.getItem('createSubscriptionObject')
     )?.data;
-    console.log('createSubscriptionObject', this.createSubscriptionObj);
 
     if (!this.createSubscriptionObj) {
       this.subscriptionObj = JSON.parse(
         sessionStorage.getItem('subscriptionObject')
       )?.data;
-      this.invoiceAmount = this.subscriptionObj['invoiceAmount'];
-      console.log('subscriptionObj', this.subscriptionObj);
+      if (this.subscriptionObj?.['invoiceAmount']) {
+        this.invoiceAmount = this.subscriptionObj['invoiceAmount'];
+      }
     } else {
       this.subscriptionObj = this.createSubscriptionObj;
       this.userSubscription = this.createSubscriptionObj;
@@ -156,59 +149,15 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
     if (this.subscriptionObj != null) {
       this.personalInfoForm.patchValue(this.subscriptionObj);
-      // this.otherInfoForm.patchValue(this.subscriptionObj);
       if (this.subscriptionObj.subscriptionId !== 0) {
         this.getUserPlanInfo(this.subscriptionObj?.subscriptionId);
       } else {
         this.getFy();
       }
     }
-    // if(this.createSubscriptionObj !=null){
-    //   this.personalInfoForm.patchValue(this.createSubscriptionObj);
-    //   // this.otherInfoForm.patchValue(this.createSubscriptionObj);
-    //   this.gstUserInfoByUserId(this.createSubscriptionObj?.userId);
-    //   this.userSubscription=this.createSubscriptionObj;
-    //   this.smeSelectedPlanId=this?.createSubscriptionObj?.smeSelectedPlan?.planId;
-    //   // this.service=this.createSubscriptionObj?.smeSelectedPlan?.servicesType;
-    //   this.serviceType = this.createSubscriptionObj?.smeSelectedPlan?.servicesType;
-    //   // this.setServiceDetails()
-    //   // this.serviceDetail=this.createSubscriptionObj.item.serviceDetail;
-    // }
-
-    this.sourcesList = [
-      {
-        name: 'Salary',
-        schedule: 'SALARY',
-      },
-      {
-        name: 'House Property',
-        schedule: 'HOUSE_PROPERTY',
-      },
-      {
-        name: 'Business / Profession',
-        schedule: 'BUSINESS_AND_PROFESSION',
-      },
-      {
-        name: 'Capital Gain',
-        schedule: 'CAPITAL_GAINS',
-      },
-      {
-        name: 'Futures / Options',
-        schedule: 'FUTURE_AND_OPTIONS',
-      },
-      {
-        name: 'NRI / Foreign',
-        schedule: 'FOREIGN_INCOME_NRI_EXPAT',
-      },
-      {
-        name: 'Crypto',
-        schedule: 'CRYPTOCURRENCY',
-      },
-    ];
-    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
 
     this.getAllPlanInfo(this.serviceType);
-    this.getOwnerFilerName();
+    this.getLeaderFilerName();
     this.setFormValues(this.selectedUserInfo);
   }
 
@@ -223,6 +172,19 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     );
   }
 
+  getSmeDetail() {
+    // https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000'
+    let loggedInSmeUserId = this.loggedInSme[0]?.userId;
+    let param = `/bo/sme-details-new/${loggedInSmeUserId}`
+    this.reportService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.smeDetails = response.data[0];
+        this.showMessage = 'Disabled plans are not available in your eligibility please contact with your leader'
+      }
+    })
+  }
+
   getCodeFromLabelOnBlur() {
     if (
       this.utilsService.isNonEmpty(this.searchedPromoCode.value) &&
@@ -235,7 +197,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       );
       if (pCode.length !== 0) {
         this.selectedPromoCode = pCode[0].code;
-        console.log('smeCode on blur = ', pCode);
       } else {
         this.searchedPromoCode.setErrors({ invalid: true });
       }
@@ -246,18 +207,30 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     await this.utilsService
       .getPincodeData(this.personalInfoForm.controls['pin'])
       .then((result) => {
-        console.log('pindata', result);
         this.city.setValue(result.city);
-        // this.country.setValue(result.countryCode);
         this.state.setValue(result.stateCode);
         this.updateIgstFlag();
       });
   }
 
+  maskMobileNumber(originalMobileNumber: string): string {
+    if (originalMobileNumber && originalMobileNumber.length >= 10) {
+      let maskedNo = 'X'.repeat(originalMobileNumber.length);
+      return maskedNo
+    }
+    return originalMobileNumber;
+  }
+
+  unMaskedMobileNo: any;
+
   setFormValues(data) {
-    console.log('data', data);
     this.userName.setValue(data?.fName + ' ' + data?.lName);
-    this.mobileNumber.setValue(data?.mobileNumber);
+    this.unMaskedMobileNo = data?.mobileNumber
+    if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+      this.mobileNumber.setValue(data?.mobileNumber);
+    } else {
+      this.mobileNumber.setValue(this.maskMobileNumber(data?.mobileNumber));
+    }
     this.emailAddress.setValue(data?.emailAddress);
     this.pin.setValue(data?.address[0]?.pinCode);
     this.state.setValue(data?.address[0]?.state);
@@ -296,9 +269,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     state: new FormControl(''),
     city: new FormControl(''),
     zipcode: new FormControl(''),
-    ownerName: new FormControl(''),
     filerName: new FormControl(''),
     assessmentYear: new FormControl(''),
+    leaderName: new FormControl(''),
   });
 
   get mobileNumber() {
@@ -333,14 +306,16 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   get zipcode() {
     return this.personalInfoForm.controls['zipcode'] as FormControl;
   }
-  get ownerName() {
-    return this.personalInfoForm.controls['ownerName'] as FormControl;
-  }
+
   get filerName() {
     return this.personalInfoForm.controls['filerName'] as FormControl;
   }
   get assessmentYear() {
     return this.personalInfoForm.controls['assessmentYear'] as FormControl;
+  }
+
+  get leaderName() {
+    return this.personalInfoForm.controls['leaderName'] as FormControl;
   }
 
   otherInfoForm: FormGroup = this.fb.group({
@@ -353,39 +328,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
   get sacNumber() {
     return this.otherInfoForm.controls['sacNumber'] as FormControl;
-  }
-  // otherDetailsForm:FormGroup = this.fb.group({
-  //   service :new FormControl(''),
-  //   serviceDetails:new FormControl(''),
-  //   sacNumber:new FormControl(''),
-  //   financialYear: new FormControl(''),
-  //   description:new FormControl('')
-  // })
-  // get service() {
-  //   return this.otherDetailsForm.controls['service'] as FormControl;
-  // }
-  // get serviceDetails() {
-  //   return this.otherDetailsForm.controls['serviceDetails'] as FormControl;
-  // }
-  // get sacNumber() {
-  //   return this.otherDetailsForm.controls['sacNumber'] as FormControl;
-  // }
-  // get financialYear() {
-  //   return this.otherDetailsForm.controls['financialYear'] as FormControl;
-  // }
-  // get description() {
-  //   return this.otherDetailsForm.controls['description'] as FormControl;
-  // }
-
-  gstFormGroup: FormGroup = this.fb.group({
-    startDate: new FormControl(''),
-    endDate: new FormControl(''),
-  });
-  get startDate() {
-    return this.gstFormGroup.controls['startDate'] as FormControl;
-  }
-  get endDate() {
-    return this.gstFormGroup.controls['endDate'] as FormControl;
   }
 
   getAllPromoCode() {
@@ -406,7 +348,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   isPromoRemoved = false;
   applyPromo(selectedPlan) {
-    console.log('selectedPromoCode:', this.selectedPromoCode);
     this.smeSelectedPlanId = selectedPlan;
     const param = `/subscription/recalculate`;
     const request = {
@@ -419,9 +360,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       removePromoCode: false
     };
     this.itrService.postMethod(param, request).subscribe((res: any) => {
-      console.log('apply promo res', res);
       this.appliedPromo = res.promoCode;
-      console.log('applied promo', this.appliedPromo);
       if (res['Error']) {
         this.utilsService.showSnackBar(res['Error']);
         return;
@@ -429,7 +368,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.isPromoRemoved = false;
       this.userSubscription = res;
       this.setFinalPricing();
-      console.log('PROMO code applied', res);
       this.utilsService.showSnackBar(
         `Promo Code ${this.selectedPromoCode} applied successfully!`
       );
@@ -437,39 +375,30 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   removePromoCode(selectedPlan) {
-    if (this.userSubscription.subscriptionId && this.userSubscription.subscriptionId > 0) {
-      console.log('selectedPromoCode:', this.selectedPromoCode);
-      this.smeSelectedPlanId = selectedPlan;
-      const param = `/subscription/recalculate`;
-      const request = {
-        userId: this.userSubscription.userId,
-        planId: selectedPlan,
-        selectedBy: 'SME',
-        smeUserId: this?.loggedInSme[0]?.userId,
-        subscriptionId: this.userSubscription.subscriptionId,
-        promoCode: this.selectedPromoCode,
-        removePromoCode: true
-      };
-      this.itrService.postMethod(param, request).subscribe((res: any) => {
-        console.log('remove promo res', res);
-        this.appliedPromo = res.promoCode;
-        console.log('removed promo', this.appliedPromo);
-        if (res['Error']) {
-          this.utilsService.showSnackBar(res['Error']);
-          return;
-        }
-        this.utilsService.showSnackBar(
-          `Promo Code ${this.selectedPromoCode} removed successfully!`
-        );
-        this.isPromoRemoved = true;
-        this.userSubscription = res;
-        this.setFinalPricing();
-      });
-    } /*else {
-      this.selectedPromoCode = '';
-      this.searchedPromoCode.reset();
-      this.applySmeSelectedPlan(this.userSubscription.smeSelectedPlan.planId);
-    }*/
+    this.smeSelectedPlanId = selectedPlan;
+    const param = `/subscription/recalculate`;
+    const request = {
+      userId: this.userSubscription.userId,
+      planId: selectedPlan,
+      selectedBy: 'SME',
+      smeUserId: this?.loggedInSme[0]?.userId,
+      subscriptionId: this.userSubscription.subscriptionId,
+      promoCode: this.selectedPromoCode,
+      removePromoCode: true
+    };
+    this.itrService.postMethod(param, request).subscribe((res: any) => {
+      this.appliedPromo = res.promoCode;
+      if (res['Error']) {
+        this.utilsService.showSnackBar(res['Error']);
+        return;
+      }
+      this.utilsService.showSnackBar(
+        `Promo Code ${this.selectedPromoCode} removed successfully!`
+      );
+      this.isPromoRemoved = true;
+      this.userSubscription = res;
+      this.setFinalPricing();
+    });
   }
 
   getExactPromoDiscount() {
@@ -499,7 +428,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   showPromoCode(code) {
-    console.log('selected promo code Id: ', code);
     this.promoCodeInfo = this.allPromoCodes.filter(
       (item: any) => item.code === code
     )[0];
@@ -508,24 +436,23 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   async getFy() {
     const fyList = await this.utilsService.getStoredFyList();
-    console.log('fylist', fyList)
-    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     this.AssessmentYear = currentFyDetails[0].assessmentYear
     console.log("ay", this.AssessmentYear)
-    this.getOwnerFiler();
+    this.getLeaderFiler();
   }
 
-  getOwnerFiler() {
+  getLeaderFiler() {
     // https://api.taxbuddy.com/user/agent-assignment-new?userId=747677&assessmentYear=2023-2024&serviceType=ITR
     this.loading = true;
     let types = ['GST', 'NOTICE', 'TPA'];
     let sType = types.includes(this.serviceType) ? this.serviceType : 'ITR';
-    const param = `/agent-assignment-new?userId=${this.subscriptionObj.userId}&assessmentYear=${this.AssessmentYear}&serviceType=${sType}`;
+    const param = `/leader-assignment?userId=${this.subscriptionObj.userId}&serviceType=${sType}`;
     this.userService.getMethod(param).subscribe((result: any) => {
       this.loading = false;
       console.log('get Owner and filer name for new create sub ', result)
-      this.filerName.setValue(result.data?.name);
-      this.ownerName.setValue(result.data?.ownerName);
+      this.filerName.setValue(result.data?.filerName);
+      this.leaderName.setValue(result.data?.leaderName);
     })
   }
 
@@ -539,14 +466,17 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         console.log('user Subscription', this.userSubscription);
         this.gstUserInfoByUserId(subscription.userId);
         this.loading = false;
-        this.reminderMobileNumber.setValue(subscription.reminderMobileNumber);
+        if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+          this.reminderMobileNumber.setValue(subscription.reminderMobileNumber);
+        } else {
+          this.reminderMobileNumber.setValue(this.maskMobileNumber(subscription.reminderMobileNumber));
+        }
         this.reminderEmail.setValue(subscription.reminderEmail);
         this.description.setValue(subscription.item.itemDescription);
         this.sacNumber.setValue(subscription.item.sacCode);
         this.assessmentYear.setValue(subscription.item.financialYear);
-        this.ownerName.setValue(subscription.ownerName);
         this.filerName.setValue(subscription.assigneeName);
-
+        this.leaderName.setValue(subscription.leaderName);
         let myDate = new Date();
         console.log(myDate.getMonth(), myDate.getDate(), myDate.getFullYear());
         if (
@@ -615,7 +545,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       },
       (error) => {
         this.loading = false;
-        console.log('Error during: ', error);
       }
     );
   }
@@ -625,13 +554,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     this.changeService();
     switch (this.serviceType) {
       case 'ITR':
-        //set plan list for service details and selected plan as seletced detail
         this.serviceDetail = this.userSubscription.smeSelectedPlan
           ? this.userSubscription.smeSelectedPlan.name
           : this.userSubscription.userSelectedPlan.name;
         break;
       case 'ITRU':
-        //set plan list for service details and selected plan as seletced detail
         this.serviceDetail = this.userSubscription.smeSelectedPlan
           ? this.userSubscription.smeSelectedPlan.name
           : this.userSubscription.userSelectedPlan.name;
@@ -649,7 +576,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           this.selectedUserInfo = res.records[0];
           console.log('this.selectedUserInfo:', this.selectedUserInfo);
           this.personalInfoForm.patchValue(this.selectedUserInfo); // all
-          // this.otherDetailsForm.patchValue(this.selectedUserInfo);
           this.setFormValues(this.selectedUserInfo);
           this.updateIgstFlag();
           if (
@@ -725,7 +651,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       this.showIgst = false;
     }
   }
-  // selectedPlan=this.sourcesList.filter((item:any) => item.selected===true)
 
   getAllPlanInfo(serviceType) {
     let param = '/plans-master';
@@ -751,18 +676,39 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
     this.itrService.getMethod(param).subscribe(
       (plans: any) => {
-        console.log(' all plans', plans);
         if (plans instanceof Array) {
           const activePlans = plans.filter(
             (item: any) => item.isActive === true
           );
-          if (this.utilsService.isNonEmpty(serviceType))
-            this.allPlans = activePlans.filter(
-              (item: any) => item.servicesType === serviceType
-            );
-          else this.allPlans = activePlans;
+          if (this.utilsService.isNonEmpty(serviceType)) {
+            this.allPlans = activePlans.filter((item: any) => item.servicesType === serviceType);
+            if (this.roles.includes('ROLE_FILER')) {
+              this.allPlans.forEach((item: any) => {
+                item.disable = true;
+                if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
+                  item.disable = false;
+              })
+            }
+          }
+          else {
+            this.allPlans = activePlans;
+            if (this.roles.includes('ROLE_FILER')) {
+              this.allPlans.forEach((item: any) => {
+                item.disable = true;
+                if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
+                  item.disable = false;
+              })
+            }
+          }
         } else {
           this.allPlans = [plans];
+          if (this.roles.includes('ROLE_FILER')) {
+            this.allPlans.forEach((item: any) => {
+              item.disable = true;
+              if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
+                item.disable = false;
+            })
+          }
         }
         this.setServiceDetails();
       },
@@ -781,6 +727,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       planId: selectedPlan,
       selectedBy: 'SME',
       smeUserId: this?.loggedInSme[0]?.userId,
+      subscriptionId: this.userSubscription.subscriptionId,
+      promoCode: this.selectedPromoCode,
+      removePromoCode: false
     };
 
     this.itrService.postMethod(param, request).subscribe(
@@ -793,7 +742,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
           this.utilsService.isNonEmpty(this.userSubscription) &&
           this.utilsService.isNonEmpty(this.userSubscription.smeSelectedPlan)
         ) {
-          if(!this.maxEndDate){
+          if (!this.maxEndDate) {
             let myDate = new Date();
             this.maxEndDate = new Date(
               myDate.getMonth() <= 2
@@ -817,7 +766,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       },
       (error) => {
         this.loading = false;
-        console.log('SME Selected plan error:', error);
       }
     );
   }
@@ -842,21 +790,15 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
   filteredFinancialYears: any[] = this.financialYear;
 
   changeService() {
-    if(this.service === 'ITRU'){
+    if (this.service === 'ITRU') {
       this.filteredFinancialYears = this.financialYear.filter(
         (year) => year.financialYear === '2020-2021' || year.financialYear === '2021-2022'
       );
 
-    }else{
+    } else {
       this.filteredFinancialYears = this.financialYear;
     }
     const serviceArray = [
-      //   { service: 'ITR Filing', details: 'ITR-1 filing (FY 21-22)/ (AY 2022-23)' },
-      // { service: 'ITR Filing', details: 'ITR-2 filing (FY 21-22)/ (AY 2022-23)' },
-      // { service: 'ITR Filing', details: 'ITR-3 filing (FY 21-22)/ (AY 2022-23)' },
-      // { service: 'ITR Filing', details: 'ITR-4 filing (FY 21-22)/ (AY 2022-23)' },
-      // { service: 'ITR Filing', details: 'ITR-5 filing (FY 21-22)/ (AY 2022-23)' },
-      // { service: 'ITR Filing', details: 'ITR Filing' },
       { service: 'GST', details: 'GST Registration' },
       { service: 'GST', details: 'GST Annual Subscription' },
       { service: 'GST', details: 'GSTR Annual return' },
@@ -928,52 +870,45 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     }
   }
 
-  // selectedPlan() {
-  //   this.selectedPlanInfo = this.userSubscription.smeSelectedPlanId;
-  //   console.log('selectedPlanInfo -> ', this.selectedPlanInfo);
 
-  // }
-
-  getOwnerFilerName() {
-    // const loggedInSmeUserId=this?.loggedInSme[0]?.userId
-
-    let param = `/sme-details-new/${this?.loggedInSme[0]?.userId}?smeUserId=${this.subscriptionObj?.subscriptionAssigneeId}`;
-    this.userService.getMethodNew(param).subscribe((result: any) => {
+  getLeaderFilerName() {
+    let param = `/bo/sme-details-new/${this.subscriptionObj?.subscriptionAssigneeId}`;
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('owner filer name  -> ', result);
-      // this.filerName.setValue(result.data[0]?.name);
-      // this.ownerName.setValue(result.data[0]?.parentName);
+      this.filerName.setValue(result.data[0]?.name);
+      this.leaderName.setValue(result.data[0]?.parentName);
     });
   }
 
   updateUserDetails() {
     let param = `/profile/${this.userSubscription.userId}`;
-    if(this.personalInfoForm.controls['gstNo'].value){
-      if(!this.selectedUserInfo.gstDetails){
+    if (this.personalInfoForm.controls['gstNo'].value) {
+      if (!this.selectedUserInfo.gstDetails) {
         this.selectedUserInfo.gstDetails = {
-          bankInformation : null,
-          businessAddress : null,
-          businessLogo : null,
-          businessSignature : null,
-          compositeDealerQuarter : null,
-          compositeDealerYear : null,
-          gstCertificate : null,
-          gstPortalPassword : "",
-          gstPortalUserName : "",
-          gstType : null,
-          gstinNumber : null,
-          gstinRegisteredMobileNumber : "",
-          gstr1Type : "",
-          legalName : "",
-          natureOfBusiness : null,
-          openingPurchaseValue : null,
-          openingSalesValue : null,
-          registrationDate : null,
-          regularDealerMonth : null,
-          regularDealerYear : null,
-          returnType : null,
-          salesInvoicePrefix : "",
-          termsAndConditions : null,
-          tradeName : ""
+          bankInformation: null,
+          businessAddress: null,
+          businessLogo: null,
+          businessSignature: null,
+          compositeDealerQuarter: null,
+          compositeDealerYear: null,
+          gstCertificate: null,
+          gstPortalPassword: "",
+          gstPortalUserName: "",
+          gstType: null,
+          gstinNumber: null,
+          gstinRegisteredMobileNumber: "",
+          gstr1Type: "",
+          legalName: "",
+          natureOfBusiness: null,
+          openingPurchaseValue: null,
+          openingSalesValue: null,
+          registrationDate: null,
+          regularDealerMonth: null,
+          regularDealerYear: null,
+          returnType: null,
+          salesInvoicePrefix: "",
+          termsAndConditions: null,
+          tradeName: ""
         };
       }
       this.selectedUserInfo.gstDetails.gstinNumber = this.personalInfoForm.controls['gstNo'].value;
@@ -993,7 +928,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       aadharNumber: this.selectedUserInfo.aadharNumber,
       panNumber: this.selectedUserInfo.panNumber,
       imageURL: this.selectedUserInfo.imageURL,
-      mobileNumber: this.mobileNumber.value,
+      mobileNumber: this.unMaskedMobileNo,
       residentialStatus: this.selectedUserInfo.residentialStatus,
       zohoDeskId: this.selectedUserInfo.zohoDeskId,
       address: [
@@ -1030,7 +965,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
     this.userService.putMethod(param, reqBody).subscribe(
       (res: any) => {
         this.loading = false;
-        console.log('user upadted res: ', res);
         this.loading = false;
         this.toastMessage.alert('success', 'user details updated successfully');
       },
@@ -1043,8 +977,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
 
   updateSubscription() {
     this.loading = true;
-    if(this.service ==='ITRU'){
-      if(this.assessmentYear.value === ''){
+    if (this.service === 'ITRU') {
+      if (this.assessmentYear.value === '') {
         this.loading = false;
         this.toastMessage.alert('error', 'Please select Financial Year For ITR-U subscription');
         return;
@@ -1060,7 +994,6 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         userId: this.userSubscription.userId,
         planId: this.userSubscription.smeSelectedPlan.planId,
         selectedBy: 'SME',
-        promoCode: this.appliedPromo,
         smeUserId: this?.loggedInSme[0]?.userId,
         item: {
           itemDescription: this.description?.value,
@@ -1081,7 +1014,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
         reminderEmail: this.reminderEmail.value,
         reminderMobileNumber: this.reminderMobileNumber.value,
         subscriptionId: this.subscriptionObj.subscriptionId,
-        removePromoCode: this.isPromoRemoved
+        removePromoCode: this.selectedPromoCode ? this.isPromoRemoved : true,
+        promoCode: this.selectedPromoCode
       };
       console.log('Req Body: ', reqBody);
       let requestData = JSON.parse(JSON.stringify(reqBody));
@@ -1161,6 +1095,47 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy {
       }
     });
 
+  }
+
+  changesMade: boolean = false;
+
+  onPersonalInfoFormChanges() {
+    this.personalInfoForm.valueChanges.subscribe((event) => {
+      this.changesMade = true;
+    });
+
+    this.searchedPromoCode.valueChanges.subscribe(() => {
+      this.changesMade = true;
+    });
+  }
+
+  onOtherInfoFormChange() {
+    this.otherInfoForm.valueChanges.subscribe(() => {
+      this.changesMade = true;
+    });
+  }
+
+  onNgModelChange() {
+    this.changesMade = true;
+  }
+
+  cancel() {
+    if (this.changesMade) {
+      this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          title: 'Cancel!',
+          message: 'Changes have not been saved. Are you sure you want to cancel?',
+        },
+
+      });
+      this.dialogRef.afterClosed().subscribe(result => {
+        if (result === 'YES') {
+          this.location.back();
+        }
+      })
+    } else {
+      this.location.back();
+    }
   }
 }
 

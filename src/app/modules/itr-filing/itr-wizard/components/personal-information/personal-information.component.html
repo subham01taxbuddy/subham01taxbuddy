@@ -186,7 +186,7 @@
         <th class="text-center">IFSC Code*</th>
         <th class="text-center">Name of Bank*</th>
         <th class="text-center">Account Number*</th>
-        <th class="text-center">Refund Acc.*</th>
+        <th class="text-center">Refund A/C.*</th>
         <th class="text-center">Actions</th>
       </tr>
     </thead>
@@ -383,6 +383,7 @@
                   placeholder="Amount"
                   name="incrExpAggAmt2LkTrvFrgnCntryFlg[i]"
                   formControlName="incrExpAggAmt2LkTrvFrgnCntryFlg"
+                  (change)="strIncrExpAggAmt2LkTrvFrgnCntryFlg()"
                 />
               </mat-form-field>
             </div>
@@ -431,6 +432,7 @@
                   placeholder="Amount"
                   name="incrExpAggAmt1LkElctrctyPrYrFlg[i]"
                   formControlName="incrExpAggAmt1LkElctrctyPrYrFlg"
+                  (change)="strIncrExpAggAmt1LkElctrctyPrYrFlg()"
                 />
               </mat-form-field>
             </div>
@@ -513,6 +515,7 @@
                       placeholder="Nature"
                       name="nature[i]"
                       formControlName="nature"
+                      (selectionChange)="onSelectionChange(i)"
                     >
                       <mat-option
                         *ngFor="
@@ -535,6 +538,7 @@
                       placeholder="Amount"
                       name="amount[i]"
                       formControlName="amount"
+                      (change)="onSelectionChange(i)"
                     />
                   </mat-form-field>
                 </div>
@@ -598,6 +602,7 @@
                   placeholder="Amount"
                   name="depAmtAggAmtExcd1CrPrYrFlg[i]"
                   formControlName="depAmtAggAmtExcd1CrPrYrFlg"
+                  (change)="strDepAmtAggAmtExcd1CrPrYrFlg()"
                 />
               </mat-form-field>
 

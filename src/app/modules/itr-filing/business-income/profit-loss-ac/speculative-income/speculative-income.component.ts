@@ -7,7 +7,7 @@ import {
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-speculative-income',
@@ -101,12 +101,59 @@ export class SpeculativeIncomeComponent implements OnInit {
 
   calculateNetIncome(index) {
     let specIncome = (
-      this.specIncomeForm.controls['specIncomesArray'] as FormArray
-    ).controls[index] as FormGroup;
-    specIncome?.controls['netIncome'].setValue(
-      specIncome.controls['grossProfit'].value -
-        specIncome.controls['expenditure'].value
+      this.specIncomeForm?.controls['specIncomesArray'] as FormArray
+    )?.controls[index] as FormGroup;
+
+    // inputs
+    let turnover = specIncome?.controls['turnOver'];
+    let netIncome = specIncome?.controls['netIncome'];
+    let grossProfit = specIncome?.controls['grossProfit'];
+
+    // values
+    let turnoverValue = parseFloat(
+      specIncome?.controls['turnOver']?.value
+        ? specIncome?.controls['turnOver']?.value
+        : 0
     );
+    let grossProfitValue = parseFloat(
+      specIncome?.controls['grossProfit']?.value
+        ? specIncome?.controls['grossProfit']?.value
+        : 0
+    );
+    let expenditureValue = parseFloat(
+      specIncome?.controls['expenditure']?.value
+        ? specIncome?.controls['expenditure']?.value
+        : 0
+    );
+    let netIncomeValue = parseFloat(
+      specIncome?.controls['netIncome']?.value
+        ? specIncome?.controls['netIncome']?.value
+        : 0
+    );
+
+    // if turnover is not 0 calculate net income else set all to 0
+    if (turnover && turnoverValue !== 0) {
+      netIncome?.setValue(grossProfitValue - expenditureValue);
+      netIncome?.updateValueAndValidity();
+      netIncomeValue = netIncome?.value;
+    } else if (turnover && turnoverValue === 0) {
+      grossProfit?.setValue(0);
+      grossProfit?.updateValueAndValidity();
+      grossProfitValue = grossProfit?.value;
+
+      netIncome?.setValue(0);
+      netIncome?.updateValueAndValidity();
+      netIncomeValue = netIncome?.value;
+    }
+
+    // set validator for gp if gp greater than turnover
+    if (grossProfitValue > turnoverValue) {
+      grossProfit?.setValidators(Validators.max(turnoverValue));
+      grossProfit?.updateValueAndValidity();
+    } else {
+      grossProfit?.clearValidators();
+      grossProfit?.updateValueAndValidity();
+    }
   }
 
   addSpecIncomeForm() {
@@ -118,7 +165,7 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   onContinue() {
-    //re-intialise the ITR objects
+    this.calculateNetIncome(0);
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
@@ -138,44 +185,51 @@ export class SpeculativeIncomeComponent implements OnInit {
         this.Copy_ITR_JSON.business.profitLossACIncomes.push(
           specBusinessIncome
         );
-      } else {
-
-        specBusiness[0].incomes = [];
-        let businessIncomes =
-          this.Copy_ITR_JSON.business.profitLossACIncomes.filter(
-            (item) => item.businessType != 'SPECULATIVEINCOME'
-          );
-
-        (
-          this.specIncomeForm.controls['specIncomesArray'] as FormArray
-        ).controls.forEach((form: FormGroup) => {
-          specBusiness[0].incomes.push(form.value);
-        });
-
-        console.log(specBusiness);
-        let grossProfit = 0;
-        let netIncome = 0;
-
-        specBusiness[0].incomes.forEach((element) => {
-          grossProfit += element.grossProfit;
-          netIncome += element.grossProfit - element.expenditure;
-        });
-        console.log(grossProfit, netIncome, 'totalOfGP');
-
-        specBusiness[0].totalgrossProfitFromSpeculativeIncome = grossProfit;
-        specBusiness[0].netProfitfromSpeculativeIncome = netIncome;
-
-        businessIncomes.push(specBusiness[0]);
-        this.Copy_ITR_JSON.business.profitLossACIncomes = businessIncomes;
       }
-      // let nonSpec = this.Copy_ITR_JSON.business?.profitLossACIncomes?.filter(
-      //   (acIncome) => acIncome.businessType !== 'SPECULATIVEINCOME'
-      // );
-      // nonSpec.push(specBusiness[0]);
-      // this.Copy_ITR_JSON.business.profitLossACIncomes = nonSpec;
+
+      if (specBusiness.length === 0) {
+        specBusiness = this.Copy_ITR_JSON.business?.profitLossACIncomes?.filter(
+          (acIncome) => acIncome?.businessType === 'SPECULATIVEINCOME'
+        );
+      }
+
+      specBusiness[0].incomes = [];
+
+      (
+        this.specIncomeForm?.controls['specIncomesArray'] as FormArray
+      )?.controls?.forEach((form: FormGroup) => {
+        specBusiness[0]?.incomes?.push(form?.value);
+      });
+
+      console.log(specBusiness);
+      let grossProfit = 0;
+      let netIncome = 0;
+
+      specBusiness[0]?.incomes?.forEach((element) => {
+        grossProfit += element?.grossProfit;
+        netIncome += element?.grossProfit - element?.expenditure;
+      });
+      console.log(grossProfit, netIncome, 'totalOfGP');
+
+      specBusiness[0].totalgrossProfitFromSpeculativeIncome = grossProfit;
+      specBusiness[0].netProfitfromSpeculativeIncome = netIncome;
+
+      let index = this.Copy_ITR_JSON.business?.profitLossACIncomes?.findIndex(
+        (item) => item?.businessType === 'SPECULATIVEINCOME'
+      );
+
+      if (index || index === 0) {
+        this.Copy_ITR_JSON.business.profitLossACIncomes[index] =
+          specBusiness[0];
+      } else {
+        this.Copy_ITR_JSON.business.profitLossACIncomes?.push(specBusiness[0]);
+      }
 
       console.log(this.Copy_ITR_JSON);
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.Copy_ITR_JSON)
+      );
       return true;
     } else {
       //show errors

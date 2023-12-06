@@ -18,6 +18,7 @@ import {
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { ReportService } from 'src/app/services/report-service';
 
 export const MY_FORMATS = {
   parse: {
@@ -104,7 +105,8 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     private utilsService: UtilsService,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
-    private location: Location
+    private location: Location,
+    private reportService:ReportService
   ) {}
 
   ngOnInit() {
@@ -552,8 +554,8 @@ export class EditUpdateResignedSmeComponent implements OnInit {
   getOwner() {
     const loggedInSmeUserId = this.loggedInSme[0].userId;
     console.log(loggedInSmeUserId);
-    let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+    let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.ownerList = result.data;
       console.log('ownerlist', this.ownerList);

@@ -10,6 +10,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { ActivatedRoute } from '@angular/router';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
+import { ReportService } from 'src/app/services/report-service';
 
 export interface User {
   name: string;
@@ -60,7 +61,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService,
     private activatedRoute: ActivatedRoute,
-    private roleBaseAuthGuardService: RoleBaseAuthGuardService
+    private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+    private reportService:ReportService
   ) { }
 
   ngOnInit() {
@@ -237,8 +239,8 @@ export class EditUpdateUnassignedSmeComponent implements OnInit {
 
   getOwner() {
     const loggedInSmeUserId = this.loggedInSme[0].userId
-    let param = `/sme-details-new/${loggedInSmeUserId}?owner=true`;
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
+    let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
+    this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('owner list result -> ', result);
       this.ownerList = result.data;
       console.log("ownerlist", this.ownerList)

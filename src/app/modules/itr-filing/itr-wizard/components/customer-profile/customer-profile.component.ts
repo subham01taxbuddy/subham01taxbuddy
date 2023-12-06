@@ -516,9 +516,9 @@ export class CustomerProfileComponent implements OnInit {
           );
           this.loading = false;
           if (ref) {
-            this.utilsService.showSnackBar(
-              'Customer profile updated successfully.'
-            );
+            // this.utilsService.showSnackBar(
+            //   'Customer profile updated successfully.'
+            // );
             this.customerProfileSaved.emit(true);
           }
           // if (ref === "CONTINUE") {

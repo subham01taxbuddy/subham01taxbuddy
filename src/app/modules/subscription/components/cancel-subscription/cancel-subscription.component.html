@@ -12,26 +12,18 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <!-- <div class="col-sm-12" *ngIf="roles?.includes('ROLE_OWNER')">
-           <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()" class="btnRt2"> Co-Owner </mat-slide-toggle>
-           </div> -->
 
             <div class="col-sm-12 bckClr">
-              <app-sme-list-drop-down #smeDropDown (sendOwner)="fromOwner($event, true)"
-                (sendFiler)="fromOwner($event, false)"></app-sme-list-drop-down>
+              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+              (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
-
-            <div class="col-sm-6 spsTp">
-              <mat-label> Mobile Number </mat-label>
-              <mat-form-field appearance="outline">
-                <input [numbersOnly]="true" maxlength="10" matInput [formControl]="mobile" />
-              </mat-form-field>
+            <div class="col-sm-4">
+              <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+                [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
             </div>
-            <div class="col-sm-6 spsTp">
-              <mat-label> Email Address </mat-label>
-              <mat-form-field appearance="outline">
-                <input type="text" matInput [formControl]="email" />
-              </mat-form-field>
+            <div class="col-8">
+              <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                (onChange)="searchByObject($event)"></app-generic-user-filter>
             </div>
             <div class="row spsTp bdrTp">
               <div class="col-6" *ngIf="false">

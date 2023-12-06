@@ -281,22 +281,37 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     dialogRefSelect.afterClosed().subscribe((result) => {
       if (result !== undefined) {
         if (result.type === 'tdsOnSalary') {
+          if(!this.taxPaid?.onSalary){
+            this.taxPaid.onSalary = [];
+          }
           this.taxPaid?.onSalary?.push(result.cgObject.salaryArray[0]);
         }
         if (result.type === 'tdsOtherThanSalary16A') {
+          if(!this.taxPaid?.otherThanSalary16A){
+            this.taxPaid.otherThanSalary16A = [];
+          }
           this.taxPaid?.otherThanSalary16A?.push(
             result.cgObject.salaryArray[0]
           );
         }
         if (result.type === 'tdsOtherThanSalaryPanBased') {
+          if(!this.taxPaid?.otherThanSalary26QB){
+            this.taxPaid.otherThanSalary26QB = [];
+          }
           this.taxPaid?.otherThanSalary26QB?.push(
             result.cgObject.salaryArray[0]
           );
         }
         if (result.type === 'tcs') {
+          if(!this.taxPaid?.tcs){
+            this.taxPaid.tcs = [];
+          }
           this.taxPaid?.tcs?.push(result.cgObject.salaryArray[0]);
         }
         if (result.type === 'selfAssessment') {
+          if(!this.taxPaid?.otherThanTDSTCS){
+            this.taxPaid.otherThanTDSTCS = [];
+          }
           this.taxPaid?.otherThanTDSTCS?.push(result.cgObject.salaryArray[0]);
         }
         this.Copy_ITR_JSON.taxPaid = this.taxPaid;
@@ -518,12 +533,12 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
-          if (params.data.tdsCode === 'tdsOtherThanSalary16A') {
+          if (params.data.tdsCode === 'tdsOtherThanSalary16A' && params.data.headOfIncome) {
             return headOfIncomeDropdownTDS2.filter(
               (item) => item.code === params.data.headOfIncome
             )[0].name;
           }
-          if (params.data.tdsCode === 'tdsOtherThanSalaryPanBased') {
+          if (params.data.tdsCode === 'tdsOtherThanSalaryPanBased' && params.data.headOfIncome) {
             return headOfIncomeDropdownTDS3.filter(
               (item) => item.code === params.data.headOfIncome
             )[0].name;

@@ -93,6 +93,8 @@ export class ScheduleFaComponent implements OnInit {
   scheduleFa: FormGroup;
   isPanelOpen: boolean = false;
   maxPurchaseDate: any;
+  selectedIndexes: number[] = [];
+  selectedAccountIndexes: number[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -663,7 +665,7 @@ export class ScheduleFaComponent implements OnInit {
   createForms(assetType: string, asset: any[]) {
     console.log('creatingForms:', asset, assetType);
     const formArray = this.scheduleFa?.controls[assetType] as FormArray;
-
+    formArray.clear();
     if (assetType === 'depositoryAccounts') {
       this.updateMultipleTypeForm(asset, assetType);
     }
@@ -794,6 +796,7 @@ export class ScheduleFaComponent implements OnInit {
         formArray.push(formGroup);
       }
     });
+    console.log(formArray);
   }
 
   // adding whole section
@@ -803,7 +806,7 @@ export class ScheduleFaComponent implements OnInit {
     if (newFormGroup) {
       const formArray = this.scheduleFa.get(section) as FormArray;
       if (formArray.valid) {
-        formArray.push(newFormGroup);
+        formArray.push(newFormGroup.controls[0]);
       } else {
         this.utilsService.showSnackBar(
           'Please make sure that all the existing details are entered correctly'
@@ -813,10 +816,15 @@ export class ScheduleFaComponent implements OnInit {
   }
 
   // adding nested form array
-  add(section) {
-    const accountControls = (this.scheduleFa.get(section) as FormArray)
-      .at(0)
-      .get('account') as FormArray;
+  add(section, i) {
+    let accountControls: any;
+    if (section === 'depositoryAccounts') {
+      accountControls = this.getAccountControls(i);
+    } else if (section === 'signingAuthorityDetails') {
+      accountControls = this.getSigningAuthAccountControls(i);
+    } else if (section === 'custodialAccounts') {
+      accountControls = this.getCustodialAccountControls(i);
+    }
 
     if (accountControls.valid) {
       if (section === 'depositoryAccounts') {
@@ -867,7 +875,7 @@ export class ScheduleFaComponent implements OnInit {
     }
   }
 
-  saveAll() {
+  saveAll(type?) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
@@ -889,10 +897,10 @@ export class ScheduleFaComponent implements OnInit {
       const formArray = this.scheduleFa.get(formArrayName) as FormArray;
 
       for (let i = formArray.length - 1; i >= 0; i--) {
-        const control = formArray.at(i) as FormGroup;
-        const value = control.get('countryCode');
+        const control = formArray?.at(i) as FormGroup;
+        const value = control?.get('countryCode');
 
-        if (!value.value) {
+        if (!value?.value) {
           formArray.removeAt(i);
         }
       }
@@ -955,10 +963,107 @@ export class ScheduleFaComponent implements OnInit {
         ).getRawValue();
         console.log(accountsFormArray);
 
+        // I can empty foreign assets before starting to push, this way only the new daat will be pushed from start
+        if (!this.Copy_ITR_JSON.foreignIncome) {
+          this.Copy_ITR_JSON.foreignIncome = {
+            foreignAssets: null,
+            id: null,
+            taxAmountRefunded: 0,
+            taxPaidOutsideIndiaFlag: null,
+            taxReliefAssessmentYear: null,
+            taxReliefClaimed: [],
+          };
+          this.Copy_ITR_JSON.foreignIncome.foreignAssets = {
+            id: null,
+            capitalAssetsDetails: [],
+            cashValueInsurance: [],
+            custodialAccounts: [],
+            depositoryAccounts: [],
+            equityAndDebtInterest: [],
+            financialInterestDetails: [],
+            immovablePropertryDetails: [],
+            otherIncomeDetails: [],
+            signingAuthorityDetails: [],
+            trustsDetails: [],
+          };
+        }
+
         accountsFormArray.forEach((sectionForm) => {
           console.log(sectionForm);
-          sectionForm.account.forEach((account) => {
-            console.log(account);
+          if (sectionForm.account && sectionForm.account.length > 0) {
+            sectionForm.account.forEach((account) => {
+              console.log(account);
+              if (section === 'depositoryAccounts') {
+                const formGroup = {
+                  countryName: sectionForm.countryName,
+                  countryCode: sectionForm.countryCode,
+                  nameOfInstitution: sectionForm.nameOfInstitution,
+                  addressOfInstitution: sectionForm.addressOfInstitution,
+                  zipCode: sectionForm.zipCode,
+                  accountNumber: account.accountNumber,
+                  status: account.status,
+                  accountOpeningDate: account.accountOpeningDate,
+                  peakBalance: account.peakBalance,
+                  closingBalance: account.closingBalance,
+                  grossInterestPaid: account.grossInterestPaid,
+                  grossAmountNature: null,
+                  dateOfContract: null,
+                  cashValue: null,
+                  totalGrossAmountPaid: null,
+                };
+                console.log(formGroup);
+                this.Copy_ITR_JSON.foreignIncome.foreignAssets[section].push(
+                  formGroup
+                );
+              } else if (section === 'signingAuthorityDetails') {
+                const formGroup = {
+                  countryName: sectionForm.countryName,
+                  countryCode: sectionForm.countryCode,
+                  institutionName: sectionForm.institutionName,
+                  address: sectionForm.address,
+                  zipCode: sectionForm.zipCode,
+                  accountHolderName: account.accountHolderName,
+                  accountNumber: account.accountNumber,
+                  peakBalance: account.peakBalance,
+                  accruedIncome: account.accruedIncome,
+                  isTaxableinYourHand: account.isTaxableinYourHand,
+                  amount: account.amount,
+                  scheduleOfferd: account.scheduleOfferd,
+                  numberOfSchedule: account.numberOfSchedule,
+                  id: null,
+                  status: account.status,
+                };
+
+                console.log(formGroup);
+                // I can empty foreign assets before starting to push, this way only the new daat will be pushed from start
+                this.Copy_ITR_JSON.foreignIncome.foreignAssets[section].push(
+                  formGroup
+                );
+              } else if (section === 'custodialAccounts') {
+                const formGroup = {
+                  countryName: sectionForm.countryName,
+                  countryCode: sectionForm.countryCode,
+                  nameOfInstitution: sectionForm.nameOfInstitution,
+                  addressOfInstitution: sectionForm.addressOfInstitution,
+                  zipCode: sectionForm.zipCode,
+                  accountNumber: account.accountNumber,
+                  status: account.status,
+                  accountOpeningDate: account.accountOpeningDate,
+                  peakBalance: account.peakBalance,
+                  closingBalance: account.closingBalance,
+                  grossAmountNature: account.grossAmountNature,
+                  grossInterestPaid: account.grossInterestPaid,
+                  dateOfContract: null,
+                  cashValue: null,
+                  totalGrossAmountPaid: null,
+                };
+
+                this.Copy_ITR_JSON.foreignIncome.foreignAssets[section].push(
+                  formGroup
+                );
+              }
+            });
+          } else {
             if (section === 'depositoryAccounts') {
               const formGroup = {
                 countryName: sectionForm.countryName,
@@ -966,42 +1071,18 @@ export class ScheduleFaComponent implements OnInit {
                 nameOfInstitution: sectionForm.nameOfInstitution,
                 addressOfInstitution: sectionForm.addressOfInstitution,
                 zipCode: sectionForm.zipCode,
-                accountNumber: account.accountNumber,
-                status: account.status,
-                accountOpeningDate: account.accountOpeningDate,
-                peakBalance: account.peakBalance,
-                closingBalance: account.closingBalance,
-                grossInterestPaid: account.grossInterestPaid,
+                accountNumber: null,
+                status: null,
+                accountOpeningDate: null,
+                peakBalance: null,
+                closingBalance: null,
+                grossInterestPaid: null,
                 grossAmountNature: null,
                 dateOfContract: null,
                 cashValue: null,
                 totalGrossAmountPaid: null,
               };
               console.log(formGroup);
-              // I can empty foreign assets before starting to push, this way only the new daat will be pushed from start
-              if (!this.Copy_ITR_JSON.foreignIncome) {
-                this.Copy_ITR_JSON.foreignIncome = {
-                  foreignAssets: null,
-                  id: null,
-                  taxAmountRefunded: 0,
-                  taxPaidOutsideIndiaFlag: null,
-                  taxReliefAssessmentYear: null,
-                  taxReliefClaimed: [],
-                };
-                this.Copy_ITR_JSON.foreignIncome.foreignAssets = {
-                  capitalAssetsDetails: [],
-                  cashValueInsurance: [],
-                  custodialAccounts: [],
-                  depositoryAccounts: [],
-                  equityAndDebtInterest: [],
-                  financialInterestDetails: [],
-                  id: null,
-                  immovablePropertryDetails: [],
-                  otherIncomeDetails: [],
-                  signingAuthorityDetails: [],
-                  trustsDetails: [],
-                };
-              }
               this.Copy_ITR_JSON.foreignIncome.foreignAssets[section].push(
                 formGroup
               );
@@ -1012,16 +1093,16 @@ export class ScheduleFaComponent implements OnInit {
                 institutionName: sectionForm.institutionName,
                 address: sectionForm.address,
                 zipCode: sectionForm.zipCode,
-                accountHolderName: account.accountHolderName,
-                accountNumber: account.accountNumber,
-                peakBalance: account.peakBalance,
-                accruedIncome: account.accruedIncome,
-                isTaxableinYourHand: account.isTaxableinYourHand,
-                amount: account.amount,
-                scheduleOfferd: account.scheduleOfferd,
-                numberOfSchedule: account.numberOfSchedule,
+                accountHolderName: null,
+                accountNumber: null,
+                peakBalance: null,
+                accruedIncome: null,
+                isTaxableinYourHand: null,
+                amount: null,
+                scheduleOfferd: null,
+                numberOfSchedule: null,
                 id: null,
-                status: account.status,
+                status: null,
               };
 
               console.log(formGroup);
@@ -1036,13 +1117,13 @@ export class ScheduleFaComponent implements OnInit {
                 nameOfInstitution: sectionForm.nameOfInstitution,
                 addressOfInstitution: sectionForm.addressOfInstitution,
                 zipCode: sectionForm.zipCode,
-                accountNumber: account.accountNumber,
-                status: account.status,
-                accountOpeningDate: account.accountOpeningDate,
-                peakBalance: account.peakBalance,
-                closingBalance: account.closingBalance,
-                grossAmountNature: account.grossAmountNature,
-                grossInterestPaid: account.grossInterestPaid,
+                accountNumber: null,
+                status: null,
+                accountOpeningDate: null,
+                peakBalance: null,
+                closingBalance: null,
+                grossAmountNature: null,
+                grossInterestPaid: null,
                 dateOfContract: null,
                 cashValue: null,
                 totalGrossAmountPaid: null,
@@ -1052,7 +1133,7 @@ export class ScheduleFaComponent implements OnInit {
                 formGroup
               );
             }
-          });
+          }
         });
       });
 
@@ -1063,23 +1144,39 @@ export class ScheduleFaComponent implements OnInit {
           this.ITR_JSON = result;
           sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
           this.loading = false;
-          this.utilsService.showSnackBar('Schedule FA saved successfully');
-          this.saveAndNext.emit(false);
+          if (type === 'DELETE') {
+            this.utilsService.showSnackBar('Deleted successfully');
+          } else {
+            this.utilsService.showSnackBar('Schedule FA saved successfully');
+            this.saveAndNext.emit(false);
+          }
           console.log(this.ITR_JSON, 'scheduleFaResult');
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
           this.loading = false;
-          this.utilsService.showSnackBar(
-            'Failed to add schedule FA, please try again.'
-          );
-          this.utilsService.smoothScrollToTop();
+          if (type === 'DELETE') {
+            this.utilsService.showSnackBar(
+              'Failed to delete details, please try again.'
+            );
+          } else {
+            this.utilsService.showSnackBar(
+              'Failed to add schedule FA, please try again.'
+            );
+            this.utilsService.smoothScrollToTop();
+          }
         }
       );
     } else {
-      this.utilsService.showSnackBar(
-        'Failed to add schedule FA, please try again.'
-      );
+      if (type === 'DELETE') {
+        this.utilsService.showSnackBar(
+          'Failed to delete details, please try again.'
+        );
+      } else {
+        this.utilsService.showSnackBar(
+          'Failed to add schedule FA, please try again.'
+        );
+      }
     }
   }
 
@@ -1089,10 +1186,18 @@ export class ScheduleFaComponent implements OnInit {
   }
 
   // TO-DO =================pass index of edit, allow one edit only
-  get getAccountControls() {
-    return (this.scheduleFa.get('depositoryAccounts') as FormArray)
-      .at(0)
-      .get('account') as FormArray;
+  getAccountControls(i: number): FormArray {
+    const depositoryAccounts = this.scheduleFa.get(
+      'depositoryAccounts'
+    ) as FormArray;
+
+    if (depositoryAccounts.at(i) instanceof FormGroup) {
+      return (depositoryAccounts.at(i) as FormGroup).get(
+        'account'
+      ) as FormArray;
+    } else {
+      return this.fb.array([]); // or return an empty FormArray if needed
+    }
   }
 
   get getEquityAndDebtInterest() {
@@ -1127,22 +1232,34 @@ export class ScheduleFaComponent implements OnInit {
     return this.scheduleFa.get('signingAuthorityDetails') as FormArray;
   }
 
-  // TO-DO =================pass index of edit, allow one edit only
-  get getSigningAuthAccountControls() {
-    return (this.scheduleFa.get('signingAuthorityDetails') as FormArray)
-      .at(0)
-      .get('account') as FormArray;
+  getSigningAuthAccountControls(i: number): FormArray {
+    const signingAuthAccounts = this.scheduleFa.get(
+      'signingAuthorityDetails'
+    ) as FormArray;
+
+    if (signingAuthAccounts.at(i) instanceof FormGroup) {
+      return (signingAuthAccounts.at(i) as FormGroup).get(
+        'account'
+      ) as FormArray;
+    } else {
+      return this.fb.array([]); // or return an empty FormArray if needed
+    }
   }
 
   get getCustodialAccounts() {
     return this.scheduleFa?.get('custodialAccounts') as FormArray;
   }
 
-  // TO-DO =================pass index of edit, allow one edit only
-  get getCustodialAccountControls() {
-    return (this.scheduleFa.get('custodialAccounts') as FormArray)
-      .at(0)
-      .get('account') as FormArray;
+  getCustodialAccountControls(i: number): FormArray {
+    const custodialAccounts = this.scheduleFa.get(
+      'custodialAccounts'
+    ) as FormArray;
+
+    if (custodialAccounts.at(i) instanceof FormGroup) {
+      return (custodialAccounts.at(i) as FormGroup).get('account') as FormArray;
+    } else {
+      return this.fb.array([]); // or return an empty FormArray if needed
+    }
   }
 
   // OTHER SECTION
@@ -1157,8 +1274,68 @@ export class ScheduleFaComponent implements OnInit {
 
   // Have to implement this, if yes then have to show questions else not
   handleSelectionChange(event) {}
-}
 
-// TO-DO
-// 1. PROVIDE CHECKBOS AND DELETE OPTION FOR EACH NON NESTED - AJAY HAS TO ADD hasEdit key
-// 2. clear form check while auto-populating on init. maybe i can clear itrObj array and then push new ones so this will automatically work
+  // Function to toggle selected index
+  toggleSelectedIndex(index: number) {
+    const idx = this.selectedIndexes.indexOf(index);
+    if (idx > -1) {
+      this.selectedIndexes.splice(idx, 1);
+    } else {
+      this.selectedIndexes.push(index);
+    }
+  }
+
+  // Function to toggle selected index
+  toggleSelectedAccountIndex(index: number) {
+    const idx = this.selectedAccountIndexes.indexOf(index);
+    if (idx > -1) {
+      this.selectedAccountIndexes.splice(idx, 1);
+    } else {
+      this.selectedAccountIndexes.push(index);
+    }
+  }
+
+  delete(formArrayName, type, index?) {
+    let formArrayOrAccountToDelete: any = '';
+
+    if (type === 'account') {
+      formArrayOrAccountToDelete = (
+        this.scheduleFa.get(formArrayName) as FormArray
+      ).controls[index].get('account') as FormArray;
+    } else {
+      formArrayOrAccountToDelete = this.scheduleFa.get(
+        formArrayName
+      ) as FormArray;
+    }
+
+    const formAcctArrayToDltCntrls = formArrayOrAccountToDelete.controls;
+    for (let i = formAcctArrayToDltCntrls.length - 1; i >= 0; i--) {
+      if (
+        (type === 'account'
+          ? this.selectedAccountIndexes
+          : this.selectedIndexes
+        ).includes(i)
+      ) {
+        if (type === 'account') {
+          if (formAcctArrayToDltCntrls.length > 0) {
+            formArrayOrAccountToDelete.removeAt(i);
+            this.utilsService.showSnackBar(
+              `Details deleted Successfully ${formArrayName}`
+            );
+          } else {
+            this.utilsService.showSnackBar(
+              `Atleast one account detail is required for ${formArrayName}`
+            );
+          }
+        } else {
+          formArrayOrAccountToDelete.removeAt(i);
+          this.utilsService.showSnackBar(
+            `Details deleted Successfully ${formArrayName}`
+          );
+        }
+      }
+    }
+    this.scheduleFa.updateValueAndValidity();
+    console.log(this.scheduleFa);
+  }
+}

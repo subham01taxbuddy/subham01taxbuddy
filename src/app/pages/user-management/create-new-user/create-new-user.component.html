@@ -5,131 +5,115 @@
     <div class="col-sm-4">
       <b style="font-size: 20px">Create New User:</b>
     </div>
-    <div class="col-sm-2" *ngIf="roles?.includes('ROLE_OWNER')">
-      <p>
-        <mat-slide-toggle [formControl]="coOwnerToggle" (change)="getToggleValue()"> Co-Owner </mat-slide-toggle>
-      </p>
-    </div>
   </div>
   <div class="rowClr">
     <div class="surround">
-    <form [formGroup]="signUpForm">
-      <div class="row">
+      <form [formGroup]="signUpForm">
+        <div class="row">
+          <div class="col-sm-12 bckClr" *ngIf="isApplicable(['ROLE_ADMIN'])">
+            <app-sme-list-drop-down (sendLeader)="fromSme($event, true)"
+              (sendPrincipleIndividual)="fromSme($event, false)" [disabled]="assignedToMe">
+            </app-sme-list-drop-down>
+            <span class="note1 note">
+              Note : Service type will be enable after selecting Leader
+            </span>
+          </div>
+          <div class="col-sm-3 spsTp">
+            <mat-form-field appearance="outline" class="class1">
+              <mat-label>PAN Number</mat-label>
+              <input placeholder="PAN" formControlName="panNumber" autocomplete="off" (blur)="getUserInfoByPan()"
+                type="text" maxlength="10" minlength="10" upperCase matInput>
+            </mat-form-field>
+          </div>
 
-        <!-- searchh area starts -->
-        <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
-          <app-sme-list-drop-down (sendOwner)="fromSme($event, true)" (sendFiler)="fromSme($event, false)" listType="ALL"
-             [disabled]="assignedToMe">
-          </app-sme-list-drop-down>
-        </div>
-        <div class="col-sm-12 bckClr" *ngIf="coOwnerCheck">
-         <app-co-owner-list-drop-down  (sendCoOwner)="fromSme1($event, true)"
-           (sendCoFiler)="fromSme1($event, false)"></app-co-owner-list-drop-down>
-         </div>
-        <!-- search area ends -->
-
-        <div class="col-sm-3 spsTp">
-          <mat-form-field appearance="outline" class="class1">
-            <mat-label>PAN Number</mat-label>
-            <input placeholder="PAN" formControlName="panNumber" autocomplete="off"
-              (blur)="getUserInfoByPan()" type="text" maxlength="10" minlength="10"
-              upperCase matInput>
-          </mat-form-field>
-        </div>
-
-        <div class="col-sm-3 spsTp">
-          <mat-form-field appearance="outline" class="class1">
-            <mat-label>First name</mat-label>
-            <input matInput placeholder="First Name" required type="text" formControlName="firstName" capitalizeFirst >
-          </mat-form-field>
-        </div>
-        <div class="col-sm-3 spsTp">
-          <mat-form-field appearance="outline" class="class1">
-            <mat-label>Middle Name</mat-label>
-            <input placeholder="Middle Name" type="text" formControlName="middleName" capitalizeFirst matInput>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-3 spsTp">
-          <mat-form-field appearance="outline" class="class1">
-            <mat-label>Last Name</mat-label>
-            <input matInput placeholder="Last Name" type="text" formControlName="lastName" capitalizeFirst required>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-3 spsTp">
-          <mat-form-field appearance="outline" class="class1">
-            <mat-label>Select country</mat-label>
-            <input type="text" placeholder="Select country" matInput formControlName="countryCode"
-              [matAutocomplete]="auto" required>
-              <mat-autocomplete  #auto="matAutocomplete">
-                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name" (click)="getCountry(option)">
-                {{ option.name| titlecase }}
+          <div class="col-sm-3 spsTp">
+            <mat-form-field appearance="outline" class="class1">
+              <mat-label>First name</mat-label>
+              <input matInput placeholder="First Name" required type="text" formControlName="firstName" capitalizeFirst>
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['firstName'].hasError('pattern')">Please enter the
+                valid name.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-3 spsTp">
+            <mat-form-field appearance="outline" class="class1">
+              <mat-label>Middle Name</mat-label>
+              <input placeholder="Middle Name" type="text" formControlName="middleName" capitalizeFirst matInput>
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['middleName'].hasError('pattern')">Please enter the
+                valid name.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-3 spsTp">
+            <mat-form-field appearance="outline" class="class1">
+              <mat-label>Last Name</mat-label>
+              <input matInput placeholder="Last Name" type="text" formControlName="lastName" capitalizeFirst required>
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['lastName'].hasError('pattern')">Please enter the
+                valid name.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-3 spsTp">
+            <mat-form-field appearance="outline" class="class1">
+              <mat-label>Select country</mat-label>
+              <input type="text" placeholder="Select country" matInput formControlName="countryCode"
+                [matAutocomplete]="auto" required>
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name"
+                  (click)="getCountry(option)">
+                  {{ option.name| titlecase }}
                 </mat-option>
               </mat-autocomplete>
-          </mat-form-field>
-
-          <!-- <mat-form-field appearance="outline">
-            <mat-label>Select country code</mat-label>
-            <mat-select placeholder="Select country" formControlName="countryCode" required>
-              <mat-option *ngFor="let country of countryDropdown" [value]="country.countryCode">
-                {{ country.countryCode}} ({{ country.countryName | titlecase}})
-              </mat-option>
-            </mat-select>
-          </mat-form-field> -->
-        </div>
-        <div class="col-sm-3 spsTp">
-          <mat-form-field appearance="outline" class="class1">
-            <mat-label>Mobile Number</mat-label>
-            <input matInput  [numbersOnly]="true" placeholder="Enter mobile number" formControlName="mobile" name="mobile"
-             [maxlength]="maxNo" [minlength]="minNo" required />
-            <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('required')">Mobile number
-              is required</mat-error>
-            <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('pattern')">Please enter a
-              valid mobile no.</mat-error>
-              <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('maxlength')">Mobile number cannot
+            </mat-form-field>
+          </div>
+          <div class="col-sm-3 spsTp">
+            <mat-form-field appearance="outline" class="class1">
+              <mat-label>Mobile Number</mat-label>
+              <input matInput [numbersOnly]="true" placeholder="Enter mobile number" formControlName="mobile"
+                name="mobile" [maxlength]="maxNo" [minlength]="minNo" required />
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('required')">Mobile number
+                is required</mat-error>
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('pattern')">Please enter a
+                valid mobile no.</mat-error>
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('maxlength')">Mobile number
+                cannot
                 exceed 10 characters.</mat-error>
-                <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('minlength')">Mobile number must
-                  be 10 digits.</mat-error>
-          </mat-form-field>
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('minlength')">Mobile number
+                must
+                be 10 digits.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-3 spsTp">
+            <mat-form-field appearance="outline" class="class1">
+              <mat-label>Email Address</mat-label>
+              <input matInput type="email" placeholder="Enter email address" formControlName="email" name="mobile"
+                pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" maxLength="50" required />
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['email'].hasError('required')">Email address is
+                required</mat-error>
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['email'].hasError('pattern')">Please enter a valid
+                email address.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-3 spsTp">
+            <mat-form-field appearance="outline" class="class1">
+              <mat-label>Service Type</mat-label>
+              <mat-select placeholder="Service Type" formControlName="serviceType"
+                (selectionChange)="changeServiceType()" required>
+                <mat-option *ngFor="let service of services" [disabled]="!service.isHide" [value]="service.value">
+                  <span> {{service.key}}</span>
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="signUpForm.controls['serviceType'].hasError('required')">Select
+                Service type </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-12" *ngIf="roles?.includes('ROLE_FILER')">
+            <mat-checkbox class="example-margin bldFnt mvRth assign" [(ngModel)]="assignedToMe"
+              [ngModelOptions]="{standalone: true}" disabled (change)="isAssignedToMe()">Assigned
+              to me!</mat-checkbox>
+          </div>
+          <div class="col-sm-12 spsTp bdrTp">
+            <button class="rt-btn" (click)="userSignUp()"[disabled]="disableUserSignUp" > User Sign-up </button>
+          </div>
         </div>
-        <div class="col-sm-3 spsTp">
-          <mat-form-field appearance="outline" class="class1">
-            <mat-label>Email Address</mat-label>
-            <input matInput type="email" placeholder="Enter email address" formControlName="email" name="mobile"
-              pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" maxLength="50" required />
-            <mat-error class="error-msg" *ngIf="signUpForm.controls['email'].hasError('required')">Email address is
-              required</mat-error>
-            <mat-error class="error-msg" *ngIf="signUpForm.controls['email'].hasError('pattern')">Please enter a valid
-              email address.</mat-error>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-3 spsTp">
-          <mat-form-field appearance="outline" class="class1">
-            <mat-label>Service Type</mat-label>
-            <mat-select placeholder="Service Type" formControlName="serviceType"
-              (selectionChange)="changeServiceType()" required>
-              <mat-option *ngFor="let service of services" [value]="service">
-                {{service}}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="signUpForm.controls['serviceType'].hasError('required')">Select
-              Service type </mat-error>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-12" *ngIf="(roles?.includes('ROLE_OWNER') || roles?.includes('ROLE_FILER')) && !coOwnerCheck " >
-          <mat-checkbox  class="example-margin bldFnt mvRth assign" [(ngModel)]="assignedToMe"
-            [ngModelOptions]="{standalone: true}" [disabled]="disableAssignedToMe" (change)="isAssignedToMe()">Assigned
-            to me!</mat-checkbox>
-        </div>
-
-
-
-        <div class="col-sm-12 spsTp bdrTp">
-          <button class="rt-btn" [class.btn-disabled]="disableUserSignUp" (click)="userSignUp()" [disabled]="disableUserSignUp"> User Sign-up </button>
-        </div>
-
-      </div>
-     </form>
-
-
+      </form>
     </div>
-    </div>
+  </div>
+</div>

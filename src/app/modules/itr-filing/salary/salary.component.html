@@ -266,7 +266,11 @@
                   {{ income.value.label }}
                 </td>
 
-                <td class="flex align-items-center allowance-label" style="flex-direction: column;" *ngIf="income.value.allowType === 'COMPENSATION_ON_VRS'">
+                <td
+                  class="flex align-items-center allowance-label"
+                  style="flex-direction: column"
+                  *ngIf="income.value.allowType === 'COMPENSATION_ON_VRS'"
+                >
                   <div>
                     Whether Exemption u/s 10(10C) is taken in Previous
                     Assessment Year ??<br />
@@ -297,8 +301,8 @@
                       > </mat-radio-group
                     ><br />
                   </div>
-                  <div style="width: 100%;" class="flex align-items-center">
-                    <div style="width: 100%;">
+                  <div style="width: 100%" class="flex align-items-center">
+                    <div style="width: 100%">
                       <mat-form-field
                         class="input-field-width"
                         style="width: 70% !important"
@@ -311,15 +315,34 @@
                           name="allowValue[i]"
                           formControlName="allowValue"
                           class="input-field"
+                          (change)="validations()"
                           [disabled]="isVrsExemptionTaken"
                         />
                       </mat-form-field>
-                      <mat-error *ngIf="freeze && (income.value.allowType === 'COMPENSATION_ON_VRS' || income.value.allowType === 'FIRST_PROVISO' || income.value.allowType === 'SECOND_PROVISO' )">
+                      <mat-error
+                        *ngIf="
+                          freeze &&
+                          (income.value.allowType === 'COMPENSATION_ON_VRS' ||
+                            income.value.allowType === 'FIRST_PROVISO' ||
+                            income.value.allowType === 'SECOND_PROVISO')
+                        "
+                      >
                         Only any one of the three is allowed
-                        </mat-error>
+                      </mat-error>
+                      <mat-error
+                        style="width: 70%"
+                        *ngIf="
+                          income.value.allowType === 'COMPENSATION_ON_VRS' &&
+                          compensationOnVrsError
+                        "
+                      >
+                        Compensation on VRS cannot be more than 17(1) or 5 lakh
+                        or if it is already claimed in any previous year then it
+                        cannot be claimed again
+                      </mat-error>
                     </div>
                     <!-- Calculator button -->
-                    <i
+                    <!-- <i
                       #buttonContainer
                       class="fa-duotone fa-calculator fa-2xl"
                       style="
@@ -330,11 +353,14 @@
                       "
                       id="buttonContainer"
                       (click)="calculator(income.value.allowType, i)"
-                    ></i>
+                    ></i> -->
                   </div>
                 </td>
-                <td class="flex align-items-center allowance-label" *ngIf="income.value.allowType !== 'COMPENSATION_ON_VRS'">
-                  <div style="width:100%">
+                <td
+                  class="flex align-items-center allowance-label"
+                  *ngIf="income.value.allowType !== 'COMPENSATION_ON_VRS'"
+                >
+                  <div style="width: 100%">
                     <mat-form-field
                       class="input-field-width"
                       style="width: 70% !important; margin-right: 5px"
@@ -348,15 +374,150 @@
                         formControlName="allowValue"
                         class="input-field"
                         maxlength="125"
+                        (change)="validations()"
                       />
-  
                     </mat-form-field>
-                    <mat-error *ngIf="freeze && (income.value.allowType === 'COMPENSATION_ON_VRS' || income.value.allowType === 'FIRST_PROVISO' || income.value.allowType === 'SECOND_PROVISO' )">
+                    <mat-error
+                      *ngIf="
+                        freeze &&
+                        (income.value.allowType === 'COMPENSATION_ON_VRS' ||
+                          income.value.allowType === 'FIRST_PROVISO' ||
+                          income.value.allowType === 'SECOND_PROVISO')
+                      "
+                    >
                       Only any one is allowed of the three
-                      </mat-error>
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'HOUSE_RENT' && hraError
+                      "
+                    >
+                      House rent allowance cannot be more than 50% of Basic or
+                      Total HRA
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="income.value.allowType === 'LTA' && ltaError"
+                    >
+                      LTA to be claimed cannot be more than the LTA that is
+                      provided
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'GRATUITY' && gratuityError
+                      "
+                    >
+                      Gratuity to be claimed cannot be more than the gratuity
+                      that is provided or salary entered in Salary 17(1) or 20
+                      lakhs, whichever is lower
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'COMMUTED_PENSION' &&
+                        pensionError
+                      "
+                    >
+                      Commuted pension u/s 10(10A) to be claimed cannot be more
+                      than the commuted pension u/s 10(10A) that is provided
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'LEAVE_ENCASHMENT' &&
+                        leaveEncashError
+                      "
+                    >
+                      Leave Encashment to be claimed cannot be more than the
+                      Leave Encashment that is provided or salary entered in
+                      Salary 17(1) or 3 lakhs (for non-goverment employees),
+                      whichever is lower
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'SECOND_PROVISO_CGOV' &&
+                        secProvisoCgovError
+                      "
+                    >
+                      Second proviso under central government can be only
+                      claimed by government employees and should be less than
+                      salary in 17(1) or 5 lakhs, whichever is lower
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'FIRST_PROVISO' &&
+                        firstProvisoError
+                      "
+                    >
+                      First proviso under central government cannot be claimed
+                      by government employees
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'SECOND_PROVISO' &&
+                        secondProvisoError
+                      "
+                    >
+                      Second proviso allowance cannot be claimed by government
+                      employees
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === '10(6)' && remunerationError
+                      "
+                    >
+                      Deduction claimed cannot be more than the total Salary
+                      under 17(1), 17(2) and 17(3)
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === '10(7)' && serviceOutIndError
+                      "
+                    >
+                      Deduction claimed cannot be more than the total Salary
+                      under 17(1), 17(2) and 17(3)
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === '10(14)(ii)' &&
+                        prescPersonalExpError
+                      "
+                    >
+                      Deduction cannot be more than the value of Salary under
+                      Conveyance Allowance, Other Allowance & Others in Section
+                      17(1)
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === '10(14)(i)' &&
+                        prescProfExpError
+                      "
+                    >
+                      Deduction cannot be more than the value of Salary under
+                      Conveyance Allowance, Other Allowance & Others in Section
+                      17(1)
+                    </mat-error>
+                    <mat-error
+                      style="width: 70%"
+                      *ngIf="
+                        income.value.allowType === 'EIC' && eicProfExpError
+                      "
+                    >
+                      Deduction can claimed only by state or central government
+                      employees
+                    </mat-error>
                   </div>
                   <!-- Calculator button -->
-                  <i
+                  <!-- <i
                     #buttonContainer
                     class="fa-duotone fa-calculator fa-2xl"
                     style="
@@ -367,7 +528,7 @@
                     "
                     id="buttonContainer"
                     (click)="calculator(income.value.allowType, i)"
-                  ></i>
+                  ></i> -->
                 </td>
               </tr>
             </tbody>

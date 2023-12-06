@@ -1,4 +1,7 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<ngx-loading
+  [show]="loading"
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
 
 <!-- first radio bar starts -->
 
@@ -12,35 +15,61 @@
     </div>
 
     <div class="col-sm-4 text-right">
-      <mat-radio-group name="directorInCompany" (change)="ChangeDirectorStatus()"
-        [(ngModel)]="Copy_ITR_JSON.systemFlags.directorInCompany" [disabled]="!isEditOther">
-        <mat-radio-button [value]="true" style="margin-left: 0px" labelPosition="before">Yes
+      <mat-radio-group
+        name="directorInCompany"
+        (change)="ChangeDirectorStatus()"
+        [(ngModel)]="Copy_ITR_JSON.systemFlags.directorInCompany"
+        [disabled]="!isEditOther"
+      >
+        <mat-radio-button
+          [value]="true"
+          style="margin-left: 0px"
+          labelPosition="before"
+          >Yes
         </mat-radio-button>
         &nbsp;&nbsp;&nbsp;
-        <mat-radio-button [value]="false" labelPosition="before">No</mat-radio-button>
+        <mat-radio-button [value]="false" labelPosition="before"
+          >No</mat-radio-button
+        >
       </mat-radio-group>
     </div>
 
     <div *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany">
-      <button class="new-add btnRt spsTp" (click)="addDirectorDetails('Add director details', 'ADD', null)">
+      <button
+        class="new-add btnRt spsTp"
+        (click)="addDirectorDetails('Add director details', 'ADD', null)"
+      >
         <i class="fa fa-plus" aria-hidden="true"></i> Add New Company
       </button>
     </div>
     <div *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany">
       <form [formGroup]="directorForm">
         <div formArrayName="directorsArray">
-          <div class="card" *ngFor="
+          <div
+            class="card"
+            *ngFor="
               let director of getDirectorsArray.controls | paginate : config;
               let i = index
-            " [formGroupName]="fieldGlobalIndex(i)">
+            "
+            [formGroupName]="fieldGlobalIndex(i)"
+          >
             <div class="row">
               <div class="col-sm-10">
-                <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
+                <mat-checkbox
+                  color="primary"
+                  name="hasEdit[i]"
+                  formControlName="hasEdit"
+                  class="ml30"
+                >
                   {{ director.get("companyName").value }}
                 </mat-checkbox>
               </div>
               <div class="col-sm-2">
-                <button type="button" class="edit-donation" (click)="editDirectorForm(i)">
+                <button
+                  type="button"
+                  class="edit-donation"
+                  (click)="editDirectorForm(i)"
+                >
                   <mat-icon> edit_square </mat-icon>Edit
                 </button>
               </div>
@@ -49,56 +78,109 @@
             <div class="row">
               <div class="col-sm-4">
                 <mat-form-field class="input-field-width">
-                  <input type="text" trim matInput formControlName="companyName" placeholder="Name of company"
-                    name="companyName" class="input-field" maxlength="125" required />
-                  <mat-error *ngIf="director.get('companyName').hasError('required')">Enter the Name of company.
+                  <input
+                    type="text"
+                    trim
+                    matInput
+                    formControlName="companyName"
+                    placeholder="Name of company"
+                    name="companyName"
+                    class="input-field"
+                    maxlength="125"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="director.get('companyName').hasError('required')"
+                    >Enter the Name of company.
                   </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-sm-4">
                 <mat-form-field class="input-field-width">
-                  <mat-select placeholder="Type of Company" name="typeOfCompany" formControlName="typeOfCompany"
-                    required>
-                    <mat-option *ngFor="let type of typeOfCompanies" [value]="type.value">
+                  <mat-select
+                    placeholder="Type of Company"
+                    name="typeOfCompany"
+                    formControlName="typeOfCompany"
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let type of typeOfCompanies"
+                      [value]="type.value"
+                    >
                       {{ type.label }}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="director.get('typeOfCompany').hasError('required')">Enter the type of company.
+                  <mat-error
+                    *ngIf="director.get('typeOfCompany').hasError('required')"
+                    >Enter the type of company.
                   </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-sm-4">
                 <mat-form-field class="input-field-width">
-                  <input type="text" trim upperCase matInput formControlName="companyPAN" placeholder="PAN of company"
-                    name="companyPAN" class="input-field" maxlength="10"
-                    [required]="director.get('typeOfCompany').value === 'D'" />
-                  <mat-error *ngIf="director.get('companyPAN').hasError('pattern')">Enter valid PAN number.
+                  <input
+                    type="text"
+                    trim
+                    upperCase
+                    matInput
+                    formControlName="companyPAN"
+                    placeholder="PAN of company"
+                    name="companyPAN"
+                    class="input-field"
+                    maxlength="10"
+                    [required]="director.get('typeOfCompany').value === 'D'"
+                  />
+                  <mat-error
+                    *ngIf="director.get('companyPAN').hasError('pattern')"
+                    >Enter valid PAN number.
                   </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-sm-4 spsTp">
                 <mat-form-field class="input-field-width">
-                  <mat-select placeholder="Select shares type" name="country" formControlName="sharesType" required>
-                    <mat-option *ngFor="let type of sharesTypes" [value]="type.value">
+                  <mat-select
+                    placeholder="Select shares type"
+                    name="country"
+                    formControlName="sharesType"
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let type of sharesTypes"
+                      [value]="type.value"
+                    >
                       {{ type.label }}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="director.get('sharesType').hasError('required')">Select the shares type.
+                  <mat-error
+                    *ngIf="director.get('sharesType').hasError('required')"
+                    >Select the shares type.
                   </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-sm-4 spsTp">
                 <mat-form-field class="input-field-width">
-                  <input type="text" matInput formControlName="din" placeholder="Director identification number(DIN)"
-                    name="din" class="input-field" maxlength="8" digitsOnly minlength="8"
+                  <input
+                    type="text"
+                    matInput
+                    formControlName="din"
+                    placeholder="Director identification number(DIN)"
+                    name="din"
+                    class="input-field"
+                    maxlength="8"
+                    digitsOnly
+                    minlength="8"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    [required]="director.get('typeOfCompany').value === 'D'" />
-                  <mat-error *ngIf="
+                    [required]="director.get('typeOfCompany').value === 'D'"
+                  />
+                  <mat-error
+                    *ngIf="
                       director.get('din').hasError('pattern') ||
                       director.get('din').hasError('minLength') ||
                       director.get('din').hasError('maxLength')
-                    ">
-                    Enter 8 digit DIN.</mat-error>
+                    "
+                  >
+                    Enter 8 digit DIN.</mat-error
+                  >
                 </mat-form-field>
               </div>
             </div>
@@ -106,17 +188,25 @@
           <div class="container">
             <div class="row">
               <div class="col-sm-3">
-                <button type="submit" class="tbd-btn-secondary btnGry" (click)="deleteDirectors()">
+                <button
+                  type="submit"
+                  class="tbd-btn-secondary btnGry"
+                  (click)="deleteDirectors()"
+                >
                   <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
                 </button>
               </div>
               <div class="col-sm-6">
                 <table>
-                  <tr *ngFor="
+                  <tr
+                    *ngFor="
                       let item of getDirectorsArray.controls | paginate : config
-                    "></tr>
+                    "
+                  ></tr>
                 </table>
-                <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                <pagination-controls
+                  (pageChange)="pageChanged($event)"
+                ></pagination-controls>
               </div>
             </div>
           </div>
@@ -136,38 +226,69 @@
       </div>
     </div>
     <div class="col-sm-4 text-right">
-      <mat-radio-group name="isUnlistedShares" (change)="ChangeSharesStatus()"
-        [(ngModel)]="Copy_ITR_JSON.systemFlags.haveUnlistedShares" [disabled]="!isEditOther">
-        <mat-radio-button [value]="true" style="margin-left: 0px" labelPosition="before">Yes
+      <mat-radio-group
+        name="isUnlistedShares"
+        (change)="ChangeSharesStatus()"
+        [(ngModel)]="Copy_ITR_JSON.systemFlags.haveUnlistedShares"
+        [disabled]="!isEditOther"
+      >
+        <mat-radio-button
+          [value]="true"
+          style="margin-left: 0px"
+          labelPosition="before"
+          >Yes
         </mat-radio-button>
         &nbsp;&nbsp;&nbsp;
-        <mat-radio-button [value]="false" labelPosition="before">No</mat-radio-button>
+        <mat-radio-button [value]="false" labelPosition="before"
+          >No</mat-radio-button
+        >
       </mat-radio-group>
     </div>
 
-    <div style="text-align: right" *ngIf="Copy_ITR_JSON.systemFlags.haveUnlistedShares">
-      <button class="new-add btnRt spsTp" (click)="addSharesDetails('Add unlisted shares details', 'ADD', null)">
+    <div
+      style="text-align: right"
+      *ngIf="Copy_ITR_JSON.systemFlags.haveUnlistedShares"
+    >
+      <button
+        class="new-add btnRt spsTp"
+        (click)="addSharesDetails('Add unlisted shares details', 'ADD', null)"
+      >
         &nbsp;&nbsp;
         <i class="fa fa-plus" aria-hidden="true"></i>
         Add Unlisted Company
       </button>
     </div>
-    <div style="height: 100%; padding-top: 5px; box-sizing: border-box"
-      *ngIf="Copy_ITR_JSON.systemFlags.haveUnlistedShares">
+    <div
+      style="height: 100%; padding-top: 5px; box-sizing: border-box"
+      *ngIf="Copy_ITR_JSON.systemFlags.haveUnlistedShares"
+    >
       <form [formGroup]="sharesForm">
         <div formArrayName="sharesArray">
-          <div class="card" *ngFor="
+          <div
+            class="card"
+            *ngFor="
               let share of getSharesArray.controls | paginate : config;
               let i = index
-            " [formGroupName]="fieldGlobalIndex(i)">
+            "
+            [formGroupName]="fieldGlobalIndex(i)"
+          >
             <div class="row">
               <div class="col-sm-10">
-                <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
+                <mat-checkbox
+                  color="primary"
+                  name="hasEdit[i]"
+                  formControlName="hasEdit"
+                  class="ml30"
+                >
                   {{ share.get("companyName").value }}
                 </mat-checkbox>
               </div>
               <div class="col-sm-2">
-                <button type="button" class="edit-donation" (click)="editSharesForm(i)">
+                <button
+                  type="button"
+                  class="edit-donation"
+                  (click)="editSharesForm(i)"
+                >
                   <mat-icon> edit_square </mat-icon>Edit
                 </button>
               </div>
@@ -175,53 +296,105 @@
             <div class="row">
               <div class="col-sm-3">
                 <mat-form-field class="input-field-width">
-                  <input type="text" trim matInput formControlName="companyName" placeholder="Name of company"
-                    name="companyName" class="input-field" maxlength="125" required />
-                  <mat-error *ngIf="share.get('companyName').hasError('required')">Enter the name of company.
+                  <input
+                    type="text"
+                    trim
+                    matInput
+                    formControlName="companyName"
+                    placeholder="Name of company"
+                    name="companyName"
+                    class="input-field"
+                    maxlength="125"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="share.get('companyName').hasError('required')"
+                    >Enter the name of company.
                   </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-sm-3">
                 <mat-form-field class="input-field-width">
-                  <mat-select placeholder="Type of Company" (selectionChange)="addPanValidator(i)" name="typeOfCompany"
-                    formControlName="typeOfCompany" required>
-                    <mat-option *ngFor="let type of typeOfCompanies" [value]="type.value">
+                  <mat-select
+                    placeholder="Type of Company"
+                    (selectionChange)="addPanValidator(i)"
+                    name="typeOfCompany"
+                    formControlName="typeOfCompany"
+                    required
+                  >
+                    <mat-option
+                      *ngFor="let type of typeOfCompanies"
+                      [value]="type.value"
+                    >
                       {{ type.label }}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="share.get('typeOfCompany').hasError('required')">Select the type of company.
+                  <mat-error
+                    *ngIf="share.get('typeOfCompany').hasError('required')"
+                    >Select the type of company.
                   </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-sm-3">
                 <mat-form-field class="input-field-width">
-                  <input trim upperCase matInput formControlName="companyPAN" placeholder="PAN of company"
-                    name="companyPAN" class="input-field" maxlength="10"
-                    [required]="share.get('typeOfCompany').value === 'D'" />
-                  <mat-error *ngIf="share.get('companyPAN').hasError('pattern')">Enter valid PAN number.</mat-error>
-                  <mat-error *ngIf="share.get('companyPAN').hasError('required')">Enter PAN of the company.
+                  <input
+                    trim
+                    upperCase
+                    matInput
+                    formControlName="companyPAN"
+                    placeholder="PAN of company"
+                    name="companyPAN"
+                    class="input-field"
+                    maxlength="10"
+                    [required]="share.get('typeOfCompany').value === 'D'"
+                  />
+                  <mat-error *ngIf="share.get('companyPAN').hasError('pattern')"
+                    >Enter valid PAN number.</mat-error
+                  >
+                  <mat-error
+                    *ngIf="share.get('companyPAN').hasError('required')"
+                    >Enter PAN of the company.
                   </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-sm-3">
                 <mat-form-field class="input-field-width">
-                  <input matInput formControlName="openingShares" placeholder="Opening No. of shares"
-                    name="openingShares" class="input-field" maxlength="14" digitsOnly
+                  <input
+                    matInput
+                    formControlName="openingShares"
+                    placeholder="Opening No. of shares"
+                    name="openingShares"
+                    class="input-field"
+                    maxlength="14"
+                    digitsOnly
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    onkeypress="event.charCode >= 48 && event.charCode <= 57" required />
-                  <mat-error *ngIf="share.get('openingShares').hasError('required')">Enter no of opening shares.
+                    onkeypress="event.charCode >= 48 && event.charCode <= 57"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="share.get('openingShares').hasError('required')"
+                    >Enter no of opening shares.
                   </mat-error>
                 </mat-form-field>
               </div>
 
               <div class="col-sm-3 spsTp">
                 <mat-form-field class="input-field-width">
-                  <input matInput formControlName="openingCOA" placeholder="Opening Cost of acquisition"
-                    name="openingCOA" class="input-field" maxlength="14" digitsOnly
+                  <input
+                    matInput
+                    formControlName="openingCOA"
+                    placeholder="Opening Cost of acquisition"
+                    name="openingCOA"
+                    class="input-field"
+                    maxlength="14"
+                    digitsOnly
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
-                    required />
-                  <mat-error *ngIf="share.get('openingCOA').hasError('required')">Enter cost of acquisition.
+                    required
+                  />
+                  <mat-error
+                    *ngIf="share.get('openingCOA').hasError('required')"
+                    >Enter cost of acquisition.
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -229,55 +402,104 @@
               <!-- Shares Aquired -->
               <div class="col-sm-3 spsTp">
                 <mat-form-field class="input-field-width">
-                  <input digitsOnly matInput formControlName="acquiredShares" placeholder="No. of shares acquired"
-                    name="acquiredShares" class="input-field" maxlength="14"
+                  <input
+                    digitsOnly
+                    matInput
+                    formControlName="acquiredShares"
+                    placeholder="No. of shares acquired"
+                    name="acquiredShares"
+                    class="input-field"
+                    maxlength="14"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    onkeypress="event.charCode >= 48 && event.charCode <= 57" required />
-                  <mat-error *ngIf="share.get('acquiredShares').hasError('required')">Enter No. of shares acquired.
+                    onkeypress="event.charCode >= 48 && event.charCode <= 57"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="share.get('acquiredShares').hasError('required')"
+                    >Enter No. of shares acquired.
                   </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-sm-3 spsTp">
                 <mat-form-field>
-                  <input matInput readonly formControlName="purchaseDate" name="purchaseDate"
-                    [matDatepicker]="purchaseDate" placeholder="Date of purchase" required />
-                  <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+                  <input
+                    matInput
+                    readonly
+                    formControlName="purchaseDate"
+                    name="purchaseDate"
+                    [matDatepicker]="purchaseDate"
+                    [min]="minDate"
+                    [max]="maxDate"
+                    placeholder="Date of purchase"
+                    required
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="purchaseDate"
+                  ></mat-datepicker-toggle>
                   <mat-datepicker #purchaseDate></mat-datepicker>
                 </mat-form-field>
               </div>
               <div class="col-sm-3 spsTp">
                 <mat-form-field class="input-field-width">
-                  <input digitsOnly matInput formControlName="faceValuePerShare" placeholder="Face value per share"
-                    name="faceValuePerShare" class="input-field" maxlength="14"
+                  <input
+                    digitsOnly
+                    matInput
+                    formControlName="faceValuePerShare"
+                    placeholder="Face value per share"
+                    name="faceValuePerShare"
+                    class="input-field"
+                    maxlength="14"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
-                    required />
-                  <mat-error *ngIf="share.get('faceValuePerShare').hasError('required')">Enter face value per share.
+                    required
+                  />
+                  <mat-error
+                    *ngIf="share.get('faceValuePerShare').hasError('required')"
+                    >Enter face value per share.
                   </mat-error>
                 </mat-form-field>
               </div>
 
               <div class="col-sm-3 spsTp">
                 <mat-form-field class="input-field-width">
-                  <input digitsOnly matInput formControlName="issuePricePerShare" placeholder="Issue price per share"
-                    name="issuePricePerShare" class="input-field" maxlength="14"
+                  <input
+                    digitsOnly
+                    matInput
+                    formControlName="issuePricePerShare"
+                    placeholder="Issue price per share"
+                    name="issuePricePerShare"
+                    class="input-field"
+                    maxlength="14"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    onkeypress="event.charCode >= 48 && event.charCode <= 57" required />
-                  <mat-error *ngIf="share.get('issuePricePerShare').hasError('required')">Enter issue price per share.
+                    onkeypress="event.charCode >= 48 && event.charCode <= 57"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="share.get('issuePricePerShare').hasError('required')"
+                    >Enter issue price per share.
                   </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-sm-3 spsTp">
                 <mat-form-field class="input-field-width">
-                  <input digitsOnly matInput formControlName="purchasePricePerShare"
-                    placeholder="Purchase price per share" name="purchasePricePerShare" class="input-field"
+                  <input
+                    digitsOnly
+                    matInput
+                    formControlName="purchasePricePerShare"
+                    placeholder="Purchase price per share"
+                    name="purchasePricePerShare"
+                    class="input-field"
                     maxlength="14"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
-                    required />
-                  <mat-error *ngIf="
+                    required
+                  />
+                  <mat-error
+                    *ngIf="
                       share.get('purchasePricePerShare').hasError('required')
-                    ">Enter Purchase price per share.
+                    "
+                    >Enter Purchase price per share.
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -285,24 +507,41 @@
               <!-- Shares Transferred -->
               <div class="col-sm-3 spsTp">
                 <mat-form-field class="input-field-width">
-                  <input digitsOnly matInput formControlName="transferredShares" placeholder="No. of shares transferred"
-                    name="transferredShares" class="input-field" maxlength="14"
+                  <input
+                    digitsOnly
+                    matInput
+                    formControlName="transferredShares"
+                    placeholder="No. of shares transferred"
+                    name="transferredShares"
+                    class="input-field"
+                    maxlength="14"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     onkeypress="event.charCode >= 48 && event.charCode <= 57"
-                    [required]="share.get('saleConsideration').value" />
-                  <mat-error *ngIf="share.get('transferredShares').hasError('required')">Enter No. of shares
-                    transferred.
+                    [required]="share.get('saleConsideration').value"
+                  />
+                  <mat-error
+                    *ngIf="share.get('transferredShares').hasError('required')"
+                    >Enter No. of shares transferred.
                   </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-sm-3 spsTp">
                 <mat-form-field class="input-field-width">
-                  <input digitsOnly matInput formControlName="saleConsideration" placeholder="Sale consideration"
-                    name="saleConsideration" class="input-field" maxlength="14"
+                  <input
+                    digitsOnly
+                    matInput
+                    formControlName="saleConsideration"
+                    placeholder="Sale consideration"
+                    name="saleConsideration"
+                    class="input-field"
+                    maxlength="14"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
-                    [required]="share.get('transferredShares').value" />
-                  <mat-error *ngIf="share.get('saleConsideration').hasError('required')">Enter sale consideration.
+                    [required]="share.get('transferredShares').value"
+                  />
+                  <mat-error
+                    *ngIf="share.get('saleConsideration').hasError('required')"
+                    >Enter sale consideration.
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -312,22 +551,41 @@
 
               <div class="col-sm-3 spsTp">
                 <mat-form-field class="input-field-width">
-                  <input digitsOnly matInput formControlName="closingShares" placeholder="Closing no of shares"
-                    name="closingShares" class="input-field" maxlength="14"
+                  <input
+                    digitsOnly
+                    matInput
+                    formControlName="closingShares"
+                    placeholder="Closing no of shares"
+                    name="closingShares"
+                    class="input-field"
+                    maxlength="14"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    onkeypress="event.charCode >= 48 && event.charCode <= 57" required />
-                  <mat-error *ngIf="share.get('closingShares').hasError('required')">Enter closing no. of shares.
+                    onkeypress="event.charCode >= 48 && event.charCode <= 57"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="share.get('closingShares').hasError('required')"
+                    >Enter closing no. of shares.
                   </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-sm-3 spsTp">
                 <mat-form-field class="input-field-width">
-                  <input digitsOnly matInput formControlName="closingCOA" placeholder="Closing cost of acquisition"
-                    name="closingCOA" class="input-field" maxlength="14"
+                  <input
+                    digitsOnly
+                    matInput
+                    formControlName="closingCOA"
+                    placeholder="Closing cost of acquisition"
+                    name="closingCOA"
+                    class="input-field"
+                    maxlength="14"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode === 46)"
-                    required />
-                  <mat-error *ngIf="share.get('closingCOA').hasError('required')">Enter Closing cost of acquisition.
+                    required
+                  />
+                  <mat-error
+                    *ngIf="share.get('closingCOA').hasError('required')"
+                    >Enter Closing cost of acquisition.
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -340,17 +598,25 @@
       <div class="container">
         <div class="row">
           <div class="col-sm-3">
-            <button type="submit" class="tbd-btn-secondary btnGry" (click)="deleteShares()">
+            <button
+              type="submit"
+              class="tbd-btn-secondary btnGry"
+              (click)="deleteShares()"
+            >
               <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
             </button>
           </div>
           <div class="col-sm-6">
             <table>
-              <tr *ngFor="
+              <tr
+                *ngFor="
                   let item of getDirectorsArray.controls | paginate : config
-                "></tr>
+                "
+              ></tr>
             </table>
-            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+            <pagination-controls
+              (pageChange)="pageChanged($event)"
+            ></pagination-controls>
           </div>
         </div>
       </div>
@@ -363,35 +629,54 @@
 <div class="gryBk1">
   <div class="row">
     <div class="col-sm-8">
-      <div class="txBg">
-        Whether you are Partner in firm ?
-      </div>
+      <div class="txBg">Whether you are Partner in firm ?</div>
     </div>
     <div class="col-sm-4 text-right">
-      <mat-radio-group name="partnerInFirm" (change)="changeFirmStatus()"
-        [(ngModel)]="Copy_ITR_JSON.partnerInFirmFlag">
-        <mat-radio-button [value]="'Y'" style="margin-left: 0px" labelPosition="before">Yes
+      <mat-radio-group
+        name="partnerInFirm"
+        (change)="changeFirmStatus()"
+        [(ngModel)]="Copy_ITR_JSON.partnerInFirmFlag"
+      >
+        <mat-radio-button
+          [value]="'Y'"
+          style="margin-left: 0px"
+          labelPosition="before"
+          >Yes
         </mat-radio-button>
         &nbsp;&nbsp;&nbsp;
-        <mat-radio-button [value]="'N'" labelPosition="before">No</mat-radio-button>
+        <mat-radio-button [value]="'N'" labelPosition="before"
+          >No</mat-radio-button
+        >
       </mat-radio-group>
     </div>
 
     <div *ngIf="isPartnerInFirmFlag()">
-      <button class="new-add btnRt spsTp" (click)="addFirmDetails('Add firm details', 'ADD', null)">
+      <button
+        class="new-add btnRt spsTp"
+        (click)="addFirmDetails('Add firm details', 'ADD', null)"
+      >
         <i class="fa fa-plus" aria-hidden="true"></i> Add New Firm
       </button>
     </div>
     <div *ngIf="isPartnerInFirmFlag()">
-      <form [formGroup]="firmForm" >
+      <form [formGroup]="firmForm">
         <div formArrayName="firmsArray">
-          <div class="card" *ngFor="
+          <div
+            class="card"
+            *ngFor="
               let director of getFirmsArray.controls | paginate : config;
               let i = index
-            " [formGroupName]="fieldGlobalIndex(i)">
+            "
+            [formGroupName]="fieldGlobalIndex(i)"
+          >
             <div class="row">
               <div class="col-sm-10">
-                <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
+                <mat-checkbox
+                  color="primary"
+                  name="hasEdit[i]"
+                  formControlName="hasEdit"
+                  class="ml30"
+                >
                   {{ director.get("name").value }}
                 </mat-checkbox>
               </div>
@@ -400,36 +685,74 @@
             <div class="row">
               <div class="col-sm-4">
                 <mat-form-field class="input-field-width">
-                  <input type="text" trim matInput formControlName="name" placeholder="Name of Firm"
-                    name="name" class="input-field" maxlength="125" required />
-                  <mat-error *ngIf="director.get('name').hasError('required')">Enter the Name of Firm.
+                  <input
+                    type="text"
+                    trim
+                    matInput
+                    formControlName="name"
+                    placeholder="Name of Firm"
+                    name="name"
+                    class="input-field"
+                    maxlength="125"
+                    required
+                  />
+                  <mat-error *ngIf="director.get('name').hasError('required')"
+                    >Enter the Name of Firm.
                   </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-sm-4">
                 <mat-form-field class="input-field-width">
-                  <input type="text" trim upperCase matInput formControlName="panNumber" placeholder="PAN of Firm"
-                    name="panNumber" class="input-field" maxlength="10" />
-                  <mat-error *ngIf="director.get('panNumber').hasError('pattern')">Enter valid PAN number.
-                  </mat-error>
+                  <input
+                    type="text"
+                    trim
+                    upperCase
+                    matInput
+                    formControlName="panNumber"
+                    placeholder="PAN of Firm"
+                    name="panNumber"
+                    class="input-field"
+                    maxlength="10"
+                    (input)="checkPAN(i)"
+                    required
+                  />
                 </mat-form-field>
+                <mat-error
+                *ngIf="
+                  director.get('panNumber').hasError('pattern')
+                  
+                "
+                >Enter valid PAN number.
+              </mat-error>
+                <mat-error *ngIf="panPartnerRepeat">
+                  PAN of Partner can't be same as user PAN.</mat-error
+                >
               </div>
             </div>
           </div>
           <div class="container" *ngIf="isPartnerInFirmFlag()">
             <div class="row">
               <div class="col-sm-3">
-                <button type="submit" class="delete-btn" (click)="deleteFirms()" [disabled]="!firmSelected()">
+                <button
+                  type="submit"
+                  class="delete-btn"
+                  (click)="deleteFirms()"
+                  [disabled]="!firmSelected()"
+                >
                   <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
                 </button>
               </div>
               <div class="col-sm-6">
                 <table>
-                  <tr *ngFor="
+                  <tr
+                    *ngFor="
                       let item of getFirmsArray.controls | paginate : config
-                    "></tr>
+                    "
+                  ></tr>
                 </table>
-                <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                <pagination-controls
+                  (pageChange)="pageChanged($event)"
+                ></pagination-controls>
               </div>
             </div>
           </div>
@@ -450,25 +773,47 @@
       </div>
     </div>
     <div class="col-sm-4 text-right">
-      <mat-radio-group name="isGovernedByPortuguese" (change)="changeGovernedByPortugueseStatus()"
-      [(ngModel)]="Copy_ITR_JSON.portugeseCC5AFlag">
-        <mat-radio-button [value]="'Y'" style="margin-left: 0px" labelPosition="before">Yes
+      <mat-radio-group
+        name="isGovernedByPortuguese"
+        (change)="changeGovernedByPortugueseStatus()"
+        [(ngModel)]="Copy_ITR_JSON.portugeseCC5AFlag"
+      >
+        <mat-radio-button
+          [value]="'Y'"
+          style="margin-left: 0px"
+          labelPosition="before"
+          >Yes
         </mat-radio-button>
         &nbsp;&nbsp;&nbsp;
-        <mat-radio-button [value]="'N'" labelPosition="before">No</mat-radio-button>
+        <mat-radio-button [value]="'N'" labelPosition="before"
+          >No</mat-radio-button
+        >
       </mat-radio-group>
     </div>
 
-    <div *ngIf="Copy_ITR_JSON.portugeseCC5AFlag==='Y'">
+    <div *ngIf="Copy_ITR_JSON.portugeseCC5AFlag === 'Y'">
       <form [formGroup]="schedule5AForm">
         <div class="card spsTp">
           <div class="row">
             <div class="col-sm-4 spsTp">
               <mat-label class="inputLabel">Name of Spouse:*</mat-label>
               <mat-form-field appearance="outline">
-                <input type="text" trim matInput placeholder="Name of Spouse" name="NameOfSpouse" class="input-field"
-                  formControlName="nameOfSpouse" maxlength="125" required />
-                <mat-error *ngIf="schedule5AForm.controls['nameOfSpouse'].hasError('required')">
+                <input
+                  type="text"
+                  trim
+                  matInput
+                  placeholder="Name of Spouse"
+                  name="NameOfSpouse"
+                  class="input-field"
+                  formControlName="nameOfSpouse"
+                  maxlength="125"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    schedule5AForm.controls['nameOfSpouse'].hasError('required')
+                  "
+                >
                   Enter the name of spouse
                 </mat-error>
               </mat-form-field>
@@ -476,239 +821,674 @@
             <div class="col-sm-4 spsTp">
               <mat-label class="inputLabel">PAN of the Spouse:*</mat-label>
               <mat-form-field appearance="outline">
-                <input type="text" trim
+                <input
+                  type="text"
+                  trim
                   matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
-                  matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput upperCase placeholder="PAN" name="PAN"
-                  class="input-field" formControlName="panOfSpouse" maxlength="10" required/>
-                <mat-error *ngIf="schedule5AForm.controls['panOfSpouse'].hasError('pattern')">Enter valid PAN (e.g XXXXX1234X)
-                </mat-error>
+                  matTooltipClass="tab-tooltip"
+                  matTooltipPosition="above"
+                  matInput
+                  upperCase
+                  placeholder="PAN"
+                  name="PAN"
+                  class="input-field"
+                  formControlName="panOfSpouse"
+                  maxlength="10"
+                  (input)="checkPAN()"
+                  required
+                />
               </mat-form-field>
+
+              <mat-error
+                *ngIf="
+                  schedule5AForm.controls['panOfSpouse'].hasError('pattern')
+                "
+                >Enter valid PAN (e.g XXXXX1234X)
+              </mat-error>
+
+              <mat-error *ngIf="panRepeat">
+                PAN of spouse can't be same as user PAN.</mat-error
+              >
             </div>
             <div class="col-sm-4 spsTp">
-              <mat-label class="inputLabel">Aadhaar number of the spouse:</mat-label>
+              <mat-label class="inputLabel"
+                >Aadhaar number of the spouse:</mat-label
+              >
               <mat-form-field appearance="outline">
-                <input type="text" trim matInput placeholder="Aadhaar number of the spouse" name="AadhaarNumberOfTheSpouse"
-                  class="input-field" formControlName="aadhaarOfSpouse" maxlength="200" />
+                <input
+                  type="text"
+                  trim
+                  matInput
+                  placeholder="Aadhaar number of the spouse"
+                  name="AadhaarNumberOfTheSpouse"
+                  class="input-field"
+                  formControlName="aadhaarOfSpouse"
+                  maxlength="12"
+                />
               </mat-form-field>
+
+              <mat-error
+                *ngIf="
+                  schedule5AForm.controls['aadhaarOfSpouse'].hasError(
+                    'minlength'
+                  )
+                "
+              >
+                Please enter valid aadhaar number
+              </mat-error>
+
+              <mat-error
+                *ngIf="
+                  schedule5AForm.controls['aadhaarOfSpouse'].hasError(
+                    'maxlength'
+                  )
+                "
+              >
+                Please enter valid aadhaar number
+              </mat-error>
             </div>
 
             <div class="col-sm-12 spsTp">
               <div class="row">
                 <div class="col-sm-8">
                   <div class="txBg">
-                    Whether books of accounts of a spouse are audited u/s 44AB? or Whether your spouse is a partner of a firm whose accounts are required to be audited u/s 44AB under this Act?
+                    Whether books of accounts of a spouse are audited u/s 44AB?
+                    or Whether your spouse is a partner of a firm whose accounts
+                    are required to be audited u/s 44AB under this Act?
                   </div>
                 </div>
-                <div class="col-sm-4 ">
-                  <mat-radio-group name="booksSpouse44ABFlg" formControlName="booksSpouse44ABFlg">
-                    <mat-radio-button [value]="'Y'" style="margin-left: 50px" labelPosition="before">Yes
+                <div class="col-sm-4">
+                  <mat-radio-group
+                    name="booksSpouse44ABFlg"
+                    formControlName="booksSpouse44ABFlg"
+                  >
+                    <mat-radio-button
+                      [value]="'Y'"
+                      style="margin-left: 50px"
+                      labelPosition="before"
+                      >Yes
                     </mat-radio-button>
                     &nbsp;&nbsp;&nbsp;
-                    <mat-radio-button [value]="'N'" labelPosition="before">No</mat-radio-button>
+                    <mat-radio-button [value]="'N'" labelPosition="before"
+                      >No</mat-radio-button
+                    >
                   </mat-radio-group>
                 </div>
               </div>
             </div>
             <div class="col-sm-12 spsTp">
-              <div class="row ">
+              <div class="row">
                 <div class="col-sm-8">
                   <div class="txBg">
-                    Whether books of accounts of a spouse are audited u/s 92E? or Whether your spouse is a partner of a firm whose accounts are required to be audited u/s 92E under this Act?
+                    Whether books of accounts of a spouse are audited u/s 92E?
+                    or Whether your spouse is a partner of a firm whose accounts
+                    are required to be audited u/s 92E under this Act?
                   </div>
                 </div>
-                <div class="col-sm-4 ">
-                  <mat-radio-group name="booksSpouse92EFlg" formControlName="booksSpouse92EFlg">
-                    <mat-radio-button [value]="'Y'" style="margin-left: 50px;" labelPosition="before">Yes
+                <div class="col-sm-4">
+                  <mat-radio-group
+                    name="booksSpouse92EFlg"
+                    formControlName="booksSpouse92EFlg"
+                  >
+                    <mat-radio-button
+                      [value]="'Y'"
+                      style="margin-left: 50px"
+                      labelPosition="before"
+                      >Yes
                     </mat-radio-button>
                     &nbsp;&nbsp;&nbsp;
-                    <mat-radio-button [value]="'N'" labelPosition="before">No</mat-radio-button>
+                    <mat-radio-button [value]="'N'" labelPosition="before"
+                      >No</mat-radio-button
+                    >
                   </mat-radio-group>
                 </div>
               </div>
             </div>
-
           </div>
 
           <!-- House Property Section -->
 
           <div class="spsTp new-border">
-            <div class="txBg new-color">
-              1 .House Property
-            </div>
-            <hr>
+            <div class="txBg new-color">1 .House Property</div>
+            <hr />
             <div formGroupName="houseProperty">
               <div class="row">
-              <div class="col-sm-6 spsTp">
-                <mat-label class="inputLabel">Receipts received under the head *</mat-label>
-                <mat-form-field appearance="outline">
-                  <input digitsOnly trim class="input-field" matInput placeholder="Receipts received under the head" name="incomeReceived" formControlName="incomeReceived" maxlength="10" required />
-                  <mat-error *ngIf="schedule5AForm.get('houseProperty.incomeReceived').hasError('required')">Please enter the amount</mat-error>
-                </mat-form-field>
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >Receipts received under the head *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="Receipts received under the head"
+                      name="incomeReceived"
+                      formControlName="incomeReceived"
+                      maxlength="10"
+                      (input)="validationHp()"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('houseProperty.incomeReceived')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >Amount apportioned in the hands of Spouse *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      (input)="validationHp()"
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="Amount apportioned in the hands of Spouse"
+                      name="apportionedAmountOfSpouse"
+                      formControlName="apportionedAmountOfSpouse"
+                      maxlength="10"
+                      required
+                    />
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      schedule5AForm
+                        .get('houseProperty.apportionedAmountOfSpouse')
+                        .hasError('required')
+                    "
+                    >Please enter the amount</mat-error
+                  >
+                  <mat-error
+                    *ngIf="
+                      schedule5AForm
+                        .get('houseProperty.apportionedAmountOfSpouse')
+                        .hasError('max')
+                    "
+                    >Amount cannot be more than receipt</mat-error
+                  >
+                </div>
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >Amount of TDS deducted on income *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="Amount of TDS deducted on income"
+                      name="tdsDeductedAmount"
+                      formControlName="tdsDeductedAmount"
+                      maxlength="10"
+                      (input)="validationHp()"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('houseProperty.tdsDeductedAmount')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >TDS apportioned in the hands of Spouse *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      (input)="validationHp()"
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="TDS apportioned in the hands of Spouse"
+                      name="apportionedTDSOfSpouse"
+                      formControlName="apportionedTDSOfSpouse"
+                      maxlength="10"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('houseProperty.apportionedTDSOfSpouse')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      schedule5AForm
+                        .get('houseProperty.apportionedTDSOfSpouse')
+                        .hasError('max')
+                    "
+                    >Amount cannot be more than receipt</mat-error
+                  >
+                </div>
               </div>
-              <div class="col-sm-6 spsTp">
-                <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
-                <mat-form-field appearance="outline">
-                  <input (input)="validationHp()" digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required />
-                </mat-form-field>
-                <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
-                <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedAmountOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
-              </div>
-              <div class="col-sm-6 spsTp">
-                <mat-label class="inputLabel">Amount of TDS deducted on income *</mat-label>
-                <mat-form-field appearance="outline">
-                  <input digitsOnly trim class="input-field" matInput placeholder="Amount of TDS deducted on income" name="tdsDeductedAmount" formControlName="tdsDeductedAmount" maxlength="10" required/>
-                  <mat-error *ngIf="schedule5AForm.get('houseProperty.tdsDeductedAmount').hasError('required')">Please enter the amount</mat-error>
-                </mat-form-field>
-              </div>
-              <div class="col-sm-6 spsTp">
-                <mat-label class="inputLabel">TDS apportioned in the hands of Spouse *</mat-label>
-                <mat-form-field appearance="outline">
-                  <input (input)="validationHp()" digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required/>
-                  <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedTDSOfSpouse').hasError('required')">Please enter the amount</mat-error>
-                </mat-form-field>
-                <mat-error *ngIf="schedule5AForm.get('houseProperty.apportionedTDSOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
-              </div>
-            </div>
             </div>
           </div>
 
           <!-- Business or Profession Section -->
           <div class="spsTp new-border">
-            <div class="txBg new-color">
-              2 .Business or profession
-            </div>
-            <hr>
-          <div formGroupName="businessOrProfession">
-            <div class="row">
-            <div class="col-sm-6 spsTp">
-              <mat-label class="inputLabel">Receipts received under the head *</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="Receipts received under the head" name="incomeReceived" formControlName="incomeReceived" maxlength="10" required/>
-                <mat-error *ngIf="schedule5AForm.get('businessOrProfession.incomeReceived').hasError('required')">Please enter the amount</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-sm-6 spsTp">
-              <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
-              <mat-form-field appearance="outline">
-                <input (input)="validationBusiness()" digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10" required/>
-                <mat-error *ngIf="schedule5AForm.get('businessOrProfession.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
-              </mat-form-field>
-              <mat-error *ngIf="schedule5AForm.get('businessOrProfession.apportionedAmountOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
-            </div>
-            <div class="col-sm-6 spsTp">
-              <mat-label class="inputLabel">Amount of TDS deducted on income *</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="Amount of TDS deducted on income" name="tdsDeductedAmount" formControlName="tdsDeductedAmount" maxlength="10" required />
-                <mat-error *ngIf="schedule5AForm.get('businessOrProfession.tdsDeductedAmount').hasError('required')">Please enter the amount</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-sm-6 spsTp">
-              <mat-label class ="inputLabel">TDS apportioned in the hands of Spouse *</mat-label>
-              <mat-form-field appearance="outline">
-                <input (input)="validationBusiness()" digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required />
-                <mat-error *ngIf="schedule5AForm.get('businessOrProfession.apportionedTDSOfSpouse').hasError('required')">Please enter the amount</mat-error>
-              </mat-form-field>
-              <mat-error *ngIf="schedule5AForm.get('businessOrProfession.apportionedTDSOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
+            <div class="txBg new-color">2 .Business or profession</div>
+            <hr />
+            <div formGroupName="businessOrProfession">
+              <div class="row">
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >Receipts received under the head *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="Receipts received under the head"
+                      name="incomeReceived"
+                      formControlName="incomeReceived"
+                      maxlength="10"
+                      (input)="validationBusiness()"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('businessOrProfession.incomeReceived')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >Amount apportioned in the hands of Spouse *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      (input)="validationBusiness()"
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="Amount apportioned in the hands of Spouse"
+                      name="apportionedAmountOfSpouse"
+                      formControlName="apportionedAmountOfSpouse"
+                      maxlength="10"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('businessOrProfession.apportionedAmountOfSpouse')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      schedule5AForm
+                        .get('businessOrProfession.apportionedAmountOfSpouse')
+                        .hasError('max')
+                    "
+                    >Amount cannot be more than receipt</mat-error
+                  >
+                </div>
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >Amount of TDS deducted on income *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="Amount of TDS deducted on income"
+                      name="tdsDeductedAmount"
+                      formControlName="tdsDeductedAmount"
+                      maxlength="10"
+                      (input)="validationBusiness()"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('businessOrProfession.tdsDeductedAmount')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >TDS apportioned in the hands of Spouse *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      (input)="validationBusiness()"
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="TDS apportioned in the hands of Spouse"
+                      name="apportionedTDSOfSpouse"
+                      formControlName="apportionedTDSOfSpouse"
+                      maxlength="10"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('businessOrProfession.apportionedTDSOfSpouse')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      schedule5AForm
+                        .get('businessOrProfession.apportionedTDSOfSpouse')
+                        .hasError('max')
+                    "
+                    >Amount cannot be more than receipt</mat-error
+                  >
+                </div>
+              </div>
             </div>
           </div>
+
+          <!-- Capital Gain Section -->
+          <div class="spsTp new-border">
+            <div class="txBg new-color">3 .Capital Gain</div>
+            <hr />
+            <div formGroupName="capitalGain">
+              <div class="row">
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >Receipts received under the head *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="Receipts received under the head"
+                      name="incomeReceived"
+                      formControlName="incomeReceived"
+                      maxlength="10"
+                      (input)="validationCg()"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('capitalGain.incomeReceived')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >Amount apportioned in the hands of Spouse *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      (input)="validationCg()"
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="Amount apportioned in the hands of Spouse"
+                      name="apportionedAmountOfSpouse"
+                      formControlName="apportionedAmountOfSpouse"
+                      maxlength="10"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('capitalGain.apportionedAmountOfSpouse')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      schedule5AForm
+                        .get('capitalGain.apportionedAmountOfSpouse')
+                        .hasError('max')
+                    "
+                    >Amount cannot be more than receipt</mat-error
+                  >
+                </div>
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >Amount of TDS deducted on income *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="Amount of TDS deducted on income"
+                      name="tdsDeductedAmount"
+                      formControlName="tdsDeductedAmount"
+                      maxlength="10"
+                      (input)="validationCg()"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('capitalGain.tdsDeductedAmount')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >TDS apportioned in the hands of Spouse *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      (input)="validationCg()"
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="TDS apportioned in the hands of Spouse"
+                      name="apportionedTDSOfSpouse"
+                      formControlName="apportionedTDSOfSpouse"
+                      maxlength="10"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('capitalGain.apportionedTDSOfSpouse')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      schedule5AForm
+                        .get('capitalGain.apportionedTDSOfSpouse')
+                        .hasError('max')
+                    "
+                    >Amount cannot be more than receipt</mat-error
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Other Sources of Income Section -->
+          <div class="spsTp new-border">
+            <div class="txBg new-color">4 . Other sources</div>
+            <hr />
+            <div formGroupName="otherSource">
+              <div class="row">
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >Receipts received under the head *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="Receipts received under the head"
+                      name="incomeReceived"
+                      formControlName="incomeReceived"
+                      maxlength="10"
+                      (input)="validationOth()"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('otherSource.incomeReceived')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >Amount apportioned in the hands of Spouse *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      (input)="validationOth()"
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="Amount apportioned in the hands of Spouse"
+                      name="apportionedAmountOfSpouse"
+                      formControlName="apportionedAmountOfSpouse"
+                      maxlength="10"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('otherSource.apportionedAmountOfSpouse')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      schedule5AForm
+                        .get('otherSource.apportionedAmountOfSpouse')
+                        .hasError('max')
+                    "
+                    >Amount cannot be more than receipt</mat-error
+                  >
+                </div>
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >Amount of TDS deducted on income *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="Amount of TDS deducted on income"
+                      name="tdsDeductedAmount"
+                      formControlName="tdsDeductedAmount"
+                      maxlength="10"
+                      (input)="validationOth()"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('otherSource.tdsDeductedAmount')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6 spsTp">
+                  <mat-label class="inputLabel"
+                    >TDS apportioned in the hands of Spouse *</mat-label
+                  >
+                  <mat-form-field appearance="outline">
+                    <input
+                      (input)="validationOth()"
+                      digitsOnly
+                      trim
+                      class="input-field"
+                      matInput
+                      placeholder="TDS apportioned in the hands of Spouse"
+                      name="apportionedTDSOfSpouse"
+                      formControlName="apportionedTDSOfSpouse"
+                      maxlength="10"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        schedule5AForm
+                          .get('otherSource.apportionedTDSOfSpouse')
+                          .hasError('required')
+                      "
+                      >Please enter the amount</mat-error
+                    >
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="
+                      schedule5AForm
+                        .get('otherSource.apportionedTDSOfSpouse')
+                        .hasError('max')
+                    "
+                    >Amount cannot be more than receipt</mat-error
+                  >
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-         <!-- Capital Gain Section -->
-         <div class="spsTp new-border">
-          <div class="txBg new-color">
-            3 .Capital Gain
-          </div>
-          <hr>
-          <div formGroupName="capitalGain">
-            <div class="row">
-            <div class="col-sm-6 spsTp">
-              <mat-label class="inputLabel">Receipts received under the head *</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="Receipts received under the head" name="incomeReceived" formControlName="incomeReceived" maxlength="10" required />
-                <mat-error *ngIf="schedule5AForm.get('capitalGain.incomeReceived').hasError('required')">Please enter the amount</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-sm-6 spsTp">
-              <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
-              <mat-form-field appearance="outline">
-                <input (input)="validationCg()" digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10"  required />
-                <mat-error *ngIf="schedule5AForm.get('capitalGain.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
-              </mat-form-field>
-              <mat-error *ngIf="schedule5AForm.get('capitalGain.apportionedAmountOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
-            </div>
-            <div class="col-sm-6 spsTp">
-              <mat-label class="inputLabel">Amount of TDS deducted on income *</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="Amount of TDS deducted on income" name="tdsDeductedAmount" formControlName="tdsDeductedAmount" maxlength="10" required />
-                <mat-error *ngIf="schedule5AForm.get('capitalGain.tdsDeductedAmount').hasError('required')">Please enter the amount</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-sm-6 spsTp">
-              <mat-label class="inputLabel">TDS apportioned in the hands of Spouse *</mat-label>
-              <mat-form-field appearance="outline">
-                <input (input)="validationCg()" digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required />
-                <mat-error *ngIf="schedule5AForm.get('capitalGain.apportionedTDSOfSpouse').hasError('required')">Please enter the amount</mat-error>
-              </mat-form-field>
-              <mat-error *ngIf="schedule5AForm.get('capitalGain.apportionedTDSOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
-            </div>
-          </div>
-          </div>
-         </div>
-
-         <!-- Other Sources of Income Section -->
-         <div class="spsTp new-border">
-          <div class="txBg new-color">
-            4 . Other sources
-          </div>
-          <hr>
-          <div formGroupName="otherSource">
-            <div class="row">
-            <div class="col-sm-6 spsTp">
-              <mat-label class="inputLabel">Receipts received under the head *</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="Receipts received under the head" name="incomeReceived" formControlName="incomeReceived" maxlength="10" required />
-                <mat-error *ngIf="schedule5AForm.get('otherSource.incomeReceived').hasError('required')">Please enter the amount</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-sm-6 spsTp">
-              <mat-label class="inputLabel">Amount apportioned in the hands of Spouse *</mat-label>
-              <mat-form-field appearance="outline">
-                <input (input)="validationOth()" digitsOnly trim class="input-field" matInput placeholder="Amount apportioned in the hands of Spouse" name ="apportionedAmountOfSpouse" formControlName="apportionedAmountOfSpouse" maxlength="10"  required />
-                <mat-error *ngIf="schedule5AForm.get('otherSource.apportionedAmountOfSpouse').hasError('required')">Please enter the amount</mat-error>
-              </mat-form-field>
-              <mat-error *ngIf="schedule5AForm.get('otherSource.apportionedAmountOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
-            </div>
-            <div class="col-sm-6 spsTp">
-              <mat-label class="inputLabel">Amount of TDS deducted on income *</mat-label>
-              <mat-form-field appearance="outline">
-                <input digitsOnly trim class="input-field" matInput placeholder="Amount of TDS deducted on income" name="tdsDeductedAmount" formControlName="tdsDeductedAmount" maxlength="10" required/>
-                <mat-error *ngIf="schedule5AForm.get('otherSource.tdsDeductedAmount').hasError('required')">Please enter the amount</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-sm-6 spsTp">
-              <mat-label class="inputLabel">TDS apportioned in the hands of Spouse *</mat-label>
-              <mat-form-field appearance="outline">
-                <input (input)="validationOth()" digitsOnly trim class="input-field" matInput placeholder="TDS apportioned in the hands of Spouse" name="apportionedTDSOfSpouse" formControlName="apportionedTDSOfSpouse" maxlength="10" required />
-                <mat-error *ngIf="schedule5AForm.get('otherSource.apportionedTDSOfSpouse').hasError('required')">Please enter the amount</mat-error>
-              </mat-form-field>
-              <mat-error *ngIf="schedule5AForm.get('otherSource.apportionedTDSOfSpouse').hasError('max')">Amount cannot be more than receipt</mat-error>
-            </div>
-          </div>
-          </div>
-         </div>
-
-        </div>
-
       </form>
     </div>
-
   </div>
 </div>
 
-
 <!-- fourth radio bar ends -->
-
 
 <!-- <div class="col-sm-12 spsTp bdrTp">
     <button class="tbd-btn save-btn mvRth" [disabled]="!isEditOther" (click)="saveAndContinue($event)">

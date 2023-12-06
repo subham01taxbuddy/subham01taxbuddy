@@ -47,16 +47,16 @@ export class TcsComponent implements OnInit {
     };
 
     this.salaryForm = this.inItForm();
-    if (
-      this.Copy_ITR_JSON.taxPaid?.tcs &&
-      this.Copy_ITR_JSON.taxPaid?.tcs.length > 0
-    ) {
-      this.Copy_ITR_JSON.taxPaid.tcs.forEach((item) => {
-        this.addMoreSalary(item);
-      });
-    } else {
+    // if (
+    //   this.Copy_ITR_JSON.taxPaid?.tcs &&
+    //   this.Copy_ITR_JSON.taxPaid?.tcs.length > 0
+    // ) {
+    //   this.Copy_ITR_JSON.taxPaid?.tcs?.forEach((item) => {
+    //     this.addMoreSalary(item);
+    //   });
+    // } else {
       this.addMoreSalary();
-    }
+    // }
     // this.salaryForm.disable();
   }
 
@@ -94,7 +94,7 @@ export class TcsComponent implements OnInit {
     }
     return this.fb.group({
       hasEdit: [item ? item.hasEdit : false],
-      srNo: [item ? item.srNo : this.Copy_ITR_JSON.taxPaid?.tcs.length],
+      srNo: [item ? item.srNo : this.Copy_ITR_JSON.taxPaid?.tcs?.length],
       collectorTAN: [
         item ? item.collectorTAN : '',
         [Validators.required, Validators.pattern(AppConstants.tanNumberRegex)],

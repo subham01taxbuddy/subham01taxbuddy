@@ -150,6 +150,7 @@ export class PartnerInFirmsComponent implements OnInit {
             this.utilsService.showSnackBar(
               'Partner in Firm details added successfully'
             );
+            this.saveAndNext.emit(false);
           }
         },
         (error) => {
@@ -160,5 +161,9 @@ export class PartnerInFirmsComponent implements OnInit {
     } else {
       $('input.ng-invalid').first().focus();
     }
+  }
+
+  goBack() {
+    this.saveAndNext.emit(false);
   }
 }
