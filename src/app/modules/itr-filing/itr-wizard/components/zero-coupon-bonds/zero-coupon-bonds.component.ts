@@ -486,7 +486,11 @@ export class ZeroCouponBondsComponent
       const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
       let bondsList = [];
       if(this.bondType !== 'bonds'){
-        bondsList = this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails;
+        if(this.bondType === 'zeroCouponBonds'){
+          bondsList = this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails?.filter(e => e.whetherDebenturesAreListed);
+        } else {
+          bondsList = this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails;
+        }
       }
       bondsArray.controls.forEach((element) => {
         if (
@@ -547,9 +551,9 @@ export class ZeroCouponBondsComponent
         .getRawValue()
         .filter((element) => element.isIndexationBenefitAvailable === true);
       //here we need to check for debentures which are listed
-      let zcbDebList = bondsArray
+      let zcbDebList = this.bondType === 'bonds' ? bondsArray
         .getRawValue()
-        .filter((element) => element.whetherDebenturesAreListed === true);
+        .filter((element) => element.whetherDebenturesAreListed === true) : [];
       if (indexedDebList?.length > 0) {
         let goldIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
           (element) => element.assetType === 'GOLD'
@@ -644,6 +648,7 @@ export class ZeroCouponBondsComponent
         let zcbList = [];
         let maxZcb = 0;
         if (this.Copy_ITR_JSON.capitalGain[zcbIndex]?.assetDetails) {
+          zcbList = this.bondType === 'bonds' ? this.Copy_ITR_JSON.capitalGain[zcbIndex].assetDetails.filter(e => !e.whetherDebenturesAreListed) : [];
           let tempArray = this.Copy_ITR_JSON.capitalGain[
             zcbIndex
             ].assetDetails.map((element) => element.srn);
@@ -728,15 +733,18 @@ export class ZeroCouponBondsComponent
               (element) => !element?.isIndexationBenefitAvailable
             );
         }
-        let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
-          (element) => element.assetType === 'ZERO_COUPON_BONDS'
-        );
-        if (zcbIndex !== -1) {
-          this.Copy_ITR_JSON.capitalGain[zcbIndex].assetDetails =
-            this.Copy_ITR_JSON.capitalGain[zcbIndex]?.assetDetails?.filter(
-              (element) => !element?.whetherDebenturesAreListed
-            );
+        if(this.bondType === 'bonds' && zcbDebList.length === 0){
+          let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
+              (element) => element.assetType === 'ZERO_COUPON_BONDS'
+          );
+          if (zcbIndex !== -1) {
+            this.Copy_ITR_JSON.capitalGain[zcbIndex].assetDetails =
+              this.Copy_ITR_JSON.capitalGain[zcbIndex]?.assetDetails?.filter(
+                (element) => !element?.whetherDebenturesAreListed
+              );
+          }
         }
+
       }
       this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
         (result: any) => {
