@@ -67,9 +67,14 @@ export class GenericCsvService {
     this.smeList.forEach((item) => {
       this.data.forEach((element) => {
         if (item.userId === element.leaderUserId)
-       element['leaderUserId'] = item.name;
+          element['leaderUserId'] = item.name;
         if (item.userId === element.filingTeamMemberId)
-       element['filingTeamMemberId'] = item.name;
+          element['filingTeamMemberId'] = item.name;
+        if (element.isRevised === 'Y') {
+          element['isRevised'] = 'Revised';
+        } else {
+          element['isRevised'] = 'Original';
+        }
       })
     });
   }
