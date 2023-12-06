@@ -622,6 +622,9 @@ export class SummaryComponent implements OnInit {
         deductorTAN: String;
         totalAmountCredited: Number;
         totalTdsDeposited: Number;
+        DeductedYr?: any;
+        BroughtFwdTDSAmt?: any;
+        GrossAmount?: any;
       }[];
       totalOtherThanSalary16A: Number;
       otherThanSalary26QB: {
@@ -3449,6 +3452,31 @@ export class SummaryComponent implements OnInit {
                         };
                       }
                     )?.TaxDeductCreditDtls?.TaxClaimedOwnHands,
+                    BroughtFwdTDSAmt: (
+                      item as {
+                        TDSCreditName: String;
+                        TANOfDeductor: String;
+                        GrossAmount: Number;
+                        BroughtFwdTDSAmt: any;
+                        TaxDeductCreditDtls: {
+                          TaxDeductedOwnHands: Number;
+                          TaxClaimedOwnHands: Number;
+                        };
+                      }
+                    )?.BroughtFwdTDSAmt,
+                    DeductedYr: (
+                      item as {
+                        TDSCreditName: String;
+                        TANOfDeductor: String;
+                        GrossAmount: Number;
+                        BroughtFwdTDSAmt: any;
+                        DeductedYr?: any;
+                        TaxDeductCreditDtls: {
+                          TaxDeductedOwnHands: Number;
+                          TaxClaimedOwnHands: Number;
+                        };
+                      }
+                    )?.DeductedYr,
                   })) as {
                     deductorName: String;
                     deductorTAN: String;
