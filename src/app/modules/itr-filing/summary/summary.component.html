@@ -65,7 +65,8 @@
             <span class="txLf">Jurisdiction of Residence: </span>
             <br />
             <span
-              class="txMuLf" style="margin:0%"
+              class="txMuLf"
+              style="margin: 0%"
               *ngFor="
                 let jurisdiction of finalCalculations?.personalInfo
                   ?.JurisdictionResPrevYrDtls;
@@ -73,9 +74,7 @@
               "
             >
               <div>
-                <span>
-                  {{ i + 1 }}.
-                </span>
+                <span> {{ i + 1 }}. </span>
 
                 <span>
                   {{ jurisdiction?.JurisdictionResidence }}
@@ -2350,6 +2349,46 @@
                           <tr
                             *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
+                                ?.winningFromLotteries
+                            "
+                          >
+                            <td>Income from lotteries and winings</td>
+
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.winningFromLotteries
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.incFromOwnAndMaintHorses
+                            "
+                          >
+                            <td>
+                              Income from owning and maintaining race horses
+                            </td>
+
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.incFromOwnAndMaintHorses
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
                                 ?.anyOtherInterest
                             "
                           >
@@ -2359,7 +2398,12 @@
                               {{
                                 utilsService.currencyFormatter(
                                   finalCalculations?.otherIncome?.otherIncomes
-                                    ?.anyOtherInterest
+                                    ?.anyOtherInterest -
+                                    (finalCalculations?.otherIncome
+                                      ?.otherIncomes?.winningFromLotteries
+                                      ? finalCalculations?.otherIncome
+                                          ?.otherIncomes?.winningFromLotteries
+                                      : 0)
                                 )
                               }}
                             </td>

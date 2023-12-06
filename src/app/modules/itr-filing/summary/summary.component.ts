@@ -239,6 +239,8 @@ export class SummaryComponent implements OnInit {
         anyOtherPropertyWithoutConsideration?: number;
         anyOtherPropertyInadequateConsideration?: number;
         dividendIncome: number;
+        winningFromLotteries?: any;
+        incFromOwnAndMaintHorses?: any;
       };
       otherIncomeTotal: number;
     };
@@ -2241,7 +2243,9 @@ export class SummaryComponent implements OnInit {
                     ?.IncOthThanOwnRaceHorse?.FamilyPension -
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                       ?.ScheduleOS?.IncOthThanOwnRaceHorse?.Deductions
-                      ?.DeductionUs57iia),
+                      ?.DeductionUs57iia) -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncFromOwnHorse?.BalanceOwnRaceHorse,
 
                 dividendIncome:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
@@ -2252,6 +2256,29 @@ export class SummaryComponent implements OnInit {
                     ?.IncOthThanOwnRaceHorse?.FamilyPension -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.Deductions?.DeductionUs57iia,
+
+                winningFromLotteries: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleOS?.IncFrmLottery?.DateRange
+                  ? Object.values(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleOS.IncFrmLottery.DateRange
+                    ).reduce(
+                      (total: any, value: any) =>
+                        total +
+                        (typeof value === 'number'
+                          ? value
+                          : (parseFloat(value) as number) || 0),
+                      0
+                    )
+                  : null,
+
+                incFromOwnAndMaintHorses: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleOS?.IncFromOwnHorse?.BalanceOwnRaceHorse
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleOS?.IncFromOwnHorse?.BalanceOwnRaceHorse
+                  : null,
               },
 
               otherIncomeTotal:
