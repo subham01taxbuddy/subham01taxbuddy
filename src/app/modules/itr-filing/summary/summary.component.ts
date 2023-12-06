@@ -182,6 +182,12 @@ export class SummaryComponent implements OnInit {
       orgAckNumber: any;
       bankAccountNumber: any;
       bankName: any;
+      JurisdictionResPrevYrDtls?: [
+        {
+          JurisdictionResidence?: any;
+          TIN?: any;
+        }
+      ];
     };
     salary: {
       employers: [
@@ -233,6 +239,8 @@ export class SummaryComponent implements OnInit {
         anyOtherPropertyWithoutConsideration?: number;
         anyOtherPropertyInadequateConsideration?: number;
         dividendIncome: number;
+        winningFromLotteries?: any;
+        incFromOwnAndMaintHorses?: any;
       };
       otherIncomeTotal: number;
     };
@@ -614,6 +622,9 @@ export class SummaryComponent implements OnInit {
         deductorTAN: String;
         totalAmountCredited: Number;
         totalTdsDeposited: Number;
+        DeductedYr?: any;
+        BroughtFwdTDSAmt?: any;
+        GrossAmount?: any;
       }[];
       totalOtherThanSalary16A: Number;
       otherThanSalary26QB: {
@@ -656,6 +667,7 @@ export class SummaryComponent implements OnInit {
   };
   natureOfBusiness: any = [];
   business44adDetails: any = [];
+  countryCodeList: any;
 
   constructor(
     private itrMsService: ItrMsService,
@@ -688,7 +700,7 @@ export class SummaryComponent implements OnInit {
   ngOnInit() {
     this.utilsService.smoothScrollToTop();
     this.loading = true;
-
+    this.countryCodeList = this.utilsService.getCountryCodeList();
     this.calculations();
 
     // Setting the ITR Type in ITR Object and updating the ITR_Type
@@ -2038,6 +2050,21 @@ export class SummaryComponent implements OnInit {
                   ? 'Non-Resident'
                   : 'Non-Ordinary Resident',
 
+              JurisdictionResPrevYrDtls:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.FilingStatus?.ResidentialStatus === 'NRI'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][
+                      this.itrType
+                    ]?.PartA_GEN1?.FilingStatus?.JurisdictionResPrevYr?.JurisdictionResPrevYrDtls?.map(
+                      (element) => ({
+                        JurisdictionResidence: this.getCountry(
+                          element?.JurisdictionResidence
+                        ),
+                        TIN: element?.TIN,
+                      })
+                    )
+                  : null,
+
               returnType:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
                   ?.FilingStatus?.ReturnFileSec === 11
@@ -2219,7 +2246,9 @@ export class SummaryComponent implements OnInit {
                     ?.IncOthThanOwnRaceHorse?.FamilyPension -
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                       ?.ScheduleOS?.IncOthThanOwnRaceHorse?.Deductions
-                      ?.DeductionUs57iia),
+                      ?.DeductionUs57iia) -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncFromOwnHorse?.BalanceOwnRaceHorse,
 
                 dividendIncome:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
@@ -2230,6 +2259,29 @@ export class SummaryComponent implements OnInit {
                     ?.IncOthThanOwnRaceHorse?.FamilyPension -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.Deductions?.DeductionUs57iia,
+
+                winningFromLotteries: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleOS?.IncFrmLottery?.DateRange
+                  ? Object.values(
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleOS.IncFrmLottery.DateRange
+                    ).reduce(
+                      (total: any, value: any) =>
+                        total +
+                        (typeof value === 'number'
+                          ? value
+                          : (parseFloat(value) as number) || 0),
+                      0
+                    )
+                  : null,
+
+                incFromOwnAndMaintHorses: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleOS?.IncFromOwnHorse?.BalanceOwnRaceHorse
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleOS?.IncFromOwnHorse?.BalanceOwnRaceHorse
+                  : null,
               },
 
               otherIncomeTotal:
@@ -3400,6 +3452,31 @@ export class SummaryComponent implements OnInit {
                         };
                       }
                     )?.TaxDeductCreditDtls?.TaxClaimedOwnHands,
+                    BroughtFwdTDSAmt: (
+                      item as {
+                        TDSCreditName: String;
+                        TANOfDeductor: String;
+                        GrossAmount: Number;
+                        BroughtFwdTDSAmt: any;
+                        TaxDeductCreditDtls: {
+                          TaxDeductedOwnHands: Number;
+                          TaxClaimedOwnHands: Number;
+                        };
+                      }
+                    )?.BroughtFwdTDSAmt,
+                    DeductedYr: (
+                      item as {
+                        TDSCreditName: String;
+                        TANOfDeductor: String;
+                        GrossAmount: Number;
+                        BroughtFwdTDSAmt: any;
+                        DeductedYr?: any;
+                        TaxDeductCreditDtls: {
+                          TaxDeductedOwnHands: Number;
+                          TaxClaimedOwnHands: Number;
+                        };
+                      }
+                    )?.DeductedYr,
                   })) as {
                     deductorName: String;
                     deductorTAN: String;
@@ -5922,6 +5999,19 @@ export class SummaryComponent implements OnInit {
 
     const business44AD = Object.values(combinedObjects);
     this.business44adDetails = business44AD;
+  }
+
+  getCountry(code) {
+    const countryCodeList = this.countryCodeList;
+
+    for (const countryString of countryCodeList) {
+      const [countryCode, countryName] = countryString.split(':');
+      if (countryCode === code.toString()) {
+        return `${countryCode}- ${countryName}`;
+      }
+    }
+
+    return 'Country not found';
   }
 }
 
