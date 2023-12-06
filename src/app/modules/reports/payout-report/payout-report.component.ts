@@ -40,6 +40,7 @@ export const MY_FORMATS = {
 })
 export class PayoutReportComponent implements OnInit,OnDestroy {
   loading = false;
+  isInternal = true;
   payoutReport: any;
   config: any;
   searchParam: any = {
