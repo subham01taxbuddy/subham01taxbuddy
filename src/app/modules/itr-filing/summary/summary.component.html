@@ -5584,6 +5584,59 @@
                       </table>
                     </div>
 
+                    <div style="margin-top: 5px; padding: 10px;">
+                      <div class="bxHed" style="margin-top: 0px;">
+                        TDS B/F Details (Other Than Salary)
+                      </div>
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                      >
+                        <thead>
+                          <tr>
+                            <th style="font-weight: bold; width: 20%">
+                              Year of TDS Deduction
+                            </th>
+                            <th style="font-weight: bold; width: 25%">
+                              TDS Amount
+                            </th>
+                            <th style="font-weight: bold; width: 35%">
+                              Income
+                            </th>
+                            <th style="font-weight: bold; width: 20%">
+                              TDS Credit claimed this year
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            *ngFor="
+                              let otherThanSalary16A of finalCalculations
+                                ?.taxPaid?.otherThanSalary16A
+                            "
+                          >
+                            <td>{{ otherThanSalary16A?.DeductedYr }}</td>
+                            <td>{{ otherThanSalary16A?.BroughtFwdTDSAmt }}</td>
+                            <td>
+                              Rs.
+                              {{
+                                utilsService.currencyFormatter(
+                                  otherThanSalary16A?.totalAmountCredited
+                                )
+                              }}
+                            </td>
+                            <td>
+                              Rs.
+                              {{
+                                utilsService.currencyFormatter(
+                                  otherThanSalary16A?.totalTdsDeposited
+                                )
+                              }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
                     <!-- 26QB -->
 
                     <div>
