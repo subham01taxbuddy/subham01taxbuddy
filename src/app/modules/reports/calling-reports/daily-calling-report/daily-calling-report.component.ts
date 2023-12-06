@@ -64,7 +64,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   roles: any;
   showCsvMessage: boolean;
   sortMenus = [
-    { value: 'filerName', name: 'Filer Name / Owner Name / Leader Name ' },
+    { value: 'filerName', name: 'Filer Name / Leader Name ' },
     { value: 'outboundAnsweredRatio', name: 'Outbound answered Ratio' },
     { value: 'inboundAnsweredRatio', name: 'Inbound answered Ratio' },
     { value: 'noOfMissedCall', name: 'No. of Missed calls' }
