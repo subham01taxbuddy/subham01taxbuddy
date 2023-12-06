@@ -15,6 +15,8 @@ import { ValidateOtpByWhatAppComponent } from '../../components/validate-otp-by-
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { RequestManager } from "../../../shared/services/request-manager";
 import { SpeedTestService } from 'ng-speed-test';
+import { ReviewService } from 'src/app/modules/review/services/review.service';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
 
 declare let $: any;
 declare function we_login(userId: string);
@@ -48,7 +50,8 @@ export class LoginComponent implements OnInit {
     private storageService: StorageService,
     private activatedRoute: ActivatedRoute,
     private requestManager: RequestManager,
-    private speedTestService: SpeedTestService
+    private speedTestService: SpeedTestService,
+    private itrMsService: ItrMsService
   ) {
     NavbarService.getInstance().component_link = this.component_link;
 
@@ -96,6 +99,7 @@ export class LoginComponent implements OnInit {
       let allowedRoles = ['FILER_ITR', 'FILER_TPA_NPS', 'FILER_NOTICE', 'FILER_WB', 'FILER_PD', 'FILER_GST',
         'ROLE_LE', 'ROLE_OWNER', 'OWNER_NRI', 'FILER_NRI', 'ROLE_FILER', 'ROLE_LEADER'];
       let roles = res.data[0]?.roles;
+      this.getPlanDetails();
       if (roles.indexOf("ROLE_ADMIN") !== -1) {
         this.router.navigate(['/tasks/assigned-users-new']);
         this.utilsService.logAction(userId, 'login');
@@ -427,5 +431,18 @@ export class LoginComponent implements OnInit {
 
   fromOtp(event: any) {
     this.mode = event.view;
+  }
+
+  getPlanDetails() {
+    this.loading = true;
+    let param = '/plans-master';
+    this.itrMsService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      sessionStorage.setItem('ALL_PLAN_LIST', JSON.stringify(response));
+    },
+    error => {
+      this.loading = false;
+    });
+
   }
 }

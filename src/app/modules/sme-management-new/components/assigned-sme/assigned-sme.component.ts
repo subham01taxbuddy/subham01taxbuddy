@@ -594,7 +594,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
       { key: 'parentPrincipalUserId', value: 'Principal Name' },
       { key: 'roles', value: 'Role' },
       { key: 'services', value: 'Assigned Services' },
-      { key: 'session', value: 'Session' },
+      { key: 'serviceEligibility_ITR.assignmentStart', value: 'Session' },
       { key: 'languages', value: 'Language Proficiency' },
       { key: 'skillSetPlanIdList', value: 'ITR Capabilities' }
     ]
