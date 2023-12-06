@@ -181,7 +181,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
         headerName: 'Leader Name',
         field: 'filerName',
         sortable: true,
-        width: 200,
+        width: 230,
         pinned: 'left',
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
@@ -195,7 +195,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
         headerName: 'Total Schedule call assigned',
         field: 'totalScheduleCallAssigned',
         sortable: true,
-        width: 180,
+        width: 250,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -208,7 +208,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
         headerName: 'No of call Done',
         field: 'noOfCallDone',
         sortable: true,
-        width: 170,
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -221,7 +221,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
         headerName: 'No Call schedule for next day',
         field: 'noOfCallScheduleForLater',
         sortable: true,
-        width: 180,
+        width: 250,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -234,7 +234,7 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
         headerName: 'No of call not done',
         field: 'noOfCallNotDone',
         sortable: true,
-        width: 150,
+        width: 250,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: "agTextColumnFilter",
@@ -243,20 +243,20 @@ export class ScheduleCallReportComponent implements OnInit,OnDestroy {
           debounceMs: 0
         }
       },
-      {
-        headerName: 'Parent Name',
-        field: 'parentName',
-        sortable: true,
-        pinned: 'right',
-        width: 200,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
-        filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
-        }
-      },
+      // {
+      //   headerName: 'Parent Name',
+      //   field: 'parentName',
+      //   sortable: true,
+      //   pinned: 'right',
+      //   width: 200,
+      //   suppressMovable: true,
+      //   cellStyle: { textAlign: 'center' },
+      //   filter: "agTextColumnFilter",
+      //   filterParams: {
+      //     filterOptions: ["contains", "notContains"],
+      //     debounceMs: 0
+      //   }
+      // },
 
 
     ]
