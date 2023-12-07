@@ -7544,19 +7544,19 @@ function getTotalBusinessIncome(summaryBusinessIncome: any): number {
 
 function getTotalGiftExemptIncome(giftTax: any): number {
   let totalGiftExemptIncome = 0;
-  if(giftTax.aggregateValueWithoutConsiderationNotTaxable)
+  if (giftTax?.aggregateValueWithoutConsiderationNotTaxable)
     totalGiftExemptIncome += giftTax.aggregateValueWithoutConsideration;
 
-  if(giftTax.immovablePropertyWithoutConsiderationNotTaxable)
+  if (giftTax?.immovablePropertyWithoutConsiderationNotTaxable)
     totalGiftExemptIncome += giftTax.immovablePropertyWithoutConsideration;
 
-  if(giftTax.immovablePropertyInadequateConsiderationNotTaxable)
+  if (giftTax?.immovablePropertyInadequateConsiderationNotTaxable)
     totalGiftExemptIncome += giftTax.immovablePropertyInadequateConsideration;
 
-  if(giftTax.anyOtherPropertyWithoutConsiderationNotTaxable)
+  if (giftTax?.anyOtherPropertyWithoutConsiderationNotTaxable)
     totalGiftExemptIncome += giftTax.anyOtherPropertyWithoutConsideration;
 
-  if(giftTax.anyOtherPropertyInadequateConsiderationNotTaxable)
+  if (giftTax?.anyOtherPropertyInadequateConsiderationNotTaxable)
     totalGiftExemptIncome += giftTax.anyOtherPropertyInadequateConsideration;
 
   return totalGiftExemptIncome;
