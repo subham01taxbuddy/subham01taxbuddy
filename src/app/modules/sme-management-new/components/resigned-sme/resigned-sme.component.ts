@@ -1,9 +1,12 @@
+import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
+import * as moment from 'moment';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
+import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -21,14 +24,9 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
   config: any;
   loggedInSme: any;
   searchParam: any = {
-    statusId: null,
     page: 0,
-    size: 20,
-    // assigned:true,
-    // owner:true,
+    pageSize: 20,
     active: false,
-    mobileNumber: null,
-    emailId: null,
   };
   sortBy: any = {};
   sortMenus = [
@@ -36,14 +34,23 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
     { value: 'roles', name: 'Roles' },
     { value: 'parentName', name: 'Parent Name' },
   ];
+
+  searchBy: any = {};
+  searchMenus = [
+    { value: 'mobileNumber', name: 'Mobile Number' },
+    { value: 'name', name: 'Name' }
+  ];
+  clearUserFilter: number;
+  roles: any;
+
   constructor(
-    private userService: UserMsService,
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private utilsService: UtilsService,
     private router: Router,
     private dialog: MatDialog,
     private cacheManager: CacheManager,
+    private reportService: ReportService,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.smeListGridOptions = <GridOptions>{
@@ -64,6 +71,7 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
+    this.roles = this.loggedInSme[0]?.roles
     this.getSmeList();
   }
 
@@ -71,25 +79,41 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
     this.sortBy = object;
   }
 
+  searchByObject(object) {
+    this.searchBy = object;
+  }
+
+  resetFilters() {
+    this.clearUserFilter = moment.now().valueOf();
+    this.searchBy = {};
+    this.sortBy = {};
+    this.getSmeList();
+  }
+
   search() {
     this.getSmeList();
   }
 
   getSmeList(pageChange?) {
+    //'https://uat-api.taxbuddy.com/report/bo/sme-details?page=0&pageSize=20&active=false'
     if (!pageChange) {
       this.cacheManager.clearCache();
-      console.log('in clear cache')
     }
-    const loggedInSmeUserId = this.loggedInSme[0].userId
     let data = this.utilsService.createUrlParams(this.searchParam);
-    let param = `/sme-details-new/${loggedInSmeUserId}?${data}`;
+    let param = `/bo/sme-details?${data}`;
 
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
       param = param + sortByJson;
     }
 
-    this.userMsService.getMethodNew(param).subscribe(
+    if (Object.keys(this.searchBy).length) {
+      let searchByKey = Object.keys(this.searchBy);
+      let searchByValue = Object.values(this.searchBy);
+      param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
+    }
+
+    this.reportService.getMethod(param).subscribe(
       (result: any) => {
         if (
           Array.isArray(result.data.content) &&
@@ -140,7 +164,7 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
       {
         headerName: 'Mobile No',
         field: 'mobileNumber',
-        width: 120,
+        width: 140,
         suppressMovable: true,
         pinned: 'left',
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -153,7 +177,7 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
       {
         headerName: 'Name',
         field: 'name',
-        width: 180,
+        width: 200,
         suppressMovable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -174,9 +198,9 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
         },
       },
       {
-        headerName: 'Official Mail ID ',
+        headerName: 'Email ID ',
         field: 'email',
-        width: 180,
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -189,80 +213,22 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
         }
       },
       {
-        headerName: 'Komm ID',
-        field: 'kommId',
+        headerName: 'Resignantion Date',
+        field: 'resigningDate',
         width: 120,
         suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+          } else {
+            return '-';
+          }
         },
+
       },
       {
-        headerName: 'Roles',
-        field: 'roles',
-        width: 180,
-        display: 'flex',
-        suppressMovable: true,
-        wrapText: true,
-        autoHeight: true,
-        cellStyle: {
-          'white-space': 'normal',
-          'overflow-wrap': 'break-word',
-          textAlign: 'center',
-          display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center',
-        },
-      },
-      {
-        headerName: 'Assigned Services',
-        field: 'serviceType',
-        width: 120,
-        display: 'flex',
-        suppressMovable: true,
-        wrapText: true,
-        autoHeight: true,
-        cellStyle: {
-          'white-space': 'normal',
-          'overflow-wrap': 'break-word',
-          textAlign: 'center',
-          display: 'flex',
-          'align-items': 'center',
-          'justify-content': 'center',
-        },
-        // cellRenderer: function (params: any) {
-        //   return
-        // }
-      },
-      {
-        headerName: 'Parent Name',
-        field: 'parentName',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
-        headerName: 'Language Proficiency',
-        field: 'languages',
-        width: 120,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        filter: 'agTextColumnFilter',
-        filterParams: {
-          filterOptions: ['contains', 'notContains'],
-          debounceMs: 0,
-        },
-      },
-      {
-        headerName: 'Update',
+        headerName: 'View Profile',
         field: '',
         width: 100,
         suppressMovable: true,
@@ -270,16 +236,16 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
 
         cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Click to edit sme" data-action-type="edit"
+          return `<button type="button" class="action_icon add_button" title="Click to view sme" data-action-type="view"
           style="border: none; background: transparent; font-size: 14px; cursor:pointer;color:#2199e8;">
-          <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="edit"> Edit</i>
+          <i class="fa-sharp fa-solid fa-eye fa-xs" data-action-type="view"> View</i>
            </button>`;
         },
       },
       {
-        headerName: 'Convert To Lead Partner',
+        headerName: 'Convert To External Partner',
         field: '',
-        width: 120,
+        width: 150,
         suppressMovable: true,
         pinned: 'right',
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -297,7 +263,6 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
   rowMultiSelectWithClick: false;
 
   createRowData(data: any) {
-    var smeArray = [];
     return data;
   }
 
@@ -305,8 +270,8 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
     if (params.event.target !== undefined) {
       const actionType = params.event.target.getAttribute('data-action-type');
       switch (actionType) {
-        case 'edit': {
-          this.editAddSme(params.data);
+        case 'view': {
+          this.viewSme(params.data);
           break;
         }
         case 'ConvertToLeadPartner': {
@@ -317,9 +282,9 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
     }
   }
 
-  editAddSme(sme) {
+  viewSme(sme) {
     let smeData = {
-      type: 'edit',
+      type: 'view',
       data: sme,
     };
     sessionStorage.setItem('smeObject', JSON.stringify(smeData));
@@ -327,40 +292,38 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
   }
 
   ConvertToLeadPartner(data) {
-    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Confirmation Dialog',
-        message: 'Are you sure want to convert this SME to lead partner?',
-      },
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result === 'YES') {
-        this.loading = true;
-        let param = '/resignedSme-to-partner?userId=' + data.userId;
+    sessionStorage.setItem('resignedSmeObj', JSON.stringify(data));
+    this.router.navigate(['/sme-management-new/convert-to-partner']);
 
-        this.userMsService.postMethod(param, '').subscribe((res: any) => {
-          this.loading = false;
-          if (res.success) {
-            this._toastMessageService.alert('success', 'Converted this resigned SME to lead partner successfully.');
-            this.getSmeList();
-          } else {
-            this._toastMessageService.alert('error', res.message);
-          }
-        },
-          (error) => {
-            this.loading = false;
-            this._toastMessageService.alert('error', 'Failed convert this resigned SME to lead partner.');
-          }
-        );
-      }
-    });
+    // let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    //   data: {
+    //     title: 'Confirmation Dialog',
+    //     message: 'Are you sure want to convert this SME to lead partner?',
+    //   },
+    // });
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   if (result === 'YES') {
+    //     this.loading = true;
+    //     let param = '/resignedSme-to-partner?userId=' + data.userId;
+
+    //     this.userMsService.postMethod(param, '').subscribe((res: any) => {
+    //       this.loading = false;
+    //       if (res.success) {
+    //         this._toastMessageService.alert('success', 'Converted this resigned SME to lead partner successfully.');
+    //         this.getSmeList();
+    //       } else {
+    //         this._toastMessageService.alert('error', res.message);
+    //       }
+    //     },
+    //       (error) => {
+    //         this.loading = false;
+    //         this._toastMessageService.alert('error', 'Failed convert this resigned SME to lead partner.');
+    //       }
+    //     );
+    //   }
+    // });
   }
 
-  // pageChanged(event: any) {
-  //   this.config.currentPage = event;
-  //   this.searchParam.page = event - 1;
-  //   this.getSmeList();
-  // }
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
