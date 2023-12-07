@@ -487,9 +487,10 @@ export class ZeroCouponBondsComponent
       let bondsList = [];
       if(this.bondType !== 'bonds'){
         if(this.bondType === 'zeroCouponBonds'){
-          bondsList = this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails?.filter(e => e.whetherDebenturesAreListed);
+          bondsList = bondIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails?.filter(
+              e => e.whetherDebenturesAreListed) : [];
         } else {
-          bondsList = this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails;
+          bondsList = bondIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails : [];
         }
       }
       bondsArray.controls.forEach((element) => {
