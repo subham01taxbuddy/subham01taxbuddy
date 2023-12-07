@@ -519,7 +519,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
   }
 
   cancelUpdate() {
-    this.router.navigate(['/sme-management-new/assignedsme']);
+    this.router.navigate(['/sme-management-new/resignedsme']);
   }
 
 

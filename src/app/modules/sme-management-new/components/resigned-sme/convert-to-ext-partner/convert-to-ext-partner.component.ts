@@ -589,7 +589,7 @@ export class ConvertToExtPartnerComponent implements OnInit {
   }
 
   cancelUpdate() {
-    this.router.navigate(['/sme-management-new/assignedsme']);
+    this.router.navigate(['/sme-management-new/resignedsme']);
   }
 
   updateSuccessful = false;
