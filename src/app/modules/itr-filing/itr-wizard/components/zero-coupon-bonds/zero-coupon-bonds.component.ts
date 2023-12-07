@@ -488,7 +488,7 @@ export class ZeroCouponBondsComponent
       if(this.bondType !== 'bonds'){
         if(this.bondType === 'zeroCouponBonds'){
           bondsList = bondIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails?.filter(
-              e => e.whetherDebenturesAreListed) : [];
+              e => e.whetherDebenturesAreListed && !e.isIndexationBenefitAvailable) : [];
         } else {
           bondsList = bondIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails : [];
         }
@@ -548,9 +548,9 @@ export class ZeroCouponBondsComponent
       }
 
       //here we need to check for debentures which have indexation benefits
-      let indexedDebList = bondsArray
+      let indexedDebList = this.bondType === 'bonds' ? bondsArray
         .getRawValue()
-        .filter((element) => element.isIndexationBenefitAvailable === true);
+        .filter((element) => element.isIndexationBenefitAvailable === true) : [];
       //here we need to check for debentures which are listed
       let zcbDebList = this.bondType === 'bonds' ? bondsArray
         .getRawValue()
@@ -729,10 +729,10 @@ export class ZeroCouponBondsComponent
           (element) => element?.assetType === 'GOLD'
         );
         if (goldIndex !== -1 && indexedDebList?.length == 0) {
-          this.Copy_ITR_JSON.capitalGain[goldIndex].assetDetails =
+          this.Copy_ITR_JSON.capitalGain[goldIndex].assetDetails = this.bondType === 'bonds' ?
             this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails?.filter(
               (element) => !element?.isIndexationBenefitAvailable
-            );
+            ) : this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails;
         }
         if(this.bondType === 'bonds' && zcbDebList.length === 0){
           let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
