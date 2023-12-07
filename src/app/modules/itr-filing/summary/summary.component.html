@@ -5618,9 +5618,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 keys.ExemptIncAgriOthUs10Total
-                                  ? keys.ExemptIncAgriOthUs10Total + finalCalculations.giftExemptIncome
+                                  ? keys.ExemptIncAgriOthUs10Total + (finalCalculations.giftExemptIncome === undefined ? 0 : finalCalculations.giftExemptIncome)
                                   : getExemptIncomeTotal() +
-                                    finalCalculations?.exemptIncome?.total + finalCalculations.giftExemptIncome
+                                    finalCalculations?.exemptIncome?.total + (finalCalculations.giftExemptIncome === undefined ? 0 : finalCalculations.giftExemptIncome)
                               }}</label>
                           </div>
                         </div>
