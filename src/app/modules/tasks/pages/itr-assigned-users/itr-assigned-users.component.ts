@@ -95,7 +95,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? (this.showReassignmentBtn.length  && rowNode.data.statusId != 11 && rowNode.data.statusId != 35) : false;
+        return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.statusId != 11 && rowNode.data.statusId != 35) : false;
       },
       onGridReady: params => {
       },
@@ -408,7 +408,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         hide: !this.showReassignmentBtn.length,
         pinned: 'left',
         checkboxSelection: (params) => {
-          return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11 ;
+          return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11;
         },
         cellStyle: function (params: any) {
           return {
@@ -546,6 +546,18 @@ export class ItrAssignedUsersComponent implements OnInit {
         headerName: 'Language',
         field: 'language',
         width: 115,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Subscription Plan',
+        field: 'subscriptionPlan',
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -863,7 +875,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     ];
   }
 
-  reassignmentForLeader(){
+  reassignmentForLeader() {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     if (selectedRows.length === 0) {
       this.utilsService.showSnackBar('Please select entries from table to Re-Assign');
@@ -944,13 +956,14 @@ export class ItrAssignedUsersComponent implements OnInit {
         panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
         eriClientValidUpto: userData[i].eriClientValidUpto,
         language: userData[i].language,
+        subscriptionPlan: userData[i].subscriptionPlan,
         itrObjectStatus: userData[i].itrObjectStatus,
         openItrId: userData[i].openItrId,
         lastFiledItrId: userData[i].lastFiledItrId,
         conversationWithFiler: userData[i].conversationWithFiler,
         ownerUserId: userData[i].ownerUserId,
-        filerUserId:userData[i].filerUserId,
-        leaderUserId :userData[i].leaderUserId,
+        filerUserId: userData[i].filerUserId,
+        leaderUserId: userData[i].leaderUserId,
       })
       userArray.push(userInfo);
     }
