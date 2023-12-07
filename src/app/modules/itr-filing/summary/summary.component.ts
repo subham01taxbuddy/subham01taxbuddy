@@ -3581,6 +3581,11 @@ export class SummaryComponent implements OnInit {
                       element?.EmployerOrDeductorOrCollectTAN,
                     DeductedYr: element?.DeductedYr,
                     BroughtFwdTDSAmt: element?.BroughtFwdTDSAmt,
+
+                    deductorName: element?.TCSCreditOwner,
+                    deductorTAN: element?.EmployerOrDeductorOrCollectTAN,
+                    totalAmountCredited: element?.TCSClaimedThisYearDtls?.TCSAmtCollOwnHand,
+                    totalTdsDeposited: element?.TCSClaimedThisYearDtls?.TCSAmtCollOwnHand,
                   }))
                 : null,
 
