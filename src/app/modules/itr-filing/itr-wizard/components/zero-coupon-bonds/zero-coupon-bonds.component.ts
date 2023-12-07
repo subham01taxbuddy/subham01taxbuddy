@@ -560,7 +560,8 @@ export class ZeroCouponBondsComponent
           (element) => element.assetType === 'GOLD'
         );
         const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
-        let debsList = [];
+        let debsList = goldIndex >= 0 ?
+            this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e=> !e.isIndexationBenefitAvailable): [];
         let maxGold = 0;
         if (this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails) {
           let tempArray = this.Copy_ITR_JSON.capitalGain[
