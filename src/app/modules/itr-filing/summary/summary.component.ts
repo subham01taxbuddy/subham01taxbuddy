@@ -241,6 +241,10 @@ export class SummaryComponent implements OnInit {
         dividendIncome: number;
         winningFromLotteries?: any;
         incFromOwnAndMaintHorses?: any;
+        NOT89A?: any;
+        OTHNOT89A?: any;
+        OTH?: any;
+        Increliefus89AOS?: any;
       };
       otherIncomeTotal: number;
     };
@@ -627,7 +631,7 @@ export class SummaryComponent implements OnInit {
         GrossAmount?: any;
         AmtCarriedFwd?: any;
       }[];
-      otherThanSalary16AAmtCarriedFwd?:any;
+      otherThanSalary16AAmtCarriedFwd?: any;
       totalOtherThanSalary16A: Number;
       otherThanSalary26QB: {
         deductorName: String;
@@ -649,7 +653,7 @@ export class SummaryComponent implements OnInit {
         DeductedYr?: any;
         BroughtFwdTDSAmt?: any;
       }[];
-      tcsBroughtFwdTDSAmt?:any;
+      tcsBroughtFwdTDSAmt?: any;
       totalTcs: Number;
       otherThanTDSTCS: {
         bsrCode: String;
@@ -1013,6 +1017,36 @@ export class SummaryComponent implements OnInit {
                 ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                   (val) => val?.OthSrcNatureDesc === 'FAP'
                 )?.OthSrcOthAmount,
+
+                NOT89A: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ][
+                  this.ITR14IncomeDeductions
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                  (val) => val?.OthSrcNatureDesc === 'NOT89A'
+                )?.OthSrcOthAmount,
+
+                OTHNOT89A: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ][
+                  this.ITR14IncomeDeductions
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                  (val) => val?.OthSrcNatureDesc === 'OTHNOT89A'
+                )?.OthSrcOthAmount,
+
+                OTH: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ][
+                  this.ITR14IncomeDeductions
+                ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
+                  (val) => val?.OthSrcNatureDesc === 'OTH'
+                )?.OthSrcOthAmount,
+
+                Increliefus89AOS:this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ][
+                  this.ITR14IncomeDeductions
+                ]?.Increliefus89AOS,
               },
 
               otherIncomeTotal:
@@ -3427,10 +3461,13 @@ export class SummaryComponent implements OnInit {
                     AmtCarriedFwd: element?.AmtCarriedFwd,
                   }))
                 : null,
-                otherThanSalary16AAmtCarriedFwd:this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ]?.ScheduleTDS2?.TDSOthThanSalaryDtls?.reduce((total, element) => total + (element.BroughtFwdTDSAmt || 0), 0),
-              totalOtherThanSalary16A: 
+              otherThanSalary16AAmtCarriedFwd: this.ITR_JSON.itrSummaryJson[
+                'ITR'
+              ][this.itrType]?.ScheduleTDS2?.TDSOthThanSalaryDtls?.reduce(
+                (total, element) => total + (element.BroughtFwdTDSAmt || 0),
+                0
+              ),
+              totalOtherThanSalary16A:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTDS2
                   ?.TotalTDSonOthThanSals,
 
@@ -3530,9 +3567,12 @@ export class SummaryComponent implements OnInit {
                   }))
                 : null,
 
-                tcsBroughtFwdTDSAmt:this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ].ScheduleTCS?.TCS?.reduce((total, element) => total + (element?.BroughtFwdTDSAmt || 0), 0),
+              tcsBroughtFwdTDSAmt: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ].ScheduleTCS?.TCS?.reduce(
+                (total, element) => total + (element?.BroughtFwdTDSAmt || 0),
+                0
+              ),
 
               totalTcs:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTCS

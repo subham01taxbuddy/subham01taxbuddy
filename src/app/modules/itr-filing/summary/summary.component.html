@@ -2531,6 +2531,85 @@
                             </td>
                           </tr>
 
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.NOT89A
+                            "
+                          >
+                            <td>
+                              Income from retirement benefit account maintained
+                              in a notified country u/s 89A
+                            </td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.NOT89A
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.OTHNOT89A
+                            "
+                          >
+                            <td>
+                              Income from retirement benefit account maintained
+                              in a country other than notified country u/s 89A
+                            </td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.OTHNOT89A
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes?.OTH
+                            "
+                          >
+                            <td>
+                              Income taxable during the previous year on which relief u/s 89A was claimed in any earlier previous year
+                            </td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.OTH
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.Increliefus89AOS
+                            "
+                          >
+                            <td>less: Income relief u/s 89A other source</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.Increliefus89AOS
+                                )
+                              }}
+                            </td>
+                          </tr>
+
                           <tr>
                             <th>Total</th>
                             <th>
