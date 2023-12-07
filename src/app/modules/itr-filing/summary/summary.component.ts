@@ -639,6 +639,13 @@ export class SummaryComponent implements OnInit {
         deductorTAN: String;
         totalAmountCredited: Number;
         totalTdsDeposited: Number;
+
+        TCSAmtCollOwnHand?: any;
+        TCSAmtCollSpouseOrOthrHand?: any;
+        PANOfSpouseOrOthrPrsn?: any;
+        EmployerOrDeductorOrCollectTAN?: any;
+        DeductedYr?: any;
+        BroughtFwdTDSAmt?: any;
       }[];
       totalTcs: Number;
       otherThanTDSTCS: {
@@ -3560,66 +3567,23 @@ export class SummaryComponent implements OnInit {
 
               tcs: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType].ScheduleTCS
                 ?.TCS
-                ? (Object.entries(
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleTCS?.TCS
-                  ).map(([key, item]) => ({
-                    deductorName: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        AmtTaxCollected: Number;
-                        CollectedYr: String;
-                        TotalTCS: Number;
-                        AmtTCSClaimedThisYear: Number;
-                      }
-                    ).EmployerOrDeductorOrCollectDetl
-                      ?.EmployerOrDeductorOrCollecterName,
-                    deductorTAN: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        AmtTaxCollected: Number;
-                        CollectedYr: String;
-                        TotalTCS: Number;
-                        AmtTCSClaimedThisYear: Number;
-                      }
-                    ).EmployerOrDeductorOrCollectDetl?.TAN,
-                    totalAmountCredited: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        AmtTaxCollected: Number;
-                        CollectedYr: String;
-                        TotalTCS: Number;
-                        AmtTCSClaimedThisYear: Number;
-                      }
-                    ).TotalTCS,
-                    totalTdsDeposited: (
-                      item as {
-                        EmployerOrDeductorOrCollectDetl: {
-                          TAN: String;
-                          EmployerOrDeductorOrCollecterName: String;
-                        };
-                        AmtTaxCollected: Number;
-                        CollectedYr: String;
-                        TotalTCS: Number;
-                        AmtTCSClaimedThisYear: Number;
-                      }
-                    ).AmtTCSClaimedThisYear,
-                  })) as {
-                    deductorName: String;
-                    deductorTAN: String;
-                    totalAmountCredited: Number;
-                    totalTdsDeposited: Number;
-                  }[])
+                ? this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ].ScheduleTCS?.TCS.map((element) => ({
+                    TCSAmtCollOwnHand:
+                      element?.TCSClaimedThisYearDtls?.TCSAmtCollOwnHand,
+                    TCSAmtCollSpouseOrOthrHand:
+                      element?.TCSClaimedThisYearDtls
+                        ?.TCSAmtCollSpouseOrOthrHand,
+                    PANOfSpouseOrOthrPrsn:
+                      element?.TCSClaimedThisYearDtls?.PANOfSpouseOrOthrPrsn,
+                    EmployerOrDeductorOrCollectTAN:
+                      element?.EmployerOrDeductorOrCollectTAN,
+                    DeductedYr: element?.DeductedYr,
+                    BroughtFwdTDSAmt: element?.BroughtFwdTDSAmt,
+                  }))
                 : null,
+
               totalTcs:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTCS
                   ?.TotalSchTCS,
