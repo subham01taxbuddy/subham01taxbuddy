@@ -625,7 +625,9 @@ export class SummaryComponent implements OnInit {
         DeductedYr?: any;
         BroughtFwdTDSAmt?: any;
         GrossAmount?: any;
+        AmtCarriedFwd?: any;
       }[];
+      otherThanSalary16AAmtCarriedFwd?:any;
       totalOtherThanSalary16A: Number;
       otherThanSalary26QB: {
         deductorName: String;
@@ -647,6 +649,7 @@ export class SummaryComponent implements OnInit {
         DeductedYr?: any;
         BroughtFwdTDSAmt?: any;
       }[];
+      tcsBroughtFwdTDSAmt?:any;
       totalTcs: Number;
       otherThanTDSTCS: {
         bsrCode: String;
@@ -3411,87 +3414,23 @@ export class SummaryComponent implements OnInit {
               otherThanSalary16A: this.ITR_JSON.itrSummaryJson['ITR'][
                 this.itrType
               ]?.ScheduleTDS2?.TDSOthThanSalaryDtls
-                ? (Object.entries(
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleTDS2?.TDSOthThanSalaryDtls
-                  ).map(([key, item]) => ({
-                    deductorName: (
-                      item as {
-                        TDSCreditName: String;
-                        TANOfDeductor: String;
-                        GrossAmount: Number;
-                        TaxDeductCreditDtls: {
-                          TaxDeductedOwnHands: Number;
-                          TaxClaimedOwnHands: Number;
-                        };
-                      }
-                    )?.TDSCreditName,
-                    deductorTAN: (
-                      item as {
-                        TDSCreditName: String;
-                        TANOfDeductor: String;
-                        GrossAmount: Number;
-                        TaxDeductCreditDtls: {
-                          TaxDeductedOwnHands: Number;
-                          TaxClaimedOwnHands: Number;
-                        };
-                      }
-                    )?.TANOfDeductor,
-                    totalAmountCredited: (
-                      item as {
-                        TDSCreditName: String;
-                        TANOfDeductor: String;
-                        GrossAmount: Number;
-                        TaxDeductCreditDtls: {
-                          TaxDeductedOwnHands: Number;
-                          TaxClaimedOwnHands: Number;
-                        };
-                      }
-                    )?.GrossAmount,
-                    totalTdsDeposited: (
-                      item as {
-                        TDSCreditName: String;
-                        TANOfDeductor: String;
-                        GrossAmount: Number;
-                        TaxDeductCreditDtls: {
-                          TaxDeductedOwnHands: Number;
-                          TaxClaimedOwnHands: Number;
-                        };
-                      }
-                    )?.TaxDeductCreditDtls?.TaxClaimedOwnHands,
-                    BroughtFwdTDSAmt: (
-                      item as {
-                        TDSCreditName: String;
-                        TANOfDeductor: String;
-                        GrossAmount: Number;
-                        BroughtFwdTDSAmt: any;
-                        TaxDeductCreditDtls: {
-                          TaxDeductedOwnHands: Number;
-                          TaxClaimedOwnHands: Number;
-                        };
-                      }
-                    )?.BroughtFwdTDSAmt,
-                    DeductedYr: (
-                      item as {
-                        TDSCreditName: String;
-                        TANOfDeductor: String;
-                        GrossAmount: Number;
-                        BroughtFwdTDSAmt: any;
-                        DeductedYr?: any;
-                        TaxDeductCreditDtls: {
-                          TaxDeductedOwnHands: Number;
-                          TaxClaimedOwnHands: Number;
-                        };
-                      }
-                    )?.DeductedYr,
-                  })) as {
-                    deductorName: String;
-                    deductorTAN: String;
-                    totalAmountCredited: Number;
-                    totalTdsDeposited: Number;
-                  }[])
+                ? this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ]?.ScheduleTDS2?.TDSOthThanSalaryDtls.map((element) => ({
+                    deductorName: element?.TDSCreditName,
+                    deductorTAN: element?.TANOfDeductor,
+                    totalAmountCredited: element?.GrossAmount,
+                    totalTdsDeposited:
+                      element?.TaxDeductCreditDtls?.TaxClaimedOwnHands,
+                    BroughtFwdTDSAmt: element?.BroughtFwdTDSAmt,
+                    DeductedYr: element?.DeductedYr,
+                    AmtCarriedFwd: element?.AmtCarriedFwd,
+                  }))
                 : null,
-              totalOtherThanSalary16A:
+                otherThanSalary16AAmtCarriedFwd:this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleTDS2?.TDSOthThanSalaryDtls?.reduce((total, element) => total + (element.BroughtFwdTDSAmt || 0), 0),
+              totalOtherThanSalary16A: 
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTDS2
                   ?.TotalTDSonOthThanSals,
 
@@ -3581,8 +3520,19 @@ export class SummaryComponent implements OnInit {
                       element?.EmployerOrDeductorOrCollectTAN,
                     DeductedYr: element?.DeductedYr,
                     BroughtFwdTDSAmt: element?.BroughtFwdTDSAmt,
+
+                    deductorName: element?.TCSCreditOwner,
+                    deductorTAN: element?.EmployerOrDeductorOrCollectTAN,
+                    totalAmountCredited:
+                      element?.TCSClaimedThisYearDtls?.TCSAmtCollOwnHand,
+                    totalTdsDeposited:
+                      element?.TCSClaimedThisYearDtls?.TCSAmtCollOwnHand,
                   }))
                 : null,
+
+                tcsBroughtFwdTDSAmt:this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ].ScheduleTCS?.TCS?.reduce((total, element) => total + (element?.BroughtFwdTDSAmt || 0), 0),
 
               totalTcs:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTCS
