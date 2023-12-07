@@ -484,6 +484,23 @@
                             </td>
                           </tr>
                           <tr>
+                            <td>5. Less: Relief u/s 89A</td>
+                            <td
+                              *ngFor="
+                                let salary of finalCalculations?.salary
+                                  ?.employers;
+                                let i = index
+                              "
+                            >
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  salary.Increliefus89A
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
                             <td>6. Less: Standard Deduction</td>
                             <td
                               *ngFor="
@@ -2579,7 +2596,9 @@
                             "
                           >
                             <td>
-                              Income taxable during the previous year on which relief u/s 89A was claimed in any earlier previous year
+                              Income taxable during the previous year on which
+                              relief u/s 89A was claimed in any earlier previous
+                              year
                             </td>
                             <td>
                               Rs
