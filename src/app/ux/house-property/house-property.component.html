@@ -94,115 +94,263 @@
               </div>
             </div>
           </div>
-            <div class="wrapper">
-              Explain
-              <div class="accordion" id="accordionExample">
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                      Accordion Item #1
-                    </button>
-                  </h2>
-                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-                    </div>
+
+            <div class="div-2">  
+              <div class="div-4">               
+              <div class="frame-wrapper-2A">
+
+                <div class="hdTxMnTp">
+                  <div class="hdTxL">
+                    What is the category of ownership?<span class="redAst">*</span>
                   </div>
+                 <div class="hdTxR">
+                  <input type="radio" class="spcR1"><label class="spcR"> Self Occupied</label>
+                  <input type="radio" class="spcR1" checked><label class="spcR">Let Out</label>
+                  <input type="radio" class="spcR1"><label>Deemed Let Out</label>
+                  </div>
+                 </div>
+
+                <div class="accordion" id="myAccordion">
+                  <div class="accordion-item">
+                      <h2 class="accordion-header accoHdclr" id="headingOne">
+                          <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne">Let Out House Property</button>									
+                      </h2>
+                      <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                          <div class="card-body">
+                            
+                            <div class="surBx1">
+
+                              <div class="hp2main">
+                               <div class="hplft">Gross Rent Received/Receivable/Letable Value * </div>
+                               <div class="hprgt"><input type="text" placeholder="₹ Enter Amount" class="form-control"> </div>
+                              </div>                                     
+                              <div class="hp2main">
+                               <div class="hplft">Amount of Property Tax *</div>
+                               <div class="hprgt"><input type="text"  placeholder="₹ Enter Amount" class="form-control"> </div>
+                              </div>
+                              <div class="hp2main">
+                               <div class="hplft">Annual value *</div>
+                               <div class="hprgt"><input type="text" class="form-control" disabled> </div>
+                              </div>
+                              <div class="hp2main">
+                               <div class="hplft">30% Of Annual Value *</div>
+                               <div class="hprgt"><input type="text" class="form-control" disabled> </div>
+                              </div>
+                              <div class="hp2main">
+                                <div class="hplft">Interest paid on housing loan * <br><span class="subTx">(If amount is more than 2Lakh, additional deduction is available u/s 80EE/80EEA)</span></div>
+                                <div class="hprgt"><input type="text"  placeholder="₹ Enter Amount" class="form-control"> </div>
+                               </div>
+                               <div class="hp2main">
+                                <div class="hplft">Arreas/Unrealised Rent received during year is less than 30% *</div>
+                                <div class="hprgt"><input type="text"  placeholder="₹ Enter Amount" class="form-control"> </div>
+                               </div>
+                               <div class="hp2main hglt">
+                                <div class="hplft">Net Taxable Income from this House Property</div>
+                                <div class="hprgt"><input type="text"  placeholder="₹56,000" class="form-control hgltfrm"> </div>
+                               </div>
+                            </div>
+
+                            <div class="surBx1">
+
+                              <div class="hp2main">
+                               <div class="hplft">Principal on housing loan * </div>
+                               <div class="hprgt"><input type="text" placeholder="₹ Enter Amount" class="form-control"> </div>
+                              </div>                                     
+                            
+                            </div>
+                                                                
+                          </div>
+                      </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading2">
+                        <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse2">Property Address</button>
+                        
+                    </h2>
+                    <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                      <div class="card-body">
+                        <div class="div-5">
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Address line 1 </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" placeholder="">
+                            </div>
+                          </div>
+                        
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">PIN Code </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" placeholder="">
+                            </div>
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">City </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" placeholder="Mumbai">
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">State </span> <span class="text-wrapper-2">*</span>
+                                <select class="form-control select" id="exampleFormControlSelect1">
+                                  <option>Select</option>
+                                  <option>2</option>
+                                  <option>3</option>
+                                  <option>4</option>
+                                  <option>5</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Country </span> <span class="text-wrapper-2">*</span>
+                                <select class="form-control select" id="exampleFormControlSelect1">
+                                  <option>India</option>
+                                  <option>2</option>
+                                  <option>3</option>
+                                  <option>4</option>
+                                  <option>5</option>
+                                </select>
+                              </div>
+  
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      Accordion Item #2
-                    </button>
-                  </h2>
-                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-                    </div>
+                  <div class="accordion-item">
+                      <h2 class="accordion-header" id="heading3">
+                          <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse3">Co-ownership Details</button>
+                          
+                      </h2>
+                      <div id="collapse3" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                          <div class="card-body">
+
+                            <div class="hdTxMnBt">
+                              <div class="hdTxL">
+                                Is the Property Jointly Owned?<span class="redAst">*</span>
+                              </div>
+                             <div class="hdTxR">
+                              <input type="radio" class="spcR1"><label class="spcR"> Yes</label>
+                              <input type="radio" class="spcR1" checked><label class="spcR">No</label>                              
+                              </div>
+                             </div>
+
+                            <div class="hp4main1">                                  
+
+                              <div class="hp4-2">
+                                <div class="field">
+                                  <div class="field-label">
+                                    <span class="span">Name of co-owner </span> <span class="redAst">*</span>
+                                  </div>
+                                  <input type="text" class="form-control gry" placeholder="Ravi Kumar">                                         
+                                </div>   
+                              </div>
+
+                              <div class="hp4-3">
+                                <div class="field">
+                                  <div class="field-label">
+                                    <span class="span">Co-owner’s PAN </span> <span class="redAst">*</span>
+                                  </div>
+                                  <input type="text" class="form-control gry" placeholder="TTGxxxxxx">
+                                </div>   
+                              </div>
+
+                              <div class="hp4-3">
+                                <div class="field">
+                                  <div class="field-label">
+                                    <span class="span">Their % Share </span> <span class="redAst">*</span>
+                                  </div>
+                                  <input type="text" class="form-control gry" placeholder="67%">
+                                </div>   
+                              </div>
+
+                              <div class="hp4-4">
+                                 <div class="Bx4">
+                                 <div class="Bx4L">
+                                  <button type="button"> <i class="fa fa-trash-o delbt"></i> </button> 
+                                 </div>
+                                 <div class="Bx4R">
+                                 <button type="button" class="addAno"> + Add Another </button> 
+                                 </div>
+                                </div> 
+                              </div>
+
+
+                             </div>                            
+
+                          </div>
+                      </div>
                   </div>
-                </div>
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                      Accordion Item #3
-                    </button>
-                  </h2>
-                  <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                      <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading4">
+                        <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse4">Tenant Details</button>
+                        
+                    </h2>
+                    <div id="collapse4" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                        <div class="card-body">
+
+                          <div class="hp4main1">                                  
+
+                            <div class="hp4-2">
+                              <div class="field">
+                                <div class="field-label">
+                                  <span class="span">Name of Tenant </span> <span class="redAst">*</span>
+                                </div>
+                                <input type="text" class="form-control gry" placeholder="Samiksha Joshi">                                         
+                              </div>   
+                            </div>
+
+                            <div class="hp4-3">
+                              <div class="field">
+                                <div class="field-label">
+                                  <span class="span">Tenant’s PAN </span> <span class="redAst">*</span>
+                                </div>
+                                <input type="text" class="form-control gry" placeholder="TTGxxxxxx">
+                              </div>   
+                            </div>
+                     
+
+                            <div class="hp4-4">
+                               <div class="Bx4">
+                               <div class="Bx4L">
+                                <button type="button"> <i class="fa fa-trash-o delbt"></i> </button> 
+                               </div>
+                               <div class="Bx4R">
+                               <button type="button" class="addAno"> + Add Another </button> 
+                               </div>
+                              </div> 
+                            </div>
+
+
+                           </div>                            
+
+                        </div>
                     </div>
-                  </div>
                 </div>
               </div>
-
-
-
-              <div class="accordion-item">
-                  <h2 class="accordion__item-title">Self Occupied House Property</h2>
-                <div class="accordion__item-body">
-                  <div class="div-6">
-                    <div class="field">
-                      <div> <span class="span">Principle on housing loan</span> <span class="text-wrapper-2">*</span></div>
-                      <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp"
-                        placeholder="AC technologies">
-                    </div>
-                    <div class="field">
-                      <div><span class="span">Interest paid on housing loan</span> <span class="text-wrapper-2">*</span></div>
-                      <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="56886TTFG">
-                        <span class="span-2">(If amount is more than 2Lakh additional deduction is available u/s 80EE/80EEA)</span>
-                    </div>
-                    <div class="field">
-                      <div><span class="span">Interest on loan taken for residensial property</span> <span class="text-wrapper-2">*</span></div>
-                      <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="56886TTFG">
-                      <span class="span-2">(Deduction in respect of interest on loan taken for certain house property 80EEA)</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="wrap-content">
-                <div class="header_content">
-                  <div class="field-text-6"> Property Address</div>
-                  <img class="mingcute-down-fill" src="assets/img/new/blk-arw.png" />
-                </div>
-                <div class="div-5">
-                  <div class="div-6">
-                    <div class="field">
-                      <div><span class="span">Address line 1. </span> <span class="text-wrapper-2">*</span></div>
-                      <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp"  placeholder="">
-                    </div>
-                  </div>
-                  <div class="div-6">
-                    <div class="field">
-                      <div><span class="span">Pin Code</span> <span class="text-wrapper-2">*</span></div>
-                      <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="">
-                    </div>
-                    <div class="field">
-                      <div><span class="span">City </span> <span class="text-wrapper-2">*</span></div>
-                      <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="">
-                    </div>
-                  </div>
-                  
-                  <div class="div-6">
-                    <div class="field">
-                      <div><span class="span">State </span> <span class="text-wrapper-2">*</span></div>
-                      <select class="form-control inpplac" id="exampleFormControlSelect1">
-                        <option>Select</option>
-                        <option>2</option>
-                        <option>3</option>
-                      </select>
-                    </div>
-                    <div class="field">
-                      <div><span class="span">Country </span> <span class="text-wrapper-2">*</span></div>
-                      <select class="form-control inpplac" id="exampleFormControlSelect1">
-                        <option>Select</option>
-                        <option>2</option>
-                        <option>3</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
+
+            <div class="out-box">
+              <div class="box-left">
+                <div class="lft-btn">Back</div>
+              </div>
+              <div class="box-right">
+                <div class="rght-btn">Save & View Summary</div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
