@@ -820,8 +820,10 @@ export class ZeroCouponBondsComponent
     }
   }
   calculateIndexCost(asset, type?) {
-    if (!asset.controls['isIndexationBenefitAvailable'].value && asset.controls['gainType'].value === 'LONG') {
+    if (!asset.controls['isIndexationBenefitAvailable'].value ||
+        (asset.controls['isIndexationBenefitAvailable'].value && asset.controls['gainType'].value !== 'LONG')) {
       asset.controls['indexCostOfAcquisition'].setValue(0);
+      asset.controls['indexCostOfImprovement'].setValue(0);
       this.calculateTotalCG(asset);
       return;
     }
