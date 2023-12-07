@@ -83,15 +83,17 @@ export class OtherAssetImprovementComponent implements OnInit {
     this.addMoreOtherAssetsForm(this.assetIndex);
 
     // setting improvement flag
-    this.goldCg?.improvement?.forEach((element) => {
-      if (
-        element &&
-        element.indexCostOfImprovement &&
-        element.indexCostOfImprovement !== 0
-      ) {
+    if (this.assetIndex >= 0) {
+      let srn = this.goldCg?.assetDetails[this.assetIndex]?.srn;
+
+      let improvementExists = this.goldCg?.improvement?.filter((element) => {
+        return element?.srn === srn;
+      });
+
+      if (improvementExists && improvementExists?.length !== 0) {
         this.isImprovement?.setValue(true);
       }
-    });
+    }
   }
 
   ngOnInit() {
@@ -316,7 +318,10 @@ export class OtherAssetImprovementComponent implements OnInit {
 
   // calculatte gainType
   calculateGainType() {
-    if(this.assetsForm.controls['purchaseDate'].valid && this.assetsForm.controls['sellDate'].valid){
+    if (
+      this.assetsForm.controls['purchaseDate'].valid &&
+      this.assetsForm.controls['sellDate'].valid
+    ) {
       let purchaseDate = this.assetsForm.controls['purchaseDate'].value;
       let sellDate = this.assetsForm.controls['sellDate'].value;
       let req = {
@@ -327,7 +332,9 @@ export class OtherAssetImprovementComponent implements OnInit {
       const param = `/calculate/indexed-cost`;
       this.itrMsService.postMethod(param, req).subscribe((res: any) => {
         console.log('GAIN Type : ', res);
-        this.assetsForm.controls['gainType']?.setValue(res.data.capitalGainType);
+        this.assetsForm.controls['gainType']?.setValue(
+          res.data.capitalGainType
+        );
         this.calculateCoaIndexation(res.data.capitalGainType);
         this.calculateCoiIndexation(res.data.capitalGainType);
       });
@@ -443,12 +450,11 @@ export class OtherAssetImprovementComponent implements OnInit {
     }
   }
 
-  calculateCg() {
+  setCorrectIndex() {
     let cgObject = this.assetsForm?.value;
     let improvement = cgObject?.improvementsArray;
 
     // setting the correct index for calculations
-    delete cgObject?.improvementsArray;
     if (this.assetIndex || this.assetIndex === 0) {
       cgObject.srn = this.assetIndex;
       if (improvement && improvement.length > 0) {
@@ -467,6 +473,13 @@ export class OtherAssetImprovementComponent implements OnInit {
         this.goldCg.improvement = [];
       }
     }
+  }
+
+  calculateCg() {
+    let cgObject = this.assetsForm?.value;
+    let improvement = cgObject?.improvementsArray;
+
+    this.setCorrectIndex();
 
     this.loading = true;
     const param = '/singleCgCalculate';
@@ -557,6 +570,7 @@ export class OtherAssetImprovementComponent implements OnInit {
       'financialYearOfImprovement',
       'costOfImprovement',
       'indexCostOfImprovement',
+      'srn',
     ];
 
     if (this.isImprovement.value && improvementsArray?.controls?.length > 0) {
@@ -584,6 +598,8 @@ export class OtherAssetImprovementComponent implements OnInit {
         this.goldCg.improvement = [];
       }
     }
+
+    this.setCorrectIndex();
 
     if (this.assetsForm.valid) {
       this.loading = true;
@@ -629,7 +645,9 @@ export class OtherAssetImprovementComponent implements OnInit {
       );
 
       improvementsArray?.value?.forEach((element) => {
-        element.srn = this.data?.assetIndex;
+        if (!element?.srn) {
+          element.srn = this.data?.assetIndex;
+        }
         filteredImprovement.push(element);
       });
 
