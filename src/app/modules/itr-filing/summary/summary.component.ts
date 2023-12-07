@@ -200,6 +200,7 @@ export class SummaryComponent implements OnInit {
           entAllowance: number;
           standardDeduction: number;
           taxableSalary: number;
+          Increliefus89A?: any;
         }
       ];
       salaryTotalIncome: number;
@@ -1018,35 +1019,28 @@ export class SummaryComponent implements OnInit {
                   (val) => val?.OthSrcNatureDesc === 'FAP'
                 )?.OthSrcOthAmount,
 
-                NOT89A: this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ][
+                NOT89A: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.ITR14IncomeDeductions
                 ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                   (val) => val?.OthSrcNatureDesc === 'NOT89A'
                 )?.OthSrcOthAmount,
 
-                OTHNOT89A: this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ][
+                OTHNOT89A: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.ITR14IncomeDeductions
                 ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                   (val) => val?.OthSrcNatureDesc === 'OTHNOT89A'
                 )?.OthSrcOthAmount,
 
-                OTH: this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ][
+                OTH: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.ITR14IncomeDeductions
                 ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                   (val) => val?.OthSrcNatureDesc === 'OTH'
                 )?.OthSrcOthAmount,
 
-                Increliefus89AOS:this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ][
-                  this.ITR14IncomeDeductions
-                ]?.Increliefus89AOS,
+                Increliefus89AOS:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                    this.ITR14IncomeDeductions
+                  ]?.Increliefus89AOS,
               },
 
               otherIncomeTotal:
@@ -2204,6 +2198,12 @@ export class SummaryComponent implements OnInit {
                         ?.ScheduleS?.EntertainmntalwncUs16ii
                     : 0;
 
+                let Increliefus89A =
+                  index === higherEmployerIndex
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleS?.Increliefus89A
+                    : 0;
+
                 let standardDeduction =
                   index === higherEmployerIndex
                     ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
@@ -2217,6 +2217,7 @@ export class SummaryComponent implements OnInit {
                   exemptAllowance: exemptAllowance,
                   professionalTax: professionalTax,
                   entAllowance: entAllowance,
+                  Increliefus89A: Increliefus89A,
                   standardDeduction: standardDeduction,
                   taxableSalary:
                     element?.Salarys?.GrossSalary -
@@ -2292,7 +2293,11 @@ export class SummaryComponent implements OnInit {
                       ?.ScheduleOS?.IncOthThanOwnRaceHorse?.Deductions
                       ?.DeductionUs57iia) -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncFromOwnHorse?.BalanceOwnRaceHorse,
+                    ?.IncFromOwnHorse?.BalanceOwnRaceHorse -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedPrYr89AOS -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS,
 
                 dividendIncome:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
@@ -2326,6 +2331,21 @@ export class SummaryComponent implements OnInit {
                   ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                       ?.ScheduleOS?.IncFromOwnHorse?.BalanceOwnRaceHorse
                   : null,
+
+                NOT89A:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IncomeNotified89AOS,
+
+                OTHNOT89A:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS,
+
+                OTH: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                  ?.ScheduleOS?.IncOthThanOwnRaceHorse?.IncomeNotifiedPrYr89AOS,
+
+                Increliefus89AOS:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Increliefus89AOS,
               },
 
               otherIncomeTotal:
