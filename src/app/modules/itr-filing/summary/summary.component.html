@@ -5618,9 +5618,9 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 keys.ExemptIncAgriOthUs10Total
-                                  ? keys.ExemptIncAgriOthUs10Total + (finalCalculations.giftExemptIncome === undefined ? 0 : finalCalculations.giftExemptIncome)
+                                  ? keys.ExemptIncAgriOthUs10Total + finalCalculations?.giftExemptIncome
                                   : getExemptIncomeTotal() +
-                                    finalCalculations?.exemptIncome?.total + (finalCalculations.giftExemptIncome === undefined ? 0 : finalCalculations.giftExemptIncome)
+                                    finalCalculations?.exemptIncome?.total + finalCalculations?.giftExemptIncome
                               }}</label>
                           </div>
                         </div>
@@ -5649,7 +5649,7 @@
                               }}
                             </td>
                           </tr>
-                          <tr *ngIf="finalCalculations.giftExemptIncome && finalCalculations.giftExemptIncome > 0">
+                          <tr *ngIf="finalCalculations?.giftExemptIncome && finalCalculations?.giftExemptIncome > 0">
                             <td>Gift u/s 56(2)(x)</td>
                             <td class="">
                               <i class="material-icons" style="font-size: 15px"
@@ -5659,7 +5659,7 @@
                               }}
                             </td>
                           </tr>
-                          <tr *ngIf="finalCalculations?.profitShareAmount && finalCalculations.profitShareAmount > 0">
+                          <tr *ngIf="finalCalculations?.profitShareAmount && finalCalculations?.profitShareAmount > 0">
                             <td>Firm profit share</td>
                             <td class="">
                               <i class="material-icons" style="font-size: 15px"
@@ -5691,7 +5691,7 @@
                               }}
                             </td>
                           </tr>
-                          <tr *ngIf="finalCalculations.giftExemptIncome && finalCalculations.giftExemptIncome > 0">
+                          <tr *ngIf="finalCalculations?.giftExemptIncome && finalCalculations?.giftExemptIncome > 0">
                             <td>Gift u/s 56(2)(x)</td>
                             <td class="">
                               <i class="material-icons" style="font-size: 15px"
@@ -5701,7 +5701,7 @@
                               }}
                             </td>
                           </tr>
-                          <tr *ngIf="finalCalculations?.profitShareAmount && finalCalculations.profitShareAmount > 0">
+                          <tr *ngIf="finalCalculations?.profitShareAmount && finalCalculations?.profitShareAmount > 0">
                             <td>Firm profit share</td>
                             <td class="">
                               <i class="material-icons" style="font-size: 15px"
