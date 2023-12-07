@@ -316,20 +316,22 @@ export class OtherAssetImprovementComponent implements OnInit {
 
   // calculatte gainType
   calculateGainType() {
-    let purchaseDate = this.assetsForm.controls['purchaseDate'].value;
-    let sellDate = this.assetsForm.controls['sellDate'].value;
-    let req = {
-      assetType: this.assetType,
-      buyDate: moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
-      sellDate: moment(new Date(sellDate)).format('YYYY-MM-DD'),
-    };
-    const param = `/calculate/indexed-cost`;
-    this.itrMsService.postMethod(param, req).subscribe((res: any) => {
-      console.log('GAIN Type : ', res);
-      this.assetsForm.controls['gainType']?.setValue(res.data.capitalGainType);
-      this.calculateCoaIndexation(res.data.capitalGainType);
-      this.calculateCoiIndexation(res.data.capitalGainType);
-    });
+    if(this.assetsForm.controls['purchaseDate'].valid && this.assetsForm.controls['sellDate'].valid){
+      let purchaseDate = this.assetsForm.controls['purchaseDate'].value;
+      let sellDate = this.assetsForm.controls['sellDate'].value;
+      let req = {
+        assetType: this.assetType,
+        buyDate: moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
+        sellDate: moment(new Date(sellDate)).format('YYYY-MM-DD'),
+      };
+      const param = `/calculate/indexed-cost`;
+      this.itrMsService.postMethod(param, req).subscribe((res: any) => {
+        console.log('GAIN Type : ', res);
+        this.assetsForm.controls['gainType']?.setValue(res.data.capitalGainType);
+        this.calculateCoaIndexation(res.data.capitalGainType);
+        this.calculateCoiIndexation(res.data.capitalGainType);
+      });
+    }
   }
 
   // calculating cost of acquistion indexation
