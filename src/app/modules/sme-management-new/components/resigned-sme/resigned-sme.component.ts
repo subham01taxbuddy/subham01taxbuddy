@@ -282,46 +282,14 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
     }
   }
 
-  viewSme(sme) {
-    let smeData = {
-      type: 'view',
-      data: sme,
-    };
-    sessionStorage.setItem('smeObject', JSON.stringify(smeData));
+  viewSme(data) {
+    sessionStorage.setItem('resignedSmeObj', JSON.stringify(data));
     this.router.navigate(['/sme-management-new/edit-resignedsme']);
   }
 
   ConvertToLeadPartner(data) {
     sessionStorage.setItem('resignedSmeObj', JSON.stringify(data));
     this.router.navigate(['/sme-management-new/convert-to-partner']);
-
-    // let dialogRef = this.dialog.open(ConfirmDialogComponent, {
-    //   data: {
-    //     title: 'Confirmation Dialog',
-    //     message: 'Are you sure want to convert this SME to lead partner?',
-    //   },
-    // });
-    // dialogRef.afterClosed().subscribe((result) => {
-    //   if (result === 'YES') {
-    //     this.loading = true;
-    //     let param = '/resignedSme-to-partner?userId=' + data.userId;
-
-    //     this.userMsService.postMethod(param, '').subscribe((res: any) => {
-    //       this.loading = false;
-    //       if (res.success) {
-    //         this._toastMessageService.alert('success', 'Converted this resigned SME to lead partner successfully.');
-    //         this.getSmeList();
-    //       } else {
-    //         this._toastMessageService.alert('error', res.message);
-    //       }
-    //     },
-    //       (error) => {
-    //         this.loading = false;
-    //         this._toastMessageService.alert('error', 'Failed convert this resigned SME to lead partner.');
-    //       }
-    //     );
-    //   }
-    // });
   }
 
   pageChanged(event) {

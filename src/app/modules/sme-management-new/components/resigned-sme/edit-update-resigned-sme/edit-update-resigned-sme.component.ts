@@ -1,24 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import * as moment from 'moment';
-import { map, Observable, startWith } from 'rxjs';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { Location } from '@angular/common';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
-} from '@angular/material/core';
+import * as moment from 'moment';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { UserMsService } from 'src/app/services/user-ms.service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
+import { Location } from "@angular/common";
 import { ReportService } from 'src/app/services/report-service';
+import { Router } from '@angular/router';
+import { ItrMsService } from 'src/app/services/itr-ms.service';
+
 
 export const MY_FORMATS = {
   parse: {
@@ -40,65 +33,69 @@ export interface User {
   selector: 'app-edit-update-resigned-sme',
   templateUrl: './edit-update-resigned-sme.component.html',
   styleUrls: ['./edit-update-resigned-sme.component.scss'],
-  providers: [
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE],
-    },
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
-  ],
+  providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+  { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class EditUpdateResignedSmeComponent implements OnInit {
-  smeObj: any;
+  smeObj: SmeObj;
   loading = false;
   rolesList: any[] = [];
   minDate = new Date(1900, 0, 1);
-  maxDate = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth(),
-    new Date().getDate()
-  );
-  // leaveEndMinDate = new Date(this.leaveStartDate)
+  maxDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
   stateDropdown = AppConstants.stateDropdown;
   ownerList: any;
   itrTypesData = [];
-  ownerNames: User[];
-  options: User[] = [];
-  filteredOptions: Observable<User[]>;
   loggedInSme: any;
   smeRecords: any;
   smeServices: any;
-  langList = [
-    'English',
-    'Assamese',
-    'Bangla',
-    'Bodo',
-    'Dogri',
-    'Gujarati',
-    'Hindi',
-    'Kashmiri',
-    'Kannada',
-    'Konkani',
-    'Maithili',
-    'Malayalam',
-    'Manipuri',
-    'Marathi',
-    'Nepali',
-    'Oriya',
-    'Punjabi',
-    'Tamil',
-    'Telugu',
-    'Santali',
-    'Sindhi',
-    'Urdu',
-  ];
+  smeRoles: any;
+  checkRoles: any;
+  loggedInSmeRoles: any;
+  coOwnerData: any;
+
+  langList = ['English', 'Hindi', 'Marathi', 'Tamil', 'Telugu', 'Oriya', 'Gujarati', 'Kannada', 'Malayalam', 'Bangla', 'Assamese',]
   itrTypeList = [
     { value: 1, display: 'ITR 1' },
     { value: 2, display: 'ITR 2' },
     { value: 3, display: 'ITR 3' },
     { value: 4, display: 'ITR 4' },
+
   ];
+  languageForm: FormGroup;
+  irtTypeCapability = [];
+  itrTypeForm: FormGroup;
+  inactivityTimeForm: FormGroup;
+  inactivityTimeDuration = [
+    { key: "15 Min", checked: false, value: 15 },
+    { key: "30 Min", checked: false, value: 30 },
+    { key: "45 Min", checked: false, value: 45 },
+    { key: "60 Min", checked: false, value: 60 }
+  ];
+  caseLimit = [
+    { key: "5 Cases", checked: false, value: 5 },
+    { key: "10 Cases", checked: false, value: 10 },
+    { key: "15 Cases", checked: false, value: 15 },
+    { key: "20 Cases", checked: false, value: 20 },
+    { key: "30 Cases", checked: false, value: 30 },
+    { key: "50 Cases", checked: false, value: 50 }
+  ];
+  additionalId = [{ key: 'Yes', value: true, status: false }, { key: 'No', value: false, status: false }];
+  caseLimitForm: FormGroup;
+  itrPlanList: any;
+  allSmeList: any;
+  accountTypeDropdown: any;
+  isBankValid: boolean;
+  validateBankDetails: any;
+  hideAssignmentOnOff: boolean;
+  disableItrService: boolean;
+  disableTpaService: boolean;
+  disableNoticeService: boolean;
+  hideOtherServicesForFiler: boolean;
+  disableGstService: boolean;
+  hideSectionForAdmin: boolean;
+  smeDetails: any;
+  isBankDetailsFormChange: boolean;
+  leaderList: any;
 
   constructor(
     private fb: FormBuilder,
@@ -106,619 +103,429 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     private userMsService: UserMsService,
     private _toastMessageService: ToastMessageService,
     private location: Location,
-    private reportService:ReportService
-  ) {}
+    private router: Router,
+    private itrMsService: ItrMsService,
+    private reportService: ReportService
+  ) {
+    this.smeObj = JSON.parse(sessionStorage.getItem('resignedSmeObj'));
+    this.languageForm = this.fb.group({});
+    this.langList.forEach((lang) => {
+      this.languageForm.addControl(lang, new FormControl(false));
+    })
+    this.itrTypeForm = this.fb.group({});
 
-  ngOnInit() {
-    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    console.log('logged sme', this.loggedInSme);
-    this.getOwner();
-    this.filteredOptions = this.coOwner.valueChanges.pipe(
-      startWith(''),
-      map((value) => {
-        const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string) : this.options.slice();
-      })
-    );
-    this.smeObj = JSON.parse(sessionStorage.getItem('smeObject'))?.data;
-    this.smeFormGroup.patchValue(this.smeObj); // all
-    this.otherSmeInfo.patchValue(this.smeObj);
-    this.roles.patchValue(this.smeObj);
-    this.services.patchValue(this.smeObj);
-    this.setFormValues(this.smeObj);
-    console.log('sme obj', this.smeObj);
-    this.getSmeRecords();
 
-    if (this.smeObj.internal === true) {
-      this.internal.setValue('internal');
-    } else this.internal.setValue('external');
-
-    if (this.smeObj.leaveStartDate !== null) {
-      let leaveStartDate = this.smeObj.leaveStartDate;
-      let lDate = leaveStartDate?.split('IST');
-      this.leaveStartDate.setValue(new Date(lDate[0] + lDate[1]));
-    }
-
-    if (this.smeObj.leaveEndDate !== null) {
-      let leaveEndDate = this.smeObj.leaveEndDate;
-      let lEndDate = leaveEndDate?.split('IST');
-      this.leaveEndDate.setValue(new Date(lEndDate[0] + lEndDate[1]));
-    }
-
-    if (this.smeObj.joiningDate !== null) {
-      let joiningDate = this.smeObj.joiningDate;
-      let joinDate = joiningDate?.split('IST');
-      this.joiningDate.setValue(new Date(joinDate[0] + joinDate[1]));
-    }
-
-    if (this.smeObj.resigningDate !== null) {
-      let resigningDate = this.smeObj.resigningDate;
-      let resignDate = resigningDate?.split('IST');
-      this.resigningDate.setValue(new Date(resignDate[0] + resignDate[1]));
-    }
-    this.roles.valueChanges.subscribe((item) => {
-      console.log(item, this.roles);
+    this.inactivityTimeForm = this.fb.group({});
+    this.inactivityTimeDuration.forEach((duration) => {
+      this.inactivityTimeForm.addControl(duration.key, new FormControl(false));
+    });
+    this.caseLimitForm = this.fb.group({});
+    this.caseLimit.forEach((limit) => {
+      this.caseLimitForm.addControl(limit.key, new FormControl(false));
     });
 
-    // this.smeObj.roles.forEach((element) => {
-    // if (element == 'FILER_ITR') {
-    // this.itr.setValue(true);
-    // }
-    // else if (element == 'FILER_NRI') {
-    // this.nri.setValue(true);
-    // }
-    // else if (element == 'FILER_NOTICE') {
-    //   this.notice.setValue(true);
-    // }
-    // else if (element == 'FILER_WB') {
-    //   this.wb.setValue(true);
-    // }
-    // else if (element == ' FILER_PD') {
-    //   this.pd.setValue(true);
-    // }
-    // else if (element == ' FILER_GST') {
-    //   this.gst.setValue(true);
-    // }
-    // else if (element == '  ROLE_LE') {
-    //   this.leader.setValue(true);
-    // }
-    // });
   }
 
-  displayFn(user: User): string {
-    return user && user.name ? user.name : '';
+
+  ngOnInit() {
+    this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
+    this.loggedInSmeRoles = this.loggedInSme[0]?.roles;
+    this.smeFormGroup.patchValue(this.smeObj);
+    this.otherSmeInfo.patchValue(this.smeObj);
+    this.getLeaders();
+    this.getAccountType();
+    this.setFormDetails();
+    this.getPlanDetails();
   }
 
-  private _filter(name: string): User[] {
-    const filterValue = name.toLowerCase();
-
-    return this.options.filter((option) =>
-      option.name.toLowerCase().includes(filterValue)
-    );
+  setUpperCase() {
+    this.smeFormGroup.controls['pan'].setValue(
+      this.utilsService.isNonEmpty(this.smeFormGroup.controls['pan'].value) ? this.smeFormGroup.controls['pan'].value.toUpperCase() : this.smeFormGroup.controls['pan'].value);
   }
 
-  setFormValues(data) {
-    this.mobileNumber.setValue(data.mobileNumber);
-    this.parentName.setValue(data.parentName);
-    this.leaveStartDate.setValue(data.leaveStartDate);
-    this.itrTypesData = this.itrTypes.value;
+  getPlanDetails() {
+    this.loading = true;
+    let param = '/plans-master?serviceType=ITR&isActive=true';
+    this.itrMsService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      this.itrPlanList = response;
+      if (this.itrPlanList.length) {
+        this.itrPlanList = this.itrPlanList.filter(element => element.name != 'Business and Profession with Balance sheet & PNL- Rs. 3499');
+        this.itrPlanList.forEach(element => {
+          this.irtTypeCapability.push(element.name);
+          this.irtTypeCapability.forEach((itrType) => {
+            this.itrTypeForm.addControl(itrType, new FormControl(false));
+          })
+          this.setPlanDetails();
+        });
+      }
+    },
+      error => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to get selected plan details');
+      });
 
-    // this.itrTypes.setValue(data.setItrData)
-
-    // this.admin.seValue(data.admin)
-    // this.callingNumber.setValue(data.callingNumber)
-    if(data.joiningDate !== null){
-      let joiningDate = data.joiningDate;
-      this.joiningDate.setValue(moment(joiningDate, 'DD/MM/YYYY').toDate())
-    }
-
-    if(data.resigningDate !== null){
-      let resigningDate = data.resigningDate;
-      this.resigningDate.setValue(moment(resigningDate, 'DD/MM/YYYY').toDate())
-    }
+  }
+  getPrincipalDetails(itrPlanList) {
+    let param = `/bo/sme-details-new/${this.smeObj?.['parentPrincipalUserId']}`
+    this.reportService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        this.smeDetails = response.data[0];
+        itrPlanList.forEach(element => {
+          this.smeDetails?.skillSetPlanIdList.forEach(item => {
+            if (element.planId === item) {
+              this.irtTypeCapability.push(element.name);
+              this.irtTypeCapability.forEach((itrType) => {
+                this.itrTypeForm.addControl(itrType, new FormControl(false));
+              })
+            }
+          });
+          this.setPlanDetails();
+        });
+      }
+    })
   }
 
-  roles: FormGroup = this.fb.group({
-    admin: new FormControl(''),
-    leader: new FormControl(''),
-    owner: new FormControl(''),
-    filer: new FormControl(''),
-    leadEngagement: new FormControl(''),
-  });
 
-  get admin() {
-    return this.roles.controls['admin'] as FormControl;
-  }
-  get leader() {
-    return this.roles.controls['leader'] as FormControl;
-  }
-  get owner() {
-    return this.roles.controls['owner'] as FormControl;
-  }
-  get filer() {
-    return this.roles.controls['filer'] as FormControl;
-  }
-  get leadEngagement() {
-    return this.roles.controls['leadEngagement'] as FormControl;
-  }
-
-  assignmentUpdated(
-    serviceType,
-    service: FormControl,
-    assignment: FormControl
-  ) {
-    let serviceRecord = this.smeRecords.filter(
-      (element) => element.serviceType === serviceType
-    );
-    serviceRecord[0].assignmentStart = assignment.value;
-    console.log(serviceRecord[0]);
-
-    //add update api call
-    // this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
-  }
-
-  smeInfoUpdateServiceCall(serviceRecord, serviceCheckBox, assignmentToggle) {
-    const userId = this.smeObj.userId;
-    const loggedInSmeUserId = this.loggedInSme[0].userId;
-    const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
-    const request = serviceRecord;
-
-    serviceCheckBox.disable();
-    assignmentToggle?.disable();
-
-    this.userMsService.putMethod(param, request).subscribe(
-      (result: any) => {
-        console.log('sme record by service  -> ', result);
-        if (result.success) {
-          serviceCheckBox.enable();
-          assignmentToggle?.enable();
-          this.utilsService.showSnackBar(
-            'Assignment updated successfully for ' + serviceRecord.serviceType
-          );
-        } else {
-          this.utilsService.showSnackBar(result.error);
-          serviceCheckBox.enable();
-          assignmentToggle?.enable();
+  setFormDetails() {
+    this.mobileNumber.setValue(this.smeObj?.mobileNumber ? this.smeObj?.mobileNumber : '');
+    if (this.smeObj?.['partnerDetails']) {
+      this.smeFormGroup.controls['state'].setValue(this.smeObj?.['partnerDetails'].state);
+      this.smeFormGroup.controls['city'].setValue(this.smeObj?.['partnerDetails'].city);
+      this.smeFormGroup.controls['pin'].setValue(this.smeObj?.['partnerDetails'].pin);
+      this.additionalId.forEach(element => {
+        if (element.value === this.smeObj?.['partnerDetails'].additionalIdsRequired) {
+          element.status = true;
         }
-      },
-      (error) => {
-        this.utilsService.showSnackBar(error);
-        serviceCheckBox.enable();
-        assignmentToggle?.enable();
-      }
-    );
-  }
+      });
+      this.smeFormGroup.controls['pan'].setValue(this.smeObj?.['partnerDetails'].pan);
+      this.smeFormGroup.controls['gstin'].setValue(this.smeObj?.['partnerDetails'].gstin);
 
-  nriServiceToggle = false;
-
-  nriUpdated(event, itr: FormControl) {
-    //for NRI capability check ITR service and add relevant roles
-    this.nriServiceToggle = !this.nriServiceToggle;
-    let itrRecord = this.smeRecords.filter(
-      (element) => element.serviceType === 'ITR'
-    )[0];
-    if (this.smeObj.owner) {
-      if (this.nriServiceToggle === true) {
-        itrRecord.roles.push('OWNER_NRI');
-      } else {
-        let index = itrRecord.roles.findIndex((item) => item === 'OWNER_NRI');
-        itrRecord.roles.splice(index, 1);
-      }
-    } else {
-      if (this.nriServiceToggle === true) {
-        itrRecord.roles.push('FILER_NRI');
-      } else {
-        let index = itrRecord.roles.findIndex((item) => item === 'OWNER_NRI');
-        itrRecord.roles.removeAt(index);
-      }
-    }
-    console.log(itrRecord);
-    // this.smeInfoUpdateServiceCall(itrRecord, itr, null);
-  }
-
-  serviceUpdated(serviceType, service: FormControl, assignment: FormControl) {
-    let serviceRecord = this.smeRecords.filter(
-      (element) => element.serviceType === serviceType
-    );
-    if (service.value) {
-      //service added, check if existing and update accordingly
-      if (serviceRecord && serviceRecord.length > 0) {
-        //existing record
-        assignment.setValue(serviceRecord[0].assignmentStart);
-
-        // this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
-      } else {
-        assignment.setValue(false);
-        let updated = this.smeRecords[0];
-        updated.serviceType = serviceType;
-        updated.assignmentStart = false;
-        this.smeRecords.push(updated);
-
-        // this.smeInfoUpdateServiceCall(updated, service, assignment);
-      }
-    } else {
-      //service is already added, set assignment start false
-      if (serviceRecord && serviceRecord.length > 0) {
-        //existing record
-        assignment.setValue(false);
-        this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
-      } else {
-        assignment.setValue(false);
-        // this.smeInfoUpdateServiceCall(serviceRecord[0], service, assignment);
+      if (this.smeObj?.['partnerDetails'].bankDetails) {
+        this.bankDetailsFormGroup.controls['accountNumber'].setValue(this.smeObj?.['partnerDetails'].bankDetails.accountNumber);
+        this.bankDetailsFormGroup.controls['ifsCode'].setValue(this.smeObj?.['partnerDetails'].bankDetails.ifsCode);
+        this.bankDetailsFormGroup.controls['accountType'].setValue(this.smeObj?.['partnerDetails'].bankDetails.accountType);
       }
     }
 
-    console.log(this.smeRecords);
+    this.allSmeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
+    this.allSmeList.forEach(element => {
+      if (element.userId === this.smeObj?.['parentPrincipalUserId']) {
+        this.smeFormGroup.controls['principalName'].setValue(element.name);
+      }
+    });
+
+    if (!this.smeObj?.languages) {
+      this.smeObj.languages = ['English'];
+    }
+    if (this.smeObj?.languages.length) {
+      this.langList.forEach(item => {
+        this.smeObj?.languages.forEach(element => {
+          if (item === element) {
+            this.languageForm.setControl(element, new FormControl(true));
+          }
+        })
+      })
+    }
+    this.languageForm.controls['English'].setValue(true);
+    this.languageForm.controls['English'].disable();
+
+
+    if (this.smeObj?.['inactivityTimeInMinutes']) {
+      let timeDuration = [{ key: "15 Min", value: 15 }, { key: "30 Min", value: 30 }, { key: "45 Min", value: 45 }, { key: "60 Min", value: 60 },]
+      timeDuration.forEach(item => {
+        if (item.value === this.smeObj?.['inactivityTimeInMinutes'])
+          this.inactivityTimeForm.setControl(item.key, new FormControl(true));
+      });
+    }
+
+    if (this.smeObj?.['activeCaseMaxCapacity']) {
+      let allCases = [{ key: "5 Cases", value: 5 }, { key: "10 Cases", value: 10 }, { key: "15 Cases", value: 15 }, { key: "20 Cases", value: 20 }, { key: "30 Cases", value: 30 }, { key: "50 Cases", value: 50 },]
+      allCases.forEach(item => {
+        if (item.value === this.smeObj?.['activeCaseMaxCapacity'])
+          this.caseLimitForm.setControl(item.key, new FormControl(true));
+      });
+    }
   }
 
-  services: FormGroup = this.fb.group({
-    itr: new FormControl(''),
-    nri: new FormControl(''),
-    tpa: new FormControl(''),
-    gst: new FormControl(''),
-    notice: new FormControl(''),
-    wb: new FormControl(''),
-    pd: new FormControl(''),
-    mf: new FormControl(''),
-    other: new FormControl(''),
-    itrToggle: new FormControl(false),
-    nriToggle: new FormControl(false),
-    tpaToggle: new FormControl(false),
-    gstToggle: new FormControl(false),
-    noticeToggle: new FormControl(false),
-    wbToggle: new FormControl(false),
-    pdToggle: new FormControl(false),
-    mfToggle: new FormControl(false),
-    otherToggle: new FormControl(false),
-  });
+  setPlanDetails() {
+    if (this.smeObj?.['skillSetPlanIdList'] && this.smeObj?.['skillSetPlanIdList'].length) {
+      this.itrPlanList.forEach(item => {
+        this.smeObj?.['skillSetPlanIdList'].forEach(element => {
+          if (item.planId === element) {
+            const name = item.name;
+            this.itrTypeForm.setControl(name, new FormControl(true));
+          }
+        })
+      })
+    }
+  }
 
-  get itr() {
-    return this.services.controls['itr'] as FormControl;
+  changeToUpper(control) {
+    control.setValue(control.value.toUpperCase());
   }
-  get nri() {
-    return this.services.controls['nri'] as FormControl;
+
+  trimValue(controlName) {
+    controlName.setValue(controlName.value.trim());
   }
-  get tpa() {
-    return this.services.controls['tpa'] as FormControl;
+  checkGstin() {
+    if (this.smeFormGroup.controls['gstin'].value && this.smeFormGroup.controls['gstin'].value.substring(2, 12) !== this.smeFormGroup.controls['pan'].value) {
+      this.gstin.setErrors({ 'invalid': true });
+    } else {
+      this.gstin.setErrors(null);
+    }
   }
-  get gst() {
-    return this.services.controls['gst'] as FormControl;
+
+  getAccountType() {
+    const param = '/fnbmaster';
+    this.userMsService.getMethod(param).subscribe((result: any) => {
+      sessionStorage.setItem('MastersDataForUpdateProfile', JSON.stringify(result));
+      console.log('master data==', result);
+      this.accountTypeDropdown = result.bankAccountType;
+    }, error => {
+      console.log('getting failed==', error);
+    });
   }
-  get notice() {
-    return this.services.controls['notice'] as FormControl;
+
+  onLanguageCheckboxChange(language: string) {
+    const langControl = this.getLanguageControl(language);
+    if (!this.smeObj['languages']) {
+      this.smeObj['languages'] = ['English'];
+    }
+    if (langControl.value) {
+      this.smeObj['languages'].push(language);
+    } else {
+      let index = this.smeObj['languages'].indexOf(language);
+      this.smeObj['languages'].splice(index, 1);
+    }
   }
-  get wb() {
-    return this.services.controls['wb'] as FormControl;
+
+  getLanguageControl(lang: string): FormControl {
+    return this.languageForm.get(lang) as FormControl;
   }
-  get pd() {
-    return this.services.controls['pd'] as FormControl;
+
+  getItrTypeControl(itrType: string): FormControl {
+    return this.itrTypeForm.get(itrType) as FormControl;
   }
-  get mf() {
-    return this.services.controls['mf'] as FormControl;
+
+  onItrTypeCheckboxChange(itrType: string) {
+    const itrTypeControl = this.getItrTypeControl(itrType);
+    if (!this.smeObj['skillSetPlanIdList']) {
+      this.smeObj['skillSetPlanIdList'] = [];
+    }
+    let planId = this.smeObj['skillSetPlanIdList'];
+
+    if (itrTypeControl.value) {
+      this.itrPlanList.forEach(element => {
+        if (element.name === itrType) {
+          planId.push(element.planId);
+        }
+      });
+      this.smeObj['skillSetPlanIdList'] = planId;
+    } else {
+      this.itrPlanList.forEach(element => {
+        if (element.name === itrType) {
+          let index = this.smeObj['skillSetPlanIdList'].indexOf(element.planId);
+          this.smeObj['skillSetPlanIdList'].splice(index, 1);
+        }
+      });
+    }
   }
-  get other() {
-    return this.services.controls['other'] as FormControl;
+
+
+
+  getDurationControl(duration: string): FormControl {
+    return this.inactivityTimeForm.get(duration) as FormControl;
   }
-  get itrToggle() {
-    return this.services.controls['itrToggle'] as FormControl;
+
+  onDurationCheckboxChange(event: any, selectedDuration: string) {
+    if (event.checked) {
+      this.inactivityTimeDuration.forEach((duration) => {
+        duration.checked = true;
+        if (duration.key !== selectedDuration) {
+          this.getDurationControl(duration.key).setValue(false);
+          duration.checked = false;
+        }
+      });
+      this.inactivityTimeDuration.forEach(element => {
+        if (element.checked) {
+          this.smeObj['inactivityTimeInMinutes'] = element.value;
+        }
+      });
+    } else {
+      this.getDurationControl(selectedDuration).setValue(true);
+    }
   }
-  get nriToggle() {
-    return this.services.controls['nriToggle'] as FormControl;
+
+  getCaseLimitControl(limit: string): FormControl {
+    return this.caseLimitForm.get(limit) as FormControl;
   }
-  get tpaToggle() {
-    return this.services.controls['tpaToggle'] as FormControl;
-  }
-  get gstToggle() {
-    return this.services.controls['gstToggle'] as FormControl;
-  }
-  get noticeToggle() {
-    return this.services.controls['noticeToggle'] as FormControl;
-  }
-  get wbToggle() {
-    return this.services.controls['wbToggle'] as FormControl;
-  }
-  get pdToggle() {
-    return this.services.controls['pdToggle'] as FormControl;
-  }
-  get mfToggle() {
-    return this.services.controls['mfToggle'] as FormControl;
-  }
-  get otherToggle() {
-    return this.services.controls['otherToggle'] as FormControl;
+
+  onCaseLimitCheckboxChange(event: any, selectedLimit: string) {
+    if (event.checked) {
+      this.caseLimit.forEach((limit) => {
+        limit.checked = true;
+        if (limit.key !== selectedLimit) {
+          this.getCaseLimitControl(limit.key).setValue(false);
+          limit.checked = false;
+        }
+      });
+      this.caseLimit.forEach(element => {
+        if (element.checked) {
+          this.smeObj['activeCaseMaxCapacity'] = element.value;
+        }
+      });
+    } else {
+      this.getCaseLimitControl(selectedLimit).setValue(true);
+    }
   }
 
   smeFormGroup: FormGroup = this.fb.group({
     mobileNumber: new FormControl(''),
-    name: new FormControl('', [Validators.required]),
+    name: new FormControl("", [Validators.required]),
     smeOriginalEmail: new FormControl(''),
     languages: new FormControl(''),
     referredBy: new FormControl(''),
     itrTypes: new FormControl(''),
     qualification: new FormControl(''),
     state: new FormControl(''),
-    parentName: new FormControl(''),
-  });
+    parentName: new FormControl('', Validators.required),
+    principalName: new FormControl(''),
+    pin: new FormControl(''),
+    city: new FormControl(''),
+    pan: new FormControl('', [Validators.required, Validators.pattern(AppConstants.panNumberRegex)]),
+    gstin: new FormControl('')
+  })
+
+  bankDetailsFormGroup: FormGroup = this.fb.group({
+    accountType: ['', [Validators.required]],
+    ifsCode: ['', [Validators.required, Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]],
+    accountNumber: ['', [Validators.required]],
+  })
+
+  get pan() {
+    return this.smeFormGroup.controls['pan'] as FormControl
+  }
+  get gstin() {
+    return this.smeFormGroup.controls['gstin'] as FormControl
+  }
 
   get mobileNumber() {
-    return this.smeFormGroup.controls['mobileNumber'] as FormControl;
+    return this.smeFormGroup.controls['mobileNumber'] as FormControl
   }
   get name() {
-    return this.smeFormGroup.controls['name'] as FormControl;
+    return this.smeFormGroup.controls['name'] as FormControl
   }
   get smeOriginalEmail() {
-    return this.smeFormGroup.controls['smeOriginalEmail'] as FormControl;
+    return this.smeFormGroup.controls['smeOriginalEmail'] as FormControl
   }
   get languages() {
-    return this.smeFormGroup.controls['languages'] as FormControl;
+    return this.smeFormGroup.controls['languages'] as FormControl
   }
   get referredBy() {
-    return this.smeFormGroup.controls['referredBy'] as FormControl;
+    return this.smeFormGroup.controls['referredBy'] as FormControl
   }
   get itrTypes() {
-    return this.smeFormGroup.controls['itrTypes'] as FormControl;
+    return this.smeFormGroup.controls['itrTypes'] as FormControl
   }
   get qualification() {
-    return this.smeFormGroup.controls['qualification'] as FormControl;
+    return this.smeFormGroup.controls['qualification'] as FormControl
   }
   get state() {
-    return this.smeFormGroup.controls['state'] as FormControl;
+    return this.smeFormGroup.controls['state'] as FormControl
   }
   get parentName() {
-    return this.smeFormGroup.controls['parentName'] as FormControl;
+    return this.smeFormGroup.controls['parentName'] as FormControl
   }
 
-  otherSmeInfo: FormGroup = this.fb.group(
-    {
-      coOwner: new FormControl(''),
-      callingNumber: new FormControl(''),
-      smeOfficialEmail: new FormControl(''),
-      email: new FormControl(''),
-      displayName: new FormControl(''),
-      internal: new FormControl(''),
-      leaveStartDate: new FormControl(''),
-      leaveEndDate: new FormControl(''),
-      joiningDate: new FormControl(''),
-      resigningDate: new FormControl(''),
-      rejoin: new FormControl(false),
+  get principalName() {
+    return this.smeFormGroup.controls['principalName'] as FormControl
+  }
+
+  get pin() {
+    return this.smeFormGroup.controls['pin'] as FormControl
+  }
+  get city() {
+    return this.smeFormGroup.controls['city'] as FormControl
+  }
+
+  assignmentUpdated(assignment: FormControl) {
+    this.smeObj['assignmentOffByLeader'] = !assignment.value;
+  }
+
+  serviceRecords: any[] = [];
+
+  serviceUpdated(serviceType, service: FormControl) {
+    if (service.value) {
+      if (!this.smeObj[serviceType]) {
+        this.smeObj[serviceType] = {
+          "assignmentStart": true,
+          "roundRobinLeaderCount": 0,
+          "roundRobinCount": 0,
+          "botId": null,
+          "botName": null
+        }
+      }
+    } else {
+      this.smeObj[serviceType] = null;
     }
-    //  {validator: this.checkDates}
-  );
-
-  get coOwner() {
-    return this.otherSmeInfo.controls['coOwner'] as FormControl;
-  }
-  get callingNumber() {
-    return this.otherSmeInfo.controls['callingNumber'] as FormControl;
-  }
-  get smeOfficialEmail() {
-    return this.otherSmeInfo.controls['smeOfficialEmail'] as FormControl;
-  }
-  get displayName() {
-    return this.otherSmeInfo.controls['displayName'] as FormControl;
-  }
-  get internal() {
-    return this.otherSmeInfo.controls['internal'] as FormControl;
-  }
-  get email() {
-    return this.otherSmeInfo.controls['email'] as FormControl;
-  }
-  get leaveStartDate() {
-    return this.otherSmeInfo.controls['leaveStartDate'] as FormControl;
-  }
-  get leaveEndDate() {
-    return this.otherSmeInfo.controls['leaveEndDate'] as FormControl;
-  }
-  get joiningDate() {
-    return this.otherSmeInfo.controls['joiningDate'] as FormControl;
-  }
-  get resigningDate() {
-    return this.otherSmeInfo.controls['resigningDate'] as FormControl;
   }
 
-  get rejoin() {
-    return this.otherSmeInfo.controls['rejoin'] as FormControl;
-  }
-
-  // comparisonEnddateValidator(): any {
-  //   let ldStartDate = this.leaveStartDate.value;
-  //   let ldEndDate = this.leaveEndDate.value;
-
-  //   let startnew = new Date(ldStartDate);
-  //   let endnew = new Date(ldEndDate);
-  //   if (startnew > endnew) {
-  //     return this.leaveEndDate.setErrors({ 'invaliddaterange': true });
-  //   }
-
-  //   let oldvalue = startnew;
-  //   this.leaveStartDate.reset();
-  //   this.leaveStartDate.patchValue(oldvalue);
-  //   return this.leaveStartDate.setErrors({ 'invaliddaterange': false });
-  // }
-
-  // comparisonStartdateValidator(): any {
-  //   let ldStartDate = this.leaveStartDate.value;
-  //   let ldEndDate = this.leaveEndDate.value;
-
-  //   let startnew = new Date(ldStartDate);
-  //   let endnew = new Date(ldEndDate);
-  //   if (startnew > endnew) {
-  //     return this.leaveStartDate.setErrors({ 'invaliddaterange': true });
-  //   }
-
-  //   let oldvalue = endnew;
-  //   this.leaveEndDate.reset();
-  //   this.leaveEndDate.patchValue(oldvalue);
-  //   return this.leaveEndDate.setErrors({ 'invaliddaterange': false });
-  // }
-
-  getOwner() {
-    const loggedInSmeUserId = this.loggedInSme[0].userId;
-    console.log(loggedInSmeUserId);
+  getLeaders() {
+    // 'https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000?leader=true' \
+    const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
     this.reportService.getMethod(param).subscribe((result: any) => {
-      console.log('owner list result -> ', result);
-      this.ownerList = result.data;
-      console.log('ownerlist', this.ownerList);
-      this.ownerNames = this.ownerList.map((item) => {
-        return { name: item.name, userId: item.userId };
-      });
-      this.options = this.ownerNames;
-      console.log(' ownerName -> ', this.ownerNames);
-    });
+      console.log('new leader list result -> ', result);
+      this.leaderList = result.data;
+      // this.leaderNames = this.leaderList.map((item) => {
+      //   return { name: item.name, userId: item.userId };
+      // });
+      // this.leaderOptions = this.leaderNames
+      // this.setFilteredLeaders();
+    }, error => {
+      this.utilsService.showSnackBar('Error in API of get leader list');
+    })
+
   }
 
-  getSmeRecords() {
-    const userId = this.smeObj.userId;
-    const loggedInSmeUserId = this.loggedInSme[0].userId;
-    const param = `/sme-details-new/${loggedInSmeUserId}?smeUserId=${userId}`;
+  otherSmeInfo: FormGroup = this.fb.group({
+    callingNumber: new FormControl('', [Validators.required, Validators.pattern(AppConstants.mobileNumberRegex)]),
+    smeOfficialEmail: new FormControl(''),
+    email: new FormControl(''),
+  })
 
-    this.userMsService.getMethodNew(param).subscribe((result: any) => {
-      console.log('sme record by service  -> ', result);
-      this.smeRecords = result.data;
-      this.setFormValues(this.smeRecords[0]);
-      this.smeServices = this.smeRecords.map((item) => {
-        return {
-          serviceType: item.serviceType,
-          assignmentStart: item.assignmentStart,
-        };
-      });
-      console.log('servicesList', this.smeServices);
 
-      this.smeServices.forEach((element) => {
-        if (element.serviceType == 'ITR') {
-          this.itr.setValue(true);
-          if (element.assignmentStart == true) {
-            this.itrToggle.setValue(true);
-          }
-        } else if (element.serviceType == 'NRI') {
-          this.nri.setValue(true);
-          if (element.assignmentStart == true) {
-            this.nriToggle.setValue(true);
-          }
-        } else if (element.serviceType == 'TPA') {
-          this.tpa.setValue(true);
-          if (element.assignmentStart == true) {
-            this.tpaToggle.setValue(true);
-          }
-        } else if (element.serviceType == 'GST') {
-          this.gst.setValue(true);
-          if (element.assignmentStart == true) {
-            this.gstToggle.setValue(true);
-          }
-        } else if (element.serviceType == 'NOTICE') {
-          this.notice.setValue(true);
-          if (element.assignmentStart == true) {
-            this.noticeToggle.setValue(true);
-          }
-        } else if (element.serviceType == 'WB') {
-          this.wb.setValue(true);
-          if (element.assignmentStart == true) {
-            this.wbToggle.setValue(true);
-          }
-        } else if (element.serviceType == 'PD') {
-          this.pd.setValue(true);
-          if (element.assignmentStart == true) {
-            this.pdToggle.setValue(true);
-          }
-        } else if (element.serviceType == 'PD') {
-          this.mf.setValue(true);
-          if (element.assignmentStart == true) {
-            this.mfToggle.setValue(true);
-          }
-        } else if (element.serviceType == 'PD') {
-          this.other.setValue(true);
-          if (element.assignmentStart == true) {
-            this.otherToggle.setValue(true);
-          }
-        }
-      });
-    });
+  get callingNumber() {
+    return this.otherSmeInfo.controls['callingNumber'] as FormControl
+  }
+  get smeOfficialEmail() {
+    return this.otherSmeInfo.controls['smeOfficialEmail'] as FormControl
   }
 
-  ownerDetails: any;
-  getownerNameId(option) {
-    this.ownerDetails = option;
-    console.log(option);
+  get email() {
+    return this.otherSmeInfo.controls['email'] as FormControl
+  }
+  get displayName() {
+    return this.otherSmeInfo.controls['displayName'] as FormControl
+  }
+  get kommId() {
+    return this.otherSmeInfo.controls['email'] as FormControl
   }
 
-  updateSmeDetails() {
-    const JoiningDate = this.convertToDDMMYY(this.joiningDate.value);
-    const LeaveStartDate = this.convertToDDMMYY(this.leaveStartDate.value);
-    const LeaveEndDate = this.convertToDDMMYY(this.leaveEndDate.value);
-    const ResigningDate = this.convertToDDMMYY(this.resigningDate.value);
-    const rejoin = this.rejoin.value;
-
-    const userId = this.smeObj.userId;
-    console.log(userId);
-    const param = `/sme-details-new/${userId}`;
-    if (this.smeFormGroup.valid && this.roles.valid && this.services.valid) {
-      this.loading = true;
-
-      let finalReq: any = {};
-      if(this.smeRecords[0]) {
-        finalReq = this.smeRecords[0];
-      }else {
-        console.log('no default data found');
-      }
-
-      finalReq.userId = this.smeObj.userId;
-      finalReq.name = this.name.value;
-      finalReq.email = this.email.value;
-      finalReq.mobileNumber = this.mobileNumber.value;
-      finalReq.callingNumber = this.smeObj.callingNumber;
-      finalReq.serviceType = this.smeObj.serviceType;
-      finalReq.roles = this.smeObj.roles;
-      finalReq.languages =this.languages.value;
-      finalReq.qualification =this.qualification?.value;
-      finalReq.referredBy =this.referredBy.value;
-      finalReq.state =this.state.value;
-      finalReq.botId = this.smeObj.botId;
-      finalReq.displayName = this.smeObj.displayName;
-      finalReq.active = this.smeObj.active;
-      finalReq.joiningDate = this.smeObj.joiningDate;
-      finalReq.internal = this.smeObj.internal;
-      finalReq.assignmentStart = this.smeObj.assignmentStart;
-      finalReq.itrTypes = this.itrTypes.value;
-      finalReq.roundRobinCount = this.smeObj.roundRobinCount;
-      finalReq.assessmentYears = this.smeObj.assessmentYears;
-      // finalReq.parentId = parentId;
-      // finalReq.parentName = parentName;
-      finalReq.roundRobinOwnerCount = this.smeObj.roundRobinOwnerCount;
-      finalReq.owner = this.owner.value;
-      finalReq.leader = this.leader.value;
-      finalReq.admin = this.admin.value;
-      finalReq.filer = this.filer.value;
-      finalReq.coOwnerUserId = this.smeObj.coOwnerUserId;
-      finalReq.resigningDate = rejoin ? null : this.smeObj.resigningDate;
-      // console.log('requestData', requestData);
-      this.userMsService.putMethod(param, finalReq).subscribe(
-        (res: any) => {
-          console.log('SME assignment updated', res);
-          this.loading = false;
-          if (res.success === false) {
-            this._toastMessageService.alert(
-              'false',
-              'failed to update sme details '
-            );
-          } else {
-            this._toastMessageService.alert(
-              'success',
-              'sme details updated successfully'
-            );
-          }
-          this.location.back();
-        },
-        (error) => {
-          this._toastMessageService.alert('error', 'failed to update.');
-          this.loading = false;
-        }
-      );
-    }
+  updateBankDetailsForm() {
+    this.isBankDetailsFormChange = true;
   }
+
+  cancelUpdate() {
+    this.router.navigate(['/sme-management-new/assignedsme']);
+  }
+
 
   convertToDDMMYY(date) {
     if (this.utilsService.isNonEmpty(date)) {
-      return moment(date).format('DD/MM/YYYY');
+      return moment(date).format('DD/MM/YYYY')
     } else {
       return date;
     }
@@ -732,64 +539,81 @@ export class EditUpdateResignedSmeComponent implements OnInit {
   }
 
   onDateChange(date) {
-    console.log(date);
+    console.log(date)
   }
 
-  rsgnDateDisable() {
-    if (this.rejoin.value === false) {
-      this.resigningDate.setValue(null);
-      this.smeObj.parentId = null;
-      this.smeObj.active = true;
+  verifyBankDetails() {
+    if (this.bankDetailsFormGroup.valid) {
+      this.loading = true;
+      let accountNumber = this.bankDetailsFormGroup.controls['accountNumber'].value;
+      let ifsc = this.bankDetailsFormGroup.controls['ifsCode'].value;
+      let param = `/validate-bankDetails?account_number=${accountNumber}&ifsc=${ifsc}&consent=Y`;
+      this.userMsService.getMethod(param).subscribe((res: any) => {
+        this.loading = false;
+        if (res.data && res.success) {
+          if (res.data?.data?.code === '1000') {
+            //valid bank details
+            this.isBankValid = true;
+            this.isBankDetailsFormChange = false;
+            this.validateBankDetails = res.data?.data?.bank_account_data;
+            this.utilsService.showSnackBar(`${res.data.data.message}`);
+          } else {
+            //bank details are invalid
+            this.isBankValid = false;
+            this.utilsService.showSnackBar(`${res.data.data.message} Please provide correct details`);
+            return;
+          }
+        } else {
+          //bank details are invalid
+          this.isBankValid = false;
+          this.utilsService.showSnackBar(`${res.data.data.message} Please provide correct details`);
+          return;
+        }
+      });
     } else {
-      this.smeObj.active = false;
-      let resigningDate = this.smeRecords[0].resigningDate;
-      this.resigningDate.setValue(moment(resigningDate, 'DD/MM/YYYY').toDate())
+      this.bankDetailsFormGroup.markAllAsTouched();
     }
   }
-
-  goBack() {
-    this.location.back();
-  }
-
-  // this.leaveStartDate = moment(new Date(this.form.controls.myDate.value)).format("YYYY/MM/DD").toString();
 }
 export interface SmeObj {
-  userId: number;
-  name: string;
-  email: string;
-  mobileNumber: string;
-  callingNumber: string;
-  serviceType: string;
-  roles: string[];
-  languages: string[];
-  parentId: number;
-  botId: string;
-  displayName: string;
-  active: boolean;
-  joiningDate: string;
-  internal: boolean;
-  assignmentStart: boolean;
-  itrTypes: number[];
-  roundRobinCount: number;
-  assessmentYears: string[];
-  parentName: string;
-  roundRobinOwnerCount: number;
-  leader: boolean;
-  admin: boolean;
-  filer: boolean;
-  coOwnerUserId: number;
-  createdDate: string;
-  id: string;
-  botName: any;
-  imageUrl: any;
-  leaveStartDate: string;
-  leaveEndDate: string;
-  resigningDate: string;
-  groupId: any;
-  callingNumberList: string[];
-  filerCallingNumberHistory: any;
-  owner: boolean;
-  referredBy: string;
-  qualification: string;
-  state: string;
+  userId: number
+  name: string
+  email: string
+  mobileNumber: string
+  callingNumber: string
+  serviceType: any
+  languages: string[]
+  parentId: number
+  botId: string
+  displayName: string
+  active: boolean
+  joiningDate: string
+  internal: boolean
+  assignmentStart: boolean
+  itrTypes: number[]
+  roundRobinCount: number
+  assessmentYears: string[]
+  parentName: string
+  principalName: string
+  roundRobinOwnerCount: number
+  leader: boolean
+  admin: boolean
+  filer: boolean
+  coOwnerUserId: number
+  createdDate: string
+  id: string
+  botName: any
+  imageUrl: any
+  leaveStartDate: string
+  leaveEndDate: string
+  resigningDate: string
+  groupId: any
+  callingNumberList: string[]
+  filerCallingNumberHistory: any
+  owner: boolean
+  referredBy: string
+  qualification: string
+  state: string,
+  smeOriginalEmail: string
+  services: any
 }
