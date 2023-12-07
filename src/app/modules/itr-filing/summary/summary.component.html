@@ -5521,7 +5521,12 @@
                     </div>
 
                     <!-- OTHER THAN SALARY -->
-                    <div>
+                    <div
+                      *ngIf="
+                        finalCalculations?.taxPaid
+                          ?.otherThanSalary16AAmtCarriedFwd
+                      "
+                    >
                       <div class="bxHed">TDS (Other Than Salary)</div>
                       <table
                         class="table table-bordered table-striped table-hover"
@@ -5759,54 +5764,62 @@
                           </tr>
 
                           <!-- TCS B/F Details -->
-                          <tr>
-                            <th class="bxHed">TCS B/F Details</th>
-                            <th class="bxHed"></th>
-                            <th class="bxHed"></th>
-                            <th class="bxHed"></th>
-                          </tr>
-                          <tr>
-                            <th style="font-weight: bold; width: 20%">
-                              Year of TDS Deduction
-                            </th>
-                            <th style="font-weight: bold; width: 25%">
-                              TDS Amount
-                            </th>
-                            <th style="font-weight: bold; width: 35%">
-                              Income
-                            </th>
-                            <th style="font-weight: bold; width: 20%">
-                              TDS credit claimed this year
-                            </th>
-                          </tr>
-                          <tr
-                            *ngFor="let tcs of finalCalculations?.taxPaid?.tcs"
+                          <ng-container
+                            *ngIf="
+                              finalCalculations?.taxPaid?.tcsBroughtFwdTDSAmt
+                            "
                           >
-                            <td>{{ tcs?.DeductedYr }}</td>
-                            <td>
-                              {{
-                                utilsService.currencyFormatter(
-                                  tcs?.BroughtFwdTDSAmt
-                                )
-                              }}
-                            </td>
-                            <td>
-                              Rs.
-                              {{
-                                utilsService.currencyFormatter(
-                                  tcs?.TCSAmtCollOwnHand
-                                )
-                              }}
-                            </td>
-                            <td>
-                              Rs.
-                              {{
-                                utilsService.currencyFormatter(
-                                  tcs?.TCSAmtCollOwnHand
-                                )
-                              }}
-                            </td>
-                          </tr>
+                            <tr>
+                              <th class="bxHed">TCS B/F Details</th>
+                              <th class="bxHed"></th>
+                              <th class="bxHed"></th>
+                              <th class="bxHed"></th>
+                            </tr>
+                            <tr>
+                              <th style="font-weight: bold; width: 20%">
+                                Year of TDS Deduction
+                              </th>
+                              <th style="font-weight: bold; width: 25%">
+                                TDS Amount
+                              </th>
+                              <th style="font-weight: bold; width: 35%">
+                                Income
+                              </th>
+                              <th style="font-weight: bold; width: 20%">
+                                TDS credit claimed this year
+                              </th>
+                            </tr>
+                            <tr
+                              *ngFor="
+                                let tcs of finalCalculations?.taxPaid?.tcs
+                              "
+                            >
+                              <td>{{ tcs?.DeductedYr }}</td>
+                              <td>
+                                {{
+                                  utilsService.currencyFormatter(
+                                    tcs?.BroughtFwdTDSAmt
+                                  )
+                                }}
+                              </td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    tcs?.TCSAmtCollOwnHand
+                                  )
+                                }}
+                              </td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    tcs?.TCSAmtCollOwnHand
+                                  )
+                                }}
+                              </td>
+                            </tr>
+                          </ng-container>
                         </tbody>
                       </table>
                     </div>
