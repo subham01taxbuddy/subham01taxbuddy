@@ -8,6 +8,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SmeManagementNewComponent } from './sme-management-new.component';
 import { EditUpdateUnassignedSmeComponent } from './components/unassigned-sme/edit-update-unassigned-sme/edit-update-unassigned-sme.component';
+import { ConvertToExtPartnerComponent } from './components/resigned-sme/convert-to-ext-partner/convert-to-ext-partner.component';
 
 
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
             { path: 'edit-unassignedsme', component: EditUpdateUnassignedSmeComponent },
             { path: 'edit-assignedsme', component: EditUpdateAssignedSmeComponent },
             { path: 'edit-resignedsme', component: EditUpdateResignedSmeComponent },
+            { path: 'convert-to-partner', component: ConvertToExtPartnerComponent },
         ]
     },
     { path: '', redirectTo: '/sme-management-new/unassignedsme', pathMatch: 'full' }
