@@ -3,9 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
-import { OwnerDashboardComponent } from './owner-dashboard/owner-dashboard.component';
-import { MainDashboardComponent } from './main-dashboard/main-dashboard.component';
-import { AttendanceReportComponent } from './attendance-report/attendance-report.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -15,7 +12,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { MaterialModule } from '../shared/material.module';
 import { SharedModule } from '../shared/shared.module';
 import { LeaderDashboardComponent } from './leader-dashboard/leader-dashboard.component';
-import { SubLeaderDashboardComponent } from './sub-leader-dashboard/sub-leader-dashboard.component';
 import { TeamReportDashboardComponent } from './team-report-dashboard/team-report-dashboard.component';
 import { LeaderAttendanceDashboardComponent } from './leader-attendance-dashboard/leader-attendance-dashboard.component';
 import { LeaderStatuswiseReportComponent } from './leader-statuswise-report/leader-statuswise-report.component';
@@ -24,11 +20,7 @@ import { LeaderStatuswiseReportComponent } from './leader-statuswise-report/lead
 @NgModule({
   declarations: [
     DashboardComponent,
-    OwnerDashboardComponent,
-    MainDashboardComponent,
-    AttendanceReportComponent,
     LeaderDashboardComponent,
-    SubLeaderDashboardComponent,
     TeamReportDashboardComponent,
     LeaderAttendanceDashboardComponent,
     LeaderStatuswiseReportComponent

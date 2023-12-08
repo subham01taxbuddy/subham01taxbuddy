@@ -127,7 +127,8 @@ export class TeamReportDashboardComponent implements OnInit {
   totalOriginal: number;
   totalRevised: number;
   scheduledCallData: any;
-  totalScheduledCall: any
+  totalScheduledCall: any;
+  selectedType:any = 'Original'
 
   constructor(
     private userMsService: UserMsService,

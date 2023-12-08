@@ -544,4 +544,10 @@ export class DashboardComponent implements OnInit {
     console.log('startDateVal: ', startDateVal);
     this.minEndDate = startDateVal.value;
   }
+
+  resetFilters() {
+    this.startDate.setValue(new Date().toISOString().slice(0, 10));
+    this.endDate.setValue(new Date().toISOString().slice(0, 10));
+    this.search('all');
+  }
 }
