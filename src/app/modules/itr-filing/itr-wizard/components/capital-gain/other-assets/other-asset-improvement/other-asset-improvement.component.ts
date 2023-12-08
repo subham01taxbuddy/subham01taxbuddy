@@ -82,12 +82,14 @@ export class OtherAssetImprovementComponent implements OnInit {
     this.assetIndex = this.data?.assetIndex;
     this.addMoreOtherAssetsForm(this.assetIndex);
 
+    let obj: any = this.assetIndex >= 0 ?
+        this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[this.assetIndex] : null;
     // setting improvement flag
     this.goldCg?.improvement?.forEach((element) => {
       if (
         element &&
         element.indexCostOfImprovement &&
-        element.indexCostOfImprovement !== 0
+        element.indexCostOfImprovement !== 0 && element.srn === obj?.srn
       ) {
         this.isImprovement?.setValue(true);
       }
@@ -196,7 +198,7 @@ export class OtherAssetImprovementComponent implements OnInit {
   }
 
   createOtherAssetsForm(srn, index?) {
-    let obj: any = index >= 0 ? this.goldCg?.assetDetails[index] : null;
+    let obj: any = index >= 0 ? this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[index] : null;
     let impObj: any = index >= 0 ? this.goldCg?.improvement : null;
 
     const assetsForm = this.fb.group({
@@ -232,7 +234,7 @@ export class OtherAssetImprovementComponent implements OnInit {
 
     if (impObj && impObj?.length > 0) {
       impObj?.forEach((element) => {
-        if (element.srn === this.assetIndex) {
+        if (element.srn === obj.srn) {
           const improvementsFormGroup = this.createImprovementsArray(element);
           (assetsForm.get('improvementsArray') as FormArray).push(
             improvementsFormGroup
