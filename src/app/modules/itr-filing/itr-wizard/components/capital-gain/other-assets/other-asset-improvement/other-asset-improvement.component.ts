@@ -116,7 +116,8 @@ export class OtherAssetImprovementComponent implements OnInit {
       if (value) {
         this.isImprovement?.patchValue(true, { emitEvent: false });
         if (improvementsArray.controls.length === 0) {
-          improvementsArray.push(this.createImprovementsArray());
+          let obj: any = this.assetIndex >= 0 ? this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[this.assetIndex] : null;
+          improvementsArray.push(this.createImprovementsArray(obj?.srn));
         }
       } else {
         this.isImprovement?.patchValue(false, { emitEvent: false });
@@ -197,12 +198,15 @@ export class OtherAssetImprovementComponent implements OnInit {
     );
   }
 
+  objSrn = 0;
+
   createOtherAssetsForm(srn, index?) {
     let obj: any = index >= 0 ? this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[index] : null;
     let impObj: any = index >= 0 ? this.goldCg?.improvement : null;
 
+    this.objSrn = obj ? obj.srn : srn;
     const assetsForm = this.fb.group({
-      srn: [srn],
+      srn: [obj ? obj.srn : srn],
       hasEdit: [obj ? obj.hasEdit : false],
       purchaseDate: [obj ? obj.purchaseDate : '', [Validators.required]],
       sellDate: [obj ? obj.sellDate : '', [Validators.required]],
@@ -235,14 +239,14 @@ export class OtherAssetImprovementComponent implements OnInit {
     if (impObj && impObj?.length > 0) {
       impObj?.forEach((element) => {
         if (element.srn === obj.srn) {
-          const improvementsFormGroup = this.createImprovementsArray(element);
+          const improvementsFormGroup = this.createImprovementsArray(obj ? obj.srn : srn, element);
           (assetsForm.get('improvementsArray') as FormArray).push(
             improvementsFormGroup
           );
         }
       });
     } else {
-      const improvementsFormGroup = this.createImprovementsArray();
+      const improvementsFormGroup = this.createImprovementsArray(obj ? obj.srn : srn);
       (assetsForm.get('improvementsArray') as FormArray).push(
         improvementsFormGroup
       );
@@ -251,8 +255,9 @@ export class OtherAssetImprovementComponent implements OnInit {
     return assetsForm;
   }
 
-  createImprovementsArray(impObj?) {
+  createImprovementsArray(srn, impObj?) {
     const improvementsArray = this.fb.group({
+      srn: [srn],
       financialYearOfImprovement: [
         impObj ? impObj?.financialYearOfImprovement : '',
         [Validators.required],
@@ -274,8 +279,10 @@ export class OtherAssetImprovementComponent implements OnInit {
     const improvementsArray = this.assetsForm.controls[
       'improvementsArray'
     ] as FormArray;
+    let obj: any = this.assetIndex >= 0 ? this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[this.assetIndex] : null;
+    let srn = obj ? obj.srn : null;
     if (improvementsArray.valid) {
-      const improvementsFormGroup = this.createImprovementsArray();
+      const improvementsFormGroup = this.createImprovementsArray(this.objSrn);
       (this.assetsForm.get('improvementsArray') as FormArray).push(
         improvementsFormGroup
       );
@@ -613,8 +620,8 @@ export class OtherAssetImprovementComponent implements OnInit {
 
       // setting asset details
       if (this.data?.assetIndex >= 0) {
-        filteredCapitalGain[0].assetDetails[this.data.assetIndex] =
-          this.goldCg?.assetDetails[this.data.assetIndex];
+        filteredCapitalGain[0].assetDetails.filter(e => !e.isIndexationBenefitAvailable)[this.data.assetIndex] =
+            this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[this.assetIndex];
       } else {
         filteredCapitalGain[0]?.assetDetails?.push(
           this.goldCg?.assetDetails[0]
@@ -626,12 +633,12 @@ export class OtherAssetImprovementComponent implements OnInit {
         (element) => element.srn !== this.data?.assetIndex
       );
 
-      improvementsArray?.value?.filter(
-        (element) => element.srn !== this.data?.assetIndex
-      );
+      // improvementsArray?.value?.filter(
+      //   (element) => element.srn !== this.data?.assetIndex
+      // );
 
       improvementsArray?.value?.forEach((element) => {
-        element.srn = this.data?.assetIndex;
+        // element.srn = this.data?.assetIndex;
         filteredImprovement.push(element);
       });
 
