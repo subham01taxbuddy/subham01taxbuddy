@@ -547,6 +547,9 @@ export class ConvertToExtPartnerComponent implements OnInit {
       this.utilsService.showSnackBar('Please verify bank details to continue.');
       return;
     } else {
+      if (!this.smeObj?.['partnerDetails']) {
+        this.smeObj['partnerDetails'] = {};
+      }
       if (!this.smeObj?.['partnerDetails'].bankDetails) {
         this.smeObj['partnerDetails']['bankDetails'] = {
           "accountType": this.bankDetailsFormGroup.controls['accountType'].value,
@@ -569,8 +572,8 @@ export class ConvertToExtPartnerComponent implements OnInit {
 
     if (this.smeFormGroup.valid) {
       this.leaderList.forEach(element => {
-        if(this.smeFormGroup.controls['parentName'].value===element.name)
-        this.smeObj.parentId = element.userId;
+        if (this.smeFormGroup.controls['parentName'].value === element.name)
+          this.smeObj.parentId = element.userId;
       });
       this.smeObj.callingNumber = this.callingNumber.value;
       this.smeObj.parentName = this.smeFormGroup.controls['parentName'].value;
