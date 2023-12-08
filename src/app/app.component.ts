@@ -120,7 +120,6 @@ export class AppComponent {
 
   mangeFilerSessionAtDayChange() {
     if (this.loginSmeDetails?.length && this.loginSmeDetails[0].roles.includes('ROLE_FILER')) {
-      debugger
       let currentTime = moment().valueOf()
       let startOfDayTime = moment().startOf('day').valueOf()
       if (currentTime === startOfDayTime) {
