@@ -568,9 +568,12 @@ export class ConvertToExtPartnerComponent implements OnInit {
     }
 
     if (this.smeFormGroup.valid) {
+      this.leaderList.forEach(element => {
+        if(this.smeFormGroup.controls['parentName'].value===element.name)
+        this.smeObj.parentId = element.userId;
+      });
       this.smeObj.callingNumber = this.callingNumber.value;
       this.smeObj.parentName = this.smeFormGroup.controls['parentName'].value;
-      debugger
       this.serviceApiCall(this.smeObj);
       setTimeout(() => {
         if (this.updateSuccessful) {
