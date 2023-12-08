@@ -1119,6 +1119,113 @@
                         </tr>
                       </tbody>
                     </table>
+
+                    <!-- 44ae  -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.businessIncome?.businessIncomeDetails
+                          ?.business44AE?.businessDetails?.length > 0
+                      "
+                    >
+                      Presumptive Income 44AE
+                      <span style="float: right">{{
+                        finalCalculations?.businessIncome?.businessIncomeDetails
+                          ?.business44AE?.totalPresInc
+                      }}</span>
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.businessIncome?.businessIncomeDetails
+                          ?.business44AE?.businessDetails?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Sr. No</th>
+                          <th style="font-weight: bold">Section</th>
+                          <th style="font-weight: bold">Name of Business</th>
+                          <th style="font-weight: bold">Business Code</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let businessDetail of finalCalculations
+                              ?.businessIncome?.businessIncomeDetails
+                              ?.business44AE?.businessDetails;
+                            let i = index
+                          "
+                        >
+                          <td>{{ i + 1 }}</td>
+                          <td>
+                            {{ businessDetail?.businessSection }}
+                          </td>
+                          <td>
+                            {{ businessDetail?.NameOfBusiness }}
+                          </td>
+                          <td>
+                            {{ businessDetail?.CodeAE }}
+                          </td>
+                          <td></td>
+                        </tr>
+
+                        <!-- 44ae income details  -->
+                        <ng-container
+                          *ngIf="
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.business44AE
+                              ?.GoodsDtlsUs44AE?.length > 0
+                          "
+                        >
+                          <tr>
+                            <th class="bxHed">44AE Income Details</th>
+                            <th class="bxHed"></th>
+                            <th class="bxHed"></th>
+                            <th class="bxHed"></th>
+                            <th class="bxHed"></th>
+                          </tr>
+                          <tr>
+                            <th style="font-weight: bold; width: 20%">
+                              Registration no. of goods carriage
+                            </th>
+                            <th style="font-weight: bold; width: 20%">
+                              Whether owned/leased/hired
+                            </th>
+                            <th style="font-weight: bold; width: 20%">
+                              Tonnage capacity of goods carriage
+                            </th>
+                            <th style="font-weight: bold; width: 20%">
+                              Number of months
+                            </th>
+                            <th style="font-weight: bold; width: 20%">
+                              Presumptive Income
+                            </th>
+                          </tr>
+                          <tr
+                            *ngFor="
+                              let businessDetail of finalCalculations
+                                ?.businessIncome?.businessIncomeDetails
+                                ?.business44AE?.GoodsDtlsUs44AE
+                            "
+                          >
+                            <td>
+                              {{ businessDetail?.RegNumberGoodsCarriage }}
+                            </td>
+                            <td>
+                              {{ businessDetail?.OwnedLeasedHiredFlag }}
+                            </td>
+                            <td>
+                              {{ businessDetail?.TonnageCapacity }}
+                            </td>
+                            <td>{{ businessDetail?.HoldingPeriod }}</td>
+                            <td>{{ businessDetail?.PresumptiveIncome }}</td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
                   </mat-expansion-panel>
 
                   <!-- ************************** Income from Capital Gain ****************************** -->
@@ -5619,12 +5726,7 @@
                     </div>
 
                     <!-- OTHER THAN SALARY -->
-                    <div
-                      *ngIf="
-                        finalCalculations?.taxPaid
-                          ?.otherThanSalary16AAmtCarriedFwd
-                      "
-                    >
+                    <div>
                       <div class="bxHed">TDS (Other Than Salary)</div>
                       <table
                         class="table table-bordered table-striped table-hover"
@@ -5685,57 +5787,66 @@
                           </tr>
 
                           <!-- TDS B/F details -->
-                          <tr>
-                            <th class="bxHed">
-                              TDS B/F Details
-                              <br />
-                              (Other Than Salary)
-                            </th>
-                            <th class="bxHed"></th>
-                            <th class="bxHed"></th>
-                            <th class="bxHed"></th>
-                          </tr>
-
-                          <tr>
-                            <th style="font-weight: bold; width: 20%">
-                              Year of TDS Deduction
-                            </th>
-                            <th style="font-weight: bold; width: 25%">
-                              TDS Amount
-                            </th>
-                            <th style="font-weight: bold; width: 35%">
-                              Income
-                            </th>
-                            <th style="font-weight: bold; width: 20%">
-                              TDS Credit claimed this year
-                            </th>
-                          </tr>
-
-                          <tr
-                            *ngFor="
-                              let otherThanSalary16A of finalCalculations
-                                ?.taxPaid?.otherThanSalary16A
+                          <ng-container
+                            *ngIf="
+                              finalCalculations?.taxPaid
+                                ?.otherThanSalary16AAmtCarriedFwd
                             "
                           >
-                            <td>{{ otherThanSalary16A?.DeductedYr }}</td>
-                            <td>{{ otherThanSalary16A?.BroughtFwdTDSAmt }}</td>
-                            <td>
-                              Rs.
-                              {{
-                                utilsService.currencyFormatter(
-                                  otherThanSalary16A?.totalAmountCredited
-                                )
-                              }}
-                            </td>
-                            <td>
-                              Rs.
-                              {{
-                                utilsService.currencyFormatter(
-                                  otherThanSalary16A?.totalTdsDeposited
-                                )
-                              }}
-                            </td>
-                          </tr>
+                            <tr>
+                              <th class="bxHed">
+                                TDS B/F Details
+                                <br />
+                                (Other Than Salary)
+                              </th>
+                              <th class="bxHed"></th>
+                              <th class="bxHed"></th>
+                              <th class="bxHed"></th>
+                            </tr>
+
+                            <tr>
+                              <th style="font-weight: bold; width: 20%">
+                                Year of TDS Deduction
+                              </th>
+                              <th style="font-weight: bold; width: 25%">
+                                TDS Amount
+                              </th>
+                              <th style="font-weight: bold; width: 35%">
+                                Income
+                              </th>
+                              <th style="font-weight: bold; width: 20%">
+                                TDS Credit claimed this year
+                              </th>
+                            </tr>
+
+                            <tr
+                              *ngFor="
+                                let otherThanSalary16A of finalCalculations
+                                  ?.taxPaid?.otherThanSalary16A
+                              "
+                            >
+                              <td>{{ otherThanSalary16A?.DeductedYr }}</td>
+                              <td>
+                                {{ otherThanSalary16A?.BroughtFwdTDSAmt }}
+                              </td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    otherThanSalary16A?.totalAmountCredited
+                                  )
+                                }}
+                              </td>
+                              <td>
+                                Rs.
+                                {{
+                                  utilsService.currencyFormatter(
+                                    otherThanSalary16A?.totalTdsDeposited
+                                  )
+                                }}
+                              </td>
+                            </tr>
+                          </ng-container>
                         </tbody>
                       </table>
                     </div>

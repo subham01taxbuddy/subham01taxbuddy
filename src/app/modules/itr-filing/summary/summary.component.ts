@@ -269,6 +269,25 @@ export class SummaryComponent implements OnInit {
             TaxableIncome: number;
           }
         ];
+        business44AE?: {
+          businessDetails?: [
+            {
+              businessSection?: any;
+              NameOfBusiness?: any;
+              CodeAE?: any;
+            }
+          ];
+          GoodsDtlsUs44AE?: [
+            {
+              RegNumberGoodsCarriage?: any;
+              OwnedLeasedHiredFlag?: any;
+              TonnageCapacity?: any;
+              HoldingPeriod?: any;
+              PresumptiveIncome?: any;
+            }
+          ];
+          totalPresInc?: any;
+        };
         nonSpecIncome: {
           businessSection: String;
           natureOfBusinessCode: any;
@@ -1101,6 +1120,36 @@ export class SummaryComponent implements OnInit {
                     ),
                   };
                 }),
+
+                business44AE: {
+                  businessDetails: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ].ScheduleBP?.NatOfBus44AE?.map((element) => {
+                    return {
+                      businessSection: 'Section 44ADA',
+                      NameOfBusiness: element?.NameOfBusiness,
+                      CodeAE: element?.CodeAE,
+                    };
+                  }),
+
+                  GoodsDtlsUs44AE: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ].ScheduleBP?.GoodsDtlsUs44AE?.map((element) => ({
+                    RegNumberGoodsCarriage: element?.RegNumberGoodsCarriage,
+                    OwnedLeasedHiredFlag: element?.OwnedLeasedHiredFlag,
+                    TonnageCapacity: element?.TonnageCapacity,
+                    HoldingPeriod: element?.HoldingPeriod,
+                    PresumptiveIncome: element?.PresumptiveIncome,
+                  })),
+
+                  totalPresInc: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ].ScheduleBP?.GoodsDtlsUs44AE?.reduce(
+                    (total, element) =>
+                      total + (element.PresumptiveIncome || 0),
+                    0
+                  ),
+                },
 
                 nonSpecIncome: {
                   businessSection: null,
