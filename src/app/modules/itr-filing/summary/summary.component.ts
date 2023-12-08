@@ -709,6 +709,12 @@ export class SummaryComponent implements OnInit {
     };
     amountPayable: number;
     amountRefund: number;
+    ScheduleAMTC?: {
+      TotalIncItemPartBTI: 37800;
+      DeductionClaimUndrAnySec: 0;
+      AdjustedUnderSec115JC: 37800;
+      TaxPayableUnderSec115JC: 0;
+    };
     exemptIncome: {
       partnerFirms: [
         {
@@ -2737,8 +2743,7 @@ export class SummaryComponent implements OnInit {
                     'PartB-TI'
                   ]?.CapGain?.LongTerm?.LongTerm20Per -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    ?.ScheduleCGFor23?.LongTermCapGain23
-                    ?.TotalAmtDeemedLtcg,
+                    ?.ScheduleCGFor23?.LongTermCapGain23?.TotalAmtDeemedLtcg,
                 LongTermSplRateDTAA: [
                   {
                     nameOfAsset: 'long Term Capital Gains @ special rate DTAA',
@@ -2775,8 +2780,7 @@ export class SummaryComponent implements OnInit {
                     ?.ScheduleCGFor23?.LongTermCapGain23?.AmtDeemedLtcg,
                 TotalAmtDeemedLtcg:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    ?.ScheduleCGFor23?.LongTermCapGain23
-                    ?.TotalAmtDeemedLtcg,
+                    ?.ScheduleCGFor23?.LongTermCapGain23?.TotalAmtDeemedLtcg,
               },
               totalLongTerm:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']

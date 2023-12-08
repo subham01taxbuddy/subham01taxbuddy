@@ -2382,7 +2382,7 @@
                       >
                         <div class="nav nav-stacked">
                           <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
-                            6. Income from Other Source
+                            5. Income from Other Source
                           </div>
                           <div class="col-lg-4 col-md-4 col-sm-4">
                             <div class="AdjAr1">
@@ -6324,6 +6324,74 @@
                         </div>
                       </div>
                     </mat-expansion-panel-header>
+                  </mat-expansion-panel>
+
+                         <!-- *********************** Schedule AMT  ************************* -->
+                  <mat-expansion-panel
+                    class="color-panel accordion-border"
+                    #scheduleAMT
+                  >
+                    <mat-expansion-panel-header class="newclass">
+                      <div
+                        class="font80"
+                        style="width: 100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                      >
+                        <div class="nav nav-stacked">
+                          <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
+                            31. Schedule AMT
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="AdjAr">
+                              <mat-icon *ngIf="!scheduleAMT.expanded"
+                                >keyboard_arrow_down
+                              </mat-icon>
+                              <mat-icon *ngIf="scheduleAMT.expanded"
+                                >keyboard_arrow_up
+                              </mat-icon>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-expansion-panel-header>
+
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">
+                            Schedule AMT	
+                          </th>
+                          <th style="font-weight: bold">
+                            Computation of Alternate Minimum Tax payable under section 115JC
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr
+                        >
+                          <td>
+                            {{ finalCalculations?.ScheduleAMTC?.TotalIncItemPartBTI }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ finalCalculations?.ScheduleAMTC?.DeductionClaimUndrAnySec }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ finalCalculations?.ScheduleAMTC?.AdjustedUnderSec115JC }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ finalCalculations?.ScheduleAMTC?.TaxPayableUnderSec115JC }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
                   </mat-expansion-panel>
 
                   <!-- *********************** Exempt Income ************************ -->
