@@ -223,6 +223,9 @@ export class LeaderStatuswiseReportComponent implements OnInit {
       } else {
         this.data = null;
         this.grandTotal =null;
+        this.dataKeys =null;
+        this.columns= null;
+        this.grandTotalKeys=null;
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
@@ -380,6 +383,11 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   resetFilters() {
+    this.grandTotal =null;
+    this.dataKeys =null;
+    this.columns= null;
+    this.grandTotalKeys=null;
+    this.selectedService.setValue(this.serviceTypes[0].value);
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this?.smeDropDown?.resetDropdown();
@@ -388,6 +396,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     }
     else{
       this.data=null;
+      this.grandTotal =null;
     }
 
   }

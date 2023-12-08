@@ -1,12 +1,9 @@
-<!--<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>-->
-
-<div class="main clearfix">
+<!-- <div class="main clearfix">
   <div class="row">
     <div class="col-sm-6">
       <h4>Activities:</h4>
     </div>
   </div>
-
   <div class="row">
     <div class="col-sm-12">
       <div class="radiusMain">
@@ -24,7 +21,6 @@
             </mat-form-field>
           </div>
           <div class="col-sm-3">
-
             <div>
               <label for="start-date">Start Date:</label>
               <input matInput type="date" id="date" name="start-date" class="form-control" [formControl]="startDate"
@@ -42,7 +38,6 @@
             <button class="srch-btn" [disabled]="loading" (click)="search('all')"><i class="fa fa-search"
                 aria-hidden="true"></i> Search </button>
           </div>
-          <!-- </form> -->
         </div>
       </div>
     </div>
@@ -150,13 +145,11 @@
     </div>
   </div>
   <div class="row rowClr">
-    <!-- new code start -->
     <div class="col-sm-6" *ngIf="invoiceData">
       <div class="radius">
         <span class="TxHd"><i class="fa fa-file-o"></i> Invoices -</span>&nbsp;
         <span class="numTxBg"></span>
         <div *ngFor="let service of invoiceData">
-          <!-- Inside Row -->
           <div class="invoice-border-radius mt-3">
             <span class="TxHd111">{{ service.serviceType }} Invoice</span>
             <div class="row">
@@ -173,10 +166,6 @@
                 </div>
               </div>
               <div class="col-sm-4">
-                <!-- <div class="radius1 grBk">
-                <span class="numTxSm grTx">₹ {{service?.revenueGenerated || 'NA'}}</span><br>
-                <span class="TxSm">Revenue Generated</span><br>
-              </div> -->
               </div>
               <div class="col-sm-4">
                 <div class="radius1 RedBk">
@@ -216,16 +205,13 @@
               </div>
             </div>
           </div>
-          <!-- Inside Row Ends -->
         </div>
       </div>
     </div>
-    <!-- new code end -->
     <div class="col-sm-6">
       <div class="radius">
         <span class="TxHd"><i class="fa fa-handshake-o"></i> Total ITR Filed</span>&nbsp;
         <span class="numTxBg">{{commissionData?.totalItrFiled || 'NA'}}</span>
-        <!-- Inside Row -->
         <div class="row">
           <span class="TxHd">Original Returns:<span class="numTxBg">{{totalOriginal || 'NA'}}</span></span>
           <div class="col-sm-4">
@@ -298,7 +284,6 @@
             </div>
           </div>
         </div>
-        <!-- Inside Row Ends -->
       </div>
     </div>
 
@@ -363,25 +348,26 @@
     <div class="col-sm-6" *ngIf="!hideCommission">
       <div class="radius">
         <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Commission</span>&nbsp;
-        <!-- <span class="numTxBg">₹ {{(commissionData?.totalCommissionEarned | number:'1.2-2') || 'NA'}}</span> -->
         <div class="row">
           <div class="col-sm-4">
             <div class="radius1 grBk">
-            <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarnedBeforeTDS | number:'1.2-2') || 'NA'}}</span><br>
-            <span class="TxSm">Total Commission Earned Before TDS</span><br>
-          </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="radius1 grBk">
-            <span class="numTxSm grTx"> ₹ {{(commissionData?.tdsOnCommission | number:'1.2-2') || 'NA'}}</span><br>
-            <span class="TxSm">TDS on Commission</span><br>
-          </div>
+              <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarnedBeforeTDS | number:'1.2-2') ||
+                'NA'}}</span><br>
+              <span class="TxSm">Total Commission Earned Before TDS</span><br>
+            </div>
           </div>
           <div class="col-sm-4">
             <div class="radius1 grBk">
-            <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarnedAfterTDS | number:'1.2-2') || 'NA'}}</span><br>
-            <span class="TxSm">Total Commission Earned After TDS</span><br>
+              <span class="numTxSm grTx"> ₹ {{(commissionData?.tdsOnCommission | number:'1.2-2') || 'NA'}}</span><br>
+              <span class="TxSm">TDS on Commission</span><br>
+            </div>
           </div>
+          <div class="col-sm-4">
+            <div class="radius1 grBk">
+              <span class="numTxSm grTx"> ₹ {{(commissionData?.totalCommissionEarnedAfterTDS | number:'1.2-2') ||
+                'NA'}}</span><br>
+              <span class="TxSm">Total Commission Earned After TDS</span><br>
+            </div>
           </div>
           <div class="col-sm-6">
             <div class="radius1 grBk">
@@ -400,12 +386,11 @@
             </div>
           </div>
 
-          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Tables Start -->
   <div class="row">
     <div class="col-sm-6">
       <div class="radiusTab scroll">
@@ -417,7 +402,6 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">User Name</th>
-              <!-- <th scope="col">Contact Number</th> -->
               <th scope="col">Payment Received Date</th>
             </tr>
           </thead>
@@ -425,8 +409,6 @@
             <tr *ngFor="let item of paymentReceivedData?.content | paginate:config.paymentReceived; let i = index">
               <td>{{ i+1 }}</td>
               <td>{{ item.userName }}</td>
-              <!-- <td><a [routerLink]="['/tasks/assigned-users-new']" [queryParams]="{mobileNumber: item.contactNumber}">{{
-                  item.contactNumber }}</a></td> -->
               <td>{{ item.paymentRecivedDate | date:'d/M/yy, h:mm a':'UTC' }}</td>
             </tr>
             <tr *ngIf="paymentReceivedData?.content?.length === 0">
@@ -450,7 +432,6 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">User Name</th>
-              <!-- <th scope="col">Contact Number</th> -->
               <th scope="col">Summary Sent Date</th>
             </tr>
           </thead>
@@ -459,8 +440,7 @@
               *ngFor="let item of summaryConfirmationData?.content | paginate:config.summaryConfirmation; let i = index">
               <td>{{ i+1 }}</td>
               <td>{{ item.userName }}</td>
-              <!-- <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{
-                  item.contactNumber }}</a></td> -->
+
               <td>{{ item.summarySentDate | date:'d/M/yy, h:mm a':'UTC' }}</td>
             </tr>
             <tr *ngIf="summaryConfirmationData?.content?.length === 0">
@@ -485,7 +465,6 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">User Name</th>
-              <!-- <th scope="col">Contact Number</th> -->
               <th scope="col">ITR Filed date</th>
             </tr>
           </thead>
@@ -494,8 +473,7 @@
               *ngFor="let item of eVerificationPendingData?.content | paginate:config.eVerificationPending; let i = index">
               <td>{{ i+1 }}</td>
               <td>{{ item.userName }}</td>
-              <!-- <td><a [routerLink]="['/tasks/filings']" [queryParams]="{mobileNumber: item.contactNumber}">{{
-                  item.contactNumber }}</a></td> -->
+
               <td>{{ item.itrFiledDate | date:'d/M/yy, h:mm a':'UTC' }}</td>
             </tr>
             <tr *ngIf="eVerificationPendingData?.content?.length === 0">
@@ -512,5 +490,438 @@
       </div>
     </div>
   </div>
-  <!-- Tables Ends -->
-</div>
+</div> -->
+
+
+<div class="main clearfix">
+  <div class="main-1">
+    <div class="row rowClr-1">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-7">
+            <div class="filter-box">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-4 " *ngIf="partnerType ==='PRINCIPAL'">
+                      <mat-label> Search By Child </mat-label>
+                      <mat-form-field appearance="outline">
+                        <input type="text" matInput [formControl]="searchChild" [matAutocomplete]="auto2" />
+                        <mat-autocomplete #auto2>
+                          <mat-option *ngFor="let option2 of filteredChild | async" [value]="option2.name"
+                            (click)="getChildNameId(option2)">
+                            {{ option2.name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 spsTp ">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Start Date:</mat-label>
+                        <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate"
+                          [max]="maxStartDate" autocomplete="off" (dateChange)="setEndDateValidate(this.startDate)" />
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 spsTp ">
+                      <mat-form-field appearance="outline">
+                        <mat-label>End Date:</mat-label>
+                        <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
+                          [max]="maxDate" autocomplete="off" />
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                        <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="button-container">
+              <button class="srch-btn-1" (click)="search('all')"><i class="fa fa-search" aria-hidden="true"></i> Search
+              </button>
+              <button class="clrLnk-1" (click)="this.resetFilters()">
+                Clear form
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="new-table-container">
+      <div class="row">
+        <div class="col-sm-12 mt-2">
+          <div class="TxHd-12">
+            <span class="TxHd"> Status Overview</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="count-chips-container">
+            <div class="row">
+              <div class="col-sm-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.open || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Open</span>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.notInterested || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Not Interested</span>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.chatInitiated || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Chat Initiated</span>
+                </div>
+              </div>
+              <div class="col-sm-2 ">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.chatResolve || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Chat Resolve</span>
+                </div>
+              </div>
+              <div class="col-sm-2 ">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.interested || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Interested</span>
+                </div>
+              </div>
+              <div class="col-sm-2 ">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.documentsUploaded || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Documents Uploaded</span>
+                </div>
+              </div>
+              <div class="col-sm-2 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.proformaInvoiceSent || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Proforma Invoice Sent</span>
+                </div>
+              </div>
+              <div class="col-sm-2 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.paymentReceived || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Payment Received</span>
+                </div>
+              </div>
+              <div class="col-sm-2 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.upgradedInvoiceSent || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Upgraded Invoice Sent</span>
+                </div>
+              </div>
+              <div class="col-sm-2 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.preparingItr || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Preparing ITR</span>
+                </div>
+              </div>
+              <div class="col-sm-2 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.waitingForConfirmation || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Waiting for Confirmation</span>
+                </div>
+              </div>
+              <div class="col-sm-2 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.itrConfirmationReceived || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">ITR Confirmation Received</span>
+                </div>
+              </div>
+              <div class="col-sm-2 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.itrFiledEverificationPending || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">ITR Filed E-verification pending</span>
+                </div>
+              </div>
+              <div class="col-sm-2 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.itrFiledEverificationCompleted || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">ITR Filed E-verification done</span>
+                </div>
+              </div>
+              <div class="col-sm-2 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.backOutWithoutRefund || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Back Out without refund</span>
+                </div>
+              </div>
+              <div class="col-sm-2 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{statusWiseCountData?.backOutWithRefund || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Back Out with refund</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row spsTp1">
+        <div class="col-sm-12 mt-3">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="col-sm-12 TxHd-12 mt-3">
+                <span class="header-text-1">Invoice(ITR)</span>
+              </div>
+              <div class="row">
+                <div class="col-sm-6 mt-2">
+                  <div class="col-sm-12 mt-3">
+                    <div class="count-radius-1">
+                      <span class="numTxSm-11">{{ invoiceData.invoiceRaised || 'NA' }}</span><br>
+                      <span class="text-TxSm-1">Invoice Raised</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 mt-3">
+                    <div class="count-radius-1">
+                      <span class="numTxSm-11">{{ invoiceData.unpaidInvoiceCount || 'NA' }}</span><br>
+                      <span class="text-TxSm-1">Unpaid Invoices</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 mt-3">
+                    <div class="count-radius-1">
+                      <span class="numTxSm-11">{{ invoiceData.paidInvoiceCount || 'NA' }}</span><br>
+                      <span class="text-TxSm-1">Paid Invoices</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6 mt-2">
+                  <div class="col-sm-12 mt-3">
+                    <div class="count-radius-1">
+                      <span class="numTxSm-11">₹ {{invoiceData.invoiceAmount || 'NA'}}</span><br>
+                      <span class="text-TxSm-1">Invoice Amount</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 mt-3">
+                    <div class="count-radius-1">
+                      <span class="numTxSm-11">₹ {{invoiceData.unpaidAmount || 'NA'}}</span><br>
+                      <span class="text-TxSm-1">Unpaid Amount</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 mt-3">
+                    <div class="count-radius-1">
+                      <span class="numTxSm-11">₹ {{invoiceData.paidAmount || 'NA'}}</span><br>
+                      <span class="text-TxSm-1">Paid Amount</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <div class="col-sm-12 TxHd-12 mt-3 d-flex justify-content-between">
+                <div class="col-sm-8"><span class="header-text-1">Total ITR Filed</span></div>
+                <div class="d-flex align-items-center">
+                  <div class="total-box"><span class="total-box-text">Total</span></div>
+                  <div class="total-box-value"><span class="total-value">{{commissionData?.totalItrFiled ||
+                      'NA'}}</span></div>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="col-text-container">
+                  <div class="col-sm-6 col-txt-1 d-flex justify-content-between">
+                    <div class=""><span class="original-text">(Original Return)</span></div>
+                    <div class="total-box-value"><span class="total-value">{{totalOriginal || 'NA'}}</span></div>
+                  </div>
+                  <div class="col-sm-6 col-txt-1 d-flex justify-content-between">
+                    <div class=""><span class="original-text">(Revise Return)</span></div>
+                    <div class="total-box-value"><span class="total-value">{{totalRevised || 'NA'}}</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-sm-6">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="col-sm-12 mt-2">
+                        <div class="count-radius-1">
+                          <span class="numTxSm-11">{{commissionData?.itr1 || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">ITR 1</span>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 mt-2">
+                        <div class="count-radius-1">
+                          <span class="numTxSm-11">{{commissionData?.itr3 || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">ITR 3</span>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 mt-2">
+                        <div class="count-radius-1">
+                          <span class="numTxSm-11">{{commissionData?.originalReturnOther || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">Other</span>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="col-sm-12 mt-2">
+                        <div class="count-radius-1">
+                          <span class="numTxSm-11">{{commissionData?.itr2 || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">ITR 2</span>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 mt-2">
+                        <div class="count-radius-1">
+                          <span class="numTxSm-11">{{commissionData?.itr4 || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">ITR 4</span>
+                        </div>
+                        <div class="col-sm-12 mt-2">
+                          <div class="count-radius-1">
+                            <span class="numTxSm-11">{{commissionData?.itrU || 'NA'}}</span><br>
+                            <span class="text-TxSm-1">ITR U</span>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="col-sm-12 mt-2">
+                        <div class="count-radius-1">
+                          <span class="numTxSm-11">{{commissionData?.itr1_revised || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">ITR 1</span>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 mt-2">
+                        <div class="count-radius-1">
+                          <span class="numTxSm-11">{{commissionData?.itr3_revised || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">ITR 3</span>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 mt-2">
+                        <div class="count-radius-1">
+                          <span class="numTxSm-11">{{commissionData?.reviseReturnOther || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">Other</span>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="col-sm-12 mt-2">
+                        <div class="count-radius-1">
+                          <span class="numTxSm-11">{{commissionData?.itr2_revised || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">ITR 2</span>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 mt-2">
+                        <div class="count-radius-1">
+                          <span class="numTxSm-11">{{commissionData?.itr4_revised || 'NA'}}</span><br>
+                          <span class="text-TxSm-1">ITR 4</span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="row spsTp1">
+        <div class="col-sm-12 mt-3">
+          <div class="row">
+            <div class="col-sm-12 TxHd-12 mt-3">
+              <span class="header-text-1">Calling Summary</span>
+            </div>
+            <div class="row mt-3">
+              <div class="col-sm-3 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{callSummaryData?.outbound_calls || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Outbound Call</span>
+                </div>
+              </div>
+              <div class="col-sm-3 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{callSummaryData?.outbound_connected || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Outbound Connected</span>
+                </div>
+              </div>
+              <div class="col-sm-3 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{callSummaryData?.outbound_answered_ratio || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Outbound Answered Ratio</span>
+                </div>
+              </div>
+              <div class="col-sm-3 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{callSummaryData?.noOfMissed_calls || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">No of Missed Call</span>
+                </div>
+              </div>
+              <div class="col-sm-3 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{callSummaryData?.inbound_calls || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Inbound Call</span>
+                </div>
+              </div>
+              <div class="col-sm-3 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{callSummaryData?.inbound_connected || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Inbound Connected</span>
+                </div>
+              </div>
+              <div class="col-sm-3 mt-2">
+                <div class="count-radius-1">
+                  <span class="numTxSm-11">{{callSummaryData?.inbound_answered_ratio || 'NA'}}</span><br>
+                  <span class="text-TxSm-1">Inbound Answered Ratio</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row spsTp1">
+        <div class="col-sm-12 mt-3">
+          <div class="row">
+            <div class="col-sm-12 TxHd-12 mt-3">
+              <span class="header-text-1">Total Commission</span>
+            </div>
+            <div class="row mt-3">
+              <div class="col-sm-3 mt-2">
+                <div class="count-radius-1">
+                  <span class="text-TxSm-1">Total Commission Earned Before TDS</span><br>
+                  <span class="numTxSm-11"> ₹ {{(commissionData?.totalCommissionEarnedBeforeTDS | number:'1.2-2') ||
+                    'NA'}}</span>
+
+                </div>
+              </div>
+              <div class="col-sm-3 mt-2">
+                <div class="count-radius-1">
+                  <span class="text-TxSm-1">TDS on Commission</span><br>
+                  <span class="numTxSm-11">₹ {{(commissionData?.tdsOnCommission | number:'1.2-2') || 'NA'}}</span>
+
+                </div>
+              </div>
+              <div class="col-sm-3 mt-2">
+                <div class="count-radius-1">
+                  <span class="text-TxSm-1">Total Commission Earned After TDS</span><br>
+                  <span class="numTxSm-11">₹ {{(commissionData?.totalCommissionEarnedAfterTDS | number:'1.2-2') ||
+                    'NA'}}</span>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>

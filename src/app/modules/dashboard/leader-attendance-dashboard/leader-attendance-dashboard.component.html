@@ -1,397 +1,195 @@
-<!--<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>-->
-
-<div class="main clearfix">
-  <div class="row">
+<div class="main-1">
+  <div class="row rowClr-1">
     <div class="col-sm-12">
-      <!-- <h4>Owner Dashboard:</h4> -->
-      <h5 class="bdrbl">​Attendance & Performance Record</h5>
-    </div>
-    <!-- <div class="col-sm-6">
-    <div class="float-right">
-      <span class="TxBg">Documents Uploaded</span>
-        <span class="numTxBg">91</span>
-      </div>
-  </div> -->
-  </div>
-
-  <div class="radiusMain">
-    <div class="row">
-
-      <div class="col-sm-12">
-        <!-- <form class="form-inline">
-                  <input class="form-control mr-sm-2" type="search" placeholder="Select Filer"
-                      aria-label="Search">
-              </form> -->
-        <!-- <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event, true)"
-          (sendOwner)="fromSme1($event, false)"></app-leader-list-dropdown> -->
-        <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
-          (sendPrincipleIndividual)="fromPrinciple($event)" [skipChild]=false></app-sme-list-drop-down>
-      </div>
-      <div class="col-sm-2 spsTp">
-        <mat-form-field appearance="outline">
-          <mat-label>Start Date:</mat-label>
-          <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxStartDate"
-            autocomplete="off" (dateChange)="setEndDateValidate(this.startDate)" />
-          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-          <mat-datepicker #picker1></mat-datepicker>
-          <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="col-sm-2 spsTp">
-        <mat-form-field appearance="outline">
-          <mat-label>End Date:</mat-label>
-          <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxDate"
-            autocomplete="off" />
-          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-          <mat-datepicker #picker2></mat-datepicker>
-          <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
-          <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
-        </mat-form-field>
-      </div>
-
-      <!-- <div class="col-sm-4">
-              <form action="/action_page.php">
-                  <span class="TxSm"> Select Date Range: </span>
-                  <input type="date" id="date" name="Select Date">
-              </form>
-          </div> -->
-
-      <div class="col-sm-6">
-        <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()">
-          <i class="fa fa-download" aria-hidden="true"></i> Download File
-        </button>
-        <button class="clrLnk mvRth" (click)="this.resetFilters()">
-          Clear form
-        </button>
-        <button class="srch-btn mvRth" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- <div class="row rowSp">
-    <div class="col-sm-12">
-      <h5 class="bdrbl1">ITR Overview:</h5>
-    </div>
-    <div class="col-sm-2">
-      <div class="radius3">
-        <span class="bluTx">{{itrOverview?.assignedUsersCount || 'NA'}}</span><br>
-        <span class="TxSm">Assign Users</span>
-      </div>
-    </div>
-    <div class="col-sm-2">
-      <div class="radius3">
-        <span class="bluTx">{{itrOverview?.openCount || 'NA'}}</span><br>
-        <span class="TxSm">Open</span>
-      </div>
-    </div>
-    <div class="col-sm-2">
-      <div class="radius3">
-        <span class="bluTx">{{itrOverview?.documentUploadedCount || 'NA'}}</span><br>
-        <span class="TxSm">Document Uploaded</span>
-      </div>
-    </div>
-    <div class="col-sm-2">
-      <div class="radius3">
-        <span class="bluTx">{{itrOverview?.inProcessCount || 'NA'}}</span><br>
-        <span class="TxSm">In Process</span>
-      </div>
-    </div>
-    <div class="col-sm-2">
-      <div class="radius3">
-        <span class="bluTx">{{itrOverview?.waitingForConfirmationCount || 'NA'}}</span><br>
-        <span class="TxSm">Waiting for confirmation</span>
-      </div>
-    </div>
-    <div class="col-sm-2">
-      <div class="radius3">
-        <span class="bluTx">{{itrOverview?.backedOutCount || 'NA'}}</span><br>
-        <span class="TxSm">Back Out</span>
-      </div>
-    </div>
-  </div> -->
-
-  <!-- Total Partners -->
-  <div class="col-sm-12">
-    <div class="tpMain">
-      <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Partners</span>&nbsp;
-      <span class="numTxBg1">{{ partnerCount }}</span>
-      <!-- Inside Row -->
       <div class="row">
-        <div class="col-sm-4">
-          <div class="radius2">
-            <div class="inBxL">
-              <span class="numTxSm grTx1">{{ activePartnerCount }}</span><br>
-              <span class="TxSm">Active Partners</span>
-            </div>
-            <div class="inBxR">
-              <span class="numTxSm OrgTx">{{ inactivePartnerCount }}</span><br>
-              <span class="TxSm">Inactive Partners</span>
+        <div class="col-sm-7">
+          <div class="filter-box">
+            <div class="row">
+              <div class="col-sm-12 bckClr">
+                <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
+                  (sendPrincipleIndividual)="fromPrinciple($event)" [skipChild]=false></app-sme-list-drop-down>
+              </div>
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-sm-4 spsTp ">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Start Date:</mat-label>
+                      <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate"
+                        [max]="maxStartDate" autocomplete="off" (dateChange)="setEndDateValidate(this.startDate)" />
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                      <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-4 spsTp ">
+                    <mat-form-field appearance="outline">
+                      <mat-label>End Date:</mat-label>
+                      <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
+                        [max]="maxDate" autocomplete="off" />
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                      <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                      <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-sm-4">
-          <div class="radius2">
-            <div class="inBxL">
-              <span class="numTxSm grTx1">{{ assignmentOnCount }}</span><br>
-              <span class="TxSm">Assignment On</span>
-            </div>
-            <div class="inBxR">
-              <span class="numTxSm OrgTx">{{ assignmentOffCount }}</span><br>
-              <span class="TxSm">Assignment Off</span>
-            </div>
+        <div class="col-sm-5">
+          <div class="button-container">
+            <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+            </button>
+            <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+              <i class="fa fa-download" aria-hidden="true"></i> Download File
+            </button>
+            <button class="clrLnk-1" (click)="this.resetFilters()">
+              Clear form
+            </button>
           </div>
         </div>
-
       </div>
-      <!-- Inside Row Ends -->
     </div>
   </div>
-  <!-- Total Partners Ends -->
-
-  <div class="row rowClr">
-
-    <!-- Partners Search Area -->
-    <div class="col-sm-12">
-      <div class="txtH">Check Partners/Filer Record:</div>
-
+  <div class="new-table-container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="txtH-1">Total SMEs :  <span class="numTxBg1">{{ partnerCount }}</span></div>
+      </div>
     </div>
-    <!-- Partners Search Area Ends -->
-    <!-- Table Starts-->
-    <div class="col-sm-12">
-      <div class="radiusTab1">
-        <!-- <div class="tx">Document Uploaded but filing not yet started</div> -->
-        <div class="table-container">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name of Partners </th>
-                <th scope="col">Attendance on Date<br>({{ today | date:'dd MMMM yyyy' }})</th>
-                <th scope="col">Assignment Status</th>
-                <th scope="col">No of clients assigned<br>(where filer is allotted)</th>
-                <th scope="col">ITR 1 <br>(original + revise)</th>
-                <th scope="col">ITR 2 <br>(original + revise)</th>
-                <th scope="col">ITR 3 <br>(original + revise)</th>
-                <th scope="col">ITR 4 <br>(original + revise)</th>
-                <th scope="col">Other <br>(original + revise)</th>
-                <th scope="col">ITR U</th>
-                <th scope="col">Total ITR Filed</th>
-                <th scope="col">Revenue Generated(filed + pending to file cases)<br>
-                  Total amount of paid invoices</th>
-                <th scope="col">Applicable Commission <br>Percentage as on date</th>
-                <th scope="col">Total Commission<br>Earned before TDS</th>
-                <th scope="col">TDS</th>
-                <th scope="col">Total Commission<br>Earned after TDS</th>
-                <th scope="col">Commission Paid</th>
-                <th scope="col">Commission Payable</th>
-                <th scope="col">Average of users Rating</th>
-                <!-- <th scope="col">Conversion Ratios</th> -->
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of allDetails ; let i = index">
-                <td>{{ i+1 }}</td>
-                <td>{{ item.nameOfFiler }}</td>
-                <td>
-                  <span *ngIf="item.attendanceOnDateInBo === 'Active'; else inactive"
-                    class="active-status">Active</span>
-                  <ng-template #inactive>
-                    <span class="inactive-status">Inactive</span>
-                  </ng-template>
-                </td>
-                <td
-                  [ngClass]="{ 'text-success': item.assignmentStatus === 'On', 'text-danger': item.assignmentStatus === 'Off' }">
-                  {{ item.assignmentStatus }}
-                </td>
-                <td>{{ item.numberOfClientsAssigned}}</td>
-                <td>{{ item.itr1}}</td>
-                <td>{{ item.itr2}}</td>
-                <td>{{ item.itr3}}</td>
-                <td>{{ item.itr4}}</td>
-                <td>{{ item.others}}</td>
-                <td>{{ item.itrU}}</td>
-                <td [ngClass]="{ 'text-success': item.totalITRFiled }">{{ item.totalITRFiled }}</td>
-                <td>{{ item.revenueGenerated}}</td>
-                <td>{{ item.applicableCommissionPercentage}}</td>
-                <td>{{ item.totalCommissionEarnedBeforeTDS}}</td>
-                <td>{{ item.tds}}</td>
-                <td>{{ item.totalCommissionEarnedAfterTDS | number:'1.2-2'}}</td>
-                <td>{{ item.commissionPaid | number:'1.2-2' }}</td>
-                <td>{{ item.commissionPayable }}</td>
-                <td>{{ item.averageUserRating }}</td>
-
-                <!-- <td>{{'NA'}}</td> -->
-              </tr>
-              <tr>
-                <td colspan="3"></td>
-                <td class="text-bold">Grand Total</td>
-                <td class="text-success">{{ grandTotal?.totalNumberOfClientsAssigned }}</td>
-                <td class="text-success">{{ grandTotal?.totalItr1 }}</td>
-                <td class="text-success">{{ grandTotal?.totalItr2 }}</td>
-                <td class="text-success">{{ grandTotal?.totalItr3 }}</td>
-                <td class="text-success">{{ grandTotal?.totalItr4 }}</td>
-                <td class="text-success">{{ grandTotal?.totalItrOthers }}</td>
-                <td class="text-success">{{ grandTotal?.totalItrU }}</td>
-                <td class="text-success">{{ grandTotal?.totalItrFiled }}</td>
-                <td class="text-success">{{ grandTotal?.totalRevenueGenerated }}</td>
-                <td>{{ 'NA' }}</td>
-                <td class="text-success">{{ grandTotal?.totalCommissionEarnedBeforeTDS | number:'1.2-2' }}</td>
-                <td class="text-success">{{ grandTotal?.totalTds }}</td>
-                <td class="text-success">{{ grandTotal?.totalCommissionEarnedAfterTDS }}</td>
-                <td class="text-success">{{ grandTotal?.totalCommissionPaid }}</td>
-                <td class="text-success">{{ grandTotal?.totalCommissionPayable }}</td>
-                <td class="text-success">{{ grandTotal?.averageUserRating }}</td>
-                <!-- <td>{{ 'NA' }}</td> -->
-              </tr>
-              <tr *ngIf="allDetails?.length === 0 || !allDetails">
-                <td colspan="8" class="text-center">
-                  No Records Found
-                </td>
-              </tr>
-              <!-- <tr>
-              <th scope="row">1</th>
-              <td>D and D Tax consultants</td>
-              <td>Active</td>
-              <td>On</td>
-              <td>8</td>
-              <td class="grTx1">65</td>
-              <td>1,06,538.50</td>
-              <td>41,500</td>
-              <td>86.67</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Mekala Sankar Rao</td>
-              <td>Active</td>
-              <td>On</td>
-              <td>4</td>
-              <td class="grTx1">76</td>
-              <td>1,24,430</td>
-              <td>41,500</td>
-              <td>84.44</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Santosh Premraj Soni</td>
-              <td>Active</td>
-              <td>On</td>
-              <td>3</td>
-              <td class="grTx1">72</td>
-              <td>1,31,280</td>
-              <td>41,500</td>
-              <td>82.76</td>
-            </tr>
-            <tr>
-              <th scope="row">4</th>
-              <td>Manmitha</td>
-              <td>Active</td>
-              <td>On</td>
-              <td>1</td>
-              <td class="grTx1">53</td>
-              <td>1,20,260</td>
-              <td>41,500</td>
-              <td>79.10</td>
-            </tr>
-            <tr>
-              <th scope="row">5</th>
-              <td>Joy prakash mohanty</td>
-              <td>Active</td>
-              <td>On</td>
-              <td>7</td>
-              <td class="grTx1">70</td>
-              <td>1,20,200</td>
-              <td>35,740</td>
-              <td>78.65</td>
-            </tr>
-            <tr>
-              <th scope="row">6</th>
-              <td>Kartik Hemani</td>
-              <td class="redTx1">Inactive</td>
-              <td class="redTx1">Off</td>
-              <td>4</td>
-              <td class="grTx1">94</td>
-              <td>1,90,141</td>
-              <td>58,431</td>
-              <td>78.33</td>
-            </tr>
-            <tr>
-              <th scope="row">7</th>
-              <td>Subrot Sahu</td>
-              <td>Active</td>
-              <td>On</td>
-              <td>3</td>
-              <td class="grTx1">101</td>
-              <td>1,52,250</td>
-              <td>63,574</td>
-              <td>77.69</td>
-            </tr>
-            <tr>
-              <th scope="row">8</th>
-              <td>Ajay chinthalapudi</td>
-              <td class="redTx1">Inactive</td>
-              <td class="redTx1">Off</td>
-              <td>5</td>
-              <td class="grTx1">81</td>
-              <td>1,24,110</td>
-              <td>41,500</td>
-              <td>77.14</td>
-            </tr>
-            <tr>
-              <th scope="row">9</th>
-              <td>Aditya</td>
-              <td class="redTx1">Inactive</td>
-              <td class="redTx1">Off</td>
-              <td>3</td>
-              <td class="grTx1">103</td>
-              <td>1,69,679.50</td>
-              <td>62,620</td>
-              <td>76.87</td>
-            </tr>
-            <tr>
-              <th scope="row">10</th>
-              <td>Feroz Chand Inamdar</td>
-              <td>Active</td>
-              <td>On</td>
-              <td>2</td>
-              <td class="grTx1">69</td>
-              <td>1,45,886.2</td>
-              <td>41,500</td>
-              <td>76.67</td>
-            </tr>
-            <tr>
-              <th scope="row"></th>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><b>Grand Total</b></td>
-              <td class="grTx1"><b>1,688</b></td>
-              <td><b>36,23,745.18</b></td>
-              <td><b>10,82,412</b></td>
-              <td><b>2,088.30</b></td>
-            </tr> -->
-            </tbody>
-          </table>
-          <!-- <nav aria-label="..." class="float-right">
-          <ul class="pagination">
-            <li class="page-item disabled">
-              <a class="page-link" href="#" tabindex="-1">Previous</a>
-            </li>
-            <li class="page-item active">
-              <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#">Next</a>
-            </li>
-          </ul>
-        </nav> -->
-
+    <hr>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="count-chips-container">
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="count-radius-1">
+                <div class="count-inBxR-1">
+                  <span class="numTxSm-11">{{ activePartnerCount }}</span><br>
+                  <span class="text-TxSm-1">Active Count</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="count-radius-1">
+                <div class="count-inBxR-1">
+                  <span class="numTxSm-11">{{ inactivePartnerCount }}</span><br>
+                  <span class="text-TxSm-1">Inactive Count</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="count-radius-1">
+                <div class="count-inBxR-1">
+                  <span class="numTxSm-11">{{ activePartnerCount }}</span><br>
+                  <span class="text-TxSm-1">Assignment On</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="count-radius-1">
+                <div class="count-inBxR-1">
+                  <span class="numTxSm-11">{{ assignmentOffCount }}</span><br>
+                  <span class="text-TxSm-1">Assignment Off</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <!-- Table Ends -->
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="table-radiusTab-1">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Sr No.</th>
+                  <th scope="col">Name of Partners </th>
+                  <th scope="col">Attendance on Date<br>({{ today | date:'dd MMMM yyyy' }})</th>
+                  <th scope="col">Assignment Status</th>
+                  <th scope="col">No of clients assigned<br>(where filer is allotted)</th>
+                  <th scope="col">ITR 1 <br>(original + revise)</th>
+                  <th scope="col">ITR 2 <br>(original + revise)</th>
+                  <th scope="col">ITR 3 <br>(original + revise)</th>
+                  <th scope="col">ITR 4 <br>(original + revise)</th>
+                  <th scope="col">Other <br>(original + revise)</th>
+                  <th scope="col">ITR U</th>
+                  <th scope="col">Total ITR Filed</th>
+                  <th scope="col">Revenue Generated(filed + pending to file cases)<br>
+                    Total amount of paid invoices</th>
+                  <th scope="col">Applicable Commission <br>Percentage as on date</th>
+                  <th scope="col">Total Commission<br>Earned before TDS</th>
+                  <th scope="col">TDS</th>
+                  <th scope="col">Total Commission<br>Earned after TDS</th>
+                  <th scope="col">Commission Paid</th>
+                  <th scope="col">Commission Payable</th>
+                  <th scope="col">Average of users Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of allDetails ; let i = index">
+                  <td>{{ i+1 }}</td>
+                  <td>{{ item.nameOfFiler }}</td>
+                  <td>
+                    <span *ngIf="item.attendanceOnDateInBo === 'Active'; else inactive" class="active-status">Active</span>
+                    <ng-template #inactive>
+                      <span class="inactive-status">Inactive</span>
+                    </ng-template>
+                  </td>
+                  <td
+                    [ngClass]="{ 'text-success': item.assignmentStatus === 'On', 'text-danger': item.assignmentStatus === 'Off' }">
+                    {{ item.assignmentStatus }}
+                  </td>
+                  <td>{{ item.numberOfClientsAssigned}}</td>
+                  <td>{{ item.itr1}}</td>
+                  <td>{{ item.itr2}}</td>
+                  <td>{{ item.itr3}}</td>
+                  <td>{{ item.itr4}}</td>
+                  <td>{{ item.others}}</td>
+                  <td>{{ item.itrU}}</td>
+                  <td [ngClass]="{ 'text-success': item.totalITRFiled }">{{ item.totalITRFiled }}</td>
+                  <td>{{ item.revenueGenerated}}</td>
+                  <td>{{ item.applicableCommissionPercentage}}</td>
+                  <td>{{ item.totalCommissionEarnedBeforeTDS}}</td>
+                  <td>{{ item.tds}}</td>
+                  <td>{{ item.totalCommissionEarnedAfterTDS | number:'1.2-2'}}</td>
+                  <td>{{ item.commissionPaid | number:'1.2-2' }}</td>
+                  <td>{{ item.commissionPayable }}</td>
+                  <td>{{ item.averageUserRating }}</td>
+                </tr>
+                <tr>
+                  <td colspan="3"></td>
+                  <td class="text-bold">Grand Total</td>
+                  <td class="text-success">{{ grandTotal?.totalNumberOfClientsAssigned }}</td>
+                  <td class="text-success">{{ grandTotal?.totalItr1 }}</td>
+                  <td class="text-success">{{ grandTotal?.totalItr2 }}</td>
+                  <td class="text-success">{{ grandTotal?.totalItr3 }}</td>
+                  <td class="text-success">{{ grandTotal?.totalItr4 }}</td>
+                  <td class="text-success">{{ grandTotal?.totalItrOthers }}</td>
+                  <td class="text-success">{{ grandTotal?.totalItrU }}</td>
+                  <td class="text-success">{{ grandTotal?.totalItrFiled }}</td>
+                  <td class="text-success">{{ grandTotal?.totalRevenueGenerated }}</td>
+                  <td>{{ 'NA' }}</td>
+                  <td class="text-success">{{ grandTotal?.totalCommissionEarnedBeforeTDS | number:'1.2-2' }}</td>
+                  <td class="text-success">{{ grandTotal?.totalTds }}</td>
+                  <td class="text-success">{{ grandTotal?.totalCommissionEarnedAfterTDS }}</td>
+                  <td class="text-success">{{ grandTotal?.totalCommissionPaid }}</td>
+                  <td class="text-success">{{ grandTotal?.totalCommissionPayable }}</td>
+                  <td class="text-success">{{ grandTotal?.averageUserRating }}</td>
+                </tr>
+                <tr *ngIf="allDetails?.length === 0 || !allDetails">
+                  <td colspan="8" class="text-center">
+                    No Records Found
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
