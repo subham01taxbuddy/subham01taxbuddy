@@ -383,25 +383,25 @@ export class EditUpdateResignedSmeComponent implements OnInit {
 
   smeFormGroup: FormGroup = this.fb.group({
     mobileNumber: new FormControl(''),
-    name: new FormControl("", [Validators.required]),
+    name: new FormControl("",),
     smeOriginalEmail: new FormControl(''),
     languages: new FormControl(''),
     referredBy: new FormControl(''),
     itrTypes: new FormControl(''),
     qualification: new FormControl(''),
     state: new FormControl(''),
-    parentName: new FormControl('', Validators.required),
+    parentName: new FormControl(''),
     principalName: new FormControl(''),
     pin: new FormControl(''),
     city: new FormControl(''),
-    pan: new FormControl('', [Validators.required, Validators.pattern(AppConstants.panNumberRegex)]),
+    pan: new FormControl(''),
     gstin: new FormControl('')
   })
 
   bankDetailsFormGroup: FormGroup = this.fb.group({
-    accountType: ['', [Validators.required]],
-    ifsCode: ['', [Validators.required, Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]],
-    accountNumber: ['', [Validators.required]],
+    accountType: [''],
+    ifsCode: [''],
+    accountNumber: [''],
   })
 
   get pan() {
