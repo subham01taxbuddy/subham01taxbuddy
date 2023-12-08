@@ -118,9 +118,9 @@ export class ZeroCouponBondsComponent
                 filterImp[0].indexCostOfImprovement;
               element['dateOfImprovement'] = filterImp[0].dateOfImprovement;
 
-              if (element.isIndexationBenefitAvailable === true) {
-                this.addMoreBondsData(element);
-              }
+            }
+            if (element.isIndexationBenefitAvailable === true) {
+              this.addMoreBondsData(element);
             }
           });
         });

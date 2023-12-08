@@ -630,7 +630,7 @@ export class OtherAssetImprovementComponent implements OnInit {
 
       // setting improvements
       let filteredImprovement = filteredCapitalGain[0]?.improvement?.filter(
-        (element) => element.srn !== this.data?.assetIndex
+        (element) => element.srn !== this.objSrn
       );
 
       // improvementsArray?.value?.filter(
