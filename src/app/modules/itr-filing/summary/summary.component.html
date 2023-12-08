@@ -1689,7 +1689,8 @@
                           ?.shortTermDeemed?.length > 0
                       "
                     >
-                      Total amount deemed to be short term capital gain @ slab rate
+                      Total amount deemed to be short term capital gain @ slab
+                      rate
                       <span style="float: right">{{
                         finalCalculations?.capitalGain?.shortTerm
                           ?.TotalAmtDeemedStcg
@@ -6326,7 +6327,7 @@
                     </mat-expansion-panel-header>
                   </mat-expansion-panel>
 
-                         <!-- *********************** Schedule AMT  ************************* -->
+                  <!-- *********************** Schedule AMT  ************************* -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     #scheduleAMT
@@ -6361,37 +6362,52 @@
                     >
                       <thead>
                         <tr>
-                          <th style="font-weight: bold">
-                            Schedule AMT	
+                          <th style="font-weight: bold" colspan="1">
+                            1. Total Income as per PARTB-TI
                           </th>
-                          <th style="font-weight: bold">
-                            Computation of Alternate Minimum Tax payable under section 115JC
+                          <th style="font-weight: bold" colspan="1">
+                            2. Adjustment as per section 115JC(2) - 
+                            <br/> a. Deduction under C-deduction 
+                            in respect of certain incomes under chapter VI-A
+                          </th>
+                          <th style="font-weight: bold" colspan="1">
+                            3. Adjusted total income under section 115JC(1)
+                          </th>
+                          <th style="font-weight: bold" colspan="1">
+                            4. Tax payable under section 115JC (18.5% of 3)
                           </th>
                         </tr>
                       </thead>
 
                       <tbody>
-                        <tr
-                        >
+                        <tr>
                           <td>
-                            {{ finalCalculations?.ScheduleAMTC?.TotalIncItemPartBTI }}
+                            {{
+                              finalCalculations?.ScheduleAMT
+                                ?.TotalIncItemPartBTI
+                            }}
                           </td>
                           <td>
-                            Rs.
-                            {{ finalCalculations?.ScheduleAMTC?.DeductionClaimUndrAnySec }}
+                            {{
+                              finalCalculations?.ScheduleAMT
+                                ?.DeductionClaimUndrAnySec
+                            }}
                           </td>
                           <td>
-                            Rs.
-                            {{ finalCalculations?.ScheduleAMTC?.AdjustedUnderSec115JC }}
+                            {{
+                              finalCalculations?.ScheduleAMT
+                                ?.AdjustedUnderSec115JC
+                            }}
                           </td>
                           <td>
-                            Rs.
-                            {{ finalCalculations?.ScheduleAMTC?.TaxPayableUnderSec115JC }}
+                            {{
+                              finalCalculations?.ScheduleAMT
+                                ?.TaxPayableUnderSec115JC
+                            }}
                           </td>
                         </tr>
                       </tbody>
                     </table>
-
                   </mat-expansion-panel>
 
                   <!-- *********************** Exempt Income ************************ -->

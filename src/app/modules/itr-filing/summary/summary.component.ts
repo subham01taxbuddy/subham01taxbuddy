@@ -709,11 +709,11 @@ export class SummaryComponent implements OnInit {
     };
     amountPayable: number;
     amountRefund: number;
-    ScheduleAMTC?: {
-      TotalIncItemPartBTI: 37800;
-      DeductionClaimUndrAnySec: 0;
-      AdjustedUnderSec115JC: 37800;
-      TaxPayableUnderSec115JC: 0;
+    ScheduleAMT?: {
+      TotalIncItemPartBTI: any;
+      DeductionClaimUndrAnySec: any;
+      AdjustedUnderSec115JC: any;
+      TaxPayableUnderSec115JC: any;
     };
     exemptIncome: {
       partnerFirms: [
@@ -3802,6 +3802,13 @@ export class SummaryComponent implements OnInit {
             amountRefund:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.Refund?.RefundDue,
+
+            ScheduleAMT: {
+              TotalIncItemPartBTI: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT?.TotalIncItemPartBTI,
+              DeductionClaimUndrAnySec: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT?.DeductionClaimUndrAnySec,
+              AdjustedUnderSec115JC: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT?.AdjustedUnderSec115JC,
+              TaxPayableUnderSec115JC: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT?.TaxPayableUnderSec115JC,
+            },
 
             exemptIncome: {
               partnerFirms: [
