@@ -10,15 +10,28 @@
                 <div class="col-sm-7"
                     *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER') )">
                     <button class="tbd-btn spRt bulk col-sm-4" style="float:right"
-                        (click)="$event.stopPropagation(); reassignmentForLeader()">Bulk Re-Assignment to Leader</button>
+                        (click)="$event.stopPropagation(); reassignmentForLeader()">Bulk Re-Assignment to
+                        Leader</button>
                     <button class="tbd-btn spRt bulk col-sm-4" style="float:right"
-                        (click)="$event.stopPropagation(); reassignmentForFiler()">Bulk Re-Assignment to Filer(with in a team)</button>
+                        (click)="$event.stopPropagation(); reassignmentForFiler()">Bulk Re-Assignment to Filer(with in a
+                        team)</button>
                 </div>
             </mat-expansion-panel-header>
             <div class="rowClr">
                 <div class="surround">
                     <div class="row">
-                        <div class="col-sm-12 bckClr" *ngIf="!coOwnerCheck">
+                        <div class="col-sm-12">
+                            <section class="example-section checkbox-right">
+                                <div class="checkbox-group ">
+                                    <mat-checkbox [formControl]="unAssignedUsersView" [disabled]="disableCheckboxes"
+                                        *ngIf="loggedInUserRoles.includes('ROLE_ADMIN') || loggedInUserRoles.includes('ROLE_LEADER')"
+                                        (change)="onCheckBoxChange()">Unassigned Users</mat-checkbox>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 bckClr">
                             <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, 1)"
                                 (sendPrincipleIndividual)="fromSme($event, 2)"
                                 (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
@@ -72,25 +85,16 @@
         </mat-expansion-panel>
     </mat-accordion>
 </div>
-<!-- New Open Close Filter Ends -->
 
 
 
 <div class="main clearfix">
-    <!-- Container -->
-    <!-- Top card Ends -->
-    <!-- Below Table Starts -->
     <div class="tableSpc">
         <div class="row">
             <div class="col-sm-9 row">
                 <div class="txTit col-sm-4">
                     User Details:
                 </div>
-                <!-- <div class="col-sm-5">
-                    <button class="tbd-btn spRt aprv mt" *ngIf="showReassignmentBtn.length && config.totalItems > 1"
-                        (click)="actionWithReassignment()">
-                        Action with Re-assignment </button>
-                </div> -->
             </div>
             <div class="col-sm-3">
                 <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
@@ -102,10 +106,7 @@
 
         <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
             (rowClicked)="onUsersRowClicked($event)">
-            <!--    paginationPageSize=15 pagination=true-->
         </ag-grid-angular>
-
         <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-
     </div>
 </div>
