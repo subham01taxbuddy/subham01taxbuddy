@@ -79,11 +79,6 @@
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Calling Number" [numbersOnly]="true" [formControl]="callingNumber"
               class="input-field" readonly />
-            <mat-error class="mt-3"> <span *ngIf="otherSmeInfo.controls['callingNumber'].hasError('required')">Please
-                enter mobile no.</span>
-              <span *ngIf="otherSmeInfo.controls['callingNumber'].hasError('pattern')">Please enter valid mobile
-                no.</span>
-            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -98,11 +93,6 @@
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Pan" (keyup)="setUpperCase()" placeholder="XXXXX1234X"
               minLength="10" maxLength="10" [formControl]="pan" class="input-field" maxlength="10" trim readonly />
-            <mat-error class="mt-3"> <span *ngIf="smeFormGroup.controls['pan'].hasError('required')">Please
-                enter mobile no.</span>
-              <span *ngIf="smeFormGroup.controls['pan'].hasError('pattern')">Please enter valid mobile
-                no.</span>
-            </mat-error>
           </mat-form-field>
         </div>
 
@@ -122,14 +112,9 @@
               <mat-label> Account Number* </mat-label>
               <mat-form-field appearance="outline">
                 <input type="text" matInput placeholder="Account No" formControlName="accountNumber" class="input-field"
-                  trim [numbersOnly]="true" required maxlength="20" minlength="3"
+                  trim [numbersOnly]="true" maxlength="20" minlength="3"
                   (blur)="trimValue(bankDetailsFormGroup.controls['accountNumber'])" (change)="updateBankDetailsForm()"
                   readonly />
-                <mat-error class="mt-3"
-                  *ngIf="bankDetailsFormGroup.controls['accountNumber'].hasError('pattern') || bankDetailsFormGroup.controls['accountNumber'].hasError('minlength') || bankDetailsFormGroup.controls['accountNumber'].hasError('maxlength')">
-                  Account number should be 3-20 digits.</mat-error>
-                <mat-error class="mt-3" *ngIf="bankDetailsFormGroup.controls['accountNumber'].hasError('required')">
-                  Enter Account number</mat-error>
               </mat-form-field>
             </div>
 
@@ -139,27 +124,19 @@
                 <input type="text" matInput placeholder="IFSC code"
                   (blur)="trimValue(bankDetailsFormGroup.controls['ifsCode'])"
                   (keyup)="changeToUpper(bankDetailsFormGroup.controls['ifsCode'])" formControlName="ifsCode"
-                  class="input-field" maxLength="11" trim required (change)="updateBankDetailsForm()" readonly />
-                <mat-error class="mt-3" *ngIf="bankDetailsFormGroup.controls['ifsCode'].hasError('pattern')">Enter
-                  valid
-                  IFSC.</mat-error>
-                <mat-error class="mt-3" *ngIf="bankDetailsFormGroup.controls['ifsCode'].hasError('required')">Enter
-                  valid
-                  IFSC.</mat-error>
+                  class="input-field" maxLength="11" trim (change)="updateBankDetailsForm()" readonly />
               </mat-form-field>
             </div>
 
             <div class="col-sm-3">
               <mat-label> Type of Account* </mat-label>
               <mat-form-field appearance="outline">
-                <mat-select placeholder="Account Type" name="accountType" formControlName="accountType" required
+                <mat-select placeholder="Account Type" name="accountType" formControlName="accountType"
                   [disabled]="true" (selectionChange)="updateBankDetailsForm()">
                   <mat-option *ngFor="let account of accountTypeDropdown" [value]="account.value">
                     {{ account.label }}
                   </mat-option>
                 </mat-select>
-                <mat-error class="mt-3" *ngIf="bankDetailsFormGroup.controls['accountType'].hasError('required')">Select
-                  account type</mat-error>
               </mat-form-field>
             </div>
             <div class="row mt-3 verifyBank">
@@ -197,7 +174,7 @@
             <section class="example-section">
               <div *ngFor="let itrType of irtTypeCapability" class="irt-type-checkbox">
                 <p>
-                  <mat-checkbox [formControl]="getItrTypeControl(itrType)"  [disabled]="true"
+                  <mat-checkbox [formControl]="getItrTypeControl(itrType)" [disabled]="true"
                     (change)="onItrTypeCheckboxChange(itrType)"><span class="spacer">{{ itrType
                       }}</span></mat-checkbox>
                 </p>
@@ -214,7 +191,7 @@
             <section class="example-section">
               <div *ngFor="let duration of inactivityTimeDuration" class="duration-checkbox">
                 <p>
-                  <mat-checkbox [formControl]="getDurationControl(duration.key)"  [disabled]="true"
+                  <mat-checkbox [formControl]="getDurationControl(duration.key)" [disabled]="true"
                     (change)="onDurationCheckboxChange($event,duration.key)">
                     <span class="spacer">{{ duration.key }}</span>
                   </mat-checkbox>
@@ -231,7 +208,7 @@
             <section class="example-section">
               <div *ngFor="let limit of caseLimit" class="case-limit-checkbox">
                 <p>
-                  <mat-checkbox [formControl]="getCaseLimitControl(limit.key)"  [disabled]="true"
+                  <mat-checkbox [formControl]="getCaseLimitControl(limit.key)" [disabled]="true"
                     (change)="onCaseLimitCheckboxChange($event,limit.key)">
                     <span class="spacer">{{ limit.key }}</span>
                   </mat-checkbox>
@@ -246,7 +223,7 @@
     <hr>
     <div class="container" style="margin-top: 20px;">
       <div class="row">
-        <div class="col-sm-3">
+        <!-- <div class="col-sm-3">
           <mat-label>Parent Name </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput [formControl]="parentName" [matAutocomplete]="auto" class="input-field" />
@@ -259,7 +236,7 @@
                 select parent name.</span>
             </mat-error>
           </mat-form-field>
-        </div>
+        </div> -->
         <div class="col-sm-3">
           <mat-label> Official Email ID</mat-label>
           <mat-form-field appearance="outline">
@@ -307,7 +284,7 @@
 
     </div>
     <div style="text-align: center;  margin-top: 40px;">
-      <button class="tbd-btn" (click)="cancelUpdate()">Cancel </button>
+      <button class="tbd-btn" (click)="cancelUpdate()">Go Back </button>
 
     </div>
   </div>
