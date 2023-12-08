@@ -365,6 +365,17 @@ export class SummaryComponent implements OnInit {
           }
         ];
         ShortTermSplRateDTAATotal: number;
+        shortTermDeemed?: [
+          {
+            PrvYrInWhichAsstTrnsfrd?: any;
+            SectionClmd?: any;
+            YrInWhichAssetAcq?: any;
+            AmtUtilized?: any;
+            AmtUnutilized?: any;
+          }
+        ];
+        AmtDeemedStcg?: any;
+        TotalAmtDeemedStcg?: any;
       };
       totalShortTerm: number;
       longTerm: {
@@ -2607,18 +2618,28 @@ export class SummaryComponent implements OnInit {
                     capitalGain:
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                         'PartB-TI'
-                      ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                      ]?.CapGain?.ShortTerm?.ShortTermAppRate -
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCGFor23?.ShortTermCapGainFor23
+                        ?.TotalAmtDeemedStcg,
                     Deduction: 0,
                     netCapitalGain:
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                         'PartB-TI'
-                      ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                      ]?.CapGain?.ShortTerm?.ShortTermAppRate -
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCGFor23?.ShortTermCapGainFor23
+                        ?.TotalAmtDeemedStcg,
                   },
                 ],
                 ShortTermAppSlabRateTotal:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                     'PartB-TI'
-                  ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                  ]?.CapGain?.ShortTerm?.ShortTermAppRate -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCGFor23?.ShortTermCapGainFor23
+                    ?.TotalAmtDeemedStcg,
+
                 ShortTermSplRateDTAA: [
                   {
                     nameOfAsset: 'Short Term Capital Gains @ special rate DTAA',
@@ -2637,6 +2658,25 @@ export class SummaryComponent implements OnInit {
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                     'PartB-TI'
                   ]?.CapGain?.ShortTerm?.ShortTermSplRateDTAA,
+
+                shortTermDeemed: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleCGFor23?.ShortTermCapGainFor23?.UnutilizedCg?.UnutilizedCgPrvYrDtls?.map(
+                  (element) => ({
+                    PrvYrInWhichAsstTrnsfrd: element?.PrvYrInWhichAsstTrnsfrd,
+                    SectionClmd: element?.SectionClmd,
+                    YrInWhichAssetAcq: element?.YrInWhichAssetAcq,
+                    AmtUtilized: element?.AmtUtilized,
+                    AmtUnutilized: element?.AmtUnutilized,
+                  })
+                ),
+                AmtDeemedStcg:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCGFor23?.ShortTermCapGainFor23?.AmtDeemedStcg,
+                TotalAmtDeemedStcg:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCGFor23?.ShortTermCapGainFor23
+                    ?.TotalAmtDeemedStcg,
               },
               totalShortTerm:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
