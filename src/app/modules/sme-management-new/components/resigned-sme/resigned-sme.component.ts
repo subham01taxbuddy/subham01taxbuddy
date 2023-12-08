@@ -72,7 +72,6 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.roles = this.loggedInSme[0]?.roles
-    this.getSmeList();
   }
 
   sortByObject(object) {
