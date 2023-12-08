@@ -1615,7 +1615,9 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermAppSlabRate?.length > 0
+                          ?.ShortTermAppSlabRate?.length > 0 &&
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTermAppSlabRateTotal > 0
                       "
                     >
                       Short term capital gain @ slab rate
@@ -1628,7 +1630,9 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermAppSlabRate?.length > 0
+                          ?.ShortTermAppSlabRate?.length > 0 &&
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTermAppSlabRateTotal > 0
                       "
                     >
                       <thead>
@@ -1689,9 +1693,10 @@
                           ?.shortTermDeemed?.length > 0
                       "
                     >
-                      Amount deemed to be short term capital
+                      Total amount deemed to be short term capital @ slab rate
                       <span style="float: right">{{
-                        finalCalculations?.capitalGain?.shortTerm?.AmtDeemedStcg
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.TotalAmtDeemedStcg
                       }}</span>
                     </div>
 
@@ -1701,6 +1706,7 @@
                         finalCalculations?.capitalGain?.shortTerm
                           ?.shortTermDeemed?.length > 0
                       "
+                      style="margin-bottom:0px"
                     >
                       <thead>
                         <tr>
@@ -1755,6 +1761,21 @@
                         </tr>
                       </tbody>
                     </table>
+                    
+                    <div
+                      class="bxHed"
+                      style="margin-top: 0px"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.shortTermDeemed?.length > 0
+                      "
+                    >
+                      Amount deemed to be short term capital
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.AmtDeemedStcg
+                      }}</span>
+                    </div>
 
                     <!-- short term -15 rate  -->
                     <div
@@ -1825,7 +1846,6 @@
                         </tr>
                       </tbody>
                     </table>
-
                     <!-- short term 30 rate  -->
                     <div
                       class="bxHed"

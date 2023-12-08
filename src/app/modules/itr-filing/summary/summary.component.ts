@@ -2618,18 +2618,28 @@ export class SummaryComponent implements OnInit {
                     capitalGain:
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                         'PartB-TI'
-                      ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                      ]?.CapGain?.ShortTerm?.ShortTermAppRate -
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCGFor23?.ShortTermCapGainFor23
+                        ?.TotalAmtDeemedStcg,
                     Deduction: 0,
                     netCapitalGain:
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                         'PartB-TI'
-                      ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                      ]?.CapGain?.ShortTerm?.ShortTermAppRate -
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCGFor23?.ShortTermCapGainFor23
+                        ?.TotalAmtDeemedStcg,
                   },
                 ],
                 ShortTermAppSlabRateTotal:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                     'PartB-TI'
-                  ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                  ]?.CapGain?.ShortTerm?.ShortTermAppRate -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCGFor23?.ShortTermCapGainFor23
+                    ?.TotalAmtDeemedStcg,
+
                 ShortTermSplRateDTAA: [
                   {
                     nameOfAsset: 'Short Term Capital Gains @ special rate DTAA',
