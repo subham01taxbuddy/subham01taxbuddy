@@ -72,7 +72,6 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'))
     this.roles = this.loggedInSme[0]?.roles
-    this.getSmeList();
   }
 
   sortByObject(object) {
@@ -219,8 +218,8 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
-          if (data.value) {
-            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+          if (data?.value) {
+            return data?.value;
           } else {
             return '-';
           }
