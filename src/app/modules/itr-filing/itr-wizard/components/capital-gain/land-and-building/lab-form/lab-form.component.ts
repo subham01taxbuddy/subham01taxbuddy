@@ -1585,6 +1585,9 @@ export class LabFormComponent implements OnInit {
   }
 
   calculateDeduction(index, singleCg?) {
+    if(this.deductionValidation()){
+      return;
+    }
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
     ).controls[0] as FormGroup;
