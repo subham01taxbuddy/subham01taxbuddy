@@ -2736,6 +2736,24 @@
                             </td>
                           </tr>
 
+                          <tr
+                          *ngIf="
+                            finalCalculations?.otherIncome?.otherIncomes
+                              ?.specialRate
+                          "
+                        >
+                          <td>Income at special rate</td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.otherIncome?.otherIncomes
+                                  ?.specialRate
+                              )
+                            }}
+                          </td>
+                        </tr>
+
                           <tr>
                             <th>Total</th>
                             <th>
