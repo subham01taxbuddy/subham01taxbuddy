@@ -507,7 +507,7 @@ export class LabFormComponent implements OnInit {
       underSection: [obj?.underSection || null],
       purchaseDate: [obj?.purchaseDate || null, [Validators.required]],
       costOfNewAssets: [obj?.costOfNewAssets || null, [Validators.required]],
-      investmentInCGAccount: [obj?.investmentInCGAccount || null],
+      investmentInCGAccount: [obj ? obj.investmentInCGAccount : null],
       totalDeductionClaimed: [obj?.totalDeductionClaimed || null],
     });
   }
@@ -1308,8 +1308,8 @@ export class LabFormComponent implements OnInit {
 
   deleteDeduction(index) {
     console.log('Remove Index', index);
-    const deductions = <FormArray>this.immovableForm.get('deductions');
-    deductions.removeAt(index);
+    let deductions = <FormArray>this.immovableForm.get('deductions');
+    deductions.controls = deductions.controls.filter((element:  FormGroup)=> !element.controls['selected'].value);
     console.log(deductions.length);
 
     if (deductions.length === 0) {
