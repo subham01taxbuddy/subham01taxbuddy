@@ -1680,6 +1680,82 @@
                       </tbody>
                     </table>
 
+                    <!-- Deemed short term gain -->
+                    <div
+                      class="bxHed"
+                      style="margin-top: 0px"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.shortTermDeemed?.length > 0
+                      "
+                    >
+                      Amount deemed to be short term capital
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.shortTerm?.AmtDeemedStcg
+                      }}</span>
+                    </div>
+
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.shortTermDeemed?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Sr. No</th>
+                          <th style="font-weight: bold">
+                            Previous year in which asset transferred
+                          </th>
+                          <th style="font-weight: bold">
+                            Section under which deduction claimed in that year
+                          </th>
+                          <th style="font-weight: bold">
+                            Year in which asset is constructed
+                          </th>
+                          <th style="font-weight: bold">
+                            Amount utilised out of capital gains account
+                          </th>
+                          <th style="font-weight: bold">
+                            Amount not used for new asset or remained unutilised
+                            in capital gains account
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let deemedInc of finalCalculations?.capitalGain
+                              ?.shortTerm?.shortTermDeemed;
+                            let i = index
+                          "
+                        >
+                          <td>{{ i + 1 }}</td>
+                          <td>
+                            {{ deemedInc?.PrvYrInWhichAsstTrnsfrd }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ deemedInc?.SectionClmd }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ deemedInc?.YrInWhichAssetAcq }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ deemedInc?.AmtUtilized }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ deemedInc?.AmtUnutilized }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
                     <!-- short term -15 rate  -->
                     <div
                       class="bxHed"
@@ -2737,22 +2813,22 @@
                           </tr>
 
                           <tr
-                          *ngIf="
-                            finalCalculations?.otherIncome?.otherIncomes
-                              ?.specialRate
-                          "
-                        >
-                          <td>Income at special rate</td>
-                          <td>
-                            Rs
-                            {{
-                              utilsService.currencyFormatter(
-                                finalCalculations?.otherIncome?.otherIncomes
-                                  ?.specialRate
-                              )
-                            }}
-                          </td>
-                        </tr>
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.specialRate
+                            "
+                          >
+                            <td>Income at special rate</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.specialRate
+                                )
+                              }}
+                            </td>
+                          </tr>
 
                           <tr>
                             <th>Total</th>
