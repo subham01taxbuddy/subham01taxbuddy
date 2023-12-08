@@ -406,6 +406,17 @@ export class SummaryComponent implements OnInit {
           }
         ];
         LongTermSplRateDTAATotal: number;
+        longTermDeemed?: [
+          {
+            PrvYrInWhichAsstTrnsfrd?: any;
+            SectionClmd?: any;
+            YrInWhichAssetAcq?: any;
+            AmtUtilized?: any;
+            AmtUnutilized?: any;
+          }
+        ];
+        AmtDeemedLtcg?: any;
+        TotalAmtDeemedLtcg?: any;
       };
       totalLongTerm: number;
       crypto: {
@@ -2707,18 +2718,27 @@ export class SummaryComponent implements OnInit {
                     capitalGain:
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                         'PartB-TI'
-                      ]?.CapGain?.LongTerm?.LongTerm20Per,
+                      ]?.CapGain?.LongTerm?.LongTerm20Per -
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCGFor23?.LongTermCapGain23
+                        ?.TotalAmtDeemedLtcg,
                     Deduction: 0,
                     netCapitalGain:
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                         'PartB-TI'
-                      ]?.CapGain?.LongTerm?.LongTerm20Per,
+                      ]?.CapGain?.LongTerm?.LongTerm20Per -
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCGFor23?.LongTermCapGain23
+                        ?.TotalAmtDeemedLtcg,
                   },
                 ],
                 LongTerm20PerTotal:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                     'PartB-TI'
-                  ]?.CapGain?.LongTerm?.LongTerm20Per,
+                  ]?.CapGain?.LongTerm?.LongTerm20Per -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCGFor23?.LongTermCapGain23
+                    ?.TotalAmtDeemedLtcg,
                 LongTermSplRateDTAA: [
                   {
                     nameOfAsset: 'long Term Capital Gains @ special rate DTAA',
@@ -2737,6 +2757,26 @@ export class SummaryComponent implements OnInit {
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                     'PartB-TI'
                   ]?.CapGain?.LongTerm?.LongTermSplRateDTAA,
+
+                // amount deemed income
+                longTermDeemed: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleCGFor23?.LongTermCapGain23?.UnutilizedCg?.UnutilizedCgPrvYrDtls?.map(
+                  (element) => ({
+                    PrvYrInWhichAsstTrnsfrd: element?.PrvYrInWhichAsstTrnsfrd,
+                    SectionClmd: element?.SectionClmd,
+                    YrInWhichAssetAcq: element?.YrInWhichAssetAcq,
+                    AmtUtilized: element?.AmtUtilized,
+                    AmtUnutilized: element?.AmtUnutilized,
+                  })
+                ),
+                AmtDeemedLtcg:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCGFor23?.LongTermCapGain23?.AmtDeemedLtcg,
+                TotalAmtDeemedLtcg:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCGFor23?.LongTermCapGain23
+                    ?.TotalAmtDeemedLtcg,
               },
               totalLongTerm:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
