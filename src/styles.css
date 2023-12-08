@@ -461,9 +461,11 @@ header {
 /* Style the left aside ends */
 
 .subTx{
-  font-size:12px;
-  color:#f1f1f1;
+  font-size:14px;
+  color:#ACACAC;
+  
 }
+
 
 /* Bread Crumb Css */
   .rectangleB {
@@ -1256,10 +1258,18 @@ main {
     margin: 25px;
 }
 
+.hglt {
+  background-color: #F0F7FF;
+}
+
+.hgltfrm {
+  background-color: #DDEDFF!important;
+}
 .surBx1{
-  border-bottom: 1px solid #DADADA;
+  border: 1px solid #e9e5e5;
   padding: 10px;
   display: block;
+  margin: 15px;
 }
 
 .txHdg{
@@ -1459,6 +1469,30 @@ main {
     justify-content: space-between;
     padding: 14px 0px 0px 14px;
   }
+  .hdTxMnTp {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0px 0px 20px 0px;
+    background-color: #f8f8f8;
+}
+.hdTxMnBt {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 15px 0px 20px 20px;
+  background-color: #ffffff;
+}
+
+
+.spcR1{
+  margin-right:5px;
+}
+.spcR{
+  margin-right:10px;
+}
   .hdTxL{
     flex: 1; 
     font-weight:bold;
