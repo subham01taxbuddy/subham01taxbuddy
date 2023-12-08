@@ -56,7 +56,6 @@ export class GenericCsvService {
       if (name === 'assigned-sme-report') {
         this.mapAssignedSmeDetails(fields);
       }
-      debugger
       this.jsonToCsvService.downloadFile(this.data, fields, name);
     } else {
       this._toastMessageService.alert('error', "There is no records found");

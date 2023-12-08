@@ -246,6 +246,7 @@ export class SummaryComponent implements OnInit {
         OTHNOT89A?: any;
         OTH?: any;
         Increliefus89AOS?: any;
+        specialRate?: any;
       };
       otherIncomeTotal: number;
     };
@@ -2395,6 +2396,15 @@ export class SummaryComponent implements OnInit {
                 Increliefus89AOS:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.Increliefus89AOS,
+
+                specialRate: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleOS?.IncOthThanOwnRaceHorse?.OthersGrossDtls?.filter(
+                  (element) => element.SourceDescription === '5A1aiii'
+                ).reduce(
+                  (total, element) => total + (element.SourceAmount || 0),
+                  0
+                ),
               },
 
               otherIncomeTotal:
