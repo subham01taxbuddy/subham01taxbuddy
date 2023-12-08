@@ -1,19 +1,20 @@
 
-import {Component, HostListener, Optional} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
+import { Component, HostListener, Optional } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
-import {MatDialog, MatDialogState} from "@angular/material/dialog";
-import {ConfirmDialogComponent} from "./modules/shared/components/confirm-dialog/confirm-dialog.component";
-import {EMPTY, from, Observable} from "rxjs";
-import { Messaging, onMessage , getToken } from "@angular/fire/messaging";
-import {filter, share, tap} from "rxjs/operators";
-import {IdleService} from "./services/idle-service";
-import {NavbarService} from "./services/navbar.service";
-import {HttpClient} from "@angular/common/http";
+import { MatDialog, MatDialogState } from "@angular/material/dialog";
+import { ConfirmDialogComponent } from "./modules/shared/components/confirm-dialog/confirm-dialog.component";
+import { EMPTY, from, Observable } from "rxjs";
+import { Messaging, onMessage, getToken } from "@angular/fire/messaging";
+import { filter, share, tap } from "rxjs/operators";
+import { IdleService } from "./services/idle-service";
+import { NavbarService } from "./services/navbar.service";
+import { HttpClient } from "@angular/common/http";
 import Auth from '@aws-amplify/auth';
 import { environment } from 'src/environments/environment';
 import { UtilsService } from './services/utils.service';
 import { UserMsService } from './services/user-ms.service';
+import * as moment from 'moment';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -25,9 +26,10 @@ export class AppComponent {
 
   token$: Observable<any> = EMPTY;
   message$: Observable<any> = EMPTY;
-  dialogRef:any;
-  loading=false;
+  dialogRef: any;
+  loading = false;
   timedOut = false;
+  loginSmeDetails: any;
 
   constructor(
     private router: Router,
@@ -39,6 +41,8 @@ export class AppComponent {
     private userMsService: UserMsService,
     @Optional() messaging: Messaging
   ) {
+    this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
+
     this.router.events
       .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
       .subscribe(event => {
@@ -48,11 +52,11 @@ export class AppComponent {
         ) {
           this.timedOut = sessionStorage.getItem('timedOut') === '1';
           console.log('in app router subscribe:', event.url);
-          if(event.url === '/'){
+          if (event.url === '/') {
             this.router.navigate(['/login']);
             return;
           }
-          if(this.timedOut){
+          if (this.timedOut) {
             this.logout();
             this.smeLogout();
           }
@@ -69,28 +73,28 @@ export class AppComponent {
       console.log('got it');
       this.token$ = from(
         navigator.serviceWorker.register('firebase-messaging-sw.js', { type: 'module', scope: '__' }).
-        then(serviceWorkerRegistration => {
-          Notification.requestPermission().then(permission => {
-            if (permission == "granted") {
-              getToken(messaging, {
-                serviceWorkerRegistration,
-                // vapidKey: environment.vapidKey,
-              }).then((value) => {
-                console.log('recvd token as=> ', value);
-                sessionStorage.setItem('webToken', value);
-              }).catch(error => {
-                console.log("error", error.code);
-                if (error.code === 'messaging/permission-blocked') {
-                  // alert("Yay!!!");
-                }
-              })
-            } else {
-              alert("Click the icon to the left of address bar and enable notifications.")
-            }
+          then(serviceWorkerRegistration => {
+            Notification.requestPermission().then(permission => {
+              if (permission == "granted") {
+                getToken(messaging, {
+                  serviceWorkerRegistration,
+                  // vapidKey: environment.vapidKey,
+                }).then((value) => {
+                  console.log('recvd token as=> ', value);
+                  sessionStorage.setItem('webToken', value);
+                }).catch(error => {
+                  console.log("error", error.code);
+                  if (error.code === 'messaging/permission-blocked') {
+                    // alert("Yay!!!");
+                  }
+                })
+              } else {
+                alert("Click the icon to the left of address bar and enable notifications.")
+              }
+            })
           })
-        })
       ).pipe(
-        tap(token => console.log('FCM', {token})),
+        tap(token => console.log('FCM', { token })),
         share()
       );
 
@@ -111,23 +115,35 @@ export class AppComponent {
       this.timedOut = false;
       console.log('im awake!');
     });
+    this.mangeFilerSessionAtDayChange();
+  }
+
+  mangeFilerSessionAtDayChange() {
+    if (this.loginSmeDetails?.length && this.loginSmeDetails[0].roles.includes('ROLE_FILER')) {
+      debugger
+      let currentTime = moment().valueOf()
+      let startOfDayTime = moment().startOf('day').valueOf()
+      if (currentTime === startOfDayTime) {
+        this.utilsService.manageFilerLoginSession(this.loginSmeDetails[0].userId);
+      }
+    }
   }
 
   @HostListener('window:beforeunload')
   onBeforeUnload() {
     console.log('in page unload');
-    if(this.timedOut) {
+    if (this.timedOut) {
       this.logout();
       this.smeLogout();
     }
     return false;
   }
 
-  handleIdleTimeout(){
+  handleIdleTimeout() {
     if (this.dialogRef && this.dialogRef.getState() === MatDialogState.OPEN) {
       return;
     }
-     this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Idle Timeout!',
         message: 'You have been logged out due to inactivity. Please login again.',
@@ -142,7 +158,7 @@ export class AppComponent {
       this.logout();
       this.smeLogout();
     });
-    this.dialogRef.backdropClick().subscribe(()=>{
+    this.dialogRef.backdropClick().subscribe(() => {
       console.log('logging out');
       this.logout();
       this.smeLogout();
@@ -168,18 +184,18 @@ export class AppComponent {
 
   }
 
-  smeLogout(){
+  smeLogout() {
     // 'https://uat-api.taxbuddy.com/user/sme-login?inActivityTime=30&smeUserId=11079'
     let inActivityTime = environment.idleTimeMins;
     let smeUserId = this.utilsService.getLoggedInUserID();
     let param = `/sme-login?inActivityTime=${inActivityTime}&smeUserId=${smeUserId}&selfLogout=false`;
 
-    this.userMsService.postMethod(param, '').subscribe((response:any)=>{
+    this.userMsService.postMethod(param, '').subscribe((response: any) => {
       this.loading = false;
 
     }, (error) => {
       this.loading = false;
-      console.log('error in sme Logout API',error)
+      console.log('error in sme Logout API', error)
     })
   }
 
@@ -196,7 +212,7 @@ export class AppComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'YES') {
         window.location.reload();
-        navigator.serviceWorker.getRegistration('/').then(function(registration) {
+        navigator.serviceWorker.getRegistration('/').then(function (registration) {
           registration.update();
         });
       }

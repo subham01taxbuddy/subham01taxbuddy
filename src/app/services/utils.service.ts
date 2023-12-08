@@ -921,6 +921,23 @@ export class UtilsService {
     this.userMsService.postMethod(param, request).subscribe((res) => {});
   }
 
+  manageFilerLoginSession(userId: any){
+     //https://uat-api.taxbuddy.com/user/sme-login?smeUserId=7002
+     let token = sessionStorage.getItem('webToken');
+     let query = ''
+     if (token) {
+       query = `&firebaseWebToken=${token}`;
+     }
+     const param = `/sme-login?smeUserId=${userId}${query}`;
+     this.userMsService.postMethod(param).subscribe((res: any) => {
+       if (res.success) {
+         console.log('sme login registered successfully');
+       } else {
+         console.log('login', res);
+       }
+     });
+  }
+
   getMyCallingNumber() {
     const loggedInSmeInfo = JSON.parse(
       sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO) ?? ''
