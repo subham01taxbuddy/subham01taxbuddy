@@ -710,10 +710,27 @@ export class SummaryComponent implements OnInit {
     amountPayable: number;
     amountRefund: number;
     ScheduleAMT?: {
-      TotalIncItemPartBTI: any;
-      DeductionClaimUndrAnySec: any;
-      AdjustedUnderSec115JC: any;
-      TaxPayableUnderSec115JC: any;
+      TotalIncItemPartBTI?: any;
+      DeductionClaimUndrAnySec?: any;
+      AdjustedUnderSec115JC?: any;
+      TaxPayableUnderSec115JC?: any;
+    };
+    ScheduleAMTC?: {
+      ScheduleAMTCDtls?: [
+        {
+          AssYr?: any;
+          Gross?: any;
+          AmtCreditSetOfEy?: any;
+          AmtCreditBalBroughtFwd?: any;
+          AmtCreditUtilized?: any;
+          BalAmtCreditCarryFwd?: any;
+        }
+      ];
+      TaxSection115JC?: any;
+      TaxOthProvisions?: any;
+      AmtTaxCreditAvailable?: any;
+      TotAmtCreditUtilisedCY?: any;
+      AmtLiabilityAvailable?: any;
     };
     exemptIncome: {
       partnerFirms: [
@@ -3804,10 +3821,46 @@ export class SummaryComponent implements OnInit {
                 ?.Refund?.RefundDue,
 
             ScheduleAMT: {
-              TotalIncItemPartBTI: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT?.TotalIncItemPartBTI,
-              DeductionClaimUndrAnySec: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT?.DeductionClaimUndrAnySec,
-              AdjustedUnderSec115JC: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT?.AdjustedUnderSec115JC,
-              TaxPayableUnderSec115JC: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT?.TaxPayableUnderSec115JC,
+              TotalIncItemPartBTI:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT
+                  ?.TotalIncItemPartBTI,
+              DeductionClaimUndrAnySec:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT
+                  ?.DeductionClaimUndrAnySec,
+              AdjustedUnderSec115JC:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT
+                  ?.AdjustedUnderSec115JC,
+              TaxPayableUnderSec115JC:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT
+                  ?.TaxPayableUnderSec115JC,
+            },
+
+            ScheduleAMTC: {
+              ScheduleAMTCDtls: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.ScheduleAMTC?.ScheduleAMTCDtls.map((element) => ({
+                AssYr: element?.AssYr,
+                Gross: element?.Gross,
+                AmtCreditSetOfEy: element?.AmtCreditSetOfEy,
+                AmtCreditBalBroughtFwd: element?.AmtCreditBalBroughtFwd,
+                AmtCreditUtilized: element?.AmtCreditUtilized,
+                BalAmtCreditCarryFwd: element?.BalAmtCreditCarryFwd,
+              })),
+              TaxSection115JC:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMTC
+                  ?.TaxSection115JC,
+              TaxOthProvisions:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMTC
+                  ?.TaxOthProvisions,
+              AmtTaxCreditAvailable:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMTC
+                  ?.AmtTaxCreditAvailable,
+              TotAmtCreditUtilisedCY:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMTC
+                  ?.TotAmtCreditUtilisedCY,
+              AmtLiabilityAvailable:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMTC
+                  ?.AmtLiabilityAvailable,
             },
 
             exemptIncome: {
