@@ -218,8 +218,8 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         cellRenderer: (data: any) => {
-          if (data.value) {
-            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+          if (data?.value) {
+            return data?.value;
           } else {
             return '-';
           }
