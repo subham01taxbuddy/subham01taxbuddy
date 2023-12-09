@@ -188,6 +188,7 @@ export class SummaryComponent implements OnInit {
           TIN?: any;
         }
       ];
+      Status?: any;
     };
     salary: {
       employers: [
@@ -923,6 +924,10 @@ export class SummaryComponent implements OnInit {
               panNumber:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
                   ?.PAN,
+
+              Status:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.Status,
 
               email:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
@@ -2252,6 +2257,10 @@ export class SummaryComponent implements OnInit {
               panNumber:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
                   ?.PersonalInfo?.PAN,
+
+              Status:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.Status,
 
               email:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1

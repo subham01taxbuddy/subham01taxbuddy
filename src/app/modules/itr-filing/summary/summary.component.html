@@ -99,6 +99,22 @@
               finalCalculations?.personalInfo?.Address
             }}</span>
           </div>
+
+          
+          <hr />
+          <!-- status -->
+          <div
+            *ngIf="finalCalculations?.personalInfo?.Status"
+            class="txBt"
+            style="border-bottom: none"
+          >
+            <span class="txLf">Status:</span
+            ><span class="txMuLf">{{
+              finalCalculations?.personalInfo?.Status === "H"
+                ? "HUF"
+                : "INDIVIDUAL"
+            }}</span>
+          </div>
         </div>
         <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">
           <!-- DOB -->
