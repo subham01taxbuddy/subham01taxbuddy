@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="mrgArdTog">
   <mat-accordion class="headers-align">
     <mat-expansion-panel [expanded]="!dataOnLoad">
@@ -7,7 +7,6 @@
           <mat-icon> arrow_forward_ios </mat-icon>
           Filter - My Users (All Services):
         </mat-panel-title>
-        <!-- Added some disable button Implementation pending -->
         <div class="col-sm-8"
           *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
           <button class="tbd-btn bulk spRt col-sm-4" style="float:right"
@@ -71,25 +70,18 @@
     </mat-expansion-panel>
   </mat-accordion>
 </div>
-<!-- New Open Close Filter Ends -->
+
 
 
 
 <div class="main clearfix">
-  <!-- Container -->
-  <!-- Top card Ends -->
-  <!-- Below Table Starts -->
+
   <div class="tableSpc">
     <div class="row">
       <div class="col-sm-9 row">
         <div class="txTit col-sm-4">
           User Details:
         </div>
-        <!-- <div class="col-sm-5">
-          <button class="tbd-btn spRt aprv mt" *ngIf="showReassignmentBtn.length && config.totalItems > 1"
-            (click)="actionWithReassignment()">
-            Action with Re-assignment </button>
-        </div> -->
       </div>
       <div class="col-sm-3">
         <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
@@ -101,22 +93,105 @@
 
     <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
       (rowClicked)="onUsersRowClicked($event)">
-      <!--    paginationPageSize=15 pagination=true-->
+
     </ag-grid-angular>
 
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  </div>
+</div> -->
 
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div class="main clearfix">
+  <div class="main-1">
+    <div class="row rowClr-1">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-8">
+            <div class="filter-box">
+              <div class="row">
+                <div class="col-sm-12 bckClr">
+                  <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, 1)"
+                  (sendPrincipleIndividual)="fromSme($event, 2)" (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
+                </div>
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-3 spsTp">
+                      <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+                        [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
+                    </div>
+                    <div *ngIf="itrStatus" class="col-sm-3 spsTp">
+                      <label class="input__label" for="attr">Select Status </label>
+                      <mat-form-field appearance="outline">
+                        <mat-select placeholder="" [(ngModel)]="searchParam.statusId">
+                          <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
+                            {{ status.statusName }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-6 spsTp">
+                      <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                        (onChange)="searchByObject($event)"></app-generic-user-filter>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="button-container">
+              <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+              </button>
+              <button class="clrLnk-1" (click)="this.resetFilters()">
+                Clear form
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tableSpc mt-3">
+      <div class="row">
+        <div class="col-sm-12 ">
+          <div class="row">
+            <div class="col-sm-5">
+              <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                (onChange)="sortByObject($event)"></app-generic-sorting>
+            </div>
+            <div class="col-sm-7" *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
+              <button class="bulk-buttons bulk spRt" style="float:right"
+              (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk Re-Assignment to Filer</span></button>
+              <button class="bulk-buttons bulk spRt" style="float:right"
+              (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk Re-Assignment to Leader</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="row">
+          <div class="col-sm-9 row">
+            <div class="table-info-text col-sm-4">
+              User Details based on search:
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
+          </div>
+        </div>
+        <table>
+          <tr *ngFor="let item of userInfo | paginate:config"></tr>
+        </table>
 
+        <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
+          (rowClicked)="onUsersRowClicked($event)">
 
+        </ag-grid-angular>
+
+        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+      </div>
+    </div>
 
   </div>
 
-  <!-- <ng-template cdkConnectedOverlay [cdkConnectedOverlayOpen]="isChatOpen"> -->
-    <!-- <button (click)="closeChat()"> <i class="fa fa-close"></i> </button>
-    <iframe class='chat-overlay' src='https://dashboard-proxy.kommunicate.io/login?showConversationSectionOnly=true'
-      id='custom-dashboard'></iframe> -->
-
-
-  <!-- </ng-template> -->
-
 </div>
+
