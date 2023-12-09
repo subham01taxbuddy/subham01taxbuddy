@@ -769,6 +769,10 @@ export class SummaryComponent implements OnInit {
       };
       TotalTaxAttributedAmt?: any;
     };
+    SeventhProvisio139?: any;
+    AmtSeventhProvisio139ii?: any;
+    AmtSeventhProvisio139iii?: any;
+    clauseiv7provisio139iDtls?: any;
   };
   natureOfBusiness: any = [];
   business44adDetails: any = [];
@@ -2139,6 +2143,19 @@ export class SummaryComponent implements OnInit {
             amountRefund:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.Refund
                 ?.RefundDue,
+
+            SeventhProvisio139:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.SeventhProvisio139,
+            AmtSeventhProvisio139ii:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139ii,
+            AmtSeventhProvisio139iii:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139iii,
+            clauseiv7provisio139iDtls:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.clauseiv7provisio139iDtls,
 
             exemptIncome: {
               partnerFirms: [
