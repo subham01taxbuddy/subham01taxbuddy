@@ -20,7 +20,7 @@
           <mat-label style="margin-left: 110px; font-size: 14px;font-weight: bold;"> Select Account Type </mat-label>
             <div class="radio-group">
               <mat-radio-group [formControl]="accountType">
-                <mat-radio-button value="current">Current account</mat-radio-button>&nbsp; &nbsp;
+                <mat-radio-button [disabled]="true" value="current">Current account</mat-radio-button>&nbsp; &nbsp;
                 <mat-radio-button value="razorpayX">RazorpayX</mat-radio-button>
               </mat-radio-group>
             </div>
