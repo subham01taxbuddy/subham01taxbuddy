@@ -26,7 +26,7 @@ export class PayProcessingComponent implements OnInit {
   downloadURL:any;
   hideDownload = false;
   showMessage ='';
-  accountType = new FormControl('current')
+  accountType = new FormControl('razorpayX')
   currentAccountNumber: string = '333005001704';
   razorpayXAccountNumber: string = '3434696314924813';
 

@@ -11,6 +11,7 @@ import { Location } from "@angular/common";
 import { ReportService } from 'src/app/services/report-service';
 import { Router } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { Observable, map, startWith } from 'rxjs';
 
 
 export const MY_FORMATS = {
@@ -95,6 +96,7 @@ export class ConvertToExtPartnerComponent implements OnInit {
   hideSectionForAdmin: boolean;
   smeDetails: any;
   isBankDetailsFormChange: boolean;
+  filteredLeaders: Observable<any[]>;
   leaderList: any;
 
   constructor(
@@ -471,23 +473,47 @@ export class ConvertToExtPartnerComponent implements OnInit {
       this.smeObj[serviceType] = null;
     }
   }
+  leaderOptions: User[] = [];
+  leaderNames: User[];
+
 
   getLeaders() {
     // 'https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000?leader=true' \
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
     this.reportService.getMethod(param).subscribe((result: any) => {
-      console.log('new leader list result -> ', result);
       this.leaderList = result.data;
-      // this.leaderNames = this.leaderList.map((item) => {
-      //   return { name: item.name, userId: item.userId };
-      // });
-      // this.leaderOptions = this.leaderNames
-      // this.setFilteredLeaders();
+      this.leaderNames = this.leaderList.map((item) => {
+        return { name: item.name, userId: item.userId };
+      });
+      this.leaderOptions = this.leaderNames
+      this.setFilteredLeaders();
     }, error => {
       this.utilsService.showSnackBar('Error in API of get leader list');
     })
 
+  }
+
+  setFilteredLeaders() {
+    this.filteredLeaders = this.parentName.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        if (!this.utilsService.isNonEmpty(value)) {
+        }
+        const name = typeof value === 'string' ? value : value?.name;
+        return name
+          ? this._filter(name as string, this.leaderOptions)
+          : this.leaderOptions.slice();
+      })
+    );
+  }
+
+  private _filter(name: string, options): User[] {
+    const filterValue = name.toLowerCase();
+
+    return options.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
+    );
   }
 
   otherSmeInfo: FormGroup = this.fb.group({

@@ -1135,7 +1135,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     disposable.afterClosed().subscribe(result => {
       if (result) {
         if (result.data === "statusChanged") {
-          this.searchParam.page = 0;
+          // this.searchParam.page = 0;
           this.search();
         }
       }
