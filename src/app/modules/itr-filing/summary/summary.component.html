@@ -99,6 +99,22 @@
               finalCalculations?.personalInfo?.Address
             }}</span>
           </div>
+
+          
+          <hr />
+          <!-- status -->
+          <div
+            *ngIf="finalCalculations?.personalInfo?.Status"
+            class="txBt"
+            style="border-bottom: none"
+          >
+            <span class="txLf">Status:</span
+            ><span class="txMuLf">{{
+              finalCalculations?.personalInfo?.Status === "H"
+                ? "HUF"
+                : "INDIVIDUAL"
+            }}</span>
+          </div>
         </div>
         <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">
           <!-- DOB -->
@@ -6421,8 +6437,8 @@
                     *ngIf="
                       !ITR_JSON.isItrSummaryJsonEdited &&
                       ITR_JSON.itrSummaryJson
-                      "
-                      #ScheduleAMTC
+                    "
+                    #ScheduleAMTC
                   >
                     <mat-expansion-panel-header class="newclass">
                       <div
@@ -6591,6 +6607,223 @@
                         finalCalculations?.ScheduleAMTC?.AmtLiabilityAvailable
                       }}</span>
                     </div>
+                  </mat-expansion-panel>
+
+                  <!-- ESOP -->
+                  <mat-expansion-panel
+                    class="color-panel accordion-border"
+                    *ngIf="
+                      !ITR_JSON.isItrSummaryJsonEdited &&
+                      ITR_JSON.itrSummaryJson
+                    "
+                    #ScheduleESOP
+                  >
+                    <mat-expansion-panel-header class="newclass">
+                      <div
+                        class="font80"
+                        style="width: 100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                      >
+                        <div class="nav nav-stacked">
+                          <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
+                            32. Schedule ESOP
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="AdjAr">
+                              <mat-icon *ngIf="!ScheduleESOP.expanded"
+                                >keyboard_arrow_down
+                              </mat-icon>
+                              <mat-icon *ngIf="ScheduleESOP.expanded"
+                                >keyboard_arrow_up
+                              </mat-icon>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-expansion-panel-header>
+
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      style="margin-bottom: 0px"
+                    >
+                      <thead class="table-header">
+                        <tr class="table-head">
+                          <th style="font-weight: bold" colspan="1" rowspan="3">
+                            1. Sr. No
+                          </th>
+                          <th style="font-weight: bold" colspan="1" rowspan="3">
+                            2. Assessment Year
+                          </th>
+                          <th style="font-weight: bold" colspan="1" rowspan="3">
+                            3. Amount of Tax deferred brought forward from
+                            earlier A.Y.
+                          </th>
+                          <th style="font-weight: bold" colspan="5" rowspan="1">
+                            4. Has any of the following events occurred during
+                            the previous year relevant to current assessment
+                            year
+                          </th>
+                          <th style="font-weight: bold" colspan="1" rowspan="3">
+                            7. Amount of tax payable in the current Assessment
+                            Year
+                          </th>
+                          <th style="font-weight: bold" colspan="1" rowspan="3">
+                            8. Balance amount of tax deferred to be carried
+                            forward to the next Assessment years Col (3 − 7)
+                          </th>
+                        </tr>
+                        <tr>
+                          <th style="font-weight: bold" colspan="2" rowspan="1">
+                            Such specified security or sweat equity shares were
+                            sold (Specify the date and amount of tax attributed
+                            to such sale out of Col 3)
+                          </th>
+                          <th style="font-weight: bold" colspan="2" rowspan="1">
+                            Ceased to be the employee of the employer who
+                            allotted or transferred such specified security or
+                            sweat equity share?
+                          </th>
+                          <th style="font-weight: bold" colspan="1" rowspan="2">
+                            6. Forty-eight months have expired from the end of
+                            the relevant assessment year in which specified
+                            security or sweat equity shares referred to in the
+                            said *clause were allotted. If yes, specify date
+                          </th>
+                        </tr>
+                        <tr>
+                          <th style="font-weight: bold" colspan="1" rowspan="1">
+                            (4i) Option Selected
+                          </th>
+                          <th style="font-weight: bold" colspan="1" rowspan="1">
+                            (4ii) Total Amount of Tax Attributed out of the sale
+                          </th>
+                          <th style="font-weight: bold" colspan="1" rowspan="1">
+                            (5i) Option selected
+                          </th>
+                          <th style="font-weight: bold" colspan="1" rowspan="1">
+                            (5ii) Date of Ceased to be employee
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr>
+                          <td>
+                            {{ 1 }}
+                          </td>
+                          <td>
+                            {{ 2021 + "-" + 22 }}
+                          </td>
+                          <td>
+                            {{ 0 }}
+                          </td>
+                          <td></td>
+                          <td>
+                            {{ 0 }}
+                          </td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            {{ 0 }}
+                          </td>
+                          <td>
+                            {{ 0 }}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            {{ 2 }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleESOP
+                                ?.ScheduleESOP2223_Type?.AssessmentYear
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleESOP
+                                ?.ScheduleESOP2223_Type?.TaxDeferredBFEarlierAY
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleESOP
+                                ?.ScheduleESOP2223_Type?.ScheduleESOPEventDtls
+                                ?.SecurityType
+                            }}
+                          </td>
+                          <td>
+                            {{finalCalculations?.ScheduleESOP?.ScheduleESOP2223_Type?.ScheduleESOPEventDtls?.ScheduleESOPEventDtlsType?.[0]?.TaxAttributedAmt}}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleESOP
+                                ?.ScheduleESOP2223_Type?.ScheduleESOPEventDtls
+                                ?.CeasedEmployee
+                            }}
+                          </td>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleESOP
+                                ?.ScheduleESOP2223_Type?.TaxPayableCurrentAY
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleESOP
+                                ?.ScheduleESOP2223_Type?.BalanceTaxCF
+                            }}
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td>
+                            {{ 3 }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleESOP
+                                ?.ScheduleESOP2324_Type?.AssessmentYear
+                            }}
+                          </td>
+                          <td></td>
+                          <td></td>
+                          <td>
+                          </td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+
+                        <tr>
+                          <td>
+                          </td>
+                          <td>
+                            {{ "Total" }}
+                          </td>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleESOP
+                                ?.TotalTaxAttributedAmt
+                            }}
+                          </td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </mat-expansion-panel>
 
                   <!-- *********************** Exempt Income ************************ -->
