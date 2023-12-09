@@ -2,11 +2,7 @@
   [show]="loading"
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
-<div
-  class="card__title"
-  style="padding: 10px; font-size: 20px"
-  (click)="downloadXML()"
->
+<div class="card__title" style="padding: 15px; font-size: 20px">
   Personal Details
 </div>
 
@@ -53,39 +49,6 @@
               finalCalculations?.personalInfo?.resStatus
             }}</span>
           </div>
-          <!-- jurisdiction details for nri, nor  -->
-          <div
-            class="txBt"
-            *ngIf="
-              finalCalculations?.personalInfo?.resStatus === 'Non-Resident' ||
-              finalCalculations?.personalInfo?.resStatus ===
-                'Non-Ordinary Resident'
-            "
-          >
-            <span class="txLf">Jurisdiction of Residence: </span>
-            <br />
-            <span
-              class="txMuLf"
-              style="margin: 0%"
-              *ngFor="
-                let jurisdiction of finalCalculations?.personalInfo
-                  ?.JurisdictionResPrevYrDtls;
-                let i = index
-              "
-            >
-              <div>
-                <span> {{ i + 1 }}. </span>
-
-                <span>
-                  {{ jurisdiction?.JurisdictionResidence }}
-                </span>
-
-                <span>
-                  {{ jurisdiction?.TIN }}
-                </span>
-              </div>
-            </span>
-          </div>
           <div class="txBt">
             <span class="txLf">Return Type:</span
             ><span class="txMuLf">{{
@@ -100,7 +63,6 @@
             }}</span>
           </div>
 
-          
           <hr />
           <!-- status -->
           <div
@@ -164,6 +126,41 @@
             ><span class="txMuLf">{{
               finalCalculations?.personalInfo?.bankAccountNumber
             }}</span>
+          </div>
+          <hr />
+
+          <!-- jurisdiction details for nri, nor  -->
+          <div
+            class="txBt"
+            *ngIf="
+              finalCalculations?.personalInfo?.resStatus === 'Non-Resident' ||
+              finalCalculations?.personalInfo?.resStatus ===
+                'Non-Ordinary Resident'
+            "
+          >
+            <span class="txLf">Jurisdiction of Residence: </span>
+            <br />
+            <span
+              class="txMuLf"
+              style="margin: 0%"
+              *ngFor="
+                let jurisdiction of finalCalculations?.personalInfo
+                  ?.JurisdictionResPrevYrDtls;
+                let i = index
+              "
+            >
+              <div>
+                <span> {{ i + 1 }}. </span>
+
+                <span>
+                  {{ jurisdiction?.JurisdictionResidence }}
+                </span>
+
+                <span>
+                  {{ jurisdiction?.TIN }}
+                </span>
+              </div>
+            </span>
           </div>
         </div>
 
@@ -241,6 +238,68 @@
             }}.00 of your tax return into your bank account number.
             <b>{{ bankArray?.accountNumber }}</b>
           </p>
+        </div>
+      </div>
+
+      <div
+        *ngIf="finalCalculations?.SeventhProvisio139 === 'Y'"
+        class="card__title"
+        style="padding: 10px; font-size: 20px"
+      >
+        Other Details
+      </div>
+
+      <div *ngIf="finalCalculations?.SeventhProvisio139 === 'Y'">
+        <div class="card__title" style="padding: 10px; font-size: 15px">
+          Seventh Provisio Details
+        </div>
+
+        <div
+          class="bxHed flex justify-between"
+          style="margin: 0px; border: 1px solid rgba(59, 130, 246, 0.1)"
+        >
+          <div>
+            Have you incurred expenditure of an amount or aggregate of amount
+            exceeding Rs. 2 lakhs for travel to a foreign country for yourself
+            or for any other person?
+          </div>
+          <div style="float: right">
+            {{ finalCalculations?.AmtSeventhProvisio139ii }}
+          </div>
+        </div>
+
+        <div
+          class="bxHed flex justify-between"
+          style="margin: 0px; border: 1px solid rgba(59, 130, 246, 0.1)"
+        >
+          <div>
+            Have you incurred expenditure of amount or aggregate of amount
+            exceeding Rs. 1 lakh on consumption of electricity during the
+            previous year?
+          </div>
+          <div style="float: right">
+            {{ finalCalculations?.AmtSeventhProvisio139iii }}
+          </div>
+        </div>
+
+        <div
+          class="bxHed flex justify-between"
+          style="margin: 0px; border: 1px solid rgba(59, 130, 246, 0.1)"
+          *ngFor="
+            let clauseIV of finalCalculations?.clauseiv7provisio139iDtls;
+            let i = index
+          "
+        >
+          <div>
+            {{
+              clauseIV?.clauseiv7provisio139iNature === "1"
+                ? "The aggregate of tax deducted at source and tax collected at source during the previous year, in the case of the person, is twenty-five thousand rupees or more(fifty thousand for resident senior citizen)"
+                : "The deposit in one or more savings bank account of the person, in aggregate, is fifty lakh rupees or more, in the previous year"
+            }}
+          </div>
+          <div style="float: right">
+            {{ clauseIV?.clauseiv7provisio139iAmount }}
+          </div>
         </div>
       </div>
     </div>
@@ -6793,8 +6852,7 @@
                           </td>
                           <td></td>
                           <td></td>
-                          <td>
-                          </td>
+                          <td></td>
                           <td></td>
                           <td></td>
                           <td></td>
@@ -6803,8 +6861,7 @@
                         </tr>
 
                         <tr>
-                          <td>
-                          </td>
+                          <td></td>
                           <td>
                             {{ "Total" }}
                           </td>
