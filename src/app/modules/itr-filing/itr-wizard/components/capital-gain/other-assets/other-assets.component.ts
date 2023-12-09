@@ -447,8 +447,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     });
     this.goldCg.assetDetails = this.goldCg.assetDetails.filter(
       (asset) =>
-        !selected.includes(asset?.srn) &&
-        asset.isIndexationBenefitAvailable !== true
+        !selected.includes(asset?.srn)
     );
     this.assetList = this.assetList.filter((asset) => asset?.hasEdit != true);
 

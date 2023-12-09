@@ -2218,5 +2218,5 @@ function getCFL(cfl: any): number {
 }
 
 function getCgQuarterWise(capitalGains: Array<any>, taxRate: number, startDate: string, endDate: string) {
-  return capitalGains.filter(item=>item.taxRate === taxRate && item.sellDate>=startDate && item.sellDate<endDate).reduce((total, element) => total + (Math.abs(element?.belAdjustmentAmount)+element?.cgIncome || 0), 0);
+  return capitalGains.filter(item=>item.taxRate === taxRate && item.sellDate>=startDate && item.sellDate<endDate && (Math.abs(item?.belAdjustmentAmount)+item?.cgIncome) > 0).reduce((total, element) => total + (Math.abs(element?.belAdjustmentAmount)+element?.cgIncome || 0), 0);
 }

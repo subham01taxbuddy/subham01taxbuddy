@@ -15,6 +15,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { MaterialModule } from '../shared/material.module';
 import { SharedModule } from '../shared/shared.module';
 import { SmeManagementNewRoutingModule } from './sme-management-new.routing';
+import { ConvertToExtPartnerComponent } from './components/resigned-sme/convert-to-ext-partner/convert-to-ext-partner.component';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { SmeManagementNewRoutingModule } from './sme-management-new.routing';
     UnassignedSmeComponent,
     EditUpdateUnassignedSmeComponent,
     EditUpdateAssignedSmeComponent,
-    EditUpdateResignedSmeComponent
+    EditUpdateResignedSmeComponent,
+    ConvertToExtPartnerComponent
   ]
 })
 export class SmeManagementNewModule { }

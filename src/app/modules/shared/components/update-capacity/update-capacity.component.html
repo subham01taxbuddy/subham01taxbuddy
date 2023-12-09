@@ -1,0 +1,30 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="row">
+    <h5>Update <span><span style="color: rgb(106, 123, 237);">{{data.mode}}</span> Capacity</span>
+
+        <button style="float: right" (click)="updateCapacity(false)"><i class="fa fa-close"></i></button>
+    </h5>
+
+</div>
+<hr class="hrAdj">
+<div class="col-sm-12">
+    <div class="card" style="margin-top: 10px;">
+        <b style="font-size: 18px">Cases Limit for ITR Filers (Work Load):</b>
+        <div class="row">
+            <section class="example-section">
+                <div *ngFor="let limit of caseLimit" class="case-limit-checkbox">
+                    <p>
+                        <mat-checkbox [formControl]="getCaseLimitControl(limit.key)"
+                            (change)="onCaseLimitCheckboxChange($event,limit.key)">
+                            <span class="spacer">{{ limit.key }}</span>
+                        </mat-checkbox>
+                    </p>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div class="col-sm-12" style="margin-right: 25px; text-align: center;">
+    <button mat-raised-button color="primary" (click)="updateCapacity(true)">Update</button>
+</div>
