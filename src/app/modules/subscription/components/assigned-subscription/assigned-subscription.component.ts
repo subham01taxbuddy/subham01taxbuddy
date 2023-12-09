@@ -297,7 +297,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           this.config.totalItems = response.data.totalElements;
           this.cacheManager.initializeCache(response.data.content);
 
-          const currentPageNumber = pageNo + 1;
+          const currentPageNumber = response?.data?.number + 1;
           this.cacheManager.cachePageContent(currentPageNumber, response.data.content);
           this.config.currentPage = currentPageNumber;
 
@@ -841,7 +841,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
             //   'User number ': subscription.mobileNumber,
             // });
             this._toastMessageService.alert('success', 'Subscription will be Canceled/Deleted onces your Leader Approves it.');
-            this.getAssignedSubscription(0)
+            this.getAssignedSubscription(this.config.currentPage);
           },
           (error) => {
             this.loading = false;
@@ -958,11 +958,13 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     if (pageContent) {
       this.subscriptionListGridOptions.api?.setRowData(this.createRowData(pageContent));
       this.config.currentPage = event;
+      this.searchParam.page = event-1;
     } else {
+      this.searchParam.page = event - 1;
       this.config.currentPage = event;
-      this.searchParam.page = event - 1
+      // this.searchParam.page = event - 1
       // this.selectedPageNo = event - 1;
-      this.getAssignedSubscription(event - 1, '', '', 'fromPageChange');
+      this.getAssignedSubscription(event, '', '', 'fromPageChange');
     }
   }
 
