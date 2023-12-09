@@ -1,8 +1,7 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
   move
   away from the page...</span>
-<!-- New Open Close Filter Starts -->
 <div class="mrgArdTog2">
   <mat-accordion class="headers-align">
     <mat-expansion-panel [expanded]="!dataOnLoad">
@@ -17,18 +16,19 @@
           <div class="row">
             <div class="col-sm-12 bckClr">
               <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
-              (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+                (sendPrincipleIndividual)="fromSme($event,false, true)"
+                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
 
             <div class="col-sm-4 ">
               <mat-label>Select Role</mat-label>
               <mat-form-field appearance="outline">
-                  <mat-select (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
-                    [ngClass]="{'error': showError && (selectRole.invalid || !searchVal)}">
-                    <mat-option *ngFor="let drop of selectRoleFilter" [value]="drop.value" (click)="getRoleValue(drop)">
-                     {{ drop.name }}
-                    </mat-option>
-                  </mat-select>
+                <mat-select (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
+                  [ngClass]="{'error': showError && (selectRole.invalid || !searchVal)}">
+                  <mat-option *ngFor="let drop of selectRoleFilter" [value]="drop.value" (click)="getRoleValue(drop)">
+                    {{ drop.name }}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
 
@@ -85,8 +85,7 @@
     </mat-expansion-panel>
   </mat-accordion>
 </div>
-<!-- New Open Close Filter Ends -->
-<!-- Table Below -->
+
 <div class="tableSpc">
   <div class="row">
     <div class="col-sm-8">
@@ -94,9 +93,7 @@
         Daily Calling Reports Details:
       </div>
     </div>
-    <!-- <div class="col-sm-4">
-  <div class="count"> Total Count: <b>{{ totalReports }}</b></div>
-  </div> -->
+
   </div>
 
   <table>
@@ -107,5 +104,114 @@
   </ag-grid-angular>
   <div *ngIf="config.totalItems > 1">
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  </div>
+</div> -->
+
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
+  move
+  away from the page...</span>
+<div class="">
+  <div class="main-1">
+    <div class="row rowClr-1">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-7">
+            <div class="filter-box">
+              <div class="row">
+                <div class="col-sm-12 bckClr">
+                  <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, 1)"
+                  (sendPrincipleIndividual)="fromSme($event, 2)" (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
+                </div>
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-4 ">
+                      <mat-label>Select Role</mat-label>
+                      <mat-form-field appearance="outline">
+                        <mat-select (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
+                          [ngClass]="{'error': showError && (selectRole.invalid || !searchVal)}">
+                          <mat-option *ngFor="let drop of selectRoleFilter" [value]="drop.value" (click)="getRoleValue(drop)">
+                            {{ drop.name }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-4 spsTp">
+                      <mat-form-field appearance="outline">
+                        <mat-label>From Date</mat-label>
+                        <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxStartDate"
+                          autocomplete="off" (dateChange)="setToDateValidation(startDate.value)" />
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 spsTp">
+                      <mat-form-field appearance="outline">
+                        <mat-label>To Date</mat-label>
+                        <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxDate"
+                          autocomplete="off" />
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                        <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="button-container">
+              <button class="srch-btn-1" (click)="showReports()">
+                <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+              </button>
+              <button class="dwldBtn-1" [disabled]="loading"
+                *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')"
+                (click)="downloadReport()">
+                <i class="fa fa-download" aria-hidden="true"></i> Download File
+              </button>
+              <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tableSpc mt-3">
+      <div class="row">
+        <div class="col-sm-12 ">
+          <div class="row">
+            <div class="col-sm-5">
+              <app-generic-sorting [sortingParameter]="sortMenus"
+                  (onChange)="sortByObject($event)"></app-generic-sorting>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="row">
+          <div class="col-sm-9 row">
+            <div class="table-info-text col-sm-4">
+              Daily Calling Reports Details:
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
+          </div>
+        </div>
+        <table>
+          <tr *ngFor="let item of dailyCallingReport | paginate:config"></tr>
+        </table>
+
+        <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="dailyCallingReportGridOptions">
+
+        </ag-grid-angular>
+
+        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+      </div>
+    </div>
   </div>
 </div>
