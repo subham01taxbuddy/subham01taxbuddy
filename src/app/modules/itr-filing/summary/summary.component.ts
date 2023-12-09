@@ -246,6 +246,7 @@ export class SummaryComponent implements OnInit {
         OTHNOT89A?: any;
         OTH?: any;
         Increliefus89AOS?: any;
+        specialRate?: any;
       };
       otherIncomeTotal: number;
     };
@@ -364,6 +365,17 @@ export class SummaryComponent implements OnInit {
           }
         ];
         ShortTermSplRateDTAATotal: number;
+        shortTermDeemed?: [
+          {
+            PrvYrInWhichAsstTrnsfrd?: any;
+            SectionClmd?: any;
+            YrInWhichAssetAcq?: any;
+            AmtUtilized?: any;
+            AmtUnutilized?: any;
+          }
+        ];
+        AmtDeemedStcg?: any;
+        TotalAmtDeemedStcg?: any;
       };
       totalShortTerm: number;
       longTerm: {
@@ -394,6 +406,17 @@ export class SummaryComponent implements OnInit {
           }
         ];
         LongTermSplRateDTAATotal: number;
+        longTermDeemed?: [
+          {
+            PrvYrInWhichAsstTrnsfrd?: any;
+            SectionClmd?: any;
+            YrInWhichAssetAcq?: any;
+            AmtUtilized?: any;
+            AmtUnutilized?: any;
+          }
+        ];
+        AmtDeemedLtcg?: any;
+        TotalAmtDeemedLtcg?: any;
       };
       totalLongTerm: number;
       crypto: {
@@ -686,6 +709,29 @@ export class SummaryComponent implements OnInit {
     };
     amountPayable: number;
     amountRefund: number;
+    ScheduleAMT?: {
+      TotalIncItemPartBTI?: any;
+      DeductionClaimUndrAnySec?: any;
+      AdjustedUnderSec115JC?: any;
+      TaxPayableUnderSec115JC?: any;
+    };
+    ScheduleAMTC?: {
+      ScheduleAMTCDtls?: [
+        {
+          AssYr?: any;
+          Gross?: any;
+          AmtCreditSetOfEy?: any;
+          AmtCreditBalBroughtFwd?: any;
+          AmtCreditUtilized?: any;
+          BalAmtCreditCarryFwd?: any;
+        }
+      ];
+      TaxSection115JC?: any;
+      TaxOthProvisions?: any;
+      AmtTaxCreditAvailable?: any;
+      TotAmtCreditUtilisedCY?: any;
+      AmtLiabilityAvailable?: any;
+    };
     exemptIncome: {
       partnerFirms: [
         {
@@ -2395,6 +2441,15 @@ export class SummaryComponent implements OnInit {
                 Increliefus89AOS:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.Increliefus89AOS,
+
+                specialRate: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleOS?.IncOthThanOwnRaceHorse?.OthersGrossDtls?.filter(
+                  (element) => element.SourceDescription === '5A1aiii'
+                ).reduce(
+                  (total, element) => total + (element.SourceAmount || 0),
+                  0
+                ),
               },
 
               otherIncomeTotal:
@@ -2597,18 +2652,28 @@ export class SummaryComponent implements OnInit {
                     capitalGain:
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                         'PartB-TI'
-                      ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                      ]?.CapGain?.ShortTerm?.ShortTermAppRate -
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCGFor23?.ShortTermCapGainFor23
+                        ?.TotalAmtDeemedStcg,
                     Deduction: 0,
                     netCapitalGain:
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                         'PartB-TI'
-                      ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                      ]?.CapGain?.ShortTerm?.ShortTermAppRate -
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCGFor23?.ShortTermCapGainFor23
+                        ?.TotalAmtDeemedStcg,
                   },
                 ],
                 ShortTermAppSlabRateTotal:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                     'PartB-TI'
-                  ]?.CapGain?.ShortTerm?.ShortTermAppRate,
+                  ]?.CapGain?.ShortTerm?.ShortTermAppRate -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCGFor23?.ShortTermCapGainFor23
+                    ?.TotalAmtDeemedStcg,
+
                 ShortTermSplRateDTAA: [
                   {
                     nameOfAsset: 'Short Term Capital Gains @ special rate DTAA',
@@ -2627,6 +2692,25 @@ export class SummaryComponent implements OnInit {
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                     'PartB-TI'
                   ]?.CapGain?.ShortTerm?.ShortTermSplRateDTAA,
+
+                shortTermDeemed: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleCGFor23?.ShortTermCapGainFor23?.UnutilizedCg?.UnutilizedCgPrvYrDtls?.map(
+                  (element) => ({
+                    PrvYrInWhichAsstTrnsfrd: element?.PrvYrInWhichAsstTrnsfrd,
+                    SectionClmd: element?.SectionClmd,
+                    YrInWhichAssetAcq: element?.YrInWhichAssetAcq,
+                    AmtUtilized: element?.AmtUtilized,
+                    AmtUnutilized: element?.AmtUnutilized,
+                  })
+                ),
+                AmtDeemedStcg:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCGFor23?.ShortTermCapGainFor23?.AmtDeemedStcg,
+                TotalAmtDeemedStcg:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCGFor23?.ShortTermCapGainFor23
+                    ?.TotalAmtDeemedStcg,
               },
               totalShortTerm:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
@@ -2657,18 +2741,26 @@ export class SummaryComponent implements OnInit {
                     capitalGain:
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                         'PartB-TI'
-                      ]?.CapGain?.LongTerm?.LongTerm20Per,
+                      ]?.CapGain?.LongTerm?.LongTerm20Per -
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCGFor23?.LongTermCapGain23
+                        ?.TotalAmtDeemedLtcg,
                     Deduction: 0,
                     netCapitalGain:
                       this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                         'PartB-TI'
-                      ]?.CapGain?.LongTerm?.LongTerm20Per,
+                      ]?.CapGain?.LongTerm?.LongTerm20Per -
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleCGFor23?.LongTermCapGain23
+                        ?.TotalAmtDeemedLtcg,
                   },
                 ],
                 LongTerm20PerTotal:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                     'PartB-TI'
-                  ]?.CapGain?.LongTerm?.LongTerm20Per,
+                  ]?.CapGain?.LongTerm?.LongTerm20Per -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCGFor23?.LongTermCapGain23?.TotalAmtDeemedLtcg,
                 LongTermSplRateDTAA: [
                   {
                     nameOfAsset: 'long Term Capital Gains @ special rate DTAA',
@@ -2687,6 +2779,25 @@ export class SummaryComponent implements OnInit {
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.[
                     'PartB-TI'
                   ]?.CapGain?.LongTerm?.LongTermSplRateDTAA,
+
+                // amount deemed income
+                longTermDeemed: this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleCGFor23?.LongTermCapGain23?.UnutilizedCg?.UnutilizedCgPrvYrDtls?.map(
+                  (element) => ({
+                    PrvYrInWhichAsstTrnsfrd: element?.PrvYrInWhichAsstTrnsfrd,
+                    SectionClmd: element?.SectionClmd,
+                    YrInWhichAssetAcq: element?.YrInWhichAssetAcq,
+                    AmtUtilized: element?.AmtUtilized,
+                    AmtUnutilized: element?.AmtUnutilized,
+                  })
+                ),
+                AmtDeemedLtcg:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCGFor23?.LongTermCapGain23?.AmtDeemedLtcg,
+                TotalAmtDeemedLtcg:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleCGFor23?.LongTermCapGain23?.TotalAmtDeemedLtcg,
               },
               totalLongTerm:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
@@ -3708,6 +3819,49 @@ export class SummaryComponent implements OnInit {
             amountRefund:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.Refund?.RefundDue,
+
+            ScheduleAMT: {
+              TotalIncItemPartBTI:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT
+                  ?.TotalIncItemPartBTI,
+              DeductionClaimUndrAnySec:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT
+                  ?.DeductionClaimUndrAnySec,
+              AdjustedUnderSec115JC:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT
+                  ?.AdjustedUnderSec115JC,
+              TaxPayableUnderSec115JC:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT
+                  ?.TaxPayableUnderSec115JC,
+            },
+
+            ScheduleAMTC: {
+              ScheduleAMTCDtls: this.ITR_JSON.itrSummaryJson['ITR'][
+                this.itrType
+              ]?.ScheduleAMTC?.ScheduleAMTCDtls?.map((element) => ({
+                AssYr: element?.AssYr,
+                Gross: element?.Gross,
+                AmtCreditSetOfEy: element?.AmtCreditSetOfEy,
+                AmtCreditBalBroughtFwd: element?.AmtCreditBalBroughtFwd,
+                AmtCreditUtilized: element?.AmtCreditUtilized,
+                BalAmtCreditCarryFwd: element?.BalAmtCreditCarryFwd,
+              })),
+              TaxSection115JC:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMTC
+                  ?.TaxSection115JC,
+              TaxOthProvisions:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMTC
+                  ?.TaxOthProvisions,
+              AmtTaxCreditAvailable:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMTC
+                  ?.AmtTaxCreditAvailable,
+              TotAmtCreditUtilisedCY:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMTC
+                  ?.TotAmtCreditUtilisedCY,
+              AmtLiabilityAvailable:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMTC
+                  ?.AmtLiabilityAvailable,
+            },
 
             exemptIncome: {
               partnerFirms: [

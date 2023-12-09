@@ -1680,6 +1680,99 @@
                       </tbody>
                     </table>
 
+                    <!-- Deemed short term gain -->
+                    <div
+                      class="bxHed"
+                      style="margin-top: 0px"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.shortTermDeemed?.length > 0
+                      "
+                    >
+                      Total amount deemed to be short term capital gain @ slab
+                      rate
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.TotalAmtDeemedStcg
+                      }}</span>
+                    </div>
+
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.shortTermDeemed?.length > 0
+                      "
+                      style="margin-bottom: 0px"
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Sr. No</th>
+                          <th style="font-weight: bold">
+                            Previous year in which asset transferred
+                          </th>
+                          <th style="font-weight: bold">
+                            Section under which deduction claimed in that year
+                          </th>
+                          <th style="font-weight: bold">
+                            Year in which asset is constructed
+                          </th>
+                          <th style="font-weight: bold">
+                            Amount utilised out of capital gains account
+                          </th>
+                          <th style="font-weight: bold">
+                            Amount not used for new asset or remained unutilised
+                            in capital gains account
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let deemedInc of finalCalculations?.capitalGain
+                              ?.shortTerm?.shortTermDeemed;
+                            let i = index
+                          "
+                        >
+                          <td>{{ i + 1 }}</td>
+                          <td>
+                            {{ deemedInc?.PrvYrInWhichAsstTrnsfrd }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ deemedInc?.SectionClmd }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ deemedInc?.YrInWhichAssetAcq }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ deemedInc?.AmtUtilized }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ deemedInc?.AmtUnutilized }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <div
+                      class="bxHed"
+                      style="margin-top: 0px"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.shortTerm
+                          ?.shortTermDeemed?.length > 0
+                      "
+                    >
+                      Amount deemed to be short term capital gain
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.shortTerm?.AmtDeemedStcg
+                      }}</span>
+                    </div>
+
                     <!-- short term -15 rate  -->
                     <div
                       class="bxHed"
@@ -1749,7 +1842,6 @@
                         </tr>
                       </tbody>
                     </table>
-
                     <!-- short term 30 rate  -->
                     <div
                       class="bxHed"
@@ -1981,7 +2073,7 @@
                       class="bxHed"
                       *ngIf="
                         finalCalculations?.capitalGain?.longTerm?.LongTerm20Per
-                          .length > 0
+                          ?.length > 0
                       "
                     >
                       Long term capital gain @ 20% rate
@@ -1994,7 +2086,7 @@
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
                         finalCalculations?.capitalGain?.longTerm?.LongTerm20Per
-                          .length > 0
+                          ?.length > 0
                       "
                     >
                       <thead>
@@ -2045,6 +2137,98 @@
                         </tr>
                       </tbody>
                     </table>
+
+                    <!-- Deemed long term gain -->
+                    <div
+                      class="bxHed"
+                      style="margin-top: 0px"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.longTerm?.longTermDeemed
+                          ?.length > 0
+                      "
+                    >
+                      Total amount deemed to be long term capital gain @ 20%
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.longTerm
+                          ?.TotalAmtDeemedLtcg
+                      }}</span>
+                    </div>
+
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.longTerm?.longTermDeemed
+                          ?.length > 0
+                      "
+                      style="margin-bottom: 0px"
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">Sr. No</th>
+                          <th style="font-weight: bold">
+                            Previous year in which asset transferred
+                          </th>
+                          <th style="font-weight: bold">
+                            Section under which deduction claimed in that year
+                          </th>
+                          <th style="font-weight: bold">
+                            Year in which asset is constructed
+                          </th>
+                          <th style="font-weight: bold">
+                            Amount utilised out of capital gains account
+                          </th>
+                          <th style="font-weight: bold">
+                            Amount not used for new asset or remained unutilised
+                            in capital gains account
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let deemedInc of finalCalculations?.capitalGain
+                              ?.longTerm?.longTermDeemed;
+                            let i = index
+                          "
+                        >
+                          <td>{{ i + 1 }}</td>
+                          <td>
+                            {{ deemedInc?.PrvYrInWhichAsstTrnsfrd }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ deemedInc?.SectionClmd }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ deemedInc?.YrInWhichAssetAcq }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ deemedInc?.AmtUtilized }}
+                          </td>
+                          <td>
+                            Rs.
+                            {{ deemedInc?.AmtUnutilized }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <div
+                      class="bxHed"
+                      style="margin-top: 0px"
+                      *ngIf="
+                        finalCalculations?.capitalGain?.longTerm?.longTermDeemed
+                          ?.length > 0
+                      "
+                    >
+                      Amount deemed to be long term capital gain
+                      <span style="float: right">{{
+                        finalCalculations?.capitalGain?.longTerm?.AmtDeemedLtcg
+                      }}</span>
+                    </div>
 
                     <!-- long term special rate  -->
                     <div
@@ -2199,7 +2383,7 @@
                       >
                         <div class="nav nav-stacked">
                           <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
-                            6. Income from Other Source
+                            5. Income from Other Source
                           </div>
                           <div class="col-lg-4 col-md-4 col-sm-4">
                             <div class="AdjAr1">
@@ -2731,6 +2915,24 @@
                                 utilsService.currencyFormatter(
                                   finalCalculations?.otherIncome?.otherIncomes
                                     ?.Increliefus89AOS
+                                )
+                              }}
+                            </td>
+                          </tr>
+
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.specialRate
+                            "
+                          >
+                            <td>Income at special rate</td>
+                            <td>
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                    ?.specialRate
                                 )
                               }}
                             </td>
@@ -6123,6 +6325,272 @@
                         </div>
                       </div>
                     </mat-expansion-panel-header>
+                  </mat-expansion-panel>
+
+                  <!-- *********************** Schedule AMT  ************************* -->
+                  <mat-expansion-panel
+                    class="color-panel accordion-border"
+                    *ngIf="
+                      !ITR_JSON.isItrSummaryJsonEdited &&
+                      ITR_JSON.itrSummaryJson
+                    "
+                    #scheduleAMT
+                  >
+                    <mat-expansion-panel-header class="newclass">
+                      <div
+                        class="font80"
+                        style="width: 100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                      >
+                        <div class="nav nav-stacked">
+                          <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
+                            31. Schedule AMT
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="AdjAr">
+                              <mat-icon *ngIf="!scheduleAMT.expanded"
+                                >keyboard_arrow_down
+                              </mat-icon>
+                              <mat-icon *ngIf="scheduleAMT.expanded"
+                                >keyboard_arrow_up
+                              </mat-icon>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-expansion-panel-header>
+
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold" colspan="1">
+                            1. Total Income as per PARTB-TI
+                          </th>
+                          <th style="font-weight: bold" colspan="1">
+                            2. Adjustment as per section 115JC(2) -
+                            <br />
+                            a. Deduction under C-deduction in respect of certain
+                            incomes under chapter VI-A
+                          </th>
+                          <th style="font-weight: bold" colspan="1">
+                            3. Adjusted total income under section 115JC(1)
+                          </th>
+                          <th style="font-weight: bold" colspan="1">
+                            4. Tax payable under section 115JC (18.5% of 3)
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleAMT
+                                ?.TotalIncItemPartBTI
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleAMT
+                                ?.DeductionClaimUndrAnySec
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleAMT
+                                ?.AdjustedUnderSec115JC
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleAMT
+                                ?.TaxPayableUnderSec115JC
+                            }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-expansion-panel>
+
+                  <!-- ScheduleAMTC -->
+                  <mat-expansion-panel
+                    class="color-panel accordion-border"
+                    *ngIf="
+                      !ITR_JSON.isItrSummaryJsonEdited &&
+                      ITR_JSON.itrSummaryJson
+                      "
+                      #ScheduleAMTC
+                  >
+                    <mat-expansion-panel-header class="newclass">
+                      <div
+                        class="font80"
+                        style="width: 100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                      >
+                        <div class="nav nav-stacked">
+                          <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
+                            32. Schedule AMTC
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="AdjAr">
+                              <mat-icon *ngIf="!ScheduleAMTC.expanded"
+                                >keyboard_arrow_down
+                              </mat-icon>
+                              <mat-icon *ngIf="ScheduleAMTC.expanded"
+                                >keyboard_arrow_up
+                              </mat-icon>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-expansion-panel-header>
+
+                    <div
+                      class="bxHed"
+                      style="
+                        margin: 0px;
+                        border: 1px solid rgba(59, 130, 246, 0.5);
+                      "
+                    >
+                      1. Tax under section 115JC in assessment year 2023-24
+                      <span style="float: right">{{
+                        finalCalculations?.ScheduleAMTC?.TaxSection115JC
+                      }}</span>
+                    </div>
+
+                    <div
+                      class="bxHed"
+                      style="
+                        margin: 0px;
+                        border: 1px solid rgba(59, 130, 246, 0.5);
+                      "
+                    >
+                      2. Tax under other provisions of the Act in assessment
+                      year 2023-24
+                      <span style="float: right">{{
+                        finalCalculations?.ScheduleAMTC?.TaxOthProvisions
+                      }}</span>
+                    </div>
+
+                    <div
+                      class="bxHed"
+                      style="
+                        margin: 0px;
+                        border: 1px solid rgba(59, 130, 246, 0.5);
+                      "
+                    >
+                      3. Amount of tax against which credit is available
+                      <span style="float: right">{{
+                        finalCalculations?.ScheduleAMTC?.AmtTaxCreditAvailable
+                      }}</span>
+                    </div>
+
+                    <div
+                      class="bxHed"
+                      style="
+                        margin: 0px;
+                        border: 1px solid rgba(59, 130, 246, 0.5);
+                      "
+                    >
+                      4. Utilisation of AMT credit Available (Sum of AMT credit
+                      utilized during the current year is subject to maximum of
+                      amount mentioned in 3 above and cannot exceed the sum of
+                      AMT Credit Brought Forward)
+                    </div>
+
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      style="margin-bottom: 0px"
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold" colspan="1">Sr. No</th>
+                          <th style="font-weight: bold" colspan="1">
+                            A. Assessment Year
+                          </th>
+                          <th style="font-weight: bold" colspan="1">
+                            B1. Gross - AMT Credit
+                          </th>
+                          <th style="font-weight: bold" colspan="1">
+                            B2. Set off in earlies assessment years - AMT Credit
+                          </th>
+                          <th style="font-weight: bold" colspan="1">
+                            B3. Balance brought forward to the current
+                            assessment year - AMT Credit
+                          </th>
+                          <th style="font-weight: bold" colspan="1">
+                            C. AMT Credit utilised during the current assessment
+                            year - AMT Credit
+                          </th>
+                          <th style="font-weight: bold" colspan="1">
+                            D. Balance AMT Credit carried forward - AMT Credit
+                            (D = D3 - C)
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr
+                          *ngFor="
+                            let amtc of finalCalculations?.ScheduleAMTC
+                              ?.ScheduleAMTCDtls;
+                            let i = index
+                          "
+                        >
+                          <td>
+                            {{ i + 1 }}
+                          </td>
+                          <td>
+                            {{ amtc?.AssYr }}
+                          </td>
+                          <td>
+                            {{ amtc?.Gross }}
+                          </td>
+                          <td>
+                            {{ amtc?.AmtCreditSetOfEy }}
+                          </td>
+                          <td>
+                            {{ amtc?.AmtCreditBalBroughtFwd }}
+                          </td>
+                          <td>
+                            {{ amtc?.AmtCreditUtilized }}
+                          </td>
+                          <td>
+                            {{ amtc?.BalAmtCreditCarryFwd }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div
+                      class="bxHed"
+                      style="
+                        margin: 0px;
+                        border: 1px solid rgba(59, 130, 246, 0.5);
+                      "
+                    >
+                      5. Amount of tax credit under section 115JD utilised
+                      during the year
+                      <span style="float: right">{{
+                        finalCalculations?.ScheduleAMTC?.TotAmtCreditUtilisedCY
+                      }}</span>
+                    </div>
+                    <div
+                      class="bxHed"
+                      style="
+                        margin: 0px;
+                        border: 1px solid rgba(59, 130, 246, 0.5);
+                      "
+                    >
+                      6. Amount of AMT liability available for credit in
+                      subsequent assessment years
+                      <span style="float: right">{{
+                        finalCalculations?.ScheduleAMTC?.AmtLiabilityAvailable
+                      }}</span>
+                    </div>
                   </mat-expansion-panel>
 
                   <!-- *********************** Exempt Income ************************ -->
