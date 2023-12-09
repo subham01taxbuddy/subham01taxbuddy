@@ -215,14 +215,15 @@
     position: relative;
     background: #E4E9F7;
     height: 100vh;
-    left: 260px;
-    width: calc(100% - 260px);
+    // left: 260px;
+    // width: calc(100% - 260px);
+    width:100%!important;
     transition: all 0.5s ease;
-    margin-right: 56px;
+    margin-right: 47px;
   }
   .sidebar.close ~ .home-section{
     left: 78px;
-    width: 100%;
+    width: 100%!important;
   }
   .home-section .home-content{
     height: 60px;
