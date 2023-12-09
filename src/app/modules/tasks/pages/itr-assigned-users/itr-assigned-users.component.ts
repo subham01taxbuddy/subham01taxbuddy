@@ -68,7 +68,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   searchMenus = [];
   clearUserFilter: number;
   partnerType: any;
-  unAssignedUsersView = new FormControl('');
+  unAssignedUsersView = new FormControl(false);
   disableCheckboxes = false;
 
   constructor(
@@ -1259,7 +1259,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       if (result) {
         if (result.data === "statusChanged") {
-          this.searchParam.page = 0;
+          // this.searchParam.page = 0;
           this.search();
         }
       }
@@ -1336,6 +1336,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
+    this.unAssignedUsersView.setValue(false);
     if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
       this.agentId = this.utilsService.getLoggedInUserID();
       this.filerId = this.filerId = this.agentId;
