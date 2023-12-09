@@ -22,10 +22,10 @@
     background-color:#ffffff;
     padding:15px;
     margin-top:15px;
-    box-shadow: 2px 5px #fafafa;
-    border:1px solid #eaeaea;
+    // box-shadow: 2px 5px #fafafa;
+    border:1px solid #ADD4FF;   
     height:auto;
-    box-shadow: 1px 2px #e4e4ff;
+    // box-shadow: 1px 2px #e4e4ff;
   }
   .radius2 {
     border-radius:8px;
@@ -41,22 +41,27 @@
   }
 
   .grTx {
-    color: #63b12d !important;
+    color: #494949 !important;
   }
   .grTx1 {
-    color: #63b12d !important;
+    color: #494949 !important;
     font-weight:600;
   }
   .grBk{
-    background-color: #f5ffeb;
+    // background-color: #f5ffeb;
+  }
+
+  .imgSiz{
+    width:75px;
+    height:auto;
   }
 
   .redTx {
-    color:#ff0000 !important;
+    color:#494949 !important;
     font-size:24px !important;
   }
   .redTx1 {
-    color:#ff0000 !important;
+    color:#494949 !important;
     // font-size:12px !important;
   }
   .OrgTx {
@@ -66,7 +71,7 @@
     background-color: #fffcf1;
   }
   .RedBk{
-    background-color: #fff9f2;
+    // background-color: #fff9f2;
   }
 
   // input {
@@ -111,7 +116,7 @@
 
   .numTxSm{
     font-size: 18px;
-    color: #04a4bc;
+    color: #494949;
     font-weight: bold;
   }
   .grytx {
