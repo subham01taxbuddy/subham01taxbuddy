@@ -4,9 +4,9 @@ import { NavigationEnd, Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { MatDialog, MatDialogState } from "@angular/material/dialog";
 import { ConfirmDialogComponent } from "./modules/shared/components/confirm-dialog/confirm-dialog.component";
-import { EMPTY, from, Observable } from "rxjs";
+import { EMPTY, from, Observable, Subscription, timer } from "rxjs";
 import { Messaging, onMessage, getToken } from "@angular/fire/messaging";
-import { filter, share, tap } from "rxjs/operators";
+import { filter, map, share, tap } from "rxjs/operators";
 import { IdleService } from "./services/idle-service";
 import { NavbarService } from "./services/navbar.service";
 import { HttpClient } from "@angular/common/http";
@@ -30,6 +30,7 @@ export class AppComponent {
   loading = false;
   timedOut = false;
   loginSmeDetails: any;
+  subscription: Subscription;
 
   constructor(
     private router: Router,
@@ -43,6 +44,7 @@ export class AppComponent {
   ) {
     this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
 
+    this.subscribeTimer();
     this.router.events
       .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
       .subscribe(event => {
@@ -115,7 +117,21 @@ export class AppComponent {
       this.timedOut = false;
       console.log('im awake!');
     });
-    this.mangeFilerSessionAtDayChange();
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  subscribeTimer() {
+    this.subscription = timer(0, 1000).pipe(map(() => new Date()), share())
+      .subscribe(time => {
+        let currentTime = moment(time).valueOf();
+        console.log('currentTime', currentTime)
+        this.mangeFilerSessionAtDayChange();
+      });
   }
 
   mangeFilerSessionAtDayChange() {
