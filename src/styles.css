@@ -517,7 +517,7 @@ header {
 
 /* center css starts */
 main {
-  margin: 0px 10px 0px 10px!important;
+  margin: 0px 10px 0px 0px!important;
   width: 100%;
 }
 
@@ -2499,7 +2499,7 @@ main {
   display: none;
   position: relative;
   bottom: 0;
-  top: 3px;
+  top: -16px;
   right: -16px;
   /* border: 3px solid #f1f1f1; */
   z-index: 9;
@@ -2518,7 +2518,7 @@ main {
 .aside-right {
   border-right: 1px solid #ededed;
   background: #ffffff;
-  flex: 1 0 0%;
+  /* flex: 1 0 0%; */
   padding: 1rem!important;
 }
     .frameS {
@@ -2721,7 +2721,7 @@ main {
         cursor: pointer;
         opacity: 0.8;
         position: fixed;
-        top: 85px;
+        top: 65px;
         right: -65px;
         width: 170px;
         height: 40px;
