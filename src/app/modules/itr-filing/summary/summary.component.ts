@@ -744,6 +744,30 @@ export class SummaryComponent implements OnInit {
     };
     giftExemptIncome?: number;
     profitShareAmount?: number;
+    ScheduleESOP?: {
+      ScheduleESOP2223_Type?: {
+        ScheduleESOPEventDtls?: {
+          ScheduleESOPEventDtlsType?: [
+            {
+              Date: any;
+              TaxAttributedAmt: any;
+            }
+          ];
+          SecurityType?: any;
+          CeasedEmployee?: any;
+        };
+        AssessmentYear?: any;
+        TaxDeferredBFEarlierAY?: any;
+        TotalTaxAttributedAmt22?: any;
+        TaxPayableCurrentAY?: any;
+        BalanceTaxCF?: any;
+      };
+      ScheduleESOP2324_Type?: {
+        AssessmentYear?: any;
+        BalanceTaxCF?: any;
+      };
+      TotalTaxAttributedAmt?: any;
+    };
   };
   natureOfBusiness: any = [];
   business44adDetails: any = [];
@@ -3861,6 +3885,59 @@ export class SummaryComponent implements OnInit {
               AmtLiabilityAvailable:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMTC
                   ?.AmtLiabilityAvailable,
+            },
+
+            ScheduleESOP: {
+              ScheduleESOP2223_Type: {
+                ScheduleESOPEventDtls: {
+                  ScheduleESOPEventDtlsType: this.ITR_JSON.itrSummaryJson[
+                    'ITR'
+                  ][
+                    this.itrType
+                  ]?.ScheduleESOP?.ScheduleESOP2223_Type?.ScheduleESOPEventDtls?.ScheduleESOPEventDtlsType?.map(
+                    (element) => ({
+                      Date: element?.Date,
+                      TaxAttributedAmt: element?.TaxAttributedAmt,
+                    })
+                  ),
+                  SecurityType:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleESOP?.ScheduleESOP2223_Type
+                      ?.ScheduleESOPEventDtls?.SecurityType,
+                  CeasedEmployee:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleESOP?.ScheduleESOP2223_Type
+                      ?.ScheduleESOPEventDtls?.CeasedEmployee,
+                },
+                AssessmentYear:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleESOP?.ScheduleESOP2223_Type?.AssessmentYear,
+                TaxDeferredBFEarlierAY:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleESOP?.ScheduleESOP2223_Type
+                    ?.TaxDeferredBFEarlierAY,
+                TotalTaxAttributedAmt22:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleESOP?.ScheduleESOP2223_Type
+                    ?.TotalTaxAttributedAmt22,
+                TaxPayableCurrentAY:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleESOP?.ScheduleESOP2223_Type?.TaxPayableCurrentAY,
+                BalanceTaxCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleESOP?.ScheduleESOP2223_Type?.BalanceTaxCF,
+              },
+              ScheduleESOP2324_Type: {
+                AssessmentYear:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleESOP?.ScheduleESOP2324_Type?.AssessmentYear,
+                BalanceTaxCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleESOP?.ScheduleESOP2324_Type?.BalanceTaxCF,
+              },
+              TotalTaxAttributedAmt:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleESOP
+                  ?.TotalTaxAttributedAmt,
             },
 
             exemptIncome: {
