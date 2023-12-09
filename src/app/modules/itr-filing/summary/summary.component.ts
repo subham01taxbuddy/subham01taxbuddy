@@ -3838,7 +3838,7 @@ export class SummaryComponent implements OnInit {
             ScheduleAMTC: {
               ScheduleAMTCDtls: this.ITR_JSON.itrSummaryJson['ITR'][
                 this.itrType
-              ]?.ScheduleAMTC?.ScheduleAMTCDtls.map((element) => ({
+              ]?.ScheduleAMTC?.ScheduleAMTCDtls?.map((element) => ({
                 AssYr: element?.AssYr,
                 Gross: element?.Gross,
                 AmtCreditSetOfEy: element?.AmtCreditSetOfEy,
