@@ -60,6 +60,7 @@ import { UpdateItrUFillingDialogComponent } from './components/update-ItrU-filli
 import { ValidationErrorScreenComponent } from './components/validation-error-screen/validation-error-screen.component';
 import { GenericSortingComponent } from './components/generic-sorting/generic-sorting.component';
 import { GenericUserFilterComponent } from './components/generic-user-filter/generic-user-filter.component';
+import { UpdateCapacityComponent } from './components/update-capacity/update-capacity.component';
 @NgModule({
   declarations: [
     UpperCaseDirective,
@@ -78,6 +79,7 @@ import { GenericUserFilterComponent } from './components/generic-user-filter/gen
     DocumentViewerComponent,
     FyDropDownComponent,
     ChangeStatusComponent,
+    UpdateCapacityComponent,
     SmeListDropDownComponent,
     CallReassignmentComponent,
     LayoutComponent,
@@ -145,6 +147,7 @@ import { GenericUserFilterComponent } from './components/generic-user-filter/gen
     DocumentViewerComponent,
     FyDropDownComponent,
     ChangeStatusComponent,
+    UpdateCapacityComponent,
     SmeListDropDownComponent,
     CallReassignmentComponent,
     NgxLoadingModule,
@@ -175,6 +178,7 @@ import { GenericUserFilterComponent } from './components/generic-user-filter/gen
     CallReassignmentComponent,
     UpdateManualFilingDialogComponent,
     AgTooltipComponent,
+    UpdateCapacityComponent
   ],
 })
 export class SharedModule {
