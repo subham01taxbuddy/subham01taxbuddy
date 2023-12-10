@@ -11,6 +11,7 @@ import { Location } from "@angular/common";
 import { ReportService } from 'src/app/services/report-service';
 import { Router } from '@angular/router';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { Observable, map, startWith } from 'rxjs';
 
 
 export const MY_FORMATS = {
@@ -30,13 +31,13 @@ export interface User {
 }
 
 @Component({
-  selector: 'app-edit-update-resigned-sme',
-  templateUrl: './edit-update-resigned-sme.component.html',
-  styleUrls: ['./edit-update-resigned-sme.component.scss'],
+  selector: 'app-convert-to-ext-partner',
+  templateUrl: './convert-to-ext-partner.component.html',
+  styleUrls: ['./convert-to-ext-partner.component.scss'],
   providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
-export class EditUpdateResignedSmeComponent implements OnInit {
+export class ConvertToExtPartnerComponent implements OnInit {
   smeObj: SmeObj;
   loading = false;
   rolesList: any[] = [];
@@ -95,6 +96,7 @@ export class EditUpdateResignedSmeComponent implements OnInit {
   hideSectionForAdmin: boolean;
   smeDetails: any;
   isBankDetailsFormChange: boolean;
+  filteredLeaders: Observable<any[]>;
   leaderList: any;
 
   constructor(
@@ -383,25 +385,25 @@ export class EditUpdateResignedSmeComponent implements OnInit {
 
   smeFormGroup: FormGroup = this.fb.group({
     mobileNumber: new FormControl(''),
-    name: new FormControl("",),
+    name: new FormControl("", [Validators.required]),
     smeOriginalEmail: new FormControl(''),
     languages: new FormControl(''),
     referredBy: new FormControl(''),
     itrTypes: new FormControl(''),
     qualification: new FormControl(''),
     state: new FormControl(''),
-    parentName: new FormControl(''),
+    parentName: new FormControl('', Validators.required),
     principalName: new FormControl(''),
     pin: new FormControl(''),
     city: new FormControl(''),
-    pan: new FormControl(''),
+    pan: new FormControl('', [Validators.required, Validators.pattern(AppConstants.panNumberRegex)]),
     gstin: new FormControl('')
   })
 
   bankDetailsFormGroup: FormGroup = this.fb.group({
-    accountType: [''],
-    ifsCode: [''],
-    accountNumber: [''],
+    accountType: ['', [Validators.required]],
+    ifsCode: ['', [Validators.required, Validators.maxLength(11), Validators.pattern(AppConstants.IFSCRegex)]],
+    accountNumber: ['', [Validators.required]],
   })
 
   get pan() {
@@ -471,23 +473,47 @@ export class EditUpdateResignedSmeComponent implements OnInit {
       this.smeObj[serviceType] = null;
     }
   }
+  leaderOptions: User[] = [];
+  leaderNames: User[];
+
 
   getLeaders() {
     // 'https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000?leader=true' \
     const loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     let param = `/bo/sme-details-new/${loggedInSmeUserId}?leader=true`;
     this.reportService.getMethod(param).subscribe((result: any) => {
-      console.log('new leader list result -> ', result);
       this.leaderList = result.data;
-      // this.leaderNames = this.leaderList.map((item) => {
-      //   return { name: item.name, userId: item.userId };
-      // });
-      // this.leaderOptions = this.leaderNames
-      // this.setFilteredLeaders();
+      this.leaderNames = this.leaderList.map((item) => {
+        return { name: item.name, userId: item.userId };
+      });
+      this.leaderOptions = this.leaderNames
+      this.setFilteredLeaders();
     }, error => {
       this.utilsService.showSnackBar('Error in API of get leader list');
     })
 
+  }
+
+  setFilteredLeaders() {
+    this.filteredLeaders = this.parentName.valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        if (!this.utilsService.isNonEmpty(value)) {
+        }
+        const name = typeof value === 'string' ? value : value?.name;
+        return name
+          ? this._filter(name as string, this.leaderOptions)
+          : this.leaderOptions.slice();
+      })
+    );
+  }
+
+  private _filter(name: string, options): User[] {
+    const filterValue = name.toLowerCase();
+
+    return options.filter((option) =>
+      option.name.toLowerCase().includes(filterValue)
+    );
   }
 
   otherSmeInfo: FormGroup = this.fb.group({
@@ -518,8 +544,120 @@ export class EditUpdateResignedSmeComponent implements OnInit {
     this.isBankDetailsFormChange = true;
   }
 
+  updateSmeDetails() {
+    if (this.smeObj['languages'].length) {
+      const lang = this.smeObj['languages'].filter(element => element === 'English')
+      if (!lang.length) {
+        this.smeObj['languages'].push('English');
+      }
+    } else {
+      this.smeObj['languages'] = ['English'];
+    }
+
+    if (!this.smeObj['inactivityTimeInMinutes']) {
+      this.utilsService.showSnackBar('Inactivity Time duration should not be null');
+      return;
+    }
+
+    if (!this.smeObj['activeCaseMaxCapacity']) {
+      this.utilsService.showSnackBar('Cases Limit for ITR Filers (Work Load) should not be zero');
+      return;
+    }
+
+    if (!this.smeObj?.['skillSetPlanIdList'] || this.smeObj?.['skillSetPlanIdList'].length === 0) {
+      this.utilsService.showSnackBar('Please select at least one ITR type');
+      return;
+    }
+
+    if (this.isBankDetailsFormChange || this.bankDetailsFormGroup.invalid) {
+      this.utilsService.showSnackBar('Please verify bank details to continue.');
+      return;
+    } else {
+      if (!this.smeObj?.['partnerDetails']) {
+        this.smeObj['partnerDetails'] = {};
+      }
+      if (!this.smeObj?.['partnerDetails'].bankDetails) {
+        this.smeObj['partnerDetails']['bankDetails'] = {
+          "accountType": this.bankDetailsFormGroup.controls['accountType'].value,
+          "ifsCode": this.bankDetailsFormGroup.controls['ifsCode'].value,
+          "name": this.validateBankDetails.name,
+          "accountNumber": this.bankDetailsFormGroup.controls['accountNumber'].value,
+          "countryName": "",
+          "branchName": this.validateBankDetails.bank_name,
+          "branchCity": this.validateBankDetails.city,
+          "id": null
+        }
+      } else {
+        this.smeObj['partnerDetails'].bankDetails.accountType = this.bankDetailsFormGroup.controls['accountType'].value;
+        this.smeObj['partnerDetails'].bankDetails.accountNumber = this.bankDetailsFormGroup.controls['accountNumber'].value;
+        this.smeObj['partnerDetails'].bankDetails.ifsCode = this.bankDetailsFormGroup.controls['ifsCode'].value;
+      }
+      this.smeObj['partnerDetails'].gstin = this.smeFormGroup.controls['gstin'].value;
+      this.smeObj['partnerDetails'].pan = this.smeFormGroup.controls['pan'].value;
+    }
+
+    if (this.smeFormGroup.valid) {
+      this.leaderList.forEach(element => {
+        if (this.smeFormGroup.controls['parentName'].value === element.name)
+          this.smeObj.parentId = element.userId;
+      });
+      this.smeObj.callingNumber = this.callingNumber.value;
+      this.smeObj.parentName = this.smeFormGroup.controls['parentName'].value;
+      this.serviceApiCall(this.smeObj);
+      setTimeout(() => {
+        if (this.updateSuccessful) {
+          this.loading = false;
+          this._toastMessageService.alert(
+            'success',
+            'Resigned sme converted to partner successfully'
+          );
+          this.location.back();
+        }
+      }, 500);
+    } else {
+      this.smeFormGroup.markAsDirty();
+      this.smeFormGroup.markAllAsTouched();
+    }
+  }
+
   cancelUpdate() {
     this.router.navigate(['/sme-management-new/resignedsme']);
+  }
+
+  updateSuccessful = false;
+  initialCall = false;
+
+  async serviceApiCall(requestData: any, initialCall = false): Promise<any> {
+    const userId = this.smeObj.userId;
+    // https://uat-api.taxbuddy.com/user/v2/resigned-sme-to-partner
+    console.log(userId);
+    const param = `/v2/resigned-sme-to-partner`;
+
+    this.loading = true;
+    this.updateSuccessful = true;
+    this.initialCall = initialCall;
+
+    try {
+      let res: any
+      res = await this.userMsService.putMethod(param, requestData).toPromise();
+      this.initialCall = true;
+      if (res.success) {
+        this.updateSuccessful = true;
+      } else {
+        this._toastMessageService.alert(
+          'false',
+          res.message
+        );
+
+        this.updateSuccessful = false;
+      }
+      return res; // return the response
+    } catch (error) {
+      this._toastMessageService.alert('error', 'failed to update.');
+      this.loading = false;
+      this.updateSuccessful = false;
+      throw error; // re-throw the error so that the calling function can handle it
+    }
   }
 
 

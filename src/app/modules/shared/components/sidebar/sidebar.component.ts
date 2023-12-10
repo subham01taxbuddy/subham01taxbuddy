@@ -2,6 +2,7 @@ import { Component, DoCheck } from '@angular/core';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { UtilsService } from '../../../../services/utils.service';
 import { Router } from '@angular/router';
+import {NavbarService} from "../../../../services/navbar.service";
 
 @Component({
   selector: 'app-sidebar',
@@ -56,7 +57,7 @@ export class SidebarComponent {
   menus: Menu[] = [
     {
       name: 'Partner Dashboard',
-      // iconClass: 'fa fa-globe',
+      icon: 'partners.png',
       active: false,
       url: '/dashboard',
       roles: ['ROLE_FILER'],
@@ -71,7 +72,7 @@ export class SidebarComponent {
     // },
     {
       name: 'Leader Dashboard',
-      // iconClass: 'fa fa-globe',
+      icon: 'dashboard.png',
       active: false,
       url: '/dashboard/leader',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
@@ -79,7 +80,7 @@ export class SidebarComponent {
     },
     {
       name: 'My Tasks',
-      // iconClass: 'fa fa-code',
+      icon: 'tasks.png',
       active: false,
       url: null,
       roles: [],
@@ -106,7 +107,7 @@ export class SidebarComponent {
     },
     {
       name: 'SME Management',
-      // iconClass: 'fa fa-mobile',
+      icon: 'sme-mgmt.png',
       active: false,
       url: null,
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
@@ -118,7 +119,7 @@ export class SidebarComponent {
     },
     {
       name: 'Subscription',
-      // iconClass: 'fa fa-globe',
+      icon: 'subscription.png',
       active: false,
       url: null,
       roles: [],
@@ -129,7 +130,7 @@ export class SidebarComponent {
     },
     {
       name: 'Invoice',
-      // iconClass: 'fa fa-globe',
+      icon: 'invoice.png',
       active: false,
       url: null,
       roles: [],
@@ -144,7 +145,7 @@ export class SidebarComponent {
     },
     {
       name: 'Payouts',
-      // iconClass: 'fa fa-code',
+      icon: 'payouts.png',
       active: false,
       url: null,
       roles: [],
@@ -156,7 +157,7 @@ export class SidebarComponent {
     },
     {
       name: 'Bulk Status Update',
-      // iconClass: 'fa fa-globe',
+      icon: 'bulk-update.png',
       active: false,
       url: '/pages/user-management/bulk-status-update',
       roles: ['ROLE_ADMIN'],
@@ -164,7 +165,7 @@ export class SidebarComponent {
     },
     {
       name: 'All Users',
-      // iconClass: 'fa fa-code',
+      icon: 'all-users.png',
       active: true,
       url: '/pages/user-management/users',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
@@ -172,7 +173,7 @@ export class SidebarComponent {
     },
     {
       name: 'Review',
-      // iconClass: 'fa fa-code',
+      icon: 'review.png',
       active: true,
       url: '/review',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
@@ -187,7 +188,7 @@ export class SidebarComponent {
     // },
     {
       name: 'Promo-Codes',
-      // iconClass: 'fa fa-code',
+      icon: 'promocode.png',
       active: true,
       url: '/promo-code',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
@@ -195,7 +196,7 @@ export class SidebarComponent {
     },
     {
       name: 'Academy Courses',
-      // iconClass: 'fa fa-code',
+      icon: 'academy.png',
       active: true,
       url: '/academy-courses',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
@@ -204,7 +205,7 @@ export class SidebarComponent {
 
     {
       name: 'Reports',
-      // iconClass: 'fa fa-code',
+      icon: '/menu/partner.png',
       active: false,
       url: null,
       roles: [],
@@ -221,6 +222,7 @@ export class SidebarComponent {
     },
     {
       name: 'Other Report', active: false, url: null, roles: ['ROLE_ADMIN'],
+      icon: '/menu/partner.png',
       submenu: [
         { name: 'Proforma Invoice', url: '/reports/proforma-invoice', roles: [] },
         { name: 'Payment Received', url: '/reports/payment-received', roles: [] },
@@ -229,6 +231,7 @@ export class SidebarComponent {
     },
     {
       name: 'Delete User Request',
+      icon: '/menu/partner.png',
       active: false,
       url: '/delete-user',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
@@ -264,6 +267,7 @@ export class SidebarComponent {
 
 export type Menu = {
   name: string,
+  icon: string,
   url: string | null,
   // iconClass: string,
   active: boolean,

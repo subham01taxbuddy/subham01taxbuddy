@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,6 +8,7 @@ import * as moment from 'moment';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import { UpdateCapacityComponent } from 'src/app/modules/shared/components/update-capacity/update-capacity.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -93,6 +93,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     private itrService: ItrMsService,
     private reportService: ReportService,
     private itrMsService: ItrMsService,
+    private dialog: MatDialog,
     @Inject(LOCALE_ID) private locale: string
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'));
@@ -594,7 +595,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
       { key: 'parentPrincipalUserId', value: 'Principal Name' },
       { key: 'roles', value: 'Role' },
       { key: 'services', value: 'Assigned Services' },
-      { key: 'session', value: 'Session' },
+      { key: 'serviceEligibility_ITR.assignmentStart', value: 'Session' },
       { key: 'languages', value: 'Language Proficiency' },
       { key: 'skillSetPlanIdList', value: 'ITR Capabilities' }
     ]
@@ -693,6 +694,7 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         headerName: 'Name',
         field: 'name',
         width: 130,
+        pinned: 'left',
         suppressMovable: true,
         filter: 'agTextColumnFilter',
         filterParams: {
@@ -702,6 +704,59 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         cellRenderer: function (params) {
           return `<span title="${params.value}">${params.value}</span>`;
         },
+      },
+      {
+        headerName: 'Active Capacity',
+        field: 'activeCaseMaxCapacity',
+        width: 110,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        cellRenderer: function (params: any) {
+          if (params.data.roles.includes('ROLE_FILER')) {
+            return `<button type="button" class="action_icon add_button" title="edit active capacity"
+          style="border: none; background: transparent; font-size: 13px;cursor: pointer !important;color:#04a4bc;" data-action-type="edit-active-capacity">
+          ${params.data.activeCaseMaxCapacity} </button>`;
+          } else {
+            return params.data.activeCaseMaxCapacity;
+          }
+        },
+      },
+      {
+        headerName: 'Balance Capacity',
+        field: 'balanceUserAssignmentCapacity',
+        width: 110,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Exhausted Capacity',
+        field: 'exhaustedCapacity',
+        width: 110,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+        cellRenderer: function (params) {
+          if (params?.data) {
+            const exhaustedCapacity = Number(params.data.activeCaseMaxCapacity) - Number(params.data.balanceUserAssignmentCapacity)
+            return exhaustedCapacity;
+          } else {
+            return '-';
+          }
+        }
       },
       {
         headerName: 'Calling No',
@@ -784,26 +839,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           }
         }
       },
-      // {
-      //   headerName: 'Roles',
-      //   field: 'roles',
-      //   width: 120,
-      //   display: 'flex',
-      //   suppressMovable: true,
-      //   wrapText: true,
-      //   autoHeight: true,
-      //   cellStyle: {
-      //     textAlign: 'left',
-      //     display: 'block',
-      //     margin: '0px 0px 0px 5px'
-      //   },
-      //   cellRenderer: (params: any) => {
-      //     // console.log('param',params)
-      //     const items = params?.value;
-      //     const itemsHtml = items?.map(item => `<li>${item}</li>`)?.join('');
-      //     return `<ul>${itemsHtml}</ul>`;
-      //   }
-      // },
       {
         headerName: 'Role',
         field: 'role',
@@ -831,97 +866,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           return `<span>${role}</span>`;
         }
       },
-
-      // {
-      //   headerName: 'Assigned Services',
-      //   field: 'services',
-      //   width: 120,
-      //   display: 'block',
-      //   suppressMovable: true,
-      //   wrapText: true,
-      //   autoHeight: true,
-      //   // cellStyle: {
-      //   //   'white-space': 'normal',
-      //   //   'overflow-wrap': 'break-word',
-      //   //   textAlign: 'center',
-      //   //   // display: 'flex',
-      //   //   // 'align-items': 'center',
-      //   //   // 'justify-content': 'center',
-      //   // },
-      //   cellRenderer: (params: any) => {
-      //     const smeServices = params?.value;
-      //     let result = []; let result1 = ''; let result2 = ''; let result3 = ''; let result4 = ''; let result5 = ''; let result6 = ''; let result7 = ''; let result8 = '';
-      //     smeServices?.forEach((element) => {
-      //       if (element?.serviceType == "ITR") {
-      //         var r1 = 'ITR';
-      //         let r2 = '';
-      //         if (element?.assignmentStart == true) {
-      //           r2 = '<i class="fa fa-check-circle" aria-hidden="true" ></i>&nbsp;'
-      //         }
-      //         result1 = r2 + r1;
-      //       }
-      //       else if (element?.serviceType == "NRI") {
-      //         var r1 = 'NRI';
-      //         let r2 = '';
-      //         if (element?.assignmentStart == true) {
-      //           r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
-      //         }
-      //         result2 = (r2 + r1) || '';
-      //       }
-      //       else if (element?.serviceType == "TPA") {
-      //         var r1 = 'TPA';
-      //         let r2 = '';
-      //         if (element?.assignmentStart == true) {
-      //           r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
-      //         }
-      //         result3 = r2 + r1;
-      //       }
-      //       else if (element?.serviceType == "GST") {
-      //         var r1 = 'GST';
-      //         let r2 = '';
-      //         if (element?.assignmentStart == true) {
-      //           r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
-      //         }
-      //         result4 = r2 + r1;
-      //       }
-      //       else if (element?.serviceType == "NOTICE") {
-      //         var r1 = 'NOTICE';
-      //         let r2 = '';
-      //         if (element?.assignmentStart == true) {
-      //           r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i> &nbsp;'
-      //         }
-      //         result5 = r2 + r1;
-      //       }
-      //       else if (element?.serviceType == "WB") {
-      //         var r1 = 'WB';
-      //         let r2 = '';
-      //         if (element?.assignmentStart == true) {
-      //           r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
-      //         }
-      //         result6 = r2 + r1;
-      //       }
-      //       else if (element?.serviceType == "PD") {
-      //         var r1 = 'PD';
-      //         let r2 = '';
-      //         if (element?.assignmentStart == true) {
-      //           r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
-      //         }
-      //         result7 = r2 + r1;
-      //       }
-      //       else if (element?.serviceType == "MF") {
-      //         var r1 = 'MF';
-      //         let r2 = '';
-      //         if (element?.assignmentStart == true) {
-      //           r2 = '<i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;'
-      //         }
-      //         result8 = r2 + r1;
-      //       }
-      //     })
-      //     result.push(result1, result2, result3, result4, result5, result6, result7, result8);
-      //     const itemsHtml = result?.map(item => `<li>${item}</li>`)?.join('');
-      //     return `<ul class="services-list"><span class="content">${itemsHtml}</span></ul>`;
-      //   }
-      // },
       {
         headerName: 'Assigned Services',
         field: 'services',
@@ -1088,8 +1032,30 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           this.call(params.data);
           break;
         }
+        case 'edit-active-capacity': {
+          this.editActiveCapacity(params.data);
+        }
       }
     }
+  }
+
+  editActiveCapacity(data) {
+    let disposable = this.dialog.open(UpdateCapacityComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        mode: 'Active',
+        data: data
+      }
+    })
+
+    disposable.afterClosed().subscribe(result => {
+      if (result) {
+        if (result) {
+          this.advanceSearch();
+        }
+      }
+    });
   }
 
   editAddSme(sme) {

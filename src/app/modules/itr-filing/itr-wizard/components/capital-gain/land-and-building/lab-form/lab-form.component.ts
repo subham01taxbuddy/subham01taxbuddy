@@ -507,7 +507,7 @@ export class LabFormComponent implements OnInit {
       underSection: [obj?.underSection || null],
       purchaseDate: [obj?.purchaseDate || null, [Validators.required]],
       costOfNewAssets: [obj?.costOfNewAssets || null, [Validators.required]],
-      investmentInCGAccount: [obj?.investmentInCGAccount || null],
+      investmentInCGAccount: [obj ? obj.investmentInCGAccount : null],
       totalDeductionClaimed: [obj?.totalDeductionClaimed || null],
     });
   }
@@ -1308,8 +1308,8 @@ export class LabFormComponent implements OnInit {
 
   deleteDeduction(index) {
     console.log('Remove Index', index);
-    const deductions = <FormArray>this.immovableForm.get('deductions');
-    deductions.removeAt(index);
+    let deductions = <FormArray>this.immovableForm.get('deductions');
+    deductions.controls = deductions.controls.filter((element:  FormGroup)=> !element.controls['selected'].value);
     console.log(deductions.length);
 
     if (deductions.length === 0) {
@@ -1585,48 +1585,58 @@ export class LabFormComponent implements OnInit {
   }
 
   calculateDeduction(index, singleCg?) {
+    if(this.deductionValidation()){
+      return;
+    }
     const assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
     ).controls[0] as FormGroup;
     console.log(this.currentCgIndex);
 
-    const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
-      .controls[index] as FormGroup;
+    // const deductionForm = (<FormArray>this.immovableForm.get('deductions'))
+    //   .controls[index] as FormGroup;
 
     let saleValue = assetDetails.controls['valueInConsideration'].value
-      ? assetDetails.controls['valueInConsideration'].value
-      : 0;
+        ? assetDetails.controls['valueInConsideration'].value
+        : 0;
     let expenses = assetDetails.controls['sellExpense'].value
-      ? assetDetails.controls['sellExpense'].value
-      : 0;
+        ? assetDetails.controls['sellExpense'].value
+        : 0;
+
+    let capitalGainDeductions = [];
+    (<FormArray>this.immovableForm.get('deductions')).controls.forEach((form: FormGroup) => {
+      capitalGainDeductions.push({
+        deductionSection: `SECTION_${form.controls['underSection'].value}`,
+        costOfNewAsset: form.controls['costOfNewAssets'].value,
+        cgasDepositedAmount:
+        form.controls['investmentInCGAccount'].value,
+        saleValue: saleValue,
+        expenses: expenses,
+      })
+    });
+
     const param = '/calculate/capital-gain/deduction';
     let request = {
       capitalGain:
         this.cgArrayElement?.assetDetails[this.currentCgIndex]
           ?.cgBeforeDeduction,
-      capitalGainDeductions: [
-        {
-          deductionSection: `SECTION_${deductionForm.controls['underSection'].value}`,
-          costOfNewAsset: deductionForm.controls['costOfNewAssets'].value,
-          cgasDepositedAmount:
-            deductionForm.controls['investmentInCGAccount'].value,
-          saleValue: saleValue,
-          expenses: expenses,
-        },
-      ],
+      capitalGainDeductions: capitalGainDeductions,
     };
     this.itrMsService.postMethod(param, request).subscribe(
       (result: any) => {
         console.log('Deductions result=', result);
         if (result?.success) {
-          let finalResult = result.data.filter(
-            (item) =>
-              item.deductionSection ===
-              `SECTION_${deductionForm.controls['underSection'].value}`
-          )[0];
-          deductionForm.controls['totalDeductionClaimed'].setValue(
-            finalResult?.deductionAmount
-          );
+          (<FormArray>this.immovableForm.get('deductions')).controls.forEach((form: FormGroup) => {
+            let finalResult = result.data.filter(
+                (item) =>
+                    item.deductionSection ===
+                    `SECTION_${form.controls['underSection'].value}`
+            )[0];
+            form.controls['totalDeductionClaimed'].setValue(
+                finalResult?.deductionAmount
+            );
+          });
+
           if (singleCg === 'singleCg') {
             this.calculateCapitalGain(
               this.immovableForm,
@@ -1635,7 +1645,7 @@ export class LabFormComponent implements OnInit {
             );
           }
         } else {
-          deductionForm.controls['totalDeductionClaimed'].setValue(0);
+          // deductionForm.controls['totalDeductionClaimed'].setValue(0);
         }
       },
       (error) => {

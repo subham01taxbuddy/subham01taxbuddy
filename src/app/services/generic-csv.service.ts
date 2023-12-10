@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JsonToCsvService } from '../modules/shared/services/json-to-csv.service';
-import { Observable, Subject } from 'rxjs';
 import { ToastMessageService } from './toast-message.service';
 import { UtilsService } from './utils.service';
 
@@ -16,6 +15,7 @@ export class GenericCsvService {
   count: number;
   roles: any;
   smeList: any;
+  allPlanDetails: any;
   constructor(
     private httpClient: HttpClient,
     private jsonToCsvService: JsonToCsvService,
@@ -23,12 +23,12 @@ export class GenericCsvService {
     private utilsService: UtilsService,
   ) {
     this.roles = this.utilsService.getUserRoles();
-    this.smeList = JSON.parse(sessionStorage.getItem('SME_LIST'))
+    this.smeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
+    this.allPlanDetails = JSON.parse(sessionStorage.getItem('ALL_PLAN_LIST'));
   }
 
   async downloadReport(baseUrl: string, param: string, page: number, name: any, fields?: any, sortBy?: any) {
     let sortJson = encodeURI(JSON.stringify(sortBy));
-    // var subject = new Subject<boolean>();
     let paramUrl = param;
     if (page == 0) {
       this.data = [];
@@ -51,32 +51,80 @@ export class GenericCsvService {
     }
     if (this.data.length) {
       if (name === 'Filed-ITR') {
-        this.mapUserIdToName();
+        this.mapFiledItrDetails();
+      }
+      if (name === 'assigned-sme-report') {
+        this.mapAssignedSmeDetails(fields);
       }
       this.jsonToCsvService.downloadFile(this.data, fields, name);
     } else {
       this._toastMessageService.alert('error', "There is no records found");
       return
     }
-    // subject.next(true);
-    // return subject.asObservable();
   }
 
-  mapUserIdToName() {
-    debugger
+  mapFiledItrDetails() {
     this.smeList.forEach((item) => {
       this.data.forEach((element) => {
         if (item.userId === element.leaderUserId)
           element['leaderUserId'] = item.name;
         if (item.userId === element.filingTeamMemberId)
           element['filingTeamMemberId'] = item.name;
-        if (element.isRevised === 'Y') {
-          element['isRevised'] = 'Revised';
-        } else {
-          element['isRevised'] = 'Original';
-        }
       })
     });
+    this.data.forEach((element) => {
+      element['isRevised'] = (element.isRevised === 'Y') ? 'Revised' : 'Original';
+    })
+  }
+
+  mapAssignedSmeDetails(fields) {
+    this.smeList.forEach((item) => {
+      this.data.forEach((element) => {
+        if (item.userId === element.parentPrincipalUserId)
+          element['parentPrincipalUserId'] = item.name;
+      });
+    });
+
+    this.data.forEach((element) => {
+      if (element.roles.includes('ROLE_FILER')) {
+        element.serviceEligibility_ITR.assignmentStart = element.serviceEligibility_ITR.assignmentStart ? 'Active' : 'In-Active';
+      } else {
+        element.serviceEligibility_ITR.assignmentStart = '-'
+      }
+      let result = [];
+      fields.forEach(item => {
+        if (item.key === 'services') {
+          const serviceTypes = [
+            { key: 'serviceEligibility_ITR', displayName: 'ITR' },
+            { key: 'serviceEligibility_TPA', displayName: 'TPA' },
+            { key: 'serviceEligibility_NOTICE', displayName: 'NOTICE' },
+            { key: 'serviceEligibility_GST', displayName: 'GST' },
+          ];
+
+          serviceTypes.forEach(serviceType => {
+            if (element[serviceType.key]) {
+              result.push(serviceType.displayName);
+            }
+          });
+        }
+      });
+      element['services'] = result;
+
+      //For planDetails
+      let itrPlanList = this.allPlanDetails.filter(element => element.servicesType === 'ITR');
+      if (element.skillSetPlanIdList || element.skillSetPlanIdList?.length) {
+        let planNames = [];
+        itrPlanList.forEach(item => {
+          element.skillSetPlanIdList.forEach(item2 => {
+            if (item2 === item.planId)
+              planNames.push(item.name);
+          })
+        })
+        element.skillSetPlanIdList = planNames;
+      }
+    });
+
+
   }
 
   async getData(baseUrl, param) {

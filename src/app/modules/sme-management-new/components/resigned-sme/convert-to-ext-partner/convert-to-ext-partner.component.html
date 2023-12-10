@@ -89,47 +89,20 @@
       </div>
     </div>
     <hr>
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="card">
-          <b style="font-size: 18px">Role: </b>
-          <section class="example-section" [formGroup]="roles">
-            <p><mat-checkbox [formControl]="admin" onclick="return false">Admin</mat-checkbox></p>
-            <hr>
-            <p><mat-checkbox [formControl]="leader" onclick="return false">Leader</mat-checkbox></p>
-            <hr>
-            <p><mat-checkbox [formControl]="filerIndividual" onclick="return false">Filer-Individual</mat-checkbox></p>
-            <hr>
-            <p><mat-checkbox [formControl]="filerPrinciple" onclick="return false">Filer-Principal/Firm</mat-checkbox>
-            </p>
-            <hr>
-            <p><mat-checkbox [formControl]="filerChild" onclick="return false">Filer- Assistant</mat-checkbox></p>
-            <hr>
-          </section>
-        </div>
-      </div>
-      <div class="col-sm-5">
-        <div class="card">
-          <b style="font-size: 18px">SME/Partner Type: </b>
-          <section class="example-section">
-            <p><mat-checkbox [formControl]="internal" onclick="return false">Internal</mat-checkbox></p>
-            <hr>
-            <p><mat-checkbox [formControl]="external" onclick="return false">External</mat-checkbox></p>
-            <hr>
-          </section>
-        </div>
-      </div>
-    </div>
-    <hr>
 
-    <div class="container" *ngIf="!smeObj?.internal && smeObj?.['partnerType']!=='CHILD'">
+    <div class="container">
       <div class="row">
         <div class="col-sm-3">
           <mat-label> PAN (Individual/Firm) TDS deducted against
             this PAN</mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Pan" [formControl]="pan" class="input-field" maxlength="10" trim
-              readonly />
+            <input type="text" matInput placeholder="Pan" (keyup)="setUpperCase()" placeholder="XXXXX1234X"
+              minLength="10" maxLength="10" [formControl]="pan" class="input-field" maxlength="10" trim />
+            <mat-error class="mt-3"> <span *ngIf="smeFormGroup.controls['pan'].hasError('required')">Please
+                enter mobile no.</span>
+              <span *ngIf="smeFormGroup.controls['pan'].hasError('pattern')">Please enter valid mobile
+                no.</span>
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -199,121 +172,10 @@
         </div>
       </div>
     </div>
-
-    <div class="row mt-3" *ngIf="!smeObj?.internal && smeObj?.['partnerType']==='PRINCIPAL'">
-      <div class="col-sm-4">
-        <div class="card">
-          <b style="font-size: 18px">Additional ID's Required?</b>
-          <div class="row col-8">
-            <section class="example-section add-id">
-              <div *ngFor="let id of additionalId" class="duration-checkbox">
-                <mat-checkbox onclick="return false" [checked]="id.status">
-                  <span class="spacer">{{ id.key }}</span>
-                </mat-checkbox>
-              </div>
-            </section>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-sm-3">
-        <mat-label> No of additional Id's required </mat-label>
-        <mat-form-field appearance="outline">
-          <input type="text" matInput placeholder="Mobile No" [formControl]="additionalIdsCount" class="input-field"
-            maxlength="10" minlength="6" trim [numbersOnly]="true" readonly />
-        </mat-form-field>
-      </div>
-    </div>
     <hr>
 
-    <div class="row" *ngIf="smeObj?.roles.includes('ROLE_LEADER') || smeObj?.roles.includes('ROLE_FILER')">
-      <div class="align-items-center row">
-        <div class="col-sm-10">
-          <b style="font-size: 20px">Expertise & Availability </b>
-        </div>
-      </div>
-      <div class="col-sm-5">
-        <div class="card" style="margin-top: 10px;">
-          <span>
-            <b style="font-size: 18px">Services: </b>
-            <b style="font-size: 18px;float:right;" *ngIf="!hideAssignmentOnOff">Assignment on/off toggle: </b>
-          </span>
-          <div class="row">
-            <section class="example-section" [formGroup]="services">
-              <p><mat-checkbox [formControl]="itr"
-                  [disabled]="smeObj?.roles.includes('ROLE_FILER') || disableItrService"
-                  (change)="serviceUpdated('serviceEligibility_ITR', itr)">ITR</mat-checkbox><mat-slide-toggle
-                  *ngIf="itr.value && !hideAssignmentOnOff" [formControl]="itrToggle"
-                  style="float:right ; margin-right: 10px;" (change)="assignmentUpdated(itrToggle)"></mat-slide-toggle>
-              </p>
-              <hr>
-
-              <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="tpa"
-                  (change)="serviceUpdated('serviceEligibility_TPA', tpa)" [disabled]="disableTpaService">Tax
-                  Planing
-                  (TPA)/NPS </mat-checkbox>
-                <mat-slide-toggle *ngIf="tpa.value  && !hideAssignmentOnOff" [formControl]="tpaToggle"
-                  style="float:right ; margin-right: 10px;" (change)="assignmentUpdated( tpaToggle)"></mat-slide-toggle>
-              </p>
-              <hr *ngIf="!hideOtherServicesForFiler">
-
-              <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="notice"
-                  [disabled]="disableNoticeService"
-                  (change)="serviceUpdated('serviceEligibility_NOTICE', notice)">Notice</mat-checkbox>
-                <mat-slide-toggle *ngIf="notice.value && !hideAssignmentOnOff" [formControl]="noticeToggle"
-                  style="float:right ; margin-right: 10px;"
-                  (change)="assignmentUpdated( noticeToggle)"></mat-slide-toggle>
-              </p>
-              <hr *ngIf="!hideOtherServicesForFiler">
-
-              <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="gst" [disabled]="disableGstService"
-                  (change)="serviceUpdated('serviceEligibility_GST', gst)">GST</mat-checkbox>
-                <mat-slide-toggle *ngIf="gst.value && !hideAssignmentOnOff" [formControl]="gstToggle"
-                  style="float:right ; margin-right: 10px;" (change)="assignmentUpdated( gstToggle)"></mat-slide-toggle>
-              </p>
-              <hr *ngIf="!hideOtherServicesForFiler">
-
-              <!-- needed in future -->
-              <div *ngIf="false">
-                <p><mat-checkbox [formControl]="wb" (change)="serviceUpdated('WB', wb)">Wealth
-                    Builder(WB)</mat-checkbox>
-                  <mat-slide-toggle *ngIf="wb.value" [formControl]="wbToggle" style="float:right ; margin-right: 10px;"
-                    (change)="assignmentUpdated( wbToggle)"></mat-slide-toggle>
-                </p>
-                <hr>
-
-                <p><mat-checkbox [formControl]="pd" (change)="serviceUpdated('PD', pd)">Portfolio
-                    Doctor(PD)</mat-checkbox>
-                  <mat-slide-toggle *ngIf="pd.value" [formControl]="pdToggle" style="float:right ; margin-right: 10px;"
-                    (change)="assignmentUpdated(pdToggle)"></mat-slide-toggle>
-                </p>
-                <hr>
-
-                <p><mat-checkbox [formControl]="mf" (change)="serviceUpdated('MF', mf)">Mutual Fund (MF)
-                    Advisor</mat-checkbox>
-                  <mat-slide-toggle *ngIf="mf.value" [formControl]="mfToggle" style="float:right ; margin-right: 10px;"
-                    (change)="assignmentUpdated( mfToggle)"></mat-slide-toggle>
-                </p>
-                <hr>
-              </div>
-            </section>
-
-          </div>
-          <div class="row">
-            <div class="col-sm-6">
-              <mat-hint>
-                <p> <i class="fas fa-circle"></i> Select checkbox to active service</p>
-              </mat-hint>
-            </div>
-            <div class="col-sm-6">
-              <mat-hint>
-                <p><i class="fas fa-circle"></i> Toggle to assign service</p>
-              </mat-hint>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-2" *ngIf="smeObj?.roles.includes('ROLE_FILER')">
+    <div class="row">
+      <div class="col-sm-2">
         <div class="card" style="margin-top: 10px;">
           <b style="font-size: 18px">Language: </b>
           <div class="row">
@@ -330,7 +192,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-5" *ngIf="smeObj?.roles.includes('ROLE_FILER')">
+      <div class="col-sm-4">
         <div class="card" style="margin-top: 10px;">
           <b style="font-size: 18px">ITR's Type can Handle: </b>
           <div class="row">
@@ -346,10 +208,8 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="row" *ngIf="smeObj?.roles.includes('ROLE_FILER')">
-      <div class="col-sm-4">
+      <div class="col-sm-3">
         <div class="card" style="margin-top: 10px;">
           <b style="font-size: 18px">Inactivity Time Duration:</b>
           <div class="row">
@@ -366,7 +226,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-5">
+      <div class="col-sm-3">
         <div class="card" style="margin-top: 10px;">
           <b style="font-size: 18px">Cases Limit for ITR Filers (Work Load):</b>
           <div class="row">
@@ -388,10 +248,18 @@
     <hr>
     <div class="container" style="margin-top: 20px;">
       <div class="row">
-        <div class="col-sm-3" *ngIf="!hideSectionForAdmin">
+        <div class="col-sm-3">
           <mat-label>Parent Name </mat-label>
           <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Name" [formControl]="parentName" class="input-field" readonly />
+            <input type="text" matInput [formControl]="parentName" [matAutocomplete]="auto" class="input-field" />
+            <mat-autocomplete #auto>
+              <mat-option *ngFor="let leader of filteredLeaders | async" [value]="leader.name">
+                {{ leader.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error class="mt-3"> <span *ngIf="smeFormGroup.controls['parentName'].hasError('required')">Please
+                select parent name.</span>
+            </mat-error>
           </mat-form-field>
         </div>
         <div class="col-sm-3">
@@ -408,47 +276,8 @@
               readonly />
           </mat-form-field>
         </div>
-        <!-- <div class="col-sm-3">
-          <mat-label> Display Name </mat-label>
-          <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Display Name" [formControl]="displayName" class="input-field" />
-          </mat-form-field>
-        </div> -->
       </div>
-      <div class="row" style="margin-top: 13px;">
-        <div class="col-sm-4" *ngIf="smeObj?.['partnerType']==='CHILD'">
-          <mat-label>Principle Name </mat-label>
-          <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="Name" [formControl]="principalName" class="input-field" readonly />
-          </mat-form-field>
-        </div>
-        <div class="col-sm-4">
-          <mat-label> Joining Date </mat-label>
-          <mat-form-field appearance="outline" class="class1">
-            <input matInput placeholder="Joining Date" readonly [formControl]="joiningDate" [min]="minDate"
-              [max]="maxDate" [matDatepicker]="picker3" autocomplete="off">
-            <mat-hint>DD/MM/YYYY</mat-hint>
-            <mat-datepicker-toggle disabled matSuffix [for]="picker3"></mat-datepicker-toggle>
-            <mat-datepicker #picker3></mat-datepicker>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-4"
-          *ngIf="(loggedInSmeRoles?.includes('ROLE_LEADER') || loggedInSmeRoles?.includes('ROLE_ADMIN'))  && !checkRoles?.includes('ROLE_LEADER') && !checkRoles?.includes('ROLE_ADMIN')">
-          <mat-label> Resigning Date </mat-label>
-          <mat-form-field appearance="outline" class="class1">
-            <input matInput placeholder="Resigning Date" [formControl]="resigningDate" [min]="minDate" [max]="maxDate"
-              [matDatepicker]="picker4" autocomplete="off">
-            <mat-hint>
-              <p><i class="fas fa-circle"></i> Resignation date is date of removal</p>
-            </mat-hint>
-            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
-            <mat-datepicker #picker4></mat-datepicker>
-            <mat-error class="mt-3"> <span *ngIf="otherSmeInfo.controls['resigningDate'].hasError">Resignation date
-                should be from joining date to today's date.</span>
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
+
       <!-- <div class="row" style="margin-top: 10px;" *ngIf="false">
         <div class="col-sm-4">
           <mat-label> Leave Starts </mat-label>
@@ -478,28 +307,7 @@
         </div>
       </div> -->
 
-      <!-- <div class="row" *ngIf="checkRoles?.includes('ROLE_OWNER')">
-        <table>
-          <thead>
-            <tr>
-              <th>Co-Owner Name</th>
-              <th>Co-Owner Start Date </th>
-              <th>Co-Owner End Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of coOwnerData">
-              <td>{{ item.coOwnerName }}</td>
-              <td>{{ item.coOwnershipStartDateTime | date:'dd/MM/yyyy' }} </td>
-              <td>{{ item.coOwnershipEndDateTime | date:'dd/MM/yyyy' }}</td>
-            </tr>
-          </tbody>
-        </table>
-
-
-      </div> -->
     </div>
-    <!-- </form> -->
     <div style="text-align: center;  margin-top: 40px;">
       <button class="tbd-btn" (click)="updateSmeDetails()">Save </button>
       <button class="tbd-btn" (click)="cancelUpdate()">Cancel </button>

@@ -37,76 +37,47 @@
     </div>
   </div>
   <div class="spc-blw" style="padding: 0 !important">
-    <div class="row brdSpc">
-      <div
-        class="col-lg-7 flex items-center text-xs text-gray-500 gap-x-[9px] mb-[15px]"
-      >
-        <div class="flex items-center gap-x-1">
-          <img
-            src="../../../../assets/icon-font/icon-home-2.svg"
-            alt="home icon"
-          />
+    <!-- breadcrumb area -->
+    <div class="row rectangleB">
+      <div class="col-md-6 frameB">
+        <div class="large-title">
           <a
-            [ngClass]="
-              showPrefill ? 'capitalize' : 'capitalize text-color-brands'
-            "
-            (click)="showPrefillView()"
-            >Pre-fill Data</a
-          >
+                [ngClass]="showPrefill ? 'capitalize' : 'capitalize text-color-brands'"
+                (click)="showPrefillView()">Pre-fill Data
+          </a>
         </div>
-        <div class="flex items-center gap-x-1" *ngIf="!showPrefill">
-          <img
-            src="../../../../assets/icon-font/icon-arrow-right.svg"
-            alt="arrow right icon"
-          />
-          <a
-            (click)="gotoSources()"
-            [ngClass]="
-              showIncomeSources ? 'capitalize' : 'capitalize text-color-brands'
-            "
-          >
-            Sources</a
-          >
-        </div>
-        <div
-          class="flex items-center gap-x-1"
-          *ngIf="!showIncomeSources && !showPrefill"
-        >
-          <img
-            src="../../../../assets/icon-font/icon-arrow-right.svg"
-            alt="arrow right icon"
-          />
-          <a
-            (click)="gotoCgSchedule()"
-            [ngClass]="
-              breadcrumb
-                ? 'capitalize text-color-brands'
-                : !showIncomeSources && !showPrefill
-                ? 'capitalize'
-                : 'capitalize text-color-brands'
-            "
-            >{{ selectedSchedule }}</a
-          >
+        <div class="text-wrapper">&gt;</div>
+        <a class="large-title"
+           (click)="gotoSources()"
+             [ngClass]="showIncomeSources ? 'capitalize' : 'capitalize text-color-brands'">
+          Sources of Income
+        </a>
+        <div class="text-wrapper" *ngIf="!showIncomeSources && !showPrefill">&gt;</div>
+        <div *ngIf="!showIncomeSources && !showPrefill" class="large-title" (click)="gotoCgSchedule()">
+          {{ selectedSchedule }}
         </div>
         <div class="flex items-center gap-x-1" *ngIf="breadcrumb">
           <img
-            src="../../../../assets/icon-font/icon-arrow-right.svg"
-            alt="arrow right icon"
+                  src="../../../../assets/icon-font/icon-arrow-right.svg"
+                  alt="arrow right icon"
           />
           <span
-            [ngClass]="
+                  [ngClass]="
               breadcrumb ? 'capitalize' : 'capitalize text-color-brands'
             "
-            >{{ breadcrumb }}</span
+          >{{ breadcrumb }}</span
           >
         </div>
       </div>
-      <div class="col-lg-5" style="text-align: right">
+      <div class="col-md-6 frameC" style="text-align: right">
         <div class="nmTxAl">
           {{ customerName }} :&nbsp;&nbsp;<span>{{ ITR_JSON.panNumber }}</span>
         </div>
       </div>
     </div>
+
+    <!-- breadcrumb area ends -->
+
     <div *ngIf="showPrefill">
       <app-prefill-id
         [data]="navigationData"

@@ -46,8 +46,6 @@ export class ItrAssignedUsersComponent implements OnInit {
   itrStatus: any = [];
   filerUserId: any;
   ogStatusList: any = [];
-  coOwnerToggle = new FormControl('');
-  coOwnerCheck = false;
   searchVal: any;
   searchStatusId: any;
   searchParam: any = {
@@ -70,6 +68,9 @@ export class ItrAssignedUsersComponent implements OnInit {
   searchMenus = [];
   clearUserFilter: number;
   partnerType: any;
+  unAssignedUsersView = new FormControl(false);
+  disableCheckboxes = false;
+
   constructor(
     private reviewService: ReviewService,
     private userMsService: UserMsService,
@@ -79,7 +80,6 @@ export class ItrAssignedUsersComponent implements OnInit {
     private http: HttpClient,
     private dialog: MatDialog,
     private itrMsService: ItrMsService,
-    private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private activatedRoute: ActivatedRoute,
     private requestManager: RequestManager,
     private cacheManager: CacheManager,
@@ -95,7 +95,7 @@ export class ItrAssignedUsersComponent implements OnInit {
       enableCellTextSelection: true,
       rowSelection: 'multiple',
       isRowSelectable: (rowNode) => {
-        return rowNode.data ? (this.showReassignmentBtn.length  && rowNode.data.statusId != 11 && rowNode.data.statusId != 35) : false;
+        return rowNode.data ? (this.showReassignmentBtn.length && rowNode.data.statusId != 11 && rowNode.data.statusId != 35) : false;
       },
       onGridReady: params => {
       },
@@ -319,11 +319,6 @@ export class ItrAssignedUsersComponent implements OnInit {
     });
   }
 
-  // async getMasterStatusList() {
-  //   this.itrStatus = await this.utilsService.getStoredMasterStatusList();
-  //   this.ogStatusList = await this.utilsService.getStoredMasterStatusList();
-  // }
-
   getStatus() {
     // 'https://dev-api.taxbuddy.com/user/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&serviceType=ITR'
     let param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&serviceType=ITR';
@@ -350,23 +345,9 @@ export class ItrAssignedUsersComponent implements OnInit {
     } else {
       this.config.currentPage = event;
       this.searchParam.page = event - 1;
-      // if (this.coOwnerToggle.value == true) {
-      //   this.search('', true, event);
-      // }
-      //  else {
       this.search('', '', event);
-      // }
     }
   }
-
-  // fromServiceType(event) {
-  //   this.searchParam.serviceType = event;
-  //   if (this.searchParam.serviceType) {
-  //     setTimeout(() => {
-  //       this.itrStatus = this.ogStatusList.filter(item => item.applicableServices.includes(this.searchParam.serviceType));
-  //     }, 100);
-  //   }
-  // }
 
   leaderId: number;
   filerId: number;
@@ -388,11 +369,44 @@ export class ItrAssignedUsersComponent implements OnInit {
       let loggedInId = this.utilsService.getLoggedInUserID();
       this.agentId = loggedInId;
     }
+
+    if (this.loggedInUserRoles.includes('ROLE_ADMIN')) {
+      if (this.leaderId && !this.filerId) {
+        this.disableCheckboxes = false;
+      } else {
+        this.disableCheckboxes = true;
+      }
+    } else if (this.loggedInUserRoles?.includes('ROLE_LEADER')) {
+      if (this.filerId) {
+        this.disableCheckboxes = true;
+      } else {
+        this.disableCheckboxes = false;
+      }
+    }
   }
 
-  coOwnerId: number;
-  coFilerId: number;
 
+  onCheckBoxChange() {
+    if (this.unAssignedUsersView.value) {
+      this.clearUserFilter = moment.now().valueOf();
+      this.cacheManager.clearCache();
+      this.searchParam.serviceType = null;
+      this.searchParam.statusId = null;
+      this.searchParam.page = 0;
+      this.searchParam.pageSize = 20;
+      this.searchParam.mobileNumber = null;
+      this.searchParam.emailId = null;
+      if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
+        this.agentId = this.utilsService.getLoggedInUserID();
+        this.filerId = this.filerId = this.agentId;
+        this.partnerType = this.utilsService.getPartnerType();
+      }
+      this?.serviceDropDown?.resetService();
+      this.usersGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
+      // this.search();
+    }
+  }
 
   usersCreateColumnDef(itrStatus) {
     console.log(itrStatus);
@@ -408,7 +422,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         hide: !this.showReassignmentBtn.length,
         pinned: 'left',
         checkboxSelection: (params) => {
-          return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11 ;
+          return this.showReassignmentBtn.length && params.data.statusId != 11 && params.data.statusId != 11;
         },
         cellStyle: function (params: any) {
           return {
@@ -546,6 +560,18 @@ export class ItrAssignedUsersComponent implements OnInit {
         headerName: 'Language',
         field: 'language',
         width: 115,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Subscription Plan',
+        field: 'subscriptionPlan',
+        width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
@@ -863,7 +889,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     ];
   }
 
-  reassignmentForLeader(){
+  reassignmentForLeader() {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     if (selectedRows.length === 0) {
       this.utilsService.showSnackBar('Please select entries from table to Re-Assign');
@@ -944,13 +970,14 @@ export class ItrAssignedUsersComponent implements OnInit {
         panNumber: this.utilsService.isNonEmpty(userData[i].panNumber) ? userData[i].panNumber : null,
         eriClientValidUpto: userData[i].eriClientValidUpto,
         language: userData[i].language,
+        subscriptionPlan: userData[i].subscriptionPlan,
         itrObjectStatus: userData[i].itrObjectStatus,
         openItrId: userData[i].openItrId,
         lastFiledItrId: userData[i].lastFiledItrId,
         conversationWithFiler: userData[i].conversationWithFiler,
         ownerUserId: userData[i].ownerUserId,
-        filerUserId:userData[i].filerUserId,
-        leaderUserId :userData[i].leaderUserId,
+        filerUserId: userData[i].filerUserId,
+        leaderUserId: userData[i].leaderUserId,
       })
       userArray.push(userInfo);
     }
@@ -1191,11 +1218,8 @@ export class ItrAssignedUsersComponent implements OnInit {
       this._toastMessageService.alert('error', "You don't have calling role.");
       return;
     }
-    if (this.coOwnerToggle.value == true) {
-      agent_number = agentNumber;
-    } else {
-      agent_number = agentNumber;
-    }
+
+    agent_number = agentNumber;
     const reqBody = {
       "agent_number": agent_number,
       "userId": data.userId,
@@ -1236,7 +1260,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
       if (result) {
         if (result.data === "statusChanged") {
-          this.searchParam.page = 0;
+          // this.searchParam.page = 0;
           this.search();
         }
       }
@@ -1313,6 +1337,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;
     this.searchParam.emailId = null;
+    this.unAssignedUsersView.setValue(false);
     if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
       this.agentId = this.utilsService.getLoggedInUserID();
       this.filerId = this.filerId = this.agentId;
@@ -1383,9 +1408,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         param = param + '&' + key + '=' + this.searchBy[key];
       });
     }
-    // if (this.searchParam.statusId) {
-    //   param = param + '&statusId=' + this.searchParam.statusId;
-    // }
+
 
     if (this.filerId === this.agentId) {
       param = param + `&filerUserId=${this.filerId}`;
@@ -1401,7 +1424,10 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (this.agentId === loggedInId && this.loggedInUserRoles.includes('ROLE_LEADER')) {
       param = param + `&leaderUserId=${this.agentId}`;
     }
-
+    if (this.unAssignedUsersView.value) {
+      // https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&serviceType=ITR&leaderUserId=14163&assigned=false
+      param = param + '&assigned=false'
+    }
     this.reportService.getMethod(param).subscribe(
 
       (result: any) => {
