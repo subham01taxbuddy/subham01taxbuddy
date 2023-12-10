@@ -1,8 +1,7 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
   move
   away from the page...</span>
-<!-- New Open Close Filter Starts -->
 <div class="mrgArdTog">
   <mat-accordion class="headers-align">
     <mat-expansion-panel [expanded]="!dataOnLoad">
@@ -16,7 +15,9 @@
         <div class="surround">
           <div class="row">
             <div class="col-sm-12 bckClr">
-              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [isInternal]="isInternal" (sendPrincipleIndividual)="fromPrinciple($event)" (sendFiler)="fromFiler($event)"></app-sme-list-drop-down>
+              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [isInternal]="isInternal"
+                (sendPrincipleIndividual)="fromPrinciple($event)"
+                (sendFiler)="fromFiler($event)"></app-sme-list-drop-down>
             </div>
             <div class="col-sm-6 dtTp">
               <mat-label>From Date</mat-label>
@@ -41,41 +42,42 @@
               </mat-form-field>
             </div>
             <div class="row align-items-start" style="margin-top: 10px;">
-            <div class="col-sm-3">
-              <label class="input__label">Select attribute</label>
-              <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
-                <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
-                <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
-                  {{drop.name}}</option>
-              </select>
-            </div>
+              <div class="col-sm-3">
+                <label class="input__label">Select attribute</label>
+                <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
 
-            <div class="col-sm-3">
-              <div>
-                <label class="input__label">Enter value</label>
-                <div class="input__select">
-                  <input type="text" class="select__box ogp_select" style="background-image:none"
-                         [(ngModel)]="searchVal" name="searchVal" />
+                  <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
+                    {{drop.name}}</option>
+                </select>
+              </div>
+
+              <div class="col-sm-3">
+                <div>
+                  <label class="input__label">Enter value</label>
+                  <div class="input__select">
+                    <input type="text" class="select__box ogp_select" style="background-image:none"
+                      [(ngModel)]="searchVal" name="searchVal" />
+                  </div>
                 </div>
               </div>
+              <div class="col-sm-3">
+                <label class="input__label">Select Status</label>
+                <select class="select__box ogp_select" (change)="statusChanged()" [(ngModel)]="selectedStatus">
+
+                  <option *ngFor="let drop of statusList" class="un-select-list" [value]="drop.value">
+                    {{drop.name}}</option>
+                </select>
+              </div>
+              <div class="col-sm-3">
+                <label class="input__label">Payout Status</label>
+                <select class="select__box ogp_select" (change)="payOutStatusChanged()"
+                  [(ngModel)]="selectedPayoutStatus">
+
+                  <option *ngFor="let drop of paymentStatusList" class="un-select-list" [value]="drop.value">
+                    {{drop.name}}</option>
+                </select>
+              </div>
             </div>
-            <div class="col-sm-3">
-              <label class="input__label">Select Status</label>
-              <select class="select__box ogp_select" (change)="statusChanged()" [(ngModel)]="selectedStatus">
-                <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
-                <option *ngFor="let drop of statusList" class="un-select-list" [value]="drop.value">
-                  {{drop.name}}</option>
-              </select>
-            </div>
-            <div class="col-sm-3">
-              <label class="input__label">Payout Status</label>
-              <select class="select__box ogp_select" (change)="payOutStatusChanged()" [(ngModel)]="selectedPayoutStatus">
-                <!-- <option value="fName">Search By : <i class="fa fa down_arrow"></i></option> -->
-                <option *ngFor="let drop of paymentStatusList" class="un-select-list" [value]="drop.value">
-                  {{drop.name}}</option>
-              </select>
-            </div>
-          </div>
             <div class="col-sm-12 spsTp bdrTp">
               <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
                 Clear form
@@ -94,19 +96,19 @@
           <div class="row">
             <div class="col-sm-12 ">
               <span class="note1">
-                Note :  Please select required filters above and click on search to get information
+                Note : Please select required filters above and click on search to get information
               </span>
             </div>
           </div>
-</div>
-</div>
+        </div>
+      </div>
 
     </mat-expansion-panel>
-   </mat-accordion>
+  </mat-accordion>
 </div>
-<!-- New Open Close Filter Ends -->
 
-<!-- Table -->
+
+
 <div class="main clearfix">
 
 
@@ -115,7 +117,7 @@
       <div class="col-sm-9">
         <span class="txTit">Payout Details: </span>
       </div>
-      <div class="col-sm-3" *ngIf="isEditAllowed" >
+      <div class="col-sm-3" *ngIf="isEditAllowed">
         <button class="tbd-btn spRt aprv" (click)="approveSelected()"> Approve </button>
         <span class="txblw">Select checkbox(below) then Approve the entries.</span>
       </div>
@@ -126,7 +128,7 @@
     </table>
 
     <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
-                     (rowClicked)="onUsersRowClicked($event)">
+      (rowClicked)="onUsersRowClicked($event)">
 
     </ag-grid-angular>
 
@@ -134,4 +136,128 @@
   </div>
 
 
+</div> -->
+
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
+  move
+  away from the page...</span>
+
+<div class="main clearfix">
+  <div class="main-1">
+    <div class="row rowClr-1">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-7">
+            <div class="filter-box">
+              <div class="row">
+                <div class="col-sm-12 bckClr">
+                  <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)" [isInternal]="isInternal"
+                    (sendPrincipleIndividual)="fromPrinciple($event)"
+                    (sendFiler)="fromFiler($event)"></app-sme-list-drop-down>
+                </div>
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <mat-label>From Date</mat-label>
+                      <mat-form-field appearance="outline" class="class1">
+                        <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxDate"
+                          autocomplete="off" (dateChange)="setToDateValidation(startDate.value)" />
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                        <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-6">
+                      <mat-label>To Date</mat-label>
+                      <mat-form-field appearance="outline" class="class1">
+                        <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="toDateMin" [max]="maxDate"
+                          autocomplete="off" />
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                        <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label class="input__label">Select attribute</label>
+                      <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey>
+
+                        <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
+                          {{drop.name}}</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-3">
+                      <div>
+                        <label class="input__label">Enter value</label>
+                        <div class="input__select">
+                          <input type="text" class="select__box ogp_select" style="background-image:none"
+                            [(ngModel)]="searchVal" name="searchVal" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-3">
+                      <label class="input__label">Select Status</label>
+                      <select class="select__box ogp_select" (change)="statusChanged()" [(ngModel)]="selectedStatus">
+
+                        <option *ngFor="let drop of statusList" class="un-select-list" [value]="drop.value">
+                          {{drop.name}}</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-3">
+                      <label class="input__label">Payout Status</label>
+                      <select class="select__box ogp_select" (change)="payOutStatusChanged()"
+                        [(ngModel)]="selectedPayoutStatus">
+
+                        <option *ngFor="let drop of paymentStatusList" class="un-select-list" [value]="drop.value">
+                          {{drop.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="button-container">
+              <button class="srch-btn-1" (click)="advanceSearch(advanceSearchKey.value)"><i class="fa fa-search" aria-hidden="true"></i> Search
+              </button>
+              <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+                <i class="fa fa-download" aria-hidden="true"></i> Download File
+              </button>
+              <button class="clrLnk-1" (click)="this.resetFilters()">
+                Clear form
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tableSpc mt-3">
+      <div>
+        <div class="align-items-center row">
+          <div class="col-sm-9 ">
+            <span class="table-info-text">Payout Details based on search: </span>
+          </div>
+          <div class="col-sm-3" *ngIf="isEditAllowed">
+            <button class="tbd-btn spRt aprv" (click)="approveSelected()"> Approve </button>
+            <span class="txblw">Select checkbox(below) then Approve the entries.</span>
+          </div>
+
+        </div>
+        <table>
+          <tr *ngFor="let item of userInfo | paginate:config"></tr>
+        </table>
+
+        <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="usersGridOptions"
+          (rowClicked)="onUsersRowClicked($event)">
+
+        </ag-grid-angular>
+
+        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+      </div>
+    </div>
+  </div>
 </div>
