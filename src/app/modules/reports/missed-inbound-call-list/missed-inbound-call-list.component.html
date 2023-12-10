@@ -1,94 +1,80 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
-  move
-  away from the page...</span>
-<div class="row">
-  <div class="col-sm-6">
-    <h4>Missed Inbound Call List:</h4>
-  </div>
-</div>
 
-<div class="mrgArdTog2">
-  <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]="!dataOnLoad">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon> arrow_forward_ios </mat-icon>
-          Filter - Missed Inbound Call List:
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="rowClr">
-        <div class="surround">
-          <div class="row">
-            <div class="col-sm-12 bckClr">
-              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
-              (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-            </div>
-            <div class="col-sm-6 spsTp">
-              <mat-form-field appearance="outline">
-                <mat-label>From Date</mat-label>
-                <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxStartDate"
-                  autocomplete="off" (dateChange)="setToDateValidation(startDate.value)" />
-                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                <mat-datepicker #picker1></mat-datepicker>
-                <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-sm-6 spsTp">
-              <mat-form-field appearance="outline">
-                <mat-label>To Date</mat-label>
-                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxDate"
-                  autocomplete="off" />
-                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                <mat-datepicker #picker2></mat-datepicker>
-                <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
-                <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-sm-12 spsTp bdrTp">
-              <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
-                Clear form
-              </button>
-              <button class="srch-btn mvRth" [disabled]="loading" (click)="showReports()">
-                <i class="fas fa-file-invoice" aria-hidden="true"></i> Show List
-              </button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12 ">
-              <span class="note1">
-                Note : Please select required filters Above and click on Show Reports to get information
-              </span>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV; it might take a few minutes. Please hold on and do not move away from the page...</span>
+
+
+<div class="main-1">
+  <div class="row rowClr-1">
+    <div class="col-sm-12">
+      <div class="row">
+
+        <div class="col-sm-7">
+          <div class="filter-box">
+            <div class="row">
+
+              <div class="col-sm-12 bckClr">
+                <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, 1)"
+                  (sendPrincipleIndividual)="fromSme($event, 2)" (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
+              </div>
+
+              <div class="col-sm-12">
+                <div class="row">
+
+                  <div class="col-sm-4 spsTp">
+                    <mat-form-field appearance="outline">
+                      <mat-label>From Date</mat-label>
+                      <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxStartDate"
+                        autocomplete="off" (dateChange)="setToDateValidation(startDate.value)" />
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                      <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-4 spsTp">
+                    <mat-form-field appearance="outline">
+                      <mat-label>To Date</mat-label>
+                      <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxDate"
+                        autocomplete="off" />
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                      <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                      <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-    </mat-expansion-panel>
-  </mat-accordion>
-</div>
+        <div class="col-sm-5">
+          <div class="button-container">
+            <button class="srch-btn-1" (click)="showReports()">
+              <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+            </button>
 
-<div class="tableSpc">
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="txTit">
-        Missed Inbound Call List Details:
+            <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
+          </div>
+        </div>
       </div>
     </div>
-    <!-- <div class="col-sm-4">
-  <div class="count"> Total Count: <b>{{ totalReports }}</b></div>
-  </div> -->
   </div>
+</div>
 
-  <table>
-    <tr *ngFor="let item of missedInboundCallList | paginate : config"></tr>
-  </table>
 
-  <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedInboundCallListGridOptions">
-  </ag-grid-angular>
-
-  <div *ngIf="config.totalItems > 1">
+<div class="tableSpc mt-3">
+  <div>
+    <div class="row">
+      <div class="col-sm-9 row">
+        <div class="table-info-text">
+          Missed Inbound Call List Details:
+        </div>
+      </div>
+    </div>
+    <table>
+      <tr *ngFor="let item of missedInboundCallList | paginate:config"></tr>
+    </table>
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedInboundCallListGridOptions"></ag-grid-angular>
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
-
 </div>
