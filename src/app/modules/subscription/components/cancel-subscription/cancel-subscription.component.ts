@@ -67,12 +67,12 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
   ];
   clearUserFilter: number;
   ogStatusList: any = [];
-  searchAsPrinciple :boolean =false;
+  searchAsPrinciple: boolean = false;
   searchParam: any = {
     statusId: null,
     page: 0,
     pageSize: 20,
-    serviceType:null,
+    serviceType: null,
   };
   itrStatus: any = [];
 
@@ -83,7 +83,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     private utilService: UtilsService,
     private itrService: ItrMsService,
     private cacheManager: CacheManager,
-    private reportService:ReportService,
+    private reportService: ReportService,
     @Inject(LOCALE_ID) private locale: string
   ) {
 
@@ -152,12 +152,12 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
   }
 
   leaderId: number;
-  fromSme(event, isOwner,fromPrinciple?) {
+  fromSme(event, isOwner, fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.leaderId = event ? event.userId : null;
     } else {
-      if(fromPrinciple){
+      if (fromPrinciple) {
         if (event?.partnerType === 'PRINCIPAL') {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = true;
@@ -165,8 +165,8 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
-      }else{
-        if(event){
+      } else {
+        if (event) {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
@@ -210,7 +210,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
       console.log('in clear cache')
     }
     let loggedInId = this.utilService.getLoggedInUserID();
-    if(this.loggedInUserRoles.includes('ROLE_LEADER')){
+    if (this.loggedInUserRoles.includes('ROLE_LEADER')) {
       this.leaderId = loggedInId
     }
     let userFilter = '';
@@ -225,18 +225,18 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     }
 
     let mobileFilter = '';
-    if(this.searchBy?.mobileNumber ){
+    if (this.searchBy?.mobileNumber) {
 
-      mobileFilter = '&mobileNumber=' +this.searchBy?.mobileNumber;
+      mobileFilter = '&mobileNumber=' + this.searchBy?.mobileNumber;
     }
     let emailFilter = '';
-    if(this.searchBy?.email){
-      emailFilter = '&email=' +this.searchBy?.email;
+    if (this.searchBy?.email) {
+      emailFilter = '&email=' + this.searchBy?.email;
     }
 
     let nameFilter = '';
-    if(this.searchBy?.name){
-      nameFilter ='&name=' + this.searchBy?.name;
+    if (this.searchBy?.name) {
+      nameFilter = '&name=' + this.searchBy?.name;
     }
     let data = this.utilService.createUrlParams(this.searchParam);
 
@@ -257,7 +257,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
             this.config.totalItems = response.data.totalElements;
             this.cacheManager.initializeCache(response.data.content);
 
-            const currentPageNumber = pageNo + 1;
+            const currentPageNumber = response?.data?.number + 1;
             this.cacheManager.cachePageContent(currentPageNumber, response.data.content);
             this.config.currentPage = currentPageNumber;
           } else {
@@ -288,10 +288,12 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     if (pageContent) {
       this.subscriptionListGridOptions.api?.setRowData(this.createRowData(pageContent));
       this.config.currentPage = event;
+      this.searchParam.page = event-1;
     } else {
+      this.searchParam.page = event - 1;
       this.config.currentPage = event;
       // this.selectedPageNo = event - 1;
-      this.getCancelSubscriptionList(event - 1, '', '', 'fromPageChange');
+      this.getCancelSubscriptionList(event, '', '', 'fromPageChange');
     }
   }
 
@@ -547,7 +549,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
         served: subscriptionData[i].served,
         promoCode: this.utilService.isNonEmpty(subscriptionData[i].promoCode) ? subscriptionData[i].promoCode : '-',
         subscriptionCreatedBy: subscriptionData[i].subscriptionCreatedBy,
-        leaderName : subscriptionData[i].leaderName
+        leaderName: subscriptionData[i].leaderName
       });
     }
     return newData;
@@ -587,12 +589,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
     disposable.afterClosed().subscribe(result => {
       if (result) {
         const data = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-        const loginSMEInfo = data[0];
-        if (this.isOwner) {
-          this.getCancelSubscriptionList(0, 'ownerUserId', loginSMEInfo.userId);
-        } else {
-          this.getCancelSubscriptionList(0);
-        }
+        this.getCancelSubscriptionList(this.config.currentPage);
       }
     });
   }
