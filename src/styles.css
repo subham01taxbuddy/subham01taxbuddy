@@ -547,7 +547,9 @@ main {
     width:auto;
     align-items: flex-start;
     position: relative;
-  }
+    padding: 0px 15px;
+}
+  
   
   .frameC .div {
     display: flex;
@@ -2519,7 +2521,7 @@ main {
   border-right: 1px solid #ededed;
   background: #ffffff;
   /* flex: 1 0 0%; */
-  padding: 1rem!important;
+  padding: 17px 15px 0px 0px;
 }
     .frameS {
         flex-direction: column;
