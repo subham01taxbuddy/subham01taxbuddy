@@ -2,6 +2,8 @@
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 @import "~ag-grid-community/dist/styles/ag-theme-balham.css";
 
+
+
 .ag-theme-balham {
   font-family: 'DM Sans', sans-serif;
   margin: -35px 0px 10px 0px !important;
@@ -547,7 +549,9 @@ main {
     width:auto;
     align-items: flex-start;
     position: relative;
-  }
+    padding: 0px 15px;
+}
+  
   
   .frameC .div {
     display: flex;
@@ -2519,7 +2523,7 @@ main {
   border-right: 1px solid #ededed;
   background: #ffffff;
   /* flex: 1 0 0%; */
-  padding: 1rem!important;
+  padding: 17px 15px 0px 0px;
 }
     .frameS {
         flex-direction: column;

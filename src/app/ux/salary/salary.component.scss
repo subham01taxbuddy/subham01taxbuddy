@@ -1,13 +1,24 @@
 
+.iconL {
+  width: 19px;
+  margin-left: 30px;
+}
+
+.iconL1 {
+  width: 22px;
+  margin-left:29px;
+}
+
+
 
 .sidebar{
-    position:fixed;
+    display:flex;
     top: 0;
     left: 0;
     height: 100%;
-    width: 260px;
-    background: #1B67BA;
-    ;
+    // width: 400px;
+    // min-width:226px;
+    background: #1B67BA;  
     z-index: 100;
     transition: all 0.5s ease;
   }
@@ -42,8 +53,9 @@
   }
   .sidebar .nav-links{
     height: 100%;
-    padding: 30px 0 150px 0;
+    padding: 45px 0 150px 0;
     overflow: auto;
+    width:226px;
   }
   .sidebar.close .nav-links{
     overflow: visible;
@@ -55,6 +67,7 @@
     position: relative;
     list-style: none;
     transition: all 0.4s ease;
+    height:55px;
   }
   .sidebar .nav-links li:hover{
     background: #144b86;
@@ -63,6 +76,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height:45px;
   }
   .sidebar.close .nav-links li .iocn-link{
     display: block
@@ -87,12 +101,14 @@
     display: flex;
     align-items: center;
     text-decoration: none;
+    height:45px;
   }
   .sidebar .nav-links li a .link_name{
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
     color: #fff;
     transition: all 0.4s ease;
+    margin-left:8px;
   }
   .sidebar.close .nav-links li a .link_name{
     opacity: 0;
@@ -120,7 +136,7 @@
   }
   .sidebar.close .nav-links li .sub-menu{
     position: absolute;
-    left: 100%;
+    left: 59%;
     top: -10px;
     margin-top: 0;
     padding: 10px 20px;
@@ -129,6 +145,9 @@
     display: block;
     pointer-events: none;
     transition: 0s;
+  }
+  .sub-menu li{
+    margin-left:20px!important;
   }
   .sidebar.close .nav-links li:hover .sub-menu{
     top: 0;
@@ -143,6 +162,7 @@
     font-size: 18px;
     opacity: 1;
     display: block;
+    margin-left:0px;
   }
   .sidebar .nav-links li .sub-menu.blank{
     opacity: 1;
@@ -214,15 +234,15 @@
   .home-section{
     position: relative;
     background: #E4E9F7;
-    height: 100vh;
+    height: auto;
     // left: 260px;
     // width: calc(100% - 260px);
     width:100%!important;
     transition: all 0.5s ease;
-    margin-right: 47px;
+    margin-right: 0px;
   }
   .sidebar.close ~ .home-section{
-    left: 78px;
+    left: 0px;
     width: 100%!important;
   }
   .home-section .home-content{
@@ -238,6 +258,7 @@
   .home-section .home-content .bx-menu{
     margin: 0 15px;
     cursor: pointer;
+    z-index: 100;
   }
   .home-section .home-content .text{
     font-size: 26px;
