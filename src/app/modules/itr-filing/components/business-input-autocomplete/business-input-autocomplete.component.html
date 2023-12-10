@@ -1,23 +1,13 @@
-<mat-label>Nature of Business</mat-label>
+<div class="field-label">
+  <span class="span">Nature of Business</span> <span class="text-wrapper-2">*</span>
+</div>
 <mat-form-field appearance="outline">
-  <input #input
-         type="text"
-         placeholder="Nature of Business"
-         matInput
-         [formControl]="myControl"
-         [matAutocomplete]="auto"
-         (click)="filter($event)"
-         (input)="filter($event)"
-         (focus)="focusIn($event)">
+  <input #input type="text" placeholder="Nature of Business" matInput [formControl]="myControl" [matAutocomplete]="auto"
+    (click)="filter($event)" (input)="filter($event)" (focus)="focusIn($event)">
   <mat-autocomplete requireSelection #auto="matAutocomplete" [displayWith]="displayFn"
-                    (optionSelected)="optionSelected($event)"
-                    (closed)="closed($event)">
-    <mat-option
-      *ngFor="let nature of filteredOptions"
-      [value]="nature.code"
-      matTooltip="{{ nature.label }}-{{ nature.code }}"
-      [disabled]="nature.disabled"
-    >
+    (optionSelected)="optionSelected($event)" (closed)="closed($event)">
+    <mat-option *ngFor="let nature of filteredOptions" [value]="nature.code"
+      matTooltip="{{ nature.label }}-{{ nature.code }}" [disabled]="nature.disabled">
       {{ nature.label }}-{{ nature.code }}
     </mat-option>
   </mat-autocomplete>
