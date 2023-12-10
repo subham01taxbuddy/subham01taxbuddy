@@ -1,10 +1,162 @@
-.titTx1 {
-    font-size: 17px;
-    color: #04A4BC;
-    font-weight: 600;
+.header_content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    gap: 8px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    padding: 8px 24px;
+    flex-grow: 1;
+    background-color: #e7e7e7;
+    border-radius: 4px 4px 0px 0px;
 }
 
-.bdrBtm {
-    border-bottom: 1px solid #04A4BC;
-    padding-bottom: 5px;
+.wrap-content {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    background-color: #ffffff;
+    border-radius: 0px 0px 8px 8px;
+
+    img {
+        position: relative;
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.wrapper {
+    display: flex;
+    align-items: flex-start;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    flex-direction: column;
+    padding: 24px;
+    position: relative;
+}
+
+.space {
+    background-color: #ffffff;
+    border-radius: 0px 0px 8px 8px;
+    padding: 20px;
+    border: 1px solid #E2E4E5;
+    border-top: 0;
+}
+
+.frameC {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    align-items: flex-start;
+    position: relative;
+}
+
+.div-5 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 24px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    background-color: #ffffff;
+    border-radius: 0px 0px 4px 4px;
+}
+
+.div-6 {
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+}
+
+.frame-wrapper-3 {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.space {
+    border: none !important;
+    padding: 0 !important;
+}
+
+.accordion__item-body {
+    padding: 24px;
+
+    p {
+        margin-bottom: 0;
+    }
+}
+
+.gray_container {
+    background-color: #f9f9f9;
+    padding: 8px 24px;
+    margin: 0px 0px 12px 0px;
+}
+
+.mb-25 {
+    margin-bottom: 25px !important;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    position: relative;
+    flex: 1;
+    flex-grow: 1;
+    align-self: stretch;
+    margin-top: -1px;
+    font-weight: 400;
+    color: #9b9b9b;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 20px;
+    padding: 8px 0;
+    margin-left: 25px;
+}
+
+.normal_text {
+    font-weight: 400;
+    font-size: 14px;
+    color: #242426;
+    line-height: 20px;
+}
+
+.form-control {
+    min-height: 44px;
+    border: none;
+    border: 1.5px solid #D3D3D3;
+    background-color: transparent;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-size: 14px;
+
+    &:focus {
+        background-color: f9f9f9;
+        border-color: #3E82CD;
+    }
+
+}
+
+.hdByr-L {
+    flex: 2 !important;
 }
