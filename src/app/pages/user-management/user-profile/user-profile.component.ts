@@ -13,6 +13,8 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { ThirdPartyService } from 'src/app/services/third-party.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Storage } from '@aws-amplify/storage';
+import { Location } from "@angular/common";
+
 import * as $ from 'jquery';
 declare function we_track(key: string, value: any);
 
@@ -334,8 +336,8 @@ export class UserProfileComponent implements OnInit {
   // get getAddressArray() {
   //   return <FormArray>this.userProfileForm.get('address');
   // }
-  roles:any;
-  unMaskedMobileNo :any;
+  roles: any;
+  unMaskedMobileNo: any;
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserMsService,
@@ -346,7 +348,9 @@ export class UserProfileComponent implements OnInit {
     private thirdPartyService: ThirdPartyService,
     private dialog: MatDialog,
     private router: Router,
-    private titleCasePipe: TitleCasePipe) { }
+    private titleCasePipe: TitleCasePipe,
+    private location: Location,
+  ) { }
 
   ngOnInit() {
     this.roles = this.utilsService.getUserRoles();
@@ -428,7 +432,7 @@ export class UserProfileComponent implements OnInit {
         this.userProfileForm.controls['mName'].setValue(result.middleName ? result.middleName : '');
         this.userProfileForm.controls['lName'].setValue(result.lastName ? result.lastName : '');
         this.userProfileForm.controls['fatherName'].setValue(result.middleName ? result.middleName : '');
-        let dob = new Date(result?.dateOfBirth ? result?.dateOfBirth: '').toISOString();
+        let dob = new Date(result?.dateOfBirth ? result?.dateOfBirth : '').toISOString();
         this.userProfileForm.controls['dateOfBirth'].setValue(dob)
       },
         error => {
@@ -496,7 +500,7 @@ export class UserProfileComponent implements OnInit {
       this.userProfileForm.controls['mobileNumber'].setValue(mobileNumber ? mobileNumber : '');
     } else {
       if (mobileNumber) {
-        let maskedNo ='X'.repeat(mobileNumber.length);
+        let maskedNo = 'X'.repeat(mobileNumber.length);
         this.userProfileForm.controls['mobileNumber'].setValue(maskedNo);
         return
       }
@@ -541,7 +545,7 @@ export class UserProfileComponent implements OnInit {
         this.addressData = [];
       }
       this.bankData = this.userProfileForm.controls['bankDetails'].value;
-      this.unMaskedMobileNo = this.userInfo.mobileNumber ;
+      this.unMaskedMobileNo = this.userInfo.mobileNumber;
       this.updateUserRole(this.unMaskedMobileNo);
       this.maskMobileNumber(this.userInfo.mobileNumber);
     },
@@ -752,6 +756,7 @@ export class UserProfileComponent implements OnInit {
         this.maskMobileNumber(this.unMaskedMobileNo);
         this._toastMessageService.alert("success", this.userInfo.fName + "'s profile updated successfully.");
         this.loading = false;
+        this.location.back();
         we_track('Profile', {
           'Any Update': '',
         });
@@ -785,7 +790,7 @@ export class UserProfileComponent implements OnInit {
 
   updateUserRole(userMobNo: any) {
     console.log('userMobNo: ', userMobNo, typeof userMobNo, typeof parseInt(userMobNo))
-    let param = '/users?mobileNumber=' +userMobNo;
+    let param = '/users?mobileNumber=' + userMobNo;
     this.userService.getMethod(param).subscribe((userRole: any) => {
       console.log('User rolses: ', userRole);
       if (Array.isArray(userRole.role) && userRole.role.length > 0) {

@@ -2190,13 +2190,13 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       stcgAppRate16MarTo31Mar: getCgQuarterWise(capitalGains, -1, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
 
       ltcg10PerUpto15Jun: getCgQuarterWise(capitalGains, 10, "2022-03-31T18:30:00.000Z", "2022-06-15T18:30:00.000Z"),
-      ltcg10Per16JunTo1515Sep: getCgQuarterWise(capitalGains, 10, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
+      ltcg10Per16JunTo15Sep: getCgQuarterWise(capitalGains, 10, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
       ltcg10Per16SepTo15Dec: getCgQuarterWise(capitalGains, 10, "2022-09-15T18:30:00.000Z", "2022-12-15T18:30:00.000Z"),
       ltcg10Per16DecTo15Mar: getCgQuarterWise(capitalGains, 10, "2022-12-15T18:30:00.000Z", "2023-03-15T18:30:00.000Z"),
       ltcg10Per16MarTo31Mar: getCgQuarterWise(capitalGains, 10, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
 
       ltcg20PerUpto15Jun: getCgQuarterWise(capitalGains, 20, "2022-03-31T18:30:00.000Z", "2022-06-15T18:30:00.000Z"),
-      ltcg20Per16JunTo1515Sep: getCgQuarterWise(capitalGains, 20, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
+      ltcg20Per16JunTo15Sep: getCgQuarterWise(capitalGains, 20, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
       ltcg20Per16SepTo15Dec: getCgQuarterWise(capitalGains, 20, "2022-09-15T18:30:00.000Z", "2022-12-15T18:30:00.000Z"),
       ltcg20Per16DecTo15Mar: getCgQuarterWise(capitalGains, 20, "2022-12-15T18:30:00.000Z", "2023-03-15T18:30:00.000Z"),
       ltcg20Per16MarTo31Mar: getCgQuarterWise(capitalGains, 20, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
@@ -2218,5 +2218,5 @@ function getCFL(cfl: any): number {
 }
 
 function getCgQuarterWise(capitalGains: Array<any>, taxRate: number, startDate: string, endDate: string) {
-  return capitalGains.filter(item=>item.taxRate === taxRate && item.sellDate>=startDate && item.sellDate<endDate && (Math.abs(item?.belAdjustmentAmount)+item?.cgIncome) > 0).reduce((total, element) => total + (Math.abs(element?.belAdjustmentAmount)+element?.cgIncome || 0), 0);
+  return capitalGains.filter(item=>item.taxRate === taxRate && item.sellDate>=startDate && item.sellDate<endDate).reduce((total, element) => total + (Math.abs(element?.belAdjustmentAmount)+Math.max(element?.cgIncome, 0) || 0), 0);
 }

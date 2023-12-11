@@ -347,8 +347,9 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
       this.config.currentPage = event;
     } else {
       this.config.currentPage = event;
+      this.searchParam.page = event - 1;
       // this.selectedPageNo = event - 1;
-      this.getRefundRequestList(event - 1, '', '', 'fromPageChange');
+      this.getRefundRequestList(event-1, '', '', 'fromPageChange');
     }
   }
 

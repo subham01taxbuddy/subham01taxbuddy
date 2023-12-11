@@ -53,6 +53,7 @@
                     <mat-radio-group
                       formControlName="isIndexationBenefitAvailable"
                       class="mvRth"
+                      (change)="getGainType(bonds);calculateTotalCG(bonds)"
                     >
                       <mat-radio-button [value]="true" labelPosition="before"
                         >Yes
@@ -72,6 +73,7 @@
                     <mat-radio-group
                       formControlName="whetherDebenturesAreListed"
                       class="mvRth"
+                      (change)="getGainType(bonds);calculateTotalCG(bonds)"
                     >
                       <mat-radio-button [value]="true" labelPosition="before"
                       >Yes
