@@ -447,9 +447,11 @@ export class SharesAndEquityComponent
               delete element?.improvementsArray?.dateOfImprovement;
             });
 
-            params?.data?.controls['improvementsArray']?.setValue(
-              this.formToBeShownAfterSaveAll[index]?.improvementsArray
-            );
+            if(this.formToBeShownAfterSaveAll[index]?.improvementsArray) {
+              params?.data?.controls['improvementsArray']?.setValue(
+                  this.formToBeShownAfterSaveAll[index]?.improvementsArray
+              );
+            }
             if (
               params.data?.controls['improvementsArray']?.value
                 .indexCostOfImprovement
@@ -1102,7 +1104,7 @@ export class SharesAndEquityComponent
               element.indexCostOfAcquisition = 0;
             }
           });
-          // this.Copy_ITR_JSON.capitalGain[securitiesIndex] = sameData;
+          this.Copy_ITR_JSON.capitalGain[securitiesIndex] = sameData;
 
           // this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails = this.Copy_ITR_JSON.capitalGain[securitiesIndex].assetDetails.concat(securitiesData.assetDetails);
         } else {
