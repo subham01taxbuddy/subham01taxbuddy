@@ -37,14 +37,13 @@ export class FileParserComponent implements OnInit {
 
   initBrokerData() {
     this.brokerData = [
-        //commenting for this release
-      // {
-      //   name: '5Paisa',
-      //   label: '5 Paisa',
-      //   loading: false,
-      //   filesUploaded: [],
-      //   steps: './assets/files/Steps to download 5 Paisa.pdf',
-      // },
+      {
+        name: '5Paisa',
+        label: '5 Paisa',
+        loading: false,
+        filesUploaded: [],
+        steps: './assets/files/Steps to download 5 Paisa.pdf',
+      },
         //not supported
       // {
       //   name: 'IIFL',
@@ -76,14 +75,13 @@ export class FileParserComponent implements OnInit {
       //   filesUploaded: [],
       //   steps: '',
       // },
-      //commenting for this release
-      // {
-      //   name: 'Upstox',
-      //   label: 'Upstox',
-      //   loading: false,
-      //   filesUploaded: [],
-      //   steps: './assets/files/Steps to download upstox statement.pdf',
-      // },
+      {
+        name: 'Upstox',
+        label: 'Upstox',
+        loading: false,
+        filesUploaded: [],
+        steps: './assets/files/Steps to download upstox statement.pdf',
+      },
       {
         name: 'Groww',
         label: 'Groww',
