@@ -291,13 +291,9 @@
           "
         >
           <div>
-            {{
-              clauseIV?.clauseiv7provisio139iNature === "1"
-                ? "The aggregate of tax deducted at source and tax collected at source during the previous year, in the case of the person, is twenty-five thousand rupees or more(fifty thousand for resident senior citizen)"
-                : "The deposit in one or more savings bank account of the person, in aggregate, is fifty lakh rupees or more, in the previous year"
-            }}
+            {{ clauseIV?.clauseiv7provisio139iNature }}
           </div>
-          <div style="float: right">
+          <div style="float: right; width: 25%; text-align: end">
             {{ clauseIV?.clauseiv7provisio139iAmount }}
           </div>
         </div>
