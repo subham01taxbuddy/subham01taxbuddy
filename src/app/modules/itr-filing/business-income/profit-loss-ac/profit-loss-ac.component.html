@@ -1,33 +1,10 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="mrgArd">
   <app-file-parser (newDataAvailable)="reloadData()"></app-file-parser>
 </div>
 <mat-accordion class="headers-align spcArnd2">
-  <mat-expansion-panel hideToggle>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <mat-icon> arrow_forward_ios </mat-icon>
-        Non-Speculative Income
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <app-non-speculative-income
-      #NonSpeculativeIncomeComponentRef
-    ></app-non-speculative-income>
-  </mat-expansion-panel>
-  <mat-expansion-panel hideToggle>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <mat-icon> arrow_forward_ios </mat-icon>
-        Speculative Income
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <app-speculative-income
-      #SpeculativeIncomeComponentRef
-    ></app-speculative-income>
-  </mat-expansion-panel>
+  <app-non-speculative-income #NonSpeculativeIncomeComponentRef></app-non-speculative-income>
+  <app-speculative-income #SpeculativeIncomeComponentRef></app-speculative-income>
 </mat-accordion>
 <div class="flex justify-between p-[30px] back-foot">
   <button class="lgtBtn" (click)="goBack()">
