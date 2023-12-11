@@ -654,6 +654,47 @@ export class ZeroCouponBondsComponent
             this.Copy_ITR_JSON.capitalGain?.push(debData);
           }
         }
+      } else {
+        //indexation entries to be removed with their improvement
+        let goldIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
+            (element) => element.assetType === 'GOLD'
+        );
+
+        bondImprovement = [];
+
+        let debsList = goldIndex >= 0 ?
+            this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e=> !e.isIndexationBenefitAvailable): [];
+
+        //persist the gold asset improvements
+        if(debsList.length > 0){
+          let srnList = debsList.map(asset => asset.srn);
+          this.Copy_ITR_JSON.capitalGain[goldIndex]?.improvement.forEach(improvment => {
+            if(srnList.includes(improvment.srn)){
+              bondImprovement.push(improvment);
+            }
+          });
+        }
+        const debData = {
+          assessmentYear: this.ITR_JSON.assessmentYear,
+          assesseeType: this.ITR_JSON.assesseeType,
+          residentialStatus: this.ITR_JSON.residentialStatus,
+          assetType: 'GOLD',
+          deduction: goldIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[goldIndex].deduction : [],
+          improvement: bondImprovement,
+          buyersDetails: [],
+          assetDetails: debsList,
+        };
+        if (goldIndex >= 0) {
+          if (debData.assetDetails.length > 0) {
+            this.Copy_ITR_JSON.capitalGain[goldIndex] = debData;
+          } else {
+            this.Copy_ITR_JSON.capitalGain.splice(goldIndex, 1);
+          }
+        } else {
+          if (debData.assetDetails.length > 0) {
+            this.Copy_ITR_JSON.capitalGain?.push(debData);
+          }
+        }
       }
       if(zcbDebList?.length > 0){
         let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
