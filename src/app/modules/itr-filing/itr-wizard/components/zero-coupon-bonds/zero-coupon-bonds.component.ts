@@ -542,9 +542,9 @@ export class ZeroCouponBondsComponent
           this.Copy_ITR_JSON.capitalGain.splice(bondIndex, 1);
         }
       } else {
-        if (bondData.assetDetails.length > 0) {
+        // if (bondData.assetDetails.length > 0) {
           this.Copy_ITR_JSON.capitalGain?.push(bondData);
-        }
+        // }
       }
 
       //here we need to check for debentures which have indexation benefits
