@@ -518,8 +518,49 @@
                                   salary.exemptAllowance
                                 )
                               }}
+                              <mat-icon
+                                *ngIf="
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.exemptAllowances
+                                "
+                                class="arrow-icon"
+                                (click)="toggleExemptAllowance($event, i)"
+                              >
+                                keyboard_arrow_down
+                              </mat-icon>
                             </td>
                           </tr>
+                          <ng-container
+                            *ngFor="
+                              let salary of finalCalculations?.salary
+                                ?.employers;
+                              let i = index
+                            "
+                          >
+                            <ng-container
+                              *ngIf="
+                                exemptAllowanceExpanded[i] &&
+                                finalCalculations?.salary?.employers[i]
+                                  ?.exemptAllowances
+                              "
+                            >
+                              <ng-container
+                                *ngFor="
+                                  let salaryAllow of finalCalculations?.salary
+                                    ?.employers[i]?.exemptAllowances;
+                                  let i = index
+                                "
+                              >
+                                <tr>
+                                  <td>
+                                    {{ i + 1 }}.
+                                    {{ salaryAllow?.SalNatureDesc }}
+                                  </td>
+                                  <td>{{ salaryAllow?.SalOthAmount }}</td>
+                                </tr>
+                              </ng-container>
+                            </ng-container>
+                          </ng-container>
                           <tr>
                             <td>4. Less: Professional Tax</td>
                             <td

@@ -202,6 +202,7 @@ export class SummaryComponent implements OnInit {
           standardDeduction: number;
           taxableSalary: number;
           Increliefus89A?: any;
+          exemptAllowances?: any;
         }
       ];
       salaryTotalIncome: number;
@@ -733,6 +734,10 @@ export class SummaryComponent implements OnInit {
       TotAmtCreditUtilisedCY?: any;
       AmtLiabilityAvailable?: any;
     };
+
+    SchedulePTI?: {
+      SchedulePTIDtls?: any;
+    };
     exemptIncome: {
       partnerFirms: [
         {
@@ -996,6 +1001,10 @@ export class SummaryComponent implements OnInit {
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.ITR14IncomeDeductions
                     ]?.IncomeFromSal,
+                  exemptAllowances:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.AllwncExemptUs10?.AllwncExemptUs10Dtls,
                 },
               ],
               salaryTotalIncome:
@@ -2160,7 +2169,7 @@ export class SummaryComponent implements OnInit {
                 ?.AmtSeventhProvisio139iii,
             clauseiv7provisio139iDtls: this.ITR_JSON.itrSummaryJson['ITR'][
               this.itrType
-            ]?.FilingStatus?.clauseiv7provisio139iDtls.map((element) => {
+            ]?.FilingStatus?.clauseiv7provisio139iDtls?.map((element) => {
               const natureValue: any = parseFloat(
                 element?.clauseiv7provisio139iNature
               );
@@ -2371,6 +2380,13 @@ export class SummaryComponent implements OnInit {
                     ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                         ?.ScheduleS?.AllwncExtentExemptUs10
                     : 0;
+
+                let exemptAllowances =
+                  index === higherEmployerIndex
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls
+                    : 0;
+
                 let professionalTax =
                   index === higherEmployerIndex
                     ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
@@ -2410,6 +2426,7 @@ export class SummaryComponent implements OnInit {
                     professionalTax -
                     entAllowance -
                     standardDeduction,
+                  exemptAllowances: exemptAllowances,
                 };
               }),
               salaryTotalIncome:
@@ -4004,6 +4021,12 @@ export class SummaryComponent implements OnInit {
               TotalTaxAttributedAmt:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleESOP
                   ?.TotalTaxAttributedAmt,
+            },
+
+            SchedulePTI: {
+              SchedulePTIDtls:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.SchedulePTI
+                  ?.SchedulePTIDtls,
             },
 
             exemptIncome: {
@@ -6332,6 +6355,13 @@ export class SummaryComponent implements OnInit {
     }
 
     return 'Country not found';
+  }
+
+  exemptAllowanceExpanded: boolean[] = [];
+
+  toggleExemptAllowance(event: Event, index: number) {
+    event.stopPropagation(); // Prevents the expansion panel from toggling
+    this.exemptAllowanceExpanded[index] = !this.exemptAllowanceExpanded[index];
   }
 }
 
