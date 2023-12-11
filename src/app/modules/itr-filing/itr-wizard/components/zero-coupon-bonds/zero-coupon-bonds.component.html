@@ -72,6 +72,7 @@
                     <mat-radio-group
                       formControlName="whetherDebenturesAreListed"
                       class="mvRth"
+                      (change)="getGainType(bonds);calculateTotalCG(bonds)"
                     >
                       <mat-radio-button [value]="true" labelPosition="before"
                       >Yes
