@@ -1649,7 +1649,11 @@ export class LabFormComponent implements OnInit {
         }
       },
       (error) => {
-        this.utilsService.showSnackBar('Failed to get deductions.');
+        if(this.utilsService.isNonEmpty(error.error.message)){
+          this.utilsService.showSnackBar(error.error.message);
+        } else {
+          this.utilsService.showSnackBar('Failed to get deductions.');
+        }
       }
     );
   }

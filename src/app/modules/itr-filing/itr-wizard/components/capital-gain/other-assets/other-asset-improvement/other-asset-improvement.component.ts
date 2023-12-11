@@ -204,6 +204,19 @@ export class OtherAssetImprovementComponent implements OnInit {
     let obj: any = index >= 0 ? this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[index] : null;
     let impObj: any = index >= 0 ? this.goldCg?.improvement : null;
 
+    let maxSrn = 0
+    let tempArray = this.goldCg.assetDetails.map((element) => element.srn);
+    if (tempArray && tempArray.length) {
+      maxSrn = tempArray.reduce((previousValue, currentValue) =>
+          previousValue > currentValue ? previousValue : currentValue
+      );
+    }
+    let srnCheck = this.goldCg.assetDetails.filter((e) => e.srn === srn);
+
+    if (srnCheck && srnCheck.length > 0) {
+       srn = maxSrn + 1;
+    }
+
     this.objSrn = obj ? obj.srn : srn;
     const assetsForm = this.fb.group({
       srn: [obj ? obj.srn : srn],
@@ -629,7 +642,7 @@ export class OtherAssetImprovementComponent implements OnInit {
         );
       } else {
         filteredCapitalGain[0]?.assetDetails?.push(
-          this.goldCg?.assetDetails[0]
+          this.goldCg?.assetDetails[this.goldCg?.assetDetails.length - 1]
         );
       }
 

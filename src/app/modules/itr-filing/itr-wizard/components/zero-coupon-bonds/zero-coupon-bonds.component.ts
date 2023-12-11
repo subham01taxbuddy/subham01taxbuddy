@@ -482,7 +482,7 @@ export class ZeroCouponBondsComponent
           (element) => element.assetType === 'ZERO_COUPON_BONDS'
         );
       }
-      const bondImprovement = [];
+      let bondImprovement = [];
       const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
       let bondsList = [];
       if(this.bondType !== 'bonds'){
@@ -560,8 +560,21 @@ export class ZeroCouponBondsComponent
           (element) => element.assetType === 'GOLD'
         );
         const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
+        bondImprovement = [];
+
         let debsList = goldIndex >= 0 ?
             this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e=> !e.isIndexationBenefitAvailable): [];
+
+        //persist the gold asset improvements
+        if(debsList.length > 0){
+          let srnList = debsList.map(asset => asset.srn);
+          this.Copy_ITR_JSON.capitalGain[goldIndex]?.improvement.forEach(improvment => {
+            if(srnList.includes(improvment.srn)){
+              bondImprovement.push(improvment);
+            }
+          });
+        }
+
         let maxGold = 0;
         if (this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails) {
           let tempArray = this.Copy_ITR_JSON.capitalGain[
@@ -646,6 +659,7 @@ export class ZeroCouponBondsComponent
         let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
           (element) => element.assetType === 'ZERO_COUPON_BONDS'
         );
+        bondImprovement = [];
         const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
         let zcbList = [];
         let maxZcb = 0;
