@@ -733,6 +733,10 @@ export class SummaryComponent implements OnInit {
       TotAmtCreditUtilisedCY?: any;
       AmtLiabilityAvailable?: any;
     };
+
+    SchedulePTI?: {
+      SchedulePTIDtls?: any;
+    };
     exemptIncome: {
       partnerFirms: [
         {
@@ -4006,6 +4010,12 @@ export class SummaryComponent implements OnInit {
                   ?.TotalTaxAttributedAmt,
             },
 
+            SchedulePTI: {
+              SchedulePTIDtls:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.SchedulePTI
+                  ?.SchedulePTIDtls,
+            },
+
             exemptIncome: {
               partnerFirms: [
                 {
@@ -6332,6 +6342,13 @@ export class SummaryComponent implements OnInit {
     }
 
     return 'Country not found';
+  }
+
+  exemptAllowanceExpanded: boolean[] = [];
+
+  toggleExemptAllowance(event: Event, index: number) {
+    event.stopPropagation(); // Prevents the expansion panel from toggling
+    this.exemptAllowanceExpanded[index] = !this.exemptAllowanceExpanded[index];
   }
 }
 

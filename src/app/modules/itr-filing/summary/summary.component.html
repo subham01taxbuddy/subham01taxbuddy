@@ -518,8 +518,29 @@
                                   salary.exemptAllowance
                                 )
                               }}
+                              <mat-icon
+                                class="arrow-icon"
+                                (click)="toggleExemptAllowance($event, i)"
+                              >
+                                keyboard_arrow_down
+                              </mat-icon>
                             </td>
                           </tr>
+                          <ng-container
+                            *ngFor="
+                              let salary of finalCalculations?.salary
+                                ?.employers;
+                              let i = index
+                            "
+
+                          >
+                                                      
+                          <tr *ngIf="exemptAllowanceExpanded[i]">
+
+                            <td>Allowance</td>
+                            <td>Amount</td>
+                          </tr>
+                        </ng-container>
                           <tr>
                             <td>4. Less: Professional Tax</td>
                             <td
