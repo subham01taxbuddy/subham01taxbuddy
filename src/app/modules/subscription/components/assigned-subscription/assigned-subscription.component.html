@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
   move
   away from the page...</span>
@@ -24,16 +24,7 @@
                 <input type="text" matInput [formControl]="assessmentYear" readonly>
               </mat-form-field>
             </div>
-            <!-- <div class="col-sm-2">
-              <label class="input__label" for="attr">Service TYpe</label>
-              <mat-form-field appearance="outline" class="class1">
-                <mat-select placeholder="" [formControl]="serviceType" required>
-                  <mat-option *ngFor="let service of services" [disabled]="service.isHide" [value]="service.value">
-                    <span> {{service.key}}</span>
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div> -->
+
             <div class="col-sm-3">
               <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
                 [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
@@ -103,4 +94,111 @@
     [rowSelection]="rowSelection" (rowClicked)="onSubscriptionRowClicked($event)">
   </ag-grid-angular>
   <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div> -->
+
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
+<span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
+  move away from the page...</span>
+
+
+<div class="main-1">
+  <div class="row rowClr-1">
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-sm-7">
+          <div class="filter-box">
+            <div class="row">
+              <div class="col-sm-12 bckClr">
+                <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                  (sendPrincipleIndividual)="fromSme($event,false, true)"
+                  (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+              </div>
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-sm-2">
+                    <label class="input__label" for="attr">F.Y Year </label>
+                    <mat-form-field appearance="outline" class="customBg">
+                      <input type="text" matInput [formControl]="assessmentYear" readonly>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-3">
+                    <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+                      [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
+                  </div>
+                  <div class="col-sm-7">
+                    <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                      (onChange)="searchByObject($event)"></app-generic-user-filter>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-5">
+          <div class="button-container">
+            <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+            </button>
+            <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+              <i class="fa fa-download" aria-hidden="true"></i> Download File
+            </button>
+            <button class="clrLnk-1" (click)="this.resetFilters()">
+              Clear form
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tableSpc mt-3">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-5">
+            <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+              (onChange)="sortByObject($event)"></app-generic-sorting>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="row">
+        <div class="col-sm-9 row">
+          <div class="table-info-text col-sm-4">
+            Assigned Subscription Details:
+          </div>
+        </div>
+
+      </div>
+      <div class="row note-box">
+        <div class="col-sm-12">
+          <div class="note1 note">
+            <span class="txTit" style="font-size: 15px;">Delete Subscription means-</span>
+            Use this to delete all records related to that subscription including invoice (paid or unpaid) & If invoice
+            is paid then to generate full amount of refund request
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <div class="note1 note">
+            <span class="txTit" style="font-size: 15px;">Update or Revise Subscription means-</span>
+            Use this to upgrade or downgrade plan or to make changes in promo code. If invoice paid and plan downgraded
+            before filing ITR partial refund request will generate.
+          </div>
+        </div>
+      </div>
+      <table>
+        <tr *ngFor="let item of userInfo | paginate:config"></tr>
+      </table>
+
+      <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="subscriptionListGridOptions"
+        (rowClicked)="onSubscriptionRowClicked($event)">
+
+      </ag-grid-angular>
+
+      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    </div>
+  </div>
+
 </div>
+
+

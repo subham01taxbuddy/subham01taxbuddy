@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
     <mat-expansion-panel [expanded]="true">
@@ -51,4 +51,57 @@
     (rowClicked)="onSmeRowClicked($event)">
   </ag-grid-angular>
   <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+</div> -->
+
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
+<div class="main-1">
+  <div class="row rowClr-1">
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-sm-7">
+          <div class="filter-box">
+            <div class="row">
+              <div class="col-sm-12 ">
+                <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                  (onChange)="searchByObject($event)"></app-generic-user-filter>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-5">
+          <div class="button-container">
+            <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+            </button>
+            <button class="clrLnk-1" (click)="this.resetFilters()">
+              Clear form
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tableSpc mt-3">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="table-info-text">
+              Resigned SME Details:
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <table>
+      <tr *ngFor="let item of smeInfo | paginate : config"></tr>
+    </table>
+
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="smeListGridOptions" [rowSelection]="rowSelection"
+      (rowClicked)="onSmeRowClicked($event)">
+    </ag-grid-angular>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  </div>
 </div>

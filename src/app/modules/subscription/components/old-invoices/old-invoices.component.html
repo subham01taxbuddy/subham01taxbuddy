@@ -1,5 +1,5 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<!-- New Open Close Filter Starts -->
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
     <mat-expansion-panel [expanded]=true>
@@ -24,7 +24,7 @@
               </mat-form-field>
             </div>
             <div class="col-sm-3 spsTp">
-              <!-- <mat-label> From Date </mat-label> -->
+
               <mat-form-field appearance="outline">
                 <mat-label>From Date</mat-label>
                 <input matInput [formControl]="startDate" [matDatepicker]="picker1" [max]="maxDate" autocomplete="off"
@@ -35,7 +35,7 @@
               </mat-form-field>
             </div>
             <div class="col-sm-3 spsTp">
-              <!-- <mat-label> To Date </mat-label> -->
+
               <mat-form-field appearance="outline">
                 <mat-label>To Date</mat-label>
                 <input matInput [formControl]="endDate" [matDatepicker]="picker2" [max]="maxDate" autocomplete="off" />
@@ -78,9 +78,8 @@
     </mat-expansion-panel>
   </mat-accordion>
 </div>
-<!-- New Open Close Filter Ends -->
 
-<!-- Table Below -->
+
 <div class="tableSpc">
   <div class="row">
     <div class="col-sm-8">
@@ -101,4 +100,104 @@
   </ag-grid-angular>
   <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
 
+</div> -->
+
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
+<div class="main-1">
+  <div class="row rowClr-1">
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-sm-7">
+          <div class="filter-box">
+            <div class="row">
+              <div class="col-sm-4 ">
+                <mat-label>Financial Year</mat-label>
+                <mat-form-field appearance="outline" class="customBg">
+                  <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear"
+                    autocomplete="off" (selectionChange)="setDates()">
+                    <mat-option *ngFor="let item of fyDropDown" [value]="item.value">
+                      {{item.label}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
+                <mat-form-field appearance="outline">
+                  <mat-label>From Date</mat-label>
+                  <input matInput [formControl]="startDate" [matDatepicker]="picker1" [max]="maxDate"
+                    autocomplete="off" (dateChange)="setToDateValidation(startDate.value)" />
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                  <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
+                <mat-form-field appearance="outline">
+                  <mat-label>To Date</mat-label>
+                  <input matInput [formControl]="endDate" [matDatepicker]="picker2" [max]="maxDate"
+                    autocomplete="off" />
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                  <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                  <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4 spsTp">
+                <mat-label>Select Status</mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select placeholder="Select Status" [formControl]="status">
+                    <mat-option *ngFor="let item of Status" [value]="item.value">
+                      {{ item.label }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-8">
+                <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                  (onChange)="searchByObject($event)"></app-generic-user-filter>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-5">
+
+          <div class="button-container">
+            <button class="srch-btn-1" [disabled]="loading" (click)="getInvoices()">
+              <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
+            </button>
+            <button class="dwldBtn-1" [disabled]="loading" (click)="downloadInvoicesSummary()">
+              <i class="fa fa-download" aria-hidden="true"></i> Download File
+            </button>
+            <button class="clrLnk-1" [disabled]="loading" (click)="resetFilters()">Clear form</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tableSpc mt-3">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-8">
+            <div class="txTit">
+              Old Invoices Details:
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="count1"> Total Invoices: <span class="txClr1">{{ totalInvoice }}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table>
+      <tr *ngFor="let item of invoiceInfo | paginate: config"></tr>
+    </table>
+    <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="invoiceListGridOptions"
+      (rowClicked)="onInvoiceRowClicked($event)">
+    </ag-grid-angular>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  </div>
 </div>

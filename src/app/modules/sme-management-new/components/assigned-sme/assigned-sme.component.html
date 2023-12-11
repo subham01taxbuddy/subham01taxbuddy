@@ -1,8 +1,8 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
   move
   away from the page...</span>
-<!-- New Open Close Filter Starts -->
+
 <div class="mrgArdTog1">
   <mat-accordion class="headers-align">
     <mat-expansion-panel [expanded]="!dataOnLoad">
@@ -15,45 +15,27 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <!-- <div class="col-sm-12 bckClr" *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')">
-              <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme($event, true)"
-                (sendOwner)="fromSme($event, false)"></app-leader-list-dropdown>
-            </div> -->
+
             <div class="col-sm-12 bckClr" *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')">
               <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
-                (sendPrincipleIndividual)="fromPrinciple($event)"[skipChild]= false></app-sme-list-drop-down>
+                (sendPrincipleIndividual)="fromPrinciple($event)" [skipChild]=false></app-sme-list-drop-down>
             </div>
 
-            <!-- <div class="col-sm-6 spsTp">
-              <label class="input__label" for="attr">Select attribute</label>
-              <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey
-                [ngClass]="{'error': showError && (!key || !searchVal)}">
-                <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
-                  {{drop.name}}</option>
-              </select>
-            </div>
 
-            <div class="col-sm-6 spsTp">
-              <label class="input__label" for="attr">Enter value</label>
-              <div class="input__select">
-                <input type="text" class="select__box ogp_select" style="background-image:none" [(ngModel)]="searchVal"
-                  name="searchVal" [ngClass]="{'error': showError && (!key || !searchVal)}" />
-              </div>
-            </div> -->
             <div class="col-sm-12 ">
               <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
-                  (onChange)="searchByObject($event)"></app-generic-user-filter>
+                (onChange)="searchByObject($event)"></app-generic-user-filter>
             </div>
 
             <div class="col-sm-4 spsTp">
               <mat-label>Select Role</mat-label>
               <mat-form-field appearance="outline">
-                  <mat-select  (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
-                    [ngClass]="{'error': showError && (selectRole.invalid || !searchVal)}">
-                    <mat-option *ngFor="let drop of selectRoleFilter" [value]="drop.value" (click)="getRoleValue(drop)">
-                     {{ drop.name }}
-                    </mat-option>
-                  </mat-select>
+                <mat-select (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
+                  [ngClass]="{'error': showError && (selectRole.invalid || !searchVal)}">
+                  <mat-option *ngFor="let drop of selectRoleFilter" [value]="drop.value" (click)="getRoleValue(drop)">
+                    {{ drop.name }}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
 
@@ -61,7 +43,7 @@
               <mat-label>Select Language</mat-label>
               <mat-form-field appearance="outline">
                 <mat-select [formControl]="selectedLangControl" (selectionChange)="onLangChange($event)">
-                 <mat-option *ngFor="let lang of langList" [value]="lang">
+                  <mat-option *ngFor="let lang of langList" [value]="lang">
                     {{ lang }}
                   </mat-option>
                 </mat-select>
@@ -72,7 +54,8 @@
               <mat-label>Select ITR Capability</mat-label>
               <mat-form-field appearance="outline">
                 <mat-select [formControl]="selectedITRCapabilityControl">
-                  <mat-option *ngFor="let capability of itrCapabilities" [value]="capability.planId"  (click)="getPlanFilterValue(capability)">
+                  <mat-option *ngFor="let capability of itrCapabilities" [value]="capability.planId"
+                    (click)="getPlanFilterValue(capability)">
                     {{ capability.name }}
                   </mat-option>
                 </mat-select>
@@ -111,9 +94,8 @@
     </mat-expansion-panel>
   </mat-accordion>
 </div>
-<!-- New Open Close Filter Ends -->
 
-<!-- Table Below -->
+
 <div class="tableSpc">
   <div class="row">
     <div class="col-sm-9">
@@ -121,15 +103,13 @@
         Assigned SME Details:
       </div>
     </div>
-    <!-- <div class="col-sm-3">
-      <div class="count1">Total Count: <span class="txClr1">{{this.config.totalItems }}</span></div>
-    </div> -->
+
   </div>
   <div class="col-sm-12">
     <div class="tpMain">
       <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Count:</span>&nbsp;
       <span class="numTxBg1">{{ this.config.totalItems }}</span>
-      <!-- Inside Row -->
+
       <div class="row">
         <div class="col-sm-4">
           <div class="radius2">
@@ -169,7 +149,7 @@
         </div>
 
       </div>
-      <!-- Inside Row Ends -->
+
     </div>
   </div>
 
@@ -182,6 +162,165 @@
 
   <div *ngIf="smeListLength > 1">
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  </div>
+
+</div>
+ -->
+
+ <div class="">
+  <div class="main-1">
+    <div class="row rowClr-1">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-7">
+            <div class="filter-box">
+              <div class="row">
+                <div class="col-sm-12 bckClr" *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')">
+                  <app-sme-list-drop-down #smeDropDown (sendLeader)="fromLeader($event)"
+                    (sendPrincipleIndividual)="fromPrinciple($event)" [skipChild]=false></app-sme-list-drop-down>
+                </div>
+                <div class="col-sm-12 ">
+                  <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                    (onChange)="searchByObject($event)"></app-generic-user-filter>
+                </div>
+
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-4 spsTp">
+                      <mat-label>Select Role</mat-label>
+                      <mat-form-field appearance="outline">
+                        <mat-select (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
+                          [ngClass]="{'error': showError && (selectRole.invalid || !searchVal)}">
+                          <mat-option *ngFor="let drop of selectRoleFilter" [value]="drop.value" (click)="getRoleValue(drop)">
+                            {{ drop.name }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 spsTp">
+                      <mat-label>Select Language</mat-label>
+                      <mat-form-field appearance="outline">
+                        <mat-select [formControl]="selectedLangControl" (selectionChange)="onLangChange($event)">
+                          <mat-option *ngFor="let lang of langList" [value]="lang">
+                            {{ lang }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 spsTp">
+                      <mat-label>Select ITR Capability</mat-label>
+                      <mat-form-field appearance="outline">
+                        <mat-select [formControl]="selectedITRCapabilityControl">
+                          <mat-option *ngFor="let capability of itrCapabilities" [value]="capability.planId"
+                            (click)="getPlanFilterValue(capability)">
+                            {{ capability.name }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="button-container">
+              <button class="srch-btn-1" (click)="advanceSearch()"><i class="fa fa-search" aria-hidden="true"></i> Search
+              </button>
+              <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+                <i class="fa fa-download" aria-hidden="true"></i> Download File
+              </button>
+              <button class="clrLnk-1" (click)="this.resetFilters()">
+                Clear form
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tableSpc mt-3">
+      <div class="row">
+        <div class="col-sm-12 ">
+          <div class="row">
+            <div class="col-sm-5">
+              <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                (onChange)="sortByObject($event)"></app-generic-sorting>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="row">
+          <div class="col-sm-9 row">
+            <div class="table-info-text col-sm-4">
+              Assigned SME Details:
+            </div>
+          </div>
+
+        </div>
+        <div class="col-sm-12">
+          <div class="tpMain">
+            <span class="TxSm"><i class="fa fa-user-circle-o"></i> Total Count:</span>&nbsp;
+            <span class="numTxBg1">{{ this.config.totalItems }}</span>
+
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="radius2">
+                  <div class="inBxL">
+                    <span class="numTxSm grTx1">{{ this.config.internalCount }}</span><br>
+                    <span class="TxSm">Internal Count</span>
+                  </div>
+                  <div class="inBxR">
+                    <span class="numTxSm OrgTx">{{ this.config.externalCount }}</span><br>
+                    <span class="TxSm">External Count</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius2">
+                  <div class="inBxL">
+                    <span class="numTxSm grTx1">{{ this.config.activeCount }}</span><br>
+                    <span class="TxSm">Active Count</span>
+                  </div>
+                  <div class="inBxR">
+                    <span class="numTxSm OrgTx">{{ this.config.inactiveCount }}</span><br>
+                    <span class="TxSm">Inactive Count</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="radius2">
+                  <div class="inBxL">
+                    <span class="numTxSm grTx1">{{ this.config.assignmentOnCount }}</span><br>
+                    <span class="TxSm">Assignment On</span>
+                  </div>
+                  <div class="inBxR">
+                    <span class="numTxSm OrgTx">{{ this.config.assignmentOffCount }}</span><br>
+                    <span class="TxSm">Assignment Off</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+        <table>
+          <tr *ngFor="let item of smeInfo | paginate:config"></tr>
+        </table>
+
+        <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="smeListGridOptions"
+          (rowClicked)="onSmeRowClicked($event)">
+
+        </ag-grid-angular>
+
+        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+      </div>
+    </div>
+
   </div>
 
 </div>
