@@ -29,7 +29,7 @@ declare let $: any;
 @Component({
   selector: 'app-salary',
   templateUrl: './salary.component.html',
-  styleUrls: ['./salary.component.css'],
+  styleUrls: ['./salary.component.scss'],
 })
 export class SalaryComponent extends WizardNavigation implements OnInit {
   // @ViewChild('buttonContainer') buttonContainer: ElementRef;

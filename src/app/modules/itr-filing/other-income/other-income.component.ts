@@ -11,7 +11,7 @@ import { WizardNavigation } from '../../itr-shared/WizardNavigation';
 @Component({
   selector: 'app-other-income',
   templateUrl: './other-income.component.html',
-  styleUrls: ['./other-income.component.css'],
+  styleUrls: ['./other-income.component.scss'],
 })
 export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   loading: boolean = false;

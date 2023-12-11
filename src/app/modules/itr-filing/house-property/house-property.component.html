@@ -3,12 +3,12 @@
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
 
-<div class="page-wrapper">
+<div class="page-wrapper" *ngIf="hpView === 'FORM'">
 
   <!-- main area -->
   <main>
 
-    <div class="frameC" *ngIf="hpView === 'FORM'">
+    <div class="frameC">
       <div class="div">
         <div class="text-wrapper">House Property</div>
         <div class="mingcute-down-fill"></div>
