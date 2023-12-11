@@ -325,10 +325,20 @@ button {
 /* Style the page wrapper */
 .page-wrapper {
   display: flex;
-  flex-direction: row;
+  /* flex-direction: row;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: space-between; */
+  min-height: 100vh;
 }
+.col1{
+  flex: 1!important;
+}
+
+.col3{
+  flex: 1!important;
+}
+
+
 /* Style the header */
 header {
   text-align: center;
@@ -519,8 +529,11 @@ header {
 
 /* center css starts */
 main {
-  margin: 0px 10px 0px 0px!important;
-  width: 100%;
+  /* margin: 0px 10px 0px 0px!important;
+  width: 100%; */
+  display:flex;
+  flex-direction: column;
+  width:100%;
 }
 
  .inpClr{
@@ -4166,7 +4179,7 @@ sup {
 table {
   border-collapse: collapse;
   border-color: inherit;
-  text-indent: 0
+  text-indent: 0;
 }
 
 button,
@@ -7497,9 +7510,9 @@ body[dir=rtl] .checkbox[checked=true] {
   display: inline-flex
 }
 
-.table {
+/* .table {
   display: table
-}
+} */
 
 .grid {
   display: grid
