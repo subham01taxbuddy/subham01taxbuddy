@@ -1245,7 +1245,7 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   updateStatus(mode, client) {
     let disposable = this.dialog.open(ChangeStatusComponent, {
-      width: '50%',
+      width: '60%',
       height: 'auto',
       data: {
         userId: client.userId,
