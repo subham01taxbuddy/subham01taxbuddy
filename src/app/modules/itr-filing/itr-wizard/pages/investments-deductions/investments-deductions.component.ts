@@ -17,7 +17,7 @@ declare let $: any;
 @Component({
   selector: 'app-investments-deductions',
   templateUrl: './investments-deductions.component.html',
-  styleUrls: ['./investments-deductions.component.css'],
+  styleUrls: ['./investments-deductions.component.scss'],
 })
 export class InvestmentsDeductionsComponent
   extends WizardNavigation

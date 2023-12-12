@@ -48,7 +48,7 @@ export const MY_FORMATS = {
 @Component({
   selector: 'app-personal-information',
   templateUrl: './personal-information.component.html',
-  styleUrls: ['./personal-information.component.css'],
+  styleUrls: ['./personal-information.component.scss'],
   providers: [
     TitleCasePipe,
     {

@@ -1,82 +1,85 @@
-<div class="txTtl">Upload Capital Gain/F&O statement here:</div>
-<div class="card">
-  <input
-    type="file"
-    id="input-file-id"
-    hidden
-    class="inptfile"
-    (change)="uploadFile($event)"
-    accept=".xls, .xlsx"
-  />
+<div class="accordion" id="myAccordion">
+  <div class="accordion-item">
+  <h2 class="accordion-header" id="heading1">
+    <button type="button" class="accordion-button" data-bs-toggle="collapse"
+            data-bs-target="#collapse1">Direct Upload From Statement</button>
 
-  <div class="">
-    <div class="alert alert-warning" role="alert">
-      <i class="material-icons-outlined adIc">warning</i> Please upload all the
-      brokers statements first and only then proceed to edit.
-    </div>
-  </div>
-
-  <div class="card__col-xs-12 card__col-sm-12">
-    <div class="card__col-xs-12">
-      <div class="upload-data">
-
-        <div class="card__col-sm-12">
-          <div class="row">
-            <div class="col-sm-6 left-label">Upload Capital Gain/F&O statement here:</div>
-            <div class="col-sm-2">
-              <button class="upload m-0" (click)="upload()">
-                <i class="fa fa-upload"></i>
-                Manual Upload
-              </button>
-            </div>
-            <div class="col-sm-3">
-              <button class="upload m-0" (click)="cloudUpload()">
-                <i class="fa fa-cloud-upload"></i>
-                Select Uploaded Doc
-              </button>
-            </div>
-            <div class="col-sm-1">
-              <mat-progress-spinner
-                *ngIf="loading"
-                color="primary"
-                diameter="20"
-                mode="indeterminate"
-              ></mat-progress-spinner>
-            </div>
-            <div class="col-sm-9">
-              <label *ngFor="let file of filesUploaded" class="filename">
-                <i
-                  class="fa fa-check-circle"
-                  style="color: green"
-                  aria-hidden="true"
-                ></i
-                >&nbsp;{{ file }}
-              </label>
-              <br />
-            </div>
+  </h2>
+  <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+    <div class="accordion__item-body">
+      <div class="surround_text">
+        <div class="row mb-20">
+          <div class="col-5 align_self">
+            <p class="normal_text">Upload Capital Gain/F&O Statement</p>
           </div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-6 left-label">How to Download any company statement?</div>
-            <div class="col-sm-4">
-              <a class="download m-0" (click)="downloadTemplate()">
-                <i class="fa fa-download"></i>
-                TaxBuddy Capital Gain/F&O Template
-              </a>
-            </div>
+
+          <div class="col-7">
+            <button class="btn btn__primary" (click)="upload()"><i
+                    class="fa-solid fa-arrow-up-from-bracket"></i> Manual Upload
+              <input
+                      type="file"
+                      id="input-file-id"
+                      hidden
+                      class="inptfile"
+                      (change)="uploadFile($event)"
+                      accept=".xls, .xlsx"/>
+            </button>
+            <button class="btn btn__primary" (click)="cloudUpload()"><i class="fa-regular fa-cloud"></i> Upload From Cloud
+            </button>
           </div>
-          <hr>
-          <div class="row">
-            <div class="col-sm-6 left-label">Steps to Download (Listed Company) Statement?</div>
-            <div class="row col-sm-6">
-              <div *ngFor="let broker of brokerData" class="col-sm-4">
-                <a class="col-sm-4 download" *ngIf="broker.name !== 'Taxbuddy'" (click)="steps(broker.steps)">
-                  <i class="fa fa-download"></i> {{ broker.name }} Steps</a>
-              </div>
+        </div>
+
+        <div class="">
+          <div class="alert alert-warning" role="alert">
+            <i class="material-icons-outlined adIc">warning</i> Please upload all the
+            brokers statements first and only then proceed to edit.
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-1">
+            <mat-progress-spinner
+                    *ngIf="loading"
+                    color="primary"
+                    diameter="20"
+                    mode="indeterminate"
+            ></mat-progress-spinner>
+          </div>
+          <div class="col-sm-9">
+            <label *ngFor="let file of filesUploaded" class="filename">
+              <i
+                      class="fa fa-check-circle"
+                      style="color: green"
+                      aria-hidden="true"
+              ></i
+              >&nbsp;{{ file }}
+            </label>
+            <br />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-7 align_self">
+            <p class="normal_text">Use Taxbuddy Template</p>
+          </div>
+          <div class="col-5">
+            <button class="btn btn__primary">
+              <i class="fa fa-download" aria-hidden="true" (click)="downloadTemplate()"></i> Download Taxbuddy Template</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-7 align_self"><p class="normal_text">Steps to Download (Listed Company) Statement?</p></div>
+          <div class="row col-sm-6">
+            <div *ngFor="let broker of brokerData" class="col-sm-4">
+              <a class="col-sm-4 download" *ngIf="broker.name !== 'Taxbuddy'" (click)="steps(broker.steps)">
+                <i class="fa fa-download"></i> {{ broker.name }} Steps</a>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
+</div>
 </div>

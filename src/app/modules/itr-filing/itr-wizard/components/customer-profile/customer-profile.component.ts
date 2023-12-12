@@ -55,7 +55,7 @@ export const MY_FORMATS = {
 @Component({
   selector: 'app-customer-profile',
   templateUrl: './customer-profile.component.html',
-  styleUrls: ['./customer-profile.component.css'],
+  styleUrls: ['./customer-profile.component.scss'],
   animations: [
     // Each unique animation requires its own trigger. The first argument of the trigger function is the name
     trigger('rotatedState', [
