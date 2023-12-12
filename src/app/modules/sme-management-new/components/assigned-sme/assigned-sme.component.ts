@@ -588,14 +588,17 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     let fieldName = [
       { key: 'mobileNumber', value: 'Mobile No' },
       { key: 'name', value: 'Name' },
+      { key: 'activeCaseMaxCapacity', value: 'Active Capacity' },
+      { key: 'balanceUserAssignmentCapacity', value: 'Balance Capacity' },
+      { key: 'exhaustedCapacity', value: 'Exhausted capacity' },
+      { key: 'services', value: 'Assigned Services' },
+      { key: 'serviceEligibility_ITR.assignmentStart', value: 'Session' },
       { key: 'callingNumber', value: 'Calling No' },
       { key: 'smeOfficialEmail', value: 'Official Mail ID' },
       { key: 'email', value: 'Komm ID' },
       { key: 'parentName', value: 'Parent Name/Leader Name' },
       { key: 'parentPrincipalUserId', value: 'Principal Name' },
       { key: 'roles', value: 'Role' },
-      { key: 'services', value: 'Assigned Services' },
-      { key: 'serviceEligibility_ITR.assignmentStart', value: 'Session' },
       { key: 'languages', value: 'Language Proficiency' },
       { key: 'skillSetPlanIdList', value: 'ITR Capabilities' }
     ]
