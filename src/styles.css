@@ -319,7 +319,9 @@ button {
 
 /*CSS changes by Sushma End */
 
-
+.left-sidebar.fixed {
+  padding-top: 100px !important;
+}
 /* New Backoffice 07 Nov 2023 */
 
 /* Style the page wrapper */
