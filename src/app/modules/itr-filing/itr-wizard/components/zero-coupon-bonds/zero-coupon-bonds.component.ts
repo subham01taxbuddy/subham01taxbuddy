@@ -687,9 +687,9 @@ export class ZeroCouponBondsComponent
           residentialStatus: this.ITR_JSON.residentialStatus,
           assetType: 'GOLD',
           deduction: goldIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[goldIndex].deduction : [],
-          improvement: bondImprovement,
+          improvement: this.bondType === 'bonds' ? bondImprovement : this.Copy_ITR_JSON.capitalGain[goldIndex]?.improvement,
           buyersDetails: [],
-          assetDetails: debsList,
+          assetDetails: this.bondType === 'bonds' ? debsList : this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails,
         };
         if (goldIndex >= 0) {
           if (debData.assetDetails.length > 0) {
