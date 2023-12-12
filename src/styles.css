@@ -2772,6 +2772,7 @@ main {
 /* Rizwan CSS 06 March 2023 */
 .close {
   color: #cccccc;
+  opacity: 100 !important;
 }
 
 .close:hover {
@@ -2788,6 +2789,8 @@ main {
   margin-top: 20px !important;
   margin-bottom: 10px !important;
 }
+
+
 
 .cardClr {
   background: #FBFBFD;
