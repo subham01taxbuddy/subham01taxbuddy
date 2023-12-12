@@ -3214,7 +3214,7 @@ main {
 }
 
 .bckClr {
-  background-color: #f7f7fa;
+  /* background-color: #f7f7fa; */
   display: block;
   padding: 10px;
   border-radius: 5px;
@@ -3551,6 +3551,11 @@ main {
 
 .mat-form-field {
   width: 100% !important;
+  background-color: #DDEDFF;
+}
+
+.select__box {
+  background-color: #DDEDFF!important;
 }
 
 .rt-btn {
