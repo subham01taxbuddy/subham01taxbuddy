@@ -1064,6 +1064,7 @@
                             <th>Section No.</th>
                             <th>Nature Of Business Code</th>
                             <th>Trade Name</th>
+                            <th>Description</th>
                             <th>Gross Turnover/Receipt</th>
                             <th>Taxable Income</th>
                           </tr>
@@ -1098,6 +1099,7 @@
                                   {{ business?.natureOfBusinessCode }}
                                 </td>
                                 <td>{{ business?.tradeName }}</td>
+                                <td>{{ business?.description }}</td>
                                 <td>Rs {{ business?.grossTurnover }}</td>
                                 <td>
                                   Rs
@@ -1126,7 +1128,7 @@
                             >
                               <ng-container
                                 *ngIf="
-                                  business.grossTurnover > 0 &&
+                                  business.grossTurnover > 0 ||
                                   business.TaxableIncome > 0
                                 "
                               >
@@ -1137,6 +1139,7 @@
                                   {{ business?.natureOfBusinessCode }}
                                 </td>
                                 <td>{{ business?.tradeName }}</td>
+                                <td>{{ business?.description }}</td>
                                 <td>Rs {{ business?.grossTurnover }}</td>
                                 <td>
                                   Rs
@@ -1463,7 +1466,7 @@
                           <th style="font-weight: bold">Section</th>
                           <th style="font-weight: bold">Name of Business</th>
                           <th style="font-weight: bold">Business Code</th>
-                          <th></th>
+                          <th style="font-weight: bold">Description</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1485,7 +1488,9 @@
                           <td>
                             {{ businessDetail?.CodeAE }}
                           </td>
-                          <td></td>
+                          <td>
+                            {{ businessDetail?.description }}
+                          </td>
                         </tr>
 
                         <!-- 44ae income details  -->
