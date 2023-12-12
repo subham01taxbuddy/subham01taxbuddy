@@ -47,17 +47,13 @@ export class TcsComponent implements OnInit {
     };
 
     this.salaryForm = this.inItForm();
-    // if (
-    //   this.Copy_ITR_JSON.taxPaid?.tcs &&
-    //   this.Copy_ITR_JSON.taxPaid?.tcs.length > 0
-    // ) {
-    //   this.Copy_ITR_JSON.taxPaid?.tcs?.forEach((item) => {
-    //     this.addMoreSalary(item);
-    //   });
-    // } else {
+
+    if(this.data?.assetIndex != null && this.data.assetIndex >= 0){
+      this.addMoreSalary(this.Copy_ITR_JSON.taxPaid?.tcs?.[this.data.assetIndex]);
+    } else {
       this.addMoreSalary();
-    // }
-    // this.salaryForm.disable();
+    }
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
