@@ -543,7 +543,7 @@ export class ZeroCouponBondsComponent
       console.log('bondData', bondData);
 
       if (bondIndex >= 0) {
-        if (bondData.assetDetails.length > 0) {
+        if (bondData.assetDetails.length > 0 || bondData.deduction?.length > 0) {
           this.Copy_ITR_JSON.capitalGain[bondIndex] = bondData;
         } else {
           this.Copy_ITR_JSON.capitalGain.splice(bondIndex, 1);
