@@ -98,6 +98,9 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
     if (!pageChange) {
       this.cacheManager.clearCache();
     }
+    if (Object.keys(this.searchBy).length) {
+      this.searchParam.page = 0;
+    }
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/bo/sme-details?${data}`;
 
