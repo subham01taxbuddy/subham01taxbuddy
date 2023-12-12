@@ -71,6 +71,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     // { value: '', name: 'Subscription Amount' },
     { value: 'invoiceDetail.invoiceNo', name: 'Invoice Number' },
     { value: 'promoCode', name: 'Promo code' },
+    { value: 'createdDate', name: 'Created Date' },
   ];
   searchBy: any = {};
   searchMenus = [];
