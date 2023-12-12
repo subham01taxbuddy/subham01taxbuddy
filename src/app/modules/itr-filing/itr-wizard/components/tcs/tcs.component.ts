@@ -121,6 +121,11 @@ export class TcsComponent implements OnInit {
     );
     this.loading = true;
     if (this.salaryForm.valid) {
+      if(!this.Copy_ITR_JSON.taxPaid){
+        this.Copy_ITR_JSON.taxPaid = {
+          onSalary: [], otherThanSalary16A: [], otherThanSalary26QB: [], otherThanTDSTCS: [], paidRefund: [], tcs: []
+        }
+      }
       this.Copy_ITR_JSON.taxPaid.tcs = this.salaryForm.value.salaryArray;
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
