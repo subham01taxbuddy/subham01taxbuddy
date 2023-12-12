@@ -351,6 +351,10 @@ export class ZeroCouponBondsComponent
           : this.bondType === 'zeroCouponBonds'
             ? 'ZERO_COUPON_BONDS'
             : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
+      if(bonds.controls['isIndexationBenefitAvailable'].value === false){
+        bonds.controls['indexCostOfAcquisition'].setValue(0);
+        bonds.controls['indexCostOfImprovement'].setValue(0);
+      }
       let request = {
         assetType: type,
         buyDate: moment(new Date(purchaseDate)).format('YYYY-MM-DD'),
@@ -361,6 +365,9 @@ export class ZeroCouponBondsComponent
         (result: any) => {
           if (result.success) {
             bonds.controls['gainType'].setValue(result.data.capitalGainType);
+            this.calculateIndexCost(bonds);
+            this.calculateIndexCost(bonds, 'asset');
+            this.calculateTotalCG(bonds);
             this.loading = false;
           } else {
             this.loading = false;
