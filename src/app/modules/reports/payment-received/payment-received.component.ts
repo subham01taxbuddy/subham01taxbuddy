@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 
 export const MY_FORMATS = {
@@ -34,10 +35,10 @@ export const MY_FORMATS = {
 export class PaymentReceivedComponent implements OnInit {
   startDate = new FormControl('');
   endDate = new FormControl('');
-  minEndDate = new Date();
-  maxStartDate = new Date();
-  maxDate = new Date(2024, 2, 31);
-  minDate = new Date(2023, 3, 1);
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
   loading: boolean;
 
   constructor(
@@ -45,13 +46,15 @@ export class PaymentReceivedComponent implements OnInit {
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
+    this.setToDateValidation();
   }
 
   ngOnInit(): void {
   }
 
-  setToDateValidation(FromDate) {
-    this.minEndDate = FromDate;
+  setToDateValidation() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   downloadReport() {

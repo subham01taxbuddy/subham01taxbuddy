@@ -55,9 +55,12 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  maxStartDate = new Date()
-  maxDate = this.maxStartDate
   minDate = new Date(2023, 3, 1);
+  minStartDate: string = '2023-04-01';
+  maxStartDate=moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
+
   // maxDate: any = new Date();
   allFilerList: any;
   toDateMin = this.minDate;
@@ -163,6 +166,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       currentPage: 1,
       totalItems: null,
     };
+    this.maxStartDate=this.endDate.value;
   }
 
   sortByObject(object) {
@@ -214,6 +218,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     }
 
     this.startDate.setValue('2023-04-01');
+    this.minEndDate = this.startDate.value;
     this.endDate.setValue(new Date());
 
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
@@ -932,9 +937,9 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     }
     console.log(data);
   }
-  setToDateValidation(FromDate) {
-    console.log('FromDate: ', FromDate);
-    this.toDateMin = FromDate;
+  setToDateValidation() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate=this.endDate.value;
   }
 
 
