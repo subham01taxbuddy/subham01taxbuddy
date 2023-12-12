@@ -1126,7 +1126,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
   updateStatus(mode, client) {
     let disposable = this.dialog.open(ChangeStatusComponent, {
-      width: '50%',
+      width: '60%',
       height: 'auto',
       data: {
         userId: client.userId,
@@ -1168,7 +1168,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
   openChat(client) {
     let disposable = this.dialog.open(ChatOptionsDialogComponent, {
-      width: '50%',
+      width: '40%',
       height: 'auto',
       data: {
         userId: client.userId,
