@@ -224,6 +224,7 @@ export class SummaryComponent implements OnInit {
           hpStandardDeduction: number;
           hpinterest: number;
           hpNetIncome: number;
+          ArrearsUnrealizedRentRcvd?:any;
           hpIncome: number;
         }
       ];
@@ -1048,6 +1049,9 @@ export class SummaryComponent implements OnInit {
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.ITR14IncomeDeductions
                     ]?.[hpStandardDeduction],
+                    ArrearsUnrealizedRentRcvd:                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.ArrearsUnrealizedRentRcvd,
                   hpinterest:
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.ITR14IncomeDeductions
@@ -2622,6 +2626,7 @@ export class SummaryComponent implements OnInit {
                   annualValue: element?.Rentdetails?.BalanceALV,
                   hpStandardDeduction:
                     element?.Rentdetails?.ThirtyPercentOfBalance,
+                    ArrearsUnrealizedRentRcvd:element?.Rentdetails?.ArrearsUnrealizedRentRcvd,
                   hpinterest: element?.Rentdetails?.IntOnBorwCap,
                   hpNetIncome: element?.Rentdetails?.IncomeOfHP,
                   hpIncome: element?.Rentdetails?.IncomeOfHP,

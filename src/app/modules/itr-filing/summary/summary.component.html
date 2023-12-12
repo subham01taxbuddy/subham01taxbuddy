@@ -956,6 +956,23 @@
                             </td>
                           </tr>
                           <tr>
+                            <td>4. Standard Deduction @30%</td>
+                            <td
+                              *ngFor="
+                                let hp of finalCalculations?.houseProperties
+                                  ?.houseProps;
+                                let i = index
+                              "
+                            >
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  hp.hpStandardDeduction
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
                             <td>5. Interest On Home Loan</td>
                             <td
                               *ngFor="
