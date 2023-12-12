@@ -759,6 +759,78 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
         }
       },
       {
+        headerName: 'Assigned Services',
+        field: 'services',
+        width: 120,
+        display: 'block',
+        suppressMovable: true,
+        wrapText: true,
+        autoHeight: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellRenderer: (params: any) => {
+          const smeData = params?.data;
+          const serviceTypes = [
+            { key: 'serviceEligibility_ITR', displayName: 'ITR' },
+            { key: 'serviceEligibility_TPA', displayName: 'TPA' },
+            { key: 'serviceEligibility_NOTICE', displayName: 'NOTICE' },
+            { key: 'serviceEligibility_GST', displayName: 'GST' },
+          ];
+
+          let result = [];
+          serviceTypes.forEach(serviceType => {
+            if (smeData[serviceType.key]) {
+              if (smeData.roles.includes('ROLE_FILER')) {
+                if (smeData['assignmentOffByLeader']) {
+                  result.push(
+                    `<li><i style="color:red;" class="fa fa-circle-xmark" aria-hidden="true"></i> ${serviceType.displayName}</li>`
+                  );
+                } else {
+                  result.push(
+                    `<li><i class="fa fa-check-circle" aria-hidden="true"></i> ${serviceType.displayName}</li>`
+                  );
+                }
+              } else {
+                if (smeData[serviceType.key].assignmentStart) {
+                  result.push(
+                    `<li><i class="fa fa-check-circle" aria-hidden="true"></i> ${serviceType.displayName}</li>`
+                  );
+                } else {
+                  result.push(
+                    `<li><i style="color:red;" class="fa fa-circle-xmark" aria-hidden="true"></i>${serviceType.displayName}</li>`
+                  );
+                }
+              }
+
+            }
+          });
+
+          const itemsHtml = result?.join('');
+          return `<ul class="services-list"><span class="content">${itemsHtml}</span></ul>`;
+        }
+
+      },
+      {
+        headerName: 'Session',
+        field: 'session',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellRenderer: (params: any) => {
+          const smeData = params?.data;
+          let session;
+          if (smeData.roles.includes('ROLE_FILER')) {
+            if (smeData['serviceEligibility_ITR'].assignmentStart) {
+              session = 'Active'
+            } else if (!smeData['serviceEligibility_ITR'].assignmentStart) {
+              session = 'In-Active'
+            }
+          } else {
+            session = '-'
+          }
+          return session
+        }
+      },
+      {
         headerName: 'Calling No',
         field: 'callingNumber',
         width: 110,
@@ -866,79 +938,6 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
           return `<span>${role}</span>`;
         }
       },
-      {
-        headerName: 'Assigned Services',
-        field: 'services',
-        width: 120,
-        display: 'block',
-        suppressMovable: true,
-        wrapText: true,
-        autoHeight: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        cellRenderer: (params: any) => {
-          const smeData = params?.data;
-          const serviceTypes = [
-            { key: 'serviceEligibility_ITR', displayName: 'ITR' },
-            { key: 'serviceEligibility_TPA', displayName: 'TPA' },
-            { key: 'serviceEligibility_NOTICE', displayName: 'NOTICE' },
-            { key: 'serviceEligibility_GST', displayName: 'GST' },
-          ];
-
-          let result = [];
-          serviceTypes.forEach(serviceType => {
-            if (smeData[serviceType.key]) {
-              if (smeData.roles.includes('ROLE_FILER')) {
-                if (smeData['assignmentOffByLeader']) {
-                  result.push(
-                    `<li><i style="color:red;" class="fa fa-circle-xmark" aria-hidden="true"></i> ${serviceType.displayName}</li>`
-                  );
-                } else {
-                  result.push(
-                    `<li><i class="fa fa-check-circle" aria-hidden="true"></i> ${serviceType.displayName}</li>`
-                  );
-                }
-              } else {
-                if (smeData[serviceType.key].assignmentStart) {
-                  result.push(
-                    `<li><i class="fa fa-check-circle" aria-hidden="true"></i> ${serviceType.displayName}</li>`
-                  );
-                } else {
-                  result.push(
-                    `<li><i style="color:red;" class="fa fa-circle-xmark" aria-hidden="true"></i>${serviceType.displayName}</li>`
-                  );
-                }
-              }
-
-            }
-          });
-
-          const itemsHtml = result?.join('');
-          return `<ul class="services-list"><span class="content">${itemsHtml}</span></ul>`;
-        }
-
-      },
-      {
-        headerName: 'Session',
-        field: 'session',
-        width: 100,
-        suppressMovable: true,
-        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
-        cellRenderer: (params: any) => {
-          const smeData = params?.data;
-          let session;
-          if (smeData.roles.includes('ROLE_FILER')) {
-            if (smeData['serviceEligibility_ITR'].assignmentStart) {
-              session = 'Active'
-            } else if (!smeData['serviceEligibility_ITR'].assignmentStart) {
-              session = 'In-Active'
-            }
-          } else {
-            session = '-'
-          }
-          return session
-        }
-      },
-
       {
         headerName: 'Language Proficiency',
         field: 'languages',
