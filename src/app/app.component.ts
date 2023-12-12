@@ -129,7 +129,7 @@ export class AppComponent {
     this.subscription = timer(0, 1000).pipe(map(() => new Date()), share())
       .subscribe(time => {
         let currentTime = moment(time).valueOf();
-        console.log('currentTime', currentTime)
+        // console.log('currentTime', currentTime)
         this.mangeFilerSessionAtDayChange();
       });
   }
