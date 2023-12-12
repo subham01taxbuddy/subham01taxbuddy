@@ -78,6 +78,10 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
   ];
   clearUserFilter: number;
   searchBy: any = {};
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
 
   constructor(
     private fb: FormBuilder,
@@ -95,6 +99,10 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
       currentPage: 1,
       totalItems: null,
     };
+    this.startDate.setValue('2023-04-01');
+    this.endDate.setValue(new Date());
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   gridApi: GridApi;
@@ -590,10 +598,9 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
     }
     console.log(data);
   }
-  setToDateValidation(FromDate) {
-    console.log('FromDate: ', FromDate);
-    this.toDateMin = FromDate;
-  }
+  setToDateValidation() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;  }
 
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);

@@ -12,6 +12,7 @@ import { FormControl } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -39,20 +40,21 @@ export const MY_FORMATS = {
   ],
 })
 export class LeaderStatuswiseReportComponent implements OnInit {
-  @Input() hideFilters =false;
-  loading=false;
-  loggedInSmeUserId:any;
-  roles:any;
+  @Input() hideFilters = false;
+  loading = false;
+  loggedInSmeUserId: any;
+  roles: any;
   minDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
-  maxStartDate = new Date().toISOString().slice(0, 10);
-  minEndDate= new Date().toISOString().slice(0, 10);
-  maxEndDate=new Date().toISOString().slice(0, 10);
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
   startDate = new FormControl('');
   endDate = new FormControl('');
-  allDetails:any;
+  allDetails: any;
   today: Date;
-  data:any;
+  data: any;
   serviceTypes = [
     {
       label: 'ITR',
@@ -85,25 +87,26 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this.today = new Date();
     this.selectedService.setValue(this.serviceTypes[0].value);
-   }
+    this.maxStartDate = this.endDate.value;
+  }
 
   ngOnInit() {
     this.loggedInSmeUserId = this.utilsService.getLoggedInUserID();
     this.roles = this.utilsService.getUserRoles();
 
-    if(this.roles.includes('ROLE_LEADER')){
-      this.leaderId= this.loggedInSmeUserId;
-       this.search();
+    if (this.roles.includes('ROLE_LEADER')) {
+      this.leaderId = this.loggedInSmeUserId;
+      this.search();
     }
 
   }
 
-  search(){
-    if(this.leaderId || this.filerId){
+  search() {
+    if (this.leaderId || this.filerId) {
       this.getStatusWiseReport();
     }
-    else{
-      this. _toastMessageService.alert("error","Please Select Leader / Filer to see the records");
+    else {
+      this._toastMessageService.alert("error", "Please Select Leader / Filer to see the records");
       return;
     }
 
@@ -145,23 +148,23 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
         const columnMap: Record<string, Record<string, string>> = {
           ITR: {
-            filerName:'filerName',
+            filerName: 'filerName',
             open: 'open',
             notInterested: 'notInterested',
             chatInitiated: 'chatInitiated',
             chatResolve: 'chatResolve',
             interested: 'interested',
-            documentsUploaded :'documentsUploaded',
-            proformaInvoiceSent : 'proformaInvoiceSent',
-            paymentReceived :'paymentReceived',
-            upgradedInvoiceSent:'upgradedInvoiceSent',
-            preparingItr : 'preparingItr',
-            waitingForConfirmation :'waitingForConfirmation',
-            itrConfirmationReceived :'itrConfirmationReceived',
-            itrFiledEverificationCompleted :'itrFiledEverificationCompleted',
-            itrFiledEverificationPending :'itrFiledEverificationPending',
-            backOutWithoutRefund:'backOutWithoutRefund',
-            backOutWithRefund:'backOutWithRefund',
+            documentsUploaded: 'documentsUploaded',
+            proformaInvoiceSent: 'proformaInvoiceSent',
+            paymentReceived: 'paymentReceived',
+            upgradedInvoiceSent: 'upgradedInvoiceSent',
+            preparingItr: 'preparingItr',
+            waitingForConfirmation: 'waitingForConfirmation',
+            itrConfirmationReceived: 'itrConfirmationReceived',
+            itrFiledEverificationCompleted: 'itrFiledEverificationCompleted',
+            itrFiledEverificationPending: 'itrFiledEverificationPending',
+            backOutWithoutRefund: 'backOutWithoutRefund',
+            backOutWithRefund: 'backOutWithRefund',
           },
           TPA: {
             filerName: 'filerName',
@@ -180,17 +183,17 @@ export class LeaderStatuswiseReportComponent implements OnInit {
             open: 'open',
             notInterested: 'notInterested',
             interested: 'interested',
-            documentsUploaded :'documentsUploaded',
-            proformaInvoiceSent : 'proformaInvoiceSent',
-            paymentReceived :'paymentReceived',
-            converted:'converted',
-            followUp:'followUp',
-            noticeResponseFiled:'noticeResponseFiled',
-            partResponseFiled:'partResponseFiled',
-            noticeWIP:'noticeWIP',
-            noticeClosed:'noticeClosed',
-            noticeReopen:'noticeReopen',
-            backOut:'backOut'
+            documentsUploaded: 'documentsUploaded',
+            proformaInvoiceSent: 'proformaInvoiceSent',
+            paymentReceived: 'paymentReceived',
+            converted: 'converted',
+            followUp: 'followUp',
+            noticeResponseFiled: 'noticeResponseFiled',
+            partResponseFiled: 'partResponseFiled',
+            noticeWIP: 'noticeWIP',
+            noticeClosed: 'noticeClosed',
+            noticeReopen: 'noticeReopen',
+            backOut: 'backOut'
           },
           GST: {
             filerName: 'filerName',
@@ -199,12 +202,12 @@ export class LeaderStatuswiseReportComponent implements OnInit {
             notInterested: 'notInterested',
             proformaInvoiceSent: 'proformaInvoiceSent',
             paymentReceived: 'paymentReceived',
-            followUp : 'followUp',
-            converted:'converted',
-            activeClientReturn : 'activeClientReturn',
-            registrationDone :'registrationDone',
-            gstCancelled:'gstCancelled',
-            backOut:'backOut'
+            followUp: 'followUp',
+            converted: 'converted',
+            activeClientReturn: 'activeClientReturn',
+            registrationDone: 'registrationDone',
+            gstCancelled: 'gstCancelled',
+            backOut: 'backOut'
           },
 
         };
@@ -224,7 +227,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
       } else {
         this.data = null;
-        this.grandTotal =null;
+        this.grandTotal = null;
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
@@ -245,10 +248,10 @@ export class LeaderStatuswiseReportComponent implements OnInit {
       return 'Owner And His Team';
     } else if (this?.allDetails?.statusWiseData?.length > 0 && this?.allDetails?.statusWiseData[0].hasOwnProperty('filerName')) {
       return 'Partner/Filer';
-    }else{
+    } else {
       return 'Leaders/Filer Name';
     }
-     // Return a default column name if needed
+    // Return a default column name if needed
   }
 
   getCellValue(item): string {
@@ -264,15 +267,15 @@ export class LeaderStatuswiseReportComponent implements OnInit {
   leaderId: number;
   filerId: number;
   agentId: number;
-  searchAsPrinciple:boolean =false;
+  searchAsPrinciple: boolean = false;
 
   fromLeader(event) {
-    if(event) {
+    if (event) {
       this.leaderId = event ? event.userId : null;
     }
   }
-  fromPrinciple(event){
-    if(event){
+  fromPrinciple(event) {
+    if (event) {
       if (event?.partnerType === 'PRINCIPAL') {
         this.filerId = event ? event.userId : null;
 
@@ -287,7 +290,7 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
   async downloadReport() {
     this.loading = true;
-    let param=''
+    let param = ''
     let userFilter = '';
     if (this.leaderId && !this.filerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
@@ -299,8 +302,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
       userFilter += `&filerUserId=${this.filerId}`;
     }
     let serviceFilter = '';
-    if(this.selectedService.value){
-      serviceFilter +=`&serviceType=${this.selectedService.value}`
+    if (this.selectedService.value) {
+      serviceFilter += `&serviceType=${this.selectedService.value}`
     }
 
     let fieldName = [];
@@ -373,10 +376,10 @@ export class LeaderStatuswiseReportComponent implements OnInit {
 
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    param =`/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
+    param = `/bo/dashboard/status-wise-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}${serviceFilter}`
 
     // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'status-wise-report',fieldName, {});
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'status-wise-report', fieldName, {});
     this.loading = false;
   }
 
@@ -385,18 +388,18 @@ export class LeaderStatuswiseReportComponent implements OnInit {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this?.smeDropDown?.resetDropdown();
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.search();
     }
-    else{
-      this.data=null;
+    else {
+      this.data = null;
     }
 
   }
 
-  setEndDateValidate(startDateVal: any) {
-    console.log('startDateVal: ', startDateVal);
-    this.minEndDate = startDateVal.value;
+  setEndDateValidate() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
 

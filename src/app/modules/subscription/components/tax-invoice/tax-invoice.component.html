@@ -12,9 +12,10 @@
       <div class="rowClr">
         <div class="surround">
           <div class="row">
-            <div class="col-sm-12 bckClr" >
+            <div class="col-sm-12 bckClr">
               <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
-                (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+                (sendPrincipleIndividual)="fromSme($event,false, true)"
+                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
             <div class="col-sm-4 spsTp">
               <mat-label> Select FY </mat-label>
@@ -25,8 +26,8 @@
             <div class="col-sm-4 dtTp">
               <mat-form-field appearance="outline" class="class1">
                 <mat-label>From Date</mat-label>
-                <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxStartDate"
-                  autocomplete="off" (dateChange)="setToDateValidation(startDate.value)">
+                <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate" [max]="maxStartDate"
+                  autocomplete="off" (dateChange)="setToDateValidation()">
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
                 <mat-error *ngIf="startDate.hasError('required')">Select From
@@ -36,8 +37,8 @@
             <div class="col-sm-4 dtTp">
               <mat-form-field appearance="outline" class="class1">
                 <mat-label>To Date</mat-label>
-                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="toDateMin" [max]="maxDate"
-                  autocomplete="off">
+                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxEndDate"
+                  autocomplete="off" (dateChange)="setToDateValidation()">
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
                 <mat-error *ngIf="endDate.hasError('required')">Select To
@@ -53,7 +54,7 @@
 
             <div class="col-sm-9 ">
               <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
-                  (onChange)="searchByObject($event)"></app-generic-user-filter>
+                (onChange)="searchByObject($event)"></app-generic-user-filter>
             </div>
 
             <div class="row spsTp bdrTp">

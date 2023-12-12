@@ -15,6 +15,7 @@ import { LeaderListDropdownComponent } from '../../shared/components/leader-list
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { environment } from 'src/environments/environment';
 import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
+import * as moment from 'moment';
 
 
 export const MY_FORMATS = {
@@ -42,16 +43,16 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class ItrFilingReportComponent implements OnInit,OnDestroy {
+export class ItrFilingReportComponent implements OnInit, OnDestroy {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
   leaderView = new FormControl('');
   ownerView = new FormControl('');
-  minEndDate = new Date();
-  maxStartDate =new Date();
-  maxDate = new Date(2024, 2, 31);
-  minDate = new Date(2023, 3, 1);
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
   itrFillingReport: any;
   config: any;
   searchParam: any = {
@@ -75,8 +76,8 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
   selectRole = new FormControl();
   searchVal: string = "";
   showError: boolean = false;
-  searchAsPrinciple :boolean =false;
-  partnerType:any;
+  searchAsPrinciple: boolean = false;
+  partnerType: any;
 
   constructor(
     public datePipe: DatePipe,
@@ -88,7 +89,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
-
+    this.setToDateValidation();
     this.itrFillingReportGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reportsCodeColumnDef('reg'),
@@ -118,10 +119,10 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
       this.filerId = this.loggedInSme[0].userId;
     }
 
-    if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
-      this.agentId =  this.loggedInSme[0]?.userId;
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+      this.agentId = this.loggedInSme[0]?.userId;
       this.showReports();
-    } else{
+    } else {
       this.dataOnLoad = false;
     }
     // this.showReports()
@@ -142,12 +143,12 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
   agentId: number;
   leaderId: number;
 
-  fromSme(event, isOwner,fromPrinciple?) {
+  fromSme(event, isOwner, fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.leaderId = event ? event.userId : null;
     } else {
-      if(fromPrinciple){
+      if (fromPrinciple) {
         if (event?.partnerType === 'PRINCIPAL') {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = true;
@@ -155,8 +156,8 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
-      }else{
-        if(event){
+      } else {
+        if (event) {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
@@ -171,13 +172,13 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
       this.agentId = loggedInId;
     }
 
-    if(this.roles.includes('ROLE_ADMIN')){
+    if (this.roles.includes('ROLE_ADMIN')) {
       if (this.leaderId || this.filerId) {
         this.disableCheckboxes = true;
       } else {
         this.disableCheckboxes = false;
       }
-    }else if(this.roles?.includes('ROLE_LEADER')){
+    } else if (this.roles?.includes('ROLE_LEADER')) {
       if (this.filerId) {
         this.disableCheckboxes = true;
       } else {
@@ -189,7 +190,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
 
   showReports(pageChange?) {
     //https://uat-api.taxbuddy.com/report/bo/calling-report/itr-filing-report?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
-    if(!pageChange){
+    if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
@@ -198,17 +199,17 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.leaderId = loggedInId
     }
 
-    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =true;
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = true;
 
-    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =false;
+    } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = false;
     }
 
     let param = ''
@@ -268,7 +269,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
         this.cacheManager.initializeCache(this.createRowData(this.itrFillingReport));
 
         const currentPageNumber = pageChange || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.itrFillingReport));
+        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.itrFillingReport));
         this.config.currentPage = currentPageNumber;
 
       } else {
@@ -288,7 +289,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
       let agentReportInfo = Object.assign({}, fillingRepoInfoArray[i], {
         filerName: fillingData[i].filerName,
         leaderName: fillingData[i].leaderName,
-        role : fillingData[i].role,
+        role: fillingData[i].role,
         itr1Original: fillingData[i].itr1Original,
         itr1Revise: fillingData[i].itr1Revise,
         itr1Payment: fillingData[i].itr1Payment,
@@ -304,8 +305,8 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
         itrOthersOriginal: fillingData[i].itrOthersOriginal,
         itrOthersRevise: fillingData[i].itrOthersRevise,
         itrU: fillingData[i].itrU,
-        itrUPayment:fillingData[i].itrUPayment,
-        otherPayment:fillingData[i].otherPayment,
+        itrUPayment: fillingData[i].itrUPayment,
+        otherPayment: fillingData[i].otherPayment,
         totalItrFiled: fillingData[i].totalItrFiled,
         totalPayment: fillingData[i].totalPayment,
       })
@@ -373,7 +374,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
             headerClass: 'centered-header',
             children: [
               {
-                headerName :'Original',
+                headerName: 'Original',
                 field: 'itr1Original',
                 sortable: true,
                 width: 80,
@@ -381,7 +382,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
                 cellStyle: { textAlign: 'center' },
               },
               {
-                headerName :'Revised',
+                headerName: 'Revised',
                 field: 'itr1Revise',
                 sortable: true,
                 width: 80,
@@ -395,7 +396,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
             headerClass: 'centered-header',
             children: [
               {
-                headerName :'Original',
+                headerName: 'Original',
                 field: 'itr2Original',
                 sortable: true,
                 width: 80,
@@ -403,7 +404,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
                 cellStyle: { textAlign: 'center' },
               },
               {
-                headerName :'Revised',
+                headerName: 'Revised',
                 field: 'itr2Revise',
                 sortable: true,
                 width: 80,
@@ -418,7 +419,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
             headerClass: 'centered-header',
             children: [
               {
-                headerName :'Original',
+                headerName: 'Original',
                 field: 'itr3Original',
                 sortable: true,
                 width: 80,
@@ -426,7 +427,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
                 cellStyle: { textAlign: 'center' },
               },
               {
-                headerName :'Revised',
+                headerName: 'Revised',
                 field: 'itr3Revise',
                 sortable: true,
                 width: 80,
@@ -440,7 +441,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
             headerClass: 'centered-header',
             children: [
               {
-                headerName :'Original',
+                headerName: 'Original',
                 field: 'itr4Original',
                 sortable: true,
                 width: 80,
@@ -448,7 +449,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
                 cellStyle: { textAlign: 'center' },
               },
               {
-                headerName :'Revised',
+                headerName: 'Revised',
                 field: 'itr4Revise',
                 sortable: true,
                 width: 80,
@@ -462,7 +463,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
             headerClass: 'centered-header',
             children: [
               {
-                headerName :'Original',
+                headerName: 'Original',
                 field: 'itrOthersOriginal',
                 sortable: true,
                 width: 80,
@@ -470,7 +471,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
                 cellStyle: { textAlign: 'center' },
               },
               {
-                headerName :'Revised',
+                headerName: 'Revised',
                 field: 'itrOthersRevise',
                 sortable: true,
                 width: 80,
@@ -500,28 +501,28 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
         },
       },
       {
-          headerName: 'Total ITR Filed',
-          field: 'totalItrFiled',
-          sortable: true,
-          width: 150,
-          suppressMovable: true,
-          cellStyle: { textAlign: 'center' },
-          filter: "agTextColumnFilter",
-          filterParams: {
-            filterOptions: ["contains", "notContains"],
-            debounceMs: 0
-          }
+        headerName: 'Total ITR Filed',
+        field: 'totalItrFiled',
+        sortable: true,
+        width: 150,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        }
+      },
+      {
+        headerName: '',
+        headerClass: 'vertical-line',
+        width: 0,
+        suppressMovable: true,
+        cellStyle: {
+          borderRight: '3px solid #ccc',
+          backgroundColor: '#fff',
         },
-        {
-          headerName: '',
-          headerClass: 'vertical-line',
-          width: 0,
-          suppressMovable: true,
-          cellStyle: {
-            borderRight: '3px solid #ccc',
-            backgroundColor: '#fff',
-          },
-        },
+      },
 
       {
         headerName: 'ITR wise payment collection',
@@ -622,22 +623,22 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
     this.showCsvMessage = true;
     let param = '';
     let loggedInId = this.utilsService.getLoggedInUserID();
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.leaderId = loggedInId
     }
-    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =true;
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = true;
 
-    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =false;
+    } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = false;
     }
     let userFilter = '';
-    if (this.leaderId && !this.filerId ) {
+    if (this.leaderId && !this.filerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.filerId && this.searchAsPrinciple === true ) {
+    if (this.filerId && this.searchAsPrinciple === true) {
       userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
     }
     if (this.filerId && this.searchAsPrinciple === false) {
@@ -682,7 +683,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
       { key: 'totalPayment', value: 'Total Payment' },
       { key: 'leaderName', value: 'Parent Name' },
     ]
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'itr-filing-report',fieldName,{});
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'itr-filing-report', fieldName, {});
     this.loading = false;
     this.showCsvMessage = false;
   }
@@ -708,7 +709,7 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
     } else if (!this.roles?.includes('ROLE_ADMIN') && !this.roles?.includes('ROLE_LEADER')) {
       this.filerId = this.loggedInSme[0].userId;
     }
-    if(this.dataOnLoad) {
+    if (this.dataOnLoad) {
       this.showReports();
       this.itrFillingReportGridOptions.api?.setRowData(this.createRowData(this.itrFillingReport));
       this.itrFillingReportGridOptions.api.setColumnDefs(this.reportsCodeColumnDef(''))
@@ -741,9 +742,9 @@ export class ItrFilingReportComponent implements OnInit,OnDestroy {
     }
   }
 
-  setToDateValidation(FromDate) {
-    console.log('FromDate: ', FromDate);
-    this.minEndDate = FromDate;
+  setToDateValidation() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   // disableCheckbox(checkboxToDisable: FormControl, checkboxToEnable: FormControl) {

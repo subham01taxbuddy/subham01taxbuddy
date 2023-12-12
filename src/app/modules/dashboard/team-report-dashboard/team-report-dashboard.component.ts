@@ -10,6 +10,7 @@ import { UserMsService } from 'src/app/services/user-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { LeaderListDropdownComponent } from '../../shared/components/leader-list-dropdown/leader-list-dropdown.component';
 import { ReportService } from 'src/app/services/report-service';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -40,11 +41,10 @@ export class TeamReportDashboardComponent implements OnInit {
   loading = false;
   loggedInSmeUserId: any;
   roles: any;
-  // maxDate = new Date(2024,2,31);
-  // minDate = new Date(2023, 3, 1);
-  minDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
-  maxStartDate = new Date().toISOString().slice(0, 10);
+  minStartDate: string = '2023-04-01';
+  maxStartDate=moment().toDate();
+  maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
   startDate = new FormControl('');
   endDate = new FormControl('');
@@ -140,6 +140,7 @@ export class TeamReportDashboardComponent implements OnInit {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this.today = new Date();
+    this.maxStartDate=this.endDate.value;
   }
 
   ngOnInit(): void {
@@ -358,8 +359,8 @@ export class TeamReportDashboardComponent implements OnInit {
     this.search();
   }
 
-  setEndDateValidate(startDateVal: any) {
-    console.log('startDateVal: ', startDateVal);
-    this.minEndDate = startDateVal.value;
+  setEndDateValidate() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 }
