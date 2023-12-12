@@ -175,6 +175,8 @@ export class LeaderStatuswiseReportComponent implements OnInit {
             proformaInvoiceSent: 'proformaInvoiceSent',
             paymentReceived: 'paymentReceived',
             backOut: 'backOut',
+            followup:'followup',
+            tpaCompleted:'tpaCompleted'
           },
           NOTICE: {
             filerName: 'filerName',
