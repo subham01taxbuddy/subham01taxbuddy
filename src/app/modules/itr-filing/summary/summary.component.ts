@@ -203,6 +203,12 @@ export class SummaryComponent implements OnInit {
           taxableSalary: number;
           Increliefus89A?: any;
           exemptAllowances?: any;
+          salaryBifurcations?: any;
+          salaryBifurcationsTotal?: any;
+          perquisitiesBifurcation?: any;
+          perquisitiesBifurcationTotal?: any;
+          profitsInLieuBifurcation?: any;
+          profitsInLieuBifurcationTotal?: any;
         }
       ];
       salaryTotalIncome: number;
@@ -2387,6 +2393,164 @@ export class SummaryComponent implements OnInit {
                         ?.ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls
                     : 0;
 
+                // salary 17 1
+                let salaryBifurcations = this.ITR_JSON.itrSummaryJson['ITR'][
+                  this.itrType
+                ]?.ScheduleS?.Salaries[
+                  index
+                ]?.Salarys?.NatureOfSalary?.OthersIncDtls?.map((element) => {
+                  let NatureDesc = parseFloat(element?.NatureDesc);
+                  let OthAmount = element?.OthAmount;
+
+                  let description =
+                    NatureDesc === 1
+                      ? 'Basic Salary'
+                      : NatureDesc === 2
+                      ? 'Dearness Allowance'
+                      : NatureDesc === 3
+                      ? 'Conveyance Allowance'
+                      : NatureDesc === 4
+                      ? 'House Rent Allowance'
+                      : NatureDesc === 5
+                      ? 'Leave Travel Allowance'
+                      : NatureDesc === 6
+                      ? 'Children Education Allowance'
+                      : NatureDesc === 7
+                      ? 'Other Allowance'
+                      : NatureDesc === 8
+                      ? 'Contribution made by the Employer towards pension scheme as referred u/s 80CCD'
+                      : NatureDesc === 9
+                      ? 'Amount deemed to be income under rule 11 of Fourth Schedule'
+                      : NatureDesc === 10
+                      ? 'Amount deemed to be income under rule 6 of Fourth Schedule'
+                      : NatureDesc === 11
+                      ? 'Annuity or pension'
+                      : NatureDesc === 12
+                      ? 'Commuted Pension'
+                      : NatureDesc === 13
+                      ? 'Gratuity'
+                      : NatureDesc === 14
+                      ? 'Fees/commission'
+                      : NatureDesc === 15
+                      ? 'Advance of salary'
+                      : NatureDesc === 16
+                      ? 'Leave Encashment'
+                      : NatureDesc === 17
+                      ? 'Contribution made by the central government towards Agnipath scheme as referred under section 80CCH'
+                      : 'Others';
+
+                  return {
+                    NatureDesc: description,
+                    OthAmount,
+                  };
+                });
+
+                let salaryBifurcationsTotal =
+                  index === higherEmployerIndex
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleS?.Salaries[index]?.Salarys?.Salary
+                    : 0;
+
+                // salary 17 2
+                let perquisitiesBifurcation = this.ITR_JSON.itrSummaryJson[
+                  'ITR'
+                ][this.itrType]?.ScheduleS?.Salaries[
+                  index
+                ]?.Salarys?.NatureOfPerquisites?.OthersIncDtls?.map(
+                  (element) => {
+                    let NatureDesc = parseFloat(element?.NatureDesc);
+                    let OthAmount = element?.OthAmount;
+
+                    let description =
+                      NatureDesc === 1
+                        ? 'Accommodation'
+                        : NatureDesc === 2
+                        ? 'Cars / Other Automotive'
+                        : NatureDesc === 3
+                        ? 'Sweeper, gardener, watchman or personal attendant'
+                        : NatureDesc === 4
+                        ? 'Gas, electricity, water'
+                        : NatureDesc === 5
+                        ? 'Interest-free or concessional loans'
+                        : NatureDesc === 6
+                        ? 'Holiday expenses'
+                        : NatureDesc === 7
+                        ? 'Free or concessional travel'
+                        : NatureDesc === 8
+                        ? 'Free meals'
+                        : NatureDesc === 9
+                        ? 'Free education'
+                        : NatureDesc === 10
+                        ? 'Gifts, vouchers, etc.'
+                        : NatureDesc === 11
+                        ? 'Credit card expenses'
+                        : NatureDesc === 12
+                        ? 'Club expenses'
+                        : NatureDesc === 13
+                        ? 'Use of movable assets by employees'
+                        : NatureDesc === 14
+                        ? 'Transfer of assets to employee'
+                        : NatureDesc === 15
+                        ? 'Value of any other benefit/amenity/service/privilege'
+                        : NatureDesc === 16
+                        ? 'Stock options allotted or transferred by employer being an eligible start-up referred to in section 80-IAC-Tax to be deferred'
+                        : NatureDesc === 17
+                        ? 'Stock options (non-qualified options) other than ESOP in col 16 above.'
+                        : NatureDesc === 18
+                        ? 'Contribution by employer to fund and scheme taxable under section 17(2)(vii)'
+                        : NatureDesc === 19
+                        ? 'Annual accretion by way of interest, dividend, etc. to the balance at the credit of fund and scheme referred to in section 17(2)(vii) and taxable under section 17(2)(viia)'
+                        : NatureDesc === 21
+                        ? 'Stock options allotted or transferred by employer being an eligible start-up referred to in section 80-IAC-Tax not to be deferred'
+                        : 'Other benefits or amenities';
+
+                    return {
+                      NatureDesc: description,
+                      OthAmount,
+                    };
+                  }
+                );
+
+                let perquisitiesBifurcationTotal =
+                  index === higherEmployerIndex
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleS?.Salaries[index]?.Salarys
+                        ?.ValueOfPerquisites
+                    : 0;
+
+                // salary 173
+                let profitsInLieuBifurcation = this.ITR_JSON.itrSummaryJson[
+                  'ITR'
+                ][this.itrType]?.ScheduleS?.Salaries[
+                  index
+                ]?.Salarys?.NatureOfProfitInLieuOfSalary?.OthersIncDtls?.map(
+                  (element) => {
+                    let NatureDesc = parseFloat(element?.NatureDesc);
+                    let OthAmount = element?.OthAmount;
+
+                    let description =
+                      NatureDesc === 1
+                        ? 'Compensation due/received by an assessee from his employer or former employer in connection with the termination of his employment or modification thereto'
+                        : NatureDesc === 2
+                        ? 'Any payment due/received by an assessee from his employer or a former employer or from a provident or other fund, sum received under Keyman Insurance Policy including Bonus thereto'
+                        : NatureDesc === 3
+                        ? 'Any amount due/received by an assessee from any person before joining or after cessation of employment with that person'
+                        : 'Any Other';
+
+                    return {
+                      NatureDesc: description,
+                      OthAmount,
+                    };
+                  }
+                );
+
+                let profitsInLieuBifurcationTotal =
+                  index === higherEmployerIndex
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.ScheduleS?.Salaries[index]?.Salarys
+                        ?.ProfitsinLieuOfSalary
+                    : 0;
+
                 let professionalTax =
                   index === higherEmployerIndex
                     ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
@@ -2427,6 +2591,12 @@ export class SummaryComponent implements OnInit {
                     entAllowance -
                     standardDeduction,
                   exemptAllowances: exemptAllowances,
+                  salaryBifurcations: salaryBifurcations,
+                  salaryBifurcationsTotal: salaryBifurcationsTotal,
+                  perquisitiesBifurcation: perquisitiesBifurcation,
+                  perquisitiesBifurcationTotal: perquisitiesBifurcationTotal,
+                  profitsInLieuBifurcation: profitsInLieuBifurcation,
+                  profitsInLieuBifurcationTotal: profitsInLieuBifurcationTotal,
                 };
               }),
               salaryTotalIncome:
@@ -6360,8 +6530,40 @@ export class SummaryComponent implements OnInit {
   exemptAllowanceExpanded: boolean[] = [];
 
   toggleExemptAllowance(event: Event, index: number) {
-    event.stopPropagation(); // Prevents the expansion panel from toggling
+    event.stopPropagation();
     this.exemptAllowanceExpanded[index] = !this.exemptAllowanceExpanded[index];
+  }
+
+  SalaryBifurcationsExpanded: boolean[] = [];
+
+  toggleSalaryBifurcations(event: Event, index: number) {
+    event.stopPropagation();
+    this.SalaryBifurcationsExpanded[index] =
+      !this.SalaryBifurcationsExpanded[index];
+  }
+
+  SalaryBifurcations171Expanded: boolean[] = [];
+
+  toggleSalaryBifurcations171(event: Event, index: number) {
+    event.stopPropagation();
+    this.SalaryBifurcations171Expanded[index] =
+      !this.SalaryBifurcations171Expanded[index];
+  }
+
+  perquisitiesBifurcationExpanded: boolean[] = [];
+
+  togglePerquisitiesBifurcation(event: Event, index: number) {
+    event.stopPropagation();
+    this.perquisitiesBifurcationExpanded[index] =
+      !this.perquisitiesBifurcationExpanded[index];
+  }
+
+  profitsInLieuBifurcationExpanded: boolean[] = [];
+
+  toggleProfitsInLieuBifurcation(event: Event, index: number) {
+    event.stopPropagation();
+    this.profitsInLieuBifurcationExpanded[index] =
+      !this.profitsInLieuBifurcationExpanded[index];
   }
 }
 

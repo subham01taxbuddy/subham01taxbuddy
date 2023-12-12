@@ -501,8 +501,195 @@
                                   salary.grossSalary
                                 )
                               }}
+                              <mat-icon
+                                *ngIf="
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.salaryBifurcations ||
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.perquisitiesBifurcation ||
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.profitsInLieuBifurcation
+                                "
+                                class="arrow-icon"
+                                (click)="toggleSalaryBifurcations($event, i)"
+                              >
+                                keyboard_arrow_down
+                              </mat-icon>
                             </td>
                           </tr>
+
+                          <ng-container
+                            *ngFor="
+                              let salary of finalCalculations?.salary
+                                ?.employers;
+                              let i = index
+                            "
+                          >
+                            <!-- salary171 -->
+                            <ng-container
+                              *ngIf="
+                                finalCalculations?.salary?.employers[i]
+                                  ?.salaryBifurcations
+                              "
+                            >
+                              <tr
+                                *ngIf="
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.salaryBifurcations &&
+                                  SalaryBifurcationsExpanded[i]
+                                "
+                              >
+                                <td colspan="1">
+                                  {{ "Salary 17(1)" }}
+                                </td>
+                                <td>
+                                  {{
+                                    finalCalculations?.salary?.employers[i]
+                                      ?.salaryBifurcationsTotal
+                                  }}
+                                  <mat-icon
+                                    class="arrow-icon"
+                                    (click)="
+                                      toggleSalaryBifurcations171($event, i)
+                                    "
+                                  >
+                                    keyboard_arrow_down
+                                  </mat-icon>
+                                </td>
+                              </tr>
+
+                              <ng-container
+                                *ngIf="SalaryBifurcations171Expanded[i]"
+                              >
+                                <ng-container
+                                  *ngFor="
+                                    let salaryAllow of finalCalculations?.salary
+                                      ?.employers[i]?.salaryBifurcations;
+                                    let i = index
+                                  "
+                                >
+                                  <tr>
+                                    <td>
+                                      {{ i + 1 }}.
+                                      {{ salaryAllow?.NatureDesc }}
+                                    </td>
+                                    <td>{{ salaryAllow?.OthAmount }}</td>
+                                  </tr>
+                                </ng-container>
+                              </ng-container>
+                            </ng-container>
+
+
+                            <!-- salary 172 -->
+                            <ng-container
+                              *ngIf="
+                                finalCalculations?.salary?.employers[i]
+                                  ?.perquisitiesBifurcation
+                              "
+                            >
+                              <tr
+                                *ngIf="
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.perquisitiesBifurcation &&
+                                  SalaryBifurcationsExpanded[i]
+                                "
+                              >
+                                <td colspan="1">
+                                  {{ "Salary 17(2)" }}
+                                </td>
+                                <td>
+                                  {{
+                                    finalCalculations?.salary?.employers[i]
+                                      ?.perquisitiesBifurcationTotal
+                                  }}
+                                  <mat-icon
+                                    class="arrow-icon"
+                                    (click)="
+                                      togglePerquisitiesBifurcation($event, i)
+                                    "
+                                  >
+                                    keyboard_arrow_down
+                                  </mat-icon>
+                                </td>
+                              </tr>
+
+                              <ng-container
+                                *ngIf="perquisitiesBifurcationExpanded[i]"
+                              >
+                                <ng-container
+                                  *ngFor="
+                                    let perqAllow of finalCalculations?.salary
+                                      ?.employers[i]?.perquisitiesBifurcation;
+                                    let i = index
+                                  "
+                                >
+                                  <tr>
+                                    <td>
+                                      {{ i + 1 }}.
+                                      {{ perqAllow?.NatureDesc }}
+                                    </td>
+                                    <td>{{ perqAllow?.OthAmount }}</td>
+                                  </tr>
+                                </ng-container>
+                              </ng-container>
+                            </ng-container>
+
+                            <!-- salary171 -->
+                            <ng-container
+                              *ngIf="
+                                finalCalculations?.salary?.employers[i]
+                                  ?.profitsInLieuBifurcation
+                              "
+                            >
+                              <tr
+                                *ngIf="
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.profitsInLieuBifurcation &&
+                                  SalaryBifurcationsExpanded[i]
+                                "
+                              >
+                                <td colspan="1">
+                                  {{ "Salary 17(1)" }}
+                                </td>
+                                <td>
+                                  {{
+                                    finalCalculations?.salary?.employers[i]
+                                      ?.profitsInLieuBifurcationTotal
+                                  }}
+                                  <mat-icon
+                                    class="arrow-icon"
+                                    (click)="
+                                      toggleProfitsInLieuBifurcation($event, i)
+                                    "
+                                  >
+                                    keyboard_arrow_down
+                                  </mat-icon>
+                                </td>
+                              </tr>
+
+                              <ng-container
+                                *ngIf="profitsInLieuBifurcationExpanded[i]"
+                              >
+                                <ng-container
+                                  *ngFor="
+                                    let salaryAllow of finalCalculations?.salary
+                                      ?.employers[i]?.profitsInLieuBifurcation;
+                                    let i = index
+                                  "
+                                >
+                                  <tr>
+                                    <td>
+                                      {{ i + 1 }}.
+                                      {{ salaryAllow?.NatureDesc }}
+                                    </td>
+                                    <td>{{ salaryAllow?.OthAmount }}</td>
+                                  </tr>
+                                </ng-container>
+                              </ng-container>
+                            </ng-container>
+
+                          </ng-container>
+
                           <tr>
                             <td>3. Less: Exempt Allowance</td>
                             <td
