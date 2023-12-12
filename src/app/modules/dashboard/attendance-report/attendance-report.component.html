@@ -117,14 +117,14 @@
             <div>
               <label for="start-date">Start Date:</label>
               <input type="date" matInput id="date" name="start-date" class="form-control" [formControl]="startDate"
-                [min]="minDate" [max]="maxStartDate" (change)="setEndDateValidate(this.startDate)" >
+                [min]="minStartDate" [max]="maxStartDate" (change)="setEndDateValidate()" >
             </div>
           </div>
           <div class="col-sm-3">
             <div>
-              <label for="end-date">End Date:</label>
+              <label for="end-date">End Date:1</label>
               <input type="date" matInput id="date" name="end-date" class="form-control" [formControl]="endDate" [min]="minEndDate"
-                [max]="maxDate">
+                [max]="maxEndDate" (change)="setEndDateValidate()">
             </div>
           </div>
 

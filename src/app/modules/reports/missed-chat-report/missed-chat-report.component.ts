@@ -14,6 +14,7 @@ import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
+import * as moment from 'moment';
 
 
 export const MY_FORMATS = {
@@ -42,14 +43,14 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class MissedChatReportComponent implements OnInit,OnDestroy {
+export class MissedChatReportComponent implements OnInit, OnDestroy {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
-  minEndDate = new Date();
-  maxStartDate = new Date();
-  maxDate = new Date(2024, 2, 31);
-  minDate = new Date(2023, 3, 1);
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
   missedChatReport: any;
   config: any;
   searchParam: any = {
@@ -72,8 +73,8 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
   selectRole = new FormControl();
   searchVal: string = "";
   showError: boolean = false;
-  searchAsPrinciple :boolean =false;
-  partnerType:any;
+  searchAsPrinciple: boolean = false;
+  partnerType: any;
   constructor(
     public datePipe: DatePipe,
     private genericCsvService: GenericCsvService,
@@ -84,7 +85,7 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
-
+    this.setToDateValidation();
     this.missedChatReportGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reportsCodeColumnDef(),
@@ -114,7 +115,7 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
       this.filerId = this.loggedInSme[0].userId;
     }
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
-      this.agentId =  this.loggedInSme[0]?.userId;
+      this.agentId = this.loggedInSme[0]?.userId;
       this.showReports();
     } else {
       this.dataOnLoad = false;
@@ -137,12 +138,12 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
   filerId: number;
   agentId: number;
 
-  fromSme(event, isOwner,fromPrinciple?) {
+  fromSme(event, isOwner, fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.leaderId = event ? event.userId : null;
     } else {
-      if(fromPrinciple){
+      if (fromPrinciple) {
         if (event?.partnerType === 'PRINCIPAL') {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = true;
@@ -150,8 +151,8 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
-      }else{
-        if(event){
+      } else {
+        if (event) {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
@@ -170,7 +171,7 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
 
   showReports(pageChange?) {
     // https://uat-api.taxbuddy.com/report/bo/calling-report/missed-chat-report?fromDate=2023-11-21&toDate=2023-11-21&page=0&pageSize=20
-    if(!pageChange){
+    if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
@@ -178,17 +179,17 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
     let loggedInId = this.utilsService.getLoggedInUserID();
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.leaderId = loggedInId
     }
 
-    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =true;
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = true;
 
-    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =false;
+    } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = false;
     }
 
     let param = ''
@@ -237,7 +238,7 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
         this.cacheManager.initializeCache(this.createRowData(this.missedChatReport));
 
         const currentPageNumber = pageChange || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.missedChatReport));
+        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.missedChatReport));
         this.config.currentPage = currentPageNumber;
 
       } else {
@@ -257,23 +258,23 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
     let userFilter = '';
     let loggedInId = this.utilsService.getLoggedInUserID();
 
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.leaderId = loggedInId
     }
 
-    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =true;
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = true;
 
-    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =false;
+    } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = false;
     }
 
-    if (this.leaderId && !this.filerId ) {
+    if (this.leaderId && !this.filerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.filerId && this.searchAsPrinciple === true ) {
+    if (this.filerId && this.searchAsPrinciple === true) {
       userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
     }
     if (this.filerId && this.searchAsPrinciple === false) {
@@ -297,7 +298,7 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
       { key: 'role', value: 'Role' },
       { key: 'parentName', value: 'Parent Name' },
     ]
-   await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'missed-chat-report', fieldName,{});
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'missed-chat-report', fieldName, {});
     this.loading = false;
     this.showCsvMessage = false;
   }
@@ -310,7 +311,7 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
         noOfMissedChat: missedChatData[i].noOfMissedChat,
         filerName: missedChatData[i].filerName,
         parentName: missedChatData[i].parentName,
-        role:missedChatData[i].role,
+        role: missedChatData[i].role,
       })
       missedChatRepoInfoArray.push(agentReportInfo);
     }
@@ -418,9 +419,9 @@ export class MissedChatReportComponent implements OnInit,OnDestroy {
     }
   }
 
-  setToDateValidation(FromDate) {
-    console.log('FromDate: ', FromDate);
-    this.minEndDate = FromDate;
+  setToDateValidation() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   ngOnDestroy() {

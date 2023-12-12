@@ -65,10 +65,20 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   config: any;
   totalInvoice = 0;
   loggedInSme: any;
-  maxStartDate = new Date()
-  maxDate = this.maxStartDate
-  minDate = new Date(2023, 3, 1);
-  toDateMin = this.minDate;
+  invoiceFormGroup: FormGroup = this.fb.group({
+    assessmentYear: new FormControl('2023-24'),
+    startDate: new FormControl('', [Validators.required]),
+    endDate: new FormControl('', [Validators.required]),
+    status: new FormControl(''),
+    mobile: new FormControl(''),
+    email: new FormControl(''),
+    txbdyInvoiceId: new FormControl(''),
+    name: new FormControl(''),
+  });
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
   roles: any;
   allFilerList: any;
   searchParam: any = {
@@ -138,6 +148,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     // this.getAgentList();
     this.loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
     this.startDate.setValue('2023-04-01');
+    this.minEndDate = this.invoiceFormGroup.controls['startDate'].value;
     this.endDate.setValue(new Date());
     this.status.setValue(this.Status[0].value);
     this.config = {
@@ -145,6 +156,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
       currentPage: 1,
       totalItems: null,
     };
+    this.maxStartDate = this.invoiceFormGroup.controls['endDate'].value;
   }
 
   cardTitle: any;
@@ -281,16 +293,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     // this.getInvoice();
   }
 
-  invoiceFormGroup: FormGroup = this.fb.group({
-    assessmentYear: new FormControl('2023-24'),
-    startDate: new FormControl('', [Validators.required]),
-    endDate: new FormControl('', [Validators.required]),
-    status: new FormControl(''),
-    mobile: new FormControl(''),
-    email: new FormControl(''),
-    txbdyInvoiceId: new FormControl(''),
-    name: new FormControl(''),
-  });
+
 
   get assessmentYear() {
     return this.invoiceFormGroup.controls['assessmentYear'] as FormControl;
@@ -1094,9 +1097,9 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     }
     console.log(data);
   }
-  setToDateValidation(FromDate) {
-    console.log('FromDate: ', FromDate);
-    this.toDateMin = FromDate;
+  setToDateValidation() {
+    this.minEndDate = this.invoiceFormGroup.controls['startDate'].value;
+    this.maxStartDate = this.invoiceFormGroup.controls['endDate'].value;
   }
 
 

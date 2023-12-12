@@ -14,6 +14,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -46,12 +47,15 @@ export class DeleteUserListComponent implements OnInit {
   loading!: boolean;
   usersGridOptions: GridOptions;
   config: any;
-  mobileNumber =new FormControl('');
-  fromDate=new FormControl('');
-  toDate=new FormControl('');
+  mobileNumber = new FormControl('');
+  fromDate = new FormControl('');
+  toDate = new FormControl('');
   deleteUserData: any = [];
   modalRef!: BsModalRef;
-  maxDate: any = new Date();
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
   minToDate: any;
   dialogRef: any;
 
@@ -64,7 +68,10 @@ export class DeleteUserListComponent implements OnInit {
     private http: HttpClient,
     @Inject(LOCALE_ID) private locale: string,
     private dialog: MatDialog,
-    ) {
+  ) {
+    this.fromDate.setValue(new Date());
+    this.toDate.setValue(new Date());
+    this.setToDateValidation();
     this.usersGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.usersCreateColumnDef(),
@@ -94,24 +101,25 @@ export class DeleteUserListComponent implements OnInit {
     this.config.currentPage = 1;
   }
 
-  clearValue1(){
+  clearValue1() {
     this.fromDate.setValue('');
     this.toDate.setValue('');
   }
 
-  setToDateValidation(fromDate) {
-    this.minToDate = this.fromDate.value;
+  setToDateValidation() {
+    this.minEndDate = this.fromDate.value;
+    this.maxStartDate = this.toDate.value;
   }
 
   getUserSearchList(pageNo) {
     const fromDateValue = this.fromDate.value;
     const toDateValue = this.toDate.value;
 
-    let fromDate = this.datePipe.transform(fromDateValue,'yyyy-MM-dd');
-    let toDate = this.datePipe.transform(toDateValue,'yyyy-MM-dd');
+    let fromDate = this.datePipe.transform(fromDateValue, 'yyyy-MM-dd');
+    let toDate = this.datePipe.transform(toDateValue, 'yyyy-MM-dd');
 
-    if(fromDate && ! toDate){
-      return this._toastMessageService.alert("error",'Please Select To Date ');
+    if (fromDate && !toDate) {
+      return this._toastMessageService.alert("error", 'Please Select To Date ');
     }
 
     this.deleteUserData = [];
@@ -123,22 +131,22 @@ export class DeleteUserListComponent implements OnInit {
         dynamicUrl += "mobileNumber=" + this.mobileNumber.value
       }
       if (fromDate) {
-        dynamicUrl += "from=" +fromDate
+        dynamicUrl += "from=" + fromDate
       } if (toDate) {
         dynamicUrl += "&to=" + toDate
       }
-      if(!dynamicUrl){
+      if (!dynamicUrl) {
         dynamicUrl += 'page=' + pageNo + '&pageSize=20'
-      }else{
+      } else {
         dynamicUrl += '&page=' + pageNo + '&pageSize=20'
       }
 
-      console.log('url' ,dynamicUrl)
+      console.log('url', dynamicUrl)
 
       NavbarService.getInstance(this.http).getDeleteUserList(dynamicUrl).subscribe(res => {
         if (Array.isArray(res.content)) {
           this.deleteUserData = res.content;
-          console.log('list of delete req',this.deleteUserData)
+          console.log('list of delete req', this.deleteUserData)
           this.usersGridOptions.api?.setRowData(this.createRowData(this.deleteUserData));
           this.config.totalItems = res.totalElements;
         }

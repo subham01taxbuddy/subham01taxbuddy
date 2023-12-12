@@ -16,6 +16,7 @@ import { GenericCsvService } from 'src/app/services/generic-csv.service';
 import { environment } from 'src/environments/environment';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { Observable } from 'rxjs';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -47,10 +48,10 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
-  maxStartDate = new Date();
-  maxDate = this.maxStartDate;
-  minDate = new Date(2023, 3, 1);
-  minEndDate = this.minDate;
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
   dailyCallingReport: any;
   config: any;
   searchParam: any = {
@@ -78,8 +79,8 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
 
   ]
   sortBy: any = {};
-  searchAsPrinciple :boolean =false;
-  partnerType:any;
+  searchAsPrinciple: boolean = false;
+  partnerType: any;
   selectRole = new FormControl();
   searchVal: string = "";
   showError: boolean = false;
@@ -94,7 +95,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
-
+    this.setToDateValidation();
     this.dailyCallingReportGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reportsCodeColumnDef(),
@@ -125,7 +126,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     }
 
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
-      this.agentId =  this.loggedInSme[0]?.userId;
+      this.agentId = this.loggedInSme[0]?.userId;
       this.showReports();
     } else {
       this.dataOnLoad = false;
@@ -148,12 +149,12 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   filerId: number;
   agentId: number;
 
-  fromSme(event, isOwner,fromPrinciple?) {
+  fromSme(event, isOwner, fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.leaderId = event ? event.userId : null;
     } else {
-      if(fromPrinciple){
+      if (fromPrinciple) {
         if (event?.partnerType === 'PRINCIPAL') {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = true;
@@ -161,8 +162,8 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
-      }else{
-        if(event){
+      } else {
+        if (event) {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
@@ -194,17 +195,17 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let loggedInId = this.utilsService.getLoggedInUserID();
 
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.leaderId = loggedInId
     }
 
-    if(this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =true;
+    if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = true;
 
-    }else if (this.roles.includes('ROLE_FILER') && this.partnerType ==="INDIVIDUAL" && this.agentId === loggedInId){
-      this.filerId = loggedInId ;
-      this.searchAsPrinciple =false;
+    } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+      this.filerId = loggedInId;
+      this.searchAsPrinciple = false;
     }
 
     let param = ''
@@ -285,7 +286,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
         inboundAnsweredRatio: callingData[i].inboundAnsweredRatio,
         noOfMissedCall: callingData[i].noOfMissedCall,
         parentName: callingData[i].parentName,
-        role:callingData[i].role,
+        role: callingData[i].role,
         // icPct: callingData[i].inboundCall > 0 ? ((callingData[i].inboundAnsweredCall / callingData[i].inboundCall) * 100).toFixed(2) : 0.00,
       })
       callingRepoInfoArray.push(agentReportInfo);
@@ -437,10 +438,10 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
     this.showCsvMessage = true;
     let param = ''
     let userFilter = '';
-    if (this.leaderId && !this.filerId ) {
+    if (this.leaderId && !this.filerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.filerId && this.searchAsPrinciple === true ) {
+    if (this.filerId && this.searchAsPrinciple === true) {
       userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
     }
     if (this.filerId && this.searchAsPrinciple === false) {
@@ -475,7 +476,7 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
       { key: 'parentName', value: 'Parent Name' },
     ]
 
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'daily-calling-report', fieldName,{});
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'daily-calling-report', fieldName, {});
     this.loading = false;
     this.showCsvMessage = false;
   }
@@ -518,9 +519,9 @@ export class DailyCallingReportComponent implements OnInit, OnDestroy {
   }
 
 
-  setToDateValidation(FromDate) {
-    console.log('FromDate: ', FromDate);
-    this.minEndDate = FromDate;
+  setToDateValidation() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   ngOnDestroy() {
