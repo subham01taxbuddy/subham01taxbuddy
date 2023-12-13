@@ -31,9 +31,7 @@
                             <div><span class="span">{{ income.value.label }} </span> <span class="text-wrapper-2">*</span></div>
                           </div>
                           <div class="form-field">
-                            <mat-form-field appearance="outline"
-                                    class="input-field-width"
-                                    style="width: 90% !important">
+                            <mat-form-field appearance="outline">
                               <input
                                       type="text"
                                       trim
@@ -42,7 +40,6 @@
                                       name="incomeValue[i]"
                                       formControlName="incomeValue"
                                       type="number"
-                                      class="form-control inpplac"
                                       maxlength="125"
                                       (blur)="validateIncomeValueOnBlur()"/>
                             </mat-form-field>
@@ -73,7 +70,6 @@
                                       placeholder="Upto 15 June 2022"
                                       name="quarter1"
                                       formControlName="quarter1"
-                                      class="form-control inpplac"
                                       maxlength="50"
                                       digitsOnly
                               />
@@ -89,7 +85,6 @@
                                       placeholder="16 June 2022 - 15 Sep 2022"
                                       name="quarter2"
                                       formControlName="quarter2"
-                                      class="form-control inpplac"
                                       maxlength="50"
                                       digitsOnly
                               />
@@ -105,7 +100,6 @@
                                       placeholder="16 Sep 2022 - 15 Dec 2022"
                                       name="quarter3"
                                       formControlName="quarter3"
-                                      class="form-control inpplac"
                                       maxlength="50"
                                       digitsOnly
                               />
@@ -123,7 +117,6 @@
                                       placeholder="16 Dec 2022 - 15 March 2023"
                                       name="quarter4"
                                       formControlName="quarter4"
-                                      class="form-control inpplac"
                                       maxlength="50"
                                       digitsOnly
                               />
@@ -139,7 +132,6 @@
                                       placeholder="16 March 2023 - 31 March 2023"
                                       name="quarter5"
                                       formControlName="quarter5"
-                                      class="form-control inpplac"
                                       maxlength="50"
                                       digitsOnly
                               />
@@ -319,50 +311,48 @@
                         <div class="div-6 gray_box">
                           <div class="form-field">
                             <div><span class="span">Family Pension amount </span> <span class="text-wrapper-2">*</span></div>
-                            <mat-form-field appearance="outline">
-                              <input
-                                      digitsOnly
-                                      trim
-                                      matInput
-                                      placeholder="Family pension"
-                                      name="quarter1"
-                                      formControlName="familyPension"
-                                      class="form-control inpplac"
-                                      maxlength="50"
-                                      digitsOnly
-                                      (blur)="calFamPension()"
-                              />
-                            </mat-form-field>
+
+                            <div class="form-field">
+                              <mat-form-field appearance="outline">
+                                <input
+                                        digitsOnly
+                                        matInput
+                                        placeholder="Family pension"
+                                        name="quarter1"
+                                        formControlName="familyPension"
+                                        maxlength="50"
+                                        (blur)="calFamPension()"
+                                />
+                              </mat-form-field>
+                            </div>
                           </div>
                           <div class="form-field">
                             <div><span class="span">Deduction u/s 57(2)a </span></div>
-                            <mat-form-field appearance="outline">
+                            <div class="form-field">
+                              <mat-form-field appearance="outline">
                               <input
                                       digitsOnly
-                                      trim
                                       matInput
                                       name="quarter2"
-                                      class="form-control inpplac"
                                       formControlName="famPenDeduction"
-                                      digitsOnly
                                       [disabled]="true"
                               />
                             </mat-form-field>
+                            </div>
                           </div>
                           <div class="form-field">
                             <div><span class="span">Net family pension</span></div>
-                            <mat-form-field appearance="outline">
+                            <div class="form-field">
+                              <mat-form-field appearance="outline">
                               <input
                                       digitsOnly
-                                      trim
                                       matInput
                                       name="quarter3"
-                                      class="form-control inpplac"
                                       formControlName="totalFamPenDeduction"
-                                      digitsOnly
                                       [disabled]="true"
                               />
                             </mat-form-field>
+                            </div>
                           </div>
                         </div>
 
@@ -394,23 +384,22 @@
 
             <form [formGroup]="exemptIncomeFormGroup">
               <div class="accordion" id="myAccordion" formArrayName="exemptIncomes">
-                <div class="accordion-item" [formGroup]="agriIncFormGroup">
+                <div class="accordion-item">
                   <h2 class="accordion-header accoHdclr" id="headingOne">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne">Agriculture Income</button>
                   </h2>
                   <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion" *ngFor="let income of getExemptIncomeArray.controls;let i = index"
                        [formGroupName]="i">
-                    <div class="card-body" *ngIf="income.value.incomeType === 'AGRI'">
+                    <div class="card-body" *ngIf="income.value.incomeType === 'AGRI'" [formGroup]="agriIncFormGroup">
 
                       <div class="surBx1">
 
                         <div class="hp2main">
                           <div class="hplft">Gross Agriculture Receipt </div>
-                          <div class="hprgt">
+                          <div class="form-field">
                             <mat-form-field appearance="outline">
-                              <input class="form-control"
+                              <input
                                       type="number"
-                                      trim
                                       matInput
                                       placeholder=""
                                       name="grossAgriculturalReceipts[i]"
@@ -423,7 +412,7 @@
                         </div>
                         <div class="hp2main">
                           <div class="hplft">Expenditure On Agriculture</div>
-                          <div class="hprgt">
+                          <div class="form-field">
                             <mat-form-field appearance="outline">
                               <input
                                       type="number"
@@ -432,7 +421,6 @@
                                       placeholder=""
                                       name="expenditureIncurredOnAgriculture[i]"
                                       formControlName="expenditureIncurredOnAgriculture"
-                                      class="form-control"
                                       maxlength="125"
                                       (change)="setNetAgriIncome(i)"
                               />
@@ -441,7 +429,7 @@
                         </div>
                         <div class="hp2main">
                           <div class="hplft">Unabsorbed Agriculture Loss</div>
-                          <div class="hprgt">
+                          <div class="form-field">
                             <mat-form-field appearance="outline">
                               <input
                                       type="number"
@@ -450,7 +438,6 @@
                                       placeholder=""
                                       name="unabsorbedAgriculturalLoss[i]"
                                       formControlName="unabsorbedAgriculturalLoss"
-                                      class="form-control"
                                       maxlength="125"
                                       (change)="setNetAgriIncome(i)"
                               />
@@ -460,7 +447,7 @@
                         <div class="hp2main">
                           <div class="hplft">The agricultural income portion relating to rules 7,
                             7A, 7B(1), 7B(1A) & 8</div>
-                          <div class="hprgt">
+                          <div class="form-field">
                             <mat-form-field appearance="outline">
                               <input
                                       type="number"
@@ -469,7 +456,6 @@
                                       placeholder=""
                                       name="agriIncomePortionRule7[i]"
                                       formControlName="agriIncomePortionRule7"
-                                      class="form-control"
                                       maxlength="125"
                                       (change)="setNetAgriIncome(i)"
                                       readonly
@@ -479,7 +465,7 @@
                         </div>
                         <div class="hp2main">
                           <div class="hplft">Net Agriculture Income</div>
-                          <div class="hprgt">
+                          <div class="form-field">
                             <mat-form-field appearance="outline">
                               <input
                                       type="number"
@@ -488,7 +474,6 @@
                                       placeholder=""
                                       name="netAgriculturalIncome[i]"
                                       formControlName="netAgriculturalIncome"
-                                      class="form-control"
                                       maxlength="125"
                                       readonly
                               />
@@ -525,48 +510,45 @@
                               <div class="field-label">
                                 <span class="span">Name of District</span> <span class="text-wrapper-2">*</span>
                               </div>
-                              <mat-form-field appearance="outline">
+                              <div class="form-field">
+                                <mat-form-field appearance="outline">
                                 <input
-                                        trim
                                         matInput
                                         placeholder="Name of District"
                                         name="nameOfDistrict[j]"
-                                        formControlName="nameOfDistrict"
-                                        class="form-control gry"
-                                />
+                                        formControlName="nameOfDistrict"/>
                               </mat-form-field>
+                              </div>
                             </div>
 
                             <div class="field">
                               <div class="field-label">
                                 <span class="span">Pincode</span>
                               </div>
-                              <mat-form-field appearance="outline">
+                              <div class="form-field">
+                                <mat-form-field appearance="outline">
                                 <input
-                                        trim
                                         matInput
                                         placeholder="Pincode"
                                         name="pinCode[j]"
-                                        formControlName="pinCode"
-                                        class="form-control gry"
-                                />
+                                        formControlName="pinCode"/>
                               </mat-form-field>
+                              </div>
                             </div>
 
                             <div class="field">
                               <div class="field-label">
                                 <span class="span">Measurement</span>
                               </div>
-                              <mat-form-field appearance="outline">
+                              <div class="form-field">
+                                <mat-form-field appearance="outline">
                                 <input
-                                        trim
                                         matInput
                                         placeholder="land In Acre"
                                         name="landInAcre[j]"
-                                        formControlName="landInAcre"
-                                        class="form-control gry"
-                                />
+                                        formControlName="landInAcre"/>
                               </mat-form-field>
+                              </div>
                             </div>
 
                           </div>
@@ -577,24 +559,28 @@
                               <div class="field-label">
                                 <span class="span">Ownership status</span> <span class="text-wrapper-2">*</span>
                               </div>
-                              <mat-select class="form-control select gry" formControlName="owner"
+                              <div class="form-field">
+                                <mat-select formControlName="owner"
                                       placeholder="owner"
                                       required>
-                                <option>Select</option>
-                                <option [value]="'O'">Owner</option>
-                                <option [value]="'H'">Held on lease</option>
+                                <mat-option>Select</mat-option>
+                                <mat-option [value]="'O'">Owner</mat-option>
+                                <mat-option [value]="'H'">Held on lease</mat-option>
                               </mat-select>
+                              </div>
                             </div>
 
                             <div class="field">
                               <div class="field-label">
                                 <span class="span">Water Source</span> <span class="text-wrapper-2">*</span>
                               </div>
-                              <mat-select class="form-control select gry" formControlName="typeOfLand" placeholder="Type Of Land">
-                                <option>Select</option>
-                                <option [value]="'IRG'">Irrigated</option>
-                                <option [value]="'RF'">Rain-fed</option>
-                              </mat-select>
+                              <div class="form-field">
+                                <mat-select formControlName="typeOfLand" placeholder="Type Of Land">
+                                  <mat-option>Select</mat-option>
+                                  <mat-option [value]="'IRG'">Irrigated</mat-option>
+                                  <mat-option [value]="'RF'">Rain-fed</mat-option>
+                                </mat-select>
+                              </div>
                             </div>
 
                           </div>
@@ -626,9 +612,11 @@
                             <div class="field-label">
                               <span class="span">Income Category </span> <span class="redAst">*</span>
                             </div>
-                            <select class="form-control select gry">
-                              <option [value]="income.value.value">{{ income.value.label }}</option>
-                            </select>
+                            <div class="form-field">
+                              <mat-select class="form-control select gry">
+                                <mat-option [value]="income.value.value">{{ income.value.label }}</mat-option>
+                              </mat-select>
+                            </div>
                           </div>
                         </div>
 
@@ -637,19 +625,19 @@
                             <div class="field-label">
                               <span class="span">Amount </span> <span class="redAst">*</span>
                             </div>
-                            <mat-form-field appearance="outline">
+                            <div class="form-field">
+                              <mat-form-field appearance="outline">
                               <input
                                       type="number"
-                                      trim
                                       matInput
                                       placeholder=""
                                       name="incomeValue[i]"
                                       formControlName="incomeValue"
-                                      class="form-control gry"
                                       maxlength="125"
                                       [readonly]="income.value.incomeType === 'AGRI'"
                               />
                             </mat-form-field>
+                            </div>
                           </div>
                         </div>
 
