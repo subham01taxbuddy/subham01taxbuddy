@@ -1,6 +1,6 @@
 .content-wrapper {
   background: #fff;
-  padding: 30px;
+  padding: 20px;
   margin-top: 20px;
 }
 
@@ -21,6 +21,240 @@ ul {
   margin: 15px;
 
   tr.first-head {
-    background: #EDEDED;
+    background: #F6F6F6;
   }
+}
+
+.main-1{
+  background: #FBFBFB;
+}
+
+.rowClr-1{
+  background: #FFF !important;
+  margin-top: 20px;
+  padding: 10px 30px 30px 20px;
+
+}
+
+.sub-title-container{
+display: flex;
+padding: 12px 18px;
+align-items: flex-start;
+gap: 10px;
+align-self: stretch;
+border-radius: 8px 8px 0px 0px;
+background: #3E82CD;
+}
+.sub-title-text{
+flex: 1 0 0;
+color: #FFF;
+font-family: DM Sans;
+font-size: 17px;
+font-style: normal;
+font-weight: 700;
+line-height: 28px; /* 164.706% */
+
+}
+
+.new-assigned-container{
+display: flex;
+padding: 32px;
+flex-direction: column;
+align-items: flex-start;
+gap: 32px;
+align-self: stretch;
+border-radius: 0px 0px 8px 8px;
+border: 1px solid #E2E4E5;
+}
+
+.new-sub-container{
+  display: flex;
+  padding: 24px;
+  flex-direction: column;
+  // align-items: flex-end;
+  gap: 24px;
+  align-self: stretch;
+  background: #F9F9F9;
+}
+.TxHd-12{
+display: flex;
+padding: 8px 24px;
+justify-content: space-between;
+align-items: flex-start;
+flex: 1 0 0;
+border-radius: 4px 4px 0px 0px;
+background: #DDEDFF;
+}
+.header-text-1{
+color: #303030;
+font-family: DM Sans;
+font-size: 12px;
+font-style: normal;
+font-weight: 700;
+line-height: 28px; /* 233.333% */
+}
+
+.user-data-container{
+padding: 10px;
+align-self: stretch;
+border-radius: 0px 0px 4px 4px;
+background: #FCFCFC;
+}
+.save-user-info{
+display: flex;
+padding: 8px 24px;
+align-items: flex-start;
+gap: 16px;
+border-radius: 4px;
+border: 1.5px solid #3E82CD;
+background: #3E82CD;
+color: #FFF;
+font-family: DM Sans;
+font-size: 12px;
+font-style: normal;
+font-weight: 500;
+line-height: 28px; /* 233.333% */
+}
+
+.plan-container{
+  display: flex;
+  padding: 24px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  flex: 1 0 0;
+  background: #F6F6F6;
+}
+.plan-header{
+align-self: stretch;
+color: #242426;
+font-family: DM Sans;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 20px; /* 142.857% */
+
+}
+.plan-values-container{
+  width:100%;
+  display: flex;
+  padding: 8px 12px;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  flex: 1 0 0;
+  align-self: stretch;
+  border-radius: 4px;
+  background: #EBEBEB;
+}
+.plan-value{
+flex: 1 0 0;
+color: #858596;
+font-family: DM Sans;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 28px; /* 200% */
+}
+.final-values-container{
+display: flex;
+align-items: flex-start;
+gap: 8px;
+align-self: stretch;
+}
+
+.hr-line{
+margin-top: 25px;
+margin-left: 10px;
+width: 388px;
+height: 1px;
+background: #B1B1B1;
+}
+.sme-value{
+  display: flex;
+  padding: 8px 12px;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  flex: 1 0 0;
+  align-self: stretch;
+  border-radius: 4px;
+  border: 0.5px solid #D3D3D3;
+}
+.select-bg-color{
+background-color:#F6F6F6 ;
+}
+.sme-plan-value{
+flex: 1 0 0;
+color: #3F3F46;
+font-family: DM Sans;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 28px; /* 200% */
+}
+
+
+.breakup-container-2{
+display: flex;
+padding: 24px;
+flex-direction: column;
+align-items: flex-start;
+gap: 18px;
+align-self: stretch;
+background: #F6F6F6;
+
+}
+
+.new-cancel-button-1{
+  display: flex;
+  padding: 8px 24px;
+  align-items: flex-start;
+  gap: 16px;
+  border-radius: 4px;
+  border: 1.5px solid #3E82CD;
+  color: #3E82CD;
+  font-family: DM Sans;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28px; /* 233.333% */
+}
+.save-all{
+// display: flex;
+padding: 8px 24px;
+align-items: flex-start;
+gap: 16px;
+border-radius: 4px;
+border: 1.5px solid #3E82CD;
+background: #3E82CD;
+color: #FFF;
+font-family: DM Sans;
+font-size: 12px;
+font-style: normal;
+font-weight: 500;
+line-height: 28px; /* 233.333% */
+}
+.save-all:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.delete-icon-btn {
+  margin-right: 5px;
+  color: red;
+  cursor: pointer;
+  font-size: 24px;
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+
+}
+.delete-icon-btn i {
+  width: 24px;
+  height: 24px;
+}
+.delete-icon-btn:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
 }

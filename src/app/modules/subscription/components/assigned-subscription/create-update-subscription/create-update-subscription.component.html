@@ -1,4 +1,4 @@
-<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div>
   <div class="align-items-center row">
     <div class="col-sm-10">
@@ -6,32 +6,6 @@
     </div>
   </div>
   <div class="content-wrapper">
-    <!-- <div class="container" *ngIf="
-        userSubscription?.userSelectedPlan !== null &&
-        userSubscription?.userSelectedPlan?.servicesType === 'ITR'
-      ">
-      <div class="row">
-        <div class="col-sm-12" style="margin-top: 10px">
-          <div class="card" style="margin-top: 10px">
-            <div class="txHd alTxH">Select at least 1 sources of income:</div>
-            <div class="flex items-center justify-between align-center p-[25px] mt-[25px]">
-              <div class="sources-back">
-                <mat-chip-list class="sources-chip" multiple (change)="sourcesUpdated($event)">
-                  <mat-chip disableRipple *ngFor="let source of sourcesList" (click)="sourcesUpdated(source)"
-                    [selected]="source.selected">
-                    {{ source.name }}
-                    <i class="fa fa-user-circle-o" aria-hidden="true" data-action-type="updateStatus"></i>
-                    <i class="fa fa-pencil-square-o" aria-hidden="true" data-action-type="updateStatus"></i>
-                  </mat-chip>
-                </mat-chip-list>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr />
-    </div> -->
-
     <div class="container">
       <div class="col-sm-10" style="margin-top: 10px">
         <b style="font-size: 20px">User Information </b>
@@ -41,9 +15,6 @@
           <mat-label> Name </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Name" [formControl]="userName" class="input-field" />
-            <!-- <mat-error
-                  *ngIf="name?.hasError('required') ">
-                  This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
@@ -51,9 +22,6 @@
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Mobile Number" [formControl]="mobileNumber" class="input-field"
               readonly />
-            <!-- <mat-error
-                  *ngIf="name?.hasError('required') ">
-                  This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
@@ -61,9 +29,6 @@
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="email id" [formControl]="emailAddress" class="input-field"
               readonly />
-            <!-- <mat-error
-                    *ngIf="email?.hasError('required') ">
-                    This field is required</mat-error> -->
           </mat-form-field>
         </div>
       </div>
@@ -73,9 +38,6 @@
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="GSTN No" [formControl]="gstNo" class="input-field"
               (blur)="updateIgstFlag()" />
-            <!-- <mat-error
-                    *ngIf="email?.hasError('required') ">
-                    This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
@@ -83,9 +45,6 @@
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Secondary Mobile Number" [formControl]="reminderMobileNumber"
               class="input-field" readonly />
-            <!-- <mat-error
-                  *ngIf="name?.hasError('required') ">
-                  This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
@@ -93,9 +52,6 @@
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Secondary Email Address" [formControl]="reminderEmail"
               class="input-field" />
-            <!-- <mat-error
-                  *ngIf="name?.hasError('required') ">
-                  This field is required</mat-error> -->
           </mat-form-field>
         </div>
       </div>
@@ -105,10 +61,6 @@
           <mat-form-field appearance="outline">
             <input type="text" trim matInput placeholder="Pin Code" class="input-field" [formControl]="pin"
               (blur)="updateDataByPincode()" style="line-height: 21px" />
-            <!-- <input type="text" matInput placeholder="PIN No." [formControl]="pin" class="input-field" /> -->
-            <!-- <mat-error
-                  *ngIf="name?.hasError('required') ">
-                  This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
@@ -120,20 +72,11 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <!-- <mat-form-field appearance="outline">
-            <input type="text" matInput placeholder="state" [formControl]="state" class="input-field" />
-            <mat-error
-                  *ngIf="state?.hasError('required') ">
-                  This field is required</mat-error>
-          </mat-form-field> -->
         </div>
         <div class="col-sm-4">
           <mat-label> City </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="City" [formControl]="city" class="input-field" />
-            <!-- <mat-error
-                  *ngIf="name?.hasError('required') ">
-                  This field is required</mat-error> -->
           </mat-form-field>
         </div>
       </div>
@@ -142,9 +85,6 @@
           <mat-label> Zip Code </mat-label>
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Zip Code" [formControl]="zipcode" class="input-field" />
-            <!-- <mat-error
-                  *ngIf="name?.hasError('required') ">
-                  This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
@@ -152,9 +92,6 @@
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Leader Name" [formControl]="leaderName" class="input-field"
               readonly />
-            <!-- <mat-error
-                  *ngIf="name?.hasError('required') ">
-                  This field is required</mat-error> -->
           </mat-form-field>
         </div>
         <div class="col-sm-4">
@@ -162,9 +99,6 @@
           <mat-form-field appearance="outline">
             <input type="text" matInput placeholder="Filer Name" [formControl]="filerName" class="input-field"
               readonly />
-            <!-- <mat-error
-                  *ngIf="name?.hasError('required') ">
-                  This field is required</mat-error> -->
           </mat-form-field>
         </div>
       </div>
@@ -182,7 +116,6 @@
           <div class="row" style="margin-top: 10px">
             <div class="col-sm-6">
               <span class="head">Plan Name:</span><br />
-              <!-- <span class="head">Description:</span><br> -->
               <span class="head">Validation For Days:</span><br />
               <span class="head">Base Price:</span><br />
               <span class="head" *ngIf="!showIgst">CGST:</span><br />
@@ -230,12 +163,12 @@
                 {{showMessage}}</span>
               <mat-label>Select Plan</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select matInput placeholder="Select Plan" [(ngModel)]="smeSelectedPlanId" (ngModelChange)="onNgModelChange()" autocomplete="off">
+                <mat-select matInput placeholder="Select Plan" [(ngModel)]="smeSelectedPlanId"
+                  (ngModelChange)="onNgModelChange()" autocomplete="off">
                   <mat-option *ngFor="let plan of allPlans" [value]="plan?.planId" [disabled]="plan.disable">
                     {{ plan.name }}
                   </mat-option>
                 </mat-select>
-                <!-- <mat-error>Select Plan</mat-error> -->
               </mat-form-field>
             </div>
             <div class="col-sm-4" *ngIf="smeSelectedPlanId">
@@ -275,13 +208,6 @@
     </div>
     <div class="row">
       <table class="table pb-table">
-        <!-- <thead>
-          <tr>
-            <th>Particulars</th>
-            <th></th>
-            <th>Amount</th>
-          </tr>
-        </thead> -->
         <tbody>
           <tr class="first-head">
             <th>Particulars</th>
@@ -327,7 +253,6 @@
                 <div style="font-weight: bold; font-size: small; margin-bottom: 10px;">
                   <span>Note:
                     <br>
-                    <!-- &bull; Removing of Promo code will apply if subscription is created — so create subscription and then remove -->
                     <br>
                     &bull; Apply the SME selected plan then only Promo code apply/remove will be enabled</span>
                 </div>
@@ -428,16 +353,15 @@
             <div class="col-sm-6">
               <mat-label>Select Service</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select [(ngModel)]="service" (ngModelChange)="onNgModelChange()" [ngModelOptions]="{ standalone: true }" matInput
-                  placeholder="Select Service" autocomplete="off" (selectionChange)="changeService()"
-                  [disabled]="isButtonDisable">
+                <mat-select [(ngModel)]="service" (ngModelChange)="onNgModelChange()"
+                  [ngModelOptions]="{ standalone: true }" matInput placeholder="Select Service" autocomplete="off"
+                  (selectionChange)="changeService()" [disabled]="isButtonDisable">
                   <mat-option value="ITR"> ITR Filing </mat-option>
                   <mat-option value="ITRU"> ITR U </mat-option>
                   <mat-option value="GST"> GST
                   </mat-option>
                   <mat-option value="NOTICE"> Notice
                     response </mat-option>
-                  <!--                    <mat-option value="TDS filing"> TDS filing </mat-option>-->
                   <mat-option value="TPA"> TPA
                   </mat-option>
                   <mat-option value="ACADEMY"> Academy
@@ -451,9 +375,9 @@
             <div class="col-sm-6">
               <mat-label>Service Detail</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select [(ngModel)]="serviceDetail" (ngModelChange)="onNgModelChange()" [ngModelOptions]="{ standalone: true }"
-                  (selectionChange)="onUpdateGstNoValidation()" placeholder="Select Service Detail" autocomplete="off"
-                  required>
+                <mat-select [(ngModel)]="serviceDetail" (ngModelChange)="onNgModelChange()"
+                  [ngModelOptions]="{ standalone: true }" (selectionChange)="onUpdateGstNoValidation()"
+                  placeholder="Select Service Detail" autocomplete="off" required>
                   <mat-option *ngFor="let details of serviceDetails" [value]="details.details">
                     {{ details.details }}
                   </mat-option>
@@ -483,7 +407,6 @@
         <div class="col-sm-4">
           <mat-label> Description</mat-label>
           <mat-form-field appearance="outline">
-            <!--            <mat-label>Description</mat-label>-->
             <input [formControl]="description" matInput placeholder="Description" autocomplete="off" />
           </mat-form-field>
         </div>
@@ -507,12 +430,495 @@
           Cancel
         </button>
       </div>
-      <!-- <div style="float: right">
-        <button class="tbd-btn cancel-btn" [disabled]="loading" (click)="cancelSubscription()"><i
-            class="fa fa-close"></i>
-          Cancel Subscription
-        </button>
-      </div> -->
+    </div>
+  </div>
+</div> -->
+
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
+<div class="">
+  <div class="">
+    <div class="rowClr-1">
+      <div class="row ">
+        <div class="col-sm-12">
+          <div class="sub-title-container">
+            <span class="sub-title-text">Assigned Subscription</span>
+          </div>
+        </div>
+      </div>
+      <div class="new-assigned-container">
+        <div class="new-sub-container">
+          <div class="row">
+            <div class="col-sm-12 TxHd-12">
+              <span class="header-text-1">User Information</span>
+            </div>
+          </div>
+          <div class="user-data-container">
+            <div class="row">
+              <div class="col-sm-4">
+                <mat-label> Name </mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" matInput placeholder="Name" [formControl]="userName" class="input-field" />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-label> Mobile Number </mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" matInput placeholder="Mobile Number" [formControl]="mobileNumber" class="input-field"
+                    readonly />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-label> Email ID </mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" matInput placeholder="email id" [formControl]="emailAddress" class="input-field"
+                    readonly />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-sm-4">
+                <mat-label> GSTN No </mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" matInput placeholder="GSTN No" [formControl]="gstNo" class="input-field"
+                    (blur)="updateIgstFlag()" />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-label> Secondary Mobile Number </mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" matInput placeholder="Secondary Mobile Number" [formControl]="reminderMobileNumber"
+                    class="input-field" readonly />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-label> Secondary Email </mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" matInput placeholder="Secondary Email Address" [formControl]="reminderEmail"
+                    class="input-field" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-sm-4">
+                <mat-label> PIN No </mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" trim matInput placeholder="Pin Code" class="input-field" [formControl]="pin"
+                    (blur)="updateDataByPincode()" style="line-height: 21px" />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-label> State </mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select placeholder="Select state" [formControl]="state" style="line-height: 21px">
+                    <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
+                      {{ state.stateName | titlecase }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-label> City </mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" matInput placeholder="City" [formControl]="city" class="input-field" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-sm-4">
+                <mat-label> Zip Code </mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" matInput placeholder="Zip Code" [formControl]="zipcode" class="input-field" />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-label> Leader Name </mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" matInput placeholder="Leader Name" [formControl]="leaderName" class="input-field"
+                    readonly />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-label> Filer Name </mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" matInput placeholder="Filer Name" [formControl]="filerName" class="input-field"
+                    readonly />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row mt-3" style="float: right;">
+              <div style="text-align: center ;">
+                <button class="save-user-info" [disabled]="loading" (click)="updateUserDetails()">Save Information</button>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-sm-12">
+              <div class="TxHd-12">
+                <span class="header-text-1">Selected Plan</span>
+              </div>
+            </div>
+          </div>
+          <div class="user-data-container">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="plan-container">
+                  <div class="plan-header">User Selected Plan</div>
+                  <div class="row">
+                    <div class="final-values-container">
+                      <div class="col-sm-6">
+                        <span class="plan-header">Plan Name:</span>
+                      </div>
+                      <div class="col-sm-6 plan-values-container">
+                        <span class="plan-value ">{{userSubscription?.userSelectedPlan?.name}}</span>
+                      </div>
+                    </div>
+                    <div class="final-values-container mt-1">
+                      <div class="col-sm-6">
+                        <span class="plan-header">Validation For Days:</span>
+                      </div>
+                      <div class="col-sm-6 plan-values-container">
+                        <span class="plan-value ">{{userSubscription?.userSelectedPlan?.validForDays}}</span>
+                      </div>
+                    </div>
+                    <div class="final-values-container mt-1">
+                      <div class="col-sm-6">
+                        <span class="plan-header">Base Price:</span>
+                      </div>
+                      <div class="col-sm-6 plan-values-container">
+                        <span class="plan-value">{{userSubscription?.userSelectedPlan?.basePrice | currency : "INR"}}</span>
+                      </div>
+                    </div>
+                    <div class="final-values-container mt-1" *ngIf="!showIgst">
+                      <div class="col-sm-6">
+                        <span class="plan-header">CGST:</span>
+                      </div>
+                      <div class="col-sm-6 plan-values-container">
+                        <span class="plan-value">{{userSubscription?.userSelectedPlan?.cgst | currency : "INR"}}</span>
+                      </div>
+                    </div>
+                    <div class="final-values-container mt-1" *ngIf="!showIgst">
+                      <div class="col-sm-6">
+                        <span class="plan-header">SGST:</span>
+                      </div>
+                      <div class="col-sm-6 plan-values-container">
+                        <span class="plan-value">{{userSubscription?.userSelectedPlan?.sgst | currency : "INR"}}</span>
+                      </div>
+                    </div>
+                    <div class="final-values-container mt-1" *ngIf="showIgst">
+                      <div class="col-sm-6">
+                        <span class="plan-header">IGST:</span>
+                      </div>
+                      <div class="col-sm-6 plan-values-container">
+                        <span class="plan-value">{{userSubscription?.userSelectedPlan?.igst | currency : "INR"}}</span>
+                      </div>
+                    </div>
+                    <hr class="hr-line" />
+                    <div class="final-values-container mt-1">
+                      <div class="col-sm-6">
+                        <span class="plan-header">Total Tax:</span>
+                      </div>
+                      <div class="col-sm-6 plan-values-container">
+                        <span class="plan-value">{{userSubscription?.userSelectedPlan?.totalTax | currency : "INR"}}</span>
+                      </div>
+                    </div>
+                    <div class="final-values-container mt-1">
+                      <div class="col-sm-6">
+                        <span class="plan-header">Total Amount:</span>
+                      </div>
+                      <div class="col-sm-6 plan-values-container">
+                        <span class="plan-value">{{userSubscription?.userSelectedPlan?.totalAmount | currency : "INR"}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="plan-container">
+                  <div class="plan-header">SME Selected Plan</div>
+                  <div class="row">
+                    <div class="row">
+                      <div class="col-sm-8">
+                        <span style="font-weight: bold; font-size: small; margin-bottom: 10px;" *ngIf="showMessage">Note:
+                          {{showMessage}}</span>
+                        <mat-label class="plan-header">Select Plan</mat-label>
+                        <mat-form-field appearance="outline" class="select-bg-color">
+                          <mat-select matInput placeholder="Select Plan" [(ngModel)]="smeSelectedPlanId"
+                            (ngModelChange)="onNgModelChange()" autocomplete="off">
+                            <mat-option *ngFor="let plan of allPlans" [value]="plan?.planId" [disabled]="plan.disable">
+                              {{ plan.name }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-4" *ngIf="smeSelectedPlanId">
+                        <button class="save-user-info" [disabled]="loading" style="margin-top: 25px;" (click)="applySmeSelectedPlan(smeSelectedPlanId)">
+                          Apply
+                        </button>
+                        &nbsp;
+                      </div>
+                    </div>
+
+                    <div class="final-values-container mt-1">
+                      <div class="col-sm-6">
+                        <span class="plan-header">Plan Name:</span>
+                      </div>
+                      <div class="col-sm-6 sme-value">
+                        <span class="sme-plan-value">{{ userSubscription?.smeSelectedPlan?.name }}</span>
+                      </div>
+                    </div>
+                    <div class="final-values-container mt-1">
+                      <div class="col-sm-6">
+                        <span class="plan-header">Validity:</span>
+                      </div>
+                      <div class="col-sm-6 sme-value">
+                        <span class="sme-plan-value">{{userSubscription?.smeSelectedPlan?.validForDays}}</span>
+                      </div>
+                    </div>
+                    <div class="final-values-container mt-1">
+                      <div class="col-sm-6">
+                        <span class="plan-header">Plan Amount:</span>
+                      </div>
+                      <div class="col-sm-6 sme-value">
+                        <span class="sme-plan-value">{{userSubscription?.smeSelectedPlan?.totalAmount | currency : "INR"}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row  mt-3">
+            <div class="col-sm-12 TxHd-12">
+              <span class="header-text-1">Price Plan Breakup</span>
+            </div>
+          </div>
+          <div class="user-data-container">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="breakup-container-2">
+                  <table class="table">
+                    <tbody>
+                      <tr class="first-head">
+                        <th>Particulars</th>
+                        <th></th>
+                        <th>Amount</th>
+                      </tr>
+                      <tr>
+                        <td>
+                          {{
+                          userSubscription?.smeSelectedPlan === null ||
+                          userSubscription?.userSelectedPlan?.planId ===
+                          userSubscription?.smeSelectedPlan?.planId
+                          ? "Actual Plan Amount"
+                          : "Change in Plan"
+                          }}
+                        </td>
+                        <td></td>
+                        <td>
+                          {{
+                          (userSubscription?.smeSelectedPlan !== null
+                          ? userSubscription?.smeSelectedPlan?.totalAmount
+                          : userSubscription?.userSelectedPlan?.totalAmount
+                          ) | currency : "INR"
+                          }}
+                        </td>
+                      </tr>
+                      <tr *ngFor="let item of this?.userSubscription?.concessionsApplied">
+                        <td>Less: {{ item.title }}</td>
+                        <td></td>
+                        <td>
+                          <span class="head">{{ item.amount | currency : "INR" }}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Total</td>
+                        <td></td>
+                        <td>{{ totalCon | currency : "INR" }}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          Promo Code :
+                          <div class="row">
+                            <div style="font-weight: bold; font-size: small; margin-bottom: 10px;">
+                              <span>Note:
+                                <br>
+                                <br>
+                                &bull; Apply the SME selected plan then only Promo code apply/remove will be enabled</span>
+                            </div>
+                            <div class="col-sm-5">
+                              <mat-label>Search & Select Promo Code</mat-label>
+                              <mat-form-field appearance="outline" class="class1">
+                                <input type="text" placeholder="Start typing..." matInput [disabled]="!smeSelectedPlanId"
+                                  [formControl]="searchedPromoCode" [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()"
+                                  required />
+                                <mat-error *ngIf="searchedPromoCode.invalid">
+                                  Please select value from dropdown only.
+                                </mat-error>
+                                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                  <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
+                                    {{ option.title }}
+                                  </mat-option>
+                                </mat-autocomplete>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-sm-5" style="margin-top: 20px;">
+                              <button class="save-all"
+                                (click)="applyPromo(smeSelectedPlanId); onNgModelChange()" [disabled]="!smeSelectedPlanId">
+                                Apply Code
+                              </button>
+                              &nbsp;
+
+                              <button [disabled]="!selectedPromoCode" class="delete-icon-btn" (click)="removePromoCode(smeSelectedPlanId); onNgModelChange()" type="reset">
+                                <i class="fa fa-trash fa-xs" aria-hidden="true" data-action-type="remove"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </td>
+                        <td></td>
+                        <td>
+                          <span class="head" *ngIf="this?.userSubscription && this?.userSubscription?.promoCode"><b> {{ getExactPromoDiscount() | currency :"INR" }}
+                            </b><br /></span><br />
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Final Amount To Pay</th>
+                        <td></td>
+                        <th>
+                          {{
+                          this?.userSubscription?.payableSubscriptionAmount
+                          | currency : "INR"
+                          }}
+                        </th>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>Base Price</td>
+                        <td>{{ this?.userSubscription?.basePrice | currency : "INR" }}</td>
+                      </tr>
+                      <tr *ngIf="!showIgst">
+                        <td></td>
+                        <td>CGST</td>
+                        <td>{{ this?.userSubscription?.cgst | currency : "INR" }}</td>
+                      </tr>
+                      <tr *ngIf="!showIgst">
+                        <td></td>
+                        <td>SGST</td>
+                        <td>{{ this?.userSubscription?.sgst | currency : "INR" }}</td>
+                      </tr>
+                      <tr *ngIf="showIgst">
+                        <td></td>
+                        <td>IGST</td>
+                        <td>{{ this?.userSubscription?.igst | currency : "INR" }}</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>Total Tax</td>
+                        <td>{{ this?.userSubscription?.totalTax | currency : "INR" }}</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>Total Amount</td>
+                        <td>
+                          <span class="head"><b>{{
+                              this?.userSubscription?.payableSubscriptionAmount
+                              | currency : "INR"
+                              }}</b></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row  mt-3">
+            <div class="col-sm-12 TxHd-12">
+              <span class="header-text-1">Other Details</span>
+            </div>
+          </div>
+          <div class="user-data-container">
+            <div class="row">
+              <div class="col-sm-4">
+                <mat-label>Select Service</mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select [(ngModel)]="service" (ngModelChange)="onNgModelChange()"
+                    [ngModelOptions]="{ standalone: true }" matInput placeholder="Select Service" autocomplete="off"
+                    (selectionChange)="changeService()" [disabled]="isButtonDisable">
+                    <mat-option value="ITR"> ITR Filing </mat-option>
+                    <mat-option value="ITRU"> ITR U </mat-option>
+                    <mat-option value="GST"> GST
+                    </mat-option>
+                    <mat-option value="NOTICE"> Notice
+                      response </mat-option>
+                    <mat-option value="TPA"> TPA
+                    </mat-option>
+                    <mat-option value="ACADEMY"> Academy
+                    </mat-option>
+                    <mat-option value="OTHER">
+                      Other Services
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-label>Service Detail</mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select [(ngModel)]="serviceDetail" (ngModelChange)="onNgModelChange()"
+                    [ngModelOptions]="{ standalone: true }" (selectionChange)="onUpdateGstNoValidation()"
+                    placeholder="Select Service Detail" autocomplete="off" required>
+                    <mat-option *ngFor="let details of serviceDetails" [value]="details.details">
+                      {{ details.details }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-4">
+                <mat-label> Description</mat-label>
+                <mat-form-field appearance="outline">
+                  <input [formControl]="description" matInput placeholder="Description" autocomplete="off" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-label> SAC Number</mat-label>
+                <mat-form-field appearance="outline">
+                  <input type="text" matInput placeholder="SAC Number" [formControl]="sacNumber" class="input-field" />
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6">
+                <mat-label> Financial Year</mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off">
+                    <mat-option *ngFor="let year of filteredFinancialYears" [value]="year.financialYear">
+                      {{ year.financialYear }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div style="flex: 1 0 0; text-align: left;">
+              <button class="new-cancel-button-1" [disabled]="loading" (click)="cancel()">
+                Cancel
+              </button>
+            </div>
+            <div style=" flex: 1 0 0; text-align: right;">
+              <button class="save-all" [disabled]="loading" (click)="updateSubscription()"
+                *ngIf="userSubscription?.payableSubscriptionAmount >= 0">
+                <i class="fas fa-wallet"></i> {{userSubscription?.payableSubscriptionAmount > 0 ? 'Save & Generate Invoice' : 'Save'}}
+              </button>
+              <button class="save-all" [disabled]="loading" (click)="updateSubscription()"
+                *ngIf="userSubscription?.payableSubscriptionAmount < 0">
+                <i class="fas fa-wallet"></i> Save & Issue Refund Request
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
