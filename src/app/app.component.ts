@@ -15,6 +15,7 @@ import { environment } from 'src/environments/environment';
 import { UtilsService } from './services/utils.service';
 import { UserMsService } from './services/user-ms.service';
 import * as moment from 'moment';
+import { KommunicateSsoService } from './services/kommunicate-sso.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -37,6 +38,7 @@ export class AppComponent {
     public swUpdate: SwUpdate,
     private dialog: MatDialog,
     private idleService: IdleService,
+    private kommunicateSsoService:KommunicateSsoService,
     private http: HttpClient,
     private utilsService: UtilsService,
     private userMsService: UserMsService,
@@ -129,7 +131,7 @@ export class AppComponent {
     this.subscription = timer(0, 1000).pipe(map(() => new Date()), share())
       .subscribe(time => {
         let currentTime = moment(time).valueOf();
-        console.log('currentTime', currentTime)
+        // console.log('currentTime', currentTime)
         this.mangeFilerSessionAtDayChange();
       });
   }
@@ -183,7 +185,7 @@ export class AppComponent {
   logout() {
     Auth.signOut()
       .then(data => {
-
+        this.kommunicateSsoService.logoutKommunicateChat();
         sessionStorage.clear();
         NavbarService.getInstance().clearAllSessionData();
         this.router.navigate(['/login']);
