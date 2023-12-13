@@ -543,7 +543,7 @@ export class ZeroCouponBondsComponent
       console.log('bondData', bondData);
 
       if (bondIndex >= 0) {
-        if (bondData.assetDetails.length > 0 || bondData.deduction?.length > 0) {
+        if (bondData.assetDetails?.length > 0 || bondData.deduction?.length > 0) {
           this.Copy_ITR_JSON.capitalGain[bondIndex] = bondData;
         } else {
           this.Copy_ITR_JSON.capitalGain.splice(bondIndex, 1);
@@ -573,7 +573,7 @@ export class ZeroCouponBondsComponent
             this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e=> !e.isIndexationBenefitAvailable): [];
 
         //persist the gold asset improvements
-        if(debsList.length > 0){
+        if(debsList?.length > 0){
           let srnList = debsList.map(asset => asset.srn);
           this.Copy_ITR_JSON.capitalGain[goldIndex]?.improvement.forEach(improvment => {
             if(srnList.includes(improvment.srn)){
@@ -587,7 +587,7 @@ export class ZeroCouponBondsComponent
           let tempArray = this.Copy_ITR_JSON.capitalGain[
             goldIndex
           ].assetDetails.map((element) => element.srn);
-          if (tempArray && tempArray.length) {
+          if (tempArray && tempArray?.length) {
             maxGold = tempArray.reduce((previousValue, currentValue) =>
               previousValue > currentValue ? previousValue : currentValue
             );
@@ -605,11 +605,11 @@ export class ZeroCouponBondsComponent
               (e) => e.srn === (element as FormGroup).controls['srn'].value
             );
 
-            if (srnCheck && srnCheck.length > 0) {
+            if (srnCheck && srnCheck?.length > 0) {
               let newSrn = Math.max(
-                bondsArray.length,
+                bondsArray?.length,
                 maxGold + 1,
-                debsList.length
+                debsList?.length
               );
               (element as FormGroup).controls['srn'].setValue(newSrn);
             }
@@ -651,13 +651,13 @@ export class ZeroCouponBondsComponent
           this.deductionForm.value([]);
         }
         if (goldIndex >= 0) {
-          if (debData.assetDetails.length > 0) {
+          if (debData.assetDetails?.length > 0) {
             this.Copy_ITR_JSON.capitalGain[goldIndex] = debData;
           } else {
             this.Copy_ITR_JSON.capitalGain.splice(goldIndex, 1);
           }
         } else {
-          if (debData.assetDetails.length > 0) {
+          if (debData.assetDetails?.length > 0) {
             this.Copy_ITR_JSON.capitalGain?.push(debData);
           }
         }
@@ -673,7 +673,7 @@ export class ZeroCouponBondsComponent
             this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails.filter(e=> !e.isIndexationBenefitAvailable): [];
 
         //persist the gold asset improvements
-        if(debsList.length > 0){
+        if(debsList?.length > 0){
           let srnList = debsList.map(asset => asset.srn);
           this.Copy_ITR_JSON.capitalGain[goldIndex]?.improvement.forEach(improvment => {
             if(srnList.includes(improvment.srn)){
@@ -692,13 +692,13 @@ export class ZeroCouponBondsComponent
           assetDetails: this.bondType === 'bonds' ? debsList : this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails,
         };
         if (goldIndex >= 0) {
-          if (debData.assetDetails.length > 0) {
+          if (debData.assetDetails?.length > 0) {
             this.Copy_ITR_JSON.capitalGain[goldIndex] = debData;
           } else {
             this.Copy_ITR_JSON.capitalGain.splice(goldIndex, 1);
           }
         } else {
-          if (debData.assetDetails.length > 0) {
+          if (debData.assetDetails?.length > 0) {
             this.Copy_ITR_JSON.capitalGain?.push(debData);
           }
         }
@@ -716,7 +716,7 @@ export class ZeroCouponBondsComponent
           let tempArray = this.Copy_ITR_JSON.capitalGain[
             zcbIndex
             ].assetDetails.map((element) => element.srn);
-          if (tempArray && tempArray.length) {
+          if (tempArray && tempArray?.length) {
             maxZcb = tempArray.reduce((previousValue, currentValue) =>
               previousValue > currentValue ? previousValue : currentValue
             );
@@ -734,11 +734,11 @@ export class ZeroCouponBondsComponent
               (e) => e.srn === (element as FormGroup).controls['srn'].value
             );
 
-            if (srnCheck && srnCheck.length > 0) {
+            if (srnCheck && srnCheck?.length > 0) {
               let newSrn = Math.max(
-                bondsArray.length,
+                bondsArray?.length,
                 maxZcb + 1,
-                zcbList.length
+                zcbList?.length
               );
               (element as FormGroup).controls['srn'].setValue(newSrn);
             }
@@ -777,13 +777,13 @@ export class ZeroCouponBondsComponent
           this.deductionForm.value([]);
         }
         if (zcbIndex >= 0) {
-          if (debData.assetDetails.length > 0) {
+          if (debData.assetDetails?.length > 0) {
             this.Copy_ITR_JSON.capitalGain[zcbIndex] = debData;
           } else {
             this.Copy_ITR_JSON.capitalGain.splice(zcbIndex, 1);
           }
         } else {
-          if (debData.assetDetails.length > 0) {
+          if (debData.assetDetails?.length > 0) {
             this.Copy_ITR_JSON.capitalGain?.push(debData);
           }
         }
@@ -797,7 +797,7 @@ export class ZeroCouponBondsComponent
               (element) => !element?.isIndexationBenefitAvailable
             ) : this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails;
         }
-        if(this.bondType === 'bonds' && zcbDebList.length === 0){
+        if(this.bondType === 'bonds' && zcbDebList?.length === 0){
           let zcbIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
               (element) => element.assetType === 'ZERO_COUPON_BONDS'
           );
