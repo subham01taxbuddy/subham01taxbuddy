@@ -25,6 +25,7 @@ import {
 } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import * as moment from 'moment';
+import {Location} from "@angular/common";
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
   $(this).blur();
@@ -73,7 +74,8 @@ export class LabFormComponent implements OnInit {
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     public matDialog: MatDialog,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    public location: Location
   ) {
     this.config = {
       itemsPerPage: 1,
@@ -103,6 +105,11 @@ export class LabFormComponent implements OnInit {
     this.getImprovementYears();
   }
 
+  getGainType(){
+      return this.cgArrayElement?.assetDetails[this.currentCgIndex]?.gainType
+          ? this.cgArrayElement?.assetDetails[this.currentCgIndex]?.gainType
+          : "NA"
+  }
   reset(control) {
     control.setValue(null);
   }
@@ -1656,5 +1663,11 @@ export class LabFormComponent implements OnInit {
         }
       }
     );
+  }
+
+  goBack(){
+    // this.location.back();
+    this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
+    // this.saveAndNext.emit(false);
   }
 }
