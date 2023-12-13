@@ -257,6 +257,10 @@ export class SummaryComponent implements OnInit {
         OTH?: any;
         Increliefus89AOS?: any;
         specialRate?: any;
+        IntrstSec10XIFirstProviso?: any;
+        IntrstSec10XISecondProviso?: any;
+        IntrstSec10XIIFirstProviso?: any;
+        IntrstSec10XIISecondProviso?: any;
       };
       otherIncomeTotal: number;
     };
@@ -2756,6 +2760,22 @@ export class SummaryComponent implements OnInit {
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.Increliefus89AOS,
 
+                pfInterest1011IP:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstSec10XIFirstProviso,
+
+                pfInterest1011IIP:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstSec10XISecondProviso,
+
+                pfInterest1012IP:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstSec10XIIFirstProviso,
+
+                pfInterest1012IIP:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstSec10XIISecondProviso,
+
                 specialRate: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
                 ]?.ScheduleOS?.IncOthThanOwnRaceHorse?.OthersGrossDtls?.filter(
@@ -4509,6 +4529,7 @@ export class SummaryComponent implements OnInit {
                     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                       (val) => val.incomeType === 'ROYALTY_US_80RRB'
                     )?.amount,
+
                   pfInterest1011IP:
                     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                       (val) => val.incomeType === 'INTEREST_ACCRUED_10_11_I_P'
