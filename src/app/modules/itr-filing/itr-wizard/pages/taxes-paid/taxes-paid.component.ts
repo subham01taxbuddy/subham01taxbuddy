@@ -457,7 +457,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       delete copy.totalTcsDeposited;
       this.assetList.push(copy);
       copy.index = counter++;
-      copy.srNo = copy.index;
+      // copy.srNo = copy.index;
     });
     this.totalEntries += counter;
 
@@ -656,7 +656,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           !filteredArray
             ?.filter((element) => element?.tdsType === 'TCS')
             ?.map((element) => element?.srNo)
-            ?.includes(parseInt(item?.srNo))
+            ?.includes(item?.srNo)
       );
       console.log(filtered4);
       if(filtered4){

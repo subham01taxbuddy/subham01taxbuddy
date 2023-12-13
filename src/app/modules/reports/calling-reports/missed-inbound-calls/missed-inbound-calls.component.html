@@ -19,22 +19,22 @@
             <div class="col-sm-4">
               <mat-label>Status</mat-label>
               <mat-form-field appearance="outline">
-                  <mat-select placeholder="Select Status" [formControl]="status" required>
-                      <mat-option *ngFor="let obj of statusList" [value]="obj.value">
-                          {{ obj.label }}
-                      </mat-option>
-                  </mat-select>
-                   <!-- <mat-error *ngIf="promoCodeForm.controls['active'].hasError('required')">Select status.
+                <mat-select placeholder="Select Status" [formControl]="status" required>
+                  <mat-option *ngFor="let obj of statusList" [value]="obj.value">
+                    {{ obj.label }}
+                  </mat-option>
+                </mat-select>
+                <!-- <mat-error *ngIf="promoCodeForm.controls['active'].hasError('required')">Select status.
                   </mat-error> -->
-                  <!-- <mat-hint *ngIf="promoCodeForm.controls['discountType'].value === 'FIXED'" style="color: red;">** Are
+                <!-- <mat-hint *ngIf="promoCodeForm.controls['discountType'].value === 'FIXED'" style="color: red;">** Are
                       sure want to create FIXED pricing promo code?</mat-hint> -->
               </mat-form-field>
             </div>
             <div class="col-sm-4 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>From Date</mat-label>
-                <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxStartDate"
-                  autocomplete="off" (dateChange)="setToDateValidation(startDate.value)" />
+                <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
+                  [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()" />
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
                 <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
@@ -43,8 +43,8 @@
             <div class="col-sm-4 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>To Date</mat-label>
-                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxDate"
-                  autocomplete="off" />
+                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxEndDate"
+                  autocomplete="off" (dateChange)="setToDateValidation()" />
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
                 <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
@@ -66,15 +66,15 @@
           <div class="row">
             <div class="col-sm-12 ">
               <span class="note1">
-                Note :  Please select required filters Above and click on Show Reports to get information
+                Note : Please select required filters Above and click on Show Reports to get information
               </span>
             </div>
           </div>
-</div>
-</div>
+        </div>
+      </div>
 
     </mat-expansion-panel>
-   </mat-accordion>
+  </mat-accordion>
 </div>
 <!-- New Open Close Filter Ends -->
 <!-- Table Below -->
@@ -95,9 +95,9 @@
   </table>
 
   <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="missedInboundCallGridOptions"
-  (rowClicked)="onRowClicked($event)">
+    (rowClicked)="onRowClicked($event)">
   </ag-grid-angular>
-  <div *ngIf="config.totalItems > 1" >
+  <div *ngIf="config.totalItems > 1">
     <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
   </div>
 

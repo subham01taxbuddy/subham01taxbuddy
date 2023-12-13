@@ -22,6 +22,7 @@ import { ReportService } from 'src/app/services/report-service';
 import { FormControl, Validators } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -90,6 +91,10 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   minDate = new Date(2023, 1, 1);
   toDateMin: any;
   partnerType: any;
+  minStartDate: string = '2023-01-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
 
   constructor(private userService: UserMsService,
     private _toastMessageService: ToastMessageService,
@@ -106,7 +111,7 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     @Inject(LOCALE_ID) private locale: string) {
     this.startDate.setValue('2023-01-01');
     this.endDate.setValue(new Date());
-    this.setToDateValidation(this.startDate.value);
+    this.setToDateValidation();
     this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'));
 
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
@@ -1016,9 +1021,9 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     this.cacheManager.clearCache();
   }
 
-  setToDateValidation(FromDate) {
-    console.log('FromDate: ', FromDate);
-    this.toDateMin = FromDate;
+  setToDateValidation() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
 
