@@ -1,34 +1,32 @@
 <ngx-loading
   [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
-<div class="container">
-  <div class="head-title mb-4" style="font-size: 18px">
-    <strong> Self Assessment or Advance Tax paid </strong>
+  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+
+
+<form [formGroup]="salaryForm">
+  <div class="PreBxUp">
+    <div class="hdByr-L">
+      <strong> Self Assessment or Advance Tax paid </strong>
+    </div>
   </div>
   <div class="head-title mb-4">
     Please enter the amount of advance tax or self assessment tax paid
   </div>
-  <form [formGroup]="salaryForm">
-    <div formArrayName="salaryArray">
-      <div
-        class="display-flex"
-        *ngFor="
-          let donation of getSalaryArray.controls | paginate : config;
-          let i = index
-        "
-        [formGroupName]="fieldGlobalIndex(i)"
-        style="margin-bottom: 25px"
+  <div formArrayName="salaryArray">
+    <div
+      class="display-flex"
+      *ngFor="let donation of getSalaryArray.controls | paginate : config; let i = index"
+      [formGroupName]="fieldGlobalIndex(i)">
+      <!-- <mat-checkbox
+        color="primary"
+        name="hasEdit[i]"
+        formControlName="hasEdit"
+        class="mv"
       >
-        <!-- <mat-checkbox
-          color="primary"
-          name="hasEdit[i]"
-          formControlName="hasEdit"
-          class="mv"
-        >
-        </mat-checkbox> -->
-        <div class="row">
-          <div class="col-sm-3">
+      </mat-checkbox> -->
+      <div class="row">
+        <div class="div-6 ">
+          <div class="form-field">
             <mat-label>BSR Code*</mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -50,41 +48,43 @@
               >
             </mat-form-field>
           </div>
-          <div class="col-sm-3">
-            <mat-label>Date of Deposit*</mat-label>
-            <mat-form-field appearance="outline">
-              <input
-                matTooltip="Date of Deposit"
-                matTooltipClass="tab-tooltip"
-                matTooltipPosition="above"
-                matInput
-                [matDatepicker]="picker"
-                class="input-field"
-                placeholder="Date of Deposit"
-                name="dateOfDeposit"
-                formControlName="dateOfDeposit"
-                [min]="minDate"
-                [max]="maxDate"
-                readonly
-                required
-              />
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="picker"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-              <mat-error
-                *ngIf="donation.get('dateOfDeposit').hasError('required')"
-              >
-                Select date of Deposit</mat-error
-              >
-            </mat-form-field>
-            <mat-hint style="font-size: 15px; margin-left: 5px"
-              >DD/MM/YYYY</mat-hint
+          <div class="form-field">
+          <mat-label>Date of Deposit*</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              matTooltip="Date of Deposit"
+              matTooltipClass="tab-tooltip"
+              matTooltipPosition="above"
+              matInput
+              [matDatepicker]="picker"
+              class="input-field"
+              placeholder="Date of Deposit"
+              name="dateOfDeposit"
+              formControlName="dateOfDeposit"
+              [min]="minDate"
+              [max]="maxDate"
+              readonly
+              required
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error
+              *ngIf="donation.get('dateOfDeposit').hasError('required')"
             >
-          </div>
+              Select date of Deposit</mat-error
+            >
+          </mat-form-field>
+          <mat-hint style="font-size: 15px; margin-left: 5px"
+            >DD/MM/YYYY</mat-hint
+          >
+        </div>
+        </div>
 
-          <div class="col-sm-3">
+        <div class="div-6 ">
+          <div class="form-field">
             <mat-label>Serial No of Challan*</mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -105,62 +105,63 @@
             </mat-form-field>
           </div>
 
-          <div class="col-sm-3">
-            <mat-label>Total Tax Paid*</mat-label>
-            <mat-form-field appearance="outline">
-              <input
-                formControlName="totalTax"
-                matInput
-                placeholder="Total Tax Paid"
-                name="totalTax[i]"
-                required
-                class="input-field"
-                maxlength="14"
-                digitsOnly
-              />
-              <mat-error *ngIf="donation.get('totalTax').hasError('required')">
-                Enter positive amount without decimal.</mat-error
-              >
-            </mat-form-field>
-          </div>
+          <div class="form-field">
+          <mat-label>Total Tax Paid*</mat-label>
+          <mat-form-field appearance="outline">
+            <input
+              formControlName="totalTax"
+              matInput
+              placeholder="Total Tax Paid"
+              name="totalTax[i]"
+              required
+              class="input-field"
+              maxlength="14"
+              digitsOnly
+            />
+            <mat-error *ngIf="donation.get('totalTax').hasError('required')">
+              Enter positive amount without decimal.</mat-error
+            >
+          </mat-form-field>
+        </div>
         </div>
 
-        <!-- <div class="edit-head">
-          <button
-            type="button"
-            class="edit-donation"
-            (click)="editSalaryForm(fieldGlobalIndex(i))"
-          >
-            <mat-icon> edit_square </mat-icon>Edit
-          </button>
-        </div> -->
-      </div>
-      <div class="row spsTp bdrTp">
-        <!-- <div class="col-sm-3">
-            <button
-              type="submit"
-              class="tbd-btn-secondary delBtn"
-              (click)="deleteSalaryArray()"
-            >
-              <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-            </button>
-          </div> -->
-        <!-- <div class="col-sm-6">
-            <table>
-              <tr
-                *ngFor="let item of getSalaryArray.controls | paginate : config"
-              ></tr>
-            </table>
-            <pagination-controls
-              (pageChange)="pageChanged($event)"
-            ></pagination-controls>
-          </div> -->
-        <div class="col-sm-3">
-          <button type="submit" class="tbd-btn save-btn mvRth" (click)="save()">
-            Save
-          </button>
-        </div>
+      <!-- <div class="edit-head">
+        <button
+          type="button"
+          class="edit-donation"
+          (click)="editSalaryForm(fieldGlobalIndex(i))"
+        >
+          <mat-icon> edit_square </mat-icon>Edit
+        </button>
+      </div> -->
       </div>
     </div>
-  </form>
-</div>
+    <div class="out-box">
+      <!-- <div class="col-sm-3">
+          <button
+            type="submit"
+            class="tbd-btn-secondary delBtn"
+            (click)="deleteSalaryArray()"
+          >
+            <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+          </button>
+        </div> -->
+      <!-- <div class="col-sm-6">
+          <table>
+            <tr
+              *ngFor="let item of getSalaryArray.controls | paginate : config"
+            ></tr>
+          </table>
+          <pagination-controls
+            (pageChange)="pageChanged($event)"
+          ></pagination-controls>
+        </div> -->
+      <div class="box-right">
+        <button type="submit" class="btn btn__primary" (click)="save()">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+
