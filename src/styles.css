@@ -12529,8 +12529,9 @@ body[dir=rtl] .checkbox[checked=true] {
 
 
 .iframe-height {
-  height: 45vw;
-  width: 600px;
+  height: 47vw;
+  width: 530px;
+  border-radius: 15px;
 }
 
 
@@ -12544,5 +12545,5 @@ body[dir=rtl] .checkbox[checked=true] {
 }
 
 .kmIcon {
-  background-color: red;
+  background-color: #2199e8;
 }

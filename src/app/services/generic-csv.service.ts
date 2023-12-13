@@ -122,6 +122,8 @@ export class GenericCsvService {
         })
         element.skillSetPlanIdList = planNames;
       }
+      element['exhaustedCapacity'] = Number(element.activeCaseMaxCapacity) - Number(element.balanceUserAssignmentCapacity)
+
     });
 
 

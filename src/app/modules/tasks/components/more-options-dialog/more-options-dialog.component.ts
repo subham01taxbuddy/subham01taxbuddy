@@ -22,6 +22,7 @@ import {
 } from "../../../shared/components/update-no-json-filing-dialog/update-no-json-filing-dialog.component";
 import { UpdateItrUFillingDialogComponent } from 'src/app/modules/shared/components/update-ItrU-filling-dialog/update-ItrU-filling-dialog.component';
 import { ReportService } from 'src/app/services/report-service';
+import { ToastMessageService } from 'src/app/services/toast-message.service';
 
 @Component({
   selector: 'app-more-options-dialog',
@@ -40,7 +41,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   // isDisable = true;
   loggedInUserRoles: any;
   showInvoiceButton: boolean;
-  navigateToInvoice:boolean
+  navigateToInvoice: boolean
   partnerType: any;
 
   constructor(
@@ -52,7 +53,8 @@ export class MoreOptionsDialogComponent implements OnInit {
     private userMsService: UserMsService,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private _toastMessageService: ToastMessageService,
   ) {
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createRowData([]),
@@ -68,7 +70,7 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   ngOnInit() {
     // this.getStatus();
-    this.partnerType =this.utilsService.getPartnerType();
+    this.partnerType = this.utilsService.getPartnerType();
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     console.log('data from assigned users', this.data);
     this.checkSubscriptionForInvoice();
@@ -83,9 +85,9 @@ export class MoreOptionsDialogComponent implements OnInit {
       this.loading = false;
       if (response.success) {
         this.showInvoiceButton = true;
-        if(response?.data[0]?.invoiceDetail[0]?.paymentStatus === "Paid"){
+        if (response?.data[0]?.invoiceDetail[0]?.paymentStatus === "Paid") {
           this.navigateToInvoice = true;
-        }else{
+        } else {
           this.navigateToInvoice = false;
         }
 
@@ -145,22 +147,22 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   goToInvoice() {
-    if(this.loggedInUserRoles.includes('ROLE_FILER')){
-    if(this.navigateToInvoice){
-      this.router.navigate(['/subscription/tax-invoice'], {
-        queryParams: { name: this.data.name },
-      });
-    }else{
-      this.router.navigate(['/subscription/proforma-invoice'], {
-        queryParams: { name: this.data.name },
-      });
-    }
-    }else{
-      if(this.navigateToInvoice){
+    if (this.loggedInUserRoles.includes('ROLE_FILER')) {
+      if (this.navigateToInvoice) {
+        this.router.navigate(['/subscription/tax-invoice'], {
+          queryParams: { name: this.data.name },
+        });
+      } else {
+        this.router.navigate(['/subscription/proforma-invoice'], {
+          queryParams: { name: this.data.name },
+        });
+      }
+    } else {
+      if (this.navigateToInvoice) {
         this.router.navigate(['/subscription/tax-invoice'], {
           queryParams: { mobile: this.data.mobileNumber },
         });
-      }else{
+      } else {
         this.router.navigate(['/subscription/proforma-invoice'], {
           queryParams: { mobile: this.data.mobileNumber },
         });
@@ -171,13 +173,13 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   goToSubscription() {
-    if(this.loggedInUserRoles.includes('ROLE_FILER')){
+    if (this.loggedInUserRoles.includes('ROLE_FILER')) {
       this.router.navigate(['/subscription/assigned-subscription'], {
         queryParams: {
           userId: this.data.userId,
         },
       });
-    }else{
+    } else {
       this.router.navigate(['/subscription/assigned-subscription'], {
         queryParams: {
           userMobNo: this.data.mobileNumber,
@@ -308,17 +310,7 @@ export class MoreOptionsDialogComponent implements OnInit {
           }
         });
         if (itrSubscriptionFound) {
-          switch (action) {
-            case 'add-client':
-              this.addClient();
-              break;
-            case 'update-filing':
-              this.updateFilingNoJson();
-              break;
-            case 'itr-u-update':
-              this.itruUpdate();
-              break;
-          }
+          this.checkFilerAssignment(action);
         } else {
           this.utilsService.showSnackBar('Please make sure the subscription is created for user.');
         }
@@ -326,6 +318,41 @@ export class MoreOptionsDialogComponent implements OnInit {
         this.utilsService.showSnackBar('Please make sure the subscription is created for user.');
       }
     });
+  }
+
+  checkFilerAssignment(action) {
+    // https://uat-api.taxbuddy.com/user/check-filer-assignment?userId=16387&assessmentYear=2023-2024&serviceType=ITR
+    let hasFilerAssignment = false;
+    let param = `/check-filer-assignment?userId=${this.data.userId}`
+    this.userMsService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      if (response.success) {
+        if (response.data.filerAssignmentStatus === 'FILER_ASSIGNED') {
+          hasFilerAssignment = true;
+          if (hasFilerAssignment) {
+            switch (action) {
+              case 'add-client':
+                this.addClient();
+                break;
+              case 'update-filing':
+                this.updateFilingNoJson();
+                break;
+              case 'itr-u-update':
+                this.itruUpdate();
+                break;
+            }
+          }
+        } else {
+          this.utilsService.showSnackBar('Please make sure that filer assignment should be done before ITR filing.');
+        }
+      } else {
+        this.utilsService.showSnackBar('Please make sure that filer assignment should be done before ITR filing.');
+      }
+    }, (error) => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Please make sure that filer assignment should be done before ITR filing.');
+    })
+
   }
 
   itruUpdate() {
@@ -395,7 +422,7 @@ export class MoreOptionsDialogComponent implements OnInit {
         serviceType: this.data.serviceType,
         ownerName: this.data.ownerName,
         filerName: this.data.filerName,
-        filerUserId :this.data.filerUserId,
+        filerUserId: this.data.filerUserId,
         userInfo: this.data
       },
     });

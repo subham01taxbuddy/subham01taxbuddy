@@ -1,69 +1,70 @@
-<div class="card">
-  <mat-panel-title>
-    <strong> Please select from the following </strong>
-  </mat-panel-title>
-  <br />
-  <mat-radio-group [(ngModel)]="selectedValue">
-    <div class="customradiobtn bdr_btm">
-      <mat-radio-button
-        style="margin: 0"
-        [value]="'tdsOnSalary'"
-        class="right-mrgn"
-        >TDS on salary</mat-radio-button
-      >
-    </div>
-    <div class="customradiobtn bdr_btm">
-      <mat-radio-button
-        style="margin: 0"
-        [value]="'tdsOtherThanSalary16A'"
-        class="right-mrgn"
-        >TDS other than salary 16A</mat-radio-button
-      >
-    </div>
-    <div class="customradiobtn">
-      <mat-radio-button
-        style="margin: 0"
-        [value]="'tdsOtherThanSalaryPanBased'"
-        class="right-mrgn"
-        [disabled]=""
-        >TDS other than salary pan based deductions (26QB, 26QC,
-        26QD)</mat-radio-button
-      >
-    </div>
-    <div class="customradiobtn">
-      <mat-radio-button
-        style="margin: 0"
-        [value]="'tcs'"
-        class="right-mrgn"
-        [disabled]=""
-        >TCS Details</mat-radio-button
-      >
-    </div>
-    <div class="customradiobtn">
-      <mat-radio-button
-        style="margin: 0"
-        [value]="'selfAssessment'"
-        class="right-mrgn"
-        [disabled]=""
-        >Self Assessment or Advance Tax Paid
-      </mat-radio-button>
-    </div>
-  </mat-radio-group>
-  <br />
+<div class="land-box-buyr" style="overflow: scroll">
+  <div class="PreBoxOut">
+    <mat-panel-title>
+      <strong> Please select from the following </strong>
+    </mat-panel-title>
 
-  <div *ngIf="selectedValue === 'tdsOnSalary'">
-    <app-tds-on-salary></app-tds-on-salary>
-  </div>
-  <div *ngIf="selectedValue === 'tdsOtherThanSalary16A'">
-    <app-tds-other-than-salary #other [showHeadOfIncome]="'TDTS'"></app-tds-other-than-salary>
-  </div>
-  <div *ngIf="selectedValue === 'tdsOtherThanSalaryPanBased'">
-    <app-tds-other-than-salary #panBased [showHeadOfIncome]="'TDTSP'"></app-tds-other-than-salary>
-  </div>
-  <div *ngIf="selectedValue === 'tcs'">
-    <app-tcs></app-tcs>
-  </div>
-  <div *ngIf="selectedValue === 'selfAssessment'">
-    <app-advance-tax-paid></app-advance-tax-paid>
+    <mat-select [(ngModel)]="selectedValue">
+      <div class="customradiobtn bdr_btm">
+        <mat-option
+          style="margin: 0"
+          [value]="'tdsOnSalary'"
+          class="right-mrgn"
+          >TDS on salary</mat-option>
+      </div>
+      <div class="customradiobtn bdr_btm">
+        <mat-option
+          style="margin: 0"
+          [value]="'tdsOtherThanSalary16A'"
+          class="right-mrgn"
+          >TDS other than salary 16A</mat-option
+        >
+      </div>
+      <div class="customradiobtn">
+        <mat-option
+          style="margin: 0"
+          [value]="'tdsOtherThanSalaryPanBased'"
+          class="right-mrgn"
+          [disabled]=""
+          >TDS other than salary pan based deductions (26QB, 26QC,
+          26QD)</mat-option
+        >
+      </div>
+      <div class="customradiobtn">
+        <mat-option
+          style="margin: 0"
+          [value]="'tcs'"
+          class="right-mrgn"
+          [disabled]=""
+          >TCS Details</mat-option
+        >
+      </div>
+      <div class="customradiobtn">
+        <mat-option
+          style="margin: 0"
+          [value]="'selfAssessment'"
+          class="right-mrgn"
+          [disabled]=""
+          >Self Assessment or Advance Tax Paid
+        </mat-option>
+      </div>
+    </mat-select>
+
+
+    <div class="PreBxUp" *ngIf="selectedValue === 'tdsOnSalary'">
+      <app-tds-on-salary></app-tds-on-salary>
+    </div>
+    <div class="PreBxUp" *ngIf="selectedValue === 'tdsOtherThanSalary16A'">
+      <app-tds-other-than-salary #other [showHeadOfIncome]="'TDTS'"></app-tds-other-than-salary>
+    </div>
+    <div class="PreBxUp" *ngIf="selectedValue === 'tdsOtherThanSalaryPanBased'">
+      <app-tds-other-than-salary #panBased [showHeadOfIncome]="'TDTSP'"></app-tds-other-than-salary>
+    </div>
+    <div class="PreBxUp" *ngIf="selectedValue === 'tcs'">
+      <app-tcs></app-tcs>
+    </div>
+    <div class="PreBxUp" *ngIf="selectedValue === 'selfAssessment'">
+      <app-advance-tax-paid></app-advance-tax-paid>
+    </div>
   </div>
 </div>

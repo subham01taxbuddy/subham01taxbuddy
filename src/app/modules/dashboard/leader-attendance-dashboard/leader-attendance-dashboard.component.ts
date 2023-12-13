@@ -15,6 +15,7 @@ import { ReportService } from 'src/app/services/report-service';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { environment } from 'src/environments/environment';
 import { GenericCsvService } from 'src/app/services/generic-csv.service';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -45,9 +46,10 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
   loading = false;
   loggedInSmeUserId:any;
   roles:any;
-  minDate: string = '2023-04-01';
+  minStartDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
-  maxStartDate = new Date().toISOString().slice(0, 10);
+  maxStartDate=moment().toDate();
+  maxEndDate = moment().toDate();
   minEndDate= new Date().toISOString().slice(0, 10);
   startDate = new FormControl('');
   endDate = new FormControl('');
@@ -80,6 +82,7 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this.today = new Date();
+    this.maxStartDate=this.endDate.value;
   }
 
   ngOnInit(): void {
@@ -265,9 +268,9 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
     this.search();
   }
 
-  setEndDateValidate(startDateVal: any) {
-    console.log('startDateVal: ', startDateVal);
-    this.minEndDate = startDateVal.value;
+  setEndDateValidate() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   async downloadReport() {

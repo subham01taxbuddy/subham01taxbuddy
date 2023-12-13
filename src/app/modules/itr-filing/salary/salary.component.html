@@ -198,13 +198,11 @@
                             <div class="field">
                               <div class="field-label">
                                 <span class="span">Country </span> <span class="text-wrapper-2">*</span>
-                                <select class="form-control select" id="exampleFormControlSelect1">
-                                  <option>India</option>
-                                  <option>2</option>
-                                  <option>3</option>
-                                  <option>4</option>
-                                  <option>5</option>
-                                </select>
+                                <mat-form-field appearance="outline">
+                                  <mat-select class="form-control select" id="exampleFormControlSelect1">
+                                    <mat-option>India</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
                               </div>
 
                             </div>
@@ -629,7 +627,7 @@
 
             <div class="out-box">
               <div class="box-left">
-                <div class="lft-btn" (click)="goBack()">>Back</div>
+                <div class="lft-btn" (click)="goBack()">Back</div>
               </div>
               <div class="box-right">
                 <div class="rght-btn" (click)="saveEmployerDetails()">Save & View Summary</div>
