@@ -10,6 +10,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { CacheManager } from '../../shared/interfaces/cache-manager.interface';
 import { SmeListDropDownComponent } from '../../shared/components/sme-list-drop-down/sme-list-drop-down.component';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -41,10 +42,10 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
   loading = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
-  minEndDate = new Date();
-  maxStartDate =new Date();
-  maxDate = new Date(2024, 2, 31);
-  minDate = new Date(2023, 3, 1);
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
   missedChatList: any;
   config: any;
   searchParam: any = {
@@ -68,6 +69,7 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
+    this.setToDateValidation();
 
     this.missedChatListGridOptions = <GridOptions>{
       rowData: [],
@@ -347,9 +349,9 @@ export class MissedChatListComponent implements OnInit, OnDestroy {
   }
 
 
-  setToDateValidation(FromDate) {
-    console.log('FromDate: ', FromDate);
-    this.minEndDate = FromDate;
+  setToDateValidation() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   ngOnDestroy() {
