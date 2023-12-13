@@ -754,6 +754,14 @@ export class SummaryComponent implements OnInit {
       SchedulePTIDtls?: any;
     };
     ScheduleFSIDtls?: any;
+    ScheduleTR1?: {
+      ScheduleTR?: any;
+      TotalTaxPaidOutsideIndia?: any;
+      TotalTaxReliefOutsideIndia?: any;
+      TaxReliefOutsideIndiaDTAA?: any;
+      TaxReliefOutsideIndiaNotDTAA?: any;
+      TaxPaidOutsideIndFlg?: any;
+    };
     exemptIncome: {
       partnerFirms: [
         {
@@ -4268,6 +4276,27 @@ export class SummaryComponent implements OnInit {
             ScheduleFSIDtls:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleFSI
                 ?.ScheduleFSIDtls,
+
+            ScheduleTR1: {
+              ScheduleTR:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTR1
+                  ?.ScheduleTR,
+              TotalTaxPaidOutsideIndia:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTR1
+                  ?.TotalTaxPaidOutsideIndia,
+              TotalTaxReliefOutsideIndia:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTR1
+                  ?.TotalTaxReliefOutsideIndia,
+              TaxReliefOutsideIndiaDTAA:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTR1
+                  ?.TaxReliefOutsideIndiaDTAA,
+              TaxReliefOutsideIndiaNotDTAA:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTR1
+                  ?.TaxReliefOutsideIndiaNotDTAA,
+              TaxPaidOutsideIndFlg:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTR1
+                  ?.TaxPaidOutsideIndFlg,
+            },
 
             exemptIncome: {
               partnerFirms: [

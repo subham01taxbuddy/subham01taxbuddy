@@ -7570,6 +7570,7 @@
                     </div>
                     <table
                       class="table table-bordered table-striped table-hover"
+                      *ngIf="finalCalculations?.ScheduleFSIDtls?.length > 0"
                     >
                       <thead>
                         <tr>
@@ -7733,6 +7734,73 @@
                         </ng-container>
                       </tbody>
                     </table>
+
+                    <!-- schedule TR -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.ScheduleTR1?.ScheduleTR?.length > 0
+                      "
+                    >
+                      Schedule TR (Summary of tax relief claimed)
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.ScheduleTR1?.ScheduleTR?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">
+                            1. Country / Region Code
+                          </th>
+                          <th style="font-weight: bold">
+                            2. Taxpayer Identification Number
+                          </th>
+                          <th style="font-weight: bold">
+                            3. Total proportionate taxes paid outside India
+                          </th>
+                          <th style="font-weight: bold">
+                            4. Total tax relief available
+                          </th>
+                          <th style="font-weight: bold">
+                            5. Tax relief claimed under section (90, 90A, 91)
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <ng-container
+                          *ngFor="
+                            let tr of finalCalculations?.ScheduleTR1
+                              ?.ScheduleTR;
+                            let i = index
+                          "
+                        >
+                          <tr>
+                            <td>
+                              {{ tr?.CountryCodeExcludingIndia }} -
+                              {{ tr?.CountryName }}
+                            </td>
+                            <td>
+                              {{ tr?.TaxIdentificationNo }}
+                            </td>
+                            <td>
+                              {{ tr?.TaxPaidOutsideIndia }}
+                            </td>
+                            <td>
+                              {{ tr?.TaxReliefOutsideIndia }}
+                            </td>
+                            <td>
+                              {{ tr?.ReliefClaimedUsSection }}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+
+                    <!-- schedule FA -->
                   </mat-expansion-panel>
 
                   <!-- *********************** Exempt Income ************************ -->
