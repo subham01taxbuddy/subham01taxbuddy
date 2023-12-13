@@ -753,6 +753,7 @@ export class SummaryComponent implements OnInit {
     SchedulePTI?: {
       SchedulePTIDtls?: any;
     };
+    ScheduleFSIDtls?: any;
     exemptIncome: {
       partnerFirms: [
         {
@@ -4263,6 +4264,10 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.SchedulePTI
                   ?.SchedulePTIDtls,
             },
+
+            ScheduleFSIDtls:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleFSI
+                ?.ScheduleFSIDtls,
 
             exemptIncome: {
               partnerFirms: [
