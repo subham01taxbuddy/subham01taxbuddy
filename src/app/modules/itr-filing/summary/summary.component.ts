@@ -762,6 +762,18 @@ export class SummaryComponent implements OnInit {
       TaxReliefOutsideIndiaNotDTAA?: any;
       TaxPaidOutsideIndFlg?: any;
     };
+    ScheduleFA?: {
+      DetailsForiegnBank?: any;
+      DtlsForeignCustodialAcc?: any;
+      DtlsForeignEquityDebtInterest?: any;
+      DtlsForeignCashValueInsurance?: any;
+      DetailsFinancialInterest?: any;
+      DetailsImmovableProperty?: any;
+      DetailsOthAssets?: any;
+      DetailsOfAccntsHvngSigningAuth?: any;
+      DetailsOfTrustOutIndiaTrustee?: any;
+      DetailsOfOthSourcesIncOutsideIndia?: any;
+    };
     exemptIncome: {
       partnerFirms: [
         {
@@ -4296,6 +4308,48 @@ export class SummaryComponent implements OnInit {
               TaxPaidOutsideIndFlg:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleTR1
                   ?.TaxPaidOutsideIndFlg,
+            },
+
+            ScheduleFA: {
+              DetailsForiegnBank:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleFA
+                  ?.DetailsForiegnBank,
+
+              DtlsForeignCustodialAcc:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleFA
+                  ?.DtlsForeignCustodialAcc,
+
+              DtlsForeignEquityDebtInterest:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleFA
+                  ?.DtlsForeignEquityDebtInterest,
+
+              DtlsForeignCashValueInsurance:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleFA
+                  ?.DtlsForeignCashValueInsurance,
+
+              DetailsFinancialInterest:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleFA
+                  ?.DetailsFinancialInterest,
+
+              DetailsImmovableProperty:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleFA
+                  ?.DetailsImmovableProperty,
+
+              DetailsOthAssets:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleFA
+                  ?.DetailsOthAssets,
+
+              DetailsOfAccntsHvngSigningAuth:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleFA
+                  ?.DetailsOfAccntsHvngSigningAuth,
+
+              DetailsOfTrustOutIndiaTrustee:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleFA
+                  ?.DetailsOfTrustOutIndiaTrustee,
+
+              DetailsOfOthSourcesIncOutsideIndia:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleFA
+                  ?.DetailsOfOthSourcesIncOutsideIndia,
             },
 
             exemptIncome: {

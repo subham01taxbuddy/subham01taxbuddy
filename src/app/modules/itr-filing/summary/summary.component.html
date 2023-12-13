@@ -7801,6 +7801,1238 @@
                     </table>
 
                     <!-- schedule FA -->
+                    <div class="bxHed" *ngIf="finalCalculations?.ScheduleFA">
+                      Schedule FA (Details of Foreign Assets and Income from any
+                      source outside India)
+                    </div>
+
+                    <!-- DetailsForiegnBank -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA?.DetailsForiegnBank
+                          ?.length > 0
+                      "
+                    >
+                      Details of Foreign Depository Accounts held (including any
+                      beneficial interest) at any time during the calendar year
+                      ending as on 31st December, 2022
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA?.DetailsForiegnBank
+                          ?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">1. Sr. No</th>
+                          <th style="font-weight: bold">
+                            2. Country / Region Name
+                          </th>
+                          <th style="font-weight: bold">
+                            3. Country / Region code
+                          </th>
+                          <th style="font-weight: bold">
+                            4. Name of financial institution
+                          </th>
+                          <th style="font-weight: bold">
+                            5. Address of financial institution
+                          </th>
+                          <th style="font-weight: bold">6. ZIP Code</th>
+                          <th style="font-weight: bold">7. Account number</th>
+                          <th style="font-weight: bold">8. Status</th>
+                          <th style="font-weight: bold">
+                            9. Account opening date
+                          </th>
+                          <th style="font-weight: bold">
+                            10. Peak balance during the period
+                          </th>
+                          <th style="font-weight: bold">11. Closing balance</th>
+                          <th style="font-weight: bold">
+                            12. Gross interest paid/credited to the account
+                            during the period
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <ng-container
+                          *ngFor="
+                            let foreignBank of finalCalculations?.ScheduleFA
+                              ?.DetailsForiegnBank;
+                            let i = index
+                          "
+                        >
+                          <tr>
+                            <td>
+                              {{ i + 1 }}
+                            </td>
+                            <td>
+                              {{ foreignBank?.CountryCodeExcludingIndia }} -
+                              {{ foreignBank?.CountryName }}
+                            </td>
+                            <td>
+                              {{ foreignBank?.CountryCodeExcludingIndia }}
+                            </td>
+                            <td>
+                              {{ foreignBank?.Bankname }}
+                            </td>
+                            <td>
+                              {{ foreignBank?.AddressOfBank }}
+                            </td>
+                            <td>
+                              {{ foreignBank?.ZipCode }}
+                            </td>
+                            <td>
+                              {{ foreignBank?.ForeignAccountNumber }}
+                            </td>
+                            <td>
+                              {{ foreignBank?.OwnerStatus }}
+                            </td>
+                            <td>
+                              {{ foreignBank?.AccOpenDate }}
+                            </td>
+                            <td>
+                              {{ foreignBank?.PeakBalanceDuringYear }}
+                            </td>
+                            <td>
+                              {{ foreignBank?.ClosingBalance }}
+                            </td>
+                            <td>
+                              {{ foreignBank?.IntrstAccured }}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+
+                    <!-- DtlsForeignCustodialAcc -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA?.DtlsForeignCustodialAcc
+                          ?.length > 0
+                      "
+                    >
+                      Details of Foreign Custodial Accounts held (including any
+                      beneficial interest) at any time during the calendar year
+                      ending as on 31st December, 2022
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA?.DtlsForeignCustodialAcc
+                          ?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">1. Sr. No</th>
+                          <th style="font-weight: bold">
+                            2. Country / Region Name
+                          </th>
+                          <th style="font-weight: bold">
+                            3. Country / Region code
+                          </th>
+                          <th style="font-weight: bold">
+                            4. Name of financial institution
+                          </th>
+                          <th style="font-weight: bold">
+                            5. Address of financial institution
+                          </th>
+                          <th style="font-weight: bold">6. ZIP Code</th>
+                          <th style="font-weight: bold">7. Account number</th>
+                          <th style="font-weight: bold">8. Status</th>
+                          <th style="font-weight: bold">
+                            9. Account opening date
+                          </th>
+                          <th style="font-weight: bold">
+                            10. Peak balance during the period
+                          </th>
+                          <th style="font-weight: bold">11. Closing balance</th>
+                          <th style="font-weight: bold">
+                            12. Gross interest paid/credited to the account
+                            during the period
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <ng-container
+                          *ngFor="
+                            let DtlsForeignCustodialAcc of finalCalculations
+                              ?.ScheduleFA?.DtlsForeignCustodialAcc;
+                            let i = index
+                          "
+                        >
+                          <tr>
+                            <td>
+                              {{ i + 1 }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignCustodialAcc?.CountryCodeExcludingIndia
+                              }}
+                              - {{ DtlsForeignCustodialAcc?.CountryName }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignCustodialAcc?.CountryCodeExcludingIndia
+                              }}
+                            </td>
+                            <td>
+                              {{ DtlsForeignCustodialAcc?.FinancialInstName }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignCustodialAcc?.FinancialInstAddress
+                              }}
+                            </td>
+                            <td>
+                              {{ DtlsForeignCustodialAcc?.ZipCode }}
+                            </td>
+                            <td>
+                              {{ DtlsForeignCustodialAcc?.AccountNumber }}
+                            </td>
+                            <td>
+                              {{ DtlsForeignCustodialAcc?.Status }}
+                            </td>
+                            <td>
+                              {{ DtlsForeignCustodialAcc?.AccOpenDate }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignCustodialAcc?.PeakBalanceDuringPeriod
+                              }}
+                            </td>
+                            <td>
+                              {{ DtlsForeignCustodialAcc?.ClosingBalance }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignCustodialAcc?.GrossAmtPaidCredited
+                              }}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+
+                    <!-- DtlsForeignEquityDebtInterest -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA
+                          ?.DtlsForeignEquityDebtInterest?.length > 0
+                      "
+                    >
+                      Details of Foreign Equity and Debt Interest held
+                      (including any beneficial interest) in any entity at any
+                      time during the calendar year ending as on 31st December,
+                      2022
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA
+                          ?.DtlsForeignEquityDebtInterest?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">1. Sr. No</th>
+                          <th style="font-weight: bold">
+                            2. Country / Region Name
+                          </th>
+                          <th style="font-weight: bold">
+                            3. Country / Region code
+                          </th>
+                          <th style="font-weight: bold">4. Name of entity</th>
+                          <th style="font-weight: bold">
+                            5. Address of entity
+                          </th>
+                          <th style="font-weight: bold">6. ZIP Code</th>
+                          <th style="font-weight: bold">7. Nature of entity</th>
+                          <th style="font-weight: bold">
+                            8. Date of acquiring the interest
+                          </th>
+                          <th style="font-weight: bold">
+                            9. Initial value of the investment
+                          </th>
+                          <th style="font-weight: bold">
+                            10. Peak value of investment during the period
+                          </th>
+                          <th style="font-weight: bold">11. Closing balance</th>
+                          <th style="font-weight: bold">
+                            12. Total gross amount paid/credited with respect to
+                            the holding during the period
+                          </th>
+                          <th style="font-weight: bold">
+                            13. Total gross proceeds from sale or redemption of
+                            investment during the period
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <ng-container
+                          *ngFor="
+                            let DtlsForeignEquityDebtInterest of finalCalculations
+                              ?.ScheduleFA?.DtlsForeignEquityDebtInterest;
+                            let i = index
+                          "
+                        >
+                          <tr>
+                            <td>
+                              {{ i + 1 }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignEquityDebtInterest?.CountryCodeExcludingIndia
+                              }}
+                              - {{ DtlsForeignEquityDebtInterest?.CountryName }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignEquityDebtInterest?.CountryCodeExcludingIndia
+                              }}
+                            </td>
+                            <td>
+                              {{ DtlsForeignEquityDebtInterest?.NameOfEntity }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignEquityDebtInterest?.AddressOfEntity
+                              }}
+                            </td>
+                            <td>
+                              {{ DtlsForeignEquityDebtInterest?.ZipCode }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignEquityDebtInterest?.NatureOfEntity
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignEquityDebtInterest?.InterestAcquiringDate
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignEquityDebtInterest?.InitialValOfInvstmnt
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignEquityDebtInterest?.PeakBalanceDuringPeriod
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignEquityDebtInterest?.ClosingBalance
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignEquityDebtInterest?.TotGrossAmtPaidCredited
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignEquityDebtInterest?.TotGrossProceeds
+                              }}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+
+                    <!-- DtlsForeignCashValueInsurance -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA
+                          ?.DtlsForeignCashValueInsurance?.length > 0
+                      "
+                    >
+                      Details of Foreign Cash Value Insurance Contract or
+                      Annuity Contract held (including any beneficial interest)
+                      at any time during the calendar year ending as on 31st
+                      December, 2022
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA
+                          ?.DtlsForeignCashValueInsurance?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">1. Sr. No</th>
+                          <th style="font-weight: bold">
+                            2. Country / Region Name
+                          </th>
+                          <th style="font-weight: bold">
+                            3. Country / Region code
+                          </th>
+                          <th style="font-weight: bold">
+                            4. Name of financial institution in which insurance
+                            contract held
+                          </th>
+                          <th style="font-weight: bold">
+                            5. Address of financial institution
+                          </th>
+                          <th style="font-weight: bold">6. ZIP Code</th>
+                          <th style="font-weight: bold">7. Date of contract</th>
+                          <th style="font-weight: bold">
+                            8. The cash value or surrender value of the contract
+                          </th>
+                          <th style="font-weight: bold">
+                            9. Total gross amount paid/credited with respect to
+                            the contract during the period
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <ng-container
+                          *ngFor="
+                            let DtlsForeignCashValueInsurance of finalCalculations
+                              ?.ScheduleFA?.DtlsForeignCashValueInsurance;
+                            let i = index
+                          "
+                        >
+                          <tr>
+                            <td>
+                              {{ i + 1 }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignCashValueInsurance?.CountryCodeExcludingIndia
+                              }}
+                              - {{ DtlsForeignCashValueInsurance?.CountryName }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignCashValueInsurance?.CountryCodeExcludingIndia
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignCashValueInsurance?.FinancialInstName
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignCashValueInsurance?.FinancialInstAddress
+                              }}
+                            </td>
+                            <td>
+                              {{ DtlsForeignCashValueInsurance?.ZipCode }}
+                            </td>
+                            <td>
+                              {{ DtlsForeignCashValueInsurance?.ContractDate }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignCashValueInsurance?.CashValOrSurrenderVal
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DtlsForeignCashValueInsurance?.TotGrossAmtPaidCredited
+                              }}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+
+                    <!-- DetailsFinancialInterest -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA?.DetailsFinancialInterest
+                          ?.length > 0
+                      "
+                    >
+                      Details of Financial Interest in any Entity held
+                      (including any beneficial interest) at any time during the
+                      calendar year ending as on 31st December, 2022
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA?.DetailsFinancialInterest
+                          ?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold" rowspan="2">
+                            1. Sr. No
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            2. Country / Region Name
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            3. ZIP Code
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            4. Nature of entity
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            5. Name and address of entity
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            6. Nature of interest
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            7. Date since held
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            8. Total investment
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            9. Income accrued from such interest
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            10. Nature of Income
+                          </th>
+                          <th style="font-weight: bold" rowspan="1" colspan="3">
+                            11. Income taxable and offered in this return
+                          </th>
+                        </tr>
+                        <tr>
+                          <th style="font-weight: bold" rowspan="1">
+                            11a. Amount
+                          </th>
+                          <th style="font-weight: bold" rowspan="1">
+                            11b. Schedule where in offered
+                          </th>
+                          <th style="font-weight: bold" rowspan="1">
+                            11c. Item number of Schedule
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <ng-container
+                          *ngFor="
+                            let DetailsFinancialInterest of finalCalculations
+                              ?.ScheduleFA?.DetailsFinancialInterest;
+                            let i = index
+                          "
+                        >
+                          <tr>
+                            <td>
+                              {{ i + 1 }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsFinancialInterest?.CountryCodeExcludingIndia
+                              }}
+                              - {{ DetailsFinancialInterest?.CountryName }}
+                            </td>
+                            <td>
+                              {{ DetailsFinancialInterest?.ZipCode }}
+                            </td>
+                            <td>
+                              {{ DetailsFinancialInterest?.NatureOfEntity }}
+                            </td>
+                            <td>
+                              {{ DetailsFinancialInterest?.NameOfEntity }} -
+                              {{ DetailsFinancialInterest?.AddressOfEntity }}
+                            </td>
+                            <td>
+                              {{ DetailsFinancialInterest?.NatureOfInt }}
+                            </td>
+                            <td>
+                              {{ DetailsFinancialInterest?.DateHeld }}
+                            </td>
+                            <td>
+                              {{ DetailsFinancialInterest?.TotalInvestment }}
+                            </td>
+                            <td>
+                              {{ DetailsFinancialInterest?.IncFromInt }}
+                            </td>
+                            <td>
+                              {{ DetailsFinancialInterest?.NatureOfInc }}
+                            </td>
+                            <td>
+                              {{ DetailsFinancialInterest?.IncTaxAmt }}
+                            </td>
+                            <td>
+                              {{ DetailsFinancialInterest?.IncTaxSch }}
+                            </td>
+                            <td>
+                              {{ DetailsFinancialInterest?.IncTaxSchNo }}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+
+                    <!-- DetailsImmovableProperty -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA?.DetailsImmovableProperty
+                          ?.length > 0
+                      "
+                    >
+                      Details of Immovable Property held (including any
+                      beneficial interest) at any time during the calendar year
+                      ending as on 31st December, 2022
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA?.DetailsImmovableProperty
+                          ?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold" rowspan="2">
+                            1. Sr. No
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            2. Country / Region Name and code
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            3. Zip code
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            4. Address of the property
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            5. Ownership
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            6. Date of acquisition
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            7. Total investment
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            8. Income derived from the property
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            9. Nature of income
+                          </th>
+                          <th style="font-weight: bold" rowspan="1" colspan="3">
+                            10. Income taxable and offered in this return
+                          </th>
+                        </tr>
+                        <tr>
+                          <th style="font-weight: bold" rowspan="1">
+                            10a. Amount
+                          </th>
+                          <th style="font-weight: bold" rowspan="1">
+                            10b. Schedule where offered
+                          </th>
+                          <th style="font-weight: bold" rowspan="1">
+                            1oc. Item number of schedule
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <ng-container
+                          *ngFor="
+                            let DetailsImmovableProperty of finalCalculations
+                              ?.ScheduleFA?.DetailsImmovableProperty;
+                            let i = index
+                          "
+                        >
+                          <tr>
+                            <td>
+                              {{ i + 1 }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsImmovableProperty?.CountryCodeExcludingIndia
+                              }}
+                              - {{ DetailsImmovableProperty?.CountryName }}
+                            </td>
+                            <td>
+                              {{ DetailsImmovableProperty?.ZipCode }}
+                            </td>
+                            <td>
+                              {{ DetailsImmovableProperty?.AddressOfProperty }}
+                            </td>
+                            <td>
+                              {{ DetailsImmovableProperty?.Ownership }}
+                            </td>
+                            <td>
+                              {{ DetailsImmovableProperty?.DateOfAcq }}
+                            </td>
+                            <td>
+                              {{ DetailsImmovableProperty?.TotalInvestment }}
+                            </td>
+                            <td>
+                              {{ DetailsImmovableProperty?.IncDrvProperty }}
+                            </td>
+                            <td>
+                              {{ DetailsImmovableProperty?.NatureOfInc }}
+                            </td>
+                            <td>
+                              {{ DetailsImmovableProperty?.IncTaxAmt }}
+                            </td>
+                            <td>
+                              {{ DetailsImmovableProperty?.IncTaxSch }}
+                            </td>
+                            <td>
+                              {{ DetailsImmovableProperty?.IncTaxSchNo }}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+
+                    <!-- DetailsOthAssets -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA?.DetailsOthAssets
+                          ?.length > 0
+                      "
+                    >
+                      Details of any other Capital Asset held (including any
+                      beneficial interest) at any time during the calendar year
+                      ending as on 31st December, 2022
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA?.DetailsOthAssets
+                          ?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold" rowspan="2">
+                            1. Sr. No
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            2. Country / Region Name and code
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            3. Zip code
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            4. Nature of asset
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            5. Ownership
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            6. Date of acquisition
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            7. Total investment
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            8. Income derived from the asset
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            9. Nature of income
+                          </th>
+                          <th style="font-weight: bold" rowspan="1" colspan="3">
+                            10. Income taxable and offered in this return
+                          </th>
+                        </tr>
+                        <tr>
+                          <th style="font-weight: bold" rowspan="1">
+                            10a. Amount
+                          </th>
+                          <th style="font-weight: bold" rowspan="1">
+                            10b. Schedule where offered
+                          </th>
+                          <th style="font-weight: bold" rowspan="1">
+                            1oc. Item number of schedule
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <ng-container
+                          *ngFor="
+                            let DetailsOthAssets of finalCalculations
+                              ?.ScheduleFA?.DetailsOthAssets;
+                            let i = index
+                          "
+                        >
+                          <tr>
+                            <td>
+                              {{ i + 1 }}
+                            </td>
+                            <td>
+                              {{ DetailsOthAssets?.CountryCodeExcludingIndia }}
+                              - {{ DetailsOthAssets?.CountryName }}
+                            </td>
+                            <td>
+                              {{ DetailsOthAssets?.ZipCode }}
+                            </td>
+                            <td>
+                              {{ DetailsOthAssets?.NatureOfAsset }}
+                            </td>
+                            <td>
+                              {{ DetailsOthAssets?.Ownership }}
+                            </td>
+                            <td>
+                              {{ DetailsOthAssets?.DateOfAcq }}
+                            </td>
+                            <td>
+                              {{ DetailsOthAssets?.TotalInvestment }}
+                            </td>
+                            <td>
+                              {{ DetailsOthAssets?.IncDrvAsset }}
+                            </td>
+                            <td>
+                              {{ DetailsOthAssets?.NatureOfInc }}
+                            </td>
+                            <td>
+                              {{ DetailsOthAssets?.IncTaxAmt }}
+                            </td>
+                            <td>
+                              {{ DetailsOthAssets?.IncTaxSch }}
+                            </td>
+                            <td>
+                              {{ DetailsOthAssets?.IncTaxSchNo }}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+
+                    <!-- DetailsOfAccntsHvngSigningAuth -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA
+                          ?.DetailsOfAccntsHvngSigningAuth?.length > 0
+                      "
+                    >
+                      Details of account(s) in which you have signing authority
+                      held (including any beneficial interest) at any time
+                      during the calendar year ending as on 31st December, 2022
+                      and which has not been included in A to D above.
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA
+                          ?.DetailsOfAccntsHvngSigningAuth?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold" rowspan="2">
+                            1. Sr. No
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            2. Name of the Institution in which the account is
+                            held
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            3. Address of the Institution
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            4. Country/Region Name and Code
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            5. Zip Code
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            6. Name of the account holder
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            7. Account number
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            8. Peak Balance/ Investment during the year(in
+                            rupees)
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            9. Whether income accrued is taxable in your hands?
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            10. If (7) is yes, Income accrued in the account
+                          </th>
+                          <th style="font-weight: bold" rowspan="1" colspan="3">
+                            11. If (7) is yes, Income offered in this return
+                          </th>
+                        </tr>
+                        <tr>
+                          <th style="font-weight: bold" rowspan="1">
+                            10a. Amount
+                          </th>
+                          <th style="font-weight: bold" rowspan="1">
+                            10b. Schedule where offered
+                          </th>
+                          <th style="font-weight: bold" rowspan="1">
+                            1oc. Item number of schedule
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <ng-container
+                          *ngFor="
+                            let DetailsOfAccntsHvngSigningAuth of finalCalculations
+                              ?.ScheduleFA?.DetailsOfAccntsHvngSigningAuth;
+                            let i = index
+                          "
+                        >
+                          <tr>
+                            <td>
+                              {{ i + 1 }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfAccntsHvngSigningAuth?.NameOfInstitution
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfAccntsHvngSigningAuth?.AddressOfInstitution
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfAccntsHvngSigningAuth?.CountryCodeExcludingIndia
+                              }}
+                              -
+                              {{ DetailsOfAccntsHvngSigningAuth?.CountryName }}
+                            </td>
+                            <td>
+                              {{ DetailsOfAccntsHvngSigningAuth?.ZipCode }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfAccntsHvngSigningAuth?.NameMentionedInAccnt
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfAccntsHvngSigningAuth?.InstitutionAccountNumber
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfAccntsHvngSigningAuth?.PeakBalanceOrInvestment
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfAccntsHvngSigningAuth?.IncAccuredTaxFlag
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfAccntsHvngSigningAuth?.IncAccuredInAcc
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfAccntsHvngSigningAuth?.IncOfferedAmt
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfAccntsHvngSigningAuth?.IncOfferedSch
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfAccntsHvngSigningAuth?.IncOfferedSchNo
+                              }}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+
+                    <!-- DetailsOfTrustOutIndiaTrustee -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA
+                          ?.DetailsOfTrustOutIndiaTrustee?.length > 0
+                      "
+                    >
+                      Details of trusts, created under the laws of a country
+                      outside India, in which you are a trustee, beneficiary or
+                      settlor
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA
+                          ?.DetailsOfTrustOutIndiaTrustee?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold" rowspan="2">
+                            1. Sr. No
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            2. Country/Region Name and code
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            3. Zip Code
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            4. Name and address of the trust
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            5. Name and address of trustees
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            6. Name and address of Settlor
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            7. Name and address of Beneficiaries
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            8. Date since position held
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            9. Whether income derived is taxable in your hands?
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            10. If (8) is yes, Income derived from the trust
+                          </th>
+                          <th style="font-weight: bold" rowspan="1" colspan="3">
+                            11. If (8) is yes, Income offered in this return
+                          </th>
+                        </tr>
+                        <tr>
+                          <th style="font-weight: bold" rowspan="1">
+                            10a. Amount
+                          </th>
+                          <th style="font-weight: bold" rowspan="1">
+                            10b. Schedule where offered
+                          </th>
+                          <th style="font-weight: bold" rowspan="1">
+                            10c. Item number of schedule
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <ng-container
+                          *ngFor="
+                            let DetailsOfTrustOutIndiaTrustee of finalCalculations
+                              ?.ScheduleFA?.DetailsOfTrustOutIndiaTrustee;
+                            let i = index
+                          "
+                        >
+                          <tr>
+                            <td>
+                              {{ i + 1 }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfTrustOutIndiaTrustee?.CountryCodeExcludingIndia
+                              }}
+                              - {{ DetailsOfTrustOutIndiaTrustee?.CountryName }}
+                            </td>
+                            <td>
+                              {{ DetailsOfTrustOutIndiaTrustee?.ZipCode }}
+                            </td>
+                            <td>
+                              {{ DetailsOfTrustOutIndiaTrustee?.NameOfTrust }}
+                              -
+                              {{
+                                DetailsOfTrustOutIndiaTrustee?.AddressOfTrust
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfTrustOutIndiaTrustee?.NameOfOtherTrustees
+                              }}
+                              -
+                              {{
+                                DetailsOfTrustOutIndiaTrustee?.AddressOfOtherTrustees
+                              }}
+                            </td>
+                            <td>
+                              {{ DetailsOfTrustOutIndiaTrustee?.NameOfSettlor }}
+                              {{
+                                DetailsOfTrustOutIndiaTrustee?.AddressOfSettlor
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfTrustOutIndiaTrustee?.NameOfBeneficiaries
+                              }}
+                              -
+                              {{
+                                DetailsOfTrustOutIndiaTrustee?.AddressOfBeneficiaries
+                              }}
+                            </td>
+                            <td>
+                              {{ DetailsOfTrustOutIndiaTrustee?.DateHeld }}
+                            </td>
+                            <td>
+                              {{ DetailsOfTrustOutIndiaTrustee?.IncDrvTaxFlag }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfTrustOutIndiaTrustee?.IncDrvFromTrust
+                              }}
+                            </td>
+                            <td>
+                              {{ DetailsOfTrustOutIndiaTrustee?.IncOfferedAmt }}
+                            </td>
+                            <td>
+                              {{ DetailsOfTrustOutIndiaTrustee?.IncOfferedSch }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfTrustOutIndiaTrustee?.IncOfferedSchNo
+                              }}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+
+                    <!-- DetailsOfOthSourcesIncOutsideIndia -->
+                    <div
+                      class="bxHed"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA
+                          ?.DetailsOfOthSourcesIncOutsideIndia?.length > 0
+                      "
+                    >
+                      Details of any other income derived from any source
+                      outside India which is not included in,- (i) items A to F
+                      above and, (ii) income under the head business or
+                      profession
+                    </div>
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="
+                        finalCalculations?.ScheduleFA
+                          ?.DetailsOfOthSourcesIncOutsideIndia?.length > 0
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold" rowspan="2">
+                            1. Sr. No
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            2. Country/Region Name and code
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            3. Zip Code
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            4. Name and address of the person from whom derived
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            5. Income derived
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            6. Nature of Income
+                          </th>
+                          <th style="font-weight: bold" rowspan="2">
+                            7. Whether taxable in your hands?
+                          </th>
+                          <th style="font-weight: bold" rowspan="1" colspan="3">
+                            8. If (6) is yes, Income offered in this return
+                          </th>
+                        </tr>
+                        <tr>
+                          <th style="font-weight: bold" rowspan="1">
+                            8a. Amount
+                          </th>
+                          <th style="font-weight: bold" rowspan="1">
+                            8b. Schedule where offered
+                          </th>
+                          <th style="font-weight: bold" rowspan="1">
+                            8c. Item number of schedule
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <ng-container
+                          *ngFor="
+                            let DetailsOfOthSourcesIncOutsideIndia of finalCalculations
+                              ?.ScheduleFA?.DetailsOfOthSourcesIncOutsideIndia;
+                            let i = index
+                          "
+                        >
+                          <tr>
+                            <td>
+                              {{ i + 1 }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfOthSourcesIncOutsideIndia?.CountryCodeExcludingIndia
+                              }}
+                              -
+                              {{
+                                DetailsOfOthSourcesIncOutsideIndia?.CountryName
+                              }}
+                            </td>
+                            <td>
+                              {{ DetailsOfOthSourcesIncOutsideIndia?.ZipCode }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfOthSourcesIncOutsideIndia?.NameOfPerson
+                              }}
+                              -
+                              {{
+                                DetailsOfOthSourcesIncOutsideIndia?.AddressOfPerson
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfOthSourcesIncOutsideIndia?.IncDerived
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfOthSourcesIncOutsideIndia?.NatureOfInc
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfOthSourcesIncOutsideIndia?.IncDrvTaxFlag
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfOthSourcesIncOutsideIndia?.IncOfferedAmt
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfOthSourcesIncOutsideIndia?.IncOfferedSch
+                              }}
+                            </td>
+                            <td>
+                              {{
+                                DetailsOfOthSourcesIncOutsideIndia?.IncOfferedSchNo
+                              }}
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
                   </mat-expansion-panel>
 
                   <!-- *********************** Exempt Income ************************ -->
