@@ -171,6 +171,7 @@ export class SummaryComponent implements OnInit {
     personalInfo: {
       name: any;
       aadhaarNumber: any;
+      AadhaarEnrolmentId?: any;
       mobileNumber: any;
       resStatus: any;
       returnType: any;
@@ -224,6 +225,7 @@ export class SummaryComponent implements OnInit {
           hpStandardDeduction: number;
           hpinterest: number;
           hpNetIncome: number;
+          ArrearsUnrealizedRentRcvd?: any;
           hpIncome: number;
         }
       ];
@@ -255,6 +257,10 @@ export class SummaryComponent implements OnInit {
         OTH?: any;
         Increliefus89AOS?: any;
         specialRate?: any;
+        IntrstSec10XIFirstProviso?: any;
+        IntrstSec10XISecondProviso?: any;
+        IntrstSec10XIIFirstProviso?: any;
+        IntrstSec10XIISecondProviso?: any;
       };
       otherIncomeTotal: number;
     };
@@ -267,6 +273,7 @@ export class SummaryComponent implements OnInit {
             tradeName: String;
             grossTurnover: number;
             TaxableIncome: number;
+            description?: any;
           }
         ];
         business44ADA: [
@@ -276,6 +283,7 @@ export class SummaryComponent implements OnInit {
             tradeName: String;
             grossTurnover: number;
             TaxableIncome: number;
+            description?: any;
           }
         ];
         business44AE?: {
@@ -284,6 +292,7 @@ export class SummaryComponent implements OnInit {
               businessSection?: any;
               NameOfBusiness?: any;
               CodeAE?: any;
+              description?: any;
             }
           ];
           GoodsDtlsUs44AE?: [
@@ -910,6 +919,10 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
                   ?.AadhaarCardNo,
 
+              AadhaarEnrolmentId:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
+                  ?.AadhaarEnrolmentId,
+
               mobileNumber: this.ITR_JSON.contactNumber,
 
               resStatus: 'Resident',
@@ -1048,6 +1061,10 @@ export class SummaryComponent implements OnInit {
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.ITR14IncomeDeductions
                     ]?.[hpStandardDeduction],
+                  ArrearsUnrealizedRentRcvd:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                      this.ITR14IncomeDeductions
+                    ]?.ArrearsUnrealizedRentRcvd,
                   hpinterest:
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.ITR14IncomeDeductions
@@ -1175,25 +1192,35 @@ export class SummaryComponent implements OnInit {
                     businessSection: 'Section 44AD',
                     natureOfBusinessCode: element?.CodeAD,
                     tradeName: element?.NameOfBusiness,
-                    grossTurnover: Number(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank +
+                    description: element?.Description,
+                    grossTurnover:
+                      parseFloat(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          .ScheduleBP?.PersumptiveInc44AD
-                          ?.GrsTrnOverAnyOthMode /
+                          .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverBank
+                      ) +
+                      parseFloat(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.PersumptiveInc44AD?.GrsTrnOverAnyOthMode
+                      ) /
+                        parseFloat(
                           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                             .ScheduleBP?.NatOfBus44AD?.length
-                    ),
-                    TaxableIncome: Number(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .ScheduleBP?.PersumptiveInc44AD
-                        ?.PersumptiveInc44AD6Per +
+                        ),
+                    TaxableIncome:
+                      parseFloat(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                           .ScheduleBP?.PersumptiveInc44AD
-                          ?.PersumptiveInc44AD8Per /
+                          ?.PersumptiveInc44AD6Per
+                      ) +
+                      parseFloat(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.PersumptiveInc44AD
+                          ?.PersumptiveInc44AD8Per
+                      ) /
+                        parseFloat(
                           this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                             .ScheduleBP?.NatOfBus44AD?.length
-                    ),
+                        ),
                   };
                 }),
 
@@ -1204,19 +1231,26 @@ export class SummaryComponent implements OnInit {
                     businessSection: 'Section 44ADA',
                     natureOfBusinessCode: element?.CodeADA,
                     tradeName: element?.NameOfBusiness,
-                    grossTurnover: Number(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt /
+                    description: element?.Description,
+                    grossTurnover:
+                      parseFloat(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.PersumptiveInc44ADA?.GrsReceipt
+                      ) /
+                      parseFloat(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                           .ScheduleBP?.NatOfBus44ADA?.length
-                    ),
-                    TaxableIncome: Number(
-                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        .ScheduleBP?.PersumptiveInc44ADA
-                        ?.TotPersumptiveInc44ADA /
+                      ),
+                    TaxableIncome:
+                      parseFloat(
+                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          .ScheduleBP?.PersumptiveInc44ADA
+                          ?.TotPersumptiveInc44ADA
+                      ) /
+                      parseFloat(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                           .ScheduleBP?.NatOfBus44ADA?.length
-                    ),
+                      ),
                   };
                 }),
 
@@ -1225,9 +1259,10 @@ export class SummaryComponent implements OnInit {
                     this.itrType
                   ].ScheduleBP?.NatOfBus44AE?.map((element) => {
                     return {
-                      businessSection: 'Section 44ADA',
+                      businessSection: 'Section 44AE',
                       NameOfBusiness: element?.NameOfBusiness,
                       CodeAE: element?.CodeAE,
+                      description: element?.Description,
                     };
                   }),
 
@@ -2273,6 +2308,10 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
                   ?.PersonalInfo?.AadhaarCardNo,
 
+              AadhaarEnrolmentId:
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
+                  ?.PersonalInfo?.AadhaarEnrolmentId,
+
               mobileNumber: this.ITR_JSON.contactNumber,
 
               resStatus:
@@ -2622,6 +2661,8 @@ export class SummaryComponent implements OnInit {
                   annualValue: element?.Rentdetails?.BalanceALV,
                   hpStandardDeduction:
                     element?.Rentdetails?.ThirtyPercentOfBalance,
+                  ArrearsUnrealizedRentRcvd:
+                    element?.Rentdetails?.ArrearsUnrealizedRentRcvd,
                   hpinterest: element?.Rentdetails?.IntOnBorwCap,
                   hpNetIncome: element?.Rentdetails?.IncomeOfHP,
                   hpIncome: element?.Rentdetails?.IncomeOfHP,
@@ -2719,6 +2760,22 @@ export class SummaryComponent implements OnInit {
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.Increliefus89AOS,
 
+                pfInterest1011IP:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstSec10XIFirstProviso,
+
+                pfInterest1011IIP:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstSec10XISecondProviso,
+
+                pfInterest1012IP:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstSec10XIIFirstProviso,
+
+                pfInterest1012IIP:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstSec10XIISecondProviso,
+
                 specialRate: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
                 ]?.ScheduleOS?.IncOthThanOwnRaceHorse?.OthersGrossDtls?.filter(
@@ -2744,20 +2801,27 @@ export class SummaryComponent implements OnInit {
                           businessSection: 'Section 44AD',
                           natureOfBusinessCode: element?.CodeAD,
                           tradeName: element?.NameOfBusiness,
-                          grossTurnover: Number(
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              ?.PARTA_PL?.PersumptiveInc44AD
-                              ?.GrsTrnOverOrReceipt /
+                          description: element?.Description,
+                          grossTurnover:
+                            parseFloat(
+                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                                ?.PARTA_PL?.PersumptiveInc44AD
+                                ?.GrsTrnOverOrReceipt
+                            ) /
+                            parseFloat(
                               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                                 ?.PARTA_PL?.NatOfBus44AD?.length
-                          ),
-                          TaxableIncome: Number(
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              ?.PARTA_PL?.PersumptiveInc44AD
-                              ?.TotPersumptiveInc44AD /
+                            ),
+                          TaxableIncome:
+                            parseFloat(
+                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                                ?.PARTA_PL?.PersumptiveInc44AD
+                                ?.TotPersumptiveInc44AD
+                            ) /
+                            parseFloat(
                               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                                 ?.PARTA_PL?.NatOfBus44AD?.length
-                          ),
+                            ),
                         };
                       })
                     : [
@@ -2779,19 +2843,26 @@ export class SummaryComponent implements OnInit {
                           businessSection: 'Section 44ADA',
                           natureOfBusinessCode: element?.CodeADA,
                           tradeName: element?.NameOfBusiness,
-                          grossTurnover: Number(
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              ?.PARTA_PL?.PersumptiveInc44ADA?.GrsReceipt /
+                          description: element?.Description,
+                          grossTurnover:
+                            parseFloat(
+                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                                ?.PARTA_PL?.PersumptiveInc44ADA?.GrsReceipt
+                            ) /
+                            parseFloat(
                               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                                 ?.PARTA_PL?.NatOfBus44ADA?.length
-                          ),
-                          TaxableIncome: Number(
-                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                              ?.PARTA_PL?.PersumptiveInc44ADA
-                              ?.TotPersumptiveInc44ADA /
+                            ),
+                          TaxableIncome:
+                            parseFloat(
+                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                                ?.PARTA_PL?.PersumptiveInc44ADA
+                                ?.TotPersumptiveInc44ADA
+                            ) /
+                            parseFloat(
                               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                                 ?.PARTA_PL?.NatOfBus44ADA?.length
-                          ),
+                            ),
                         };
                       })
                     : [
@@ -4458,6 +4529,7 @@ export class SummaryComponent implements OnInit {
                     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                       (val) => val.incomeType === 'ROYALTY_US_80RRB'
                     )?.amount,
+
                   pfInterest1011IP:
                     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                       (val) => val.incomeType === 'INTEREST_ACCRUED_10_11_I_P'
