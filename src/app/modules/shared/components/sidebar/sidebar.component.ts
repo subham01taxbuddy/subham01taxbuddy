@@ -205,7 +205,7 @@ export class SidebarComponent {
 
     {
       name: 'Reports',
-      icon: '/menu/partner.png',
+      icon: 'invoice.png',
       active: false,
       url: null,
       roles: [],

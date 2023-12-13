@@ -37,7 +37,7 @@ import { param } from 'jquery';
 @Component({
   selector: 'app-taxes-paid',
   templateUrl: './taxes-paid.component.html',
-  styleUrls: ['./taxes-paid.component.css'],
+  styleUrls: ['./taxes-paid.component.scss'],
 })
 export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   loading: boolean = false;

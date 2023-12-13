@@ -2,35 +2,22 @@
   [show]="loading"
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
-<div class="container">
-  <div class="row">
-    <div class="col-lg-10 tds-title">TDS On Salary</div>
-    <!-- <div class="edit clearfix notes col-lg-2">
-      <button
-        type="button"
-        class="edit_btn"
-        [disabled]="salaryForm.invalid"
-        (click)="addMore()"
-      >
-        <i class="fa fa-plus"></i>Add
-      </button>
-    </div> -->
-    <hr />
-    <div class="head-title mb-3">
+
+
+  <div class="PreBxUp">
+    <div class="hdByr-L">TDS On Salary</div>
+  </div>
+
+  <div class="head-title mb-3">
       This is TDS on salary deducted by your employer. Enter the amount form 16
       or 26AS
     </div>
-  </div>
+
   <form [formGroup]="salaryForm">
     <div formArrayName="salaryArray">
-      <div
-        class="tds-on boxClr"
-        *ngFor="
-          let salary of getSalaryArray.controls | paginate : config;
-          let i = index
-        "
-        [formGroupName]="fieldGlobalIndex(i)"
-      >
+      <div class="display-flex"
+        *ngFor="let salary of getSalaryArray.controls | paginate : config;
+          let i = index" [formGroupName]="fieldGlobalIndex(i)">
         <!-- <mat-checkbox
           color="primary"
           name="hasEdit[i]"
@@ -39,33 +26,34 @@
         >
         </mat-checkbox> -->
         <div class="row">
-          <div class="col-sm-3">
-            <mat-label>TAN of Employer* &nbsp;&nbsp;&nbsp;</mat-label>
-            <mat-form-field appearance="outline">
-              <input
-                matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
-                matTooltipClass="tab-tooltip"
-                matTooltipPosition="above"
-                formControlName="deductorTAN"
-                matInput
-                currencyMask
-                placeholder="XXXXXNNNNX"
-                name="deductorTAN[i]"
-                class="input-field"
-                maxlength="10"
-                minlength="10"
-                required
-                type="text"
-                trim
-                upperCase
-              />
+          <div class="div-6 ">
+            <div class="form-field">
+              <mat-label>TAN of Employer* &nbsp;&nbsp;&nbsp;</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
+                  matTooltipClass="tab-tooltip"
+                  matTooltipPosition="above"
+                  formControlName="deductorTAN"
+                  matInput
+                  currencyMask
+                  placeholder="XXXXXNNNNX"
+                  name="deductorTAN[i]"
+                  class="input-field"
+                  maxlength="10"
+                  minlength="10"
+                  required
+                  type="text"
+                  trim
+                  upperCase
+                />
 
-              <mat-error *ngIf="salary.get('deductorTAN').hasError('pattern')">
-                Enter valid TAN (e.g XXXXX1234X)</mat-error
-              >
-            </mat-form-field>
-          </div>
-          <div class="col-sm-3">
+                <mat-error *ngIf="salary.get('deductorTAN').hasError('pattern')">
+                  Enter valid TAN (e.g XXXXX1234X)</mat-error
+                >
+              </mat-form-field>
+            </div>
+            <div class="form-field">
             <mat-label>Name of Employer*</mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -84,8 +72,10 @@
               >
             </mat-form-field>
           </div>
+          </div>
 
-          <div class="col-sm-3">
+          <div class="div-6 ">
+            <div class="form-field">
             <mat-label>Total Amount credited*</mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -105,8 +95,7 @@
               >
             </mat-form-field>
           </div>
-
-          <div class="col-sm-3">
+            <div class="form-field">
             <mat-label>Total Tax Deducted*</mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -126,14 +115,15 @@
               >
             </mat-form-field>
           </div>
+          </div>
+
         </div>
 
       </div>
-      <hr />
-      <div class="col-sm-3">
-        <button class="tbd-btn save-btn mvRth" (click)="save()">Save</button>
-      </div>
 
+      <div class="box-right">
+        <button class="btn btn__primary" (click)="save()">Save</button>
+      </div>
     </div>
   </form>
-</div>
+
