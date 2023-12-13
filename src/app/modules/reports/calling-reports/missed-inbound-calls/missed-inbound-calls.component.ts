@@ -5,6 +5,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
+import * as moment from 'moment';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { UserNotesComponent } from 'src/app/modules/shared/components/user-notes/user-notes.component';
@@ -45,10 +46,10 @@ export class MissedInboundCallsComponent implements OnInit,OnDestroy {
   startDate = new FormControl('');
   endDate = new FormControl('');
   status = new FormControl('');
-  minEndDate = new Date();
-  maxStartDate = new Date();
-  maxDate = new Date(2024,2,31);
-  minDate = new Date(2023, 3, 1);
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
   missedInboundCallingReport: any;
   config: any;
   searchParam: any = {
@@ -76,6 +77,8 @@ export class MissedInboundCallsComponent implements OnInit,OnDestroy {
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
+    this.maxEndDate = moment().toDate();
+    this.setToDateValidation();
 
     this.missedInboundCallGridOptions = <GridOptions>{
       rowData: [],
@@ -422,9 +425,9 @@ export class MissedInboundCallsComponent implements OnInit,OnDestroy {
       this.showMissedInboundCall(event);
     }
   }
-  setToDateValidation(FromDate) {
-    console.log('FromDate: ', FromDate);
-    this.minEndDate = FromDate;
+  setToDateValidation() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   ngOnDestroy() {
