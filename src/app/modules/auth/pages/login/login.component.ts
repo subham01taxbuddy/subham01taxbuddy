@@ -455,7 +455,7 @@ export class LoginComponent implements OnInit {
     }
 
 
-    iframe.setAttribute('src', `${baseUrl}/login?email=${userEmail}&password=${userAccessToken}?showConversationSectionOnly=true`)
+    iframe.setAttribute('src', `${baseUrl}/login?email=${userEmail}&loginType=custom&password=${userAccessToken}&showConversationSectionOnly=true`)
     if (!document.getElementById('km-iframe')) {
       let viewbox = document.getElementById('km-viewbox');
       viewbox.append(iframe);

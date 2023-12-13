@@ -11,6 +11,7 @@ import { FormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -38,7 +39,7 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class PayoutReportComponent implements OnInit,OnDestroy {
+export class PayoutReportComponent implements OnInit, OnDestroy {
   loading = false;
   isInternal = true;
   payoutReport: any;
@@ -63,10 +64,10 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
   selectedStatus = new FormControl();
   startDate = new FormControl('');
   endDate = new FormControl('');
-  minEndDate = new Date();
-  maxStartDate =new Date();
-  maxDate = new Date(2024, 2, 31);
-  minDate = new Date(2023, 3, 1);
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
 
   constructor(
     public datePipe: DatePipe,
@@ -78,7 +79,7 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
-
+    this.setToDateValidation();
     this.payoutReportGridOptions = <GridOptions>{
       rowData: [],
       columnDefs: this.reportsCodeColumnDef(),
@@ -106,13 +107,13 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
     }
   }
 
-  getStatusValue(item){
+  getStatusValue(item) {
 
   }
 
-  setToDateValidation(FromDate) {
-    console.log('FromDate: ', FromDate);
-    this.minEndDate = FromDate;
+  setToDateValidation() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   leaderId: number;
@@ -150,7 +151,7 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
 
   showReports(pageChange?) {
     //'https://uat-api.taxbuddy.com/report/payout/report?toDate=2023-11-10&fromDate=2023-04-01&page=0&pageSize=20' \
-    if(!pageChange){
+    if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
@@ -206,7 +207,7 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
         this.cacheManager.initializeCache(this.createRowData(this.payoutReport));
 
         const currentPageNumber = pageChange || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber,this.createRowData(this.payoutReport));
+        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.payoutReport));
         this.config.currentPage = currentPageNumber;
 
 
@@ -247,7 +248,7 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
         slabThreeCount: payoutData[i].slabThreeCount,
         slabThreeEarning: payoutData[i].slabThreeEarning,
         role: payoutData[i].role,
-        slabOneTDS: payoutData[i].slabOneTDS ,
+        slabOneTDS: payoutData[i].slabOneTDS,
         slabOneEarningAfterTds: payoutData[i].slabOneEarningAfterTds,
         slabTwoTDS: payoutData[i].slabTwoTDS,
         slabTwoEarningAfterTds: payoutData[i].slabTwoEarningAfterTds,
@@ -508,10 +509,10 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
     let loggedInId = this.utilsService.getLoggedInUserID();
     let param = ''
     let userFilter = '';
-    if (this.leaderId && !this.filerId ) {
+    if (this.leaderId && !this.filerId) {
       userFilter += `&leaderUserId=${this.leaderId}`;
     }
-    if (this.filerId && this.searchAsPrinciple === true ) {
+    if (this.filerId && this.searchAsPrinciple === true) {
       userFilter += `&searchAsPrincipal=true&filerUserId=${this.filerId}`;
     }
     if (this.filerId && this.searchAsPrinciple === false) {
@@ -544,7 +545,7 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
 
       { key: 'leaderName', value: 'Parent Name' },
     ]
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report',fieldName, {});
+    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'payout-report', fieldName, {});
     this.loading = false;
     this.showCsvMessage = false;
   }
@@ -560,7 +561,7 @@ export class PayoutReportComponent implements OnInit,OnDestroy {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
     this.config.totalCommissionEarned = 0;
-    this.config.totalPartnersPaid=0;
+    this.config.totalPartnersPaid = 0;
     this.payoutReportGridOptions.api?.setRowData(this.createRowData([]));
     this.config.totalItems = 0;
     // this.showReports();

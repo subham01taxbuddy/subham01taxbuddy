@@ -41,12 +41,16 @@ export const MY_FORMATS = {
   ],
 })
 export class CreditNoteComponent implements OnInit {
-  loading: boolean=false;
+  loading: boolean = false;
   dataOnLoad = true;
   creditNoteGridOptions: GridOptions;
   loggedInUserRoles: any;
   maxDate = new Date(2024, 2, 31);
   minDate = new Date(2023, 3, 1);
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
   toDateMin: any;
   searchParam: any = {
     statusId: null,
@@ -54,11 +58,11 @@ export class CreditNoteComponent implements OnInit {
     pageSize: 20,
     mobileNumber: null,
     emailId: null,
-    invoiceNo:null,
+    invoiceNo: null,
   };
   config: any;
   creditNoteInfo: any = [];
-  searchAsPrinciple :boolean =false;
+  searchAsPrinciple: boolean = false;
   searchBy: any = {};
   searchMenus = [
     { value: 'mobile', name: 'Mobile No' },
@@ -107,16 +111,18 @@ export class CreditNoteComponent implements OnInit {
 
     this.startDate.setValue('2023-04-01');
     this.endDate.setValue(new Date());
+    this.minEndDate = this.startDate.value;
 
     this.config = {
       itemsPerPage: this.searchParam.pageSize,
       currentPage: 1,
       totalItems: null,
     };
+    this.maxStartDate = this.endDate.value;
 
     this.creditNoteGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs:  this.creditNoteCreateColumnDef(),
+      columnDefs: this.creditNoteCreateColumnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -144,19 +150,19 @@ export class CreditNoteComponent implements OnInit {
   }
   searchByObject(object) {
     this.searchBy = object;
-    console.log('object from search param ',this.searchBy);
+    console.log('object from search param ', this.searchBy);
   }
 
   filerId: number;
   leaderId: number;
   agentId: number;
 
-  fromSme(event, isOwner,fromPrinciple?) {
+  fromSme(event, isOwner, fromPrinciple?) {
     console.log('sme-drop-down', event, isOwner);
     if (isOwner) {
       this.leaderId = event ? event.userId : null;
     } else {
-      if(fromPrinciple){
+      if (fromPrinciple) {
         if (event?.partnerType === 'PRINCIPAL') {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = true;
@@ -164,8 +170,8 @@ export class CreditNoteComponent implements OnInit {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
-      }else{
-        if(event){
+      } else {
+        if (event) {
           this.filerId = event ? event.userId : null;
           this.searchAsPrinciple = false;
         }
@@ -185,22 +191,22 @@ export class CreditNoteComponent implements OnInit {
     // this.getInvoice();
   }
 
-  getCreditNote(pageChange?){
+  getCreditNote(pageChange?) {
     // 'https://dev-api.taxbuddy.com/report/bo/credit-note?fromDate=2022-01-10&toDate=2023-10-27' \
     if (!pageChange) {
       this.cacheManager.clearCache();
     }
     this.loading = true;
-    let fromData =this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
+    let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
 
-     if(this.searchBy?.mobile){
+    if (this.searchBy?.mobile) {
       this.mobile.setValue(this.searchBy?.mobile)
     }
-    if(this.searchBy?.email){
+    if (this.searchBy?.email) {
       this.email.setValue(this.searchBy?.email)
     }
-    if(this.searchBy?.invoiceNo){
+    if (this.searchBy?.invoiceNo) {
       this.invoiceNo.setValue(this.searchBy?.invoiceNo)
     }
 
@@ -230,11 +236,11 @@ export class CreditNoteComponent implements OnInit {
     }
 
     let data = this.utilsService.createUrlParams(this.searchParam);
-    let param =  `/bo/credit-note?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${mobileFilter}${emailFilter}${invoiceFilter}`
+    let param = `/bo/credit-note?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${mobileFilter}${emailFilter}${invoiceFilter}`
 
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
-      if(response.success){
+      if (response.success) {
         this.creditNoteInfo = response?.data?.content;
         this.config.totalItems = response?.data?.totalElements;
         this.creditNoteGridOptions.api?.setRowData(this.createRowData(this.creditNoteInfo));
@@ -243,13 +249,14 @@ export class CreditNoteComponent implements OnInit {
         const currentPageNumber = pageChange || this.searchParam.page + 1;
         this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.creditNoteInfo));
         this.config.currentPage = currentPageNumber;
-      }else{
+      } else {
         this.loading = false;
         this._toastMessageService.alert("error", response.message);
       }
     }, (error) => {
       this.loading = false;
-      this._toastMessageService.alert("error", "Error");})
+      this._toastMessageService.alert("error", "Error");
+    })
 
   }
 
@@ -268,12 +275,12 @@ export class CreditNoteComponent implements OnInit {
         invoiceDate: creditData[i].invoiceDate,
         reason: creditData[i].reason,
         basicAmount: creditData[i].basicAmount || '-',
-        csGstTotal : creditData[i].sgstTotal +  creditData[i].cgstTotal  || '-',
+        csGstTotal: creditData[i].sgstTotal + creditData[i].cgstTotal || '-',
         igstTotal: creditData[i].igstTotal || '-',
-        total : creditData[i].total || '-',
-        serviceType : creditData[i].serviceType || '-',
+        total: creditData[i].total || '-',
+        serviceType: creditData[i].serviceType || '-',
         gstin: creditData[i].gstin || '-',
-        state : creditData[i].state || '-',
+        state: creditData[i].state || '-',
         modeOfPayment: creditData[i].modeOfPayment || '-',
 
       })
@@ -283,7 +290,7 @@ export class CreditNoteComponent implements OnInit {
     return creditInfoArray;
   }
 
-  creditNoteCreateColumnDef(){
+  creditNoteCreateColumnDef() {
     return [
       {
         headerName: 'Credit Note No',
@@ -503,20 +510,20 @@ export class CreditNoteComponent implements OnInit {
     ]
   }
 
-  setToDateValidation(FromDate) {
-    console.log('FromDate: ', FromDate);
-    this.toDateMin = FromDate;
+  setToDateValidation() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
-  downloadCreditNote(){
+  downloadCreditNote() {
     //https://api.taxbuddy.com/itr/credit-note-download?to=2023-10-16&from=2023-10-17
 
-    let fromData =this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let fromData = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toData = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
 
-    if(fromData && toData){
-      location.href =environment.url +'/itr/credit-note-download?to=' + toData + '&from=' +fromData;
-    }else{
+    if (fromData && toData) {
+      location.href = environment.url + '/itr/credit-note-download?to=' + toData + '&from=' + fromData;
+    } else {
       this._toastMessageService.alert("error", "please select from and to date ");
     }
 

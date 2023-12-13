@@ -2,11 +2,7 @@
   [show]="loading"
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
-<div
-  class="card__title"
-  style="padding: 10px; font-size: 20px"
-  (click)="downloadXML()"
->
+<div class="card__title" style="padding: 15px; font-size: 20px">
   Personal Details
 </div>
 
@@ -53,39 +49,6 @@
               finalCalculations?.personalInfo?.resStatus
             }}</span>
           </div>
-          <!-- jurisdiction details for nri, nor  -->
-          <div
-            class="txBt"
-            *ngIf="
-              finalCalculations?.personalInfo?.resStatus === 'Non-Resident' ||
-              finalCalculations?.personalInfo?.resStatus ===
-                'Non-Ordinary Resident'
-            "
-          >
-            <span class="txLf">Jurisdiction of Residence: </span>
-            <br />
-            <span
-              class="txMuLf"
-              style="margin: 0%"
-              *ngFor="
-                let jurisdiction of finalCalculations?.personalInfo
-                  ?.JurisdictionResPrevYrDtls;
-                let i = index
-              "
-            >
-              <div>
-                <span> {{ i + 1 }}. </span>
-
-                <span>
-                  {{ jurisdiction?.JurisdictionResidence }}
-                </span>
-
-                <span>
-                  {{ jurisdiction?.TIN }}
-                </span>
-              </div>
-            </span>
-          </div>
           <div class="txBt">
             <span class="txLf">Return Type:</span
             ><span class="txMuLf">{{
@@ -100,7 +63,6 @@
             }}</span>
           </div>
 
-          
           <hr />
           <!-- status -->
           <div
@@ -164,6 +126,41 @@
             ><span class="txMuLf">{{
               finalCalculations?.personalInfo?.bankAccountNumber
             }}</span>
+          </div>
+          <hr />
+
+          <!-- jurisdiction details for nri, nor  -->
+          <div
+            class="txBt"
+            *ngIf="
+              finalCalculations?.personalInfo?.resStatus === 'Non-Resident' ||
+              finalCalculations?.personalInfo?.resStatus ===
+                'Non-Ordinary Resident'
+            "
+          >
+            <span class="txLf">Jurisdiction of Residence: </span>
+            <br />
+            <span
+              class="txMuLf"
+              style="margin: 0%"
+              *ngFor="
+                let jurisdiction of finalCalculations?.personalInfo
+                  ?.JurisdictionResPrevYrDtls;
+                let i = index
+              "
+            >
+              <div>
+                <span> {{ i + 1 }}. </span>
+
+                <span>
+                  {{ jurisdiction?.JurisdictionResidence }}
+                </span>
+
+                <span>
+                  {{ jurisdiction?.TIN }}
+                </span>
+              </div>
+            </span>
           </div>
         </div>
 
@@ -241,6 +238,64 @@
             }}.00 of your tax return into your bank account number.
             <b>{{ bankArray?.accountNumber }}</b>
           </p>
+        </div>
+      </div>
+
+      <div
+        *ngIf="finalCalculations?.SeventhProvisio139 === 'Y'"
+        class="card__title"
+        style="padding: 10px; font-size: 20px"
+      >
+        Other Details
+      </div>
+
+      <div *ngIf="finalCalculations?.SeventhProvisio139 === 'Y'">
+        <div class="card__title" style="padding: 10px; font-size: 15px">
+          Seventh Provisio Details
+        </div>
+
+        <div
+          class="bxHed flex justify-between"
+          style="margin: 0px; border: 1px solid rgba(59, 130, 246, 0.1)"
+        >
+          <div>
+            Have you incurred expenditure of an amount or aggregate of amount
+            exceeding Rs. 2 lakhs for travel to a foreign country for yourself
+            or for any other person?
+          </div>
+          <div style="float: right">
+            {{ finalCalculations?.AmtSeventhProvisio139ii }}
+          </div>
+        </div>
+
+        <div
+          class="bxHed flex justify-between"
+          style="margin: 0px; border: 1px solid rgba(59, 130, 246, 0.1)"
+        >
+          <div>
+            Have you incurred expenditure of amount or aggregate of amount
+            exceeding Rs. 1 lakh on consumption of electricity during the
+            previous year?
+          </div>
+          <div style="float: right">
+            {{ finalCalculations?.AmtSeventhProvisio139iii }}
+          </div>
+        </div>
+
+        <div
+          class="bxHed flex justify-between"
+          style="margin: 0px; border: 1px solid rgba(59, 130, 246, 0.1)"
+          *ngFor="
+            let clauseIV of finalCalculations?.clauseiv7provisio139iDtls;
+            let i = index
+          "
+        >
+          <div>
+            {{ clauseIV?.clauseiv7provisio139iNature }}
+          </div>
+          <div style="float: right; width: 25%; text-align: end">
+            {{ clauseIV?.clauseiv7provisio139iAmount }}
+          </div>
         </div>
       </div>
     </div>
@@ -446,8 +501,195 @@
                                   salary.grossSalary
                                 )
                               }}
+                              <mat-icon
+                                *ngIf="
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.salaryBifurcations ||
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.perquisitiesBifurcation ||
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.profitsInLieuBifurcation
+                                "
+                                class="arrow-icon"
+                                (click)="toggleSalaryBifurcations($event, i)"
+                              >
+                                keyboard_arrow_down
+                              </mat-icon>
                             </td>
                           </tr>
+
+                          <ng-container
+                            *ngFor="
+                              let salary of finalCalculations?.salary
+                                ?.employers;
+                              let i = index
+                            "
+                          >
+                            <!-- salary171 -->
+                            <ng-container
+                              *ngIf="
+                                finalCalculations?.salary?.employers[i]
+                                  ?.salaryBifurcations
+                              "
+                            >
+                              <tr
+                                *ngIf="
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.salaryBifurcations &&
+                                  SalaryBifurcationsExpanded[i]
+                                "
+                              >
+                                <td colspan="1">
+                                  {{ "Salary 17(1)" }}
+                                </td>
+                                <td>
+                                  {{
+                                    finalCalculations?.salary?.employers[i]
+                                      ?.salaryBifurcationsTotal
+                                  }}
+                                  <mat-icon
+                                    class="arrow-icon"
+                                    (click)="
+                                      toggleSalaryBifurcations171($event, i)
+                                    "
+                                  >
+                                    keyboard_arrow_down
+                                  </mat-icon>
+                                </td>
+                              </tr>
+
+                              <ng-container
+                                *ngIf="SalaryBifurcations171Expanded[i]"
+                              >
+                                <ng-container
+                                  *ngFor="
+                                    let salaryAllow of finalCalculations?.salary
+                                      ?.employers[i]?.salaryBifurcations;
+                                    let i = index
+                                  "
+                                >
+                                  <tr>
+                                    <td>
+                                      {{ i + 1 }}.
+                                      {{ salaryAllow?.NatureDesc }}
+                                    </td>
+                                    <td>{{ salaryAllow?.OthAmount }}</td>
+                                  </tr>
+                                </ng-container>
+                              </ng-container>
+                            </ng-container>
+
+
+                            <!-- salary 172 -->
+                            <ng-container
+                              *ngIf="
+                                finalCalculations?.salary?.employers[i]
+                                  ?.perquisitiesBifurcation
+                              "
+                            >
+                              <tr
+                                *ngIf="
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.perquisitiesBifurcation &&
+                                  SalaryBifurcationsExpanded[i]
+                                "
+                              >
+                                <td colspan="1">
+                                  {{ "Salary 17(2)" }}
+                                </td>
+                                <td>
+                                  {{
+                                    finalCalculations?.salary?.employers[i]
+                                      ?.perquisitiesBifurcationTotal
+                                  }}
+                                  <mat-icon
+                                    class="arrow-icon"
+                                    (click)="
+                                      togglePerquisitiesBifurcation($event, i)
+                                    "
+                                  >
+                                    keyboard_arrow_down
+                                  </mat-icon>
+                                </td>
+                              </tr>
+
+                              <ng-container
+                                *ngIf="perquisitiesBifurcationExpanded[i]"
+                              >
+                                <ng-container
+                                  *ngFor="
+                                    let perqAllow of finalCalculations?.salary
+                                      ?.employers[i]?.perquisitiesBifurcation;
+                                    let i = index
+                                  "
+                                >
+                                  <tr>
+                                    <td>
+                                      {{ i + 1 }}.
+                                      {{ perqAllow?.NatureDesc }}
+                                    </td>
+                                    <td>{{ perqAllow?.OthAmount }}</td>
+                                  </tr>
+                                </ng-container>
+                              </ng-container>
+                            </ng-container>
+
+                            <!-- salary171 -->
+                            <ng-container
+                              *ngIf="
+                                finalCalculations?.salary?.employers[i]
+                                  ?.profitsInLieuBifurcation
+                              "
+                            >
+                              <tr
+                                *ngIf="
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.profitsInLieuBifurcation &&
+                                  SalaryBifurcationsExpanded[i]
+                                "
+                              >
+                                <td colspan="1">
+                                  {{ "Salary 17(1)" }}
+                                </td>
+                                <td>
+                                  {{
+                                    finalCalculations?.salary?.employers[i]
+                                      ?.profitsInLieuBifurcationTotal
+                                  }}
+                                  <mat-icon
+                                    class="arrow-icon"
+                                    (click)="
+                                      toggleProfitsInLieuBifurcation($event, i)
+                                    "
+                                  >
+                                    keyboard_arrow_down
+                                  </mat-icon>
+                                </td>
+                              </tr>
+
+                              <ng-container
+                                *ngIf="profitsInLieuBifurcationExpanded[i]"
+                              >
+                                <ng-container
+                                  *ngFor="
+                                    let salaryAllow of finalCalculations?.salary
+                                      ?.employers[i]?.profitsInLieuBifurcation;
+                                    let i = index
+                                  "
+                                >
+                                  <tr>
+                                    <td>
+                                      {{ i + 1 }}.
+                                      {{ salaryAllow?.NatureDesc }}
+                                    </td>
+                                    <td>{{ salaryAllow?.OthAmount }}</td>
+                                  </tr>
+                                </ng-container>
+                              </ng-container>
+                            </ng-container>
+
+                          </ng-container>
+
                           <tr>
                             <td>3. Less: Exempt Allowance</td>
                             <td
@@ -463,8 +705,49 @@
                                   salary.exemptAllowance
                                 )
                               }}
+                              <mat-icon
+                                *ngIf="
+                                  finalCalculations?.salary?.employers[i]
+                                    ?.exemptAllowances
+                                "
+                                class="arrow-icon"
+                                (click)="toggleExemptAllowance($event, i)"
+                              >
+                                keyboard_arrow_down
+                              </mat-icon>
                             </td>
                           </tr>
+                          <ng-container
+                            *ngFor="
+                              let salary of finalCalculations?.salary
+                                ?.employers;
+                              let i = index
+                            "
+                          >
+                            <ng-container
+                              *ngIf="
+                                exemptAllowanceExpanded[i] &&
+                                finalCalculations?.salary?.employers[i]
+                                  ?.exemptAllowances
+                              "
+                            >
+                              <ng-container
+                                *ngFor="
+                                  let salaryAllow of finalCalculations?.salary
+                                    ?.employers[i]?.exemptAllowances;
+                                  let i = index
+                                "
+                              >
+                                <tr>
+                                  <td>
+                                    {{ i + 1 }}.
+                                    {{ salaryAllow?.SalNatureDesc }}
+                                  </td>
+                                  <td>{{ salaryAllow?.SalOthAmount }}</td>
+                                </tr>
+                              </ng-container>
+                            </ng-container>
+                          </ng-container>
                           <tr>
                             <td>4. Less: Professional Tax</td>
                             <td
@@ -673,6 +956,23 @@
                             </td>
                           </tr>
                           <tr>
+                            <td>4. Standard Deduction @30%</td>
+                            <td
+                              *ngFor="
+                                let hp of finalCalculations?.houseProperties
+                                  ?.houseProps;
+                                let i = index
+                              "
+                            >
+                              Rs
+                              {{
+                                utilsService.currencyFormatter(
+                                  hp.hpStandardDeduction
+                                )
+                              }}
+                            </td>
+                          </tr>
+                          <tr>
                             <td>5. Interest On Home Loan</td>
                             <td
                               *ngFor="
@@ -764,6 +1064,7 @@
                             <th>Section No.</th>
                             <th>Nature Of Business Code</th>
                             <th>Trade Name</th>
+                            <th>Description</th>
                             <th>Gross Turnover/Receipt</th>
                             <th>Taxable Income</th>
                           </tr>
@@ -798,6 +1099,7 @@
                                   {{ business?.natureOfBusinessCode }}
                                 </td>
                                 <td>{{ business?.tradeName }}</td>
+                                <td>{{ business?.description }}</td>
                                 <td>Rs {{ business?.grossTurnover }}</td>
                                 <td>
                                   Rs
@@ -826,7 +1128,7 @@
                             >
                               <ng-container
                                 *ngIf="
-                                  business.grossTurnover > 0 &&
+                                  business.grossTurnover > 0 ||
                                   business.TaxableIncome > 0
                                 "
                               >
@@ -837,6 +1139,7 @@
                                   {{ business?.natureOfBusinessCode }}
                                 </td>
                                 <td>{{ business?.tradeName }}</td>
+                                <td>{{ business?.description }}</td>
                                 <td>Rs {{ business?.grossTurnover }}</td>
                                 <td>
                                   Rs
@@ -1163,7 +1466,7 @@
                           <th style="font-weight: bold">Section</th>
                           <th style="font-weight: bold">Name of Business</th>
                           <th style="font-weight: bold">Business Code</th>
-                          <th></th>
+                          <th style="font-weight: bold">Description</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1185,7 +1488,9 @@
                           <td>
                             {{ businessDetail?.CodeAE }}
                           </td>
-                          <td></td>
+                          <td>
+                            {{ businessDetail?.description }}
+                          </td>
                         </tr>
 
                         <!-- 44ae income details  -->
@@ -6793,8 +7098,7 @@
                           </td>
                           <td></td>
                           <td></td>
-                          <td>
-                          </td>
+                          <td></td>
                           <td></td>
                           <td></td>
                           <td></td>
@@ -6803,8 +7107,7 @@
                         </tr>
 
                         <tr>
-                          <td>
-                          </td>
+                          <td></td>
                           <td>
                             {{ "Total" }}
                           </td>
@@ -6821,6 +7124,406 @@
                           <td></td>
                           <td></td>
                           <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-expansion-panel>
+
+                  <!-- *********************** Schedule PTI  ************************* -->
+                  <mat-expansion-panel
+                    class="color-panel accordion-border"
+                    *ngIf="
+                      !ITR_JSON.isItrSummaryJsonEdited &&
+                      ITR_JSON.itrSummaryJson
+                    "
+                    #SchedulePTI
+                  >
+                    <mat-expansion-panel-header class="newclass">
+                      <div
+                        class="font80"
+                        style="width: 100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                      >
+                        <div class="nav nav-stacked">
+                          <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
+                            31. Schedule PTI
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="AdjAr">
+                              <mat-icon *ngIf="!SchedulePTI.expanded"
+                                >keyboard_arrow_down
+                              </mat-icon>
+                              <mat-icon *ngIf="SchedulePTI.expanded"
+                                >keyboard_arrow_up
+                              </mat-icon>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-expansion-panel-header>
+
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngFor="
+                        let pti of finalCalculations?.SchedulePTI
+                          ?.SchedulePTIDtls;
+                        let i = index
+                      "
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">1. Sr. No</th>
+                          <th style="font-weight: bold">
+                            2. Investment entity covered by section 115UA/115UB
+                          </th>
+                          <th style="font-weight: bold">
+                            3. Name of business trust/ investment fund
+                          </th>
+                          <th style="font-weight: bold">
+                            4. PAN of the business trust/ investment fund
+                          </th>
+                          <th style="font-weight: bold">5. Sr. No</th>
+                          <th style="font-weight: bold">6. Head of income</th>
+                          <th style="font-weight: bold">
+                            7. Current year income
+                          </th>
+                          <th style="font-weight: bold">
+                            8. Share of current year loss distributed by
+                            Investment fund
+                          </th>
+                          <th style="font-weight: bold">
+                            9. Net Income / Loss (7-8)
+                          </th>
+                          <th style="font-weight: bold">
+                            9. TDS on such amount, if any
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <!-- row 1 -->
+                        <tr>
+                          <td rowspan="15">
+                            {{ i + 1 }}
+                          </td>
+                          <td rowspan="15">
+                            {{
+                              pti?.InvstmntCvrdUs115UA115UB === "A"
+                                ? "115UA"
+                                : "115UB"
+                            }}
+                          </td>
+                          <td rowspan="15">
+                            {{ pti?.BusinessName }}
+                          </td>
+                          <td rowspan="15">
+                            {{ pti?.BusinessPAN }}
+                          </td>
+                          <td rowspan="1">
+                            {{ "i" }}
+                          </td>
+                          <td rowspan="1">
+                            {{ "House Property" }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.IncFromHP?.AmountOfInc }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.IncFromHP?.CurrYrLossShareByInvstFund }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.IncFromHP?.NetIncomeLoss }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.IncFromHP?.TDSAmount }}
+                          </td>
+                        </tr>
+
+                        <!-- row 2 -->
+                        <tr>
+                          <td rowspan="7" colspan="1">
+                            {{ "ii" }}
+                          </td>
+                          <td rowspan="1" colspan="5">
+                            {{ "Capital gains" }}
+                          </td>
+                        </tr>
+
+                        <!-- row 3 -->
+                        <tr>
+                          <td rowspan="1">
+                            {{ "ai. Short term" }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.CapitalGainsPTI?.ShortTermCG?.AmountOfInc }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.ShortTermCG
+                                ?.CurrYrLossShareByInvstFund
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.ShortTermCG?.NetIncomeLoss
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.CapitalGainsPTI?.ShortTermCG?.TDSAmount }}
+                          </td>
+                        </tr>
+
+                        <!-- row 4 -->
+                        <tr>
+                          <td rowspan="1">
+                            {{ "aii. Section 111A" }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.STCG_Sec111A?.AmountOfInc
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.STCG_Sec111A
+                                ?.CurrYrLossShareByInvstFund
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.STCG_Sec111A?.NetIncomeLoss
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.CapitalGainsPTI?.STCG_Sec111A?.TDSAmount }}
+                          </td>
+                        </tr>
+
+                        <!-- row 5 -->
+                        <tr>
+                          <td rowspan="1">
+                            {{ "aiii. Section 111A" }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.CapitalGainsPTI?.STCG_Others?.AmountOfInc }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.STCG_Others
+                                ?.CurrYrLossShareByInvstFund
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.STCG_Others?.NetIncomeLoss
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.CapitalGainsPTI?.STCG_Others?.TDSAmount }}
+                          </td>
+                        </tr>
+
+                        <!-- row 6 -->
+                        <tr>
+                          <td rowspan="1">
+                            {{ "b. Long term" }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.CapitalGainsPTI?.LongTermCG?.AmountOfInc }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.LongTermCG
+                                ?.CurrYrLossShareByInvstFund
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.LongTermCG?.NetIncomeLoss
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.CapitalGainsPTI?.LongTermCG?.TDSAmount }}
+                          </td>
+                        </tr>
+
+                        <!-- row 7 -->
+                        <tr>
+                          <td rowspan="1">
+                            {{ "bi. Section 112A" }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.LTCG_Sec112A?.AmountOfInc
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.LTCG_Sec112A
+                                ?.CurrYrLossShareByInvstFund
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.LTCG_Sec112A?.NetIncomeLoss
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.CapitalGainsPTI?.LTCG_Sec112A?.TDSAmount }}
+                          </td>
+                        </tr>
+
+                        <!-- row 8 -->
+                        <tr>
+                          <td rowspan="1">
+                            {{ "bii. Other than Section 112A" }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.CapitalGainsPTI?.LTCG_Others?.AmountOfInc }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.LTCG_Others
+                                ?.CurrYrLossShareByInvstFund
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.CapitalGainsPTI?.LTCG_Others?.NetIncomeLoss
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.CapitalGainsPTI?.LTCG_Others?.TDSAmount }}
+                          </td>
+                        </tr>
+
+                        <!-- row 9 -->
+                        <tr>
+                          <td rowspan="3" colspan="1">
+                            {{ "iii" }}
+                          </td>
+                          <td rowspan="1" colspan="5">
+                            {{ "Other Sources" }}
+                          </td>
+                        </tr>
+
+                        <!-- row 10 -->
+                        <tr>
+                          <td rowspan="1">
+                            {{ "a. Dividend" }}
+                          </td>
+                          <td rowspan="1" colspan="2">
+                            {{ pti?.OS_Dividend?.AmountOfInc }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.OS_Dividend?.NetIncomeLoss }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.OS_Dividend?.TDSAmount }}
+                          </td>
+                        </tr>
+
+                        <!-- row 11 -->
+                        <tr>
+                          <td rowspan="1">
+                            {{ "b. Others" }}
+                          </td>
+                          <td rowspan="1" colspan="2">
+                            {{ pti?.OS_Others?.AmountOfInc }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.OS_Others?.NetIncomeLoss }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.OS_Others?.TDSAmount }}
+                          </td>
+                        </tr>
+
+                        <!-- row 12 -->
+                        <tr>
+                          <td rowspan="4" colspan="1">
+                            {{ "iv" }}
+                          </td>
+                          <td rowspan="1" colspan="5">
+                            {{ "Income claimed to be exempt" }}
+                          </td>
+                        </tr>
+
+                        <!-- row 13 -->
+                        <tr>
+                          <td rowspan="1">
+                            {{ "a. u/s 10(23FBB)" }}
+                          </td>
+                          <td rowspan="1" colspan="2">
+                            {{ pti?.IncClmdPTI?.Sec23FBB?.AmountOfInc }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.IncClmdPTI?.Sec23FBB?.NetIncomeLoss }}
+                          </td>
+                          <td rowspan="1">
+                            {{ pti?.IncClmdPTI?.Sec23FBB?.TDSAmount }}
+                          </td>
+                        </tr>
+
+                        <!-- row 14 -->
+                        <tr>
+                          <td rowspan="1">
+                            {{
+                              pti?.IncClmdPTI?.SecBIncExmptDtl?.SectionCode ===
+                              "b"
+                                ? "u/s b"
+                                : null
+                            }}
+                          </td>
+                          <td rowspan="1" colspan="2">
+                            {{
+                              pti?.IncClmdPTI?.SecBIncExmptDtl?.SecBCIncExmptDtl
+                                ?.AmountOfInc
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.IncClmdPTI?.SecBIncExmptDtl?.SecBCIncExmptDtl
+                                ?.NetIncomeLoss
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.IncClmdPTI?.SecBIncExmptDtl?.SecBCIncExmptDtl
+                                ?.TDSAmount
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- row 15 -->
+                        <tr>
+                          <td rowspan="1">
+                            {{
+                              pti?.IncClmdPTI?.SecCIncExmptDtl?.SectionCode ===
+                              "c"
+                                ? "u/s c"
+                                : null
+                            }}
+                          </td>
+                          <td rowspan="1" colspan="2">
+                            {{
+                              pti?.IncClmdPTI?.SecCIncExmptDtl?.SecBCIncExmptDtl
+                                ?.AmountOfInc
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.IncClmdPTI?.SecCIncExmptDtl?.SecBCIncExmptDtl
+                                ?.NetIncomeLoss
+                            }}
+                          </td>
+                          <td rowspan="1">
+                            {{
+                              pti?.IncClmdPTI?.SecCIncExmptDtl?.SecBCIncExmptDtl
+                                ?.TDSAmount
+                            }}
+                          </td>
                         </tr>
                       </tbody>
                     </table>

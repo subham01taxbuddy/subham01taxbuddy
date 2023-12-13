@@ -24,9 +24,8 @@
             <div class="col-sm-4">
               <mat-label>From Date</mat-label>
               <mat-form-field class="input-field-width" appearance="outline">
-                <input matInput placeholder="DD/MM/YYYY" [formControl]="fromDate" [max]="maxDate"
-                  (dateChange)="setToDateValidation(this.fromDate.value)" [matDatepicker]="picker1"
-                  autocomplete="off" />
+                <input matInput placeholder="DD/MM/YYYY" [formControl]="fromDate" [min]="minStartDate" [max]="maxStartDate"
+                  (dateChange)="setToDateValidation()" [matDatepicker]="picker1" autocomplete="off" />
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
                 <!-- <mat-error *ngIf="fromDateValue.hasError('required')">Select From date</mat-error> -->
@@ -36,8 +35,8 @@
             <div class="col-sm-4">
               <mat-label>To Date</mat-label>
               <mat-form-field appearance="outline">
-                <input matInput placeholder="DD/MM/YYYY" [formControl]="toDate" [max]="maxDate" [min]="minToDate"
-                  [matDatepicker]="picker2" autocomplete="off" />
+                <input matInput placeholder="DD/MM/YYYY" [formControl]="toDate" [max]="maxEndDate" [min]="minEndDate"
+                  [matDatepicker]="picker2" autocomplete="off" (dateChange)="setToDateValidation()" />
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
                 <!-- <mat-error *ngIf="toDateValue.hasError('required')">Select To date</mat-error>

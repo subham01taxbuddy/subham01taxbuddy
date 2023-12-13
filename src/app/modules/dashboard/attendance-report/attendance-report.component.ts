@@ -10,6 +10,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -39,24 +40,25 @@ export const MY_FORMATS = {
 export class AttendanceReportComponent implements OnInit {
 
   loading = false;
-  loggedInSmeUserId:any;
-  roles:any;
-  minDate: string = '2023-04-01';
+  loggedInSmeUserId: any;
+  roles: any;
+  minStartDate: string = '2023-04-01';
   maxDate: string = '2024-03-31';
-  maxStartDate = new Date().toISOString().slice(0, 10);
-  minEndDate= new Date().toISOString().slice(0, 10);
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
+  maxStartDate=moment().toDate();
   startDate = new FormControl('');
   endDate = new FormControl('');
   searchFiler = new FormControl('');
-  filerId:any;
-  filerUserId:any;
+  filerId: any;
+  filerUserId: any;
   options1: User[] = [];
   filerList: any;
   filerNames: User[];
   filteredFilers: Observable<any[]>;
-  allDetails:any;
+  allDetails: any;
   today: Date;
-  grandTotal:any;
+  grandTotal: any;
   searchQuery: string;
   filteredData: any[];
   partnerCount: number;
@@ -64,7 +66,7 @@ export class AttendanceReportComponent implements OnInit {
   inactivePartnerCount: number;
   assignmentOnCount: number;
   assignmentOffCount: number;
-  itrOverview:any;
+  itrOverview: any;
 
   constructor(
     private userMsService: UserMsService,
@@ -77,7 +79,8 @@ export class AttendanceReportComponent implements OnInit {
     this.startDate.setValue(new Date().toISOString().slice(0, 10));
     this.endDate.setValue(new Date().toISOString().slice(0, 10));
     this.today = new Date();
-   }
+    this.maxStartDate=this.endDate.value;
+  }
 
   ngOnInit(): void {
     this.loggedInSmeUserId = this.utilsService.getLoggedInUserID();
@@ -110,22 +113,22 @@ export class AttendanceReportComponent implements OnInit {
   //   });
   // }
 
-  search(){
+  search() {
     this.getPartnerDetails();
   }
 
-  getPartnerDetails(){
+  getPartnerDetails() {
     // API to get partner details
-  // https://uat-api.taxbuddy.com/itr/dashboard/partner-commission?ownerUserId=7002&fromDate=2023-01-01&toDate=2023-05-11
-  this.loading = true;
-  let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
-  let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
-  let ownerUserId = this.loggedInSmeUserId;
-  let serviceType = 'ITR';
+    // https://uat-api.taxbuddy.com/itr/dashboard/partner-commission?ownerUserId=7002&fromDate=2023-01-01&toDate=2023-05-11
+    this.loading = true;
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+    let ownerUserId = this.loggedInSmeUserId;
+    let serviceType = 'ITR';
 
-  let param =`/dashboard/partner-commission?ownerUserId=${ownerUserId}&fromDate=${fromDate}&toDate=${toDate}`
+    let param = `/dashboard/partner-commission?ownerUserId=${ownerUserId}&fromDate=${fromDate}&toDate=${toDate}`
 
-  this.userMsService.getMethodNew(param).subscribe((response: any) => {
+    this.userMsService.getMethodNew(param).subscribe((response: any) => {
       if (response.success) {
         this.loading = false;
         this.allDetails = response.data;
@@ -138,18 +141,18 @@ export class AttendanceReportComponent implements OnInit {
 
         // Assign the totals to a property
         this.grandTotal = {
-        totalItrFiled,
-        totalPaidRevenue,
-        totalCommissionEarned,
+          totalItrFiled,
+          totalPaidRevenue,
+          totalCommissionEarned,
         };
 
-     }else{
-       this.loading = false;
-       this. _toastMessageService.alert("error",response.message);
-     }
-    },(error) => {
+      } else {
+        this.loading = false;
+        this._toastMessageService.alert("error", response.message);
+      }
+    }, (error) => {
       this.loading = false;
-      this. _toastMessageService.alert("error","Error");
+      this._toastMessageService.alert("error", "Error");
     })
   }
 
@@ -184,9 +187,9 @@ export class AttendanceReportComponent implements OnInit {
   // })
   // }
 
-  setEndDateValidate(startDateVal: any) {
-    console.log('startDateVal: ', startDateVal);
-    this.minEndDate = startDateVal.value;
+  setEndDateValidate() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
 }
