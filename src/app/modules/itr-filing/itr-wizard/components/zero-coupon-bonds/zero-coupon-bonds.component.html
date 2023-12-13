@@ -130,7 +130,7 @@
                       class="input-field"
                       readonly
                       placeholder="Buy Date"
-                      (dateChange)="getGainType(bonds); calMinImproveDate(bonds.get('purchaseDate').value, bonds);calculateIndexCost(bonds, 'asset')"
+                      (dateChange)="getGainType(bonds); calMinImproveDate(bonds.get('purchaseDate').value, bonds);"
                       formControlName="purchaseDate"
                       name="purchaseDate"
                       [matDatepicker]="purchaseDate"

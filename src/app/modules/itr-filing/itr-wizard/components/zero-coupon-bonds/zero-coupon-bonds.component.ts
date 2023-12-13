@@ -878,7 +878,7 @@ export class ZeroCouponBondsComponent
       this.minImprovementDate = new Date(purchaseDate);
       this.getImprovementYears();
       //this.calculateCapitalGain(formGroupName, '', index);
-      this.calculateIndexCost(bonds);
+      // this.calculateIndexCost(bonds);
     }
   }
   calculateIndexCost(asset, type?) {
