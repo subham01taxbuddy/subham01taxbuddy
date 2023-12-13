@@ -543,7 +543,7 @@ export class ZeroCouponBondsComponent
       console.log('bondData', bondData);
 
       if (bondIndex >= 0) {
-        if (bondData.assetDetails.length > 0) {
+        if (bondData.assetDetails.length > 0 || bondData.deduction?.length > 0) {
           this.Copy_ITR_JSON.capitalGain[bondIndex] = bondData;
         } else {
           this.Copy_ITR_JSON.capitalGain.splice(bondIndex, 1);
@@ -687,9 +687,9 @@ export class ZeroCouponBondsComponent
           residentialStatus: this.ITR_JSON.residentialStatus,
           assetType: 'GOLD',
           deduction: goldIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[goldIndex].deduction : [],
-          improvement: bondImprovement,
+          improvement: this.bondType === 'bonds' ? bondImprovement : this.Copy_ITR_JSON.capitalGain[goldIndex]?.improvement,
           buyersDetails: [],
-          assetDetails: debsList,
+          assetDetails: this.bondType === 'bonds' ? debsList : this.Copy_ITR_JSON.capitalGain[goldIndex]?.assetDetails,
         };
         if (goldIndex >= 0) {
           if (debData.assetDetails.length > 0) {
@@ -878,7 +878,7 @@ export class ZeroCouponBondsComponent
       this.minImprovementDate = new Date(purchaseDate);
       this.getImprovementYears();
       //this.calculateCapitalGain(formGroupName, '', index);
-      this.calculateIndexCost(bonds);
+      // this.calculateIndexCost(bonds);
     }
   }
   calculateIndexCost(asset, type?) {
