@@ -162,7 +162,7 @@
                       <mat-label>From Date</mat-label>
                       <mat-form-field appearance="outline" class="class1">
                         <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxDate"
-                          autocomplete="off" (dateChange)="setToDateValidation(startDate.value)" />
+                          autocomplete="off" (dateChange)="setToDateValidation()" />
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                         <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
