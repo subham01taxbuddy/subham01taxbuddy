@@ -1440,3 +1440,15 @@ ul {
 .note {
   max-width: none;
 }
+
+.openSideBar {
+  display: block !important;
+}
+
+.closeSideBar {
+  display: none !important;
+}
+
+.sidebar__item_active {
+  color: #f18203 !important
+}

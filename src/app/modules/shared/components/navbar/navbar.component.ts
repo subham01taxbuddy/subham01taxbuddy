@@ -13,6 +13,8 @@ import { ToastMessageService } from "../../../../services/toast-message.service"
 import { UserMsService } from "../../../../services/user-ms.service";
 import { AddAffiliateIdComponent } from '../add-affiliate-id/add-affiliate-id.component';
 import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { SidebarService } from 'src/app/services/sidebar.service';
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
@@ -36,6 +38,7 @@ export class NavbarComponent implements DoCheck {
   showAffiliateBtn = false;
 
   loading: boolean = false;
+  nav: boolean;
 
   constructor(
     private router: Router,
@@ -44,7 +47,10 @@ export class NavbarComponent implements DoCheck {
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService,
     private userMsService: UserMsService,
-    private kommunicateSsoService:KommunicateSsoService
+    private kommunicateSsoService:KommunicateSsoService,
+    private observer: BreakpointObserver,
+    private sidebarService: SidebarService,
+
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     this.fetchAffiliateId();
@@ -63,7 +69,7 @@ export class NavbarComponent implements DoCheck {
   }
 
   sideBar() {
-    if (window.innerWidth < 768) {
+    // if (window.innerWidth < 768) {
       if (this.sidebar_open) {
         this.menu_btn_rotate = false;
         setTimeout(() => {
@@ -79,7 +85,29 @@ export class NavbarComponent implements DoCheck {
           this.menu_hide_component = true;
         }, 300);
       }
-    }
+    // }
+  }
+  
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.observer.observe(['(max-width: 800px)']).subscribe((res) => {
+        if (res.matches) {
+          this.nav = true;
+        } else {
+          this.nav = false;
+        }
+      });
+    });
+  }
+
+  open() {
+    this.nav = false;
+    this.sidebarService.open();
+  }
+
+  close() {
+    this.nav = true;
+    this.sidebarService.hide();
   }
   navigateToHome() {
     this.router.navigate(['/tasks/assigned-users-new']);

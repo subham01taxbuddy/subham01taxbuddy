@@ -1,6 +1,6 @@
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { interval } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { DirectCallingComponent } from '../direct-calling/direct-calling.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -9,6 +9,8 @@ import { AppConstants } from '../../constants';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 import { Router, NavigationStart, NavigationEnd, ActivatedRoute, ActivationEnd, Params } from '@angular/router';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { SidebarService } from 'src/app/services/sidebar.service';
 
 @Component({
   selector: 'app-layout',
@@ -24,6 +26,8 @@ export class LayoutComponent implements OnInit {
   routePath: any;
   updatedChat: any;
   urlSafe: any;
+  openSidebar: boolean=true;
+  subscription:Subscription
   constructor(
     private router: Router,
     private dialog: MatDialog,
@@ -31,6 +35,8 @@ export class LayoutComponent implements OnInit {
     private ngZone: NgZone,
     private matBottomSheet: MatBottomSheet,
     public sanitizer: DomSanitizer,
+    private observer: BreakpointObserver,
+    private sidebarService: SidebarService,
   ) {
     this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(environment.assistedKmScript);
 
@@ -45,6 +51,32 @@ export class LayoutComponent implements OnInit {
       this.routePath = router.url;
     });
   }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.observer.observe(['(max-width: 800px)']).subscribe((res) => {
+        if (res.matches) {
+          // this.sidenav.close();
+          this.openSidebar = false;
+        } else {
+          // this.sidenav.open();
+          this.openSidebar = true;
+        }
+      });
+    });
+    this.subscription = this.sidebarService.isLoading
+      .subscribe((state) => {
+        debugger
+        if (state) {
+          // this.sidenav.open();
+          this.openSidebar = true;
+        } else {
+          // this.sidenav.close();
+          this.openSidebar = false;
+        }
+      });
+  }
+
   ngOnInit(): void {
     if(this.router?.url?.includes('user-docs')){
       this.isDocumentCloud=false
