@@ -1450,5 +1450,6 @@ ul {
 }
 
 .sidebar__item_active {
-  color: #f18203 !important
+  color: #c3fff7 !important; 
+  background-color:#0f58a7;
 }
