@@ -10,6 +10,7 @@ import { ApiEndpoints } from '../modules/shared/api-endpoint';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
+  Employer,
   ITR_JSON,
   OptedInNewRegime,
   OptedOutNewRegime,
@@ -1773,5 +1774,39 @@ export class UtilsService {
       '263:ZIMBABWE',
       '9999:OTHERS',
     ];
+  }
+
+  getBifurcation(localEmployer: Employer) {
+    let bifurcation = {
+      SEC17_1: {total: 0, value: {}},
+      SEC17_2: {total: 0, value: {}},
+      SEC17_3: {total: 0, value: {}}
+    };
+    let total = 0;
+    localEmployer.salary.forEach(income => {
+      if(income.salaryType !== 'SEC17_1'){
+        bifurcation.SEC17_1.value[income.salaryType] = income.taxableAmount;
+        total += income.taxableAmount;
+      }
+    });
+    bifurcation.SEC17_1.total = total;
+    total = 0;
+    localEmployer.perquisites.forEach(income => {
+      if(income.perquisiteType !== 'SEC17_2'){
+        bifurcation.SEC17_2.value[income.perquisiteType] = income.taxableAmount;
+        total += income.taxableAmount;
+      }
+    });
+    bifurcation.SEC17_2.total = total;
+    total = 0;
+    localEmployer.profitsInLieuOfSalaryType.forEach(income => {
+      if(income.salaryType !== 'SEC17_3'){
+        bifurcation.SEC17_3.value[income.salaryType] = income.taxableAmount;
+        total += income.taxableAmount;
+      }
+    });
+    bifurcation.SEC17_3.total = total;
+
+    return bifurcation;
   }
 }
