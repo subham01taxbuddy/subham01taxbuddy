@@ -533,8 +533,8 @@
           <div class="col-sm-4">
             <mat-label> Calling Number </mat-label>
             <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="Calling Number" [numbersOnly]="true" [formControl]="callingNumber"
-                class="input-field" />
+              <input type="text" matInput placeholder="Calling Number" [numbersOnly]="true"
+                [formControl]="callingNumber" class="input-field" />
               <mat-error class="mt-3"> <span *ngIf="otherSmeInfo.controls['callingNumber'].hasError('required')">Please
                   enter mobile no.</span>
                 <span *ngIf="otherSmeInfo.controls['callingNumber'].hasError('pattern')">Please enter valid mobile
@@ -559,9 +559,11 @@
                 <hr>
                 <p><mat-checkbox [formControl]="leader" onclick="return false">Leader</mat-checkbox></p>
                 <hr>
-                <p><mat-checkbox [formControl]="filerIndividual" onclick="return false">Filer-Individual</mat-checkbox></p>
+                <p><mat-checkbox [formControl]="filerIndividual" onclick="return false">Filer-Individual</mat-checkbox>
+                </p>
                 <hr>
-                <p><mat-checkbox [formControl]="filerPrinciple" onclick="return false">Filer-Principal/Firm</mat-checkbox>
+                <p><mat-checkbox [formControl]="filerPrinciple"
+                    onclick="return false">Filer-Principal/Firm</mat-checkbox>
                 </p>
                 <hr>
                 <p><mat-checkbox [formControl]="filerChild" onclick="return false">Filer- Assistant</mat-checkbox></p>
@@ -588,8 +590,8 @@
               <mat-label> PAN (Individual/Firm) TDS deducted against
                 this PAN</mat-label>
               <mat-form-field appearance="outline">
-                <input type="text" matInput placeholder="Pan" [formControl]="pan" class="input-field" maxlength="10" trim
-                  readonly />
+                <input type="text" matInput placeholder="Pan" [formControl]="pan" class="input-field" maxlength="10"
+                  trim readonly />
               </mat-form-field>
             </div>
 
@@ -608,8 +610,8 @@
                 <div class="col-sm-5">
                   <mat-label> Account Number* </mat-label>
                   <mat-form-field appearance="outline">
-                    <input type="text" matInput placeholder="Account No" formControlName="accountNumber" class="input-field"
-                      trim [numbersOnly]="true" required maxlength="20" minlength="3"
+                    <input type="text" matInput placeholder="Account No" formControlName="accountNumber"
+                      class="input-field" trim [numbersOnly]="true" required maxlength="20" minlength="3"
                       (blur)="trimValue(bankDetailsFormGroup.controls['accountNumber'])"
                       (change)="updateBankDetailsForm()" />
                     <mat-error class="mt-3"
@@ -645,7 +647,8 @@
                         {{ account.label }}
                       </mat-option>
                     </mat-select>
-                    <mat-error class="mt-3" *ngIf="bankDetailsFormGroup.controls['accountType'].hasError('required')">Select
+                    <mat-error class="mt-3"
+                      *ngIf="bankDetailsFormGroup.controls['accountType'].hasError('required')">Select
                       account type</mat-error>
                   </mat-form-field>
                 </div>
@@ -687,8 +690,8 @@
             <div class="col-sm-6">
               <mat-label> No of additional Id's required </mat-label>
               <mat-form-field appearance="outline">
-                <input type="text" matInput placeholder="Mobile No" [formControl]="additionalIdsCount" class="input-field"
-                  maxlength="10" minlength="6" trim [numbersOnly]="true" readonly />
+                <input type="text" matInput placeholder="Mobile No" [formControl]="additionalIdsCount"
+                  class="input-field" maxlength="10" minlength="6" trim [numbersOnly]="true" readonly />
               </mat-form-field>
             </div>
           </div>
@@ -709,10 +712,12 @@
               </span>
               <div class="row">
                 <section class="example-section" [formGroup]="services">
-                  <p><mat-checkbox [formControl]="itr" [disabled]="smeObj?.roles.includes('ROLE_FILER') || disableItrService"
+                  <p><mat-checkbox [formControl]="itr"
+                      [disabled]="smeObj?.roles.includes('ROLE_FILER') || disableItrService"
                       (change)="serviceUpdated('serviceEligibility_ITR', itr)">ITR</mat-checkbox><mat-slide-toggle
                       *ngIf="itr.value && !hideAssignmentOnOff" [formControl]="itrToggle"
-                      style="float:right ; margin-right: 10px;" (change)="assignmentUpdated(itrToggle)"></mat-slide-toggle>
+                      style="float:right ; margin-right: 10px;"
+                      (change)="assignmentUpdated(itrToggle)"></mat-slide-toggle>
                   </p>
                   <hr>
 
@@ -721,11 +726,13 @@
                       Planing
                       (TPA)/NPS </mat-checkbox>
                     <mat-slide-toggle *ngIf="tpa.value  && !hideAssignmentOnOff" [formControl]="tpaToggle"
-                      style="float:right ; margin-right: 10px;" (change)="assignmentUpdated( tpaToggle)"></mat-slide-toggle>
+                      style="float:right ; margin-right: 10px;"
+                      (change)="assignmentUpdated( tpaToggle)"></mat-slide-toggle>
                   </p>
                   <hr *ngIf="!hideOtherServicesForFiler">
 
-                  <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="notice" [disabled]="disableNoticeService"
+                  <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="notice"
+                      [disabled]="disableNoticeService"
                       (change)="serviceUpdated('serviceEligibility_NOTICE', notice)">Notice</mat-checkbox>
                     <mat-slide-toggle *ngIf="notice.value && !hideAssignmentOnOff" [formControl]="noticeToggle"
                       style="float:right ; margin-right: 10px;"
@@ -736,7 +743,8 @@
                   <p *ngIf="!hideOtherServicesForFiler"><mat-checkbox [formControl]="gst" [disabled]="disableGstService"
                       (change)="serviceUpdated('serviceEligibility_GST', gst)">GST</mat-checkbox>
                     <mat-slide-toggle *ngIf="gst.value && !hideAssignmentOnOff" [formControl]="gstToggle"
-                      style="float:right ; margin-right: 10px;" (change)="assignmentUpdated( gstToggle)"></mat-slide-toggle>
+                      style="float:right ; margin-right: 10px;"
+                      (change)="assignmentUpdated( gstToggle)"></mat-slide-toggle>
                   </p>
                   <hr *ngIf="!hideOtherServicesForFiler">
 
@@ -744,21 +752,24 @@
                   <div *ngIf="false">
                     <p><mat-checkbox [formControl]="wb" (change)="serviceUpdated('WB', wb)">Wealth
                         Builder(WB)</mat-checkbox>
-                      <mat-slide-toggle *ngIf="wb.value" [formControl]="wbToggle" style="float:right ; margin-right: 10px;"
+                      <mat-slide-toggle *ngIf="wb.value" [formControl]="wbToggle"
+                        style="float:right ; margin-right: 10px;"
                         (change)="assignmentUpdated( wbToggle)"></mat-slide-toggle>
                     </p>
                     <hr>
 
                     <p><mat-checkbox [formControl]="pd" (change)="serviceUpdated('PD', pd)">Portfolio
                         Doctor(PD)</mat-checkbox>
-                      <mat-slide-toggle *ngIf="pd.value" [formControl]="pdToggle" style="float:right ; margin-right: 10px;"
+                      <mat-slide-toggle *ngIf="pd.value" [formControl]="pdToggle"
+                        style="float:right ; margin-right: 10px;"
                         (change)="assignmentUpdated(pdToggle)"></mat-slide-toggle>
                     </p>
                     <hr>
 
                     <p><mat-checkbox [formControl]="mf" (change)="serviceUpdated('MF', mf)">Mutual Fund (MF)
                         Advisor</mat-checkbox>
-                      <mat-slide-toggle *ngIf="mf.value" [formControl]="mfToggle" style="float:right ; margin-right: 10px;"
+                      <mat-slide-toggle *ngIf="mf.value" [formControl]="mfToggle"
+                        style="float:right ; margin-right: 10px;"
                         (change)="assignmentUpdated( mfToggle)"></mat-slide-toggle>
                     </p>
                     <hr>
@@ -885,7 +896,8 @@
           <div class="col-sm-4" *ngIf="smeObj?.['partnerType']==='CHILD'">
             <mat-label>Principle Name </mat-label>
             <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="Name" [formControl]="principalName" class="input-field" readonly />
+              <input type="text" matInput placeholder="Name" [formControl]="principalName" class="input-field"
+                readonly />
             </mat-form-field>
           </div>
           <div class="col-sm-4">
