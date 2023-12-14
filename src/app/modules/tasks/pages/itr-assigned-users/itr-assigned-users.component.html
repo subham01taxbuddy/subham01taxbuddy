@@ -110,7 +110,7 @@
 
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
-<div class="main clearfix">
+<div class="clearfix">
   <div class="main-1">
     <div class="row rowClr-1">
       <div class="col-sm-12">
@@ -122,14 +122,15 @@
                   <section class="example-section checkbox-right">
                     <div class="checkbox-group ">
                       <mat-checkbox class="ft-18" [formControl]="unAssignedUsersView" [disabled]="disableCheckboxes"
-                    *ngIf="loggedInUserRoles.includes('ROLE_ADMIN') || loggedInUserRoles.includes('ROLE_LEADER')"
-                    (change)="onCheckBoxChange()">Unassigned Users</mat-checkbox>
+                        *ngIf="loggedInUserRoles.includes('ROLE_ADMIN') || loggedInUserRoles.includes('ROLE_LEADER')"
+                        (change)="onCheckBoxChange()">Unassigned Users</mat-checkbox>
                     </div>
                   </section>
                 </div>
                 <div class="col-sm-12 bckClr">
                   <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, 1)"
-                    (sendPrincipleIndividual)="fromSme($event, 2)" (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
+                    (sendPrincipleIndividual)="fromSme($event, 2)"
+                    (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
                 </div>
                 <div class="col-sm-12">
                   <div class="row">
@@ -173,11 +174,14 @@
               <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                 (onChange)="sortByObject($event)"></app-generic-sorting>
             </div>
-            <div class="col-sm-7" *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
+            <div class="col-sm-7"
+              *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
               <button class="bulk-buttons bulk spRt" style="float:right"
-              (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk Re-Assignment to Filer</span></button>
+                (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk
+                  Re-Assignment to Filer</span></button>
               <button class="bulk-buttons bulk spRt" style="float:right"
-              (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk Re-Assignment to Leader</span></button>
+                (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk
+                  Re-Assignment to Leader</span></button>
             </div>
           </div>
         </div>
