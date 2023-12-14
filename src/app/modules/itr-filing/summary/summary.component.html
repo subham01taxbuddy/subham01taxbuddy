@@ -140,27 +140,39 @@
           >
             <span class="txLf">Jurisdiction of Residence: </span>
             <br />
-            <span
-              class="txMuLf"
-              style="margin: 0%"
-              *ngFor="
-                let jurisdiction of finalCalculations?.personalInfo
-                  ?.JurisdictionResPrevYrDtls;
-                let i = index
-              "
-            >
-              <div>
-                <span> {{ i + 1 }}. </span>
-
-                <span>
-                  {{ jurisdiction?.JurisdictionResidence }}
-                </span>
-
-                <span>
-                  {{ jurisdiction?.TIN }}
-                </span>
-              </div>
-            </span>
+            <div>
+              <table
+                class="simple-table"
+                *ngIf="finalCalculations?.personalInfo?.JurisdictionResPrevYrDtls"
+              >
+                <thead>
+                  <tr>
+                    <th>Sr. No</th>
+                    <th>Name</th>
+                    <th>Pan Number</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container
+                    *ngFor="
+                      let jurisdiction of finalCalculations?.personalInfo
+                        ?.JurisdictionResPrevYrDtls;
+                      let i = index
+                    "
+                  >
+                    <tr>
+                      <td colspan="1">{{ i + 1 }}</td>
+                      <td colspan="1">
+                        {{ jurisdiction?.JurisdictionResidence }}
+                      </td>
+                      <td colspan="1">
+                        {{ jurisdiction?.TIN }}
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
