@@ -19,7 +19,6 @@ export class CryptoVdaComponent implements OnInit {
   loading = false;
   minDate: Date;
   maxDate: Date;
-  maxPurchaseDate: Date;
 
   constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
 
@@ -72,12 +71,6 @@ export class CryptoVdaComponent implements OnInit {
       this.calcTotal();
     } else {
       this.add('addEmpty');
-    }
-  }
-
-  calMaxPurchaseDate(sellDate) {
-    if (this.utilsService.isNonEmpty(sellDate)) {
-      this.maxPurchaseDate = sellDate;
     }
   }
 
