@@ -1448,3 +1448,7 @@ ul {
 .closeSideBar {
   display: none !important;
 }
+
+.sidebar__item_active {
+  color: #f18203 !important
+}
