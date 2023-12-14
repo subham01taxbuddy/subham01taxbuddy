@@ -221,7 +221,8 @@
                       (blur)="checkGrossSalary()"
                       class="input-field"
                       maxlength="125"
-                      (change)="changed(true)"
+                      (change)="changed(true);"
+                      (beforeinput)="confirmChange($event, income.value.salaryType)"
                     />
                   </mat-form-field>
 

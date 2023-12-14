@@ -234,6 +234,7 @@ export class SpeculativeIncomeComponent implements OnInit {
     } else {
       //show errors
       $('input.ng-invalid').first().focus();
+      this.utilsService.highlightInvalidFormFields(this.specIncomeForm);
       return false;
     }
   }

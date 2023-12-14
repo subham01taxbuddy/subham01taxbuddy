@@ -104,7 +104,9 @@ export class LabFormComponent implements OnInit {
   }
 
   reset(control) {
-    control.setValue(null);
+    if(control.value === 0) {
+      control.setValue(null);
+    }
   }
   get getImprovementsArrayForImmovable() {
     return <FormArray>this.immovableForm.get('improvement');
