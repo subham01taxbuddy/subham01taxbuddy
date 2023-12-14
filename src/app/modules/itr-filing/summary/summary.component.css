@@ -1,3 +1,13 @@
+.simple-table {
+  width: 100%; /* Set the table width to 100% of the container */
+  border-collapse: collapse; /* Collapse the borders between cells */
+}
+
+.simple-table th, .simple-table td {
+  border: 1px solid #ddd; /* Add a 1px solid border to th and td elements */
+  padding: 8px; /* Add padding to th and td elements for better spacing */
+}
+
 .arrow-icon {
   cursor: pointer;
   transition: transform 0.3s;

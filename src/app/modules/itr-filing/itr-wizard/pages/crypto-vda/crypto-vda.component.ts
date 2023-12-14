@@ -93,6 +93,11 @@ export class CryptoVdaComponent implements OnInit {
     return formGroup;
   }
 
+  updateValidations(vda){
+    this.minDate = (vda as FormGroup).controls['dateOfAcquisition'].value;
+    (vda as FormGroup).controls['dateOfTransfer'].updateValueAndValidity();
+  }
+
   add(item) {
     const vdaArray = <FormArray>this.scheduleVda.get('vdaArray');
     if (item === 'addEmpty') {
@@ -124,9 +129,10 @@ export class CryptoVdaComponent implements OnInit {
   }
 
   getInputValue(index: number, controlName: string) {
-    return (this.scheduleVda.get('vdaArray') as FormArray)
+    let value = (this.scheduleVda.get('vdaArray') as FormArray)
       .at(index)
       .get(controlName).value;
+    return value;
   }
 
   calcInc(index: number) {
@@ -138,7 +144,7 @@ export class CryptoVdaComponent implements OnInit {
       .at(index)
       .get('income');
 
-    incomeInput.setValue(income);
+    incomeInput.setValue(income > 0 ? income : 0);
 
     this.calcTotal();
   }
