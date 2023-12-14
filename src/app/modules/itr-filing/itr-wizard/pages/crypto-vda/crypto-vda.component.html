@@ -66,6 +66,7 @@
                     autocomplete="off"
                     formControlName="dateOfAcquisition"
                     required
+                    (dateChange)="updateValidations(vda)"
                   />
                   <mat-datepicker-toggle
                     matSuffix

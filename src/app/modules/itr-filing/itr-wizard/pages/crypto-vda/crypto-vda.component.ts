@@ -93,6 +93,11 @@ export class CryptoVdaComponent implements OnInit {
     return formGroup;
   }
 
+  updateValidations(vda){
+    this.minDate = (vda as FormGroup).controls['dateOfAcquisition'].value;
+    (vda as FormGroup).controls['dateOfTransfer'].updateValueAndValidity();
+  }
+
   add(item) {
     const vdaArray = <FormArray>this.scheduleVda.get('vdaArray');
     if (item === 'addEmpty') {
