@@ -6937,6 +6937,23 @@ export class SummaryComponent implements OnInit {
     this.profitsInLieuBifurcationExpanded[index] =
       !this.profitsInLieuBifurcationExpanded[index];
   }
+
+  ptiShortTermExpanded: boolean[] = [];
+
+  togglePtiShortTerm(event: Event, index: number) {
+    event.stopPropagation();
+    this.ptiShortTermExpanded[index] =
+      !this.ptiShortTermExpanded[index];
+  }
+
+    ptiLongTermExpanded: boolean[] = [];
+
+  togglePtiLongTerm(event: Event, index: number) {
+    event.stopPropagation();
+    this.ptiLongTermExpanded[index] =
+      !this.ptiLongTermExpanded[index];
+  }
+
 }
 
 function getTotalBusinessIncome(summaryBusinessIncome: any): number {
