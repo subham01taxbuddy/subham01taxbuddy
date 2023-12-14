@@ -19,6 +19,7 @@ export class CryptoVdaComponent implements OnInit {
   loading = false;
   minDate: Date;
   maxDate: Date;
+  maxPurchaseDate: Date;
 
   constructor(private fb: FormBuilder, private utilsService: UtilsService) {}
 
@@ -74,6 +75,12 @@ export class CryptoVdaComponent implements OnInit {
     }
   }
 
+  calMaxPurchaseDate(sellDate) {
+    if (this.utilsService.isNonEmpty(sellDate)) {
+      this.maxPurchaseDate = sellDate;
+    }
+  }
+
   initForm(state?) {
     return this.fb.group({
       vdaArray: this.fb.array([]),
@@ -124,9 +131,10 @@ export class CryptoVdaComponent implements OnInit {
   }
 
   getInputValue(index: number, controlName: string) {
-    return (this.scheduleVda.get('vdaArray') as FormArray)
+    let value = (this.scheduleVda.get('vdaArray') as FormArray)
       .at(index)
       .get(controlName).value;
+    return value;
   }
 
   calcInc(index: number) {
@@ -138,7 +146,7 @@ export class CryptoVdaComponent implements OnInit {
       .at(index)
       .get('income');
 
-    incomeInput.setValue(income);
+    incomeInput.setValue(income > 0 ? income : 0);
 
     this.calcTotal();
   }

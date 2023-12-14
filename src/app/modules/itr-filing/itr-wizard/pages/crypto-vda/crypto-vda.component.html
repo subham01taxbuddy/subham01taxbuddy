@@ -19,8 +19,8 @@
           <thead class="table-header">
             <tr class="table-head">
               <th></th>
-              <th>Date of acquisition (2)</th>
-              <th>Date of transfer (3)</th>
+              <th>Date of transfer (2)</th>
+              <th>Date of acquisition (3)</th>
               <th>
                 Head under which income
                 <br />
@@ -53,28 +53,6 @@
                 </mat-checkbox>
               </td>
 
-              <!-- date of acquisition-->
-              <td>
-                <mat-form-field appearance="outline">
-                  <mat-label>Date of acquisition</mat-label>
-                  <input
-                    [max]="maxDate"
-                    matInput
-                    placeholder="DD/MM/YYYY"
-                    name="dateOfAcquisition[i]"
-                    [matDatepicker]="dateofAcquisition"
-                    autocomplete="off"
-                    formControlName="dateOfAcquisition"
-                    required
-                  />
-                  <mat-datepicker-toggle
-                    matSuffix
-                    [for]="dateofAcquisition"
-                  ></mat-datepicker-toggle>
-                  <mat-datepicker #dateofAcquisition></mat-datepicker>
-                </mat-form-field>
-              </td>
-
               <!-- date of transfer -->
               <td>
                 <mat-form-field appearance="outline">
@@ -88,6 +66,9 @@
                     [matDatepicker]="dateofTransfer"
                     autocomplete="off"
                     formControlName="dateOfTransfer"
+                    (dateChange)="
+                      calMaxPurchaseDate(vda.get('dateOfTransfer').value)
+                    "
                     required
                   />
                   <mat-datepicker-toggle
@@ -95,6 +76,28 @@
                     [for]="dateofTransfer"
                   ></mat-datepicker-toggle>
                   <mat-datepicker #dateofTransfer></mat-datepicker>
+                </mat-form-field>
+              </td>
+
+              <!-- date of acquisition-->
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-label>Date of acquisition</mat-label>
+                  <input
+                    [max]="maxPurchaseDate"
+                    matInput
+                    placeholder="DD/MM/YYYY"
+                    name="dateOfAcquisition[i]"
+                    [matDatepicker]="dateofAcquisition"
+                    autocomplete="off"
+                    formControlName="dateOfAcquisition"
+                    required
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="dateofAcquisition"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #dateofAcquisition></mat-datepicker>
                 </mat-form-field>
               </td>
 
