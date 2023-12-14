@@ -1548,15 +1548,15 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   changeConsetGiven = false;
   confirmChange(event: Event, incomeType: string){
 
-    if (incomeType === 'SEC17_1' && !this.utilsService.isNonZero(this.bifurcationResult.SEC17_1.total)) {
+    if (incomeType === 'SEC17_1' && this.utilsService.isNonZero(this.bifurcationResult.SEC17_1.total)) {
       this.showWarningPopup();
     }
 
-    if(incomeType === 'SEC17_2' && !this.utilsService.isNonZero(this.bifurcationResult.SEC17_2.total)) {
+    if(incomeType === 'SEC17_2' && this.utilsService.isNonZero(this.bifurcationResult.SEC17_2.total)) {
       this.showWarningPopup();
     }
 
-    if(incomeType === 'SEC17_3' && !this.utilsService.isNonZero(this.bifurcationResult.SEC17_3.total)) {
+    if(incomeType === 'SEC17_3' && this.utilsService.isNonZero(this.bifurcationResult.SEC17_3.total)) {
       this.showWarningPopup();
     }
   }
