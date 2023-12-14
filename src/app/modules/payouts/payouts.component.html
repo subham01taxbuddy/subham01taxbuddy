@@ -143,10 +143,18 @@
   move
   away from the page...</span>
 
-<div class="main clearfix">
+<div class="clearfix">
   <div class="main-1">
     <div class="row rowClr-1">
       <div class="col-sm-12">
+        <mat-accordion class="headers-align">
+          <mat-expansion-panel [expanded]="!dataOnLoad">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon> arrow_forward_ios </mat-icon>
+                Filter - Payouts:
+              </mat-panel-title>
+            </mat-expansion-panel-header>
         <div class="row">
           <div class="col-sm-7">
             <div class="filter-box">
@@ -233,6 +241,8 @@
             </div>
           </div>
         </div>
+      </mat-expansion-panel>
+    </mat-accordion>
       </div>
     </div>
     <div class="tableSpc mt-3">

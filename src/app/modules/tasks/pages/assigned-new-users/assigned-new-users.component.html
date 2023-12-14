@@ -105,59 +105,70 @@
   <div class="main-1">
     <div class="row rowClr-1">
       <div class="col-sm-12">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="filter-box">
-              <div class="row">
-                <div class="col-sm-12 bckClr">
-                  <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, 1)"
-                  (sendPrincipleIndividual)="fromSme($event, 2)" (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
-                </div>
-                <div class="col-sm-12">
+        <mat-accordion class="headers-align">
+          <mat-expansion-panel [expanded]="!dataOnLoad">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon> arrow_forward_ios </mat-icon>
+                Filter - My Users (All Services):
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="filter-box">
                   <div class="row">
-                    <div class="col-sm-3 spsTp">
-                      <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
-                        [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
+                    <div class="col-sm-12 bckClr">
+                      <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, 1)"
+                        (sendPrincipleIndividual)="fromSme($event, 2)"
+                        (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
                     </div>
-                    <div *ngIf="itrStatus" class="col-sm-3 spsTp">
-                      <label class="input__label" for="attr">Select Status </label>
-                      <mat-form-field appearance="outline">
-                        <mat-select placeholder="" [(ngModel)]="searchParam.statusId">
-                          <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
-                            {{ status.statusName }}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
+                    <div class="col-sm-12">
+                      <div class="row">
+                        <div class="col-sm-3 spsTp">
+                          <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+                            [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
+                        </div>
+                        <div *ngIf="itrStatus" class="col-sm-3 spsTp">
+                          <label class="input__label" for="attr">Select Status </label>
+                          <mat-form-field appearance="outline">
+                            <mat-select placeholder="" [(ngModel)]="searchParam.statusId">
+                              <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
+                                {{ status.statusName }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-6 spsTp">
+                          <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                            (onChange)="searchByObject($event)"></app-generic-user-filter>
+                        </div>
+                      </div>
                     </div>
-                    <div class="col-sm-6 spsTp">
-                      <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
-                        (onChange)="searchByObject($event)"></app-generic-user-filter>
+
+                    <div class="button-container">
+                      <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                      </button>
+                      <button class="clrLnk-1" (click)="this.resetFilters()">
+                        Clear form
+                      </button>
                     </div>
                   </div>
+
                 </div>
 
-                <div class="button-container">
-                  <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-                  </button>
-                  <button class="clrLnk-1" (click)="this.resetFilters()">
-                    Clear form
-                  </button>
-                </div>
               </div>
-              
+              <!-- <div class="col-sm-4">
+                        <div class="button-container">
+                          <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                          </button>
+                          <button class="clrLnk-1" (click)="this.resetFilters()">
+                            Clear form
+                          </button>
+                        </div>
+                      </div> -->
             </div>
-            
-          </div>
-          <!-- <div class="col-sm-4">
-            <div class="button-container">
-              <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-              </button>
-              <button class="clrLnk-1" (click)="this.resetFilters()">
-                Clear form
-              </button>
-            </div>
-          </div> -->
-        </div>
+          </mat-expansion-panel>
+        </mat-accordion>
       </div>
     </div>
     <div class="tableSpc mt-3">
