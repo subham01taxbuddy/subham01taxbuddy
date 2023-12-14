@@ -105,58 +105,68 @@
           <h4>Missed Chat List:</h4>
         </div>
       </div>
-      <div class="row">
-
-        <div class="col-sm-7">
-          <div class="filter-box">
+      <div class="mrgArdTog2">
+        <mat-accordion class="headers-align">
+          <mat-expansion-panel [expanded]="!dataOnLoad">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon> arrow_forward_ios </mat-icon>
+                Filter - Missed Chat List:
+              </mat-panel-title>
+            </mat-expansion-panel-header>
             <div class="row">
-
-              <div class="col-sm-12 bckClr">
-                <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, 1)"
-                  (sendPrincipleIndividual)="fromSme($event, 2)" (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
-              </div>
-
-              <div class="col-sm-12">
-                <div class="row">
-
-                  <div class="col-sm-4 spsTp">
-                    <mat-form-field appearance="outline">
-                      <mat-label>From Date</mat-label>
-                      <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate" [max]="maxStartDate"
-                        autocomplete="off" (dateChange)="setToDateValidation()" />
-                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                      <mat-datepicker #picker1></mat-datepicker>
-                      <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
-                    </mat-form-field>
-                  </div>
-                  <div class="col-sm-4 spsTp">
-                    <mat-form-field appearance="outline">
-                      <mat-label>To Date</mat-label>
-                      <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxEndDate"
-                        autocomplete="off" />
-                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                      <mat-datepicker #picker2></mat-datepicker>
-                      <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
-                      <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
-                    </mat-form-field>
+              <div class="col-sm-7">
+                <div class="filter-box">
+                  <div class="row">
+                    <div class="col-sm-12 bckClr">
+                      <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, 1)"
+                        (sendPrincipleIndividual)="fromSme($event, 2)"
+                        (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="row">
+                        <div class="col-sm-4 spsTp">
+                          <mat-form-field appearance="outline">
+                            <mat-label>From Date</mat-label>
+                            <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
+                              [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()" />
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                            <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-4 spsTp">
+                          <mat-form-field appearance="outline">
+                            <mat-label>To Date</mat-label>
+                            <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
+                              [max]="maxEndDate" autocomplete="off" />
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                            <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                            <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+
+              <div class="col-sm-5">
+                <div class="button-container">
+                  <button class="srch-btn-1" (click)="showReports()">
+                    <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+                  </button>
+
+                  <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <div class="col-sm-5">
-          <div class="button-container">
-            <button class="srch-btn-1" (click)="showReports()">
-              <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
-            </button>
-
-            <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
-          </div>
-        </div>
+          </mat-expansion-panel>
+        </mat-accordion>
       </div>
     </div>
+
   </div>
 </div>
 
