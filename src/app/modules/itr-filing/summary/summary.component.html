@@ -4117,6 +4117,730 @@
                     </table>
                   </mat-expansion-panel>
 
+                  <!-- ScheduleBFLA -->
+                  <mat-expansion-panel
+                    class="color-panel accordion-border"
+                    *ngIf="
+                      !ITR_JSON.isItrSummaryJsonEdited &&
+                      ITR_JSON.itrSummaryJson &&
+                      finalCalculations?.ScheduleBFLA
+                    "
+                    #ScheduleBFLA
+                  >
+                    <mat-expansion-panel-header class="newclass">
+                      <div
+                        class="font80"
+                        style="width: 100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                      >
+                        <div class="nav nav-stacked">
+                          <div class="col-lg-8 col-md-8 col-sm-8 whieTx">
+                            31. Schedule BFLA
+                          </div>
+                          <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="AdjAr">
+                              <mat-icon *ngIf="!ScheduleBFLA.expanded"
+                                >keyboard_arrow_down
+                              </mat-icon>
+                              <mat-icon *ngIf="ScheduleBFLA.expanded"
+                                >keyboard_arrow_up
+                              </mat-icon>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-expansion-panel-header>
+
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      *ngIf="finalCalculations?.ScheduleBFLA"
+                    >
+                      <thead>
+                        <tr>
+                          <th style="font-weight: bold">1. Sr. No</th>
+                          <th style="font-weight: bold">
+                            2. Head / Source of Income
+                          </th>
+                          <th style="font-weight: bold">
+                            3. Income after set off, if any, of current years
+                            losses as per 5 of Schedule CYLA
+                          </th>
+                          <th style="font-weight: bold">
+                            4. Brought forward loss set off
+                          </th>
+                          <th style="font-weight: bold">
+                            5. Brought forward depreciation set off
+                          </th>
+                          <th style="font-weight: bold">
+                            6. Brought forward allowance under section 35(4) set
+                            off
+                          </th>
+                          <th style="font-weight: bold">
+                            7. Current years income remaining after set off
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr>
+                          <td>
+                            {{ "i" }}
+                          </td>
+                          <td>
+                            {{ "Salaries" }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.Salary?.IncBFLA
+                                ?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.Salary?.IncBFLA
+                                ?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- House property -->
+                        <tr>
+                          <td>
+                            {{ "ii" }}
+                          </td>
+                          <td>
+                            {{ "House Property" }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.HP?.IncBFLA
+                                ?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.HP?.IncBFLA
+                                ?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.HP?.IncBFLA
+                                ?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.HP?.IncBFLA
+                                ?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.HP?.IncBFLA
+                                ?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- Business (excluding speculation income and income from specified business) -->
+                        <tr>
+                          <td>
+                            {{ "iii" }}
+                          </td>
+                          <td>
+                            {{
+                              "Business (excluding speculation income and income from specified business)"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA
+                                ?.BusProfExclSpecProf?.IncBFLA
+                                ?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA
+                                ?.BusProfExclSpecProf?.IncBFLA
+                                ?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA
+                                ?.BusProfExclSpecProf?.IncBFLA
+                                ?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA
+                                ?.BusProfExclSpecProf?.IncBFLA
+                                ?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA
+                                ?.BusProfExclSpecProf?.IncBFLA
+                                ?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- speculation income -->
+                        <tr>
+                          <td>
+                            {{ "iv" }}
+                          </td>
+                          <td>
+                            {{ "Speculation Income" }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.SpeculativeInc
+                                ?.IncBFLA?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.SpeculativeInc
+                                ?.IncBFLA?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.SpeculativeInc
+                                ?.IncBFLA?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.SpeculativeInc
+                                ?.IncBFLA?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.SpeculativeInc
+                                ?.IncBFLA?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- specified business income -->
+                        <tr>
+                          <td>
+                            {{ "v" }}
+                          </td>
+                          <td>
+                            {{ "Specified Business Income" }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.SpecifiedInc
+                                ?.IncBFLA?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.SpecifiedInc
+                                ?.IncBFLA?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.SpecifiedInc
+                                ?.IncBFLA?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.SpecifiedInc
+                                ?.IncBFLA?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.SpecifiedInc
+                                ?.IncBFLA?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- stcg @15% -->
+                        <tr>
+                          <td>
+                            {{ "vi" }}
+                          </td>
+                          <td>
+                            {{ "Short term capital gain @15%" }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCG15Per
+                                ?.IncBFLA?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCG15Per
+                                ?.IncBFLA?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCG15Per
+                                ?.IncBFLA?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCG15Per
+                                ?.IncBFLA?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCG15Per
+                                ?.IncBFLA?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- stcg @30% -->
+                        <tr>
+                          <td>
+                            {{ "vii" }}
+                          </td>
+                          <td>
+                            {{ "Short term capital gain @30%" }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCG30Per
+                                ?.IncBFLA?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCG30Per
+                                ?.IncBFLA?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCG30Per
+                                ?.IncBFLA?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCG30Per
+                                ?.IncBFLA?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCG30Per
+                                ?.IncBFLA?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- stcg @slab rate -->
+                        <tr>
+                          <td>
+                            {{ "viii" }}
+                          </td>
+                          <td>
+                            {{ "Short term capital gain at appicable rates" }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCGAppRate
+                                ?.IncBFLA?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCGAppRate
+                                ?.IncBFLA?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCGAppRate
+                                ?.IncBFLA?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCGAppRate
+                                ?.IncBFLA?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCGAppRate
+                                ?.IncBFLA?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- Short-term capital gain taxable at special rates in India as per DTAA	 -->
+                        <tr>
+                          <td>
+                            {{ "ix" }}
+                          </td>
+                          <td>
+                            {{
+                              "Short-term capital gain taxable at special rates in India as per DTAA"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCGDTAARate
+                                ?.IncBFLA?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCGDTAARate
+                                ?.IncBFLA?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCGDTAARate
+                                ?.IncBFLA?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCGDTAARate
+                                ?.IncBFLA?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.STCGDTAARate
+                                ?.IncBFLA?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- Long term capital gain taxable @ 10%		 -->
+                        <tr>
+                          <td>
+                            {{ "x" }}
+                          </td>
+                          <td>
+                            {{
+                              "Long term capital gain taxable @ 10%	                                                                                                    "
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCG10Per
+                                ?.IncBFLA?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCG10Per
+                                ?.IncBFLA?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCG10Per
+                                ?.IncBFLA?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCG10Per
+                                ?.IncBFLA?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCG10Per
+                                ?.IncBFLA?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- Long term capital gain taxable @ 20%			 -->
+                        <tr>
+                          <td>
+                            {{ "xi" }}
+                          </td>
+                          <td>
+                            {{
+                              "Long term capital gain taxable @ 20%	                                                                                                    "
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCG20Per
+                                ?.IncBFLA?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCG20Per
+                                ?.IncBFLA?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCG20Per
+                                ?.IncBFLA?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCG20Per
+                                ?.IncBFLA?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCG20Per
+                                ?.IncBFLA?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- Long term capital gains taxable at special rates in India as per DTAA				 -->
+                        <tr>
+                          <td>
+                            {{ "xii" }}
+                          </td>
+                          <td>
+                            {{
+                              "Long term capital gains taxable at special rates in India as per DTAA	                                                                                                    "
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCGDTAARate
+                                ?.IncBFLA?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCGDTAARate
+                                ?.IncBFLA?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCGDTAARate
+                                ?.IncBFLA?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCGDTAARate
+                                ?.IncBFLA?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.LTCGDTAARate
+                                ?.IncBFLA?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- Net income from other sources chargeable at normal applicable rates				 -->
+                        <tr>
+                          <td>
+                            {{ "xiii" }}
+                          </td>
+                          <td>
+                            {{
+                              "Net income from other sources chargeable at normal applicable rates	                                                                                                    "
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA
+                                ?.OthSrcExclRaceHorse?.IncBFLA
+                                ?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA
+                                ?.OthSrcExclRaceHorse?.IncBFLA
+                                ?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA
+                                ?.OthSrcExclRaceHorse?.IncBFLA
+                                ?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA
+                                ?.OthSrcExclRaceHorse?.IncBFLA
+                                ?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA
+                                ?.OthSrcExclRaceHorse?.IncBFLA
+                                ?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- Profit from owning and maintaining race horses					 -->
+                        <tr>
+                          <td>
+                            {{ "xiv" }}
+                          </td>
+                          <td>
+                            {{
+                              "Profit from owning and maintaining race horses		                                                                                                    "
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.OthSrcRaceHorse
+                                ?.IncBFLA?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.OthSrcRaceHorse
+                                ?.IncBFLA?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.OthSrcRaceHorse
+                                ?.IncBFLA?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.OthSrcRaceHorse
+                                ?.IncBFLA?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.OthSrcRaceHorse
+                                ?.IncBFLA?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- Income from other sources income taxable at special rates in India as per DTAA				 -->
+                        <tr>
+                          <td>
+                            {{ "xv" }}
+                          </td>
+                          <td>
+                            {{
+                              "Income from other sources income taxable at special rates in India as per DTAA		                                                                                                    "
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.IncOSDTAA
+                                ?.IncBFLA?.IncOfCurYrUndHeadFromCYLA
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.IncOSDTAA
+                                ?.IncBFLA?.BFlossPrevYrUndSameHeadSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.IncOSDTAA
+                                ?.IncBFLA?.BFUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.IncOSDTAA
+                                ?.IncBFLA?.BFAllUs35Cl4Setoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.IncOSDTAA
+                                ?.IncBFLA?.IncOfCurYrAfterSetOffBFLosses
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- Total -->
+                        <tr>
+                          <td>
+                            {{ "xvi" }}
+                          </td>
+                          <td colspan="2">
+                            {{
+                              "Total of brought forward loss set off (2ii + 2iii + 2iv + 2v + 2vi+ 2vii +2viii + 2ix + 2x + 2xi + 2xii + 2xiv)			                                                                                                    "
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.TotalBFLossSetOff
+                                ?.TotBFLossSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.TotalBFLossSetOff
+                                ?.TotUnabsorbedDeprSetoff
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA?.TotalBFLossSetOff
+                                ?.TotAllUs35cl4Setoff
+                            }}
+                          </td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td>{{ "xvii" }}</td>
+                          <td colspan="5">
+                            Current year's income remaining after set off Total
+                            of (5i + 5ii + 5iii + 5iv + 5v+ 5vi + 5vii + 5viii+
+                            5ix + 5x + 5xi + 5xii + 5xiii + 5xiv + 5xv)
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.ScheduleBFLA
+                                ?.IncomeOfCurrYrAftCYLABFLA
+                            }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-expansion-panel>
+
                   <!-- ********************** Gross Total Income (8-9) ********************** -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"

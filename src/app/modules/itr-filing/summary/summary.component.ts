@@ -504,6 +504,7 @@ export class SummaryComponent implements OnInit {
       lossSetOffDuringYear: Number;
       cflTotal: Number;
     };
+    ScheduleBFLA?:any;
     scheduleCflDetails: {
       LossCFFromPrev12thYearFromAY: {
         dateOfFiling: any;
@@ -3334,6 +3335,9 @@ export class SummaryComponent implements OnInit {
               lossSetOffDuringYear: 0,
               cflTotal: 0,
             },
+            
+            ScheduleBFLA:this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBFLA,
+
             scheduleCflDetails: {
               LossCFFromPrev12thYearFromAY: {
                 dateOfFiling:
