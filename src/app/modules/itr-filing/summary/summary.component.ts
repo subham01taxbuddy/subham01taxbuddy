@@ -812,6 +812,7 @@ export class SummaryComponent implements OnInit {
       TotalTaxAttributedAmt?: any;
     };
     SeventhProvisio139?: any;
+    AmtSeventhProvisio139i?: any;
     AmtSeventhProvisio139ii?: any;
     AmtSeventhProvisio139iii?: any;
     clauseiv7provisio139iDtls?: [
@@ -2224,6 +2225,9 @@ export class SummaryComponent implements OnInit {
             SeventhProvisio139:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
                 ?.SeventhProvisio139,
+            AmtSeventhProvisio139i:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139i,
             AmtSeventhProvisio139ii:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
                 ?.AmtSeventhProvisio139ii,
@@ -4224,6 +4228,57 @@ export class SummaryComponent implements OnInit {
             amountRefund:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.Refund?.RefundDue,
+
+            SeventhProvisio139:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.SeventhProvisio139,
+            AmtSeventhProvisio139i:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139i,
+            AmtSeventhProvisio139ii:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139ii,
+            AmtSeventhProvisio139iii:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139iii,
+            clauseiv7provisio139iDtls: this.ITR_JSON.itrSummaryJson['ITR'][
+              this.itrType
+            ]?.FilingStatus?.clauseiv7provisio139iDtls?.map((element) => {
+              const natureValue: any = parseFloat(
+                element?.clauseiv7provisio139iNature
+              );
+              const clauseiv7provisio139iAmount =
+                element?.clauseiv7provisio139iAmount;
+              let clauseiv7provisio139iNature;
+              if (this.itrType === 'ITR3') {
+                if (natureValue === 1) {
+                  clauseiv7provisio139iNature =
+                    'total sales, turnover or gross receipts, as the case may be, of the person in the business exceeds sixty lakh rupees during the previous year';
+                } else if (natureValue === 2) {
+                  clauseiv7provisio139iNature =
+                    'the total gross receipts of the person in profession exceeds ten lakh rupees during the previous year';
+                } else if (natureValue === 3) {
+                  clauseiv7provisio139iNature =
+                    'the aggregate of tax deducted at source and tax collected at source during the previous year, in the case of the person, is twenty-five thousand rupees or more';
+                } else if (natureValue === 4) {
+                  clauseiv7provisio139iNature =
+                    'if his total deposits in a savings bank account is fifty lakh rupees or more, in the previous year';
+                }
+              } else if (this.itrType === 'ITR2') {
+                if (natureValue === 1) {
+                  clauseiv7provisio139iNature =
+                    'the aggregate of tax deducted at source and tax collected at source during the previous year, in the case of the person, is twenty-five thousand rupees or more(fifty thousand for resident senior citizen)';
+                } else if (natureValue === 2) {
+                  clauseiv7provisio139iNature =
+                    'the deposit in one or more savings bank account of the person, in aggregate, is fifty lakh rupees or more, in the previous year';
+                }
+              }
+
+              return {
+                clauseiv7provisio139iNature: clauseiv7provisio139iNature,
+                clauseiv7provisio139iAmount: clauseiv7provisio139iAmount,
+              };
+            }),
 
             ScheduleAMT: {
               TotalIncItemPartBTI:

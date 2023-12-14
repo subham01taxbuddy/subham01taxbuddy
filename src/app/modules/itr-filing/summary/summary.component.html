@@ -143,7 +143,9 @@
             <div>
               <table
                 class="simple-table"
-                *ngIf="finalCalculations?.personalInfo?.JurisdictionResPrevYrDtls"
+                *ngIf="
+                  finalCalculations?.personalInfo?.JurisdictionResPrevYrDtls
+                "
               >
                 <thead>
                   <tr>
@@ -264,6 +266,19 @@
       <div *ngIf="finalCalculations?.SeventhProvisio139 === 'Y'">
         <div class="card__title" style="padding: 10px; font-size: 15px">
           Seventh Provisio Details
+        </div>
+
+        <div
+          class="bxHed flex justify-between"
+          style="margin: 0px; border: 1px solid rgba(59, 130, 246, 0.1)"
+        >
+          <div>
+            Deposited amount or aggregate of amounts exceeding ₹ 1 crore in one
+            or more current account during the previous year
+          </div>
+          <div style="float: right">
+            {{ finalCalculations?.AmtSeventhProvisio139i }}
+          </div>
         </div>
 
         <div
