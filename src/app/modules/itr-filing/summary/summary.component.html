@@ -143,7 +143,9 @@
             <div>
               <table
                 class="simple-table"
-                *ngIf="finalCalculations?.personalInfo?.JurisdictionResPrevYrDtls"
+                *ngIf="
+                  finalCalculations?.personalInfo?.JurisdictionResPrevYrDtls
+                "
               >
                 <thead>
                   <tr>
@@ -264,6 +266,19 @@
       <div *ngIf="finalCalculations?.SeventhProvisio139 === 'Y'">
         <div class="card__title" style="padding: 10px; font-size: 15px">
           Seventh Provisio Details
+        </div>
+
+        <div
+          class="bxHed flex justify-between"
+          style="margin: 0px; border: 1px solid rgba(59, 130, 246, 0.1)"
+        >
+          <div>
+            Deposited amount or aggregate of amounts exceeding ₹ 1 crore in one
+            or more current account during the previous year
+          </div>
+          <div style="float: right">
+            {{ finalCalculations?.AmtSeventhProvisio139i }}
+          </div>
         </div>
 
         <div
@@ -660,7 +675,7 @@
                                 "
                               >
                                 <td colspan="1">
-                                  {{ "Salary 17(1)" }}
+                                  {{ "Salary 17(3)" }}
                                 </td>
                                 <td>
                                   {{
@@ -966,7 +981,7 @@
                             </td>
                           </tr>
                           <tr>
-                            <td>4. Standard Deduction @30%</td>
+                            <td>5. Arrears unrealized rent received</td>
                             <td
                               *ngFor="
                                 let hp of finalCalculations?.houseProperties
@@ -977,7 +992,7 @@
                               Rs
                               {{
                                 utilsService.currencyFormatter(
-                                  hp.hpStandardDeduction
+                                  hp.ArrearsUnrealizedRentRcvd
                                 )
                               }}
                             </td>
@@ -7985,149 +8000,161 @@
                         </tr>
 
                         <!-- row 3 -->
-                        <tr>
-                          <td rowspan="1">
+                        <tr (click)="togglePtiShortTerm($event, i)">
+                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
                             {{ "ai. Short term" }}
                           </td>
-                          <td rowspan="1">
+                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
                             {{ pti?.CapitalGainsPTI?.ShortTermCG?.AmountOfInc }}
                           </td>
-                          <td rowspan="1">
+                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
                             {{
                               pti?.CapitalGainsPTI?.ShortTermCG
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
                             {{
                               pti?.CapitalGainsPTI?.ShortTermCG?.NetIncomeLoss
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
                             {{ pti?.CapitalGainsPTI?.ShortTermCG?.TDSAmount }}
+                            <mat-icon
+                            class="arrow-icon"
+                            (click)="togglePtiShortTerm($event, i)"
+                          >
+                            keyboard_arrow_down
+                          </mat-icon>
                           </td>
                         </tr>
 
                         <!-- row 4 -->
-                        <tr>
-                          <td rowspan="1">
+                        <tr *ngIf="ptiShortTermExpanded[i]">
+                          <td>
                             {{ "aii. Section 111A" }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{
                               pti?.CapitalGainsPTI?.STCG_Sec111A?.AmountOfInc
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{
                               pti?.CapitalGainsPTI?.STCG_Sec111A
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{
                               pti?.CapitalGainsPTI?.STCG_Sec111A?.NetIncomeLoss
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{ pti?.CapitalGainsPTI?.STCG_Sec111A?.TDSAmount }}
                           </td>
                         </tr>
 
                         <!-- row 5 -->
-                        <tr>
-                          <td rowspan="1">
+                        <tr *ngIf="ptiShortTermExpanded[i]">
+                          <td>
                             {{ "aiii. Section 111A" }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{ pti?.CapitalGainsPTI?.STCG_Others?.AmountOfInc }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{
                               pti?.CapitalGainsPTI?.STCG_Others
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{
                               pti?.CapitalGainsPTI?.STCG_Others?.NetIncomeLoss
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{ pti?.CapitalGainsPTI?.STCG_Others?.TDSAmount }}
                           </td>
                         </tr>
 
                         <!-- row 6 -->
-                        <tr>
-                          <td rowspan="1">
+                        <tr (click)="togglePtiLongTerm($event, i)">
+                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
                             {{ "b. Long term" }}
                           </td>
-                          <td rowspan="1">
+                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
                             {{ pti?.CapitalGainsPTI?.LongTermCG?.AmountOfInc }}
                           </td>
-                          <td rowspan="1">
+                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LongTermCG
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LongTermCG?.NetIncomeLoss
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
                             {{ pti?.CapitalGainsPTI?.LongTermCG?.TDSAmount }}
+                            <mat-icon
+                            class="arrow-icon"
+                            (click)="togglePtiLongTerm($event, i)"
+                          >
+                            keyboard_arrow_down
+                          </mat-icon>
                           </td>
                         </tr>
 
                         <!-- row 7 -->
-                        <tr>
-                          <td rowspan="1">
+                        <tr *ngIf="ptiLongTermExpanded[i]">
+                          <td>
                             {{ "bi. Section 112A" }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Sec112A?.AmountOfInc
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Sec112A
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Sec112A?.NetIncomeLoss
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{ pti?.CapitalGainsPTI?.LTCG_Sec112A?.TDSAmount }}
                           </td>
                         </tr>
 
                         <!-- row 8 -->
-                        <tr>
-                          <td rowspan="1">
+                        <tr *ngIf="ptiLongTermExpanded[i]">
+                          <td>
                             {{ "bii. Other than Section 112A" }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{ pti?.CapitalGainsPTI?.LTCG_Others?.AmountOfInc }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Others
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Others?.NetIncomeLoss
                             }}
                           </td>
-                          <td rowspan="1">
+                          <td>
                             {{ pti?.CapitalGainsPTI?.LTCG_Others?.TDSAmount }}
                           </td>
                         </tr>

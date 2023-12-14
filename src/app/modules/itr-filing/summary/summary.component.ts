@@ -812,6 +812,7 @@ export class SummaryComponent implements OnInit {
       TotalTaxAttributedAmt?: any;
     };
     SeventhProvisio139?: any;
+    AmtSeventhProvisio139i?: any;
     AmtSeventhProvisio139ii?: any;
     AmtSeventhProvisio139iii?: any;
     clauseiv7provisio139iDtls?: [
@@ -1042,10 +1043,55 @@ export class SummaryComponent implements OnInit {
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.ITR14IncomeDeductions
                     ]?.IncomeFromSal,
-                  exemptAllowances:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ]?.AllwncExemptUs10?.AllwncExemptUs10Dtls,
+                  exemptAllowances: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ][
+                    this.ITR14IncomeDeductions
+                  ]?.AllwncExemptUs10?.AllwncExemptUs10Dtls?.map((element) => {
+                    let SalNatureDesc = element?.SalNatureDesc;
+                    let SalOthAmount = element?.SalOthAmount;
+
+                    let description =
+                      SalNatureDesc === '10(5)'
+                        ? 'Sec 10(5)-Leave Travel allowance'
+                        : SalNatureDesc === '10(6)'
+                        ? 'Sec 10(6)-Remuneration received as an official, by whatever name called, of an embassy, high commission etc'
+                        : SalNatureDesc === '10(7)'
+                        ? 'Sec 10(7)-Allowances or perquisites paid or allowed as such outside India by the Government to a citizen of India for rendering service outside India'
+                        : SalNatureDesc === '10(10)'
+                        ? 'Sec 10(10)-Death-cum-retirement gratuity received'
+                        : SalNatureDesc === '10(10A)'
+                        ? 'Sec 10(10A)-Commuted value of pension received'
+                        : SalNatureDesc === '10(10AA)'
+                        ? 'Sec 10(10AA)-Earned leave encashment'
+                        : SalNatureDesc === '10(10B)(i)'
+                        ? 'Sec 10(10B)-First proviso - Compensation limit notified by CG in the Official Gazette'
+                        : SalNatureDesc === '10(10B)(ii)'
+                        ? 'Sec 10(10B)-Second proviso - Compensation under scheme approved by the Central Government'
+                        : SalNatureDesc === '10(10C)'
+                        ? 'Sec 10(10C)-Amount received on voluntary retirement or termination of service'
+                        : SalNatureDesc === '10(10CC)'
+                        ? 'Sec 10(10CC)-Tax paid by employer on non-monetary perquisite'
+                        : SalNatureDesc === '10(13A)'
+                        ? 'Sec 10(13A)-House Rent Allowance'
+                        : SalNatureDesc === '10(14)(i)'
+                        ? 'Sec 10(14)-Allowances or benefits not in a nature of perquisite specifically granted and incurred in performance of duties of office or employment'
+                        : SalNatureDesc === '10(14)(ii)'
+                        ? 'Sec 10(14)-Allowances or benefits not in a nature of perquisite specifically granted in performance of duties of office or employment'
+                        : SalNatureDesc === '10(14)(i)(115BAC)'
+                        ? 'Sec 10(14)(i) -Allowances referred in sub-clauses (a) to (c) of sub-rule (1) in Rule 2BB'
+                        : SalNatureDesc === '10(14)(ii)(115BAC)'
+                        ? 'Sec 10(14)(ii) -Transport allowance granted to certain physically handicapped assessee'
+                        : SalNatureDesc === 'EIC'
+                        ? 'Exempt income received by a judge covered under the payment of salaries to Supreme Court/High Court judges Act /Rules'
+                        : SalNatureDesc === 'OTH'
+                        ? 'Any Other'
+                        : 'Others';
+                    return {
+                      SalNatureDesc: description,
+                      SalOthAmount,
+                    };
+                  }),
                 },
               ],
               salaryTotalIncome:
@@ -2224,6 +2270,9 @@ export class SummaryComponent implements OnInit {
             SeventhProvisio139:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
                 ?.SeventhProvisio139,
+            AmtSeventhProvisio139i:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139i,
             AmtSeventhProvisio139ii:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
                 ?.AmtSeventhProvisio139ii,
@@ -2450,8 +2499,55 @@ export class SummaryComponent implements OnInit {
 
                 let exemptAllowances =
                   index === higherEmployerIndex
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][
+                        this.itrType
+                      ]?.ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls?.map(
+                        (element) => {
+                          let SalNatureDesc = element?.SalNatureDesc;
+                          let SalOthAmount = element?.SalOthAmount;
+
+                          let description =
+                            SalNatureDesc === '10(5)'
+                              ? 'Sec 10(5)-Leave Travel allowance'
+                              : SalNatureDesc === '10(6)'
+                              ? 'Sec 10(6)-Remuneration received as an official, by whatever name called, of an embassy, high commission etc'
+                              : SalNatureDesc === '10(7)'
+                              ? 'Sec 10(7)-Allowances or perquisites paid or allowed as such outside India by the Government to a citizen of India for rendering service outside India'
+                              : SalNatureDesc === '10(10)'
+                              ? 'Sec 10(10)-Death-cum-retirement gratuity received'
+                              : SalNatureDesc === '10(10A)'
+                              ? 'Sec 10(10A)-Commuted value of pension received'
+                              : SalNatureDesc === '10(10AA)'
+                              ? 'Sec 10(10AA)-Earned leave encashment'
+                              : SalNatureDesc === '10(10B)(i)'
+                              ? 'Sec 10(10B)-First proviso - Compensation limit notified by CG in the Official Gazette'
+                              : SalNatureDesc === '10(10B)(ii)'
+                              ? 'Sec 10(10B)-Second proviso - Compensation under scheme approved by the Central Government'
+                              : SalNatureDesc === '10(10C)'
+                              ? 'Sec 10(10C)-Amount received on voluntary retirement or termination of service'
+                              : SalNatureDesc === '10(10CC)'
+                              ? 'Sec 10(10CC)-Tax paid by employer on non-monetary perquisite'
+                              : SalNatureDesc === '10(13A)'
+                              ? 'Sec 10(13A)-House Rent Allowance'
+                              : SalNatureDesc === '10(14)(i)'
+                              ? 'Sec 10(14)-Allowances or benefits not in a nature of perquisite specifically granted and incurred in performance of duties of office or employment'
+                              : SalNatureDesc === '10(14)(ii)'
+                              ? 'Sec 10(14)-Allowances or benefits not in a nature of perquisite specifically granted in performance of duties of office or employment'
+                              : SalNatureDesc === '10(14)(i)(115BAC)'
+                              ? 'Sec 10(14)(i) -Allowances referred in sub-clauses (a) to (c) of sub-rule (1) in Rule 2BB'
+                              : SalNatureDesc === '10(14)(ii)(115BAC)'
+                              ? 'Sec 10(14)(ii) -Transport allowance granted to certain physically handicapped assessee'
+                              : SalNatureDesc === 'EIC'
+                              ? 'Exempt income received by a judge covered under the payment of salaries to Supreme Court/High Court judges Act /Rules'
+                              : SalNatureDesc === 'OTH'
+                              ? 'Any Other'
+                              : 'Others';
+                          return {
+                            SalNatureDesc: description,
+                            SalOthAmount,
+                          };
+                        }
+                      )
                     : 0;
 
                 // salary 17 1
@@ -4224,6 +4320,57 @@ export class SummaryComponent implements OnInit {
             amountRefund:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.Refund?.RefundDue,
+
+            SeventhProvisio139:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.SeventhProvisio139,
+            AmtSeventhProvisio139i:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139i,
+            AmtSeventhProvisio139ii:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139ii,
+            AmtSeventhProvisio139iii:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139iii,
+            clauseiv7provisio139iDtls: this.ITR_JSON.itrSummaryJson['ITR'][
+              this.itrType
+            ]?.FilingStatus?.clauseiv7provisio139iDtls?.map((element) => {
+              const natureValue: any = parseFloat(
+                element?.clauseiv7provisio139iNature
+              );
+              const clauseiv7provisio139iAmount =
+                element?.clauseiv7provisio139iAmount;
+              let clauseiv7provisio139iNature;
+              if (this.itrType === 'ITR3') {
+                if (natureValue === 1) {
+                  clauseiv7provisio139iNature =
+                    'total sales, turnover or gross receipts, as the case may be, of the person in the business exceeds sixty lakh rupees during the previous year';
+                } else if (natureValue === 2) {
+                  clauseiv7provisio139iNature =
+                    'the total gross receipts of the person in profession exceeds ten lakh rupees during the previous year';
+                } else if (natureValue === 3) {
+                  clauseiv7provisio139iNature =
+                    'the aggregate of tax deducted at source and tax collected at source during the previous year, in the case of the person, is twenty-five thousand rupees or more';
+                } else if (natureValue === 4) {
+                  clauseiv7provisio139iNature =
+                    'if his total deposits in a savings bank account is fifty lakh rupees or more, in the previous year';
+                }
+              } else if (this.itrType === 'ITR2') {
+                if (natureValue === 1) {
+                  clauseiv7provisio139iNature =
+                    'the aggregate of tax deducted at source and tax collected at source during the previous year, in the case of the person, is twenty-five thousand rupees or more(fifty thousand for resident senior citizen)';
+                } else if (natureValue === 2) {
+                  clauseiv7provisio139iNature =
+                    'the deposit in one or more savings bank account of the person, in aggregate, is fifty lakh rupees or more, in the previous year';
+                }
+              }
+
+              return {
+                clauseiv7provisio139iNature: clauseiv7provisio139iNature,
+                clauseiv7provisio139iAmount: clauseiv7provisio139iAmount,
+              };
+            }),
 
             ScheduleAMT: {
               TotalIncItemPartBTI:
@@ -6790,6 +6937,23 @@ export class SummaryComponent implements OnInit {
     this.profitsInLieuBifurcationExpanded[index] =
       !this.profitsInLieuBifurcationExpanded[index];
   }
+
+  ptiShortTermExpanded: boolean[] = [];
+
+  togglePtiShortTerm(event: Event, index: number) {
+    event.stopPropagation();
+    this.ptiShortTermExpanded[index] =
+      !this.ptiShortTermExpanded[index];
+  }
+
+    ptiLongTermExpanded: boolean[] = [];
+
+  togglePtiLongTerm(event: Event, index: number) {
+    event.stopPropagation();
+    this.ptiLongTermExpanded[index] =
+      !this.ptiLongTermExpanded[index];
+  }
+
 }
 
 function getTotalBusinessIncome(summaryBusinessIncome: any): number {
