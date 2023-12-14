@@ -62,6 +62,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   searchBy: any = {};
   sortMenus = [
     { value: 'userName', name: 'Name' },
+    { value: 'createdDate', name: 'Schedule Call Date' },
   ];
   searchMenus = [
     { value: 'email', name: 'Email' },

@@ -18,6 +18,7 @@ import { SpeedTestService } from 'ng-speed-test';
 import { ReviewService } from 'src/app/modules/review/services/review.service';
 import { environment } from 'src/environments/environment';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
+import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 
 declare let $: any;
 declare function we_login(userId: string);
@@ -53,7 +54,8 @@ export class LoginComponent implements OnInit {
     private requestManager: RequestManager,
     private speedTestService: SpeedTestService,
     private reviewService: ReviewService,
-    private itrMsService: ItrMsService
+    private itrMsService: ItrMsService,
+    private kommunicateSsoService: KommunicateSsoService
   ) {
     NavbarService.getInstance().component_link = this.component_link;
 
@@ -427,10 +429,10 @@ export class LoginComponent implements OnInit {
       (response: any) => {
         this.loading = false;
         if (response.success) {
-          this.utilsService.showSnackBar(response.message);
+          // this.utilsService.showSnackBar(response.message);
           sessionStorage.setItem('kmAuthToken', response?.data?.token);
           if (response?.data?.token) {
-            this.loginKommunicateSdk(response?.data?.token);
+            this.kommunicateSsoService.loginKommunicateSdk(response?.data?.token);
           }
         } else {
           this.utilsService.showSnackBar(response.message);
@@ -440,26 +442,6 @@ export class LoginComponent implements OnInit {
         this.loading = false;
         this.utilsService.showSnackBar('Failed to generate the kommunicate auth token');
       });
-  }
-
-  loginKommunicateSdk(token) {
-    let loginSmeDetails = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    const baseUrl = "https://dashboard-proxy.kommunicate.io";
-    const userEmail = loginSmeDetails[0].email;
-    const userAccessToken = `${token}&appId=${environment.kmAppId}`;
-    let iframe = document.getElementById('km-iframe') as HTMLIFrameElement;
-    if (!iframe) {
-      iframe = document.createElement("iframe");
-      iframe.setAttribute('class', 'iframe-height');
-      iframe.setAttribute('id', 'km-iframe');
-    }
-
-
-    iframe.setAttribute('src', `${baseUrl}/login?email=${userEmail}&loginType=custom&password=${userAccessToken}&showConversationSectionOnly=true`)
-    if (!document.getElementById('km-iframe')) {
-      let viewbox = document.getElementById('km-viewbox');
-      viewbox.append(iframe);
-    }
   }
 
   mode: string = 'SIGN_IN';
@@ -485,9 +467,9 @@ export class LoginComponent implements OnInit {
       this.loading = false;
       sessionStorage.setItem('ALL_PLAN_LIST', JSON.stringify(response));
     },
-    error => {
-      this.loading = false;
-    });
+      error => {
+        this.loading = false;
+      });
 
   }
 }

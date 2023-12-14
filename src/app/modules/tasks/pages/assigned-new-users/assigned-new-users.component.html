@@ -106,7 +106,7 @@
     <div class="row rowClr-1">
       <div class="col-sm-12">
         <div class="row">
-          <div class="col-sm-8">
+          <div class="col-sm-12">
             <div class="filter-box">
               <div class="row">
                 <div class="col-sm-12 bckClr">
@@ -135,10 +135,20 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="button-container">
+                  <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                  </button>
+                  <button class="clrLnk-1" (click)="this.resetFilters()">
+                    Clear form
+                  </button>
+                </div>
               </div>
+              
             </div>
+            
           </div>
-          <div class="col-sm-4">
+          <!-- <div class="col-sm-4">
             <div class="button-container">
               <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
               </button>
@@ -146,7 +156,7 @@
                 Clear form
               </button>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

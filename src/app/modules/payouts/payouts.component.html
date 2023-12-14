@@ -22,8 +22,8 @@
             <div class="col-sm-6 dtTp">
               <mat-label>From Date</mat-label>
               <mat-form-field appearance="outline" class="class1">
-                <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxDate"
-                  autocomplete="off" (dateChange)="setToDateValidation(startDate.value)" />
+                <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate" [max]="maxStartDate"
+                  autocomplete="off" (dateChange)="setToDateValidation()" />
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
                 <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
@@ -33,8 +33,8 @@
             <div class="col-sm-6 dtTp">
               <mat-label>To Date</mat-label>
               <mat-form-field appearance="outline" class="class1">
-                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="toDateMin" [max]="maxDate"
-                  autocomplete="off" />
+                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxEndDate"
+                  autocomplete="off" (dateChange)="setToDateValidation()"/>
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
                 <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
@@ -162,7 +162,7 @@
                       <mat-label>From Date</mat-label>
                       <mat-form-field appearance="outline" class="class1">
                         <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxDate"
-                          autocomplete="off" (dateChange)="setToDateValidation(startDate.value)" />
+                          autocomplete="off" (dateChange)="setToDateValidation()" />
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                         <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>

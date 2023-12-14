@@ -22,13 +22,14 @@
           <div class="row">
             <div class="col-sm-12 bckClr">
               <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
-              (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+                (sendPrincipleIndividual)="fromSme($event,false, true)"
+                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
             </div>
             <div class="col-sm-6 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>From Date</mat-label>
-                <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxStartDate"
-                  autocomplete="off" (dateChange)="setToDateValidation(startDate.value)" />
+                <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
+                  [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()" />
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
                 <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
@@ -37,8 +38,8 @@
             <div class="col-sm-6 spsTp">
               <mat-form-field appearance="outline">
                 <mat-label>To Date</mat-label>
-                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxDate"
-                  autocomplete="off" />
+                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxEndDate"
+                  autocomplete="off" (dateChange)="setToDateValidation()" />
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
                 <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
@@ -121,8 +122,8 @@
                   <div class="col-sm-4 spsTp">
                     <mat-form-field appearance="outline">
                       <mat-label>From Date</mat-label>
-                      <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate" [max]="maxStartDate"
-                        autocomplete="off" (dateChange)="setToDateValidation(startDate.value)" />
+                      <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate" [max]="maxStartDate"
+                        autocomplete="off" (dateChange)="setToDateValidation()" />
                       <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                       <mat-datepicker #picker1></mat-datepicker>
                       <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
@@ -131,7 +132,7 @@
                   <div class="col-sm-4 spsTp">
                     <mat-form-field appearance="outline">
                       <mat-label>To Date</mat-label>
-                      <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxDate"
+                      <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxEndDate"
                         autocomplete="off" />
                       <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                       <mat-datepicker #picker2></mat-datepicker>

@@ -6,10 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./salary.component.scss']
 })
 export class SalaryComponent implements OnInit {
-
+  openSidebar = false;
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  toggleSidebar() {
+    this.openSidebar = !this.openSidebar;
   }
 
 }

@@ -9,9 +9,10 @@ import { Location } from '@angular/common';
 import { DirectCallingComponent } from '../direct-calling/direct-calling.component';
 import { environment } from 'src/environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
-import {ToastMessageService} from "../../../../services/toast-message.service";
-import {UserMsService} from "../../../../services/user-ms.service";
+import { ToastMessageService } from "../../../../services/toast-message.service";
+import { UserMsService } from "../../../../services/user-ms.service";
 import { AddAffiliateIdComponent } from '../add-affiliate-id/add-affiliate-id.component';
+import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
@@ -32,7 +33,7 @@ export class NavbarComponent implements DoCheck {
   component_link_3!: string;
 
   loggedInUserId: number;
-  showAffiliateBtn  = false;
+  showAffiliateBtn = false;
 
   loading: boolean = false;
 
@@ -43,6 +44,7 @@ export class NavbarComponent implements DoCheck {
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService,
     private userMsService: UserMsService,
+    private kommunicateSsoService:KommunicateSsoService
   ) {
     this.loggedInUserId = this.utilsService.getLoggedInUserID();
     this.fetchAffiliateId();
@@ -158,7 +160,7 @@ export class NavbarComponent implements DoCheck {
     this.loading = true;
     Auth.signOut()
       .then(data => {
-
+        this.kommunicateSsoService.logoutKommunicateChat();
         this.smeLogout();
         this.loading = false;
         sessionStorage.clear();
@@ -171,18 +173,18 @@ export class NavbarComponent implements DoCheck {
 
   }
 
-  smeLogout(){
+  smeLogout() {
     // 'https://uat-api.taxbuddy.com/user/sme-login?inActivityTime=30&smeUserId=11079'
     let inActivityTime = environment.idleTimeMins;
     let smeUserId = this.utilsService.getLoggedInUserID();
     let param = `/sme-login?inActivityTime=${inActivityTime}&smeUserId=${smeUserId}&selfLogout=true`;
 
-    this.userMsService.postMethod(param, '').subscribe((response:any)=>{
+    this.userMsService.postMethod(param, '').subscribe((response: any) => {
       this.loading = false;
 
     }, (error) => {
       this.loading = false;
-      console.log('error in sme Logout API',error)
+      console.log('error in sme Logout API', error)
     })
   }
 
