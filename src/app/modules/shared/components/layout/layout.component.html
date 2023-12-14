@@ -8,8 +8,9 @@
         message.</a></strong>&nbsp;
     <button class="clsBtn" (click)="closeNotification()"><i class="fa fa-times" aria-hidden="true"></i></button>
   </div>
-
-  <router-outlet></router-outlet>
+  <div [ngClass]="openSidebar? 'main':'main main-margin'">
+    <router-outlet></router-outlet>
+  </div>
   <!-- <div class="call-icon" style="z-index: 100000;">
     <button mat-mini-fab color="primary" (click)="openCallDialog()">
       <mat-icon>phone</mat-icon>

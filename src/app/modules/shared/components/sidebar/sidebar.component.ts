@@ -2,7 +2,11 @@ import { Component, DoCheck } from '@angular/core';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { UtilsService } from '../../../../services/utils.service';
 import { Router } from '@angular/router';
-import {NavbarService} from "../../../../services/navbar.service";
+import { NavbarService } from "../../../../services/navbar.service";
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { SidebarService } from 'src/app/services/sidebar.service';
+import { MatSidenav } from '@angular/material/sidenav';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -16,11 +20,16 @@ export class SidebarComponent {
   loggedInSme: any;
   roles: any;
   currentPath = '';
+  sidenav!: MatSidenav;
+  subscription: Subscription;
 
   constructor(
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private route: Router,
     private utilsService: UtilsService,
+    private observer: BreakpointObserver,
+    private sidebarService: SidebarService,
+
   ) {
     this.currentPath = route.url;
     this.loggedInUserRoles = this.utilsService.getUserRoles();
@@ -34,6 +43,34 @@ export class SidebarComponent {
     });
     this.setActiveMenu();
   }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.observer.observe(['(max-width: 800px)']).subscribe((res) => {
+        if (res.matches) {
+          this.sidenav.mode = 'over';
+          // this.sidenav.close();
+          this.openSidebar = false;
+        } else {
+          this.sidenav.mode = 'side';
+          // this.sidenav.open();
+          this.openSidebar = true;
+        }
+      });
+    });
+    this.subscription = this.sidebarService.isLoading
+      .subscribe((state) => {
+        debugger
+        if (state) {
+          // this.sidenav.open();
+          this.openSidebar = true;
+        } else {
+          // this.sidenav.close();
+          this.openSidebar = false;
+        }
+      });
+  }
+
 
   setActiveMenu() {
     this.menus.forEach(element => {
@@ -210,14 +247,14 @@ export class SidebarComponent {
       url: null,
       roles: [],
       submenu: [
-        { name: 'Calling Report', url: '/reports/calling-reports', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
-        { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
-        { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
+        { name: 'Calling Report', url: '/reports/calling-reports', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         // { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
-        { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
+        { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         // { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
-        { name: 'Missed Inbound Calls', url: '/reports/missed-inbound-calls-list', roles: ['ROLE_LEADER','ROLE_FILER'] },
-        { name: 'Missed Chat List', url: '/reports/missed-chat-list', roles: ['ROLE_LEADER','ROLE_FILER'] },
+        { name: 'Missed Inbound Calls', url: '/reports/missed-inbound-calls-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
+        { name: 'Missed Chat List', url: '/reports/missed-chat-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
       ]
     },
     {

@@ -90,42 +90,51 @@
 <div class="main-1">
   <div class="row rowClr-1">
     <div class="col-sm-12">
-      <div class="row">
-        <div class="col-sm-7">
-          <div class="filter-box">
-            <div class="row">
+      <mat-accordion class="headers-align">
+        <mat-expansion-panel [expanded]=false>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon> arrow_forward_ios </mat-icon>
+              Filter - Unassigned SME:
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="row">
+            <div class="col-sm-7">
+              <div class="filter-box">
+                <div class="row">
 
-              <div class="col-sm-6 spsTp">
-                <label class="input__label" for="attr">Select attribute</label>
-                <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey
-                  [ngClass]="{'error': showError && (!key || !searchVal)}">
-                  <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
-                    {{drop.name}}</option>
-                </select>
-              </div>
-              <div class="col-sm-6 spsTp">
-                <label class="input__label" for="attr">Enter value</label>
-                <div class="input__select">
-                  <input type="text" class="select__box ogp_select" style="background-image:none" [(ngModel)]="searchVal"
-                    name="searchVal" [ngClass]="{'error': showError && (!key || !searchVal)}" />
+                  <div class="col-sm-6 spsTp">
+                    <label class="input__label" for="attr">Select attribute</label>
+                    <select class="select__box ogp_select" (change)="clearValue()" [(ngModel)]="key" #advanceSearchKey
+                      [ngClass]="{'error': showError && (!key || !searchVal)}">
+                      <option *ngFor="let drop of searchMenus" class="un-select-list" [value]="drop.value">
+                        {{drop.name}}</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-6 spsTp">
+                    <label class="input__label" for="attr">Enter value</label>
+                    <div class="input__select">
+                      <input type="text" class="select__box ogp_select" style="background-image:none"
+                        [(ngModel)]="searchVal" name="searchVal"
+                        [ngClass]="{'error': showError && (!key || !searchVal)}" />
+                    </div>
+                  </div>
                 </div>
               </div>
-
-
-
+            </div>
+            <div class="col-sm-5">
+              <div class="button-container">
+                <button class="srch-btn-1" (click)="advanceSearch(advanceSearchKey.value)"><i class="fa fa-search"
+                    aria-hidden="true"></i> Search
+                </button>
+                <button class="clrLnk-1" (click)="this.resetFilters()">
+                  Clear form
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-sm-5">
-          <div class="button-container">
-            <button class="srch-btn-1" (click)="advanceSearch(advanceSearchKey.value)"><i class="fa fa-search" aria-hidden="true"></i> Search
-            </button>
-            <button class="clrLnk-1" (click)="this.resetFilters()">
-              Clear form
-            </button>
-          </div>
-        </div>
-      </div>
+        </mat-expansion-panel>
+      </mat-accordion>
     </div>
   </div>
   <div class="tableSpc mt-3">
@@ -133,13 +142,11 @@
       <div class="col-sm-12 ">
         <div class="row">
           <div class="col-sm-5">
-            <app-generic-sorting [sortingParameter]="sortMenus"
-                  (onChange)="sortByObject($event)"></app-generic-sorting>
+            <app-generic-sorting [sortingParameter]="sortMenus" (onChange)="sortByObject($event)"></app-generic-sorting>
           </div>
         </div>
       </div>
     </div>
-
     <div>
       <div class="row">
         <div class="col-sm-8 row">
@@ -151,7 +158,6 @@
           <div class="count1">Total Count: <span class="txClr1">{{this.config.totalItems }}</span></div>
         </div>
       </div>
-
       <table>
         <tr *ngFor="let item of smeInfo | paginate:config"></tr>
       </table>

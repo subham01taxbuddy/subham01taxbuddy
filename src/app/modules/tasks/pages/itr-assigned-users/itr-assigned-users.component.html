@@ -110,59 +110,70 @@
 
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
-<div class="main clearfix">
+<div class="clearfix">
   <div class="main-1">
     <div class="row rowClr-1">
       <div class="col-sm-12">
-        <div class="row">
-          <div class="col-sm-8">
-            <div class="filter-box">
-              <div class="row">
-                <div class="col-sm-12">
-                  <section class="example-section checkbox-right">
-                    <div class="checkbox-group ">
-                      <mat-checkbox class="ft-18" [formControl]="unAssignedUsersView" [disabled]="disableCheckboxes"
-                    *ngIf="loggedInUserRoles.includes('ROLE_ADMIN') || loggedInUserRoles.includes('ROLE_LEADER')"
-                    (change)="onCheckBoxChange()">Unassigned Users</mat-checkbox>
-                    </div>
-                  </section>
-                </div>
-                <div class="col-sm-12 bckClr">
-                  <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, 1)"
-                    (sendPrincipleIndividual)="fromSme($event, 2)" (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
-                </div>
-                <div class="col-sm-12">
+        <mat-accordion class="headers-align">
+          <mat-expansion-panel [expanded]="!dataOnLoad">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon> arrow_forward_ios </mat-icon>
+                Filter - ITR Assigned User:
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="filter-box">
                   <div class="row">
-
-                    <div *ngIf="itrStatus" class="col-sm-3 spsTp">
-                      <label class="input__label" for="attr">Select Status </label>
-                      <mat-form-field appearance="outline">
-                        <mat-select placeholder="" [(ngModel)]="searchParam.statusId">
-                          <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
-                            {{ status.statusName }}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
+                    <div class="col-sm-12">
+                      <section class="example-section checkbox-right">
+                        <div class="checkbox-group ">
+                          <mat-checkbox class="ft-18" [formControl]="unAssignedUsersView" [disabled]="disableCheckboxes"
+                            *ngIf="loggedInUserRoles.includes('ROLE_ADMIN') || loggedInUserRoles.includes('ROLE_LEADER')"
+                            (change)="onCheckBoxChange()">Unassigned Users</mat-checkbox>
+                        </div>
+                      </section>
                     </div>
-                    <div class="col-sm-9 spsTp">
-                      <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
-                        (onChange)="searchByObject($event)"></app-generic-user-filter>
+                    <div class="col-sm-12 bckClr">
+                      <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, 1)"
+                        (sendPrincipleIndividual)="fromSme($event, 2)"
+                        (sendFiler)="fromSme($event,3)"></app-sme-list-drop-down>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="row">
+
+                        <div *ngIf="itrStatus" class="col-sm-3 spsTp">
+                          <label class="input__label" for="attr">Select Status </label>
+                          <mat-form-field appearance="outline">
+                            <mat-select placeholder="" [(ngModel)]="searchParam.statusId">
+                              <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
+                                {{ status.statusName }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-9 spsTp">
+                          <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                            (onChange)="searchByObject($event)"></app-generic-user-filter>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <div class="col-sm-4">
+                <div class="button-container">
+                  <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                  </button>
+                  <button class="clrLnk-1" (click)="this.resetFilters()">
+                    Clear form
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="button-container">
-              <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-              </button>
-              <button class="clrLnk-1" (click)="this.resetFilters()">
-                Clear form
-              </button>
-            </div>
-          </div>
-        </div>
+          </mat-expansion-panel>
+        </mat-accordion>
       </div>
     </div>
     <div class="tableSpc mt-3">
@@ -173,11 +184,14 @@
               <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                 (onChange)="sortByObject($event)"></app-generic-sorting>
             </div>
-            <div class="col-sm-7" *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
+            <div class="col-sm-7"
+              *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
               <button class="bulk-buttons bulk spRt" style="float:right"
-              (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk Re-Assignment to Filer</span></button>
+                (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk
+                  Re-Assignment to Filer</span></button>
               <button class="bulk-buttons bulk spRt" style="float:right"
-              (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk Re-Assignment to Leader</span></button>
+                (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk
+                  Re-Assignment to Leader</span></button>
             </div>
           </div>
         </div>

@@ -23,6 +23,7 @@ import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { CalculatorsComponent } from './calculators/calculators.component';
 import { BreakUpComponent } from './break-up/break-up.component';
+import {ConfirmDialogComponent} from "../../shared/components/confirm-dialog/confirm-dialog.component";
 
 declare let $: any;
 
@@ -223,7 +224,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     private AllSalaryIncomeComponent: AllSalaryIncomeComponent,
     private matDialog: MatDialog,
     private overlay: Overlay,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private dialog: MatDialog
   ) {
     super();
     console.log('nav data', this.router.getCurrentNavigation()?.extras?.state);
@@ -261,8 +263,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         upload: [],
         calculators: null,
       };
+      this.changeConsetGiven = true;
     } else {
       this.localEmployer = this.ITR_JSON.employers[this.currentIndex];
+      this.bifurcationResult = this.utilsService.getBifurcation(this.localEmployer);
     }
   }
 
@@ -1543,6 +1547,39 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     }
   }
 
+  changeConsetGiven = false;
+  confirmChange(event: Event, incomeType: string){
+
+    if (incomeType === 'SEC17_1' && this.utilsService.isNonZero(this.bifurcationResult.SEC17_1.total)) {
+      this.showWarningPopup();
+    }
+
+    if(incomeType === 'SEC17_2' && this.utilsService.isNonZero(this.bifurcationResult.SEC17_2.total)) {
+      this.showWarningPopup();
+    }
+
+    if(incomeType === 'SEC17_3' && this.utilsService.isNonZero(this.bifurcationResult.SEC17_3.total)) {
+      this.showWarningPopup();
+    }
+  }
+
+  showWarningPopup(){
+    if(this.changeConsetGiven){
+      return;
+    }
+    this.changeConsetGiven = false;
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Warning!! Data will be removed!',
+        message: 'Updating gross value will remove bifurcation.',
+        showActions: false
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      this.changeConsetGiven = true;
+    });
+  }
+
   editEmployerDetails(index) {
     this.employerDetailsFormGroup.reset();
     this.employerDetailsFormGroup = this.createEmployerDetailsFormGroup();
@@ -1733,7 +1770,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         data: this.ITR_JSON.employers[this.currentIndex],
         index: this.currentIndex,
         typeIndex: i,
-        valueChanged: this.valueChanged,
+        valueChanged: this.changeConsetGiven,
       },
       closeOnNavigation: true,
       disableClose: false,
@@ -1742,6 +1779,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
+        this.changeConsetGiven = false;
         console.log('BifurcationComponent=', result);
         if (result.type === 'perquisites') {
           this.bifurcationResult.SEC17_2.total = result?.total;
