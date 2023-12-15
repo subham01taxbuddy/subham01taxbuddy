@@ -9869,7 +9869,24 @@
                               <i class="material-icons" style="font-size: 15px"
                                 >₹</i
                               >&nbsp;{{
-                                utilsService.currencyFormatter(exempt.OthAmount)
+                                utilsService.currencyFormatter(exempt.OthAmount - finalCalculations?.giftExemptIncome ? finalCalculations?.giftExemptIncome : 0)
+                              }}
+                            </td>
+                          </tr>
+                          <tr
+                            *ngIf="
+                              finalCalculations?.giftExemptIncome &&
+                              finalCalculations?.giftExemptIncome > 0
+                            "
+                          >
+                            <td>Gift u/s 56(2)(x)</td>
+                            <td class="">
+                              <i class="material-icons" style="font-size: 15px"
+                                >₹</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.giftExemptIncome
+                                )
                               }}
                             </td>
                           </tr>

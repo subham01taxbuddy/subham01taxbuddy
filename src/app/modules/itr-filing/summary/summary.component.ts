@@ -4578,6 +4578,12 @@ export class SummaryComponent implements OnInit {
               ],
               total: 0,
             },
+            
+            giftExemptIncome: this.ITR_JSON.itrSummaryJson['ITR'][
+              this.itrType
+            ]?.ScheduleEI?.OthersInc?.OthersIncDtls?.find(
+              (item) => item.OthNatOfInc === 'Gift U/S 56(2)(X)'
+            )?.OthAmount,
           };
           console.log(
             this.finalCalculations,
