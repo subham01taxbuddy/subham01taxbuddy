@@ -2,7 +2,7 @@
   <div class="row rowClr-1">
     <div class="col-sm-12">
       <div class="row">
-        <div class="col-sm-7">
+        <div class="col-sm-12">
           <div class="filter-box">
             <div class="row">
               <div class="col-sm-12 bckClr">
@@ -11,7 +11,7 @@
               </div>
               <div class="col-sm-12">
                 <div class="row">
-                  <div class="col-sm-4 spsTp ">
+                  <div class="col-sm-6 spsTp ">
                     <mat-form-field appearance="outline">
                       <mat-label>Start Date:</mat-label>
           <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate" [max]="maxStartDate"
@@ -21,7 +21,7 @@
                       <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
                     </mat-form-field>
                   </div>
-                  <div class="col-sm-4 spsTp ">
+                  <div class="col-sm-6 spsTp ">
                     <mat-form-field appearance="outline">
                       <mat-label>End Date:</mat-label>
           <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxEndDate"
@@ -34,21 +34,20 @@
                   </div>
                 </div>
               </div>
+              <div class="button-container">
+                <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                </button>
+                <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+                  <i class="fa fa-download" aria-hidden="true"></i> Download File
+                </button>
+                <button class="clrLnk-1" (click)="this.resetFilters()">
+                  Clear form
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-sm-5">
-          <div class="button-container">
-            <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-            </button>
-            <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
-              <i class="fa fa-download" aria-hidden="true"></i> Download File
-            </button>
-            <button class="clrLnk-1" (click)="this.resetFilters()">
-              Clear form
-            </button>
-          </div>
-        </div>
+       
       </div>
     </div>
   </div>

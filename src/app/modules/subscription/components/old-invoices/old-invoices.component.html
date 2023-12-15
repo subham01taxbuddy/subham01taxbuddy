@@ -117,7 +117,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div class="row">
-            <div class="col-sm-7">
+            <div class="col-sm-12">
               <div class="filter-box">
                 <div class="row">
                   <div class="col-sm-4 ">
@@ -166,23 +166,20 @@
                     <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                       (onChange)="searchByObject($event)"></app-generic-user-filter>
                   </div>
-
+                  <div class="button-container">
+                    <button class="srch-btn-1" [disabled]="loading" (click)="getInvoices()">
+                      <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
+                    </button>
+                    <button class="dwldBtn-1" [disabled]="loading" (click)="downloadInvoicesSummary()">
+                      <i class="fa fa-download" aria-hidden="true"></i> Download File
+                    </button>
+                    <button class="clrLnk-1" [disabled]="loading" (click)="resetFilters()">Clear form</button>
+    
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-sm-5">
-
-              <div class="button-container">
-                <button class="srch-btn-1" [disabled]="loading" (click)="getInvoices()">
-                  <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
-                </button>
-                <button class="dwldBtn-1" [disabled]="loading" (click)="downloadInvoicesSummary()">
-                  <i class="fa fa-download" aria-hidden="true"></i> Download File
-                </button>
-                <button class="clrLnk-1" [disabled]="loading" (click)="resetFilters()">Clear form</button>
-
-              </div>
-            </div>
+        
           </div>
         </mat-expansion-panel>
       </mat-accordion>

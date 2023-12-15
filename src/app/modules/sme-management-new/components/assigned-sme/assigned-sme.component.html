@@ -180,7 +180,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div class="row">
-            <div class="col-sm-7">
+            <div class="col-sm-12">
               <div class="filter-box">
                 <div class="row">
                   <div class="col-sm-12 bckClr" *ngIf="roles.includes('ROLE_LEADER') || roles.includes('ROLE_ADMIN')">
@@ -230,22 +230,21 @@
 
                     </div>
                   </div>
+                  <div class="button-container">
+                    <button class="srch-btn-1" (click)="advanceSearch()"><i class="fa fa-search" aria-hidden="true"></i>
+                      Search
+                    </button>
+                    <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+                      <i class="fa fa-download" aria-hidden="true"></i> Download File
+                    </button>
+                    <button class="clrLnk-1" (click)="this.resetFilters()">
+                      Clear form
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-sm-5">
-              <div class="button-container">
-                <button class="srch-btn-1" (click)="advanceSearch()"><i class="fa fa-search" aria-hidden="true"></i>
-                  Search
-                </button>
-                <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
-                  <i class="fa fa-download" aria-hidden="true"></i> Download File
-                </button>
-                <button class="clrLnk-1" (click)="this.resetFilters()">
-                  Clear form
-                </button>
-              </div>
-            </div>
+           
           </div>
         </mat-expansion-panel>
       </mat-accordion>

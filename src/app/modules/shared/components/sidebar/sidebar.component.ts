@@ -259,7 +259,7 @@ export class SidebarComponent {
     },
     {
       name: 'Other Report', active: false, url: null, roles: ['ROLE_ADMIN'],
-      icon: '/menu/partner.png',
+      icon: 'invoice.png',
       submenu: [
         { name: 'Proforma Invoice', url: '/reports/proforma-invoice', roles: [] },
         { name: 'Payment Received', url: '/reports/payment-received', roles: [] },

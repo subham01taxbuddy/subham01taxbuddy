@@ -105,7 +105,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-12">
               <div class="filter-box">
                 <div class="row">
                   <div class="col-sm-12 bckClr">
@@ -131,21 +131,18 @@
                     <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                       (onChange)="searchByObject($event)"></app-generic-user-filter>
                   </div>
+                  <div class="button-container">
+                    <button class="srch-btn-1" [disabled]="loading" (click)="applyFilter()">
+                      <i class="fas fa-search" aria-hidden="true"></i> Search
+                    </button>
+                    <button class="clrLnk-1" [disabled]="loading" (click)="resetFilters()">
+                      Clear form
+                    </button>    
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-sm-4">
-              <div class="button-container">
-                <button class="srch-btn-1" [disabled]="loading" (click)="applyFilter()">
-                  <i class="fas fa-search" aria-hidden="true"></i> Search
-                </button>
-                <button class="clrLnk-1" [disabled]="loading" (click)="resetFilters()">
-                  Clear form
-                </button>
-
-              </div>
-
-            </div>
+    
           </div>
         </mat-expansion-panel>
       </mat-accordion>
