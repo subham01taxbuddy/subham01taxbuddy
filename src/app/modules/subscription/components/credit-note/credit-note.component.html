@@ -149,12 +149,12 @@
                   <i class="fa fa-download" aria-hidden="true"></i> Download File
                 </button>
                 <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
-    
+
               </div>
             </div>
           </div>
         </div>
-      
+
       </div>
     </mat-expansion-panel>
   </mat-accordion>
@@ -164,10 +164,13 @@
 
     <div>
       <div class="row">
-        <div class="col-sm-9 row">
+        <div class="col-sm-8 row">
           <div class="table-info-text col-sm-4">
             Credit Note Details:
           </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="count1"> Total Count: <span class="txClr1">{{ this.config.totalItems }}</span></div>
         </div>
       </div>
       <table>

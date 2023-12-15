@@ -1,835 +1,576 @@
-<div class="mrgArd">
-  <mat-accordion class="headers-align">
-    <mat-expansion-panel hideToggle [expanded]="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon> arrow_forward_ios </mat-icon>
-          Balance Sheet
-        </mat-panel-title>
-      </mat-expansion-panel-header>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
-      <ngx-loading
-        [show]="loading"
-        [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-      ></ngx-loading>
-
-      <form [formGroup]="natOfBusinessDtlForm" style="margin: 0px 20px">
-        <div class="row bdrBtm" style="align-items: center">
-          <div class="col-sm-6">
-            <div class="titTx1">
-              Nature of Business (Other than 44AD, 44ADA,44AE)
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <button
-              type="button"
-              class="new-add btnRt"
-              (click)="addNatOfBusinessForm()"
-            >
-              + Add More
-            </button>
-          </div>
-        </div>
-
-        <div
-          formArrayName="natOfBusinessDtlsArray"
-          style="height: 100%; padding-top: 5px; box-sizing: border-box"
-        >
-          <div
-            *ngFor="
-              let income of getnatOfBusinessDtlsArray.controls
-                | paginate : config;
-              let i = index
-            "
-            [formGroupName]="fieldGlobalIndex(i)"
-          >
-            <div class="row specBk">
-              <div class="col-sm-1">
-                <mat-checkbox
-                  name="hasEdit[i]"
-                  formControlName="hasEdit"
-                  class="tpBtn1"
-                >
-                </mat-checkbox>
-              </div>
-
-              <div class="col-sm-3">
-                <app-business-input-autocomplete
-                  [businessType]="'ALL'"
-                  [selectedInput]="
-                    natOfBusinessDtlsArray.controls[i].get('natureOfBusiness')
-                      .value
-                  "
-                  (businessSelected)="businessClicked($event, i)"
-                >
-                </app-business-input-autocomplete>
-              </div>
-
-              <div class="col-sm-3">
-                <mat-label>Trade Name</mat-label>
-                <mat-form-field appearance="outline">
-                  <input
-                    formControlName="tradeName"
-                    matInput
-                    name="tradeName[i]"
-                    class="input-field"
-                  />
-                </mat-form-field>
-              </div>
-              <div class="col-sm-4">
-                <mat-label>Description</mat-label>
-                <mat-form-field appearance="outline">
-                  <input
-                    formControlName="businessDescription"
-                    matInput
-                    name="businessDescription[i]"
-                    class="input-field"
-                  />
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-
-      <div
-        class="row spsTp bdrTp"
-        style="margin: 0px 20px; align-items: center"
-      >
-        <div class="col-sm-3">
-          <button
-            type="submit"
-            class="delete-btn"
-            (click)="deleteArray()"
-            [disabled]="!specSelected()"
-          >
-            <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-          </button>
-        </div>
-        <div class="col-sm-6 txt-center">
-          <table>
-            <tr
-              *ngFor="
-                let item of getnatOfBusinessDtlsArray.controls
-                  | paginate : config
-              "
-            ></tr>
-          </table>
-          <pagination-controls
-            (pageChange)="pageChanged($event)"
-          ></pagination-controls>
-        </div>
+<div class="page-wrapper">
+  <main>
+    <div class="frameC">
+      <div class="div">
+        <div class="text-wrapper"> Balance Sheet</div>
+        <div class="mingcute-down-fill"></div>
       </div>
+      <div class="space">
+        <div class="wrapper">
+          <div class="div-4">
+            <div class="frame-wrapper-2A">
+              <div class="accordion" id="myAccordion">
 
-      <div
-        [class.editForm]="!sheetData?.editForm"
-        *ngIf="this.ITR_JSON.liableSection44AAflag === 'Y'"
-      >
-        <form id="commonValidForm">
-          <div class="col-sm-12 blsArnd1">
-            <div class="titTxB">
-              Provide values as per balance sheet as on 31/03/{{
-                this.ITR_JSON.assessmentYear.substring(0, 4)
-              }}. These are mandatory to be filled as per income tax return.
-            </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="heading3">
+                    <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse3">Nature of Business (Other than 44AD, 44ADA,44AE)</button>
 
-            <div class="row">
-              <div class="col-sm-6">
-                <!-- Table Starts -->
-                <div class="container">
-                  <div class="row">
-                    <div class="col-sm-6 tabBdrH">Liabilities</div>
-                    <div class="col-sm-6 tabBdrH">Amount</div>
-                    <div class="col-sm-6 tabBdr">
-                      Partner’s/Member’s capital or own capital
-                    </div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(
-                              assetLiabilitiesForm.controls['membersOwnCapital']
-                            )
-                          "
-                          matInput
-                          placeholder="Partner’s/Member’s capital or own capital"
-                          name="membersOwnCapital"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="calculateTotal1()"
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'membersOwnCapital'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdr">Secured loan</div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(assetLiabilitiesForm.controls['securedLoans'])
-                          "
-                          matInput
-                          placeholder="Secured loan"
-                          name="securedLoans"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="calculateTotal1()"
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'securedLoans'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdr">Unsecured loan</div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(
-                              assetLiabilitiesForm.controls['unSecuredLoans']
-                            )
-                          "
-                          matInput
-                          placeholder="Unsecured loan"
-                          name="unSecuredLoans"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="calculateTotal1()"
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'unSecuredLoans'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdr">Advances</div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(assetLiabilitiesForm.controls['advances'])
-                          "
-                          matInput
-                          placeholder="Advances"
-                          name="Advances"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="calculateTotal1()"
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls['advances'].hasError(
-                              'pattern'
-                            )
-                          "
-                          >Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdr">Sundry creditors*</div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(
-                              assetLiabilitiesForm.controls[
-                                'sundryCreditorsAmount'
-                              ]
-                            )
-                          "
-                          matInput
-                          placeholder="Sundry creditors"
-                          name="sundryCreditorsAmount"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="calculateTotal1()"
-                          required
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'sundryCreditorsAmount'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdr">Other liabilities</div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(
-                              assetLiabilitiesForm.controls['otherLiabilities']
-                            )
-                          "
-                          matInput
-                          placeholder="Other liabilities"
-                          name="otherLiabilities"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="calculateTotal1()"
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'otherLiabilities'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdr blnkTbl"></div>
-                    <div class="col-sm-6 tabBdr blnkTbl"></div>
-                    <div class="col-sm-6 tabBdr blnkTbl"></div>
-                    <div class="col-sm-6 tabBdr blnkTbl"></div>
-                    <div class="col-sm-6 tabBdrH">Total Liabilities:</div>
-                    <div class="col-sm-6 tabBdrH">
-                      ₹ {{ utilsService.currencyFormatter(total1) }}
+                  </h2>
+
+                  <div id="collapse3" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                    <div class="accordion__item-body">
+                      <form [formGroup]="natOfBusinessDtlForm">
+                        <div class="pre-box1">
+                          <div class="hdByr-L">
+                            &nbsp; </div>
+                          <div class="hdByr-R">
+                            <div class="Bx4">
+                              <div class="Bx4L">
+                                <button type="submit" (click)="deleteArray()" [disabled]="!specSelected()">
+                                  <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
+                                </button>
+                              </div>
+                              <div class="Bx4R">
+                                <button type="button" class="addAno" (click)="addNatOfBusinessForm()"> + Add Another
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row" formArrayName="natOfBusinessDtlsArray">
+                          <div *ngFor="
+                          let income of getnatOfBusinessDtlsArray.controls
+                            | paginate : config;
+                          let i = index
+                        " [formGroupName]="fieldGlobalIndex(i)">
+                            <div class=" gray_box">
+                              <div class="div-6 ">
+                                <div class="col-sm-1 spsTp">
+                                  <mat-checkbox name="hasEdit[i]" formControlName="hasEdit" class="tpBtn1">
+                                  </mat-checkbox>
+                                </div>
+
+                                <div class="form-field">
+                                  <app-business-input-autocomplete [businessType]="'ALL'" [selectedInput]="
+                                  natOfBusinessDtlsArray.controls[i].get('natureOfBusiness')
+                                    .value
+                                " (businessSelected)="businessClicked($event, i)">
+                                  </app-business-input-autocomplete>
+                                </div>
+                                <div class="form-field">
+                                  <div><span class="normal_text">Trade Name </span> </div>
+                                  <mat-form-field appearance="outline">
+                                    <input formControlName="tradeName" matInput name="tradeName[i]"
+                                      class="input-field" />
+                                  </mat-form-field>
+                                </div>
+                                <div class="form-field">
+                                  <div><span class="normal_text">Business Description</span></div>
+                                  <mat-form-field appearance="outline">
+                                    <input formControlName="businessDescription" matInput name="businessDescription[i]"
+                                      class="input-field" />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                      <div class="row spsTp bdrTp" style="align-items: center">
+                        <div class="col-sm-6 txt-center">
+                          <table>
+                            <tr *ngFor="let item of getnatOfBusinessDtlsArray.controls | paginate : config"></tr>
+                          </table>
+                          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
                 </div>
-                <!-- Table Ends -->
-              </div>
-              <div class="col-sm-6">
-                <!-- Table Starts -->
-                <div class="container">
-                  <div class="row">
-                    <div class="col-sm-6 tabBdrH">Assets</div>
-                    <div class="col-sm-6 tabBdrH">Amount</div>
-                    <div class="col-sm-6 tabBdr">Fixed assets</div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(assetLiabilitiesForm.controls['fixedAssets'])
-                          "
-                          matInput
-                          placeholder="Fixed assets"
-                          name="fixedAssets"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="
-                            calculateTotal2();
-                            showPopUp(
-                              assetLiabilitiesForm.controls['fixedAssets'].value
-                            )
-                          "
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'fixedAssets'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdr">Inventories*</div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(assetLiabilitiesForm.controls['inventories'])
-                          "
-                          matInput
-                          placeholder="Inventories"
-                          name="Inventories"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="calculateTotal2()"
-                          required
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'inventories'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdr">Sundry debtors*</div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(
-                              assetLiabilitiesForm.controls[
-                                'sundryDebtorsAmount'
-                              ]
-                            )
-                          "
-                          matInput
-                          placeholder="Sundry debtors"
-                          name="sundryDebtorsAmount"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="calculateTotal2()"
-                          required
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'sundryDebtorsAmount'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdr">Balance with bank</div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(
-                              assetLiabilitiesForm.controls['balanceWithBank']
-                            )
-                          "
-                          matInput
-                          placeholder="Balance with bank"
-                          name="balanceWithBank"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="calculateTotal2()"
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'balanceWithBank'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdr">Cash in hand*</div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(assetLiabilitiesForm.controls['cashInHand'])
-                          "
-                          matInput
-                          placeholder="Cash in hand"
-                          name="cashInHand"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="calculateTotal2()"
-                          required
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'cashInHand'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdr">Loans and advance</div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(
-                              assetLiabilitiesForm.controls['loanAndAdvances']
-                            )
-                          "
-                          matInput
-                          placeholder="Loans and advance"
-                          name="loanAndAdvances"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="calculateTotal2()"
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'loanAndAdvances'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdr">Investments</div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(assetLiabilitiesForm.controls['investment'])
-                          "
-                          matInput
-                          placeholder="Investments"
-                          name="investment"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="calculateTotal2()"
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'investment'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdr">Other assets</div>
-                    <div class="col-sm-6 tabBdr">
-                      <mat-form-field appearance="outline">
-                        <input
-                          digitsOnly
-                          [formControl]="
-                            $any(assetLiabilitiesForm.controls['otherAssets'])
-                          "
-                          matInput
-                          placeholder="Other assets"
-                          name="otherAssets"
-                          class="input-field"
-                          maxlength="14"
-                          (blur)="calculateTotal2()"
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'otherAssets'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="col-sm-6 tabBdrH">Total Assets:</div>
-                    <div class="col-sm-6 tabBdrH">
-                      ₹ {{ utilsService.currencyFormatter(total2) }}
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="heading1">
+                    <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse1">Source Of Fund</button>
+
+                  </h2>
+                  <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                    <div class="accordion__item-body">
+                      <div class="gray_container">
+
+                        <div [class.editForm]="!sheetData?.editForm"
+                          *ngIf="this.ITR_JSON.liableSection44AAflag === 'Y'">
+                          <form id="commonValidForm">
+                            <div class="col-sm-12 blsArnd1">
+                              <div class="titTxB">
+                                Provide values as per balance sheet as on 31/03/{{
+                                this.ITR_JSON.assessmentYear.substring(0, 4)
+                                }}. These are mandatory to be filled as per income tax return.
+                              </div>
+
+                              <div class="row">
+                                <div class="col-sm-6">
+                                  <!-- Table Starts -->
+                                  <div class="container">
+                                    <div class="row">
+                                      <div class="col-sm-6 tabBdrH">Liabilities</div>
+                                      <div class="col-sm-6 tabBdrH">Amount</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        Partner’s/Member’s capital or own capital
+                                      </div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(
+                                                      assetLiabilitiesForm.controls['membersOwnCapital']
+                                                    )
+                                                  " matInput placeholder="Partner’s/Member’s capital or own capital"
+                                            name="membersOwnCapital" class="input-field" maxlength="14"
+                                            (blur)="calculateTotal1()" />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'membersOwnCapital'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdr">Secured loan</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(assetLiabilitiesForm.controls['securedLoans'])
+                                                  " matInput placeholder="Secured loan" name="securedLoans"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal1()" />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'securedLoans'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdr">Unsecured loan</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(
+                                                      assetLiabilitiesForm.controls['unSecuredLoans']
+                                                    )
+                                                  " matInput placeholder="Unsecured loan" name="unSecuredLoans"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal1()" />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'unSecuredLoans'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdr">Advances</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(assetLiabilitiesForm.controls['advances'])
+                                                  " matInput placeholder="Advances" name="Advances" class="input-field"
+                                            maxlength="14" (blur)="calculateTotal1()" />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls['advances'].hasError(
+                                                      'pattern'
+                                                    )
+                                                  ">Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdr">Sundry creditors*</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(
+                                                      assetLiabilitiesForm.controls[
+                                                        'sundryCreditorsAmount'
+                                                      ]
+                                                    )
+                                                  " matInput placeholder="Sundry creditors"
+                                            name="sundryCreditorsAmount" class="input-field" maxlength="14"
+                                            (blur)="calculateTotal1()" required />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'sundryCreditorsAmount'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdr">Other liabilities</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(
+                                                      assetLiabilitiesForm.controls['otherLiabilities']
+                                                    )
+                                                  " matInput placeholder="Other liabilities" name="otherLiabilities"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal1()" />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'otherLiabilities'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdr blnkTbl"></div>
+                                      <div class="col-sm-6 tabBdr blnkTbl"></div>
+                                      <div class="col-sm-6 tabBdr blnkTbl"></div>
+                                      <div class="col-sm-6 tabBdr blnkTbl"></div>
+                                      <div class="col-sm-6 tabBdrH">Total Liabilities:</div>
+                                      <div class="col-sm-6 tabBdrH">
+                                        ₹ {{ utilsService.currencyFormatter(total1) }}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!-- Table Ends -->
+                                </div>
+                                <div class="col-sm-6">
+                                  <!-- Table Starts -->
+                                  <div class="container">
+                                    <div class="row">
+                                      <div class="col-sm-6 tabBdrH">Assets</div>
+                                      <div class="col-sm-6 tabBdrH">Amount</div>
+                                      <div class="col-sm-6 tabBdr">Fixed assets</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(assetLiabilitiesForm.controls['fixedAssets'])
+                                                  " matInput placeholder="Fixed assets" name="fixedAssets"
+                                            class="input-field" maxlength="14" (blur)="
+                                                    calculateTotal2();
+                                                    showPopUp(
+                                                      assetLiabilitiesForm.controls['fixedAssets'].value
+                                                    )
+                                                  " />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'fixedAssets'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdr">Inventories*</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(assetLiabilitiesForm.controls['inventories'])
+                                                  " matInput placeholder="Inventories" name="Inventories"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal2()" required />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'inventories'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdr">Sundry debtors*</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(
+                                                      assetLiabilitiesForm.controls[
+                                                        'sundryDebtorsAmount'
+                                                      ]
+                                                    )
+                                                  " matInput placeholder="Sundry debtors" name="sundryDebtorsAmount"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal2()" required />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'sundryDebtorsAmount'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdr">Balance with bank</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(
+                                                      assetLiabilitiesForm.controls['balanceWithBank']
+                                                    )
+                                                  " matInput placeholder="Balance with bank" name="balanceWithBank"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal2()" />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'balanceWithBank'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdr">Cash in hand*</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(assetLiabilitiesForm.controls['cashInHand'])
+                                                  " matInput placeholder="Cash in hand" name="cashInHand"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal2()" required />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'cashInHand'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdr">Loans and advance</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(
+                                                      assetLiabilitiesForm.controls['loanAndAdvances']
+                                                    )
+                                                  " matInput placeholder="Loans and advance" name="loanAndAdvances"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal2()" />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'loanAndAdvances'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdr">Investments</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(assetLiabilitiesForm.controls['investment'])
+                                                  " matInput placeholder="Investments" name="investment"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal2()" />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'investment'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdr">Other assets</div>
+                                      <div class="col-sm-6 tabBdr">
+                                        <mat-form-field appearance="outline">
+                                          <input digitsOnly [formControl]="
+                                                    $any(assetLiabilitiesForm.controls['otherAssets'])
+                                                  " matInput placeholder="Other assets" name="otherAssets"
+                                            class="input-field" maxlength="14" (blur)="calculateTotal2()" />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'otherAssets'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-sm-6 tabBdrH">Total Assets:</div>
+                                      <div class="col-sm-6 tabBdrH">
+                                        ₹ {{ utilsService.currencyFormatter(total2) }}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!-- Table Ends -->
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="card__row">
+                              <div class="card__col-xs-12 card__col-sm-6">
+                                <div class="card__col-xs-6 card__col-sm-6">
+                                  <mat-form-field appearance="outline">
+                                    <mat-label>GST Turnover </mat-label>
+                                    <input matInput placeholder="GST Turnover" name="grossTurnOverAmount" [formControl]="
+                                              $any(assetLiabilitiesForm.controls['grossTurnOverAmount'])
+                                            " class="input-field" maxlength="14" />
+                                    <mat-error *ngIf="
+                                              assetLiabilitiesForm.controls[
+                                                'grossTurnOverAmount'
+                                              ].hasError('pattern')
+                                            ">
+                                      Enter positive number without decimal.</mat-error>
+                                  </mat-form-field>
+                                </div>
+                                <div class="card__col-xs-6 card__col-sm-6">
+                                  <mat-form-field appearance="outline">
+                                    <mat-label>GSTR Number </mat-label>
+                                    <input matInput placeholder="GST Number" name="GSTRNumber" [formControl]="
+                                              $any(assetLiabilitiesForm.controls['GSTRNumber'])
+                                            " class="input-field"
+                                      matTooltip="(GST pattern is NNXXXXXNNNNXZZZ N is number, X is character, Z is number or character)"
+                                      matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput upperCase />
+                                    <mat-error *ngIf="
+                                              assetLiabilitiesForm.controls['GSTRNumber'].hasError(
+                                                'pattern'
+                                              )
+                                            ">Enter valid GST Number</mat-error>
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="card__col-xs-12 card__col-sm-6">
+                                <mat-form-field appearance="outline">
+                                  <mat-label>Difference </mat-label>
+                                  <input matInput placeholder="Difference" name="difference" readonly [formControl]="
+                                            $any(assetLiabilitiesForm.controls['difference'])
+                                          " class="input-field" maxlength="14" />
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                        <div *ngIf="this.Copy_ITR_JSON.liableSection44AAflag !== 'Y'">
+                          <form id="commonValidForm2">
+                            <div class="col-sm-12 blsArnd1">
+                              <div class="titTxB">
+                                Provide values as per balance sheet as on 31/03/{{
+                                this.ITR_JSON.assessmentYear.substring(0, 4)
+                                }}. These are mandatory to be filled as per income tax return.
+                              </div>
+                              <div class="row">
+                                <!-- Table Starts -->
+                                <div class="container">
+                                  <div class="row">
+                                    <div class="col-sm-6 tabBdrH">Assets</div>
+                                    <div class="col-sm-6 tabBdrH">Amount</div>
+                                    <div class="col-sm-6 tabBdr">Sundry debtors*</div>
+                                    <div class="col-sm-6 tabBdr">
+                                      <mat-form-field appearance="outline">
+                                        <input digitsOnly [formControl]="
+                                                  $any(
+                                                    assetLiabilitiesForm.controls['sundryDebtorsAmount']
+                                                  )
+                                                " matInput placeholder="Sundry debtors" name="sundryDebtorsAmount"
+                                          class="input-field" maxlength="14" required />
+                                        <mat-error *ngIf="
+                                                  assetLiabilitiesForm.controls[
+                                                    'sundryDebtorsAmount'
+                                                  ].hasError('pattern')
+                                                ">
+                                          Enter positive number without decimal.</mat-error>
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-sm-6 tabBdr">Sundry creditors*</div>
+                                    <div class="col-sm-6 tabBdr">
+                                      <mat-form-field appearance="outline">
+                                        <input digitsOnly [formControl]="
+                                                  $any(
+                                                    assetLiabilitiesForm.controls[
+                                                      'sundryCreditorsAmount'
+                                                    ]
+                                                  )
+                                                " matInput placeholder="Sundry creditors" name="sundryCreditorsAmount"
+                                          class="input-field" maxlength="14" required />
+                                        <mat-error *ngIf="
+                                                  assetLiabilitiesForm.controls[
+                                                    'sundryCreditorsAmount'
+                                                  ].hasError('pattern')
+                                                ">
+                                          Enter positive number without decimal.</mat-error>
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-sm-6 tabBdr">Inventories*</div>
+                                    <div class="col-sm-6 tabBdr">
+                                      <mat-form-field appearance="outline">
+                                        <input digitsOnly [formControl]="
+                                                  $any(assetLiabilitiesForm.controls['inventories'])
+                                                " matInput placeholder="Inventories" name="Inventories"
+                                          class="input-field" maxlength="14" required />
+                                        <mat-error *ngIf="
+                                                  assetLiabilitiesForm.controls['inventories'].hasError(
+                                                    'pattern'
+                                                  )
+                                                ">
+                                          Enter positive number without decimal.</mat-error>
+                                      </mat-form-field>
+                                    </div>
+                                    <div class="col-sm-6 tabBdr">Cash in hand*</div>
+                                    <div class="col-sm-6 tabBdr">
+                                      <mat-form-field appearance="outline">
+                                        <input digitsOnly [formControl]="
+                                                  $any(assetLiabilitiesForm.controls['cashInHand'])
+                                                " matInput placeholder="Cash in hand" name="cashInHand"
+                                          class="input-field" maxlength="14" required />
+                                        <mat-error *ngIf="
+                                                  assetLiabilitiesForm.controls['cashInHand'].hasError(
+                                                    'pattern'
+                                                  )
+                                                ">
+                                          Enter positive number without decimal.</mat-error>
+                                      </mat-form-field>
+                                    </div>
+
+                                    <div class="card__col-xs-12 card__col-sm-6">
+                                      <div class="card__col-xs-6 card__col-sm-6">
+                                        <mat-form-field appearance="outline">
+                                          <mat-label>GST Turnover </mat-label>
+                                          <input matInput placeholder="GST Turnover" name="grossTurnOverAmount"
+                                            [formControl]="
+                                                    $any(
+                                                      assetLiabilitiesForm.controls[
+                                                        'grossTurnOverAmount'
+                                                      ]
+                                                    )
+                                                  " class="input-field" maxlength="14" />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'grossTurnOverAmount'
+                                                    ].hasError('pattern')
+                                                  ">
+                                            Enter positive number without decimal.</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="card__col-xs-6 card__col-sm-6">
+                                        <mat-form-field appearance="outline">
+                                          <mat-label>GSTR Number </mat-label>
+                                          <input matInput placeholder="GST Number" name="GSTRNumber" [formControl]="
+                                                    $any(assetLiabilitiesForm.controls['GSTRNumber'])
+                                                  " class="input-field"
+                                            matTooltip="(GST pattern is NNXXXXXNNNNXZZZ N is number, X is character, Z is number or character)"
+                                            matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput
+                                            upperCase />
+                                          <mat-error *ngIf="
+                                                    assetLiabilitiesForm.controls[
+                                                      'GSTRNumber'
+                                                    ].hasError('pattern')
+                                                  ">Enter valid GST Number</mat-error>
+                                        </mat-form-field>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+
+                      </div>
                     </div>
                   </div>
                 </div>
-                <!-- Table Ends -->
-              </div>
-            </div>
-          </div>
 
-          <div class="card__row">
-            <div class="card__col-xs-12 card__col-sm-6">
-              <div class="card__col-xs-6 card__col-sm-6">
-                <mat-form-field appearance="outline">
-                  <mat-label>GST Turnover </mat-label>
-                  <input
-                    matInput
-                    placeholder="GST Turnover"
-                    name="grossTurnOverAmount"
-                    [formControl]="
-                      $any(assetLiabilitiesForm.controls['grossTurnOverAmount'])
-                    "
-                    class="input-field"
-                    maxlength="14"
-                  />
-                  <mat-error
-                    *ngIf="
-                      assetLiabilitiesForm.controls[
-                        'grossTurnOverAmount'
-                      ].hasError('pattern')
-                    "
-                  >
-                    Enter positive number without decimal.</mat-error
-                  >
-                </mat-form-field>
               </div>
-              <div class="card__col-xs-6 card__col-sm-6">
-                <mat-form-field appearance="outline">
-                  <mat-label>GSTR Number </mat-label>
-                  <input
-                    matInput
-                    placeholder="GST Number"
-                    name="GSTRNumber"
-                    [formControl]="
-                      $any(assetLiabilitiesForm.controls['GSTRNumber'])
-                    "
-                    class="input-field"
-                    matTooltip="(GST pattern is NNXXXXXNNNNXZZZ N is number, X is character, Z is number or character)"
-                    matTooltipClass="tab-tooltip"
-                    matTooltipPosition="above"
-                    matInput
-                    upperCase
-                  />
-                  <mat-error
-                    *ngIf="
-                      assetLiabilitiesForm.controls['GSTRNumber'].hasError(
-                        'pattern'
-                      )
-                    "
-                    >Enter valid GST Number</mat-error
-                  >
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="card__col-xs-12 card__col-sm-6">
-              <mat-form-field appearance="outline">
-                <mat-label>Difference </mat-label>
-                <input
-                  matInput
-                  placeholder="Difference"
-                  name="difference"
-                  readonly
-                  [formControl]="
-                    $any(assetLiabilitiesForm.controls['difference'])
-                  "
-                  class="input-field"
-                  maxlength="14"
-                />
-              </mat-form-field>
+
             </div>
           </div>
-        </form>
+        </div>
       </div>
-      <div *ngIf="this.Copy_ITR_JSON.liableSection44AAflag !== 'Y'">
-        <form id="commonValidForm2">
-          <div class="col-sm-12 blsArnd1">
-            <div class="titTxB">
-              Provide values as per balance sheet as on 31/03/{{
-                this.ITR_JSON.assessmentYear.substring(0, 4)
-              }}. These are mandatory to be filled as per income tax return.
-            </div>
-            <div class="row">
-              <!-- Table Starts -->
-              <div class="container">
-                <div class="row">
-                  <div class="col-sm-6 tabBdrH">Assets</div>
-                  <div class="col-sm-6 tabBdrH">Amount</div>
-                  <div class="col-sm-6 tabBdr">Sundry debtors*</div>
-                  <div class="col-sm-6 tabBdr">
-                    <mat-form-field appearance="outline">
-                      <input
-                        digitsOnly
-                        [formControl]="
-                          $any(
-                            assetLiabilitiesForm.controls['sundryDebtorsAmount']
-                          )
-                        "
-                        matInput
-                        placeholder="Sundry debtors"
-                        name="sundryDebtorsAmount"
-                        class="input-field"
-                        maxlength="14"
-                        required
-                      />
-                      <mat-error
-                        *ngIf="
-                          assetLiabilitiesForm.controls[
-                            'sundryDebtorsAmount'
-                          ].hasError('pattern')
-                        "
-                      >
-                        Enter positive number without decimal.</mat-error
-                      >
-                    </mat-form-field>
-                  </div>
-                  <div class="col-sm-6 tabBdr">Sundry creditors*</div>
-                  <div class="col-sm-6 tabBdr">
-                    <mat-form-field appearance="outline">
-                      <input
-                        digitsOnly
-                        [formControl]="
-                          $any(
-                            assetLiabilitiesForm.controls[
-                              'sundryCreditorsAmount'
-                            ]
-                          )
-                        "
-                        matInput
-                        placeholder="Sundry creditors"
-                        name="sundryCreditorsAmount"
-                        class="input-field"
-                        maxlength="14"
-                        required
-                      />
-                      <mat-error
-                        *ngIf="
-                          assetLiabilitiesForm.controls[
-                            'sundryCreditorsAmount'
-                          ].hasError('pattern')
-                        "
-                      >
-                        Enter positive number without decimal.</mat-error
-                      >
-                    </mat-form-field>
-                  </div>
-                  <div class="col-sm-6 tabBdr">Inventories*</div>
-                  <div class="col-sm-6 tabBdr">
-                    <mat-form-field appearance="outline">
-                      <input
-                        digitsOnly
-                        [formControl]="
-                          $any(assetLiabilitiesForm.controls['inventories'])
-                        "
-                        matInput
-                        placeholder="Inventories"
-                        name="Inventories"
-                        class="input-field"
-                        maxlength="14"
-                        required
-                      />
-                      <mat-error
-                        *ngIf="
-                          assetLiabilitiesForm.controls['inventories'].hasError(
-                            'pattern'
-                          )
-                        "
-                      >
-                        Enter positive number without decimal.</mat-error
-                      >
-                    </mat-form-field>
-                  </div>
-                  <div class="col-sm-6 tabBdr">Cash in hand*</div>
-                  <div class="col-sm-6 tabBdr">
-                    <mat-form-field appearance="outline">
-                      <input
-                        digitsOnly
-                        [formControl]="
-                          $any(assetLiabilitiesForm.controls['cashInHand'])
-                        "
-                        matInput
-                        placeholder="Cash in hand"
-                        name="cashInHand"
-                        class="input-field"
-                        maxlength="14"
-                        required
-                      />
-                      <mat-error
-                        *ngIf="
-                          assetLiabilitiesForm.controls['cashInHand'].hasError(
-                            'pattern'
-                          )
-                        "
-                      >
-                        Enter positive number without decimal.</mat-error
-                      >
-                    </mat-form-field>
-                  </div>
+    </div>
+  </main>
+</div>
 
-                  <div class="card__col-xs-12 card__col-sm-6">
-                    <div class="card__col-xs-6 card__col-sm-6">
-                      <mat-form-field appearance="outline">
-                        <mat-label>GST Turnover </mat-label>
-                        <input
-                          matInput
-                          placeholder="GST Turnover"
-                          name="grossTurnOverAmount"
-                          [formControl]="
-                            $any(
-                              assetLiabilitiesForm.controls[
-                                'grossTurnOverAmount'
-                              ]
-                            )
-                          "
-                          class="input-field"
-                          maxlength="14"
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'grossTurnOverAmount'
-                            ].hasError('pattern')
-                          "
-                        >
-                          Enter positive number without decimal.</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                    <div class="card__col-xs-6 card__col-sm-6">
-                      <mat-form-field appearance="outline">
-                        <mat-label>GSTR Number </mat-label>
-                        <input
-                          matInput
-                          placeholder="GST Number"
-                          name="GSTRNumber"
-                          [formControl]="
-                            $any(assetLiabilitiesForm.controls['GSTRNumber'])
-                          "
-                          class="input-field"
-                          matTooltip="(GST pattern is NNXXXXXNNNNXZZZ N is number, X is character, Z is number or character)"
-                          matTooltipClass="tab-tooltip"
-                          matTooltipPosition="above"
-                          matInput
-                          upperCase
-                        />
-                        <mat-error
-                          *ngIf="
-                            assetLiabilitiesForm.controls[
-                              'GSTRNumber'
-                            ].hasError('pattern')
-                          "
-                          >Enter valid GST Number</mat-error
-                        >
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
+<div class="flex justify-between p-[30px] back-foot">
+  <button (click)="goBack()" class="lgtBtn">
+    <mat-icon class="icoAdj">keyboard_backspace</mat-icon> Back to Source Page
+  </button>
 
-  <div class="flex justify-between p-[30px] back-foot">
-    <button (click)="goBack()" class="lgtBtn">
-      <mat-icon class="icoAdj">keyboard_backspace</mat-icon> Back to Source Page
-    </button>
-
-    <button (click)="onContinue()" class="saveBtnIn">Save All</button>
-  </div>
+  <button (click)="onContinue()" class="saveBtnIn">Save All</button>
 </div>

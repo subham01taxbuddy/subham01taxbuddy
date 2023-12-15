@@ -30,7 +30,7 @@
                   <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
                 </mat-form-field>
               </div>
-           
+
                 <div class="button-container">
                   <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
                   </button>
@@ -38,11 +38,11 @@
                     Clear form
                   </button>
                 </div>
-             
+
             </div>
           </div>
         </div>
-    
+
       </div>
     </div>
   </div>
@@ -212,7 +212,7 @@
             <div class="total-box"><span class="total-box-text">Total</span></div>
             <div class="total-box-value"><span class="total-value">{{commissionData?.totalItrFiled || 'NA'}}</span>
             </div>
-            <div class="dropdown-box">
+            <div class="dropdown-box" [class.open]="isDropdownOpen" (click)="toggleDropdown()">
               <select [(ngModel)]="selectedType">
                 <option value="Original">Original</option>
                 <option value="Revised">Revised</option>

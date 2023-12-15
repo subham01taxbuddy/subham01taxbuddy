@@ -198,11 +198,11 @@
                     <button class="srch-btn-1" [disabled]="loading" (click)="getInvoice('isAgent','agentId')">
                       <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Invoice
                     </button>
-    
+
                     <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">
                       Clear form
                     </button>
-    
+
                     <button *ngIf="roles?.includes('ROLE_ADMIN') || roles?.includes('ROLE_LEADER') " class="dwldBtn-1"
                       [disabled]="loading" (click)="downloadInvoicesSummary()">
                       <i class="fa fa-download" aria-hidden="true"></i> Download File
@@ -211,7 +211,7 @@
                 </div>
               </div>
             </div>
-           
+
           </div>
         </mat-expansion-panel>
       </mat-accordion>
@@ -230,10 +230,13 @@
     </div>
     <div>
       <div class="row">
-        <div class="col-sm-9 row">
+        <div class="col-sm-8 row">
           <div class="table-info-text col-sm-4">
             Proforma Invoices Details:
           </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="count1"> Total Count: <span class="txClr1">{{ totalInvoice }}</span></div>
         </div>
       </div>
       <table>

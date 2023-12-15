@@ -87,7 +87,9 @@ export class SidebarComponent {
           }
         });
       }
-
+      if (this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserRoles, ['ROLE_ADMIN']) && element.name === 'Leader Dashboard') {
+        element.name = 'Admin Dashboard';
+      }
     });
   }
 
