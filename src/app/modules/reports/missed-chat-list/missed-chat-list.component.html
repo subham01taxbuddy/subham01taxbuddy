@@ -115,7 +115,7 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <div class="row">
-              <div class="col-sm-7">
+              <div class="col-sm-12">
                 <div class="filter-box">
                   <div class="row">
                     <div class="col-sm-12 bckClr">
@@ -148,17 +148,14 @@
                         </div>
                       </div>
                     </div>
+                    <div class="button-container">
+                      <button class="srch-btn-1" (click)="showReports()">
+                        <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+                      </button>
+    
+                      <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              <div class="col-sm-5">
-                <div class="button-container">
-                  <button class="srch-btn-1" (click)="showReports()">
-                    <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
-                  </button>
-
-                  <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
                 </div>
               </div>
             </div>

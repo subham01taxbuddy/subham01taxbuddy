@@ -369,7 +369,7 @@ header {
     border-radius: 4px;
     width:auto;
   }
-  
+
   .frameL .contents {
     gap: 16px;
     padding: 8px 12px;
@@ -379,7 +379,7 @@ header {
     position: relative;
     border-radius: 4px;
   }
-  
+
   .frameL .field-text {
     position: relative;
     width: fit-content;
@@ -392,7 +392,7 @@ header {
     line-height: 28px;
     white-space: nowrap;
   }
-  
+
   .frameL .div {
     align-items: center;
     justify-content: space-between;
@@ -404,7 +404,7 @@ header {
     flex: 0 0 auto;
     border-radius: 4px;
   }
-  
+
   .frameL .text-wrapper {
     font-family: "DM Sans-Bold", Helvetica;
     font-weight: 700;
@@ -417,13 +417,13 @@ header {
     line-height: 28px;
     white-space: nowrap;
   }
-  
+
   .frameL .mingcute-down-fill {
     position: relative;
     width: 20px;
     height: 20px;
   }
-  
+
   .frameL .div-2 {
     display: flex;
     flex-direction: column;
@@ -432,7 +432,7 @@ header {
     position: relative;
     flex: 0 0 auto;
   }
-  
+
   .frameL .field-text-wrapper {
     align-items: flex-start;
     gap: 16px;
@@ -445,7 +445,7 @@ header {
     flex: 0 0 auto;
     border-radius: 4px;
   }
-  
+
   .frameL .field-text-2 {
     margin-right: -3px;
     font-family: "DM Sans-Regular", Helvetica;
@@ -459,7 +459,7 @@ header {
     line-height: 28px;
     white-space: nowrap;
   }
-  
+
   .frameL .div-wrapper {
     align-items: flex-start;
     gap: 16px;
@@ -471,13 +471,13 @@ header {
     width: 100%;
     flex: 0 0 auto;
     border-radius: 4px;
-  }  
+  }
 /* Style the left aside ends */
 
 .subTx{
   font-size:14px;
   color:#ACACAC;
-  
+
 }
 
 
@@ -499,7 +499,7 @@ header {
     position: relative;
     padding: 10px 0px 0px 15px!important;
   }
-  
+
   .frameB .large-title {
     position: relative;
     width: fit-content;
@@ -513,7 +513,7 @@ header {
     text-decoration: underline;
     white-space: nowrap;
   }
-  
+
   .frameB .text-wrapper {
     position: relative;
     width: fit-content;
@@ -526,7 +526,7 @@ header {
     line-height: 36px;
     white-space: nowrap;
   }
-  
+
 /* Bread Crumb Css Ends */
 
 /* center css starts */
@@ -540,19 +540,19 @@ main {
 
  .inpClr{
   background-color: #f1f1f1;
- } 
+ }
  .inpClr1{
   background-color: #f1f1f1;
   width:40%;
- } 
+ }
  .inpClr2{
   background-color: #f1f1f1!important;
   width:20% !important;
   position: absolute;
   right: 60px;
- } 
+ }
  .btnSal{
-  color:#157999;  
+  color:#157999;
  }
 .bundle{
  margin:20px;
@@ -566,8 +566,8 @@ main {
     position: relative;
     padding: 0px 15px;
 }
-  
-  
+
+
   .frameC .div {
     display: flex;
     align-items: flex-start;
@@ -582,7 +582,7 @@ main {
     border: 1px solid;
     border-color: #a6a6a6;
   }
-  
+
   .frameC .text-wrapper {
     position: relative;
     flex: 1;
@@ -594,13 +594,13 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .frameC .mingcute-down-fill {
     position: relative;
     width: 24px;
     height: 24px;
   }
-  
+
   .frameC .space {
     display: flex;
     flex-direction: column;
@@ -616,7 +616,7 @@ main {
     border: 1px solid;
     border-color: #a6a6a6;
   }
-  
+
   .frameC .div-2 {
     display: flex;
     flex-direction: column;
@@ -626,14 +626,14 @@ main {
     width: 100%;
     flex: 0 0 auto;
   }
-  
+
   .frameC .div-3 {
     display: inline-flex;
     align-items: flex-start;
     position: relative;
     flex: 0 0 auto;
   }
-  
+
   .frameC .contents-wrapper {
     display: inline-flex;
     align-items: flex-start;
@@ -641,7 +641,7 @@ main {
     position: relative;
     flex: 0 0 auto;
   }
-  
+
   .frameC .contents {
     display: inline-flex;
     align-items: flex-start;
@@ -653,7 +653,7 @@ main {
     border-radius: 4px 4px 0px 0px;
     border: 1.5px solid;
   }
-  
+
   .frameC .field-text {
     position: relative;
     width: fit-content;
@@ -666,7 +666,7 @@ main {
     line-height: 28px;
     white-space: nowrap;
   }
-  
+
   .frameC .group {
     position: relative;
     width: 28px;
@@ -674,7 +674,7 @@ main {
     background-color: #ffffff57;
     border-radius: 14px;
   }
-  
+
   .frameC .material-symbols {
     position: absolute;
     width: 16px;
@@ -682,7 +682,7 @@ main {
     top: 6px;
     left: 6px;
   }
-  
+
   .frameC .field-text-wrapper {
     display: inline-flex;
     align-items: flex-start;
@@ -695,7 +695,7 @@ main {
     border: 1px solid;
     border-color: #3d82cd;
   }
-  
+
   .frameC .field-text-2 {
     width: fit-content;
     margin-top: -1px;
@@ -708,7 +708,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .frameC .div-4 {
     display: flex;
     flex-direction: column;
@@ -721,7 +721,7 @@ main {
     flex: 0 0 auto;
     background-color: #f8f8f8;
   }
-  
+
   .frameC .div-wrapper {
     display: flex;
     align-items: flex-start;
@@ -732,7 +732,7 @@ main {
     width: 100%;
     flex: 0 0 auto;
   }
-  
+
   .frameC .contents-2 {
     display: flex;
     align-items: flex-start;
@@ -744,7 +744,7 @@ main {
     background-color: #e7e7e7;
     border-radius: 4px 4px 0px 0px;
   }
-  
+
   .frameC .field-text-3 {
     width: fit-content;
     margin-top: -1.5px;
@@ -757,7 +757,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .frameC .div-5 {
     display: flex;
     flex-direction: column;
@@ -771,7 +771,7 @@ main {
     background-color: #ffffff;
     border-radius: 0px 0px 4px 4px;
   }
-  
+
   .frameC .div-6 {
     display: flex;
     align-items: flex-start;
@@ -781,7 +781,7 @@ main {
     width: 100%;
     flex: 0 0 auto;
   }
-  
+
   .frameC .field {
     display: flex;
     flex-direction: column;
@@ -791,7 +791,7 @@ main {
     flex: 1;
     flex-grow: 1;
   }
-  
+
   .frameC .field-label {
     position: relative;
     align-self: stretch;
@@ -803,15 +803,15 @@ main {
     letter-spacing: 0;
     line-height: 20px;
   }
-  
+
   .frameC .span {
     color: #242426;
   }
-  
+
   .frameC .text-wrapper-2 {
     color: #eb5757;
   }
-  
+
   .frameC .contents-3 {
     display: flex;
     align-items: flex-start;
@@ -825,7 +825,7 @@ main {
     border: 0.5px solid;
     border-color: #d3d3d3;
   }
-  
+
   .frameC .field-text-4 {
     flex: 1;
     margin-top: -0.5px;
@@ -837,7 +837,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .frameC .contents-4 {
     position: relative;
     align-self: stretch;
@@ -847,7 +847,7 @@ main {
     border: 0.5px solid;
     border-color: #d3d3d3;
   }
-  
+
   .frameC .field-text-5 {
     flex: 1;
     margin-top: -0.5px;
@@ -859,7 +859,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .frameC .contents-5 {
     display: flex;
     height: 68px;
@@ -872,7 +872,7 @@ main {
     background-color: #e7e7e7;
     border-radius: 4px 4px 0px 0px;
   }
-  
+
   .frameC .field-text-6 {
     width: fit-content;
     font-family: "DM Sans-Medium", Helvetica;
@@ -884,7 +884,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .frameC .div-7 {
     display: inline-flex;
     align-items: center;
@@ -892,7 +892,7 @@ main {
     position: relative;
     flex: 0 0 auto;
   }
-  
+
   .frameC .contents-6 {
     display: flex;
     width: 218px;
@@ -903,7 +903,7 @@ main {
     background-color: #f5f5f56b;
     border-radius: 4px;
   }
-  
+
   .frameC .field-text-7 {
     flex: 1;
     margin-top: -0.5px;
@@ -915,7 +915,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .frameC .div-8 {
     flex-direction: column;
     align-items: flex-end;
@@ -927,7 +927,7 @@ main {
     border-radius: 0px 0px 4px 4px;
     display: flex;
     position: relative;
-    align-self: stretch;        
+    align-self: stretch;
   }
 
   .frameC .div-8A {
@@ -936,7 +936,7 @@ main {
     align-items: flex-start;
     justify-content:space-between;
     align-items:baseline;
-    padding: 24px;   
+    padding: 24px;
     gap:15px;
     border-bottom: 1px solid #f1f1f1;
   }
@@ -946,11 +946,11 @@ main {
     flex-direction: row;
     align-items: flex-start;
     justify-content:space-between;
-    align-items:baseline;      
+    align-items:baseline;
     gap:15px;
   }
 
-  
+
   .item-right{
     flex-grow:1;
   }
@@ -963,7 +963,7 @@ main {
   .item-left{
     flex-basis:220px;
   }
-  
+
   .frameC .div-9 {
     display: flex;
     align-items: center;
@@ -975,7 +975,7 @@ main {
     border-bottom:1px solid #cccccc;
     padding-bottom:20px;
   }
-  
+
   .frameC .field-label-wrapper {
     display: inline-flex;
     align-items: center;
@@ -983,7 +983,7 @@ main {
     position: relative;
     flex: 0 0 auto;
   }
-  
+
   .frameC .p {
     width: 315px;
     margin-top: -1px;
@@ -995,7 +995,7 @@ main {
     letter-spacing: 0;
     line-height: 20px;
   }
-  
+
   .frameC .div-10 {
     display: flex;
     width: 50%;
@@ -1003,7 +1003,7 @@ main {
     justify-content: space-between;
     position: relative;
   }
-  
+
   .frameC .contents-7 {
     display: flex;
     width: 218px;
@@ -1014,7 +1014,7 @@ main {
     background-color: #f5f5f5;
     border-radius: 4px;
   }
-  
+
   .frameC .field-label-2 {
     width: fit-content;
     font-family: "DM Sans-Bold", Helvetica;
@@ -1026,7 +1026,7 @@ main {
     letter-spacing: 0;
     line-height: 20px;
   }
-  
+
   .frameC .contents-8 {
     display: inline-flex;
     align-items: flex-start;
@@ -1038,7 +1038,7 @@ main {
     border: 1.5px solid;
     border-color: #157999;
   }
-  
+
   .frameC .field-text-8 {
     width: fit-content;
     margin-top: -1.5px;
@@ -1051,7 +1051,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .frameC .line {
     position: relative;
     align-self: stretch;
@@ -1059,7 +1059,7 @@ main {
     height: 1px;
     object-fit: cover;
   }
-  
+
   .frameC .frame-wrapper {
     align-items: flex-start;
     gap: 8px;
@@ -1069,7 +1069,7 @@ main {
     position: relative;
     align-self: stretch;
   }
-  
+
   .frameC .contents-wrapper-2 {
     align-items: center;
     gap: 8px;
@@ -1079,7 +1079,7 @@ main {
     position: relative;
     align-self: stretch;
   }
-  
+
   .frameC .contents-9 {
     display: flex;
     align-items: center;
@@ -1091,7 +1091,7 @@ main {
     background-color: #e7e7e7;
     border-radius: 4px 4px 0px 0px;
   }
-  
+
   .frameC .space-2 {
     align-items: flex-end;
     display: flex;
@@ -1105,7 +1105,7 @@ main {
     background-color: #ffffff;
     border-radius: 0px 0px 8px 8px;
   }
-  
+
   .frameC .field-2 {
     display: flex;
     align-items: center;
@@ -1114,7 +1114,7 @@ main {
     flex: 1;
     flex-grow: 1;
   }
-  
+
   .frameC .field-label-3 {
     flex: 1;
     font-family: "DM Sans-Regular", Helvetica;
@@ -1125,7 +1125,7 @@ main {
     letter-spacing: 0;
     line-height: 20px;
   }
-  
+
   .frameC .contents-10 {
     display: flex;
     width: 222px;
@@ -1138,12 +1138,12 @@ main {
     border: 0.5px solid;
     border-color: #d3d3d3;
   }
-  
+
   .frameC .img {
     position: relative;
     width: 337px;
   }
-  
+
   .frameC .contents-wrapper-3 {
     display: flex;
     align-items: center;
@@ -1153,7 +1153,7 @@ main {
     width: 100%;
     flex: 0 0 auto;
   }
-  
+
   .frameC .space-3 {
     align-items: flex-start;
     display: flex;
@@ -1167,7 +1167,7 @@ main {
     background-color: #ffffff;
     border-radius: 0px 0px 8px 8px;
   }
-  
+
   .frameC .field-3 {
     display: flex;
     width: 822px;
@@ -1176,7 +1176,7 @@ main {
     position: relative;
     margin-right: -22px;
   }
-  
+
   .frameC .contents-11 {
     display: flex;
     align-items: flex-start;
@@ -1189,7 +1189,7 @@ main {
     border: 0.5px solid;
     border-color: #d3d3d3;
   }
-  
+
   .frameC .frame-wrapper-2 {
     display: block;
     align-items: flex-start;
@@ -1197,10 +1197,10 @@ main {
     align-self: stretch;
     width: 100%;
     flex: 0 0 auto;
-   
+
   }
 
-  
+
   .accordion-button {
     font-family: "DM Sans", sans-serif;
     color: #303030;
@@ -1241,8 +1241,8 @@ main {
     justify-content: space-between;
     align-items: baseline;
     padding: 24px;
-    width:100%;   
-    gap:30px; 
+    width:100%;
+    gap:30px;
     border-bottom: 1px solid #f1f1f1;
 }
 
@@ -1252,7 +1252,7 @@ main {
   font-weight:bold;
 }
 .area-2 {
-  flex: 1;  
+  flex: 1;
 }
 .area-3 {
   flex: 1;
@@ -1321,7 +1321,7 @@ main {
     justify-content: space-between;
     align-items: baseline;
     padding: 24px;
-    gap: 15px;   
+    gap: 15px;
 }
 .hplft{
   flex: 1;
@@ -1331,7 +1331,7 @@ main {
 }
 
 .hprgt{
-  flex: 1;  
+  flex: 1;
 }
 
 .hp2mainClr {
@@ -1341,7 +1341,7 @@ main {
   justify-content: space-between;
   align-items: baseline;
   padding: 24px;
-  gap: 15px;   
+  gap: 15px;
   background-color: #F0F7FF;
   margin:10px;
 }
@@ -1357,54 +1357,54 @@ main {
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 24px;    
+    padding: 24px;
   }
   .hp4main1 {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 14px;    
+    padding: 14px;
   }
   .hp4-1{
-    flex: 1; 
+    flex: 1;
     background-color:#F6F6F6;
     padding:15px;
     min-height: 105px;
   }
   .hp4-2{
-    flex: 1; 
+    flex: 1;
     background-color:#F6F6F6;
     padding:15px;
     min-height: 105px;
   }
   .hp4-3{
-    flex: 1; 
+    flex: 1;
     background-color:#F6F6F6;
     padding:15px;
     min-height: 105px;
   }
   .hp4-4{
-    flex: 1;  
+    flex: 1;
     padding:15px;
   }
   .hp4A {
-    flex: 3.3;  
+    flex: 3.3;
     padding:15px;
     background-color:#F6F6F6;
     display: flex;
-    flex-direction: row;    
+    flex-direction: row;
   }
   .spcBtw{
     padding-right:15px;
   }
   .gry{
-    background-color:#f6f6f6!important;    
+    background-color:#f6f6f6!important;
   }
   .redAst{
     color:#ff0000;
   }
-  .addAno{  
+  .addAno{
     border-radius: 4px;
     border: 1.5px solid;
     border-color: #157999;
@@ -1417,13 +1417,13 @@ main {
     align-items: flex-start;
     justify-content: space-between;
     align-items: center;
-    padding: 24px;   
+    padding: 24px;
     }
   .Bx4L{
-    flex: 1;  
+    flex: 1;
   }
   .Bx4R{
-    flex: 3;  
+    flex: 3;
   }
   .delbt{
     color:#EB5757;
@@ -1435,26 +1435,26 @@ main {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    justify-content: space-between; 
-    padding: 24px; 
+    justify-content: space-between;
+    padding: 24px;
   }
   .Box5-L {
     padding: 15px;
     background-color: #F6F6F6;
     display: flex;
-    flex-direction: row;  
+    flex-direction: row;
     gap:50px;
     flex-wrap: wrap;
-    flex: 3;  
+    flex: 3;
 }
 .Box5-R {
   padding: 15px;
   background-color: #ffffff;
   display: flex;
-  flex-direction: row;  
+  flex-direction: row;
   gap:50px;
   flex-wrap: wrap;
-  flex: 1;  
+  flex: 1;
 }
 .Box5-1{
   width:150px;
@@ -1462,10 +1462,10 @@ main {
 .Box5-2{
   width:150px;
 }
-.Box5-3{ 
+.Box5-3{
   width:150px;
 }
-.Box5-4{ 
+.Box5-4{
   width:150px;
 }
 .Box5-5{
@@ -1513,11 +1513,11 @@ main {
   margin-right:10px;
 }
   .hdTxL{
-    flex: 1; 
+    flex: 1;
     font-weight:bold;
   }
   .hdTxR{
-    flex: 1; 
+    flex: 1;
   }
 
   /* landBldg 2 Column */
@@ -1527,7 +1527,7 @@ main {
     align-items: flex-start;
     justify-content: space-between;
     align-items: baseline;
-    padding: 24px;  
+    padding: 24px;
     background-color:#F8F8F8;
     width:100%;
     position: relative;
@@ -1539,7 +1539,7 @@ main {
   align-items: flex-start;
   justify-content: space-between;
   align-items: baseline;
-  padding: 24px;  
+  padding: 24px;
   background-color: #F6F6F6;
   width:100%;
   position: relative;
@@ -1559,10 +1559,10 @@ main {
   gap: 30px;
 }
 .lndBldg-L {
-  flex: 1; 
+  flex: 1;
 }
 .lndBldg-R {
-  flex: 1; 
+  flex: 1;
 }
 .buyr-box {
   display: flex;
@@ -1570,7 +1570,7 @@ main {
   align-items: flex-start;
   justify-content: space-between;
   align-items: baseline;
-  padding: 24px;  
+  padding: 24px;
   background-color:#F8F8F8;
   width:100%;
   position: relative;
@@ -1584,7 +1584,7 @@ main {
   align-items: flex-start;
   justify-content: space-between;
   align-items: baseline;
-  padding: 24px;  
+  padding: 24px;
   background-color:#F8F8F8;
   width:100%;
   position: relative;
@@ -1611,11 +1611,11 @@ main {
 }
 
 .hdByr-L{
-  flex: 3; 
+  flex: 3;
   font-weight:bold;
 }
 .hdByr-R{
-  flex: 1; 
+  flex: 1;
 }
 
 .LndBx{
@@ -1636,12 +1636,12 @@ main {
 
 
   /* Second Box */
-  .scnBxWh{    
-    padding: 15px;  
-    width: 100%;   
-    background-color: #ffffff;  
+  .scnBxWh{
+    padding: 15px;
+    width: 100%;
+    background-color: #ffffff;
 }
-  
+
   /* Second Box */
 
 
@@ -1655,7 +1655,7 @@ main {
     justify-content: space-between;
     align-items: baseline;
     /* padding: 24px; */
-    width:100%;   
+    width:100%;
 }
 
 .land-box-buyr {
@@ -1665,12 +1665,12 @@ main {
   justify-content: space-between;
   align-items: baseline;
   /* padding: 24px; */
-  width:100%;   
+  width:100%;
   flex-wrap: wrap;
   padding: 25px;
 }
 
-.lft-btn {  
+.lft-btn {
     padding: 8px 24px;
     border-radius: 4px;
     border: 1.5px solid;
@@ -1688,7 +1688,7 @@ main {
   .frameC .frame-wrapper-3 {
 
   }
-  
+
   .frameC .contents-wrapper-4 {
     display: flex;
     height: 55px;
@@ -1699,7 +1699,7 @@ main {
     flex-grow: 1;
     width:100%;
   }
-  
+
   .frameC .contents-12 {
     display: flex;
     align-items: center;
@@ -1712,7 +1712,7 @@ main {
     background-color: #ddedff;
     border-radius: 4px;
   }
-  
+
   .frameC .field-wrapper {
     display: flex;
     align-items: center;
@@ -1722,7 +1722,7 @@ main {
     align-self: stretch;
     flex-grow: 1;
   }
-  
+
   .frameC .field-4 {
     display: flex;
     align-items: flex-start;
@@ -1731,7 +1731,7 @@ main {
     flex: 1;
     flex-grow: 1;
   }
-  
+
   .frameC .field-label-4 {
     width: fit-content;
     margin-top: -1px;
@@ -1744,7 +1744,7 @@ main {
     letter-spacing: 0;
     line-height: 20px;
   }
-  
+
   .frameC .div-11 {
     display: flex;
     flex-direction: row;
@@ -1752,7 +1752,7 @@ main {
     justify-content: space-between;
     align-items: baseline;
   }
-  
+
   .frameC .frame-wrapper-3 {
     display: inline-flex;
     align-items: flex-start;
@@ -1760,7 +1760,7 @@ main {
     position: relative;
     flex: 0 0 auto;
   }
-  
+
   .frameC .contents-13 {
     display: inline-flex;
     align-items: flex-start;
@@ -1772,7 +1772,7 @@ main {
     border: 1.5px solid;
     border-color: #3d82cd;
   }
-  
+
   .frameC .field-text-9 {
     width: fit-content;
     margin-top: -1.5px;
@@ -1785,11 +1785,11 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .frameC .frame-wrapper-4 {
 
   }
-  
+
   .frameC .contents-14 {
     display: inline-flex;
     align-items: flex-start;
@@ -1801,7 +1801,7 @@ main {
     border-radius: 4px;
     border: 1.5px solid;
   }
-  
+
   .space {
     display: flex;
     flex-direction: column;
@@ -1814,7 +1814,7 @@ main {
     border: 1px solid;
     border-color: #a6a6a6;
   }
-  
+
   .space .frame {
     display: flex;
     flex-direction: column;
@@ -1824,14 +1824,14 @@ main {
     width: 100%;
     flex: 0 0 auto;
   }
-  
+
   .space .div {
     display: inline-flex;
     align-items: flex-start;
     position: relative;
     flex: 0 0 auto;
   }
-  
+
   .space .contents-wrapper {
     display: inline-flex;
     align-items: flex-start;
@@ -1839,7 +1839,7 @@ main {
     position: relative;
     flex: 0 0 auto;
   }
-  
+
   .space .contents {
     display: inline-flex;
     align-items: flex-start;
@@ -1851,7 +1851,7 @@ main {
     border-radius: 4px 4px 0px 0px;
     border: 1.5px solid;
   }
-  
+
   .space .field-text {
     position: relative;
     width: fit-content;
@@ -1864,7 +1864,7 @@ main {
     line-height: 28px;
     white-space: nowrap;
   }
-  
+
   .space .group {
     position: relative;
     width: 28px;
@@ -1872,7 +1872,7 @@ main {
     background-color: #ffffff57;
     border-radius: 14px;
   }
-  
+
   .space .material-symbols {
     position: absolute;
     width: 16px;
@@ -1887,7 +1887,7 @@ main {
     border-radius: 5px;
     width: 90%;
   }
-  
+
   .space .field-text-wrapper {
     display: inline-flex;
     align-items: flex-start;
@@ -1900,7 +1900,7 @@ main {
     border: 1px solid;
     border-color: #3d82cd;
   }
-  
+
   .space .text-wrapper {
     width: fit-content;
     margin-top: -1px;
@@ -1913,7 +1913,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .space .frame-2 {
     display: flex;
     flex-direction: column;
@@ -1926,7 +1926,7 @@ main {
     flex: 0 0 auto;
     background-color: #f8f8f8;
   }
-  
+
   .space .div-wrapper {
     display: flex;
     align-items: flex-start;
@@ -1937,7 +1937,7 @@ main {
     width: 100%;
     flex: 0 0 auto;
   }
-  
+
   .space .contents-2 {
     display: flex;
     align-items: flex-start;
@@ -1949,7 +1949,7 @@ main {
     background-color: #e7e7e7;
     border-radius: 4px 4px 0px 0px;
   }
-  
+
   .space .field-text-2 {
     width: fit-content;
     margin-top: -1.5px;
@@ -1962,13 +1962,13 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .space .mingcute-down-fill {
     position: relative;
     width: 24px;
     height: 24px;
   }
-  
+
   .space .frame-3 {
     display: flex;
     flex-direction: column;
@@ -1982,7 +1982,7 @@ main {
     background-color: #ffffff;
     border-radius: 0px 0px 4px 4px;
   }
-  
+
   .space .frame-4 {
     display: flex;
     align-items: flex-start;
@@ -1992,7 +1992,7 @@ main {
     width: 100%;
     flex: 0 0 auto;
   }
-  
+
   .space .field {
     display: flex;
     flex-direction: column;
@@ -2002,7 +2002,7 @@ main {
     flex: 1;
     flex-grow: 1;
   }
-  
+
   .space .field-label {
     position: relative;
     align-self: stretch;
@@ -2014,15 +2014,15 @@ main {
     letter-spacing: 0;
     line-height: 20px;
   }
-  
+
   .space .span {
     color: #242426;
   }
-  
+
   .space .text-wrapper-2 {
     color: #eb5757;
   }
-  
+
   .space .contents-3 {
     display: flex;
     align-items: flex-start;
@@ -2036,7 +2036,7 @@ main {
     border: 0.5px solid;
     border-color: #d3d3d3;
   }
-  
+
   .space .field-text-3 {
     flex: 1;
     margin-top: -0.5px;
@@ -2048,7 +2048,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .space .contents-4 {
     position: relative;
     align-self: stretch;
@@ -2058,7 +2058,7 @@ main {
     border: 0.5px solid;
     border-color: #d3d3d3;
   }
-  
+
   .space .field-text-4 {
     flex: 1;
     margin-top: -0.5px;
@@ -2070,7 +2070,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .space .contents-5 {
     display: flex;
     height: 68px;
@@ -2083,7 +2083,7 @@ main {
     background-color: #e7e7e7;
     border-radius: 4px 4px 0px 0px;
   }
-  
+
   .space .field-text-5 {
     width: fit-content;
     font-family: "DM Sans-Medium", Helvetica;
@@ -2095,7 +2095,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .space .frame-5 {
     display: inline-flex;
     align-items: center;
@@ -2103,7 +2103,7 @@ main {
     position: relative;
     flex: 0 0 auto;
   }
-  
+
   .space .contents-6 {
     display: flex;
     width: 218px;
@@ -2114,7 +2114,7 @@ main {
     background-color: #f5f5f56b;
     border-radius: 4px;
   }
-  
+
   .space .field-text-6 {
     flex: 1;
     margin-top: -0.5px;
@@ -2126,7 +2126,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .space .frame-6 {
     flex-direction: column;
     align-items: flex-end;
@@ -2140,7 +2140,7 @@ main {
     position: relative;
     align-self: stretch;
   }
-  
+
   .space .frame-7 {
     display: flex;
     align-items: center;
@@ -2150,7 +2150,7 @@ main {
     width: 100%;
     flex: 0 0 auto;
   }
-  
+
   .space .field-label-wrapper {
     display: inline-flex;
     align-items: center;
@@ -2158,7 +2158,7 @@ main {
     position: relative;
     flex: 0 0 auto;
   }
-  
+
   .space .p {
     width: 315px;
     margin-top: -1px;
@@ -2170,7 +2170,7 @@ main {
     letter-spacing: 0;
     line-height: 20px;
   }
-  
+
   .space .frame-8 {
     display: flex;
     width: 479px;
@@ -2178,7 +2178,7 @@ main {
     justify-content: space-between;
     position: relative;
   }
-  
+
   .space .contents-7 {
     display: flex;
     width: 218px;
@@ -2189,7 +2189,7 @@ main {
     background-color: #f5f5f5;
     border-radius: 4px;
   }
-  
+
   .space .field-label-2 {
     width: fit-content;
     font-family: "DM Sans-Bold", Helvetica;
@@ -2203,8 +2203,8 @@ main {
     margin-left: 20px;
     margin-right: 20px;
 }
-  
-  
+
+
   .space .contents-8 {
     display: inline-flex;
     align-items: flex-start;
@@ -2216,7 +2216,7 @@ main {
     border: 1.5px solid;
     border-color: #157999;
   }
-  
+
   .space .field-text-7 {
     width: fit-content;
     margin-top: -1.5px;
@@ -2229,7 +2229,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .space .line {
     position: relative;
     align-self: stretch;
@@ -2237,7 +2237,7 @@ main {
     height: 1px;
     object-fit: cover;
   }
-  
+
   .space .frame-wrapper {
     align-items: flex-start;
     gap: 8px;
@@ -2247,7 +2247,7 @@ main {
     position: relative;
     align-self: stretch;
   }
-  
+
   .space .frame-9 {
     align-items: center;
     gap: 8px;
@@ -2257,7 +2257,7 @@ main {
     position: relative;
     align-self: stretch;
   }
-  
+
   .space .contents-9 {
     display: flex;
     align-items: center;
@@ -2269,7 +2269,7 @@ main {
     background-color: #e7e7e7;
     border-radius: 4px 4px 0px 0px;
   }
-  
+
   .space .frame-wrapper-2 {
     align-items: flex-end;
     display: block;
@@ -2297,7 +2297,7 @@ main {
     background-color: #ffffff;
     border-radius: 0px 0px 8px 8px;
   }
-  
+
   .space .field-2 {
     display: flex;
     align-items: center;
@@ -2306,7 +2306,7 @@ main {
     flex: 1;
     flex-grow: 1;
   }
-  
+
   .space .field-label-3 {
     flex: 1;
     font-family: "DM Sans-Regular", Helvetica;
@@ -2317,7 +2317,7 @@ main {
     letter-spacing: 0;
     line-height: 20px;
   }
-  
+
   .space .contents-10 {
     display: flex;
     width: 222px;
@@ -2331,12 +2331,12 @@ main {
     border-color: #d3d3d3;
     border:none;
   }
-  
+
   .space .img {
     position: relative;
     width: 337px;
   }
-  
+
   .space .frame-10 {
     display: flex;
     align-items: center;
@@ -2346,7 +2346,7 @@ main {
     width: 100%;
     flex: 0 0 auto;
   }
-  
+
   .space .div-2 {
     align-items: flex-start;
     display: flex;
@@ -2360,7 +2360,7 @@ main {
     background-color: #ffffff;
     border-radius: 0px 0px 8px 8px;
   }
-  
+
   .space .field-3 {
     display: flex;
     width: 100%;
@@ -2369,7 +2369,7 @@ main {
     position: relative;
     margin-right: -22px;
   }
-  
+
   .space .contents-11 {
     display: flex;
     align-items: flex-start;
@@ -2382,7 +2382,7 @@ main {
     border: 0.5px solid;
     border-color: #d3d3d3;
   }
-  
+
   .space .frame-11 {
     display: flex;
     align-items: flex-start;
@@ -2391,7 +2391,7 @@ main {
     width: 100%;
     flex: 0 0 auto;
   }
-  
+
   .space .frame-12 {
     display: flex;
     height: 55px;
@@ -2401,7 +2401,7 @@ main {
     flex: 1;
     flex-grow: 1;
   }
-  
+
   .space .contents-12 {
     display: flex;
     align-items: center;
@@ -2414,7 +2414,7 @@ main {
     background-color: #ddedff;
     border-radius: 4px;
   }
-  
+
   .space .field-wrapper {
     display: flex;
     align-items: center;
@@ -2424,7 +2424,7 @@ main {
     align-self: stretch;
     flex-grow: 1;
   }
-  
+
   .space .field-4 {
     display: flex;
     align-items: flex-start;
@@ -2433,7 +2433,7 @@ main {
     flex: 1;
     flex-grow: 1;
   }
-  
+
   .space .field-label-4 {
     width: fit-content;
     margin-top: -1px;
@@ -2446,7 +2446,7 @@ main {
     letter-spacing: 0;
     line-height: 20px;
   }
-  
+
   .space .frame-13 {
     display: flex;
     align-items: flex-start;
@@ -2456,7 +2456,7 @@ main {
     width: 100%;
     flex: 0 0 auto;
   }
-  
+
   .space .frame-14 {
     display: inline-flex;
     align-items: flex-start;
@@ -2464,7 +2464,7 @@ main {
     position: relative;
     flex: 0 0 auto;
   }
-  
+
   .space .contents-13 {
     display: inline-flex;
     align-items: flex-start;
@@ -2476,7 +2476,7 @@ main {
     border: 1.5px solid;
     border-color: #3d82cd;
   }
-  
+
   .space .field-text-8 {
     width: fit-content;
     margin-top: -1.5px;
@@ -2489,7 +2489,7 @@ main {
     letter-spacing: 0;
     line-height: 28px;
   }
-  
+
   .space .frame-15 {
     display: flex;
     width: 175px;
@@ -2498,7 +2498,7 @@ main {
     gap: 12px;
     position: relative;
   }
-  
+
   .space .contents-14 {
     display: inline-flex;
     align-items: flex-start;
@@ -2547,7 +2547,7 @@ main {
         display: flex;
         position: relative;
       }
-      
+
       .frameS .contents-wrapper {
         justify-content: space-around;
         gap: 8px;
@@ -2558,20 +2558,20 @@ main {
         width: 100%;
         flex: 0 0 auto;
       }
-      
+
       .frameS .contents {
         align-items: center;
         gap: 16px;
         padding: 8px 8px 8px 24px;
         flex: 1;
         flex-grow: 1;
-        background-color: #BDD5F0;        
+        background-color: #BDD5F0;
         border-radius: 4px 4px 0px 0px;
         display: flex;
         position: relative;
         color: white;
       }
-      
+
       .frameS .field-text {
         position: relative;
         width: 293px;
@@ -2583,13 +2583,13 @@ main {
         letter-spacing: 0;
         line-height: 28px;
       }
-      
+
       .frameS .ic-round-close {
         position: relative;
         width: 24px;
         height: 24px;
       }
-      
+
       .frameS .space {
         flex-direction: column;
         align-items: flex-start;
@@ -2605,7 +2605,7 @@ main {
         display: flex;
         position: relative;
       }
-      
+
       .frameS .div {
         flex-direction: column;
         gap: 16px;
@@ -2616,7 +2616,7 @@ main {
         width: 100%;
         flex: 0 0 auto;
       }
-      
+
       .frameS .field-wrapper {
         align-items: flex-start;
         gap: 32px;
@@ -2626,7 +2626,7 @@ main {
         display: flex;
         position: relative;
       }
-      
+
       .frameS .field {
         align-items: center;
         gap: 8px;
@@ -2635,7 +2635,7 @@ main {
         display: flex;
         position: relative;
       }
-      
+
       .frameS .field-label {
         position: relative;
         flex: 1;
@@ -2647,7 +2647,7 @@ main {
         letter-spacing: 0;
         line-height: 20px;
       }
-      
+
       .frameS .text-wrapper {
         width: 141px;
         font-family: "DM Sans-Bold", Helvetica;
@@ -2659,7 +2659,7 @@ main {
         letter-spacing: 0;
         line-height: 20px;
       }
-      
+
       .frameS .line {
         position: relative;
         align-self: stretch;
@@ -2667,7 +2667,7 @@ main {
         height: 1px;
         object-fit: cover;
       }
-      
+
       .frameS .field-2 {
         display: flex;
         align-items: center;
@@ -2676,7 +2676,7 @@ main {
         flex: 1;
         flex-grow: 1;
       }
-      
+
       .frameS .field-label-2 {
         flex: 1;
         font-family: "DM Sans-Medium", Helvetica;
@@ -2688,7 +2688,7 @@ main {
         letter-spacing: 0;
         line-height: 20px;
       }
-      
+
       .frameS .field-label-3 {
         width: 145px;
         font-family: "DM Sans-Medium", Helvetica;
@@ -2700,7 +2700,7 @@ main {
         letter-spacing: 0;
         line-height: 20px;
       }
-      
+
       .frameS .field-label-4 {
         width: 132px;
         font-family: "DM Sans-Medium", Helvetica;
@@ -2712,7 +2712,7 @@ main {
         letter-spacing: 0;
         line-height: 20px;
       }
-      
+
       .frameS .img {
         margin-top: -1px;
         position: relative;
@@ -2721,7 +2721,7 @@ main {
         height: 1px;
         object-fit: cover;
       }
-      
+
       .hedTx{
         font-family: "DM Sans-Bold", Helvetica !important;
         font-weight: 700 !important;
@@ -3333,7 +3333,7 @@ main {
 
 .count1 {
   color: #07070C;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
   text-align: right;
   margin-right: 25px;
@@ -3341,7 +3341,7 @@ main {
 
 .txClr1 {
   color: #00AECA;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 600;
 }
 

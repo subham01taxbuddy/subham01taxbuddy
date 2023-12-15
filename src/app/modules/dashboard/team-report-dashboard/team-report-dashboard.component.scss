@@ -23,7 +23,7 @@
     padding:15px;
     margin-top:15px;
     // box-shadow: 2px 5px #fafafa;
-    border:1px solid #ADD4FF;   
+    border:1px solid #ADD4FF;
     height:auto;
     // box-shadow: 1px 2px #e4e4ff;
   }
@@ -323,10 +323,10 @@
   border: 1px solid #8CBDF2;
 }
 .button-container {
-  margin-top: 60px;
+  margin-top: 20px;
   display: inline-flex;
-  align-items: flex-start;
-  gap: 10px;
+  justify-content: right;
+  gap:10px;
 }
 
 .dwldBtn-1{
@@ -534,7 +534,7 @@ line-height: 28px; /* 200% */
   display: flex;
   height: 36px;
   width: 119px;
-  padding: 8px 16px;
+  padding: 5px 5px;
   align-items: center;
   gap: 16px;
   background: #CEE5FF;
@@ -561,9 +561,15 @@ background: #CEE5FF;
   position: absolute;
   top: 50%;
   right: 5px;
-  transform: translateY(-50%);
+  transform: translateY(-50%) rotate(0deg); /* Initial rotation angle */
+  transition: transform 0.3s ease; /* Add a transition for smooth rotation */
   color: #2D8EF9;
 }
+
+.dropdown-box.open::after {
+  transform: translateY(-50%) rotate(180deg); /* Rotate the arrow when the dropdown is open */
+}
+
 .d-flex {
   display: flex;
 }

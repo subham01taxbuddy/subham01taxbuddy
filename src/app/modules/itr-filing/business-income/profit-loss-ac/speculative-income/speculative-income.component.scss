@@ -91,11 +91,6 @@
     flex: 0 0 auto;
 }
 
-.space {
-    border: none !important;
-    padding: 0 !important;
-}
-
 .accordion__item-body {
     padding: 24px;
 
@@ -159,4 +154,71 @@
 
 .hdByr-L {
     flex: 2 !important;
+}
+
+.inner_accordion-title {
+    color: #303030;
+    font-weight: 500;
+    height: 44px;
+    line-height: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    background-color: #F0F7FF;
+    padding: 12px 24px;
+    gap: 32px;
+}
+
+.gray_box {
+    background-color: #F3F3F3;
+    padding: 24px;
+    margin: 12px 0;
+    width: 100%;
+}
+
+// .btn.btn__add {
+//     padding-left: 30px;
+// }
+
+.btn__default {
+    background-color: transparent;
+    border: 1px solid #3E82CD;
+    color: #3E82CD;
+}
+
+.btn {
+    text-transform: capitalize;
+    position: relative;
+    font-family: "DM Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 28px;
+    border-radius: 4px;
+    padding: 8px 24px;
+    text-align: center;
+    padding: 0;
+}
+
+.buttons {
+    align-items: flex-end;
+}
+
+.form-control-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+
+.space {
+    background-color: #ffffff;
+    border: none !important;
+}
+
+.wrapper {
+    background-color: #F5F5FA !important;
+}
+
+.page-wrapper {
+    min-height: 0 !important;
 }

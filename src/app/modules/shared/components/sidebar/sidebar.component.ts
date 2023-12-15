@@ -87,7 +87,9 @@ export class SidebarComponent {
           }
         });
       }
-
+      if (this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserRoles, ['ROLE_ADMIN']) && element.name === 'Leader Dashboard') {
+        element.name = 'Admin Dashboard';
+      }
     });
   }
 
@@ -259,7 +261,7 @@ export class SidebarComponent {
     },
     {
       name: 'Other Report', active: false, url: null, roles: ['ROLE_ADMIN'],
-      icon: '/menu/partner.png',
+      icon: 'invoice.png',
       submenu: [
         { name: 'Proforma Invoice', url: '/reports/proforma-invoice', roles: [] },
         { name: 'Payment Received', url: '/reports/payment-received', roles: [] },

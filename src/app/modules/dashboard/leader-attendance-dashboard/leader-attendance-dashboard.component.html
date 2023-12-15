@@ -2,7 +2,7 @@
   <div class="row rowClr-1">
     <div class="col-sm-12">
       <div class="row">
-        <div class="col-sm-7">
+        <div class="col-sm-12">
           <div class="filter-box">
             <div class="row">
               <div class="col-sm-12 bckClr">
@@ -11,21 +11,21 @@
               </div>
               <div class="col-sm-12">
                 <div class="row">
-                  <div class="col-sm-4 spsTp ">
+                  <div class="col-sm-6 spsTp ">
                     <mat-form-field appearance="outline">
                       <mat-label>Start Date:</mat-label>
-          <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate" [max]="maxStartDate"
-            autocomplete="off" (dateChange)="setEndDateValidate()" />
+                      <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
+                        [max]="maxStartDate" autocomplete="off" (dateChange)="setEndDateValidate()" />
                       <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                       <mat-datepicker #picker1></mat-datepicker>
                       <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
                     </mat-form-field>
                   </div>
-                  <div class="col-sm-4 spsTp ">
+                  <div class="col-sm-6 spsTp ">
                     <mat-form-field appearance="outline">
                       <mat-label>End Date:</mat-label>
-          <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxEndDate"
-            autocomplete="off" (dateChange)="setEndDateValidate()" />
+                      <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
+                        [max]="maxEndDate" autocomplete="off" (dateChange)="setEndDateValidate()" />
                       <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                       <mat-datepicker #picker2></mat-datepicker>
                       <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
@@ -34,28 +34,27 @@
                   </div>
                 </div>
               </div>
+              <div class="button-container">
+                <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                </button>
+                <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+                  <i class="fa fa-download" aria-hidden="true"></i> Download File
+                </button>
+                <button class="clrLnk-1" (click)="this.resetFilters()">
+                  Clear form
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-sm-5">
-          <div class="button-container">
-            <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-            </button>
-            <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
-              <i class="fa fa-download" aria-hidden="true"></i> Download File
-            </button>
-            <button class="clrLnk-1" (click)="this.resetFilters()">
-              Clear form
-            </button>
-          </div>
-        </div>
+
       </div>
     </div>
   </div>
   <div class="new-table-container">
     <div class="row">
       <div class="col-sm-12">
-        <div class="txtH-1">Total SMEs :  <span class="numTxBg1">{{ partnerCount }}</span></div>
+        <div class="txtH-1">Total SMEs : <span class="numTxBg1">{{ partnerCount }}</span></div>
       </div>
     </div>
     <hr>
@@ -134,7 +133,8 @@
                   <td>{{ i+1 }}</td>
                   <td>{{ item.nameOfFiler }}</td>
                   <td>
-                    <span *ngIf="item.attendanceOnDateInBo === 'Active'; else inactive" class="active-status">Active</span>
+                    <span *ngIf="item.attendanceOnDateInBo === 'Active'; else inactive"
+                      class="active-status">Active</span>
                     <ng-template #inactive>
                       <span class="inactive-status">Inactive</span>
                     </ng-template>
