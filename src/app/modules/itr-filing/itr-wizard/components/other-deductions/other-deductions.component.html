@@ -12,182 +12,173 @@
           </h2>
 
           <form [formGroup]="otherDeductionForm">
-<div id="collapse4" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-<div class="accordion__item-body">
-<div class="gray_container">
-<div class="div-6 mb-20">
-  <div class="form-field">
-    <span class="normal_text">Section 8OEE - Interest on Home Loan</span>
-    <span class="text_italic">Autofiled from HP</span>
-  </div>
-  <div class="form-field">
-    <mat-form-field appearance="outline">
-      <input class=" form-control disable inpplac"
-              matInput
-              placeholder="Under sec. 80EE"
-              maxlength="8"
-              formControlName="us80ee"
-              autocomplete="off"
-              digitsOnly
-              readonly
-      />
-    </mat-form-field>
-  </div>
-</div>
-<div class="div-6 mb-20">
-  <div class="form-field">
-    <span class="normal_text">Section 8OEEA - Interest on Home Loan</span>
-    <span class="text_italic">Autofiled from HP</span>
-  </div>
-  <div class="form-field">
-    <mat-form-field appearance="outline">
-      <input class="form-control disable inpplac"
-              matInput
-              placeholder="Under sec. 80EEA"
-              maxlength="8"
-              formControlName="us80eea"
-              autocomplete="off"
-              digitsOnly
-              readonly
-      />
-    </mat-form-field>
-  </div>
-</div>
-<div class="div-6 mb-20">
-  <div class="form-field">
-    <span class="normal_text">Section 8OQQB- Royalty received on books </span>
-    <span class="text_italic">Autofiled from IFOS</span>
-  </div>
-  <div class="form-field">
-    <mat-form-field appearance="outline">
-      <input class="form-control disable inpplac"
-              matInput
-              placeholder="Under sec. 80QQB"
-              maxlength="8"
-              formControlName="us80qqb"
-              autocomplete="off"
-              digitsOnly
-              readonly
-      />
-    </mat-form-field>
-  </div>
-</div>
-<div class="div-6 mb-20">
-  <div class="form-field">
-    <span class="normal_text">Section 8ORRB-Income on Parents/Inventions </span>
-    <span class="text_italic">Autofiled from IFOS</span>
-  </div>
-  <div class="form-field">
-    <input type="text"
-           id="exampleInputEmail1" aria-describedby="emailHelp" placeholder=""
-           disabled>
-    <mat-form-field appearance="outline">
-      <input class="form-control disable inpplac"
-              matInput
-              placeholder="Under sec. 80RRB"
-              maxlength="8"
-              formControlName="us80rrb"
-              autocomplete="off"
-              digitsOnly
-              readonly
-      />
-    </mat-form-field>
-  </div>
-</div>
+            <div id="collapse4" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+              <div class="accordion__item-body">
+              <div class="gray_container">
+              <div class="div-6 mb-20">
+                <div class="form-field">
+                  <span class="normal_text">Section 8OEE - Interest on Home Loan</span>
+                  <span class="text_italic">Autofiled from HP</span>
+                </div>
+                <div class="form-field">
+                  <mat-form-field appearance="outline">
+                    <input
+                            matInput
+                            placeholder="Under sec. 80EE"
+                            maxlength="8"
+                            formControlName="us80ee"
+                            autocomplete="off"
+                            digitsOnly
+                            readonly/>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="div-6 mb-20">
+                <div class="form-field">
+                  <span class="normal_text">Section 8OEEA - Interest on Home Loan</span>
+                  <span class="text_italic">Autofiled from HP</span>
+                </div>
+                <div class="form-field">
+                  <mat-form-field appearance="outline">
+                    <input
+                            matInput
+                            placeholder="Under sec. 80EEA"
+                            maxlength="8"
+                            formControlName="us80eea"
+                            autocomplete="off"
+                            digitsOnly
+                            readonly/>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="div-6 mb-20">
+                <div class="form-field">
+                  <span class="normal_text">Section 8OQQB- Royalty received on books </span>
+                  <span class="text_italic">Autofiled from IFOS</span>
+                </div>
+                <div class="form-field">
+                  <mat-form-field appearance="outline">
+                    <input
+                            matInput
+                            placeholder="Under sec. 80QQB"
+                            maxlength="8"
+                            formControlName="us80qqb"
+                            autocomplete="off"
+                            digitsOnly
+                            readonly/>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="div-6 mb-20">
+                <div class="form-field">
+                  <span class="normal_text">Section 8ORRB-Income on Parents/Inventions </span>
+                  <span class="text_italic">Autofiled from IFOS</span>
+                </div>
+                <div class="form-field">
+                  <mat-form-field appearance="outline">
+                    <input
+                            matInput
+                            placeholder="Under sec. 80RRB"
+                            maxlength="8"
+                            formControlName="us80rrb"
+                            autocomplete="off"
+                            digitsOnly
+                            readonly/>
+                  </mat-form-field>
+                </div>
+              </div>
 
-<!-- 80TTA -->
-<div class="div-6">
-  <div class="gray_box">
-    <p><span class="normal_text">Deduction for Interest earned on Savings Bank
-                                                        Account
-                                                    </span> </p>
-    <div class="div-6 mb-20">
-      <div class="form-field">
-        <div><span class="normal_text">8OTTA</span></div>
-        <span class="text_italic">This auto filed from IFOS</span>
-      </div>
-      <div class="form-field">
-        <mat-form-field appearance="outline">
-          <input class="form-control inpplac disable"
-                 matInput
-                 placeholder="Under sec. 80TTA"
-                 maxlength="8"
-                 formControlName="us80tta"
-                 autocomplete="off"
-                 digitsOnly
-                 readonly
-          />
-        </mat-form-field>
-      </div>
-    </div>
+              <!-- 80TTA -->
+              <div class="div-6">
+                <div class="gray_box">
+                  <p><span class="normal_text">Deduction for Interest earned on Savings Bank
+                                                                      Account
+                                                                  </span> </p>
+                  <div class="div-6 mb-20">
+                    <div class="form-field">
+                      <div><span class="normal_text">8OTTA</span></div>
+                      <span class="text_italic">This auto filed from IFOS</span>
+                    </div>
+                    <div class="form-field">
+                      <mat-form-field appearance="outline">
+                        <input
+                               matInput
+                               placeholder="Under sec. 80TTA"
+                               maxlength="8"
+                               formControlName="us80tta"
+                               autocomplete="off"
+                               digitsOnly
+                               readonly/>
+                      </mat-form-field>
+                    </div>
+                  </div>
 
-    <!-- 80TTB -->
-    <div class="div-6">
-      <div class="form-field">
-        <div><span class="normal_text">8OTTB</span> </div>
-        <span class="text_italic">This auto filed from IFOS</span>
-      </div>
-      <div class="form-field">
-        <mat-form-field appearance="outline">
-          <input class="form-control inpplac disable"
-                 matInput
-                 placeholder="Under sec. 80TTB"
-                 maxlength="8"
-                 formControlName="us80ttb"
-                 autocomplete="off"
-                 digitsOnly
-                 readonly
-          />
-        </mat-form-field>
-      </div>
-    </div>
-  </div>
-</div>
+                  <!-- 80TTB -->
+                  <div class="div-6">
+                    <div class="form-field">
+                      <div><span class="normal_text">8OTTB</span> </div>
+                      <span class="text_italic">This auto filed from IFOS</span>
+                    </div>
+                    <div class="form-field">
+                      <mat-form-field appearance="outline">
+                        <input
+                               matInput
+                               placeholder="Under sec. 80TTB"
+                               maxlength="8"
+                               formControlName="us80ttb"
+                               autocomplete="off"
+                               digitsOnly
+                               readonly/>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-<div class="div-6 mb-20">
-  <div class="form-field">
-    <span class="normal_text">Section BOE-Eduction Loan on Higher Studies</span>
-    <span class="normal_text">(Graduate or Post Graduate)</span>
-  </div>
-  <div class="form-field">
-    <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-           aria-describedby="emailHelp" placeholder="₹ Enter Amount">
-  </div>
-</div>
-<div class="div-6 mb-20">
-  <div class="form-field">
-    <span class="normal_text">Section 8OGG-Deduction for House Rent </span>
-    <span class="normal_text">(Self-Employed or Salaried with no HRA) </span>
+              <div class="div-6 mb-20">
+                <div class="form-field">
+                  <span class="normal_text">Section BOE-Eduction Loan on Higher Studies</span>
+                  <span class="normal_text">(Graduate or Post Graduate)</span>
+                </div>
+                <div class="form-field">
+                  <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                         aria-describedby="emailHelp" placeholder="₹ Enter Amount">
+                </div>
+              </div>
+              <div class="div-6 mb-20">
+                <div class="form-field">
+                  <span class="normal_text">Section 8OGG-Deduction for House Rent </span>
+                  <span class="normal_text">(Self-Employed or Salaried with no HRA) </span>
 
-  </div>
-  <div class="form-field">
-    <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-           aria-describedby="emailHelp" placeholder="₹ Enter Amount">
-  </div>
-</div>
-<div class="div-6 mb-20">
-  <div class="form-field">
-                                                <span class="normal_text"> Section 8OGGC-Contribution to Political
-                                                    Party</span>
-  </div>
-  <div class="form-field">
-    <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-           aria-describedby="emailHelp" placeholder="₹ Enter Amount">
-  </div>
-</div>
-<div class="div-6 mb-20">
-  <div class="form-field">
-    <span class="normal_text">Section 8OEEB-Electric Vehical Loan </span>
-  </div>
-  <div class="form-field">
-    <input type="text" class="form-control inpplac" id="exampleInputEmail1"
-           aria-describedby="emailHelp" placeholder="₹ Enter Amount">
-  </div>
-</div>
-</div>
-</div>
-</div>
-</form>
+                </div>
+                <div class="form-field">
+                  <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                         aria-describedby="emailHelp" placeholder="₹ Enter Amount">
+                </div>
+              </div>
+              <div class="div-6 mb-20">
+                <div class="form-field">
+                    <span class="normal_text"> Section 8OGGC-Contribution to Political
+                              Party</span>
+                </div>
+                <div class="form-field">
+                  <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                         aria-describedby="emailHelp" placeholder="₹ Enter Amount">
+                </div>
+              </div>
+              <div class="div-6 mb-20">
+                <div class="form-field">
+                  <span class="normal_text">Section 8OEEB-Electric Vehical Loan </span>
+                </div>
+                <div class="form-field">
+                  <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                         aria-describedby="emailHelp" placeholder="₹ Enter Amount">
+                </div>
+              </div>
+            </div>
+            </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>

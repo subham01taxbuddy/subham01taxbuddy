@@ -47,16 +47,13 @@
                                       placeholder="Type of donee"
                                       formControlName="schemeCode"
                                       name="schemeCode[i]"
-                                      class="form-control inpplac "
-                                      required
-                          >
+                                      required>
                             <mat-option
                                     *ngFor="let dropdown of otherDonationToDropdown"
                                     [value]="dropdown.value"
                                     matTooltip="{{ dropdown.label }}"
                                     matTooltipClass="tab-tooltip"
-                                    matTooltipPosition="above"
-                            >
+                                    matTooltipPosition="above">
                               {{ dropdown.label }}
                             </mat-option>
                           </mat-select>
@@ -109,7 +106,6 @@
                                 matInput
                                 placeholder="Name of donee"
                                 name="name[i]"
-                                class="form-control inpplac"
                                 maxlength="125"
                                 required
                                 type="text"
@@ -133,7 +129,6 @@
                                 placeholder="Amount in Cash"
                                 name="amount"
                                 required
-                                class="form-control inpplac"
                                 maxlength="14"
                                 digitsOnly/>
                         <mat-error
@@ -153,7 +148,6 @@
                                 placeholder="Amount Other Than Cash"
                                 name="amountOtherThanCash[i]"
                                 required
-                                class="form-control inpplac"
                                 maxlength="14"
                                 digitsOnly/>
                         <mat-error *ngIf="donation.get('amountOtherThanCash').hasError('pattern')">
@@ -177,7 +171,6 @@
                                 currencyMask
                                 placeholder="PAN of donee"
                                 name="panNumber[i]"
-                                class="form-control inpplac"
                                 (blur)="checkDoneePAN(i, donation)"
                                 maxlength="10"
                                 minlength="10"
@@ -203,7 +196,6 @@
                                 currencyMask
                                 placeholder="PIN"
                                 name="pinCode[i]"
-                                class="form-control inpplac"
                                 maxlength="6"
                                 minlength="6"
                                 required
@@ -230,7 +222,6 @@
                                 matInput
                                 placeholder="City/Taluka/District"
                                 name="city[i]"
-                                class="form-control inpplac"
                                 maxlength="50"
                                 required
                                 type="text"
