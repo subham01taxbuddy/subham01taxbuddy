@@ -6713,6 +6713,10 @@ export class SummaryComponent implements OnInit {
         if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
           this.checkFilerAssignment();
           // console.log(res, 'Paid');
+        }  else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
+          this.utilsService.showSnackBar(
+            'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
+          );
         } else {
           this.utilsService.showSnackBar(
             'Please make sure that the payment has been made by the user to proceed ahead'
