@@ -1052,11 +1052,11 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
-      if (result) {
-        if (result) {
+      // if (result) {
+        // if (result) {
           this.advanceSearch();
-        }
-      }
+        // }
+      // }
     });
   }
 

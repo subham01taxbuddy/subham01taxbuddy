@@ -407,7 +407,6 @@ export class FilingsComponent implements OnInit, OnDestroy {
       let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
       param = param + sortByJson;
     }
-
     if (Object.keys(this.searchBy).length) {
       let searchByKey = Object.keys(this.searchBy);
       let searchByValue = Object.values(this.searchBy);
@@ -479,6 +478,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         leaderName: data[i].leaderName,
         leaderUserId: data[i].leaderUserId,
         filingSource: data[i].filingSource,
+        itrSummaryJson: data[i].itrSummaryJson,
       });
     }
     return newData;
@@ -566,12 +566,23 @@ export class FilingsComponent implements OnInit, OnDestroy {
         headerName: 'Filing Mode',
         field: 'filingSource',
         cellStyle: { textAlign: 'center' },
-        width: 120,
+        width: 150,
         filter: 'agTextColumnFilter',
         filterParams: {
           defaultOption: 'startsWith',
           debounceMs: 0,
         },
+        valueGetter: function (params) {
+          if (params.data.filingSource === 'ERI') {
+            if (!params.data.itrSummaryJson) {
+              return params.data.filingSource + ' - TB Utility';
+            } else {
+              return params.data.filingSource + '- Summary JSON ';
+            }
+          } else {
+            return params.data.filingSource;
+          }
+        }
       },
       {
         headerName: 'Return Type',

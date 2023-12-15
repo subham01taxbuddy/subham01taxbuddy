@@ -79,10 +79,12 @@ export class UpdateCapacityComponent implements OnInit {
             this.toastMessage.alert('success', 'Active Capacity updated successfully');
             this.dialogRef.close(status);
           } else {
+            this.dialogRef.close(status);
             this.toastMessage.alert('error', res.message);
           }
         },
         (error) => {
+          this.dialogRef.close(status);
           this.toastMessage.alert('error', 'failed to update.');
           this.loading = false;
         }
