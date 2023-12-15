@@ -572,9 +572,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
         valueGetter: function (params) {
           if (params.data.filingSource === 'ERI') {
             if (!params.data.itrSummaryJson) {
-              return params.data.filingSource + '- Summary JSON ';
-            } else {
               return params.data.filingSource + ' - TB Utility';
+            } else {
+              return params.data.filingSource + '- Summary JSON ';
             }
           } else {
             return params.data.filingSource;
