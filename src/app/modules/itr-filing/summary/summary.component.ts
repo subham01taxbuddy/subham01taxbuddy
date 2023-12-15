@@ -262,6 +262,7 @@ export class SummaryComponent implements OnInit {
         IntrstSec10XISecondProviso?: any;
         IntrstSec10XIIFirstProviso?: any;
         IntrstSec10XIISecondProviso?: any;
+        giftExemptIncome?: any;
       };
       otherIncomeTotal: number;
     };
@@ -862,11 +863,14 @@ export class SummaryComponent implements OnInit {
     this.natureOfBusiness = JSON.parse(
       sessionStorage.getItem('NATURE_OF_BUSINESS')
     );
+
+    if (!this.natureOfBusiness) {
+      this.getMastersData();
+    }
+
     this.utilsService.smoothScrollToTop();
     this.loading = true;
     this.countryCodeList = this.utilsService.getCountryCodeList();
-    this.calculations();
-
     // Setting the ITR Type in ITR Object and updating the ITR_Type
     if (this.ITR_JSON.itrType === '1') {
       this.itrType = 'ITR1';
@@ -877,6 +881,32 @@ export class SummaryComponent implements OnInit {
     } else if (this.ITR_JSON.itrType === '4') {
       this.itrType = 'ITR4';
     }
+
+    this.calculations();
+  }
+
+  getMastersData() {
+    this.loading = true;
+    const param = '/itrmaster';
+    this.itrMsService.getMethod(param).subscribe(
+      (result: any) => {
+        this.loading = false;
+        sessionStorage.setItem('MASTER', JSON.stringify(result));
+        let natureOfBusinessAll = result.natureOfBusiness;
+        this.natureOfBusiness = natureOfBusinessAll;
+        sessionStorage.setItem(
+          'NATURE_OF_BUSINESS',
+          JSON.stringify(natureOfBusinessAll)
+        );
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'Failed to get nature of Business list, please try again.'
+        );
+        this.utilsService.smoothScrollToTop();
+      }
+    );
   }
 
   getItrTypeInSummary() {
@@ -2840,7 +2870,9 @@ export class SummaryComponent implements OnInit {
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.IncomeNotifiedPrYr89AOS -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS,
+                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.Tot562x,
 
                 dividendIncome:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
@@ -2914,6 +2946,10 @@ export class SummaryComponent implements OnInit {
                   (total, element) => total + (element.SourceAmount || 0),
                   0
                 ),
+
+                giftExemptIncome:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Tot562x,
               },
 
               otherIncomeTotal:
@@ -4578,7 +4614,7 @@ export class SummaryComponent implements OnInit {
               ],
               total: 0,
             },
-            
+
             giftExemptIncome: this.ITR_JSON.itrSummaryJson['ITR'][
               this.itrType
             ]?.ScheduleEI?.OthersInc?.OthersIncDtls?.find(

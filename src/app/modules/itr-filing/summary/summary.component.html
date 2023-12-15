@@ -20,9 +20,7 @@
           </div>
           <div
             class="txBt"
-            *ngIf="
-              finalCalculations?.personalInfo?.aadhaarNumber
-            "
+            *ngIf="finalCalculations?.personalInfo?.aadhaarNumber"
           >
             <div>
               <span class="txLf">Aadhar Number:</span
@@ -33,18 +31,16 @@
           </div>
 
           <div
-          class="txBt"
-          *ngIf="
-            finalCalculations?.personalInfo?.AadhaarEnrolmentId
-          "
-        >
-          <div>
-            <span class="txLf">Aadhaar Enrolment Id: </span
-            ><span class="txMuLf">{{
-              finalCalculations?.personalInfo?.AadhaarEnrolmentId
-            }}</span>
+            class="txBt"
+            *ngIf="finalCalculations?.personalInfo?.AadhaarEnrolmentId"
+          >
+            <div>
+              <span class="txLf">Aadhaar Enrolment Id: </span
+              ><span class="txMuLf">{{
+                finalCalculations?.personalInfo?.AadhaarEnrolmentId
+              }}</span>
+            </div>
           </div>
-        </div>
           <!-- Mobile -->
           <div class="txBt">
             <div>
@@ -281,6 +277,7 @@
         </div>
 
         <div
+          *ngIf="finalCalculations?.AmtSeventhProvisio139i"
           class="bxHed flex justify-between"
           style="margin: 0px; border: 1px solid rgba(59, 130, 246, 0.1)"
         >
@@ -294,6 +291,7 @@
         </div>
 
         <div
+          *ngIf="finalCalculations?.AmtSeventhProvisio139ii"
           class="bxHed flex justify-between"
           style="margin: 0px; border: 1px solid rgba(59, 130, 246, 0.1)"
         >
@@ -308,6 +306,7 @@
         </div>
 
         <div
+          *ngIf="finalCalculations?.AmtSeventhProvisio139iii"
           class="bxHed flex justify-between"
           style="margin: 0px; border: 1px solid rgba(59, 130, 246, 0.1)"
         >
@@ -321,21 +320,23 @@
           </div>
         </div>
 
-        <div
-          class="bxHed flex justify-between"
-          style="margin: 0px; border: 1px solid rgba(59, 130, 246, 0.1)"
-          *ngFor="
-            let clauseIV of finalCalculations?.clauseiv7provisio139iDtls;
-            let i = index
-          "
-        >
-          <div>
-            {{ clauseIV?.clauseiv7provisio139iNature }}
+        <ng-container *ngIf="finalCalculations?.clauseiv7provisio139iDtls">
+          <div
+            class="bxHed flex justify-between"
+            style="margin: 0px; border: 1px solid rgba(59, 130, 246, 0.1)"
+            *ngFor="
+              let clauseIV of finalCalculations?.clauseiv7provisio139iDtls;
+              let i = index
+            "
+          >
+            <div>
+              {{ clauseIV?.clauseiv7provisio139iNature }}
+            </div>
+            <div style="float: right; width: 25%; text-align: end">
+              {{ clauseIV?.clauseiv7provisio139iAmount }}
+            </div>
           </div>
-          <div style="float: right; width: 25%; text-align: end">
-            {{ clauseIV?.clauseiv7provisio139iAmount }}
-          </div>
-        </div>
+        </ng-container>
       </div>
     </div>
   </div>
@@ -1133,7 +1134,8 @@
                                   {{ business?.businessSection }}
                                 </td>
                                 <td>
-                                  {{ business?.natureOfBusinessCode }} - {{business?.natureOfBusinessCodeName}}
+                                  {{ business?.natureOfBusinessCode }} -
+                                  {{ business?.natureOfBusinessCodeName }}
                                 </td>
                                 <td>{{ business?.tradeName }}</td>
                                 <td>{{ business?.description }}</td>
@@ -1173,7 +1175,8 @@
                                   {{ business?.businessSection }}
                                 </td>
                                 <td>
-                                  {{ business?.natureOfBusinessCode }} - {{business?.natureOfBusinessCodeName}}
+                                  {{ business?.natureOfBusinessCode }} -
+                                  {{ business?.natureOfBusinessCodeName }}
                                 </td>
                                 <td>{{ business?.tradeName }}</td>
                                 <td>{{ business?.description }}</td>
@@ -1523,7 +1526,8 @@
                             {{ businessDetail?.NameOfBusiness }}
                           </td>
                           <td>
-                            {{ businessDetail?.CodeAE }} - {{businessDetail?.natureOfBusinessCodeName}}
+                            {{ businessDetail?.CodeAE }} -
+                            {{ businessDetail?.natureOfBusinessCodeName }}
                           </td>
                           <td>
                             {{ businessDetail?.description }}
@@ -3296,6 +3300,27 @@
                             </td>
                           </tr>
 
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.giftExemptIncome &&
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.giftExemptIncome > 0
+                            "
+                          >
+                            <td>Gift u/s 56(2)(x)</td>
+                            <td class="">
+                              <i class="material-icons" style="font-size: 15px"
+                                >₹</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                ?.giftExemptIncome
+                                )
+                              }}
+                            </td>
+                          </tr>
+
                           <tr>
                             <th>Total</th>
                             <th>
@@ -4159,11 +4184,7 @@
                   <!-- ScheduleBFLA -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    *ngIf="
-                      !ITR_JSON.isItrSummaryJsonEdited &&
-                      ITR_JSON.itrSummaryJson &&
-                      finalCalculations?.ScheduleBFLA
-                    "
+                    *ngIf="false"
                     #ScheduleBFLA
                   >
                     <mat-expansion-panel-header class="newclass">
@@ -8013,31 +8034,56 @@
 
                         <!-- row 3 -->
                         <tr (click)="togglePtiShortTerm($event, i)">
-                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
+                          <td
+                            [attr.rowspan]="
+                              !ptiShortTermExpanded[i] ? '3' : '1'
+                            "
+                            colspan="1"
+                          >
                             {{ "ai. Short term" }}
                           </td>
-                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
+                          <td
+                            [attr.rowspan]="
+                              !ptiShortTermExpanded[i] ? '3' : '1'
+                            "
+                            colspan="1"
+                          >
                             {{ pti?.CapitalGainsPTI?.ShortTermCG?.AmountOfInc }}
                           </td>
-                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
+                          <td
+                            [attr.rowspan]="
+                              !ptiShortTermExpanded[i] ? '3' : '1'
+                            "
+                            colspan="1"
+                          >
                             {{
                               pti?.CapitalGainsPTI?.ShortTermCG
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
+                          <td
+                            [attr.rowspan]="
+                              !ptiShortTermExpanded[i] ? '3' : '1'
+                            "
+                            colspan="1"
+                          >
                             {{
                               pti?.CapitalGainsPTI?.ShortTermCG?.NetIncomeLoss
                             }}
                           </td>
-                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
+                          <td
+                            [attr.rowspan]="
+                              !ptiShortTermExpanded[i] ? '3' : '1'
+                            "
+                            colspan="1"
+                          >
                             {{ pti?.CapitalGainsPTI?.ShortTermCG?.TDSAmount }}
                             <mat-icon
-                            class="arrow-icon"
-                            (click)="togglePtiShortTerm($event, i)"
-                          >
-                            keyboard_arrow_down
-                          </mat-icon>
+                              class="arrow-icon"
+                              (click)="togglePtiShortTerm($event, i)"
+                            >
+                              keyboard_arrow_down
+                            </mat-icon>
                           </td>
                         </tr>
 
@@ -8093,31 +8139,56 @@
 
                         <!-- row 6 -->
                         <tr (click)="togglePtiLongTerm($event, i)">
-                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
+                          <td
+                            [attr.rowspan]="
+                              !ptiShortTermExpanded[i] ? '3' : '1'
+                            "
+                            colspan="1"
+                          >
                             {{ "b. Long term" }}
                           </td>
-                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
+                          <td
+                            [attr.rowspan]="
+                              !ptiShortTermExpanded[i] ? '3' : '1'
+                            "
+                            colspan="1"
+                          >
                             {{ pti?.CapitalGainsPTI?.LongTermCG?.AmountOfInc }}
                           </td>
-                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
+                          <td
+                            [attr.rowspan]="
+                              !ptiShortTermExpanded[i] ? '3' : '1'
+                            "
+                            colspan="1"
+                          >
                             {{
                               pti?.CapitalGainsPTI?.LongTermCG
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
+                          <td
+                            [attr.rowspan]="
+                              !ptiShortTermExpanded[i] ? '3' : '1'
+                            "
+                            colspan="1"
+                          >
                             {{
                               pti?.CapitalGainsPTI?.LongTermCG?.NetIncomeLoss
                             }}
                           </td>
-                          <td [attr.rowspan]="!ptiShortTermExpanded[i] ? '3' : '1'" colspan="1">
+                          <td
+                            [attr.rowspan]="
+                              !ptiShortTermExpanded[i] ? '3' : '1'
+                            "
+                            colspan="1"
+                          >
                             {{ pti?.CapitalGainsPTI?.LongTermCG?.TDSAmount }}
                             <mat-icon
-                            class="arrow-icon"
-                            (click)="togglePtiLongTerm($event, i)"
-                          >
-                            keyboard_arrow_down
-                          </mat-icon>
+                              class="arrow-icon"
+                              (click)="togglePtiLongTerm($event, i)"
+                            >
+                              keyboard_arrow_down
+                            </mat-icon>
                           </td>
                         </tr>
 
@@ -9869,7 +9940,12 @@
                               <i class="material-icons" style="font-size: 15px"
                                 >₹</i
                               >&nbsp;{{
-                                utilsService.currencyFormatter(exempt.OthAmount - finalCalculations?.giftExemptIncome ? finalCalculations?.giftExemptIncome : 0)
+                                utilsService.currencyFormatter(
+                                  exempt.OthAmount -
+                                    finalCalculations?.giftExemptIncome
+                                    ? finalCalculations?.giftExemptIncome
+                                    : 0
+                                )
                               }}
                             </td>
                           </tr>
