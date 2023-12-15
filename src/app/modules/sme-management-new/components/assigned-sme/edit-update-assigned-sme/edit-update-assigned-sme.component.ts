@@ -814,13 +814,14 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
           'false',
           res.message
         );
-
+        this.loading = false;
         this.updateSuccessful = false;
       } else {
         // this._toastMessageService.alert(
         //   'success',
         //   'sme details updated successfully'
         // );
+        this.loading = false;
         this.updateSuccessful = true;
       }
 
