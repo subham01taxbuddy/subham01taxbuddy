@@ -11,6 +11,8 @@ export const environment = {
 	isValidItr: false,
 	assistedKmScript: '../assets/assisted-km-script-uat.html',
 	environment: 'UAT',
+	validate_km_token: "https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/kommunicate/validate-token",
+	kmAppId: "3f4d0cc30b95c4deb37639d7cc350c728",
 	admin_id: 3000,
 	webportal_url: 'https://uat-itr.taxbuddy.com',
 	lifecycleUrl: "https://ngd74g554pp72qp5ur3b55cvia0vfwur.lambda-url.ap-south-1.on.aws/itr/lifecycle-status",

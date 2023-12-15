@@ -29,6 +29,9 @@ import { AgTooltipComponent } from "../../../shared/components/ag-tooltip/ag-too
 import { ReAssignActionDialogComponent } from '../../components/re-assign-action-dialog/re-assign-action-dialog.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import * as moment from 'moment';
+import { DomSanitizer } from '@angular/platform-browser';
+import { KommunicateSsoService } from 'src/app/services/kommunicate-sso.service';
+
 declare function we_track(key: string, value: any);
 @Component({
   selector: 'app-assigned-new-users',
@@ -76,11 +79,13 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private dialog: MatDialog,
     private itrMsService: ItrMsService,
-    private roleBaseAuthGuardService: RoleBaseAuthGuardService,
+    private kommunicateSsoService: KommunicateSsoService,
     private activatedRoute: ActivatedRoute,
     private requestManager: RequestManager,
     private cacheManager: CacheManager,
     private userService: UserMsService,
+    private sanitizer: DomSanitizer,
+
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
@@ -418,7 +423,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
           if (this.loggedInUserRoles.includes('ROLE_OWNER')) {
             return params.data.serviceType === 'ITR' && this.showReassignmentBtn.length && params.data.statusId != 11;
           } else {
-            return  this.showReassignmentBtn.length
+            return this.showReassignmentBtn.length
           }
         },
         cellStyle: function (params: any) {
@@ -736,7 +741,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     ];
   }
 
-  reassignmentForLeader(){
+  reassignmentForLeader() {
     let selectedRows = this.usersGridOptions.api.getSelectedRows();
     if (selectedRows.length === 0) {
       this.utilsService.showSnackBar('Please select entries from table to Re-Assign');
@@ -746,12 +751,12 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     const uniqueLeaderUserIds = new Set(selectedRows.map(row => row.leaderUserId));
     const uniqueServiceType = new Set(selectedRows.map(row => row.serviceType))
 
-    if((uniqueLeaderUserIds.size !== 1) || (uniqueServiceType.size !==1)){
-      if(this.loggedInUserRoles.includes('ROLE_ADMIN')){
+    if ((uniqueLeaderUserIds.size !== 1) || (uniqueServiceType.size !== 1)) {
+      if (this.loggedInUserRoles.includes('ROLE_ADMIN')) {
         this.utilsService.showSnackBar('Please filter 1 leader and 1 service and the bulk re-assignment to leader')
-      }else{
+      } else {
         this.utilsService.showSnackBar('Please filter 1 service and then try the bulk re-assignment to leader');
-      }      return;
+      } return;
     }
 
     let disposable = this.dialog.open(ReAssignActionDialogComponent, {
@@ -783,9 +788,9 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     const serviceType = selectedRows.map(row => row.serviceType);
 
     if ((uniqueLeaderUserIds.size !== 1) || serviceType.some(type => type !== 'ITR')) {
-      if(this.loggedInUserRoles.includes('ROLE_ADMIN')){
+      if (this.loggedInUserRoles.includes('ROLE_ADMIN')) {
         this.utilsService.showSnackBar('Please filter 1 leader and ITR service and then try the bulk re-assignment to Filer')
-      }else{
+      } else {
         this.utilsService.showSnackBar('Please filter ITR service and then try the bulk re-assignment to Filer');
       }
       return;
@@ -833,8 +838,8 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         lastFiledItrId: userData[i].lastFiledItrId,
         conversationWithFiler: userData[i].conversationWithFiler,
         ownerUserId: userData[i].ownerUserId,
-        filerUserId : userData[i].filerUserId,
-        leaderUserId :userData[i].leaderUserId,
+        filerUserId: userData[i].filerUserId,
+        leaderUserId: userData[i].leaderUserId,
       })
       userArray.push(userInfo);
     }
@@ -1156,6 +1161,10 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     disposable.afterClosed().subscribe(result => {
     });
   }
+
+  isChatOpen = false;
+  kommChatLink = null;
+
   openChat(client) {
     let disposable = this.dialog.open(ChatOptionsDialogComponent, {
       width: '50%',
@@ -1168,11 +1177,14 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     })
 
     disposable.afterClosed().subscribe(result => {
+      if (result.id) {
+        this.isChatOpen = true;
+        this.kommunicateSsoService.openConversation(result.id)
+        this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
+      }
     });
 
   }
-
-
 
   moreOptions(client) {
     console.log('client', client)
@@ -1221,13 +1233,13 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
       this.filerId = this.filerId = this.agentId;
       this.partnerType = this.utilsService.getPartnerType();
     }
-      if (this.dataOnLoad) {
-        this.search();
-      } else {
-        //clear grid for loaded data
-        this.usersGridOptions.api?.setRowData(this.createRowData([]));
-        this.config.totalItems = 0;
-      }
+    if (this.dataOnLoad) {
+      this.search();
+    } else {
+      //clear grid for loaded data
+      this.usersGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
+    }
 
 
   }

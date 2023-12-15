@@ -21,9 +21,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&amp;family=Noto+Sans:wght@400;500;600;700;800&amp;display=swap" /> -->
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
@@ -32,9 +34,9 @@
   <script src="https://accounts.google.com/gsi/client"></script>
   <script src="https://apis.google.com/js/api.js"></script>
   <script src="https://kit.fontawesome.com/875db75ec4.js" crossorigin="anonymous"></script>
- <!-- New Fontawesome Script Starts -->
+  <!-- New Fontawesome Script Starts -->
   <script src="https://kit.fontawesome.com/b36b654a7b.js" crossorigin="anonymous"></script>
- <!-- New Fontawesome Script Ends -->
+  <!-- New Fontawesome Script Ends -->
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script>
     var appLocation = '';
@@ -43,62 +45,76 @@
   </script>
 
 
-<script type="text/javascript" src="../../../../assets/scripts/vendors/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" src="../../../../assets/scripts/chart-utils.min.js"></script>
-<script type="text/javascript" src="../../../../assets/scripts/chart.min.js"></script>
-<script type="text/javascript" src="https://unpkg.com/chartjs-chart-geo@3"></script>
-<script src="../../../../assets/scripts/app.js?v=5.0"></script>
+  <script type="text/javascript" src="../../../../assets/scripts/vendors/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="../../../../assets/scripts/chart-utils.min.js"></script>
+  <script type="text/javascript" src="../../../../assets/scripts/chart.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/chartjs-chart-geo@3"></script>
+  <script src="../../../../assets/scripts/app.js?v=5.0"></script>
 
-<script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-messaging-compat.js"></script>
-<!--<script src="https://www.gstatic.com/firebasejs/9.0.1/firebase/init.js"></script>-->
-<script>
-  function requestPermission() {
-    Notification.requestPermission().then((permission) => {
-      if (permission === 'granted') {
-        console.log('Notification permission granted.');
-        messaging.getToken().then((currentToken) => {
-          console.log('token in html:', currentToken);
-          sessionStorage.setItem('webToken', currentToken);
-        });
-      } else {
-        console.log('Unable to get permission to notify.');
-      }
-    });
-  }
-  // Retrieve Firebase Messaging object.
-  const firebaseConfig = {
-    apiKey: 'AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk',
-    authDomain: 'taxbuddy-uat.firebaseapp.com',
-    databaseURL: 'https://taxbuddy-uat.firebaseio.com',
-    projectId: 'taxbuddy-uat',
-    storageBucket: 'taxbuddy-uat.appspot.com',
-    messagingSenderId: '805239680508',
-    appId: '1:805239680508:web:b9258ec04023b0fda05679',
-    measurementId: 'G-DMWVKK98X2',
-  };
-  firebase.initializeApp(firebaseConfig);
-  const messaging = firebase.messaging();
-
-  messaging.onMessage((payload) => {
-    console.log('Message received. ', payload);
-    // Update the UI to include the received message.
-    // self.registration.showNotification(title, { body, icon: image || '/assets/img/logo-img.svg' });
-    alert(payload.notification.body);
-  });
-</script>
-<!--FreshDesk Start-->
+  <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-messaging-compat.js"></script>
+  <!--<script src="https://www.gstatic.com/firebasejs/9.0.1/firebase/init.js"></script>-->
   <script>
-    window.fwSettings={
-      'widget_id':1070000000560
+    function requestPermission() {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          console.log('Notification permission granted.');
+          messaging.getToken().then((currentToken) => {
+            console.log('token in html:', currentToken);
+            sessionStorage.setItem('webToken', currentToken);
+          });
+        } else {
+          console.log('Unable to get permission to notify.');
+        }
+      });
+    }
+    // Retrieve Firebase Messaging object.
+    const firebaseConfig = {
+      apiKey: 'AIzaSyCJ2slZlHWDCsZLJs59NGU-lTAHOfucZyk',
+      authDomain: 'taxbuddy-uat.firebaseapp.com',
+      databaseURL: 'https://taxbuddy-uat.firebaseio.com',
+      projectId: 'taxbuddy-uat',
+      storageBucket: 'taxbuddy-uat.appspot.com',
+      messagingSenderId: '805239680508',
+      appId: '1:805239680508:web:b9258ec04023b0fda05679',
+      measurementId: 'G-DMWVKK98X2',
     };
-    !function(){if("function"!=typeof window.FreshworksWidget){var n=function(){n.q.push(arguments)};n.q=[],window.FreshworksWidget=n}}()
+    firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
+
+    messaging.onMessage((payload) => {
+      console.log('Message received. ', payload);
+      // Update the UI to include the received message.
+      // self.registration.showNotification(title, { body, icon: image || '/assets/img/logo-img.svg' });
+      alert(payload.notification.body);
+    });
+  </script>
+  <!--FreshDesk Start-->
+  <script>
+    window.fwSettings = {
+      'widget_id': 1070000000560
+    };
+    !function () { if ("function" != typeof window.FreshworksWidget) { var n = function () { n.q.push(arguments) }; n.q = [], window.FreshworksWidget = n } }()
   </script>
   <script type='text/javascript' src='https://ind-widget.freshworks.com/widgets/1070000000560.js' async defer></script>
 
   <!--FreshDesk End-->
 
+
+  <div class="panel kmFrame" id="km-viewbox" style="display: none; 
+    position: fixed;
+    z-index: 11111;
+    bottom: 2px;
+    border: 2px inset;
+    border-radius: 10px;
+    height: 47vw;
+  width: 530px;
+  ">
+    <button class="close-kmChat" onclick="document.getElementById('km-viewbox').style.display='none'"><i
+        class="fa fa-close kmIcon"></i>
+    </button>
+  </div>
+
 </body>
 
 </html>
-

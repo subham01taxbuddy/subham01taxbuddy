@@ -19,6 +19,13 @@ export class ReviewService {
     return this.httpClient.post<T>(`${environment.reviewUrl}${param[0]}`, param[1], { headers: this.headers });
   }
 
+  
+  postKmMethod<T>(...param: any): Observable<any> {
+    this.headers = new HttpHeaders();
+    this.headers.append('Content-Type', 'application/json');
+    return this.httpClient.post<T>(`${environment.validate_km_token}${param[0]}`, param[1], { headers: this.headers });
+  }
+
   getMethod<T>(...param: any): Observable<T> {
     this.headers = new HttpHeaders();
     this.headers.append('Content-Type', 'application/json');

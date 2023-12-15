@@ -2650,6 +2650,9 @@ export class PersonalInformationComponent implements OnInit {
       this.ITR_JSON.panNumber
     );
 
+    if(!this.ITR_JSON.declaration){
+      this.ITR_JSON.declaration = {capacity: "", childOf: "", name: "", panNumber: "", place: ""};
+    }
     this.ITR_JSON.declaration.panNumber = this.ITR_JSON.panNumber;
 
     if (!this.isFormValid()) {

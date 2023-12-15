@@ -30,6 +30,7 @@ export class ChatOptionsDialogComponent implements OnInit {
 
   kommChatLink = null;
   waChatLink = null;
+  kommChatConversationId: any;
 
   constructor(
     public dialogRef: MatDialogRef<ChatOptionsDialogComponent>,
@@ -38,7 +39,7 @@ export class ChatOptionsDialogComponent implements OnInit {
     private userMsService: UserMsService,
     private itrMsService: ItrMsService,
     public utilsService: UtilsService
-  ) {}
+  ) { }
 
   ngOnInit() {
     console.log('DATA1:', this.data);
@@ -50,7 +51,8 @@ export class ChatOptionsDialogComponent implements OnInit {
         this.loading = false;
         if (response.success) {
           this.kommChatLink = response.data?.chatLink;
-          this.waChatLink= response.data?.whatsAppChatLink
+          this.kommChatConversationId = response.data?.conversationId;
+          this.waChatLink = response.data?.whatsAppChatLink
         } else {
           // this.utilsService.showErrorMsg('User has not initiated chat on kommunicate');
         }
@@ -81,8 +83,10 @@ export class ChatOptionsDialogComponent implements OnInit {
   goToKommunicate() {
     console.log(this.kommChatLink);
     if (this.kommChatLink) {
-      window.open(this.kommChatLink);
-      this.dialogRef.close();
+      // window.open(this.kommChatLink);
+      this.dialogRef.close({
+        id: this.kommChatConversationId
+      });
     }
   }
 
