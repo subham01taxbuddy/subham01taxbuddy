@@ -175,11 +175,11 @@
       <div class="row">
         <div class="col-sm-12 ">
           <div class="row">
-            <div class="col-sm-5">
+            <div class="col-sm-6">
               <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                 (onChange)="sortByObject($event)"></app-generic-sorting>
             </div>
-            <div class="col-sm-7" *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
+            <div class="col-sm-6" *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
               <button class="bulk-buttons bulk spRt" style="float:right"
               (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk Re-Assignment to Filer</span></button>
               <button class="bulk-buttons bulk spRt" style="float:right"
