@@ -3300,6 +3300,27 @@
                             </td>
                           </tr>
 
+                          <tr
+                            *ngIf="
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.giftExemptIncome &&
+                              finalCalculations?.otherIncome?.otherIncomes
+                                ?.giftExemptIncome > 0
+                            "
+                          >
+                            <td>Gift u/s 56(2)(x)</td>
+                            <td class="">
+                              <i class="material-icons" style="font-size: 15px"
+                                >₹</i
+                              >&nbsp;{{
+                                utilsService.currencyFormatter(
+                                  finalCalculations?.otherIncome?.otherIncomes
+                                ?.giftExemptIncome
+                                )
+                              }}
+                            </td>
+                          </tr>
+
                           <tr>
                             <th>Total</th>
                             <th>
@@ -4163,11 +4184,7 @@
                   <!-- ScheduleBFLA -->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    *ngIf="
-                      !ITR_JSON.isItrSummaryJsonEdited &&
-                      ITR_JSON.itrSummaryJson &&
-                      finalCalculations?.ScheduleBFLA
-                    "
+                    *ngIf="false"
                     #ScheduleBFLA
                   >
                     <mat-expansion-panel-header class="newclass">

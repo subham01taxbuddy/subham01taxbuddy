@@ -262,6 +262,7 @@ export class SummaryComponent implements OnInit {
         IntrstSec10XISecondProviso?: any;
         IntrstSec10XIIFirstProviso?: any;
         IntrstSec10XIISecondProviso?: any;
+        giftExemptIncome?: any;
       };
       otherIncomeTotal: number;
     };
@@ -880,7 +881,7 @@ export class SummaryComponent implements OnInit {
     } else if (this.ITR_JSON.itrType === '4') {
       this.itrType = 'ITR4';
     }
-    
+
     this.calculations();
   }
 
@@ -2869,7 +2870,9 @@ export class SummaryComponent implements OnInit {
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.IncomeNotifiedPrYr89AOS -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS,
+                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.Tot562x,
 
                 dividendIncome:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
@@ -2943,6 +2946,10 @@ export class SummaryComponent implements OnInit {
                   (total, element) => total + (element.SourceAmount || 0),
                   0
                 ),
+
+                giftExemptIncome:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Tot562x,
               },
 
               otherIncomeTotal:
