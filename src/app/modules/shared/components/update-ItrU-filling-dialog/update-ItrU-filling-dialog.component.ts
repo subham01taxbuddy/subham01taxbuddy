@@ -39,8 +39,8 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   maxDate = new Date();
   loading = false;
   userProfile: any;
-  showDetails =false;
-  hideYears =true;
+  showDetails = false;
+  hideYears = true;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -54,99 +54,106 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   ngOnInit() {
     console.log(this.data);
     const param = `/profile/${this.data.userId}`;
-    this.userMsService.getMethod(param).subscribe((res:any) => {
+    this.userMsService.getMethod(param).subscribe((res: any) => {
       this.userProfile = res;
     });
   }
 
-  selectedFy(year:any){
-    if(year){
+  selectedFy(year: any) {
+    if (year) {
       this.fy.setValue(year);
       this.checkPaymentStatus()
-      if(year === "2020-2021" ){
+      if (year === "2020-2021") {
         this.ay.setValue('2021-2022');
-      }else if(year === "2021-2022"){
+      } else if (year === "2021-2022") {
         this.ay.setValue('2022-2023');
       }
     }
-    else{
-      this.showDetails=false;
+    else {
+      this.showDetails = false;
       this.fy.setValue(null);
     }
 
   }
 
-  checkPaymentStatus(){
-      this.loading = true;
-      const param1 = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITRU&financialYear=${this.fy.value}`;
-      this.itrMsService.getMethod(param1).subscribe(
-        (res: any) => {
-          this.loading=false;
-          if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-            this.loading=false;
-            this.hideYears=false;
-            this.showDetails=true;
-            // this.updateItrUDetails();
-          }
-          else{
-            this.loading=false;
-            this.hideYears=true;
-            this.showDetails=false;
-            this.utilsService.showSnackBar(
-              'Please make sure that the payment has been made by the user to proceed ahead'
-            );
-          }
-        }, error => {
-          this.hideYears=true;
-          this.showDetails=false;
-          this.utilsService.showSnackBar('Error while checking payment status, Please try again.');
+  checkPaymentStatus() {
+    this.loading = true;
+    const param1 = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITRU&financialYear=${this.fy.value}`;
+    this.itrMsService.getMethod(param1).subscribe(
+      (res: any) => {
+        this.loading = false;
+        if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
           this.loading = false;
-        })
+          this.hideYears = false;
+          this.showDetails = true;
+          // this.updateItrUDetails();
+        } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
+          this.loading = false;
+          this.hideYears = true;
+          this.showDetails = false;
+          this.utilsService.showSnackBar(
+            'ITR-U' + this.fy.value + 'Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
+          );
+        }
+        else {
+          this.loading = false;
+          this.hideYears = true;
+          this.showDetails = false;
+          this.utilsService.showSnackBar(
+            'Please make sure that the payment has been made by the user to proceed ahead'
+          );
+        }
+      }, error => {
+        this.hideYears = true;
+        this.showDetails = false;
+        this.utilsService.showSnackBar('Error while checking payment status, Please try again.');
+        this.loading = false;
+      })
 
   }
 
-  updateItrUDetails(){
+  updateItrUDetails() {
     if (this.eFillingDate.valid && this.ackNumber.valid) {
-    this.loading=true;
-    let itrType = `ITRU-${this.itrType.value}`;
-    let req = {
-      userId:this.data.userId,
-      email:this.data.email,
-      contactNumber:this.data.mobileNumber,
-      panNumber: this.userProfile.panNumber,
-      "assesseeType":"INDIVIDUAL",
-      assessmentYear: this.data.assessmentYear,
-      financialYear:this.fy.value,
-      "isRevised": "N",
-      "eFillingCompleted":true,
-      eFillingDate:this.eFillingDate.value,
-      ackNumber:this.ackNumber.value,
-      itrType:`${itrType}`,
-      itrTokenNumber:'',
-      "filingTeamMemberId":this.data.callerAgentUserId,
-      filingSource:"MANUALLY"
-    }
-    console.log('Updated Data:', req)
-    const param = `${ApiEndpoints.itrMs.itrManuallyData}`
-    this.itrMsService.putMethod(param, req).subscribe((res: any) => {
-      console.log(res);
-      this.loading = false;
-      if(res.success) {
-        this.utilsService.showSnackBar('ITR-U Filing Details updated successfully');
-        this.dialogRef.close();
-        // this.location.back();
-      }else{
-        this.utilsService.showSnackBar(res.message);
+      this.loading = true;
+      let itrType = `ITRU-${this.itrType.value}`;
+      let req = {
+        userId: this.data.userId,
+        email: this.data.email,
+        contactNumber: this.data.mobileNumber,
+        panNumber: this.userProfile.panNumber,
+        "assesseeType": "INDIVIDUAL",
+        assessmentYear: this.data.assessmentYear,
+        financialYear: this.fy.value,
+        "isRevised": "N",
+        "eFillingCompleted": true,
+        eFillingDate: this.eFillingDate.value,
+        ackNumber: this.ackNumber.value,
+        itrType: `${itrType}`,
+        itrTokenNumber: '',
+        "filingTeamMemberId": this.data.callerAgentUserId,
+        filingSource: "MANUALLY"
       }
-    }, error => {
-      this.utilsService.showSnackBar('Failed to update ITR-U Filing Details')
-      this.loading = false;
-    })
-  }else{
-    this.utilsService.showSnackBar(
-      'Please give E-Filling-Date and Acknowledgment Number'
-    );
-  }
+      console.log('Updated Data:', req)
+      const param = `${ApiEndpoints.itrMs.itrManuallyData}`
+      this.itrMsService.putMethod(param, req).subscribe((res: any) => {
+        console.log(res);
+        this.loading = false;
+        if (res.success) {
+          this.utilsService.showSnackBar('ITR-U Filing Details updated successfully');
+          this.dialogRef.close();
+          // this.location.back();
+        } else {
+          this.utilsService.showSnackBar(res.message);
+        }
+      }, error => {
+        this.utilsService.showSnackBar('Failed to update ITR-U Filing Details')
+        this.loading = false;
+      })
+    } else {
+      this.utilsService.showSnackBar(
+        'Please give E-Filling-Date and Acknowledgment Number'
+      );
+    }
 
   }
 

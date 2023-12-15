@@ -523,15 +523,32 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   updateFilingNoJson() {
-    let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: this.data,
-    });
+    const param = `/subscription-payment-status?userId=${this.data.userId}&serviceType=ITR`;
+    this.itrMsService.getMethod(param).subscribe(
+      (res: any) => {
+        if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
+          let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
+            width: '50%',
+            height: 'auto',
+            data: this.data,
+          });
 
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
+          disposable.afterClosed().subscribe((result) => {
+          });
+        } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
+          this.utilsService.showSnackBar(
+            'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
+          );
+        } else {
+          this.utilsService.showSnackBar(
+            'Please make sure that the payment has been made by the user to proceed ahead'
+          );
+        }
+      },
+      (error) => {
+        this.utilsService.showSnackBar(error);
+      }
+    );
   }
 
   linkToFinbingo() {

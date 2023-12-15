@@ -126,6 +126,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       disabled: false,
     },
     { name: 'Income from House Property', code: 'HP', disabled: false },
+    { name: 'Income from Capital Gains', code: 'CG', disabled: false },
     { name: 'Income from Other Source', code: 'OS', disabled: false },
     { name: 'Exempt Income', code: 'EI', disabled: false },
     { name: 'Not Applicable(194N)', code: 'NA', disabled: false },
