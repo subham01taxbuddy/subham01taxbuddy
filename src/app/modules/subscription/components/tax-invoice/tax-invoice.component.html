@@ -177,12 +177,12 @@
                     <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">
                       Clear form
                     </button>
-    
+
                   </div>
                 </div>
               </div>
             </div>
-         
+
           </div>
         </mat-expansion-panel>
       </mat-accordion>
@@ -201,10 +201,13 @@
     </div>
     <div>
       <div class="row">
-        <div class="col-sm-9 row">
+        <div class="col-sm-8 row">
           <div class="table-info-text col-sm-4">
             Tax Invoice Details:
           </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="count1"> Total Invoice Count: <span class="txClr1">{{totalInvoice}}</span></div>
         </div>
       </div>
       <table>
