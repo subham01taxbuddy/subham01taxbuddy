@@ -6453,9 +6453,7 @@ export class SummaryComponent implements OnInit {
     this.itrMsService.getMethod(param).subscribe(
       (res: any) => {
         if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-          if (confirm('Are you sure you want to file the ITR?')) {
-            this.checkFilerAssignment();
-          }
+          this.checkFilerAssignment();
           // console.log(res, 'Paid');
         } else {
           this.utilsService.showSnackBar(
@@ -6476,7 +6474,9 @@ export class SummaryComponent implements OnInit {
       this.loading = false;
       if (response.success) {
         if (response.data.filerAssignmentStatus === 'FILER_ASSIGNED') {
-          this.fileITR();
+          if (confirm('Are you sure you want to file the ITR?')) {
+            this.fileITR();
+          }
         } else {
           this.utilsService.showSnackBar('Please make sure that filer assignment should be done before ITR filing.');
         }
