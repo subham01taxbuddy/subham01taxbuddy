@@ -33,7 +33,7 @@
         >
         <div>To rectify the below errors, simply click on error hyperlink.</div>
       </div>
-      <div style="font-size: 24px" class="updateManually">
+      <!-- <div style="font-size: 24px" class="updateManually">
         <strong>
           ITR Type : {{ itrType ? itrType : "ITR Type is missing" }}
         </strong>
@@ -50,8 +50,9 @@
         >
           <strong> Manual Update </strong>
         </button>
-      </div>
+      </div> -->
       <div class="cardRect">
+        <div class="table-responsive">
         <table
           class="table table-bordered table-hover"
           style="margin-top: 10px"
@@ -61,7 +62,7 @@
               <th>Sr. No</th>
               <th>Error Description</th>
               <th>Schedule</th>
-              <th>Error Code</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -71,21 +72,21 @@
                   {{ i + 1 }}
                 </td>
                 <td>
-                  <a
-                    href="javascript:void(0);"
-                    (click)="redirectToErrorPage(error?.relatedSchedule)"
-                  >
                     {{ error?.message }}
-                  </a>
                 </td>
                 <td>{{ error?.relatedSchedule }}</td>
                 <td>
-                  {{ error?.errorCode }}
+                  <a
+                    href="javascript:void(0);"
+                    (click)="redirectToErrorPage(error?.relatedSchedule)">
+                  Click Here
+                </a>
                 </td>
               </tr>
             </ng-container>
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   </div>

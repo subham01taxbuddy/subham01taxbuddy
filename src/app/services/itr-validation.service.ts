@@ -1261,4 +1261,13 @@ export class ItrValidationService {
       assessmentYearStart + '-' + (assessmentYearStart + 1);
     return assessmentYearStart + '-' + (assessmentYearStart + 1); // Format: 2023-2024 for AY 2023-24
   }
+
+  getItrValidationErrorMappring(errors: any) {
+    const errorList: ItrValidationObject[] = [];
+    errors.forEach(err=>{
+      const error = this.getErrorMessages(err);
+      errorList.push(error);
+    });
+    return errorList;
+  }
 }
