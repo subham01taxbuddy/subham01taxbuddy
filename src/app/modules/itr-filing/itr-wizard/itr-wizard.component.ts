@@ -26,6 +26,9 @@ import { ChatOptionsDialogComponent } from '../../tasks/components/chat-options/
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ReviewService } from '../../review/services/review.service';
 import { MoreInformationComponent } from './pages/more-information/more-information.component';
+import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
+import {NavbarService} from "../../../services/navbar.service";
+import {SidebarService} from "../../../services/sidebar.service";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -60,7 +63,8 @@ export class ItrWizardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     public schedules: Schedules,
     private matDialog: MatDialog,
-    private itrValidationService: ItrValidationService
+    private itrValidationService: ItrValidationService,
+    private sidebarService: SidebarService
   ) {
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
   }
@@ -110,6 +114,7 @@ export class ItrWizardComponent implements OnInit {
       this.showIncomeSources = true;
     }
     this.getCustomerName();
+    this.sidebarService.hide();
   }
 
   getCustomerName() {
