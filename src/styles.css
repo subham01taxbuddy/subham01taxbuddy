@@ -3745,7 +3745,7 @@ pagination-controls {
   color: #cccccc;
   width: 95px;
   border-radius: 5px;
-  margin-left: -15px;
+  margin-left: 0px;
 }
 
 .btnGry {

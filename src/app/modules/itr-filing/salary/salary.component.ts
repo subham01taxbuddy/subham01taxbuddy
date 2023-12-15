@@ -1855,6 +1855,16 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     });
   }
 
+  getTotalAllowances(){
+    return this.getAllowanceArray.getRawValue().map(val=> val.allowValue ? parseInt(val.allowValue) : 0).reduce((previousValue, currentValue) =>
+        previousValue + currentValue);
+  }
+
+  getTotalGrossSalary(){
+    return this.getSalaryArray.getRawValue().map(val=> val.salaryValue ? parseInt(val.salaryValue) : 0).reduce((previousValue, currentValue) =>
+        previousValue + currentValue);
+  }
+
   // CALCULATORS
   calculator(component, index) {
     // console.log(this.buttonContainer);
