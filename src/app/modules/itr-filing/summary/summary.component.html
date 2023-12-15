@@ -1978,8 +1978,8 @@
                     >
                       Short term capital gain @ slab rate
                       <span style="float: right">{{
-                        finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermAppSlabRateTotal
+                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTermAppSlabRateTotal)
                       }}</span>
                     </div>
                     <table
@@ -2141,8 +2141,8 @@
                     >
                       Short term capital gain @ 15% rate
                       <span style="float: right">{{
-                        finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm15PerTotal
+                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTerm15PerTotal)
                       }}</span>
                     </div>
                     <table
@@ -2214,8 +2214,8 @@
                     >
                       Short term capital gain @ 30% rate
                       <span style="float: right">{{
-                        finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm30PerTotal
+                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTerm30PerTotal)
                       }}</span>
                     </div>
                     <table
@@ -2292,8 +2292,8 @@
                     >
                       Short term capital gain @ special rate
                       <span style="float: right">{{
-                        finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermSplRateDTAATotal
+                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
+                          ?.ShortTermSplRateDTAATotal)
                       }}</span>
                     </div>
                     <table
@@ -2366,8 +2366,8 @@
                     >
                       Long term capital gain @ 10% rate
                       <span style="float: right">{{
-                        finalCalculations?.capitalGain?.longTerm
-                          ?.LongTerm10PerTotal
+                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.longTerm
+                          ?.LongTerm10PerTotal)
                       }}</span>
                     </div>
                     <table
@@ -2436,8 +2436,8 @@
                     >
                       Long term capital gain @ 20% rate
                       <span style="float: right">{{
-                        finalCalculations?.capitalGain?.longTerm
-                          ?.LongTerm20PerTotal
+                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.longTerm
+                          ?.LongTerm20PerTotal)
                       }}</span>
                     </div>
                     <table
@@ -2676,7 +2676,7 @@
                     >
                       Income from crypto
                       <span style="float: right">{{
-                        finalCalculations?.capitalGain?.totalCryptoIncome
+                       utilsService.currencyFormatter(finalCalculations?.capitalGain?.totalCryptoIncome)
                       }}</span>
                     </div>
                     <table
