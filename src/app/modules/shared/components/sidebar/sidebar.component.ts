@@ -60,7 +60,6 @@ export class SidebarComponent {
     });
     this.subscription = this.sidebarService.isLoading
       .subscribe((state) => {
-        debugger
         if (state) {
           // this.sidenav.open();
           this.openSidebar = true;
