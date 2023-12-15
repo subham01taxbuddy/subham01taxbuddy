@@ -21,9 +21,7 @@
           <div
             class="txBt"
             *ngIf="
-              finalCalculations?.personalInfo?.aadhaarNumber !== '' &&
-              finalCalculations?.personalInfo?.aadhaarNumber !== null &&
-              finalCalculations?.personalInfo?.aadhaarNumber !== undefined
+              finalCalculations?.personalInfo?.aadhaarNumber
             "
           >
             <div>
@@ -33,6 +31,20 @@
               }}</span>
             </div>
           </div>
+
+          <div
+          class="txBt"
+          *ngIf="
+            finalCalculations?.personalInfo?.AadhaarEnrolmentId
+          "
+        >
+          <div>
+            <span class="txLf">Aadhaar Enrolment Id: </span
+            ><span class="txMuLf">{{
+              finalCalculations?.personalInfo?.AadhaarEnrolmentId
+            }}</span>
+          </div>
+        </div>
           <!-- Mobile -->
           <div class="txBt">
             <div>
