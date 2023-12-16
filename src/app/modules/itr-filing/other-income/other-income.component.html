@@ -28,7 +28,7 @@
                         <div class="div-6" *ngFor="let income of getIncomeArray.controls; let i = index"
                              [formGroupName]="i">
                           <div class="form-field">
-                            <div><span class="span">{{ income.value.label }} </span> <span class="text-wrapper-2">*</span></div>
+                            <div><span class="span">{{ income.value.label }} </span></div>
                           </div>
                           <div class="form-field">
                             <mat-form-field appearance="outline">
@@ -61,7 +61,7 @@
                       <div class="accordion__item-body" formGroupName="dividendIncomes">
                         <div class="div-6">
                           <div class="form-field">
-                            <div><span class="span">Upto 15 June </span> <span class="text-wrapper-2">*</span></div>
+                            <div><span class="span">Upto 15 June </span></div>
                             <mat-form-field appearance="outline">
                               <input
                                       digitsOnly
@@ -76,7 +76,7 @@
                             </mat-form-field>
                           </div>
                           <div class="form-field">
-                            <div><span class="span">16th June- 16th Sep</span> <span class="text-wrapper-2">*</span></div>
+                            <div><span class="span">16th June- 15th Sep</span></div>
                             <mat-form-field appearance="outline">
                               <input
                                       digitsOnly
@@ -91,7 +91,7 @@
                             </mat-form-field>
                           </div>
                           <div class="form-field">
-                            <div><span class="span">16th Sep- 15th Dec </span> <span class="text-wrapper-2">*</span></div>
+                            <div><span class="span">16th Sep- 15th Dec </span></div>
                             <mat-form-field appearance="outline">
                               <input
                                       digitsOnly
@@ -108,7 +108,7 @@
                         </div>
                         <div class="div-6">
                           <div class="form-field">
-                            <div> <span class="span">16th Dec- 15th Mar</span> <span class="text-wrapper-2">*</span></div>
+                            <div> <span class="span">16th Dec- 15th Mar</span></div>
                             <mat-form-field appearance="outline">
                               <input
                                       digitsOnly
@@ -123,7 +123,7 @@
                             </mat-form-field>
                           </div>
                           <div class="form-field">
-                            <div><span class="span">16th Mar- 31th Mar</span> <span class="text-wrapper-2">*</span></div>
+                            <div><span class="span">16th Mar- 31th Mar</span></div>
                             <mat-form-field appearance="outline">
                               <input
                                       digitsOnly
@@ -310,7 +310,7 @@
                         <div class="txHdg">Family Pension</div>
                         <div class="div-6 gray_box">
                           <div class="form-field">
-                            <div><span class="span">Family Pension amount </span> <span class="text-wrapper-2">*</span></div>
+                            <div><span class="span">Family Pension amount </span></div>
 
                             <div class="form-field">
                               <mat-form-field appearance="outline">
@@ -508,7 +508,7 @@
                             </div>
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">Name of District</span> <span class="text-wrapper-2">*</span>
+                                <span class="span">Name of District</span>
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline">
@@ -557,7 +557,7 @@
 
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">Ownership status</span> <span class="text-wrapper-2">*</span>
+                                <span class="span">Ownership status</span>
                               </div>
                               <div class="form-field">
                                 <mat-select formControlName="owner"
@@ -572,7 +572,7 @@
 
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">Water Source</span> <span class="text-wrapper-2">*</span>
+                                <span class="span">Water Source</span>
                               </div>
                               <div class="form-field">
                                 <mat-select formControlName="typeOfLand" placeholder="Type Of Land">
@@ -610,20 +610,20 @@
                         <div class="hp4-2">
                           <div class="field">
                             <div class="field-label">
-                              <span class="span">Income Category </span> <span class="redAst">*</span>
+                              <span class="span">Income Category </span>
                             </div>
-                            <div class="form-field">
-                              <mat-select class="form-control select gry">
-                                <mat-option [value]="income.value.value">{{ income.value.label }}</mat-option>
+                            <mat-form-field appearance="outline">
+                              <mat-select value="{{income.value.value}}" >
+                                <mat-option value="{{income.value.value}}">{{ income.value.label }}</mat-option>
                               </mat-select>
-                            </div>
+                            </mat-form-field>
                           </div>
                         </div>
 
                         <div class="hp4-3">
                           <div class="field">
                             <div class="field-label">
-                              <span class="span">Amount </span> <span class="redAst">*</span>
+                              <span class="span">Amount </span>
                             </div>
                             <div class="form-field">
                               <mat-form-field appearance="outline">
@@ -646,7 +646,7 @@
                             <div class="Bx4L">
                               <button type="button"> <i class="fa fa-trash-o delbt"></i> </button>
                             </div>
-                            <div class="Bx4R">
+                            <div class="Bx4R" *ngIf="false">
                               <button type="button" class="addAno"> + Add Another </button>
                             </div>
                           </div>
