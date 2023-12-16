@@ -22,7 +22,7 @@
                 <div class="group"><img class="material-symbols" src="assets/img/new/del.png" /></div>
               </div>
             </div>
-            <div class="contents-wrapper">
+            <div class="contents-wrapper" *ngIf="false">
               <div class="field-text-wrapper">
                 <div class="field-text-2">+ Add Another</div>
               </div>
@@ -392,7 +392,7 @@
                               </mat-form-field>
                             </div>
                           </div>
-                          <div class="hp2main hglt">
+                          <div class="hp2main hglt" *ngIf="false">
                             <div class="hplft">Net Taxable Income from this House Property</div>
                             <div class="hprgt">
                               <input type="text"  placeholder="₹56,000" class="form-control hgltfrm">
@@ -715,34 +715,37 @@
 
                     </h2>
                     <div id="collapse4" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-                      <div class="card-body">
+                      <div class="card-body" formArrayName="tenant">
 
                         <div class="hp4main1" *ngFor="let ten of getTenantArray.controls; let i = index"
                              [formGroupName]="i">
 
                           <div class="hp4-2">
                             <div class="field">
+                              <div class="custom-control custom-checkbox">
+                                <input
+                                        class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                        type="checkbox"
+                                        (click)="activeTenant = [i]"
+                                />
+                              </div>
                               <div class="field-label">
                                 <span class="span">Name of Tenant </span> <span class="redAst">*</span>
                               </div>
 
-                              <mat-form-field
-                                      class="input-field-width"
-                                      appearance="outline">
+                              <mat-form-field class="input-field-width" appearance="outline">
                                 <input
                                         matInput
                                         name="ten[ii]"
-                                        class="form-control gry"
                                         formControlName="name"
                                         pattern="[a-zA-Z ]*"
                                         required
                                         maxlength="40"
                                         type="text"
-                                        trim
-                                />
+                                        trim/>
                                 <mat-error *ngIf="ten.get('name').hasError('required')">
-                                  Enter tenant name.</mat-error
-                                >
+                                  Enter tenant name.
+                                </mat-error>
                               </mat-form-field>
                             </div>
                           </div>
@@ -750,15 +753,13 @@
                           <div class="hp4-3">
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">Tenant’s PAN </span> <span class="redAst">*</span>
+                                <span class="span">Tenant’s PAN </span>
                               </div>
 
-                              <mat-form-field
-                                      appearance="outline"
+                              <mat-form-field appearance="outline"
                                       class="input-field-width">
                                 <input
                                         matInput
-                                        class="form-control gry"
                                         name="ten[i]"
                                         matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number."
                                         matTooltipClass="tab-tooltip"
