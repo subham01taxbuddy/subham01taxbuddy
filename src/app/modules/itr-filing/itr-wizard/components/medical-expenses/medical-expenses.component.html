@@ -111,8 +111,6 @@
                   </div>
                   <div class="col-2">
                     <mat-radio-group class="radio_group" name="hasParentOverSixty"
-                                     [(ngModel)]="this.Copy_ITR_JSON.systemFlags.hasParentOverSixty"
-                                     [ngModelOptions]="{ standalone: true }"
                                      (change)="isParentOverSixty()">
                       <mat-radio-button type="radio" class="radio_input" value="true">Yes</mat-radio-button>
                       <mat-radio-button type="radio" class="radio_input" value="false">No</mat-radio-button>
