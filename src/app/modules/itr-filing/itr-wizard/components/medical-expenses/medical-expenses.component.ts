@@ -67,6 +67,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         };
       }
     }
+    this.Copy_ITR_JSON = this.ITR_JSON;
   }
 
   ngOnInit(): void {
@@ -155,7 +156,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
           'selfMedicalExpenditure'
         ].setValue(this.ITR_JSON.insurances[i].medicalExpenditure);
       } else if (this.ITR_JSON.insurances[i].policyFor === 'PARENTS') {
-        this.ITR_JSON.systemFlags.hasParentOverSixty = true;
+        this.Copy_ITR_JSON.systemFlags.hasParentOverSixty = true;
         this.investmentDeductionForm.controls['hasParentOverSixty'].setValue(
           true
         );
@@ -503,7 +504,8 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
           this.investmentDeductionForm.controls['medicalExpenditure'].value
         )
       ) {
-        // this.Copy_ITR_JSON.systemFlags.hasParentOverSixty = true;
+        this.Copy_ITR_JSON.systemFlags.hasParentOverSixty =
+            this.investmentDeductionForm.controls['hasParentOverSixty'].value;
         this.Copy_ITR_JSON.insurances?.push({
           insuranceType: 'HEALTH',
           typeOfPolicy: null,

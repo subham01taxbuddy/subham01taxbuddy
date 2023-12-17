@@ -545,10 +545,16 @@ export class HousePropertyComponent implements OnInit {
 
     let itrJsonHp = this.ITR_JSON.houseProperties[index];
     this.housePropertyForm.patchValue(itrJsonHp);
+    if(itrJsonHp.tenant?.length > 0){}
+    itrJsonHp.tenant.forEach(ten => {
+      const tenant = <FormArray>this.housePropertyForm.get('tenant');
+      tenant.push(this.createTenantForm(ten));
+    });
     this.housePropertyForm.controls['country'].setValue('91');
     this.housePropertyForm.controls['principalAmount'].setValue(
       itrJsonHp?.loans[0]?.principalAmount
     );
+    this.housePropertyForm.controls['annualRentReceived'].setValue(itrJsonHp.grossAnnualRentReceived);
 
     if (itrJsonHp?.propertyType === 'SOP') {
       this.housePropertyForm.controls['interestAmount'].setValue(
