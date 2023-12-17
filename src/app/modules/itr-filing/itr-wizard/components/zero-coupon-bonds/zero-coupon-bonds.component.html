@@ -275,27 +275,7 @@
                                   >
                                 </mat-form-field>
                               </div>
-                              <div class="form-field" *ngIf="bonds.get('isIndexationBenefitAvailable').value">
-                                <div class="field">
-                                  <div class="field-label">
-                                    <span class="span">Year Of Improvement</span><span class="redAst">*</span>
-                                  </div>
-                                </div>
-                                <mat-form-field class="input-field-width">
-                                  <mat-select
-                                          name="improve[i]"
-                                          formControlName="dateOfImprovement"
-                                          (selectionChange)="calculateIndexCost(bonds)"
-                                  >
-                                    <mat-option
-                                            [value]="year"
-                                            *ngFor="let year of getYearsList(bonds)"
-                                    >
-                                      {{ year }}
-                                    </mat-option>
-                                  </mat-select>
-                                </mat-form-field>
-                              </div>
+
 
                               <div class="form-field" *ngIf="bonds.get('isIndexationBenefitAvailable').value">
                                 <div class="field">
