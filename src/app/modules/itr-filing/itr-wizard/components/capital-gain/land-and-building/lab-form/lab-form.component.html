@@ -12,11 +12,12 @@
       <div class="div-3">
         <div class="contents-wrapper">
           <div class="contents">
-            <div class="field-text">Land & Building Property 1</div>
-            <div class="group"><img class="material-symbols" src="assets/img/new/del.png" /></div>
+            <div class="field-text">Land & Building Property {{ this.currentCgIndex !== -1 ? this.currentCgIndex + 1 : this.ITR_JSON.employers.length + 1}}</div>
+            <div class="group" *ngIf="false"><img class="material-symbols" src="assets/img/new/del.png"
+            /></div>
           </div>
         </div>
-        <div class="contents-wrapper">
+        <div class="contents-wrapper" *ngIf="false">
           <div class="field-text-wrapper"><div class="field-text-2">+ Add Another Property</div></div>
         </div>
       </div>
