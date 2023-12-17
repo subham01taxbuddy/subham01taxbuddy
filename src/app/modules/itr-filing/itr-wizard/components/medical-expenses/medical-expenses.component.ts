@@ -160,6 +160,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         this.investmentDeductionForm.controls['hasParentOverSixty'].setValue(
           true
         );
+        this.investmentDeductionForm.controls['hasParentOverSixty'].updateValueAndValidity();
         this.investmentDeductionForm.controls['premium'].setValue(
           this.ITR_JSON.insurances[i].premium
         );
