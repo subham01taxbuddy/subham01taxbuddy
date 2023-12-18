@@ -1330,6 +1330,13 @@ export class UtilsService {
     return this.userMsService.getMethodNew(param);
   }
 
+  getActiveUsers(mobile){
+   //api to check weather user is active
+  // https://api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&mobileNumber=8840046021&active=false
+    const param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}&active=false`
+    return this.userMsService.getMethodNew(param);
+  }
+
   /**
    * API call to get pan details with user id
    * @param panNumber PAN number for which details to be checked

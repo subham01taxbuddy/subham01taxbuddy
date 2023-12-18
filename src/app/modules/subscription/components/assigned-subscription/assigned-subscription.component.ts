@@ -879,20 +879,32 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     } else {
       this.mobileNumber = this.searchVal
     }
-    const loggedInSmeUserId = this?.loggedInSme[0]?.userId
-    if (this.roles.includes('ROLE_FILER')) {
-      this.openAddSubscriptionDialog();
-    } else {
-      this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, this.mobileNumber).subscribe((res: any) => {
-        console.log(res);
-        if (res?.records) {
-          this.userId = res?.records[0]?.userId;
-          if (this.userId) {
-            this.openAddSubscriptionDialog();
-          }
+
+    //integrate new api to check active user
+    this.utilsService.getActiveUsers(this.mobileNumber).subscribe((res: any) => {
+      console.log(res);
+      if (res.data) {
+        if(res.data.content[0].active === false){
+          this._toastMessageService.alert('error', "This customer is currently inactive, please activate customer first and then create subscription");
+          return
         }
-      });
-    }
+      }else{
+        const loggedInSmeUserId = this?.loggedInSme[0]?.userId
+        if (this.roles.includes('ROLE_FILER')) {
+          this.openAddSubscriptionDialog();
+        } else {
+          this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, this.mobileNumber).subscribe((res: any) => {
+            console.log(res);
+            if (res?.records) {
+              this.userId = res?.records[0]?.userId;
+              if (this.userId) {
+                this.openAddSubscriptionDialog();
+              }
+            }
+          });
+        }
+      }
+    })
   }
 
   openAddSubscriptionDialog() {
