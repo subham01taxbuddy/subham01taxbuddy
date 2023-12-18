@@ -492,9 +492,9 @@ height: 30px;
 flex-shrink: 0;
 }
 .total-box{
-  display: flex;
+display: flex;
 height: 36px;
-width: 52px;
+width: auto;
 padding: 8px 10px;
 align-items: center;
 gap: 8px;
@@ -512,7 +512,7 @@ line-height: 28px; /* 200% */
 .total-box-value{
   display: flex;
 height: 36px;
-width: 34px;
+width: auto;
 padding: 8px;
 align-items: center;
 gap: 8px;
