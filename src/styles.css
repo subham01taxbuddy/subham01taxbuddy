@@ -24,6 +24,11 @@
   padding-left: 10px;
 }
 
+.mat-chip.mat-standard-chip.mat-chip-selected.mat-primary {
+  background-color: #1b67ba!important;
+  color: white;
+}
+
 .ag-header {
   height: 50px !important;
   padding-top: 5px !important;
@@ -3257,7 +3262,13 @@ main {
   background-color: #f0f0f5;
   padding: 10px;
   height: 45px;
-  margin: 0px 25px 0px 15px;
+  margin: 25px 25px 25px 5px;
+}
+
+
+.spacTp {
+  margin-top: 20px;
+  display: block;
 }
 
 .ttlTx {
@@ -3280,19 +3291,19 @@ main {
   background-color: #fafafa;
   border-radius: 5px;
   margin-right: 5px;
-  border: 1px solid #00aeca;
+  border: 1px solid #1b67ba;
   font-size: 14px;
-  color: #00aeca !important;
+  color: #1b67ba !important;
 }
 
 .action-buttons:hover {
   border: none;
   float: right;
   padding: 5px 10px 5px 10px;
-  background-color: #00aeca;
+  background-color: #1b67ba;
   border-radius: 5px;
   margin-right: 5px;
-  border: 2px solid #00aeca;
+  border: 2px solid #1b67ba;
   font-size: 14px;
   color: #ffffff !important;
 }
@@ -3842,8 +3853,8 @@ pagination-controls {
 .lgtBtn {
   margin-left: 17%;
   background-color: #ffffff;
-  color: #00AECA;
-  border: 2px solid #00AECA;
+  color: #1b67ba;
+  border: 2px solid #1b67ba;
   border-radius: 6px;
   height: 50px;
   width: auto;
@@ -3856,15 +3867,15 @@ pagination-controls {
 
 
 .lgtBtn:hover {
-  background-color: #00AECA;
-  border-color: #00AECA;
+  background-color: #1b67ba;
+  border-color: #1b67ba;
   color: #ffffff;
 }
 
 .darkBtn {
   margin-right: 10%;
-  background-color: #00AECA;
-  border-color: #00AECA;
+  background-color: #1b67ba;
+  border-color: #1b67ba;
   color: #ffffff;
   border-radius: 6px;
   height: 50px;
@@ -3876,8 +3887,8 @@ pagination-controls {
 
 .darkBtn:hover {
   background-color: #ffffff;
-  color: #00AECA;
-  border: 1px solid #00AECA;
+  color: #1b67ba;
+  border: 1px solid #1b67ba;
 }
 
 .saveBtnIn {
