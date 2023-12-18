@@ -77,7 +77,7 @@ export class SourceOfIncomesComponent implements OnInit {
           schedule: this.schedules.CAPITAL_GAIN,
         },
         {
-          name: 'Futures / Options',
+          name: 'P&L',
           selected:
             this.ITR_JSON.business?.profitLossACIncomes != null &&
             this.ITR_JSON.business?.profitLossACIncomes?.length > 0

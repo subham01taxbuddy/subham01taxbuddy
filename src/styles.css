@@ -12558,3 +12558,10 @@ body[dir=rtl] .checkbox[checked=true] {
 .kmIcon {
   background-color: #2199e8;
 }
+
+.mat-form-field-appearance-outline .mat-form-field-wrapper {
+  margin: 0 !important;
+}
+.class1 .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}
