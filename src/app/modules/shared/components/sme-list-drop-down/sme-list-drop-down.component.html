@@ -1,7 +1,7 @@
 
 <div>
   <div class="row" class="row" *ngIf="roles?.includes('ROLE_ADMIN')">
-    <div class="col-sm-6" *ngIf="!disableLeader">
+    <div class="col-sm-4" *ngIf="!disableLeader">
       <mat-label> Search By Leader </mat-label>
       <mat-form-field appearance="outline" class="customBg">
         <input type="text" matInput [formControl]="searchLeader" [matAutocomplete]="auto"  (blur)="setList()" />
@@ -13,7 +13,7 @@
         </mat-autocomplete>
       </mat-form-field>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-4">
       <mat-label> Search By Principal/Individual </mat-label>
       <mat-form-field appearance="outline" class="customBg">
         <input type="text" matInput [formControl]="searchPrincipleIndividual" [matAutocomplete]="auto1"
