@@ -529,12 +529,12 @@ export class SummaryComponent implements OnInit {
       };
       LossCFFromPrev8thYearFromAY: {
         dateOfFiling: any;
-        hpLoss: Number;
-        broughtForwardBusLoss: Number;
-        BusLossOthThanSpecifiedLossCF: Number;
-        LossFrmSpecifiedBusCF: Number;
-        stcgLoss: Number;
-        ltcgLoss: Number;
+        hpLoss: any;
+        broughtForwardBusLoss: any;
+        BusLossOthThanSpecifiedLossCF: any;
+        LossFrmSpecifiedBusCF: any;
+        stcgLoss: any;
+        ltcgLoss:any;
       };
       LossCFFromPrev7thYearFromAY: {
         dateOfFiling: any;
@@ -597,6 +597,17 @@ export class SummaryComponent implements OnInit {
         lossFromSpeculativeBus: Number;
       };
       LossCFCurrentAssmntYear: {
+        dateOfFiling: any;
+        hpLoss: Number;
+        broughtForwardBusLoss: Number;
+        BusLossOthThanSpecifiedLossCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        stcgLoss: Number;
+        ltcgLoss: Number;
+        OthSrcLossRaceHorseCF: Number;
+        lossFromSpeculativeBus: Number;
+      };
+      LossCFCurrentAssmntYear2023?:{
         dateOfFiling: any;
         hpLoss: Number;
         broughtForwardBusLoss: Number;
@@ -3843,6 +3854,44 @@ export class SummaryComponent implements OnInit {
                 lossFromSpeculativeBus:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
                     ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossFrmSpecBusCF,
+              },
+              LossCFCurrentAssmntYear2023:{
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.DateOfFiling,
+                hpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.TotalHPPTILossCF,
+                broughtForwardBusLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.BrtFwdBusLoss,
+                BusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.BusLossOthThanSpecLossCF,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.LossFrmSpecifiedBusCF,
+                stcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.TotalSTCGPTILossCF,
+                ltcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.TotalLTCGPTILossCF,
+                OthSrcLossRaceHorseCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.OthSrcLossRaceHorseCF,
+                lossFromSpeculativeBus:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.LossFrmSpecBusCF,
               },
               TotalOfBFLossesEarlierYrs: {
