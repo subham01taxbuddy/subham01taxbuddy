@@ -3018,6 +3018,43 @@ export class PrefillIdComponent implements OnInit {
                   this.ITR_Obj.systemFlags.haveUnlistedShares = false;
                 }
               }
+
+              // partnership firm details
+              {
+                if(this.ITR_Type ==='ITR3'){
+                  this.ITR_Obj.partnerInFirmFlag =
+                    ItrJSON[
+                      this.ITR_Type
+                    ]?.PartA_GEN1?.FilingStatus?.PartnerInFirmFlg;
+                  this.ITR_Obj.partnerInFirms = ItrJSON[
+                    this.ITR_Type
+                  ]?.PartA_GEN1?.FilingStatus?.PartnerInFirm?.PartnerInFirmDtls?.map(
+                    (element) => ({
+                      name: element?.NameOfFirm,
+                      panNumber: element?.PAN,
+                    })
+                  );
+  
+                  // setting partnership firm object
+                  {
+                    if (!this.ITR_Obj.partnerFirms) {
+                      this.ITR_Obj.partnerFirms = [];
+                    }
+  
+                    this.ITR_Obj.partnerFirms = ItrJSON[
+                      this.ITR_Type
+                    ]?.ScheduleIF?.PartnerFirmDetails?.map((element) => ({
+                      name: element?.FirmName,
+                      panNumber: element?.FirmPAN,
+                      isLiableToAudit: element?.IsLiableToAudit,
+                      sec92EFirmFlag: element?.Sec92EFirmFlag,
+                      profitSharePercent: element?.ProfitSharePercent,
+                      profitShareAmount: element?.ProfitShareAmt,
+                      capitalBalanceOn31stMarch: element?.FirmCapBalOn31Mar,
+                    }));
+                  }
+                }
+              }
             }
           }
 

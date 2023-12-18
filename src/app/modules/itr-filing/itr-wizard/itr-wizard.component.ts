@@ -332,35 +332,35 @@ export class ItrWizardComponent implements OnInit {
   }
 
   gotoSchedule(schedule) {
-    if (this.ITR_JSON.itrSummaryJson) {
-      this.utilsService.showSnackBar(
-        'Editing data is not allowed after summary json is uploaded'
-      );
-      return;
-    }
+    // if (this.ITR_JSON.itrSummaryJson) {
+    //   this.utilsService.showSnackBar(
+    //     'Editing data is not allowed after summary json is uploaded'
+    //   );
+    //   return;
+    // }
     const errors = this.validateItrObj(); // invoke the function and store the result
     console.log('errors', errors);
 
-    if (errors !== null) {
-      if (schedule === 'personalInfo') {
-        this.selectedSchedule = this.schedules.getTitle(schedule);
-        this.showIncomeSources = false;
-        this.breadcrumb = null;
-        let navigationPath = '/itr/personal-info';
-        this.router.navigate(['/itr-filing/' + navigationPath], {
-          state: this.navigationData,
-        });
-      } else {
-        let errorMessage = 'Please fill all the below details:\n';
-        Object.entries(errors).forEach(([key, value], index) => {
-          errorMessage += `${index + 1}. ${key}: ${value}\n`;
-        });
-        this.utilsService.showSnackBar(errorMessage);
-      }
-      return;
-    }
+    // if (errors !== null) {
+    //   if (schedule === 'personalInfo') {
+    //     this.selectedSchedule = this.schedules.getTitle(schedule);
+    //     this.showIncomeSources = false;
+    //     this.breadcrumb = null;
+    //     let navigationPath = '/itr/personal-info';
+    //     this.router.navigate(['/itr-filing/' + navigationPath], {
+    //       state: this.navigationData,
+    //     });
+    //   } else {
+    //     let errorMessage = 'Please fill all the below details:\n';
+    //     Object.entries(errors).forEach(([key, value], index) => {
+    //       errorMessage += `${index + 1}. ${key}: ${value}\n`;
+    //     });
+    //     this.utilsService.showSnackBar(errorMessage);
+    //   }
+    //   return;
+    // }
 
-    if (errors === null) {
+    // if (errors === null) {
       this.selectedSchedule = this.schedules.getTitle(schedule);
       this.showIncomeSources = false;
       this.breadcrumb = null;
@@ -369,7 +369,7 @@ export class ItrWizardComponent implements OnInit {
         state: this.navigationData,
       });
       return;
-    }
+    // }
   }
 
   gotoCgSchedule() {
