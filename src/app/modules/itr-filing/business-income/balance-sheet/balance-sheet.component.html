@@ -95,7 +95,10 @@
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="heading1">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                      data-bs-target="#collapse1">Source Of Fund</button>
+                      data-bs-target="#collapse1">
+                      {{this.ITR_JSON.liableSection44AAflag === 'Y' ? 'Assets and liabilities' :
+                            'Information in respect to Business'}}
+                    </button>
 
                   </h2>
                   <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">

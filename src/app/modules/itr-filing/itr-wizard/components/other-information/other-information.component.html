@@ -39,7 +39,7 @@
             </mat-radio-group>
           </div>
         </div>
-        <div class="clearfix">
+        <div class="clearfix" *ngIf="Copy_ITR_JSON.systemFlags?.directorInCompany">
           <button class="btn btn__default btn__add pull-right"
                   (click)="addDirectorDetails('Add director details', 'ADD', null)"> Add New Company
           </button>

@@ -44,20 +44,6 @@ table {
   margin: 0px 20px 0px 20px;
 }
 
-.mat-radio-group .mat-radio-button .mat-radio-label .mat-radio-label-content {
-  font-weight: 400;
-  font-size: 16px!important;
-  line-height: 14px;
-  color: #9A9AAF;
-}
-
-.mat-radio-group .mat-radio-checked .mat-radio-label .mat-radio-label-content {
-  font-weight: 600!important;
-  font-size: 16px!important;
-  line-height: 14px!important;
-  color: #ff0000!important;
-}
-
 .table-responsive {
   overflow-x: auto;
 }
@@ -76,28 +62,4 @@ td {
   font-size: 12px;
 } */
 
-mat-form-field,
-th,
-thead,
-tr,
-td {
-  padding: 5px;
-  font-size: 10px;
-  /* height: 10px; */
-}
 
-.invalid {
-  border: 1px solid #f00;
-}
-
-.mat-accordion > .mat-expansion-panel-spacing:first-child {
-  margin-top: 15px;
-}
-
-.mat-radio-button {
-  margin-left: 16px;
-}
-
-.mat-expansion-panel-content > .mat-expansion-panel-body {
-  height: 100vh;
-}
