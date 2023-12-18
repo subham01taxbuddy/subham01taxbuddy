@@ -1,209 +1,212 @@
 <form [formGroup]="scheduleFsiForm">
-  <div class="mrgArdSpcBlw">
-    <!-- header and sub header -->
-    <div class="flex justify-between align-items-center">
-      <div>
-        <div class="txtTitle" style="margin-bottom: 0px">
-          <strong> Schedule FSI </strong>
+  <div class="frameC">
+    <h1 class="heading__title">Schedule FSI</h1>
+    <div class="space">
+      <span class="normal_text">Details of income from outside India and tax relief (available only in
+                        case of resident)</span>
+      <button class="btn btn__default btn__add btn-rt" (click)="add()">Add</button>
+      <div class="wrapper">
+
+        <div class="div-4">
+          <div class="frame-wrapper-2A">
+            <div class="accordion" id="myAccordion">
+
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="heading1">
+                  <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                          data-bs-target="#collapse1"><span class="box-left">
+                                        Schedule FSI
+                                    </span>  </button>
+
+
+                </h2>
+                <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                  <div class="accordion__item-body">
+
+                    <div style="overflow-x:auto;">
+                      <table class="table">
+                        <thead class="table-header divider_border">
+                          <tr class="table-head">
+                            <th class="text-left mr-20">Action</th>
+                            <th class="text-left mr-20 min-width">Country Code</th>
+                            <th class="text-left mr-20 min-width">Tax Identification Number</th>
+                            <th colspan="5" class="flex text-left mr-20 ">
+                              <div class="mr-20 min-width">Heads of Income (a)</div>
+                              <div class="mr-20 min-width">
+                                Income from outside <br />
+                                India (b)
+                              </div>
+                              <div class="mr-20 min-width">Tax paid outside India (c)</div>
+                              <div class="mr-20 min-width">
+                                Tax payable on such income under
+                                <br />
+                                normal provisions in India (d)
+                              </div>
+                              <div class="mr-20 min-width">
+                                Tax relief available in India (e)
+                                <br />
+                                *lower of c & d
+                              </div>
+                              <div class="mr-20 min-width">
+                                Relevant article of DTAA
+                                <br />
+                                if relief claimed u/s 90 or 90A
+                              </div>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody formArrayName="fsiArray">
+                          <tr
+                                class="tds-on"
+                                *ngFor="let fsi of getFsiArray.controls; let index = index"
+                                [formGroupName]="index">
+                          <!-- checkbox -->
+                          <td>
+                            <mat-checkbox
+                                    color="primary"
+                                    name="hasEdit[i]"
+                                    formControlName="hasEdit"
+                                    class=""
+                            >
+                            </mat-checkbox>
+                          </td>
+
+                          <!-- country code -->
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <mat-select
+                                      formControlName="countryCode"
+                                      name="countryCode[i]"
+                                      required
+                              >
+                                <mat-option
+                                        *ngFor="let nature of countryCodeList"
+                                        [value]="nature"
+                                        matTooltip="{{ nature }}"
+                                        [disabled]="nature.disabled"
+                                >
+                                  {{ nature }}
+                                </mat-option></mat-select
+                              >
+                            </mat-form-field>
+                          </td>
+
+                          <!-- tin number -->
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <input
+                                      matInput
+                                      name="tinNumber[i]"
+                                      formControlName="tinNumber"
+                                      required
+                              />
+                            </mat-form-field>
+                          </td>
+                          <!-- head Of incomes Array -->
+                          <ng-container formArrayName="headOfIncomes">
+                            <ng-container *ngFor="let headOfIncomeGroup of headOfIncomesArray.controls; let i = index"
+                                          [formGroupName]="i">
+                              <tr>
+                                <td>
+                                  <mat-form-field appearance="outline">
+                                    <input
+                                            matInput
+                                            formControlName="headOfIncome"
+                                            name="headOfIncome[i]"
+                                            readonly
+                                    />
+                                  </mat-form-field>
+                                </td>
+                                <td>
+                                  <mat-form-field appearance="outline">
+                                    <input
+                                            matInput
+                                            class="input-field"
+                                            name="incFromOutInd[i]"
+                                            formControlName="incFromOutInd"
+                                    />
+                                    <mat-hint style="margin-top: 18px">
+                                      Ensure income reflects
+                                      <br />
+                                      in respective schedules
+                                    </mat-hint>
+                                  </mat-form-field>
+                                </td>
+                                <td>
+                                  <mat-form-field appearance="outline">
+                                    <input
+                                            matInput
+                                            class="input-field"
+                                            name="taxPaidOutInd[i]"
+                                            formControlName="taxPaidOutInd"
+                                    />
+                                  </mat-form-field>
+                                </td>
+                                <td>
+                                  <mat-form-field appearance="outline">
+                                    <input
+                                            matInput
+                                            class="input-field"
+                                            name="taxPayableNrmlProv[i]"
+                                            formControlName="taxPayableNrmlProv"
+                                    />
+                                  </mat-form-field>
+                                </td>
+                                <td>
+                                  <mat-form-field appearance="outline">
+                                    <input
+                                            matInput
+                                            class="input-field"
+                                            name="offeredForTaxInd[i]"
+                                            formControlName="offeredForTaxInd"
+                                            readonly
+                                    />
+                                    {{ getLowerOfCds() }}
+                                  </mat-form-field>
+                                </td>
+                                <td>
+                                  <mat-form-field appearance="outline">
+                                    <mat-label>Relevant Article</mat-label>
+                                    <input
+                                            matInput
+                                            class="input-field"
+                                            formControlName="relevantArticle"
+                                            name="relevantArticle[i]"
+                                    />
+                                  </mat-form-field>
+                                </td>
+                              </tr>
+                            </ng-container>
+                          </ng-container>
+
+                          <br /><br />
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <button class="btn btn__white mt-20" (click)="deleteFsiArray()">
+                      <i class="fa-solid fa-trash-can"></i>Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
         </div>
-        <div>
-          Details of income from outside India and tax relief (available only in
-          case of resident)
+
+        <div class="out-box">
+          <div class="box-left">
+            <button class="btn btn__white" (click)="goBack()">Back</button>
+          </div>
+          <div class="box-right">
+            <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
+          </div>
         </div>
       </div>
-      <button class="lgtBtn" (click)="add()">+ Add</button>
-    </div>
-    <br />
-
-    <div class="row cardBack">
-      <div class="table-responsive">
-        <table class="table table-bordered" style="border: 1px solid #bdc3c7">
-          <thead class="table-header">
-            <tr class="table-head">
-              <th>Action</th>
-              <th>Country Code</th>
-              <th>Tax Identification Number</th>
-              <th colspan="5" class="flex justify-between">
-                <div class="matWidth">Heads of Income (a)</div>
-                <div class="matWidth">
-                  Income from outside <br />
-                  India (b)
-                </div>
-                <div class="matWidth">Tax paid outside India (c)</div>
-                <div class="matWidth">
-                  Tax payable on such income under
-                  <br />
-                  normal provisions in India (d)
-                </div>
-                <div class="matWidth">
-                  Tax relief available in India (e)
-                  <br />
-                  *lower of c & d
-                </div>
-                <div class="matWidth">
-                  Relevant article of DTAA
-                  <br />
-                  if relief claimed u/s 90 or 90A
-                </div>
-              </th>
-            </tr>
-          </thead>
-
-          <tbody formArrayName="fsiArray">
-            <tr
-              class="tds-on"
-              *ngFor="let fsi of getFsiArray.controls; let index = index"
-              [formGroupName]="index"
-            >
-              <!-- checkbox -->
-              <td>
-                <mat-checkbox
-                  color="primary"
-                  name="hasEdit[i]"
-                  formControlName="hasEdit"
-                  class=""
-                >
-                </mat-checkbox>
-              </td>
-
-              <!-- country code -->
-              <td>
-                <mat-form-field appearance="outline">
-                  <mat-select
-                    formControlName="countryCode"
-                    name="countryCode[i]"
-                    required
-                  >
-                    <mat-option
-                      *ngFor="let nature of countryCodeList"
-                      [value]="nature"
-                      matTooltip="{{ nature }}"
-                      [disabled]="nature.disabled"
-                    >
-                      {{ nature }}
-                    </mat-option></mat-select
-                  >
-                </mat-form-field>
-              </td>
-
-              <!-- tin number -->
-              <td>
-                <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="tinNumber[i]"
-                    formControlName="tinNumber"
-                    required
-                  />
-                </mat-form-field>
-              </td>
-
-              <!-- head Of incomes Array -->
-              <ng-container formArrayName="headOfIncomes">
-                <ng-container
-                  *ngFor="
-                    let headOfIncomeGroup of headOfIncomesArray.controls;
-                    let i = index
-                  "
-                  [formGroupName]="i"
-                >
-                  <tr>
-                    <td>
-                      <mat-form-field appearance="outline">
-                        <input
-                          matInput
-                          formControlName="headOfIncome"
-                          name="headOfIncome[i]"
-                          readonly
-                        />
-                      </mat-form-field>
-                    </td>
-                    <td>
-                      <mat-form-field appearance="outline">
-                        <input
-                          matInput
-                          class="input-field"
-                          name="incFromOutInd[i]"
-                          formControlName="incFromOutInd"
-                        />
-                        <mat-hint style="margin-top: 18px">
-                          Ensure income reflects
-                          <br />
-                          in respective schedules
-                        </mat-hint>
-                      </mat-form-field>
-                    </td>
-                    <td>
-                      <mat-form-field appearance="outline">
-                        <input
-                          matInput
-                          class="input-field"
-                          name="taxPaidOutInd[i]"
-                          formControlName="taxPaidOutInd"
-                        />
-                      </mat-form-field>
-                    </td>
-                    <td>
-                      <mat-form-field appearance="outline">
-                        <input
-                          matInput
-                          class="input-field"
-                          name="taxPayableNrmlProv[i]"
-                          formControlName="taxPayableNrmlProv"
-                        />
-                      </mat-form-field>
-                    </td>
-                    <td>
-                      <mat-form-field appearance="outline">
-                        <input
-                          matInput
-                          class="input-field"
-                          name="offeredForTaxInd[i]"
-                          formControlName="offeredForTaxInd"
-                          readonly
-                        />
-                        {{ getLowerOfCds() }}
-                      </mat-form-field>
-                    </td>
-                    <td>
-                      <mat-form-field appearance="outline">
-                        <mat-label>Relevant Article</mat-label>
-                        <input
-                          matInput
-                          class="input-field"
-                          formControlName="relevantArticle"
-                          name="relevantArticle[i]"
-                        />
-                      </mat-form-field>
-                    </td>
-                  </tr>
-                </ng-container>
-              </ng-container>
-              <br />
-              <br />
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-6">
-        <button type="submit" class="clr-btn" (click)="deleteFsiArray()">
-          <i class="fa fa-close" aria-hidden="true">&nbsp;</i> Delete
-        </button>
-      </div>
-    </div>
-
-    <div class="flex justify-between p-[30px] back-foot">
-      <button class="lgtBtn" (click)="goBack()">
-        <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-        <span class="font-semibold">&nbsp;Back to More Info List</span>
-      </button>
-
-      <button class="saveBtnIn" (click)="saveAll()">
-        <span class="font-semibold">Save All</span>
-      </button>
     </div>
   </div>
+
 </form>
