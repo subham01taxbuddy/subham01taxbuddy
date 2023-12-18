@@ -167,6 +167,8 @@ export class SummaryComponent implements OnInit {
   taxComputation: any;
   keys: any = {};
   finalSummary: any;
+  hpPtiValue: any;
+  passThroughInc:any;
 
   finalCalculations: {
     personalInfo: {
@@ -534,7 +536,7 @@ export class SummaryComponent implements OnInit {
         BusLossOthThanSpecifiedLossCF: any;
         LossFrmSpecifiedBusCF: any;
         stcgLoss: any;
-        ltcgLoss:any;
+        ltcgLoss: any;
       };
       LossCFFromPrev7thYearFromAY: {
         dateOfFiling: any;
@@ -607,7 +609,7 @@ export class SummaryComponent implements OnInit {
         OthSrcLossRaceHorseCF: Number;
         lossFromSpeculativeBus: Number;
       };
-      LossCFCurrentAssmntYear2023?:{
+      LossCFCurrentAssmntYear2023?: {
         dateOfFiling: any;
         hpLoss: Number;
         broughtForwardBusLoss: Number;
@@ -3856,7 +3858,7 @@ export class SummaryComponent implements OnInit {
                     ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
                     ?.LossFrmSpecBusCF,
               },
-              LossCFCurrentAssmntYear2023:{
+              LossCFCurrentAssmntYear2023: {
                 dateOfFiling:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
                     ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
@@ -4712,6 +4714,8 @@ export class SummaryComponent implements OnInit {
                 : null,
           };
           console.log(this.keys, 'this.keys ITR2&3');
+          this.calculateTotalNetIncomeLoss();
+          this.calculatePassThroughInc();
           this.loading = false;
         }
       } else {
@@ -6942,7 +6946,7 @@ export class SummaryComponent implements OnInit {
     let total = 0;
     if (this.ITR_JSON.exemptIncomes?.length > 0) {
       for (let i = 0; i < this.ITR_JSON.exemptIncomes?.length; i++) {
-        total = total + this.ITR_JSON.exemptIncomes[i].amount;
+        total = parseFloat(total + this.ITR_JSON.exemptIncomes[i].amount);
       }
     }
     return total;
@@ -7061,17 +7065,37 @@ export class SummaryComponent implements OnInit {
   }
 
   ptiShortTermExpanded: boolean[] = [];
-
+  rowspanValue: any;
   togglePtiShortTerm(event: Event, index: number) {
     event.stopPropagation();
     this.ptiShortTermExpanded[index] = !this.ptiShortTermExpanded[index];
+    this.rowspanValue = !this.ptiShortTermExpanded[index] ? 3 : 1;
   }
 
   ptiLongTermExpanded: boolean[] = [];
-
+  rowspanLtcgValue: any;
   togglePtiLongTerm(event: Event, index: number) {
     event.stopPropagation();
     this.ptiLongTermExpanded[index] = !this.ptiLongTermExpanded[index];
+    this.rowspanLtcgValue = !this.ptiShortTermExpanded[index] ? 3 : 1;
+  }
+
+  calculateTotalNetIncomeLoss() {
+    const details = this.finalCalculations?.SchedulePTI?.SchedulePTIDtls || [];
+    if (details && details.length > 0) {
+      this.hpPtiValue = details
+        ?.map((detail) => detail?.IncFromHP?.NetIncomeLoss || 0)
+        ?.reduce((total, value) => total + value, 0);
+    }
+  }
+
+  calculatePassThroughInc(){
+    const details = this.finalCalculations?.SchedulePTI?.SchedulePTIDtls || [];
+    if (details && details.length > 0) {
+      this.passThroughInc = details
+        ?.map((detail) => detail?.IncClmdPTI?.TotalSec23FBB?.NetIncomeLoss || 0)
+        ?.reduce((total, value) => total + value, 0);
+    }
   }
 }
 

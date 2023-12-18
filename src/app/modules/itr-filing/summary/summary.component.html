@@ -1040,6 +1040,13 @@
                               }}
                             </td>
                           </tr>
+                          <tr *ngIf="hpPtiValue">
+                            <th>7. Income from PTI</th>
+                            <td>
+                              Rs
+                              {{ hpPtiValue }}
+                            </td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
@@ -3315,7 +3322,7 @@
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
                                   finalCalculations?.otherIncome?.otherIncomes
-                                ?.giftExemptIncome
+                                    ?.giftExemptIncome
                                 )
                               }}
                             </td>
@@ -5902,24 +5909,21 @@
                           <td>
                             {{
                               finalCalculations?.scheduleCflDetails
-                                ?.LossCFPrevAssmntYear
-                                ?.broughtForwardBusLoss
+                                ?.LossCFPrevAssmntYear?.broughtForwardBusLoss
                             }}
                           </td>
                           <!-- loss from speculative business  -->
                           <td>
                             {{
                               finalCalculations?.scheduleCflDetails
-                                ?.LossCFPrevAssmntYear
-                                ?.lossFromSpeculativeBus
+                                ?.LossCFPrevAssmntYear?.lossFromSpeculativeBus
                             }}
                           </td>
                           <!-- loss from specified business  -->
                           <td>
                             {{
                               finalCalculations?.scheduleCflDetails
-                                ?.LossCFPrevAssmntYear
-                                ?.LossFrmSpecifiedBusCF
+                                ?.LossCFPrevAssmntYear?.LossFrmSpecifiedBusCF
                             }}
                           </td>
                           <!-- short term capital loss  -->
@@ -5940,8 +5944,7 @@
                           <td>
                             {{
                               finalCalculations?.scheduleCflDetails
-                                ?.LossCFPrevAssmntYear
-                                ?.OthSrcLossRaceHorseCF
+                                ?.LossCFPrevAssmntYear?.OthSrcLossRaceHorseCF
                             }}
                           </td>
                         </tr>
@@ -5975,7 +5978,8 @@
                           <td>
                             {{
                               finalCalculations?.scheduleCflDetails
-                                ?.LossCFCurrentAssmntYear?.lossFromSpeculativeBus
+                                ?.LossCFCurrentAssmntYear
+                                ?.lossFromSpeculativeBus
                             }}
                           </td>
                           <!-- loss from specified business  -->
@@ -6030,7 +6034,8 @@
                           <td>
                             {{
                               finalCalculations?.scheduleCflDetails
-                                ?.LossCFCurrentAssmntYear2023?.broughtForwardBusLoss
+                                ?.LossCFCurrentAssmntYear2023
+                                ?.broughtForwardBusLoss
                             }}
                           </td>
                           <!-- loss from speculative business  -->
@@ -6045,7 +6050,8 @@
                           <td>
                             {{
                               finalCalculations?.scheduleCflDetails
-                                ?.LossCFCurrentAssmntYear2023?.LossFrmSpecifiedBusCF
+                                ?.LossCFCurrentAssmntYear2023
+                                ?.LossFrmSpecifiedBusCF
                             }}
                           </td>
                           <!-- short term capital loss  -->
@@ -6066,7 +6072,8 @@
                           <td>
                             {{
                               finalCalculations?.scheduleCflDetails
-                                ?.LossCFCurrentAssmntYear2023?.OthSrcLossRaceHorseCF
+                                ?.LossCFCurrentAssmntYear2023
+                                ?.OthSrcLossRaceHorseCF
                             }}
                           </td>
                         </tr>
@@ -8033,211 +8040,149 @@
                         </tr>
 
                         <!-- row 3 -->
-                        <tr (click)="togglePtiShortTerm($event, i)">
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                        <tr>
+                          <td rowspan="1">
                             {{ "ai. Short term" }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.ShortTermCG?.AmountOfInc }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.ShortTermCG
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.ShortTermCG?.NetIncomeLoss
                             }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.ShortTermCG?.TDSAmount }}
-                            <mat-icon
-                              class="arrow-icon"
-                              (click)="togglePtiShortTerm($event, i)"
-                            >
-                              keyboard_arrow_down
-                            </mat-icon>
                           </td>
                         </tr>
 
                         <!-- row 4 -->
-                        <tr *ngIf="ptiShortTermExpanded[i]">
-                          <td>
+                        <tr>
+                          <td rowspan="1">
                             {{ "aii. Section 111A" }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.STCG_Sec111A?.AmountOfInc
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.STCG_Sec111A
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.STCG_Sec111A?.NetIncomeLoss
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.STCG_Sec111A?.TDSAmount }}
                           </td>
                         </tr>
 
                         <!-- row 5 -->
-                        <tr *ngIf="ptiShortTermExpanded[i]">
-                          <td>
+                        <tr>
+                          <td rowspan="1">
                             {{ "aiii. Section 111A" }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.STCG_Others?.AmountOfInc }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.STCG_Others
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.STCG_Others?.NetIncomeLoss
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.STCG_Others?.TDSAmount }}
                           </td>
                         </tr>
 
                         <!-- row 6 -->
-                        <tr (click)="togglePtiLongTerm($event, i)">
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                        <tr>
+                          <td rowspan="1">
                             {{ "b. Long term" }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.LongTermCG?.AmountOfInc }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LongTermCG
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LongTermCG?.NetIncomeLoss
                             }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.LongTermCG?.TDSAmount }}
-                            <mat-icon
-                              class="arrow-icon"
-                              (click)="togglePtiLongTerm($event, i)"
-                            >
-                              keyboard_arrow_down
-                            </mat-icon>
                           </td>
                         </tr>
 
                         <!-- row 7 -->
-                        <tr *ngIf="ptiLongTermExpanded[i]">
-                          <td>
+                        <tr>
+                          <td rowspan="1">
                             {{ "bi. Section 112A" }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Sec112A?.AmountOfInc
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Sec112A
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Sec112A?.NetIncomeLoss
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.LTCG_Sec112A?.TDSAmount }}
                           </td>
                         </tr>
 
                         <!-- row 8 -->
-                        <tr *ngIf="ptiLongTermExpanded[i]">
-                          <td>
+                        <tr>
+                          <td rowspan="1">
                             {{ "bii. Other than Section 112A" }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.LTCG_Others?.AmountOfInc }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Others
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Others?.NetIncomeLoss
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.LTCG_Others?.TDSAmount }}
                           </td>
                         </tr>
@@ -9907,23 +9852,20 @@
                               </mat-icon>
                             </div>
                             <label class="rtNumb1">
-                              <i class="material-icons icRup">&#8377;</i
-                              >&nbsp;{{
+                              <i class="material-icons icRup">&#8377;</i>&nbsp;{{
                                 keys.ExemptIncAgriOthUs10Total
-                                  ? keys.ExemptIncAgriOthUs10Total +
-                                    finalCalculations?.giftExemptIncome
-                                  : getExemptIncomeTotal() +
-                                    finalCalculations?.exemptIncome?.total +
-                                    finalCalculations?.giftExemptIncome
-                              }}</label
-                            >
+                                  ?  (keys?.ExemptIncAgriOthUs10Total || 0) + (finalCalculations?.giftExemptIncome || 0)
+                                  :  getExemptIncomeTotal() + (finalCalculations?.exemptIncome?.total || 0) + (finalCalculations?.giftExemptIncome || 0)
+                              }}
+                            </label>                            
                           </div>
                         </div>
                       </div>
                     </mat-expansion-panel-header>
                     <div
                       *ngIf="
-                        ITR_JSON.itrSummaryJson && keys.ExemptIncomeDetails
+                        (ITR_JSON.itrSummaryJson && keys.ExemptIncomeDetails) ||
+                        passThroughInc
                       "
                     >
                       <table
@@ -9934,14 +9876,14 @@
                             <td><b>Particular</b></td>
                             <td><b>Amount</b></td>
                           </tr>
-                          <tr *ngFor="let exempt of keys.ExemptIncomeDetails">
-                            <td>{{ exempt.NatureDesc }}</td>
+                          <tr *ngFor="let exempt of keys?.ExemptIncomeDetails">
+                            <td>{{ exempt?.NatureDesc }}</td>
                             <td class="">
                               <i class="material-icons" style="font-size: 15px"
                                 >₹</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  exempt.OthAmount -
+                                  exempt?.OthAmount -
                                     finalCalculations?.giftExemptIncome
                                     ? finalCalculations?.giftExemptIncome
                                     : 0
@@ -9966,6 +9908,12 @@
                               }}
                             </td>
                           </tr>
+                          <tr *ngIf="passThroughInc">
+                            <td>Pass through income not chargeable to tax</td>
+                            <td>
+                              {{ passThroughInc }}
+                            </td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
@@ -9984,7 +9932,7 @@
                               <i class="material-icons" style="font-size: 15px"
                                 >₹</i
                               >&nbsp;{{
-                                utilsService.currencyFormatter(exempt.amount)
+                                utilsService.currencyFormatter(exempt?.amount)
                               }}
                             </td>
                           </tr>
@@ -10020,6 +9968,12 @@
                                   finalCalculations.profitShareAmount
                                 )
                               }}
+                            </td>
+                          </tr>
+                          <tr *ngIf="passThroughInc">
+                            <td>Pass through income not chargeable to tax</td>
+                            <td>
+                              {{ passThroughInc }}
                             </td>
                           </tr>
                         </tbody>
