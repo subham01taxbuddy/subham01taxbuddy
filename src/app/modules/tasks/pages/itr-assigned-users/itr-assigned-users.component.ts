@@ -1146,7 +1146,7 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   openReviseReturnDialog(data) {
     console.log('Data for revise return ', data);
-    if(data.isEverified){
+    if(data.statusId != 11){
       let disposable = this.dialog.open(ReviseReturnDialogComponent, {
         width: '50%',
         height: 'auto',

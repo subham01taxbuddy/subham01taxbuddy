@@ -230,7 +230,8 @@
                 {{showMessage}}</span>
               <mat-label>Select Plan</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select matInput placeholder="Select Plan" [(ngModel)]="smeSelectedPlanId" (ngModelChange)="onNgModelChange()" autocomplete="off">
+                <mat-select matInput placeholder="Select Plan" [(ngModel)]="smeSelectedPlanId"
+                  (ngModelChange)="onNgModelChange()" autocomplete="off">
                   <mat-option *ngFor="let plan of allPlans" [value]="plan?.planId" [disabled]="plan.disable">
                     {{ plan.name }}
                   </mat-option>
@@ -334,13 +335,17 @@
                 <div class="col-sm-5">
                   <mat-label>Search & Select Promo Code</mat-label>
                   <mat-form-field appearance="outline" class="class1">
-                    <input type="text" placeholder="Start typing..." matInput [disabled]="!smeSelectedPlanId"
+                    <input type="text" placeholder="Start typing..." matInput [readonly]="!smeSelectedPlanId"
                       [formControl]="searchedPromoCode" [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()"
                       required />
-                    <mat-error *ngIf="searchedPromoCode.invalid">
+                    <mat-error *ngIf="searchedPromoCode.hasError('invalid')">
                       Please select value from dropdown only.
                     </mat-error>
-                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-error *ngIf="searchedPromoCode.hasError('maxError')">
+                      Selected promo code amount should be less than Plan Amount. Please select another promo code.
+                    </mat-error>
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                      (optionSelected)="addPromoMaxValidation($event);">
                       <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
                         {{ option.title }}
                       </mat-option>
@@ -349,7 +354,8 @@
                 </div>
                 <div class="col-sm-5">
                   <button class="btn" style="background: #00aeca; border-radius: 2px"
-                    (click)="applyPromo(smeSelectedPlanId); onNgModelChange()" [disabled]="!smeSelectedPlanId">
+                    (click)="applyPromo(smeSelectedPlanId); onNgModelChange()"
+                    [disabled]="!smeSelectedPlanId || searchedPromoCode.invalid">
                     Apply
                   </button>
                   &nbsp;
@@ -428,9 +434,9 @@
             <div class="col-sm-6">
               <mat-label>Select Service</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select [(ngModel)]="service" (ngModelChange)="onNgModelChange()" [ngModelOptions]="{ standalone: true }" matInput
-                  placeholder="Select Service" autocomplete="off" (selectionChange)="changeService()"
-                  [disabled]="isButtonDisable">
+                <mat-select [(ngModel)]="service" (ngModelChange)="onNgModelChange()"
+                  [ngModelOptions]="{ standalone: true }" matInput placeholder="Select Service" autocomplete="off"
+                  (selectionChange)="changeService()" [disabled]="isButtonDisable">
                   <mat-option value="ITR"> ITR Filing </mat-option>
                   <mat-option value="ITRU"> ITR U </mat-option>
                   <mat-option value="GST"> GST
@@ -451,9 +457,9 @@
             <div class="col-sm-6">
               <mat-label>Service Detail</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select [(ngModel)]="serviceDetail" (ngModelChange)="onNgModelChange()" [ngModelOptions]="{ standalone: true }"
-                  (selectionChange)="onUpdateGstNoValidation()" placeholder="Select Service Detail" autocomplete="off"
-                  required>
+                <mat-select [(ngModel)]="serviceDetail" (ngModelChange)="onNgModelChange()"
+                  [ngModelOptions]="{ standalone: true }" (selectionChange)="onUpdateGstNoValidation()"
+                  placeholder="Select Service Detail" autocomplete="off" required>
                   <mat-option *ngFor="let details of serviceDetails" [value]="details.details">
                     {{ details.details }}
                   </mat-option>
