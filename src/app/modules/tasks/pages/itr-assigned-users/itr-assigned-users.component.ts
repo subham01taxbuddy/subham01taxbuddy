@@ -1146,25 +1146,32 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   openReviseReturnDialog(data) {
     console.log('Data for revise return ', data);
-    let disposable = this.dialog.open(ReviseReturnDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: data
-    })
-    disposable.afterClosed().subscribe(result => {
-      if (result === 'reviseReturn') {
-        this.router.navigate(['/itr-filing/itr'], {
-          state: {
-            userId: data.userId,
-            panNumber: data.panNumber,
-            eriClientValidUpto: data.eriClientValidUpto,
-            name: data.name
-          }
-        });
-      }
-      console.log('The dialog was closed', result);
-    });
-  }
+    if(data.isEverified){
+      let disposable = this.dialog.open(ReviseReturnDialogComponent, {
+        width: '50%',
+        height: 'auto',
+        data: data
+      })
+      disposable.afterClosed().subscribe(result => {
+        if (result === 'reviseReturn') {
+          this.router.navigate(['/itr-filing/itr'], {
+            state: {
+              userId: data.userId,
+              panNumber: data.panNumber,
+              eriClientValidUpto: data.eriClientValidUpto,
+              name: data.name
+            }
+          });
+        }
+        console.log('The dialog was closed', result);
+      });
+    }else{
+      this.utilsService.showSnackBar(
+        'Please complete e-verification before starting with revised return'
+      );
+    }
+    }
+
 
   redirectTowardInvoice(userInfo: any) {
     this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: userInfo.userId } });
