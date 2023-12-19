@@ -1676,11 +1676,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
           'allowances'
         ] as FormArray;
 
-        const id = allowanceArray.controls.filter(
+        const id = allowanceArray?.controls?.filter(
           (item: any) =>
-            item.controls['allowType'].value === allowance[i].allowanceType
+            item?.controls['allowType']?.value === allowance[i]?.allowanceType
         )[0] as FormGroup;
-        id.controls['allowValue'].setValue(allowance[i].exemptAmount);
+        if(id){
+          id?.controls['allowValue']?.setValue(allowance[i]?.exemptAmount);
+        }
 
         // id.setValue({
         //   id: id,
