@@ -916,6 +916,54 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     return total;
   }
 
+  getTotalOtherIncome() {
+    let total = 0;
+    for (let i = 0; i < this.otherIncomesFormArray.controls.length; i++) {
+      if (
+        this.utilsService.isNonZero(
+          this.otherIncomesFormArray.controls[i].value.incomeValue
+        )
+      ) {
+        total =
+          total +
+          Number(this.otherIncomesFormArray.controls[i].value.incomeValue);
+      }
+    }
+    return total;
+  }
+
+  getTotalGiftIncome(){
+    let giftTax = this.otherIncomeFormGroup.get('giftTax') as FormGroup;
+    let total = 0;
+
+    if(!giftTax.get('aggregateValueWithoutConsiderationNotTaxable').value &&
+        this.utilsService.isNonZero(giftTax.get('aggregateValueWithoutConsideration').value)){
+      total += Number(giftTax.get('aggregateValueWithoutConsideration').value);
+    }
+
+    if(!giftTax.get('immovablePropertyWithoutConsiderationNotTaxable').value &&
+        this.utilsService.isNonZero(giftTax.get('immovablePropertyWithoutConsideration').value)){
+      total += Number(giftTax.get('immovablePropertyWithoutConsideration').value);
+    }
+
+    if(!giftTax.get('immovablePropertyInadequateConsiderationNotTaxable').value &&
+        this.utilsService.isNonZero(giftTax.get('immovablePropertyInadequateConsideration').value)){
+      total += Number(giftTax.get('immovablePropertyInadequateConsideration').value);
+    }
+
+    if(!giftTax.get('anyOtherPropertyWithoutConsiderationNotTaxable').value &&
+        this.utilsService.isNonZero(giftTax.get('anyOtherPropertyWithoutConsideration').value)) {
+      total += Number(giftTax.get('anyOtherPropertyWithoutConsideration').value);
+    }
+
+    if(!giftTax.get('anyOtherPropertyInadequateConsiderationNotTaxable').value &&
+        this.utilsService.isNonZero(giftTax.get('anyOtherPropertyInadequateConsideration').value)){
+      total += Number(giftTax.get('anyOtherPropertyInadequateConsideration').value);
+    }
+
+    return total;
+  }
+
   validateIncomeValueOnBlur() {
     if (
       this.otherIncomeFormGroup
