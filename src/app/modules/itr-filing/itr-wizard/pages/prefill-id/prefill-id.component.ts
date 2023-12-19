@@ -1927,7 +1927,8 @@ export class PrefillIdComponent implements OnInit {
                       : housePropertyDetails?.TypeOfHP,
                   grossAnnualRentReceivedTotal:
                     housePropertyDetails?.GrossRentReceived,
-                  grossAnnualRentReceived: housePropertyDetails?.GrossRentReceived,
+                  grossAnnualRentReceived:
+                    housePropertyDetails?.GrossRentReceived,
 
                   propertyTax: housePropertyDetails?.TaxPaidlocalAuth,
                   ownerPercentage: null,
@@ -1960,10 +1961,15 @@ export class PrefillIdComponent implements OnInit {
                               housePropertyDetails?.InterestPayable,
                           },
                         ],
-                        ArrearsUnrealizedRentRcvd: Math.round(
-                          housePropertyDetails?.ArrearsUnrealizedRentRcvd,
-                        ),
-                        totalArrearsUnrealizedRentReceived:(Math.round(housePropertyDetails?.ArrearsUnrealizedRentRcvd)*100)/30,
+                  ArrearsUnrealizedRentRcvd: Math.round(
+                    housePropertyDetails?.ArrearsUnrealizedRentRcvd
+                  ),
+                  totalArrearsUnrealizedRentReceived:
+                    (Math.round(
+                      housePropertyDetails?.ArrearsUnrealizedRentRcvd
+                    ) *
+                      100) /
+                    30,
                 };
 
                 this.ITR_Obj.houseProperties.push(hpKeys);
@@ -3052,10 +3058,12 @@ export class PrefillIdComponent implements OnInit {
                 this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
                   ItrJSON[
                     this.ITR_Type
-                  ]?.FilingStatus?.clauseiv7provisio139iDtls?.map((element) => ({
-                    nature: parseFloat(element?.clauseiv7provisio139iNature),
-                    amount: parseFloat(element?.clauseiv7provisio139iAmount),
-                  }));
+                  ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
+                    (element) => ({
+                      nature: parseFloat(element?.clauseiv7provisio139iNature),
+                      amount: parseFloat(element?.clauseiv7provisio139iAmount),
+                    })
+                  );
 
                 this.ITR_Obj.seventhProviso139.strDepAmtAggAmtExcd1CrPrYrFlg =
                   ItrJSON[
@@ -3771,7 +3779,8 @@ export class PrefillIdComponent implements OnInit {
                       : 'LOP',
                   grossAnnualRentReceivedTotal:
                     houseProperty?.Rentdetails?.AnnualLetableValue,
-                  grossAnnualRentReceived: houseProperty?.Rentdetails?.AnnualLetableValue,
+                  grossAnnualRentReceived:
+                    houseProperty?.Rentdetails?.AnnualLetableValue,
 
                   // Not able to map annualValue as we are not storing it in the ITRobject. The final annual value and deduction are wrong for itr2
                   propertyTax: houseProperty?.Rentdetails?.LocalTaxes,
@@ -3825,10 +3834,14 @@ export class PrefillIdComponent implements OnInit {
                     },
                   ],
                   ArrearsUnrealizedRentRcvd: Math.round(
-                    houseProperty?.Rentdetails?.ArrearsUnrealizedRentRcvd,
+                    houseProperty?.Rentdetails?.ArrearsUnrealizedRentRcvd
                   ),
-                  totalArrearsUnrealizedRentReceived:(Math.round(houseProperty?.Rentdetails?.ArrearsUnrealizedRentRcvd)*100)/30,
-
+                  totalArrearsUnrealizedRentReceived:
+                    (Math.round(
+                      houseProperty?.Rentdetails?.ArrearsUnrealizedRentRcvd
+                    ) *
+                      100) /
+                    30,
                 };
                 this.ITR_Obj.houseProperties.push(housePropertyDetails);
               });
@@ -3942,6 +3955,62 @@ export class PrefillIdComponent implements OnInit {
               });
             }
 
+            // pf 10 11 I
+            const pfInterest1011IP =
+              this.uploadedJson[this.ITR_Type]?.ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.IntrstSec10XIFirstProviso;
+
+            if (pfInterest1011IP && pfInterest1011IP !== 0) {
+              this.ITR_Obj.incomes.push({
+                incomeType: 'INTEREST_ACCRUED_10_11_I_P',
+                details: '',
+                amount: pfInterest1011IP,
+                expenses: null,
+              });
+            }
+
+            // pf 10 11 II
+            const pfInterest1011IIP =
+              this.uploadedJson[this.ITR_Type]?.ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.IntrstSec10XISecondProviso;
+
+            if (pfInterest1011IIP && pfInterest1011IIP !== 0) {
+              this.ITR_Obj.incomes.push({
+                incomeType: 'INTEREST_ACCRUED_10_11_II_P',
+                details: '',
+                amount: pfInterest1011IIP,
+                expenses: null,
+              });
+            }
+
+            // pf 10 12 I
+            const pfInterest1012IP =
+              this.uploadedJson[this.ITR_Type]?.ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.IntrstSec10XIIFirstProviso;
+
+            if (pfInterest1012IP && pfInterest1012IP !== 0) {
+              this.ITR_Obj.incomes.push({
+                incomeType: 'INTEREST_ACCRUED_10_12_I_P',
+                details: '',
+                amount: pfInterest1012IP,
+                expenses: null,
+              });
+            }
+
+            // pf 10 12 I
+            const pfInterest1012IIP =
+              this.uploadedJson[this.ITR_Type]?.ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.IntrstSec10XIISecondProviso;
+
+            if (pfInterest1012IIP && pfInterest1012IIP !== 0) {
+              this.ITR_Obj.incomes.push({
+                incomeType: 'INTEREST_ACCRUED_10_12_II_P',
+                details: '',
+                amount: pfInterest1012IIP,
+                expenses: null,
+              });
+            }
+
             // any other
             const IncChargeable =
               this.uploadedJson[this.ITR_Type].ScheduleOS?.IncChargeable;
@@ -3956,7 +4025,11 @@ export class PrefillIdComponent implements OnInit {
                   IntrstFrmTermDeposit -
                   IntrstFrmIncmTaxRefund -
                   FamilyPension -
-                  DividendGross,
+                  DividendGross -
+                  pfInterest1011IP -
+                  pfInterest1011IIP -
+                  pfInterest1012IP -
+                  pfInterest1012IIP,
                 expenses: null,
               });
             }
