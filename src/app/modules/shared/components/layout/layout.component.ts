@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, DoCheck, NgZone, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription, interval } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
@@ -18,7 +18,7 @@ import { SidebarService } from 'src/app/services/sidebar.service';
   styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent implements OnInit {
-  isDocumentCloud:boolean=true;
+  isDocumentCloud: boolean = true;
   timer: any;
   userMsgInfo: any;
   msgCount: any = 0;
@@ -26,8 +26,8 @@ export class LayoutComponent implements OnInit {
   routePath: any;
   updatedChat: any;
   urlSafe: any;
-  openSidebar: boolean=true;
-  subscription:Subscription
+  openSidebar: boolean = true;
+  subscription: Subscription
   constructor(
     private router: Router,
     private dialog: MatDialog,
@@ -51,35 +51,29 @@ export class LayoutComponent implements OnInit {
       this.routePath = router.url;
     });
   }
+  ngDoCheck() {
+    this.detectSidebar();
+  }
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.observer.observe(['(max-width: 800px)']).subscribe((res) => {
-        if (res.matches) {
-          // this.sidenav.close();
-          this.openSidebar = false;
-        } else {
-          // this.sidenav.open();
-          this.openSidebar = true;
-        }
-      });
-    });
+  detectSidebar() {
     this.subscription = this.sidebarService.isLoading
       .subscribe((state) => {
-        // debugger
+        debugger
         if (state) {
-          // this.sidenav.open();
           this.openSidebar = true;
         } else {
-          // this.sidenav.close();
           this.openSidebar = false;
         }
       });
   }
 
+  ngAfterViewInit() {
+    this.detectSidebar();
+  }
+
   ngOnInit(): void {
-    if(this.router?.url?.includes('user-docs')){
-      this.isDocumentCloud=false
+    if (this.router?.url?.includes('user-docs')) {
+      this.isDocumentCloud = false
     }
     const data = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
     let smeMobileNumber = '';

@@ -114,7 +114,7 @@ export class ItrWizardComponent implements OnInit {
       this.showIncomeSources = true;
     }
     this.getCustomerName();
-    this.sidebarService.hide();
+    // this.sidebarService.hide();
   }
 
   getCustomerName() {
