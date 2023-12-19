@@ -13,10 +13,10 @@ import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confir
 import { UserMsService } from '../../../../../services/user-ms.service';
 import * as moment from 'moment/moment';
 import { NonNullExpression } from 'typescript';
-import {AisCredsDialogComponent} from "../../../../../pages/itr-filing/ais-creds-dialog/ais-creds-dialog.component";
-import {Storage} from "@aws-amplify/storage";
-import {environment} from "../../../../../../environments/environment";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import { AisCredsDialogComponent } from '../../../../../pages/itr-filing/ais-creds-dialog/ais-creds-dialog.component';
+import { Storage } from '@aws-amplify/storage';
+import { environment } from '../../../../../../environments/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-prefill-id',
@@ -70,7 +70,7 @@ export class PrefillIdComponent implements OnInit {
     );
   }
 
-  customerName:any;
+  customerName: any;
   ngOnInit(): void {
     let name = this.getCustomerName();
     this.utilsService
@@ -1573,8 +1573,12 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Obj.aadharNumber =
                 ItrJSON[this.ITR_Type].PersonalInfo?.AadhaarCardNo;
 
-              // Date is converted in the required format by BO which is utc we get normaL date 29/01/2000 from JSON
-              this.parseAndFormatDate(ItrJSON[this.ITR_Type].PersonalInfo?.DOB);
+              (this.ITR_Obj.aadhaarEnrolmentId =
+                ItrJSON[this.ITR_Type]?.PersonalInfo?.AadhaarEnrolmentId),
+                // Date is converted in the required format by BO which is utc we get normaL date 29/01/2000 from JSON
+                this.parseAndFormatDate(
+                  ItrJSON[this.ITR_Type].PersonalInfo?.DOB
+                );
               this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
             }
 
@@ -1600,6 +1604,7 @@ export class PrefillIdComponent implements OnInit {
                   ItrJSON[this.ITR_Type].PersonalInfo.Address?.RoadOrStreet +
                   ItrJSON[this.ITR_Type].PersonalInfo.Address?.LocalityOrArea;
               }
+
               //BANK DETAILS
               {
                 const UtilityBankDetails =
@@ -1626,6 +1631,87 @@ export class PrefillIdComponent implements OnInit {
                       };
                     }
                   );
+                }
+              }
+
+              // SEVENTH PROVISIO DETAILS
+              {
+                this.ITR_Obj.seventhProviso139 = {
+                  seventhProvisio139: 'N',
+                  strDepAmtAggAmtExcd1CrPrYrFlg: null,
+                  depAmtAggAmtExcd1CrPrYrFlg: null,
+                  strIncrExpAggAmt2LkTrvFrgnCntryFlg: null,
+                  incrExpAggAmt2LkTrvFrgnCntryFlg: null,
+                  strIncrExpAggAmt1LkElctrctyPrYrFlg: null,
+                  incrExpAggAmt1LkElctrctyPrYrFlg: null,
+                  clauseiv7provisio139i: null,
+                  clauseiv7provisio139iDtls: null,
+                };
+
+                this.ITR_Obj.seventhProviso139.seventhProvisio139 =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.SeventhProvisio139;
+
+                this.ITR_Obj.seventhProviso139.strIncrExpAggAmt1LkElctrctyPrYrFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.IncrExpAggAmt1LkElctrctyPrYrFlg;
+                this.ITR_Obj.seventhProviso139.incrExpAggAmt1LkElctrctyPrYrFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.AmtSeventhProvisio139iii;
+
+                this.ITR_Obj.seventhProviso139.strIncrExpAggAmt2LkTrvFrgnCntryFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.IncrExpAggAmt2LkTrvFrgnCntryFlg;
+                this.ITR_Obj.seventhProviso139.incrExpAggAmt2LkTrvFrgnCntryFlg =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.AmtSeventhProvisio139ii;
+
+                if (this.ITR_Type === 'ITR1') {
+                  this.ITR_Obj.seventhProviso139.clauseiv7provisio139i =
+                    ItrJSON[this.ITR_Type]?.FilingStatus?.clauseiv7provisio139i;
+                  this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
+                    ItrJSON[
+                      this.ITR_Type
+                    ]?.FilingStatus?.clauseiv7provisio139iDtls.map(
+                      (element) => ({
+                        nature: parseFloat(
+                          element?.clauseiv7provisio139iNature
+                        ),
+                        amount: parseFloat(
+                          element?.clauseiv7provisio139iAmount
+                        ),
+                      })
+                    );
+
+                  // 1cr is not present in seventhProvisio for ITR1 so setting it as N
+                  this.ITR_Obj.seventhProviso139.strDepAmtAggAmtExcd1CrPrYrFlg =
+                    'N';
+                } else if (this.ITR_Type === 'ITR4') {
+                  this.ITR_Obj.seventhProviso139.clauseiv7provisio139i =
+                    ItrJSON[this.ITR_Type]?.FilingStatus?.clauseiv7provisio139i;
+                  this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
+                    ItrJSON[
+                      this.ITR_Type
+                    ]?.FilingStatus?.clauseiv7provisio139iDtls.map(
+                      (element) => ({
+                        nature: parseFloat(
+                          element?.clauseiv7provisio139iNature
+                        ),
+                        amount: parseFloat(
+                          element?.clauseiv7provisio139iAmount
+                        ),
+                      })
+                    );
+
+                  this.ITR_Obj.seventhProviso139.strDepAmtAggAmtExcd1CrPrYrFlg =
+                    ItrJSON[
+                      this.ITR_Type
+                    ]?.FilingStatus?.DepAmtAggAmtExcd1CrPrYrFlg;
+                  this.ITR_Obj.seventhProviso139.depAmtAggAmtExcd1CrPrYrFlg =
+                    ItrJSON[
+                      this.ITR_Type
+                    ]?.FilingStatus?.AmtSeventhProvisio139i;
                 }
               }
             }
@@ -2843,10 +2929,14 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Obj.aadharNumber =
                 ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.AadhaarCardNo;
 
-              // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
-              this.parseAndFormatDate(
-                ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.DOB
-              );
+              (this.ITR_Obj.aadhaarEnrolmentId =
+                ItrJSON[
+                  this.ITR_Type
+                ]?.PartA_GEN1?.PersonalInfo?.AadhaarEnrolmentId),
+                // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
+                this.parseAndFormatDate(
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.DOB
+                );
               this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
             }
 
@@ -2918,6 +3008,57 @@ export class PrefillIdComponent implements OnInit {
                     }
                   );
                 }
+              }
+
+              // SEVENTH PROVISIO DETAILS
+              {
+                this.ITR_Obj.seventhProviso139 = {
+                  seventhProvisio139: 'N',
+                  strDepAmtAggAmtExcd1CrPrYrFlg: null,
+                  depAmtAggAmtExcd1CrPrYrFlg: null,
+                  strIncrExpAggAmt2LkTrvFrgnCntryFlg: null,
+                  incrExpAggAmt2LkTrvFrgnCntryFlg: null,
+                  strIncrExpAggAmt1LkElctrctyPrYrFlg: null,
+                  incrExpAggAmt1LkElctrctyPrYrFlg: null,
+                  clauseiv7provisio139i: null,
+                  clauseiv7provisio139iDtls: null,
+                };
+
+                this.ITR_Obj.seventhProviso139.seventhProvisio139 =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.SeventhProvisio139;
+
+                this.ITR_Obj.seventhProviso139.strIncrExpAggAmt1LkElctrctyPrYrFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.IncrExpAggAmt1LkElctrctyPrYrFlg;
+                this.ITR_Obj.seventhProviso139.incrExpAggAmt1LkElctrctyPrYrFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.AmtSeventhProvisio139iii;
+
+                this.ITR_Obj.seventhProviso139.strIncrExpAggAmt2LkTrvFrgnCntryFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.IncrExpAggAmt2LkTrvFrgnCntryFlg;
+                this.ITR_Obj.seventhProviso139.incrExpAggAmt2LkTrvFrgnCntryFlg =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.AmtSeventhProvisio139ii;
+
+                this.ITR_Obj.seventhProviso139.clauseiv7provisio139i =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.clauseiv7provisio139i;
+                this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.clauseiv7provisio139iDtls.map((element) => ({
+                    nature: parseFloat(element?.clauseiv7provisio139iNature),
+                    amount: parseFloat(element?.clauseiv7provisio139iAmount),
+                  }));
+
+                this.ITR_Obj.seventhProviso139.strDepAmtAggAmtExcd1CrPrYrFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.DepAmtAggAmtExcd1CrPrYrFlg;
+                this.ITR_Obj.seventhProviso139.depAmtAggAmtExcd1CrPrYrFlg =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.AmtSeventhProvisio139i;
               }
             }
 
@@ -3016,6 +3157,43 @@ export class PrefillIdComponent implements OnInit {
                   }
                 } else {
                   this.ITR_Obj.systemFlags.haveUnlistedShares = false;
+                }
+              }
+
+              // partnership firm details
+              {
+                if (this.ITR_Type === 'ITR3') {
+                  this.ITR_Obj.partnerInFirmFlag =
+                    ItrJSON[
+                      this.ITR_Type
+                    ]?.PartA_GEN1?.FilingStatus?.PartnerInFirmFlg;
+                  this.ITR_Obj.partnerInFirms = ItrJSON[
+                    this.ITR_Type
+                  ]?.PartA_GEN1?.FilingStatus?.PartnerInFirm?.PartnerInFirmDtls?.map(
+                    (element) => ({
+                      name: element?.NameOfFirm,
+                      panNumber: element?.PAN,
+                    })
+                  );
+
+                  // setting partnership firm object
+                  {
+                    if (!this.ITR_Obj.partnerFirms) {
+                      this.ITR_Obj.partnerFirms = [];
+                    }
+
+                    this.ITR_Obj.partnerFirms = ItrJSON[
+                      this.ITR_Type
+                    ]?.ScheduleIF?.PartnerFirmDetails?.map((element) => ({
+                      name: element?.FirmName,
+                      panNumber: element?.FirmPAN,
+                      isLiableToAudit: element?.IsLiableToAudit,
+                      sec92EFirmFlag: element?.Sec92EFirmFlag,
+                      profitSharePercent: element?.ProfitSharePercent,
+                      profitShareAmount: element?.ProfitShareAmt,
+                      capitalBalanceOn31stMarch: element?.FirmCapBalOn31Mar,
+                    }));
+                  }
                 }
               }
             }
@@ -5598,9 +5776,13 @@ export class PrefillIdComponent implements OnInit {
 
   /*****AIS code starts*****/
   addAisCredentials() {
-
-    if(!this.utilsService.isNonEmpty(this.ITR_JSON.panNumber) && !this.utilsService.isNonEmpty(this.userProfile.panNumber)){
-      this.utilsService.showSnackBar("User PAN is not available. Please update PAN in user profile.");
+    if (
+      !this.utilsService.isNonEmpty(this.ITR_JSON.panNumber) &&
+      !this.utilsService.isNonEmpty(this.userProfile.panNumber)
+    ) {
+      this.utilsService.showSnackBar(
+        'User PAN is not available. Please update PAN in user profile.'
+      );
       return;
     }
     const dialogRef = this.dialog.open(AisCredsDialogComponent, {
@@ -5633,7 +5815,6 @@ export class PrefillIdComponent implements OnInit {
         document.getElementById('input-utility-file-jsonfile-id').click();
       }
     });
-
   }
 
   downloadAisOpt() {
@@ -5648,73 +5829,90 @@ export class PrefillIdComponent implements OnInit {
       this.uploadDoc = file.item(0);
 
       let reqUrl = `/cloud/signed-s3-url-by-type?fileName=${this.uploadDoc.name}`;
-      this.itrMsService.getMethod(reqUrl).subscribe((result: any) => {
+      this.itrMsService.getMethod(reqUrl).subscribe(
+        (result: any) => {
           if (result && result.data) {
-            let signedUrl = result.data.s3SignedUrl
+            let signedUrl = result.data.s3SignedUrl;
             this.uploadFileS3(this.uploadDoc, signedUrl);
           } else {
             this.loading = false;
-            this.utilsService.showSnackBar("Error while uploading ais json");
+            this.utilsService.showSnackBar('Error while uploading ais json');
           }
-        }, ((err: any) => {
+        },
+        (err: any) => {
           this.loading = false;
-          this.utilsService.showSnackBar("Error while uploading ais json" + JSON.stringify(err));
-        })
+          this.utilsService.showSnackBar(
+            'Error while uploading ais json' + JSON.stringify(err)
+          );
+        }
       );
 
       //read the file to get details upload and validate
       const reader = new FileReader();
       reader.onload = (e: any) => {
         let jsonRes = e.target.result;
-        console.log('fileText:',jsonRes);
+        console.log('fileText:', jsonRes);
       };
       reader.readAsText(this.uploadDoc);
     }
   }
 
-  uploadFileS3(uploadDoc, signedUrl){
-
+  uploadFileS3(uploadDoc, signedUrl) {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
     headers = headers.append('Accept', 'application/json');
-    headers = headers.append('X-Upload-Content-Length', uploadDoc.size.toString());
-    headers = headers.append('X-Upload-Content-Type', 'application/octet-stream');
+    headers = headers.append(
+      'X-Upload-Content-Length',
+      uploadDoc.size.toString()
+    );
+    headers = headers.append(
+      'X-Upload-Content-Type',
+      'application/octet-stream'
+    );
     // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
-    this.httpClient.put(signedUrl, uploadDoc, {headers: headers}).subscribe((result: any) => {
-      //call the decrypt api
-      let url = '/upload-ais-json';
-      let request = {
-        userId: this.data.userId,
-        fileName: uploadDoc.name
-      }
-      this.itrMsService.postMethod(url, request).subscribe((result: any)=>{
-        this.loading = false;
-        console.log(result);
-        this.utilsService.showSnackBar('AIS json uploaded successfully');
-        const param = `/itr?userId=${this.ITR_JSON.userId}&assessmentYear=${this.ITR_JSON.assessmentYear}&itrId=${this.ITR_JSON.itrId}`;
-        this.itrMsService.getMethod(param).subscribe(async (res: any) => {
-          if(res && res.length == 1){
-            this.ITR_JSON = res[0];
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_JSON)
-            );
+    this.httpClient.put(signedUrl, uploadDoc, { headers: headers }).subscribe(
+      (result: any) => {
+        //call the decrypt api
+        let url = '/upload-ais-json';
+        let request = {
+          userId: this.data.userId,
+          fileName: uploadDoc.name,
+        };
+        this.itrMsService.postMethod(url, request).subscribe(
+          (result: any) => {
+            this.loading = false;
+            console.log(result);
+            this.utilsService.showSnackBar('AIS json uploaded successfully');
+            const param = `/itr?userId=${this.ITR_JSON.userId}&assessmentYear=${this.ITR_JSON.assessmentYear}&itrId=${this.ITR_JSON.itrId}`;
+            this.itrMsService.getMethod(param).subscribe(async (res: any) => {
+              if (res && res.length == 1) {
+                this.ITR_JSON = res[0];
+                sessionStorage.setItem(
+                  AppConstants.ITR_JSON,
+                  JSON.stringify(this.ITR_JSON)
+                );
+              }
+            });
+          },
+          (error) => {
+            console.log('error in decrypting ais json', error);
+            this.loading = false;
+            this.utilsService.showSnackBar(error.error.message);
           }
-        });
-      }, error => {
-        console.log('error in decrypting ais json', error);
+        );
+      },
+      (err: any) => {
         this.loading = false;
-        this.utilsService.showSnackBar(error.error.message);
-      });
-    },(err: any) => {
-      this.loading = false;
-      this.utilsService.showSnackBar("Error while uploading ais json" + JSON.stringify(err));
-    });
+        this.utilsService.showSnackBar(
+          'Error while uploading ais json' + JSON.stringify(err)
+        );
+      }
+    );
   }
 
   /*****AIS code ends*****/
 
-  sendEmail(uploadedJson){
+  sendEmail(uploadedJson) {
     this.loading = true;
 
     var data = new FormData();
@@ -5853,5 +6051,4 @@ export class PrefillIdComponent implements OnInit {
       this.subscription.unsubscribe();
     }
   }
-
 }
