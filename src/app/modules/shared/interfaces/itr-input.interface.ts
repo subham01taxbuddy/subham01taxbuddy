@@ -12,6 +12,7 @@ export interface ITR_JSON {
   contactNumber: string;
   panNumber: string;
   aadharNumber: string;
+  aadhaarEnrolmentId:any;
   residentialStatus: string;
   maritalStatus: string;
   assesseeType: string;
