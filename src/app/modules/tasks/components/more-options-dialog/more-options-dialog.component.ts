@@ -209,7 +209,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   goToProfile() {
-    this.router.navigate(['pages/user-management/profile/' + this.data.userId]);
+    this.router.navigate([`pages/user-management/profile/` + this.data.userId], { queryParams: { 'serviceType': this.data.serviceType, }, queryParamsHandling: 'merge' });
     this.dialogRef.close();
   }
 
