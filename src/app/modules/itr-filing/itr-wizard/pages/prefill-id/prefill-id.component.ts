@@ -4816,7 +4816,7 @@ export class PrefillIdComponent implements OnInit {
                     ?.LongTermCapGain23?.SaleofLandBuild?.SaleofLandBuildDtls;
 
                 if (SaleofLandBuildDtls) {
-                  SaleofLandBuildDtls?.forEach(({ landAndBuilding }, index) => {
+                  SaleofLandBuildDtls?.forEach((landAndBuilding, index) => {
                     if (
                       landAndBuilding?.FullConsideration &&
                       landAndBuilding?.FullConsideration !== 0 &&
@@ -4828,7 +4828,7 @@ export class PrefillIdComponent implements OnInit {
                         assesseeType: this.ITR_Obj.assesseeType,
                         residentialStatus: this.ITR_Obj.residentialStatus,
                         assetType: 'PLOT_OF_LAND',
-                        deduction: landAndBuilding?.ExemptionOrDednUs54
+                        deduction: [landAndBuilding?.ExemptionOrDednUs54
                           ?.ExemptionOrDednUs54Dtls
                           ? landAndBuilding?.ExemptionOrDednUs54?.ExemptionOrDednUs54Dtls?.map(
                               (
@@ -4862,7 +4862,7 @@ export class PrefillIdComponent implements OnInit {
                               totalDeductionClaimed: null,
                               costOfPlantMachinary: null,
                               usedDeduction: null,
-                            },
+                            }],
                         improvement: [
                           {
                             id: null,
@@ -4913,8 +4913,8 @@ export class PrefillIdComponent implements OnInit {
                                 ? landAndBuilding?.DateofSale
                                 : '2023-03-15'
                             ),
-                            sellValue: null,
-                            stampDutyValue: null,
+                            sellValue: landAndBuilding?.FullConsideration,
+                            stampDutyValue: landAndBuilding?.PropertyValuation,
                             valueInConsideration:
                               landAndBuilding?.FullConsideration50C,
                             sellExpense: landAndBuilding?.ExpOnTrans,
@@ -5326,7 +5326,7 @@ export class PrefillIdComponent implements OnInit {
 
                 if (SaleofLandBuildDtlsStcg) {
                   SaleofLandBuildDtlsStcg?.forEach(
-                    ({ landAndBuilding }, index) => {
+                    (landAndBuilding, index) => {
                       if (
                         landAndBuilding?.FullConsideration &&
                         landAndBuilding?.FullConsideration !== 0 &&
@@ -5405,8 +5405,8 @@ export class PrefillIdComponent implements OnInit {
                                   ? landAndBuilding?.DateofSale
                                   : '2023-03-15'
                               ),
-                              sellValue: null,
-                              stampDutyValue: null,
+                              sellValue: landAndBuilding?.FullConsideration,
+                              stampDutyValue: landAndBuilding?.PropertyValuation,
                               valueInConsideration:
                                 landAndBuilding?.FullConsideration50C,
                               sellExpense: landAndBuilding?.ExpOnTrans,
