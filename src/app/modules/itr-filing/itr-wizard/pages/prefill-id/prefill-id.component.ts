@@ -204,18 +204,18 @@ export class PrefillIdComponent implements OnInit {
     // create a mapping object to map the JSON names to the new names of ITR Object
     const mapping = {
       '10(5)': 'LTA',
-      '10(6)': 'ANY_OTHER',
-      '10(7)': 'ANY_OTHER',
+      '10(6)': 'REMUNERATION_REC',
+      '10(7)': 'US_10_7',
       '10(10)': 'GRATUITY',
       '10(10A)': 'COMMUTED_PENSION',
       '10(10AA)': 'LEAVE_ENCASHMENT',
-      '10(10B)(i)': 'ANY_OTHER',
-      '10(10B)(ii)': 'ANY_OTHER',
-      '10(10C)': 'ANY_OTHER',
-      '10(10CC)': 'ANY_OTHER',
+      '10(10B)(i)': 'FIRST_PROVISO',
+      '10(10B)(ii)': 'SECOND_PROVISO',
+      '10(10C)': 'COMPENSATION_ON_VRS',
+      '10(10CC)': 'NON_MONETARY_PERQUISITES',
       '10(13A)': 'HOUSE_RENT',
-      '10(14)(i)': 'ANY_OTHER',
-      '10(14)(ii)': 'ANY_OTHER',
+      '10(14)(i)': 'US_10_14I',
+      '10(14)(ii)': 'US_10_14II',
       '10(14)(i)(115BAC)': 'ANY_OTHER',
       '10(14)(ii)(115BAC)': 'ANY_OTHER',
       EIC: 'ANY_OTHER',
@@ -3583,6 +3583,48 @@ export class PrefillIdComponent implements OnInit {
                           },
                           {
                             allowanceType: 'ANY_OTHER',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+
+                          {
+                            allowanceType: 'REMUNERATION_REC',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+                          {
+                            allowanceType: 'US_10_7',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+                          {
+                            allowanceType: 'FIRST_PROVISO',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+                          {
+                            allowanceType: 'SECOND_PROVISO',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+                          {
+                            allowanceType: 'COMPENSATION_ON_VRS',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+                          {
+                            allowanceType: 'NON_MONETARY_PERQUISITES',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+                          {
+                            allowanceType: 'US_10_14I',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+
+                          {
+                            allowanceType: 'US_10_14II',
                             taxableAmount: 0,
                             exemptAmount: null,
                           },
