@@ -891,7 +891,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   updateUserDetails() {
-    let param = `/profile/${this.userSubscription.userId}`;
+    let param = `/profile/${this.userSubscription.userId}?serviceType=${this.serviceType}`;
     if (this.personalInfoForm.controls['gstNo'].value) {
       if (!this.selectedUserInfo.gstDetails) {
         this.selectedUserInfo.gstDetails = {
