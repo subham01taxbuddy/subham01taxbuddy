@@ -1673,7 +1673,7 @@ export class PrefillIdComponent implements OnInit {
                   this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
                     ItrJSON[
                       this.ITR_Type
-                    ]?.FilingStatus?.clauseiv7provisio139iDtls.map(
+                    ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
                       (element) => ({
                         nature: parseFloat(
                           element?.clauseiv7provisio139iNature
@@ -1693,7 +1693,7 @@ export class PrefillIdComponent implements OnInit {
                   this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
                     ItrJSON[
                       this.ITR_Type
-                    ]?.FilingStatus?.clauseiv7provisio139iDtls.map(
+                    ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
                       (element) => ({
                         nature: parseFloat(
                           element?.clauseiv7provisio139iNature
@@ -1927,7 +1927,7 @@ export class PrefillIdComponent implements OnInit {
                       : housePropertyDetails?.TypeOfHP,
                   grossAnnualRentReceivedTotal:
                     housePropertyDetails?.GrossRentReceived,
-                  grossAnnualRentReceived: null,
+                  grossAnnualRentReceived: housePropertyDetails?.GrossRentReceived,
 
                   propertyTax: housePropertyDetails?.TaxPaidlocalAuth,
                   ownerPercentage: null,
@@ -1960,6 +1960,10 @@ export class PrefillIdComponent implements OnInit {
                               housePropertyDetails?.InterestPayable,
                           },
                         ],
+                        ArrearsUnrealizedRentRcvd: Math.round(
+                          housePropertyDetails?.ArrearsUnrealizedRentRcvd,
+                        ),
+                        totalArrearsUnrealizedRentReceived:(Math.round(housePropertyDetails?.ArrearsUnrealizedRentRcvd)*100)/30,
                 };
 
                 this.ITR_Obj.houseProperties.push(hpKeys);
@@ -3048,7 +3052,7 @@ export class PrefillIdComponent implements OnInit {
                 this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
                   ItrJSON[
                     this.ITR_Type
-                  ]?.FilingStatus?.clauseiv7provisio139iDtls.map((element) => ({
+                  ]?.FilingStatus?.clauseiv7provisio139iDtls?.map((element) => ({
                     nature: parseFloat(element?.clauseiv7provisio139iNature),
                     amount: parseFloat(element?.clauseiv7provisio139iAmount),
                   }));
@@ -3767,7 +3771,7 @@ export class PrefillIdComponent implements OnInit {
                       : 'LOP',
                   grossAnnualRentReceivedTotal:
                     houseProperty?.Rentdetails?.AnnualLetableValue,
-                  grossAnnualRentReceived: null,
+                  grossAnnualRentReceived: houseProperty?.Rentdetails?.AnnualLetableValue,
 
                   // Not able to map annualValue as we are not storing it in the ITRobject. The final annual value and deduction are wrong for itr2
                   propertyTax: houseProperty?.Rentdetails?.LocalTaxes,
@@ -3820,6 +3824,11 @@ export class PrefillIdComponent implements OnInit {
                       interestAmount: houseProperty?.Rentdetails?.IntOnBorwCap,
                     },
                   ],
+                  ArrearsUnrealizedRentRcvd: Math.round(
+                    houseProperty?.Rentdetails?.ArrearsUnrealizedRentRcvd,
+                  ),
+                  totalArrearsUnrealizedRentReceived:(Math.round(houseProperty?.Rentdetails?.ArrearsUnrealizedRentRcvd)*100)/30,
+
                 };
                 this.ITR_Obj.houseProperties.push(housePropertyDetails);
               });
