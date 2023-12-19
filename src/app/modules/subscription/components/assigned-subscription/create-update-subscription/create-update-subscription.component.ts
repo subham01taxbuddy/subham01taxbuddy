@@ -94,10 +94,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
 
   }
   ngAfterViewInit(): void {
-    setTimeout(()=>{
-    this.onPersonalInfoFormChanges();
-    this.onOtherInfoFormChange();
-  },7000);
+    setTimeout(() => {
+      this.onPersonalInfoFormChanges();
+      this.onOtherInfoFormChange();
+    }, 7000);
   }
 
   ngOnInit() {
@@ -159,6 +159,16 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.getAllPlanInfo(this.serviceType);
     this.getLeaderFilerName();
     this.setFormValues(this.selectedUserInfo);
+  }
+
+  addPromoMaxValidation(event) {
+    this.allPromoCodes.forEach(element => {
+      if (element.title === event.option.value) {
+        if (element.discountType === 'AMOUNT' && element.discountAmount > this.userSubscription?.smeSelectedPlan?.totalAmount) {
+          this.searchedPromoCode.setErrors({ maxError: true });
+        }
+      }
+    });
   }
 
   displayFn(label: any) {
@@ -436,7 +446,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
 
   async getFy() {
     const fyList = await this.utilsService.getStoredFyList();
-const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     this.AssessmentYear = currentFyDetails[0].assessmentYear
     console.log("ay", this.AssessmentYear)
     this.getLeaderFiler();
