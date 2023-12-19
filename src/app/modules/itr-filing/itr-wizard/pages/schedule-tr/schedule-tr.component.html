@@ -155,11 +155,7 @@
                             <tr class=" divider_border">
                               <td>3</td>
                               <td colspan="4">
-                                <span class="normal_text"> Whether any tax paid outside India,
-                                    on
-                                    which tax relief was allowed in India, has been
-                                    refunded/credited
-                                    by the foreign tax authority during the year?</span>
+                                <span class="normal_text"> Total tax relief available in respect of country where DTAA is not applicable (section 91)</span>
                               </td>
                               <td *ngIf="sectionValue === '91'">
                                 {{ totalTaxRelief ? totalTaxRelief : 0 }}
@@ -174,9 +170,8 @@
                                 <tr>
                                   <td>4</td>
                                   <td colspan="4">
-                                    <span class="normal_text"> Total tax relief available in respect
-                                        of
-                                        country where DTAA is applicable (section 90/90A)</span>
+                                    <span class="normal_text"> Whether any tax paid outside India, on which tax relief was allowed in India, has been refunded/credited
+by the foreign tax authority during the year?</span>
                                   </td>
                                   <td>
                                     <mat-radio-group
@@ -198,8 +193,10 @@
                                         class="table-header"
                                         *ngIf="getTrArray.controls[0].get('selectedOption').value === 'yes'">
                                   <td></td>
-                                  <td colspan="1">a</td>
-                                  <td colspan="3">Amount of tax refunded*</td>
+                                  <td colspan="1"><span class="normal_text">a</span></td>
+                                  <td colspan="3"><span class="normal_text">Amount of tax refunded</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </td>
                                   <td>
                                     <mat-form-field appearance="outline">
                                       <input
@@ -217,9 +214,10 @@
                                 <tr class="table-header"
                                         *ngIf="getTrArray.controls[0].get('selectedOption').value === 'yes'">
                                   <td></td>
-                                  <td colspan="1">b</td>
-                                  <td colspan="3">
-                                    Assessment year in which tax relief allowed in India*
+                                  <td colspan="1"><span class="normal_text">b</span></td>
+                                  <td colspan="3"><span class="normal_text">
+                                    Assessment year in which tax relief allowed in India</span>
+                                    <span class="text-wrapper-2">*</span>
                                   </td>
                                   <td class="flex">
                                     <mat-form-field appearance="outline">

@@ -19,8 +19,10 @@
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="headingTwo">
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                              data-bs-target="#collapseTwo">Other Income <input type="number" class="form-control inpClr2"
-                                                                                   id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹0"></button>
+                              data-bs-target="#collapseTwo">Other Income
+                        <input type="number" class="form-control inpClr2" disabled
+                          value="{{getTotalOtherIncome()}}">
+                      </button>
 
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
@@ -145,8 +147,11 @@
                     <div class="accordion-item">
                       <h2 class="accordion-header" id="headingThree">
                         <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseThree">Income from Gift <input type="number" class="form-control inpClr2"
-                                                                                        id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹0"></button>
+                                data-bs-target="#collapseThree">Income from Gift
+                          <input type="number" class="form-control inpClr2" disabled
+                            value="{{getTotalGiftIncome()}}">
+                        </button>
+                        <div>Note for Gift- Gift received from Relative will be excluded from the total as it's not part of taxable income.</div>
                       </h2>
                       <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                         <div class="accordion__item-body">
@@ -302,8 +307,10 @@
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="headingThree">
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                              data-bs-target="#collapseThree">Any Other Income <input type="number" class="form-control inpClr2"
-                                                                                      id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹0"></button>
+                              data-bs-target="#collapseThree">Any Other Income
+                        <input type="number" class="form-control inpClr2" disabled
+                               value="{{otherIncomeFormGroup.getRawValue().totalFamPenDeduction}}">
+                      </button>
                     </h2>
                     <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                       <div class="accordion__item-body">
@@ -335,7 +342,7 @@
                                       matInput
                                       name="quarter2"
                                       formControlName="famPenDeduction"
-                                      [disabled]="true"
+                                      readonly
                               />
                             </mat-form-field>
                             </div>
@@ -349,7 +356,7 @@
                                       matInput
                                       name="quarter3"
                                       formControlName="totalFamPenDeduction"
-                                      [disabled]="true"
+                                      readonly
                               />
                             </mat-form-field>
                             </div>
@@ -395,7 +402,7 @@
                       <div class="surBx1">
 
                         <div class="hp2main">
-                          <div class="hplft">Gross Agriculture Receipt </div>
+                          <div class="hplft">Gross Agricultural Receipts </div>
                           <div class="form-field">
                             <mat-form-field appearance="outline">
                               <input
@@ -411,7 +418,7 @@
                           </div>
                         </div>
                         <div class="hp2main">
-                          <div class="hplft">Expenditure On Agriculture</div>
+                          <div class="hplft">Expenditure incurred on agriculture</div>
                           <div class="form-field">
                             <mat-form-field appearance="outline">
                               <input
@@ -428,7 +435,7 @@
                           </div>
                         </div>
                         <div class="hp2main">
-                          <div class="hplft">Unabsorbed Agriculture Loss</div>
+                          <div class="hplft">Unabsorbed agricultural loss of the previous eight assessment years</div>
                           <div class="form-field">
                             <mat-form-field appearance="outline">
                               <input
@@ -445,8 +452,7 @@
                           </div>
                         </div>
                         <div class="hp2main">
-                          <div class="hplft">The agricultural income portion relating to rules 7,
-                            7A, 7B(1), 7B(1A) & 8</div>
+                          <div class="hplft">The agricultural income portion relating to rules 7, 7A, 7B(1), 7B(1A) & 8</div>
                           <div class="form-field">
                             <mat-form-field appearance="outline">
                               <input
@@ -464,7 +470,7 @@
                           </div>
                         </div>
                         <div class="hp2main">
-                          <div class="hplft">Net Agriculture Income</div>
+                          <div class="hplft">Net Agricultural income</div>
                           <div class="form-field">
                             <mat-form-field appearance="outline">
                               <input
@@ -482,7 +488,8 @@
                         </div>
                       </div>
 
-                      <div class="txHdg">
+                      <div class="txHdg" *ngIf="income.value.incomeType === 'AGRI' &&
+                        income.value.incomeValue > 500000">
                         Since the Net Agriculture income amount entered is more than INR 5 Lakh, enter the following details-
                       </div>
                       <div formArrayName="agriInc" *ngIf="
@@ -597,7 +604,7 @@
                   <h2 class="accordion-header" id="headingTwo">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
                       Other Exempt Amount
-                      <input type="number" class="form-control inpClr2" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹0">
+                      <input type="number" class="form-control inpClr2" value="{{getTotalExemptIncome()}}" disabled>
                     </button>
 
                   </h2>
@@ -641,12 +648,12 @@
                           </div>
                         </div>
 
-                        <div class="hp4-4">
+                        <div class="hp4-4" *ngIf="false">
                           <div class="Bx4">
                             <div class="Bx4L">
                               <button type="button"> <i class="fa fa-trash-o delbt"></i> </button>
                             </div>
-                            <div class="Bx4R" *ngIf="false">
+                            <div class="Bx4R">
                               <button type="button" class="addAno"> + Add Another </button>
                             </div>
                           </div>

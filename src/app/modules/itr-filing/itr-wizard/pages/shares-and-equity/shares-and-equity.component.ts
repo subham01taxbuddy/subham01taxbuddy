@@ -1356,6 +1356,11 @@ export class SharesAndEquityComponent
     } else {
       this.deduction = false;
     }
+
+    if(this.isDisable){
+      this.deductionForm.reset();
+      this.deductionForm.controls['underSection'].setValue('Deduction 54F');
+    }
   }
 
   valueGetter(controls, name) {
