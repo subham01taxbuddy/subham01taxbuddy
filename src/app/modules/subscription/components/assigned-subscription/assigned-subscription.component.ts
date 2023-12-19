@@ -1,6 +1,6 @@
 import { CoOwnerListDropDownComponent } from './../../../shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { data } from 'jquery';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -20,7 +20,7 @@ import * as moment from 'moment';
 import { ReportService } from 'src/app/services/report-service';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
-import { Location } from '@angular/common';
+import { Location, formatDate } from '@angular/common';
 declare function we_track(key: string, value: any);
 export interface User {
   name: string;
@@ -101,6 +101,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private reportService: ReportService,
     public location: Location,
+    @Inject(LOCALE_ID) private locale: string
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
     console.log('new Filer List ', this.allFilerList)
@@ -607,6 +608,21 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         },
       },
       {
+        headerName: 'Created Date',
+        field: 'createdDate',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+          } else {
+            return '-';
+          }
+        },
+
+      },
+      {
         headerName: 'Promo Code',
         field: 'promoCode',
         width: 100,
@@ -796,7 +812,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         subscriptionCreatedBy: subscriptionData[i].subscriptionCreatedBy,
         cancellationStatus: subscriptionData[i].cancellationStatus,
         // invoiceDetails: invoiceDetails,
-        leaderName: subscriptionData[i].leaderName
+        leaderName: subscriptionData[i].leaderName,
+        createdDate:subscriptionData[i].createdDate,
       });
     }
     return newData;
@@ -884,11 +901,11 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     this.utilsService.getActiveUsers(this.mobileNumber).subscribe((res: any) => {
       console.log(res);
       if (res.data) {
-        if(res.data.content[0].active === false){
+        if (res.data.content[0].active === false) {
           this._toastMessageService.alert('error', "This customer is currently inactive, please activate customer first and then create subscription");
           return
         }
-      }else{
+      } else {
         const loggedInSmeUserId = this?.loggedInSme[0]?.userId
         if (this.roles.includes('ROLE_FILER')) {
           this.openAddSubscriptionDialog();
@@ -971,7 +988,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     if (pageContent) {
       this.subscriptionListGridOptions.api?.setRowData(this.createRowData(pageContent));
       this.config.currentPage = event;
-      this.searchParam.page = event-1;
+      this.searchParam.page = event - 1;
     } else {
       this.searchParam.page = event - 1;
       this.config.currentPage = event;
