@@ -327,6 +327,7 @@ export class UtilsService {
       contactNumber: this.isNonEmpty(profile) ? profile.mobileNumber : '',
       panNumber: this.isNonEmpty(profile) ? profile.panNumber : '',
       aadharNumber: '',
+      aadhaarEnrolmentId: '',
       residentialStatus: this.isNonEmpty(profile)
         ? profile.residentialStatus
         : '',
