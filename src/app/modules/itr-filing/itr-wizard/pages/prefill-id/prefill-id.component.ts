@@ -3196,6 +3196,90 @@ export class PrefillIdComponent implements OnInit {
                   }
                 }
               }
+
+              // setting schedule5A portuguese code
+              {
+                if (ItrJSON[this.ITR_Type]?.Schedule5A2014) {
+                  if (!this.ITR_Obj.schedule5a) {
+                    this.ITR_Obj.schedule5a = {
+                      nameOfSpouse: null,
+                      panOfSpouse: null,
+                      aadhaarOfSpouse: null,
+                      booksSpouse44ABFlg: null,
+                      booksSpouse92EFlg: null,
+                      headIncomes: [],
+                    };
+                  }
+
+                  this.ITR_Obj.schedule5a.nameOfSpouse =
+                    ItrJSON[this.ITR_Type]?.Schedule5A2014?.NameOfSpouse;
+                  this.ITR_Obj.schedule5a.panOfSpouse =
+                    ItrJSON[this.ITR_Type]?.Schedule5A2014?.PANOfSpouse;
+
+                  this.ITR_Obj.portugeseCC5AFlag = 'Y';
+
+                  if (this.ITR_Type === 'ITR3') {
+                    this.ITR_Obj.schedule5a.aadhaarOfSpouse =
+                      ItrJSON[this.ITR_Type]?.Schedule5A2014?.AadhaarOfSpouse;
+
+                    this.ITR_Obj.schedule5a.booksSpouse44ABFlg =
+                      ItrJSON[
+                        this.ITR_Type
+                      ]?.Schedule5A2014?.BooksSpouse44ABFlg;
+
+                    this.ITR_Obj.schedule5a.booksSpouse92EFlg =
+                      ItrJSON[this.ITR_Type]?.Schedule5A2014?.BooksSpouse92EFlg;
+                  } else {
+                    this.ITR_Obj.schedule5a.booksSpouse44ABFlg = 'N';
+                    this.ITR_Obj.schedule5a.booksSpouse92EFlg = 'N';
+                  }
+
+                  const originalValue = [
+                    ItrJSON[this.ITR_Type]?.Schedule5A2014?.HPHeadIncome,
+                    ItrJSON[this.ITR_Type]?.Schedule5A2014?.CapGainHeadIncome,
+                    ItrJSON[this.ITR_Type]?.Schedule5A2014
+                      ?.OtherSourcesHeadIncome,
+                    this.ITR_Type === 'ITR3'
+                      ? ItrJSON[this.ITR_Type]?.Schedule5A2014?.BusHeadIncome
+                      : null,
+                  ];
+
+                  const transformObject = (originalObject, typeOfIncome) => ({
+                    apportionedAmountOfSpouse:
+                      originalObject?.AmtApprndOfSpouse || 0,
+                    apportionedTDSOfSpouse:
+                      originalObject?.TDSApprndOfSpouse || 0,
+                    headOfIncome: typeOfIncome || '',
+                    incomeReceived: originalObject?.IncRecvdUndHead || 0,
+                    tdsDeductedAmount: originalObject?.AmtTDSDeducted || 0,
+                  });
+
+                  // Transform the original object
+                  originalValue?.forEach((element, index) => {
+                    const headOfIncome = [
+                      'HP',
+                      'CAPITAL_GAIN',
+                      'OTHER_SOURCE',
+                      'BUSINESS',
+                    ]?.[index];
+
+                    if (element) {
+                      const transformedObject = transformObject(
+                        element,
+                        headOfIncome
+                      );
+
+                      if (transformedObject) {
+                        this.ITR_Obj.schedule5a?.headIncomes?.push(
+                          transformedObject
+                        );
+                      }
+                    }
+                  });
+                } else {
+                  this.ITR_Obj.portugeseCC5AFlag = 'N';
+                }
+              }
             }
           }
 

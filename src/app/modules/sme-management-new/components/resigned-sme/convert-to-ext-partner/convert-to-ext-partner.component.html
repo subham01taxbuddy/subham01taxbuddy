@@ -99,8 +99,8 @@
             <input type="text" matInput placeholder="Pan" (keyup)="setUpperCase()" placeholder="XXXXX1234X"
               minLength="10" maxLength="10" [formControl]="pan" class="input-field" maxlength="10" trim />
             <mat-error class="mt-3"> <span *ngIf="smeFormGroup.controls['pan'].hasError('required')">Please
-                enter mobile no.</span>
-              <span *ngIf="smeFormGroup.controls['pan'].hasError('pattern')">Please enter valid mobile
+                enter pan no.</span>
+              <span *ngIf="smeFormGroup.controls['pan'].hasError('pattern')">Please enter valid pan
                 no.</span>
             </mat-error>
           </mat-form-field>
