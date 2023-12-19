@@ -603,7 +603,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
         },
       },
       {
-        headerName: 'Initiate refund',
+        headerName: 'Initiate Refund',
         hide: view === 'admin' ? false : true,
         editable: false,
         suppressMenu: true,
@@ -613,7 +613,36 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
           if (params.data.status === 'IN_PROGRESS') {
             return `<button type="button" class="action_icon add_button" title="Initiate refund for this user"
             style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#2dd35c;">
-              <i class="fa fa-undo" aria-hidden="true" data-action-type="initiate-refund"></i>
+              <i class="fa fa-spinner" aria-hidden="true" data-action-type="initiate-refund"></i>
+             </button>`;
+          } else {
+            return '-'
+          }
+
+        },
+        width: 85,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
+        headerName: 'Revert Refund',
+        hide: view === 'admin' ? false : true,
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          if (params.data.status === 'IN_PROGRESS') {
+            return `<button type="button" class="action_icon add_button" title="revert/undo refund for this user"
+            style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:red;">
+              <i class="fa fa-undo" aria-hidden="true" data-action-type="revert-refund"></i>
              </button>`;
           } else {
             return '-'
@@ -680,6 +709,10 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
           this.initiateRefund(params.data);
           break;
         }
+        case 'revert-refund': {
+          this.revertRefund(params.data);
+          break;
+        }
       }
     }
   }
@@ -737,6 +770,38 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
     disposable.afterClosed().subscribe(result => {
     });
+
+  }
+
+  revertRefund(data){
+    // https://uat-api.taxnuddy.com/itr/refund-request?id=6581a4e07f576c4e8dcea4e8
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Revert/Undo Refund Request!',
+        message: 'Are you sure you want to Revert/Undo Refund Request for this invoice ?',
+      },
+    });
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result === 'YES') {
+        this.loading = true;
+        let id = data.id
+        let param = `/refund-request?id=${id}`;
+        this.itrService.deleteMethod(param).subscribe((response: any) => {
+          if (response.success) {
+            this.loading = false;
+            console.log('response', response);
+            this.utilsService.showSnackBar(response.message);
+            this.resetFilters();
+          } else {
+            this.utilsService.showSnackBar(response.message);
+            this.loading = false;
+          }
+        },(error) => {
+          this.loading = false;
+          this.utilsService.showSnackBar('Error in API of Revert/Undo Refund');
+        });
+      }
+    })
 
   }
 
