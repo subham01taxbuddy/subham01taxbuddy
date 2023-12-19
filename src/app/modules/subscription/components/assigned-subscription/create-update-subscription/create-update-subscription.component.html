@@ -335,7 +335,7 @@
                 <div class="col-sm-5">
                   <mat-label>Search & Select Promo Code</mat-label>
                   <mat-form-field appearance="outline" class="class1">
-                    <input type="text" placeholder="Start typing..." matInput [disabled]="!smeSelectedPlanId"
+                    <input type="text" placeholder="Start typing..." matInput [readonly]="!smeSelectedPlanId"
                       [formControl]="searchedPromoCode" [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()"
                       required />
                     <mat-error *ngIf="searchedPromoCode.hasError('invalid')">
@@ -354,7 +354,8 @@
                 </div>
                 <div class="col-sm-5">
                   <button class="btn" style="background: #00aeca; border-radius: 2px"
-                    (click)="applyPromo(smeSelectedPlanId); onNgModelChange()" [disabled]="!smeSelectedPlanId || searchedPromoCode.invalid">
+                    (click)="applyPromo(smeSelectedPlanId); onNgModelChange()"
+                    [disabled]="!smeSelectedPlanId || searchedPromoCode.invalid">
                     Apply
                   </button>
                   &nbsp;
