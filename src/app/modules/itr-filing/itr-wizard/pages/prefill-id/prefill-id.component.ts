@@ -3286,6 +3286,198 @@ export class PrefillIdComponent implements OnInit {
           //SALARY - FOR ITR 2 SALARY ALLOWANCES ARE BEING SET AGAINST 1ST EMPLOYER ONLY
           {
             const salaries = ItrJSON[this.ITR_Type].ScheduleS?.Salaries;
+            const salaryTypes = [
+              { code: 'SEC17_1', desc: 'Salary' },
+              { code: 'BASIC_SALARY', desc: 'Basic Salary', natureDesc: '1' },
+              { code: 'DA', desc: 'Dearness Allowance', natureDesc: '2' },
+              {
+                code: 'CONVEYANCE',
+                desc: 'Conveyance Allowance',
+                natureDesc: '3',
+              },
+              {
+                code: 'HOUSE_RENT',
+                desc: 'House Rent Allowance',
+                natureDesc: '4',
+              },
+              { code: 'LTA', desc: 'Leave Travel Allowance', natureDesc: '5' },
+              {
+                code: 'CHILDREN_EDUCATION',
+                desc: 'Children Education Allowance',
+                natureDesc: '6',
+              },
+              {
+                code: 'OTHER_ALLOWANCE',
+                desc: 'Other Allowance',
+                natureDesc: '7',
+              },
+              {
+                code: 'CONTRI_80CCD',
+                desc: 'Contribution towards pension scheme (80CCD)',
+                natureDesc: '8',
+              },
+              {
+                code: 'RULE11',
+                desc: 'Amount deemed to be income under rule 11 of Fourth Schedule',
+                natureDesc: '9',
+              },
+              {
+                code: 'RULE6',
+                desc: 'Amount deemed to be income under rule 6 of Fourth Schedule',
+                natureDesc: '10',
+              },
+              {
+                code: 'ANN_PENSION',
+                desc: 'Annuity or Pension',
+                natureDesc: '11',
+              },
+              {
+                code: 'COMM_PENSION',
+                desc: 'Commuted Pension',
+                natureDesc: '12',
+              },
+              { code: 'GRATUITY', desc: 'Gratuity', natureDesc: '13' },
+              {
+                code: 'FEES_COMMISSION',
+                desc: 'Fees/Commission',
+                natureDesc: '14',
+              },
+              {
+                code: 'ADV_SALARY',
+                desc: 'Advance of Salary',
+                natureDesc: '15',
+              },
+              {
+                code: 'LEAVE_ENCASH',
+                desc: 'Leave Encashment',
+                natureDesc: '16',
+              },
+              {
+                code: 'CONTRI_80CCH',
+                desc: 'Contribution by central government towards Agnipath scheme (80CCH)',
+                natureDesc: '17',
+              },
+              { code: 'OTH', desc: 'Others', natureDesc: 'OTH' },
+            ];
+            const perquisiteTypes = [
+              {
+                code: 'SEC17_2',
+                desc: 'Income chargeable under the head Perquisities',
+                natureDesc: null,
+              },
+              { code: 'ACCOMODATION', desc: 'Accommodation', natureDesc: '1' },
+              {
+                code: 'MOTOR_CAR',
+                desc: 'Cars / Other Automotive',
+                natureDesc: '2',
+              },
+              {
+                code: 'SWEEPER_GARDNER_WATCHMAN_OR_PERSONAL_ATTENDANT',
+                desc: 'Sweeper, gardener, watchman, or personal attendant',
+                natureDesc: '3',
+              },
+              {
+                code: 'GAST_ELECTRICITY_WATER',
+                desc: 'Gas, electricity, water',
+                natureDesc: '4',
+              },
+              {
+                code: 'INTEREST_FREE_LOANS',
+                desc: 'Interest-free or concessional loans',
+                natureDesc: '5',
+              },
+              {
+                code: 'HOLIDAY_EXPENSES',
+                desc: 'Holiday expenses',
+                natureDesc: '6',
+              },
+              {
+                code: 'FREE_OR_CONCESSIONAL_TRAVEL',
+                desc: 'Free or concessional travel',
+                natureDesc: '7',
+              },
+              { code: 'FREE_MEALS', desc: 'Free meals', natureDesc: '8' },
+              { code: 'FREE_EDU', desc: 'Free education', natureDesc: '9' },
+              {
+                code: 'GIFT_VOUCHERS',
+                desc: 'Gifts, vouchers, etc.',
+                natureDesc: '10',
+              },
+              {
+                code: 'CREDIT_CARD_EXPENSES',
+                desc: 'Credit card expenses',
+                natureDesc: '11',
+              },
+              { code: 'CLUB_EXP', desc: 'Club expenses', natureDesc: '12' },
+              {
+                code: 'USE_OF_MOVABLE_ASSETS_BY_EMPLOYEE',
+                desc: 'Use of movable assets by employees',
+                natureDesc: '13',
+              },
+              {
+                code: 'TRANSFER_OF_ASSET_TO_EMPLOYEE',
+                desc: 'Transfer of assets to employee',
+                natureDesc: '14',
+              },
+              {
+                code: 'VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE',
+                desc: 'Value of other benefits/amenities/service/privilege',
+                natureDesc: '15',
+              },
+              {
+                code: 'SECTION_80_IAC_TAX_TO_BE_DEFERED',
+                desc: 'Stock options allotted or transferred by employer being an eligible start-up referred to in section 80-IAC-Tax to be deferred',
+                natureDesc: '16',
+              },
+              {
+                code: 'STOCK_OPTIONS_OTHER_THAN_ESOP',
+                desc: 'Stock options (non-qualified options) other than ESOP',
+                natureDesc: '17',
+              },
+              {
+                code: 'SCHEME_TAXABLE_US_17_2_VII',
+                desc: 'Contribution by employer to fund and scheme taxable under section 17(2)(vii)',
+                natureDesc: '18',
+              },
+              {
+                code: 'SCHEME_TAXABLE_US_17_2_VIIA',
+                desc: 'Annual accretion by way of interest, dividend etc. to the balance at the credit of fund and scheme referred to in section 17(2)(vii) and taxable under section 17(2)(viia)',
+                natureDesc: '19',
+              },
+              {
+                code: 'SECTION_80_IAC_TAX_NOT_TO_BE_DEFERED',
+                desc: 'Stock options allotted or transferred by employer being an eligible start-up referred to in section 80-IAC-Tax not to be deferred',
+                natureDesc: '21',
+              },
+              {
+                code: 'OTH_BENEFITS_AMENITIES',
+                desc: 'Other benefits or amenities',
+                natureDesc: 'OTH',
+              },
+            ];
+            const profitInLieuTypes = [
+              {
+                code: 'SEC17_3',
+                desc: 'Income chargeable under the head profitInLieu',
+                natureDesc: null,
+              },
+              {
+                code: 'COMPENSATION_ON_VRS',
+                desc: 'Compensation due/received by an assessee from his employer or former employer in connection with the termination of his employment or modification thereto',
+                natureDesc: '1',
+              },
+              {
+                code: 'PAYMENT_DUE',
+                desc: 'Any payment due/received by an assessee from his employer or a former employer or from a provident or other fund, sum received under Keyman Insurance Policy including Bonus thereto',
+                natureDesc: '2',
+              },
+              {
+                code: 'AMOUNT_DUE',
+                desc: 'Any amount due/received by assessee from any person before joining or after cessation of employment with that person',
+                natureDesc: '3',
+              },
+              { code: 'ANY_OTHER', desc: 'Any Other', natureDesc: 'OTH' },
+            ];
 
             if (salaries && salaries !== 0) {
               this.ITR_Obj.systemFlags.hasSalary = true;
@@ -3308,13 +3500,32 @@ export class PrefillIdComponent implements OnInit {
                   exemptIncome: null,
                   taxRelief: null,
                   taxDeducted: null,
-                  salary: [
-                    {
-                      salaryType: 'SEC17_1',
-                      taxableAmount: salary.Salarys?.Salary,
-                      exemptAmount: 0,
-                    },
-                  ],
+                  salary: salaryTypes
+                    .map((type) => {
+                      if (type?.code === 'SEC17_1') {
+                        return {
+                          salaryType: type.code,
+                          taxableAmount: salary?.Salarys?.Salary,
+                          exemptAmount: 0,
+                        };
+                      } else {
+                        let amount =
+                          salary?.Salarys?.NatureOfSalary?.OthersIncDtls?.find(
+                            (element) =>
+                              element?.NatureDesc === type?.natureDesc
+                          )?.OthAmount || 0;
+                        if (amount && amount > 0) {
+                          return {
+                            salaryType: type?.code,
+                            taxableAmount: amount,
+                            exemptAmount: 0,
+                          };
+                        } else {
+                          return null;
+                        }
+                      }
+                    })
+                    .filter(Boolean),
                   allowance:
                     this.regime === 'NEW'
                       ? [
@@ -3381,20 +3592,58 @@ export class PrefillIdComponent implements OnInit {
                             exemptAmount: null,
                           },
                         ],
-                  perquisites: [
-                    {
-                      perquisiteType: 'SEC17_2',
-                      taxableAmount: salary.Salarys?.ValueOfPerquisites,
-                      exemptAmount: 0,
-                    },
-                  ],
-                  profitsInLieuOfSalaryType: [
-                    {
-                      salaryType: 'SEC17_3',
-                      taxableAmount: salary.Salarys?.ProfitsinLieuOfSalary,
-                      exemptAmount: 0,
-                    },
-                  ],
+                  perquisites: perquisiteTypes
+                    .map((type) => {
+                      if (type?.code === 'SEC17_2') {
+                        return {
+                          perquisiteType: type.code,
+                          taxableAmount: salary?.Salarys?.ValueOfPerquisites,
+                          exemptAmount: 0,
+                        };
+                      } else {
+                        let amount =
+                          salary?.Salarys?.NatureOfPerquisites?.OthersIncDtls?.find(
+                            (element) =>
+                              element?.NatureDesc === type?.natureDesc
+                          )?.OthAmount || 0;
+                        if (amount && amount > 0) {
+                          return {
+                            perquisiteType: type?.code,
+                            taxableAmount: amount,
+                            exemptAmount: 0,
+                          };
+                        } else {
+                          return null;
+                        }
+                      }
+                    })
+                    .filter(Boolean),
+                  profitsInLieuOfSalaryType: profitInLieuTypes
+                    .map((type) => {
+                      if (type?.code === 'SEC17_3') {
+                        return {
+                          salaryType: type.code,
+                          taxableAmount: salary?.Salarys?.ProfitsinLieuOfSalary,
+                          exemptAmount: 0,
+                        };
+                      } else {
+                        let amount =
+                          salary?.Salarys?.NatureOfProfitInLieuOfSalary?.OthersIncDtls?.find(
+                            (element) =>
+                              element?.NatureDesc === type?.natureDesc
+                          )?.OthAmount || 0;
+                        if (amount && amount > 0) {
+                          return {
+                            salaryType: type?.code,
+                            taxableAmount: amount,
+                            exemptAmount: 0,
+                          };
+                        } else {
+                          return null;
+                        }
+                      }
+                    })
+                    .filter(Boolean),
                   deductions:
                     this.regime === 'NEW'
                       ? []
