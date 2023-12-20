@@ -2690,6 +2690,7 @@ main {
         color: #242426;
         letter-spacing: 0;
         line-height: 20px;
+        text-wrap: balance;
       }
 
       .frameS .field-label-3 {
@@ -2743,7 +2744,7 @@ main {
         cursor: pointer;
         opacity: 0.8;
         position: fixed;
-        top: 65px;
+        /*top: 65px;*/
         right: -65px;
         width: 170px;
         height: 40px;
