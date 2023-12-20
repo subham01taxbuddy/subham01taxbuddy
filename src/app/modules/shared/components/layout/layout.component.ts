@@ -58,7 +58,6 @@ export class LayoutComponent implements OnInit {
   detectSidebar() {
     this.subscription = this.sidebarService.isLoading
       .subscribe((state) => {
-        debugger
         if (state) {
           this.openSidebar = true;
         } else {
