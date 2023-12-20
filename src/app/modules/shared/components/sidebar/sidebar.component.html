@@ -7,10 +7,13 @@
         <i *ngIf="!menu.active" class="fa fa-chevron-right menu-icon"></i>
         <i *ngIf="menu.active" class="fa fa-chevron-up menu-icon"></i>
       </div>
-      <a *ngIf="menu.url && isApplicable(menu.roles)" routerLink="{{menu.url}}" routerLinkActive="sidebar__item_active"
-        [routerLinkActiveOptions]="{exact:true}" class="sidebar__item" href="javascript:void(0)">
-        <span class="spacTp">{{ menu.name }}</span>
-      </a>
+      <div *ngIf="menu.url && isApplicable(menu.roles)">
+        <a routerLink="{{menu.url}}" routerLinkActive="sidebar__item_active" [routerLinkActiveOptions]="{exact:true}"
+          class="sidebar__item" href="javascript:void(0)">
+          <!-- <span class="spacTp">{{ menu.name }}</span> -->
+          <img src="assets/img/menu/{{menu.icon}}" class="imgAli" style="display:inline;" /><span>{{ menu.name }}</span>
+        </a>
+      </div>
       <div *ngIf="menu.active">
         <ul class="submenu hilit" #submenu>
           <li *ngFor="let submenu of menu.submenu">
