@@ -1,0 +1,46 @@
+<!-- right side summary -->
+<aside class="aside-right">
+    <button class="open-button" *ngIf="!displayPanel" (click)="openPanel()">
+        <img class="icoSum" src="assets/img/new/summary.png">
+        <div class="txAln">Show Summary</div>
+    </button>
+    <div class="form-popup" id="myForm" *ngIf="displayPanel" [ngClass]="displayPanel ? 'show-panel' : 'hide-panel'">
+        <div class="frameS">
+            <div class="contents-wrapper">
+                <div class="contents">
+                    <div class="field-text">Summary</div>
+                    <a (click)="closePanel()"><img class="clos" src="assets/img/new/close.png" /></a>
+                </div>
+            </div>
+            <div class="space" *ngIf="summary">
+                <div class="div">
+                    <div class="field-wrapper">
+                        <div class="field-2">
+                            <div class="field-label-2 hedTx">Particulars</div>
+                            <div class="field-label-3 hedTx">{{convertToTitleCase(type)}} Details</div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="div">
+                    <div class="field-wrapper" *ngFor="let row of result">
+                        <div class="field-2">
+                            <div class="field-label-2">{{ row.key}}</div>
+                            <div class="field-label-3">₹ {{row.value}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="div">
+                    <img class="img" src="img/line-2.svg" />
+                    <div class="field-wrapper">
+                        <div class="field-2">
+                            <div class="field-label-2 hedTx">Taxable {{convertToTitleCase(type)}}</div>
+                            <div class="field-label-3 hedTx">₹ {{netIncome}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>
+<!-- right side summary ends-->

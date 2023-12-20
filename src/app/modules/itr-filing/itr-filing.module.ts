@@ -104,21 +104,23 @@ import { BifurcationComponent } from './salary/bifurcation/bifurcation.component
 import { CalculatorsComponent } from './salary/calculators/calculators.component';
 import { BreakUpComponent } from './salary/break-up/break-up.component';
 import { OtherDeductionsComponent } from './itr-wizard/components/other-deductions/other-deductions.component';
+import {ItrSharedModule} from "../itr-shared/itr-shared.module";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ItrFilingRoutingModule,
-    NgxImageZoomModule,
-    PdfViewerModule,
-    SharedModule,
-    PagesModule,
-    NgxDocViewerModule,
-    NgxPaginationModule,
-    // NgxExtendedPdfViewerModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ItrFilingRoutingModule,
+        NgxImageZoomModule,
+        PdfViewerModule,
+        SharedModule,
+        PagesModule,
+        NgxDocViewerModule,
+        NgxPaginationModule,
+        ItrSharedModule,
+        // NgxExtendedPdfViewerModule
+    ],
   providers: [
     DatePipe,
     { provide: MAT_DIALOG_DATA, useValue: {} },

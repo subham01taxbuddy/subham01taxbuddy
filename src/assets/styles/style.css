@@ -1446,7 +1446,8 @@ ul {
 }
 
 .closeSideBar {
-  display: none !important;
+  width: 78px !important;
+  /* display: none !important; */
 }
 
 .sidebar__item_active {

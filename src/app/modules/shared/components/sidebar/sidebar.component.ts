@@ -34,6 +34,10 @@ export class SidebarComponent {
     this.setActiveMenu();
   }
 
+  openOtherMenu() {
+    this.openSidebar = true;
+  }
+
   ngAfterViewInit() {
     this.subscription = this.sidebarService.isLoading
       .subscribe((state) => {
