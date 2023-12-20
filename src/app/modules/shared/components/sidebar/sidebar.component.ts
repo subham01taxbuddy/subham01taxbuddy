@@ -217,6 +217,7 @@ export class SidebarComponent {
         // { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Missed Inbound Calls', url: '/reports/missed-inbound-calls-list', roles: ['ROLE_LEADER','ROLE_FILER'] },
         { name: 'Missed Chat List', url: '/reports/missed-chat-list', roles: ['ROLE_LEADER','ROLE_FILER'] },
+        { name: 'Daily Sign-Up Report', url: '/reports/daily-sign-up-report', roles: ['ROLE_ADMIN'] },
       ]
     },
     {
