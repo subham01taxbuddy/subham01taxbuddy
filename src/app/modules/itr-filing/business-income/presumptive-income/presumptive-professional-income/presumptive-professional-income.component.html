@@ -68,7 +68,7 @@
                                 </div>
                                 <div class="field">
                                   <div class="field-label">
-                                    <span class="span">Trade Name</span>
+                                    <span class="span">Trade Name</span> <span class="redAst">*</span>
                                   </div>
                                   <mat-form-field appearance="outline">
                                     <input formControlName="tradeName" matInput name="tradeName[i]" class="input-field"
@@ -142,7 +142,8 @@
                                   </div>
                                 </div>
                                 <div class="pre-box">
-                                  <div class="lndBldg-L">Presumptive income <span><ng-container
+                                  <div class="lndBldg-L">Presumptive income <span>
+                                    <ng-container
                                         *ngFor="let percentage of percentage; let id = index">
                                         <ng-container *ngIf="id === i">
                                           ({{
@@ -156,7 +157,7 @@
                                           : 0
                                           }}%)
                                         </ng-container>
-                                      </ng-container></span>
+                                      </ng-container></span><span class="redAst">*</span>
                                   </div>
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline">

@@ -48,6 +48,10 @@ table {
   overflow-x: auto;
 }
 
+.tenant-checkbox {
+  margin-right: 10px;
+  align-self: center;
+}
 /* tr:nth-child(even) {
   background-color: #f2f2f2;
 } */

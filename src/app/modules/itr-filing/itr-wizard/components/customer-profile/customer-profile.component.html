@@ -320,7 +320,7 @@
           </mat-form-field>
         </div>
 
-        <div class="form-field">
+        <div class="form-field" *ngIf="customerProfileForm.controls['isRevised'].value === 'N'">
           <div><span class="span">Aadhar Number</span> <span class="text-wrapper-2">*</span></div>
           <mat-form-field appearance="outline">
             <input
@@ -360,7 +360,7 @@
             >
           </mat-form-field>
         </div>
-        <div class="form-field">
+        <div class="form-field" *ngIf="customerProfileForm.controls['isRevised'].value === 'N'">
           <div><span class="span">Aadhar Enrollment ID</span> <span class="text-wrapper-2">*</span></div>
           <mat-form-field appearance="outline">
             <input
@@ -408,6 +408,94 @@
         </div>
       </div>
       <div class="div-6">
+
+        <div class="form-field" *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
+          <div><span class="span">Aadhar Number</span> <span class="text-wrapper-2">*</span></div>
+          <mat-form-field appearance="outline">
+            <input
+                    matTooltip="Aadhar Number should be linked with your PAN Number and 12 digit."
+                    matTooltipClass="tab-tooltip"
+                    matTooltipPosition="above"
+                    matInput
+                    currencyMask
+                    placeholder="Aadhaar"
+                    name="aadharNumber"
+                    formControlName="aadharNumber"
+                    class="input-field"
+                    maxlength="12"
+                    digitsOnly
+                    (change)="shallDisableOther('aadhaarEnrolmentId', 'aadharNumber')"
+            />
+            <mat-error
+                    *ngIf="
+            customerProfileForm.controls['aadharNumber'].hasError('required')
+          "
+            >
+              Enter aadhar number</mat-error
+            >
+            <mat-error
+                    *ngIf="
+            customerProfileForm.controls['aadharNumber'].hasError('maxlength')
+          "
+            >
+              Enter 12 digit aadhar number</mat-error
+            >
+            <mat-error
+                    *ngIf="
+            customerProfileForm.controls['aadharNumber'].hasError('minlength')
+          "
+            >
+              Enter 12 digit aadhar number</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div class="form-field" *ngIf="customerProfileForm.controls['isRevised'].value === 'Y'">
+          <div><span class="span">Aadhar Enrollment ID</span> <span class="text-wrapper-2">*</span></div>
+          <mat-form-field appearance="outline">
+            <input
+                    matTooltip="Aadhar Enrollment ID should be 14 digit."
+                    matTooltipClass="tab-tooltip"
+                    matTooltipPosition="above"
+                    matInput
+                    currencyMask
+                    placeholder="Aadhaar"
+                    name="aadhaarEnrolmentId"
+                    formControlName="aadhaarEnrolmentId"
+                    class="input-field"
+                    maxlength="14"
+                    digitsOnly
+                    (change)="shallDisableOther('aadharNumber', 'aadhaarEnrolmentId')"
+            />
+            <mat-error
+                    *ngIf="
+            customerProfileForm.controls['aadhaarEnrolmentId'].hasError(
+              'required'
+            )
+          "
+            >
+              Enter Aadhar Enrollment ID</mat-error
+            >
+            <mat-error
+                    *ngIf="
+            customerProfileForm.controls['aadhaarEnrolmentId'].hasError(
+              'maxlength'
+            )
+          "
+            >
+              Enter 14 digit Aadhar Enrollment ID</mat-error
+            >
+            <mat-error
+                    *ngIf="
+            customerProfileForm.controls['aadhaarEnrolmentId'].hasError(
+              'minlength'
+            )
+          "
+            >
+              Enter 14 digit Aadhar Enrollment ID</mat-error
+            >
+          </mat-form-field>
+        </div>
+
         <div class="form-field">
           <div><span class="span">Date Of Birth</span> <span class="text-wrapper-2">*</span></div>
           <mat-form-field appearance="outline">
