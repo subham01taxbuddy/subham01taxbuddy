@@ -1,42 +1,97 @@
-.schedule-header {
-    font-weight: 500;
-    font-size: 21.2451px;
-    line-height: 150%;
-    letter-spacing: -0.022em;
-    color: #1E1E1E;
-    margin-bottom: 11px;
-}
-
-.description {
-    width: 95%;
-}
-
-.movable-assets {
+@import "../../../../../../../ux/scss/style.scss";
+.header_content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    gap: 8px;
+    position: relative;
+    align-self: stretch;
     width: 100%;
+    flex: 0 0 auto;
+    padding: 8px 24px;
+    flex-grow: 1;
+    background-color: #e7e7e7;
+    border-radius: 4px 4px 0px 0px;
 }
 
-.tds-on {
+.wrap-content {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    background-color: #ffffff;
+    border-radius: 0px 0px 8px 8px;
+
+    img {
+        position: relative;
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.btn-rt{
+    position:absolute;
+    right:20px;
+}
+
+.wrapper {
+    display: flex;
+    align-items: flex-start;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    flex-direction: column;
+    padding: 24px;
+    position: relative;
+}
+
+.space {
+    background-color: #ffffff;
+    border-radius: 0px 0px 8px 8px;
+    padding: 20px;
+    border: 1px solid #E2E4E5;
+    border-top: 0;
+}
+
+.frameC {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    align-items: flex-start;
+    position: relative;
+}
+
+.div-5 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 24px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    background-color: #ffffff;
+    border-radius: 0px 0px 4px 4px;
+}
+.div-6 {
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+}
+
+.frame-wrapper-3 {
     display: inline-flex;
-}
-
-.isDeduction {
-    font-weight: 500;
-    font-size: 22px;
-    color: #FF6B00;
-}
-
-.edit-assets {
-    width: 50px;
-}
-
-.mb-16 {
-    margin-bottom: 16px;
-}
-
-.financial-assets {
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 14px;
-    letter-spacing: -0.009em;
-    color: #07070C;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+    flex: 0 0 auto;
 }
