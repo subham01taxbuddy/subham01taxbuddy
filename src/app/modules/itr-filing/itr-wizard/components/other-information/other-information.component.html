@@ -60,9 +60,6 @@
                       {{ director.get("companyName").value }}
                     </mat-checkbox>
                   </div>
-                  <div class="col-2">
-                    <button class="btn btn__default btn__edit" (click)="editDirectorForm(i)">Edit</button>
-                  </div>
                 </div>
                 <div class="div-6 ">
                   <div class="form-field">
@@ -227,9 +224,6 @@
                             class="ml30">
                       {{ share.get("companyName").value }}
                     </mat-checkbox>
-                  </div>
-                  <div class="col-2">
-                    <button class="btn btn__default btn__edit" (click)="editSharesForm(i)"> Edit</button>
                   </div>
                 </div>
                 <div class="div-6 ">
@@ -615,9 +609,6 @@
                       {{ director.get("name").value }}
                     </mat-checkbox>
                   </div>
-                  <div class="col-2">
-                    <button class="btn btn__default btn__edit">Edit</button>
-                  </div>
                 </div>
                 <div class="div-6 ">
                   <div class="form-field">
@@ -758,8 +749,7 @@
                 </mat-error>
               </div>
               <div class="form-field">
-                <div><span class="span">Aadhaar number of the spouse:</span> <span
-                        class="text-wrapper-2">*</span>
+                <div><span class="span">Aadhaar number of the spouse:</span>
                 </div>
                 <mat-form-field appearance="outline">
                   <input
@@ -786,12 +776,12 @@
             </div>
 
             <div class="row mb-10  divider_border">
-              <div class="col-10 ">
+              <div class="col-9">
                 <p><span class="span">Whether books of accounts of a spouse are audited u/s 92E? or Whether your
                                       spouse is a partner of a
                                       firm whose accounts are required to be audited u/s 92E under this Act?</span></p>
               </div>
-              <div class="col-2">
+              <div class="col-3">
                 <mat-radio-group
                         name="booksSpouse92EFlg"
                         formControlName="booksSpouse92EFlg"
@@ -811,13 +801,13 @@
             </div>
 
             <div class="row mb-10 divider_border">
-              <div class="col-10 ">
+              <div class="col-9">
                 <p><span class="span">Whether books of accounts of a spouse are audited u/s 44AB? or Whether
                                       your
                                       spouse is a partner of a
                                       firm whose accounts are required to be audited u/s 44AB under this Act?</span></p>
               </div>
-              <div class="col-2">
+              <div class="col-3">
                 <mat-radio-group
                         name="booksSpouse44ABFlg"
                         formControlName="booksSpouse44ABFlg"

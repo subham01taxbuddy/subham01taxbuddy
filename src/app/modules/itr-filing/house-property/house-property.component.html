@@ -182,7 +182,7 @@
                             <div class="hp2main">
                               <div class="hplft">Annual value *</div>
                               <div class="hprgt">
-                                <mat-form-field appearance="outline">
+                                <mat-form-field appearance="outline" style="margin-bottom: 20px;">
                                   <input
                                           formControlName="nav"
                                           matInput
@@ -192,27 +192,26 @@
                                           class="form-control"
                                           maxlength="11"
                                           digitsOnly
-                                          readonly
+                                          readonly/>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                  <input
+                                          matInput
+                                          placeholder="Annual Value"
+                                          [(ngModel)]="annualValue"
+                                          [ngModelOptions]="{ standalone: true }"
+                                          matTooltipClass="tab-tooltip"
+                                          matTooltip="Gross rent received - Tax paid on local authorities"
+                                          name="annualValue"
+                                          class="form-control"
+                                          maxlength="11"
+                                          digitsOnly
+                                          disabled
                                   />
-                                  <mat-form-field appearance="outline">
-                                    <input
-                                            matInput
-                                            placeholder="Annual Value"
-                                            [(ngModel)]="annualValue"
-                                            [ngModelOptions]="{ standalone: true }"
-                                            matTooltipClass="tab-tooltip"
-                                            matTooltip="Gross rent received - Tax paid on local authorities"
-                                            name="annualValue"
-                                            class="form-control"
-                                            maxlength="11"
-                                            digitsOnly
-                                            disabled
-                                    />
-                                    <mat-hint
-                                    >Gross rent received - Tax paid on local
-                                      authorities</mat-hint
-                                    >
-                                  </mat-form-field>
+                                  <mat-hint
+                                  >Gross rent received - Tax paid on local
+                                    authorities</mat-hint
+                                  >
                                 </mat-form-field>
                               </div>
                             </div>
@@ -296,7 +295,7 @@
                                   </div>
                                 </mat-radio-group>
                               </div>
-                              <mat-form-field appearance="outline">
+                              <mat-form-field appearance="outline" style="margin-bottom: 20px;">
                                 <input
                                         formControlName="interestAmount"
                                         matInput
@@ -365,7 +364,7 @@
                           <div class="hp2main">
                             <div class="hplft">Arreas/Unrealised Rent received during year is less than 30% *</div>
                             <div class="hprgt">
-                              <mat-form-field appearance="outline">
+                              <mat-form-field appearance="outline" style="margin-bottom: 20px;">
                                 <input
                                         matInput
                                         placeholder="total arrears amount"
@@ -720,15 +719,12 @@
                         <div class="hp4main1" *ngFor="let ten of getTenantArray.controls; let i = index"
                              [formGroupName]="i">
 
+                          <div class="custom-control custom-checkbox tenant-checkbox">
+                            <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                    type="checkbox" (click)="activeTenant = [i]"/>
+                          </div>
                           <div class="hp4-2">
                             <div class="field">
-                              <div class="custom-control custom-checkbox">
-                                <input
-                                        class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                        type="checkbox"
-                                        (click)="activeTenant = [i]"
-                                />
-                              </div>
                               <div class="field-label">
                                 <span class="span">Name of Tenant </span> <span class="redAst">*</span>
                               </div>
