@@ -2,285 +2,304 @@
   [show]="loading"
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
-<div class="mrgArdSpcBlw">
-  <div class="txtTitle" style="margin-bottom: 0px">
-    <strong> Partner In Firms </strong>
-  </div>
-  <div class="row">
-    <div class="cardBdr1">
-      <div *ngIf="Copy_ITR_JSON.partnerFirms">
-        <button
-          class="new-add btnRt"
-          (click)="addFirmDetails('Add firm details', 'ADD', null)"
-        >
-          <i class="fa fa-plus" aria-hidden="true"></i> Add New Firm
-        </button>
-      </div>
-      <div class="form-con">
-        <form [formGroup]="partnerInFirmForm">
-          <div formArrayName="firmArray">
-            <div
-              class="card"
-              *ngFor="
-                let firm of firmArray.controls | paginate : config;
-                let i = index
-              "
-              [formGroupName]="fieldGlobalIndex(i)"
-            >
-              <div class="row">
-                <div class="col-sm-10">
-                  <mat-checkbox
-                    color="primary"
-                    name="hasEdit[i]"
-                    formControlName="hasEdit"
-                  >
-                    {{ firm.get("name").value }}
-                  </mat-checkbox>
-                </div>
-                <div class="col-sm-2">
+<div class="frameC">
+  <h1 class="heading__title">Partner In Firms
+  </h1>
+  <div class="space">
+    <div class="wrapper">
+      <div class="div-4">
+        <div class="frame-wrapper-2A">
+
+          <div class="accordion" id="myAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header accoHdclr" id="headingOne">
+                <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne">Firm Details</button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                <div *ngIf="Copy_ITR_JSON.partnerFirms">
                   <button
-                    type="button"
-                    class="edit-donation"
-                    (click)="editFirmForm(i)"
-                  >
-                    <mat-icon> edit_square </mat-icon>Edit
+                          class="new-add btnRt"
+                          (click)="addFirmDetails('Add firm details', 'ADD', null)">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Add New Firm
                   </button>
                 </div>
-              </div>
-              <div class="row bdrBtm">
-                <div class="col-sm-6">
-                  <mat-label>Name of the Firm</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      placeholder="Name of the Firm"
-                      name="name"
-                      formControlName="name"
-                      class="input-field"
-                      required
-                    />
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-6">
-                  <mat-label>Pan of the Firm</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      placeholder="Pan of the Firm"
-                      name="panNumber"
-                      formControlName="panNumber"
-                      class="input-field"
-                      required
-                    />
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Capital Balance</mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      placeholder="Capital Balance"
-                      name="capitalBalanceOn31stMarch"
-                      formControlName="capitalBalanceOn31stMarch"
-                      class="input-field"
-                      required
-                    />
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Profit Ratio % </mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      placeholder="Profit Ratio"
-                      name="profitSharePercent"
-                      formControlName="profitSharePercent"
-                      class="input-field"
-                      required
-                    />
-                  </mat-form-field>
-                </div>
+                <div class="accordion__item-body">
 
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Profit </mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      placeholder="Profit"
-                      name="profitShareAmount"
-                      formControlName="profitShareAmount"
-                      class="input-field"
-                      required
-                    />
-                  </mat-form-field>
-                </div>
+                  <div class="">
+                    <form [formGroup]="partnerInFirmForm">
+                      <div formArrayName="firmArray">
+                        <div class="card" *ngFor="let firm of firmArray.controls | paginate : config;let i = index"
+                                [formGroupName]="fieldGlobalIndex(i)">
 
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Salary </mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      placeholder="Salary"
-                      name="salary"
-                      formControlName="salary"
-                      class="input-field"
-                      required
-                    />
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Bonus </mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      placeholder="Bonus"
-                      name="bonus"
-                      formControlName="bonus"
-                      class="input-field"
-                      required
-                    />
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Commission </mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      placeholder="Commission"
-                      name="commission"
-                      formControlName="commission"
-                      class="input-field"
-                      required
-                    />
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Interest </mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      placeholder="Interest"
-                      name="interest"
-                      formControlName="interest"
-                      class="input-field"
-                      required
-                    />
-                  </mat-form-field>
-                </div>
-                <div class="col-sm-4 spsTp">
-                  <mat-label>Others </mat-label>
-                  <mat-form-field appearance="outline">
-                    <input
-                      matInput
-                      placeholder="Others"
-                      name="others"
-                      formControlName="others"
-                      class="input-field"
-                      required
-                    />
-                  </mat-form-field>
-                </div>
+                          <div class="col-sm-10">
+                            <mat-checkbox
+                                    color="primary"
+                                    name="hasEdit[i]"
+                                    formControlName="hasEdit">
+                              {{ firm.get("name").value }}
+                            </mat-checkbox>
+                          </div>
 
-                <div class="col-sm-12 spsTp">
-                  <div class="row">
-                    <div class="col-sm-8">
-                      <div class="txBg">
-                        Whether the firm is liable for Audit?
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Name of the Firm </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input
+                                        matInput
+                                        placeholder="Name of the Firm"
+                                        name="name"
+                                        formControlName="name"
+                                        class="input-field"
+                                        required/>
+                              </mat-form-field>
+                            </div>
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Pan of the Firm </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input
+                                        matInput
+                                        placeholder="Pan of the Firm"
+                                        name="panNumber"
+                                        formControlName="panNumber"
+                                        class="input-field"
+                                        required/>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Capital Balance </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input
+                                        matInput
+                                        placeholder="Capital Balance"
+                                        name="capitalBalanceOn31stMarch"
+                                        formControlName="capitalBalanceOn31stMarch"
+                                        class="input-field"
+                                        required
+                                />
+                              </mat-form-field>
+                            </div>
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Profit Ratio %  </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input
+                                        matInput
+                                        placeholder="Profit Ratio"
+                                        name="profitSharePercent"
+                                        formControlName="profitSharePercent"
+                                        class="input-field"
+                                        required/>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Profit </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input
+                                        matInput
+                                        placeholder="Profit"
+                                        name="profitShareAmount"
+                                        formControlName="profitShareAmount"
+                                        class="input-field"
+                                        required/>
+                              </mat-form-field>
+                            </div>
+
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Salary  </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input
+                                        matInput
+                                        placeholder="Salary"
+                                        name="salary"
+                                        formControlName="salary"
+                                        class="input-field"
+                                        required/>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Bonus  </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input
+                                        matInput
+                                        placeholder="Bonus"
+                                        name="bonus"
+                                        formControlName="bonus"
+                                        class="input-field"
+                                        required/>
+                              </mat-form-field>
+                            </div>
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Commission  </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input
+                                        matInput
+                                        placeholder="Commission"
+                                        name="commission"
+                                        formControlName="commission"
+                                        class="input-field"
+                                        required/>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Interest  </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input
+                                        matInput
+                                        placeholder="Interest"
+                                        name="interest"
+                                        formControlName="interest"
+                                        class="input-field"
+                                        required/>
+                              </mat-form-field>
+                            </div>
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Others  </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input
+                                        matInput
+                                        placeholder="Others"
+                                        name="others"
+                                        formControlName="others"
+                                        class="input-field"
+                                        required/>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="col-sm-12 spsTp">
+                              <div class="row">
+                                <div class="col-sm-8">
+                                  <div class="txBg">
+                                    Whether the firm is liable for Audit?
+                                  </div>
+                                </div>
+                                <div class="col-sm-4">
+                                  <mat-radio-group
+                                          name="{{ i + 'isLiableToAudit' }}"
+                                          formControlName="isLiableToAudit"
+                                  >
+                                    <mat-radio-button
+                                            [value]="'Y'"
+                                            style="margin-left: 0px"
+                                            labelPosition="before"
+                                    >Yes
+                                    </mat-radio-button>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <mat-radio-button [value]="'N'" labelPosition="before"
+                                    >No</mat-radio-button
+                                    >
+                                  </mat-radio-group>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="col-sm-12 spsTp">
+                              <div class="row">
+                                <div class="col-sm-8">
+                                  <div class="txBg">
+                                    Whether section 92CE is applicable to the firm ?
+                                  </div>
+                                </div>
+                                <div class="col-sm-4">
+                                  <mat-radio-group
+                                          name="{{ i + 'sec92EFirmFlag' }}"
+                                          formControlName="sec92EFirmFlag"
+                                  >
+                                    <mat-radio-button
+                                            [value]="'Y'"
+                                            style="margin-left: 0px"
+                                            labelPosition="before"
+                                    >Yes
+                                    </mat-radio-button>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <mat-radio-button [value]="'N'" labelPosition="before"
+                                    >No</mat-radio-button
+                                    >
+                                  </mat-radio-group>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="container">
+                          <div class="row spsTp">
+                            <div class="col-sm-3">
+                              <button
+                                      type="submit"
+                                      class="delete-btn"
+                                      (click)="deleteFirms()"
+                                      [disabled]="!firmSelected()"
+                              >
+                                <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+                              </button>
+                            </div>
+                            <div class="col-sm-6">
+                              <table>
+                                <tr
+                                        *ngFor="
+                                let item of firmArray.controls | paginate : config
+                              "
+                                ></tr>
+                              </table>
+                              <pagination-controls
+                                      (pageChange)="pageChanged($event)"
+                              ></pagination-controls>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-sm-4">
-                      <mat-radio-group
-                        name="{{ i + 'isLiableToAudit' }}"
-                        formControlName="isLiableToAudit"
-                      >
-                        <mat-radio-button
-                          [value]="'Y'"
-                          style="margin-left: 0px"
-                          labelPosition="before"
-                          >Yes
-                        </mat-radio-button>
-                        &nbsp;&nbsp;&nbsp;
-                        <mat-radio-button [value]="'N'" labelPosition="before"
-                          >No</mat-radio-button
-                        >
-                      </mat-radio-group>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-12 spsTp">
-                  <div class="row">
-                    <div class="col-sm-8">
-                      <div class="txBg">
-                        Whether section 92CE is applicable to the firm ?
-                      </div>
-                    </div>
-                    <div class="col-sm-4">
-                      <mat-radio-group
-                        name="{{ i + 'sec92EFirmFlag' }}"
-                        formControlName="sec92EFirmFlag"
-                      >
-                        <mat-radio-button
-                          [value]="'Y'"
-                          style="margin-left: 0px"
-                          labelPosition="before"
-                          >Yes
-                        </mat-radio-button>
-                        &nbsp;&nbsp;&nbsp;
-                        <mat-radio-button [value]="'N'" labelPosition="before"
-                          >No</mat-radio-button
-                        >
-                      </mat-radio-group>
-                    </div>
+                    </form>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="container">
-              <div class="row spsTp">
-                <div class="col-sm-3">
-                  <button
-                    type="submit"
-                    class="delete-btn"
-                    (click)="deleteFirms()"
-                    [disabled]="!firmSelected()"
-                  >
-                    <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-                  </button>
-                </div>
-                <div class="col-sm-6">
-                  <table>
-                    <tr
-                      *ngFor="
-                        let item of firmArray.controls | paginate : config
-                      "
-                    ></tr>
-                  </table>
-                  <pagination-controls
-                    (pageChange)="pageChanged($event)"
-                  ></pagination-controls>
-                </div>
-              </div>
+
+          </div>
+
+        </div>
+
+        <div class="out-box">
+          <div class="box-left">
+            <div class="lft-btn btn-padding" (click)="goBack()">Back</div>
+          </div>
+          <div class="box-right">
+            <div class="rght-btn btn-padding">
+              <button [disabled]="partnerInFirmForm.invalid"
+                      (click)="saveFirmDetails($event)">Save & View Summary</button>
             </div>
           </div>
-        </form>
+        </div>
+
       </div>
     </div>
-  </div>
-  <div class="flex justify-between p-[30px] back-foot">
-    <button class="lgtBtn">
-      <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-      <span class="font-semibold" (click)="goBack()"
-        >&nbsp;Back to More Info List</span
-      >
-    </button>
-
-    <button
-      [disabled]="partnerInFirmForm.invalid"
-      class="saveBtnIn"
-      id="saveBtnIn"
-      (click)="saveFirmDetails($event)"
-    >
-      <span class="font-semibold">Save All</span>
-    </button>
   </div>
 </div>
