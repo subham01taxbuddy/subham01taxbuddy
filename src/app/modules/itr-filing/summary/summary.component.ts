@@ -6455,7 +6455,7 @@ export class SummaryComponent implements OnInit {
         if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
           this.checkFilerAssignment();
           // console.log(res, 'Paid');
-        }  else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
+        } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
           this.utilsService.showSnackBar(
             'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
           );
@@ -6524,7 +6524,11 @@ export class SummaryComponent implements OnInit {
           });
         } else {
           if (res.errors instanceof Array && res.errors.length > 0) {
-            this.utilsService.showSnackBar(res.errors[0].errFld);
+            if (res.errors[0].errFld) {
+              this.utilsService.showSnackBar(res.errors[0].errFld);
+            } else {
+              this.utilsService.showSnackBar(res.errors[0].desc);
+            }
           } else {
             this.utilsService.showSnackBar('Failed to file ITR.');
           }
