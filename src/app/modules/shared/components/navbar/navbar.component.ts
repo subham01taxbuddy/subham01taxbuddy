@@ -47,7 +47,7 @@ export class NavbarComponent implements DoCheck {
     private utilsService: UtilsService,
     private _toastMessageService: ToastMessageService,
     private userMsService: UserMsService,
-    private kommunicateSsoService:KommunicateSsoService,
+    private kommunicateSsoService: KommunicateSsoService,
     private observer: BreakpointObserver,
     private sidebarService: SidebarService,
 
@@ -62,14 +62,14 @@ export class NavbarComponent implements DoCheck {
     this.component_link = NavbarService.getInstance().component_link;
     this.component_link_2 = NavbarService.getInstance().component_link_2;
     this.component_link_3 = NavbarService.getInstance().component_link_3;
-    if (NavbarService.getInstance().closeSideBar) {
-      this.sideBar();
-      NavbarService.getInstance().closeSideBar = false;
-    }
+    // if (NavbarService.getInstance().closeSideBar) {
+    //   this.sideBar();
+    //   NavbarService.getInstance().closeSideBar = false;
+    // }
   }
 
   sideBar() {
-    // if (window.innerWidth < 768) {
+    if (window.innerWidth < 768) {
       if (this.sidebar_open) {
         this.menu_btn_rotate = false;
         setTimeout(() => {
@@ -85,19 +85,13 @@ export class NavbarComponent implements DoCheck {
           this.menu_hide_component = true;
         }, 300);
       }
-    // }
+    }
   }
-  
+
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.observer.observe(['(max-width: 800px)']).subscribe((res) => {
-        if (res.matches) {
-          this.nav = true;
-        } else {
-          this.nav = false;
-        }
-      });
-    });
+    if (this.router.url.startsWith('/itr-filing/itr')) {
+      this.close();
+    }
   }
 
   open() {
@@ -109,6 +103,7 @@ export class NavbarComponent implements DoCheck {
     this.nav = true;
     this.sidebarService.hide();
   }
+
   navigateToHome() {
     this.router.navigate(['/tasks/assigned-users-new']);
   }

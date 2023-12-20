@@ -33,38 +33,15 @@ export class SidebarComponent {
   ) {
     this.currentPath = route.url;
     this.loggedInUserRoles = this.utilsService.getUserRoles();
-    console.log('loggedInUserData', this.loggedInUserRoles);
-    this.route.events.subscribe((url: any) => {
-      // if (route.url === '/itr-filing/itr') {
-      //   this.hideSideBar = true;
-      // } else {
-      //   this.hideSideBar = false;
-      // }
-    });
     this.setActiveMenu();
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.observer.observe(['(max-width: 800px)']).subscribe((res) => {
-        if (res.matches) {
-          this.sidenav.mode = 'over';
-          // this.sidenav.close();
-          this.openSidebar = false;
-        } else {
-          this.sidenav.mode = 'side';
-          // this.sidenav.open();
-          this.openSidebar = true;
-        }
-      });
-    });
     this.subscription = this.sidebarService.isLoading
       .subscribe((state) => {
         if (state) {
-          // this.sidenav.open();
           this.openSidebar = true;
         } else {
-          // this.sidenav.close();
           this.openSidebar = false;
         }
       });
