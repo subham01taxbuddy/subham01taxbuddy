@@ -177,23 +177,6 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
     });
   }
 
-
-  calculateTotals(signUpData) {
-    return {
-        leaderName: 'Total',
-        totalAssignedUsersForITR: signUpData.reduce((sum, row) => sum + row.totalAssignedUsersForITR, 0),
-        signUpNumbersForITR: signUpData.reduce((sum, row) => sum + row.signUpNumbersForITR, 0),
-        totalAssignedUsersForTPA: signUpData.reduce((sum, row) => sum + row.totalAssignedUsersForTPA, 0),
-        signUpNumbersForTPA: signUpData.reduce((sum, row) => sum + row.signUpNumbersForTPA, 0),
-        totalAssignedUsersForGST: signUpData.reduce((sum, row) => sum + row.totalAssignedUsersForGST, 0),
-        signUpNumbersForGST: signUpData.reduce((sum, row) => sum + row.signUpNumbersForGST, 0),
-        totalAssignedUsersForNotice: signUpData.reduce((sum, row) => sum + row.totalAssignedUsersForNotice, 0),
-        signUpNumbersForNotice: signUpData.reduce((sum, row) => sum + row.signUpNumbersForNotice, 0),
-        totalAssignedUsers: signUpData.reduce((sum, row) => sum + row.totalAssignedUsers, 0),
-        totalSignUpNumbers: signUpData.reduce((sum, row) => sum + row.totalSignUpNumbers, 0),
-    };
-}
-
   createRowData(signUpData) {
     console.log('sign Up RepoInfo -> ', signUpData);
     var signUpRepoInfoArray = [];
@@ -299,6 +282,16 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
         ]
       },
       {
+        headerName: '',
+        headerClass: 'vertical-line',
+        width: 0,
+        suppressMovable: true,
+        cellStyle: {
+          borderRight: '3px solid #ccc',
+          backgroundColor: '#fff',
+        },
+      },
+      {
         headerName: 'Notice',
         headerClass: 'centered-header',
         children: [
@@ -319,6 +312,16 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
         ]
       },
       {
+        headerName: '',
+        headerClass: 'vertical-line',
+        width: 0,
+        suppressMovable: true,
+        cellStyle: {
+          borderRight: '3px solid #ccc',
+          backgroundColor: '#fff',
+        },
+      },
+      {
         headerName: 'GST',
         headerClass: 'centered-header',
         children: [
@@ -337,6 +340,16 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
         ]
+      },
+      {
+        headerName: '',
+        headerClass: 'vertical-line',
+        width: 0,
+        suppressMovable: true,
+        cellStyle: {
+          borderRight: '3px solid #ccc',
+          backgroundColor: '#fff',
+        },
       },
       {
         headerName: 'Total',
