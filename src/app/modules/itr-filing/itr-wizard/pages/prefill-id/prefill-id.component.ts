@@ -4356,6 +4356,55 @@ export class PrefillIdComponent implements OnInit {
               this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
             }
 
+            // agriculture rebate
+            {
+              if (!this.ITR_Obj.agriculturalIncome) {
+                this.ITR_Obj.agriculturalIncome = {
+                  agriIncomePortionRule7: null,
+                  expenditureIncurredOnAgriculture: null,
+                  grossAgriculturalReceipts: null,
+                  netAgriculturalIncome: null,
+                  unabsorbedAgriculturalLoss: null,
+                };
+              }
+
+              this.ITR_Obj.agriculturalIncome.expenditureIncurredOnAgriculture =
+                this.uploadedJson[this.ITR_Type].ScheduleEI?.ExpIncAgri;
+
+              this.ITR_Obj.agriculturalIncome.grossAgriculturalReceipts =
+                this.uploadedJson[this.ITR_Type].ScheduleEI?.GrossAgriRecpt;
+
+              this.ITR_Obj.agriculturalIncome.netAgriculturalIncome =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].ScheduleEI?.NetAgriIncOrOthrIncRule7;
+
+              this.ITR_Obj.agriculturalIncome.unabsorbedAgriculturalLoss =
+                this.uploadedJson[this.ITR_Type].ScheduleEI?.UnabAgriLossPrev8;
+
+              // agriculture land details
+              {
+                const agriLandDetails =
+                  this.uploadedJson[this.ITR_Type].ScheduleEI?.ExcNetAgriInc
+                    ?.ExcNetAgriIncDtls;
+
+                if (agriLandDetails && agriLandDetails?.length > 0) {
+                  if (!this.ITR_Obj.agriculturalLandDetails) {
+                    this.ITR_Obj.agriculturalLandDetails = [];
+                  }
+                  this.ITR_Obj.agriculturalLandDetails = agriLandDetails?.map(
+                    (element) => ({
+                      landInAcre: element?.MeasurementOfLand,
+                      nameOfDistrict: element?.NameOfDistrict,
+                      owner: element?.AgriLandOwnedFlag,
+                      pinCode: element?.PinCode,
+                      typeOfLand: element?.AgriLandIrrigatedFlag,
+                    })
+                  );
+                }
+              }
+            }
+
             sessionStorage.setItem(
               AppConstants.ITR_JSON,
               JSON.stringify(this.ITR_Obj)
