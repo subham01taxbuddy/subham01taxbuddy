@@ -168,7 +168,7 @@ export class SummaryComponent implements OnInit {
   keys: any = {};
   finalSummary: any;
   hpPtiValue: any;
-  passThroughInc:any;
+  passThroughInc: any;
 
   finalCalculations: {
     personalInfo: {
@@ -2974,40 +2974,40 @@ export class SummaryComponent implements OnInit {
                 business44AD:
                   this.itrType === 'ITR3'
                     ? this.ITR_JSON.itrSummaryJson['ITR'][
-                        this.itrType
-                      ]?.PARTA_PL?.NatOfBus44AD?.map((element) => {
-                        return {
-                          businessSection: 'Section 44AD',
-                          natureOfBusinessCode: element?.CodeAD,
-                          tradeName: element?.NameOfBusiness,
-                          description: element?.Description,
-                          natureOfBusinessCodeName: this.natureOfBusiness?.find(
-                            (item) => {
-                              return item?.code === element?.CodeAD;
-                            }
-                          )?.label,
-                          grossTurnover:
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.PersumptiveInc44AD
-                                ?.GrsTrnOverOrReceipt
-                            ) /
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.NatOfBus44AD?.length
-                            ),
-                          TaxableIncome:
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.PersumptiveInc44AD
-                                ?.TotPersumptiveInc44AD
-                            ) /
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.NatOfBus44AD?.length
-                            ),
-                        };
-                      })
+                      this.itrType
+                    ]?.PARTA_PL?.NatOfBus44AD?.map((element) => {
+                      return {
+                        businessSection: 'Section 44AD',
+                        natureOfBusinessCode: element?.CodeAD,
+                        tradeName: element?.NameOfBusiness,
+                        description: element?.Description,
+                        natureOfBusinessCodeName: this.natureOfBusiness?.find(
+                          (item) => {
+                            return item?.code === element?.CodeAD;
+                          }
+                        )?.label,
+                        grossTurnover:
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.PersumptiveInc44AD
+                              ?.GrsTrnOverOrReceipt
+                          ) /
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.NatOfBus44AD?.length
+                          ),
+                        TaxableIncome:
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.PersumptiveInc44AD
+                              ?.TotPersumptiveInc44AD
+                          ) /
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.NatOfBus44AD?.length
+                          ),
+                      };
+                    })
                     : [
                       {
                         businessSection: null,
@@ -3021,39 +3021,39 @@ export class SummaryComponent implements OnInit {
                 business44ADA:
                   this.itrType === 'ITR3'
                     ? this.ITR_JSON.itrSummaryJson['ITR'][
-                        this.itrType
-                      ]?.PARTA_PL?.NatOfBus44ADA?.map((element) => {
-                        return {
-                          businessSection: 'Section 44ADA',
-                          natureOfBusinessCode: element?.CodeADA,
-                          tradeName: element?.NameOfBusiness,
-                          description: element?.Description,
-                          natureOfBusinessCodeName: this.natureOfBusiness?.find(
-                            (item) => {
-                              return item?.code === element?.CodeADA;
-                            }
-                          )?.label,
-                          grossTurnover:
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.PersumptiveInc44ADA?.GrsReceipt
-                            ) /
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.NatOfBus44ADA?.length
-                            ),
-                          TaxableIncome:
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.PersumptiveInc44ADA
-                                ?.TotPersumptiveInc44ADA
-                            ) /
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.NatOfBus44ADA?.length
-                            ),
-                        };
-                      })
+                      this.itrType
+                    ]?.PARTA_PL?.NatOfBus44ADA?.map((element) => {
+                      return {
+                        businessSection: 'Section 44ADA',
+                        natureOfBusinessCode: element?.CodeADA,
+                        tradeName: element?.NameOfBusiness,
+                        description: element?.Description,
+                        natureOfBusinessCodeName: this.natureOfBusiness?.find(
+                          (item) => {
+                            return item?.code === element?.CodeADA;
+                          }
+                        )?.label,
+                        grossTurnover:
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.PersumptiveInc44ADA?.GrsReceipt
+                          ) /
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.NatOfBus44ADA?.length
+                          ),
+                        TaxableIncome:
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.PersumptiveInc44ADA
+                              ?.TotPersumptiveInc44ADA
+                          ) /
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.NatOfBus44ADA?.length
+                          ),
+                      };
+                    })
                     : [
                       {
                         businessSection: null,
@@ -6766,7 +6766,7 @@ export class SummaryComponent implements OnInit {
         if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
           this.checkFilerAssignment();
           // console.log(res, 'Paid');
-        }  else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
+        } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
           this.utilsService.showSnackBar(
             'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
           );
@@ -6843,7 +6843,11 @@ export class SummaryComponent implements OnInit {
           });
         } else {
           if (res.errors instanceof Array && res.errors.length > 0) {
-            this.utilsService.showSnackBar(res.errors[0].errFld);
+            if (res.errors[0].errFld) {
+              this.utilsService.showSnackBar(res.errors[0].errFld);
+            } else {
+              this.utilsService.showSnackBar(res.errors[0].desc);
+            }
           } else {
             this.utilsService.showSnackBar('Failed to file ITR.');
           }
@@ -7089,7 +7093,7 @@ export class SummaryComponent implements OnInit {
     }
   }
 
-  calculatePassThroughInc(){
+  calculatePassThroughInc() {
     const details = this.finalCalculations?.SchedulePTI?.SchedulePTIDtls || [];
     if (details && details.length > 0) {
       this.passThroughInc = details
