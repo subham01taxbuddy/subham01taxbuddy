@@ -3,7 +3,7 @@
     <li *ngFor="let menu of menus; let i = index" [class.active]="menu.active">
       <div class="menu sidebar__item menu-name" (click)="$event.stopPropagation();toggle(i)"
         *ngIf="!menu.url && isApplicable(menu.roles)">
-        <img src="assets/img/menu/{{menu.icon}}" class="imgAli" [title]="menu.name" style="display:inline;" /><span *ngIf="openSidebar">{{ menu.name }}</span>
+        <img src="assets/img/menu/{{menu.icon}}" (click)="openOtherMenu()" class="imgAli" [title]="menu.name" style="display:inline;" /><span *ngIf="openSidebar">{{ menu.name }}</span>
         <i *ngIf="!menu.active && openSidebar" class="fa fa-chevron-right menu-icon"></i>
         <i *ngIf="menu.active && openSidebar" class="fa fa-chevron-up menu-icon"></i>
       </div>
