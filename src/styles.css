@@ -3075,16 +3075,15 @@ main {
 .note1 {
   background-color: #fafafa;
   padding: 5px 0px 5px 10px;
-  /* width: 350px; */
+  width: 290px;
   border-radius: 8px;
   font-size: 12px;
   font-style: italic;
   border: 1px solid #efefef;
-  color: #b60000;
-  max-width: 250px;
+  color: #b60000; 
   min-width: 180px;
-  margin: 0 auto;
-  margin-top: 10px;
+  margin-top: 5px;
+  margin-left:-50px;
 }
 
 .edit-head {
