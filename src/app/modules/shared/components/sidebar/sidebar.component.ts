@@ -27,9 +27,7 @@ export class SidebarComponent {
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private route: Router,
     private utilsService: UtilsService,
-    private observer: BreakpointObserver,
     private sidebarService: SidebarService,
-
   ) {
     this.currentPath = route.url;
     this.loggedInUserRoles = this.utilsService.getUserRoles();
@@ -78,13 +76,6 @@ export class SidebarComponent {
       roles: ['ROLE_FILER'],
       submenu: []
     },
-    // {
-    //   name: 'Owner Dashboard',
-    //   active: false,
-    //   url: '/dashboard/main',
-    //   roles: ['ROLE_OWNER'],
-    //   submenu: []
-    // },
     {
       name: 'Leader Dashboard',
       icon: 'dashboard.png',
@@ -106,14 +97,6 @@ export class SidebarComponent {
         { name: 'ITR Assigned Users', url: '/tasks/itr-assigned-users', roles: [] },
         { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Filed ITRs', url: '/tasks/filings', roles: [] },
-        // {
-        //   name: 'Exceptions', url: '/tasks/exceptions', roles: [],
-        //   // submenu: [
-        //   //   { path: 'signup', component: SignUpExceptionsComponent },
-        //   //   { path: 'eri', component: EriExceptionsComponent },
-        //   //   { path: '', redirectTo: 'signup', pathMatch: 'full' }
-        //   // ]
-        // },
         { name: 'Create User', url: '/pages/user-management/create-user', roles: [] },
         { name: 'Potential Users', url: '/tasks/potential-users', roles: [] },
 
@@ -155,7 +138,6 @@ export class SidebarComponent {
         { name: 'Tax Invoice', url: '/subscription/tax-invoice', roles: [] },
         { name: 'Credit Note', url: '/subscription/credit-note', roles: ['ROLE_ADMIN'] },
         { name: 'Old Invoices', url: '/subscription/old-invoices', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
-        // { name: 'Pause Reminders', url: '/subscription/pause-reminders', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     },
     {
@@ -194,13 +176,6 @@ export class SidebarComponent {
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
-    // {
-    //   name: 'BO-Partners',
-    //   active: true,
-    //   url: '/bo-partners',
-    //   roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
-    //   submenu: []
-    // },
     {
       name: 'Promo-Codes',
       icon: 'promocode.png',
@@ -228,9 +203,7 @@ export class SidebarComponent {
         { name: 'Calling Report', url: '/reports/calling-reports', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
-        // { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
         { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
-        // { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Missed Inbound Calls', url: '/reports/missed-inbound-calls-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
         { name: 'Missed Chat List', url: '/reports/missed-chat-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
       ]
@@ -241,22 +214,17 @@ export class SidebarComponent {
       submenu: [
         { name: 'Proforma Invoice', url: '/reports/proforma-invoice', roles: [] },
         { name: 'Payment Received', url: '/reports/payment-received', roles: [] },
-        // { name: 'TDS Report', url: '/reports/tds-report', roles: [] },
       ]
     },
     {
       name: 'Delete User Request',
-      icon: '/menu/partner.png',
+      icon: 'sme-mgmt.png',
       active: false,
       url: '/delete-user',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
   ];
-
-  // ngDoCheck() {
-  //   // this.showSidebar = NavbarService.getInstance().showSideBar;
-  // }
 
   isApplicable(permissionRoles: any) {
     if (permissionRoles.length === 0) {
@@ -284,7 +252,6 @@ export type Menu = {
   name: string,
   icon: string,
   url: string | null,
-  // iconClass: string,
   active: boolean,
   roles: string[],
   submenu: { name: string, url: string, roles: string[] }[]
