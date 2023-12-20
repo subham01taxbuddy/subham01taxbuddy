@@ -11,8 +11,8 @@
       <form [formGroup]="signUpForm">
         <div class="row">
           <div class="col-sm-12 bckClr" *ngIf="isApplicable(['ROLE_ADMIN'])">
-            <app-sme-list-drop-down (sendLeader)="fromSme($event, true)"
-              (sendPrincipleIndividual)="fromSme($event, false)" [disabled]="assignedToMe">
+            <app-sme-list-drop-down (sendLeader)="fromSme($event, 1)" (sendPrincipleIndividual)="fromSme($event, 2)"
+              (sendFiler)="fromSme($event,3)" [disabled]="assignedToMe">
             </app-sme-list-drop-down>
             <span class="note1 note">
               Note : Service type will be enable after selecting Leader
@@ -38,7 +38,8 @@
             <mat-form-field appearance="outline" class="class1">
               <mat-label>Middle Name</mat-label>
               <input placeholder="Middle Name" type="text" formControlName="middleName" capitalizeFirst matInput>
-              <mat-error class="error-msg" *ngIf="signUpForm.controls['middleName'].hasError('pattern')">Please enter the
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['middleName'].hasError('pattern')">Please enter
+                the
                 valid name.</mat-error>
             </mat-form-field>
           </div>
@@ -110,7 +111,7 @@
               to me!</mat-checkbox>
           </div>
           <div class="col-sm-12 spsTp bdrTp">
-            <button class="rt-btn" (click)="userSignUp()"[disabled]="disableUserSignUp" > User Sign-up </button>
+            <button class="rt-btn" (click)="userSignUp()" [disabled]="disableUserSignUp"> User Sign-up </button>
           </div>
         </div>
       </form>
