@@ -47,6 +47,7 @@ export class SummaryComponent implements OnInit {
   isValidateJson = false;
   natureOfBusinessDropdown = [];
   assetsTypesDropdown = [];
+  natureOfBusinessList: any;
   exemptIncomesDropdown = [
     {
       id: null,
@@ -166,6 +167,8 @@ export class SummaryComponent implements OnInit {
   taxComputation: any;
   keys: any = {};
   finalSummary: any;
+  hpPtiValue: any;
+  passThroughInc: any;
 
   finalCalculations: {
     personalInfo: {
@@ -261,6 +264,7 @@ export class SummaryComponent implements OnInit {
         IntrstSec10XISecondProviso?: any;
         IntrstSec10XIIFirstProviso?: any;
         IntrstSec10XIISecondProviso?: any;
+        giftExemptIncome?: any;
       };
       otherIncomeTotal: number;
     };
@@ -274,6 +278,7 @@ export class SummaryComponent implements OnInit {
             grossTurnover: number;
             TaxableIncome: number;
             description?: any;
+            natureOfBusinessCodeName?: any;
           }
         ];
         business44ADA: [
@@ -284,6 +289,7 @@ export class SummaryComponent implements OnInit {
             grossTurnover: number;
             TaxableIncome: number;
             description?: any;
+            natureOfBusinessCodeName?: any;
           }
         ];
         business44AE?: {
@@ -293,6 +299,7 @@ export class SummaryComponent implements OnInit {
               NameOfBusiness?: any;
               CodeAE?: any;
               description?: any;
+              natureOfBusinessCodeName?: any;
             }
           ];
           GoodsDtlsUs44AE?: [
@@ -504,6 +511,7 @@ export class SummaryComponent implements OnInit {
       lossSetOffDuringYear: Number;
       cflTotal: Number;
     };
+    ScheduleBFLA?: any;
     scheduleCflDetails: {
       LossCFFromPrev12thYearFromAY: {
         dateOfFiling: any;
@@ -523,12 +531,12 @@ export class SummaryComponent implements OnInit {
       };
       LossCFFromPrev8thYearFromAY: {
         dateOfFiling: any;
-        hpLoss: Number;
-        broughtForwardBusLoss: Number;
-        BusLossOthThanSpecifiedLossCF: Number;
-        LossFrmSpecifiedBusCF: Number;
-        stcgLoss: Number;
-        ltcgLoss: Number;
+        hpLoss: any;
+        broughtForwardBusLoss: any;
+        BusLossOthThanSpecifiedLossCF: any;
+        LossFrmSpecifiedBusCF: any;
+        stcgLoss: any;
+        ltcgLoss: any;
       };
       LossCFFromPrev7thYearFromAY: {
         dateOfFiling: any;
@@ -591,6 +599,17 @@ export class SummaryComponent implements OnInit {
         lossFromSpeculativeBus: Number;
       };
       LossCFCurrentAssmntYear: {
+        dateOfFiling: any;
+        hpLoss: Number;
+        broughtForwardBusLoss: Number;
+        BusLossOthThanSpecifiedLossCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        stcgLoss: Number;
+        ltcgLoss: Number;
+        OthSrcLossRaceHorseCF: Number;
+        lossFromSpeculativeBus: Number;
+      };
+      LossCFCurrentAssmntYear2023?: {
         dateOfFiling: any;
         hpLoss: Number;
         broughtForwardBusLoss: Number;
@@ -811,6 +830,7 @@ export class SummaryComponent implements OnInit {
       TotalTaxAttributedAmt?: any;
     };
     SeventhProvisio139?: any;
+    AmtSeventhProvisio139i?: any;
     AmtSeventhProvisio139ii?: any;
     AmtSeventhProvisio139iii?: any;
     clauseiv7provisio139iDtls?: [
@@ -853,11 +873,17 @@ export class SummaryComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.natureOfBusiness = JSON.parse(
+      sessionStorage.getItem('NATURE_OF_BUSINESS')
+    );
+
+    if (!this.natureOfBusiness) {
+      this.getMastersData();
+    }
+
     this.utilsService.smoothScrollToTop();
     this.loading = true;
     this.countryCodeList = this.utilsService.getCountryCodeList();
-    this.calculations();
-
     // Setting the ITR Type in ITR Object and updating the ITR_Type
     if (this.ITR_JSON.itrType === '1') {
       this.itrType = 'ITR1';
@@ -869,8 +895,30 @@ export class SummaryComponent implements OnInit {
       this.itrType = 'ITR4';
     }
 
-    this.natureOfBusiness = JSON.parse(
-      sessionStorage.getItem('NATURE_OF_BUSINESS')
+    this.calculations();
+  }
+
+  getMastersData() {
+    this.loading = true;
+    const param = '/itrmaster';
+    this.itrMsService.getMethod(param).subscribe(
+      (result: any) => {
+        this.loading = false;
+        sessionStorage.setItem('MASTER', JSON.stringify(result));
+        let natureOfBusinessAll = result.natureOfBusiness;
+        this.natureOfBusiness = natureOfBusinessAll;
+        sessionStorage.setItem(
+          'NATURE_OF_BUSINESS',
+          JSON.stringify(natureOfBusinessAll)
+        );
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'Failed to get nature of Business list, please try again.'
+        );
+        this.utilsService.smoothScrollToTop();
+      }
     );
   }
 
@@ -1038,10 +1086,55 @@ export class SummaryComponent implements OnInit {
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                       this.ITR14IncomeDeductions
                     ]?.IncomeFromSal,
-                  exemptAllowances:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                      this.ITR14IncomeDeductions
-                    ]?.AllwncExemptUs10?.AllwncExemptUs10Dtls,
+                  exemptAllowances: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ][
+                    this.ITR14IncomeDeductions
+                  ]?.AllwncExemptUs10?.AllwncExemptUs10Dtls?.map((element) => {
+                    let SalNatureDesc = element?.SalNatureDesc;
+                    let SalOthAmount = element?.SalOthAmount;
+
+                    let description =
+                      SalNatureDesc === '10(5)'
+                        ? 'Sec 10(5)-Leave Travel allowance'
+                        : SalNatureDesc === '10(6)'
+                          ? 'Sec 10(6)-Remuneration received as an official, by whatever name called, of an embassy, high commission etc'
+                          : SalNatureDesc === '10(7)'
+                            ? 'Sec 10(7)-Allowances or perquisites paid or allowed as such outside India by the Government to a citizen of India for rendering service outside India'
+                            : SalNatureDesc === '10(10)'
+                              ? 'Sec 10(10)-Death-cum-retirement gratuity received'
+                              : SalNatureDesc === '10(10A)'
+                                ? 'Sec 10(10A)-Commuted value of pension received'
+                                : SalNatureDesc === '10(10AA)'
+                                  ? 'Sec 10(10AA)-Earned leave encashment'
+                                  : SalNatureDesc === '10(10B)(i)'
+                                    ? 'Sec 10(10B)-First proviso - Compensation limit notified by CG in the Official Gazette'
+                                    : SalNatureDesc === '10(10B)(ii)'
+                                      ? 'Sec 10(10B)-Second proviso - Compensation under scheme approved by the Central Government'
+                                      : SalNatureDesc === '10(10C)'
+                                        ? 'Sec 10(10C)-Amount received on voluntary retirement or termination of service'
+                                        : SalNatureDesc === '10(10CC)'
+                                          ? 'Sec 10(10CC)-Tax paid by employer on non-monetary perquisite'
+                                          : SalNatureDesc === '10(13A)'
+                                            ? 'Sec 10(13A)-House Rent Allowance'
+                                            : SalNatureDesc === '10(14)(i)'
+                                              ? 'Sec 10(14)-Allowances or benefits not in a nature of perquisite specifically granted and incurred in performance of duties of office or employment'
+                                              : SalNatureDesc === '10(14)(ii)'
+                                                ? 'Sec 10(14)-Allowances or benefits not in a nature of perquisite specifically granted in performance of duties of office or employment'
+                                                : SalNatureDesc === '10(14)(i)(115BAC)'
+                                                  ? 'Sec 10(14)(i) -Allowances referred in sub-clauses (a) to (c) of sub-rule (1) in Rule 2BB'
+                                                  : SalNatureDesc === '10(14)(ii)(115BAC)'
+                                                    ? 'Sec 10(14)(ii) -Transport allowance granted to certain physically handicapped assessee'
+                                                    : SalNatureDesc === 'EIC'
+                                                      ? 'Exempt income received by a judge covered under the payment of salaries to Supreme Court/High Court judges Act /Rules'
+                                                      : SalNatureDesc === 'OTH'
+                                                        ? 'Any Other'
+                                                        : 'Others';
+                    return {
+                      SalNatureDesc: description,
+                      SalOthAmount,
+                    };
+                  }),
                 },
               ],
               salaryTotalIncome:
@@ -1211,6 +1304,11 @@ export class SummaryComponent implements OnInit {
                     natureOfBusinessCode: element?.CodeAD,
                     tradeName: element?.NameOfBusiness,
                     description: element?.Description,
+                    natureOfBusinessCodeName: this.natureOfBusiness?.find(
+                      (item) => {
+                        return item?.code === element?.CodeAD;
+                      }
+                    )?.label,
                     grossTurnover:
                       parseFloat(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
@@ -1250,6 +1348,11 @@ export class SummaryComponent implements OnInit {
                     natureOfBusinessCode: element?.CodeADA,
                     tradeName: element?.NameOfBusiness,
                     description: element?.Description,
+                    natureOfBusinessCodeName: this.natureOfBusiness?.find(
+                      (item) => {
+                        return item?.code === element?.CodeADA;
+                      }
+                    )?.label,
                     grossTurnover:
                       parseFloat(
                         this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
@@ -1281,6 +1384,11 @@ export class SummaryComponent implements OnInit {
                       NameOfBusiness: element?.NameOfBusiness,
                       CodeAE: element?.CodeAE,
                       description: element?.Description,
+                      natureOfBusinessCodeName: this.natureOfBusiness?.find(
+                        (item) => {
+                          return item?.code === element?.CodeAE;
+                        }
+                      )?.label,
                     };
                   }),
 
@@ -2220,6 +2328,9 @@ export class SummaryComponent implements OnInit {
             SeventhProvisio139:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
                 ?.SeventhProvisio139,
+            AmtSeventhProvisio139i:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139i,
             AmtSeventhProvisio139ii:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
                 ?.AmtSeventhProvisio139ii,
@@ -2443,8 +2554,55 @@ export class SummaryComponent implements OnInit {
 
                 let exemptAllowances =
                   index === higherEmployerIndex
-                    ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls
+                    ? this.ITR_JSON.itrSummaryJson['ITR'][
+                      this.itrType
+                    ]?.ScheduleS?.AllwncExemptUs10?.AllwncExemptUs10Dtls?.map(
+                      (element) => {
+                        let SalNatureDesc = element?.SalNatureDesc;
+                        let SalOthAmount = element?.SalOthAmount;
+
+                        let description =
+                          SalNatureDesc === '10(5)'
+                            ? 'Sec 10(5)-Leave Travel allowance'
+                            : SalNatureDesc === '10(6)'
+                              ? 'Sec 10(6)-Remuneration received as an official, by whatever name called, of an embassy, high commission etc'
+                              : SalNatureDesc === '10(7)'
+                                ? 'Sec 10(7)-Allowances or perquisites paid or allowed as such outside India by the Government to a citizen of India for rendering service outside India'
+                                : SalNatureDesc === '10(10)'
+                                  ? 'Sec 10(10)-Death-cum-retirement gratuity received'
+                                  : SalNatureDesc === '10(10A)'
+                                    ? 'Sec 10(10A)-Commuted value of pension received'
+                                    : SalNatureDesc === '10(10AA)'
+                                      ? 'Sec 10(10AA)-Earned leave encashment'
+                                      : SalNatureDesc === '10(10B)(i)'
+                                        ? 'Sec 10(10B)-First proviso - Compensation limit notified by CG in the Official Gazette'
+                                        : SalNatureDesc === '10(10B)(ii)'
+                                          ? 'Sec 10(10B)-Second proviso - Compensation under scheme approved by the Central Government'
+                                          : SalNatureDesc === '10(10C)'
+                                            ? 'Sec 10(10C)-Amount received on voluntary retirement or termination of service'
+                                            : SalNatureDesc === '10(10CC)'
+                                              ? 'Sec 10(10CC)-Tax paid by employer on non-monetary perquisite'
+                                              : SalNatureDesc === '10(13A)'
+                                                ? 'Sec 10(13A)-House Rent Allowance'
+                                                : SalNatureDesc === '10(14)(i)'
+                                                  ? 'Sec 10(14)-Allowances or benefits not in a nature of perquisite specifically granted and incurred in performance of duties of office or employment'
+                                                  : SalNatureDesc === '10(14)(ii)'
+                                                    ? 'Sec 10(14)-Allowances or benefits not in a nature of perquisite specifically granted in performance of duties of office or employment'
+                                                    : SalNatureDesc === '10(14)(i)(115BAC)'
+                                                      ? 'Sec 10(14)(i) -Allowances referred in sub-clauses (a) to (c) of sub-rule (1) in Rule 2BB'
+                                                      : SalNatureDesc === '10(14)(ii)(115BAC)'
+                                                        ? 'Sec 10(14)(ii) -Transport allowance granted to certain physically handicapped assessee'
+                                                        : SalNatureDesc === 'EIC'
+                                                          ? 'Exempt income received by a judge covered under the payment of salaries to Supreme Court/High Court judges Act /Rules'
+                                                          : SalNatureDesc === 'OTH'
+                                                            ? 'Any Other'
+                                                            : 'Others';
+                        return {
+                          SalNatureDesc: description,
+                          SalOthAmount,
+                        };
+                      }
+                    )
                     : 0;
 
                 // salary 17 1
@@ -2725,7 +2883,9 @@ export class SummaryComponent implements OnInit {
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.IncomeNotifiedPrYr89AOS -
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS,
+                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS -
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.Tot562x,
 
                 dividendIncome:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
@@ -2799,6 +2959,10 @@ export class SummaryComponent implements OnInit {
                   (total, element) => total + (element.SourceAmount || 0),
                   0
                 ),
+
+                giftExemptIncome:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Tot562x,
               },
 
               otherIncomeTotal:
@@ -2817,6 +2981,11 @@ export class SummaryComponent implements OnInit {
                         natureOfBusinessCode: element?.CodeAD,
                         tradeName: element?.NameOfBusiness,
                         description: element?.Description,
+                        natureOfBusinessCodeName: this.natureOfBusiness?.find(
+                          (item) => {
+                            return item?.code === element?.CodeAD;
+                          }
+                        )?.label,
                         grossTurnover:
                           parseFloat(
                             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
@@ -2859,6 +3028,11 @@ export class SummaryComponent implements OnInit {
                         natureOfBusinessCode: element?.CodeADA,
                         tradeName: element?.NameOfBusiness,
                         description: element?.Description,
+                        natureOfBusinessCodeName: this.natureOfBusiness?.find(
+                          (item) => {
+                            return item?.code === element?.CodeADA;
+                          }
+                        )?.label,
                         grossTurnover:
                           parseFloat(
                             this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
@@ -2889,6 +3063,42 @@ export class SummaryComponent implements OnInit {
                         TaxableIncome: null,
                       },
                     ],
+
+                business44AE: {
+                  businessDetails: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ].PARTA_PL?.NatOfBus44AE?.map((element) => {
+                    return {
+                      businessSection: 'Section 44AE',
+                      NameOfBusiness: element?.NameOfBusiness,
+                      CodeAE: element?.CodeAE,
+                      description: element?.Description,
+                      natureOfBusinessCodeName: this.natureOfBusiness?.find(
+                        (item) => {
+                          return item?.code === element?.CodeAE;
+                        }
+                      )?.label,
+                    };
+                  }),
+
+                  GoodsDtlsUs44AE: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ].PARTA_PL?.GoodsDtlsUs44AE?.map((element) => ({
+                    RegNumberGoodsCarriage: element?.RegNumberGoodsCarriage,
+                    OwnedLeasedHiredFlag: element?.OwnedLeasedHiredFlag,
+                    TonnageCapacity: element?.TonnageCapacity,
+                    HoldingPeriod: element?.HoldingPeriod,
+                    PresumptiveIncome: element?.PresumptiveIncome,
+                  })),
+
+                  totalPresInc: this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ].PARTA_PL?.GoodsDtlsUs44AE?.reduce(
+                    (total, element) =>
+                      total + (element.PresumptiveIncome || 0),
+                    0
+                  ),
+                },
 
                 nonSpecIncome:
                   this.itrType === 'ITR3'
@@ -3334,6 +3544,10 @@ export class SummaryComponent implements OnInit {
               lossSetOffDuringYear: 0,
               cflTotal: 0,
             },
+
+            ScheduleBFLA:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleBFLA,
+
             scheduleCflDetails: {
               LossCFFromPrev12thYearFromAY: {
                 dateOfFiling:
@@ -3642,6 +3856,44 @@ export class SummaryComponent implements OnInit {
                 lossFromSpeculativeBus:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
                     ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossFrmSpecBusCF,
+              },
+              LossCFCurrentAssmntYear2023: {
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.DateOfFiling,
+                hpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.TotalHPPTILossCF,
+                broughtForwardBusLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.BrtFwdBusLoss,
+                BusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.BusLossOthThanSpecLossCF,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.LossFrmSpecifiedBusCF,
+                stcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.TotalSTCGPTILossCF,
+                ltcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.TotalLTCGPTILossCF,
+                OthSrcLossRaceHorseCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.OthSrcLossRaceHorseCF,
+                lossFromSpeculativeBus:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.LossFrmSpecBusCF,
               },
               TotalOfBFLossesEarlierYrs: {
@@ -4183,6 +4435,57 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.Refund?.RefundDue,
 
+            SeventhProvisio139:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.SeventhProvisio139,
+            AmtSeventhProvisio139i:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139i,
+            AmtSeventhProvisio139ii:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139ii,
+            AmtSeventhProvisio139iii:
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.FilingStatus
+                ?.AmtSeventhProvisio139iii,
+            clauseiv7provisio139iDtls: this.ITR_JSON.itrSummaryJson['ITR'][
+              this.itrType
+            ]?.FilingStatus?.clauseiv7provisio139iDtls?.map((element) => {
+              const natureValue: any = parseFloat(
+                element?.clauseiv7provisio139iNature
+              );
+              const clauseiv7provisio139iAmount =
+                element?.clauseiv7provisio139iAmount;
+              let clauseiv7provisio139iNature;
+              if (this.itrType === 'ITR3') {
+                if (natureValue === 1) {
+                  clauseiv7provisio139iNature =
+                    'total sales, turnover or gross receipts, as the case may be, of the person in the business exceeds sixty lakh rupees during the previous year';
+                } else if (natureValue === 2) {
+                  clauseiv7provisio139iNature =
+                    'the total gross receipts of the person in profession exceeds ten lakh rupees during the previous year';
+                } else if (natureValue === 3) {
+                  clauseiv7provisio139iNature =
+                    'the aggregate of tax deducted at source and tax collected at source during the previous year, in the case of the person, is twenty-five thousand rupees or more';
+                } else if (natureValue === 4) {
+                  clauseiv7provisio139iNature =
+                    'if his total deposits in a savings bank account is fifty lakh rupees or more, in the previous year';
+                }
+              } else if (this.itrType === 'ITR2') {
+                if (natureValue === 1) {
+                  clauseiv7provisio139iNature =
+                    'the aggregate of tax deducted at source and tax collected at source during the previous year, in the case of the person, is twenty-five thousand rupees or more(fifty thousand for resident senior citizen)';
+                } else if (natureValue === 2) {
+                  clauseiv7provisio139iNature =
+                    'the deposit in one or more savings bank account of the person, in aggregate, is fifty lakh rupees or more, in the previous year';
+                }
+              }
+
+              return {
+                clauseiv7provisio139iNature: clauseiv7provisio139iNature,
+                clauseiv7provisio139iAmount: clauseiv7provisio139iAmount,
+              };
+            }),
+
             ScheduleAMT: {
               TotalIncItemPartBTI:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleAMT
@@ -4362,6 +4665,12 @@ export class SummaryComponent implements OnInit {
               ],
               total: 0,
             },
+
+            giftExemptIncome: this.ITR_JSON.itrSummaryJson['ITR'][
+              this.itrType
+            ]?.ScheduleEI?.OthersInc?.OthersIncDtls?.find(
+              (item) => item.OthNatOfInc === 'Gift U/S 56(2)(X)'
+            )?.OthAmount,
           };
           console.log(
             this.finalCalculations,
@@ -4405,6 +4714,8 @@ export class SummaryComponent implements OnInit {
                 : null,
           };
           console.log(this.keys, 'this.keys ITR2&3');
+          this.calculateTotalNetIncomeLoss();
+          this.calculatePassThroughInc();
           this.loading = false;
         }
       } else {
@@ -6473,25 +6784,33 @@ export class SummaryComponent implements OnInit {
 
   checkFilerAssignment() {
     // https://uat-api.taxbuddy.com/user/check-filer-assignment?userId=16387&assessmentYear=2023-2024&serviceType=ITR
-    let param = `/check-filer-assignment?userId=${this.ITR_JSON.userId}`
-    this.userMsService.getMethod(param).subscribe((response: any) => {
-      this.loading = false;
-      if (response.success) {
-        if (response.data.filerAssignmentStatus === 'FILER_ASSIGNED') {
-          if (confirm('Are you sure you want to file the ITR?')) {
-            this.fileITR();
+    let param = `/check-filer-assignment?userId=${this.ITR_JSON.userId}`;
+    this.userMsService.getMethod(param).subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          if (response.data.filerAssignmentStatus === 'FILER_ASSIGNED') {
+            if (confirm('Are you sure you want to file the ITR?')) {
+              this.fileITR();
+            }
+          } else {
+            this.utilsService.showSnackBar(
+              'Please make sure that filer assignment should be done before ITR filing.'
+            );
           }
         } else {
-          this.utilsService.showSnackBar('Please make sure that filer assignment should be done before ITR filing.');
+          this.utilsService.showSnackBar(
+            'Please make sure that filer assignment should be done before ITR filing.'
+          );
         }
-      } else {
-        this.utilsService.showSnackBar('Please make sure that filer assignment should be done before ITR filing.');
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'Please make sure that filer assignment should be done before ITR filing.'
+        );
       }
-    }, (error) => {
-      this.loading = false;
-      this.utilsService.showSnackBar('Please make sure that filer assignment should be done before ITR filing.');
-    })
-
+    );
   }
 
   fileITR() {
@@ -6631,7 +6950,7 @@ export class SummaryComponent implements OnInit {
     let total = 0;
     if (this.ITR_JSON.exemptIncomes?.length > 0) {
       for (let i = 0; i < this.ITR_JSON.exemptIncomes?.length; i++) {
-        total = total + this.ITR_JSON.exemptIncomes[i].amount;
+        total = parseFloat(total + this.ITR_JSON.exemptIncomes[i].amount);
       }
     }
     return total;
@@ -6747,6 +7066,40 @@ export class SummaryComponent implements OnInit {
     event.stopPropagation();
     this.profitsInLieuBifurcationExpanded[index] =
       !this.profitsInLieuBifurcationExpanded[index];
+  }
+
+  ptiShortTermExpanded: boolean[] = [];
+  rowspanValue: any;
+  togglePtiShortTerm(event: Event, index: number) {
+    event.stopPropagation();
+    this.ptiShortTermExpanded[index] = !this.ptiShortTermExpanded[index];
+    this.rowspanValue = !this.ptiShortTermExpanded[index] ? 3 : 1;
+  }
+
+  ptiLongTermExpanded: boolean[] = [];
+  rowspanLtcgValue: any;
+  togglePtiLongTerm(event: Event, index: number) {
+    event.stopPropagation();
+    this.ptiLongTermExpanded[index] = !this.ptiLongTermExpanded[index];
+    this.rowspanLtcgValue = !this.ptiShortTermExpanded[index] ? 3 : 1;
+  }
+
+  calculateTotalNetIncomeLoss() {
+    const details = this.finalCalculations?.SchedulePTI?.SchedulePTIDtls || [];
+    if (details && details.length > 0) {
+      this.hpPtiValue = details
+        ?.map((detail) => detail?.IncFromHP?.NetIncomeLoss || 0)
+        ?.reduce((total, value) => total + value, 0);
+    }
+  }
+
+  calculatePassThroughInc() {
+    const details = this.finalCalculations?.SchedulePTI?.SchedulePTIDtls || [];
+    if (details && details.length > 0) {
+      this.passThroughInc = details
+        ?.map((detail) => detail?.IncClmdPTI?.TotalSec23FBB?.NetIncomeLoss || 0)
+        ?.reduce((total, value) => total + value, 0);
+    }
   }
 }
 
