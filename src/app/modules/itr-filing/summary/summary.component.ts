@@ -264,7 +264,6 @@ export class SummaryComponent implements OnInit {
         IntrstSec10XISecondProviso?: any;
         IntrstSec10XIIFirstProviso?: any;
         IntrstSec10XIISecondProviso?: any;
-        giftExemptIncome?: any;
       };
       otherIncomeTotal: number;
     };
@@ -2887,7 +2886,16 @@ export class SummaryComponent implements OnInit {
                   (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS || 0) -
                   (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.Tot562x || 0),
+                    ?.IncOthThanOwnRaceHorse?.Aggrtvaluewithoutcons562x || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Immovpropwithoutcons562x || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Immovpropinadeqcons562x || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Anyotherpropwithoutcons562x ||
+                    0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Anyotherpropinadeqcons562x || 0),
 
                 dividendIncome:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
@@ -2977,10 +2985,6 @@ export class SummaryComponent implements OnInit {
                 anyOtherPropertyInadequateConsideration:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.Anyotherpropwithoutcons562x,
-
-                giftExemptIncome:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.Tot562x,
               },
 
               otherIncomeTotal:

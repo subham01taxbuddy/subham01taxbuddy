@@ -3321,27 +3321,6 @@
                             </td>
                           </tr>
 
-                          <tr
-                            *ngIf="
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.giftExemptIncome &&
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.giftExemptIncome > 0
-                            "
-                          >
-                            <td>Gift u/s 56(2)(x)</td>
-                            <td class="">
-                              <i class="material-icons" style="font-size: 15px"
-                                >₹</i
-                              >&nbsp;{{
-                                utilsService.currencyFormatter(
-                                  finalCalculations?.otherIncome?.otherIncomes
-                                    ?.giftExemptIncome
-                                )
-                              }}
-                            </td>
-                          </tr>
-
                           <tr>
                             <th>Total</th>
                             <th>
@@ -9947,12 +9926,10 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 keys.ExemptIncAgriOthUs10Total
-                                  ? (keys?.ExemptIncAgriOthUs10Total || 0) +
-                                    (finalCalculations?.giftExemptIncome || 0)
+                                  ? (keys?.ExemptIncAgriOthUs10Total || 0) 
                                   : getExemptIncomeTotal() +
                                     (finalCalculations?.exemptIncome?.total ||
-                                      0) +
-                                    (finalCalculations?.giftExemptIncome || 0)
+                                      0) 
                               }}
                             </label>
                           </div>
