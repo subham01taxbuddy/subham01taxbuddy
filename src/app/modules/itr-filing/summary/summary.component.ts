@@ -1222,34 +1222,34 @@ export class SummaryComponent implements OnInit {
                 Qqb80: null,
                 Rrb80: null,
                 anyOtherInterest:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ]?.IncomeOthSrc -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  ]?.IncomeOthSrc || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val?.OthSrcNatureDesc === 'SAV'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  )?.OthSrcOthAmount || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val?.OthSrcNatureDesc === 'IFD'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  )?.OthSrcOthAmount || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val?.OthSrcNatureDesc === 'TAX'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  )?.OthSrcOthAmount || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val.OthSrcNatureDesc === 'FAP'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  )?.OthSrcOthAmount || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val?.OthSrcNatureDesc === 'DIV'
-                  )?.OthSrcOthAmount,
+                  )?.OthSrcOthAmount || 0),
 
                 dividendIncome: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -2865,29 +2865,29 @@ export class SummaryComponent implements OnInit {
                 Rrb80: null,
 
                 anyOtherInterest:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncChargeable -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IntrstFrmSavingBank -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IntrstFrmTermDeposit -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IntrstFrmIncmTaxRefund -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.DividendGross -
                   (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.FamilyPension -
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.IncChargeable || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstFrmSavingBank || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstFrmTermDeposit || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstFrmIncmTaxRefund || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.DividendGross || 0) -
+                  ((this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleOS?.IncOthThanOwnRaceHorse?.FamilyPension || 0) -
+                    (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                       ?.ScheduleOS?.IncOthThanOwnRaceHorse?.Deductions
-                      ?.DeductionUs57iia) -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncFromOwnHorse?.BalanceOwnRaceHorse -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedPrYr89AOS -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.Tot562x,
+                      ?.DeductionUs57iia || 0)) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncFromOwnHorse?.BalanceOwnRaceHorse || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedPrYr89AOS || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.Tot562x || 0),
 
                 dividendIncome:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
@@ -7178,35 +7178,50 @@ export class SummaryComponent implements OnInit {
       if (element === 'TotalCurYr') {
         arrayToBeReturned.push({
           headOfIncome: element,
-          HP: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
-            element
-          ]?.TotHPlossCurYr || 0,
-          BUS: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            ?.ScheduleCYLA?.[element]?.TotBusLoss || 0,
-          OTH: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            ?.ScheduleCYLA?.[element]?.TotOthSrcLossNoRaceHorse || 0,
+          HP:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotHPlossCurYr || 0,
+          BUS:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotBusLoss || 0,
+          OTH:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotOthSrcLossNoRaceHorse || 0,
         });
       } else if ('TotalLossSetOff') {
         arrayToBeReturned.push({
           headOfIncome: element,
-          HP: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
-            element
-          ]?.TotHPlossCurYrSetoff || 0,
-          BUS: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            ?.ScheduleCYLA?.[element]?.TotBusLossSetoff || 0,
-          OTH: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            ?.ScheduleCYLA?.[element]?.TotOthSrcLossNoRaceHorseSetoff || 0,
+          HP:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotHPlossCurYrSetoff || 0,
+          BUS:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotBusLossSetoff || 0,
+          OTH:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotOthSrcLossNoRaceHorseSetoff || 0,
         });
       } else if ('LossRemAftSetOff') {
         arrayToBeReturned.push({
           headOfIncome: element,
-          HP: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
-            element
-          ]?.BalHPlossCurYrAftSetoff || 0,
-          BUS: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            ?.ScheduleCYLA?.[element]?.BalBusLossAftSetoff || 0,
-          OTH: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            ?.ScheduleCYLA?.[element]?.BalOthSrcLossNoRaceHorseAftSetoff || 0,
+          HP:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.BalHPlossCurYrAftSetoff || 0,
+          BUS:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.BalBusLossAftSetoff || 0,
+          OTH:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.BalOthSrcLossNoRaceHorseAftSetoff || 0,
         });
       }
     });
