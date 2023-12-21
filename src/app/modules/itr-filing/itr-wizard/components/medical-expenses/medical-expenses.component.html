@@ -201,8 +201,7 @@
                     aria-label="Select an option"
                     [(ngModel)]="selected80dd"
                     [ngModelOptions]="{ standalone: true }"
-                    (change)="radioChange80dd(true)"
-            >
+                    (change)="radioChange80dd(true)">
               <mat-radio-button value="">None</mat-radio-button><br /><br />
               <mat-radio-button value="DEPENDENT_PERSON_WITH_DISABILITY"
               >Dependent person with disability </mat-radio-button
@@ -256,13 +255,13 @@
                 <input
                         matInput
                         type="number"
-                        placeholder="Up to {{ maxLimit80ddb }}"
+                        placeholder=" {{ maxLimit80ddb > 0 ? 'Up to ' + maxLimit80ddb : '' }}"
                         maxlength="8"
                         formControlName="us80ddb"
                         autocomplete="off"
                         digitsOnly
                 />
-                <mat-hint>Upto {{ maxLimit80ddb }}</mat-hint>
+                <mat-hint>{{ maxLimit80ddb > 0 ? 'Up to ' + maxLimit80ddb : '' }}</mat-hint>
                 <mat-error
                         *ngIf="investmentDeductionForm.controls['us80ddb'].hasError('max')">
                   Max limit is {{ maxLimit80ddb }}

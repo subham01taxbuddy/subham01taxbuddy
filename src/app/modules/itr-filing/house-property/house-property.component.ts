@@ -139,6 +139,10 @@ export class HousePropertyComponent implements OnInit {
     this.updateHpTaxaxbleIncome();
   }
 
+  getPropertyTypeLabel(){
+    return this.propertyTypeDropdown.filter(prop =>
+        prop.value === this.housePropertyForm.controls['propertyType'].value)[0].label;
+  }
   updateHpTaxaxbleIncome(save?) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // Loop through each index in the ITR_JSON.employers array
