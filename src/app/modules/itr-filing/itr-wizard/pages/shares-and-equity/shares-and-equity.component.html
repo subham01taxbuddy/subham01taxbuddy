@@ -321,11 +321,8 @@
                     INNOTREQUIRD</mat-hint
                   >
                   <mat-error
-                          *ngIf="
-                  selectedFormGroup.get('nameOfTheUnits').hasError('pattern')
-                "
-                  >Enter valid amount.</mat-error
-                  >
+                          *ngIf="selectedFormGroup.get('nameOfTheUnits').hasError('pattern')">
+                    Enter valid amount.</mat-error>
                 </mat-form-field>
               </div>
               <div class="form-field">
@@ -341,27 +338,15 @@
                           readonly
                           [matDatepicker]="sellDate"
                           placeholder="DD/MM/YYYY"
-                          (dateChange)="
-                    calculateGainTypeOrIndexCost(
-                      selectedFormGroup
-                    );
-                    calculateTotalCG(selectedFormGroup);
-                    calMaxPurchaseDate(selectedFormGroup.get('sellDate').value)
-                  "
-                  />
-                  <mat-datepicker-toggle
-                          matSuffix
-                          [for]="sellDate"
-                  ></mat-datepicker-toggle>
+                          (dateChange)="calculateGainTypeOrIndexCost(selectedFormGroup);
+                          calculateTotalCG(selectedFormGroup);
+                          calMaxPurchaseDate(selectedFormGroup.get('sellDate').value)"/>
+                  <mat-datepicker-toggle matSuffix [for]="sellDate"></mat-datepicker-toggle>
                   <mat-datepicker #sellDate> </mat-datepicker>
-                  <mat-error
-                          *ngIf="selectedFormGroup.get('sellDate').hasError('required')"
-                  >
+                  <mat-error *ngIf="selectedFormGroup.get('sellDate').hasError('required')">
                     Enter valid Date.
                   </mat-error>
-                  <mat-error
-                          *ngIf="selectedFormGroup.get('sellDate').hasError('dateOrder')"
-                  >
+                  <mat-error *ngIf="selectedFormGroup.get('sellDate').hasError('dateOrder')">
                     Sale date must be after purchase date.
                   </mat-error>
                 </mat-form-field>
