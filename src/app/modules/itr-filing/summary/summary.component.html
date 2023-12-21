@@ -3432,9 +3432,73 @@
                         </div>
                       </div>
                     </mat-expansion-panel-header>
+                    <!-- summary json uploaded -->
                     <table
                       class="table table-bordered table-striped table-hover"
                       style="margin-top: 20px"
+                      *ngIf="
+                        !ITR_JSON.isItrSummaryJsonEdited &&
+                        ITR_JSON.itrSummaryJson
+                      "
+                    >
+                      <tbody>
+                        <tr>
+                          <td><b>Head/Source of Income</b></td>
+                          <td><b>Income of current year</b></td>
+                          <td>
+                            <b
+                              >House Property loss of the current year set
+                              off</b
+                            >
+                          </td>
+                          <td>
+                            <b>Business loss of the current year set off</b>
+                          </td>
+                          <td>
+                            <b
+                              >Other source loss excluding race horse of the
+                              current year set off</b
+                            >
+                          </td>
+                          <td>
+                            <b>Current years Income remaining after set off</b>
+                          </td>
+                        </tr>
+
+                        <tr
+                          *ngFor="
+                            let currentYearLoss of finalCalculations
+                              ?.currentYearLosses?.currentYearLossesSetOff;
+                            let i = index
+                          "
+                        >
+                        <td>
+                          {{ currentYearLoss?.headOfIncome }}
+                        </td>
+                        <td>
+                            {{ currentYearLoss?.currentYearInc }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.houseProperty }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.businessSetOff }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.otherThanHpBusiness }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.IncOfCurYrAfterSetOff }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <!-- if json not uploaded -->
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      style="margin-top: 20px"
+                      *ngIf="!ITR_JSON.itrSummaryJson"
                     >
                       <tbody>
                         <tr>

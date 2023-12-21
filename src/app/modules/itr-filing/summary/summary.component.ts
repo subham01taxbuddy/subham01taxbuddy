@@ -462,13 +462,14 @@ export class SummaryComponent implements OnInit {
 
     totalHeadWiseIncome: number;
     currentYearLosses: {
-      currentYearLossesSetOff: [
-        {
-          houseProperty: number;
-          businessSetOff: number;
-          otherThanHpBusiness: number;
-        }
-      ];
+      currentYearLossesSetOff: {
+        headOfIncome?: any;
+        currentYearInc?: any;
+        houseProperty: number;
+        businessSetOff: number;
+        otherThanHpBusiness: number;
+        IncOfCurYrAfterSetOff?: any;
+      }[];
       totalCurrentYearSetOff: number;
     };
     balanceAfterSetOffCurrentYearLosses: number;
@@ -3117,9 +3118,9 @@ export class SummaryComponent implements OnInit {
                 },
 
                 nonSpecIncome:
-                  this.itrType === 'ITR3' && this.ITR_JSON.itrSummaryJson['ITR'][
-                    this.itrType
-                  ]?.TradingAccount?.OtherOperatingRevenueDtls
+                  this.itrType === 'ITR3' &&
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.TradingAccount?.OtherOperatingRevenueDtls
                     ? {
                         businessSection: 'Non-Speculative Income',
                         natureOfBusinessCode: 'nonSpec',
@@ -3135,15 +3136,19 @@ export class SummaryComponent implements OnInit {
                             ?.TradingAccount?.GrossProfitFrmBusProf,
                       }
                     : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    ?.TradingAccount?.GrossProfitFrmBusProf ? {
+                        ?.TradingAccount?.GrossProfitFrmBusProf
+                    ? {
                         businessSection: 'Non-Speculative Income',
                         natureOfBusinessCode: 'nonSpec',
                         tradeName: 'Non-Speculative Income',
-                        grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.TradingAccount?.TardingAccTotCred,
-                        TaxableIncome: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.TradingAccount?.GrossProfitFrmBusProf,
-                      } : {
+                        grossTurnover:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.TradingAccount?.TardingAccTotCred,
+                        TaxableIncome:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.TradingAccount?.GrossProfitFrmBusProf,
+                      }
+                    : {
                         businessSection: null,
                         natureOfBusinessCode: null,
                         tradeName: null,
@@ -3437,19 +3442,108 @@ export class SummaryComponent implements OnInit {
             // Need to set losses for uploadedJson
             currentYearLosses: {
               currentYearLossesSetOff: [
+                // salary
                 {
+                  headOfIncome: 'Salary',
+                  currentYearInc:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.Salary?.IncCYLA
+                      ?.IncOfCurYrUnderThatHead || 0,
                   houseProperty:
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.TotalLossSetOff?.TotHPlossCurYrSetoff,
+                      ?.ScheduleCYLA?.Salary?.IncCYLA?.HPlossCurYrSetoff || 0,
                   businessSetOff:
                     this.itrType === 'ITR3'
                       ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleCYLA?.TotalLossSetOff?.TotBusLossSetoff
+                          ?.ScheduleCYLA?.Salary?.IncCYLA?.BusLossSetoff || 0
                       : 0,
                   otherThanHpBusiness:
                     this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.TotalLossSetOff
-                      ?.TotOthSrcLossNoRaceHorseSetoff,
+                      ?.ScheduleCYLA?.Salary?.IncCYLA
+                      ?.OthSrcLossNoRaceHorseSetoff || 0,
+
+                  IncOfCurYrAfterSetOff:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.Salary?.IncCYLA?.IncOfCurYrAfterSetOff ||
+                    0,
+                },
+                // HP
+                {
+                  headOfIncome: 'House Property',
+                  currentYearInc:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.HP?.IncCYLA?.IncOfCurYrUnderThatHead || 0,
+                  houseProperty:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.HP?.IncCYLA?.HPlossCurYrSetoff || 0,
+                  businessSetOff:
+                    this.itrType === 'ITR3'
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.ScheduleCYLA?.HP?.IncCYLA?.BusLossSetoff || 0
+                      : 0,
+                  otherThanHpBusiness:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.HP?.IncCYLA
+                      ?.OthSrcLossNoRaceHorseSetoff || 0,
+                  IncOfCurYrAfterSetOff:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.HP?.IncCYLA?.IncOfCurYrAfterSetOff || 0,
+                },
+                // business profesion excluding speculative inc
+                {
+                  headOfIncome:
+                    'Business or Profession excluding Speculative Inc',
+                  currentYearInc:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.BusProfExclSpecProf?.IncCYLA
+                      ?.IncOfCurYrUnderThatHead || 0,
+                  houseProperty:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.BusProfExclSpecProf?.IncCYLA
+                      ?.HPlossCurYrSetoff || 0,
+                  businessSetOff:
+                    this.itrType === 'ITR3'
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.ScheduleCYLA?.BusProfExclSpecProf?.IncCYLA
+                          ?.BusLossSetoff || 0
+                      : 0,
+                  otherThanHpBusiness:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.BusProfExclSpecProf?.IncCYLA
+                      ?.OthSrcLossNoRaceHorseSetoff || 0,
+
+                  IncOfCurYrAfterSetOff:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.BusProfExclSpecProf?.IncCYLA
+                      ?.IncOfCurYrAfterSetOff || 0,
+                },
+
+                // speculative inc
+                {
+                  headOfIncome: 'Speculative Income',
+                  currentYearInc:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.SpeculativeInc?.IncCYLA
+                      ?.IncOfCurYrUnderThatHead || 0,
+                  houseProperty:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.SpeculativeInc?.IncCYLA
+                      ?.HPlossCurYrSetoff || 0,
+                  businessSetOff:
+                    this.itrType === 'ITR3'
+                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                          ?.ScheduleCYLA?.SpeculativeInc?.IncCYLA
+                          ?.BusLossSetoff || 0
+                      : 0,
+                  otherThanHpBusiness:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.SpeculativeInc?.IncCYLA
+                      ?.OthSrcLossNoRaceHorseSetoff || 0,
+
+                  IncOfCurYrAfterSetOff:
+                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.ScheduleCYLA?.SpeculativeInc?.IncCYLA
+                      ?.IncOfCurYrAfterSetOff || 0,
                 },
               ],
               totalCurrentYearSetOff:
