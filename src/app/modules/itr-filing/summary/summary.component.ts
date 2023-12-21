@@ -470,6 +470,7 @@ export class SummaryComponent implements OnInit {
         otherThanHpBusiness: number;
         IncOfCurYrAfterSetOff?: any;
       }[];
+      totals?: any[];
       totalCurrentYearSetOff: number;
     };
     balanceAfterSetOffCurrentYearLosses: number;
@@ -3440,112 +3441,10 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                 ?.TotalTI,
             // Need to set losses for uploadedJson
+
             currentYearLosses: {
-              currentYearLossesSetOff: [
-                // salary
-                {
-                  headOfIncome: 'Salary',
-                  currentYearInc:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.Salary?.IncCYLA
-                      ?.IncOfCurYrUnderThatHead || 0,
-                  houseProperty:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.Salary?.IncCYLA?.HPlossCurYrSetoff || 0,
-                  businessSetOff:
-                    this.itrType === 'ITR3'
-                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          ?.ScheduleCYLA?.Salary?.IncCYLA?.BusLossSetoff || 0
-                      : 0,
-                  otherThanHpBusiness:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.Salary?.IncCYLA
-                      ?.OthSrcLossNoRaceHorseSetoff || 0,
-
-                  IncOfCurYrAfterSetOff:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.Salary?.IncCYLA?.IncOfCurYrAfterSetOff ||
-                    0,
-                },
-                // HP
-                {
-                  headOfIncome: 'House Property',
-                  currentYearInc:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.HP?.IncCYLA?.IncOfCurYrUnderThatHead || 0,
-                  houseProperty:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.HP?.IncCYLA?.HPlossCurYrSetoff || 0,
-                  businessSetOff:
-                    this.itrType === 'ITR3'
-                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          ?.ScheduleCYLA?.HP?.IncCYLA?.BusLossSetoff || 0
-                      : 0,
-                  otherThanHpBusiness:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.HP?.IncCYLA
-                      ?.OthSrcLossNoRaceHorseSetoff || 0,
-                  IncOfCurYrAfterSetOff:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.HP?.IncCYLA?.IncOfCurYrAfterSetOff || 0,
-                },
-                // business profesion excluding speculative inc
-                {
-                  headOfIncome:
-                    'Business or Profession excluding Speculative Inc',
-                  currentYearInc:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.BusProfExclSpecProf?.IncCYLA
-                      ?.IncOfCurYrUnderThatHead || 0,
-                  houseProperty:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.BusProfExclSpecProf?.IncCYLA
-                      ?.HPlossCurYrSetoff || 0,
-                  businessSetOff:
-                    this.itrType === 'ITR3'
-                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          ?.ScheduleCYLA?.BusProfExclSpecProf?.IncCYLA
-                          ?.BusLossSetoff || 0
-                      : 0,
-                  otherThanHpBusiness:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.BusProfExclSpecProf?.IncCYLA
-                      ?.OthSrcLossNoRaceHorseSetoff || 0,
-
-                  IncOfCurYrAfterSetOff:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.BusProfExclSpecProf?.IncCYLA
-                      ?.IncOfCurYrAfterSetOff || 0,
-                },
-
-                // speculative inc
-                {
-                  headOfIncome: 'Speculative Income',
-                  currentYearInc:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.SpeculativeInc?.IncCYLA
-                      ?.IncOfCurYrUnderThatHead || 0,
-                  houseProperty:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.SpeculativeInc?.IncCYLA
-                      ?.HPlossCurYrSetoff || 0,
-                  businessSetOff:
-                    this.itrType === 'ITR3'
-                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          ?.ScheduleCYLA?.SpeculativeInc?.IncCYLA
-                          ?.BusLossSetoff || 0
-                      : 0,
-                  otherThanHpBusiness:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.SpeculativeInc?.IncCYLA
-                      ?.OthSrcLossNoRaceHorseSetoff || 0,
-
-                  IncOfCurYrAfterSetOff:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.SpeculativeInc?.IncCYLA
-                      ?.IncOfCurYrAfterSetOff || 0,
-                },
-              ],
+              currentYearLossesSetOff: this.getCurrentYearLossJson(),
+              totals: this.getCurrentYearLossJsonTotal(),
               totalCurrentYearSetOff:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                   ?.CurrentYearLoss,
@@ -7221,6 +7120,98 @@ export class SummaryComponent implements OnInit {
         ?.map((detail) => detail?.IncClmdPTI?.TotalSec23FBB?.NetIncomeLoss || 0)
         ?.reduce((total, value) => total + value, 0);
     }
+  }
+
+  getCurrentYearLossJson() {
+    let array = [
+      'Salary',
+      'HP',
+      'BusProfExclSpecProf',
+      'SpeculativeInc',
+      'SpecifiedInc',
+      'STCG15Per',
+      'STCG30Per',
+      'STCGAppRate',
+      'STCGDTAARate',
+      'LTCG10Per',
+      'LTCG20Per',
+      'LTCGDTAARate',
+      'OthSrcExclRaceHorse',
+      'OthSrcRaceHorse',
+      'IncOSDTAA',
+    ];
+
+    let result = array.map((element, index) => ({
+      headOfIncome: element,
+      currentYearInc:
+        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+          element
+        ]?.IncCYLA?.IncOfCurYrUnderThatHead || 0,
+      houseProperty:
+        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+          element
+        ]?.IncCYLA?.HPlossCurYrSetoff || 0,
+      businessSetOff:
+        this.itrType === 'ITR3'
+          ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.IncCYLA?.BusLossSetoff || 0
+          : 0,
+      otherThanHpBusiness:
+        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+          element
+        ]?.IncCYLA?.OthSrcLossNoRaceHorseSetoff || 0,
+
+      IncOfCurYrAfterSetOff:
+        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+          element
+        ]?.IncCYLA?.IncOfCurYrAfterSetOff || 0,
+    }));
+    return result;
+  }
+
+  getCurrentYearLossJsonTotal() {
+    let array = ['TotalCurYr', 'TotalLossSetOff', 'LossRemAftSetOff'];
+    let arrayToBeReturned = [];
+
+    array.map((element) => {
+      if (element === 'TotalCurYr') {
+        arrayToBeReturned.push({
+          headOfIncome: element,
+          HP: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+            element
+          ]?.TotHPlossCurYr || 0,
+          BUS: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            ?.ScheduleCYLA?.[element]?.TotBusLoss || 0,
+          OTH: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            ?.ScheduleCYLA?.[element]?.TotOthSrcLossNoRaceHorse || 0,
+        });
+      } else if ('TotalLossSetOff') {
+        arrayToBeReturned.push({
+          headOfIncome: element,
+          HP: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+            element
+          ]?.TotHPlossCurYrSetoff || 0,
+          BUS: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            ?.ScheduleCYLA?.[element]?.TotBusLossSetoff || 0,
+          OTH: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            ?.ScheduleCYLA?.[element]?.TotOthSrcLossNoRaceHorseSetoff || 0,
+        });
+      } else if ('LossRemAftSetOff') {
+        arrayToBeReturned.push({
+          headOfIncome: element,
+          HP: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+            element
+          ]?.BalHPlossCurYrAftSetoff || 0,
+          BUS: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            ?.ScheduleCYLA?.[element]?.BalBusLossAftSetoff || 0,
+          OTH: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            ?.ScheduleCYLA?.[element]?.BalOthSrcLossNoRaceHorseAftSetoff || 0,
+        });
+      }
+    });
+
+    return arrayToBeReturned;
   }
 }
 

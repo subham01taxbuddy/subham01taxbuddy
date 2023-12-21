@@ -3472,10 +3472,10 @@
                             let i = index
                           "
                         >
-                        <td>
-                          {{ currentYearLoss?.headOfIncome }}
-                        </td>
-                        <td>
+                          <td>
+                            {{ currentYearLoss?.headOfIncome }}
+                          </td>
+                          <td>
                             {{ currentYearLoss?.currentYearInc }}
                           </td>
                           <td>
@@ -3490,6 +3490,20 @@
                           <td>
                             {{ currentYearLoss?.IncOfCurYrAfterSetOff }}
                           </td>
+                        </tr>
+                        <tr
+                          *ngFor="
+                            let currentYearLossTotal of finalCalculations
+                              ?.currentYearLosses?.totals;
+                            let i = index
+                          "
+                        >
+                          <td>{{ currentYearLossTotal.headOfIncome }}</td>
+                          <td></td>
+                          <td>{{ currentYearLossTotal.HP }}</td>
+                          <td>{{ currentYearLossTotal.BUS }}</td>
+                          <td>{{ currentYearLossTotal.OTH }}</td>
+                          <td></td>
                         </tr>
                       </tbody>
                     </table>
