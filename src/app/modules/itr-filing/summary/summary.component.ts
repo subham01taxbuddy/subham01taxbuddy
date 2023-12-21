@@ -3117,28 +3117,39 @@ export class SummaryComponent implements OnInit {
                 },
 
                 nonSpecIncome:
-                  this.itrType === 'ITR3'
+                  this.itrType === 'ITR3' && this.ITR_JSON.itrSummaryJson['ITR'][
+                    this.itrType
+                  ]?.TradingAccount?.OtherOperatingRevenueDtls
                     ? {
-                      businessSection: 'Non-Speculative Income',
-                      natureOfBusinessCode: 'nonSpec',
-                      tradeName: 'Non-Speculative Income',
-                      grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][
-                        this.itrType
-                      ]?.TradingAccount?.OtherOperatingRevenueDtls?.reduce(
-                        (sum, obj) => sum + obj.OperatingRevenueAmt,
-                        0
-                      ),
-                      TaxableIncome:
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          ?.TradingAccount?.GrossProfitFrmBusProf,
-                    }
-                    : {
-                      businessSection: null,
-                      natureOfBusinessCode: null,
-                      tradeName: null,
-                      grossTurnover: null,
-                      TaxableIncome: null,
-                    },
+                        businessSection: 'Non-Speculative Income',
+                        natureOfBusinessCode: 'nonSpec',
+                        tradeName: 'Non-Speculative Income',
+                        grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][
+                          this.itrType
+                        ]?.TradingAccount?.OtherOperatingRevenueDtls?.reduce(
+                          (sum, obj) => sum + obj.OperatingRevenueAmt,
+                          0
+                        ),
+                        TaxableIncome:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.TradingAccount?.GrossProfitFrmBusProf,
+                      }
+                    : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.TradingAccount?.GrossProfitFrmBusProf ? {
+                        businessSection: 'Non-Speculative Income',
+                        natureOfBusinessCode: 'nonSpec',
+                        tradeName: 'Non-Speculative Income',
+                        grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.TradingAccount?.TardingAccTotCred,
+                        TaxableIncome: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.TradingAccount?.GrossProfitFrmBusProf,
+                      } : {
+                        businessSection: null,
+                        natureOfBusinessCode: null,
+                        tradeName: null,
+                        grossTurnover: null,
+                        TaxableIncome: null,
+                      },
 
                 specIncome:
                   this.itrType === 'ITR3'

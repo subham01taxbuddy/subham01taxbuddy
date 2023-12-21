@@ -1099,6 +1099,128 @@
                       </div>
                     </mat-expansion-panel-header>
 
+                    <!-- spec non-spec -->
+                    <div>
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Business section</th>
+                            <th>Nature Of Business Code</th>
+                            <th>Trade Name</th>
+                            <th>Gross Turnover/Receipt</th>
+                            <th>Taxable Income</th>
+                          </tr>
+                        </tbody>
+                        <!-- Non speculative Income  -->
+
+                        <tr
+                          *ngIf="
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncome
+                              ?.grossTurnover &&
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncome
+                              ?.grossTurnover !== 0
+                          "
+                        >
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.businessSection
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.natureOfBusinessCode
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.tradeName
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.grossTurnover
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.businessIncome
+                                  ?.businessIncomeDetails?.nonSpecIncome
+                                  ?.TaxableIncome
+                              )
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- speculative Income  -->
+
+                        <tr
+                          *ngIf="
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.specIncome
+                              ?.grossTurnover &&
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.specIncome
+                              ?.grossTurnover !== 0
+                          "
+                        >
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome
+                                ?.businessSection
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome
+                                ?.natureOfBusinessCode
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome?.tradeName
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome
+                                ?.grossTurnover
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.businessIncome
+                                  ?.businessIncomeDetails?.specIncome
+                                  ?.TaxableIncome
+                              )
+                            }}
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+
                     <div>
                       <table
                         class="table table-bordered table-striped table-hover"
@@ -1193,114 +1315,6 @@
                                   {{ business?.TaxableIncome }}
                                 </td>
                               </ng-container>
-                            </tr>
-                          </ng-container>
-
-                          <!-- PROFIT AND LOSS INCOMES  -->
-                          <!-- Non speculative Income  -->
-                          <ng-container
-                            *ngIf="
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.nonSpecIncome
-                                ?.grossTurnover &&
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.nonSpecIncome
-                                ?.grossTurnover !== 0
-                            "
-                          >
-                            <tr>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.nonSpecIncome
-                                    ?.businessSection
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.nonSpecIncome
-                                    ?.natureOfBusinessCode
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.nonSpecIncome
-                                    ?.tradeName
-                                }}
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.nonSpecIncome
-                                    ?.grossTurnover
-                                }}
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                  utilsService.currencyFormatter(
-                                    finalCalculations?.businessIncome
-                                      ?.businessIncomeDetails?.nonSpecIncome
-                                      ?.TaxableIncome
-                                  )
-                                }}
-                              </td>
-                            </tr>
-                          </ng-container>
-                          <!-- speculative Income  -->
-                          <ng-container
-                            *ngIf="
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.specIncome
-                                ?.grossTurnover &&
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.specIncome
-                                ?.grossTurnover !== 0
-                            "
-                          >
-                            <tr>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.specIncome
-                                    ?.businessSection
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.specIncome
-                                    ?.natureOfBusinessCode
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.specIncome
-                                    ?.tradeName
-                                }}
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.specIncome
-                                    ?.grossTurnover
-                                }}
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                  utilsService.currencyFormatter(
-                                    finalCalculations?.businessIncome
-                                      ?.businessIncomeDetails?.specIncome
-                                      ?.TaxableIncome
-                                  )
-                                }}
-                              </td>
                             </tr>
                           </ng-container>
 
@@ -9852,12 +9866,17 @@
                               </mat-icon>
                             </div>
                             <label class="rtNumb1">
-                              <i class="material-icons icRup">&#8377;</i>&nbsp;{{
+                              <i class="material-icons icRup">&#8377;</i
+                              >&nbsp;{{
                                 keys.ExemptIncAgriOthUs10Total
-                                  ?  (keys?.ExemptIncAgriOthUs10Total || 0) + (finalCalculations?.giftExemptIncome || 0)
-                                  :  getExemptIncomeTotal() + (finalCalculations?.exemptIncome?.total || 0) + (finalCalculations?.giftExemptIncome || 0)
+                                  ? (keys?.ExemptIncAgriOthUs10Total || 0) +
+                                    (finalCalculations?.giftExemptIncome || 0)
+                                  : getExemptIncomeTotal() +
+                                    (finalCalculations?.exemptIncome?.total ||
+                                      0) +
+                                    (finalCalculations?.giftExemptIncome || 0)
                               }}
-                            </label>                            
+                            </label>
                           </div>
                         </div>
                       </div>
