@@ -16,7 +16,7 @@
       class="display-flex"
       *ngFor="let donation of getSalaryArray.controls | paginate : config;let i = index"
       [formGroupName]="fieldGlobalIndex(i)">
-      <mat-checkbox
+      <mat-checkbox *ngIf="false"
         color="primary"
         name="hasEdit[i]"
         formControlName="hasEdit"

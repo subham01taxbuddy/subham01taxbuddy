@@ -48,31 +48,8 @@
                                   color="primary"
                                   name="hasEdit[i]"
                                   formControlName="hasEdit"
-                                  class=""
-                          >
+                                  class="">
                           </mat-checkbox>
-                        </td>
-
-                        <!-- date of acquisition-->
-                        <td>
-                          <mat-form-field appearance="outline">
-                            <input
-                                    [max]="maxDate"
-                                    matInput
-                                    placeholder="DD/MM/YYYY"
-                                    name="dateOfAcquisition[i]"
-                                    [matDatepicker]="dateofAcquisition"
-                                    autocomplete="off"
-                                    formControlName="dateOfAcquisition"
-                                    required
-                                    (dateChange)="updateValidations(vda)"
-                            />
-                            <mat-datepicker-toggle
-                                    matSuffix
-                                    [for]="dateofAcquisition"
-                            ></mat-datepicker-toggle>
-                            <mat-datepicker #dateofAcquisition></mat-datepicker>
-                          </mat-form-field>
                         </td>
 
                         <!-- date of transfer -->
@@ -93,6 +70,26 @@
                                     matSuffix
                                     [for]="dateofTransfer"></mat-datepicker-toggle>
                             <mat-datepicker #dateofTransfer></mat-datepicker>
+                          </mat-form-field>
+                        </td>
+
+                        <!-- date of acquisition-->
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    [max]="maxDate"
+                                    matInput
+                                    placeholder="DD/MM/YYYY"
+                                    name="dateOfAcquisition[i]"
+                                    [matDatepicker]="dateofAcquisition"
+                                    autocomplete="off"
+                                    formControlName="dateOfAcquisition"
+                                    required
+                                    (dateChange)="updateValidations(vda)"
+                            />
+                            <mat-datepicker-toggle
+                                    matSuffix [for]="dateofAcquisition"></mat-datepicker-toggle>
+                            <mat-datepicker #dateofAcquisition></mat-datepicker>
                           </mat-form-field>
                         </td>
 
@@ -184,7 +181,7 @@
 
 
                 </div>
-                <button class="btn btn__white mt-20"><i class="fa-solid fa-trash-can" (click)="deleteVdaArray()"></i>
+                <button class="btn btn__white mt-20" (click)="deleteVdaArray()"><i class="fa-solid fa-trash-can"></i>
                   Delete</button>
               </div>
             </div>

@@ -313,6 +313,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.Copy_ITR_JSON.agriculturalLandDetails = agriIncArray;
     this.agriIncFormArray = this.fb.array(agriIncArray);
     this.saveExemptIncomes('delete');
+    this.selectedIndexes = [];
   }
 
   get getIncomeArray() {

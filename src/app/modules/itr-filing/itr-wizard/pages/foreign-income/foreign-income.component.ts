@@ -43,6 +43,7 @@ export class ForeignIncomeComponent extends WizardNavigation implements OnInit {
   }
 
   ngOnInit(): void {
+    this.showList = true;
     ('');
   }
 
@@ -74,5 +75,6 @@ export class ForeignIncomeComponent extends WizardNavigation implements OnInit {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+    this.showList = true;
   }
 }
