@@ -182,34 +182,6 @@
                         <div class="lndBldg-R"><input type="text" placeholder="₹ Enter Amount" class="form-control gry"> </div>
                       </div>
                       <div class="lndBldg-box">
-                        <div class="lndBldg-L">Transfer Expenses <span class="redAst">*</span></div>
-                        <div class="lndBldg-R">
-                          <mat-form-field class="input-field-width" appearance="outline">
-                            <!-- <mat-icon matPrefix> &#8377;</mat-icon> -->
-                            <!-- (blur)="calculateCapitalGain(this.immovableForm,'', i)" -->
-                            <input
-                                    matInput
-                                    currencyMask
-                                    type="number"
-                                    [pattern]="amountRegex"
-                                    formControlName="sellExpense"
-                                    placeholder="Transfer Expenses"
-                                    name="asset[i]"
-                                    class="input-field"
-                                    maxlength="14"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    (blur)="calculateIndexCost(i);
-                      calculateCapitalGain(this.immovableForm, '', i)"
-                                    (focusin)="reset(asset.get('sellExpense'))"
-                            />
-                            <mat-error
-                                    *ngIf="asset.get('sellExpense').hasError('pattern')">
-                              Enter valid amount upto 2 decimal in case of shares.
-                            </mat-error>
-                          </mat-form-field>
-                        </div>
-                      </div>
-                      <div class="lndBldg-box">
                         <div class="lndBldg-L">Cost of Acquisition <span class="redAst">*</span></div>
                         <div class="lndBldg-R">
                           <mat-form-field class="input-field-width" appearance="outline">
@@ -251,6 +223,34 @@
                                     [disabled]="true"
                                     style="cursor: not-allowed"
                             />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="lndBldg-box">
+                        <div class="lndBldg-L">Transfer Expenses <span class="redAst">*</span></div>
+                        <div class="lndBldg-R">
+                          <mat-form-field class="input-field-width" appearance="outline">
+                            <!-- <mat-icon matPrefix> &#8377;</mat-icon> -->
+                            <!-- (blur)="calculateCapitalGain(this.immovableForm,'', i)" -->
+                            <input
+                                    matInput
+                                    currencyMask
+                                    type="number"
+                                    [pattern]="amountRegex"
+                                    formControlName="sellExpense"
+                                    placeholder="Transfer Expenses"
+                                    name="asset[i]"
+                                    class="input-field"
+                                    maxlength="14"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    (blur)="calculateIndexCost(i);
+                      calculateCapitalGain(this.immovableForm, '', i)"
+                                    (focusin)="reset(asset.get('sellExpense'))"
+                            />
+                            <mat-error
+                                    *ngIf="asset.get('sellExpense').hasError('pattern')">
+                              Enter valid amount upto 2 decimal in case of shares.
+                            </mat-error>
                           </mat-form-field>
                         </div>
                       </div>
