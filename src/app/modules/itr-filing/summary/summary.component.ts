@@ -2960,6 +2960,22 @@ export class SummaryComponent implements OnInit {
                   0
                 ),
 
+                aggregateValueWithoutConsideration:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Aggrtvaluewithoutcons562x,
+                immovablePropertyWithoutConsideration:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Immovpropwithoutcons562x,
+                immovablePropertyInadequateConsideration:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Immovpropinadeqcons562x,
+                anyOtherPropertyWithoutConsideration:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Anyotherpropwithoutcons562x,
+                anyOtherPropertyInadequateConsideration:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Anyotherpropwithoutcons562x,
+
                 giftExemptIncome:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
                     ?.IncOthThanOwnRaceHorse?.Tot562x,
