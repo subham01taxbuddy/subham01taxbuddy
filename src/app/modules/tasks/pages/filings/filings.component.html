@@ -132,6 +132,15 @@
                         Clear form
                       </button>
                     </div>
+                    <!-- Table Sorting inside filter starts -->
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                          (onChange)="sortByObject($event)"></app-generic-sorting>
+                      </div>
+          
+                    </div>
+                    <!-- Table Sorting inside filter ends -->
                   </div>
                 </div>
               </div>
@@ -141,17 +150,7 @@
       </div>
     </div>
     <div class="tableSpc mt-3">
-      <div class="row">
-        <div class="col-sm-12 ">
-          <div class="row">
-            <div class="col-sm-5">
-              <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
-                (onChange)="sortByObject($event)"></app-generic-sorting>
-            </div>
-
-          </div>
-        </div>
-      </div>
+     
       <div>
         <div class="row">
           <div class="col-sm-9 row">
