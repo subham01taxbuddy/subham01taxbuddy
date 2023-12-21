@@ -40,10 +40,10 @@
                 <mat-radio-button value="E">E portal OTP</mat-radio-button>
               </mat-radio-group>
               <!-- pan-dob input  -->
-              <div class="card__row">
+              <div class="card__row mb-3">
                 <div class="card__col-xs-12 card__col-sm-4">
+                  <mat-label>PAN Number</mat-label>
                   <mat-form-field appearance="outline">
-                    <mat-label>PAN Number</mat-label>
                     <input
                       [style.cursor]="
                         ITR_JSON.eFillingCompleted === true ? 'not-allowed' : ''
@@ -73,8 +73,8 @@
                   </mat-form-field>
                 </div>
                 <div class="card__col-xs-12 card__col-sm-4">
+                  <mat-label>Date Of Birth</mat-label>
                   <mat-form-field appearance="outline">
-                    <mat-label>Date Of Birth</mat-label>
                     <input
                       matTooltip="Date of birth as per PAN"
                       matTooltipClass="tab-tooltip"
