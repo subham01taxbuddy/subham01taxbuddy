@@ -566,28 +566,28 @@
                               <div class="field-label">
                                 <span class="span">Ownership status</span>
                               </div>
-                              <div class="form-field">
+                              <mat-form-field appearance="outline">
                                 <mat-select formControlName="owner"
-                                      placeholder="owner"
+                                      placeholder="Owner"
                                       required>
-                                <mat-option>Select</mat-option>
-                                <mat-option [value]="'O'">Owner</mat-option>
-                                <mat-option [value]="'H'">Held on lease</mat-option>
-                              </mat-select>
-                              </div>
+                                  <mat-option>Select</mat-option>
+                                  <mat-option [value]="'O'">Owner</mat-option>
+                                  <mat-option [value]="'H'">Held on lease</mat-option>
+                                </mat-select>
+                              </mat-form-field>
                             </div>
 
                             <div class="field">
                               <div class="field-label">
                                 <span class="span">Water Source</span>
                               </div>
-                              <div class="form-field">
+                              <mat-form-field appearance="outline">
                                 <mat-select formControlName="typeOfLand" placeholder="Type Of Land">
                                   <mat-option>Select</mat-option>
                                   <mat-option [value]="'IRG'">Irrigated</mat-option>
                                   <mat-option [value]="'RF'">Rain-fed</mat-option>
                                 </mat-select>
-                              </div>
+                              </mat-form-field>
                             </div>
 
                           </div>

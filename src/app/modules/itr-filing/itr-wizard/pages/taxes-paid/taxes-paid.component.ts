@@ -169,7 +169,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
             this.Copy_ITR_JSON.taxPaid = this.taxPaid;
           }
           this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
-          this.saveAll();
+          // this.saveAll();
         }
       });
     } else if (type === 'tdsOtherThanSalary16A') {
@@ -192,7 +192,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
               result?.cgObject?.salaryArray[0];
             this.Copy_ITR_JSON.taxPaid = this.taxPaid;
             this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
-            this.saveAll();
+            // this.saveAll();
           }
         }
       });
@@ -216,7 +216,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
               result?.cgObject?.salaryArray[0];
             this.Copy_ITR_JSON.taxPaid = this.taxPaid;
             this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
-            this.saveAll();
+            // this.saveAll();
           }
         }
       });
@@ -238,7 +238,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
             this.taxPaid.tcs[index] = result?.cgObject?.salaryArray[0];
             this.Copy_ITR_JSON.taxPaid = this.taxPaid;
             this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
-            this.saveAll();
+            // this.saveAll();
           }
         }
       });
@@ -261,7 +261,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
               result?.cgObject?.salaryArray[0];
             this.Copy_ITR_JSON.taxPaid = this.taxPaid;
             this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
-            this.saveAll();
+            // this.saveAll();
           }
         }
       });
