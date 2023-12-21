@@ -58,6 +58,8 @@ export class AddSubscriptionComponent implements OnInit {
     if (this.roles.includes('ROLE_FILER')) {
       this.isAllowed = false;
       this.getSmeDetail();
+    }else if(this.data.filerId){
+      this.getSmeDetail();
     }
     if (this.data.mobileNo) {
       this.getUserInfoByMobileNum(this.data.mobileNo);
@@ -70,7 +72,13 @@ export class AddSubscriptionComponent implements OnInit {
   getSmeDetail() {
     // https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000'
     let loggedInSmeUserId = this.loggedInSme[0]?.userId;
-    let param = `/bo/sme-details-new/${loggedInSmeUserId}`
+    let userId;
+    if(this.data.filerId){
+      userId = this.data.filerId
+    }else{
+      userId = loggedInSmeUserId;
+    }
+    let param = `/bo/sme-details-new/${userId}`
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
@@ -83,7 +91,7 @@ export class AddSubscriptionComponent implements OnInit {
   }
 
   isPlanEnabled(plan: any): boolean {
-    if (this.roles.includes('ROLE_FILER')) {
+    if (this.roles.includes('ROLE_FILER') || this.data.filerId ) {
       if (this.smeDetails?.skillSetPlanIdList) {
         const planId = plan.planId;
         return this.smeDetails?.skillSetPlanIdList.includes(planId);

@@ -87,6 +87,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   searchAsPrinciple: boolean = false;
   partnerType: any;
   selectedSearchUserId: any;
+  assignedFilerId :number
 
   constructor(
     private fb: FormBuilder,
@@ -910,15 +911,25 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         if (this.roles.includes('ROLE_FILER')) {
           this.openAddSubscriptionDialog();
         } else {
-          this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, this.mobileNumber).subscribe((res: any) => {
+          this.utilsService.getFilerIdByMobile(this.mobileNumber).subscribe((res: any) => {
             console.log(res);
-            if (res?.records) {
-              this.userId = res?.records[0]?.userId;
-              if (this.userId) {
-                this.openAddSubscriptionDialog();
-              }
+            if (res.data) {
+              this.assignedFilerId =res?.data?.content[0].filerUserId;
+              this.userId = res?.data?.content[0].userId;
+              this.openAddSubscriptionDialog();
+            }else{
+              this.utilsService.getFilerIdByMobile(this.mobileNumber,'ITR').subscribe((res: any) => {
+                console.log(res);
+                if (res.data) {
+                  this.assignedFilerId =res?.data?.content[0].filerUserId;
+                  this.userId = res?.data?.content[0].userId;
+                  this.openAddSubscriptionDialog();
+                }else{
+                  this._toastMessageService.alert('error',res.message);
+                }
+              })
             }
-          });
+          })
         }
       }
     })
@@ -931,6 +942,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       data: {
         userId: this.userId,
         mobileNo: this.mobileNumber,
+        filerId :this.assignedFilerId,
       },
 
     })
@@ -1120,4 +1132,5 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 export interface ConfirmModel {
   userId: number
   mobileNo: number
+  filerId:number
 }

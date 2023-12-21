@@ -1331,6 +1331,25 @@ export class UtilsService {
     return this.userMsService.getMethodNew(param);
   }
 
+  getFilerIdByMobile(mobile,ITR?){
+    //user list api to get filerId for create subscription
+    //https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&serviceType=ITR&mobileNumber=3263636364
+    let param ='';
+    let role = this.getUserRoles();
+    let loggedInSmeId = this.getLoggedInUserID();
+    let userFilter = '';
+    if(role.includes('ROLE_LEADER')){
+      userFilter='&leaderUserId='+ loggedInSmeId ;
+    }
+    if(ITR){
+      param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}`
+    }else{
+      param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&serviceType=ITR&mobileNumber=${mobile}${userFilter}`
+    }
+
+    return this.userMsService.getMethodNew(param);
+  }
+
   getActiveUsers(mobile){
    //api to check weather user is active
   // https://api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&mobileNumber=8840046021&active=false
