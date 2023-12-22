@@ -44,8 +44,12 @@
   justify-content: right;
   gap:10px;
   margin-bottom: 20px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 20px;
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+}
+
+.spcTp{
+  margin-top: 20px;
 }
 
 
@@ -124,7 +128,7 @@ gap: 9px;
 flex-shrink: 0;
 border-radius: 4px;
 background: #2D8EF9;
-margin-top: 58px;
+margin-top: 72px;
 }
 
 

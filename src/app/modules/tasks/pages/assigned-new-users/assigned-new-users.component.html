@@ -145,15 +145,9 @@
                       </div>
                     </div>
 
-                    <div class="button-container">
-                      <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
-                      </button>
-                      <button class="clrLnk-1" (click)="this.resetFilters()">
-                        Clear form
-                      </button>
-                    </div>
+                    
                     <!-- Adding new content in filter -->
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 spcTp">
                       <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                         (onChange)="sortByObject($event)"></app-generic-sorting>
                     </div>
@@ -164,6 +158,13 @@
                       (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk Re-Assignment to Leader</span></button>
                     </div>
                     <!-- Adding new content in filter ends --> 
+                    <div class="button-container">
+                      <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                      </button>
+                      <button class="clrLnk-1" (click)="this.resetFilters()">
+                        Clear form
+                      </button>
+                    </div>
                   </div>
 
                 </div>
