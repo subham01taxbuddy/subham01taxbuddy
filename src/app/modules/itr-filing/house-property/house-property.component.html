@@ -713,10 +713,10 @@
                         <div class="hp4main1" *ngFor="let ten of getTenantArray.controls; let i = index"
                              [formGroupName]="i">
 
-                          <div class="custom-control custom-checkbox tenant-checkbox">
-                            <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                    type="checkbox" (click)="activeTenant = [i]"/>
-                          </div>
+<!--                          <div class="custom-control custom-checkbox tenant-checkbox">-->
+<!--                            <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"-->
+<!--                                    type="checkbox" (click)="activeTenant = [i]"/>-->
+<!--                          </div>-->
                           <div class="hp4-2">
                             <div class="field">
                               <div class="field-label">
@@ -775,7 +775,7 @@
                           <div class="hp4-4">
                             <div class="Bx4">
                               <div class="Bx4L">
-                                <button type="button" (click)="removeTenant(activeTenant)"> <i class="fa fa-trash-o delbt"></i> </button>
+                                <button type="button" (click)="removeTenant(i)"> <i class="fa fa-trash-o delbt"></i> </button>
                               </div>
                               <div class="Bx4R">
                                 <button type="button" class="addAno" (click)="addMoreTenants()"> + Add Another </button>
