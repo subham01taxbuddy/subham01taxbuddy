@@ -140,6 +140,15 @@
                       </div>
                     </div>
                   </div>
+                  
+                  <!-- Table Togle Inside Filter starts -->
+                  <div class="row">
+                    <div class="col-sm-6 spcTp">
+                      <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                        (onChange)="sortByObject($event)"></app-generic-sorting>
+                    </div>
+                  </div>
+                  <!-- Table Togle Inside Filter ends -->
                   <div class="button-container">
                     <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
                     </button>
@@ -152,14 +161,6 @@
                     <button *ngIf="isAllowed" class="srch-btn-1"  (click)="createSub()"> Create
                       Subscription </button>
                   </div>
-                  <!-- Table Togle Inside Filter starts -->
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
-                        (onChange)="sortByObject($event)"></app-generic-sorting>
-                    </div>
-                  </div>
-                  <!-- Table Togle Inside Filter ends -->
                 </div>
               </div>
             </div>
