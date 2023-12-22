@@ -18,8 +18,9 @@
             <div class="row">
               <div class="col-sm-12">
                 <div class="filter-box">
+                  <div class="container-fluid">
                   <div class="row">
-                    <div class="col-sm-12 bckClr">
+                    <div class="col-sm-6 bckClr">
                       <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event)"
                         [showOwnerList]="true"></app-leader-list-dropdown>
                     </div>
@@ -37,6 +38,7 @@
                         Clear form
                       </button>
                     </div>
+                  </div>
                   </div>
                 </div>
               </div>
