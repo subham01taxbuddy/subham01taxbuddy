@@ -907,6 +907,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       if(result.data[0].filer && !result.data[0].leader ){
         this.assignedFilerId = result.data[0].userId;
         this.getSmeDetail();
+        this.getAllPlanInfo(this.serviceType);
       }
 
 
