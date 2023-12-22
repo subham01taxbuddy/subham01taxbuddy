@@ -85,7 +85,11 @@ export class AddSubscriptionComponent implements OnInit {
         this.smeDetails = response.data[0];
         console.log('new sme', this.smeDetails);
         this.serviceEligibility = this.smeDetails.serviceEligibility_ITR;
-        this.showMessage = 'Disabled plans are not available in your eligibility please contact with your leader'
+        if(this.data.filerId){
+          this.showMessage = 'Filer is not eligible for the disabled plans. Please give plan capability and then try or reassign the user.'
+        }else{
+          this.showMessage = 'Disabled plans are not available in your eligibility please contact with your leader'
+        }
       }
     })
   }
