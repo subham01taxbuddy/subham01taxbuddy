@@ -956,7 +956,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         sessionStorage.setItem('createSubscriptionObject', JSON.stringify(subData))
         // let subID=result.data['subscriptionId'];
         console.log('Afetr dialog close -> ', subData);
-        this.router.navigate(['/subscription/create-subscription']);
+        this.router.navigate(['/subscription/create-subscription'], {
+          queryParams: { assignedFilerId: this.assignedFilerId},
+        });
         // this.router.navigate(['/subscription/create-subscription ' + result.data['subscriptionId']]);
       }
     })
