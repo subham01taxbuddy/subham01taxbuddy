@@ -22,13 +22,12 @@
 
                     <form formArrayName="depositoryAccounts" style="padding: 20px">
                       <div class="accordion__item-body" *ngIf="topic.code === 'A1'">
+                        <button class="btn btn__default btn__add pull-right" (click)="addMore('depositoryAccounts')">
+                          Add More
+                        </button>
                         <div  *ngFor="let depositoryAccounts of getDepositoryAccounts.controls;let i = index"
                               [formGroupName]="i">
                           <div class="White_box">
-                            <button class="btn btn__default btn__add pull-right" (click)="addMore('depositoryAccounts')">
-                              Add More
-                            </button>
-
                             <div class="div-6 ">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                       type="checkbox"
@@ -103,12 +102,12 @@
                             <div *ngFor="let accountCtrl of getAccountControls(i).controls;let j = index"
                                  [formGroupName]="j">
                               <div class="div-6">
-                                <input
-                                        class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                        type="checkbox"
-                                        (click)="$event.stopPropagation()"
-                                        [checked]="selectedAccountIndexes.includes(j)"
-                                        (click)="toggleSelectedAccountIndex(j)"/>
+<!--                                <input-->
+<!--                                        class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"-->
+<!--                                        type="checkbox"-->
+<!--                                        (click)="$event.stopPropagation()"-->
+<!--                                        [checked]="selectedAccountIndexes.includes(j)"-->
+<!--                                        (click)="toggleSelectedAccountIndex(j)"/>-->
                                 <div class="form-field">
                                   <div><span class="span">Account Number</span> <span
                                           class="text-wrapper-2">*</span></div>
@@ -185,10 +184,10 @@
                                   </mat-form-field>
                                 </div>
                               </div>
-                              <button class="delete-btn" style="width: 15%"
-                                      (click)="delete('depositoryAccounts', 'account', i)">
-                                <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                              </button>
+<!--                              <button class="delete-btn" style="width: 15%"-->
+<!--                                      (click)="delete('depositoryAccounts', 'account', i)">-->
+<!--                                <i class="fa fa-trash" aria-hidden="true"></i> Delete-->
+<!--                              </button>-->
                             </div>
                           </div>
                         </div>
@@ -1690,12 +1689,12 @@
                   <div id="collapse9" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                     <div class="accordion__item-body">
                       <form formArrayName="trustsDetails" style="padding: 20px">
+                        <button class="btn btn__default btn__add pull-right"
+                                (click)="addMore('trustsDetails')"> Add More
+                        </button>
                         <div *ngFor="let trustsDetails of getTrustsDetails.controls;let i = index"
                              [formGroupName]="i">
                           <div class="White_box">
-                            <button class="btn btn__default btn__add pull-right"
-                                    (click)="addMore('trustsDetails')"> Add More
-                            </button>
                             <div class="div-6 ">
                               <input
                                       class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"

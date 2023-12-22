@@ -26,6 +26,14 @@
               </h2>
               <div id="collapse3" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                 <div class="accordion__item-body">
+                  <div>
+                    <button
+                            *ngIf="compactView || selectedBroker === ''"
+                            class="edit_btn"
+                            (click)="$event.stopPropagation(); addMore()">
+                      <i class="fa fa-plus"></i>Add
+                    </button>
+                  </div>
                   <ag-grid-angular
                           class="ag-theme-balham topSps"
                           [gridOptions]="equityGridOptions"
@@ -33,20 +41,20 @@
                   </ag-grid-angular>
 
                   <div class="row spsTp bdrTp">
-                <div class="col-sm-3">
-                  <button type="submit" class="delete-btn"
-                          [disabled]="!equitySelected()"
-                          (click)="deleteArray()">
-                    <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-                  </button>
-                </div>
+                    <div class="col-sm-3">
+                      <button type="submit" class="delete-btn"
+                              [disabled]="!equitySelected()"
+                              (click)="deleteArray()">
+                        <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+                      </button>
+                    </div>
 
-                <div class="col-sm-3">
-                  <button type="submit" class="cancel" (click)="showCompactView()">
-                    Back to Brokers
-                  </button>
-                </div>
-              </div>
+                    <div class="col-sm-3">
+                      <button type="submit" class="cancel" (click)="showCompactView()">
+                        Back to Brokers
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -80,7 +88,7 @@
                     <div class="card__col-sm-3 broker-view-title">STCG</div>
                   </div>
                   <div class="card__row broker-card"
-                          *ngFor="let securities of brokerList; let i = index">
+                       *ngFor="let securities of brokerList; let i = index">
                     <div class="">
                       <!-- checkbox -->
                       <div class="col-sm-1">
@@ -92,7 +100,7 @@
                         ></mat-checkbox>
                       </div>
                       <div class="row col-sm-12"
-                              (click)="showBroker(securities.brokerName)">
+                           (click)="showBroker(securities.brokerName)">
                         <div class="col-sm-3 broker-view-value">
                           {{ securities.brokerName }}
                         </div>
@@ -167,17 +175,17 @@
                           </div>
                           <div class="form-field">
                             <mat-form-field appearance="outline">
-                            <input
-                                    (change)="calculateDeductionGain()"
-                                    matInput
-                                    readonly
-                                    placeholder=""
-                                    formControlName="underSection"
-                                    name="underSection"/>
-                            <mat-error *ngIf="deductionForm.controls['underSection'].hasError(
+                              <input
+                                      (change)="calculateDeductionGain()"
+                                      matInput
+                                      readonly
+                                      placeholder=""
+                                      formControlName="underSection"
+                                      name="underSection"/>
+                              <mat-error *ngIf="deductionForm.controls['underSection'].hasError(
                             'required')">Please enter type of deduction
-                            </mat-error>
-                          </mat-form-field>
+                              </mat-error>
+                            </mat-form-field>
                           </div>
                         </div>
                         <div class="div-6 mb-20">
@@ -186,20 +194,20 @@
                           </div>
                           <div class="form-field">
                             <mat-form-field appearance="outline">
-                            <input
-                                    (change)="calculateDeductionGain()"
-                                    matInput
-                                    readonly
-                                    placeholder="Purchase date of new asset"
-                                    formControlName="purchaseDate"
-                                    name="purchaseDate"
-                                    [matDatepicker]="purchaseDate"/>
-                            <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
-                            <mat-datepicker #purchaseDate></mat-datepicker>
-                            <mat-error
-                                    *ngIf="deductionForm.controls['purchaseDate'].hasError(
+                              <input
+                                      (change)="calculateDeductionGain()"
+                                      matInput
+                                      readonly
+                                      placeholder="Purchase date of new asset"
+                                      formControlName="purchaseDate"
+                                      name="purchaseDate"
+                                      [matDatepicker]="purchaseDate"/>
+                              <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+                              <mat-datepicker #purchaseDate></mat-datepicker>
+                              <mat-error
+                                      *ngIf="deductionForm.controls['purchaseDate'].hasError(
                                     'required')">Please select date</mat-error>
-                          </mat-form-field>
+                            </mat-form-field>
                           </div>
                         </div>
                         <div class="div-6 mb-20">
@@ -208,19 +216,19 @@
                           </div>
                           <div class="form-field">
                             <mat-form-field appearance="outline">
-                            <input
-                                    matInput
-                                    digitsOnly
-                                    placeholder="cost of new asset"
-                                    (change)="calculateDeductionGain()"
-                                    formControlName="costOfNewAssets"
-                                    required
-                                    maxlength="14"/>
-                            <mat-error
-                                    *ngIf="deductionForm.controls['costOfNewAssets'].hasError(
+                              <input
+                                      matInput
+                                      digitsOnly
+                                      placeholder="cost of new asset"
+                                      (change)="calculateDeductionGain()"
+                                      formControlName="costOfNewAssets"
+                                      required
+                                      maxlength="14"/>
+                              <mat-error
+                                      *ngIf="deductionForm.controls['costOfNewAssets'].hasError(
                                     'required')">Please enter cost of new assets
-                            </mat-error>
-                          </mat-form-field>
+                              </mat-error>
+                            </mat-form-field>
                           </div>
                         </div>
                         <div class="div-6 mb-20">
@@ -229,21 +237,21 @@
                           </div>
                           <div class="form-field">
                             <mat-form-field appearance="outline">
-                            <input
-                                    matInput
-                                    digitsOnly
-                                    placeholder="Amount deposited on CGAS before due date"
-                                    formControlName="investmentInCGAccount"
-                                    required
-                                    maxlength="14"
-                                    matTooltip="Amount deposited on CGAS before due date"
-                                    (change)="calculateDeductionGain()"
-                                    matTooltipClass="tab-tooltip"
-                                    matTooltipPosition="above"/>
-                            <mat-error
-                                    *ngIf="deductionForm.controls['investmentInCGAccount'].hasError(
+                              <input
+                                      matInput
+                                      digitsOnly
+                                      placeholder="Amount deposited on CGAS before due date"
+                                      formControlName="investmentInCGAccount"
+                                      required
+                                      maxlength="14"
+                                      matTooltip="Amount deposited on CGAS before due date"
+                                      (change)="calculateDeductionGain()"
+                                      matTooltipClass="tab-tooltip"
+                                      matTooltipPosition="above"/>
+                              <mat-error
+                                      *ngIf="deductionForm.controls['investmentInCGAccount'].hasError(
                     'required')">Please enter amount</mat-error>
-                          </mat-form-field>
+                            </mat-form-field>
                           </div>
                         </div>
 
@@ -253,17 +261,17 @@
                           </div>
                           <div class="form-field">
                             <mat-form-field appearance="outline">
-                            <input
-                                    (change)="calculateDeductionGain()"
-                                    matInput
-                                    readonly
-                                    placeholder="Amount of deduction claimed"
-                                    formControlName="totalDeductionClaimed"
-                                    maxlength="14"/>
-                            <mat-error
-                                    *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError(
+                              <input
+                                      (change)="calculateDeductionGain()"
+                                      matInput
+                                      readonly
+                                      placeholder="Amount of deduction claimed"
+                                      formControlName="totalDeductionClaimed"
+                                      maxlength="14"/>
+                              <mat-error
+                                      *ngIf="deductionForm.controls['totalDeductionClaimed'].hasError(
                     'required')">Please enter amount</mat-error>
-                          </mat-form-field>
+                            </mat-form-field>
                           </div>
                         </div>
                       </div>
