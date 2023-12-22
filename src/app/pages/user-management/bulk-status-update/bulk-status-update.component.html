@@ -1,5 +1,5 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<div class="">
+
   <div class="col-sm-12">
     <h5 class="bdrbl">Bulk Status Update:</h5>
   </div>
@@ -11,7 +11,7 @@
           <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
             [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
         </div>
-        <div class="col-sm-3 spsTp">
+        <div class="col-sm-3 spcAbv">
           <mat-label>Status which needs to be updated in bulk &nbsp;&nbsp; </mat-label>
           <mat-form-field appearance="outline">
             <mat-select placeholder="Select Status" [formControl]="fromStatusValue" multiple>
@@ -23,8 +23,8 @@
           </mat-form-field>
         </div>
         <div class="col-sm-6 spsTp">
-          <div class="text-center">
-            <mat-label>Date range on which the last status was updated</mat-label>
+          <div class="text-left">
+            <mat-label>Date range on which the last status was updated:</mat-label>
           </div>
           <div class="row">
             <div class="col-sm-6 spsTp ">
@@ -64,10 +64,10 @@
           </mat-form-field>
         </div>
         <div class="col-sm-6">
-          <button class="tbd-btn spRt margin srch-btn-1" (click)="update()">
+          <button class="btnUpdate spRt margin" (click)="update()">
             Update Status </button>
         </div>
       </div>
     </div>
   </div>
-</div>
+
