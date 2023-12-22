@@ -112,13 +112,13 @@
                   <div class="col-2">
                     <mat-radio-group class="radio_group" formControlName="hasParentOverSixty"
                                      (change)="isParentOverSixty()">
-                      <mat-radio-button type="radio" class="radio_input" value="true">Yes</mat-radio-button>
-                      <mat-radio-button type="radio" class="radio_input" value="false">No</mat-radio-button>
+                      <mat-radio-button type="radio" class="radio_input" [value]="true">Yes</mat-radio-button>
+                      <mat-radio-button type="radio" class="radio_input" [value]="false">No</mat-radio-button>
                     </mat-radio-group>
                   </div>
                 </div>
                 <div class="gray_container">
-                  <div class="div-6" *ngIf="Copy_ITR_JSON.systemFlags?.hasParentOverSixty">
+                  <div class="div-6" *ngIf="investmentDeductionForm.controls['hasParentOverSixty'].value">
                     <div class="form-field">
                       <div>
                         <span class="span">Medical Expenditure for senior citizen</span>
