@@ -105,6 +105,7 @@ import { CalculatorsComponent } from './salary/calculators/calculators.component
 import { BreakUpComponent } from './salary/break-up/break-up.component';
 import { OtherDeductionsComponent } from './itr-wizard/components/other-deductions/other-deductions.component';
 import {ItrSharedModule} from "../itr-shared/itr-shared.module";
+import {ExemptIncomeComponent} from "./exempt-income/exempt-income.component";
 
 @NgModule({
     imports: [
@@ -229,6 +230,7 @@ import {ItrSharedModule} from "../itr-shared/itr-shared.module";
     CalculatorsComponent,
     BreakUpComponent,
     OtherDeductionsComponent,
+    ExemptIncomeComponent
   ],
 
   exports: [CustomerProfileComponent],
