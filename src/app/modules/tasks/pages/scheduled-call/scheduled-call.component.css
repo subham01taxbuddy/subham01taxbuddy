@@ -27,14 +27,19 @@
     margin-top: -20px;
 }
 .button-container {
-  margin-top: 20px;
+  margin-top: -50px;
   display: inline-flex;
   justify-content: right;
   gap: 10px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 20px;
+  margin-bottom: 0px;
+  /* border-bottom: 1px solid #ccc; */
+  /* padding-bottom: 20px; */
 }
+
+.spcTp{
+  margin-top: 20px;
+}
+
 
 .tpSpc{
 margin-top:-10px;
