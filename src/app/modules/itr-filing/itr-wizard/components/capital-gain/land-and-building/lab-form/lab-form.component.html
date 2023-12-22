@@ -40,7 +40,39 @@
                       <div class="div-6">
                         <div class="field">
                           <div class="field-label">
-                            <span class="span">Date of Acqusition </span> <span class="text-wrapper-2">*</span>
+                            <span class="span">Date of Sale </span> <span class="text-wrapper-2">*</span>
+                          </div>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    matInput
+                                    [min]="minSellDate"
+                                    [max]="maxSellDate"
+                                    formControlName="sellDate"
+                                    name="asset[i]"
+                                    readonly
+                                    [matDatepicker]="sellDate"
+                                    placeholder="Date of Sale"
+                                    (blur)="calculateIndexCost(i);
+                      calculateCapitalGain(this.immovableForm, '', i)"
+                                    (dateChange)="calMaxPurchaseDate(asset.get('sellDate').value,this.immovableForm,i)"
+                                    (dateInput)="calMaxPurchaseDate(asset.get('sellDate').value,this.immovableForm,i)"
+                                    (blur)="calMaxPurchaseDate(asset.get('sellDate').value,this.immovableForm,i)"
+                                    required/>
+                            <mat-datepicker-toggle
+                                    matSuffix
+                                    [for]="sellDate"></mat-datepicker-toggle>
+                            <mat-datepicker #sellDate></mat-datepicker>
+                            <mat-error
+                                    *ngIf="asset.get('sellDate').hasError('matDatepickerMax') ||
+                      asset.get('sellDate').hasError('matDatepickerMin')">
+                              Invalid Date of Sale
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="field">
+                          <div class="field-label">
+                            <span class="span">Date of Acquisition </span> <span class="text-wrapper-2">*</span>
                           </div>
                           <mat-form-field appearance="outline">
                             <input
@@ -71,37 +103,7 @@
                             </mat-error>
                           </mat-form-field>
                         </div>
-                        <div class="field">
-                          <div class="field-label">
-                            <span class="span">Date of Sale </span> <span class="text-wrapper-2">*</span>
-                          </div>
-                          <mat-form-field appearance="outline">
-                            <input
-                                    matInput
-                                    [min]="minSellDate"
-                                    [max]="maxSellDate"
-                                    formControlName="sellDate"
-                                    name="asset[i]"
-                                    readonly
-                                    [matDatepicker]="sellDate"
-                                    placeholder="Date of Sale"
-                                    (blur)="calculateIndexCost(i);
-                      calculateCapitalGain(this.immovableForm, '', i)"
-                                    (dateChange)="calMaxPurchaseDate(asset.get('sellDate').value,this.immovableForm,i)"
-                                    (dateInput)="calMaxPurchaseDate(asset.get('sellDate').value,this.immovableForm,i)"
-                                    (blur)="calMaxPurchaseDate(asset.get('sellDate').value,this.immovableForm,i)"
-                                    required/>
-                            <mat-datepicker-toggle
-                                    matSuffix
-                                    [for]="sellDate"></mat-datepicker-toggle>
-                            <mat-datepicker #sellDate></mat-datepicker>
-                            <mat-error
-                                    *ngIf="asset.get('sellDate').hasError('matDatepickerMax') ||
-                      asset.get('sellDate').hasError('matDatepickerMin')">
-                              Invalid Date of Sale
-                            </mat-error>
-                          </mat-form-field>
-                        </div>
+
                         <div class="field">
                           <div class="field-label">
                             <span class="span">Type of Gain</span>
@@ -180,34 +182,6 @@
                         <div class="lndBldg-R"><input type="text" placeholder="₹ Enter Amount" class="form-control gry"> </div>
                       </div>
                       <div class="lndBldg-box">
-                        <div class="lndBldg-L">Transfer Expenses <span class="redAst">*</span></div>
-                        <div class="lndBldg-R">
-                          <mat-form-field class="input-field-width" appearance="outline">
-                            <!-- <mat-icon matPrefix> &#8377;</mat-icon> -->
-                            <!-- (blur)="calculateCapitalGain(this.immovableForm,'', i)" -->
-                            <input
-                                    matInput
-                                    currencyMask
-                                    type="number"
-                                    [pattern]="amountRegex"
-                                    formControlName="sellExpense"
-                                    placeholder="Transfer Expenses"
-                                    name="asset[i]"
-                                    class="input-field"
-                                    maxlength="14"
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    (blur)="calculateIndexCost(i);
-                      calculateCapitalGain(this.immovableForm, '', i)"
-                                    (focusin)="reset(asset.get('sellExpense'))"
-                            />
-                            <mat-error
-                                    *ngIf="asset.get('sellExpense').hasError('pattern')">
-                              Enter valid amount upto 2 decimal in case of shares.
-                            </mat-error>
-                          </mat-form-field>
-                        </div>
-                      </div>
-                      <div class="lndBldg-box">
                         <div class="lndBldg-L">Cost of Acquisition <span class="redAst">*</span></div>
                         <div class="lndBldg-R">
                           <mat-form-field class="input-field-width" appearance="outline">
@@ -249,6 +223,34 @@
                                     [disabled]="true"
                                     style="cursor: not-allowed"
                             />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="lndBldg-box">
+                        <div class="lndBldg-L">Transfer Expenses <span class="redAst">*</span></div>
+                        <div class="lndBldg-R">
+                          <mat-form-field class="input-field-width" appearance="outline">
+                            <!-- <mat-icon matPrefix> &#8377;</mat-icon> -->
+                            <!-- (blur)="calculateCapitalGain(this.immovableForm,'', i)" -->
+                            <input
+                                    matInput
+                                    currencyMask
+                                    type="number"
+                                    [pattern]="amountRegex"
+                                    formControlName="sellExpense"
+                                    placeholder="Transfer Expenses"
+                                    name="asset[i]"
+                                    class="input-field"
+                                    maxlength="14"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    (blur)="calculateIndexCost(i);
+                      calculateCapitalGain(this.immovableForm, '', i)"
+                                    (focusin)="reset(asset.get('sellExpense'))"
+                            />
+                            <mat-error
+                                    *ngIf="asset.get('sellExpense').hasError('pattern')">
+                              Enter valid amount upto 2 decimal in case of shares.
+                            </mat-error>
                           </mat-form-field>
                         </div>
                       </div>

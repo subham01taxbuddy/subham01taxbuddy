@@ -3,304 +3,312 @@
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
 
-<div class="page-wrapper">
-  <main>
+<div class="">
+<!--  <main>-->
     <div class="frame-wrapper-2A">
       <form [formGroup]="generalDonationForm">
-        <div class="accordion" id="myAccordion">
+        <div class="accordion-item">
           <h2 class="accordion-header">
-            <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                    data-bs-target="#collapse2">Deduction related to Donation</button>
+<!--            <button type="button" class="accordion-button" data-bs-toggle="collapse"-->
+<!--                    attr.data-bs-target="{{type === '80g' ? '#80g' : '#80gga'}}">Deduction related to Donation</button>-->
+            <button *ngIf="type === '80g'" type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                    aria-expanded="false" data-bs-target="#col80g">Deduction related to Donation</button>
+            <button *ngIf="type === '80gga'" type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                    aria-expanded="false" data-bs-target="#col80gga">Deduction related to Donation</button>
           </h2>
-          <div class="gray_container" formArrayName="donationArray">
-            <div class="div-6">
-              <p class="mb-10" *ngIf="type==='80g'">8OG Donation to chartiable trust</p>
-              <p class="mb-10" *ngIf="type==='80gga'">Section 8OGGA - Donations for Scientific research or Rural
-                Development
-              </p>
-              <div style="float: right">
-                <button class="btn btn__default btn__add" (click)="addDonations()"> Add Another</button>
-              </div>
-            </div>
-            <div class="row" *ngFor="let donation of getDonationArray.controls | paginate : config;let i = index"
-                 [formGroupName]="fieldGlobalIndex(i)">
-              <div class="col-8">
-                <div class="gray_box">
-                  <div class="div-6 ">
-                    <mat-checkbox
-                            color="primary"
-                            name="hasEdit[i]"
-                            formControlName="hasEdit"
-                            class="mv">
-                    </mat-checkbox>
-                    <div class="form-field">
-                      <div><span class="span">Donation Type </span>
-                        <span class="text-wrapper-2">*</span>
+          <div id="{{type === '80g' ? 'col80g' : 'col80gga'}}" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
+            <div class="accordion__item-body">
+              <div class="gray_container" formArrayName="donationArray" >
+                <div class="div-6">
+                  <p class="mb-10" *ngIf="type==='80g'">8OG Donation to chartiable trust</p>
+                  <p class="mb-10" *ngIf="type==='80gga'">Section 8OGGA - Donations for Scientific research or Rural
+                    Development
+                  </p>
+                  <div style="float: right">
+                    <button class="btn btn__default btn__add" (click)="addDonations()"> Add Another</button>
+                  </div>
+                </div>
+                <div class="row" *ngFor="let donation of getDonationArray.controls | paginate : config;let i = index"
+                     [formGroupName]="fieldGlobalIndex(i)">
+                  <div class="col-8">
+                    <div class="gray_box">
+                      <div class="div-6 ">
+                        <mat-checkbox
+                                color="primary"
+                                name="hasEdit[i]"
+                                formControlName="hasEdit"
+                                class="mv">
+                        </mat-checkbox>
+                        <div class="form-field">
+                          <div><span class="span">Donation Type </span>
+                            <span class="text-wrapper-2">*</span>
+                          </div>
+                          <div class="form-control-wrapper select_arrow">
+                            <mat-form-field appearance="outline">
+                              <mat-select *ngIf="type === '80g'"
+                                          (selectionChange)="displayTooltip(i); changed()"
+                                          matTooltip="{{ donationToolTip }}"
+                                          matTooltipClass="tab-tooltip"
+                                          matTooltipPosition="above"
+                                          placeholder="Type of donee"
+                                          formControlName="schemeCode"
+                                          name="schemeCode[i]"
+                                          required>
+                                <mat-option
+                                        *ngFor="let dropdown of otherDonationToDropdown"
+                                        [value]="dropdown.value"
+                                        matTooltip="{{ dropdown.label }}"
+                                        matTooltipClass="tab-tooltip"
+                                        matTooltipPosition="above">
+                                  {{ dropdown.label }}
+                                </mat-option>
+                              </mat-select>
+                              <mat-select *ngIf="type === '80gga'"
+                                          (selectionChange)="displayTooltip(i); changed()"
+                                          matTooltip="{{ donationToolTip }}"
+                                          matTooltipClass="tab-tooltip"
+                                          matTooltipPosition="above"
+                                          placeholder="Type of donee"
+                                          formControlName="schemeCode"
+                                          name="schemeCode[i]"
+                                          required
+                              >
+                                <mat-option
+                                        *ngFor="let dropdown of scientificDonationDropdown"
+                                        [value]="dropdown.value"
+                                        matTooltip="{{ dropdown.label }}"
+                                        matTooltipClass="tab-tooltip"
+                                        matTooltipPosition="above"
+                                >
+                                  {{ dropdown.label }}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="form-field" *ngIf="type === '80g' && donation.get('schemeCode').value === 'FND_SEC80G'">
+                          <div><span class="span">Donation Reference Number </span>
+                          </div>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    formControlName="identifier"
+                                    matInput
+                                    currencyMask
+                                    placeholder="Donation Reference Number"
+                                    name="identifier[i]"
+                                    class="input-field"
+                                    type="text"
+                                    trim/>
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-field">
+                          <div><span class="span">Name of donee</span> <span
+                                  class="text-wrapper-2">*</span></div>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    formControlName="name"
+                                    matInput
+                                    placeholder="Name of donee"
+                                    name="name[i]"
+                                    maxlength="125"
+                                    required
+                                    type="text"
+                                    trim
+                            />
+                            <mat-error *ngIf="donation.get('name').hasError('pattern')">
+                              Name should be character only
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
                       </div>
-                      <div class="form-control-wrapper select_arrow">
-                        <mat-form-field appearance="outline">
-                          <mat-select *ngIf="type === '80g'"
-                                      (selectionChange)="displayTooltip(i); changed()"
-                                      matTooltip="{{ donationToolTip }}"
-                                      matTooltipClass="tab-tooltip"
-                                      matTooltipPosition="above"
-                                      placeholder="Type of donee"
-                                      formControlName="schemeCode"
-                                      name="schemeCode[i]"
-                                      required>
-                            <mat-option
-                                    *ngFor="let dropdown of otherDonationToDropdown"
-                                    [value]="dropdown.value"
-                                    matTooltip="{{ dropdown.label }}"
-                                    matTooltipClass="tab-tooltip"
-                                    matTooltipPosition="above">
-                              {{ dropdown.label }}
-                            </mat-option>
-                          </mat-select>
-                          <mat-select *ngIf="type === '80gga'"
-                                      (selectionChange)="displayTooltip(i); changed()"
-                                      matTooltip="{{ donationToolTip }}"
-                                      matTooltipClass="tab-tooltip"
-                                      matTooltipPosition="above"
-                                      placeholder="Type of donee"
-                                      formControlName="schemeCode"
-                                      name="schemeCode[i]"
-                                      required
-                          >
-                            <mat-option
-                                    *ngFor="let dropdown of scientificDonationDropdown"
-                                    [value]="dropdown.value"
-                                    matTooltip="{{ dropdown.label }}"
+                      <div class="div-6 ">
+                        <div class="form-field">
+                          <div><span class="span">Donation Amount(In Cash) </span> <span
+                                  class="text-wrapper-2">*</span></div>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    formControlName="amountInCash"
+                                    name="amountInCash[i]"
+                                    matInput
+                                    placeholder="Amount in Cash"
+                                    name="amount"
+                                    required
+                                    maxlength="14"
+                                    digitsOnly/>
+                            <mat-error
+                                    *ngIf="donation.get('amountInCash').hasError('pattern') &&
+                                    (donation.get('amountInCash').touched || donation.get('amountInCash').dirty)">
+                              Enter positive amount without decimal.
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="form-field">
+                          <div><span class="span">Donation Amount(Online)</span> <span
+                                  class="text-wrapper-2">*</span></div>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    formControlName="amountOtherThanCash"
+                                    matInput
+                                    placeholder="Amount Other Than Cash"
+                                    name="amountOtherThanCash[i]"
+                                    required
+                                    maxlength="14"
+                                    digitsOnly/>
+                            <mat-error *ngIf="donation.get('amountOtherThanCash').hasError('pattern')">
+                              Enter positive amount without decimal.
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="div-6 ">
+                        <div class="form-field">
+                          <div><span class="span">PAN </span> <span
+                                  class="text-wrapper-2">*</span>
+                          </div>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
                                     matTooltipClass="tab-tooltip"
                                     matTooltipPosition="above"
-                            >
-                              {{ dropdown.label }}
-                            </mat-option>
-                          </mat-select>
-                        </mat-form-field>
+                                    formControlName="panNumber"
+                                    matInput
+                                    currencyMask
+                                    placeholder="PAN of donee"
+                                    name="panNumber[i]"
+                                    (blur)="checkDoneePAN(i, donation)"
+                                    maxlength="10"
+                                    minlength="10"
+                                    required
+                                    type="text"
+                                    trim
+                                    upperCase
+                            />
+                            <mat-error *ngIf="donation.get('panNumber').hasError('pattern')">
+                              Enter valid PAN (e.g XXXXX1234X)</mat-error>
+                            <mat-error *ngIf="donation.get('panNumber').hasError('incorrect')">
+                              Donee PAN can't be same as user PAN.</mat-error>
+                          </mat-form-field>
+                          <mat-label> If PAN not present, use 'GGGGG0000G'</mat-label>
+                        </div>
+                        <div class="form-field">
+                          <div><span class="span">Pin Code</span> <span
+                                  class="text-wrapper-2">*</span></div>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    formControlName="pinCode"
+                                    matInput
+                                    currencyMask
+                                    placeholder="PIN"
+                                    name="pinCode[i]"
+                                    maxlength="6"
+                                    minlength="6"
+                                    required
+                                    type="text"
+                                    trim
+                                    digitsOnly
+                                    (blur)="getData(fieldGlobalIndex(i), donation.get('pinCode').value)"/>
+                            <mat-error *ngIf="donation.get('pinCode').hasError('pattern') ||
+                            donation.get('pinCode').hasError('minlength') ||
+                            donation.get('pinCode').hasError('maxlength')">
+                              PIN should have 6 digits.
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
                       </div>
-                    </div>
-
-                    <div class="form-field" *ngIf="type === '80g' && donation.get('schemeCode').value === 'FND_SEC80G'">
-                      <div><span class="span">Donation Reference Number </span>
+                      <div class="div-6 ">
+                        <div class="form-field">
+                          <div><span class="span">City </span> <span
+                                  class="text-wrapper-2">*</span>
+                          </div>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    formControlName="city"
+                                    matInput
+                                    placeholder="City/Taluka/District"
+                                    name="city[i]"
+                                    maxlength="50"
+                                    required
+                                    type="text"
+                                    trim/>
+                            <mat-error *ngIf="donation.get('city').hasError('pattern')">
+                              Enter valid city name.
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="form-field">
+                          <div><span class="span">State</span> <span
+                                  class="text-wrapper-2">*</span>
+                          </div>
+                          <mat-form-field appearance="outline">
+                            <mat-select
+                                    placeholder="State"
+                                    formControlName="state"
+                                    name="state[i]"
+                                    required>
+                              <mat-option>Select One</mat-option>
+                              <mat-option
+                                      *ngFor="let state of stateDropdown; let i = index"
+                                      [value]="state.stateCode">
+                                {{ state.stateName }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
                       </div>
-                      <mat-form-field appearance="outline">
-                        <input
-                                formControlName="identifier"
+                      <div class="div-6 ">
+                        <div class="form-field">
+                          <div><span class="span">Address </span> <span
+                                  class="text-wrapper-2">*</span></div>
+                          <mat-form-field appearance="outline">
+                            <textarea
+                                formControlName="address"
+                                name="address[i]"
                                 matInput
                                 currencyMask
-                                placeholder="Donation Reference Number"
-                                name="identifier[i]"
+                                placeholder="Address"
                                 class="input-field"
+                                required
                                 type="text"
-                                trim/>
-                      </mat-form-field>
+                                trim></textarea>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div *ngIf="type === '80gga'" class="div-6">
+                        <div class="form-field">
+                          <div><span class="span">Total Donations</span></div>
+                          <div><span class="span">{{ getTotalAmount(i) }}</span></div>
+                        </div>
+                      </div>
+                      <div *ngIf="type === '80gga'" class="div-6">
+                        <div class="form-field">
+                          <div><span class="span">Eligible Amount</span></div>
+                          <div><span class="span">{{ getEligibleAmount(i)}}</span></div>
+                        </div>
+                      </div>
                     </div>
+                  </div>
+                  <div class="col-4 mt-20">
+                    <div class="ml-20">
+                      <i class="fa fa-trash-o delbt mr-20" (click)="deleteDonationArray()"></i>
+                    </div>
+                  </div>
+                </div>
 
-                    <div class="form-field">
-                      <div><span class="span">Name of donee</span> <span
-                              class="text-wrapper-2">*</span></div>
-                      <mat-form-field appearance="outline">
-                        <input
-                                formControlName="name"
-                                matInput
-                                placeholder="Name of donee"
-                                name="name[i]"
-                                maxlength="125"
-                                required
-                                type="text"
-                                trim
-                        />
-                        <mat-error *ngIf="donation.get('name').hasError('pattern')">
-                          Name should be character only
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="div-6 ">
-                    <div class="form-field">
-                      <div><span class="span">Donation Amount(In Cash) </span> <span
-                              class="text-wrapper-2">*</span></div>
-                      <mat-form-field appearance="outline">
-                        <input
-                                formControlName="amountInCash"
-                                name="amountInCash[i]"
-                                matInput
-                                placeholder="Amount in Cash"
-                                name="amount"
-                                required
-                                maxlength="14"
-                                digitsOnly/>
-                        <mat-error
-                                *ngIf="donation.get('amountInCash').hasError('pattern') &&
-                                (donation.get('amountInCash').touched || donation.get('amountInCash').dirty)">
-                          Enter positive amount without decimal.
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                    <div class="form-field">
-                      <div><span class="span">Donation Amount(Online)</span> <span
-                              class="text-wrapper-2">*</span></div>
-                      <mat-form-field appearance="outline">
-                        <input
-                                formControlName="amountOtherThanCash"
-                                matInput
-                                placeholder="Amount Other Than Cash"
-                                name="amountOtherThanCash[i]"
-                                required
-                                maxlength="14"
-                                digitsOnly/>
-                        <mat-error *ngIf="donation.get('amountOtherThanCash').hasError('pattern')">
-                          Enter positive amount without decimal.
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="div-6 ">
-                    <div class="form-field">
-                      <div><span class="span">PAN </span> <span
-                              class="text-wrapper-2">*</span>
-                      </div>
-                      <mat-form-field appearance="outline">
-                        <input
-                                matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
-                                matTooltipClass="tab-tooltip"
-                                matTooltipPosition="above"
-                                formControlName="panNumber"
-                                matInput
-                                currencyMask
-                                placeholder="PAN of donee"
-                                name="panNumber[i]"
-                                (blur)="checkDoneePAN(i, donation)"
-                                maxlength="10"
-                                minlength="10"
-                                required
-                                type="text"
-                                trim
-                                upperCase
-                        />
-                        <mat-error *ngIf="donation.get('panNumber').hasError('pattern')">
-                          Enter valid PAN (e.g XXXXX1234X)</mat-error>
-                        <mat-error *ngIf="donation.get('panNumber').hasError('incorrect')">
-                          Donee PAN can't be same as user PAN.</mat-error>
-                      </mat-form-field>
-                      <mat-label> If PAN not present, use 'GGGGG0000G'</mat-label>
-                    </div>
-                    <div class="form-field">
-                      <div><span class="span">Pin Code</span> <span
-                              class="text-wrapper-2">*</span></div>
-                      <mat-form-field appearance="outline">
-                        <input
-                                formControlName="pinCode"
-                                matInput
-                                currencyMask
-                                placeholder="PIN"
-                                name="pinCode[i]"
-                                maxlength="6"
-                                minlength="6"
-                                required
-                                type="text"
-                                trim
-                                digitsOnly
-                                (blur)="getData(fieldGlobalIndex(i), donation.get('pinCode').value)"/>
-                        <mat-error *ngIf="donation.get('pinCode').hasError('pattern') ||
-                        donation.get('pinCode').hasError('minlength') ||
-                        donation.get('pinCode').hasError('maxlength')">
-                          PIN should have 6 digits.
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="div-6 ">
-                    <div class="form-field">
-                      <div><span class="span">City </span> <span
-                              class="text-wrapper-2">*</span>
-                      </div>
-                      <mat-form-field appearance="outline">
-                        <input
-                                formControlName="city"
-                                matInput
-                                placeholder="City/Taluka/District"
-                                name="city[i]"
-                                maxlength="50"
-                                required
-                                type="text"
-                                trim/>
-                        <mat-error *ngIf="donation.get('city').hasError('pattern')">
-                          Enter valid city name.
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                    <div class="form-field">
-                      <div><span class="span">State</span> <span
-                              class="text-wrapper-2">*</span>
-                      </div>
-                      <mat-form-field appearance="outline">
-                        <mat-select
-                                placeholder="State"
-                                formControlName="state"
-                                name="state[i]"
-                                required>
-                          <mat-option>Select One</mat-option>
-                          <mat-option
-                                  *ngFor="let state of stateDropdown; let i = index"
-                                  [value]="state.stateCode">
-                            {{ state.stateName }}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="div-6 ">
-                    <div class="form-field">
-                      <div><span class="span">Address </span> <span
-                              class="text-wrapper-2">*</span></div>
-                      <mat-form-field appearance="outline">
-                        <textarea
-                            formControlName="address"
-                            name="address[i]"
-                            matInput
-                            currencyMask
-                            placeholder="Address"
-                            class="input-field"
-                            required
-                            type="text"
-                            trim></textarea>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div *ngIf="type === '80gga'" class="div-6">
-                    <div class="form-field">
-                      <div><span class="span">Total Donations</span></div>
-                      <div><span class="span">{{ getTotalAmount(i) }}</span></div>
-                    </div>
-                  </div>
-                  <div *ngIf="type === '80gga'" class="div-6">
-                    <div class="form-field">
-                      <div><span class="span">Eligible Amount</span></div>
-                      <div><span class="span">{{ getEligibleAmount(i)}}</span></div>
-                    </div>
-                  </div>
-                </div>
+
               </div>
-              <div class="col-4 mt-20">
-                <div class="ml-20">
-                  <i class="fa fa-trash-o delbt mr-20" (click)="deleteDonationArray()"></i>
-                </div>
+
+              <div class="col-sm-6">
+                <table>
+                  <tr *ngFor="let item of getDonationArray.controls | paginate : config"></tr>
+                </table>
+                <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
               </div>
             </div>
-
-
-          </div>
-
-          <div class="col-sm-6">
-            <table>
-              <tr *ngFor="let item of getDonationArray.controls | paginate : config"></tr>
-            </table>
-            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
           </div>
         </div>
       </form>
     </div>
-  </main>
+<!--  </main>-->
 </div>

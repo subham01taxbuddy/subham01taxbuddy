@@ -10,10 +10,10 @@ import { WizardNavigation } from '../../itr-shared/WizardNavigation';
 
 @Component({
   selector: 'app-other-income',
-  templateUrl: './other-income.component.html',
-  styleUrls: ['./other-income.component.scss'],
+  templateUrl: './exempt-income.component.html',
+  styleUrls: ['./exempt-income.component.scss'],
 })
-export class OtherIncomeComponent extends WizardNavigation implements OnInit {
+export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
   loading: boolean = false;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -66,13 +66,13 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   ];
 
   exemptIncomesDropdown = [
-    {
-      id: null,
-      seqNum: 1,
-      value: 'AGRI',
-      label: 'Agriculture Income (less than or equal to RS. 5 Lakhs)',
-      detailed: false,
-    },
+    // {
+    //   id: null,
+    //   seqNum: 1,
+    //   value: 'AGRI',
+    //   label: 'Agriculture Income (less than or equal to RS. 5 Lakhs)',
+    //   detailed: false,
+    // },
     {
       id: null,
       seqNum: 2,
@@ -241,7 +241,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       exemptIncomes: this.exemptIncomesFormArray,
     });
 
-    this.setOtherIncomeValues();
+    // this.setOtherIncomeValues();
     this.setExemptIncomeValues();
     this.setAgriIncValues();
     this.validateIncomeValueOnBlur();
@@ -262,19 +262,58 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   }
   private createExemptIncomeForm() {
     const data = [];
-    for (let i = 0; i < this.exemptIncomesDropdown.length; i++) {
+    // for (let i = 0; i < this.exemptIncomesDropdown.length; i++) {
       const formGroup = this.fb.group({
-        label: this.exemptIncomesDropdown[i].label,
-        incomeType: this.exemptIncomesDropdown[i].value,
+        label: [null],
+        incomeType: [null],
         incomeValue:
-          this.exemptIncomesDropdown[i].value === 'AGRI'
+          this.exemptIncomesDropdown[1].value === 'AGRI'
             ? [null]
             : [null, Validators.min(0)],
       });
-
+    if(this.ITR_JSON.exemptIncomes.length == 0) {
       data.push(formGroup);
     }
+    // }
     return this.fb.array(data);
+  }
+
+  addExemptIncome(){
+    let exemptIncomesFormArray = this.exemptIncomeFormGroup.controls[
+        'exemptIncomes'
+        ] as FormArray;
+    const agriformGroup = this.fb.group({
+      label: 'Agriculture Income (less than or equal to RS. 5 Lakhs)',
+      incomeType: 'AGRI',
+      incomeValue: [null]
+    });
+    exemptIncomesFormArray.push(agriformGroup);
+    const formGroup = this.fb.group({
+      label: this.exemptIncomesDropdown[1].label,
+      incomeType: this.exemptIncomesDropdown[1].value,
+      incomeValue:
+          this.exemptIncomesDropdown[1].value === 'AGRI'
+              ? [null]
+              : [null, Validators.min(0)],
+    });
+    exemptIncomesFormArray.push(formGroup);
+  }
+
+  isAgriIncomeExceedMaxLimit(){
+    let exemptIncomesFormArray = this.exemptIncomeFormGroup.controls[
+        'exemptIncomes'
+        ] as FormArray;
+    return exemptIncomesFormArray.controls[0].value.incomeValue > 500000;
+  }
+
+  deleteExemptIncome(index){
+    let exemptIncomesFormArray = this.exemptIncomeFormGroup.controls[
+        'exemptIncomes'
+        ] as FormArray;
+    exemptIncomesFormArray.removeAt(index);
+    if(exemptIncomesFormArray.length === 0){
+      this.addExemptIncome();
+    }
   }
 
   private createAgriIncForm() {
@@ -342,7 +381,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         ? this.agriIncFormGroup.valid
         : true)
     ) {
-      this.saveOtherIncome();
+      // this.saveOtherIncome();
       this.saveExemptIncomes();
       this.saveAndNext.emit(false);
     } else {
@@ -508,9 +547,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     let exemptIncomes = this.exemptIncomeFormGroup.controls[
       'exemptIncomes'
     ] as FormArray;
-    for (let i = 0; i < this.exemptIncomesDropdown.length; i++) {
+    for (let i = 0; i < exemptIncomes.controls.length; i++) {
       let exempt = exemptIncomes.controls[i] as FormGroup;
-      console.log(exempt.controls['incomeValue'].value);
+      // console.log(exempt.controls['incomeValue'].value);
       if (this.utilsService.isNonZero(exempt.controls['incomeValue'].value)) {
         this.Copy_ITR_JSON.exemptIncomes.push({
           natureDesc: exempt.controls['incomeType'].value,
@@ -738,14 +777,20 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       // const allowance = this.localEmployer.allowance.filter((item: any) => item.natureDesc !== 'ALL_ALLOWANCES');
 
       for (let i = 0; i < this.ITR_JSON.exemptIncomes.length; i++) {
-        const formGroup = exemptIncomesFormArray.controls.filter(
-          (item: any) =>
-            item.controls['incomeType'].value ===
-            this.ITR_JSON.exemptIncomes[i].natureDesc
-        )[0] as FormGroup;
-        formGroup.controls['incomeValue'].setValue(
-          this.ITR_JSON.exemptIncomes[i].amount
-        );
+        if(this.ITR_JSON.exemptIncomes[i].natureDesc !== 'AGRI') {
+          let label = this.exemptIncomesDropdown.filter(
+              element => element.value === this.ITR_JSON.exemptIncomes[i].natureDesc)[0]?.label;
+
+          const formGroup = this.fb.group({
+            label: label,
+            incomeType: this.ITR_JSON.exemptIncomes[i].natureDesc,
+            incomeValue:
+                this.exemptIncomesDropdown[1].value === 'AGRI'
+                    ? [null]
+                    : [this.ITR_JSON.exemptIncomes[i].amount, Validators.min(0)],
+          });
+          exemptIncomesFormArray.push(formGroup);
+        }
       }
     }
   }

@@ -1,18 +1,18 @@
 <ngx-loading [show]="loading"></ngx-loading>
 
-<div class="page-wrapper">
-  <main>
+<div class="">
+<!--  <main>-->
     <div class="frame-wrapper-2A">
       <div class="accordion" id="myAccordion">
         <div class="accordion-item" *ngIf="!loading">
           <h2 class="accordion-header" id="heading4">
-            <button type="button" class="accordion-button" data-bs-toggle="collapse"
+            <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" aria-expanded="false"
                     data-bs-target="#collapse4">Any Other Deductions</button>
 
           </h2>
 
           <form [formGroup]="otherDeductionForm">
-            <div id="collapse4" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+            <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
               <div class="accordion__item-body">
               <div class="gray_container">
               <div class="div-6 mb-20">
@@ -182,5 +182,5 @@
         </div>
       </div>
     </div>
-  </main>
+<!--  </main>-->
 </div>

@@ -62,7 +62,7 @@ export class PresumptiveIncomeComponent
 
   subscribeToEmitter(componentRef) {
     //this may not be needed for us
-    // if (!(componentRef instanceof OtherIncomeComponent)){
+    // if (!(componentRef instanceof ExemptIncomeComponent)){
     //   return;
     // }
     const child: WizardNavigation = componentRef;

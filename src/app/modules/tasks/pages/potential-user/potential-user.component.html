@@ -112,8 +112,8 @@
               <div class="col-sm-12">
                 <div class="filter-box">
                   <div class="row">
-                    <div class="col-sm-12 bckClr">
-                      <div class="col-sm-6 bckClr" *ngIf="roles.includes('ROLE_ADMIN')">
+                    <div class="col-sm-12 bckClr tpSpc">
+                      <div class="col-sm-6 bckClr spcLft" *ngIf="roles.includes('ROLE_ADMIN')">
                         <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event)"
                           [showOwnerList]="true"></app-leader-list-dropdown>
                       </div>
@@ -136,6 +136,15 @@
                         </div>
                       </div>
                     </div>
+                    
+                    <!-- Table Sorting inside filter starts -->
+                    <div class="row">
+                      <div class="col-sm-6 spcTp">
+                        <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                          (onChange)="sortByObject($event)"></app-generic-sorting>
+                      </div>
+                    </div>
+                    <!-- Table Sorting inside filter ends -->
                     <div class="button-container">
                       <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
                       </button>
@@ -154,17 +163,7 @@
         </mat-accordion>
       </div>
     </div>
-    <div class="tableSpc mt-3">
-      <div class="row">
-        <div class="col-sm-12 ">
-          <div class="row">
-            <div class="col-sm-5">
-              <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
-                (onChange)="sortByObject($event)"></app-generic-sorting>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="tableSpc mt-3">    
       <div>
         <div class="row">
           <div class="col-sm-9 row">

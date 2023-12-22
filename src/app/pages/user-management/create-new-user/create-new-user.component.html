@@ -3,7 +3,7 @@
 <div class="clearfix">
   <div class="align-items-center row">
     <div class="col-sm-4">
-      <b style="font-size: 20px">Create New User:</b>
+      <div class="hdTx">Create New User:</div>
     </div>
   </div>
   <div class="rowClr">
@@ -14,9 +14,9 @@
             <app-sme-list-drop-down (sendLeader)="fromSme($event, true)"
               (sendPrincipleIndividual)="fromSme($event, false)" [disabled]="assignedToMe">
             </app-sme-list-drop-down>
-            <span class="note1 note">
+            <div class="smallNot">
               Note : Service type will be enable after selecting Leader
-            </span>
+            </div>
           </div>
           <div class="col-sm-3 spsTp">
             <mat-form-field appearance="outline" class="class1">

@@ -1,4 +1,4 @@
-@import "../../../../../ux/scss/style.scss";
+@import "../../../ux/scss/style.scss";
 .header_content {
   display: flex;
   align-items: flex-start;
@@ -31,10 +31,6 @@
     width: 24px;
     height: 24px;
   }
-}
-
-.input-field-width{
-  padding-left:10px!important;
 }
 
 .wrapper {
@@ -93,4 +89,8 @@
   gap: 12px;
   position: relative;
   flex: 0 0 auto;
+}
+
+.extra-pad{
+  padding: 24px;
 }

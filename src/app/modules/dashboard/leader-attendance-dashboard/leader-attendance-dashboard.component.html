@@ -11,7 +11,7 @@
               </div>
               <div class="col-sm-12">
                 <div class="row">
-                  <div class="col-sm-6 spsTp ">
+                  <div class="col-sm-4 spsTp ">
                     <mat-form-field appearance="outline">
                       <mat-label>Start Date:</mat-label>
                       <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
@@ -21,7 +21,7 @@
                       <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
                     </mat-form-field>
                   </div>
-                  <div class="col-sm-6 spsTp ">
+                  <div class="col-sm-4 spsTp ">
                     <mat-form-field appearance="outline">
                       <mat-label>End Date:</mat-label>
                       <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"

@@ -139,6 +139,14 @@ export class HousePropertyComponent implements OnInit {
     this.updateHpTaxaxbleIncome();
   }
 
+  getPropertyTypeLabel(){
+    if(this.housePropertyForm.controls['propertyType'].value) {
+      return this.propertyTypeDropdown.filter(prop =>
+          prop.value === this.housePropertyForm.controls['propertyType'].value)[0].label + ' Property';
+    } else {
+      return 'Property'
+    }
+  }
   updateHpTaxaxbleIncome(save?) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // Loop through each index in the ITR_JSON.employers array
@@ -579,12 +587,12 @@ export class HousePropertyComponent implements OnInit {
         this.housePropertyForm.controls['isEligibleFor80EE']?.setValue('80EE');
       }
     } else {
-      this.housePropertyForm.controls['interestAmount'].setValue(
-        itrJsonHp?.loans[0]?.interestAmount +
-          (itrJsonHp?.eligible80EEAAmount > 0
-            ? itrJsonHp?.eligible80EEAAmount
-            : itrJsonHp?.eligible80EEAmount)
-      );
+      // this.housePropertyForm.controls['interestAmount'].setValue(
+      //   itrJsonHp?.loans[0]?.interestAmount +
+      //     (itrJsonHp?.eligible80EEAAmount > 0
+      //       ? itrJsonHp?.eligible80EEAAmount
+      //       : itrJsonHp?.eligible80EEAmount)
+      // );
 
       if (itrJsonHp?.eligible80EEAAmount > 0) {
         this.housePropertyForm.controls['interestAmount'].setValue(
@@ -596,6 +604,9 @@ export class HousePropertyComponent implements OnInit {
           itrJsonHp?.loans[0]?.interestAmount + itrJsonHp?.eligible80EEAmount
         );
         this.housePropertyForm.controls['isEligibleFor80EE']?.setValue('80EE');
+      } else {
+        this.housePropertyForm.controls['interestAmount'].setValue(
+            itrJsonHp?.loans[0]?.interestAmount);
       }
 
       this.housePropertyForm.controls['nav'].setValue(

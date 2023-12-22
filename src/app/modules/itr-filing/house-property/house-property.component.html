@@ -28,8 +28,8 @@
               </div>
             </div>
           </div>
-
-          <div class="div-2">
+          <div class="container-fluid">
+          <div class="row">
             <form [formGroup]="housePropertyForm">
               <div class="div-4">
               <div class="frame-wrapper-2A">
@@ -47,19 +47,12 @@
                             placeholder="Select Property Type"
                             name="propertyType"
                             formControlName="propertyType"
-                            (change)="
-                      changePropType(
-                        housePropertyForm.controls['propertyType'].value
-                      )
-                    "
-                            required
-                    >
+                            (change)="changePropType(housePropertyForm.controls['propertyType'].value)" required>
                       <mat-radio-button
                               class="fntWgt"
                               *ngFor="let propertyType of propertyTypeDropdown"
-                              [value]="propertyType.value"
-                      >{{ propertyType.label | titlecase }}</mat-radio-button
-                      >
+                              [value]="propertyType.value">{{ propertyType.label | titlecase }}
+                      </mat-radio-button>
                     </mat-radio-group>
                   </div>
                 </div>
@@ -67,7 +60,8 @@
                 <div class="accordion" id="myAccordion">
                   <div class="accordion-item">
                     <h2 class="accordion-header accoHdclr" id="headingOne">
-                      <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne">Let Out House Property</button>
+                      <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                        {{ getPropertyTypeLabel()}} </button>
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                       <div class="card-body">
@@ -719,10 +713,10 @@
                         <div class="hp4main1" *ngFor="let ten of getTenantArray.controls; let i = index"
                              [formGroupName]="i">
 
-                          <div class="custom-control custom-checkbox tenant-checkbox">
-                            <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                    type="checkbox" (click)="activeTenant = [i]"/>
-                          </div>
+<!--                          <div class="custom-control custom-checkbox tenant-checkbox">-->
+<!--                            <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"-->
+<!--                                    type="checkbox" (click)="activeTenant = [i]"/>-->
+<!--                          </div>-->
                           <div class="hp4-2">
                             <div class="field">
                               <div class="field-label">
@@ -781,7 +775,7 @@
                           <div class="hp4-4">
                             <div class="Bx4">
                               <div class="Bx4L">
-                                <button type="button" (click)="removeTenant(activeTenant)"> <i class="fa fa-trash-o delbt"></i> </button>
+                                <button type="button" (click)="removeTenant(i)"> <i class="fa fa-trash-o delbt"></i> </button>
                               </div>
                               <div class="Bx4R">
                                 <button type="button" class="addAno" (click)="addMoreTenants()"> + Add Another </button>
@@ -809,6 +803,7 @@
             </div>
 
           </div>
+        </div>
         </div>
       </div>
     </div>

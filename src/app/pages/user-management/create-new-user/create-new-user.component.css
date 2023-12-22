@@ -4,6 +4,26 @@
     margin-bottom: 15px;
 }
 
+.hdTx {
+  margin-left: 20px;
+  margin-top: -5px;
+  margin-bottom: 10px;
+  font-size:20px;
+}
+
+.smallNot {
+  background-color: #fafafa;
+  padding: 5px 0px 5px 10px;
+  width: 360px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-style: italic;
+  border: 1px solid #efefef;
+  color: #b60000;
+  min-width: 180px;
+  margin-top: 10px;  
+}
+
 .bldFnt{
   font-weight:600;
 }

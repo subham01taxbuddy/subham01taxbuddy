@@ -126,7 +126,7 @@
                     <div class="row">
                       <div class="col-sm-2">
                         <label class="input__label" for="attr">F.Y Year </label>
-                        <mat-form-field appearance="outline" class="customBg">
+                        <mat-form-field appearance="outline">
                           <input type="text" matInput [formControl]="assessmentYear" readonly>
                         </mat-form-field>
                       </div>
@@ -140,6 +140,15 @@
                       </div>
                     </div>
                   </div>
+                  
+                  <!-- Table Togle Inside Filter starts -->
+                  <div class="row">
+                    <div class="col-sm-6 spcTp">
+                      <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                        (onChange)="sortByObject($event)"></app-generic-sorting>
+                    </div>
+                  </div>
+                  <!-- Table Togle Inside Filter ends -->
                   <div class="button-container">
                     <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
                     </button>
@@ -160,17 +169,7 @@
       </mat-accordion>
     </div>
   </div>
-  <div class="tableSpc mt-3">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="row">
-          <div class="col-sm-5">
-            <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
-              (onChange)="sortByObject($event)"></app-generic-sorting>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="tableSpc mt-3">  
     <div>
       <div class="row">
         <div class="col-sm-9 row">

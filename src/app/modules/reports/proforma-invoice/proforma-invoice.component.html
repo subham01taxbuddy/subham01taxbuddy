@@ -52,12 +52,7 @@
 <div class="main-1">
   <div class="row rowClr-1">
     <div class="col-sm-12">
-      <div class="row">
-        <div class="col-sm-6">
-          <h4>Proforma Invoice Sent Report:</h4>
-        </div>
-      </div>
-      <div class="">
+ 
         <mat-accordion class="headers-align">
           <mat-expansion-panel [expanded]=true>
             <mat-expansion-panel-header>
@@ -70,10 +65,11 @@
 
               <div class="col-sm-12">
                 <div class="filter-box">
+                  <div class="container-fluid">
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="row">
-                        <div class="col-sm-6 spsTp">
+                        <div class="col-sm-4 spsTp">
                           <mat-form-field appearance="outline">
                             <mat-label>From Date</mat-label>
                             <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
@@ -83,7 +79,7 @@
                             <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
                           </mat-form-field>
                         </div>
-                        <div class="col-sm-6 spsTp">
+                        <div class="col-sm-4 spsTp">
                           <mat-form-field appearance="outline">
                             <mat-label>To Date</mat-label>
                             <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
@@ -103,13 +99,14 @@
                     </div>
                   </div>
                 </div>
+                </div>
               </div>
 
             
             </div>
           </mat-expansion-panel>
         </mat-accordion>
-      </div>
+      
     </div>
   </div>
 </div>
