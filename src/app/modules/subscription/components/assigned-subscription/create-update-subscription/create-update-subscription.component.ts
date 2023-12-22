@@ -904,6 +904,12 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       console.log('owner filer name  -> ', result);
       this.filerName.setValue(result.data[0]?.name);
       this.leaderName.setValue(result.data[0]?.parentName);
+      if(result.data[0].filer && !result.data[0].leader ){
+        this.assignedFilerId = result.data[0].userId;
+        this.getSmeDetail();
+      }
+
+
     });
   }
 
