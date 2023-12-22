@@ -97,7 +97,7 @@
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline">
-                                  <input readonly formControlName="cogc" name="cogc[i]" matInput class="input-field"
+                                  <input readonly formControlName="totalCredit" name="totalCredit[i]" matInput class="input-field"
                                     required type="number" trim />
                                 </mat-form-field>
                               </div>
@@ -131,6 +131,22 @@
                             </div>
                             <div class="div-6 mb-20">
                               <div class="form-field">
+                                <div><span class="normal_text">Gross profit from trading
+                                    account</span>
+                                </div>
+                                <div><span class="normal_text">Note: Gross Profit cannot be more than Turnover</span>
+                                </div>
+                              </div>
+                              <div class="form-field">
+                                <mat-form-field appearance="outline">
+                                  <input readonly formControlName="grossProfit" name="grossProfit[i]" matInput
+                                         class="input-field" required type="number" trim />
+                                </mat-form-field>
+                              </div>
+                            </div>
+
+                            <div class="div-6 mb-20">
+                              <div class="form-field">
                                 <div><span class="normal_text">Trading expense</span>
                                 </div>
                               </div>
@@ -142,21 +158,7 @@
                                 </mat-form-field>
                               </div>
                             </div>
-                            <div class="div-6 mb-20">
-                              <div class="form-field">
-                                <div><span class="normal_text">Gross profit from trading
-                                    account</span>
-                                </div>
-                                <div><span class="normal_text">Note: Gross Profit cannot be more than Turnover</span>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <mat-form-field appearance="outline">
-                                  <input readonly formControlName="grossProfit" name="grossProfit[i]" matInput
-                                    class="input-field" required type="number" trim />
-                                </mat-form-field>
-                              </div>
-                            </div>
+
                             <div class="div-6 mb-20 mt-3">
                               <div class="form-field">
                                 <div><span class="normal_text">Net Profit (Gross Profit - Expenses)</span>

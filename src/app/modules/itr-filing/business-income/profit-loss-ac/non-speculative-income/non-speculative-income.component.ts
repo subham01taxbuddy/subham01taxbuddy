@@ -143,7 +143,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       finishedGoodsOpeningStock: [income?.finishedGoodsOpeningStock],
       purchase: [income?.purchase],
       netIncome: [0],
-      cogc: [0],
+      totalCredit: [0],
       expenditure: [income?.expenditure == null ? 0 : income?.expenditure],
     });
   }
@@ -200,17 +200,17 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     let specIncome = (
       this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
     ).controls[index] as FormGroup;
-    specIncome.controls['cogc'].setValue(
-      specIncome.controls['finishedGoodsOpeningStock'].value +
-        specIncome.controls['purchase'].value -
-        specIncome.controls['finishedGoodsClosingStock'].value
+    specIncome.controls['totalCredit'].setValue(
+      Number(specIncome.controls['turnOver'].value) +
+        Number(specIncome.controls['finishedGoodsClosingStock'].value)
     );
     specIncome.controls['grossProfit'].setValue(
-      specIncome.controls['turnOver'].value - specIncome.controls['cogc'].value
+      Number(specIncome.controls['totalCredit'].value) - Number(specIncome.controls['finishedGoodsOpeningStock'].value)
+        - Number(specIncome.controls['purchase'].value)
     );
     specIncome.controls['netIncome'].setValue(
-      specIncome.controls['grossProfit'].value -
-        specIncome.controls['expenditure'].value
+      Number(specIncome.controls['grossProfit'].value) -
+        Number(specIncome.controls['expenditure'].value)
     );
     this.calculateNetProfit();
   }
