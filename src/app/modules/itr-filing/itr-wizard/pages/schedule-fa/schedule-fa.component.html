@@ -93,12 +93,10 @@
                                 let j = index
                               " [formGroupName]="j">
                               <div class="div-6">
-                                <!--                                <input-->
-                                <!--                                        class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"-->
-                                <!--                                        type="checkbox"-->
-                                <!--                                        (click)="$event.stopPropagation()"-->
-                                <!--                                        [checked]="selectedAccountIndexes.includes(j)"-->
-                                <!--                                        (click)="toggleSelectedAccountIndex(j)"/>-->
+                                <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                  type="checkbox" (click)="$event.stopPropagation()"
+                                  [checked]="selectedAccountIndexes.includes(j)"
+                                  (click)="toggleSelectedAccountIndex(j)" />
                                 <div class="form-field">
                                   <div>
                                     <span class="span">Account Number</span>
@@ -174,6 +172,12 @@
                               <!--                                <i class="fa fa-trash" aria-hidden="true"></i> Delete-->
                               <!--                              </button>-->
                             </div>
+                            <button class="delete-btn" style="width: 15%" (click)="
+                                delete('depositoryAccounts', 'account', i)
+                              ">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                              Delete
+                            </button>
                           </div>
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px"
@@ -1407,6 +1411,11 @@
                             Delete
                           </button>
                         </div>
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                          (click)="delete('signingAuthorityDetails', 'formArray')">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          All
+                        </button>
                       </form>
                     </div>
                   </div>
@@ -1633,9 +1642,15 @@
                                     required />
                                 </mat-form-field>
                               </div>
+
                             </div>
                           </div>
                         </div>
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                          (click)="delete('trustsDetails', 'formArray')">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          All
+                        </button>
                       </form>
                     </div>
                   </div>
@@ -1792,13 +1807,13 @@
                                 </mat-form-field>
                               </div>
                             </div>
-                            <button class="delete-btn" style="width: 15%; margin: 10px"
-                              (click)="delete('otherIncomeDetails', 'formArray')">
-                              <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                              All
-                            </button>
                           </div>
                         </div>
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                          (click)="delete('otherIncomeDetails', 'formArray')">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          All
+                        </button>
                       </form>
                     </div>
                   </div>
