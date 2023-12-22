@@ -165,15 +165,7 @@
                       <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
                         (onChange)="sortByObject($event)"></app-generic-sorting>
                     </div>
-                    <div class="col-sm-6"
-                      *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
-                      <button class="bulk-buttons bulk" style="float:right"
-                        (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk
-                          Re-Assignment to Filer</span></button>
-                      <button class="bulk-buttons bulk spRt" style="float:right"
-                        (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk
-                          Re-Assignment to Leader</span></button>
-                    </div>
+                   
                     <!-- Adding new content in filter ends --> 
                     <div class="button-container">
                       <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
@@ -182,6 +174,15 @@
                         Clear form
                       </button>
                     </div>
+                    <div class="right"
+                    *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
+                    <button class="bulk-buttons bulk" style="float:right"
+                      (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk
+                        Re-Assignment to Filer</span></button>
+                    <button class="bulk-buttons bulk spRt" style="float:right"
+                      (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk
+                        Re-Assignment to Leader</span></button>
+                  </div>
                     
                   </div>
                 </div>     
