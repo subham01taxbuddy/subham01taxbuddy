@@ -1105,12 +1105,14 @@
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
                         *ngIf="
-                          finalCalculations?.businessIncome
+                          (finalCalculations?.businessIncome
                             ?.businessIncomeDetails?.nonSpecIncome
                             ?.grossTurnover &&
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncome
+                              ?.grossTurnover !== 0) ||
                           finalCalculations?.businessIncome
-                            ?.businessIncomeDetails?.nonSpecIncome
-                            ?.grossTurnover !== 0
+                            ?.businessIncomeDetails?.nonSpecIncomePl
                         "
                       >
                         <tbody>
@@ -1123,7 +1125,16 @@
                           </tr>
                         </tbody>
                         <!-- Non speculative Income  -->
-                        <tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncome
+                              ?.grossTurnover &&
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncome
+                              ?.grossTurnover !== 0
+                          "
+                        >
                           <td>
                             {{
                               finalCalculations?.businessIncome
@@ -1146,7 +1157,6 @@
                             }}
                           </td>
                           <td>
-                            Rs
                             {{
                               finalCalculations?.businessIncome
                                 ?.businessIncomeDetails?.nonSpecIncome
@@ -1154,12 +1164,27 @@
                             }}
                           </td>
                           <td>
-                            Rs
                             {{
                               utilsService.currencyFormatter(
                                 finalCalculations?.businessIncome
                                   ?.businessIncomeDetails?.nonSpecIncome
                                   ?.TaxableIncome
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncomePl
+                          "
+                        >
+                          <td colspan="4">P&L details</td>
+                          <td>
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.businessIncome
+                                  ?.businessIncomeDetails?.nonSpecIncomePl
                               )
                             }}
                           </td>
@@ -8021,8 +8046,9 @@
                     class="color-panel accordion-border"
                     *ngIf="
                       !ITR_JSON.isItrSummaryJsonEdited &&
-                      ITR_JSON.itrSummaryJson && finalCalculations?.SchedulePTI
-                          ?.SchedulePTIDtls?.length > 0
+                      ITR_JSON.itrSummaryJson &&
+                      finalCalculations?.SchedulePTI?.SchedulePTIDtls?.length >
+                        0
                     "
                     #SchedulePTI
                   >

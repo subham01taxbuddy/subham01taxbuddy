@@ -319,6 +319,7 @@ export class SummaryComponent implements OnInit {
           grossTurnover?: Number;
           TaxableIncome?: Number;
         };
+        nonSpecIncomePl?:any;
         specIncome?: {
           businessSection: String;
           natureOfBusinessCode: any;
@@ -3166,6 +3167,9 @@ export class SummaryComponent implements OnInit {
                         TaxableIncome: null,
                       },
 
+                      nonSpecIncomePl: this.itrType === 'ITR3' ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PARTA_PL?.DebitsToPL?.PBT : null,
+                      
                 specIncome:
                   this.itrType === 'ITR3'
                     ? {
