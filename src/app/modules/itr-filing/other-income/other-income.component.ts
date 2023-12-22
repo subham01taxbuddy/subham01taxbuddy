@@ -904,7 +904,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   getTotalExemptIncome() {
     let total = 0;
     for (let i = 0; i < this.exemptIncomesFormArray.controls.length; i++) {
-      if (
+      if ( this.exemptIncomesFormArray.controls[i].value.incomeType !== 'AGRI' &&
         this.utilsService.isNonZero(
           this.exemptIncomesFormArray.controls[i].value.incomeValue
         )
