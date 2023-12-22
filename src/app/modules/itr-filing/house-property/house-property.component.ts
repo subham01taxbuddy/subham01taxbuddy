@@ -140,8 +140,12 @@ export class HousePropertyComponent implements OnInit {
   }
 
   getPropertyTypeLabel(){
-    return this.propertyTypeDropdown.filter(prop =>
-        prop.value === this.housePropertyForm.controls['propertyType'].value)[0].label;
+    if(this.housePropertyForm.controls['propertyType'].value) {
+      return this.propertyTypeDropdown.filter(prop =>
+          prop.value === this.housePropertyForm.controls['propertyType'].value)[0].label + ' Property';
+    } else {
+      return 'Property'
+    }
   }
   updateHpTaxaxbleIncome(save?) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
