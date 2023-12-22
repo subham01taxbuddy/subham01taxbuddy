@@ -1104,6 +1104,14 @@
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
+                        *ngIf="
+                          finalCalculations?.businessIncome
+                            ?.businessIncomeDetails?.nonSpecIncome
+                            ?.grossTurnover &&
+                          finalCalculations?.businessIncome
+                            ?.businessIncomeDetails?.nonSpecIncome
+                            ?.grossTurnover !== 0
+                        "
                       >
                         <tbody>
                           <tr>
@@ -1115,17 +1123,7 @@
                           </tr>
                         </tbody>
                         <!-- Non speculative Income  -->
-
-                        <tr
-                          *ngIf="
-                            finalCalculations?.businessIncome
-                              ?.businessIncomeDetails?.nonSpecIncome
-                              ?.grossTurnover &&
-                            finalCalculations?.businessIncome
-                              ?.businessIncomeDetails?.nonSpecIncome
-                              ?.grossTurnover !== 0
-                          "
-                        >
+                        <tr>
                           <td>
                             {{
                               finalCalculations?.businessIncome
@@ -1225,6 +1223,17 @@
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
+                        *ngIf="
+                          finalCalculations?.businessIncome
+                            ?.businessIncomeDetails?.business44AD?.length > 0 ||
+                          finalCalculations?.businessIncome
+                            ?.businessIncomeDetails?.business44ADA?.length >
+                            0 ||
+                          (finalSummary?.assessment?.summaryIncome
+                            ?.summaryBusinessIncome.totalIncomeFromFirm &&
+                            finalSummary?.assessment?.summaryIncome
+                              ?.summaryBusinessIncome.totalIncomeFromFirm !== 0)
+                        "
                       >
                         <tbody>
                           <tr>
@@ -1240,10 +1249,8 @@
                           <ng-container
                             *ngIf="
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD &&
-                              finalCalculations?.businessIncome
                                 ?.businessIncomeDetails?.business44AD?.length >
-                                0
+                              0
                             "
                           >
                             <tr
@@ -1281,10 +1288,8 @@
                           <ng-container
                             *ngIf="
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44ADA &&
-                              finalCalculations?.businessIncome
                                 ?.businessIncomeDetails?.business44ADA?.length >
-                                0
+                              0
                             "
                           >
                             <tr
@@ -1321,8 +1326,10 @@
                           <ng-container
                             *ngIf="
                               finalSummary?.assessment?.summaryIncome
+                                ?.summaryBusinessIncome.totalIncomeFromFirm &&
+                              finalSummary?.assessment?.summaryIncome
                                 ?.summaryBusinessIncome.totalIncomeFromFirm !==
-                              0
+                                0
                             "
                           >
                             <tr>
@@ -1350,6 +1357,8 @@
                       class="bxHed"
                       *ngIf="
                         finalSummary?.assessment?.summaryIncome
+                          ?.summaryBusinessIncome.totalIncomeFromFirm &&
+                        finalSummary?.assessment?.summaryIncome
                           ?.summaryBusinessIncome.totalIncomeFromFirm !== 0
                       "
                     >
@@ -1362,6 +1371,8 @@
 
                     <div
                       *ngIf="
+                        finalSummary?.assessment?.summaryIncome
+                          ?.summaryBusinessIncome.totalIncomeFromFirm &&
                         finalSummary?.assessment?.summaryIncome
                           ?.summaryBusinessIncome.totalIncomeFromFirm !== 0
                       "
@@ -1459,6 +1470,8 @@
                     <table
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
+                        finalCalculations?.businessIncome?.businessIncomeDetails
+                          ?.crypto?.cryptoDetails &&
                         finalCalculations?.businessIncome?.businessIncomeDetails
                           ?.crypto?.cryptoDetails?.length > 0
                       "
@@ -2003,8 +2016,10 @@
                     >
                       Short term capital gain @ slab rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermAppSlabRateTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.shortTerm
+                            ?.ShortTermAppSlabRateTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2166,8 +2181,10 @@
                     >
                       Short term capital gain @ 15% rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm15PerTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.shortTerm
+                            ?.ShortTerm15PerTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2239,8 +2256,10 @@
                     >
                       Short term capital gain @ 30% rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm30PerTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.shortTerm
+                            ?.ShortTerm30PerTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2317,8 +2336,10 @@
                     >
                       Short term capital gain @ special rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermSplRateDTAATotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.shortTerm
+                            ?.ShortTermSplRateDTAATotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2391,8 +2412,10 @@
                     >
                       Long term capital gain @ 10% rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.longTerm
-                          ?.LongTerm10PerTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.longTerm
+                            ?.LongTerm10PerTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2461,8 +2484,10 @@
                     >
                       Long term capital gain @ 20% rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.longTerm
-                          ?.LongTerm20PerTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.longTerm
+                            ?.LongTerm20PerTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2701,7 +2726,9 @@
                     >
                       Income from crypto
                       <span style="float: right">{{
-                       utilsService.currencyFormatter(finalCalculations?.capitalGain?.totalCryptoIncome)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.totalCryptoIncome
+                        )
                       }}</span>
                     </div>
                     <table
@@ -7994,7 +8021,8 @@
                     class="color-panel accordion-border"
                     *ngIf="
                       !ITR_JSON.isItrSummaryJsonEdited &&
-                      ITR_JSON.itrSummaryJson
+                      ITR_JSON.itrSummaryJson && finalCalculations?.SchedulePTI
+                          ?.SchedulePTIDtls?.length > 0
                     "
                     #SchedulePTI
                   >
@@ -9926,10 +9954,10 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 keys.ExemptIncAgriOthUs10Total
-                                  ? (keys?.ExemptIncAgriOthUs10Total || 0) 
+                                  ? keys?.ExemptIncAgriOthUs10Total || 0
                                   : getExemptIncomeTotal() +
                                     (finalCalculations?.exemptIncome?.total ||
-                                      0) 
+                                      0)
                               }}
                             </label>
                           </div>

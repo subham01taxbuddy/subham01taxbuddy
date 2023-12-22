@@ -312,14 +312,14 @@ export class SummaryComponent implements OnInit {
           ];
           totalPresInc?: any;
         };
-        nonSpecIncome: {
-          businessSection: String;
-          natureOfBusinessCode: any;
-          tradeName: String;
-          grossTurnover: Number;
-          TaxableIncome: Number;
+        nonSpecIncome?: {
+          businessSection?: String;
+          natureOfBusinessCode?: any;
+          tradeName?: String;
+          grossTurnover?: Number;
+          TaxableIncome?: Number;
         };
-        specIncome: {
+        specIncome?: {
           businessSection: String;
           natureOfBusinessCode: any;
           tradeName: String;
@@ -795,14 +795,14 @@ export class SummaryComponent implements OnInit {
       DetailsOfOthSourcesIncOutsideIndia?: any;
     };
     exemptIncome: {
-      partnerFirms: [
+      partnerFirms: 
         {
-          name: string;
-          panNumber: string;
-          profitShareAmount: number;
-        }
-      ];
-      total: number;
+          name?: string;
+          panNumber?: string;
+          profitShareAmount?: number;
+        }[]
+      ;
+      total?: number;
     };
     giftExemptIncome?: number;
     profitShareAmount?: number;
@@ -1339,7 +1339,8 @@ export class SummaryComponent implements OnInit {
                           .ScheduleBP?.NatOfBus44AD?.length
                       ),
                   };
-                }),
+                })?.filter(item => Object.entries(item)
+                .some(([key, value]) => value !== null || value!== 0)),
 
                 business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -1374,7 +1375,8 @@ export class SummaryComponent implements OnInit {
                           .ScheduleBP?.NatOfBus44ADA?.length
                       ),
                   };
-                }),
+                })?.filter(item => Object.entries(item)
+                .some(([key, value]) => value !== null || value!== 0)),
 
                 business44AE: {
                   businessDetails: this.ITR_JSON.itrSummaryJson['ITR'][
@@ -1391,7 +1393,8 @@ export class SummaryComponent implements OnInit {
                         }
                       )?.label,
                     };
-                  }),
+                  })?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
 
                   GoodsDtlsUs44AE: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
@@ -1401,7 +1404,8 @@ export class SummaryComponent implements OnInit {
                     TonnageCapacity: element?.TonnageCapacity,
                     HoldingPeriod: element?.HoldingPeriod,
                     PresumptiveIncome: element?.PresumptiveIncome,
-                  })),
+                  }))?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
 
                   totalPresInc: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
@@ -2379,11 +2383,6 @@ export class SummaryComponent implements OnInit {
 
             exemptIncome: {
               partnerFirms: [
-                {
-                  name: '',
-                  panNumber: '',
-                  profitShareAmount: 0,
-                },
               ],
               total: 0,
             },
@@ -3029,7 +3028,8 @@ export class SummaryComponent implements OnInit {
                               ?.PARTA_PL?.NatOfBus44AD?.length
                           ),
                       };
-                    })
+                    })?.filter(item => Object.entries(item)
+                    .some(([key, value]) => value !== null || value!== 0))
                     : [
                       {
                         businessSection: null,
@@ -3038,7 +3038,8 @@ export class SummaryComponent implements OnInit {
                         grossTurnover: null,
                         TaxableIncome: null,
                       },
-                    ],
+                    ]?.filter(item => Object.entries(item)
+                    .some(([key, value]) => value !== null || value!== 0)),
 
                 business44ADA:
                   this.itrType === 'ITR3'
@@ -3075,7 +3076,8 @@ export class SummaryComponent implements OnInit {
                               ?.PARTA_PL?.NatOfBus44ADA?.length
                           ),
                       };
-                    })
+                    })?.filter(item => Object.entries(item)
+                    .some(([key, value]) => value !== null || value!== 0))
                     : [
                       {
                         businessSection: null,
@@ -3084,7 +3086,8 @@ export class SummaryComponent implements OnInit {
                         grossTurnover: null,
                         TaxableIncome: null,
                       },
-                    ],
+                    ]?.filter(item => Object.entries(item)
+                    .some(([key, value]) => value !== null || value!== 0)),
 
                 business44AE: {
                   businessDetails: this.ITR_JSON.itrSummaryJson['ITR'][
@@ -3101,7 +3104,8 @@ export class SummaryComponent implements OnInit {
                         }
                       )?.label,
                     };
-                  }),
+                  })?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
 
                   GoodsDtlsUs44AE: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
@@ -3111,7 +3115,8 @@ export class SummaryComponent implements OnInit {
                     TonnageCapacity: element?.TonnageCapacity,
                     HoldingPeriod: element?.HoldingPeriod,
                     PresumptiveIncome: element?.PresumptiveIncome,
-                  })),
+                  }))?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
 
                   totalPresInc: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
@@ -3195,7 +3200,8 @@ export class SummaryComponent implements OnInit {
                       SaleValue: element?.ConsidReceived,
                       income: element?.IncomeFromVDA,
                     };
-                  }),
+                  })?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
                 },
                 totalCryptoIncome: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -4681,11 +4687,7 @@ export class SummaryComponent implements OnInit {
 
             exemptIncome: {
               partnerFirms: [
-                {
-                  name: '',
-                  panNumber: '',
-                  profitShareAmount: 0,
-                },
+                
               ],
               total: 0,
             },
@@ -6273,16 +6275,17 @@ export class SummaryComponent implements OnInit {
                 this.finalSummary?.assessment?.taxSummary?.taxRefund,
 
               exemptIncome: {
-                partnerFirms: this.finalSummary?.itr?.partnerFirms
-                  ?.map((element, index) => {
-                    return {
-                      srNo: index + 1,
-                      name: element.name,
-                      panNumber: element.panNumber,
-                      profitShareAmount: element.profitShareAmount,
-                    };
-                  })
-                  .flat(),
+                partnerFirms: (this.finalSummary?.itr?.partnerFirms || [])?.map((element, index) => ({
+                  srNo: index + 1,
+                  name: element?.name || null,
+                  panNumber: element?.panNumber || null,
+                  profitShareAmount: element?.profitShareAmount || null,
+                })).filter(item => Object.entries(item)
+                  .filter(([key, value]) => key !== 'srNo')
+                  .some(([key, value]) => value !== null || value!== 0)
+                ),
+                            
+                
                 total: this.finalSummary?.itr?.partnerFirms?.reduce(
                   (total, item) => total + item?.profitShareAmount,
                   0
