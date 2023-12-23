@@ -429,76 +429,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   createAllowanceArray() {
     const data = [];
 
-    for (let i = 0; i < this.allowanceDropdown.length; i++) {
-      let validators = null;
-      if (this.allowanceDropdown[i].value === 'COMPENSATION_ON_VRS') {
-        validators = Validators.max(500000);
-      }
-
-      // FOR EIC
-      if (
-        (this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
-          this.ITR_JSON.employerCategory === 'GOVERNMENT') &&
-        this.allowanceDropdown[i].value === 'EIC'
-      ) {
-        data.push(
-          this.fb.group({
-            label: this.allowanceDropdown[i].label,
-            allowType: this.allowanceDropdown[i].value,
-            allowValue: [null, validators],
-          })
-        );
-      }
-
-      // FIRST PROVISIO
-      if (
-        this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
-        this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
-        this.ITR_JSON.employerCategory !== 'PE' &&
-        this.ITR_JSON.employerCategory !== 'PESG' &&
-        this.allowanceDropdown[i].value === 'FIRST_PROVISO'
-      ) {
-        data.push(
-          this.fb.group({
-            label: this.allowanceDropdown[i].label,
-            allowType: this.allowanceDropdown[i].value,
-            allowValue: [null, validators],
-          })
-        );
-      }
-
-      // SECOND PROVISIO
-      if (
-        this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
-        this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
-        this.ITR_JSON.employerCategory !== 'PE' &&
-        this.ITR_JSON.employerCategory !== 'PESG' &&
-        this.allowanceDropdown[i].value === 'SECOND_PROVISO'
-      ) {
-        data.push(
-          this.fb.group({
-            label: this.allowanceDropdown[i].label,
-            allowType: this.allowanceDropdown[i].value,
-            allowValue: [null, validators],
-          })
-        );
-      }
-
-      // OTHER
-      if (
-        this.allowanceDropdown[i].value !== 'EIC' &&
-        this.allowanceDropdown[i].value !== 'FIRST_PROVISO' &&
-        this.allowanceDropdown[i].value !== 'SECOND_PROVISO'
-      ) {
-        data.push(
-          this.fb.group({
-            label: this.allowanceDropdown[i].label,
-            allowType: this.allowanceDropdown[i].value,
-            allowValue: [null, validators],
-          })
-        );
-      }
-    }
+    data.push(
+        this.fb.group({
+          label: this.allowanceDropdown[0].label,
+          allowType: this.allowanceDropdown[0].value,
+          allowValue: [null],
+        })
+    );
 
     return this.fb.array(data);
   }
@@ -520,6 +457,91 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         allowances: allowanceArray,
       });
     }
+  }
+
+  validateExemptIncomes(event: any) {
+    let exemptIncomes = this.allowanceFormGroup.controls[
+        'allowances'
+        ] as FormArray;
+    let selectedValues = exemptIncomes.controls.filter(
+        (fg:FormGroup)=> fg.controls['allowType'].value === event.value);
+    if(selectedValues?.length > 1){
+      this.utilsService.showSnackBar("You cannot select same exempt income more than once");
+      selectedValues.forEach((fg:FormGroup) => {
+        fg.controls['allowType'].setErrors({invalid : true})
+      });
+    } else {
+      exemptIncomes.controls.forEach((fg:FormGroup) => {
+        fg.controls['allowType'].setErrors(null);
+        let validators = null;
+        if (fg.controls['allowType'].value === 'COMPENSATION_ON_VRS') {
+          validators = Validators.max(500000);
+          fg.controls['allowValue'].setValidators(validators);
+          fg.controls['allowValue'].updateValueAndValidity();
+        }
+        // FOR EIC
+        if ((this.ITR_JSON.employerCategory === 'CENTRAL_GOVT' ||
+                this.ITR_JSON.employerCategory === 'GOVERNMENT') &&
+            fg.controls['allowType'].value === 'EIC') {
+          fg.controls['allowValue'].setValidators(validators);
+          fg.controls['allowValue'].updateValueAndValidity();
+        }
+
+        // FIRST PROVISIO
+        if (this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+            this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
+            this.ITR_JSON.employerCategory !== 'PE' &&
+            this.ITR_JSON.employerCategory !== 'PESG' &&
+            fg.controls['allowType'].value === 'FIRST_PROVISO') {
+          fg.controls['allowValue'].setValidators(validators);
+          fg.controls['allowValue'].updateValueAndValidity();
+        }
+
+        // SECOND PROVISIO
+        if (this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+            this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
+            this.ITR_JSON.employerCategory !== 'PE' &&
+            this.ITR_JSON.employerCategory !== 'PESG' &&
+            fg.controls['allowType'].value === 'SECOND_PROVISO') {
+          fg.controls['allowValue'].setValidators(validators);
+          fg.controls['allowValue'].updateValueAndValidity();
+        }
+
+        // OTHER
+        if (fg.controls['allowType'].value !== 'EIC' &&
+            fg.controls['allowType'].value !== 'FIRST_PROVISO' &&
+            fg.controls['allowType'].value !== 'SECOND_PROVISO') {
+          fg.controls['allowValue'].setValidators(validators);
+          fg.controls['allowValue'].updateValueAndValidity();
+        }
+      });
+    }
+  }
+
+  deleteExemptIncome(index){
+    let exemptIncomesFormArray = this.allowanceFormGroup.controls[
+        'allowances'
+        ] as FormArray;
+    exemptIncomesFormArray.removeAt(index);
+    if(exemptIncomesFormArray.length === 0){
+      this.addExemptIncome();
+    }
+  }
+
+  addExemptIncome(allowance?){
+    let exemptIncomesFormArray = this.allowanceFormGroup.controls[
+        'allowances'
+        ] as FormArray;
+    let label = this.allowanceDropdown[1].label;
+    if(allowance){
+      label = this.allowanceDropdown.filter(element => element.value === allowance.allowanceType)[0]?.label;
+    }
+    const formGroup = this.fb.group({
+      label: [label],
+      allowType: [allowance? allowance.allowanceType : this.allowanceDropdown[1].value],
+      allowValue: [allowance ? allowance.exemptAmount : null],
+    });
+    exemptIncomesFormArray.push(formGroup);
   }
 
   createEmployerDetailsFormGroup() {
@@ -1671,24 +1693,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       const allowance = this.localEmployer.allowance.filter(
         (item: any) => item.allowanceType !== 'ALL_ALLOWANCES'
       );
-      for (let i = 0; i < allowance.length; i++) {
-        let allowanceArray = this.allowanceFormGroup.controls[
+      let allowanceArray = this.allowanceFormGroup.controls[
           'allowances'
-        ] as FormArray;
-
-        const id = allowanceArray.controls.filter(
-          (item: any) =>
-            item.controls['allowType'].value === allowance[i].allowanceType
-        )[0] as FormGroup;
-        id.controls['allowValue'].setValue(allowance[i].exemptAmount);
-
-        // id.setValue({
-        //   id: id,
-        //   label: this.allowanceDropdown[i].label,
-        //   allowType: allowance[i].allowanceType,
-        //   taxableAmount: allowance[i].taxableAmount,
-        //   allowValue: allowance[i].exemptAmount
-        // });
+          ] as FormArray;
+      allowanceArray.controls = [];
+      for (let i = 0; i < allowance.length; i++) {
+        this.addExemptIncome(allowance[i]);
       }
     }
 
