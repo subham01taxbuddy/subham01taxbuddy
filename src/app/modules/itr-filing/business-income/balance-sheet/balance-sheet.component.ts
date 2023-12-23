@@ -36,6 +36,8 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   depreciationObj: any[];
   loading: boolean;
   config: any;
+  fixedAssetData: any;
+  totalAppOfFunds: number = 0;
 
   constructor(
     public matDialog: MatDialog,
@@ -86,6 +88,19 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     this.natOfBusinessDtlForm = this.fb.group({
       natOfBusinessDtlsArray: this.natOfBusinessDtlsArray,
     });
+
+    this.calculateTotalLoans();
+    this.calSourcesOfFunds();
+    this.calTotalLiabilitiesProvision();
+    this.calCurrentAssets();
+    this.calTotalCurrentAssetsLoansAdv();
+    this.calNetCurrentAssets();
+  }
+
+  calculateTotalLoans() {
+    let totalLoans = 0;
+    totalLoans = Number(this.assetLiabilitiesForm.controls['securedLoans'].value) + Number(this.assetLiabilitiesForm.controls['unSecuredLoans'].value);
+    this.assetLiabilitiesForm.controls['totalLoans'].setValue(totalLoans);
   }
 
   createNatOfBusinessForm(index, detail: BusinessDescription) {
@@ -363,7 +378,9 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         obj?.unSecuredLoans,
         Validators.pattern(AppConstants.numericRegex),
       ],
+      totalLoans: [obj?.totalLoans],
       advances: [obj?.advances, Validators.pattern(AppConstants.numericRegex)],
+      totalSourcesOfFunds: [obj?.totalSourcesOfFunds],
       sundryCreditorsAmount: [
         obj?.sundryCreditorsAmount ? obj?.sundryCreditorsAmount : 0,
         [Validators.required, Validators.pattern(AppConstants.numericRegex)],
@@ -373,6 +390,8 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         Validators.pattern(AppConstants.numericRegex),
       ],
       totalCapitalLiabilities: [obj?.totalCapitalLiabilities],
+      totalLiabilitiesProvision: [obj?.totalLiabilitiesProvision],
+      netCurrentAsset: [obj?.netCurrentAsset],
       fixedAssets: [
         obj?.fixedAssets,
         Validators.pattern(AppConstants.numericRegex),
@@ -381,6 +400,8 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         obj?.inventories ? obj?.inventories : 0,
         [Validators.required, Validators.pattern(AppConstants.numericRegex)],
       ],
+      totalCurrentAssets: [obj?.totalCurrentAssets],
+      totalCurrentAssetsLoansAdv: [obj?.totalCurrentAssetsLoansAdv],
       sundryDebtorsAmount: [
         obj?.sundryDebtorsAmount ? obj?.sundryDebtorsAmount : 0,
         [Validators.required, Validators.pattern(AppConstants.numericRegex)],
@@ -435,6 +456,16 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   //   }
   // }
 
+  calSourcesOfFunds() {
+    let totalSourcesOfFunds = 0;
+    totalSourcesOfFunds =
+      Number(this.assetLiabilitiesForm.controls['membersOwnCapital'].value) +
+      Number(this.assetLiabilitiesForm.controls['securedLoans'].value) +
+      Number(this.assetLiabilitiesForm.controls['unSecuredLoans'].value) +
+      Number(this.assetLiabilitiesForm.controls['advances'].value);
+    this.assetLiabilitiesForm.controls['totalSourcesOfFunds'].setValue(totalSourcesOfFunds);
+  }
+
   calculateTotal1() {
     this.total1 = 0;
     this.total1 =
@@ -450,6 +481,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
   }
 
+
   calculateTotal2() {
     this.total2 = 0;
     this.total2 =
@@ -463,6 +495,48 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       Number(this.assetLiabilitiesForm.controls['otherAssets'].value);
     this.difference = this.total1 - this.total2;
     this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
+  }
+
+  getFixedAssetData(data) {
+    this.fixedAssetData = data;
+    if (this.fixedAssetData.fixedAssetsDetails.totalNetBlock) {
+      this.totalApplicationOfFunds();
+    }
+  }
+
+  calTotalLiabilitiesProvision() {
+    let totalLiabilitiesProvision = 0;
+    totalLiabilitiesProvision = Number(this.assetLiabilitiesForm.controls['sundryCreditorsAmount'].value) + Number(this.assetLiabilitiesForm.controls['otherLiabilities'].value);
+    this.assetLiabilitiesForm.controls['totalLiabilitiesProvision'].setValue(totalLiabilitiesProvision);
+    this.calNetCurrentAssets();
+  }
+
+  calCurrentAssets() {
+    let totalCurrentAssets = 0;
+    totalCurrentAssets = Number(this.assetLiabilitiesForm.controls['inventories'].value) + Number(this.assetLiabilitiesForm.controls['sundryDebtorsAmount'].value)
+      + Number(this.assetLiabilitiesForm.controls['balanceWithBank'].value) + Number(this.assetLiabilitiesForm.controls['cashInHand'].value);
+    this.assetLiabilitiesForm.controls['totalCurrentAssets'].setValue(totalCurrentAssets);
+    this.calTotalCurrentAssetsLoansAdv();
+  }
+
+  calTotalCurrentAssetsLoansAdv() {
+    let totalCurrentAssetsLoansAdv = 0;
+    totalCurrentAssetsLoansAdv = Number(this.assetLiabilitiesForm.controls['totalCurrentAssets'].value) + Number(this.assetLiabilitiesForm.controls['loanAndAdvances'].value);
+    this.assetLiabilitiesForm.controls['totalCurrentAssetsLoansAdv'].setValue(totalCurrentAssetsLoansAdv);
+    this.calNetCurrentAssets();
+  }
+
+  calNetCurrentAssets() {
+    let netCurrentAsset = 0;
+    netCurrentAsset = Number(this.assetLiabilitiesForm.controls['totalCurrentAssetsLoansAdv'].value) - Number(this.assetLiabilitiesForm.controls['totalLiabilitiesProvision'].value);
+    this.assetLiabilitiesForm.controls['netCurrentAsset'].setValue(netCurrentAsset);
+    this.totalApplicationOfFunds();
+  }
+
+  totalApplicationOfFunds() {
+    this.totalAppOfFunds = 0;
+    debugger
+    this.totalAppOfFunds = Number(this.fixedAssetData.fixedAssetsDetails.totalNetBlock) + Number(this.assetLiabilitiesForm.controls['investment'].value) + Number(this.assetLiabilitiesForm.controls['netCurrentAsset'].value);
   }
 
   showPopUp(value) {
@@ -541,6 +615,8 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
             unSecuredLoans: null,
             advances: null,
             sundryCreditorsAmount: null,
+            totalLiabilitiesProvision: null,
+            totalCurrentAssets: null,
             otherLiabilities: null,
             totalCapitalLiabilities: null,
             fixedAssets: null,
