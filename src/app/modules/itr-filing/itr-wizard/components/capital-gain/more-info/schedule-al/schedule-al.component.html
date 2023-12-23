@@ -17,9 +17,29 @@
 
               </h2>
               <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-                <button class="btn btn__default btn__add btn-rt"
-                  (click)="$event.stopPropagation(); addMore()">Add</button>
-                <form [formGroup]="immovableAssetForm">
+                <div style="padding: 20px;">
+                  <div class="Bx4R">
+                    <button type="button" class=" btn btn__default btn__add addAno" (click)="addMore()">
+                       Add more
+                    </button>
+                  </div>
+                  <div>
+                    <table>
+                      <tr *ngFor="let item of immovableAssets | paginate:config"></tr>
+                    </table>
+                    <ag-grid-angular
+                      style="width: 100%; height: 150%"
+                     class="ag-theme-balham topSps"
+                     [gridOptions]="immovableAssetGridOptions"
+                     [groupDisplayType]="groupDisplayType"
+                     [animateRows]="true"
+                      (rowClicked)="onAssetsRowClicked($event)"></ag-grid-angular>
+                    <!-- <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls> -->
+                  </div>
+                </div>
+
+
+                <!-- <form [formGroup]="immovableAssetForm">
                   <div class="accordion__item-body" formArrayName="immovableAssetArray">
                     <div *ngFor="let immovableAssets of immovableAssetArray.controls | paginate : config;let i = index"
                       [formGroupName]="fieldGlobalIndex(i)">
@@ -145,7 +165,7 @@
                       </div>
                     </div>
                   </div>
-                </form>
+                </form> -->
               </div>
             </div>
 
