@@ -3,8 +3,6 @@
         <h1 class="heading__title">Losses To Be Carried Forward (Schedule CFL)
         </h1>
         <div class="space">
-            <div class="wrapper">
-                <div class="div-4">
                     <div class="frame-wrapper-2A">
                         <div class="accordion" id="myAccordion">
 
@@ -37,8 +35,7 @@
                                     <tbody formArrayName="cflArray">
                                     <tr *ngFor="let cfl of getCflArray.controls;let i=index" [formGroupName]="i">
                                         <td>
-                                            <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit"
-                                                          class="">
+                                            <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit">
                                             </mat-checkbox>
                                         </td>
                                         <td>
@@ -72,7 +69,7 @@
                                             </mat-form-field>
                                         </td>
                                         <td>
-                                            <mat-form-field [appearance]="getApperance(i, 'speculativeBusinessLoss')">
+                                            <mat-form-field appearance="outline" class="colrOut">
                                                 <input matInput class="input-field" name="speculativeBusinessLoss[i]"
                                                        maxlength="14"
                                                        formControlName="speculativeBusinessLoss"
@@ -97,12 +94,10 @@
                                     </tbody>
                                     <hr>
                                     <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td class="total-losses">
+                                    <tr>                                       
+                                        <td colspan="3" class="total-losses">
                                             Total of earlier year losses
-                                        </td>
-                                        <td></td>
+                                        </td>                                        
                                         <td>
                                             <mat-form-field appearance="outline">
                                                 <input matInput class="input-field" readonly name="totalHPLoss"
@@ -151,7 +146,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+               
 
 
                 <div class="out-box">
@@ -162,7 +157,7 @@
                         <div class="btn__primary" (click)="save()">Save & View Summary</div>
                     </div>
                 </div>
-            </div>
+         
         </div>
     </div>
 </form>
