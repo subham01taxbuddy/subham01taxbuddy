@@ -1,9 +1,11 @@
 <div class="main-1">
   <div class="row rowClr-1">
     <div class="col-sm-12">
+      
       <div class="row">
         <div class="col-sm-12">
           <div class="filter-box">
+            <div class="container-fluid">
             <div class="row">
               <div class="col-sm-4" *ngIf="roles.includes('ROLE_ADMIN')">
                 <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event)"
@@ -41,9 +43,11 @@
 
             </div>
           </div>
+          </div>
         </div>
 
       </div>
+    
     </div>
   </div>
   <div class="new-table-container">
