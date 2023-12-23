@@ -49,7 +49,7 @@
 
 
     <div *ngIf="serviceTypeSelected">
-      <div class="row" *ngIf="this.roles.includes('ROLE_FILER') || data.filerId ">
+      <div class="row" *ngIf="this.roles.includes('ROLE_FILER') || (data.filerId &&  onlyServiceITR )">
         <span *ngIf="showMessage && !(filteredPlans.length === 0)" class="show-note">Note: {{showMessage}}</span>
       </div>
       <label *ngIf="filteredPlans.length === 0">Selected service plan detail not available.</label>

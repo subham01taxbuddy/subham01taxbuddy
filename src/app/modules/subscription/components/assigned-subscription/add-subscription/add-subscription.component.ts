@@ -36,6 +36,7 @@ export class AddSubscriptionComponent implements OnInit {
   partnerType: any;
   searchAsPrinciple: boolean = false;
   cancelSubscriptionData: any;
+  onlyServiceITR :boolean =false;
   constructor(
     public dialogRef: MatDialogRef<AddSubscriptionComponent>,
     private dialog: MatDialog,
@@ -95,13 +96,15 @@ export class AddSubscriptionComponent implements OnInit {
   }
 
   isPlanEnabled(plan: any): boolean {
-    if (this.roles.includes('ROLE_FILER') || this.data.filerId ) {
+    if (this.roles.includes('ROLE_FILER') || (this.data.filerId && plan.servicesType ==='ITR') ) {
       if (this.smeDetails?.skillSetPlanIdList) {
         const planId = plan.planId;
+        this.onlyServiceITR =true;
         return this.smeDetails?.skillSetPlanIdList.includes(planId);
       }
       return false;
     } else {
+      this.onlyServiceITR =false;
       return true;
     }
   }
