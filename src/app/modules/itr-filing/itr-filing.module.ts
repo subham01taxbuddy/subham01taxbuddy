@@ -105,6 +105,7 @@ import { CalculatorsComponent } from './salary/calculators/calculators.component
 import { BreakUpComponent } from './salary/break-up/break-up.component';
 import { OtherDeductionsComponent } from './itr-wizard/components/other-deductions/other-deductions.component';
 import {ItrSharedModule} from "../itr-shared/itr-shared.module";
+import {ExemptIncomeComponent} from "./exempt-income/exempt-income.component";
 import { AddAssetsComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/add-assets/add-assets.component';
 
 @NgModule({
@@ -230,6 +231,7 @@ import { AddAssetsComponent } from './itr-wizard/components/capital-gain/more-in
     CalculatorsComponent,
     BreakUpComponent,
     OtherDeductionsComponent,
+    ExemptIncomeComponent
     AddAssetsComponent,
   ],
 

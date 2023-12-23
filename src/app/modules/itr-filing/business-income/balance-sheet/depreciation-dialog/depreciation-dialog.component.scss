@@ -36,3 +36,123 @@
     color: #FF6B00;
     font-weight: 500;
 }
+
+.gray_container {
+    background-color: #f9f9f9;
+    padding: 8px 24px;
+    margin: 0px 0px 12px 0px;
+}
+
+.mb-25 {
+    margin-bottom: 25px !important;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    position: relative;
+    flex: 1;
+    flex-grow: 1;
+    align-self: stretch;
+    margin-top: -1px;
+    font-weight: 400;
+    color: #9b9b9b;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 20px;
+    padding: 8px 0;
+    margin-left: 25px;
+}
+
+.normal_text {
+    font-weight: 400;
+    font-size: 14px;
+    color: #242426;
+    line-height: 20px;
+}
+
+.form-control {
+    min-height: 44px;
+    border: none;
+    border: 1.5px solid #D3D3D3;
+    background-color: transparent;
+    border-radius: 4px;
+    padding: 0px 12px;
+    font-size: 14px;
+    font-size: 14px;
+
+    &:focus {
+        background-color: f9f9f9;
+        border-color: #3E82CD;
+    }
+
+}
+
+.hdByr-L {
+    flex: 2 !important;
+}
+
+.inner_accordion-title {
+    color: #303030;
+    font-weight: 500;
+    height: 44px;
+    line-height: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    background-color: #F0F7FF;
+    padding: 12px 24px;
+    gap: 32px;
+}
+
+.gray_box {
+    background-color: #F3F3F3;
+    padding: 24px;
+    margin: 12px 0;
+    width: 100%;
+}
+
+
+.btn__primary {
+    background-color: #3E82CD;
+    color: #ffffff;
+    border: 1px solid #3E82CD;
+    padding: 8px 24px;
+    border-radius: 4px;
+    line-height: 28px;
+}
+
+.btn__primary:active,
+.btn__primary:focus,
+.btn__primary:hover {
+    background-color: #ffffff;
+    color: #3E82CD;
+}
+
+.btn__primary.btn__hover2:active,
+.btn__primary.btn__hover2:focus,
+.btn__primary.btn__hover2:hover {
+    background-color: #ffffff;
+    color: #3E82CD;
+    border-color: #ffffff;
+}
+
+.btn__primary.btn__hover3:active,
+.btn__primary.btn__hover3:focus,
+.btn__primary.btn__hover3:hover {
+    background-color: #242426;
+    color: #ffffff;
+    border-color: #242426;
+}
+
+.form-control-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.drop-down {
+    padding: 12px;
+}

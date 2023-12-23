@@ -149,7 +149,7 @@ table {
     border: 1.5px solid #D3D3D3;
     background-color: transparent;
     border-radius: 4px;
-    padding: 8px 12px;
+    padding: 0px 12px;
     font-size: 14px;
     font-size: 14px;
 
@@ -225,4 +225,65 @@ table {
 
 .wrapper {
     background-color: #F5F5FA !important;
+}
+
+.btn__primary {
+    background-color: #3E82CD;
+    color: #ffffff;
+    border: 1px solid #3E82CD;
+    padding: 8px 24px;
+    border-radius: 4px;
+    line-height: 28px;
+}
+
+.btn__primary:active,
+.btn__primary:focus,
+.btn__primary:hover {
+    background-color: #ffffff;
+    color: #3E82CD;
+}
+
+.btn__primary.btn__hover2:active,
+.btn__primary.btn__hover2:focus,
+.btn__primary.btn__hover2:hover {
+    background-color: #ffffff;
+    color: #3E82CD;
+    border-color: #ffffff;
+}
+
+.btn__primary.btn__hover3:active,
+.btn__primary.btn__hover3:focus,
+.btn__primary.btn__hover3:hover {
+    background-color: #242426;
+    color: #ffffff;
+    border-color: #242426;
+}
+
+.accordion-item {
+    background-color: #FCFCFC;
+    margin-bottom: 27px;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.appFunds {
+    border: none;
+}
+
+.accordion-title {
+    font-family: "DM Sans", sans-serif;
+    color: #303030;
+    font-weight: 500;
+    line-height: 28px;
+    font-size: 14px;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    background-color: #DDEDFF;
+    padding: 8px 24px;
+    border-radius: 4px;
+}
+
+.accordion-btn {
+    float: right;
 }

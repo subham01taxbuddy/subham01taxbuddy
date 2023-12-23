@@ -1,4 +1,4 @@
-@import "../../../../../ux/scss/style.scss";
+@import "../../../ux/scss/style.scss";
 .header_content {
   display: flex;
   align-items: flex-start;
@@ -13,50 +13,6 @@
   background-color: #e7e7e7;
   border-radius: 4px 4px 0px 0px;
 }
-
-.frameC {
-   padding: 0px 25px 0px 25px;
-}
-
-.table-responsive{
-  height:400px;
-  overflow: scroll;
-}
-
-.table th {
-  border: 1px solid #dfdfdf!important;
-}
-
-.table td {
-  border: 1px solid #dfdfdf!important;
-}
-
-.table :where(th, td) {
-  white-space: normal!important;
-}
-
-.mat-form-field {
-  width: 165px !important;  
-}
-
-.txCen {
-  text-align: center;
-}
-
-mat-checkbox {
-  margin: 0 auto;
-  width: 20%;
-  display: block;
-}
-
-.midChck{
-  margin:0 auto;
-}
-
-.colrOut {
-    background-color: #f9f9f9!important;
-}
-
 
 .wrap-content {
   align-items: flex-start;
@@ -133,4 +89,8 @@ mat-checkbox {
   gap: 12px;
   position: relative;
   flex: 0 0 auto;
+}
+
+.extra-pad{
+  padding: 24px;
 }
