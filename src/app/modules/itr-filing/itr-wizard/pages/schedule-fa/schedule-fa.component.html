@@ -3,133 +3,119 @@
     <h1 class="heading__title">Schedule FA</h1>
     <div class="space">
       <span class="normal_text">Details of foreign assets and income from any source outside India -
-          Applicable
-          to Resident Assessee only</span>
+        Applicable to Resident Assessee only</span>
       <div class="wrapper">
         <div class="div-4">
           <div class="frame-wrapper-2A">
             <div class="accordion" id="myAccordion">
-
               <div *ngFor="let topic of topicList">
                 <!-- Depository Accounts  -->
                 <div class="accordion-item" *ngIf="topic.code === 'A1'">
                   <h2 class="accordion-header" id="heading1">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse1"> {{ topic.label }}
+                      data-bs-target="#collapse1">
+                      {{ topic.label }}
                     </button>
                   </h2>
                   <div id="collapse1" class="accordion-collapse collapse show">
-
                     <form formArrayName="depositoryAccounts" style="padding: 20px">
                       <div class="accordion__item-body" *ngIf="topic.code === 'A1'">
                         <button class="btn btn__default btn__add pull-right" (click)="addMore('depositoryAccounts')">
                           Add More
                         </button>
-                        <div  *ngFor="let depositoryAccounts of getDepositoryAccounts.controls;let i = index"
-                              [formGroupName]="i">
+                        <div *ngFor="
+                            let depositoryAccounts of getDepositoryAccounts.controls;
+                            let i = index
+                          " [formGroupName]="i">
                           <div class="White_box">
-                            <div class="div-6 ">
+                            <div class="div-6">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                      type="checkbox"
-                                      (click)="$event.stopPropagation()"
-                                      [checked]="selectedIndexes.includes(i)"
-                                      (click)="toggleSelectedIndex(i)"/>
-                              <div class="form-field">
-                                <div><span class="normal_text">Country code </span> <span
-                                        class="text-wrapper-2">*</span></div>
-                                <div class="form-control-wrapper select_arrow">
-                                  <mat-form-field appearance="outline">
-                                    <mat-select
-                                            formControlName="countryCode"
-                                            name="countryCode[i]"
-                                            required>
-                                      <mat-option
-                                              *ngFor="let nature of countryCodeList"
-                                              [value]="nature"
-                                              matTooltip="{{ nature }}"
-                                              [disabled]="nature.disabled">
-                                        {{ nature }}
-                                      </mat-option>
-                                    </mat-select>
-                                  </mat-form-field>
-                                </div>
-                              </div>
+                                type="checkbox" (click)="$event.stopPropagation()"
+                                [checked]="selectedIndexes.includes(i)" (click)="toggleSelectedIndex(i)" />
+
                               <div class="form-field">
                                 <div>
                                   <span class="span">Name of the financial institution</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="nameOfInstitution[i]"
-                                          formControlName="nameOfInstitution"
-                                          required/>
+                                  <input matInput name="nameOfInstitution[i]" formControlName="nameOfInstitution"
+                                    required />
+                                </mat-form-field>
+                              </div>
+
+                              <div class="form-field">
+                                <div>
+                                  <span class="span">Address of the financial institution</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <mat-form-field appearance="outline">
+                                  <input matInput name="addressOfInstitution[i]" formControlName="addressOfInstitution"
+                                    required />
                                 </mat-form-field>
                               </div>
                             </div>
-                            <div class="div-6 ">
+                            <div class="div-6">
                               <div class="form-field">
-                                <div><span class="span">Address of the financial institution</span> <span
-                                        class="text-wrapper-2">*</span></div>
+                                <div>
+                                  <span class="span">Zip code</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
                                 <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="addressOfInstitution[i]"
-                                          formControlName="addressOfInstitution"
-                                          required/>
+                                  <input matInput name="zipCode[i]" formControlName="zipCode" required />
                                 </mat-form-field>
                               </div>
                               <div class="form-field">
-                                <div><span class="span">Zip code</span> <span
-                                        class="text-wrapper-2">*</span>
+                                <div>
+                                  <span class="normal_text">Country code </span>
+                                  <span class="text-wrapper-2">*</span>
                                 </div>
-                                <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="zipCode[i]"
-                                          formControlName="zipCode"
-                                          required
-                                  />
-                                </mat-form-field>
+                                <div class="form-control-wrapper select_arrow">
+                                  <mat-form-field appearance="outline">
+                                    <mat-select formControlName="countryCode" name="countryCode[i]" required>
+                                      <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
+                                        matTooltip="{{ nature }}" [disabled]="nature.disabled">
+                                        {{ nature }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
                               </div>
                             </div>
                           </div>
                           <div class="White_box" formArrayName="account">
-                            <button class="btn btn__default btn__add pull-right"
-                                    (click)="add('depositoryAccounts', i)"> Add
+                            <button class="btn btn__default btn__add pull-right" (click)="add('depositoryAccounts', i)">
+                              Add
                             </button>
-                            <div *ngFor="let accountCtrl of getAccountControls(i).controls;let j = index"
-                                 [formGroupName]="j">
+                            <div *ngFor="
+                                let accountCtrl of getAccountControls(i)
+                                  .controls;
+                                let j = index
+                              " [formGroupName]="j">
                               <div class="div-6">
-<!--                                <input-->
-<!--                                        class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"-->
-<!--                                        type="checkbox"-->
-<!--                                        (click)="$event.stopPropagation()"-->
-<!--                                        [checked]="selectedAccountIndexes.includes(j)"-->
-<!--                                        (click)="toggleSelectedAccountIndex(j)"/>-->
+                                <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                  type="checkbox" (click)="$event.stopPropagation()"
+                                  [checked]="selectedAccountIndexes.includes(j)"
+                                  (click)="toggleSelectedAccountIndex(j)" />
                                 <div class="form-field">
-                                  <div><span class="span">Account Number</span> <span
-                                          class="text-wrapper-2">*</span></div>
+                                  <div>
+                                    <span class="span">Account Number</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <input matInput
-                                            formControlName="accountNumber"
-                                            digitsOnly
-                                            required/>
+                                    <input matInput formControlName="accountNumber" digitsOnly required />
                                   </mat-form-field>
                                 </div>
                                 <div class="form-field">
-                                  <div><span class="normal_text">Status</span> <span
-                                          class="text-wrapper-2">*</span></div>
+                                  <div>
+                                    <span class="normal_text">Status</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <div class="form-control-wrapper select_arrow">
                                     <mat-form-field appearance="outline">
-                                      <mat-select matInput
-                                              formControlName="status"
-                                              required>
-                                        <mat-option
-                                                *ngFor="let status of status"
-                                                [value]="status"
-                                                matTooltip="{{ status }}">
+                                      <mat-select matInput formControlName="status" required>
+                                        <mat-option *ngFor="let status of status" [value]="status"
+                                          matTooltip="{{ status }}">
                                           {{ status }}
                                         </mat-option>
                                       </mat-select>
@@ -137,68 +123,70 @@
                                   </div>
                                 </div>
                                 <div class="form-field">
-                                  <div><span class="span">Account Opening Date</span><span
-                                          class="text-wrapper-2">*</span></div>
+                                  <div>
+                                    <span class="span">Account Opening Date</span><span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <input matInput placeholder="DD/MM/YYYY"
-                                            [matDatepicker]="dateofFilling"
-                                            autocomplete="off"
-                                            formControlName="accountOpeningDate"
-                                            [max]="maxPurchaseDate"
-                                            required/>
+                                    <input matInput placeholder="DD/MM/YYYY" [matDatepicker]="dateofFilling"
+                                      autocomplete="off" formControlName="accountOpeningDate" [max]="maxPurchaseDate"
+                                      required />
                                     <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
                                     <mat-datepicker #dateofFilling></mat-datepicker>
                                   </mat-form-field>
                                 </div>
                               </div>
-                              <div class="div-6 ">
+                              <div class="div-6">
                                 <div class="form-field">
-                                  <div><span class="span"> Peak Balance During the Period</span> <span
-                                          class="text-wrapper-2">*</span></div>
+                                  <div>
+                                    <span class="span">
+                                      Peak Balance During the Period</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <input matInput
-                                            formControlName="peakBalance"
-                                            digitsOnly
-                                            required/>
+                                    <input matInput formControlName="peakBalance" digitsOnly required />
                                   </mat-form-field>
                                 </div>
                                 <div class="form-field">
-                                  <div><span class="span">Closing Balance</span> <span
-                                          class="text-wrapper-2">*</span></div>
+                                  <div>
+                                    <span class="span">Closing Balance</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <input matInput
-                                            formControlName="closingBalance"
-                                            digitsOnly
-                                            required/>
+                                    <input matInput formControlName="closingBalance" digitsOnly required />
                                   </mat-form-field>
                                 </div>
                                 <div class="form-field">
-                                  <div><span class="span">Gross Interest paid/credited to the account during
-                                                                    the
-                                                                    period </span> <span class="text-wrapper-2">*</span></div>
+                                  <div>
+                                    <span class="span">Gross Interest paid/credited to the
+                                      account during the period
+                                    </span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <input matInput
-                                            formControlName="grossInterestPaid"
-                                            digitsOnly
-                                            required/>
+                                    <input matInput formControlName="grossInterestPaid" digitsOnly required />
                                   </mat-form-field>
                                 </div>
                               </div>
-<!--                              <button class="delete-btn" style="width: 15%"-->
-<!--                                      (click)="delete('depositoryAccounts', 'account', i)">-->
-<!--                                <i class="fa fa-trash" aria-hidden="true"></i> Delete-->
-<!--                              </button>-->
+                              <!--                              <button class="delete-btn" style="width: 15%"-->
+                              <!--                                      (click)="delete('depositoryAccounts', 'account', i)">-->
+                              <!--                                <i class="fa fa-trash" aria-hidden="true"></i> Delete-->
+                              <!--                              </button>-->
                             </div>
+                            <button class="delete-btn" style="width: 15%" (click)="
+                                delete('depositoryAccounts', 'account', i)
+                              ">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                              Delete
+                            </button>
                           </div>
                         </div>
-                        <button class="delete-btn"
-                                style="width: 15%; margin: 10px"
-                                (click)="delete('depositoryAccounts', 'formArray')">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                          (click)="delete('depositoryAccounts', 'formArray')">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          All
                         </button>
                       </div>
                     </form>
-
                   </div>
                 </div>
 
@@ -206,119 +194,109 @@
                 <div class="accordion-item" *ngIf="topic.code === 'A2'">
                   <h2 class="accordion-header" id="heading2">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse2"> {{ topic.label }}
+                      data-bs-target="#collapse2">
+                      {{ topic.label }}
                     </button>
                   </h2>
                   <div id="collapse2" class="accordion-collapse collapse show">
-
                     <form formArrayName="custodialAccounts" style="padding: 20px">
                       <div class="accordion__item-body">
-                        <button class="btn btn__default btn__add pull-right"
-                                (click)="addMore('custodialAccounts')"> Add More
+                        <button class="btn btn__default btn__add pull-right" (click)="addMore('custodialAccounts')">
+                          Add More
                         </button>
-                        <div *ngFor="let custodialAccounts of getCustodialAccounts?.controls;let i = index"
-                             [formGroupName]="i">
+                        <div *ngFor="
+                            let custodialAccounts of getCustodialAccounts?.controls;
+                            let i = index
+                          " [formGroupName]="i">
                           <div class="White_box">
-                            <div class="div-6 ">
-                              <input
-                                      class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                      type="checkbox"
-                                      (click)="$event.stopPropagation()"
-                                      [checked]="selectedIndexes.includes(i)"
-                                      (click)="toggleSelectedIndex(i)"/>
-                              <div class="form-field">
-                                <div><span class="normal_text">Country code </span> <span
-                                        class="text-wrapper-2">*</span></div>
-                                <div class="form-control-wrapper select_arrow">
-                                  <mat-form-field appearance="outline">
-                                    <mat-select formControlName="countryCode"
-                                                name="countryCode[i]"
-                                                required>
-                                      <mat-option
-                                              *ngFor="let nature of countryCodeList"
-                                              [value]="nature"
-                                              matTooltip="{{ nature }}"
-                                              [disabled]="nature.disabled">
-                                        {{ nature }}
-                                      </mat-option>
-                                    </mat-select>
-                                  </mat-form-field>
-                                </div>
-                              </div>
+                            <div class="div-6">
+                              <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                type="checkbox" (click)="$event.stopPropagation()"
+                                [checked]="selectedIndexes.includes(i)" (click)="toggleSelectedIndex(i)" />
                               <div class="form-field">
                                 <div>
                                   <span class="span">Name of the financial institution</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <input matInput
-                                         name="nameOfInstitution[i]"
-                                         formControlName="nameOfInstitution"
-                                         required/>
+                                  <input matInput name="nameOfInstitution[i]" formControlName="nameOfInstitution"
+                                    required />
+                                </mat-form-field>
+                              </div>
+                              <div class="form-field">
+                                <div>
+                                  <span class="span">Address of the financial institution</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <mat-form-field appearance="outline">
+                                  <input matInput name="addressOfInstitution[i]" formControlName="addressOfInstitution"
+                                    required />
                                 </mat-form-field>
                               </div>
                             </div>
-                            <div class="div-6 ">
+                            <div class="div-6">
                               <div class="form-field">
-                                <div><span class="span">Address of the financial institution</span> <span
-                                        class="text-wrapper-2">*</span></div>
+                                <div>
+                                  <span class="span">Zip code</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
                                 <mat-form-field appearance="outline">
-                                  <input matInput
-                                         name="addressOfInstitution[i]"
-                                         formControlName="addressOfInstitution"
-                                         required/>
+                                  <input matInput name="zipCode[i]" formControlName="zipCode" required />
                                 </mat-form-field>
                               </div>
                               <div class="form-field">
-                                <div><span class="span">Zip code</span> <span
-                                        class="text-wrapper-2">*</span>
+                                <div>
+                                  <span class="normal_text">Country code </span>
+                                  <span class="text-wrapper-2">*</span>
                                 </div>
-                                <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="zipCode[i]"
-                                          formControlName="zipCode"
-                                          required/>
-                                </mat-form-field>
+                                <div class="form-control-wrapper select_arrow">
+                                  <mat-form-field appearance="outline">
+                                    <mat-select formControlName="countryCode" name="countryCode[i]" required>
+                                      <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
+                                        matTooltip="{{ nature }}" [disabled]="nature.disabled">
+                                        {{ nature }}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
                               </div>
                             </div>
                           </div>
                           <div class="White_box" formArrayName="account">
-                            <button class="btn btn__default btn__add pull-right"
-                                    (click)="add('custodialAccounts', i)"> Add
+                            <button class="btn btn__default btn__add pull-right" (click)="add('custodialAccounts', i)">
+                              Add
                             </button>
-                            <div *ngFor="let accountCtrl of getCustodialAccountControls(i)?.controls;let j = index"
-                                 [formGroupName]="j">
-                              <div class="div-6 ">
+                            <div *ngFor="
+                                let accountCtrl of getCustodialAccountControls(
+                                  i
+                                )?.controls;
+                                let j = index
+                              " [formGroupName]="j">
+                              <div class="div-6">
                                 <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                       type="checkbox"
-                                       (click)="$event.stopPropagation()"
-                                       [checked]="selectedAccountIndexes.includes(j)"
-                                       (click)="toggleSelectedAccountIndex(j)"/>
+                                  type="checkbox" (click)="$event.stopPropagation()"
+                                  [checked]="selectedAccountIndexes.includes(j)"
+                                  (click)="toggleSelectedAccountIndex(j)" />
                                 <div class="form-field">
-                                  <div><span class="span">Account Number</span> <span
-                                          class="text-wrapper-2">*</span></div>
+                                  <div>
+                                    <span class="span">Account Number</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <input matInput
-                                           name="accountNumber[j]"
-                                           formControlName="accountNumber"
-                                           digitsOnly
-                                           required/>
+                                    <input matInput name="accountNumber[j]" formControlName="accountNumber" digitsOnly
+                                      required />
                                   </mat-form-field>
                                 </div>
                                 <div class="form-field">
-                                  <div><span class="normal_text">Status</span> <span
-                                          class="text-wrapper-2">*</span></div>
+                                  <div>
+                                    <span class="normal_text">Status</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <div class="form-control-wrapper select_arrow">
                                     <mat-form-field appearance="outline">
-                                      <mat-select matInput
-                                                  name="status[j]"
-                                                  formControlName="status"
-                                                  required>
-                                        <mat-option
-                                                *ngFor="let status of status"
-                                                [value]="status"
-                                                matTooltip="{{ status }}">
+                                      <mat-select matInput name="status[j]" formControlName="status" required>
+                                        <mat-option *ngFor="let status of status" [value]="status"
+                                          matTooltip="{{ status }}">
                                           {{ status }}
                                         </mat-option>
                                       </mat-select>
@@ -326,89 +304,81 @@
                                   </div>
                                 </div>
                                 <div class="form-field">
-                                  <div><span class="span">Account Opening Date</span> <span
-                                          class="text-wrapper-2">*</span></div>
-                                  <mat-form-field appearance="outline">
-                                    <input matInput
-                                           placeholder="DD/MM/YYYY"
-                                           name="accountOpeningDate[j]"
-                                           [matDatepicker]="dateofFilling"
-                                           autocomplete="off"
-                                           formControlName="accountOpeningDate"
-                                           [max]="maxPurchaseDate"
-                                           required/>
-                                    <mat-datepicker-toggle matSuffix
-                                                           [for]="dateofFilling"></mat-datepicker-toggle>
-                                    <mat-datepicker #dateofFilling></mat-datepicker>
-                                  </mat-form-field>
-                                </div>
-                                <div class="form-field">
-                                  <div><span class="span"> Amount</span> <span class="text-wrapper-2">*</span>
-                                  </div>
-                                  <mat-form-field appearance="outline">
-                                    <input matInput
-                                           name="grossInterestPaid[j]"
-                                           formControlName="grossInterestPaid"
-                                           digitsOnly
-                                           required/>
-                                  </mat-form-field>
-                                </div>
-                              </div>
-                              <div class="div-6 ">
-                                <div class="form-field">
-                                  <div><span class="span"> Peak Balance During the Period</span> <span
-                                          class="text-wrapper-2">*</span></div>
-                                  <mat-form-field appearance="outline">
-                                    <input matInput
-                                           name="peakBalance[j]"
-                                           formControlName="peakBalance"
-                                           digitsOnly
-                                           required/>
-                                  </mat-form-field>
-                                </div>
-                                <div class="form-field">
-                                  <div><span class="span">Closing Balance</span> <span
-                                          class="text-wrapper-2">*</span></div>
-                                  <mat-form-field appearance="outline">
-                                    <input matInput
-                                           name="closingBalance[j]"
-                                           formControlName="closingBalance"
-                                           digitsOnly
-                                           required/>
-                                  </mat-form-field>
-                                </div>
-                                <div class="form-field">
-                                  <div><span class="span">Nature of Amount</span>
+                                  <div>
+                                    <span class="span">Account Opening Date</span>
                                     <span class="text-wrapper-2">*</span>
                                   </div>
                                   <mat-form-field appearance="outline">
-                                    <mat-select matInput
-                                                name="grossAmountNature[j]"
-                                                formControlName="grossAmountNature"
-                                                required>
-                                      <mat-option
-                                              *ngFor="let option of natureOfIncome"
-                                              [value]="option">
+                                    <input matInput placeholder="DD/MM/YYYY" name="accountOpeningDate[j]"
+                                      [matDatepicker]="dateofFilling" autocomplete="off"
+                                      formControlName="accountOpeningDate" [max]="maxPurchaseDate" required />
+                                    <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
+                                    <mat-datepicker #dateofFilling></mat-datepicker>
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="div-6">
+                                <div class="form-field">
+                                  <div>
+                                    <span class="span">
+                                      Peak Balance During the Period</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
+                                  <mat-form-field appearance="outline">
+                                    <input matInput name="peakBalance[j]" formControlName="peakBalance" digitsOnly
+                                      required />
+                                  </mat-form-field>
+                                </div>
+                                <div class="form-field">
+                                  <div>
+                                    <span class="span">Closing Balance</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
+                                  <mat-form-field appearance="outline">
+                                    <input matInput name="closingBalance[j]" formControlName="closingBalance" digitsOnly
+                                      required />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="div-6">
+                                <div class="form-field">
+                                  <div>
+                                    <span class="span">Nature of Amount</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
+                                  <mat-form-field appearance="outline">
+                                    <mat-select matInput name="grossAmountNature[j]" formControlName="grossAmountNature"
+                                      required>
+                                      <mat-option *ngFor="let option of natureOfIncome" [value]="option">
                                         {{ option }}
                                       </mat-option>
                                     </mat-select>
                                   </mat-form-field>
                                 </div>
-
+                                <div class="form-field">
+                                  <div>
+                                    <span class="span"> Amount</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
+                                  <mat-form-field appearance="outline">
+                                    <input matInput name="grossInterestPaid[j]" formControlName="grossInterestPaid"
+                                      digitsOnly required />
+                                  </mat-form-field>
+                                </div>
                               </div>
                             </div>
-                            <button class="delete-btn"
-                                    style="width: 15%"
-                                    (click)="delete('custodialAccounts', 'account', i)">
-                              <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                            <button class="delete-btn" style="width: 15%" (click)="
+                                delete('custodialAccounts', 'account', i)
+                              ">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                              Delete
                             </button>
-
                           </div>
                         </div>
-                        <button class="delete-btn"
-                                style="width: 15%; margin: 10px"
-                                (click)="delete('custodialAccounts', 'formArray')">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                          (click)="delete('custodialAccounts', 'formArray')">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          All
                         </button>
                       </div>
                     </form>
@@ -419,59 +389,31 @@
                 <div class="accordion-item" *ngIf="topic.code === 'A3'">
                   <h2 class="accordion-header" id="heading3">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse3">{{ topic.label }}
+                      data-bs-target="#collapse3">
+                      {{ topic.label }}
                     </button>
                   </h2>
                   <div id="collapse3" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <form formArrayName="equityAndDebtInterest" style="padding: 20px">
-                        <button class="btn btn__default btn__add pull-right"
-                                (click)="addMore('equityAndDebtInterest')"> Add More
+                        <button class="btn btn__default btn__add pull-right" (click)="addMore('equityAndDebtInterest')">
+                          Add More
                         </button>
-                        <div class="White_box"
-                             *ngFor="let equityAndDebtInterest of getEquityAndDebtInterest.controls;let i = index"
-                             [formGroupName]="i">
-                          <div class="div-6 ">
-                            <div class="form-field">
-                              <input
-                                      class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                      type="checkbox"
-                                      (click)="$event.stopPropagation()"
-                                      [checked]="selectedIndexes.includes(i)"
-                                      (click)="toggleSelectedIndex(i)"/>
-                              <div><span class="normal_text">Country code </span> <span
-                                      class="text-wrapper-2">*</span></div>
-                              <div class="form-control-wrapper select_arrow">
-                                <mat-form-field appearance="outline">
-                                  <mat-select
-                                          formControlName="countryCode"
-                                          name="countryCode[i]"
-                                          required
-                                  >
-                                    <mat-option
-                                            *ngFor="let nature of countryCodeList"
-                                            [value]="nature"
-                                            matTooltip="{{ nature }}"
-                                            [disabled]="nature.disabled"
-                                    >
-                                      {{ nature }}
-                                    </mat-option></mat-select
-                                  >
-                                </mat-form-field>
-                              </div>
-                            </div>
+                        <div class="White_box" *ngFor="
+                            let equityAndDebtInterest of getEquityAndDebtInterest.controls;
+                            let i = index
+                          " [formGroupName]="i">
+                          <div class="div-6">
+                            <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                              type="checkbox" (click)="$event.stopPropagation()" [checked]="selectedIndexes.includes(i)"
+                              (click)="toggleSelectedIndex(i)" />
                             <div class="form-field">
                               <div>
                                 <span class="span">Name of Entity</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="nameOfEntity[i]"
-                                        formControlName="nameOfEntity"
-                                        required
-                                />
+                                <input matInput name="nameOfEntity[i]" formControlName="nameOfEntity" required />
                               </mat-form-field>
                             </div>
                             <div class="form-field">
@@ -480,142 +422,123 @@
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="addressOfEntity[i]"
-                                        formControlName="addressOfEntity"
-                                        required
-                                />
+                                <input matInput name="addressOfEntity[i]" formControlName="addressOfEntity" required />
                               </mat-form-field>
                             </div>
                           </div>
-                          <div class="div-6 ">
+                          <div class="div-6">
                             <div class="form-field">
-                              <div><span class="span">Zip code</span> <span
-                                      class="text-wrapper-2">*</span>
+                              <div>
+                                <span class="span">Zip code</span>
+                                <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="zipCode[i]"
-                                        formControlName="zipCode"
-                                        required
-                                />
+                                <input matInput name="zipCode[i]" formControlName="zipCode" required />
                               </mat-form-field>
                             </div>
                             <div class="form-field">
-                              <div><span class="span">Nature of Entity</span> <span
-                                      class="text-wrapper-2">*</span>
+                              <div>
+                                <span class="normal_text">Country code </span>
+                                <span class="text-wrapper-2">*</span>
                               </div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="natureOfEntity[i]"
-                                        formControlName="natureOfEntity"
-                                        required
-                                />
-                              </mat-form-field>
-                            </div>
-                            <div class="form-field">
-                              <div><span class="span">Date of acquiring the interest</span><span
-                                      class="text-wrapper-2">*</span></div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="DD/MM/YYYY"
-                                        name="dateOfInterest[i]"
-                                        [matDatepicker]="dateofFilling"
-                                        autocomplete="off"
-                                        formControlName="dateOfInterest"
-                                        [max]="maxPurchaseDate"
-                                        required
-                                />
-                                <mat-datepicker-toggle
-                                        matSuffix
-                                        [for]="dateofFilling"
-                                ></mat-datepicker-toggle>
-                                <mat-datepicker #dateofFilling></mat-datepicker>
-                              </mat-form-field>
+                              <div class="form-control-wrapper select_arrow">
+                                <mat-form-field appearance="outline">
+                                  <mat-select formControlName="countryCode" name="countryCode[i]" required>
+                                    <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
+                                      matTooltip="{{ nature }}" [disabled]="nature.disabled">
+                                      {{ nature }}
+                                    </mat-option></mat-select>
+                                </mat-form-field>
+                              </div>
                             </div>
                           </div>
 
-                          <div class="div-6 ">
+                          <div class="div-6">
                             <div class="form-field">
-                              <div><span class="span"> Initial Value of the Investment</span> <span
-                                      class="text-wrapper-2">*</span></div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="initialValue[i]"
-                                        formControlName="initialValue"
-                                        digitsOnly
-                                        required
-                                />
-                              </mat-form-field>
-                            </div>
-                            <div class="form-field">
-                              <div><span class="span"> Peak value of the investment during the
-                                                                period</span>
+                              <div>
+                                <span class="span">Nature of Entity</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="peakValue[i]"
-                                        formControlName="peakValue"
-                                        digitsOnly
-                                        required
-                                />
+                                <input matInput name="natureOfEntity[i]" formControlName="natureOfEntity" required />
                               </mat-form-field>
                             </div>
                             <div class="form-field">
-                              <div><span class="span"> Closing value</span> <span
-                                      class="text-wrapper-2">*</span></div>
+                              <div>
+                                <span class="span">Date of acquiring the interest</span><span
+                                  class="text-wrapper-2">*</span>
+                              </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="closingValue[i]"
-                                        formControlName="closingValue"
-                                        digitsOnly
-                                        required
-                                />
+                                <input matInput placeholder="DD/MM/YYYY" name="dateOfInterest[i]"
+                                  [matDatepicker]="dateofFilling" autocomplete="off" formControlName="dateOfInterest"
+                                  [max]="maxPurchaseDate" required />
+                                <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
+                                <mat-datepicker #dateofFilling></mat-datepicker>
+                              </mat-form-field>
+                            </div>
+                            <div class="form-field">
+                              <div>
+                                <span class="span">
+                                  Initial Value of the Investment</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="initialValue[i]" formControlName="initialValue" digitsOnly
+                                  required />
+                              </mat-form-field>
+                            </div>
+                            <div class="form-field">
+                              <div>
+                                <span class="span">
+                                  Peak value of the investment during the
+                                  period</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="peakValue[i]" formControlName="peakValue" digitsOnly required />
                               </mat-form-field>
                             </div>
                           </div>
-                          <div class="div-6 ">
+                          <div class="div-6">
                             <div class="form-field">
-                              <div><span class="span"> Total Gross Amount paid/credited with recp</span>
-                                <span class="text-wrapper-2">*</span></div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="totalGrossAmountPaid[i]"
-                                        formControlName="totalGrossAmountPaid"
-                                        digitsOnly
-                                        required
-                                />
-                              </mat-form-field>
-                            </div>
-                            <div class="form-field">
-                              <div><span class="span">Total Gross Proceeds from sale or redemption</span>
+                              <div>
+                                <span class="span">
+                                  Total Gross Amount paid/credited with
+                                  recp</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="totalGrossProceedsFromSale[i]"
-                                        formControlName="totalGrossProceedsFromSale"
-                                        digitsOnly
-                                        required
-                                />
+                                <input matInput name="totalGrossAmountPaid[i]" formControlName="totalGrossAmountPaid"
+                                  digitsOnly required />
+                              </mat-form-field>
+                            </div>
+                            <div class="form-field">
+                              <div>
+                                <span class="span">Total Gross Proceeds from sale or
+                                  redemption</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="totalGrossProceedsFromSale[i]"
+                                  formControlName="totalGrossProceedsFromSale" digitsOnly required />
+                              </mat-form-field>
+                            </div>
+                            <div class="form-field">
+                              <div>
+                                <span class="span"> Closing value</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="closingValue[i]" formControlName="closingValue" digitsOnly
+                                  required />
                               </mat-form-field>
                             </div>
                           </div>
                         </div>
-                        <button class="delete-btn"
-                                style="width: 15%; margin: 10px"
-                                (click)="delete('equityAndDebtInterest', 'formArray')">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                          (click)="delete('equityAndDebtInterest', 'formArray')">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          All
                         </button>
                       </form>
                     </div>
@@ -626,53 +549,54 @@
                 <div class="accordion-item" *ngIf="topic.code === 'A4'">
                   <h2 class="accordion-header" id="heading4">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse4"> {{ topic.label }}
+                      data-bs-target="#collapse4">
+                      {{ topic.label }}
                     </button>
                   </h2>
                   <div id="collapse4" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <form formArrayName="cashValueInsurance" style="padding: 20px">
-                        <button class="btn btn__default btn__add pull-right"
-                                (click)="addMore('cashValueInsurance')"> Add More
+                        <button class="btn btn__default btn__add pull-right" (click)="addMore('cashValueInsurance')">
+                          Add More
                         </button>
-                        <div class="White_box"
-                             *ngFor="let CashValueInsurance of getCashValueInsurance.controls;let i = index"
-                             [formGroupName]="i">
-
-                          <div class="div-6 ">
+                        <div class="White_box" *ngFor="
+                            let CashValueInsurance of getCashValueInsurance.controls;
+                            let i = index
+                          " [formGroupName]="i">
+                          <div class="div-6">
+                            <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                              type="checkbox" (click)="$event.stopPropagation()" [checked]="selectedIndexes.includes(i)"
+                              (click)="toggleSelectedIndex(i)" />
                             <div class="form-field">
-                              <input
-                                      class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                      type="checkbox"
-                                      (click)="$event.stopPropagation()"
-                                      [checked]="selectedIndexes.includes(i)"
-                                      (click)="toggleSelectedIndex(i)"
-                              />
                               <div>
-                                <span class="span">Country Code</span>
+                                <span class="span">Name of the Financial Institution in which
+                                  insurance contract held</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <mat-label>Country Code</mat-label>
-                                <mat-select
-                                        formControlName="countryCode"
-                                        name="countryCode[i]"
-                                        required
-                                >
-                                  <mat-option
-                                          *ngFor="let nature of countryCodeList"
-                                          [value]="nature"
-                                          matTooltip="{{ nature }}"
-                                          [disabled]="nature.disabled"
-                                  >
-                                    {{ nature }}
-                                  </mat-option></mat-select
-                                >
+                                <mat-label>Name of Financial Institution in which
+                                  insurance contract held</mat-label>
+                                <input matInput name="nameOfInstitution[i]" formControlName="nameOfInstitution"
+                                  required />
                               </mat-form-field>
                             </div>
                             <div class="form-field">
-                              <div><span class="span">Zip code</span> <span
-                                      class="text-wrapper-2">*</span>
+                              <div>
+                                <span class="span">Address of Financial Institution</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Address of financial institution</mat-label>
+                                <input matInput name="addressOfInstitution[i]" formControlName="addressOfInstitution"
+                                  required />
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="form-field">
+                              <div>
+                                <span class="span">Zip code</span>
+                                <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
                                 <mat-label>Zip Code</mat-label>
@@ -680,114 +604,68 @@
                               </mat-form-field>
                             </div>
                             <div class="form-field">
-                              <div><span class="span">Date of Contract</span> <span
-                                      class="text-wrapper-2">*</span></div>
+                              <div>
+                                <span class="span">Country Code</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Country Code</mat-label>
+                                <mat-select formControlName="countryCode" name="countryCode[i]" required>
+                                  <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
+                                    matTooltip="{{ nature }}" [disabled]="nature.disabled">
+                                    {{ nature }}
+                                  </mat-option></mat-select>
+                              </mat-form-field>
+                            </div>
+                          </div>
+
+                          <div class="div-6">
+                            <div class="form-field">
+                              <div>
+                                <span class="span">Date of Contract</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
                               <mat-form-field appearance="outline">
                                 <mat-label>Date of contract</mat-label>
-                                <input
-                                        matInput
-                                        placeholder="DD/MM/YYYY"
-                                        name="dateOfContract[i]"
-                                        [matDatepicker]="dateofFilling"
-                                        autocomplete="off"
-                                        formControlName="dateOfContract"
-                                        [max]="maxPurchaseDate"
-                                        required
-                                />
-                                <mat-datepicker-toggle
-                                        matSuffix
-                                        [for]="dateofFilling"
-                                ></mat-datepicker-toggle>
+                                <input matInput placeholder="DD/MM/YYYY" name="dateOfContract[i]"
+                                  [matDatepicker]="dateofFilling" autocomplete="off" formControlName="dateOfContract"
+                                  [max]="maxPurchaseDate" required />
+                                <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
                                 <mat-datepicker #dateofFilling></mat-datepicker>
                               </mat-form-field>
                             </div>
-
-                          </div>
-                          <div class="div-6 ">
                             <div class="form-field">
                               <div>
-                                                            <span class="span">Name of the Financial Institution in which insurance
-                                                                contract held</span>
+                                <span class="span">
+                                  Total Gross Amount paid/credited with respect
+                                  to the Contract</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <mat-label
-                                >Name of Financial Institution in which insurance contract
-                                  held</mat-label
-                                >
-                                <input
-                                        matInput
-                                        name="nameOfInstitution[i]"
-                                        formControlName="nameOfInstitution"
-                                        required
-                                />
+                                <mat-label>Total gross amount paid/credited with respect
+                                  to the contract during the period</mat-label>
+                                <input matInput name="totalGrossAmountPaid[i]" formControlName="totalGrossAmountPaid"
+                                  digitsOnly required />
                               </mat-form-field>
                             </div>
                             <div class="form-field">
-                              <div><span class="span"> Total Gross Amount paid/credited with respect to
-                                                                the
-                                                                Contract</span> <span class="text-wrapper-2">*</span></div>
-                              <mat-form-field appearance="outline">
-                                <mat-label
-                                >Total gross amount paid/credited with respect to the
-                                  contract during the period</mat-label
-                                >
-                                <input
-                                        matInput
-                                        name="totalGrossAmountPaid[i]"
-                                        formControlName="totalGrossAmountPaid"
-                                        digitsOnly
-                                        required
-                                />
-                              </mat-form-field>
-                            </div>
-
-
-                          </div>
-
-                          <div class="div-6 ">
-
-                            <div class="form-field">
-                              <div><span class="span"> The Cash/Surrender value of the Contract</span>
+                              <div>
+                                <span class="span">
+                                  The Cash/Surrender value of the Contract</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <mat-label
-                                >The Cash / Surrender value of the contract</mat-label
-                                >
-                                <input
-                                        matInput
-                                        name="cashValue[i]"
-                                        formControlName="cashValue"
-                                        digitsOnly
-                                        required
-                                />
+                                <mat-label>The Cash / Surrender value of the
+                                  contract</mat-label>
+                                <input matInput name="cashValue[i]" formControlName="cashValue" digitsOnly required />
                               </mat-form-field>
                             </div>
-                            <div class="form-field">
-                              <div><span class="span">Address of Financial Institution</span> <span
-                                      class="text-wrapper-2">*</span>
-                              </div>
-                              <mat-form-field appearance="outline">
-                                <mat-label>Address of financial institution</mat-label>
-                                <input
-                                        matInput
-                                        name="addressOfInstitution[i]"
-                                        formControlName="addressOfInstitution"
-                                        required
-                                />
-                              </mat-form-field>
-                            </div>
-
-
                           </div>
                         </div>
-                        <button
-                                class="delete-btn"
-                                style="width: 15%; margin: 10px"
-                                (click)="delete('cashValueInsurance', 'formArray')"
-                        >
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                          (click)="delete('cashValueInsurance', 'formArray')">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          All
                         </button>
                       </form>
                     </div>
@@ -798,55 +676,80 @@
                 <div class="accordion-item" *ngIf="topic.code === 'B'">
                   <h2 class="accordion-header" id="heading5">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse5">  {{ topic.label }}
+                      data-bs-target="#collapse5">
+                      {{ topic.label }}
                     </button>
                   </h2>
                   <div id="collapse5" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <form formArrayName="financialInterestDetails" style="padding: 20px">
                         <button class="btn btn__default btn__add pull-right"
-                                (click)="addMore('financialInterestDetails')"> Add More</button>
-                        <div class="White_box"
-                             *ngFor="let financialInterestDetails of getFinancialInterestDetails.controls;let i = index"
-                             [formGroupName]="i">
-                          <div class="div-6 ">
-                            <input
-                                    class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                    type="checkbox"
-                                    (click)="$event.stopPropagation()"
-                                    [checked]="selectedIndexes.includes(i)"
-                                    (click)="toggleSelectedIndex(i)"/>
-                            <div class="form-field">
-                              <div><span class="normal_text">Country code </span> <span
-                                      class="text-wrapper-2">*</span></div>
-                              <div class="form-control-wrapper select_arrow">
-                                <mat-form-field appearance="outline">
-                                  <mat-select
-                                          formControlName="countryCode"
-                                          name="countryCode[i]"
-                                          required>
-                                    <mat-option
-                                            *ngFor="let nature of countryCodeList"
-                                            [value]="nature"
-                                            matTooltip="{{ nature }}"
-                                            [disabled]="nature.disabled">
-                                      {{ nature }}
-                                    </mat-option>
-                                  </mat-select>
-                                </mat-form-field>
-                              </div>
-                            </div>
+                          (click)="addMore('financialInterestDetails')">
+                          Add More
+                        </button>
+                        <div class="White_box" *ngFor="
+                            let financialInterestDetails of getFinancialInterestDetails.controls;
+                            let i = index
+                          " [formGroupName]="i">
+                          <div class="div-6">
+                            <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                              type="checkbox" (click)="$event.stopPropagation()" [checked]="selectedIndexes.includes(i)"
+                              (click)="toggleSelectedIndex(i)" />
                             <div class="form-field">
                               <div>
                                 <span class="span">Name of Entity</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="nameOfEntity[i]"
-                                        formControlName="nameOfEntity"
-                                        required/>
+                                <input matInput name="nameOfEntity[i]" formControlName="nameOfEntity" required />
+                              </mat-form-field>
+                            </div>
+                            <div class="form-field">
+                              <div>
+                                <span class="span">Address of Entity</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="address[i]" formControlName="address" required />
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="form-field">
+                              <div>
+                                <span class="span">Zip code</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="zipCode[i]" formControlName="zipCode" required />
+                              </mat-form-field>
+                            </div>
+                            <div class="form-field">
+                              <div>
+                                <span class="normal_text">Country code </span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <div class="form-control-wrapper select_arrow">
+                                <mat-form-field appearance="outline">
+                                  <mat-select formControlName="countryCode" name="countryCode[i]" required>
+                                    <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
+                                      matTooltip="{{ nature }}" [disabled]="nature.disabled">
+                                      {{ nature }}
+                                    </mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="form-field">
+                              <div>
+                                <span class="span">Nature of interest</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="natureOfInterest[i]" formControlName="natureOfInterest"
+                                  required />
                               </mat-form-field>
                             </div>
                             <div class="form-field">
@@ -855,144 +758,75 @@
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="natureOfEntity[i]"
-                                        formControlName="natureOfEntity"
-                                        required/>
+                                <input matInput name="natureOfEntity[i]" formControlName="natureOfEntity" required />
                               </mat-form-field>
                             </div>
-                          </div>
-                          <div class="div-6 ">
                             <div class="form-field">
-                              <div><span class="span">Zip code</span> <span
-                                      class="text-wrapper-2">*</span>
+                              <div>
+                                <span class="span">Date since held</span><span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="zipCode[i]"
-                                        formControlName="zipCode"
-                                        required
-                                />
-                              </mat-form-field>
-                            </div>
-                            <div class="form-field">
-                              <div><span class="span">Address of Entity</span> <span
-                                      class="text-wrapper-2">*</span>
-                              </div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="address[i]"
-                                        formControlName="address"
-                                        required/>
-                              </mat-form-field>
-                            </div>
-                            <div class="form-field">
-                              <div><span class="span">Nature of interest</span> <span
-                                      class="text-wrapper-2">*</span>
-                              </div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="natureOfInterest[i]"
-                                        formControlName="natureOfInterest"
-                                        required/>
-                              </mat-form-field>
-                            </div>
-
-                          </div>
-
-                          <div class="div-6 ">
-                            <div class="form-field">
-                              <div><span class="span">Date since held</span><span
-                                      class="text-wrapper-2">*</span></div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="DD/MM/YYYY"
-                                        name="date[i]"
-                                        [matDatepicker]="dateofFilling"
-                                        autocomplete="off"
-                                        formControlName="date"
-                                        [max]="maxPurchaseDate"
-                                        required/>
-                                <mat-datepicker-toggle
-                                        matSuffix
-                                        [for]="dateofFilling"
-                                ></mat-datepicker-toggle>
+                                <input matInput placeholder="DD/MM/YYYY" name="date[i]" [matDatepicker]="dateofFilling"
+                                  autocomplete="off" formControlName="date" [max]="maxPurchaseDate" required />
+                                <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
                                 <mat-datepicker #dateofFilling></mat-datepicker>
                               </mat-form-field>
                             </div>
                             <div class="form-field">
-                              <div><span class="span">Total Investment (At cost)</span>
+                              <div>
+                                <span class="span">Total Investment (At cost)</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="totalInvestments[i]"
-                                        formControlName="totalInvestments"
-                                        digitsOnly
-                                        required/>
-                              </mat-form-field>
-                            </div>
-                            <div class="form-field">
-                              <div><span class="span"> Income Accrued from such interest</span> <span
-                                      class="text-wrapper-2">*</span></div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="accruedIncome[i]"
-                                        formControlName="accruedIncome"
-                                        digitsOnly
-                                        required
-                                />
+                                <input matInput name="totalInvestments[i]" formControlName="totalInvestments" digitsOnly
+                                  required />
                               </mat-form-field>
                             </div>
                           </div>
-                          <div class="div-6 ">
+                          <div class="div-6">
                             <div class="form-field">
-                              <div><span class="span"> Nature of Income</span> <span
-                                      class="text-wrapper-2">*</span></div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="natureOfIncome[i]"
-                                        formControlName="natureOfIncome"
-                                        required/>
-                              </mat-form-field>
-                            </div>
-                            <div class="form-field">
-                              <div><span class="span">Amount</span>
+                              <div>
+                                <span class="span">
+                                  Income Accrued from such interest</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="amount[i]"
-                                        formControlName="amount"
-                                        digitsOnly
-                                        required/>
+                                <input matInput name="accruedIncome[i]" formControlName="accruedIncome" digitsOnly
+                                  required />
+                              </mat-form-field>
+                            </div>
+                            <div class="form-field">
+                              <div>
+                                <span class="span"> Nature of Income</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="natureOfIncome[i]" formControlName="natureOfIncome" required />
+                              </mat-form-field>
+                            </div>
+                            <div class="form-field">
+                              <div>
+                                <span class="span">Amount</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="amount[i]" formControlName="amount" digitsOnly required />
                               </mat-form-field>
                             </div>
                           </div>
-                          <div class="div-6 ">
+                          <div class="div-6">
                             <div class="form-field">
-                              <div><span class="normal_text">Schedule Where Offered</span> <span
-                                      class="text-wrapper-2">*</span></div>
+                              <div>
+                                <span class="normal_text">Schedule Where Offered</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
                               <div class="form-control-wrapper select_arrow">
                                 <mat-form-field appearance="outline">
-                                  <mat-select
-                                          matInput
-                                          name="scheduleOfferd[i]"
-                                          formControlName="scheduleOfferd"
-                                          required>
-                                    <mat-option
-                                            *ngFor="let option of scheduleWhereOffered"
-                                            [value]="option"
-                                    >
+                                  <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
+                                    required>
+                                    <mat-option *ngFor="
+                                        let option of scheduleWhereOffered
+                                      " [value]="option">
                                       {{ option }}
                                     </mat-option>
                                   </mat-select>
@@ -1000,24 +834,22 @@
                               </div>
                             </div>
                             <div class="form-field">
-                              <div><span class="span">Item Number of Schedule</span>
+                              <div>
+                                <span class="span">Item Number of Schedule</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="numberOfSchedule[i]"
-                                        formControlName="numberOfSchedule"
-                                        required/>
+                                <input matInput name="numberOfSchedule[i]" formControlName="numberOfSchedule"
+                                  required />
                               </mat-form-field>
                             </div>
                           </div>
                         </div>
-                        <button
-                                class="delete-btn"
-                                style="width: 15%; margin: 10px"
-                                (click)="delete('financialInterestDetails', 'formArray')">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+                        <button class="delete-btn" style="width: 15%; margin: 10px" (click)="
+                            delete('financialInterestDetails', 'formArray')
+                          ">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          All
                         </button>
                       </form>
                     </div>
@@ -1028,39 +860,55 @@
                 <div class="accordion-item" *ngIf="topic.code === 'C'">
                   <h2 class="accordion-header" id="heading6">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse6">  {{ topic.label }}
+                      data-bs-target="#collapse6">
+                      {{ topic.label }}
                     </button>
                   </h2>
                   <div id="collapse6" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <form formArrayName="immovablePropertryDetails" style="padding: 20px">
                         <button class="btn btn__default btn__add pull-right"
-                                (click)="addMore('immovablePropertryDetails')"> Add More</button>
-                        <div class="White_box"
-                             *ngFor="let immovablePropertryDetails of getImmovablePropertryDetails.controls;let i = index"
-                             [formGroupName]="i">
-                          <div class="div-6 ">
-                            <input
-                                    class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                    type="checkbox"
-                                    (click)="$event.stopPropagation()"
-                                    [checked]="selectedIndexes.includes(i)"
-                                    (click)="toggleSelectedIndex(i)"
-                            />
+                          (click)="addMore('immovablePropertryDetails')">
+                          Add More
+                        </button>
+                        <div class="White_box" *ngFor="
+                            let immovablePropertryDetails of getImmovablePropertryDetails.controls;
+                            let i = index
+                          " [formGroupName]="i">
+                          <div class="div-6">
+                            <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                              type="checkbox" (click)="$event.stopPropagation()" [checked]="selectedIndexes.includes(i)"
+                              (click)="toggleSelectedIndex(i)" />
                             <div class="form-field">
-                              <div><span class="normal_text">Country code </span> <span
-                                      class="text-wrapper-2">*</span></div>
+                              <div>
+                                <span class="span">Address of Entity</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="address[i]" formControlName="address" required />
+                              </mat-form-field>
+                            </div>
+                            <div class="form-field">
+                              <div>
+                                <span class="span">Zip code</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="zipCode[i]" formControlName="zipCode" required />
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="form-field">
+                              <div>
+                                <span class="normal_text">Country code </span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
                               <div class="form-control-wrapper select_arrow">
                                 <mat-form-field appearance="outline">
-                                  <mat-select
-                                          formControlName="countryCode"
-                                          name="countryCode[i]"
-                                          required>
-                                    <mat-option
-                                            *ngFor="let nature of countryCodeList"
-                                            [value]="nature"
-                                            matTooltip="{{ nature }}"
-                                            [disabled]="nature.disabled">
+                                  <mat-select formControlName="countryCode" name="countryCode[i]" required>
+                                    <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
+                                      matTooltip="{{ nature }}" [disabled]="nature.disabled">
                                       {{ nature }}
                                     </mat-option>
                                   </mat-select>
@@ -1068,141 +916,89 @@
                               </div>
                             </div>
                             <div class="form-field">
-                              <div><span class="normal_text">Ownership</span> <span
-                                      class="text-wrapper-2">*</span></div>
+                              <div>
+                                <span class="normal_text">Ownership</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
                               <div class="form-control-wrapper select_arrow">
                                 <mat-form-field appearance="outline">
-                                  <mat-select
-                                          matInput
-                                          name="ownerShip[i]"
-                                          formControlName="ownerShip"
-                                          required>
-                                    <mat-option
-                                            *ngFor="let option of natureOfInterestOwnership"
-                                            [value]="option">
+                                  <mat-select matInput name="ownerShip[i]" formControlName="ownerShip" required>
+                                    <mat-option *ngFor="
+                                        let option of natureOfInterestOwnership
+                                      " [value]="option">
                                       {{ option }}
                                     </mat-option>
                                   </mat-select>
                                 </mat-form-field>
                               </div>
                             </div>
-
-                          </div>
-                          <div class="div-6 ">
-
                             <div class="form-field">
-                              <div><span class="span">Address of Entity</span> <span
-                                      class="text-wrapper-2">*</span>
+                              <div>
+                                <span class="span">Date of Acquisition</span>
+                                <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="address[i]"
-                                        formControlName="address"
-                                        required/>
-                              </mat-form-field>
-                            </div>
-                            <div class="form-field">
-                              <div><span class="span">Zip code</span> <span
-                                      class="text-wrapper-2">*</span>
-                              </div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="zipCode[i]"
-                                        formControlName="zipCode"
-                                        required/>
-                              </mat-form-field>
-                            </div>
-                            <div class="form-field">
-                              <div><span class="span">Date of Acquisition</span> <span
-                                      class="text-wrapper-2">*</span></div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="DD/MM/YYYY"
-                                        name="date[i]"
-                                        [matDatepicker]="dateofFilling"
-                                        autocomplete="off"
-                                        formControlName="date"
-                                        [max]="maxPurchaseDate"
-                                        required/>
-                                <mat-datepicker-toggle
-                                        matSuffix
-                                        [for]="dateofFilling"></mat-datepicker-toggle>
+                                <input matInput placeholder="DD/MM/YYYY" name="date[i]" [matDatepicker]="dateofFilling"
+                                  autocomplete="off" formControlName="date" [max]="maxPurchaseDate" required />
+                                <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
                                 <mat-datepicker #dateofFilling></mat-datepicker>
                               </mat-form-field>
                             </div>
                           </div>
-
-                          <div class="div-6 ">
+                          <div class="div-6">
                             <div class="form-field">
-                              <div><span class="span">Total Investment (At cost)</span>
+                              <div>
+                                <span class="span">Total Investment (At cost)</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="totalInvestments[i]"
-                                        formControlName="totalInvestments"
-                                        digitsOnly
-                                        required/>
-                              </mat-form-field>
-                            </div>
-
-                            <div class="form-field">
-                              <div><span class="span"> Income derived from Property </span> <span
-                                      class="text-wrapper-2">*</span></div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="derivedIncome[i]"
-                                        formControlName="derivedIncome"
-                                        required/>
+                                <input matInput name="totalInvestments[i]" formControlName="totalInvestments" digitsOnly
+                                  required />
                               </mat-form-field>
                             </div>
                             <div class="form-field">
-                              <div><span class="span">Nature of Income</span> <span
-                                      class="text-wrapper-2">*</span>
+                              <div>
+                                <span class="span">
+                                  Income derived from Property
+                                </span>
+                                <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="natureOfIncome[i]"
-                                        formControlName="natureOfIncome"
-                                        required/>
+                                <input matInput name="derivedIncome[i]" formControlName="derivedIncome" required />
                               </mat-form-field>
                             </div>
-
+                            <div class="form-field">
+                              <div>
+                                <span class="span">Nature of Income</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="natureOfIncome[i]" formControlName="natureOfIncome" required />
+                              </mat-form-field>
+                            </div>
                           </div>
-                          <div class="div-6 ">
+                          <div class="div-6">
                             <div class="form-field">
-                              <div><span class="span">Amount</span>
+                              <div>
+                                <span class="span">Amount</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="amount[i]"
-                                        formControlName="amount"
-                                        digitsOnly
-                                        required
-                                />
+                                <input matInput name="amount[i]" formControlName="amount" digitsOnly required />
                               </mat-form-field>
                             </div>
                             <div class="form-field">
-                              <div><span class="normal_text">Schedule where Offered</span> <span
-                                      class="text-wrapper-2">*</span></div>
+                              <div>
+                                <span class="normal_text">Schedule where Offered</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
                               <div class="form-control-wrapper select_arrow">
                                 <mat-form-field appearance="outline">
-                                  <mat-select
-                                          matInput
-                                          name="scheduleOfferd[i]"
-                                          formControlName="scheduleOfferd"
-                                          required>
-                                    <mat-option
-                                            *ngFor="let option of scheduleWhereOffered"
-                                            [value]="option">
+                                  <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
+                                    required>
+                                    <mat-option *ngFor="
+                                        let option of scheduleWhereOffered
+                                      " [value]="option">
                                       {{ option }}
                                     </mat-option>
                                   </mat-select>
@@ -1210,25 +1006,22 @@
                               </div>
                             </div>
                             <div class="form-field">
-                              <div><span class="span">Item number of Schedule</span>
+                              <div>
+                                <span class="span">Item number of Schedule</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="numberOfSchedule[i]"
-                                        formControlName="numberOfSchedule"
-                                        required/>
+                                <input matInput name="numberOfSchedule[i]" formControlName="numberOfSchedule"
+                                  required />
                               </mat-form-field>
                             </div>
                           </div>
-
                         </div>
-                        <button
-                                class="delete-btn"
-                                style="width: 15%; margin: 10px"
-                                (click)="delete('immovablePropertryDetails', 'formArray')">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+                        <button class="delete-btn" style="width: 15%; margin: 10px" (click)="
+                            delete('immovablePropertryDetails', 'formArray')
+                          ">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          All
                         </button>
                       </form>
                     </div>
@@ -1239,41 +1032,34 @@
                 <div class="accordion-item" *ngIf="topic.code === 'D'">
                   <h2 class="accordion-header" id="heading7">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse7">  {{ topic.label }}
+                      data-bs-target="#collapse7">
+                      {{ topic.label }}
                     </button>
                   </h2>
                   <div id="collapse7" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <form formArrayName="capitalAssetsDetails" style="padding: 20px">
-                        <button class="btn btn__default btn__add pull-right"
-                                (click)="addMore('capitalAssetsDetails')"> Add More
+                        <button class="btn btn__default btn__add pull-right" (click)="addMore('capitalAssetsDetails')">
+                          Add More
                         </button>
-                        <div class="White_box"
-                             *ngFor="let capitalAssetsDetails of getCapitalAssetsDetails.controls;let i = index"
-                             [formGroupName]="i">
-
-                          <div class="div-6 ">
-                            <input
-                                    class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                    type="checkbox"
-                                    (click)="$event.stopPropagation()"
-                                    [checked]="selectedIndexes.includes(i)"
-                                    (click)="toggleSelectedIndex(i)"
-                            />
+                        <div class="White_box" *ngFor="
+                            let capitalAssetsDetails of getCapitalAssetsDetails.controls;
+                            let i = index
+                          " [formGroupName]="i">
+                          <div class="div-6">
+                            <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                              type="checkbox" (click)="$event.stopPropagation()" [checked]="selectedIndexes.includes(i)"
+                              (click)="toggleSelectedIndex(i)" />
                             <div class="form-field">
-                              <div><span class="normal_text">Country code </span> <span
-                                      class="text-wrapper-2">*</span></div>
+                              <div>
+                                <span class="normal_text">Country code </span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
                               <div class="form-control-wrapper select_arrow">
                                 <mat-form-field appearance="outline">
-                                  <mat-select
-                                          formControlName="countryCode"
-                                          name="countryCode[i]"
-                                          required>
-                                    <mat-option
-                                            *ngFor="let nature of countryCodeList"
-                                            [value]="nature"
-                                            matTooltip="{{ nature }}"
-                                            [disabled]="nature.disabled">
+                                  <mat-select formControlName="countryCode" name="countryCode[i]" required>
+                                    <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
+                                      matTooltip="{{ nature }}" [disabled]="nature.disabled">
                                       {{ nature }}
                                     </mat-option>
                                   </mat-select>
@@ -1281,140 +1067,112 @@
                               </div>
                             </div>
                             <div class="form-field">
-                              <div><span class="normal_text">Ownership</span> <span
-                                      class="text-wrapper-2">*</span></div>
+                              <div>
+                                <span class="span">Zip code</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="zipCode[i]" formControlName="zipCode" required />
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="form-field">
+                              <div>
+                                <span class="span">Nature of Assets</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="natureOfAsstes[i]" formControlName="natureOfAsstes" required />
+                              </mat-form-field>
+                            </div>
+                            <div class="form-field">
+                              <div>
+                                <span class="normal_text">Ownership</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
                               <div class="form-control-wrapper select_arrow">
                                 <mat-form-field appearance="outline">
                                   <mat-label>Ownership</mat-label>
-                                  <mat-select
-                                          matInput
-                                          name="ownerShip[i]"
-                                          formControlName="ownerShip"
-                                          required>
-                                    <mat-option
-                                            *ngFor="let option of natureOfInterestOwnership"
-                                            [value]="option">
+                                  <mat-select matInput name="ownerShip[i]" formControlName="ownerShip" required>
+                                    <mat-option *ngFor="
+                                        let option of natureOfInterestOwnership
+                                      " [value]="option">
                                       {{ option }}
                                     </mat-option>
                                   </mat-select>
                                 </mat-form-field>
                               </div>
                             </div>
-
-                          </div>
-                          <div class="div-6 ">
-
                             <div class="form-field">
-                              <div><span class="span">Nature of Assets</span> <span
-                                      class="text-wrapper-2">*</span>
+                              <div>
+                                <span class="span">Date of Acquisition</span><span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="natureOfAsstes[i]"
-                                        formControlName="natureOfAsstes"
-                                        required/>
-                              </mat-form-field>
-                            </div>
-                            <div class="form-field">
-                              <div><span class="span">Zip code</span> <span
-                                      class="text-wrapper-2">*</span>
-                              </div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="zipCode[i]"
-                                        formControlName="zipCode"
-                                        required/>
-                              </mat-form-field>
-                            </div>
-                            <div class="form-field">
-                              <div><span class="span">Date of Acquisition</span><span
-                                      class="text-wrapper-2">*</span></div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        placeholder="DD/MM/YYYY"
-                                        name="date[i]"
-                                        [matDatepicker]="dateofFilling"
-                                        autocomplete="off"
-                                        formControlName="date"
-                                        [max]="maxPurchaseDate"
-                                        required/>
+                                <input matInput placeholder="DD/MM/YYYY" name="date[i]" [matDatepicker]="dateofFilling"
+                                  autocomplete="off" formControlName="date" [max]="maxPurchaseDate" required />
                                 <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
                                 <mat-datepicker #dateofFilling></mat-datepicker>
                               </mat-form-field>
                             </div>
                           </div>
 
-                          <div class="div-6 ">
+                          <div class="div-6">
                             <div class="form-field">
-                              <div><span class="span">Total Investment (At cost)</span>
+                              <div>
+                                <span class="span">Total Investment (At cost)</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="totalInvestments[i]"
-                                        formControlName="totalInvestments"
-                                        digitsOnly
-                                        required/>
+                                <input matInput name="totalInvestments[i]" formControlName="totalInvestments" digitsOnly
+                                  required />
                               </mat-form-field>
                             </div>
 
                             <div class="form-field">
-                              <div><span class="span"> Income derived from Asset </span> <span
-                                      class="text-wrapper-2">*</span></div>
-                              <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="derivedIncome[i]"
-                                        formControlName="derivedIncome"
-                                        digitsOnly
-                                        required/>
-                              </mat-form-field>
-                            </div>
-                            <div class="form-field">
-                              <div><span class="span">Nature of Income</span> <span
-                                      class="text-wrapper-2">*</span>
+                              <div>
+                                <span class="span">
+                                  Income derived from Asset
+                                </span>
+                                <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="natureOfIncome[i]"
-                                        formControlName="natureOfIncome"
-                                        required/>
+                                <input matInput name="derivedIncome[i]" formControlName="derivedIncome" digitsOnly
+                                  required />
                               </mat-form-field>
                             </div>
-
+                            <div class="form-field">
+                              <div>
+                                <span class="span">Nature of Income</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input matInput name="natureOfIncome[i]" formControlName="natureOfIncome" required />
+                              </mat-form-field>
+                            </div>
                           </div>
-                          <div class="div-6 ">
+                          <div class="div-6">
                             <div class="form-field">
-                              <div><span class="span">Amount</span>
+                              <div>
+                                <span class="span">Amount</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="amount[i]"
-                                        formControlName="amount"
-                                        digitsOnly
-                                        required/>
+                                <input matInput name="amount[i]" formControlName="amount" digitsOnly required />
                               </mat-form-field>
                             </div>
                             <div class="form-field">
-                              <div><span class="normal_text">Schedule where Offered</span> <span
-                                      class="text-wrapper-2">*</span></div>
+                              <div>
+                                <span class="normal_text">Schedule where Offered</span>
+                                <span class="text-wrapper-2">*</span>
+                              </div>
                               <div class="form-control-wrapper select_arrow">
                                 <mat-form-field appearance="outline">
-                                  <mat-select
-                                          matInput
-                                          name="scheduleOfferd[i]"
-                                          formControlName="scheduleOfferd"
-                                          required>
-                                    <mat-option
-                                            *ngFor="let option of scheduleWhereOffered"
-                                            [value]="option">
+                                  <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
+                                    required>
+                                    <mat-option *ngFor="
+                                        let option of scheduleWhereOffered
+                                      " [value]="option">
                                       {{ option }}
                                     </mat-option>
                                   </mat-select>
@@ -1423,25 +1181,21 @@
                             </div>
 
                             <div class="form-field">
-                              <div><span class="span">Item number of Schedule</span>
+                              <div>
+                                <span class="span">Item number of Schedule</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
                               <mat-form-field appearance="outline">
-                                <input
-                                        matInput
-                                        name="numberOfSchedule[i]"
-                                        formControlName="numberOfSchedule"
-                                        required/>
+                                <input matInput name="numberOfSchedule[i]" formControlName="numberOfSchedule"
+                                  required />
                               </mat-form-field>
                             </div>
                           </div>
-
                         </div>
-                        <button
-                                class="delete-btn"
-                                style="width: 15%; margin: 10px"
-                                (click)="delete('capitalAssetsDetails', 'formArray')">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                          (click)="delete('capitalAssetsDetails', 'formArray')">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          All
                         </button>
                       </form>
                     </div>
@@ -1452,200 +1206,184 @@
                 <div class="accordion-item" *ngIf="topic.code === 'E'">
                   <h2 class="accordion-header" id="heading8">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse8">   {{ topic.label }}
+                      data-bs-target="#collapse8">
+                      {{ topic.label }}
                     </button>
                   </h2>
                   <div id="collapse8" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <form formArrayName="signingAuthorityDetails" style="padding: 20px">
-                        <div *ngFor="let signingAuthorityDetails of getSigningAuthorityDetails?.controls;let i = index"
-                             [formGroupName]="i">
+                        <div *ngFor="
+                            let signingAuthorityDetails of getSigningAuthorityDetails?.controls;
+                            let i = index
+                          " [formGroupName]="i">
                           <div class="White_box">
                             <button class="btn btn__default btn__add pull-right"
-                                    (click)="addMore('signingAuthorityDetails')"> Add More
+                              (click)="addMore('signingAuthorityDetails')">
+                              Add More
                             </button>
-                            <div class="div-6 ">
-                              <input
-                                      class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                      type="checkbox"
-                                      (click)="$event.stopPropagation()"
-                                      [checked]="selectedIndexes.includes(i)"
-                                      (click)="toggleSelectedIndex(i)"/>
+                            <div class="div-6">
+                              <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                type="checkbox" (click)="$event.stopPropagation()"
+                                [checked]="selectedIndexes.includes(i)" (click)="toggleSelectedIndex(i)" />
                               <div class="form-field">
-                                <div><span class="normal_text">Country code </span> <span
-                                        class="text-wrapper-2">*</span></div>
+                                <div>
+                                  <span class="span">Name of the Institution in which the
+                                    account is held</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <mat-form-field appearance="outline">
+                                  <input matInput name="institutionName[i]" formControlName="institutionName"
+                                    required />
+                                </mat-form-field>
+                              </div>
+                              <div class="form-field">
+                                <div>
+                                  <span class="span">Address of the Institution</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <mat-form-field appearance="outline">
+                                  <input matInput name="address[i]" formControlName="address" required />
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div class="div-6">
+                              <div class="form-field">
+                                <div>
+                                  <span class="span">Zip code</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <mat-form-field appearance="outline">
+                                  <input matInput name="zipCode[i]" formControlName="zipCode" required />
+                                </mat-form-field>
+                              </div>
+                              <div class="form-field">
+                                <div>
+                                  <span class="normal_text">Country code </span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
                                 <div class="form-control-wrapper select_arrow">
                                   <mat-form-field appearance="outline">
-                                    <mat-select
-                                            formControlName="countryCode"
-                                            name="countryCode[i]"
-                                            required>
-                                      <mat-option
-                                              *ngFor="let nature of countryCodeList"
-                                              [value]="nature"
-                                              matTooltip="{{ nature }}"
-                                              [disabled]="nature.disabled">
+                                    <mat-select formControlName="countryCode" name="countryCode[i]" required>
+                                      <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
+                                        matTooltip="{{ nature }}" [disabled]="nature.disabled">
                                         {{ nature }}
                                       </mat-option>
                                     </mat-select>
                                   </mat-form-field>
                                 </div>
                               </div>
-
-                              <div class="form-field">
-                                <div><span class="span">Name of the Institution in which the account is
-                                                                  held</span> <span class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="institutionName[i]"
-                                          formControlName="institutionName"
-                                          required/>
-                                </mat-form-field>
-                              </div>
-                            </div>
-                            <div class="div-6 ">
-                              <div class="form-field">
-                                <div><span class="span">Address of the Institution</span> <span
-                                        class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="address[i]"
-                                          formControlName="address"
-                                          required/>
-                                </mat-form-field>
-                              </div>
-                              <div class="form-field">
-                                <div><span class="span">Zip code</span> <span
-                                        class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="zipCode[i]"
-                                          formControlName="zipCode"
-                                          required/>
-                                </mat-form-field>
-                              </div>
                             </div>
                           </div>
                           <button class="btn btn__default btn__add pull-right"
-                                  (click)="add('signingAuthorityDetails', i)"> Add
+                            (click)="add('signingAuthorityDetails', i)">
+                            Add
                           </button>
                           <div formArrayName="account">
-                            <div *ngFor="let accountCtrl of getSigningAuthAccountControls(i)?.controls;let j = index"
-                                 [formGroupName]="j">
+                            <div *ngFor="
+                                let accountCtrl of getSigningAuthAccountControls(
+                                  i
+                                )?.controls;
+                                let j = index
+                              " [formGroupName]="j">
                               <div class="White_box">
-                                <div class="div-6 ">
+                                <div class="div-6">
                                   <input
-                                          class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                          type="checkbox"
-                                          (click)="$event.stopPropagation()"
-                                          [checked]="selectedAccountIndexes.includes(j)"
-                                          (click)="toggleSelectedAccountIndex(j)"/>
+                                    class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                    type="checkbox" (click)="$event.stopPropagation()" [checked]="
+                                      selectedAccountIndexes.includes(j)
+                                    " (click)="toggleSelectedAccountIndex(j)" />
                                   <div class="form-field">
-                                    <div><span class="span">Name of the account holder</span>
+                                    <div>
+                                      <span class="span">Name of the account holder</span>
                                       <span class="text-wrapper-2">*</span>
                                     </div>
                                     <mat-form-field appearance="outline">
-                                      <input
-                                              matInput
-                                              name="accountHolderName[j]"
-                                              formControlName="accountHolderName"
-                                              required/>
+                                      <input matInput name="accountHolderName[j]" formControlName="accountHolderName"
+                                        required />
                                     </mat-form-field>
                                   </div>
                                   <div class="form-field">
-                                    <div><span class="span"> Account Number </span> <span
-                                            class="text-wrapper-2">*</span></div>
-                                    <mat-form-field appearance="outline">
-                                      <input
-                                              matInput
-                                              name="accountNumber[j]"
-                                              formControlName="accountNumber"
-                                              digitsOnly
-                                              required/>
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="form-field">
-                                    <div><span class="span">Peak Balance During the year</span> <span
-                                            class="text-wrapper-2">*</span>
+                                    <div>
+                                      <span class="span"> Account Number </span>
+                                      <span class="text-wrapper-2">*</span>
                                     </div>
                                     <mat-form-field appearance="outline">
-                                      <input
-                                              matInput
-                                              name="peakBalance[j]"
-                                              formControlName="peakBalance"
-                                              digitsOnly
-                                              required/>
+                                      <input matInput name="accountNumber[j]" formControlName="accountNumber" digitsOnly
+                                        required />
                                     </mat-form-field>
                                   </div>
-
+                                  <div class="form-field">
+                                    <div>
+                                      <span class="span">Peak Balance During the year</span>
+                                      <span class="text-wrapper-2">*</span>
+                                    </div>
+                                    <mat-form-field appearance="outline">
+                                      <input matInput name="peakBalance[j]" formControlName="peakBalance" digitsOnly
+                                        required />
+                                    </mat-form-field>
+                                  </div>
                                 </div>
                               </div>
                               <div class="White_box">
                                 <div class="row mb-10">
-                                  <div class="col-10 ">
-                                    <p><span class="span">
-                                                                      Whether income accrued is taxable in your hands? </span><span
-                                            class="text-wrapper-2">*</span></p>
+                                  <div class="col-10">
+                                    <p>
+                                      <span class="span">
+                                        Whether income accrued is taxable in
+                                        your hands? </span><span class="text-wrapper-2">*</span>
+                                    </p>
                                   </div>
                                   <div class="col-2">
-                                    <mat-radio-group
-                                            name="isTaxableinYourHand[j]"
-                                            formControlName="isTaxableinYourHand"
-                                            required
-                                            (change)="handleSelectionChange($event.value)">
+                                    <mat-radio-group name="isTaxableinYourHand[j]" formControlName="isTaxableinYourHand"
+                                      required (change)="
+                                        handleSelectionChange($event.value)
+                                      ">
                                       <mat-radio-button value="Y" style="margin-right: 10px">Yes</mat-radio-button>
                                       <mat-radio-button value="N">No</mat-radio-button>
                                     </mat-radio-group>
                                   </div>
                                 </div>
-                                <div class="div-6 " *ngIf="accountCtrl?.get('isTaxableinYourHand')?.value === 'Y'">
+                                <div class="div-6" *ngIf="
+                                    accountCtrl?.get('isTaxableinYourHand')
+                                      ?.value === 'Y'
+                                  ">
                                   <div class="form-field">
-                                    <div><span class="span">Income Accured in the Account</span> <span
-                                            class="text-wrapper-2">*</span>
+                                    <div>
+                                      <span class="span">Income Accured in the Account</span>
+                                      <span class="text-wrapper-2">*</span>
                                     </div>
                                     <mat-form-field appearance="outline">
-                                      <input
-                                              matInput
-                                              name="accruedIncome[j]"
-                                              formControlName="accruedIncome"
-                                              digitsOnly
-                                              required/>
+                                      <input matInput name="accruedIncome[j]" formControlName="accruedIncome" digitsOnly
+                                        required />
                                     </mat-form-field>
                                   </div>
                                   <div class="form-field">
-                                    <div><span class="span">Amount</span> <span class="text-wrapper-2">*</span>
+                                    <div>
+                                      <span class="span">Amount</span>
+                                      <span class="text-wrapper-2">*</span>
                                     </div>
                                     <mat-form-field appearance="outline">
-                                      <input
-                                              matInput
-                                              name="amount[j]"
-                                              formControlName="amount"
-                                              digitsOnly
-                                              required
-                                      />
+                                      <input matInput name="amount[j]" formControlName="amount" digitsOnly required />
                                     </mat-form-field>
                                   </div>
                                 </div>
-                                <div class="div-6 " *ngIf="accountCtrl?.get('isTaxableinYourHand')?.value === 'Y'">
+                                <div class="div-6" *ngIf="
+                                    accountCtrl?.get('isTaxableinYourHand')
+                                      ?.value === 'Y'
+                                  ">
                                   <div class="form-field">
-                                    <div><span class="normal_text">Scheduled Where Offered</span> <span
-                                            class="text-wrapper-2">*</span></div>
+                                    <div>
+                                      <span class="normal_text">Scheduled Where Offered</span>
+                                      <span class="text-wrapper-2">*</span>
+                                    </div>
                                     <div class="form-control-wrapper select_arrow">
                                       <mat-form-field appearance="outline">
-                                        <mat-select
-                                                matInput
-                                                name="scheduleOfferd[j]"
-                                                formControlName="scheduleOfferd"
-                                                required>
-                                          <mat-option
-                                                  *ngFor="let option of scheduleWhereOffered"
-                                                  [value]="option">
+                                        <mat-select matInput name="scheduleOfferd[j]" formControlName="scheduleOfferd"
+                                          required>
+                                          <mat-option *ngFor="
+                                              let option of scheduleWhereOffered
+                                            " [value]="option">
                                             {{ option }}
                                           </mat-option>
                                         </mat-select>
@@ -1653,27 +1391,31 @@
                                     </div>
                                   </div>
                                   <div class="form-field">
-                                    <div><span class="span">Item Number of Schedule</span> <span
-                                            class="text-wrapper-2">*</span>
+                                    <div>
+                                      <span class="span">Item Number of Schedule</span>
+                                      <span class="text-wrapper-2">*</span>
                                     </div>
                                     <mat-form-field appearance="outline">
-                                      <input
-                                              matInput
-                                              name="numberOfSchedule[j]"
-                                              formControlName="numberOfSchedule"
-                                              required/>
+                                      <input matInput name="numberOfSchedule[j]" formControlName="numberOfSchedule"
+                                        required />
                                     </mat-form-field>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                          <button class="delete-btn"
-                                  style="width: 15%"
-                                  (click)="delete('signingAuthorityDetails', 'account', i)">
-                            <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          <button class="delete-btn" style="width: 15%" (click)="
+                              delete('signingAuthorityDetails', 'account', i)
+                            ">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                            Delete
                           </button>
                         </div>
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                          (click)="delete('signingAuthorityDetails', 'formArray')">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          All
+                        </button>
                       </form>
                     </div>
                   </div>
@@ -1683,175 +1425,144 @@
                 <div class="accordion-item" *ngIf="topic.code === 'F'">
                   <h2 class="accordion-header" id="heading9">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse9">   {{ topic.label }}
+                      data-bs-target="#collapse9">
+                      {{ topic.label }}
                     </button>
                   </h2>
                   <div id="collapse9" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <form formArrayName="trustsDetails" style="padding: 20px">
-                        <button class="btn btn__default btn__add pull-right"
-                                (click)="addMore('trustsDetails')"> Add More
+                        <button class="btn btn__default btn__add pull-right" (click)="addMore('trustsDetails')">
+                          Add More
                         </button>
-                        <div *ngFor="let trustsDetails of getTrustsDetails.controls;let i = index"
-                             [formGroupName]="i">
+                        <div *ngFor="
+                            let trustsDetails of getTrustsDetails.controls;
+                            let i = index
+                          " [formGroupName]="i">
                           <div class="White_box">
-                            <div class="div-6 ">
-                              <input
-                                      class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                      type="checkbox"
-                                      (click)="$event.stopPropagation()"
-                                      [checked]="selectedIndexes.includes(i)"
-                                      (click)="toggleSelectedIndex(i)"
-                              />
+                            <div class="div-6">
+                              <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                type="checkbox" (click)="$event.stopPropagation()"
+                                [checked]="selectedIndexes.includes(i)" (click)="toggleSelectedIndex(i)" />
                               <div class="form-field">
-                                <div><span class="normal_text">Country code </span> <span
-                                        class="text-wrapper-2">*</span></div>
+                                <div>
+                                  <span class="span">Name of the trust</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <mat-form-field appearance="outline">
+                                  <input matInput name="trustName[i]" formControlName="trustName" required />
+                                </mat-form-field>
+                              </div>
+                              <div class="form-field">
+                                <div>
+                                  <span class="span">Address of the trust</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <mat-form-field appearance="outline">
+                                  <input matInput name="trustAddress[i]" formControlName="trustAddress" required />
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div class="div-6">
+                              <div class="form-field">
+                                <div>
+                                  <span class="span">Zip code</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <mat-form-field appearance="outline">
+                                  <input matInput name="zipCode[i]" formControlName="zipCode" required />
+                                </mat-form-field>
+                              </div>
+                              <div class="form-field">
+                                <div>
+                                  <span class="normal_text">Country code </span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
                                 <div class="form-control-wrapper select_arrow">
                                   <mat-form-field appearance="outline">
-                                    <mat-select
-                                            formControlName="countryCode"
-                                            name="countryCode[i]"
-                                            required>
-                                      <mat-option
-                                              *ngFor="let nature of countryCodeList"
-                                              [value]="nature"
-                                              matTooltip="{{ nature }}"
-                                              [disabled]="nature.disabled">
+                                    <mat-select formControlName="countryCode" name="countryCode[i]" required>
+                                      <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
+                                        matTooltip="{{ nature }}" [disabled]="nature.disabled">
                                         {{ nature }}
                                       </mat-option>
                                     </mat-select>
                                   </mat-form-field>
                                 </div>
                               </div>
-                              <div class="form-field">
-                                <div><span class="span">Zip code</span> <span
-                                        class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="zipCode[i]"
-                                          formControlName="zipCode"
-                                          required/>
-                                </mat-form-field>
-                              </div>
-
                             </div>
-                            <div class="div-6 ">
+                            <div class="div-6">
                               <div class="form-field">
-                                <div><span class="span">Name of the trust</span> <span
-                                        class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="trustName[i]"
-                                          formControlName="trustName"
-                                          required/>
-                                </mat-form-field>
-                              </div>
-                              <div class="form-field">
-                                <div><span class="span">Address of the trust</span> <span
-                                        class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="trustAddress[i]"
-                                          formControlName="trustAddress"
-                                          required/>
-                                </mat-form-field>
-                              </div>
-                              <div class="form-field">
-                                <div><span class="span">Name of the trustee</span> <span
-                                        class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="trusteesName[i]"
-                                          formControlName="trusteesName"
-                                          required/>
-                                </mat-form-field>
-                              </div>
-                            </div>
-                            <div class="div-6 ">
-                              <div class="form-field">
-                                <div><span class="span">Address of the trustee</span>
+                                <div>
+                                  <span class="span">Name of the trustee</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="trusteesAddress[i]"
-                                          formControlName="trusteesAddress"
-                                          required/>
+                                  <input matInput name="trusteesName[i]" formControlName="trusteesName" required />
+                                </mat-form-field>
+                              </div>
+                              <div class="form-field">
+                                <div>
+                                  <span class="span">Address of the trustee</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <mat-form-field appearance="outline">
+                                  <input matInput name="trusteesAddress[i]" formControlName="trusteesAddress"
+                                    required />
                                 </mat-form-field>
                               </div>
 
                               <div class="form-field">
-                                <div><span class="span"> Name of the settlor </span> <span
-                                        class="text-wrapper-2">*</span></div>
+                                <div>
+                                  <span class="span">
+                                    Name of the settlor
+                                  </span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
                                 <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="settlorName[i]"
-                                          formControlName="settlorName"
-                                          required/>
+                                  <input matInput name="settlorName[i]" formControlName="settlorName" required />
                                 </mat-form-field>
                               </div>
                               <div class="form-field">
-                                <div><span class="span">Address of the settlor </span> <span
-                                        class="text-wrapper-2">*</span>
+                                <div>
+                                  <span class="span">Address of the settlor
+                                  </span>
+                                  <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="settlorAddress[i]"
-                                          formControlName="settlorAddress"
-                                          required/>
+                                  <input matInput name="settlorAddress[i]" formControlName="settlorAddress" required />
                                 </mat-form-field>
                               </div>
-
                             </div>
-                            <div class="div-6 ">
+                            <div class="div-6">
                               <div class="form-field">
-                                <div><span class="span">Name of the beneficiaries</span>
+                                <div>
+                                  <span class="span">Name of the beneficiaries</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="beneficiariesName[i]"
-                                          formControlName="beneficiariesName"
-                                          required/>
+                                  <input matInput name="beneficiariesName[i]" formControlName="beneficiariesName"
+                                    required />
                                 </mat-form-field>
                               </div>
                               <div class="form-field">
-                                <div><span class="span">Address of the beneficiaries</span>
+                                <div>
+                                  <span class="span">Address of the beneficiaries</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="beneficiariesAddress[i]"
-                                          formControlName="beneficiariesAddress"
-                                          required/>
+                                  <input matInput name="beneficiariesAddress[i]" formControlName="beneficiariesAddress"
+                                    required />
                                 </mat-form-field>
                               </div>
                               <div class="form-field">
-                                <div><span class="span">Date since position held </span><span
-                                        class="text-wrapper-2">*</span></div>
+                                <div>
+                                  <span class="span">Date since position held </span><span
+                                    class="text-wrapper-2">*</span>
+                                </div>
                                 <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          placeholder="DD/MM/YYYY"
-                                          name="date[i]"
-                                          [matDatepicker]="dateofFilling"
-                                          autocomplete="off"
-                                          formControlName="date"
-                                          [max]="maxPurchaseDate"
-                                          required/>
+                                  <input matInput placeholder="DD/MM/YYYY" name="date[i]"
+                                    [matDatepicker]="dateofFilling" autocomplete="off" formControlName="date"
+                                    [max]="maxPurchaseDate" required />
                                   <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
                                   <mat-datepicker #dateofFilling></mat-datepicker>
                                 </mat-form-field>
@@ -1860,64 +1571,61 @@
                           </div>
                           <div class="White_box">
                             <div class="row mb-10">
-                              <div class="col-10 ">
-                                <p><span class="span">Whether income accrued is taxable in your hands?
-                                                              </span><span class="text-wrapper-2">*</span></p>
+                              <div class="col-10">
+                                <p>
+                                  <span class="span">Whether income accrued is taxable in your
+                                    hands? </span><span class="text-wrapper-2">*</span>
+                                </p>
                               </div>
                               <div class="col-2">
-                                <mat-radio-group
-                                        name="isTaxableinYourHand[i]"
-                                        formControlName="isTaxableinYourHand"
-                                        required
-                                        (change)="handleSelectionChange($event.value)">
+                                <mat-radio-group name="isTaxableinYourHand[i]" formControlName="isTaxableinYourHand"
+                                  required (change)="handleSelectionChange($event.value)">
                                   <mat-radio-button value="Y" style="margin-right: 10px">Yes</mat-radio-button>
                                   <mat-radio-button value="N">No</mat-radio-button>
                                 </mat-radio-group>
                               </div>
                             </div>
-                            <div class="div-6 " *ngIf="trustsDetails?.get('isTaxableinYourHand')?.value === 'Y'">
+                            <div class="div-6" *ngIf="
+                                trustsDetails?.get('isTaxableinYourHand')
+                                  ?.value === 'Y'
+                              ">
                               <div class="form-field">
-                                <div><span class="span">Income derived in the account</span>
+                                <div>
+                                  <span class="span">Income derived in the account</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="derivedIncome[i]"
-                                          formControlName="derivedIncome"
-                                          digitsOnly
-                                          required/>
+                                  <input matInput name="derivedIncome[i]" formControlName="derivedIncome" digitsOnly
+                                    required />
                                 </mat-form-field>
                               </div>
 
                               <div class="form-field">
-                                <div><span class="span">Amount</span>
+                                <div>
+                                  <span class="span">Amount</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="amount[i]"
-                                          formControlName="amount"
-                                          digitsOnly
-                                          required/>
+                                  <input matInput name="amount[i]" formControlName="amount" digitsOnly required />
                                 </mat-form-field>
                               </div>
                             </div>
-                            <div class="div-6 " *ngIf="trustsDetails?.get('isTaxableinYourHand')?.value === 'Y'">
+                            <div class="div-6" *ngIf="
+                                trustsDetails?.get('isTaxableinYourHand')
+                                  ?.value === 'Y'
+                              ">
                               <div class="form-field">
-                                <div><span class="normal_text">Schedule where Offered</span> <span
-                                        class="text-wrapper-2">*</span></div>
+                                <div>
+                                  <span class="normal_text">Schedule where Offered</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
                                 <div class="form-control-wrapper select_arrow">
                                   <mat-form-field appearance="outline">
-                                    <mat-select
-                                            matInput
-                                            name="scheduleOfferd[i]"
-                                            formControlName="scheduleOfferd"
-                                            required>
-                                      <mat-option
-                                              *ngFor="let option of scheduleWhereOffered"
-                                              [value]="option">
+                                    <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
+                                      required>
+                                      <mat-option *ngFor="
+                                          let option of scheduleWhereOffered
+                                        " [value]="option">
                                         {{ option }}
                                       </mat-option>
                                     </mat-select>
@@ -1925,20 +1633,24 @@
                                 </div>
                               </div>
                               <div class="form-field">
-                                <div><span class="span">Item number of Schedule</span>
+                                <div>
+                                  <span class="span">Item number of Schedule</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="numberOfSchedule[i]"
-                                          formControlName="numberOfSchedule"
-                                          required/>
+                                  <input matInput name="numberOfSchedule[i]" formControlName="numberOfSchedule"
+                                    required />
                                 </mat-form-field>
                               </div>
+
                             </div>
                           </div>
                         </div>
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                          (click)="delete('trustsDetails', 'formArray')">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          All
+                        </button>
                       </form>
                     </div>
                   </div>
@@ -1948,156 +1660,135 @@
                 <div class="accordion-item" *ngIf="topic.code === 'G'">
                   <h2 class="accordion-header" id="heading10">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse10">{{ topic.label }}
+                      data-bs-target="#collapse10">
+                      {{ topic.label }}
                     </button>
                   </h2>
                   <div id="collapse10" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
-                      <button class="btn btn__default btn__add pull-right"
-                              (click)="addMore('otherIncomeDetails')"> Add More
+                      <button class="btn btn__default btn__add pull-right" (click)="addMore('otherIncomeDetails')">
+                        Add More
                       </button>
                       <form formArrayName="otherIncomeDetails" style="padding: 20px">
-                        <div *ngFor="let otherIncomeDetails of getOtherIncomeDetails.controls;let i = index"
-                             [formGroupName]="i">
+                        <div *ngFor="
+                            let otherIncomeDetails of getOtherIncomeDetails.controls;
+                            let i = index
+                          " [formGroupName]="i">
                           <div class="White_box">
-                            <div class="div-6 ">
-                              <input
-                                      class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                      type="checkbox"
-                                      (click)="$event.stopPropagation()"
-                                      [checked]="selectedIndexes.includes(i)"
-                                      (click)="toggleSelectedIndex(i)"/>
+                            <div class="div-6">
+                              <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                type="checkbox" (click)="$event.stopPropagation()"
+                                [checked]="selectedIndexes.includes(i)" (click)="toggleSelectedIndex(i)" />
                               <div class="form-field">
-                                <div><span class="normal_text">Country code </span> <span
-                                        class="text-wrapper-2">*</span></div>
-                                <div class="form-control-wrapper select_arrow">
-                                  <mat-form-field appearance="outline">
-                                    <mat-select
-                                            formControlName="countryCode"
-                                            name="countryCode[i]"
-                                            required>
-                                      <mat-option
-                                              *ngFor="let nature of countryCodeList"
-                                              [value]="nature"
-                                              matTooltip="{{ nature }}"
-                                              [disabled]="nature.disabled">
-                                        {{ nature }}
-                                      </mat-option></mat-select
-                                    >
-                                  </mat-form-field>
-                                </div>
-                              </div>
-                              <div class="form-field">
-                                <div><span class="span">Zip code</span> <span
-                                        class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="zipCode[i]"
-                                          formControlName="zipCode"
-                                          required/>
-                                </mat-form-field>
-                              </div>
-
-                            </div>
-                            <div class="div-6 ">
-                              <div class="form-field">
-                                <div><span class="span">Name of the person from whom derived</span> <span
-                                        class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="name[i]"
-                                          formControlName="name"
-                                          required/>
-                                </mat-form-field>
-                              </div>
-                              <div class="form-field">
-                                <div><span class="span">Address of the person from whom derived</span> <span
-                                        class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="address[i]"
-                                          formControlName="address"
-                                          required/>
-                                </mat-form-field>
-                              </div>
-
-                            </div>
-                            <div class="div-6 ">
-                              <div class="form-field">
-                                <div><span class="span">Nature of Income</span>
+                                <div>
+                                  <span class="span">Name of the person from whom derived</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <input matInput
-                                          name="natureOfIncome[i]"
-                                          formControlName="natureOfIncome"
-                                          required/>
+                                  <input matInput name="name[i]" formControlName="name" required />
+                                </mat-form-field>
+                              </div>
+                              <div class="form-field">
+                                <div>
+                                  <span class="span">Address of the person from whom
+                                    derived</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <mat-form-field appearance="outline">
+                                  <input matInput name="address[i]" formControlName="address" required />
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div class="div-6">
+                              <div class="form-field">
+                                <div>
+                                  <span class="span">Zip code</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <mat-form-field appearance="outline">
+                                  <input matInput name="zipCode[i]" formControlName="zipCode" required />
+                                </mat-form-field>
+                              </div>
+                              <div class="form-field">
+                                <div>
+                                  <span class="normal_text">Country code </span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <div class="form-control-wrapper select_arrow">
+                                  <mat-form-field appearance="outline">
+                                    <mat-select formControlName="countryCode" name="countryCode[i]" required>
+                                      <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
+                                        matTooltip="{{ nature }}" [disabled]="nature.disabled">
+                                        {{ nature }}
+                                      </mat-option></mat-select>
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="div-6">
+                              <div class="form-field">
+                                <div>
+                                  <span class="span">Nature of Income</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
+                                <mat-form-field appearance="outline">
+                                  <input matInput name="natureOfIncome[i]" formControlName="natureOfIncome" required />
                                 </mat-form-field>
                               </div>
 
                               <div class="form-field">
-                                <div><span class="span">Income Derived</span> <span
-                                        class="text-wrapper-2">*</span></div>
+                                <div>
+                                  <span class="span">Income Derived</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
                                 <mat-form-field appearance="outline">
-                                  <input
-                                          matInput
-                                          name="derivedIncome[i]"
-                                          formControlName="derivedIncome"
-                                          digitsOnly
-                                          required/>
+                                  <input matInput name="derivedIncome[i]" formControlName="derivedIncome" digitsOnly
+                                    required />
                                 </mat-form-field>
                               </div>
                             </div>
                           </div>
                           <div class="White_box">
                             <div class="row mb-10">
-                              <div class="col-10 ">
-                                <p><span class="span">Whether income accrued is taxable in your hands?
-                                                              </span><span class="text-wrapper-2">*</span></p>
+                              <div class="col-10">
+                                <p>
+                                  <span class="span">Whether income accrued is taxable in your
+                                    hands? </span><span class="text-wrapper-2">*</span>
+                                </p>
                               </div>
                               <div class="col-2">
-                                <mat-radio-group
-                                        name="isTaxableinYourHand[i]"
-                                        formControlName="isTaxableinYourHand"
-                                        required
-                                        (change)="handleSelectionChange($event.value)">
+                                <mat-radio-group name="isTaxableinYourHand[i]" formControlName="isTaxableinYourHand"
+                                  required (change)="handleSelectionChange($event.value)">
                                   <mat-radio-button value="Y" style="margin-right: 10px">Yes</mat-radio-button>
                                   <mat-radio-button value="N">No</mat-radio-button>
                                 </mat-radio-group>
                               </div>
                             </div>
-                            <div class="div-6" *ngIf="otherIncomeDetails?.get('isTaxableinYourHand')?.value === 'Y'">
+                            <div class="div-6" *ngIf="
+                                otherIncomeDetails?.get('isTaxableinYourHand')
+                                  ?.value === 'Y'
+                              ">
                               <div class="form-field">
-                                <div><span class="span">Amount</span>
+                                <div>
+                                  <span class="span">Amount</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
-                                  <input matInput
-                                          name="amount[i]"
-                                          formControlName="amount"
-                                          digitsOnly
-                                          required/>
+                                  <input matInput name="amount[i]" formControlName="amount" digitsOnly required />
                                 </mat-form-field>
                               </div>
                               <div class="form-field">
-                                <div><span class="normal_text">Schedule where Offered</span> <span
-                                        class="text-wrapper-2">*</span></div>
+                                <div>
+                                  <span class="normal_text">Schedule where Offered</span>
+                                  <span class="text-wrapper-2">*</span>
+                                </div>
                                 <div class="form-control-wrapper select_arrow">
                                   <mat-form-field appearance="outline">
-                                    <mat-select
-                                            matInput
-                                            name="scheduleOfferd[i]"
-                                            formControlName="scheduleOfferd"
-                                            required>
-                                      <mat-option
-                                              *ngFor="let option of scheduleWhereOffered"
-                                              [value]="option">
+                                    <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
+                                      required>
+                                      <mat-option *ngFor="
+                                          let option of scheduleWhereOffered
+                                        " [value]="option">
                                         {{ option }}
                                       </mat-option>
                                     </mat-select>
@@ -2105,38 +1796,29 @@
                                 </div>
                               </div>
                               <div class="form-field">
-                                <div><span class="span">Item number of Schedule</span>
+                                <div>
+                                  <span class="span">Item number of Schedule</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
                                 <mat-form-field appearance="outline">
                                   <mat-label>Item number of Schedule</mat-label>
-                                  <input
-                                          matInput
-                                          name="numberOfSchedule[i]"
-                                          formControlName="numberOfSchedule"
-                                          required/>
+                                  <input matInput name="numberOfSchedule[i]" formControlName="numberOfSchedule"
+                                    required />
                                 </mat-form-field>
                               </div>
                             </div>
-                            <div class="clearfix">
-                              <button class="btn btn__default pull-right"(click)="delete('otherIncomeDetails', 'formArray')">
-                                <i class="fa fa-trash-o delbt"></i>Delete
-                              </button>
-                            </div>
                           </div>
                         </div>
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                          (click)="delete('otherIncomeDetails', 'formArray')">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                          All
+                        </button>
                       </form>
-                      <button
-                              class="delete-btn"
-                              style="width: 15%; margin: 10px"
-                              (click)="delete('trustsDetails', 'formArray')">
-                        <i class="fa fa-trash" aria-hidden="true"></i> Delete All
-                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -2147,10 +1829,11 @@
           <button class="btn btn__white" (click)="goBack()">Back</button>
         </div>
         <div class="box-right">
-          <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
+          <button class="btn btn__primary" (click)="saveAll()">
+            Save & View Summary
+          </button>
         </div>
       </div>
     </div>
   </div>
-
 </form>

@@ -1056,8 +1056,13 @@ export interface NewFinancialParticulars {
   membersOwnCapital: any;
   securedLoans: any;
   unSecuredLoans: any;
+  totalLoans?: any;
   advances: any;
+  totalSourcesOfFunds?: any;
   sundryCreditorsAmount: Number;
+  totalLiabilitiesProvision?: Number;
+  totalCurrentAssetsLoansAdv?: Number;
+  netCurrentAsset?:Number;
   otherLiabilities: any;
   totalCapitalLiabilities: any;
   fixedAssets: any;
@@ -1067,6 +1072,7 @@ export interface NewFinancialParticulars {
   cashInHand: Number;
   loanAndAdvances: any;
   investment: any;
+  totalCurrentAssets?: Number;
   otherAssets: any;
   totalAssets: any;
   GSTRNumber: any;

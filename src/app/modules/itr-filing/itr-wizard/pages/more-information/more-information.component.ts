@@ -46,6 +46,12 @@ export class MoreInformationComponent
     this.showList = true;
     this.topicList = [
       {
+        label: 'Exempt Income',
+        path: 'exempt-income',
+        type: 'exemptIncome',
+        showOnUi :true
+      },
+      {
         label: 'Schedule Assets & Liability (AL)',
         path: 'schedule-al',
         type: 'scheduleAl',
@@ -109,7 +115,7 @@ export class MoreInformationComponent
 
   subscribeToEmitter(componentRef) {
     //this may not be needed for us
-    // if (!(componentRef instanceof OtherIncomeComponent)){
+    // if (!(componentRef instanceof ExemptIncomeComponent)){
     //   return;
     // }
     const child: WizardNavigation = componentRef;
