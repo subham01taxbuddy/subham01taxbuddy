@@ -231,7 +231,7 @@ import { AddAssetsComponent } from './itr-wizard/components/capital-gain/more-in
     CalculatorsComponent,
     BreakUpComponent,
     OtherDeductionsComponent,
-    ExemptIncomeComponent
+    ExemptIncomeComponent,
     AddAssetsComponent,
   ],
 
