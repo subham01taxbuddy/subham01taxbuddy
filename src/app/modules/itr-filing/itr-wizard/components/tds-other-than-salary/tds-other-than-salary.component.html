@@ -2,19 +2,29 @@
   [show]="loading"
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
-<div class="PreBxUp">
-  <div class="hdByr-L">
-    <strong> TDS other than salary </strong>
+<div class="div-3" *ngFor="let salary of getSalaryArray.controls;
+            let i = index">
+  <!--      <div>-->
+  <div class="contents-wrapper">
+    <div class="contents">
+      <div class="field-text" (click)="markActive(i)">Entry {{i+1}}</div>
+      <div class="group"><img class="material-symbols" src="assets/img/new/del.png" /></div>
+    </div>
+  </div>
+  <!--      </div>-->
+</div>
+<div class="contents-wrapper">
+  <div class="field-text-wrapper">
+    <div class="field-text-2" (click)="$event.stopPropagation(); addSalary();">+ Add Another</div>
   </div>
 </div>
 <form [formGroup]="salaryForm">
   <div formArrayName="salaryArray">
-    <div
+    <div *ngFor="let item of getSalaryArray.controls | slice:0:activeIndex+1; let i=index"
       class="display-flex"
-      *ngFor="let donation of getSalaryArray.controls | paginate : config; let i = index"
-      [formGroupName]="fieldGlobalIndex(i)">
+      [formGroupName]="activeIndex">
 
-      <div class="row">
+      <div class="row" *ngIf="activeIndex === i">
         <div class="div-6 ">
           <div class="form-field" *ngIf="showHeadOfIncome === 'TDTS'">
             <div class="field-label">
@@ -29,7 +39,7 @@
                 matInput
                 currencyMask
                 placeholder="Tan of deductor"
-                name="deductorTAN[i]"
+                name="deductorTAN[activeIndex]"
                 class="input-field"
                 maxlength="10"
                 minlength="10"
@@ -54,7 +64,7 @@
               matInput
               currencyMask
               placeholder="Pan of deductor"
-              name="deductorPAN[i]"
+              name="deductorPAN[activeIndex]"
               class="input-field"
               maxlength="10"
               minlength="10"
@@ -78,7 +88,7 @@
                 matTooltipPosition="above"
                 placeholder="Head of Income"
                 formControlName="headOfIncome"
-                name="headOfIncome[i]"
+                name="headOfIncome[activeIndex]"
                 required
               >
                 <mat-option
@@ -104,7 +114,7 @@
                 matTooltipPosition="above"
                 placeholder="Head of Income"
                 formControlName="headOfIncome"
-                name="headOfIncome[i]"
+                name="headOfIncome[activeIndex]"
                 required
               >
                 <mat-option
@@ -130,7 +140,7 @@
                 formControlName="deductorName"
                 matInput
                 placeholder="Name of deductor"
-                name="deductorName[i]"
+                name="deductorName[activeIndex]"
                 class="input-field"
                 maxlength="125"
                 required
@@ -150,7 +160,7 @@
               formControlName="totalAmountCredited"
               matInput
               placeholder="Total amount credited"
-              name="totalAmountCredited[i]"
+              name="totalAmountCredited[activeIndex]"
               required
               class="input-field"
               maxlength="14"
@@ -171,7 +181,7 @@
               formControlName="totalTdsDeposited"
               matInput
               placeholder="Total tax deposited"
-              name="totalTdsDeposited[i]"
+              name="totalTdsDeposited[activeIndex]"
               required
               class="input-field"
               maxlength="14"
@@ -184,7 +194,10 @@
       </div>
 
     </div>
-    <div>
+    <div class="out-box">
+      <div class="box-left">
+        <button class="btn btn__white" (click)="goBack()">Back</button>
+      </div>
       <div class="box-right">
         <button class="btn btn__primary" (click)="save()">Save</button>
       </div>

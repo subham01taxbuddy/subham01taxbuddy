@@ -1,0 +1,131 @@
+<div >
+  <label style="font-size: 18px; font-weight: bold; ">Add Immovable Asset:</label>
+<button mat-dialog-close tabindex="-1" (click)="close()" style="float: right; color:#3E82CD; width: 24px;
+  height: 24px;" class="tbd-btn-close">
+  <i class="fa fa-times" aria-hidden="true"></i>
+</button>
+  <div class="PreBoxOut">
+    <form [formGroup]="immovableAssetForm">
+      <div class="div-6">
+        <div class="row">
+          <div class="col-sm-4">
+            <div><span class="span">Description </span> </div>
+            <mat-form-field class="description" appearance="outline">
+              <input type="text" trim matInput placeholder="Asset Description" name="description"
+                formControlName="description" class="input-field" maxlength="50" required />
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <div><span class="span">Amount (Cost) </span> <span class="text-wrapper-2">*</span></div>
+            <mat-form-field appearance="outline">
+              <input digitsOnly trim matInput placeholder="Amount" name="amount" formControlName="amount" class="input-field"
+                maxlength="50" required />
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <div><span class="span">PIN Code </span> <span class="text-wrapper-2">*</span></div>
+            <mat-form-field appearance="outline">
+              <input type="text" matInput placeholder="PIN code" name="pinCode" formControlName="pinCode" class="input-field"
+                maxlength="6" minlength="6" trim digitsOnly (blur)="updateDataByPincode()" required />
+              <mat-error *ngIf="immovableAssetForm.get('pinCode').hasError('pattern')">
+                Enter 6 digit PIN code.
+              </mat-error>
+              <mat-error *ngIf="immovableAssetForm.get('pinCode').hasError('minLength')">
+                Enter 6 digit PIN code.
+              </mat-error>
+              <mat-error *ngIf="immovableAssetForm.get('pinCode').hasError('maxLength')">
+                Enter 6 digit PIN code.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="div-6 mt-2">
+        <div class="row">
+          <div class="col-sm-4">
+            <div> <span class="span">Flat/Door/Block No</span> <span class="text-wrapper-2">*</span></div>
+            <mat-form-field appearance="outline">
+              <input type="text" trim matInput placeholder="Flat/Door/Block No." name="flatNo" formControlName="flatNo"
+                class="input-field" maxlength="50" required />
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <div><span class="span">Premises name</span> <span class="text-wrapper-2">*</span></div>
+            <mat-form-field appearance="outline">
+              <input type="text" trim matInput placeholder="Premises name" name="premisesName" formControlName="premisesName"
+                class="input-field" maxlength="50" required />
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <div><span class="span">Road / Street</span> <span class="text-wrapper-2">*</span></div>
+            <mat-form-field appearance="outline">
+              <input type="text" trim matInput placeholder="Road / Street" name="road" formControlName="road"
+                class="input-field" maxlength="50" required />
+            </mat-form-field>
+          </div>
+        </div>
+
+      </div>
+      <div class="div-6 mt-2">
+        <div class="row">
+          <div class="col-sm-4">
+            <div><span class="span">Area/ Locality</span> <span class="text-wrapper-2">*</span></div>
+            <mat-form-field appearance="outline">
+              <input type="text" trim matInput placeholder="Area/ Locality" name="area" formControlName="area"
+                class="input-field" maxlength="50" required />
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <div><span class="span">City </span> <span class="text-wrapper-2">*</span></div>
+            <mat-form-field appearance="outline">
+              <input type="text" trim matInput placeholder="City/Taluka/District" name="city" formControlName="city"
+                class="input-field" maxlength="50" required />
+              <mat-error *ngIf="immovableAssetForm.get('city').hasError('pattern')">
+                Enter valid city name.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-4">
+            <div><span class="span">Select state </span> <span class="text-wrapper-2">*</span></div>
+            <div class="form-control-wrapper select_arrow">
+              <mat-form-field appearance="outline">
+                <mat-select placeholder="Select state" name="state" formControlName="state" required>
+                  <mat-option *ngFor="let state of stateDropdown" [value]="state.stateCode">
+                    {{ state.stateName | titlecase }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+      <div class="div-6 mt-2">
+        <div class="row">
+          <div class="col-sm-4">
+            <div><span class="span">Select country </span> <span class="text-wrapper-2">*</span></div>
+            <div class="form-control-wrapper select_arrow">
+              <mat-form-field appearance="outline">
+                <mat-select placeholder="Select country" name="country" formControlName="country" required>
+                  <mat-option *ngFor="let country of countryDropdown" [value]="country.countryCode">
+                    {{ country.countryName | titlecase }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+  <div class="row mt-3 justify-content-center">
+    <div class="col-auto">
+      <button class="tbd-btn" (click)="close()">Cancel</button>
+    </div>
+    <div class="col-auto">
+      <button class="tbd-btn" (click)="onSave()">Save</button>
+    </div>
+  </div>
+</div>

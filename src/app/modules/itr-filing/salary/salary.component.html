@@ -278,9 +278,13 @@
 
                           <div class="item2">
                             <div class="contents-10">
-                              <select class="form-control select">
-                                <option value="{{ income.value.value }}">{{ income.value.label }}</option>
-                              </select>
+                              <mat-form-field appearance="outline">
+                                <mat-select name="allowType[i]" formControlName="allowType"
+                                            (selectionChange)="validateExemptIncomes($event)">
+                                  <mat-option *ngFor="let exempt of allowanceDropdown; let k = index"
+                                          [value]="exempt.value">{{ exempt.label }}</mat-option>
+                                </mat-select>
+                              </mat-form-field>
                             </div>
                           </div>
 
@@ -428,6 +432,17 @@
                                 cannot be claimed again
                               </mat-error>
 
+                            </div>
+                          </div>
+
+                          <div class="hp4-4 extra-pad">
+                            <div class="Bx4">
+                              <div class="Bx4L">
+                                <button type="button" (click)="deleteExemptIncome(i)"> <i class="fa fa-trash-o delbt"></i> </button>
+                              </div>
+                              <div class="Bx4R">
+                                <button type="button" class="addAno" (click)="addExemptIncome()"> + Add Another </button>
+                              </div>
                             </div>
                           </div>
 
