@@ -48,20 +48,23 @@ export class AdvanceTaxPaidComponent implements OnInit {
     };
 
     this.salaryForm = this.inItForm();
-    // if (
-    //   this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS &&
-    //   this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS.length > 0
-    // ) {
-    //   this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS.forEach((item) => {
-    //     this.addMoreSalary(item);
-    //   });
-    // } else {
-    if (this.data.assetIndex !== null && this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS) {
-      this.addMoreSalary(this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS[this.data.assetIndex]);
+    if (
+        this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS &&
+        this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS.length > 0
+    ) {
+      this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS.forEach((item) => {
+        this.addMoreSalary(item);
+      });
     } else {
       this.addMoreSalary();
     }
+
+    // if (this.data.assetIndex !== null && this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS) {
+    //   this.addMoreSalary(this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS[this.data.assetIndex]);
+    // } else {
+    //   this.addMoreSalary();
     // }
+
     // this.salaryForm.disable();
 
     // Set the minimum to financial year and max to current date
@@ -155,9 +158,12 @@ export class AdvanceTaxPaidComponent implements OnInit {
         rowIndex: this.data.rowIndex,
         type:'selfAssessment'
       };
-      this.dialogRef.close(result);
+      // this.dialogRef.close(result);
       // (this.salaryForm.controls['salaryArray'] as FormGroup).disable();
-      this.onSave.emit();
+      this.onSave.emit({
+        type: 'selfAssessment',
+        saved: true
+      });
       this.loading = false;
       this.utilsService.showSnackBar(
         'advance tax or self assessment tax paid data saved successfully.'
@@ -194,6 +200,20 @@ export class AdvanceTaxPaidComponent implements OnInit {
         // (this.salaryForm.controls['salaryArray'] as FormGroup).enable();
       }
     }
+  }
+
+  goBack(){
+    this.onSave.emit({
+      type: 'selfAssessment',
+      saved: false
+    })
+  }
+  activeIndex = 0;
+  markActive(index){
+    this.activeIndex = index;
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
+    this.config.currentPage = this.activeIndex;
   }
 
   pageChanged(event) {
