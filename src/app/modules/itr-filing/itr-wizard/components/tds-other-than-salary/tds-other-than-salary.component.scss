@@ -33,6 +33,10 @@
     }
 }
 
+.hdByr-L {
+    margin-top: -40px!important;
+  }
+
 .wrapper {
     display: flex;
     align-items: flex-start;
@@ -89,4 +93,10 @@
     gap: 12px;
     position: relative;
     flex: 0 0 auto;
+}
+
+.box-right {
+    float: right;
+    margin-top: 20px;
+    margin-right: -30px;
 }

@@ -246,7 +246,8 @@
                             </div>
                             <mat-form-field appearance="outline">
                               <mat-select name="incomeType[i]"
-                                          formControlName="incomeType">
+                                          formControlName="incomeType"
+                              (selectionChange)="validateExemptIncomes($event)">
                                 <mat-option *ngFor="let exempt of exemptIncomesDropdown; let k = index"
                                         [value]="exempt.value">{{ exempt.label }}</mat-option>
                               </mat-select>

@@ -8,9 +8,7 @@
 
   <div class="frameC">
     <h1 class="heading__title">Taxes Paid</h1>
-    <div class="space">
-      <div class="wrapper">
-        <div class="div-4">
+    <div class="space">    
           <div class="frame-wrapper-2A">
             <!--            TDS on salary-->
             <div class="accordion" id="tdsAccordion">
@@ -21,11 +19,11 @@
                 </h2>
                 <div id="tdsSalary" class="accordion-collapse collapse show" data-bs-parent="#tdsAccordion">
                   <div class="accordion__item-body">
-                    <div class="Bx4R">
+                    <!-- <div class="Bx4R">
                       <button type="button" class="addAno" (click)="editTaxesPaid(TDS_TYPE_CODE)">
                         + Add more
                       </button>
-                    </div>
+                    </div> -->
 
                     <div class="card__row display-flex" *ngIf="tdsMode === 'EDIT'">
                       <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12">
@@ -58,25 +56,30 @@
                           data-bs-target="#tdsOther">Tax Deducted at Source (TDS) on Income other than salary</button>
                 </h2>
                 <div id="tdsOther" class="accordion-collapse collapse show" data-bs-parent="#tdsOtherAccordion">
-                  <div class="accordion__item-body">
+                  <div class="accordion__item-body">                 
                     <div class="Bx4R">
-                      <button type="button" class="addAno" (click)="$event.stopPropagation(); addMore('other')"
-                              (click)="addTaxesPaid(false)">
+                      <button type="button" class="addAno" (click)="editTaxesPaid(TDS_OTHER_TYPE_CODE)">
                         + Add more
                       </button>
                     </div>
-                    <app-tds-other-than-salary
-                            #other
-                            [addData]="isAddOther"
-                            [showHeadOfIncome]="'TDTS'"
-                            (onSave)="saveAll()"></app-tds-other-than-salary>
-                    <ag-grid-angular
-                            style="width: 100%; height: 150%"
+         
+                
+                 
+                    <div class="card__row display-flex" *ngIf="tdsOtherMode === 'EDIT'">
+                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12">
+                        <app-tds-other-than-salary
+                                #other
+                                [addData]="isAddOther"
+                                [showHeadOfIncome]="'TDTS'"
+                                (onSave)="saveAll($event)"></app-tds-other-than-salary>
+                      </div>
+                    </div>
+                    <ag-grid-angular *ngIf="tdsOtherMode === 'VIEW'"                           
                             class="ag-theme-balham spsTp"
                             [gridOptions]="tdsOtherThanSalary16AGridOptions"
                             [animateRows]="true"
                             (rowClicked)="onTdsDetailRowClicked($event)"></ag-grid-angular>
-                    <button
+                    <button *ngIf="false"
                             class="delete-btn delete-icon"
                             (click)="$event.stopPropagation(); deleteAsset()"
                             [disabled]="!isAssetSelected()">
@@ -98,23 +101,26 @@
                 <div id="tdsPan" class="accordion-collapse collapse show" data-bs-parent="#tdsPanAccordion">
                   <div class="accordion__item-body">
                     <div class="Bx4R">
-                      <button type="button" class="addAno" (click)="addTaxesPaid(false)"
-                              (click)="$event.stopPropagation(); addMore('panBased')">
+                      <button type="button" class="addAno" (click)="editTaxesPaid(TDS_PAN_TYPE_CODE)">
                         + Add more
                       </button>
                     </div>
-                    <app-tds-other-than-salary
-                            #panBased
-                            [addData]="isAddPanBased"
-                            [showHeadOfIncome]="'TDTSP'"
-                            (onSave)="saveAll()"></app-tds-other-than-salary>
-                    <ag-grid-angular
+                    <div class="card__row display-flex" *ngIf="tdsPanMode === 'EDIT'">
+                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12">
+                      <app-tds-other-than-salary
+                              #panBased
+                              [addData]="isAddPanBased"
+                              [showHeadOfIncome]="'TDTSP'"
+                              (onSave)="saveAll($event)"></app-tds-other-than-salary>
+                      </div>
+                    </div>
+                    <ag-grid-angular *ngIf="tdsPanMode === 'VIEW'"
                             style="width: 100%; height: 150%"
                             class="ag-theme-balham spsTp"
                             [gridOptions]="tdsOtherThanSalary26QBGridOptions"
                             [animateRows]="true"
                             (rowClicked)="onTdsDetailRowClicked($event)"></ag-grid-angular>
-                    <button
+                    <button *ngIf="false"
                             class="delete-btn delete-icon"
                             (click)="$event.stopPropagation(); deleteAsset()"
                             [disabled]="!isAssetSelected()">
@@ -197,7 +203,7 @@
               </div>
             </div>
           </div>
-        </div>
+     
 
         <div class="out-box">
           <div class="box-left">
@@ -207,7 +213,7 @@
             <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
           </div>
         </div>
-      </div>
+   
     </div>
   </div>
 
