@@ -51,7 +51,6 @@ export class DepreciationDialogComponent implements OnInit {
     public utilsService: UtilsService,
     public toastMsgService: ToastMessageService,
     public fb: FormBuilder,
-    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<DepreciationDialogComponent>,
     // @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -63,6 +62,7 @@ export class DepreciationDialogComponent implements OnInit {
   ngOnInit(): void {
     // let rowData = this.data.list ? this.data.list : [];
     // this.getDepreciationTableData(rowData);
+    console.log('depreciationObj', this.depreciationObj);
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.config = {
@@ -71,9 +71,9 @@ export class DepreciationDialogComponent implements OnInit {
     };
     console.log(this.Copy_ITR_JSON);
     this.depreciationForm = this.initDepreciationForm();
-    if (this.Copy_ITR_JSON?.fixedAssetsDetails && this.Copy_ITR_JSON?.fixedAssetsDetails.length > 0) {
-      this.Copy_ITR_JSON.fixedAssetsDetails.forEach(item => {
-        this.addMore();
+    if (this.Copy_ITR_JSON?.business.fixedAssetsDetails && this.Copy_ITR_JSON?.business.fixedAssetsDetails.length > 0) {
+      this.Copy_ITR_JSON.business.fixedAssetsDetails.forEach(item => {
+        this.addMore(item);
       })
     } else {
       this.addMore();
@@ -142,7 +142,9 @@ export class DepreciationDialogComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     if (this.depreciationForm.valid) {
       console.log("formGroup", this.depreciationForm)
-      this.Copy_ITR_JSON.fixedAssetsDetails = this.depreciationForm.value;
+      // this.Copy_ITR_JSON.fixedAssetsDetails = this.depreciationForm.value;
+      const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
+      this.Copy_ITR_JSON.fixedAssetsDetails = depreciationArray.getRawValue();
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
       this.onSave.emit(this.Copy_ITR_JSON);
       this.loading = false;
@@ -157,9 +159,10 @@ export class DepreciationDialogComponent implements OnInit {
     return <FormArray>this.depreciationForm.get('depreciationArray');
   }
 
-  addMore() {
+  addMore(item?) {
     const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
-    depreciationArray.push(this.createForm());
+    depreciationArray.push(this.createForm(item));
+    this.calculateDepreciationTotal();
   }
 
   edit(i, formGroup: any) {
@@ -182,9 +185,9 @@ export class DepreciationDialogComponent implements OnInit {
     depreciationArray.controls.forEach((element, index) => {
       if ((element as FormGroup).controls['hasEdit'].value) {
         depreciationArray.removeAt(index);
+        this.calculateDepreciationTotal();
       }
     })
-    this.calculateDepreciationTotal();
   }
 
   calculateDepreciationTotal() {
@@ -192,21 +195,28 @@ export class DepreciationDialogComponent implements OnInit {
     let totalDepreciationAmount = 0;
     let totalNetBlock = 0;
     const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
-    depreciationArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['bookValue'].value) {
-        totalGrossBlock += Number((element as FormGroup).controls['bookValue'].value);
-        this.depreciationForm.controls['totalGrossBlock'].setValue(totalGrossBlock);
-      }
-      if ((element as FormGroup).controls['depreciationAmount'].value) {
-        totalDepreciationAmount += Number((element as FormGroup).controls['depreciationAmount'].value);
-        this.depreciationForm.controls['totalDepreciationAmount'].setValue(totalDepreciationAmount);
-      }
-      if ((element as FormGroup).controls['fixedAssetClosingAmount'].value) {
-        totalNetBlock += Number((element as FormGroup).controls['fixedAssetClosingAmount'].value);
-        this.depreciationForm.controls['totalNetBlock'].setValue(totalNetBlock);
-      }
-    })
-    this.save();
+    if (depreciationArray.controls.length) {
+      depreciationArray.controls.forEach((element, index) => {
+        if ((element as FormGroup).controls['bookValue'].value) {
+          totalGrossBlock += Number((element as FormGroup).controls['bookValue'].value);
+          this.depreciationForm.controls['totalGrossBlock'].setValue(totalGrossBlock);
+        }
+        if ((element as FormGroup).controls['depreciationAmount'].value) {
+          totalDepreciationAmount += Number((element as FormGroup).controls['depreciationAmount'].value);
+          this.depreciationForm.controls['totalDepreciationAmount'].setValue(totalDepreciationAmount);
+        }
+        if ((element as FormGroup).controls['fixedAssetClosingAmount'].value) {
+          totalNetBlock += Number((element as FormGroup).controls['fixedAssetClosingAmount'].value);
+          this.depreciationForm.controls['totalNetBlock'].setValue(totalNetBlock);
+        }
+      })
+      this.save();
+    } else {
+      this.depreciationForm.controls['totalGrossBlock'].setValue(0);
+      this.depreciationForm.controls['totalDepreciationAmount'].setValue(0);
+      this.depreciationForm.controls['totalNetBlock'].setValue(0);
+      this.save();
+    }
   }
 
   pageChanged(event) {

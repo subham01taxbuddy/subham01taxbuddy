@@ -33,6 +33,10 @@
   }
 }
 
+.frameC {
+  margin: 20px 25px 0px 25px;
+}
+
 .wrapper {
   display: flex;
   align-items: flex-start;
@@ -58,6 +62,11 @@
   width: auto;
   align-items: flex-start;
   position: relative;
+}
+
+.spsTp{
+  width: 100%; 
+  margin-top:55px!important;
 }
 
 .div-5 {
@@ -150,4 +159,15 @@ tr:nth-child(even) {
   letter-spacing: -0.022em;
 
   color: #1E1E1E;
+}
+
+.Bx4R{
+  float: right;
+  border-radius: 5px;
+  border: 1px solid #15799f;
+  padding: 8px!important;
+}
+
+.delete-btn:disabled {
+  margin-top: 15px;
 }
