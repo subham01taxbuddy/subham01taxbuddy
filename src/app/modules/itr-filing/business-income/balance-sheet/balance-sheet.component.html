@@ -372,8 +372,20 @@
                           </button>
                         </h2>
                       </div>
+                      <div class="gray_container">
+                        <div class="div-6">
+                          <div class="form-field">
+                            <div><span class="span">Difference </span>
+                            </div>
+                          </div>
+                          <div class="form-field">
+                            <input matInput placeholder="Difference" name="difference" readonly [formControl]="
+                            $any(assetLiabilitiesForm.controls['difference'])
+                          " class="form-control inpplac" maxlength="14" readonly />
+                          </div>
+                        </div>
+                      </div>
                     </div>
-
                     <div class="accordion__item-body" *ngIf="this.ITR_JSON.liableSection44AAflag != 'Y'">
                       <form id="commonValidForm2">
                         <div class="gray_container">
