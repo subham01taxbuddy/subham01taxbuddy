@@ -464,6 +464,8 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       Number(this.assetLiabilitiesForm.controls['unSecuredLoans'].value) +
       Number(this.assetLiabilitiesForm.controls['advances'].value);
     this.assetLiabilitiesForm.controls['totalSourcesOfFunds'].setValue(totalSourcesOfFunds);
+    this.calDifference();
+
   }
 
   calculateTotal1() {
@@ -499,6 +501,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
 
   getFixedAssetData(data) {
     this.fixedAssetData = data;
+    this.depreciationObj = this.fixedAssetData.fixedAssetsDetails;
     if (this.fixedAssetData.fixedAssetsDetails.totalNetBlock) {
       this.totalApplicationOfFunds();
     }
@@ -535,8 +538,17 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
 
   totalApplicationOfFunds() {
     this.totalAppOfFunds = 0;
-    debugger
-    this.totalAppOfFunds = Number(this.fixedAssetData.fixedAssetsDetails.totalNetBlock) + Number(this.assetLiabilitiesForm.controls['investment'].value) + Number(this.assetLiabilitiesForm.controls['netCurrentAsset'].value);
+    this.totalAppOfFunds = Number(this.assetLiabilitiesForm.controls['investment'].value) + Number(this.assetLiabilitiesForm.controls['netCurrentAsset'].value);
+    if (this.fixedAssetData?.fixedAssetsDetails?.totalNetBlock) {
+      this.totalAppOfFunds += Number(this.fixedAssetData?.fixedAssetsDetails?.totalNetBlock);
+    }
+    this.calDifference();
+  }
+
+  calDifference() {
+    let difference = 0;
+    difference = Number(this.assetLiabilitiesForm.controls['totalSourcesOfFunds'].value) - Number(this.totalAppOfFunds);
+    this.assetLiabilitiesForm.controls['difference'].setValue(difference);
   }
 
   showPopUp(value) {

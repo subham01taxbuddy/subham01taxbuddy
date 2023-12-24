@@ -202,15 +202,15 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     ).controls[index] as FormGroup;
     specIncome.controls['totalCredit'].setValue(
       Number(specIncome.controls['turnOver'].value) +
-        Number(specIncome.controls['finishedGoodsClosingStock'].value)
+      Number(specIncome.controls['finishedGoodsClosingStock'].value)
     );
     specIncome.controls['grossProfit'].setValue(
       Number(specIncome.controls['totalCredit'].value) - Number(specIncome.controls['finishedGoodsOpeningStock'].value)
-        - Number(specIncome.controls['purchase'].value)
+      - Number(specIncome.controls['purchase'].value)
     );
     specIncome.controls['netIncome'].setValue(
       Number(specIncome.controls['grossProfit'].value) -
-        Number(specIncome.controls['expenditure'].value)
+      Number(specIncome.controls['expenditure'].value)
     );
     this.calculateNetProfit();
   }
@@ -328,19 +328,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   }
 
   deleteArray() {
-    let indexToRemove: number[] = [];
-    (
-      this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
-    ).controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        //indexToRemove.push(index);
-        (
-          this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
-        ).controls.splice(index, 1);
-      }
-    });
-    // indexToRemove.reverse().forEach((index) => {
-    //   (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).controls.splice(index, 1);
-    // });
+    const nonspecIncomesArray = <FormArray>this.nonspecIncomeForm.get('nonspecIncomesArray');
+    nonspecIncomesArray.controls = nonspecIncomesArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
   }
 }
