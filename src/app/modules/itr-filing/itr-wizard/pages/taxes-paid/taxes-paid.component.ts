@@ -71,6 +71,8 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   @Input() taxPaid: TaxPaid;
   assetList: any;
   tdsMode = 'VIEW';
+  tdsOtherMode = 'VIEW';
+  tdsPanMode = 'VIEW';
 
   constructor(
     public utilsService: UtilsService,
@@ -197,53 +199,55 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       //   }
       // });
     } else if (type === this.TDS_OTHER_TYPE_CODE) {
-      const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
-        data: {
-          isTaxesPaid: this.isTaxesPaid,
-          assetIndex: index,
-          showHeadOfIncome: 'TDTS',
-        },
-        closeOnNavigation: true,
-        disableClose: false,
-        width: '100%',
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        console.log('Result of tdsOtherThanSalary16A:', result);
-        if (result !== undefined) {
-          if (index != null) {
-            this.taxPaid.otherThanSalary16A[index] =
-              result?.cgObject?.salaryArray[0];
-            this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-            this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData(this.TDS_OTHER_TYPE_CODE));
-            // this.saveAll();
-          }
-        }
-      });
+      this.tdsOtherMode = 'EDIT';
+      // const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
+      //   data: {
+      //     isTaxesPaid: this.isTaxesPaid,
+      //     assetIndex: index,
+      //     showHeadOfIncome: 'TDTS',
+      //   },
+      //   closeOnNavigation: true,
+      //   disableClose: false,
+      //   width: '100%',
+      // });
+      //
+      // dialogRef.afterClosed().subscribe((result) => {
+      //   console.log('Result of tdsOtherThanSalary16A:', result);
+      //   if (result !== undefined) {
+      //     if (index != null) {
+      //       this.taxPaid.otherThanSalary16A[index] =
+      //         result?.cgObject?.salaryArray[0];
+      //       this.Copy_ITR_JSON.taxPaid = this.taxPaid;
+      //       this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData(this.TDS_OTHER_TYPE_CODE));
+      //       // this.saveAll();
+      //     }
+      //   }
+      // });
     } else if (type === this.TDS_PAN_TYPE_CODE) {
-      const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
-        data: {
-          isTaxesPaid: this.isTaxesPaid,
-          assetIndex: index,
-          showHeadOfIncome: 'TDTSP',
-        },
-        closeOnNavigation: true,
-        disableClose: false,
-        width: '100%',
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        console.log('Result of tdsOtherThanSalary16A:', result);
-        if (result !== undefined) {
-          if (index != null) {
-            this.taxPaid.otherThanSalary26QB[index] =
-              result?.cgObject?.salaryArray[0];
-            this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-            this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData(this.TDS_PAN_TYPE_CODE));
-            // this.saveAll();
-          }
-        }
-      });
+      this.tdsPanMode = 'EDIT'
+      // const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
+      //   data: {
+      //     isTaxesPaid: this.isTaxesPaid,
+      //     assetIndex: index,
+      //     showHeadOfIncome: 'TDTSP',
+      //   },
+      //   closeOnNavigation: true,
+      //   disableClose: false,
+      //   width: '100%',
+      // });
+      //
+      // dialogRef.afterClosed().subscribe((result) => {
+      //   console.log('Result of tdsOtherThanSalary16A:', result);
+      //   if (result !== undefined) {
+      //     if (index != null) {
+      //       this.taxPaid.otherThanSalary26QB[index] =
+      //         result?.cgObject?.salaryArray[0];
+      //       this.Copy_ITR_JSON.taxPaid = this.taxPaid;
+      //       this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData(this.TDS_PAN_TYPE_CODE));
+      //       // this.saveAll();
+      //     }
+      //   }
+      // });
     } else if (type === this.TCS_TYPE_CODE) {
       const dialogRef = this.matDialog.open(TcsComponent, {
         data: {
@@ -506,6 +510,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   }
 
   tdsDetailCreateColumnDef(type) {
+    var self = this;
     return [
       {
         headerName: this.getColumnName(type, 'deductorTAN'),
@@ -551,7 +556,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         field: 'headOfIncome',
         editable: false,
         suppressMovable: true,
-        hide: type === this.TDS_TYPE_CODE,
+        hide: type === self.TDS_TYPE_CODE,
+        valueGetter: function nameFromCode(params) {
+          if(type === self.TDS_OTHER_TYPE_CODE){
+            return self.headOfIncomeDropdownTDS2.filter(element => element.code === params.data.headOfIncome)[0]?.name;
+          } else {
+            return self.headOfIncomeDropdownTDS3.filter(element => element.code === params.data.headOfIncome)[0]?.name;
+          }
+        },
       },
       {
         headerName: 'Edit',
@@ -594,6 +606,14 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         },
       },
     ];
+  }
+
+  getIncomeHead(type, headOfIncome){
+    if(type === this.TDS_OTHER_TYPE_CODE){
+      return this.headOfIncomeDropdownTDS2.filter(element => element.code === headOfIncome)[0].name;
+    } else {
+      return this.headOfIncomeDropdownTDS3.filter(element => element.code === headOfIncome)[0].name;
+    }
   }
 
   public onTdsDetailRowClicked(params) {
@@ -716,6 +736,32 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         this.taxPaid = this.Copy_ITR_JSON.taxPaid;
         // this.onSalaryGridApi?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
         this.onSalaryGridOptions = this.initGridOptions(this.TDS_TYPE_CODE, this.onSalaryGridApi);
+      }
+
+    }
+    if(save && (save.type === this.TDS_OTHER_TYPE_CODE || save.type === this.TDS_PAN_TYPE_CODE)){
+      if(!save.saved){
+        this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
+        this.taxPaid = this.Copy_ITR_JSON.taxPaid;
+        if(save.type === this.TDS_OTHER_TYPE_CODE){
+          this.tdsOtherMode = 'VIEW';
+          this.tdsOtherThanSalary16AGridOptions = this.initGridOptions(save.type, this.tdsOtherThanSalary16AGridApi);
+        } else {
+          this.tdsPanMode = 'VIEW';
+          this.tdsOtherThanSalary26QBGridOptions = this.initGridOptions(save.type, this.tdsOtherThanSalary26QBGridApi);
+        }
+
+        return;
+      } else {
+        this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
+        this.taxPaid = this.Copy_ITR_JSON.taxPaid;
+        if(save.type === this.TDS_OTHER_TYPE_CODE){
+          this.tdsOtherMode = 'VIEW';
+          this.tdsOtherThanSalary16AGridOptions = this.initGridOptions(save.type, this.tdsOtherThanSalary16AGridApi);
+        } else {
+          this.tdsPanMode = 'VIEW';
+          this.tdsOtherThanSalary26QBGridOptions = this.initGridOptions(save.type, this.tdsOtherThanSalary26QBGridApi);
+        }
       }
 
     }
