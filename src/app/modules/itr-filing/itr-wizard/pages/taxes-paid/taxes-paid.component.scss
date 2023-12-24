@@ -33,6 +33,10 @@
   }
 }
 
+.frameC {
+  margin: 20px 25px 0px 25px;
+}
+
 .wrapper {
   display: flex;
   align-items: flex-start;
@@ -150,4 +154,17 @@ tr:nth-child(even) {
   letter-spacing: -0.022em;
 
   color: #1E1E1E;
+}
+
+
+.Bx4R{
+  float: right;
+  border-radius: 5px;
+  border: 1px solid #15799f;
+  padding: 8px!important;
+  display: block;
+}
+
+.delete-btn:disabled {
+  margin-top: 15px;
 }

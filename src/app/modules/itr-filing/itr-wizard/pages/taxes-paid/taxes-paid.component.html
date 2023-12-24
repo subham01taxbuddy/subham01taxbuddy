@@ -8,9 +8,7 @@
 
   <div class="frameC">
     <h1 class="heading__title">Taxes Paid</h1>
-    <div class="space">
-      <div class="wrapper">
-        <div class="div-4">
+    <div class="space">    
           <div class="frame-wrapper-2A">
             <!--            TDS on salary-->
             <div class="accordion" id="tdsAccordion">
@@ -21,11 +19,11 @@
                 </h2>
                 <div id="tdsSalary" class="accordion-collapse collapse show" data-bs-parent="#tdsAccordion">
                   <div class="accordion__item-body">
-                    <div class="Bx4R">
+                    <!-- <div class="Bx4R">
                       <button type="button" class="addAno" (click)="editTaxesPaid(TDS_TYPE_CODE)">
                         + Add more
                       </button>
-                    </div>
+                    </div> -->
 
                     <div class="card__row display-flex" *ngIf="tdsMode === 'EDIT'">
                       <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12">
@@ -197,7 +195,7 @@
               </div>
             </div>
           </div>
-        </div>
+     
 
         <div class="out-box">
           <div class="box-left">
@@ -207,7 +205,7 @@
             <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
           </div>
         </div>
-      </div>
+   
     </div>
   </div>
 

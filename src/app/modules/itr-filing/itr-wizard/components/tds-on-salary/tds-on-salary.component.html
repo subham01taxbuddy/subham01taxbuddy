@@ -4,23 +4,23 @@
 ></ngx-loading>
 
 <div>
-
-  <div class="div-3" *ngFor="let salary of getSalaryArray.controls;
-            let i = index">
+  <div class="spcDwn">
+  <div class="div-3" *ngFor="let salary of getSalaryArray.controls; let i = index">
     <!--      <div>-->
     <div class="contents-wrapper">
-      <div class="contents">
+      <div class="contents delBox">
         <div class="field-text" (click)="markActive(i)">Entry {{i+1}}</div>
         <div class="group"><img class="material-symbols" src="assets/img/new/del.png" /></div>
       </div>
-    </div>
-    <!--      </div>-->
+    </div>      
   </div>
-  <div class="contents-wrapper">
+  <div class="contents-wrapper spcLft">
     <div class="field-text-wrapper">
       <div class="field-text-2" (click)="$event.stopPropagation(); addMore();">+ Add Another</div>
     </div>
   </div>
+</div>
+  
   <form [formGroup]="salaryForm">
     <div formArrayName="salaryArray">
       <div *ngFor="let salary of getSalaryArray.controls | paginate :config;
