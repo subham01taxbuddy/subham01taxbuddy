@@ -287,7 +287,10 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
       incomeType: 'AGRI',
       incomeValue: [null]
     });
-    exemptIncomesFormArray.push(agriformGroup);
+    // let filtered = exemptIncomesFormArray.controls.filter((fg:FormGroup) => fg.controls['incomeType'].value === 'AGRI')
+    // if(filtered?.length === 0) {
+    //   exemptIncomesFormArray.push(agriformGroup);
+    // }
     const formGroup = this.fb.group({
       label: this.exemptIncomesDropdown[1].label,
       incomeType: this.exemptIncomesDropdown[1].value,
@@ -300,10 +303,11 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
   }
 
   isAgriIncomeExceedMaxLimit(){
-    let exemptIncomesFormArray = this.exemptIncomeFormGroup.controls[
-        'exemptIncomes'
-        ] as FormArray;
-    return exemptIncomesFormArray.controls[0].value.incomeValue > 500000;
+    // let exemptIncomesFormArray = this.exemptIncomeFormGroup.controls[
+    //     'exemptIncomes'
+    //     ] as FormArray;
+    // return exemptIncomesFormArray.controls[0].value.incomeValue > 500000;
+    return this.agriIncFormGroup.controls['grossAgriculturalReceipts'].value > 500000;
   }
 
   deleteExemptIncome(index){
@@ -370,6 +374,24 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
 
   goBack() {
     this.saveAndNext.emit(true);
+  }
+
+  validateExemptIncomes(event: any) {
+    let exemptIncomes = this.exemptIncomeFormGroup.controls[
+        'exemptIncomes'
+        ] as FormArray;
+    let selectedValues = exemptIncomes.controls.filter(
+        (fg:FormGroup)=> fg.controls['incomeType'].value === event.value);
+    if(selectedValues?.length > 1){
+      this.utilsService.showSnackBar("You cannot select same exempt income more than once");
+      selectedValues.forEach((fg:FormGroup) => {
+        fg.controls['incomeType'].setErrors({invalid : true})
+      });
+    } else {
+      exemptIncomes.controls.forEach((fg:FormGroup) => {
+        fg.controls['incomeType'].setErrors(null)
+      });
+    }
   }
 
   saveAll() {

@@ -23,9 +23,9 @@
   
   <form [formGroup]="salaryForm">
     <div formArrayName="salaryArray">
-      <div *ngFor="let salary of getSalaryArray.controls | paginate :config;
-            let i = index" [formGroupName]="activeIndex">
-        <div class="display-flex">
+      <div *ngFor="let item of getSalaryArray.controls | slice:0:activeIndex+1; let i=index"
+           [formGroupName]="activeIndex">
+        <div class="display-flex" *ngIf="activeIndex === i">
           <!-- <mat-checkbox
             color="primary"
             name="hasEdit[i]"
