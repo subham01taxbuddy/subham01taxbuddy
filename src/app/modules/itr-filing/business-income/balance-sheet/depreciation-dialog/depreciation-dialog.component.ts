@@ -182,12 +182,8 @@ export class DepreciationDialogComponent implements OnInit {
 
   deleteDepreciationArray() {
     const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
-    depreciationArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        depreciationArray.removeAt(index);
-        this.calculateDepreciationTotal();
-      }
-    })
+    depreciationArray.controls = depreciationArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
+    this.calculateDepreciationTotal();
   }
 
   calculateDepreciationTotal() {
