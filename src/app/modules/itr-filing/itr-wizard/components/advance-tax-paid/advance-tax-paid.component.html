@@ -2,21 +2,29 @@
   [show]="loading"
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
-
-<form [formGroup]="salaryForm">
-  <div class="PreBxUp">
-    <div class="hdByr-L">
-      <strong> Self Assessment or Advance Tax paid </strong>
+<div class="div-3" *ngFor="let salary of getSalaryArray.controls;
+            let i = index">
+  <!--      <div>-->
+  <div class="contents-wrapper">
+    <div class="contents">
+      <div class="field-text" (click)="markActive(i)">Entry {{i+1}}</div>
+      <div class="group"><img class="material-symbols" src="assets/img/new/del.png" /></div>
     </div>
   </div>
-  <div class="head-title mb-4">
-    Please enter the amount of advance tax or self assessment tax paid
+  <!--      </div>-->
+</div>
+<div class="contents-wrapper">
+  <div class="field-text-wrapper">
+    <div class="field-text-2" (click)="$event.stopPropagation(); addSalary();">+ Add Another</div>
   </div>
+</div>
+
+<form [formGroup]="salaryForm">
+
   <div formArrayName="salaryArray">
-    <div
-      class="display-flex"
-      *ngFor="let donation of getSalaryArray.controls | paginate : config; let i = index"
-      [formGroupName]="fieldGlobalIndex(i)">
+    <div class="display-flex"
+      *ngFor="let donation of getSalaryArray.controls | slice:0:activeIndex+1; let i=index"
+      [formGroupName]="activeIndex">
       <!-- <mat-checkbox
         color="primary"
         name="hasEdit[i]"
@@ -24,7 +32,7 @@
         class="mv"
       >
       </mat-checkbox> -->
-      <div class="row">
+      <div class="row" *ngIf="activeIndex === i">
         <div class="div-6 ">
           <div class="form-field">
             <mat-label>BSR Code*</mat-label>
@@ -136,32 +144,14 @@
       </div> -->
       </div>
     </div>
- 
-      <!-- <div class="col-sm-3">
-          <button
-            type="submit"
-            class="tbd-btn-secondary delBtn"
-            (click)="deleteSalaryArray()"
-          >
-            <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-          </button>
-        </div> -->
-      <!-- <div class="col-sm-6">
-          <table>
-            <tr
-              *ngFor="let item of getSalaryArray.controls | paginate : config"
-            ></tr>
-          </table>
-          <pagination-controls
-            (pageChange)="pageChanged($event)"
-          ></pagination-controls>
-        </div> -->
-      <div class="box-right">
-        <button type="submit" class="btn btn__primary" (click)="save()">
-          Save
-        </button>
+    <div class="out-box">
+      <div class="box-left">
+        <button class="btn btn__white" (click)="goBack()">Back</button>
       </div>
-  
+      <div class="box-right">
+        <button class="btn btn__primary" (click)="save()">Save</button>
+      </div>
+    </div>
   </div>
 </form>
 
