@@ -56,12 +56,15 @@
                           data-bs-target="#tdsOther">Tax Deducted at Source (TDS) on Income other than salary</button>
                 </h2>
                 <div id="tdsOther" class="accordion-collapse collapse show" data-bs-parent="#tdsOtherAccordion">
-                  <div class="accordion__item-body">
+                  <div class="accordion__item-body">                 
                     <div class="Bx4R">
                       <button type="button" class="addAno" (click)="editTaxesPaid(TDS_OTHER_TYPE_CODE)">
                         + Add more
                       </button>
                     </div>
+         
+                
+                 
                     <div class="card__row display-flex" *ngIf="tdsOtherMode === 'EDIT'">
                       <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12">
                         <app-tds-other-than-salary
@@ -71,8 +74,7 @@
                                 (onSave)="saveAll($event)"></app-tds-other-than-salary>
                       </div>
                     </div>
-                    <ag-grid-angular *ngIf="tdsOtherMode === 'VIEW'"
-                            style="width: 100%; height: 150%"
+                    <ag-grid-angular *ngIf="tdsOtherMode === 'VIEW'"                           
                             class="ag-theme-balham spsTp"
                             [gridOptions]="tdsOtherThanSalary16AGridOptions"
                             [animateRows]="true"
