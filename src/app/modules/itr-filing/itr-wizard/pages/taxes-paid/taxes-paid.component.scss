@@ -166,6 +166,8 @@ tr:nth-child(even) {
   border-radius: 5px;
   border: 1px solid #15799f;
   padding: 8px!important;
+  z-index: 10;
+  position: relative;
 }
 
 .delete-btn:disabled {

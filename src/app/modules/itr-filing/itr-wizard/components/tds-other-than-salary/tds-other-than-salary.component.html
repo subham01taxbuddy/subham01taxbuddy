@@ -21,11 +21,10 @@
 <form [formGroup]="salaryForm">
   <div formArrayName="salaryArray">
     <div *ngFor="let item of getSalaryArray.controls | slice:0:activeIndex+1; let i=index"
-      class="display-flex"
+      class="container-fluid"
       [formGroupName]="activeIndex">
-
       <div class="row" *ngIf="activeIndex === i">
-        <div class="div-6 ">
+        <div class="col-sm-6">
           <div class="form-field" *ngIf="showHeadOfIncome === 'TDTS'">
             <div class="field-label">
               <span class="span">TAN of Deductor</span><span class="text-wrapper-2">*</span>
@@ -130,7 +129,7 @@
             </mat-form-field>
           </div>
         </div>
-        <div class="div-6 ">
+        <div class="col-sm-6">
           <div class="form-field">
             <div class="field-label">
               <span class="span">Name of Deductor</span><span class="text-wrapper-2">*</span>
@@ -171,7 +170,7 @@
         </div>
         </div>
 
-        <div class="div-6 ">
+        <div class="col-sm-6">
           <div class="form-field">
           <div class="field-label">
             <span class="span">Total Tax Deducted</span><span class="text-wrapper-2">*</span>
@@ -192,7 +191,6 @@
         </div>
         </div>
       </div>
-
     </div>
     <div class="out-box">
       <div class="box-left">
