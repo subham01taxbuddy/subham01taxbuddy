@@ -48,11 +48,21 @@ export class TcsComponent implements OnInit {
 
     this.salaryForm = this.inItForm();
 
-    if(this.data?.assetIndex != null && this.data.assetIndex >= 0){
-      this.addMoreSalary(this.Copy_ITR_JSON.taxPaid?.tcs?.[this.data.assetIndex]);
+    if (
+        this.Copy_ITR_JSON.taxPaid?.tcs &&
+        this.Copy_ITR_JSON.taxPaid?.tcs.length > 0
+    ) {
+      this.Copy_ITR_JSON.taxPaid.tcs.forEach((item) => {
+        this.addMoreSalary(item);
+      });
     } else {
       this.addMoreSalary();
     }
+    // if(this.data?.assetIndex != null && this.data.assetIndex >= 0){
+    //   this.addMoreSalary(this.Copy_ITR_JSON.taxPaid?.tcs?.[this.data.assetIndex]);
+    // } else {
+    //   this.addMoreSalary();
+    // }
 
   }
 
@@ -110,6 +120,21 @@ export class TcsComponent implements OnInit {
     });
   }
 
+  activeIndex = 0;
+  markActive(index){
+    this.activeIndex = index;
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
+    this.config.currentPage = this.activeIndex;
+  }
+
+  goBack(){
+    this.onSave.emit({
+      type: 'tcs',
+      saved: false
+    })
+  }
+
   editSalaryForm(i) {
     // ((this.salaryForm.controls['salaryArray'] as FormGroup).controls[i] as FormGroup).enable();
   }
@@ -137,9 +162,12 @@ export class TcsComponent implements OnInit {
         rowIndex: this.data.rowIndex,
         type:'tcs'
       };
-      this.dialogRef.close(result);
+      // this.dialogRef.close(result);
 
-      this.onSave.emit();
+      this.onSave.emit({
+        type: 'tcs',
+        saved: true
+      });
       this.loading = false;
       this.utilsService.showSnackBar('TCS data saved successfully.');
     } else {

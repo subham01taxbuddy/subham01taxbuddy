@@ -2,20 +2,28 @@
   [show]="loading"
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
-
+<div class="div-3" *ngFor="let salary of getSalaryArray.controls;
+            let i = index">
+  <!--      <div>-->
+  <div class="contents-wrapper">
+    <div class="contents">
+      <div class="field-text" (click)="markActive(i)">Entry {{i+1}}</div>
+      <div class="group"><img class="material-symbols" src="assets/img/new/del.png" /></div>
+    </div>
+  </div>
+  <!--      </div>-->
+</div>
+<div class="contents-wrapper">
+  <div class="field-text-wrapper">
+    <div class="field-text-2" (click)="$event.stopPropagation(); addSalary();">+ Add Another</div>
+  </div>
+</div>
 <form [formGroup]="salaryForm">
   <div formArrayName="salaryArray">
-    <div class="PreBxUp">
-      <div class="hdByr-L"><strong> Tax Collected at Source Details </strong></div>
-    </div>
-    <div class="head-title mb-4">
-      In case of some incomes the payer of income collects TCS from you. Enter
-      the amount from form 16A or 26AS
-    </div>
     <div
       class="display-flex"
-      *ngFor="let donation of getSalaryArray.controls | paginate : config;let i = index"
-      [formGroupName]="fieldGlobalIndex(i)">
+      *ngFor="let donation of getSalaryArray.controls | slice:0:activeIndex+1; let i=index"
+      [formGroupName]="activeIndex">
       <mat-checkbox *ngIf="false"
         color="primary"
         name="hasEdit[i]"
@@ -23,9 +31,14 @@
         class="mv"
       >
       </mat-checkbox>
+<<<<<<< HEAD
       <div class="container spcBlw">
         <div class="row">
         <div class="col-sm-6">
+=======
+      <div class="row" *ngIf="activeIndex === i">
+        <div class="div-6 ">
+>>>>>>> 66da4d35dce3dd6768814865a5077cce99e3858b
           <div class="form-field">
             <mat-label>TAN of Collector*
             </mat-label>
@@ -124,11 +137,13 @@
     </div>
 
     </div>
-      <div class="box-right">
-        <button type="submit" class="btn btn__primary" (click)="save()">
-          Save
-        </button>
+    <div class="out-box">
+      <div class="box-left">
+        <button class="btn btn__white" (click)="goBack()">Back</button>
       </div>
-    
+      <div class="box-right">
+        <button class="btn btn__primary" (click)="save()">Save</button>
+      </div>
+    </div>
   </div>
 </form>
