@@ -3081,10 +3081,23 @@ main {
   font-size: 12px;
   font-style: italic;
   border: 1px solid #efefef;
-  color: #b60000; 
+  color: #b60000;
   min-width: 180px;
   margin-top: 5px;
   margin-left:-50px;
+}
+
+.new-note1 {
+  background-color: #fafafa;
+  padding: 5px 10px 5px 10px;
+  width: 290px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-style: italic;
+  border: 1px solid #efefef;
+  color: #b60000;
+  min-width: 180px;
+  margin-top: 5px;
 }
 
 .edit-head {
