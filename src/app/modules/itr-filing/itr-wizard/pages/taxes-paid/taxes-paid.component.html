@@ -65,8 +65,8 @@
          
                 
                  
-                    <div class="card__row display-flex" *ngIf="tdsOtherMode === 'EDIT'">
-                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12">
+                    <div class="card__row" *ngIf="tdsOtherMode === 'EDIT'">
+                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12 fullBox">
                         <app-tds-other-than-salary
                                 #other
                                 [addData]="isAddOther"
@@ -105,8 +105,8 @@
                         + Add more
                       </button>
                     </div>
-                    <div class="card__row display-flex" *ngIf="tdsPanMode === 'EDIT'">
-                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12">
+                    <div class="card__row" *ngIf="tdsPanMode === 'EDIT'">
+                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12 fullBox">
                       <app-tds-other-than-salary
                               #panBased
                               [addData]="isAddPanBased"
@@ -146,8 +146,8 @@
                         + Add more
                       </button>
                     </div>
-                    <div class="card__row display-flex" *ngIf="tcsMode === 'EDIT'">
-                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12">
+                    <div class="card__row" *ngIf="tcsMode === 'EDIT'">
+                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12 fullBox">
                         <app-tcs [isAddTcs]="isAddTcs" (onSave)="saveAll($event)"></app-tcs>
                       </div>
                     </div>
@@ -184,8 +184,8 @@
                       </button>
                     </div>
 
-                    <div class="card__row display-flex" *ngIf="advanceMode === 'EDIT'">
-                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12">
+                    <div class="card__row" *ngIf="advanceMode === 'EDIT'">
+                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12 fullBox">
                         <app-advance-tax-paid
                                 [isAddAdvance]="isAddAdvance"
                                 (onSave)="saveAll($event)"></app-advance-tax-paid>
