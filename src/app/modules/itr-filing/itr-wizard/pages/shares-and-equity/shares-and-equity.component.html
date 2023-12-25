@@ -9,9 +9,7 @@
 <div class="frameC">
   <h1 class="heading__title"> {{ title }}</h1>
   <div class="space">
-    <div class="wrapper">
 
-      <div class="div-4">
         <div class="frame-wrapper-2A">
           <div class="accordion" id="myAccordion">
 
@@ -29,7 +27,7 @@
                   <div>
                     <button
                             *ngIf="compactView || selectedBroker === ''"
-                            class="edit_btn"
+                            class="edit_btn float-right"
                             (click)="$event.stopPropagation(); addMore()">
                       <i class="fa fa-plus"></i>Add
                     </button>
@@ -285,7 +283,7 @@
 
           </div>
         </div>
-      </div>
+ 
 
 
 
@@ -297,7 +295,7 @@
           <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
         </div>
       </div>
-    </div>
+    
   </div>
 </div>
 

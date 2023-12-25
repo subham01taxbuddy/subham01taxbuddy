@@ -1692,6 +1692,25 @@ main {
 
   }
 
+  .styAlrt{
+    padding:8px!important;
+    width:98%;
+  }
+
+  .downLd {
+    padding: 10px!important; 
+    margin-top: 10px!important; 
+    display: block; 
+    border: 1px solid #3E82CD;
+    width: 40%; 
+    text-align: center; 
+    border-radius: 6px;
+  }
+  .downLd:hover{
+    background-color: #3E82CD;
+    color:#ffffff!important;
+  }
+
   .frameC .contents-wrapper-4 {
     display: flex;
     height: 55px;
@@ -1869,6 +1888,7 @@ main {
     white-space: nowrap;
   }
 
+ 
   .space .group {
     position: relative;
     width: 28px;
