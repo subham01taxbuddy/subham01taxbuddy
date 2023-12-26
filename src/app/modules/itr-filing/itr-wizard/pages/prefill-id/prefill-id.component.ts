@@ -1673,7 +1673,7 @@ export class PrefillIdComponent implements OnInit {
                   this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
                     ItrJSON[
                       this.ITR_Type
-                    ]?.FilingStatus?.clauseiv7provisio139iDtls.map(
+                    ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
                       (element) => ({
                         nature: parseFloat(
                           element?.clauseiv7provisio139iNature
@@ -1693,7 +1693,7 @@ export class PrefillIdComponent implements OnInit {
                   this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
                     ItrJSON[
                       this.ITR_Type
-                    ]?.FilingStatus?.clauseiv7provisio139iDtls.map(
+                    ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
                       (element) => ({
                         nature: parseFloat(
                           element?.clauseiv7provisio139iNature
@@ -3048,7 +3048,7 @@ export class PrefillIdComponent implements OnInit {
                 this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
                   ItrJSON[
                     this.ITR_Type
-                  ]?.FilingStatus?.clauseiv7provisio139iDtls.map((element) => ({
+                  ]?.FilingStatus?.clauseiv7provisio139iDtls?.map((element) => ({
                     nature: parseFloat(element?.clauseiv7provisio139iNature),
                     amount: parseFloat(element?.clauseiv7provisio139iAmount),
                   }));
