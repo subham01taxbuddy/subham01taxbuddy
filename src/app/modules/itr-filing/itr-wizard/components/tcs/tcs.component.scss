@@ -18,13 +18,20 @@
     margin-top: -40px !important;
 }
 .box-right{
+    position: relative;
+    top: 200px;
+    right:0px;
+}
+.btn__primary {  
     float: right;
-    margin-top: 20px;
-    margin-right: -30px;
+    margin-right:0px!important;
 }
 .head-title {
     margin-top: -16px;
 }
+.form-field{
+    margin-left:10px;
+  }
 
 .wrap-content {
     align-items: flex-start;

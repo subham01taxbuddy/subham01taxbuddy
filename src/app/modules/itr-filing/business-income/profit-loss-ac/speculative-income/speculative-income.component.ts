@@ -65,10 +65,10 @@ export class SpeculativeIncomeComponent implements OnInit {
         this.specIncomeFormArray.push(form);
       }
       // this.speculativeIncome = specBusiness?.incomes[0];
-    } /*else {
+    } else {
       let form = this.createSpecIncomeForm(0, null);
       this.specIncomeFormArray.push(form);
-    }*/
+    }
     this.specIncomeForm = this.fb.group({
       specIncomesArray: this.specIncomeFormArray,
     });
@@ -251,13 +251,7 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   deleteArray() {
-    const specIncomesArray = <FormArray>(
-      this.specIncomeForm.get('specIncomesArray')
-    );
-    specIncomesArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        specIncomesArray.removeAt(index);
-      }
-    });
+    const specIncomesArray = <FormArray>this.specIncomeForm.get('specIncomesArray');
+    specIncomesArray.controls = specIncomesArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
   }
 }

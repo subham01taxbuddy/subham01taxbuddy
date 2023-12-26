@@ -31,11 +31,11 @@
         class="mv"
       >
       </mat-checkbox>
-      <div class="row" *ngIf="activeIndex === i">
-        <div class="div-6 ">
+      <div class="container spcBlw">
+        <div class="row">
+        <div class="col-sm-6">
           <div class="form-field">
-            <mat-label style="margin-bottom: 16.4px"
-              >TAN of Collector*
+            <mat-label>TAN of Collector*
             </mat-label>
             <mat-form-field appearance="outline">
               <input
@@ -63,7 +63,7 @@
           </div>
 
           <div class="form-field">
-            <mat-label style="margin-bottom: 16.4px">Collector Name* </mat-label>
+            <mat-label>Collector Name* </mat-label>
             <mat-form-field appearance="outline">
               <input
                 formControlName="collectorName"
@@ -85,9 +85,9 @@
           </div>
         </div>
 
-        <div class="div-6 ">
+        <div class="col-sm-6">
           <div class="form-field">
-            <mat-label style="margin-bottom: 16.4px">Amount*</mat-label>
+            <mat-label>Amount*</mat-label>
             <mat-form-field appearance="outline">
               <input
                 formControlName="totalAmountPaid"
@@ -129,6 +129,7 @@
         </div>
         </div>
       </div>
+    </div>
 
     </div>
     <div class="out-box">

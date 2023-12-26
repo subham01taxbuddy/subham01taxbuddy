@@ -9,9 +9,7 @@
 <div class="frameC">
   <h1 class="heading__title"> {{ title }}</h1>
   <div class="space">
-    <div class="wrapper">
 
-      <div class="div-4">
         <div class="frame-wrapper-2A">
           <div class="accordion" id="myAccordion">
 
@@ -26,14 +24,14 @@
               </h2>
               <div id="collapse3" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                 <div class="accordion__item-body">
-                  <div>
+                 
                     <button
                             *ngIf="compactView || selectedBroker === ''"
-                            class="edit_btn"
+                            class="edit_btn float-right"
                             (click)="$event.stopPropagation(); addMore()">
                       <i class="fa fa-plus"></i>Add
                     </button>
-                  </div>
+                
                   <ag-grid-angular
                           class="ag-theme-balham topSps"
                           [gridOptions]="equityGridOptions"
@@ -285,7 +283,7 @@
 
           </div>
         </div>
-      </div>
+ 
 
 
 
@@ -297,7 +295,7 @@
           <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
         </div>
       </div>
-    </div>
+    
   </div>
 </div>
 

@@ -25,7 +25,7 @@
     <div formArrayName="salaryArray">
       <div *ngFor="let item of getSalaryArray.controls | slice:0:activeIndex+1; let i=index"
            [formGroupName]="activeIndex">
-        <div class="display-flex" *ngIf="activeIndex === i">
+        <div *ngIf="activeIndex === i">
           <!-- <mat-checkbox
             color="primary"
             name="hasEdit[i]"
@@ -33,9 +33,12 @@
             class="chkSp"
           >
           </mat-checkbox> -->
-
-          <div class="row">
-            <div class="div-6 ">
+          
+          <div class="container spcBlw">
+          <div class="row">          
+           
+            <div class="col-sm-6">
+             
               <div class="form-field">
                 <mat-label>TAN of Employer* &nbsp;&nbsp;&nbsp;</mat-label>
                 <mat-form-field appearance="outline">
@@ -83,7 +86,7 @@
             </div>
             </div>
 
-            <div class="div-6 ">
+            <div class="col-sm-6">
               <div class="form-field">
               <mat-label>Total Amount credited*</mat-label>
               <mat-form-field appearance="outline">
@@ -120,11 +123,11 @@
               </mat-form-field>
             </div>
             </div>
-
+        
           </div>
-          <mat-paginator #paginator *ngIf="true"
-                  [pageIndex]="activeIndex" [length]="getTotalCount()"
-                         [pageSize]="1"></mat-paginator>
+          
+        </div>
+       
 
         </div>
       </div>
@@ -133,6 +136,9 @@
         <div class="box-left">
           <button class="btn btn__white" (click)="goBack()">Back</button>
         </div>
+        <mat-paginator #paginator *ngIf="true"
+        [pageIndex]="activeIndex" [length]="getTotalCount()"
+               [pageSize]="1"></mat-paginator>
         <div class="box-right">
           <button class="btn btn__primary" (click)="save()">Save</button>
         </div>

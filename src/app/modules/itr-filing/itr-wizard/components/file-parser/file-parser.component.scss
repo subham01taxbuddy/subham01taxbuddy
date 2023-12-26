@@ -9,6 +9,16 @@
     color: #07070c;
   }
 
+  .btn__primary{   
+    margin-right:-30px!important;
+  }
+
+  .warn {
+    padding:8px!important;
+}
+
+
+
   .left-label {
     // Upload Capital Gain/F&O statement here:
     color: #1E1E1E;
@@ -26,12 +36,13 @@
     font-size: 13px;
   }
 
-  .download {
-    color: #087586;
-    padding: 5px;
-    font-size: 14px;
-    text-decoration: none;
+  .bdr{
+    border-top:1px solid #cccccc;
+    margin-top: 20px!important;
+    padding-bottom: 20px!important;
   }
+
+
 
   .filename {
     overflow-wrap: break-word;

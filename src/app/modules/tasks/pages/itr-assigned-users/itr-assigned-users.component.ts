@@ -30,6 +30,8 @@ import { ReAssignActionDialogComponent } from '../../components/re-assign-action
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ReportService } from 'src/app/services/report-service';
 import * as moment from 'moment';
+import {KommunicateSsoService} from "../../../../services/kommunicate-sso.service";
+import {DomSanitizer} from "@angular/platform-browser";
 
 declare function we_track(key: string, value: any);
 
@@ -85,6 +87,8 @@ export class ItrAssignedUsersComponent implements OnInit {
     private cacheManager: CacheManager,
     private reportService: ReportService,
     private userService: UserMsService,
+    private kommunicateSsoService: KommunicateSsoService,
+    private sanitizer: DomSanitizer,
     @Inject(LOCALE_ID) private locale: string) {
     this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.showReassignmentBtn = this.loggedInUserRoles.filter((item => item === 'ROLE_OWNER' || item === 'ROLE_ADMIN' || item === 'ROLE_LEADER'));
@@ -1142,25 +1146,32 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   openReviseReturnDialog(data) {
     console.log('Data for revise return ', data);
-    let disposable = this.dialog.open(ReviseReturnDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: data
-    })
-    disposable.afterClosed().subscribe(result => {
-      if (result === 'reviseReturn') {
-        this.router.navigate(['/itr-filing/itr'], {
-          state: {
-            userId: data.userId,
-            panNumber: data.panNumber,
-            eriClientValidUpto: data.eriClientValidUpto,
-            name: data.name
-          }
-        });
-      }
-      console.log('The dialog was closed', result);
-    });
-  }
+    if(data.statusId != 11){
+      let disposable = this.dialog.open(ReviseReturnDialogComponent, {
+        width: '50%',
+        height: 'auto',
+        data: data
+      })
+      disposable.afterClosed().subscribe(result => {
+        if (result === 'reviseReturn') {
+          this.router.navigate(['/itr-filing/itr'], {
+            state: {
+              userId: data.userId,
+              panNumber: data.panNumber,
+              eriClientValidUpto: data.eriClientValidUpto,
+              name: data.name
+            }
+          });
+        }
+        console.log('The dialog was closed', result);
+      });
+    }else{
+      this.utilsService.showSnackBar(
+        'Please complete e-verification before starting with revised return'
+      );
+    }
+    }
+
 
   redirectTowardInvoice(userInfo: any) {
     this.router.navigate(['/pages/subscription/invoices'], { queryParams: { userId: userInfo.userId } });
@@ -1281,6 +1292,10 @@ export class ItrAssignedUsersComponent implements OnInit {
     disposable.afterClosed().subscribe(result => {
     });
   }
+
+  isChatOpen = false;
+  kommChatLink = null;
+
   openChat(client) {
     let disposable = this.dialog.open(ChatOptionsDialogComponent, {
       width: '50%',
@@ -1293,6 +1308,11 @@ export class ItrAssignedUsersComponent implements OnInit {
     })
 
     disposable.afterClosed().subscribe(result => {
+      if (result.id) {
+        this.isChatOpen = true;
+        this.kommunicateSsoService.openConversation(result.id)
+        this.kommChatLink = this.sanitizer.bypassSecurityTrustUrl(result.kommChatLink);
+      }
     });
 
   }

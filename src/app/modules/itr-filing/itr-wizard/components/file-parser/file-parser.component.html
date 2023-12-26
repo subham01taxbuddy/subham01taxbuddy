@@ -9,12 +9,12 @@
     <div class="accordion__item-body">
       <div class="surround_text">
         <div class="row mb-20">
-          <div class="col-5 align_self">
+          <div class="col-7 align_self">
             <p class="normal_text">Upload Capital Gain/F&O Statement</p>
           </div>
 
-          <div class="col-7">
-            <button class="btn btn__primary" (click)="upload()"><i
+          <div class="col-5">
+            <button class="btn btn__primary float-right" (click)="upload()"><i
                     class="fa-solid fa-arrow-up-from-bracket"></i> Manual Upload
               <input
                       type="file"
@@ -24,17 +24,17 @@
                       (change)="uploadFile($event)"
                       accept=".xls, .xlsx"/>
             </button>
-            <button class="btn btn__primary" (click)="cloudUpload()"><i class="fa-regular fa-cloud"></i> Upload From Cloud
+            <button class="btn btn__primary float-right" (click)="cloudUpload()"><i class="fa-regular fa-cloud"></i> Upload From Cloud
             </button>
           </div>
         </div>
 
-        <div class="">
-          <div class="alert alert-warning" role="alert">
-            <i class="material-icons-outlined adIc">warning</i> Please upload all the
+     
+          <div class="alert alert-warning styAlrt" role="alert">
+            <i class="material-icons-outlined adIc">warning</i>&nbsp;&nbsp; Please upload all the
             brokers statements first and only then proceed to edit.
           </div>
-        </div>
+  
 
         <div class="row">
           <div class="col-sm-1">
@@ -63,16 +63,16 @@
             <p class="normal_text">Use Taxbuddy Template</p>
           </div>
           <div class="col-5">
-            <button class="btn btn__primary" (click)="downloadTemplate()">
+            <button class="btn btn__primary float-right" (click)="downloadTemplate()">
               <i class="fa fa-download" aria-hidden="true"></i> Download Taxbuddy Template</button>
           </div>
         </div>
-
+        <hr style="border-top:1px solid #cccccc; margin-top: 20px; padding-bottom: 20px">
         <div class="row">
           <div class="col-7 align_self"><p class="normal_text">Steps to Download (Listed Company) Statement?</p></div>
-          <div class="row col-sm-6">
+          <div class="row col-sm-12">
             <div *ngFor="let broker of brokerData" class="col-sm-4">
-              <a class="col-sm-4 download" *ngIf="broker.name !== 'Taxbuddy'" (click)="steps(broker.steps)">
+              <a class="downLd" *ngIf="broker.name !== 'Taxbuddy'" (click)="steps(broker.steps)">
                 <i class="fa fa-download"></i> {{ broker.name }} Steps</a>
             </div>
           </div>
