@@ -825,68 +825,24 @@
           </div>
         </div>
         <div class="space">
-          <div class="div">
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2 hedTx">Particulars</div>
-                <div class="field-label-3 hedTx">All Employers</div>
-              </div>
-            </div>
-
-          </div>
-          <div class="div">
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2">17 (1)</div>
-                <div class="field-label-3">₹ 40,00,000</div>
-              </div>
-            </div>
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2">17 (2)</div>
-                <div class="field-label-3">₹0</div>
-              </div>
-            </div>
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2">17 (3)</div>
-                <div class="field-label-3">₹0</div>
-              </div>
-            </div>
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2">Gross Salary</div>
-                <div class="field-label-3">₹0</div>
-              </div>
-            </div>
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2">Exemptions u/s 10</div>
-                <div class="field-label-3">₹0</div>
-              </div>
-            </div>
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-4">Net Salary</div>
-                <div class="field-label-3">₹ 50,000</div>
-              </div>
-            </div>
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-4">Deduction u/s 16</div>
-                <div class="field-label-3">₹ 50,000</div>
-              </div>
-            </div>
-          </div>
-          <div class="div">
-            <img class="img" src="img/line-2.svg" />
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2 hedTx">Taxable Salary</div>
-                <div class="field-label-3 hedTx">₹ 39,50,000</div>
-              </div>
-            </div>
-          </div>
+          <table class="table table-borderless f-size">
+            <tbody>
+              <tr class="border-bottom">
+              <th>HP</th>
+              <th>Ownership Category</th>
+              <th>Net Income</th>
+              </tr>
+              <tr *ngFor="let house of ITR_JSON.houseProperties; let i = index">
+              <td>{{i+1}}</td>
+              <td>{{getOwnershipCategory(house.propertyType)}}</td>
+              <td class="text-end">₹{{utilsService.currencyFormatter(house.taxableIncome)}}</td>
+              </tr>
+              <tr class="border-top">
+                <th colspan="2">Total income from all HPs</th>
+                <th class="text-end">₹{{utilsService.currencyFormatter(getTotalTaxableIncome())}}</th>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -911,26 +867,17 @@
       </mat-expansion-panel-header>
 
       <div class="row">
-        <div>
+      
           <!-- add-more-hp-button  -->
           <div style="text-align: right">
-            <button class="btn" (click)="addHousingIncome()">
+            <button class="btn rgtBtn" (click)="addHousingIncome()">
               Add House Property&nbsp;&nbsp;
               <i class="fa fa-plus" aria-hidden="true"></i>
             </button>
           </div>
-
-          <div
-                  class=""
-                  style="padding: 25px"
-                  *ngFor="let house of ITR_JSON.houseProperties; let i = index"
-                  hideToggle
-          >
-            <div
-                    class="flex justify-between"
-                    (click)="editHouseProperty(i)"
-                    style="cursor: pointer"
-            >
+          <div class="spcTp">
+          <div class="desCon"  *ngFor="let house of ITR_JSON.houseProperties; let i = index" hideToggle>
+            <div class="flex justify-between" (click)="editHouseProperty(i)" style="cursor: pointer">
               <!-- checkbox  -->
               <div class="">
                 <div class="custom-control custom-checkbox">
@@ -943,7 +890,7 @@
                   />
                 </div>
                 <!-- title  -->
-                <div class="card__title">
+                <div class="card__title inl">
                   {{
                   house.propertyType === "SOP"
                           ? "Self occupied"
@@ -960,25 +907,18 @@
                 {{ house.city }}, {{ house.pinCode }}
               </div>
               <!-- net hp income  -->
-              <div>
+              <div class="conTx">
                 {{ utilsService.currencyFormatter(taxableIncomesHP[i]) }}
               </div>
               <!-- right icon  -->
-              <mat-icon>arrow_forward_ios</mat-icon>
+              <mat-icon class="icSp">arrow_forward_ios</mat-icon>
             </div>
           </div>
-          <div>
-            <button
-                    class="btn"
-                    style="cursor: pointer"
-                    (click)="deleteHpDetails()"
-            >
-              Delete
-            </button>
           </div>
-        </div>
-        <br />
-        <hr />
+            <button class="delBut" style="cursor: pointer" (click)="deleteHpDetails()">
+              <i aria-hidden="true" class="fa fa-trash"></i> Delete
+            </button>
+
       </div>
     </mat-expansion-panel>
   </mat-accordion>

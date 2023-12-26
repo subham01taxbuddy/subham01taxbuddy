@@ -6,6 +6,49 @@
   border: 1px solid black;
   border-radius: 4px;
 }
+.rgtBtn{
+  border: 1px solid #ccc;
+  top: -70px;
+  z-index: 50;
+  position: relative;
+  right: -30px!important;
+}
+
+.spcTp{
+  margin-top:-65px;
+}
+
+.inl{
+  margin-top: -21px;
+  margin-left: 55px;
+}
+
+.delBut {
+  cursor: pointer;
+  width: 100px;
+  float: left;
+  border: 1px solid #ff0000;
+  padding: 10px;
+  color:#ff0000;
+  border-radius:6px;
+  margin: 12px 0px 0px 12px;
+}
+
+.conTx{
+font-weight:bold;
+margin-top:5px;
+}
+
+.icSp{
+  margin-top:5px;
+}
+
+.desCon{
+  padding:10px;
+  border-radius:6px;
+  border:1px solid #0bb1cc;
+  margin-bottom:10px;
+}
 
 
 .fntWgt {
@@ -54,6 +97,15 @@ table {
   margin-right: 10px;
   align-self: center;
 }
+
+.table>:not(caption)>*>* {
+  background-color: white !important;
+}
+
+.f-size{
+  font-size:13px;
+}
+
 /* tr:nth-child(even) {
   background-color: #f2f2f2;
 } */

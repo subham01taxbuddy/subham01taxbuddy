@@ -245,6 +245,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.setExemptIncomeValues();
     this.setAgriIncValues();
     this.validateIncomeValueOnBlur();
+    this.setNetAgriIncome();
   }
 
   private createOtherIncomeForm() {
@@ -813,7 +814,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  setNetAgriIncome(index) {
+  setNetAgriIncome(index?) {
     const formValues = this.agriIncFormGroup.value;
 
     // List of keys to ignore

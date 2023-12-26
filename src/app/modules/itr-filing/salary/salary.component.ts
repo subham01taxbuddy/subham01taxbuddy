@@ -1867,12 +1867,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
   getTotalAllowances(){
     return this.getAllowanceArray.getRawValue().map(val=> val.allowValue ? parseInt(val.allowValue) : 0).reduce((previousValue, currentValue) =>
-        previousValue + currentValue);
+        previousValue + currentValue, 0);
   }
 
   getTotalGrossSalary(){
     return this.getSalaryArray.getRawValue().map(val=> val.salaryValue ? parseInt(val.salaryValue) : 0).reduce((previousValue, currentValue) =>
-        previousValue + currentValue);
+        previousValue + currentValue, 0);
   }
 
   // CALCULATORS
