@@ -292,8 +292,8 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
     //   exemptIncomesFormArray.push(agriformGroup);
     // }
     const formGroup = this.fb.group({
-      label: this.exemptIncomesDropdown[1].label,
-      incomeType: this.exemptIncomesDropdown[1].value,
+      label: [null],
+      incomeType: [null],
       incomeValue:
           this.exemptIncomesDropdown[1].value === 'AGRI'
               ? [null]

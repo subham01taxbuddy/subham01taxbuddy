@@ -97,8 +97,8 @@
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline">
-                                  <input readonly formControlName="totalCredit" name="totalCredit[i]" matInput class="input-field"
-                                    required type="number" trim />
+                                  <input readonly formControlName="totalCredit" name="totalCredit[i]" matInput
+                                    class="input-field" required type="number" trim />
                                 </mat-form-field>
                               </div>
                             </div>
@@ -140,7 +140,7 @@
                               <div class="form-field">
                                 <mat-form-field appearance="outline">
                                   <input readonly formControlName="grossProfit" name="grossProfit[i]" matInput
-                                         class="input-field" required type="number" trim />
+                                    class="input-field" required type="number" trim />
                                 </mat-form-field>
                               </div>
                             </div>
@@ -280,6 +280,17 @@
                                     " />
                                 </mat-form-field>
                               </div>
+                            </div>
+                          </div>
+
+                          <div class="div-6">
+                            <div class="form-field">
+                              <div><span class="normal_text">Total Other Expenses</span>
+                              </div>
+                            </div>
+                            <div class="form-field">
+                              <input readonly type="text" class="form-control inpplac disable"
+                                value="{{totalOtherExpenses}}" id="exampleInputEmail1" aria-describedby="emailHelp">
                             </div>
                           </div>
                         </form>
