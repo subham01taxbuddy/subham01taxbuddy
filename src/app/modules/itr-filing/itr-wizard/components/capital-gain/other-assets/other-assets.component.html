@@ -16,7 +16,6 @@
       </div>
       <div class="wrapper">
 
-        <div class="div-4">
           <div class="frame-wrapper-2A">
             <div class="accordion" id="myAccordion">
 
@@ -59,10 +58,11 @@
                   <button type="button" class="accordion-button" data-bs-toggle="collapse"
                           data-bs-target="#collapse2">Add Deduction under section 54F (Applicable for any capital assets other than residential House Property)</button>
                   <div class="row">
-                    <div class="col-sm-9">Add Deduction under section 54F (Applicable for any capital assets other than residential House Property)
+                    <div class="col-sm-9"><div class="lftSpc">Add Deduction under section 54F (Applicable for any capital assets other than residential House Property)</div>
                     </div>
 
                     <div class="col-sm-3">
+                    
                     <mat-radio-group
                             [(ngModel)]="deduction"
                             [disabled]="isDisable"
@@ -70,7 +70,7 @@
                       <mat-radio-button [value]="true" labelPosition="before"
                       >Yes
                       </mat-radio-button>
-                      <mat-radio-button [value]="false" labelPosition="before"
+                      <mat-radio-button class="radSpc" [value]="false" labelPosition="before"
                       >No</mat-radio-button
                       >
                     </mat-radio-group>
@@ -80,71 +80,73 @@
                 <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                   <form [formGroup]="deductionForm" *ngIf="deduction">
                     <div class="accordion__item-body" formArrayName="deductions">
-                    <div class="div-6">
-                      <div class="form-field">
-                        <div><span class="span">Type of deduction </span> <span
-                                class="text-wrapper-2">*</span></div>
-                        <div class="form-control-wrapper select_arrow">
-                          <mat-form-field class="input-field-width" appearance="outline">
-                            <input
-                                    matInput
-                                    digitsOnly
-                                    formControlName="typeOfDeduction"
-                                    placeholder="Section 54F"
-                                    name="typeOfDeduction"
-                                    class="input-field"
-                                    maxlength="14"
-                                    readonly
-                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            />
-                          </mat-form-field>
+                      <div *ngFor="let deduction of getDeductions?.controls | paginate : config;let i = index"
+                           [formGroupName]="fieldGlobalIndex(i)">
+                        <div class="div-6">
+                          <div class="form-field">
+                            <div><span class="span">Type of deduction </span> <span
+                                    class="text-wrapper-2">*</span></div>
+                            <div class="form-control-wrapper select_arrow">
+                              <mat-form-field class="input-field-width" appearance="outline">
+                                <input
+                                        matInput
+                                        digitsOnly
+                                        formControlName="typeOfDeduction"
+                                        placeholder="Section 54F"
+                                        name="typeOfDeduction"
+                                        class="input-field"
+                                        maxlength="14"
+                                        readonly
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                />
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-field">
+                            <div><span class="span">Purchase Date Of New Assets </span> <span
+                                    class="text-wrapper-2">*</span></div>
+                            <mat-form-field appearance="outline">
+                              <input
+                                      matInput
+                                      formControlName="purchaseDate"
+                                      name="purchaseDate"
+                                      [matDatepicker]="purchaseDate"
+                                      placeholder="Buy Date / Date of Acquisition"
+                                      [max]="maximumDate"
+                                      (change)="calculateDeduction()"
+                              />
+                              <mat-datepicker-toggle
+                                      matSuffix
+                                      [for]="purchaseDate"
+                              ></mat-datepicker-toggle>
+                              <mat-datepicker #purchaseDate></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+                          <div class="form-field">
+                            <div><span class="span">Cost Of New Assets</span> <span
+                                    class="text-wrapper-2">*</span></div>
+                            <mat-form-field class="input-field-width" appearance="outline">
+                              <input
+                                      matInput
+                                      digitsOnly
+                                      formControlName="costOfNewAsset"
+                                      placeholder="Cost Of New Asset"
+                                      name="costOfNewAsset"
+                                      class="input-field"
+                                      maxlength="14"
+                                      oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                      (change)="calculateDeduction()"
+                              />
+                              <!-- <mat-error
+                                *ngIf="
+                                  assetDetailsForm.controls['sellValue'].hasError('pattern')
+                                "
+                                >Enter valid amount.</mat-error
+                              > -->
+                            </mat-form-field>
+                          </div>
                         </div>
-                      </div>
-                      <div class="form-field">
-                        <div><span class="span">Purches date Of New Assets </span> <span
-                                class="text-wrapper-2">*</span></div>
-                        <mat-form-field appearance="outline">
-                          <input
-                                  matInput
-                                  formControlName="purchaseDate"
-                                  name="purchaseDate"
-                                  [matDatepicker]="purchaseDate"
-                                  placeholder="Buy Date / Date of Acquisition"
-                                  [max]="maximumDate"
-                                  (change)="calculateDeduction()"
-                          />
-                          <mat-datepicker-toggle
-                                  matSuffix
-                                  [for]="purchaseDate"
-                          ></mat-datepicker-toggle>
-                          <mat-datepicker #purchaseDate></mat-datepicker>
-                        </mat-form-field>
-                      </div>
-                      <div class="form-field">
-                        <div><span class="span">cost Of New Assets</span> <span
-                                class="text-wrapper-2">*</span></div>
-                        <mat-form-field class="input-field-width" appearance="outline">
-                          <input
-                                  matInput
-                                  digitsOnly
-                                  formControlName="costOfNewAsset"
-                                  placeholder="Cost Of New Asset"
-                                  name="costOfNewAsset"
-                                  class="input-field"
-                                  maxlength="14"
-                                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                  (change)="calculateDeduction()"
-                          />
-                          <!-- <mat-error
-                            *ngIf="
-                              assetDetailsForm.controls['sellValue'].hasError('pattern')
-                            "
-                            >Enter valid amount.</mat-error
-                          > -->
-                        </mat-form-field>
-                      </div>
-                    </div>
-                    <div class="div-6">
+                        <div class="div-6">
                       <div class="form-field">
                         <div><span class="span">Amount Deposited on CGAS </span> <span
                                 class="text-wrapper-2">*</span></div>
@@ -186,6 +188,7 @@
                         </mat-form-field>
                       </div>
                     </div>
+                      </div>
                   </div>
                   </form>
                 </div>
@@ -193,7 +196,7 @@
 
             </div>
           </div>
-        </div>
+      
 
 
         <div class="out-box">
