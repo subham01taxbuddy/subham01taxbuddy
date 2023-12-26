@@ -1040,6 +1040,13 @@
                               }}
                             </td>
                           </tr>
+                          <tr *ngIf="hpPtiValue">
+                            <th>7. Income from PTI</th>
+                            <td>
+                              Rs
+                              {{ hpPtiValue }}
+                            </td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
@@ -1092,10 +1099,166 @@
                       </div>
                     </mat-expansion-panel-header>
 
+                    <!-- spec non-spec -->
                     <div>
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
+                        *ngIf="
+                          (finalCalculations?.businessIncome
+                            ?.businessIncomeDetails?.nonSpecIncome
+                            ?.grossTurnover &&
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncome
+                              ?.grossTurnover !== 0) ||
+                          finalCalculations?.businessIncome
+                            ?.businessIncomeDetails?.nonSpecIncomePl
+                        "
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Business section</th>
+                            <th>Nature Of Business Code</th>
+                            <th>Trade Name</th>
+                            <th>Gross Turnover/Receipt</th>
+                            <th>Taxable Income</th>
+                          </tr>
+                        </tbody>
+                        <!-- Non speculative Income  -->
+                        <tr
+                          *ngIf="
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncome
+                              ?.grossTurnover &&
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncome
+                              ?.grossTurnover !== 0
+                          "
+                        >
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.businessSection
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.natureOfBusinessCode
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.tradeName
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.grossTurnover
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.businessIncome
+                                  ?.businessIncomeDetails?.nonSpecIncome
+                                  ?.TaxableIncome
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncomePl
+                          "
+                        >
+                          <td colspan="4">P&L details</td>
+                          <td>
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.businessIncome
+                                  ?.businessIncomeDetails?.nonSpecIncomePl
+                              )
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- speculative Income  -->
+
+                        <tr
+                          *ngIf="
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.specIncome
+                              ?.grossTurnover &&
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.specIncome
+                              ?.grossTurnover !== 0
+                          "
+                        >
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome
+                                ?.businessSection
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome
+                                ?.natureOfBusinessCode
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome?.tradeName
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome
+                                ?.grossTurnover
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.businessIncome
+                                  ?.businessIncomeDetails?.specIncome
+                                  ?.TaxableIncome
+                              )
+                            }}
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+
+                    <div>
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                        *ngIf="
+                          finalCalculations?.businessIncome
+                            ?.businessIncomeDetails?.business44AD?.length > 0 ||
+                          finalCalculations?.businessIncome
+                            ?.businessIncomeDetails?.business44ADA?.length >
+                            0 ||
+                          (finalSummary?.assessment?.summaryIncome
+                            ?.summaryBusinessIncome.totalIncomeFromFirm &&
+                            finalSummary?.assessment?.summaryIncome
+                              ?.summaryBusinessIncome.totalIncomeFromFirm !== 0)
+                        "
                       >
                         <tbody>
                           <tr>
@@ -1111,10 +1274,8 @@
                           <ng-container
                             *ngIf="
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD &&
-                              finalCalculations?.businessIncome
                                 ?.businessIncomeDetails?.business44AD?.length >
-                                0
+                              0
                             "
                           >
                             <tr
@@ -1152,10 +1313,8 @@
                           <ng-container
                             *ngIf="
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44ADA &&
-                              finalCalculations?.businessIncome
                                 ?.businessIncomeDetails?.business44ADA?.length >
-                                0
+                              0
                             "
                           >
                             <tr
@@ -1189,119 +1348,13 @@
                             </tr>
                           </ng-container>
 
-                          <!-- PROFIT AND LOSS INCOMES  -->
-                          <!-- Non speculative Income  -->
-                          <ng-container
-                            *ngIf="
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.nonSpecIncome
-                                ?.grossTurnover &&
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.nonSpecIncome
-                                ?.grossTurnover !== 0
-                            "
-                          >
-                            <tr>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.nonSpecIncome
-                                    ?.businessSection
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.nonSpecIncome
-                                    ?.natureOfBusinessCode
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.nonSpecIncome
-                                    ?.tradeName
-                                }}
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.nonSpecIncome
-                                    ?.grossTurnover
-                                }}
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                  utilsService.currencyFormatter(
-                                    finalCalculations?.businessIncome
-                                      ?.businessIncomeDetails?.nonSpecIncome
-                                      ?.TaxableIncome
-                                  )
-                                }}
-                              </td>
-                            </tr>
-                          </ng-container>
-                          <!-- speculative Income  -->
-                          <ng-container
-                            *ngIf="
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.specIncome
-                                ?.grossTurnover &&
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.specIncome
-                                ?.grossTurnover !== 0
-                            "
-                          >
-                            <tr>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.specIncome
-                                    ?.businessSection
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.specIncome
-                                    ?.natureOfBusinessCode
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.specIncome
-                                    ?.tradeName
-                                }}
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.specIncome
-                                    ?.grossTurnover
-                                }}
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                  utilsService.currencyFormatter(
-                                    finalCalculations?.businessIncome
-                                      ?.businessIncomeDetails?.specIncome
-                                      ?.TaxableIncome
-                                  )
-                                }}
-                              </td>
-                            </tr>
-                          </ng-container>
-
                           <ng-container
                             *ngIf="
                               finalSummary?.assessment?.summaryIncome
+                                ?.summaryBusinessIncome.totalIncomeFromFirm &&
+                              finalSummary?.assessment?.summaryIncome
                                 ?.summaryBusinessIncome.totalIncomeFromFirm !==
-                              0
+                                0
                             "
                           >
                             <tr>
@@ -1329,6 +1382,8 @@
                       class="bxHed"
                       *ngIf="
                         finalSummary?.assessment?.summaryIncome
+                          ?.summaryBusinessIncome.totalIncomeFromFirm &&
+                        finalSummary?.assessment?.summaryIncome
                           ?.summaryBusinessIncome.totalIncomeFromFirm !== 0
                       "
                     >
@@ -1341,6 +1396,8 @@
 
                     <div
                       *ngIf="
+                        finalSummary?.assessment?.summaryIncome
+                          ?.summaryBusinessIncome.totalIncomeFromFirm &&
                         finalSummary?.assessment?.summaryIncome
                           ?.summaryBusinessIncome.totalIncomeFromFirm !== 0
                       "
@@ -1438,6 +1495,8 @@
                     <table
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
+                        finalCalculations?.businessIncome?.businessIncomeDetails
+                          ?.crypto?.cryptoDetails &&
                         finalCalculations?.businessIncome?.businessIncomeDetails
                           ?.crypto?.cryptoDetails?.length > 0
                       "
@@ -1982,8 +2041,10 @@
                     >
                       Short term capital gain @ slab rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermAppSlabRateTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.shortTerm
+                            ?.ShortTermAppSlabRateTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2145,8 +2206,10 @@
                     >
                       Short term capital gain @ 15% rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm15PerTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.shortTerm
+                            ?.ShortTerm15PerTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2218,8 +2281,10 @@
                     >
                       Short term capital gain @ 30% rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm30PerTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.shortTerm
+                            ?.ShortTerm30PerTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2296,8 +2361,10 @@
                     >
                       Short term capital gain @ special rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermSplRateDTAATotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.shortTerm
+                            ?.ShortTermSplRateDTAATotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2370,8 +2437,10 @@
                     >
                       Long term capital gain @ 10% rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.longTerm
-                          ?.LongTerm10PerTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.longTerm
+                            ?.LongTerm10PerTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2440,8 +2509,10 @@
                     >
                       Long term capital gain @ 20% rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.longTerm
-                          ?.LongTerm20PerTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.longTerm
+                            ?.LongTerm20PerTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2680,7 +2751,9 @@
                     >
                       Income from crypto
                       <span style="float: right">{{
-                       utilsService.currencyFormatter(finalCalculations?.capitalGain?.totalCryptoIncome)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.totalCryptoIncome
+                        )
                       }}</span>
                     </div>
                     <table
@@ -3300,27 +3373,6 @@
                             </td>
                           </tr>
 
-                          <tr
-                            *ngIf="
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.giftExemptIncome &&
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.giftExemptIncome > 0
-                            "
-                          >
-                            <td>Gift u/s 56(2)(x)</td>
-                            <td class="">
-                              <i class="material-icons" style="font-size: 15px"
-                                >₹</i
-                              >&nbsp;{{
-                                utilsService.currencyFormatter(
-                                  finalCalculations?.otherIncome?.otherIncomes
-                                ?.giftExemptIncome
-                                )
-                              }}
-                            </td>
-                          </tr>
-
                           <tr>
                             <th>Total</th>
                             <th>
@@ -3411,9 +3463,87 @@
                         </div>
                       </div>
                     </mat-expansion-panel-header>
+                    <!-- summary json uploaded -->
                     <table
                       class="table table-bordered table-striped table-hover"
                       style="margin-top: 20px"
+                      *ngIf="
+                        !ITR_JSON.isItrSummaryJsonEdited &&
+                        ITR_JSON.itrSummaryJson
+                      "
+                    >
+                      <tbody>
+                        <tr>
+                          <td><b>Head/Source of Income</b></td>
+                          <td><b>Income of current year</b></td>
+                          <td>
+                            <b
+                              >House Property loss of the current year set
+                              off</b
+                            >
+                          </td>
+                          <td>
+                            <b>Business loss of the current year set off</b>
+                          </td>
+                          <td>
+                            <b
+                              >Other source loss excluding race horse of the
+                              current year set off</b
+                            >
+                          </td>
+                          <td>
+                            <b>Current years Income remaining after set off</b>
+                          </td>
+                        </tr>
+
+                        <tr
+                          *ngFor="
+                            let currentYearLoss of finalCalculations
+                              ?.currentYearLosses?.currentYearLossesSetOff;
+                            let i = index
+                          "
+                        >
+                          <td>
+                            {{ currentYearLoss?.headOfIncome }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.currentYearInc }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.houseProperty }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.businessSetOff }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.otherThanHpBusiness }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.IncOfCurYrAfterSetOff }}
+                          </td>
+                        </tr>
+                        <tr
+                          *ngFor="
+                            let currentYearLossTotal of finalCalculations
+                              ?.currentYearLosses?.totals;
+                            let i = index
+                          "
+                        >
+                          <td>{{ currentYearLossTotal.headOfIncome }}</td>
+                          <td></td>
+                          <td>{{ currentYearLossTotal.HP }}</td>
+                          <td>{{ currentYearLossTotal.BUS }}</td>
+                          <td>{{ currentYearLossTotal.OTH }}</td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <!-- if json not uploaded -->
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      style="margin-top: 20px"
+                      *ngIf="!ITR_JSON.itrSummaryJson"
                     >
                       <tbody>
                         <tr>
@@ -5445,46 +5575,6 @@
                         <tr
                           *ngIf="
                             finalCalculations?.scheduleCflDetails
-                              ?.LossCFFromPrev12thYearFromAY
-                              ?.LossFrmSpecifiedBusCF > 0
-                          "
-                        >
-                          <!-- Assessment year -->
-                          <td>2011-2012</td>
-                          <!-- date of filing -->
-                          <td>
-                            {{
-                              finalCalculations?.scheduleCflDetails
-                                ?.LossCFFromPrev12thYearFromAY?.dateOfFiling
-                            }}
-                            <!-- house property loss -->
-                          </td>
-
-                          <td>0</td>
-                          <!-- Other than speculative and specified business -->
-                          <td>0</td>
-                          <!-- loss from speculative business  -->
-                          <td>0</td>
-                          <!-- loss from specified business  -->
-                          <td>
-                            {{
-                              finalCalculations?.scheduleCflDetails
-                                ?.LossCFFromPrev12thYearFromAY
-                                ?.LossFrmSpecifiedBusCF
-                            }}
-                          </td>
-                          <!-- short term capital loss  -->
-                          <td>0</td>
-                          <!-- long term capital loss  -->
-                          <td>0</td>
-                          <!-- loss from maintaining and owning horses  -->
-                          <td>0</td>
-                        </tr>
-
-                        <!-- 11th Assessment Year -->
-                        <tr
-                          *ngIf="
-                            finalCalculations?.scheduleCflDetails
                               ?.LossCFFromPrev11thYearFromAY
                               ?.LossFrmSpecifiedBusCF > 0
                           "
@@ -5497,8 +5587,9 @@
                               finalCalculations?.scheduleCflDetails
                                 ?.LossCFFromPrev11thYearFromAY?.dateOfFiling
                             }}
+                            <!-- house property loss -->
                           </td>
-                          <!-- house property loss -->
+
                           <td>0</td>
                           <!-- Other than speculative and specified business -->
                           <td>0</td>
@@ -5520,7 +5611,7 @@
                           <td>0</td>
                         </tr>
 
-                        <!-- 10th Assessment Year -->
+                        <!-- 11th Assessment Year -->
                         <tr
                           *ngIf="
                             finalCalculations?.scheduleCflDetails
@@ -5559,7 +5650,7 @@
                           <td>0</td>
                         </tr>
 
-                        <!-- 9th Assessment Year -->
+                        <!-- 10th Assessment Year -->
                         <tr
                           *ngIf="
                             finalCalculations?.scheduleCflDetails
@@ -5598,10 +5689,16 @@
                           <td>0</td>
                         </tr>
 
-                        <!-- 8th Assessment Year -->
-                        <tr>
+                        <!-- 9th Assessment Year -->
+                        <tr
+                          *ngIf="
+                            finalCalculations?.scheduleCflDetails
+                              ?.LossCFFromPrev8thYearFromAY
+                              ?.LossFrmSpecifiedBusCF > 0
+                          "
+                        >
                           <!-- Assessment year -->
-                          <td>2015-2016</td>
+                          <td>2014-2015</td>
                           <!-- date of filing -->
                           <td>
                             {{
@@ -5610,20 +5707,9 @@
                             }}
                           </td>
                           <!-- house property loss -->
-                          <td>
-                            {{
-                              finalCalculations?.scheduleCflDetails
-                                ?.LossCFFromPrev8thYearFromAY?.hpLoss
-                            }}
-                          </td>
+                          <td>0</td>
                           <!-- Other than speculative and specified business -->
-                          <td>
-                            {{
-                              finalCalculations?.scheduleCflDetails
-                                ?.LossCFFromPrev8thYearFromAY
-                                ?.broughtForwardBusLoss
-                            }}
-                          </td>
+                          <td>0</td>
                           <!-- loss from speculative business  -->
                           <td>0</td>
                           <!-- loss from specified business  -->
@@ -5635,27 +5721,17 @@
                             }}
                           </td>
                           <!-- short term capital loss  -->
-                          <td>
-                            {{
-                              finalCalculations?.scheduleCflDetails
-                                ?.LossCFFromPrev8thYearFromAY?.stcgLoss
-                            }}
-                          </td>
+                          <td>0</td>
                           <!-- long term capital loss  -->
-                          <td>
-                            {{
-                              finalCalculations?.scheduleCflDetails
-                                ?.LossCFFromPrev8thYearFromAY?.ltcgLoss
-                            }}
-                          </td>
+                          <td>0</td>
                           <!-- loss from maintaining and owning horses  -->
                           <td>0</td>
                         </tr>
 
-                        <!-- 7th Assessment Year -->
+                        <!-- 8th Assessment Year -->
                         <tr>
                           <!-- Assessment year -->
-                          <td>2016-2017</td>
+                          <td>2015-2016</td>
                           <!-- date of filing -->
                           <td>
                             {{
@@ -5706,10 +5782,10 @@
                           <td>0</td>
                         </tr>
 
-                        <!-- 6th Assessment Year -->
+                        <!-- 7th Assessment Year -->
                         <tr>
                           <!-- Assessment year -->
-                          <td>2017-2018</td>
+                          <td>2016-2017</td>
                           <!-- date of filing -->
                           <td>
                             {{
@@ -5760,10 +5836,10 @@
                           <td>0</td>
                         </tr>
 
-                        <!-- 5th Assessment Year -->
+                        <!-- 6th Assessment Year -->
                         <tr>
                           <!-- Assessment year -->
-                          <td>2018-2019</td>
+                          <td>2017-2018</td>
                           <!-- date of filing -->
                           <td>
                             {{
@@ -5814,10 +5890,10 @@
                           <td>0</td>
                         </tr>
 
-                        <!-- 4th Assessment Year -->
+                        <!-- 5th Assessment Year -->
                         <tr>
                           <!-- Assessment year -->
-                          <td>2019-2020</td>
+                          <td>2018-2019</td>
                           <!-- date of filing -->
                           <td>
                             {{
@@ -5841,13 +5917,7 @@
                             }}
                           </td>
                           <!-- loss from speculative business  -->
-                          <td>
-                            {{
-                              finalCalculations?.scheduleCflDetails
-                                ?.LossCFFromPrev4thYearFromAY
-                                ?.lossFromSpeculativeBus
-                            }}
-                          </td>
+                          <td>0</td>
                           <!-- loss from specified business  -->
                           <td>
                             {{
@@ -5871,19 +5941,13 @@
                             }}
                           </td>
                           <!-- loss from maintaining and owning horses  -->
-                          <td>
-                            {{
-                              finalCalculations?.scheduleCflDetails
-                                ?.LossCFFromPrev4thYearFromAY
-                                ?.OthSrcLossRaceHorseCF
-                            }}
-                          </td>
+                          <td>0</td>
                         </tr>
 
-                        <!-- 3rd Assessment Year -->
+                        <!-- 4th Assessment Year -->
                         <tr>
                           <!-- Assessment year -->
-                          <td>2020-2021</td>
+                          <td>2019-2020</td>
                           <!-- date of filing -->
                           <td>
                             {{
@@ -5946,10 +6010,10 @@
                           </td>
                         </tr>
 
-                        <!-- previous Assessment Year -->
+                        <!-- 3rd Assessment Year -->
                         <tr>
                           <!-- Assessment year -->
-                          <td>2021-2022</td>
+                          <td>2020-2021</td>
                           <!-- date of filing -->
                           <td>
                             {{
@@ -6008,10 +6072,10 @@
                           </td>
                         </tr>
 
-                        <!--current Assessment Year -->
+                        <!-- previous Assessment Year -->
                         <tr>
                           <!-- Assessment year -->
-                          <td>2022-2023</td>
+                          <td>2021-2022</td>
                           <!-- date of filing -->
                           <td>
                             {{
@@ -6067,6 +6131,72 @@
                             {{
                               finalCalculations?.scheduleCflDetails
                                 ?.LossCFCurrentAssmntYear?.OthSrcLossRaceHorseCF
+                            }}
+                          </td>
+                        </tr>
+
+                        <!--current Assessment Year -->
+                        <tr>
+                          <!-- Assessment year -->
+                          <td>2022-2023</td>
+                          <!-- date of filing -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCflDetails
+                                ?.LossCFCurrentAssmntYear2023?.dateOfFiling
+                            }}
+                          </td>
+                          <!-- house property loss -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCflDetails
+                                ?.LossCFCurrentAssmntYear2023?.hpLoss
+                            }}
+                          </td>
+                          <!-- Other than speculative and specified business -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCflDetails
+                                ?.LossCFCurrentAssmntYear2023
+                                ?.broughtForwardBusLoss
+                            }}
+                          </td>
+                          <!-- loss from speculative business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCflDetails
+                                ?.LossCFCurrentAssmntYear2023
+                                ?.lossFromSpeculativeBus
+                            }}
+                          </td>
+                          <!-- loss from specified business  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCflDetails
+                                ?.LossCFCurrentAssmntYear2023
+                                ?.LossFrmSpecifiedBusCF
+                            }}
+                          </td>
+                          <!-- short term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCflDetails
+                                ?.LossCFCurrentAssmntYear2023?.stcgLoss
+                            }}
+                          </td>
+                          <!-- long term capital loss  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCflDetails
+                                ?.LossCFCurrentAssmntYear2023?.ltcgLoss
+                            }}
+                          </td>
+                          <!-- loss from maintaining and owning horses  -->
+                          <td>
+                            {{
+                              finalCalculations?.scheduleCflDetails
+                                ?.LossCFCurrentAssmntYear2023
+                                ?.OthSrcLossRaceHorseCF
                             }}
                           </td>
                         </tr>
@@ -7916,7 +8046,9 @@
                     class="color-panel accordion-border"
                     *ngIf="
                       !ITR_JSON.isItrSummaryJsonEdited &&
-                      ITR_JSON.itrSummaryJson
+                      ITR_JSON.itrSummaryJson &&
+                      finalCalculations?.SchedulePTI?.SchedulePTIDtls?.length >
+                        0
                     "
                     #SchedulePTI
                   >
@@ -8033,211 +8165,149 @@
                         </tr>
 
                         <!-- row 3 -->
-                        <tr (click)="togglePtiShortTerm($event, i)">
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                        <tr>
+                          <td rowspan="1">
                             {{ "ai. Short term" }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.ShortTermCG?.AmountOfInc }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.ShortTermCG
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.ShortTermCG?.NetIncomeLoss
                             }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.ShortTermCG?.TDSAmount }}
-                            <mat-icon
-                              class="arrow-icon"
-                              (click)="togglePtiShortTerm($event, i)"
-                            >
-                              keyboard_arrow_down
-                            </mat-icon>
                           </td>
                         </tr>
 
                         <!-- row 4 -->
-                        <tr *ngIf="ptiShortTermExpanded[i]">
-                          <td>
+                        <tr>
+                          <td rowspan="1">
                             {{ "aii. Section 111A" }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.STCG_Sec111A?.AmountOfInc
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.STCG_Sec111A
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.STCG_Sec111A?.NetIncomeLoss
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.STCG_Sec111A?.TDSAmount }}
                           </td>
                         </tr>
 
                         <!-- row 5 -->
-                        <tr *ngIf="ptiShortTermExpanded[i]">
-                          <td>
-                            {{ "aiii. Section 111A" }}
+                        <tr>
+                          <td rowspan="1">
+                            {{ "aiii. Other than Section 111A" }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.STCG_Others?.AmountOfInc }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.STCG_Others
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.STCG_Others?.NetIncomeLoss
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.STCG_Others?.TDSAmount }}
                           </td>
                         </tr>
 
                         <!-- row 6 -->
-                        <tr (click)="togglePtiLongTerm($event, i)">
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                        <tr>
+                          <td rowspan="1">
                             {{ "b. Long term" }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.LongTermCG?.AmountOfInc }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LongTermCG
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LongTermCG?.NetIncomeLoss
                             }}
                           </td>
-                          <td
-                            [attr.rowspan]="
-                              !ptiShortTermExpanded[i] ? '3' : '1'
-                            "
-                            colspan="1"
-                          >
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.LongTermCG?.TDSAmount }}
-                            <mat-icon
-                              class="arrow-icon"
-                              (click)="togglePtiLongTerm($event, i)"
-                            >
-                              keyboard_arrow_down
-                            </mat-icon>
                           </td>
                         </tr>
 
                         <!-- row 7 -->
-                        <tr *ngIf="ptiLongTermExpanded[i]">
-                          <td>
+                        <tr>
+                          <td rowspan="1">
                             {{ "bi. Section 112A" }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Sec112A?.AmountOfInc
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Sec112A
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Sec112A?.NetIncomeLoss
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.LTCG_Sec112A?.TDSAmount }}
                           </td>
                         </tr>
 
                         <!-- row 8 -->
-                        <tr *ngIf="ptiLongTermExpanded[i]">
-                          <td>
+                        <tr>
+                          <td rowspan="1">
                             {{ "bii. Other than Section 112A" }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.LTCG_Others?.AmountOfInc }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Others
                                 ?.CurrYrLossShareByInvstFund
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{
                               pti?.CapitalGainsPTI?.LTCG_Others?.NetIncomeLoss
                             }}
                           </td>
-                          <td>
+                          <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.LTCG_Others?.TDSAmount }}
                           </td>
                         </tr>
@@ -9910,20 +9980,20 @@
                               <i class="material-icons icRup">&#8377;</i
                               >&nbsp;{{
                                 keys.ExemptIncAgriOthUs10Total
-                                  ? keys.ExemptIncAgriOthUs10Total +
-                                    finalCalculations?.giftExemptIncome
+                                  ? keys?.ExemptIncAgriOthUs10Total || 0
                                   : getExemptIncomeTotal() +
-                                    finalCalculations?.exemptIncome?.total +
-                                    finalCalculations?.giftExemptIncome
-                              }}</label
-                            >
+                                    (finalCalculations?.exemptIncome?.total ||
+                                      0)
+                              }}
+                            </label>
                           </div>
                         </div>
                       </div>
                     </mat-expansion-panel-header>
                     <div
                       *ngIf="
-                        ITR_JSON.itrSummaryJson && keys.ExemptIncomeDetails
+                        (ITR_JSON.itrSummaryJson && keys.ExemptIncomeDetails) ||
+                        passThroughInc
                       "
                     >
                       <table
@@ -9934,14 +10004,14 @@
                             <td><b>Particular</b></td>
                             <td><b>Amount</b></td>
                           </tr>
-                          <tr *ngFor="let exempt of keys.ExemptIncomeDetails">
-                            <td>{{ exempt.NatureDesc }}</td>
+                          <tr *ngFor="let exempt of keys?.ExemptIncomeDetails">
+                            <td>{{ exempt?.NatureDesc }}</td>
                             <td class="">
                               <i class="material-icons" style="font-size: 15px"
                                 >₹</i
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
-                                  exempt.OthAmount -
+                                  exempt?.OthAmount -
                                     finalCalculations?.giftExemptIncome
                                     ? finalCalculations?.giftExemptIncome
                                     : 0
@@ -9966,6 +10036,12 @@
                               }}
                             </td>
                           </tr>
+                          <tr *ngIf="passThroughInc">
+                            <td>Pass through income not chargeable to tax</td>
+                            <td>
+                              {{ passThroughInc }}
+                            </td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
@@ -9984,7 +10060,7 @@
                               <i class="material-icons" style="font-size: 15px"
                                 >₹</i
                               >&nbsp;{{
-                                utilsService.currencyFormatter(exempt.amount)
+                                utilsService.currencyFormatter(exempt?.amount)
                               }}
                             </td>
                           </tr>
@@ -10020,6 +10096,12 @@
                                   finalCalculations.profitShareAmount
                                 )
                               }}
+                            </td>
+                          </tr>
+                          <tr *ngIf="passThroughInc">
+                            <td>Pass through income not chargeable to tax</td>
+                            <td>
+                              {{ passThroughInc }}
                             </td>
                           </tr>
                         </tbody>

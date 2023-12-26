@@ -1032,24 +1032,31 @@ export class FilingsComponent implements OnInit, OnDestroy {
     we_track('Actions', {
       'User Number': data.contactNumber,
     });
-    let disposable = this.dialog.open(ReviseReturnDialogComponent, {
-      width: '50%',
-      height: 'auto',
-      data: data,
-    });
-    disposable.afterClosed().subscribe((result) => {
-      if (result === 'reviseReturn') {
-        this.router.navigate(['/itr-filing/itr'], {
-          state: {
-            userId: data.userId,
-            panNumber: data.panNumber,
-            eriClientValidUpto: data?.eriClientValidUpto,
-            name: data?.fName + ' ' + data?.lName,
-          },
-        });
-      }
-      console.log('The dialog was closed', result);
-    });
+
+    if(data.isEverified){
+      let disposable = this.dialog.open(ReviseReturnDialogComponent, {
+        width: '50%',
+        height: 'auto',
+        data: data,
+      });
+      disposable.afterClosed().subscribe((result) => {
+        if (result === 'reviseReturn') {
+          this.router.navigate(['/itr-filing/itr'], {
+            state: {
+              userId: data.userId,
+              panNumber: data.panNumber,
+              eriClientValidUpto: data?.eriClientValidUpto,
+              name: data?.fName + ' ' + data?.lName,
+            },
+          });
+        }
+        console.log('The dialog was closed', result);
+      });
+    }else{
+      this.utilsService.showSnackBar(
+        'Please complete e-verification before starting with revised return'
+      );
+    }
   }
 
   getAcknowledgeDetail(data) {

@@ -167,6 +167,8 @@ export class SummaryComponent implements OnInit {
   taxComputation: any;
   keys: any = {};
   finalSummary: any;
+  hpPtiValue: any;
+  passThroughInc: any;
 
   finalCalculations: {
     personalInfo: {
@@ -262,7 +264,6 @@ export class SummaryComponent implements OnInit {
         IntrstSec10XISecondProviso?: any;
         IntrstSec10XIIFirstProviso?: any;
         IntrstSec10XIISecondProviso?: any;
-        giftExemptIncome?: any;
       };
       otherIncomeTotal: number;
     };
@@ -311,14 +312,15 @@ export class SummaryComponent implements OnInit {
           ];
           totalPresInc?: any;
         };
-        nonSpecIncome: {
-          businessSection: String;
-          natureOfBusinessCode: any;
-          tradeName: String;
-          grossTurnover: Number;
-          TaxableIncome: Number;
+        nonSpecIncome?: {
+          businessSection?: String;
+          natureOfBusinessCode?: any;
+          tradeName?: String;
+          grossTurnover?: Number;
+          TaxableIncome?: Number;
         };
-        specIncome: {
+        nonSpecIncomePl?:any;
+        specIncome?: {
           businessSection: String;
           natureOfBusinessCode: any;
           tradeName: String;
@@ -460,13 +462,15 @@ export class SummaryComponent implements OnInit {
 
     totalHeadWiseIncome: number;
     currentYearLosses: {
-      currentYearLossesSetOff: [
-        {
-          houseProperty: number;
-          businessSetOff: number;
-          otherThanHpBusiness: number;
-        }
-      ];
+      currentYearLossesSetOff: {
+        headOfIncome?: any;
+        currentYearInc?: any;
+        houseProperty: number;
+        businessSetOff: number;
+        otherThanHpBusiness: number;
+        IncOfCurYrAfterSetOff?: any;
+      }[];
+      totals?: any[];
       totalCurrentYearSetOff: number;
     };
     balanceAfterSetOffCurrentYearLosses: number;
@@ -529,12 +533,12 @@ export class SummaryComponent implements OnInit {
       };
       LossCFFromPrev8thYearFromAY: {
         dateOfFiling: any;
-        hpLoss: Number;
-        broughtForwardBusLoss: Number;
-        BusLossOthThanSpecifiedLossCF: Number;
-        LossFrmSpecifiedBusCF: Number;
-        stcgLoss: Number;
-        ltcgLoss: Number;
+        hpLoss: any;
+        broughtForwardBusLoss: any;
+        BusLossOthThanSpecifiedLossCF: any;
+        LossFrmSpecifiedBusCF: any;
+        stcgLoss: any;
+        ltcgLoss: any;
       };
       LossCFFromPrev7thYearFromAY: {
         dateOfFiling: any;
@@ -597,6 +601,17 @@ export class SummaryComponent implements OnInit {
         lossFromSpeculativeBus: Number;
       };
       LossCFCurrentAssmntYear: {
+        dateOfFiling: any;
+        hpLoss: Number;
+        broughtForwardBusLoss: Number;
+        BusLossOthThanSpecifiedLossCF: Number;
+        LossFrmSpecifiedBusCF: Number;
+        stcgLoss: Number;
+        ltcgLoss: Number;
+        OthSrcLossRaceHorseCF: Number;
+        lossFromSpeculativeBus: Number;
+      };
+      LossCFCurrentAssmntYear2023?: {
         dateOfFiling: any;
         hpLoss: Number;
         broughtForwardBusLoss: Number;
@@ -781,14 +796,14 @@ export class SummaryComponent implements OnInit {
       DetailsOfOthSourcesIncOutsideIndia?: any;
     };
     exemptIncome: {
-      partnerFirms: [
+      partnerFirms: 
         {
-          name: string;
-          panNumber: string;
-          profitShareAmount: number;
-        }
-      ];
-      total: number;
+          name?: string;
+          panNumber?: string;
+          profitShareAmount?: number;
+        }[]
+      ;
+      total?: number;
     };
     giftExemptIncome?: number;
     profitShareAmount?: number;
@@ -1207,34 +1222,34 @@ export class SummaryComponent implements OnInit {
                 Qqb80: null,
                 Rrb80: null,
                 anyOtherInterest:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ]?.IncomeOthSrc -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  ]?.IncomeOthSrc || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val?.OthSrcNatureDesc === 'SAV'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  )?.OthSrcOthAmount || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val?.OthSrcNatureDesc === 'IFD'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  )?.OthSrcOthAmount || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val?.OthSrcNatureDesc === 'TAX'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  )?.OthSrcOthAmount || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val.OthSrcNatureDesc === 'FAP'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  )?.OthSrcOthAmount || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val?.OthSrcNatureDesc === 'DIV'
-                  )?.OthSrcOthAmount,
+                  )?.OthSrcOthAmount || 0),
 
                 dividendIncome: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -1325,7 +1340,8 @@ export class SummaryComponent implements OnInit {
                           .ScheduleBP?.NatOfBus44AD?.length
                       ),
                   };
-                }),
+                })?.filter(item => Object.entries(item)
+                .some(([key, value]) => value !== null || value!== 0)),
 
                 business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -1360,7 +1376,8 @@ export class SummaryComponent implements OnInit {
                           .ScheduleBP?.NatOfBus44ADA?.length
                       ),
                   };
-                }),
+                })?.filter(item => Object.entries(item)
+                .some(([key, value]) => value !== null || value!== 0)),
 
                 business44AE: {
                   businessDetails: this.ITR_JSON.itrSummaryJson['ITR'][
@@ -1377,7 +1394,8 @@ export class SummaryComponent implements OnInit {
                         }
                       )?.label,
                     };
-                  }),
+                  })?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
 
                   GoodsDtlsUs44AE: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
@@ -1387,7 +1405,8 @@ export class SummaryComponent implements OnInit {
                     TonnageCapacity: element?.TonnageCapacity,
                     HoldingPeriod: element?.HoldingPeriod,
                     PresumptiveIncome: element?.PresumptiveIncome,
-                  })),
+                  }))?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
 
                   totalPresInc: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
@@ -2365,11 +2384,6 @@ export class SummaryComponent implements OnInit {
 
             exemptIncome: {
               partnerFirms: [
-                {
-                  name: '',
-                  panNumber: '',
-                  profitShareAmount: 0,
-                },
               ],
               total: 0,
             },
@@ -2850,29 +2864,38 @@ export class SummaryComponent implements OnInit {
                 Rrb80: null,
 
                 anyOtherInterest:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncChargeable -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IntrstFrmSavingBank -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IntrstFrmTermDeposit -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IntrstFrmIncmTaxRefund -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.DividendGross -
                   (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.FamilyPension -
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.IncChargeable || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstFrmSavingBank || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstFrmTermDeposit || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstFrmIncmTaxRefund || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.DividendGross || 0) -
+                  ((this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleOS?.IncOthThanOwnRaceHorse?.FamilyPension || 0) -
+                    (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                       ?.ScheduleOS?.IncOthThanOwnRaceHorse?.Deductions
-                      ?.DeductionUs57iia) -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncFromOwnHorse?.BalanceOwnRaceHorse -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedPrYr89AOS -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.Tot562x,
+                      ?.DeductionUs57iia || 0)) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncFromOwnHorse?.BalanceOwnRaceHorse || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedPrYr89AOS || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Aggrtvaluewithoutcons562x || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Immovpropwithoutcons562x || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Immovpropinadeqcons562x || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Anyotherpropwithoutcons562x ||
+                    0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Anyotherpropinadeqcons562x || 0),
 
                 dividendIncome:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
@@ -2947,9 +2970,21 @@ export class SummaryComponent implements OnInit {
                   0
                 ),
 
-                giftExemptIncome:
+                aggregateValueWithoutConsideration:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.Tot562x,
+                    ?.IncOthThanOwnRaceHorse?.Aggrtvaluewithoutcons562x,
+                immovablePropertyWithoutConsideration:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Immovpropwithoutcons562x,
+                immovablePropertyInadequateConsideration:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Immovpropinadeqcons562x,
+                anyOtherPropertyWithoutConsideration:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Anyotherpropwithoutcons562x,
+                anyOtherPropertyInadequateConsideration:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Anyotherpropwithoutcons562x,
               },
 
               otherIncomeTotal:
@@ -2961,40 +2996,41 @@ export class SummaryComponent implements OnInit {
                 business44AD:
                   this.itrType === 'ITR3'
                     ? this.ITR_JSON.itrSummaryJson['ITR'][
-                        this.itrType
-                      ]?.PARTA_PL?.NatOfBus44AD?.map((element) => {
-                        return {
-                          businessSection: 'Section 44AD',
-                          natureOfBusinessCode: element?.CodeAD,
-                          tradeName: element?.NameOfBusiness,
-                          description: element?.Description,
-                          natureOfBusinessCodeName: this.natureOfBusiness?.find(
-                            (item) => {
-                              return item?.code === element?.CodeAD;
-                            }
-                          )?.label,
-                          grossTurnover:
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.PersumptiveInc44AD
-                                ?.GrsTrnOverOrReceipt
-                            ) /
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.NatOfBus44AD?.length
-                            ),
-                          TaxableIncome:
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.PersumptiveInc44AD
-                                ?.TotPersumptiveInc44AD
-                            ) /
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.NatOfBus44AD?.length
-                            ),
-                        };
-                      })
+                      this.itrType
+                    ]?.PARTA_PL?.NatOfBus44AD?.map((element) => {
+                      return {
+                        businessSection: 'Section 44AD',
+                        natureOfBusinessCode: element?.CodeAD,
+                        tradeName: element?.NameOfBusiness,
+                        description: element?.Description,
+                        natureOfBusinessCodeName: this.natureOfBusiness?.find(
+                          (item) => {
+                            return item?.code === element?.CodeAD;
+                          }
+                        )?.label,
+                        grossTurnover:
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.PersumptiveInc44AD
+                              ?.GrsTrnOverOrReceipt
+                          ) /
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.NatOfBus44AD?.length
+                          ),
+                        TaxableIncome:
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.PersumptiveInc44AD
+                              ?.TotPersumptiveInc44AD
+                          ) /
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.NatOfBus44AD?.length
+                          ),
+                      };
+                    })?.filter(item => Object.entries(item)
+                    .some(([key, value]) => value !== null || value!== 0))
                     : [
                       {
                         businessSection: null,
@@ -3003,44 +3039,46 @@ export class SummaryComponent implements OnInit {
                         grossTurnover: null,
                         TaxableIncome: null,
                       },
-                    ],
+                    ]?.filter(item => Object.entries(item)
+                    .some(([key, value]) => value !== null || value!== 0)),
 
                 business44ADA:
                   this.itrType === 'ITR3'
                     ? this.ITR_JSON.itrSummaryJson['ITR'][
-                        this.itrType
-                      ]?.PARTA_PL?.NatOfBus44ADA?.map((element) => {
-                        return {
-                          businessSection: 'Section 44ADA',
-                          natureOfBusinessCode: element?.CodeADA,
-                          tradeName: element?.NameOfBusiness,
-                          description: element?.Description,
-                          natureOfBusinessCodeName: this.natureOfBusiness?.find(
-                            (item) => {
-                              return item?.code === element?.CodeADA;
-                            }
-                          )?.label,
-                          grossTurnover:
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.PersumptiveInc44ADA?.GrsReceipt
-                            ) /
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.NatOfBus44ADA?.length
-                            ),
-                          TaxableIncome:
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.PersumptiveInc44ADA
-                                ?.TotPersumptiveInc44ADA
-                            ) /
-                            parseFloat(
-                              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                                ?.PARTA_PL?.NatOfBus44ADA?.length
-                            ),
-                        };
-                      })
+                      this.itrType
+                    ]?.PARTA_PL?.NatOfBus44ADA?.map((element) => {
+                      return {
+                        businessSection: 'Section 44ADA',
+                        natureOfBusinessCode: element?.CodeADA,
+                        tradeName: element?.NameOfBusiness,
+                        description: element?.Description,
+                        natureOfBusinessCodeName: this.natureOfBusiness?.find(
+                          (item) => {
+                            return item?.code === element?.CodeADA;
+                          }
+                        )?.label,
+                        grossTurnover:
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.PersumptiveInc44ADA?.GrsReceipt
+                          ) /
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.NatOfBus44ADA?.length
+                          ),
+                        TaxableIncome:
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.PersumptiveInc44ADA
+                              ?.TotPersumptiveInc44ADA
+                          ) /
+                          parseFloat(
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PARTA_PL?.NatOfBus44ADA?.length
+                          ),
+                      };
+                    })?.filter(item => Object.entries(item)
+                    .some(([key, value]) => value !== null || value!== 0))
                     : [
                       {
                         businessSection: null,
@@ -3049,7 +3087,8 @@ export class SummaryComponent implements OnInit {
                         grossTurnover: null,
                         TaxableIncome: null,
                       },
-                    ],
+                    ]?.filter(item => Object.entries(item)
+                    .some(([key, value]) => value !== null || value!== 0)),
 
                 business44AE: {
                   businessDetails: this.ITR_JSON.itrSummaryJson['ITR'][
@@ -3066,7 +3105,8 @@ export class SummaryComponent implements OnInit {
                         }
                       )?.label,
                     };
-                  }),
+                  })?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
 
                   GoodsDtlsUs44AE: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
@@ -3076,7 +3116,8 @@ export class SummaryComponent implements OnInit {
                     TonnageCapacity: element?.TonnageCapacity,
                     HoldingPeriod: element?.HoldingPeriod,
                     PresumptiveIncome: element?.PresumptiveIncome,
-                  })),
+                  }))?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
 
                   totalPresInc: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
@@ -3088,29 +3129,47 @@ export class SummaryComponent implements OnInit {
                 },
 
                 nonSpecIncome:
-                  this.itrType === 'ITR3'
+                  this.itrType === 'ITR3' &&
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.TradingAccount?.OtherOperatingRevenueDtls
                     ? {
-                      businessSection: 'Non-Speculative Income',
-                      natureOfBusinessCode: 'nonSpec',
-                      tradeName: 'Non-Speculative Income',
-                      grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][
-                        this.itrType
-                      ]?.TradingAccount?.OtherOperatingRevenueDtls?.reduce(
-                        (sum, obj) => sum + obj.OperatingRevenueAmt,
-                        0
-                      ),
-                      TaxableIncome:
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          ?.TradingAccount?.GrossProfitFrmBusProf,
-                    }
+                        businessSection: 'Non-Speculative Income',
+                        natureOfBusinessCode: 'nonSpec',
+                        tradeName: 'Non-Speculative Income',
+                        grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][
+                          this.itrType
+                        ]?.TradingAccount?.OtherOperatingRevenueDtls?.reduce(
+                          (sum, obj) => sum + obj.OperatingRevenueAmt,
+                          0
+                        ),
+                        TaxableIncome:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.TradingAccount?.GrossProfitFrmBusProf,
+                      }
+                    : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.TradingAccount?.GrossProfitFrmBusProf
+                    ? {
+                        businessSection: 'Non-Speculative Income',
+                        natureOfBusinessCode: 'nonSpec',
+                        tradeName: 'Non-Speculative Income',
+                        grossTurnover:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.TradingAccount?.TardingAccTotCred,
+                        TaxableIncome:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.TradingAccount?.GrossProfitFrmBusProf,
+                      }
                     : {
-                      businessSection: null,
-                      natureOfBusinessCode: null,
-                      tradeName: null,
-                      grossTurnover: null,
-                      TaxableIncome: null,
-                    },
+                        businessSection: null,
+                        natureOfBusinessCode: null,
+                        tradeName: null,
+                        grossTurnover: null,
+                        TaxableIncome: null,
+                      },
 
+                      nonSpecIncomePl: this.itrType === 'ITR3' ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PARTA_PL?.DebitsToPL?.PBT : null,
+                      
                 specIncome:
                   this.itrType === 'ITR3'
                     ? {
@@ -3145,7 +3204,8 @@ export class SummaryComponent implements OnInit {
                       SaleValue: element?.ConsidReceived,
                       income: element?.IncomeFromVDA,
                     };
-                  }),
+                  })?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
                 },
                 totalCryptoIncome: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -3395,23 +3455,10 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                 ?.TotalTI,
             // Need to set losses for uploadedJson
+
             currentYearLosses: {
-              currentYearLossesSetOff: [
-                {
-                  houseProperty:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.TotalLossSetOff?.TotHPlossCurYrSetoff,
-                  businessSetOff:
-                    this.itrType === 'ITR3'
-                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleCYLA?.TotalLossSetOff?.TotBusLossSetoff
-                      : 0,
-                  otherThanHpBusiness:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.TotalLossSetOff
-                      ?.TotOthSrcLossNoRaceHorseSetoff,
-                },
-              ],
+              currentYearLossesSetOff: this.getCurrentYearLossJson(),
+              totals: this.getCurrentYearLossJsonTotal(),
               totalCurrentYearSetOff:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                   ?.CurrentYearLoss,
@@ -3843,6 +3890,44 @@ export class SummaryComponent implements OnInit {
                 lossFromSpeculativeBus:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
                     ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.LossFrmSpecBusCF,
+              },
+              LossCFCurrentAssmntYear2023: {
+                dateOfFiling:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.DateOfFiling,
+                hpLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.TotalHPPTILossCF,
+                broughtForwardBusLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.BrtFwdBusLoss,
+                BusLossOthThanSpecifiedLossCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.BusLossOthThanSpecLossCF,
+                LossFrmSpecifiedBusCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.LossFrmSpecifiedBusCF,
+                stcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.TotalSTCGPTILossCF,
+                ltcgLoss:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2022?.CarryFwdLossDetail
+                    ?.TotalLTCGPTILossCF,
+                OthSrcLossRaceHorseCF:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
+                    ?.OthSrcLossRaceHorseCF,
+                lossFromSpeculativeBus:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
+                    ?.LossCFCurrentAssmntYear2023?.CarryFwdLossDetail
                     ?.LossFrmSpecBusCF,
               },
               TotalOfBFLossesEarlierYrs: {
@@ -4606,11 +4691,7 @@ export class SummaryComponent implements OnInit {
 
             exemptIncome: {
               partnerFirms: [
-                {
-                  name: '',
-                  panNumber: '',
-                  profitShareAmount: 0,
-                },
+                
               ],
               total: 0,
             },
@@ -4663,6 +4744,8 @@ export class SummaryComponent implements OnInit {
                 : null,
           };
           console.log(this.keys, 'this.keys ITR2&3');
+          this.calculateTotalNetIncomeLoss();
+          this.calculatePassThroughInc();
           this.loading = false;
         }
       } else {
@@ -6196,16 +6279,17 @@ export class SummaryComponent implements OnInit {
                 this.finalSummary?.assessment?.taxSummary?.taxRefund,
 
               exemptIncome: {
-                partnerFirms: this.finalSummary?.itr?.partnerFirms
-                  ?.map((element, index) => {
-                    return {
-                      srNo: index + 1,
-                      name: element.name,
-                      panNumber: element.panNumber,
-                      profitShareAmount: element.profitShareAmount,
-                    };
-                  })
-                  .flat(),
+                partnerFirms: (this.finalSummary?.itr?.partnerFirms || [])?.map((element, index) => ({
+                  srNo: index + 1,
+                  name: element?.name || null,
+                  panNumber: element?.panNumber || null,
+                  profitShareAmount: element?.profitShareAmount || null,
+                })).filter(item => Object.entries(item)
+                  .filter(([key, value]) => key !== 'srNo')
+                  .some(([key, value]) => value !== null || value!== 0)
+                ),
+                            
+                
                 total: this.finalSummary?.itr?.partnerFirms?.reduce(
                   (total, item) => total + item?.profitShareAmount,
                   0
@@ -6713,7 +6797,7 @@ export class SummaryComponent implements OnInit {
         if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
           this.checkFilerAssignment();
           // console.log(res, 'Paid');
-        }  else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
+        } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
           this.utilsService.showSnackBar(
             'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'
           );
@@ -6790,7 +6874,11 @@ export class SummaryComponent implements OnInit {
           });
         } else {
           if (res.errors instanceof Array && res.errors.length > 0) {
-            this.utilsService.showSnackBar(res.errors[0].errFld);
+            if (res.errors[0].errFld) {
+              this.utilsService.showSnackBar(res.errors[0].errFld);
+            } else {
+              this.utilsService.showSnackBar(res.errors[0].desc);
+            }
           } else {
             this.utilsService.showSnackBar('Failed to file ITR.');
           }
@@ -6893,7 +6981,7 @@ export class SummaryComponent implements OnInit {
     let total = 0;
     if (this.ITR_JSON.exemptIncomes?.length > 0) {
       for (let i = 0; i < this.ITR_JSON.exemptIncomes?.length; i++) {
-        total = total + this.ITR_JSON.exemptIncomes[i].amount;
+        total = parseFloat(total + this.ITR_JSON.exemptIncomes[i].amount);
       }
     }
     return total;
@@ -7012,17 +7100,144 @@ export class SummaryComponent implements OnInit {
   }
 
   ptiShortTermExpanded: boolean[] = [];
-
+  rowspanValue: any;
   togglePtiShortTerm(event: Event, index: number) {
     event.stopPropagation();
     this.ptiShortTermExpanded[index] = !this.ptiShortTermExpanded[index];
+    this.rowspanValue = !this.ptiShortTermExpanded[index] ? 3 : 1;
   }
 
   ptiLongTermExpanded: boolean[] = [];
-
+  rowspanLtcgValue: any;
   togglePtiLongTerm(event: Event, index: number) {
     event.stopPropagation();
     this.ptiLongTermExpanded[index] = !this.ptiLongTermExpanded[index];
+    this.rowspanLtcgValue = !this.ptiShortTermExpanded[index] ? 3 : 1;
+  }
+
+  calculateTotalNetIncomeLoss() {
+    const details = this.finalCalculations?.SchedulePTI?.SchedulePTIDtls || [];
+    if (details && details.length > 0) {
+      this.hpPtiValue = details
+        ?.map((detail) => detail?.IncFromHP?.NetIncomeLoss || 0)
+        ?.reduce((total, value) => total + value, 0);
+    }
+  }
+
+  calculatePassThroughInc() {
+    const details = this.finalCalculations?.SchedulePTI?.SchedulePTIDtls || [];
+    if (details && details.length > 0) {
+      this.passThroughInc = details
+        ?.map((detail) => detail?.IncClmdPTI?.TotalSec23FBB?.NetIncomeLoss || 0)
+        ?.reduce((total, value) => total + value, 0);
+    }
+  }
+
+  getCurrentYearLossJson() {
+    let array = [
+      'Salary',
+      'HP',
+      'BusProfExclSpecProf',
+      'SpeculativeInc',
+      'SpecifiedInc',
+      'STCG15Per',
+      'STCG30Per',
+      'STCGAppRate',
+      'STCGDTAARate',
+      'LTCG10Per',
+      'LTCG20Per',
+      'LTCGDTAARate',
+      'OthSrcExclRaceHorse',
+      'OthSrcRaceHorse',
+      'IncOSDTAA',
+    ];
+
+    let result = array.map((element, index) => ({
+      headOfIncome: element,
+      currentYearInc:
+        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+          element
+        ]?.IncCYLA?.IncOfCurYrUnderThatHead || 0,
+      houseProperty:
+        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+          element
+        ]?.IncCYLA?.HPlossCurYrSetoff || 0,
+      businessSetOff:
+        this.itrType === 'ITR3'
+          ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.IncCYLA?.BusLossSetoff || 0
+          : 0,
+      otherThanHpBusiness:
+        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+          element
+        ]?.IncCYLA?.OthSrcLossNoRaceHorseSetoff || 0,
+
+      IncOfCurYrAfterSetOff:
+        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+          element
+        ]?.IncCYLA?.IncOfCurYrAfterSetOff || 0,
+    }));
+    return result;
+  }
+
+  getCurrentYearLossJsonTotal() {
+    let array = ['TotalCurYr', 'TotalLossSetOff', 'LossRemAftSetOff'];
+    let arrayToBeReturned = [];
+
+    array.map((element) => {
+      if (element === 'TotalCurYr') {
+        arrayToBeReturned.push({
+          headOfIncome: element,
+          HP:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotHPlossCurYr || 0,
+          BUS:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotBusLoss || 0,
+          OTH:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotOthSrcLossNoRaceHorse || 0,
+        });
+      } else if ('TotalLossSetOff') {
+        arrayToBeReturned.push({
+          headOfIncome: element,
+          HP:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotHPlossCurYrSetoff || 0,
+          BUS:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotBusLossSetoff || 0,
+          OTH:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotOthSrcLossNoRaceHorseSetoff || 0,
+        });
+      } else if ('LossRemAftSetOff') {
+        arrayToBeReturned.push({
+          headOfIncome: element,
+          HP:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.BalHPlossCurYrAftSetoff || 0,
+          BUS:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.BalBusLossAftSetoff || 0,
+          OTH:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.BalOthSrcLossNoRaceHorseAftSetoff || 0,
+        });
+      }
+    });
+
+    return arrayToBeReturned;
   }
 }
 

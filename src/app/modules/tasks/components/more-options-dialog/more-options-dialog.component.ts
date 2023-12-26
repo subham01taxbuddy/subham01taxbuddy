@@ -209,7 +209,7 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   goToProfile() {
-    this.router.navigate(['pages/user-management/profile/' + this.data.userId]);
+    this.router.navigate([`pages/user-management/profile/` + this.data.userId], { queryParams: { 'serviceType': this.data.serviceType, }, queryParamsHandling: 'merge' });
     this.dialogRef.close();
   }
 
@@ -527,14 +527,21 @@ export class MoreOptionsDialogComponent implements OnInit {
     this.itrMsService.getMethod(param).subscribe(
       (res: any) => {
         if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-          let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
-            width: '50%',
-            height: 'auto',
-            data: this.data,
-          });
+          if(this.data.statusId != 11){
+            let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
+              width: '50%',
+              height: 'auto',
+              data: this.data,
+            });
 
-          disposable.afterClosed().subscribe((result) => {
-          });
+            disposable.afterClosed().subscribe((result) => {
+            });
+          }else{
+            this.utilsService.showSnackBar(
+              'Please complete e-verification before starting with revised return'
+            );
+          }
+
         } else if (res?.data?.itrInvoicepaymentStatus === 'SubscriptionDeletionPending') {
           this.utilsService.showSnackBar(
             'ITR Subscription is deleted which is pending for Approval / Reject, please ask Leader to reject so that we can proceed further'

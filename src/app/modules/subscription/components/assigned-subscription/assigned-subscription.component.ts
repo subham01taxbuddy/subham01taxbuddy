@@ -1,6 +1,6 @@
 import { CoOwnerListDropDownComponent } from './../../../shared/components/co-owner-list-drop-down/co-owner-list-drop-down.component';
 import { data } from 'jquery';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GridOptions } from 'ag-grid-community';
@@ -20,7 +20,7 @@ import * as moment from 'moment';
 import { ReportService } from 'src/app/services/report-service';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
-import { Location } from '@angular/common';
+import { Location, formatDate } from '@angular/common';
 declare function we_track(key: string, value: any);
 export interface User {
   name: string;
@@ -87,6 +87,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
   searchAsPrinciple: boolean = false;
   partnerType: any;
   selectedSearchUserId: any;
+  assignedFilerId :number
 
   constructor(
     private fb: FormBuilder,
@@ -101,6 +102,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private reportService: ReportService,
     public location: Location,
+    @Inject(LOCALE_ID) private locale: string
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('ALL_FILERS_LIST'))
     console.log('new Filer List ', this.allFilerList)
@@ -607,6 +609,21 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         },
       },
       {
+        headerName: 'Created Date',
+        field: 'createdDate',
+        width: 100,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        cellRenderer: (data: any) => {
+          if (data.value) {
+            return formatDate(data.value, 'dd/MM/yyyy', this.locale);
+          } else {
+            return '-';
+          }
+        },
+
+      },
+      {
         headerName: 'Promo Code',
         field: 'promoCode',
         width: 100,
@@ -796,7 +813,8 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         subscriptionCreatedBy: subscriptionData[i].subscriptionCreatedBy,
         cancellationStatus: subscriptionData[i].cancellationStatus,
         // invoiceDetails: invoiceDetails,
-        leaderName: subscriptionData[i].leaderName
+        leaderName: subscriptionData[i].leaderName,
+        createdDate:subscriptionData[i].createdDate,
       });
     }
     return newData;
@@ -879,20 +897,42 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     } else {
       this.mobileNumber = this.searchVal
     }
-    const loggedInSmeUserId = this?.loggedInSme[0]?.userId
-    if (this.roles.includes('ROLE_FILER')) {
-      this.openAddSubscriptionDialog();
-    } else {
-      this.utilsService.getUserDetailsByMobile(loggedInSmeUserId, this.mobileNumber).subscribe((res: any) => {
-        console.log(res);
-        if (res?.records) {
-          this.userId = res?.records[0]?.userId;
-          if (this.userId) {
-            this.openAddSubscriptionDialog();
-          }
+
+    //integrate new api to check active user
+    this.utilsService.getActiveUsers(this.mobileNumber).subscribe((res: any) => {
+      console.log(res);
+      if (res.data) {
+        if (res.data.content[0].active === false) {
+          this._toastMessageService.alert('error', "This customer is currently inactive, please activate customer first and then create subscription");
+          return
         }
-      });
-    }
+      } else {
+        const loggedInSmeUserId = this?.loggedInSme[0]?.userId
+        if (this.roles.includes('ROLE_FILER')) {
+          this.openAddSubscriptionDialog();
+        } else {
+          this.utilsService.getFilerIdByMobile(this.mobileNumber).subscribe((res: any) => {
+            console.log(res);
+            if (res.data) {
+              this.assignedFilerId =res?.data?.content[0].filerUserId;
+              this.userId = res?.data?.content[0].userId;
+              this.openAddSubscriptionDialog();
+            }else{
+              this.utilsService.getFilerIdByMobile(this.mobileNumber,'ITR').subscribe((res: any) => {
+                console.log(res);
+                if (res.data) {
+                  this.assignedFilerId =res?.data?.content[0].filerUserId;
+                  this.userId = res?.data?.content[0].userId;
+                  this.openAddSubscriptionDialog();
+                }else{
+                  this._toastMessageService.alert('error',res.message);
+                }
+              })
+            }
+          })
+        }
+      }
+    })
   }
 
   openAddSubscriptionDialog() {
@@ -902,6 +942,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       data: {
         userId: this.userId,
         mobileNo: this.mobileNumber,
+        filerId :this.assignedFilerId,
       },
 
     })
@@ -915,7 +956,9 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         sessionStorage.setItem('createSubscriptionObject', JSON.stringify(subData))
         // let subID=result.data['subscriptionId'];
         console.log('Afetr dialog close -> ', subData);
-        this.router.navigate(['/subscription/create-subscription']);
+        this.router.navigate(['/subscription/create-subscription'], {
+          queryParams: { assignedFilerId: this.assignedFilerId},
+        });
         // this.router.navigate(['/subscription/create-subscription ' + result.data['subscriptionId']]);
       }
     })
@@ -959,7 +1002,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     if (pageContent) {
       this.subscriptionListGridOptions.api?.setRowData(this.createRowData(pageContent));
       this.config.currentPage = event;
-      this.searchParam.page = event-1;
+      this.searchParam.page = event - 1;
     } else {
       this.searchParam.page = event - 1;
       this.config.currentPage = event;
@@ -1091,4 +1134,5 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
 export interface ConfirmModel {
   userId: number
   mobileNo: number
+  filerId:number
 }

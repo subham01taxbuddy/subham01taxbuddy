@@ -15,6 +15,7 @@ import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
 import { ReportService } from 'src/app/services/report-service';
+import { ActivatedRoute } from '@angular/router';
 declare function we_track(key: string, value: any);
 
 @Component({
@@ -79,6 +80,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   smeDetails: any;
   showMessage = '';
   serviceEligibility: any;
+  assignedFilerId:any;
   constructor(
     private fb: FormBuilder,
     public utilsService: UtilsService,
@@ -87,20 +89,25 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     private toastMessage: ToastMessageService,
     public location: Location,
     private dialog: MatDialog,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private route: ActivatedRoute
   ) {
     this.roles = this.utilsService.getUserRoles();
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
 
   }
   ngAfterViewInit(): void {
-    setTimeout(()=>{
-    this.onPersonalInfoFormChanges();
-    this.onOtherInfoFormChange();
-  },7000);
+    setTimeout(() => {
+      this.onPersonalInfoFormChanges();
+      this.onOtherInfoFormChange();
+    }, 7000);
   }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.assignedFilerId = params['assignedFilerId'];
+      console.log('Filer ID:', this.assignedFilerId);
+    });
     this.getAllPromoCode();
     this.subType = (this.subscriptionObjType = JSON.parse(
       sessionStorage.getItem('subscriptionObject')
@@ -111,7 +118,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     } else {
       this.isButtonDisable = true;
     }
-    if (this.roles?.includes('ROLE_FILER')) {
+
+    if (this.roles?.includes('ROLE_FILER') || this.assignedFilerId) {
       this.getSmeDetail();
     }
 
@@ -161,6 +169,16 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.setFormValues(this.selectedUserInfo);
   }
 
+  addPromoMaxValidation(event) {
+    this.allPromoCodes.forEach(element => {
+      if (element.title === event.option.value) {
+        if (element.discountType === 'AMOUNT' && element.discountAmount > this.userSubscription?.smeSelectedPlan?.totalAmount) {
+          this.searchedPromoCode.setErrors({ maxError: true });
+        }
+      }
+    });
+  }
+
   displayFn(label: any) {
     return label ? label : undefined;
   }
@@ -175,12 +193,24 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   getSmeDetail() {
     // https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000'
     let loggedInSmeUserId = this.loggedInSme[0]?.userId;
-    let param = `/bo/sme-details-new/${loggedInSmeUserId}`
+    let userId;
+    if(this.assignedFilerId){
+      userId = this.assignedFilerId;
+    }else{
+      userId = loggedInSmeUserId;
+    }
+    let param = `/bo/sme-details-new/${userId}`
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {
         this.smeDetails = response.data[0];
-        this.showMessage = 'Disabled plans are not available in your eligibility please contact with your leader'
+        if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')){
+          if(this.assignedFilerId && this.serviceType ==='ITR'){
+            this.showMessage = 'Filer is not eligible for the disabled plans. Please give plan capability and then try or reassign the user.'
+          }
+        }else if(this.roles.includes('ROLE_FILER')){
+          this.showMessage = 'Disabled plans are not available in your eligibility please contact with your leader'
+        }
       }
     })
   }
@@ -436,7 +466,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
 
   async getFy() {
     const fyList = await this.utilsService.getStoredFyList();
-const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
     this.AssessmentYear = currentFyDetails[0].assessmentYear
     console.log("ay", this.AssessmentYear)
     this.getLeaderFiler();
@@ -682,7 +712,7 @@ const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
           );
           if (this.utilsService.isNonEmpty(serviceType)) {
             this.allPlans = activePlans.filter((item: any) => item.servicesType === serviceType);
-            if (this.roles.includes('ROLE_FILER')) {
+            if (this.roles.includes('ROLE_FILER') || (this.assignedFilerId && serviceType ==='ITR')) {
               this.allPlans.forEach((item: any) => {
                 item.disable = true;
                 if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
@@ -877,11 +907,18 @@ const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
       console.log('owner filer name  -> ', result);
       this.filerName.setValue(result.data[0]?.name);
       this.leaderName.setValue(result.data[0]?.parentName);
+      if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')){
+        if(result.data[0].filer && !result.data[0].leader ){
+          this.assignedFilerId = result.data[0].userId;
+          this.getSmeDetail();
+          this.getAllPlanInfo(this.serviceType);
+        }
+      }
     });
   }
 
   updateUserDetails() {
-    let param = `/profile/${this.userSubscription.userId}`;
+    let param = `/profile/${this.userSubscription.userId}?serviceType=${this.serviceType}`;
     if (this.personalInfoForm.controls['gstNo'].value) {
       if (!this.selectedUserInfo.gstDetails) {
         this.selectedUserInfo.gstDetails = {

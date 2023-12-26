@@ -87,8 +87,8 @@ export class ScheduleFaComponent implements OnInit {
     'Other income',
     'No Amount Paid/Credited',
   ];
-  natureOfInterestOwnership = ['Direct', 'Beneficial Owner', 'Beneficiary'];
-  status = ['Select', 'Owner', 'Beneficial Owner', 'Beneficiary'];
+  natureOfInterestOwnership = ['DIRECT', 'BENEFICIAL_OWNER', 'BENIFICIARY'];
+  status = ['Select', 'OWNER', 'BENEFICIAL_OWNER', 'BENIFICIARY'];
   countryCodeList: any;
   scheduleFa: FormGroup;
   isPanelOpen: boolean = false;
@@ -100,7 +100,7 @@ export class ScheduleFaComponent implements OnInit {
     private fb: FormBuilder,
     private utilsService: UtilsService,
     private cd: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.countryCodeList = [
@@ -1275,33 +1275,44 @@ export class ScheduleFaComponent implements OnInit {
   // Have to implement this, if yes then have to show questions else not
   handleSelectionChange(event) {}
 
+  // Generate a unique identifier for each checkbox based on form array index and checkbox index
+  getCheckboxId(formArrayIndex?: any, checkboxIndex?: any): any {
+    return `${formArrayIndex}_${checkboxIndex}`;
+  }
+
+  // Generate a unique identifier for each checkbox based on form array index and checkbox index for accounts array
+  getCheckboxIdAccount(formIndex?: any, formArrayIndex?: any, checkboxAccountIndex?: any): any {
+    return `${formIndex}_${formArrayIndex}_${checkboxAccountIndex}`;
+  }
+
   // Function to toggle selected index
-  toggleSelectedIndex(index: number) {
-    const idx = this.selectedIndexes.indexOf(index);
+  toggleSelectedIndex(formArrayIndex?: number, checkboxIndex?: number) {
+    const checkboxId = this.getCheckboxId(formArrayIndex, checkboxIndex);
+    const idx = this.selectedIndexes.indexOf(checkboxId);
     if (idx > -1) {
       this.selectedIndexes.splice(idx, 1);
     } else {
-      this.selectedIndexes.push(index);
+      this.selectedIndexes.push(checkboxId);
     }
   }
 
   // Function to toggle selected index
-  toggleSelectedAccountIndex(index: number) {
-    const idx = this.selectedAccountIndexes.indexOf(index);
+  toggleSelectedAccountIndex(formIndex, formArrayIndex, checkboxAccountIndex) {
+    const checkboxIdAccount = this.getCheckboxIdAccount(formIndex, formArrayIndex, checkboxAccountIndex);
+    const idx = this.selectedAccountIndexes.indexOf(checkboxIdAccount);
     if (idx > -1) {
       this.selectedAccountIndexes.splice(idx, 1);
     } else {
-      this.selectedAccountIndexes.push(index);
+      this.selectedAccountIndexes.push(checkboxIdAccount);
     }
   }
 
-  delete(formArrayName, type, index?) {
+  delete(formArrayName, type, formIndex, formArrayIndex?) {
     let formArrayOrAccountToDelete: any = '';
-
     if (type === 'account') {
       formArrayOrAccountToDelete = (
         this.scheduleFa.get(formArrayName) as FormArray
-      ).controls[index].get('account') as FormArray;
+      ).controls[formIndex].get('account') as FormArray;
     } else {
       formArrayOrAccountToDelete = this.scheduleFa.get(
         formArrayName
@@ -1310,11 +1321,23 @@ export class ScheduleFaComponent implements OnInit {
 
     const formAcctArrayToDltCntrls = formArrayOrAccountToDelete.controls;
     for (let i = formAcctArrayToDltCntrls.length - 1; i >= 0; i--) {
+      let index;
+      const checkboxId = this.getCheckboxId(formIndex, i);
+      if (formArrayName === 'depositoryAccounts') {
+        index = 0;
+      } else if (formArrayName === 'custodialAccounts'
+      ) {
+        index = 1;
+      } else if (formArrayName === 'signingAuthorityDetails') {
+        index = 7;
+      }
+      const checkboxIdAccount = this.getCheckboxIdAccount(index, formArrayIndex, i);
+
       if (
         (type === 'account'
           ? this.selectedAccountIndexes
           : this.selectedIndexes
-        ).includes(i)
+        ).includes(type === 'account' ? checkboxIdAccount : checkboxId)
       ) {
         if (type === 'account') {
           if (formAcctArrayToDltCntrls.length > 0) {
