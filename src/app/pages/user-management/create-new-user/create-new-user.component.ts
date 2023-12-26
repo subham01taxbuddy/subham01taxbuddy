@@ -51,6 +51,7 @@ export class CreateNewUserComponent implements OnInit {
   loggedInUserRoles: any;
   loggedInId: any;
   smeInfo: any;
+  partnerType: any;
   constructor(
     private fb: FormBuilder,
     private userService: UserMsService,
@@ -140,15 +141,24 @@ export class CreateNewUserComponent implements OnInit {
   leaderId: number;
   filerId: number;
   agentId: number;
-  fromSme(event, isLeader) {
-    if (isLeader && event && Object.keys(event).length > 0) {
+
+  fromSme(event, item) {
+    if (item === 1) {
       this.leaderName = event ? event.name : null;
       this.leaderId = event ? event.userId : null;
       if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.leaderId) {
-        this.assignedToMe=false;
+        this.assignedToMe = false;
         this.getSmeInfoDetails(this.leaderId);
       }
-    } else {
+    } else if (item === 2) {
+      this.partnerType = event.partnerType;
+      this.filerId = event ? event.userId : null;
+      this.filerName = event ? event.name : null;
+      if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.filerId) {
+        this.getSmeInfoDetails(this.filerId);
+      }
+    } else if (item === 3) {
+      this.partnerType = event.partnerType;
       this.filerId = event ? event.userId : null;
       this.filerName = event ? event.name : null;
       if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.filerId) {
@@ -157,35 +167,27 @@ export class CreateNewUserComponent implements OnInit {
     }
     if (this.filerId) {
       this.disableUserSignUp = false;
-      // this.signUpForm.controls['agentUserId'].setValue(this.filerId);
-      // this.getSmeRecords(this.filerId);
+      this.agentId = this.filerId;
     } else if (this.leaderId) {
       this.disableUserSignUp = true;
-      if (this.roles.includes('ROLE_OWNER')) {
-        this.disableUserSignUp = false;
-      }
-      // this.signUpForm.controls['agentUserId'].setValue(this.leaderId);
-      // this.getSmeRecords(this.leaderId)
-    } else {
-      if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
-        this.disableUserSignUp = true;
-      } else {
-        this.disableUserSignUp = false;
-      }
-      // this.signUpForm.controls['agentUserId'].setValue(this.loggedInId);
+      this.agentId = this.leaderId;
+    } else if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+      this.disableUserSignUp = true;
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
     }
-
+    else {
+      this.disableUserSignUp = false;
+      let loggedInId = this.utilsService.getLoggedInUserID();
+      this.agentId = loggedInId;
+    }
   }
 
   isAssignedToMe() {
     this.disableUserSignUp = false;
     if (!this.assignedToMe) {
-      // this.signUpForm.controls['agentUserId'].setValue(null);
       return;
     }
-    const loggedInId = this.utilsService.getLoggedInUserID();
-    // this.signUpForm.controls['agentUserId'].setValue(loggedInId);
-
   }
 
   isApplicable(permissionRoles: any) {
@@ -340,20 +342,20 @@ export class CreateNewUserComponent implements OnInit {
     }
 
     const selectedServiceType = this.signUpForm.controls['serviceType'].value;
-    let newServices =[];
-    if(this.smeInfo[0].serviceEligibility_ITR){
+    let newServices = [];
+    if (this.smeInfo[0].serviceEligibility_ITR) {
       newServices.push('ITR');
     }
-    if(this.smeInfo[0].serviceEligibility_TPA){
+    if (this.smeInfo[0].serviceEligibility_TPA) {
       newServices.push('TPA');
     }
-    if(this.smeInfo[0].serviceEligibility_GST){
+    if (this.smeInfo[0].serviceEligibility_GST) {
       newServices.push('GST');
     }
-    if(this.smeInfo[0].serviceEligibility_NOTICE){
+    if (this.smeInfo[0].serviceEligibility_NOTICE) {
       newServices.push('NOTICE');
     }
-    if(newServices.includes(selectedServiceType)){
+    if (newServices.includes(selectedServiceType)) {
       this.disableUserSignUp = false;
     } else {
       if (this.filerId) {

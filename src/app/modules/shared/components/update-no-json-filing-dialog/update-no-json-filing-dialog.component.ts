@@ -57,6 +57,12 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
   }
 
   updateManualDetails() {
+    const assessmentYearLastTwoDigits = this.data.assessmentYear.substr(2, 2);
+    const ackNumberLastTwoDigits = this.ackNumber.value.substr(-2);
+    if (ackNumberLastTwoDigits !== assessmentYearLastTwoDigits) {
+      this.utilsService.showSnackBar( `Ack Number must end with "${assessmentYearLastTwoDigits}" for the Assessment Year ${this.data.assessmentYear}`);
+      return;
+    }
     if (this.eFillingDate.valid && this.ackNumber.valid) {
       this.loading = true;
 

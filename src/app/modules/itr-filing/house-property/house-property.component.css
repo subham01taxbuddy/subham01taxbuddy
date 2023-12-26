@@ -54,6 +54,15 @@ table {
   margin-right: 10px;
   align-self: center;
 }
+
+.table>:not(caption)>*>* {
+  background-color: white !important;
+}
+
+.f-size{
+  font-size:13px;
+}
+
 /* tr:nth-child(even) {
   background-color: #f2f2f2;
 } */
