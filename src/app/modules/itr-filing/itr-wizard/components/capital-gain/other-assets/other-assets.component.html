@@ -16,7 +16,6 @@
       </div>
       <div class="wrapper">
 
-        <div class="div-4">
           <div class="frame-wrapper-2A">
             <div class="accordion" id="myAccordion">
 
@@ -59,10 +58,11 @@
                   <button type="button" class="accordion-button" data-bs-toggle="collapse"
                           data-bs-target="#collapse2">Add Deduction under section 54F (Applicable for any capital assets other than residential House Property)</button>
                   <div class="row">
-                    <div class="col-sm-9">Add Deduction under section 54F (Applicable for any capital assets other than residential House Property)
+                    <div class="col-sm-9"><div class="lftSpc">Add Deduction under section 54F (Applicable for any capital assets other than residential House Property)</div>
                     </div>
 
                     <div class="col-sm-3">
+                    
                     <mat-radio-group
                             [(ngModel)]="deduction"
                             [disabled]="isDisable"
@@ -70,7 +70,7 @@
                       <mat-radio-button [value]="true" labelPosition="before"
                       >Yes
                       </mat-radio-button>
-                      <mat-radio-button [value]="false" labelPosition="before"
+                      <mat-radio-button class="radSpc" [value]="false" labelPosition="before"
                       >No</mat-radio-button
                       >
                     </mat-radio-group>
@@ -193,7 +193,7 @@
 
             </div>
           </div>
-        </div>
+      
 
 
         <div class="out-box">
