@@ -49,7 +49,7 @@
 
                     <div class="col-sm-3">
                       <button type="submit" class="cancel" (click)="showCompactView()">
-                        Back to Brokers
+                        {{ this.bondType === 'listed' ? 'Back to Brokers' : 'Back'}}
                       </button>
                     </div>
                   </div>
