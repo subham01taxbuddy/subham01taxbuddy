@@ -113,6 +113,12 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   }
 
   updateItrUDetails() {
+    const assessmentYearLastTwoDigits = this.data.assessmentYear.substr(2, 2);//2023-2024 //23
+    const ackNumberLastTwoDigits = this.ackNumber.value.substr(-2);//23 or 24
+    if ((ackNumberLastTwoDigits !== '24' && ackNumberLastTwoDigits !== '23')) {
+      this.utilsService.showSnackBar(`Ack Number must end with '23' or '24' for the Year ${this.data.assessmentYear}`);
+      return;
+     }
     if (this.eFillingDate.valid && this.ackNumber.valid) {
       this.loading = true;
       let itrType = `ITRU-${this.itrType.value}`;

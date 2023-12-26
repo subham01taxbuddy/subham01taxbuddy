@@ -13,10 +13,10 @@ import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confir
 import { UserMsService } from '../../../../../services/user-ms.service';
 import * as moment from 'moment/moment';
 import { NonNullExpression } from 'typescript';
-import {AisCredsDialogComponent} from "../../../../../pages/itr-filing/ais-creds-dialog/ais-creds-dialog.component";
-import {Storage} from "@aws-amplify/storage";
-import {environment} from "../../../../../../environments/environment";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import { AisCredsDialogComponent } from '../../../../../pages/itr-filing/ais-creds-dialog/ais-creds-dialog.component';
+import { Storage } from '@aws-amplify/storage';
+import { environment } from '../../../../../../environments/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-prefill-id',
@@ -70,7 +70,7 @@ export class PrefillIdComponent implements OnInit {
     );
   }
 
-  customerName:any;
+  customerName: any;
   ngOnInit(): void {
     let name = this.getCustomerName();
     this.utilsService
@@ -204,18 +204,18 @@ export class PrefillIdComponent implements OnInit {
     // create a mapping object to map the JSON names to the new names of ITR Object
     const mapping = {
       '10(5)': 'LTA',
-      '10(6)': 'ANY_OTHER',
-      '10(7)': 'ANY_OTHER',
+      '10(6)': 'REMUNERATION_REC',
+      '10(7)': 'US_10_7',
       '10(10)': 'GRATUITY',
       '10(10A)': 'COMMUTED_PENSION',
       '10(10AA)': 'LEAVE_ENCASHMENT',
-      '10(10B)(i)': 'ANY_OTHER',
-      '10(10B)(ii)': 'ANY_OTHER',
-      '10(10C)': 'ANY_OTHER',
-      '10(10CC)': 'ANY_OTHER',
+      '10(10B)(i)': 'FIRST_PROVISO',
+      '10(10B)(ii)': 'SECOND_PROVISO',
+      '10(10C)': 'COMPENSATION_ON_VRS',
+      '10(10CC)': 'NON_MONETARY_PERQUISITES',
       '10(13A)': 'HOUSE_RENT',
-      '10(14)(i)': 'ANY_OTHER',
-      '10(14)(ii)': 'ANY_OTHER',
+      '10(14)(i)': 'US_10_14I',
+      '10(14)(ii)': 'US_10_14II',
       '10(14)(i)(115BAC)': 'ANY_OTHER',
       '10(14)(ii)(115BAC)': 'ANY_OTHER',
       EIC: 'ANY_OTHER',
@@ -1573,8 +1573,12 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Obj.aadharNumber =
                 ItrJSON[this.ITR_Type].PersonalInfo?.AadhaarCardNo;
 
-              // Date is converted in the required format by BO which is utc we get normaL date 29/01/2000 from JSON
-              this.parseAndFormatDate(ItrJSON[this.ITR_Type].PersonalInfo?.DOB);
+              (this.ITR_Obj.aadhaarEnrolmentId =
+                ItrJSON[this.ITR_Type]?.PersonalInfo?.AadhaarEnrolmentId),
+                // Date is converted in the required format by BO which is utc we get normaL date 29/01/2000 from JSON
+                this.parseAndFormatDate(
+                  ItrJSON[this.ITR_Type].PersonalInfo?.DOB
+                );
               this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
             }
 
@@ -1600,6 +1604,7 @@ export class PrefillIdComponent implements OnInit {
                   ItrJSON[this.ITR_Type].PersonalInfo.Address?.RoadOrStreet +
                   ItrJSON[this.ITR_Type].PersonalInfo.Address?.LocalityOrArea;
               }
+
               //BANK DETAILS
               {
                 const UtilityBankDetails =
@@ -1626,6 +1631,87 @@ export class PrefillIdComponent implements OnInit {
                       };
                     }
                   );
+                }
+              }
+
+              // SEVENTH PROVISIO DETAILS
+              {
+                this.ITR_Obj.seventhProviso139 = {
+                  seventhProvisio139: 'N',
+                  strDepAmtAggAmtExcd1CrPrYrFlg: null,
+                  depAmtAggAmtExcd1CrPrYrFlg: null,
+                  strIncrExpAggAmt2LkTrvFrgnCntryFlg: null,
+                  incrExpAggAmt2LkTrvFrgnCntryFlg: null,
+                  strIncrExpAggAmt1LkElctrctyPrYrFlg: null,
+                  incrExpAggAmt1LkElctrctyPrYrFlg: null,
+                  clauseiv7provisio139i: null,
+                  clauseiv7provisio139iDtls: null,
+                };
+
+                this.ITR_Obj.seventhProviso139.seventhProvisio139 =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.SeventhProvisio139;
+
+                this.ITR_Obj.seventhProviso139.strIncrExpAggAmt1LkElctrctyPrYrFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.IncrExpAggAmt1LkElctrctyPrYrFlg;
+                this.ITR_Obj.seventhProviso139.incrExpAggAmt1LkElctrctyPrYrFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.AmtSeventhProvisio139iii;
+
+                this.ITR_Obj.seventhProviso139.strIncrExpAggAmt2LkTrvFrgnCntryFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.IncrExpAggAmt2LkTrvFrgnCntryFlg;
+                this.ITR_Obj.seventhProviso139.incrExpAggAmt2LkTrvFrgnCntryFlg =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.AmtSeventhProvisio139ii;
+
+                if (this.ITR_Type === 'ITR1') {
+                  this.ITR_Obj.seventhProviso139.clauseiv7provisio139i =
+                    ItrJSON[this.ITR_Type]?.FilingStatus?.clauseiv7provisio139i;
+                  this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
+                    ItrJSON[
+                      this.ITR_Type
+                    ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
+                      (element) => ({
+                        nature: parseFloat(
+                          element?.clauseiv7provisio139iNature
+                        ),
+                        amount: parseFloat(
+                          element?.clauseiv7provisio139iAmount
+                        ),
+                      })
+                    );
+
+                  // 1cr is not present in seventhProvisio for ITR1 so setting it as N
+                  this.ITR_Obj.seventhProviso139.strDepAmtAggAmtExcd1CrPrYrFlg =
+                    'N';
+                } else if (this.ITR_Type === 'ITR4') {
+                  this.ITR_Obj.seventhProviso139.clauseiv7provisio139i =
+                    ItrJSON[this.ITR_Type]?.FilingStatus?.clauseiv7provisio139i;
+                  this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
+                    ItrJSON[
+                      this.ITR_Type
+                    ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
+                      (element) => ({
+                        nature: parseFloat(
+                          element?.clauseiv7provisio139iNature
+                        ),
+                        amount: parseFloat(
+                          element?.clauseiv7provisio139iAmount
+                        ),
+                      })
+                    );
+
+                  this.ITR_Obj.seventhProviso139.strDepAmtAggAmtExcd1CrPrYrFlg =
+                    ItrJSON[
+                      this.ITR_Type
+                    ]?.FilingStatus?.DepAmtAggAmtExcd1CrPrYrFlg;
+                  this.ITR_Obj.seventhProviso139.depAmtAggAmtExcd1CrPrYrFlg =
+                    ItrJSON[
+                      this.ITR_Type
+                    ]?.FilingStatus?.AmtSeventhProvisio139i;
                 }
               }
             }
@@ -1841,7 +1927,8 @@ export class PrefillIdComponent implements OnInit {
                       : housePropertyDetails?.TypeOfHP,
                   grossAnnualRentReceivedTotal:
                     housePropertyDetails?.GrossRentReceived,
-                  grossAnnualRentReceived: null,
+                  grossAnnualRentReceived:
+                    housePropertyDetails?.GrossRentReceived,
 
                   propertyTax: housePropertyDetails?.TaxPaidlocalAuth,
                   ownerPercentage: null,
@@ -1874,6 +1961,15 @@ export class PrefillIdComponent implements OnInit {
                               housePropertyDetails?.InterestPayable,
                           },
                         ],
+                  ArrearsUnrealizedRentRcvd: Math.round(
+                    housePropertyDetails?.ArrearsUnrealizedRentRcvd
+                  ),
+                  totalArrearsUnrealizedRentReceived:
+                    (Math.round(
+                      housePropertyDetails?.ArrearsUnrealizedRentRcvd
+                    ) *
+                      100) /
+                    30,
                 };
 
                 this.ITR_Obj.houseProperties.push(hpKeys);
@@ -2843,10 +2939,14 @@ export class PrefillIdComponent implements OnInit {
               this.ITR_Obj.aadharNumber =
                 ItrJSON[this.ITR_Type].PartA_GEN1.PersonalInfo?.AadhaarCardNo;
 
-              // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
-              this.parseAndFormatDate(
-                ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.DOB
-              );
+              (this.ITR_Obj.aadhaarEnrolmentId =
+                ItrJSON[
+                  this.ITR_Type
+                ]?.PartA_GEN1?.PersonalInfo?.AadhaarEnrolmentId),
+                // Date is converted in the required format by BO which is utc we get normat date 29/01/2000 from JSON
+                this.parseAndFormatDate(
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.PersonalInfo?.DOB
+                );
               this.ITR_Obj.family[0].dateOfBirth = new Date(this.utcDate);
             }
 
@@ -2918,6 +3018,59 @@ export class PrefillIdComponent implements OnInit {
                     }
                   );
                 }
+              }
+
+              // SEVENTH PROVISIO DETAILS
+              {
+                this.ITR_Obj.seventhProviso139 = {
+                  seventhProvisio139: 'N',
+                  strDepAmtAggAmtExcd1CrPrYrFlg: null,
+                  depAmtAggAmtExcd1CrPrYrFlg: null,
+                  strIncrExpAggAmt2LkTrvFrgnCntryFlg: null,
+                  incrExpAggAmt2LkTrvFrgnCntryFlg: null,
+                  strIncrExpAggAmt1LkElctrctyPrYrFlg: null,
+                  incrExpAggAmt1LkElctrctyPrYrFlg: null,
+                  clauseiv7provisio139i: null,
+                  clauseiv7provisio139iDtls: null,
+                };
+
+                this.ITR_Obj.seventhProviso139.seventhProvisio139 =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.SeventhProvisio139;
+
+                this.ITR_Obj.seventhProviso139.strIncrExpAggAmt1LkElctrctyPrYrFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.IncrExpAggAmt1LkElctrctyPrYrFlg;
+                this.ITR_Obj.seventhProviso139.incrExpAggAmt1LkElctrctyPrYrFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.AmtSeventhProvisio139iii;
+
+                this.ITR_Obj.seventhProviso139.strIncrExpAggAmt2LkTrvFrgnCntryFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.IncrExpAggAmt2LkTrvFrgnCntryFlg;
+                this.ITR_Obj.seventhProviso139.incrExpAggAmt2LkTrvFrgnCntryFlg =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.AmtSeventhProvisio139ii;
+
+                this.ITR_Obj.seventhProviso139.clauseiv7provisio139i =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.clauseiv7provisio139i;
+                this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
+                    (element) => ({
+                      nature: parseFloat(element?.clauseiv7provisio139iNature),
+                      amount: parseFloat(element?.clauseiv7provisio139iAmount),
+                    })
+                  );
+
+                this.ITR_Obj.seventhProviso139.strDepAmtAggAmtExcd1CrPrYrFlg =
+                  ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.DepAmtAggAmtExcd1CrPrYrFlg;
+                this.ITR_Obj.seventhProviso139.depAmtAggAmtExcd1CrPrYrFlg =
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.AmtSeventhProvisio139i;
               }
             }
 
@@ -3018,12 +3171,325 @@ export class PrefillIdComponent implements OnInit {
                   this.ITR_Obj.systemFlags.haveUnlistedShares = false;
                 }
               }
+
+              // partnership firm details
+              {
+                if (this.ITR_Type === 'ITR3') {
+                  this.ITR_Obj.partnerInFirmFlag =
+                    ItrJSON[
+                      this.ITR_Type
+                    ]?.PartA_GEN1?.FilingStatus?.PartnerInFirmFlg;
+                  this.ITR_Obj.partnerInFirms = ItrJSON[
+                    this.ITR_Type
+                  ]?.PartA_GEN1?.FilingStatus?.PartnerInFirm?.PartnerInFirmDtls?.map(
+                    (element) => ({
+                      name: element?.NameOfFirm,
+                      panNumber: element?.PAN,
+                    })
+                  );
+
+                  // setting partnership firm object
+                  {
+                    if (!this.ITR_Obj.partnerFirms) {
+                      this.ITR_Obj.partnerFirms = [];
+                    }
+
+                    this.ITR_Obj.partnerFirms = ItrJSON[
+                      this.ITR_Type
+                    ]?.ScheduleIF?.PartnerFirmDetails?.map((element) => ({
+                      name: element?.FirmName,
+                      panNumber: element?.FirmPAN,
+                      isLiableToAudit: element?.IsLiableToAudit,
+                      sec92EFirmFlag: element?.Sec92EFirmFlag,
+                      profitSharePercent: element?.ProfitSharePercent,
+                      profitShareAmount: element?.ProfitShareAmt,
+                      capitalBalanceOn31stMarch: element?.FirmCapBalOn31Mar,
+                    }));
+                  }
+                }
+              }
+
+              // setting schedule5A portuguese code
+              {
+                if (ItrJSON[this.ITR_Type]?.Schedule5A2014) {
+                  if (!this.ITR_Obj.schedule5a) {
+                    this.ITR_Obj.schedule5a = {
+                      nameOfSpouse: null,
+                      panOfSpouse: null,
+                      aadhaarOfSpouse: null,
+                      booksSpouse44ABFlg: null,
+                      booksSpouse92EFlg: null,
+                      headIncomes: [],
+                    };
+                  }
+
+                  this.ITR_Obj.schedule5a.nameOfSpouse =
+                    ItrJSON[this.ITR_Type]?.Schedule5A2014?.NameOfSpouse;
+                  this.ITR_Obj.schedule5a.panOfSpouse =
+                    ItrJSON[this.ITR_Type]?.Schedule5A2014?.PANOfSpouse;
+
+                  this.ITR_Obj.portugeseCC5AFlag = 'Y';
+
+                  if (this.ITR_Type === 'ITR3') {
+                    this.ITR_Obj.schedule5a.aadhaarOfSpouse =
+                      ItrJSON[this.ITR_Type]?.Schedule5A2014?.AadhaarOfSpouse;
+
+                    this.ITR_Obj.schedule5a.booksSpouse44ABFlg =
+                      ItrJSON[
+                        this.ITR_Type
+                      ]?.Schedule5A2014?.BooksSpouse44ABFlg;
+
+                    this.ITR_Obj.schedule5a.booksSpouse92EFlg =
+                      ItrJSON[this.ITR_Type]?.Schedule5A2014?.BooksSpouse92EFlg;
+                  } else {
+                    this.ITR_Obj.schedule5a.booksSpouse44ABFlg = 'N';
+                    this.ITR_Obj.schedule5a.booksSpouse92EFlg = 'N';
+                  }
+
+                  const originalValue = [
+                    ItrJSON[this.ITR_Type]?.Schedule5A2014?.HPHeadIncome,
+                    ItrJSON[this.ITR_Type]?.Schedule5A2014?.CapGainHeadIncome,
+                    ItrJSON[this.ITR_Type]?.Schedule5A2014
+                      ?.OtherSourcesHeadIncome,
+                    this.ITR_Type === 'ITR3'
+                      ? ItrJSON[this.ITR_Type]?.Schedule5A2014?.BusHeadIncome
+                      : null,
+                  ];
+
+                  const transformObject = (originalObject, typeOfIncome) => ({
+                    apportionedAmountOfSpouse:
+                      originalObject?.AmtApprndOfSpouse || 0,
+                    apportionedTDSOfSpouse:
+                      originalObject?.TDSApprndOfSpouse || 0,
+                    headOfIncome: typeOfIncome || '',
+                    incomeReceived: originalObject?.IncRecvdUndHead || 0,
+                    tdsDeductedAmount: originalObject?.AmtTDSDeducted || 0,
+                  });
+
+                  // Transform the original object
+                  originalValue?.forEach((element, index) => {
+                    const headOfIncome = [
+                      'HP',
+                      'CAPITAL_GAIN',
+                      'OTHER_SOURCE',
+                      'BUSINESS',
+                    ]?.[index];
+
+                    if (element) {
+                      const transformedObject = transformObject(
+                        element,
+                        headOfIncome
+                      );
+
+                      if (transformedObject) {
+                        this.ITR_Obj.schedule5a?.headIncomes?.push(
+                          transformedObject
+                        );
+                      }
+                    }
+                  });
+                } else {
+                  this.ITR_Obj.portugeseCC5AFlag = 'N';
+                }
+              }
             }
           }
 
           //SALARY - FOR ITR 2 SALARY ALLOWANCES ARE BEING SET AGAINST 1ST EMPLOYER ONLY
           {
             const salaries = ItrJSON[this.ITR_Type].ScheduleS?.Salaries;
+            const salaryTypes = [
+              { code: 'SEC17_1', desc: 'Salary' },
+              { code: 'BASIC_SALARY', desc: 'Basic Salary', natureDesc: '1' },
+              { code: 'DA', desc: 'Dearness Allowance', natureDesc: '2' },
+              {
+                code: 'CONVEYANCE',
+                desc: 'Conveyance Allowance',
+                natureDesc: '3',
+              },
+              {
+                code: 'HOUSE_RENT',
+                desc: 'House Rent Allowance',
+                natureDesc: '4',
+              },
+              { code: 'LTA', desc: 'Leave Travel Allowance', natureDesc: '5' },
+              {
+                code: 'CHILDREN_EDUCATION',
+                desc: 'Children Education Allowance',
+                natureDesc: '6',
+              },
+              {
+                code: 'OTHER_ALLOWANCE',
+                desc: 'Other Allowance',
+                natureDesc: '7',
+              },
+              {
+                code: 'CONTRI_80CCD',
+                desc: 'Contribution towards pension scheme (80CCD)',
+                natureDesc: '8',
+              },
+              {
+                code: 'RULE11',
+                desc: 'Amount deemed to be income under rule 11 of Fourth Schedule',
+                natureDesc: '9',
+              },
+              {
+                code: 'RULE6',
+                desc: 'Amount deemed to be income under rule 6 of Fourth Schedule',
+                natureDesc: '10',
+              },
+              {
+                code: 'ANN_PENSION',
+                desc: 'Annuity or Pension',
+                natureDesc: '11',
+              },
+              {
+                code: 'COMM_PENSION',
+                desc: 'Commuted Pension',
+                natureDesc: '12',
+              },
+              { code: 'GRATUITY', desc: 'Gratuity', natureDesc: '13' },
+              {
+                code: 'FEES_COMMISSION',
+                desc: 'Fees/Commission',
+                natureDesc: '14',
+              },
+              {
+                code: 'ADV_SALARY',
+                desc: 'Advance of Salary',
+                natureDesc: '15',
+              },
+              {
+                code: 'LEAVE_ENCASH',
+                desc: 'Leave Encashment',
+                natureDesc: '16',
+              },
+              {
+                code: 'CONTRI_80CCH',
+                desc: 'Contribution by central government towards Agnipath scheme (80CCH)',
+                natureDesc: '17',
+              },
+              { code: 'OTH', desc: 'Others', natureDesc: 'OTH' },
+            ];
+            const perquisiteTypes = [
+              {
+                code: 'SEC17_2',
+                desc: 'Income chargeable under the head Perquisities',
+                natureDesc: null,
+              },
+              { code: 'ACCOMODATION', desc: 'Accommodation', natureDesc: '1' },
+              {
+                code: 'MOTOR_CAR',
+                desc: 'Cars / Other Automotive',
+                natureDesc: '2',
+              },
+              {
+                code: 'SWEEPER_GARDNER_WATCHMAN_OR_PERSONAL_ATTENDANT',
+                desc: 'Sweeper, gardener, watchman, or personal attendant',
+                natureDesc: '3',
+              },
+              {
+                code: 'GAST_ELECTRICITY_WATER',
+                desc: 'Gas, electricity, water',
+                natureDesc: '4',
+              },
+              {
+                code: 'INTEREST_FREE_LOANS',
+                desc: 'Interest-free or concessional loans',
+                natureDesc: '5',
+              },
+              {
+                code: 'HOLIDAY_EXPENSES',
+                desc: 'Holiday expenses',
+                natureDesc: '6',
+              },
+              {
+                code: 'FREE_OR_CONCESSIONAL_TRAVEL',
+                desc: 'Free or concessional travel',
+                natureDesc: '7',
+              },
+              { code: 'FREE_MEALS', desc: 'Free meals', natureDesc: '8' },
+              { code: 'FREE_EDU', desc: 'Free education', natureDesc: '9' },
+              {
+                code: 'GIFT_VOUCHERS',
+                desc: 'Gifts, vouchers, etc.',
+                natureDesc: '10',
+              },
+              {
+                code: 'CREDIT_CARD_EXPENSES',
+                desc: 'Credit card expenses',
+                natureDesc: '11',
+              },
+              { code: 'CLUB_EXP', desc: 'Club expenses', natureDesc: '12' },
+              {
+                code: 'USE_OF_MOVABLE_ASSETS_BY_EMPLOYEE',
+                desc: 'Use of movable assets by employees',
+                natureDesc: '13',
+              },
+              {
+                code: 'TRANSFER_OF_ASSET_TO_EMPLOYEE',
+                desc: 'Transfer of assets to employee',
+                natureDesc: '14',
+              },
+              {
+                code: 'VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE',
+                desc: 'Value of other benefits/amenities/service/privilege',
+                natureDesc: '15',
+              },
+              {
+                code: 'SECTION_80_IAC_TAX_TO_BE_DEFERED',
+                desc: 'Stock options allotted or transferred by employer being an eligible start-up referred to in section 80-IAC-Tax to be deferred',
+                natureDesc: '16',
+              },
+              {
+                code: 'STOCK_OPTIONS_OTHER_THAN_ESOP',
+                desc: 'Stock options (non-qualified options) other than ESOP',
+                natureDesc: '17',
+              },
+              {
+                code: 'SCHEME_TAXABLE_US_17_2_VII',
+                desc: 'Contribution by employer to fund and scheme taxable under section 17(2)(vii)',
+                natureDesc: '18',
+              },
+              {
+                code: 'SCHEME_TAXABLE_US_17_2_VIIA',
+                desc: 'Annual accretion by way of interest, dividend etc. to the balance at the credit of fund and scheme referred to in section 17(2)(vii) and taxable under section 17(2)(viia)',
+                natureDesc: '19',
+              },
+              {
+                code: 'SECTION_80_IAC_TAX_NOT_TO_BE_DEFERED',
+                desc: 'Stock options allotted or transferred by employer being an eligible start-up referred to in section 80-IAC-Tax not to be deferred',
+                natureDesc: '21',
+              },
+              {
+                code: 'OTH_BENEFITS_AMENITIES',
+                desc: 'Other benefits or amenities',
+                natureDesc: 'OTH',
+              },
+            ];
+            const profitInLieuTypes = [
+              {
+                code: 'SEC17_3',
+                desc: 'Income chargeable under the head profitInLieu',
+                natureDesc: null,
+              },
+              {
+                code: 'COMPENSATION_ON_VRS',
+                desc: 'Compensation due/received by an assessee from his employer or former employer in connection with the termination of his employment or modification thereto',
+                natureDesc: '1',
+              },
+              {
+                code: 'PAYMENT_DUE',
+                desc: 'Any payment due/received by an assessee from his employer or a former employer or from a provident or other fund, sum received under Keyman Insurance Policy including Bonus thereto',
+                natureDesc: '2',
+              },
+              {
+                code: 'AMOUNT_DUE',
+                desc: 'Any amount due/received by assessee from any person before joining or after cessation of employment with that person',
+                natureDesc: '3',
+              },
+              { code: 'ANY_OTHER', desc: 'Any Other', natureDesc: 'OTH' },
+            ];
 
             if (salaries && salaries !== 0) {
               this.ITR_Obj.systemFlags.hasSalary = true;
@@ -3046,13 +3512,32 @@ export class PrefillIdComponent implements OnInit {
                   exemptIncome: null,
                   taxRelief: null,
                   taxDeducted: null,
-                  salary: [
-                    {
-                      salaryType: 'SEC17_1',
-                      taxableAmount: salary.Salarys?.Salary,
-                      exemptAmount: 0,
-                    },
-                  ],
+                  salary: salaryTypes
+                    .map((type) => {
+                      if (type?.code === 'SEC17_1') {
+                        return {
+                          salaryType: type.code,
+                          taxableAmount: salary?.Salarys?.Salary,
+                          exemptAmount: 0,
+                        };
+                      } else {
+                        let amount =
+                          salary?.Salarys?.NatureOfSalary?.OthersIncDtls?.find(
+                            (element) =>
+                              element?.NatureDesc === type?.natureDesc
+                          )?.OthAmount || 0;
+                        if (amount && amount > 0) {
+                          return {
+                            salaryType: type?.code,
+                            taxableAmount: amount,
+                            exemptAmount: 0,
+                          };
+                        } else {
+                          return null;
+                        }
+                      }
+                    })
+                    .filter(Boolean),
                   allowance:
                     this.regime === 'NEW'
                       ? [
@@ -3113,26 +3598,106 @@ export class PrefillIdComponent implements OnInit {
                             taxableAmount: 0,
                             exemptAmount: null,
                           },
+
+                          {
+                            allowanceType: 'REMUNERATION_REC',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+                          {
+                            allowanceType: 'US_10_7',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+                          {
+                            allowanceType: 'FIRST_PROVISO',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+                          {
+                            allowanceType: 'SECOND_PROVISO',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+                          {
+                            allowanceType: 'COMPENSATION_ON_VRS',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+                          {
+                            allowanceType: 'NON_MONETARY_PERQUISITES',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+                          {
+                            allowanceType: 'US_10_14I',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
+
+                          {
+                            allowanceType: 'US_10_14II',
+                            taxableAmount: 0,
+                            exemptAmount: null,
+                          },
                           {
                             allowanceType: 'ALL_ALLOWANCES',
                             taxableAmount: 0,
                             exemptAmount: null,
                           },
                         ],
-                  perquisites: [
-                    {
-                      perquisiteType: 'SEC17_2',
-                      taxableAmount: salary.Salarys?.ValueOfPerquisites,
-                      exemptAmount: 0,
-                    },
-                  ],
-                  profitsInLieuOfSalaryType: [
-                    {
-                      salaryType: 'SEC17_3',
-                      taxableAmount: salary.Salarys?.ProfitsinLieuOfSalary,
-                      exemptAmount: 0,
-                    },
-                  ],
+                  perquisites: perquisiteTypes
+                    .map((type) => {
+                      if (type?.code === 'SEC17_2') {
+                        return {
+                          perquisiteType: type.code,
+                          taxableAmount: salary?.Salarys?.ValueOfPerquisites,
+                          exemptAmount: 0,
+                        };
+                      } else {
+                        let amount =
+                          salary?.Salarys?.NatureOfPerquisites?.OthersIncDtls?.find(
+                            (element) =>
+                              element?.NatureDesc === type?.natureDesc
+                          )?.OthAmount || 0;
+                        if (amount && amount > 0) {
+                          return {
+                            perquisiteType: type?.code,
+                            taxableAmount: amount,
+                            exemptAmount: 0,
+                          };
+                        } else {
+                          return null;
+                        }
+                      }
+                    })
+                    .filter(Boolean),
+                  profitsInLieuOfSalaryType: profitInLieuTypes
+                    .map((type) => {
+                      if (type?.code === 'SEC17_3') {
+                        return {
+                          salaryType: type.code,
+                          taxableAmount: salary?.Salarys?.ProfitsinLieuOfSalary,
+                          exemptAmount: 0,
+                        };
+                      } else {
+                        let amount =
+                          salary?.Salarys?.NatureOfProfitInLieuOfSalary?.OthersIncDtls?.find(
+                            (element) =>
+                              element?.NatureDesc === type?.natureDesc
+                          )?.OthAmount || 0;
+                        if (amount && amount > 0) {
+                          return {
+                            salaryType: type?.code,
+                            taxableAmount: amount,
+                            exemptAmount: 0,
+                          };
+                        } else {
+                          return null;
+                        }
+                      }
+                    })
+                    .filter(Boolean),
                   deductions:
                     this.regime === 'NEW'
                       ? []
@@ -3214,7 +3779,8 @@ export class PrefillIdComponent implements OnInit {
                       : 'LOP',
                   grossAnnualRentReceivedTotal:
                     houseProperty?.Rentdetails?.AnnualLetableValue,
-                  grossAnnualRentReceived: null,
+                  grossAnnualRentReceived:
+                    houseProperty?.Rentdetails?.AnnualLetableValue,
 
                   // Not able to map annualValue as we are not storing it in the ITRobject. The final annual value and deduction are wrong for itr2
                   propertyTax: houseProperty?.Rentdetails?.LocalTaxes,
@@ -3267,6 +3833,15 @@ export class PrefillIdComponent implements OnInit {
                       interestAmount: houseProperty?.Rentdetails?.IntOnBorwCap,
                     },
                   ],
+                  ArrearsUnrealizedRentRcvd: Math.round(
+                    houseProperty?.Rentdetails?.ArrearsUnrealizedRentRcvd
+                  ),
+                  totalArrearsUnrealizedRentReceived:
+                    (Math.round(
+                      houseProperty?.Rentdetails?.ArrearsUnrealizedRentRcvd
+                    ) *
+                      100) /
+                    30,
                 };
                 this.ITR_Obj.houseProperties.push(housePropertyDetails);
               });
@@ -3380,6 +3955,62 @@ export class PrefillIdComponent implements OnInit {
               });
             }
 
+            // pf 10 11 I
+            const pfInterest1011IP =
+              this.uploadedJson[this.ITR_Type]?.ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.IntrstSec10XIFirstProviso;
+
+            if (pfInterest1011IP && pfInterest1011IP !== 0) {
+              this.ITR_Obj.incomes.push({
+                incomeType: 'INTEREST_ACCRUED_10_11_I_P',
+                details: '',
+                amount: pfInterest1011IP,
+                expenses: null,
+              });
+            }
+
+            // pf 10 11 II
+            const pfInterest1011IIP =
+              this.uploadedJson[this.ITR_Type]?.ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.IntrstSec10XISecondProviso;
+
+            if (pfInterest1011IIP && pfInterest1011IIP !== 0) {
+              this.ITR_Obj.incomes.push({
+                incomeType: 'INTEREST_ACCRUED_10_11_II_P',
+                details: '',
+                amount: pfInterest1011IIP,
+                expenses: null,
+              });
+            }
+
+            // pf 10 12 I
+            const pfInterest1012IP =
+              this.uploadedJson[this.ITR_Type]?.ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.IntrstSec10XIIFirstProviso;
+
+            if (pfInterest1012IP && pfInterest1012IP !== 0) {
+              this.ITR_Obj.incomes.push({
+                incomeType: 'INTEREST_ACCRUED_10_12_I_P',
+                details: '',
+                amount: pfInterest1012IP,
+                expenses: null,
+              });
+            }
+
+            // pf 10 12 I
+            const pfInterest1012IIP =
+              this.uploadedJson[this.ITR_Type]?.ScheduleOS
+                ?.IncOthThanOwnRaceHorse?.IntrstSec10XIISecondProviso;
+
+            if (pfInterest1012IIP && pfInterest1012IIP !== 0) {
+              this.ITR_Obj.incomes.push({
+                incomeType: 'INTEREST_ACCRUED_10_12_II_P',
+                details: '',
+                amount: pfInterest1012IIP,
+                expenses: null,
+              });
+            }
+
             // any other
             const IncChargeable =
               this.uploadedJson[this.ITR_Type].ScheduleOS?.IncChargeable;
@@ -3394,9 +4025,41 @@ export class PrefillIdComponent implements OnInit {
                   IntrstFrmTermDeposit -
                   IntrstFrmIncmTaxRefund -
                   FamilyPension -
-                  DividendGross,
+                  DividendGross -
+                  pfInterest1011IP -
+                  pfInterest1011IIP -
+                  pfInterest1012IP -
+                  pfInterest1012IIP,
                 expenses: null,
               });
+            }
+
+            // gift income
+            {
+              this.ITR_Obj.giftTax.aggregateValueWithoutConsideration =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].ScheduleOS?.IncOthThanOwnRaceHorse?.Aggrtvaluewithoutcons562x;
+
+              this.ITR_Obj.giftTax.anyOtherPropertyInadequateConsideration =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].ScheduleOS?.IncOthThanOwnRaceHorse?.Anyotherpropinadeqcons562x;
+
+              this.ITR_Obj.giftTax.anyOtherPropertyWithoutConsideration =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].ScheduleOS?.IncOthThanOwnRaceHorse?.Anyotherpropwithoutcons562x;
+
+              this.ITR_Obj.giftTax.immovablePropertyInadequateConsideration =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].ScheduleOS?.IncOthThanOwnRaceHorse?.Immovpropinadeqcons562x;
+
+              this.ITR_Obj.giftTax.immovablePropertyWithoutConsideration =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].ScheduleOS?.IncOthThanOwnRaceHorse?.Immovpropwithoutcons562x;
             }
           }
 
@@ -3691,6 +4354,55 @@ export class PrefillIdComponent implements OnInit {
                 (value) => value.NatureDesc
               );
               this.updateExemptIncomes(availableExemptIncomes, this.ITR_Type);
+            }
+
+            // agriculture rebate
+            {
+              if (!this.ITR_Obj.agriculturalIncome) {
+                this.ITR_Obj.agriculturalIncome = {
+                  agriIncomePortionRule7: null,
+                  expenditureIncurredOnAgriculture: null,
+                  grossAgriculturalReceipts: null,
+                  netAgriculturalIncome: null,
+                  unabsorbedAgriculturalLoss: null,
+                };
+              }
+
+              this.ITR_Obj.agriculturalIncome.expenditureIncurredOnAgriculture =
+                this.uploadedJson[this.ITR_Type].ScheduleEI?.ExpIncAgri;
+
+              this.ITR_Obj.agriculturalIncome.grossAgriculturalReceipts =
+                this.uploadedJson[this.ITR_Type].ScheduleEI?.GrossAgriRecpt;
+
+              this.ITR_Obj.agriculturalIncome.netAgriculturalIncome =
+                this.uploadedJson[
+                  this.ITR_Type
+                ].ScheduleEI?.NetAgriIncOrOthrIncRule7;
+
+              this.ITR_Obj.agriculturalIncome.unabsorbedAgriculturalLoss =
+                this.uploadedJson[this.ITR_Type].ScheduleEI?.UnabAgriLossPrev8;
+
+              // agriculture land details
+              {
+                const agriLandDetails =
+                  this.uploadedJson[this.ITR_Type].ScheduleEI?.ExcNetAgriInc
+                    ?.ExcNetAgriIncDtls;
+
+                if (agriLandDetails && agriLandDetails?.length > 0) {
+                  if (!this.ITR_Obj.agriculturalLandDetails) {
+                    this.ITR_Obj.agriculturalLandDetails = [];
+                  }
+                  this.ITR_Obj.agriculturalLandDetails = agriLandDetails?.map(
+                    (element) => ({
+                      landInAcre: element?.MeasurementOfLand,
+                      nameOfDistrict: element?.NameOfDistrict,
+                      owner: element?.AgriLandOwnedFlag,
+                      pinCode: element?.PinCode,
+                      typeOfLand: element?.AgriLandIrrigatedFlag,
+                    })
+                  );
+                }
+              }
             }
 
             sessionStorage.setItem(
@@ -4181,7 +4893,7 @@ export class PrefillIdComponent implements OnInit {
                     ?.LongTermCapGain23?.SaleofLandBuild?.SaleofLandBuildDtls;
 
                 if (SaleofLandBuildDtls) {
-                  SaleofLandBuildDtls?.forEach(({ landAndBuilding }, index) => {
+                  SaleofLandBuildDtls?.forEach((landAndBuilding, index) => {
                     if (
                       landAndBuilding?.FullConsideration &&
                       landAndBuilding?.FullConsideration !== 0 &&
@@ -4193,41 +4905,43 @@ export class PrefillIdComponent implements OnInit {
                         assesseeType: this.ITR_Obj.assesseeType,
                         residentialStatus: this.ITR_Obj.residentialStatus,
                         assetType: 'PLOT_OF_LAND',
-                        deduction: landAndBuilding?.ExemptionOrDednUs54
-                          ?.ExemptionOrDednUs54Dtls
-                          ? landAndBuilding?.ExemptionOrDednUs54?.ExemptionOrDednUs54Dtls?.map(
-                              (
-                                { ExemptionSecCode, ExemptionAmount },
-                                index
-                              ) => ({
+                        deduction: [
+                          landAndBuilding?.ExemptionOrDednUs54
+                            ?.ExemptionOrDednUs54Dtls
+                            ? landAndBuilding?.ExemptionOrDednUs54?.ExemptionOrDednUs54Dtls?.map(
+                                (
+                                  { ExemptionSecCode, ExemptionAmount },
+                                  index
+                                ) => ({
+                                  srn: index,
+                                  underSection: ExemptionSecCode,
+                                  orgAssestTransferDate: null,
+                                  purchaseDate: null,
+                                  panOfEligibleCompany: null,
+                                  purchaseDatePlantMachine: null,
+                                  costOfNewAssets: null,
+                                  investmentInCGAccount: null,
+                                  totalDeductionClaimed: ExemptionAmount
+                                    ? ExemptionAmount
+                                    : null,
+                                  costOfPlantMachinary: null,
+                                  usedDeduction: null,
+                                })
+                              )
+                            : {
                                 srn: index,
-                                underSection: ExemptionSecCode,
+                                underSection: 'Deduction 54F',
                                 orgAssestTransferDate: null,
                                 purchaseDate: null,
                                 panOfEligibleCompany: null,
                                 purchaseDatePlantMachine: null,
                                 costOfNewAssets: null,
                                 investmentInCGAccount: null,
-                                totalDeductionClaimed: ExemptionAmount
-                                  ? ExemptionAmount
-                                  : null,
+                                totalDeductionClaimed: null,
                                 costOfPlantMachinary: null,
                                 usedDeduction: null,
-                              })
-                            )
-                          : {
-                              srn: index,
-                              underSection: 'Deduction 54F',
-                              orgAssestTransferDate: null,
-                              purchaseDate: null,
-                              panOfEligibleCompany: null,
-                              purchaseDatePlantMachine: null,
-                              costOfNewAssets: null,
-                              investmentInCGAccount: null,
-                              totalDeductionClaimed: null,
-                              costOfPlantMachinary: null,
-                              usedDeduction: null,
-                            },
+                              },
+                        ],
                         improvement: [
                           {
                             id: null,
@@ -4278,8 +4992,8 @@ export class PrefillIdComponent implements OnInit {
                                 ? landAndBuilding?.DateofSale
                                 : '2023-03-15'
                             ),
-                            sellValue: null,
-                            stampDutyValue: null,
+                            sellValue: landAndBuilding?.FullConsideration,
+                            stampDutyValue: landAndBuilding?.PropertyValuation,
                             valueInConsideration:
                               landAndBuilding?.FullConsideration50C,
                             sellExpense: landAndBuilding?.ExpOnTrans,
@@ -4690,124 +5404,120 @@ export class PrefillIdComponent implements OnInit {
                     ?.SaleofLandBuildDtls;
 
                 if (SaleofLandBuildDtlsStcg) {
-                  SaleofLandBuildDtlsStcg?.forEach(
-                    ({ landAndBuilding }, index) => {
-                      if (
-                        landAndBuilding?.FullConsideration &&
-                        landAndBuilding?.FullConsideration !== 0 &&
-                        landAndBuilding?.Balance &&
-                        landAndBuilding?.Balance !== 0
-                      ) {
-                        const SaleofLandBuildStcgDetails = {
-                          assessmentYear: this.ITR_Obj.assessmentYear,
-                          assesseeType: this.ITR_Obj.assesseeType,
-                          residentialStatus: this.ITR_Obj.residentialStatus,
-                          assetType: 'PLOT_OF_LAND',
-                          deduction: [
-                            {
+                  SaleofLandBuildDtlsStcg?.forEach((landAndBuilding, index) => {
+                    if (
+                      landAndBuilding?.FullConsideration &&
+                      landAndBuilding?.FullConsideration !== 0 &&
+                      landAndBuilding?.Balance &&
+                      landAndBuilding?.Balance !== 0
+                    ) {
+                      const SaleofLandBuildStcgDetails = {
+                        assessmentYear: this.ITR_Obj.assessmentYear,
+                        assesseeType: this.ITR_Obj.assesseeType,
+                        residentialStatus: this.ITR_Obj.residentialStatus,
+                        assetType: 'PLOT_OF_LAND',
+                        deduction: [
+                          {
+                            srn: index,
+                            underSection: 'Deduction 54F',
+                            orgAssestTransferDate: null,
+                            purchaseDate: null,
+                            panOfEligibleCompany: null,
+                            purchaseDatePlantMachine: null,
+                            costOfNewAssets: null,
+                            investmentInCGAccount: null,
+                            totalDeductionClaimed: null,
+                            costOfPlantMachinary: null,
+                            usedDeduction: null,
+                          },
+                        ],
+                        improvement: [
+                          {
+                            id: null,
+                            srn: index,
+                            financialYearOfImprovement: null,
+                            dateOfImprovement: null,
+                            costOfImprovement: landAndBuilding?.ImproveCost
+                              ? landAndBuilding?.ImproveCost
+                              : null,
+                            indexCostOfImprovement: null,
+                          },
+                        ],
+                        buyersDetails:
+                          landAndBuilding.TrnsfImmblPrprty?.TrnsfImmblPrprtyDtls?.map(
+                            (
+                              {
+                                NameOfBuyer,
+                                PANofBuyer,
+                                PercentageShare,
+                                Amount,
+                                AddressOfProperty,
+                                StateCode,
+                                CountryCode,
+                                PinCode,
+                              },
+                              index
+                            ) => ({
+                              aadhaarNumber: null,
+                              address: AddressOfProperty,
+                              amount: Amount,
+                              country: CountryCode,
+                              name: NameOfBuyer,
+                              pan: PANofBuyer,
+                              pin: PinCode,
+                              share: PercentageShare,
                               srn: index,
-                              underSection: 'Deduction 54F',
-                              orgAssestTransferDate: null,
-                              purchaseDate: null,
-                              panOfEligibleCompany: null,
-                              purchaseDatePlantMachine: null,
-                              costOfNewAssets: null,
-                              investmentInCGAccount: null,
-                              totalDeductionClaimed: null,
-                              costOfPlantMachinary: null,
-                              usedDeduction: null,
-                            },
-                          ],
-                          improvement: [
-                            {
-                              id: null,
-                              srn: index,
-                              financialYearOfImprovement: null,
-                              dateOfImprovement: null,
-                              costOfImprovement: landAndBuilding?.ImproveCost
-                                ? landAndBuilding?.ImproveCost
-                                : null,
-                              indexCostOfImprovement: null,
-                            },
-                          ],
-                          buyersDetails:
-                            landAndBuilding.TrnsfImmblPrprty?.TrnsfImmblPrprtyDtls?.map(
-                              (
-                                {
-                                  NameOfBuyer,
-                                  PANofBuyer,
-                                  PercentageShare,
-                                  Amount,
-                                  AddressOfProperty,
-                                  StateCode,
-                                  CountryCode,
-                                  PinCode,
-                                },
-                                index
-                              ) => ({
-                                aadhaarNumber: null,
-                                address: AddressOfProperty,
-                                amount: Amount,
-                                country: CountryCode,
-                                name: NameOfBuyer,
-                                pan: PANofBuyer,
-                                pin: PinCode,
-                                share: PercentageShare,
-                                srn: index,
-                                state: StateCode,
-                              })
+                              state: StateCode,
+                            })
+                          ),
+                        assetDetails: [
+                          {
+                            id: null,
+                            hasIndexation: null,
+                            isUploaded: null,
+                            srn: index,
+                            description: null,
+                            gainType: 'SHORT',
+                            sellDate: this.parseAndFormatDate(
+                              landAndBuilding?.DateofSale
+                                ? landAndBuilding?.DateofSale
+                                : '2023-03-15'
                             ),
-                          assetDetails: [
-                            {
-                              id: null,
-                              hasIndexation: null,
-                              isUploaded: null,
-                              srn: index,
-                              description: null,
-                              gainType: 'SHORT',
-                              sellDate: this.parseAndFormatDate(
-                                landAndBuilding?.DateofSale
-                                  ? landAndBuilding?.DateofSale
-                                  : '2023-03-15'
-                              ),
-                              sellValue: null,
-                              stampDutyValue: null,
-                              valueInConsideration:
-                                landAndBuilding?.FullConsideration50C,
-                              sellExpense: landAndBuilding?.ExpOnTrans,
-                              purchaseDate: this.parseAndFormatDate(
-                                landAndBuilding?.DateofPurchase
-                                  ? landAndBuilding?.DateofPurchase
-                                  : '2022-04-15'
-                              ),
-                              purchaseCost: landAndBuilding?.AquisitCost,
-                              isinCode: null,
-                              nameOfTheUnits: null,
-                              sellOrBuyQuantity: 1,
-                              sellValuePerUnit: null,
-                              purchaseValuePerUnit: null,
-                              algorithm: 'cgProperty',
-                              isIndexationBenefitAvailable: null,
-                              whetherDebenturesAreListed: null,
-                              fmvAsOn31Jan2018: null,
-                              capitalGain: landAndBuilding?.Balance,
-                              cgBeforeDeduction: landAndBuilding?.Balance,
-                              indexCostOfAcquisition:
-                                landAndBuilding?.AquisitCostIndex,
-                              totalFairMarketValueOfCapitalAsset: null,
-                              grandFatheredValue: null,
-                              brokerName: null,
-                            },
-                          ],
-                          deductionAmount: null,
-                        };
-                        this.ITR_Obj.capitalGain.push(
-                          SaleofLandBuildStcgDetails
-                        );
-                        this.ITR_Obj.systemFlags.hasCapitalGain = true;
-                      }
+                            sellValue: landAndBuilding?.FullConsideration,
+                            stampDutyValue: landAndBuilding?.PropertyValuation,
+                            valueInConsideration:
+                              landAndBuilding?.FullConsideration50C,
+                            sellExpense: landAndBuilding?.ExpOnTrans,
+                            purchaseDate: this.parseAndFormatDate(
+                              landAndBuilding?.DateofPurchase
+                                ? landAndBuilding?.DateofPurchase
+                                : '2022-04-15'
+                            ),
+                            purchaseCost: landAndBuilding?.AquisitCost,
+                            isinCode: null,
+                            nameOfTheUnits: null,
+                            sellOrBuyQuantity: 1,
+                            sellValuePerUnit: null,
+                            purchaseValuePerUnit: null,
+                            algorithm: 'cgProperty',
+                            isIndexationBenefitAvailable: null,
+                            whetherDebenturesAreListed: null,
+                            fmvAsOn31Jan2018: null,
+                            capitalGain: landAndBuilding?.Balance,
+                            cgBeforeDeduction: landAndBuilding?.Balance,
+                            indexCostOfAcquisition:
+                              landAndBuilding?.AquisitCostIndex,
+                            totalFairMarketValueOfCapitalAsset: null,
+                            grandFatheredValue: null,
+                            brokerName: null,
+                          },
+                        ],
+                        deductionAmount: null,
+                      };
+                      this.ITR_Obj.capitalGain.push(SaleofLandBuildStcgDetails);
+                      this.ITR_Obj.systemFlags.hasCapitalGain = true;
                     }
-                  );
+                  });
                 }
 
                 sessionStorage.setItem(
@@ -4816,6 +5526,465 @@ export class PrefillIdComponent implements OnInit {
                 );
               }
             }
+          }
+
+          // SCHEDULE FOREIGN INCOME
+          {
+            if (!this.ITR_Obj.foreignIncome) {
+              this.ITR_Obj.foreignIncome = {
+                id: 1,
+                taxPaidOutsideIndiaFlag: null,
+                taxReliefAssessmentYear: null,
+                taxAmountRefunded: null,
+                taxReliefClaimed: [],
+                foreignAssets: {
+                  id: null,
+                  depositoryAccounts: [],
+                  custodialAccounts: [],
+                  equityAndDebtInterest: [],
+                  cashValueInsurance: [],
+                  financialInterestDetails: [],
+                  immovablePropertryDetails: [],
+                  capitalAssetsDetails: [],
+                  signingAuthorityDetails: [],
+                  trustsDetails: [],
+                  otherIncomeDetails: [],
+                },
+              };
+            }
+
+            this.ITR_Obj.foreignIncome.taxReliefClaimed = this.uploadedJson[
+              this.ITR_Type
+            ]?.ScheduleFSI?.ScheduleFSIDtls?.map((element, index) => ({
+              id: '0',
+              claimedDTAA:
+                this.uploadedJson[this.ITR_Type]?.ScheduleTR1?.ScheduleTR[index]
+                  ?.ReliefClaimedUsSection,
+              reliefClaimedUsSection:
+                this.uploadedJson[this.ITR_Type]?.ScheduleTR1?.ScheduleTR[index]
+                  ?.ReliefClaimedUsSection,
+              countryCode: element?.CountryCodeExcludingIndia,
+              countryName: element?.CountryName,
+              taxPayerID: element?.TaxIdentificationNo,
+              headOfIncome: [
+                {
+                  id: '0',
+                  incomeType: 'SALARY',
+                  claimedDTAA: element?.IncFromSal?.DTAAReliefUs90or90A,
+                  outsideIncome: element?.IncFromSal?.IncFrmOutsideInd,
+                  outsideTaxPaid: element?.IncFromSal?.TaxPaidOutsideInd,
+                  taxPayable: element?.IncFromSal?.TaxPayableinInd,
+                  taxRelief: element?.IncFromSal?.TaxReliefinInd,
+                },
+                {
+                  id: '0',
+                  incomeType: 'HOUSE',
+                  claimedDTAA: element?.IncFromHP?.DTAAReliefUs90or90A,
+                  outsideIncome: element?.IncFromHP?.IncFrmOutsideInd,
+                  outsideTaxPaid: element?.IncFromHP?.TaxPaidOutsideInd,
+                  taxPayable: element?.IncFromHP?.TaxPayableinInd,
+                  taxRelief: element?.IncFromHP?.TaxReliefinInd,
+                },
+                {
+                  id: '0',
+                  incomeType: 'CAPITAL_GAIN',
+                  claimedDTAA: element?.IncCapGain?.DTAAReliefUs90or90A,
+                  outsideIncome: element?.IncCapGain?.IncFrmOutsideInd,
+                  outsideTaxPaid: element?.IncCapGain?.TaxPaidOutsideInd,
+                  taxPayable: element?.IncCapGain?.TaxPayableinInd,
+                  taxRelief: element?.IncCapGain?.TaxReliefinInd,
+                },
+                {
+                  id: '0',
+                  incomeType: 'OTHER',
+                  claimedDTAA: element?.IncOthSrc?.DTAAReliefUs90or90A,
+                  outsideIncome: element?.IncOthSrc?.IncFrmOutsideInd,
+                  outsideTaxPaid: element?.IncOthSrc?.TaxPaidOutsideInd,
+                  taxPayable: element?.IncOthSrc?.TaxPayableinInd,
+                  taxRelief: element?.IncOthSrc?.TaxReliefinInd,
+                },
+                this.ITR_Type === 'ITR3' && element?.IncFromBusiness
+                  ? {
+                      id: '0',
+                      incomeType: 'BUSINESS_OR_PROFESSION',
+                      claimedDTAA:
+                        element?.IncFromBusiness?.DTAAReliefUs90or90A,
+                      outsideIncome: element?.IncFromBusiness?.IncFrmOutsideInd,
+                      outsideTaxPaid:
+                        element?.IncFromBusiness?.TaxPaidOutsideInd,
+                      taxPayable: element?.IncFromBusiness?.TaxPayableinInd,
+                      taxRelief: element?.IncFromBusiness?.TaxReliefinInd,
+                    }
+                  : null,
+              ].filter(Boolean),
+            }));
+          }
+
+          // SCHEDULE TR
+          {
+            this.ITR_Obj.foreignIncome.taxPaidOutsideIndiaFlag =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleTR1?.TaxPaidOutsideIndFlg;
+
+            if (
+              this.uploadedJson[this.ITR_Type]?.ScheduleTR1
+                ?.TaxPaidOutsideIndFlg === 'YES'
+            ) {
+              this.ITR_Obj.foreignIncome.taxAmountRefunded =
+                this.uploadedJson[this.ITR_Type]?.ScheduleTR1?.AmtTaxRefunded;
+              this.ITR_Obj.foreignIncome.taxReliefAssessmentYear =
+                this.uploadedJson[this.ITR_Type]?.ScheduleTR1?.AssmtYrTaxRelief;
+            }
+          }
+
+          // SCHEDULE FA
+          {
+            // depositoryAccounts - DetailsForiegnBank
+            if (!this.ITR_Obj.foreignIncome.foreignAssets.depositoryAccounts) {
+              this.ITR_Obj.foreignIncome.foreignAssets.depositoryAccounts = [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.depositoryAccounts =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsForiegnBank?.map((element) => ({
+                accountNumber: element?.ForeignAccountNumber,
+                accountOpeningDate: element?.AccOpenDate,
+                addressOfInstitution: element?.AddressOfBank,
+                cashValue: null,
+                closingBalance: element?.ClosingBalance,
+                countryCode: element?.CountryCodeExcludingIndia,
+                countryName: element?.CountryName,
+                dateOfContract: null,
+                grossAmountNature: null,
+                grossInterestPaid: element?.IntrstAccured,
+                nameOfInstitution: element?.Bankname,
+                peakBalance: element?.PeakBalanceDuringYear,
+                status: element?.OwnerStatus,
+                totalGrossAmountPaid: null,
+                zipCode: element?.ZipCode,
+              }));
+
+            // custodialAccounts - DtlsForeignCustodialAcc
+            if (!this.ITR_Obj.foreignIncome.foreignAssets.custodialAccounts) {
+              this.ITR_Obj.foreignIncome.foreignAssets.custodialAccounts = [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.custodialAccounts =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DtlsForeignCustodialAcc?.map((element) => ({
+                accountNumber: element?.AccountNumber,
+                accountOpeningDate: element?.AccOpenDate,
+                addressOfInstitution: element?.FinancialInstAddress,
+                cashValue: null,
+                closingBalance: element?.ClosingBalance,
+                countryCode: element?.CountryCodeExcludingIndia,
+                countryName: element?.CountryName,
+                dateOfContract: null,
+                grossAmountNature:
+                  element?.NatureOfAmount === 'I'
+                    ? 'Interest'
+                    : element?.NatureOfAmount === 'D'
+                    ? 'Dividend'
+                    : element?.NatureOfAmount === 'S'
+                    ? 'Proceeds from sale or redemption of financial assets'
+                    : element?.NatureOfAmount === 'O'
+                    ? 'Other income'
+                    : element?.NatureOfAmount === 'N'
+                    ? 'No Amount Paid/Credited'
+                    : 'Select',
+                grossInterestPaid: element?.GrossAmtPaidCredited,
+                nameOfInstitution: element?.FinancialInstName,
+                peakBalance: element?.PeakBalanceDuringPeriod,
+                status: element?.Status,
+                totalGrossAmountPaid: null,
+                zipCode: element?.ZipCode,
+              }));
+
+            // // equityAndDebtInterest - DtlsForeignEquityDebtInterest
+            if (
+              !this.ITR_Obj.foreignIncome.foreignAssets.equityAndDebtInterest
+            ) {
+              this.ITR_Obj.foreignIncome.foreignAssets.equityAndDebtInterest =
+                [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.equityAndDebtInterest =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DtlsForeignEquityDebtInterest?.map((element) => ({
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                nameOfEntity: element?.NameOfEntity,
+                addressOfEntity: element?.AddressOfEntity,
+                zipCode: element?.ZipCode,
+                natureOfEntity: element?.NatureOfEntity,
+                dateOfInterest: element?.InterestAcquiringDate,
+                initialValue: element?.InitialValOfInvstmnt,
+                peakValue: element?.PeakBalanceDuringPeriod,
+                closingValue: element?.ClosingBalance,
+                totalGrossAmountPaid: element?.TotGrossAmtPaidCredited,
+                totalGrossProceedsFromSale: element?.TotGrossProceeds,
+              }));
+
+            // // cashValueInsurance - DtlsForeignCashValueInsurance
+            if (!this.ITR_Obj.foreignIncome.foreignAssets.cashValueInsurance) {
+              this.ITR_Obj.foreignIncome.foreignAssets.cashValueInsurance = [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.cashValueInsurance =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DtlsForeignCashValueInsurance?.map((element) => ({
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                nameOfInstitution: element?.FinancialInstName,
+                addressOfInstitution: element?.FinancialInstAddress,
+                zipCode: element?.ZipCode,
+                dateOfContract: element?.ContractDate,
+                cashValue: element?.CashValOrSurrenderVal,
+                totalGrossAmountPaid: element?.TotGrossAmtPaidCredited,
+                accountNumber: null,
+                accountOpeningDate: null,
+                closingBalance: null,
+                grossAmountNature: null,
+                grossInterestPaid: null,
+                peakBalance: null,
+                status: null,
+              }));
+
+            // // financialInterestDetails - DetailsFinancialInterest
+            if (
+              !this.ITR_Obj.foreignIncome.foreignAssets.financialInterestDetails
+            ) {
+              this.ITR_Obj.foreignIncome.foreignAssets.financialInterestDetails =
+                [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.financialInterestDetails =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsFinancialInterest?.map((element) => ({
+                id: null,
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                zipCode: element?.ZipCode,
+                natureOfEntity: element?.NatureOfEntity,
+                nameOfEntity: element?.NameOfEntity,
+                address: element?.AddressOfEntity,
+                natureOfInterest: element?.NatureOfInt,
+                date: element?.DateHeld,
+                totalInvestments: element?.TotalInvestment,
+                accruedIncome: element?.IncFromInt,
+                amount: element?.IncTaxAmt,
+                natureOfIncome: element?.NatureOfInc,
+                numberOfSchedule: parseFloat(element?.IncTaxSchNo),
+                scheduleOfferd:
+                  element?.IncTaxSch === 'SA'
+                    ? 'Salary'
+                    : element?.IncTaxSch === 'HP'
+                    ? 'House Property'
+                    : element?.IncTaxSch === 'BU'
+                    ? 'Business'
+                    : element?.IncTaxSch === 'CG'
+                    ? 'Capital Gains'
+                    : element?.IncTaxSch === 'OS'
+                    ? 'Other Sources'
+                    : element?.IncTaxSch === 'EI'
+                    ? 'Exempt Income'
+                    : element?.IncTaxSch === 'NI'
+                    ? 'No Income during the year'
+                    : 'Select',
+              }));
+
+            // // immovablePropertryDetails - DetailsImmovableProperty
+            if (
+              !this.ITR_Obj.foreignIncome.foreignAssets
+                .immovablePropertryDetails
+            ) {
+              this.ITR_Obj.foreignIncome.foreignAssets.immovablePropertryDetails =
+                [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.immovablePropertryDetails =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsImmovableProperty?.map((element) => ({
+                id: null,
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                zipCode: element?.ZipCode,
+                address: element?.AddressOfProperty,
+                ownerShip: element?.Ownership,
+                date: element?.DateOfAcq,
+                totalInvestments: element?.TotalInvestment,
+                derivedIncome: element?.IncDrvProperty,
+                natureOfIncome: element?.NatureOfInc,
+                amount: element?.IncTaxAmt,
+                numberOfSchedule: parseFloat(element?.IncTaxSchNo),
+                scheduleOfferd:
+                  element?.IncTaxSch === 'SA'
+                    ? 'Salary'
+                    : element?.IncTaxSch === 'HP'
+                    ? 'House Property'
+                    : element?.IncTaxSch === 'BU'
+                    ? 'Business'
+                    : element?.IncTaxSch === 'CG'
+                    ? 'Capital Gains'
+                    : element?.IncTaxSch === 'OS'
+                    ? 'Other Sources'
+                    : element?.IncTaxSch === 'EI'
+                    ? 'Exempt Income'
+                    : element?.IncTaxSch === 'NI'
+                    ? 'No Income during the year'
+                    : 'Select',
+              }));
+
+            // capitalAssetsDetails - DetailsOthAssets
+            if (
+              !this.ITR_Obj.foreignIncome.foreignAssets.capitalAssetsDetails
+            ) {
+              this.ITR_Obj.foreignIncome.foreignAssets.capitalAssetsDetails =
+                [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.capitalAssetsDetails =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsOthAssets?.map((element) => ({
+                id: null,
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                zipCode: element?.ZipCode,
+                natureOfAsstes: element?.NatureOfAsset,
+                ownerShip: element?.Ownership,
+                date: element?.DateOfAcq,
+                totalInvestments: element?.TotalInvestment,
+                derivedIncome: element?.IncDrvAsset,
+                natureOfIncome: element?.NatureOfInc,
+                amount: element?.IncTaxAmt,
+                scheduleOfferd:
+                  element?.IncTaxSch === 'SA'
+                    ? 'Salary'
+                    : element?.IncTaxSch === 'HP'
+                    ? 'House Property'
+                    : element?.IncTaxSch === 'BU'
+                    ? 'Business'
+                    : element?.IncTaxSch === 'CG'
+                    ? 'Capital Gains'
+                    : element?.IncTaxSch === 'OS'
+                    ? 'Other Sources'
+                    : element?.IncTaxSch === 'EI'
+                    ? 'Exempt Income'
+                    : element?.IncTaxSch === 'NI'
+                    ? 'No Income during the year'
+                    : 'Select',
+                numberOfSchedule: parseFloat(element?.IncTaxSchNo),
+              }));
+
+            // signingAuthorityDetails - DetailsOfAccntsHvngSigningAuth
+            if (
+              !this.ITR_Obj.foreignIncome.foreignAssets.signingAuthorityDetails
+            ) {
+              this.ITR_Obj.foreignIncome.foreignAssets.signingAuthorityDetails =
+                [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.signingAuthorityDetails =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsOfAccntsHvngSigningAuth?.map((element) => ({
+                id: null,
+                institutionName: element?.NameOfInstitution,
+                address: element?.AddressOfInstitution,
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                zipCode: element?.ZipCode,
+                accountHolderName: element?.NameMentionedInAccnt,
+                accountNumber: element?.InstitutionAccountNumber,
+                peakBalance: element?.PeakBalanceOrInvestment,
+                isTaxableinYourHand: element?.IncAccuredTaxFlag,
+                accruedIncome: element?.IncAccuredInAcc,
+                amount: element?.IncOfferedAmt,
+                scheduleOfferd:
+                  element?.IncOfferedSch === 'SA'
+                    ? 'Salary'
+                    : element?.IncOfferedSch === 'HP'
+                    ? 'House Property'
+                    : element?.IncOfferedSch === 'BU'
+                    ? 'Business'
+                    : element?.IncOfferedSch === 'CG'
+                    ? 'Capital Gains'
+                    : element?.IncOfferedSch === 'OS'
+                    ? 'Other Sources'
+                    : element?.IncOfferedSch === 'EI'
+                    ? 'Exempt Income'
+                    : element?.IncOfferedSch === 'NI'
+                    ? 'No Income during the year'
+                    : 'Select',
+                numberOfSchedule: parseFloat(element?.IncOfferedSchNo),
+              }));
+
+            // trustsDetails - DetailsOfTrustOutIndiaTrustee
+            if (!this.ITR_Obj.foreignIncome.foreignAssets.trustsDetails) {
+              this.ITR_Obj.foreignIncome.foreignAssets.trustsDetails = [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.trustsDetails =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsOfTrustOutIndiaTrustee?.map((element) => ({
+                id: null,
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                zipCode: element?.ZipCode,
+                trustName: element?.NameOfTrust,
+                trustAddress: element?.AddressOfTrust,
+                trusteesName: element?.NameOfOtherTrustees,
+                trusteesAddress: element?.AddressOfOtherTrustees,
+                settlorName: element?.NameOfSettlor,
+                settlorAddress: element?.AddressOfSettlor,
+                beneficiariesName: element?.NameOfBeneficiaries,
+                beneficiariesAddress: element?.AddressOfBeneficiaries,
+                date: element?.DateHeld,
+                isTaxableinYourHand: element?.IncDrvTaxFlag,
+                derivedIncome: element?.IncDrvFromTrust,
+                amount: element?.IncOfferedAmt,
+                scheduleOfferd:
+                  element?.IncOfferedSch === 'SA'
+                    ? 'Salary'
+                    : element?.IncOfferedSch === 'HP'
+                    ? 'House Property'
+                    : element?.IncOfferedSch === 'BU'
+                    ? 'Business'
+                    : element?.IncOfferedSch === 'CG'
+                    ? 'Capital Gains'
+                    : element?.IncOfferedSch === 'OS'
+                    ? 'Other Sources'
+                    : element?.IncOfferedSch === 'EI'
+                    ? 'Exempt Income'
+                    : element?.IncOfferedSch === 'NI'
+                    ? 'No Income during the year'
+                    : 'Select',
+                numberOfSchedule: parseFloat(element?.IncOfferedSchNo),
+              }));
+
+            // // otherIncomeDetails - DetailsOthAssets
+            if (!this.ITR_Obj.foreignIncome.foreignAssets.otherIncomeDetails) {
+              this.ITR_Obj.foreignIncome.foreignAssets.otherIncomeDetails = [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.otherIncomeDetails =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsOfOthSourcesIncOutsideIndia?.map(
+                (element) => ({
+                  id: null,
+                  countryName: element?.CountryName,
+                  countryCode: element?.CountryCodeExcludingIndia,
+                  zipCode: element?.ZipCode,
+                  name: element?.NameOfPerson,
+                  address: element?.AddressOfPerson,
+                  derivedIncome: element?.IncDerived,
+                  natureOfIncome: element?.NatureOfInc,
+                  isTaxableinYourHand: element?.IncDrvTaxFlag,
+                  amount: element?.IncOfferedAmt,
+                  scheduleOfferd: element?.IncOfferedSch,
+                  numberOfSchedule: element?.IncOfferedSchNo,
+                })
+              );
           }
 
           // SCHEDULE CFL
@@ -5598,9 +6767,13 @@ export class PrefillIdComponent implements OnInit {
 
   /*****AIS code starts*****/
   addAisCredentials() {
-
-    if(!this.utilsService.isNonEmpty(this.ITR_JSON.panNumber) && !this.utilsService.isNonEmpty(this.userProfile.panNumber)){
-      this.utilsService.showSnackBar("User PAN is not available. Please update PAN in user profile.");
+    if (
+      !this.utilsService.isNonEmpty(this.ITR_JSON.panNumber) &&
+      !this.utilsService.isNonEmpty(this.userProfile.panNumber)
+    ) {
+      this.utilsService.showSnackBar(
+        'User PAN is not available. Please update PAN in user profile.'
+      );
       return;
     }
     const dialogRef = this.dialog.open(AisCredsDialogComponent, {
@@ -5633,7 +6806,6 @@ export class PrefillIdComponent implements OnInit {
         document.getElementById('input-utility-file-jsonfile-id').click();
       }
     });
-
   }
 
   downloadAisOpt() {
@@ -5648,73 +6820,90 @@ export class PrefillIdComponent implements OnInit {
       this.uploadDoc = file.item(0);
 
       let reqUrl = `/cloud/signed-s3-url-by-type?fileName=${this.uploadDoc.name}`;
-      this.itrMsService.getMethod(reqUrl).subscribe((result: any) => {
+      this.itrMsService.getMethod(reqUrl).subscribe(
+        (result: any) => {
           if (result && result.data) {
-            let signedUrl = result.data.s3SignedUrl
+            let signedUrl = result.data.s3SignedUrl;
             this.uploadFileS3(this.uploadDoc, signedUrl);
           } else {
             this.loading = false;
-            this.utilsService.showSnackBar("Error while uploading ais json");
+            this.utilsService.showSnackBar('Error while uploading ais json');
           }
-        }, ((err: any) => {
+        },
+        (err: any) => {
           this.loading = false;
-          this.utilsService.showSnackBar("Error while uploading ais json" + JSON.stringify(err));
-        })
+          this.utilsService.showSnackBar(
+            'Error while uploading ais json' + JSON.stringify(err)
+          );
+        }
       );
 
       //read the file to get details upload and validate
       const reader = new FileReader();
       reader.onload = (e: any) => {
         let jsonRes = e.target.result;
-        console.log('fileText:',jsonRes);
+        console.log('fileText:', jsonRes);
       };
       reader.readAsText(this.uploadDoc);
     }
   }
 
-  uploadFileS3(uploadDoc, signedUrl){
-
+  uploadFileS3(uploadDoc, signedUrl) {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
     headers = headers.append('Accept', 'application/json');
-    headers = headers.append('X-Upload-Content-Length', uploadDoc.size.toString());
-    headers = headers.append('X-Upload-Content-Type', 'application/octet-stream');
+    headers = headers.append(
+      'X-Upload-Content-Length',
+      uploadDoc.size.toString()
+    );
+    headers = headers.append(
+      'X-Upload-Content-Type',
+      'application/octet-stream'
+    );
     // this.headers.append('Authorization', 'Bearer ' + this.TOKEN);
-    this.httpClient.put(signedUrl, uploadDoc, {headers: headers}).subscribe((result: any) => {
-      //call the decrypt api
-      let url = '/upload-ais-json';
-      let request = {
-        userId: this.data.userId,
-        fileName: uploadDoc.name
-      }
-      this.itrMsService.postMethod(url, request).subscribe((result: any)=>{
-        this.loading = false;
-        console.log(result);
-        this.utilsService.showSnackBar('AIS json uploaded successfully');
-        const param = `/itr?userId=${this.ITR_JSON.userId}&assessmentYear=${this.ITR_JSON.assessmentYear}&itrId=${this.ITR_JSON.itrId}`;
-        this.itrMsService.getMethod(param).subscribe(async (res: any) => {
-          if(res && res.length == 1){
-            this.ITR_JSON = res[0];
-            sessionStorage.setItem(
-              AppConstants.ITR_JSON,
-              JSON.stringify(this.ITR_JSON)
-            );
+    this.httpClient.put(signedUrl, uploadDoc, { headers: headers }).subscribe(
+      (result: any) => {
+        //call the decrypt api
+        let url = '/upload-ais-json';
+        let request = {
+          userId: this.data.userId,
+          fileName: uploadDoc.name,
+        };
+        this.itrMsService.postMethod(url, request).subscribe(
+          (result: any) => {
+            this.loading = false;
+            console.log(result);
+            this.utilsService.showSnackBar('AIS json uploaded successfully');
+            const param = `/itr?userId=${this.ITR_JSON.userId}&assessmentYear=${this.ITR_JSON.assessmentYear}&itrId=${this.ITR_JSON.itrId}`;
+            this.itrMsService.getMethod(param).subscribe(async (res: any) => {
+              if (res && res.length == 1) {
+                this.ITR_JSON = res[0];
+                sessionStorage.setItem(
+                  AppConstants.ITR_JSON,
+                  JSON.stringify(this.ITR_JSON)
+                );
+              }
+            });
+          },
+          (error) => {
+            console.log('error in decrypting ais json', error);
+            this.loading = false;
+            this.utilsService.showSnackBar(error.error.message);
           }
-        });
-      }, error => {
-        console.log('error in decrypting ais json', error);
+        );
+      },
+      (err: any) => {
         this.loading = false;
-        this.utilsService.showSnackBar(error.error.message);
-      });
-    },(err: any) => {
-      this.loading = false;
-      this.utilsService.showSnackBar("Error while uploading ais json" + JSON.stringify(err));
-    });
+        this.utilsService.showSnackBar(
+          'Error while uploading ais json' + JSON.stringify(err)
+        );
+      }
+    );
   }
 
   /*****AIS code ends*****/
 
-  sendEmail(uploadedJson){
+  sendEmail(uploadedJson) {
     this.loading = true;
 
     var data = new FormData();
@@ -5853,5 +7042,4 @@ export class PrefillIdComponent implements OnInit {
       this.subscription.unsubscribe();
     }
   }
-
 }
