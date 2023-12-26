@@ -179,17 +179,29 @@
                     #medicalExpensesComponentRef>
             </app-medical-expenses>
 
-            <app-donations
-                    #donationsComponentRef
-                    [type]="'80g'"
-                    [isAddDonation]="isAddDonation">
-            </app-donations>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <!--            <button type="button" class="accordion-button" data-bs-toggle="collapse"-->
+                <!--                    attr.data-bs-target="{{type === '80g' ? '#80g' : '#80gga'}}">Deduction related to Donation</button>-->
+                <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                        aria-expanded="false" data-bs-target="#col80g">Deduction related to Donation</button>
+              </h2>
+              <div id="col80g" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
+                <div class="accordion__item-body">
+                  <app-donations
+                          #donationsComponentRef
+                          [type]="'80g'"
+                          [isAddDonation]="isAddDonation">
+                  </app-donations>
 
-            <app-donations
-                    #donations80ggaComponentRef
-                    [type]="'80gga'"
-                    [isAddDonation]="isAddDonation">
-            </app-donations>
+                  <app-donations
+                          #donations80ggaComponentRef
+                          [type]="'80gga'"
+                          [isAddDonation]="isAddDonation">
+                  </app-donations>
+                </div>
+              </div>
+            </div>
 
             <app-other-deductions #otherDeductionsRef></app-other-deductions>
 
