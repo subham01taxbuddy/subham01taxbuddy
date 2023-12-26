@@ -31,8 +31,8 @@
                             <div class="div-6">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                 type="checkbox" (click)="$event.stopPropagation()"
-                                [checked]="selectedIndexes.includes(i)" (click)="toggleSelectedIndex(i)" />
-
+                                [checked]="selectedIndexes.includes(getCheckboxId(0, i))"
+                                (click)="toggleSelectedIndex(0, i)" />
                               <div class="form-field">
                                 <div>
                                   <span class="span">Name of the financial institution</span>
@@ -95,8 +95,8 @@
                               <div class="div-6">
                                 <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                   type="checkbox" (click)="$event.stopPropagation()"
-                                  [checked]="selectedAccountIndexes.includes(j)"
-                                  (click)="toggleSelectedAccountIndex(j)" />
+                                  [checked]="selectedAccountIndexes.includes(getCheckboxIdAccount(0, i, j))"
+                                  (click)="toggleSelectedAccountIndex(0, i, j)" />
                                 <div class="form-field">
                                   <div>
                                     <span class="span">Account Number</span>
@@ -173,7 +173,7 @@
                               <!--                              </button>-->
                             </div>
                             <button class="delete-btn" style="width: 15%" (click)="
-                                delete('depositoryAccounts', 'account', i)
+                                delete('depositoryAccounts', 'account', i, i)
                               ">
                               <i class="fa fa-trash" aria-hidden="true"></i>
                               Delete
@@ -181,7 +181,7 @@
                           </div>
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px"
-                          (click)="delete('depositoryAccounts', 'formArray')">
+                          (click)="delete('depositoryAccounts', 'formArray', 0)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
                         </button>
@@ -212,7 +212,8 @@
                             <div class="div-6">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                 type="checkbox" (click)="$event.stopPropagation()"
-                                [checked]="selectedIndexes.includes(i)" (click)="toggleSelectedIndex(i)" />
+                                [checked]="selectedIndexes.includes(getCheckboxId(1, i))"
+                                (click)="toggleSelectedIndex(1, i)" />
                               <div class="form-field">
                                 <div>
                                   <span class="span">Name of the financial institution</span>
@@ -275,8 +276,8 @@
                               <div class="div-6">
                                 <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                   type="checkbox" (click)="$event.stopPropagation()"
-                                  [checked]="selectedAccountIndexes.includes(j)"
-                                  (click)="toggleSelectedAccountIndex(j)" />
+                                  [checked]="selectedAccountIndexes.includes(getCheckboxIdAccount(1, i, j))"
+                                  (click)="toggleSelectedAccountIndex(1, i, j)" />
                                 <div class="form-field">
                                   <div>
                                     <span class="span">Account Number</span>
@@ -368,7 +369,7 @@
                               </div>
                             </div>
                             <button class="delete-btn" style="width: 15%" (click)="
-                                delete('custodialAccounts', 'account', i)
+                                delete('custodialAccounts', 'account', i, i)
                               ">
                               <i class="fa fa-trash" aria-hidden="true"></i>
                               Delete
@@ -376,7 +377,7 @@
                           </div>
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px"
-                          (click)="delete('custodialAccounts', 'formArray')">
+                          (click)="delete('custodialAccounts', 'formArray', 1)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
                         </button>
@@ -405,8 +406,9 @@
                           " [formGroupName]="i">
                           <div class="div-6">
                             <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                              type="checkbox" (click)="$event.stopPropagation()" [checked]="selectedIndexes.includes(i)"
-                              (click)="toggleSelectedIndex(i)" />
+                              type="checkbox" (click)="$event.stopPropagation()"
+                              [checked]="selectedIndexes.includes(getCheckboxId(2, i))"
+                              (click)="toggleSelectedIndex(2, i)" />
                             <div class="form-field">
                               <div>
                                 <span class="span">Name of Entity</span>
@@ -536,7 +538,7 @@
                           </div>
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px"
-                          (click)="delete('equityAndDebtInterest', 'formArray')">
+                          (click)="delete('equityAndDebtInterest', 'formArray', 2)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
                         </button>
@@ -565,8 +567,9 @@
                           " [formGroupName]="i">
                           <div class="div-6">
                             <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                              type="checkbox" (click)="$event.stopPropagation()" [checked]="selectedIndexes.includes(i)"
-                              (click)="toggleSelectedIndex(i)" />
+                              type="checkbox" (click)="$event.stopPropagation()"
+                              [checked]="selectedIndexes.includes(getCheckboxId(3, i))"
+                              (click)="toggleSelectedIndex(3, i)" />
                             <div class="form-field">
                               <div>
                                 <span class="span">Name of the Financial Institution in which
@@ -663,7 +666,7 @@
                           </div>
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px"
-                          (click)="delete('cashValueInsurance', 'formArray')">
+                          (click)="delete('cashValueInsurance', 'formArray', 3)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
                         </button>
@@ -693,8 +696,9 @@
                           " [formGroupName]="i">
                           <div class="div-6">
                             <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                              type="checkbox" (click)="$event.stopPropagation()" [checked]="selectedIndexes.includes(i)"
-                              (click)="toggleSelectedIndex(i)" />
+                              type="checkbox" (click)="$event.stopPropagation()"
+                              [checked]="selectedIndexes.includes(getCheckboxId(4, i))"
+                              (click)="toggleSelectedIndex(4, i)" />
                             <div class="form-field">
                               <div>
                                 <span class="span">Name of Entity</span>
@@ -846,7 +850,7 @@
                           </div>
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px" (click)="
-                            delete('financialInterestDetails', 'formArray')
+                            delete('financialInterestDetails', 'formArray', 4)
                           ">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
@@ -877,8 +881,9 @@
                           " [formGroupName]="i">
                           <div class="div-6">
                             <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                              type="checkbox" (click)="$event.stopPropagation()" [checked]="selectedIndexes.includes(i)"
-                              (click)="toggleSelectedIndex(i)" />
+                              type="checkbox" (click)="$event.stopPropagation()"
+                              [checked]="selectedIndexes.includes(getCheckboxId(5, i))"
+                              (click)="toggleSelectedIndex(5, i)" />
                             <div class="form-field">
                               <div>
                                 <span class="span">Address of Entity</span>
@@ -1018,7 +1023,7 @@
                           </div>
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px" (click)="
-                            delete('immovablePropertryDetails', 'formArray')
+                            delete('immovablePropertryDetails', 'formArray', 5)
                           ">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
@@ -1048,8 +1053,9 @@
                           " [formGroupName]="i">
                           <div class="div-6">
                             <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                              type="checkbox" (click)="$event.stopPropagation()" [checked]="selectedIndexes.includes(i)"
-                              (click)="toggleSelectedIndex(i)" />
+                              type="checkbox" (click)="$event.stopPropagation()"
+                              [checked]="selectedIndexes.includes(getCheckboxId(6, i))"
+                              (click)="toggleSelectedIndex(6, i)" />
                             <div class="form-field">
                               <div>
                                 <span class="normal_text">Country code </span>
@@ -1193,7 +1199,7 @@
                           </div>
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px"
-                          (click)="delete('capitalAssetsDetails', 'formArray')">
+                          (click)="delete('capitalAssetsDetails', 'formArray', 6)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
                         </button>
@@ -1225,7 +1231,8 @@
                             <div class="div-6">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                 type="checkbox" (click)="$event.stopPropagation()"
-                                [checked]="selectedIndexes.includes(i)" (click)="toggleSelectedIndex(i)" />
+                                [checked]="selectedIndexes.includes(getCheckboxId(7, i))"
+                                (click)="toggleSelectedIndex(7, i)" />
                               <div class="form-field">
                                 <div>
                                   <span class="span">Name of the Institution in which the
@@ -1290,9 +1297,9 @@
                                 <div class="div-6">
                                   <input
                                     class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                    type="checkbox" (click)="$event.stopPropagation()" [checked]="
-                                      selectedAccountIndexes.includes(j)
-                                    " (click)="toggleSelectedAccountIndex(j)" />
+                                    type="checkbox" (click)="$event.stopPropagation()"
+                                    [checked]="selectedAccountIndexes.includes(getCheckboxIdAccount(7, i, j))"
+                                    (click)="toggleSelectedAccountIndex(7,i, j)" />
                                   <div class="form-field">
                                     <div>
                                       <span class="span">Name of the account holder</span>
@@ -1335,8 +1342,7 @@
                                     </p>
                                   </div>
                                   <div class="col-2">
-                                    <mat-radio-group name="isTaxableinYourHand[j]" formControlName="isTaxableinYourHand"
-                                      required (change)="
+                                    <mat-radio-group formControlName="isTaxableinYourHand" required (change)="
                                         handleSelectionChange($event.value)
                                       ">
                                       <mat-radio-button value="Y" style="margin-right: 10px">Yes</mat-radio-button>
@@ -1405,14 +1411,14 @@
                             </div>
                           </div>
                           <button class="delete-btn" style="width: 15%" (click)="
-                              delete('signingAuthorityDetails', 'account', i)
+                              delete('signingAuthorityDetails', 'account', i, i)
                             ">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                             Delete
                           </button>
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px"
-                          (click)="delete('signingAuthorityDetails', 'formArray')">
+                          (click)="delete('signingAuthorityDetails', 'formArray', 7)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
                         </button>
@@ -1443,7 +1449,8 @@
                             <div class="div-6">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                 type="checkbox" (click)="$event.stopPropagation()"
-                                [checked]="selectedIndexes.includes(i)" (click)="toggleSelectedIndex(i)" />
+                                [checked]="selectedIndexes.includes(getCheckboxId(8, i))"
+                                (click)="toggleSelectedIndex(8, i)" />
                               <div class="form-field">
                                 <div>
                                   <span class="span">Name of the trust</span>
@@ -1578,8 +1585,8 @@
                                 </p>
                               </div>
                               <div class="col-2">
-                                <mat-radio-group name="isTaxableinYourHand[i]" formControlName="isTaxableinYourHand"
-                                  required (change)="handleSelectionChange($event.value)">
+                                <mat-radio-group formControlName="isTaxableinYourHand" required
+                                  (change)="handleSelectionChange($event.value)">
                                   <mat-radio-button value="Y" style="margin-right: 10px">Yes</mat-radio-button>
                                   <mat-radio-button value="N">No</mat-radio-button>
                                 </mat-radio-group>
@@ -1647,7 +1654,7 @@
                           </div>
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px"
-                          (click)="delete('trustsDetails', 'formArray')">
+                          (click)="delete('trustsDetails', 'formArray', 8)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
                         </button>
@@ -1678,7 +1685,8 @@
                             <div class="div-6">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                 type="checkbox" (click)="$event.stopPropagation()"
-                                [checked]="selectedIndexes.includes(i)" (click)="toggleSelectedIndex(i)" />
+                                [checked]="selectedIndexes.includes(getCheckboxId(9, i))"
+                                (click)="toggleSelectedIndex(9, i)" />
                               <div class="form-field">
                                 <div>
                                   <span class="span">Name of the person from whom derived</span>
@@ -1757,8 +1765,8 @@
                                 </p>
                               </div>
                               <div class="col-2">
-                                <mat-radio-group name="isTaxableinYourHand[i]" formControlName="isTaxableinYourHand"
-                                  required (change)="handleSelectionChange($event.value)">
+                                <mat-radio-group formControlName="isTaxableinYourHand" required
+                                  (change)="handleSelectionChange($event.value)">
                                   <mat-radio-button value="Y" style="margin-right: 10px">Yes</mat-radio-button>
                                   <mat-radio-button value="N">No</mat-radio-button>
                                 </mat-radio-group>
@@ -1810,7 +1818,7 @@
                           </div>
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px"
-                          (click)="delete('otherIncomeDetails', 'formArray')">
+                          (click)="delete('otherIncomeDetails', 'formArray', 9)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
                         </button>
