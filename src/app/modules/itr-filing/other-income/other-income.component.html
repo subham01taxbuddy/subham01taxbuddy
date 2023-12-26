@@ -2,8 +2,8 @@
   [show]="loading"
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
-
-<div>
+<div class="page-wrapper">
+<main>
     <div class="frameC">
       <div class="div">
         <div class="text-wrapper">Other Source of Income</div>
@@ -384,7 +384,10 @@
         </div>
       </div>
     </div>
-
+</main>
+ <!-- right side summary -->
+ <app-side-summary-panel type="otherIncome"></app-side-summary-panel>
+ <!-- right side summary ends-->
 </div>
 
 

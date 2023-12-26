@@ -5,3 +5,11 @@
 .hide-panel {
   display: none;
 }
+
+.table>:not(caption)>*>* {
+  background-color: white !important;
+}
+
+.f-size{
+  font-size:13px;
+}
