@@ -342,7 +342,7 @@
                     </mat-form-field>
                   </div>
                   <div class="form-field">
-                    <div><span class="span">No. of shares aquired</span> <span class="text-wrapper-2">*</span>
+                    <div><span class="span">No. of shares acquired</span> <span class="text-wrapper-2">*</span>
                     </div>
                     <mat-form-field class="input-field-width">
                       <input
@@ -366,7 +366,7 @@
                 </div>
                 <div class="div-6 ">
                   <div class="form-field">
-                    <div><span class="span">Date of Purches</span> <span class="text-wrapper-2">*</span>
+                    <div><span class="span">Date of Purchase</span> <span class="text-wrapper-2">*</span>
                     </div>
                     <mat-form-field>
                       <input
@@ -435,7 +435,7 @@
 
                 <div class="div-6 ">
                   <div class="form-field">
-                    <div><span class="span">Purches Price per share</span> <span class="text-wrapper-2">*</span>
+                    <div><span class="span">Purchase Price per share</span> <span class="text-wrapper-2">*</span>
                     </div>
                     <mat-form-field class="input-field-width">
                       <input
@@ -550,7 +550,7 @@
                 </div>
                 <div class="row">
                   <div class="col-10">
-                    <button class="btn__primary"> <i class="fa-solid fa-trash-can" (click)="deleteShares()"></i> Delete
+                    <button class="btn__primary" (click)="deleteShares()"> <i class="fa-solid fa-trash-can"></i> Delete
                     </button>
                   </div>
                   <div class="col-2">
@@ -655,19 +655,19 @@
                     </mat-error>
                   </div>
                 </div>
-                <div class="row" *ngIf="isPartnerInFirmFlag()">
-                  <div class="col-10">
-                    <button class="btn__primary"  (click)="deleteFirms()"
-                            [disabled]="!firmSelected()"> <i class="fa-solid fa-trash-can"></i> Delete
-                    </button>
-                  </div>
-                  <div class="col-sm-6">
-                    <table>
-                      <tr *ngFor="let item of getFirmsArray.controls | paginate : config"></tr>
-                    </table>
-                    <pagination-controls (pageChange)="pageChanged($event)">
-                    </pagination-controls>
-                  </div>
+              </div>
+              <div class="row" *ngIf="isPartnerInFirmFlag()">
+                <div class="col-10">
+                  <button class="btn__primary"  (click)="deleteFirms()"
+                          [disabled]="!firmSelected()"> <i class="fa-solid fa-trash-can"></i> Delete
+                  </button>
+                </div>
+                <div class="col-sm-6">
+                  <table>
+                    <tr *ngFor="let item of getFirmsArray.controls | paginate : config"></tr>
+                  </table>
+                  <pagination-controls (pageChange)="pageChanged($event)">
+                  </pagination-controls>
                 </div>
               </div>
             </div>
