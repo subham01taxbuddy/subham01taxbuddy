@@ -8,7 +8,7 @@
         <div class="frameS">
             <div class="contents-wrapper">
                 <div class="contents">
-                    <div class="field-text">Summary</div>
+                    <div class="field-text fw-bold">Summary</div>
                     <a (click)="closePanel()"><img class="clos" src="assets/img/new/close.png" /></a>
                 </div>
             </div>
@@ -17,25 +17,25 @@
                     <div class="field-wrapper">
                         <div class="field-2">
                             <div class="field-label-2 hedTx">Particulars</div>
-                            <div class="field-label-3 hedTx">{{convertToTitleCase(type)}} Details</div>
+                            <div class="field-label-3 hedTx">{{title}}</div>
                         </div>
                     </div>
-
+                    <hr style="width:100%;height:1.8px;border-width:0;color:gray;background-color:gray">
                 </div>
                 <div class="div">
                     <div class="field-wrapper" *ngFor="let row of result">
                         <div class="field-2">
                             <div class="field-label-2">{{ row.key}}</div>
-                            <div class="field-label-3">₹ {{row.value}}</div>
+                            <div class="field-label-3">₹ {{utilsService.currencyFormatter(row.value)}}</div>
                         </div>
                     </div>
                 </div>
                 <div class="div">
-                    <img class="img" src="img/line-2.svg" />
+                    <hr style="width:100%;height:2px;border-width:0;color:gray;background-color:gray">
                     <div class="field-wrapper">
                         <div class="field-2">
-                            <div class="field-label-2 hedTx">Taxable {{convertToTitleCase(type)}}</div>
-                            <div class="field-label-3 hedTx">₹ {{netIncome}}</div>
+                            <div class="field-label-2 hedTx">{{taxableHeading}}</div>
+                            <div class="field-label-3 hedTx">₹ {{utilsService.currencyFormatter(netIncome)}}</div>
                         </div>
                     </div>
                 </div>

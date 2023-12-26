@@ -825,68 +825,24 @@
           </div>
         </div>
         <div class="space">
-          <div class="div">
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2 hedTx">Particulars</div>
-                <div class="field-label-3 hedTx">All Employers</div>
-              </div>
-            </div>
-
-          </div>
-          <div class="div">
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2">17 (1)</div>
-                <div class="field-label-3">₹ 40,00,000</div>
-              </div>
-            </div>
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2">17 (2)</div>
-                <div class="field-label-3">₹0</div>
-              </div>
-            </div>
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2">17 (3)</div>
-                <div class="field-label-3">₹0</div>
-              </div>
-            </div>
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2">Gross Salary</div>
-                <div class="field-label-3">₹0</div>
-              </div>
-            </div>
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2">Exemptions u/s 10</div>
-                <div class="field-label-3">₹0</div>
-              </div>
-            </div>
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-4">Net Salary</div>
-                <div class="field-label-3">₹ 50,000</div>
-              </div>
-            </div>
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-4">Deduction u/s 16</div>
-                <div class="field-label-3">₹ 50,000</div>
-              </div>
-            </div>
-          </div>
-          <div class="div">
-            <img class="img" src="img/line-2.svg" />
-            <div class="field-wrapper">
-              <div class="field-2">
-                <div class="field-label-2 hedTx">Taxable Salary</div>
-                <div class="field-label-3 hedTx">₹ 39,50,000</div>
-              </div>
-            </div>
-          </div>
+          <table class="table table-borderless f-size">
+            <tbody>
+              <tr class="border-bottom">
+              <th>HP</th>
+              <th>Ownership Category</th>
+              <th>Net Income</th>
+              </tr>
+              <tr *ngFor="let house of ITR_JSON.houseProperties; let i = index">
+              <td>{{i+1}}</td>
+              <td>{{getOwnershipCategory(house.propertyType)}}</td>
+              <td class="text-end">₹{{utilsService.currencyFormatter(house.taxableIncome)}}</td>
+              </tr>
+              <tr class="border-top">
+                <th colspan="2">Total income from all HPs</th>
+                <th class="text-end">₹{{utilsService.currencyFormatter(getTotalTaxableIncome())}}</th>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
