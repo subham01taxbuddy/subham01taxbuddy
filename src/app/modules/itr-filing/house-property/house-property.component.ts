@@ -409,6 +409,19 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
+  getTotalTaxableIncome(){
+    return this.ITR_JSON.houseProperties?.reduce((total, element) => total + element.taxableIncome, 0);
+  }
+
+  getOwnershipCategory(propertyType: string){
+    if("SOP"===propertyType)
+      return "Self Occupied";
+    if("LOP"===propertyType)
+      return "Let Out";
+    if("DLOP"===propertyType)
+      return "Deemed Let Out";
+  }
+
   createCoOwnerForm(
     obj: {
       name?: string;

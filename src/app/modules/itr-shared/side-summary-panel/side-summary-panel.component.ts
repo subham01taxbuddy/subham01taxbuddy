@@ -3,6 +3,7 @@ import {AppConstants} from "../../shared/constants";
 import {ItrMsService} from "../../../services/itr-ms.service";
 import {startCase} from "lodash";
 import {SummaryHelperService} from "../../../services/summary-helper-service";
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-side-summary-panel',
@@ -17,11 +18,12 @@ export class SideSummaryPanelComponent implements OnInit {
   summary: any;
   result: any;
   title: string;
+  taxableHeading: string;
 
   netIncomeKeyMap:any;
 
   netIncome: number;
-  constructor(private summaryHelper: SummaryHelperService) { }
+  constructor(private summaryHelper: SummaryHelperService,  public utilsService: UtilsService) { }
 
   ngOnInit(): void {
     this.getSummary();
@@ -52,20 +54,39 @@ export class SideSummaryPanelComponent implements OnInit {
   }
 
   getSalaryData(){
-    this.result = [];
     this.title = 'All Employers';
-    Object.keys(this.summary.summaryIncome.summarySalaryIncome).forEach(key => {
-      if(typeof this.summary.summaryIncome.summarySalaryIncome[key] !== "object"){
-        if(this.netIncomeKeyMap[this.type] !== key) {
-          this.result.push({
-            key: this.convertToTitleCase(key),
-            value: this.summary.summaryIncome.summarySalaryIncome[key]
-          });
-        } else {
-          this.netIncome = this.summary.summaryIncome.summarySalaryIncome[key];
-        }
-      }
-    });
+    this.taxableHeading = "Taxable Salary";
+    this.netIncome = this.summary.summaryIncome.summarySalaryIncome.totalSalaryTaxableIncome;
+    this.result = [
+      {
+        key: '17(1)',
+        value: this.summary.summaryIncome.summarySalaryIncome.totalSummarySalaryTaxableIncome
+      },
+      {
+        key: '17(2)',
+        value: this.summary.summaryIncome.summarySalaryIncome.totalSummaryPerquisitesTaxableIncome
+      },
+      {
+        key: '17(3)',
+        value: this.summary.summaryIncome.summarySalaryIncome.totalSummaryProfitsInLieuOfSalaryTaxableIncome
+      },
+      {
+        key: 'Gross Salary',
+        value: this.summary.summaryIncome.summarySalaryIncome.totalSummarySalaryTaxableIncome + this.summary.summaryIncome.summarySalaryIncome.totalSummaryPerquisitesTaxableIncome + this.summary.summaryIncome.summarySalaryIncome.totalSummaryProfitsInLieuOfSalaryTaxableIncome
+      },
+      {
+        key: 'Exemptions u/s 10',
+        value: this.summary.summaryIncome.summarySalaryIncome.totalSummaryAllowanceExemptIncome
+      },
+      {
+        key: 'Net Salary',
+        value: this.summary.summaryIncome.summarySalaryIncome.netSalary
+      },
+      {
+        key: 'Deduction u/s 16',
+        value: this.summary.summaryIncome.summarySalaryIncome.totalStandardDeduction
+      },
+    ];
   }
 
   convertToTitleCase(key){
