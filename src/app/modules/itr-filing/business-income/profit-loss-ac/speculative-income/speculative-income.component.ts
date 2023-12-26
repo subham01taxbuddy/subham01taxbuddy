@@ -65,10 +65,10 @@ export class SpeculativeIncomeComponent implements OnInit {
         this.specIncomeFormArray.push(form);
       }
       // this.speculativeIncome = specBusiness?.incomes[0];
-    } /*else {
+    } else {
       let form = this.createSpecIncomeForm(0, null);
       this.specIncomeFormArray.push(form);
-    }*/
+    }
     this.specIncomeForm = this.fb.group({
       specIncomesArray: this.specIncomeFormArray,
     });
