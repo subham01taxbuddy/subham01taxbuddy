@@ -142,6 +142,7 @@ export class HousePropertyComponent implements OnInit {
     }
 
     this.updateHpTaxaxbleIncome();
+    this.enableOnOverAllValue();
   }
 
   updateHpTaxaxbleIncome(save?) {
@@ -1287,7 +1288,6 @@ export class HousePropertyComponent implements OnInit {
   }
 
   enableOnOverAllValue() {
-    let propertyType = this.housePropertyForm.controls['propertyType'];
     // current value of interest amount
     const currentInterestValue = parseFloat(
       this.housePropertyForm.controls['interestAmount']?.value
@@ -1296,31 +1296,39 @@ export class HousePropertyComponent implements OnInit {
     const itrJsonInterestValue = this.ITR_JSON.houseProperties
       ?.filter((item, index) => index !== this.currentIndex)
       ?.reduce((acc, property, index) => {
-        // Check if the property has a loans array and the index is 0
-        if (index === 0 && property?.loans?.length > 0) {
-          // Calculate the total interest amount from the loans array
+        if (property?.loans?.length > 0) {
           const totalInterest = property.loans.reduce((loanAcc, loan) => loanAcc + (loan?.interestAmount || 0), 0);
-
-          // Add the total interest to the accumulator
           acc += totalInterest;
         }
         return acc;
       }, 0);
 
-    if (propertyType?.value === 'SOP') {
-      if ((itrJsonInterestValue || 0) + (currentInterestValue
-        || 0) > 200000) {
-        return true;
-      } else {
-        return false
-      }
+    if ((itrJsonInterestValue || 0) + (currentInterestValue
+      || 0) > 200000) {
+      return true;
     } else {
-      if (currentInterestValue > 200000) {
-        return true;
-      } else {
-        return false
-      }
+      return false
     }
+  }
+
+  deduction80EEValue() {
+    const itrJsonDeductionValue = this.ITR_JSON.houseProperties
+      ?.filter((item, index) => index !== this.currentIndex)
+      ?.reduce((acc, property) => {
+        const totalInterest = (acc + (property?.eligible80EEAmount || 0));
+        return acc + totalInterest;
+      }, 0);
+    return parseFloat(itrJsonDeductionValue);
+  }
+
+  deduction80EEAValue() {
+    const itrJsonDeductionValue = this.ITR_JSON.houseProperties
+      ?.filter((item, index) => index !== this.currentIndex)
+      ?.reduce((acc, property) => {
+        const totalInterest = (acc + (property?.eligible80EEAAmount || 0));
+        return acc + totalInterest;
+      }, 0);
+    return parseFloat(itrJsonDeductionValue);
   }
 
   // other functions
@@ -1437,7 +1445,9 @@ export class HousePropertyComponent implements OnInit {
       interest24b.updateValueAndValidity();
       interest.clearValidators();
       interest.updateValueAndValidity();
-    } else if (propertyType?.value === 'DLOP') {
+    } else {
+      interest24b.clearValidators();
+      interest24b.updateValueAndValidity();
       interest.clearValidators();
       interest.updateValueAndValidity();
     }
@@ -1445,8 +1455,8 @@ export class HousePropertyComponent implements OnInit {
     if (eligible80EE?.value === '80EE') {
       if (propertyType?.value === 'SOP') {
         if (parseFloat(interest?.value) > 250000) {
-          let eligibleValue = 50000 - (jsonAmt80ee || 0);
-          eligible80EEAmount?.setValue(eligibleValue);
+          let eligible80EEValue = 50000 - (jsonAmt80ee || 0);
+          eligible80EEAmount?.setValue(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0);
           eligible80EEAmount?.updateValueAndValidity();
           let eligible24b;
           if (itrJsonInterestValue && itrJsonInterestValue > 0) {
@@ -1469,9 +1479,9 @@ export class HousePropertyComponent implements OnInit {
             interest24b?.setValue(Math.min(eligible24b, 200000));
           }
           interest24b?.updateValueAndValidity();
-          let eligibleValue = 50000 - (jsonAmt80ee || 0);
+          let eligible80EEValue = 50000 - (jsonAmt80ee || 0);
           let difference = interest?.value - interest24b?.value;
-          eligible80EEAmount?.setValue(Math.min(eligibleValue, difference));
+          eligible80EEAmount?.setValue(Math.min(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0, difference));
           eligible80EEAmount?.updateValueAndValidity();
           eligible80EEAAmount?.setValue(0);
           eligible80EEAAmount?.updateValueAndValidity();
@@ -1486,38 +1496,71 @@ export class HousePropertyComponent implements OnInit {
           }
           interest24b?.updateValueAndValidity();
 
-          if (itrJsonInterestValue + interest24b?.value <= 200000) {
-            let eligibleValue = 50000 - (jsonAmt80ee || 0);
+          if ((itrJsonInterestValue || 0) + interest24b?.value <= 200000) {
+            let eligible80EEValue = 50000 - (jsonAmt80ee || 0);
             let difference = interest?.value - interest24b?.value;
-            eligible80EEAmount?.setValue(Math.min(eligibleValue, difference));
+            eligible80EEAmount?.setValue(Math.min(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0, difference));
             eligible80EEAmount?.updateValueAndValidity();
             eligible80EEAAmount?.setValue(0);
             eligible80EEAAmount?.updateValueAndValidity();
           }
         }
-      } else if (parseFloat(interest?.value) > 250000) {
-        let value = 50000 - jsonAmt80ee;
-        eligible80EEAmount?.setValue(value > 0 ? value : 0);
-        eligible80EEAmount?.updateValueAndValidity();
-
-        // if 80ee then setting 80eea as 0, as both cannot be claimed
-        eligible80EEAAmount?.setValue(0);
-        eligible80EEAAmount?.updateValueAndValidity();
-
-        interest24b?.setValue(
-          interest?.value - (parseFloat(eligible80EEAmount?.value) || 0)
-        );
       } else {
-        interest24b?.setValue(interest?.value);
-        interest24b?.updateValueAndValidity();
+        if (parseFloat(interest?.value) > 250000) {
+          let eligible80EEValue = 50000 - (jsonAmt80ee || 0);
+          eligible80EEAmount?.setValue(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0);
+          eligible80EEAmount?.updateValueAndValidity();
+          let eligible24b;
+          if (itrJsonInterestValue && itrJsonInterestValue > 0) {
+            eligible24b = 200000 - itrJsonInterestValue;
+            interest24b?.setValue(Math.max(eligible24b, (interest?.value - eligible80EEAmount?.value)));
+          } else {
+            eligible24b = interest?.value - eligible80EEAmount?.value;
+            interest24b?.setValue(Math.max(eligible24b, 200000));
+          }
+          interest24b?.updateValueAndValidity();
+          eligible80EEAAmount?.setValue(0);
+          eligible80EEAAmount?.updateValueAndValidity();
+        } else if (parseFloat(interest?.value) > 200000) {
+          let eligible24b;
+          let eligible80EEValue = 50000 - (jsonAmt80ee || 0);
 
-        let value =
-          parseFloat(interest?.value) - interest24b?.value - jsonAmt80ee;
-        eligible80EEAmount?.setValue(value > 0 ? value : 0);
-
-        // if 80ee then setting 80eea as 0, as both cannot be claimed
-        eligible80EEAAmount?.setValue(0);
-        eligible80EEAAmount?.updateValueAndValidity();
+          if (itrJsonInterestValue && itrJsonInterestValue > 0) {
+            eligible80EEAmount?.setValue(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0);
+            eligible80EEAmount?.updateValueAndValidity();
+            eligible80EEAAmount?.setValue(0);
+            eligible80EEAAmount?.updateValueAndValidity();
+            interest24b?.setValue(interest?.value - eligible80EEAmount?.value);
+          } else {
+            eligible24b = interest?.value;
+            interest24b?.setValue(Math.min(eligible24b, 200000));
+          }
+          interest24b?.updateValueAndValidity();
+          let difference = interest?.value - interest24b?.value;
+          eligible80EEAmount?.setValue(Math.min(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0, difference));
+          eligible80EEAmount?.updateValueAndValidity();
+          eligible80EEAAmount?.setValue(0);
+          eligible80EEAAmount?.updateValueAndValidity();
+        } else {
+          let eligible24b;
+          let eligible80EEValue = 50000 - (jsonAmt80ee || 0);
+          if (itrJsonInterestValue && itrJsonInterestValue > 0) {
+            eligible80EEAmount?.setValue(Math.min(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0, interest?.value));
+            eligible80EEAmount?.updateValueAndValidity();
+            eligible80EEAAmount?.setValue(0);
+            eligible80EEAAmount?.updateValueAndValidity();
+            interest24b?.setValue(interest?.value - eligible80EEAmount?.value);
+          } else {
+            eligible24b = interest?.value;
+            interest24b?.setValue(Math.min(eligible24b, 200000));
+            let difference = interest?.value - interest24b?.value;
+            eligible80EEAmount?.setValue(Math.min(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0, difference));
+            eligible80EEAmount?.updateValueAndValidity();
+            eligible80EEAAmount?.setValue(0);
+            eligible80EEAAmount?.updateValueAndValidity();
+          }
+          interest24b?.updateValueAndValidity();
+        }
       }
     } else if (eligible80EE?.value === '80EEA') {
       if (propertyType?.value === 'SOP') {
