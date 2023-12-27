@@ -1599,6 +1599,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       this.changeConsetGiven = true;
+      this.bifurcationResult = null;
     });
   }
 
@@ -1700,6 +1701,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       for (let i = 0; i < allowance.length; i++) {
         this.addExemptIncome(allowance[i]);
       }
+    }
+    if(this.localEmployer.allowance.length == 0) {
+      let allowanceArray = this.allowanceFormGroup.controls[
+          'allowances'
+          ] as FormArray;
+      allowanceArray.controls = [];
+      this.addExemptIncome();
     }
 
     /* Deductions Set Values */
