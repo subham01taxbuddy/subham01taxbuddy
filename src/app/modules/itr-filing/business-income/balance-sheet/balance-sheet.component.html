@@ -12,6 +12,40 @@
           <div class="div-4">
             <div class="frame-wrapper-2A">
               <div class="accordion" id="myAccordion">
+
+                <div class="accordion__item-body">
+                  <div class="gray_container">
+                    <div class="div-6">
+                      <div class="form-field">
+                        <div><span class="span">GST Turnover </span>
+                        </div>
+                      </div>
+                      <div class="form-field">
+                        <input matInput placeholder="GST Turnover" name="grossTurnOverAmount"
+                          [formControl]="$any(assetLiabilitiesForm.controls['grossTurnOverAmount'])"
+                          class="form-control inpplac" maxlength="14" />
+                        <mat-error *ngIf="assetLiabilitiesForm.controls['grossTurnOverAmount'].hasError('pattern')">
+                          Enter positive number without decimal.</mat-error>
+                      </div>
+                    </div>
+
+                    <div class="div-6">
+                      <div class="form-field">
+                        <div><span class="span">GSTR Number</span>
+                        </div>
+                      </div>
+                      <div class="form-field">
+                        <input matInput placeholder="GST Number" name="GSTRNumber"
+                          [formControl]="$any(assetLiabilitiesForm.controls['GSTRNumber'])" class="form-control inpplac"
+                          matTooltip="(GST pattern is NNXXXXXNNNNXZZZ N is number, X is character, Z is number or character)"
+                          matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput upperCase />
+                        <mat-error *ngIf="assetLiabilitiesForm.controls['GSTRNumber'].hasError('pattern')">Enter valid
+                          GST Number</mat-error>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="heading1">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
@@ -108,9 +142,88 @@
                           </div>
                         </div>
                       </form>
-                      <h2 class="inner_accordion-title">
-                        Application of Funds
-                      </h2>
+
+                    </div>
+                    <div class="accordion__item-body" *ngIf="this.ITR_JSON.liableSection44AAflag != 'Y'">
+                      <form id="commonValidForm2">
+                        <div class="gray_container">
+                          <div class="div-6">
+                            <div class="form-field">
+                              <div><span class="span">Sundry debtors </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                            </div>
+                            <div class="form-field">
+                              <input digitsOnly
+                                [formControl]="$any(assetLiabilitiesForm.controls['sundryCreditorsAmount'])" matInput
+                                placeholder="₹ Enter Amount" name="sundryCreditorsAmount" class="form-control inpplac"
+                                maxlength="14" required />
+                              <mat-error
+                                *ngIf="assetLiabilitiesForm.controls['sundryCreditorsAmount'].hasError('pattern')">
+                                Enter positive number without decimal.</mat-error>
+                            </div>
+                          </div>
+
+                          <div class="div-6">
+                            <div class="form-field">
+                              <div><span class="span">Sundry creditors </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                            </div>
+                            <div class="form-field">
+                              <input digitsOnly
+                                [formControl]="$any(assetLiabilitiesForm.controls['sundryCreditorsAmount'])" matInput
+                                placeholder="Sundry creditors" name="sundryCreditorsAmount" class="form-control inpplac"
+                                maxlength="14" required />
+                              <mat-error
+                                *ngIf="assetLiabilitiesForm.controls['sundryCreditorsAmount'].hasError('pattern')">
+                                Enter positive number without decimal.</mat-error>
+                            </div>
+                          </div>
+
+                          <div class="div-6">
+                            <div class="form-field">
+                              <div><span class="span">Inventories </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                            </div>
+                            <div class="form-field">
+                              <input digitsOnly [formControl]="$any(assetLiabilitiesForm.controls['inventories'])"
+                                matInput placeholder="Inventories" name="Inventories" class="form-control inpplac"
+                                maxlength="14" required />
+                              <mat-error *ngIf="assetLiabilitiesForm.controls['inventories'].hasError('pattern')">
+                                Enter positive number without decimal.</mat-error>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="form-field">
+                              <div><span class="span">Cash in hand </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                            </div>
+                            <div class="form-field">
+                              <input digitsOnly [formControl]="$any(assetLiabilitiesForm.controls['cashInHand'])"
+                                matInput placeholder="Cash in hand" name="cashInHand" class="form-control inpplac"
+                                maxlength="14" required />
+                              <mat-error *ngIf="assetLiabilitiesForm.controls['cashInHand'].hasError('pattern')">
+                                Enter positive number without decimal.</mat-error>
+                            </div>
+                          </div>
+
+                        </div>
+
+                      </form>
+                    </div>
+
+                  </div>
+                </div>
+
+
+                <div class="accordion-item" *ngIf="this.ITR_JSON.liableSection44AAflag === 'Y'">
+                  <h2 class="accordion-header" id="heading2">
+                    <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse2">Application of Funds</button>
+
+                  </h2>
+                  <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                    <div class="accordion__item-body">
+
                       <div class="gray_container">
                         <app-depreciation-dialog [depreciationObj]="depreciationObj"
                           (onSave)="getFixedAssetData($event)"></app-depreciation-dialog>
@@ -291,89 +404,25 @@
                           </button>
                         </h2>
                       </div>
-                      <div class="gray_container">
-                        <div class="div-6">
-                          <div class="form-field">
-                            <div><span class="span">Difference </span>
-                            </div>
-                          </div>
-                          <div class="form-field">
-                            <input matInput placeholder="Difference" name="difference" readonly [formControl]="
-                            $any(assetLiabilitiesForm.controls['difference'])
-                          " class="form-control inpplac" maxlength="14" readonly />
-                          </div>
-                        </div>
-                      </div>
                     </div>
-                    <div class="accordion__item-body" *ngIf="this.ITR_JSON.liableSection44AAflag != 'Y'">
-                      <form id="commonValidForm2">
-                        <div class="gray_container">
-                          <div class="div-6">
-                            <div class="form-field">
-                              <div><span class="span">Sundry debtors </span> <span class="text-wrapper-2">*</span>
-                              </div>
-                            </div>
-                            <div class="form-field">
-                              <input digitsOnly
-                                [formControl]="$any(assetLiabilitiesForm.controls['sundryCreditorsAmount'])" matInput
-                                placeholder="₹ Enter Amount" name="sundryCreditorsAmount" class="form-control inpplac"
-                                maxlength="14" required />
-                              <mat-error
-                                *ngIf="assetLiabilitiesForm.controls['sundryCreditorsAmount'].hasError('pattern')">
-                                Enter positive number without decimal.</mat-error>
-                            </div>
-                          </div>
-
-                          <div class="div-6">
-                            <div class="form-field">
-                              <div><span class="span">Sundry creditors </span> <span class="text-wrapper-2">*</span>
-                              </div>
-                            </div>
-                            <div class="form-field">
-                              <input digitsOnly
-                                [formControl]="$any(assetLiabilitiesForm.controls['sundryCreditorsAmount'])" matInput
-                                placeholder="Sundry creditors" name="sundryCreditorsAmount" class="form-control inpplac"
-                                maxlength="14" required />
-                              <mat-error
-                                *ngIf="assetLiabilitiesForm.controls['sundryCreditorsAmount'].hasError('pattern')">
-                                Enter positive number without decimal.</mat-error>
-                            </div>
-                          </div>
-
-                          <div class="div-6">
-                            <div class="form-field">
-                              <div><span class="span">Inventories </span> <span class="text-wrapper-2">*</span>
-                              </div>
-                            </div>
-                            <div class="form-field">
-                              <input digitsOnly [formControl]="$any(assetLiabilitiesForm.controls['inventories'])"
-                                matInput placeholder="Inventories" name="Inventories" class="form-control inpplac"
-                                maxlength="14" required />
-                              <mat-error *ngIf="assetLiabilitiesForm.controls['inventories'].hasError('pattern')">
-                                Enter positive number without decimal.</mat-error>
-                            </div>
-                          </div>
-                          <div class="div-6">
-                            <div class="form-field">
-                              <div><span class="span">Cash in hand </span> <span class="text-wrapper-2">*</span>
-                              </div>
-                            </div>
-                            <div class="form-field">
-                              <input digitsOnly [formControl]="$any(assetLiabilitiesForm.controls['cashInHand'])"
-                                matInput placeholder="Cash in hand" name="cashInHand" class="form-control inpplac"
-                                maxlength="14" required />
-                              <mat-error *ngIf="assetLiabilitiesForm.controls['cashInHand'].hasError('pattern')">
-                                Enter positive number without decimal.</mat-error>
-                            </div>
-                          </div>
-
-                        </div>
-
-                      </form>
-                    </div>
-
                   </div>
                 </div>
+                <div class="accordion__item-body">
+                  <div class="gray_container" *ngIf="this.ITR_JSON.liableSection44AAflag === 'Y'">
+                    <div class="div-6">
+                      <div class="form-field">
+                        <div><span class="span">Difference </span>
+                        </div>
+                      </div>
+                      <div class="form-field">
+                        <input matInput placeholder="Difference" name="difference" readonly [formControl]="
+                                            $any(assetLiabilitiesForm.controls['difference'])
+                                          " class="form-control inpplac" maxlength="14" readonly />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
