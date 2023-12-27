@@ -143,6 +143,7 @@ export class HousePropertyComponent implements OnInit {
 
     this.updateHpTaxaxbleIncome();
     this.enableOnOverAllValue();
+    this.calculateInterestOrDeduction();
   }
 
   updateHpTaxaxbleIncome(save?) {
@@ -1426,15 +1427,30 @@ export class HousePropertyComponent implements OnInit {
       .filter((element, index) => index !== this.currentIndex)
       .reduce((acc, element) => acc + element.eligible80EEAAmount, 0);
 
+    this.enableOnOverAllValue();
+
+    // let currentIndex;
+    // if(this.currentIndex){
+    //   currentIndex=
+    // }
+
+    // set terninary current index if it isxists for all
+
     const itrJsonInterestValue = this.ITR_JSON.houseProperties
       ?.filter((item, index) => index !== this.currentIndex)
       ?.reduce((acc, property, index) => {
-        // Check if the property has a loans array and the index is 0
-        if (index === 0 && property?.loans?.length > 0) {
-          // Calculate the total interest amount from the loans array
+        if (property?.loans?.length > 0) {
           const totalInterest = property.loans.reduce((loanAcc, loan) => loanAcc + (loan?.interestAmount || 0), 0);
+          acc += totalInterest;
+        }
+        return acc;
+      }, 0);
 
-          // Add the total interest to the accumulator
+    const itrJsonSopInterestValue = this.ITR_JSON.houseProperties
+      ?.filter((item, index) => index !== this.currentIndex && item.propertyType === 'SOP')
+      ?.reduce((acc, property, index) => {
+        if (property?.loans?.length > 0) {
+          const totalInterest = property.loans.reduce((loanAcc, loan) => loanAcc + (loan?.interestAmount || 0), 0);
           acc += totalInterest;
         }
         return acc;
@@ -1451,16 +1467,17 @@ export class HousePropertyComponent implements OnInit {
       interest.clearValidators();
       interest.updateValueAndValidity();
     }
+    let deductionValueTotal = this.deduction80EEValue();
 
     if (eligible80EE?.value === '80EE') {
       if (propertyType?.value === 'SOP') {
         if (parseFloat(interest?.value) > 250000) {
           let eligible80EEValue = 50000 - (jsonAmt80ee || 0);
-          eligible80EEAmount?.setValue(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0);
+          eligible80EEAmount?.setValue(deductionValueTotal < 50000 ? eligible80EEValue : 0);
           eligible80EEAmount?.updateValueAndValidity();
           let eligible24b;
-          if (itrJsonInterestValue && itrJsonInterestValue > 0) {
-            eligible24b = 200000 - itrJsonInterestValue;
+          if (itrJsonSopInterestValue && itrJsonSopInterestValue > 0) {
+            eligible24b = 200000 - itrJsonSopInterestValue;
             interest24b?.setValue(Math.min(eligible24b, (interest?.value - eligible80EEAmount?.value)));
           } else {
             eligible24b = interest?.value - eligible80EEAmount?.value;
@@ -1471,8 +1488,8 @@ export class HousePropertyComponent implements OnInit {
           eligible80EEAAmount?.updateValueAndValidity();
         } else if (parseFloat(interest?.value) > 200000) {
           let eligible24b;
-          if (itrJsonInterestValue && itrJsonInterestValue > 0) {
-            eligible24b = 200000 - itrJsonInterestValue;
+          if (itrJsonSopInterestValue && itrJsonSopInterestValue > 0) {
+            eligible24b = 200000 - itrJsonSopInterestValue;
             interest24b?.setValue(Math.min(eligible24b, interest?.value));
           } else {
             eligible24b = interest?.value;
@@ -1481,14 +1498,14 @@ export class HousePropertyComponent implements OnInit {
           interest24b?.updateValueAndValidity();
           let eligible80EEValue = 50000 - (jsonAmt80ee || 0);
           let difference = interest?.value - interest24b?.value;
-          eligible80EEAmount?.setValue(Math.min(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0, difference));
+          eligible80EEAmount?.setValue(Math.min(deductionValueTotal < 50000 ? eligible80EEValue : 0, difference));
           eligible80EEAmount?.updateValueAndValidity();
           eligible80EEAAmount?.setValue(0);
           eligible80EEAAmount?.updateValueAndValidity();
         } else {
           let eligible24b;
-          if (itrJsonInterestValue && itrJsonInterestValue > 0) {
-            eligible24b = 200000 - itrJsonInterestValue;
+          if (itrJsonSopInterestValue && itrJsonSopInterestValue > 0) {
+            eligible24b = 200000 - itrJsonSopInterestValue;
             interest24b?.setValue(Math.min(eligible24b, interest?.value));
           } else {
             eligible24b = interest?.value;
@@ -1496,10 +1513,10 @@ export class HousePropertyComponent implements OnInit {
           }
           interest24b?.updateValueAndValidity();
 
-          if ((itrJsonInterestValue || 0) + interest24b?.value <= 200000) {
+          if ((itrJsonSopInterestValue || 0) + interest24b?.value <= 200000) {
             let eligible80EEValue = 50000 - (jsonAmt80ee || 0);
             let difference = interest?.value - interest24b?.value;
-            eligible80EEAmount?.setValue(Math.min(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0, difference));
+            eligible80EEAmount?.setValue(Math.min(deductionValueTotal < 50000 ? eligible80EEValue : 0, difference));
             eligible80EEAmount?.updateValueAndValidity();
             eligible80EEAAmount?.setValue(0);
             eligible80EEAAmount?.updateValueAndValidity();
@@ -1508,7 +1525,7 @@ export class HousePropertyComponent implements OnInit {
       } else {
         if (parseFloat(interest?.value) > 250000) {
           let eligible80EEValue = 50000 - (jsonAmt80ee || 0);
-          eligible80EEAmount?.setValue(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0);
+          eligible80EEAmount?.setValue(deductionValueTotal < 50000 ? eligible80EEValue : 0);
           eligible80EEAmount?.updateValueAndValidity();
           let eligible24b;
           if (itrJsonInterestValue && itrJsonInterestValue > 0) {
@@ -1526,18 +1543,23 @@ export class HousePropertyComponent implements OnInit {
           let eligible80EEValue = 50000 - (jsonAmt80ee || 0);
 
           if (itrJsonInterestValue && itrJsonInterestValue > 0) {
-            eligible80EEAmount?.setValue(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0);
+            interest24b?.setValue(Math.min(interest?.value, 200000));
+            eligible80EEAmount?.setValue(Math.min(deductionValueTotal < 50000 ? interest?.value - interest24b?.value : 0, eligible80EEValue));
             eligible80EEAmount?.updateValueAndValidity();
             eligible80EEAAmount?.setValue(0);
             eligible80EEAAmount?.updateValueAndValidity();
-            interest24b?.setValue(interest?.value - eligible80EEAmount?.value);
+            if (eligible80EEAmount?.value === 0) {
+              interest24b?.setValue(interest?.value);
+            } else {
+              interest24b?.setValue(interest?.value - eligible80EEAmount?.value);
+            }
           } else {
             eligible24b = interest?.value;
             interest24b?.setValue(Math.min(eligible24b, 200000));
           }
           interest24b?.updateValueAndValidity();
           let difference = interest?.value - interest24b?.value;
-          eligible80EEAmount?.setValue(Math.min(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0, difference));
+          eligible80EEAmount?.setValue(Math.min(deductionValueTotal < 50000 ? eligible80EEValue : 0, difference));
           eligible80EEAmount?.updateValueAndValidity();
           eligible80EEAAmount?.setValue(0);
           eligible80EEAAmount?.updateValueAndValidity();
@@ -1545,16 +1567,16 @@ export class HousePropertyComponent implements OnInit {
           let eligible24b;
           let eligible80EEValue = 50000 - (jsonAmt80ee || 0);
           if (itrJsonInterestValue && itrJsonInterestValue > 0) {
-            eligible80EEAmount?.setValue(Math.min(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0, interest?.value));
+            interest24b?.setValue(Math.min(interest?.value, 200000));
+            eligible80EEAmount?.setValue(deductionValueTotal < 50000 ? interest?.value - interest24b?.value : 0);
             eligible80EEAmount?.updateValueAndValidity();
             eligible80EEAAmount?.setValue(0);
             eligible80EEAAmount?.updateValueAndValidity();
-            interest24b?.setValue(interest?.value - eligible80EEAmount?.value);
           } else {
             eligible24b = interest?.value;
             interest24b?.setValue(Math.min(eligible24b, 200000));
             let difference = interest?.value - interest24b?.value;
-            eligible80EEAmount?.setValue(Math.min(this.deduction80EEValue() < 50000 ? eligible80EEValue : 0, difference));
+            eligible80EEAmount?.setValue(Math.min(deductionValueTotal < 50000 ? eligible80EEValue : 0, difference));
             eligible80EEAmount?.updateValueAndValidity();
             eligible80EEAAmount?.setValue(0);
             eligible80EEAAmount?.updateValueAndValidity();
