@@ -29,10 +29,6 @@ export class InvestmentsDeductionsComponent
   sec80gDonationsComponent!: DonationsComponent;
   @ViewChild('donations80ggaComponentRef', { static: false })
   sec80ggaDonationsComponent!: DonationsComponent;
-
-  @ViewChild('otherDeductionsRef', { static: false })
-  otherDeductionComponent!: OtherDeductionsComponent;
-
   step = 0;
   isAddDonation: Number;
   loading: boolean = false;
@@ -702,6 +698,8 @@ export class InvestmentsDeductionsComponent
       PS_EMPLOYEE: [null, Validators.pattern(AppConstants.numericRegex)],
       PS_EMPLOYER: [null, Validators.pattern(AppConstants.numericRegex)],
       PENSION_SCHEME: [null, Validators.pattern(AppConstants.numericRegex)],
+      us80e: [null, Validators.pattern(AppConstants.numericRegex)],
+      us80gg: [null, Validators.pattern(AppConstants.numericRegex)],
       selfPremium: [null, Validators.pattern(AppConstants.numericRegex)],
       selfPreventiveCheckUp: [
         null,
@@ -717,8 +715,11 @@ export class InvestmentsDeductionsComponent
         [Validators.pattern(AppConstants.numericRegex), Validators.max(5000)],
       ],
       medicalExpenditure: [null, Validators.pattern(AppConstants.numericRegex)],
-      us80tta: [null, Validators.pattern(AppConstants.numericRegex)],
-      us80ttb: [null, Validators.pattern(AppConstants.numericRegex)],
+      us80ggc: [null, Validators.pattern(AppConstants.numericRegex)],
+      us80eeb: [
+        null,
+        [Validators.pattern(AppConstants.numericRegex), Validators.max(150000)],
+      ],
       us80u: [null, Validators.pattern(AppConstants.numericRegex)],
       us80dd: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ddb: [null, Validators.pattern(AppConstants.numericRegex)],
@@ -742,6 +743,88 @@ export class InvestmentsDeductionsComponent
             item === 'PENSION_SCHEME'
           ) {
             this.addAndUpdateInvestment(item);
+          } else {
+            if (item === 'us80e') {
+              this.ITR_JSON.loans = this.ITR_JSON.loans?.filter(
+                (item: any) => item.loanType !== 'EDUCATION'
+              );
+              if (!this.ITR_JSON.loans) {
+                this.ITR_JSON.loans = [];
+              }
+              this.ITR_JSON.loans?.push({
+                loanType: 'EDUCATION',
+                name: null,
+                interestPaidPerAnum: Number(
+                  this.investmentDeductionForm.controls['us80e'].value
+                ),
+                principalPaidPerAnum: 0.0,
+                loanAmount: null,
+                details: null,
+              });
+            } else if (item === 'us80gg') {
+              this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter(
+                (item: any) => item.expenseType !== 'HOUSE_RENT_PAID'
+              );
+              if (!this.ITR_JSON.expenses) {
+                this.ITR_JSON.expenses = [];
+              }
+              if (!this.ITR_JSON.systemFlags.hraAvailed) {
+                this.ITR_JSON.expenses?.push({
+                  expenseType: 'HOUSE_RENT_PAID',
+                  expenseFor: null,
+                  details: null,
+                  amount: Number(
+                    this.investmentDeductionForm.controls['us80gg'].value
+                  ),
+                  noOfMonths: 0,
+                });
+              }
+            } else if (item === 'us80ggc') {
+              this.ITR_JSON.donations = this.ITR_JSON.donations?.filter(
+                (item: any) => item.donationType !== 'POLITICAL'
+              );
+              if (!this.ITR_JSON.donations) {
+                this.ITR_JSON.donations = [];
+              }
+              if (this.investmentDeductionForm.controls['us80ggc'].value > 0) {
+                this.ITR_JSON.donations?.push({
+                  details: '',
+                  identifier: '',
+                  panNumber: '',
+                  schemeCode: '',
+                  donationType: 'POLITICAL',
+                  name: '',
+                  amountInCash: 0,
+                  amountOtherThanCash: Number(
+                    this.investmentDeductionForm.controls['us80ggc'].value
+                  ),
+                  address: '',
+                  city: '',
+                  pinCode: '',
+                  state: '',
+                });
+              } else {
+                this.ITR_JSON.donations = this.ITR_JSON.donations?.filter(
+                  (item: any) => item.donationType !== 'POLITICAL'
+                );
+              }
+            } else if (item === 'us80eeb') {
+              this.ITR_JSON.expenses = this.ITR_JSON.expenses?.filter(
+                (item: any) => item.expenseType !== 'ELECTRIC_VEHICLE'
+              );
+              if (!this.ITR_JSON.expenses) {
+                this.ITR_JSON.expenses = [];
+              }
+              this.ITR_JSON.expenses?.push({
+                expenseType: 'ELECTRIC_VEHICLE',
+                expenseFor: null,
+                details: null,
+                amount: Number(
+                  this.investmentDeductionForm.controls['us80eeb'].value
+                ),
+                noOfMonths: 0,
+              });
+            }
           }
         }
       );
@@ -761,7 +844,6 @@ export class InvestmentsDeductionsComponent
     this.sec80ggaDonationsComponent.saveGeneralDonation();
     let medicalExpenses =
       this.MedicalExpensesComponent.saveInvestmentDeductions();
-    this.otherDeductionComponent.saveInvestmentDeductions();
     if (saved && medicalExpenses) {
       this.serviceCall();
     }
@@ -781,6 +863,43 @@ export class InvestmentsDeductionsComponent
         ].setValue(investment.amount);
     });
 
+    for (let i = 0; i < this.ITR_JSON.loans?.length; i++) {
+      switch (this.ITR_JSON.loans[i].loanType) {
+        case 'EDUCATION': {
+          this.investmentDeductionForm.controls['us80e'].setValue(
+            this.ITR_JSON.loans[i].interestPaidPerAnum
+          );
+        }
+      }
+    }
+
+    for (let j = 0; j < this.ITR_JSON.expenses?.length; j++) {
+      switch (this.ITR_JSON.expenses[j].expenseType) {
+        case 'HOUSE_RENT_PAID': {
+          this.investmentDeductionForm.controls['us80gg'].setValue(
+            this.ITR_JSON.expenses[j].amount
+          );
+          break;
+        }
+        case 'ELECTRIC_VEHICLE': {
+          this.investmentDeductionForm.controls['us80eeb'].setValue(
+            this.ITR_JSON.expenses[j].amount
+          );
+          break;
+        }
+      }
+    }
+
+    for (let j = 0; j < this.ITR_JSON.donations?.length; j++) {
+      switch (this.ITR_JSON.donations[j].donationType) {
+        case 'POLITICAL': {
+          this.investmentDeductionForm.controls['us80ggc'].setValue(
+            this.ITR_JSON.donations[j].amountOtherThanCash
+          );
+          break;
+        }
+      }
+    }
   }
 
   addAndUpdateInvestment(controlName) {

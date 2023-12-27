@@ -27,9 +27,9 @@
                  
                     <button
                             *ngIf="compactView || selectedBroker === ''"
-                            class="edit_btn float-right btnStyl"
+                            class="edit_btn float-right"
                             (click)="$event.stopPropagation(); addMore()">
-                      <i class="fa fa-plus"></i> Add
+                      <i class="fa fa-plus"></i>Add
                     </button>
                 
                   <ag-grid-angular
@@ -49,7 +49,7 @@
 
                     <div class="col-sm-3">
                       <button type="submit" class="cancel" (click)="showCompactView()">
-                        {{ this.bondType === 'listed' ? 'Back to Brokers' : 'Back'}}
+                        Back to Brokers
                       </button>
                     </div>
                   </div>
