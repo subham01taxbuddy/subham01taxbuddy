@@ -46,8 +46,6 @@ export class TdsOnSalaryComponent implements OnInit {
       this.Copy_ITR_JSON.taxPaid?.onSalary.forEach((item) => {
         this.addMore(item);
       });
-    } else {
-      this.addMore();
     }
 
     if (this.editIndex != undefined && this.editIndex >= 0) {

@@ -15,17 +15,18 @@
       <div class="space">
         <div class="div-2">
           <div class="div-3">
-            <div class="contents-wrapper">
+            <div class="contents-wrapper" *ngFor="let employer of Copy_ITR_JSON.employers; let i = index;">
               <div class="contents">
-                <div class="field-text">Employer {{ this.currentIndex !== -1 ? this.currentIndex + 1 : this.ITR_JSON.employers.length + 1}}</div>
-                <div class="group"><img class="material-symbols" src="assets/img/new/del.png" /></div>
+<!--                <div class="field-text">Employer {{ this.currentIndex !== -1 ? this.currentIndex + 1 : this.ITR_JSON.employers.length + 1}}</div>-->
+                <div class="field-text" (click)="markActive(i)">Employer {{ i + 1}}</div>
+                <div class="group" (click)="deleteEmployer(i)"><img class="material-symbols" src="assets/img/new/del.png" /></div>
               </div>
             </div>
-<!--            <div class="contents-wrapper">-->
-<!--              <div class="field-text-wrapper">-->
-<!--                <div class="field-text-2">+ Add Another Employer</div>-->
-<!--              </div>-->
-<!--            </div>-->
+            <div class="contents-wrapper">
+              <div class="field-text-wrapper">
+                <div class="field-text-2" (click)="markActive(-1)">+ Add Another Employer</div>
+              </div>
+            </div>
           </div>
 
 
@@ -571,7 +572,7 @@
                 <div class="lft-btn" (click)="goBack()">Back</div>
               </div>
               <div class="box-right">
-                <div class="rght-btn" (click)="saveEmployerDetails()">Save & View Summary</div>
+                <div class="rght-btn" (click)="saveEmployerDetails(true)">Save & View Summary</div>
               </div>
             </div>
 
