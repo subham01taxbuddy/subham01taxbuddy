@@ -1,9 +1,6 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <div class="page-wrapper">
-<main>
+  <main>
     <div class="frameC">
       <div class="div">
         <div class="text-wrapper">Other Source of Income</div>
@@ -19,31 +16,23 @@
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="headingTwo">
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                              data-bs-target="#collapseTwo">Other Income
-                        <input type="number" class="form-control inpClr2" disabled
-                          value="{{getTotalOtherIncome()}}">
+                        data-bs-target="#collapseTwo">Interest Income
+                        <input type="number" class="form-control inpClr2" disabled value="{{getTotalOtherIncome()}}">
                       </button>
 
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                       <div class="accordion__item-body" formArrayName="otherIncomes">
                         <div class="div-6" *ngFor="let income of getIncomeArray.controls; let i = index"
-                             [formGroupName]="i">
+                          [formGroupName]="i">
                           <div class="form-field">
                             <div><span class="span">{{ income.value.label }} </span></div>
                           </div>
                           <div class="form-field">
                             <mat-form-field appearance="outline">
-                              <input
-                                      type="text"
-                                      trim
-                                      matInput
-                                      placeholder=""
-                                      name="incomeValue[i]"
-                                      formControlName="incomeValue"
-                                      type="number"
-                                      maxlength="125"
-                                      (blur)="validateIncomeValueOnBlur()"/>
+                              <input type="text" trim matInput placeholder="" name="incomeValue[i]"
+                                formControlName="incomeValue" type="number" maxlength="125"
+                                (blur)="validateIncomeValueOnBlur()" />
                             </mat-form-field>
                           </div>
                         </div>
@@ -54,9 +43,9 @@
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="headingThree">
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                              data-bs-target="#collapseThree">Divident Income
-                        <input type="number" class="form-control inpClr2" [value]="getTotal()"
-                               id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹0">
+                        data-bs-target="#collapseThree">Divident Income
+                        <input type="number" class="form-control inpClr2" [value]="getTotal()" id="exampleInputEmail1"
+                          aria-describedby="emailHelp" placeholder="₹0">
                       </button>
                     </h2>
                     <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
@@ -65,46 +54,22 @@
                           <div class="form-field">
                             <div><span class="span">Upto 15 June </span></div>
                             <mat-form-field appearance="outline">
-                              <input
-                                      digitsOnly
-                                      trim
-                                      matInput
-                                      placeholder="Upto 15 June 2022"
-                                      name="quarter1"
-                                      formControlName="quarter1"
-                                      maxlength="50"
-                                      digitsOnly
-                              />
+                              <input digitsOnly trim matInput placeholder="Upto 15 June 2022" name="quarter1"
+                                formControlName="quarter1" maxlength="50" digitsOnly />
                             </mat-form-field>
                           </div>
                           <div class="form-field">
                             <div><span class="span">16th June- 15th Sep</span></div>
                             <mat-form-field appearance="outline">
-                              <input
-                                      digitsOnly
-                                      trim
-                                      matInput
-                                      placeholder="16 June 2022 - 15 Sep 2022"
-                                      name="quarter2"
-                                      formControlName="quarter2"
-                                      maxlength="50"
-                                      digitsOnly
-                              />
+                              <input digitsOnly trim matInput placeholder="16 June 2022 - 15 Sep 2022" name="quarter2"
+                                formControlName="quarter2" maxlength="50" digitsOnly />
                             </mat-form-field>
                           </div>
                           <div class="form-field">
                             <div><span class="span">16th Sep- 15th Dec </span></div>
                             <mat-form-field appearance="outline">
-                              <input
-                                      digitsOnly
-                                      trim
-                                      matInput
-                                      placeholder="16 Sep 2022 - 15 Dec 2022"
-                                      name="quarter3"
-                                      formControlName="quarter3"
-                                      maxlength="50"
-                                      digitsOnly
-                              />
+                              <input digitsOnly trim matInput placeholder="16 Sep 2022 - 15 Dec 2022" name="quarter3"
+                                formControlName="quarter3" maxlength="50" digitsOnly />
                             </mat-form-field>
                           </div>
                         </div>
@@ -112,31 +77,15 @@
                           <div class="form-field">
                             <div> <span class="span">16th Dec- 15th Mar</span></div>
                             <mat-form-field appearance="outline">
-                              <input
-                                      digitsOnly
-                                      trim
-                                      matInput
-                                      placeholder="16 Dec 2022 - 15 March 2023"
-                                      name="quarter4"
-                                      formControlName="quarter4"
-                                      maxlength="50"
-                                      digitsOnly
-                              />
+                              <input digitsOnly trim matInput placeholder="16 Dec 2022 - 15 March 2023" name="quarter4"
+                                formControlName="quarter4" maxlength="50" digitsOnly />
                             </mat-form-field>
                           </div>
                           <div class="form-field">
                             <div><span class="span">16th Mar- 31th Mar</span></div>
                             <mat-form-field appearance="outline">
-                              <input
-                                      digitsOnly
-                                      trim
-                                      matInput
-                                      placeholder="16 March 2023 - 31 March 2023"
-                                      name="quarter5"
-                                      formControlName="quarter5"
-                                      maxlength="50"
-                                      digitsOnly
-                              />
+                              <input digitsOnly trim matInput placeholder="16 March 2023 - 31 March 2023"
+                                name="quarter5" formControlName="quarter5" maxlength="50" digitsOnly />
                             </mat-form-field>
                           </div>
                         </div>
@@ -144,172 +93,122 @@
                     </div>
                   </div>
 
-                    <div class="accordion-item">
-                      <h2 class="accordion-header" id="headingThree">
-                        <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseThree">Income from Gift
-                          <input type="number" class="form-control inpClr2" disabled
-                            value="{{getTotalGiftIncome()}}">
-                        </button>
-                        <div>Note for Gift- Gift received from Relative will be excluded from the total as it's not part of taxable income.</div>
-                      </h2>
-                      <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-                        <div class="accordion__item-body">
-                          <table class="table table-bordered" style="width: 100%">
-                        <thead style="background: #eaeaea">
-                        <tr class="table-head">
-                          <th></th>
-                          <th class="text-center">Whether GIft is received from Relative</th>
-                          <th></th>
-                        </tr>
-                        </thead>
-                        <tbody formGroupName="giftTax">
-                        <tr>
-                          <td>
-                            Money received without consideration
-                          </td>
-                          <td>
-                            <mat-checkbox formControlName="aggregateValueWithoutConsiderationNotTaxable">
-                            </mat-checkbox>
-                          </td>
-                          <td>
-                            <mat-form-field
-                                    class="input-field-width"
-                                    style="width: 90% !important"
-                            >
-                              <input
-                                      type="text"
-                                      trim
-                                      matInput
-                                      placeholder=""
-                                      formControlName="aggregateValueWithoutConsideration"
-                                      type="number"
-                                      class="input-field"
-                                      maxlength="125"
-                              />
-                            </mat-form-field>
-                          </td>
-                        </tr>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                      <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree">Income from Gift
+                        <input type="number" class="form-control inpClr2" disabled value="{{getTotalGiftIncome()}}">
+                      </button>
+                      <div>Note for Gift- Gift received from Relative will be excluded from the total as it's not part
+                        of taxable income.</div>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                      <div class="accordion__item-body">
+                        <table class="table table-bordered" style="width: 100%">
+                          <thead style="background: #eaeaea">
+                            <tr class="table-head">
+                              <th></th>
+                              <th class="text-center">Whether GIft is received from Relative</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody formGroupName="giftTax">
+                            <tr>
+                              <td>
+                                Money received without consideration
+                              </td>
+                              <td>
+                                <mat-checkbox formControlName="aggregateValueWithoutConsiderationNotTaxable">
+                                </mat-checkbox>
+                              </td>
+                              <td>
+                                <mat-form-field class="input-field-width" style="width: 90% !important">
+                                  <input type="text" trim matInput placeholder=""
+                                    formControlName="aggregateValueWithoutConsideration" type="number"
+                                    class="input-field" maxlength="125" />
+                                </mat-form-field>
+                              </td>
+                            </tr>
 
-                        <tr>
-                          <td>
-                            Immovable property received without consideration
-                          </td>
-                          <td>
-                            <mat-checkbox formControlName="immovablePropertyWithoutConsiderationNotTaxable">
-                            </mat-checkbox>
-                          </td>
-                          <td>
-                            <mat-form-field
-                                    class="input-field-width"
-                                    style="width: 90% !important"
-                            >
-                              <input
-                                      type="text"
-                                      trim
-                                      matInput
-                                      placeholder=""
-                                      formControlName="immovablePropertyWithoutConsideration"
-                                      type="number"
-                                      class="input-field"
-                                      maxlength="125"
-                              />
-                            </mat-form-field>
-                          </td>
-                        </tr>
+                            <tr>
+                              <td>
+                                Immovable property received without consideration
+                              </td>
+                              <td>
+                                <mat-checkbox formControlName="immovablePropertyWithoutConsiderationNotTaxable">
+                                </mat-checkbox>
+                              </td>
+                              <td>
+                                <mat-form-field class="input-field-width" style="width: 90% !important">
+                                  <input type="text" trim matInput placeholder=""
+                                    formControlName="immovablePropertyWithoutConsideration" type="number"
+                                    class="input-field" maxlength="125" />
+                                </mat-form-field>
+                              </td>
+                            </tr>
 
-                        <tr>
-                          <td>
-                            Immovable property received for inadequate consideration
-                          </td>
-                          <td>
-                            <mat-checkbox formControlName="immovablePropertyInadequateConsiderationNotTaxable">
-                            </mat-checkbox>
-                          </td>
-                          <td>
-                            <mat-form-field
-                                    class="input-field-width"
-                                    style="width: 90% !important"
-                            >
-                              <input
-                                      type="text"
-                                      trim
-                                      matInput
-                                      placeholder=""
-                                      formControlName="immovablePropertyInadequateConsideration"
-                                      type="number"
-                                      class="input-field"
-                                      maxlength="125"
-                              />
-                            </mat-form-field>
-                          </td>
-                        </tr>
+                            <tr>
+                              <td>
+                                Immovable property received for inadequate consideration
+                              </td>
+                              <td>
+                                <mat-checkbox formControlName="immovablePropertyInadequateConsiderationNotTaxable">
+                                </mat-checkbox>
+                              </td>
+                              <td>
+                                <mat-form-field class="input-field-width" style="width: 90% !important">
+                                  <input type="text" trim matInput placeholder=""
+                                    formControlName="immovablePropertyInadequateConsideration" type="number"
+                                    class="input-field" maxlength="125" />
+                                </mat-form-field>
+                              </td>
+                            </tr>
 
-                        <tr>
-                          <td>
-                            Any Other property received without consideration
-                          </td>
-                          <td>
-                            <mat-checkbox formControlName="anyOtherPropertyWithoutConsiderationNotTaxable">
-                            </mat-checkbox>
-                          </td>
-                          <td>
-                            <mat-form-field
-                                    class="input-field-width"
-                                    style="width: 90% !important"
-                            >
-                              <input
-                                      type="text"
-                                      trim
-                                      matInput
-                                      placeholder=""
-                                      formControlName="anyOtherPropertyWithoutConsideration"
-                                      type="number"
-                                      class="input-field"
-                                      maxlength="125"
-                              />
-                            </mat-form-field>
-                          </td>
-                        </tr>
+                            <tr>
+                              <td>
+                                Any Other property received without consideration
+                              </td>
+                              <td>
+                                <mat-checkbox formControlName="anyOtherPropertyWithoutConsiderationNotTaxable">
+                                </mat-checkbox>
+                              </td>
+                              <td>
+                                <mat-form-field class="input-field-width" style="width: 90% !important">
+                                  <input type="text" trim matInput placeholder=""
+                                    formControlName="anyOtherPropertyWithoutConsideration" type="number"
+                                    class="input-field" maxlength="125" />
+                                </mat-form-field>
+                              </td>
+                            </tr>
 
-                        <tr>
-                          <td>
-                            Any Other property received for inadequate consideration
-                          </td>
-                          <td>
-                            <mat-checkbox formControlName="anyOtherPropertyInadequateConsiderationNotTaxable">
-                            </mat-checkbox>
-                          </td>
-                          <td>
-                            <mat-form-field
-                                    class="input-field-width"
-                                    style="width: 90% !important"
-                            >
-                              <input
-                                      type="text"
-                                      trim
-                                      matInput
-                                      placeholder=""
-                                      formControlName="anyOtherPropertyInadequateConsideration"
-                                      type="number"
-                                      class="input-field"
-                                      maxlength="125"
-                              />
-                            </mat-form-field>
-                          </td>
-                        </tr>
-                        </tbody>
-                      </table>
-                        </div>
+                            <tr>
+                              <td>
+                                Any Other property received for inadequate consideration
+                              </td>
+                              <td>
+                                <mat-checkbox formControlName="anyOtherPropertyInadequateConsiderationNotTaxable">
+                                </mat-checkbox>
+                              </td>
+                              <td>
+                                <mat-form-field class="input-field-width" style="width: 90% !important">
+                                  <input type="text" trim matInput placeholder=""
+                                    formControlName="anyOtherPropertyInadequateConsideration" type="number"
+                                    class="input-field" maxlength="125" />
+                                </mat-form-field>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </div>
+                  </div>
 
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="headingThree">
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                              data-bs-target="#collapseThree">Any Other Income
+                        data-bs-target="#collapseThree">Any Other Income
                         <input type="number" class="form-control inpClr2" disabled
-                               value="{{otherIncomeFormGroup.getRawValue().totalFamPenDeduction}}">
+                          value="{{otherIncomeFormGroup.getRawValue().totalFamPenDeduction}}">
                       </button>
                     </h2>
                     <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
@@ -321,15 +220,8 @@
 
                             <div class="form-field">
                               <mat-form-field appearance="outline">
-                                <input
-                                        digitsOnly
-                                        matInput
-                                        placeholder="Family pension"
-                                        name="quarter1"
-                                        formControlName="familyPension"
-                                        maxlength="50"
-                                        (blur)="calFamPension()"
-                                />
+                                <input digitsOnly matInput placeholder="Family pension" name="quarter1"
+                                  formControlName="familyPension" maxlength="50" (blur)="calFamPension()" />
                               </mat-form-field>
                             </div>
                           </div>
@@ -337,28 +229,17 @@
                             <div><span class="span">Deduction u/s 57(2)a </span></div>
                             <div class="form-field">
                               <mat-form-field appearance="outline">
-                              <input
-                                      digitsOnly
-                                      matInput
-                                      name="quarter2"
-                                      formControlName="famPenDeduction"
-                                      readonly
-                              />
-                            </mat-form-field>
+                                <input digitsOnly matInput name="quarter2" formControlName="famPenDeduction" readonly />
+                              </mat-form-field>
                             </div>
                           </div>
                           <div class="form-field">
                             <div><span class="span">Net family pension</span></div>
                             <div class="form-field">
                               <mat-form-field appearance="outline">
-                              <input
-                                      digitsOnly
-                                      matInput
-                                      name="quarter3"
-                                      formControlName="totalFamPenDeduction"
-                                      readonly
-                              />
-                            </mat-form-field>
+                                <input digitsOnly matInput name="quarter3" formControlName="totalFamPenDeduction"
+                                  readonly />
+                              </mat-form-field>
                             </div>
                           </div>
                         </div>
@@ -384,12 +265,8 @@
         </div>
       </div>
     </div>
-</main>
- <!-- right side summary -->
- <app-side-summary-panel type="otherIncome"></app-side-summary-panel>
- <!-- right side summary ends-->
+  </main>
+  <!-- right side summary -->
+  <app-side-summary-panel type="otherIncome"></app-side-summary-panel>
+  <!-- right side summary ends-->
 </div>
-
-
-
-
