@@ -56,8 +56,6 @@ export class AdvanceTaxPaidComponent implements OnInit {
       this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS.forEach((item) => {
         this.addMoreSalary(item);
       });
-    } else {
-      this.addMoreSalary();
     }
 
     if (this.editIndex != undefined && this.editIndex >= 0) {

@@ -221,7 +221,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
     private location: Location,
-    private AllSalaryIncomeComponent: AllSalaryIncomeComponent,
+    // private AllSalaryIncomeComponent: AllSalaryIncomeComponent,
     private matDialog: MatDialog,
     private overlay: Overlay,
     private elementRef: ElementRef,
@@ -231,12 +231,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     console.log('nav data', this.router.getCurrentNavigation()?.extras?.state);
     console.log('nav data', this.location.getState());
     let extraData: any = this.location.getState();
-    this.currentIndex = extraData.data;
+    // this.currentIndex = extraData.data;
     // this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
+    this.currentIndex = this.ITR_JSON.employers?.length > 0 ? 0 : -1;
     if (this.currentIndex === -1) {
       this.localEmployer = {
         id: Math.random().toString(36).substr(2, 9),
@@ -324,6 +325,56 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     }
 
     if (this.currentIndex >= 0) {
+      this.editEmployerDetails(this.currentIndex);
+    }
+  }
+
+  deleteEmployer(index){
+    if(index >= 0 && index < this.Copy_ITR_JSON.employers.length) {
+      this.localEmployer = null;
+      this.Copy_ITR_JSON.employers.splice(index, 1);
+      this.ITR_JSON = this.Copy_ITR_JSON;
+      sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_JSON)
+      );
+      this.serviceCall();
+    }
+  }
+
+  markActive(index){
+    if(this.currentIndex > 0){
+      this.saveEmployerDetails(false);
+    }
+    if(index === -1) {
+      this.localEmployer = {
+        id: Math.random().toString(36).substr(2, 9),
+        employerName: '',
+        address: '',
+        city: '',
+        pinCode: '',
+        state: '',
+        employerPAN: '',
+        employerTAN: '',
+        taxableIncome: null,
+        exemptIncome: null,
+        standardDeduction: null,
+        periodFrom: '',
+        periodTo: '',
+        taxDeducted: null,
+        taxRelief: null,
+        employerCategory: '',
+        salary: [],
+        allowance: [],
+        perquisites: [],
+        profitsInLieuOfSalaryType: [],
+        deductions: [],
+        upload: [],
+        calculators: null,
+      };
+      this.Copy_ITR_JSON.employers.push(this.localEmployer);
+    } else {
+      this.currentIndex = index;
       this.editEmployerDetails(this.currentIndex);
     }
   }
@@ -1031,7 +1082,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     this.validationApplicableForAll();
   }
 
-  saveEmployerDetails() {
+  saveEmployerDetails(apiCall: boolean) {
     this.validations();
     if (this.employerDetailsFormGroup?.valid && this.allowanceFormGroup?.valid) {
       this.checkGrossSalary();
@@ -1401,7 +1452,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         });
       }
 
-      this.serviceCall();
+      if(apiCall) {
+        this.serviceCall();
+      }
     } else {
       $('input.ng-invalid').first().focus();
     }
@@ -1437,8 +1490,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         }
         this.Copy_ITR_JSON.employers.push(myEmp);
       } else {
-        const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
-        this.Copy_ITR_JSON.employers.splice(this.currentIndex, 1, myEmp);
+        if(this.localEmployer) {
+          const myEmp = JSON.parse(JSON.stringify(this.localEmployer));
+          this.Copy_ITR_JSON.employers.splice(this.currentIndex, 1, myEmp);
+        }
       }
 
       if (!this.Copy_ITR_JSON.systemFlags) {
@@ -1481,7 +1536,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
                 );
                 sessionStorage.removeItem('localEmployer');
 
-                this.AllSalaryIncomeComponent.updatingTaxableIncome('save');
+                // this.AllSalaryIncomeComponent.updatingTaxableIncome('save');
 
                 this.utilsService.showSnackBar('Salary updated successfully.');
                 this.loading = false;
@@ -1599,6 +1654,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       this.changeConsetGiven = true;
+      this.bifurcationResult = null;
     });
   }
 
@@ -1700,6 +1756,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       for (let i = 0; i < allowance.length; i++) {
         this.addExemptIncome(allowance[i]);
       }
+    }
+    if(this.localEmployer.allowance.length == 0) {
+      let allowanceArray = this.allowanceFormGroup.controls[
+          'allowances'
+          ] as FormArray;
+      allowanceArray.controls = [];
+      this.addExemptIncome();
     }
 
     /* Deductions Set Values */

@@ -56,8 +56,6 @@ export class TcsComponent implements OnInit {
       this.Copy_ITR_JSON.taxPaid.tcs.forEach((item) => {
         this.addMoreSalary(item);
       });
-    } else {
-      this.addMoreSalary();
     }
     if (this.editIndex != undefined && this.editIndex >= 0) {
       this.activeIndex = this.editIndex;
