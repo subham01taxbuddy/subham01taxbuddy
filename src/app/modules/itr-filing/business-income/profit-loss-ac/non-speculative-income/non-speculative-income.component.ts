@@ -61,6 +61,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   natOfBusinessDtlForm: FormGroup;
   natOfBusinessDtlsArray: FormArray;
 
+  totalOtherExpenses: any;
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
@@ -307,6 +308,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     form.expenses.forEach((element) => {
       allExpenses += parseFloat(element.expenseAmount);
     });
+    this.totalOtherExpenses = allExpenses;
     const net = form.netProfit - allExpenses;
     this.profitLossForm.controls['netProfit'].setValue(net);
     this.totalNetProfit = net;

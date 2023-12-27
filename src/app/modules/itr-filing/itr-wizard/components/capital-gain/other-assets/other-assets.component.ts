@@ -310,7 +310,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
           .filter((item) => item.assetType === 'GOLD')?.[0]
           ?.deduction?.splice(
             0,
-            this.ITR_JSON.capitalGain[0].deduction.length,
+            this.ITR_JSON.capitalGain[0].deduction?.length,
             extraDeductionDetails
           );
       } else {

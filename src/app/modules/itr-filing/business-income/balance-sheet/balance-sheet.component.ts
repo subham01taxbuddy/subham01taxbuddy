@@ -81,6 +81,25 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     this.assetLiabilitiesForm.controls['totalLoans'].setValue(totalLoans);
   }
 
+  createNatOfBusinessForm(index, detail: BusinessDescription) {
+    return this.fb.group({
+      id: detail?.id ? detail?.id : index,
+      hasEdit: [false],
+      natureOfBusiness: [detail?.natureOfBusiness || null, Validators.required],
+      tradeName: detail?.tradeName,
+      businessDescription: detail?.businessDescription,
+    });
+  }
+
+  addNatOfBusinessForm() {
+    let form = this.createNatOfBusinessForm(0, null);
+    (this.natOfBusinessDtlForm.controls['natOfBusinessDtlsArray'] as FormArray).insert(0, form);
+  }
+
+  get getnatOfBusinessDtlsArray() {
+    return <FormArray>this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray');
+  }
+
   pageChanged(event) {
     this.config.currentPage = event;
   }
@@ -392,8 +411,8 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         this.assetLiabilitiesForm.controls['sundryCreditorsAmount'].value
       ) +
       Number(this.assetLiabilitiesForm.controls['otherLiabilities'].value);
-    this.difference = this.total1 - this.total2;
-    this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
+    // this.difference = this.total1 - this.total2;
+    // this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
   }
 
 
@@ -408,15 +427,19 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       Number(this.assetLiabilitiesForm.controls['loanAndAdvances'].value) +
       Number(this.assetLiabilitiesForm.controls['investment'].value) +
       Number(this.assetLiabilitiesForm.controls['otherAssets'].value);
-    this.difference = this.total1 - this.total2;
-    this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
+    // this.difference = this.total1 - this.total2;
+    // this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
   }
 
   getFixedAssetData(data) {
     this.fixedAssetData = data;
     this.depreciationObj = this.fixedAssetData.fixedAssetsDetails;
-    if (this.fixedAssetData.fixedAssetsDetails.totalNetBlock) {
-      this.totalApplicationOfFunds();
+    if (this.depreciationObj.length) {
+      let totalNetBlock = 0;
+      this.depreciationObj.forEach(element => {
+        totalNetBlock += element.fixedAssetClosingAmount;
+      });
+      this.totalApplicationOfFunds(totalNetBlock);
     }
   }
 
@@ -449,11 +472,11 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     this.totalApplicationOfFunds();
   }
 
-  totalApplicationOfFunds() {
+  totalApplicationOfFunds(totalNetBlock?) {
     this.totalAppOfFunds = 0;
     this.totalAppOfFunds = Number(this.assetLiabilitiesForm.controls['investment'].value) + Number(this.assetLiabilitiesForm.controls['netCurrentAsset'].value);
-    if (this.fixedAssetData?.fixedAssetsDetails?.totalNetBlock) {
-      this.totalAppOfFunds += Number(this.fixedAssetData?.fixedAssetsDetails?.totalNetBlock);
+    if (totalNetBlock) {
+      this.totalAppOfFunds += Number(totalNetBlock);
     }
     this.calDifference();
   }
