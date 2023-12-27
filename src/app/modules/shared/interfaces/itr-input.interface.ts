@@ -494,6 +494,8 @@ export interface HouseProperties {
   loans: Loans[];
   eligible80EEAAmount?: any;
   eligible80EEAmount?: any;
+  totalArrearsUnrealizedRentReceived?:any;
+  arrearsUnrealizedRentReceived?:any;
 }
 
 export interface PresumptiveIncomes {

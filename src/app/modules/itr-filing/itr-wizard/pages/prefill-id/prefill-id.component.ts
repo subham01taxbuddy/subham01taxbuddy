@@ -1363,13 +1363,13 @@ export class PrefillIdComponent implements OnInit {
 
               ItrJSON[this.ITR_Type]?.FilingStatus?.ReceiptNo
                 ? (this.ITR_Obj.orgITRAckNum =
-                    ItrJSON[this.ITR_Type]?.FilingStatus?.ReceiptNo)
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.ReceiptNo)
                 : (this.ITR_Obj.orgITRAckNum = null);
 
               ItrJSON[this.ITR_Type]?.FilingStatus?.OrigRetFiledDate
                 ? (this.ITR_Obj.orgITRDate = this.parseAndFormatDate(
-                    ItrJSON[this.ITR_Type]?.FilingStatus?.OrigRetFiledDate
-                  ))
+                  ItrJSON[this.ITR_Type]?.FilingStatus?.OrigRetFiledDate
+                ))
                 : (this.ITR_Obj.orgITRDate = null);
 
               if (this.ITR_Type === 'ITR1') {
@@ -1437,26 +1437,26 @@ export class PrefillIdComponent implements OnInit {
                     ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls
                       ?.AssessmentYear
                       ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
-                          ItrJSON[
-                            this.ITR_Type
-                          ].FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
+                        ItrJSON[
+                          this.ITR_Type
+                        ].FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
                       : null;
 
                     ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls
                       ?.Form10IEDtls?.Form10IEDate
                       ? (this.ITR_Obj.everOptedNewRegime.date =
-                          this.parseAndFormatDate(
-                            ItrJSON[this.ITR_Type].FilingStatus
-                              ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
-                          ))
+                        this.parseAndFormatDate(
+                          ItrJSON[this.ITR_Type].FilingStatus
+                            ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
+                        ))
                       : null;
 
                     ItrJSON[this.ITR_Type].FilingStatus?.NewTaxRegimeDtls
                       ?.Form10IEDtls?.Form10IEAckNo
                       ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
-                          ItrJSON[
-                            this.ITR_Type
-                          ].FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                        ItrJSON[
+                          this.ITR_Type
+                        ].FilingStatus?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
                       : null;
                   }
 
@@ -1486,27 +1486,27 @@ export class PrefillIdComponent implements OnInit {
                     ItrJSON[this.ITR_Type].FilingStatus
                       ?.OptedOutNewTaxRegimeDtls?.AssessmentYear
                       ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
-                          ItrJSON[
-                            this.ITR_Type
-                          ].FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
+                        ItrJSON[
+                          this.ITR_Type
+                        ].FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
                       : null;
 
                     ItrJSON[this.ITR_Type].FilingStatus
                       ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
                       ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
-                          this.parseAndFormatDate(
-                            ItrJSON[this.ITR_Type].FilingStatus
-                              ?.OptedOutNewTaxRegimeDtls.Form10IEDtls
-                              ?.Form10IEDate
-                          ))
+                        this.parseAndFormatDate(
+                          ItrJSON[this.ITR_Type].FilingStatus
+                            ?.OptedOutNewTaxRegimeDtls.Form10IEDtls
+                            ?.Form10IEDate
+                        ))
                       : null;
 
                     ItrJSON[this.ITR_Type].FilingStatus
                       ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo
                       ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
-                          ItrJSON[
-                            this.ITR_Type
-                          ].FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                        ItrJSON[
+                          this.ITR_Type
+                        ].FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
                       : null;
                   }
 
@@ -1524,13 +1524,13 @@ export class PrefillIdComponent implements OnInit {
 
                 ItrJSON[this.ITR_Type].FilingStatus?.Form10IEDate
                   ? (this.ITR_Obj.optionForCurrentAY.date =
-                      this.parseAndFormatDate(
-                        ItrJSON[this.ITR_Type].FilingStatus?.Form10IEDate
-                      ))
+                    this.parseAndFormatDate(
+                      ItrJSON[this.ITR_Type].FilingStatus?.Form10IEDate
+                    ))
                   : null;
                 ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo
                   ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
-                      ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo)
+                    ItrJSON[this.ITR_Type].FilingStatus?.Form10IEAckNo)
                   : null;
 
                 sessionStorage.setItem(
@@ -1670,19 +1670,23 @@ export class PrefillIdComponent implements OnInit {
                 if (this.ITR_Type === 'ITR1') {
                   this.ITR_Obj.seventhProviso139.clauseiv7provisio139i =
                     ItrJSON[this.ITR_Type]?.FilingStatus?.clauseiv7provisio139i;
-                  this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
-                    ItrJSON[
-                      this.ITR_Type
-                    ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
-                      (element) => ({
-                        nature: parseFloat(
-                          element?.clauseiv7provisio139iNature
-                        ),
-                        amount: parseFloat(
-                          element?.clauseiv7provisio139iAmount
-                        ),
-                      })
-                    );
+                  if (ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.clauseiv7provisio139iDtls) {
+                    this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
+                      ItrJSON[
+                        this.ITR_Type
+                      ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
+                        (element) => ({
+                          nature: parseFloat(
+                            element?.clauseiv7provisio139iNature
+                          ),
+                          amount: parseFloat(
+                            element?.clauseiv7provisio139iAmount
+                          ),
+                        })
+                      );
+                  }
 
                   // 1cr is not present in seventhProvisio for ITR1 so setting it as N
                   this.ITR_Obj.seventhProviso139.strDepAmtAggAmtExcd1CrPrYrFlg =
@@ -1690,19 +1694,23 @@ export class PrefillIdComponent implements OnInit {
                 } else if (this.ITR_Type === 'ITR4') {
                   this.ITR_Obj.seventhProviso139.clauseiv7provisio139i =
                     ItrJSON[this.ITR_Type]?.FilingStatus?.clauseiv7provisio139i;
-                  this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
-                    ItrJSON[
-                      this.ITR_Type
-                    ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
-                      (element) => ({
-                        nature: parseFloat(
-                          element?.clauseiv7provisio139iNature
-                        ),
-                        amount: parseFloat(
-                          element?.clauseiv7provisio139iAmount
-                        ),
-                      })
-                    );
+                  if (ItrJSON[
+                    this.ITR_Type
+                  ]?.FilingStatus?.clauseiv7provisio139iDtls) {
+                    this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
+                      ItrJSON[
+                        this.ITR_Type
+                      ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
+                        (element) => ({
+                          nature: parseFloat(
+                            element?.clauseiv7provisio139iNature
+                          ),
+                          amount: parseFloat(
+                            element?.clauseiv7provisio139iAmount
+                          ),
+                        })
+                      );
+                  }
 
                   this.ITR_Obj.seventhProviso139.strDepAmtAggAmtExcd1CrPrYrFlg =
                     ItrJSON[
@@ -1743,148 +1751,148 @@ export class PrefillIdComponent implements OnInit {
                   periodTo: '',
                   taxableIncome:
                     salaryDetails?.IncomeFromSal === 0 ||
-                    salaryDetails?.IncomeFromSal === null
+                      salaryDetails?.IncomeFromSal === null
                       ? 0
                       : salaryDetails?.IncomeFromSal,
                   standardDeduction:
                     salaryDetails?.DeductionUs16ia === 0 ||
-                    salaryDetails?.DeductionUs16ia === null ||
-                    this.regime === 'NEW'
+                      salaryDetails?.DeductionUs16ia === null ||
+                      this.regime === 'NEW'
                       ? 0
                       : salaryDetails?.DeductionUs16ia,
                   employerCategory: '',
                   exemptIncome:
                     salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
                       0 ||
-                    salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
+                      salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
                       null ||
-                    this.regime === 'NEW'
+                      this.regime === 'NEW'
                       ? 0
                       : salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10,
                   taxRelief: null,
                   taxDeducted: null,
                   salary:
                     salaryDetails?.Salary === 0 ||
-                    salaryDetails?.Salary === null
+                      salaryDetails?.Salary === null
                       ? []
                       : [
-                          {
-                            salaryType: 'SEC17_1',
-                            taxableAmount: salaryDetails?.Salary,
-                            exemptAmount: 0,
-                          },
-                        ],
+                        {
+                          salaryType: 'SEC17_1',
+                          taxableAmount: salaryDetails?.Salary,
+                          exemptAmount: 0,
+                        },
+                      ],
                   allowance:
                     salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
                       0 ||
-                    salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
+                      salaryDetails?.AllwncExemptUs10?.TotalAllwncExemptUs10 ===
                       null ||
-                    this.regime === 'NEW'
+                      this.regime === 'NEW'
                       ? [
-                          {
-                            allowanceType: 'GRATUITY',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'COMMUTED_PENSION',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'LEAVE_ENCASHMENT',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'ANY_OTHER',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                        ]
+                        {
+                          allowanceType: 'GRATUITY',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'COMMUTED_PENSION',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'LEAVE_ENCASHMENT',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'ANY_OTHER',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                      ]
                       : [
-                          {
-                            allowanceType: 'HOUSE_RENT',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'LTA',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'CHILDREN_EDUCATION',
-                            taxableAmount: 0,
-                            exemptAmount: 0,
-                          },
-                          {
-                            allowanceType: 'GRATUITY',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'COMMUTED_PENSION',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'LEAVE_ENCASHMENT',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'ANY_OTHER',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'ALL_ALLOWANCES',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                        ],
+                        {
+                          allowanceType: 'HOUSE_RENT',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'LTA',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'CHILDREN_EDUCATION',
+                          taxableAmount: 0,
+                          exemptAmount: 0,
+                        },
+                        {
+                          allowanceType: 'GRATUITY',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'COMMUTED_PENSION',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'LEAVE_ENCASHMENT',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'ANY_OTHER',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'ALL_ALLOWANCES',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                      ],
                   perquisites:
                     salaryDetails?.PerquisitesValue === 0 ||
-                    salaryDetails?.PerquisitesValue === null
+                      salaryDetails?.PerquisitesValue === null
                       ? []
                       : [
-                          {
-                            perquisiteType: 'SEC17_2',
-                            taxableAmount: salaryDetails?.PerquisitesValue,
-                            exemptAmount: 0,
-                          },
-                        ],
+                        {
+                          perquisiteType: 'SEC17_2',
+                          taxableAmount: salaryDetails?.PerquisitesValue,
+                          exemptAmount: 0,
+                        },
+                      ],
                   profitsInLieuOfSalaryType:
                     salaryDetails?.ProfitsInSalary === 0 ||
-                    salaryDetails?.ProfitsInSalary === null
+                      salaryDetails?.ProfitsInSalary === null
                       ? []
                       : [
-                          {
-                            salaryType: 'SEC17_3',
-                            taxableAmount: salaryDetails?.ProfitsInSalary,
-                            exemptAmount: 0,
-                          },
-                        ],
+                        {
+                          salaryType: 'SEC17_3',
+                          taxableAmount: salaryDetails?.ProfitsInSalary,
+                          exemptAmount: 0,
+                        },
+                      ],
                   deductions:
                     this.regime === 'NEW'
                       ? []
                       : [
-                          {
-                            deductionType: 'PROFESSIONAL_TAX',
-                            taxableAmount: null,
-                            exemptAmount: salaryDetails?.ProfessionalTaxUs16iii,
-                          },
+                        {
+                          deductionType: 'PROFESSIONAL_TAX',
+                          taxableAmount: null,
+                          exemptAmount: salaryDetails?.ProfessionalTaxUs16iii,
+                        },
 
-                          {
-                            deductionType: 'ENTERTAINMENT_ALLOW',
-                            taxableAmount: null,
-                            exemptAmount:
-                              this.ITR_Type === 'ITR1'
-                                ? salaryDetails?.EntertainmentAlw16ii
-                                : salaryDetails?.EntertainmntalwncUs16ii,
-                          },
-                        ],
+                        {
+                          deductionType: 'ENTERTAINMENT_ALLOW',
+                          taxableAmount: null,
+                          exemptAmount:
+                            this.ITR_Type === 'ITR1'
+                              ? salaryDetails?.EntertainmentAlw16ii
+                              : salaryDetails?.EntertainmntalwncUs16ii,
+                        },
+                      ],
                   upload: [],
                   calculators: null,
                 };
@@ -1921,10 +1929,10 @@ export class PrefillIdComponent implements OnInit {
                     housePropertyDetails?.TypeOfHP === 'S'
                       ? 'SOP'
                       : housePropertyDetails?.TypeOfHP === 'L'
-                      ? 'LOP'
-                      : housePropertyDetails?.TypeOfHP === 'D'
-                      ? 'DLOP'
-                      : housePropertyDetails?.TypeOfHP,
+                        ? 'LOP'
+                        : housePropertyDetails?.TypeOfHP === 'D'
+                          ? 'DLOP'
+                          : housePropertyDetails?.TypeOfHP,
                   grossAnnualRentReceivedTotal:
                     housePropertyDetails?.GrossRentReceived,
                   grossAnnualRentReceived:
@@ -1951,16 +1959,16 @@ export class PrefillIdComponent implements OnInit {
                   coOwners: [],
                   loans:
                     housePropertyDetails?.InterestPayable === 0 ||
-                    housePropertyDetails?.InterestPayable === null
+                      housePropertyDetails?.InterestPayable === null
                       ? []
                       : [
-                          {
-                            loanType: 'HOUSING',
-                            principalAmount: null,
-                            interestAmount:
-                              housePropertyDetails?.InterestPayable,
-                          },
-                        ],
+                        {
+                          loanType: 'HOUSING',
+                          principalAmount: null,
+                          interestAmount:
+                            housePropertyDetails?.InterestPayable,
+                        },
+                      ],
                   ArrearsUnrealizedRentRcvd: Math.round(
                     housePropertyDetails?.ArrearsUnrealizedRentRcvd
                   ),
@@ -2693,14 +2701,14 @@ export class PrefillIdComponent implements OnInit {
 
               ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo
                 ? (this.ITR_Obj.orgITRAckNum =
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo)
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.ReceiptNo)
                 : (this.ITR_Obj.orgITRAckNum = null);
 
               ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.OrigRetFiledDate
                 ? (this.ITR_Obj.orgITRDate = this.parseAndFormatDate(
-                    ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                      ?.OrigRetFiledDate
-                  ))
+                  ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                    ?.OrigRetFiledDate
+                ))
                 : (this.ITR_Obj.orgITRDate = null);
 
               // SETTING REGIME TYPE FOR ITR2
@@ -2780,26 +2788,26 @@ export class PrefillIdComponent implements OnInit {
                     ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
                       ?.NewTaxRegimeDtls?.AssessmentYear
                       ? (this.ITR_Obj.everOptedNewRegime.assessmentYear =
-                          ItrJSON[
-                            this.ITR_Type
-                          ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
+                        ItrJSON[
+                          this.ITR_Type
+                        ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls?.AssessmentYear)
                       : null;
 
                     ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
                       ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
                       ? (this.ITR_Obj.everOptedNewRegime.date =
-                          this.parseAndFormatDate(
-                            ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                              ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
-                          ))
+                        this.parseAndFormatDate(
+                          ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                            ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
+                        ))
                       : null;
 
                     ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
                       ?.NewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo
                       ? (this.ITR_Obj.everOptedNewRegime.acknowledgementNumber =
-                          ItrJSON[
-                            this.ITR_Type
-                          ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls.Form10IEDtls?.Form10IEAckNo)
+                        ItrJSON[
+                          this.ITR_Type
+                        ].PartA_GEN1?.FilingStatus?.NewTaxRegimeDtls.Form10IEDtls?.Form10IEAckNo)
                       : null;
                   }
 
@@ -2829,27 +2837,27 @@ export class PrefillIdComponent implements OnInit {
                     ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
                       ?.OptedOutNewTaxRegimeDtls?.AssessmentYear
                       ? (this.ITR_Obj.everOptedOutOfNewRegime.assessmentYear =
-                          ItrJSON[
-                            this.ITR_Type
-                          ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
+                        ItrJSON[
+                          this.ITR_Type
+                        ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.AssessmentYear)
                       : null;
 
                     ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
                       ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEDate
                       ? (this.ITR_Obj.everOptedOutOfNewRegime.date =
-                          this.parseAndFormatDate(
-                            ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                              ?.OptedOutNewTaxRegimeDtls.Form10IEDtls
-                              ?.Form10IEDate
-                          ))
+                        this.parseAndFormatDate(
+                          ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                            ?.OptedOutNewTaxRegimeDtls.Form10IEDtls
+                            ?.Form10IEDate
+                        ))
                       : null;
 
                     ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
                       ?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo
                       ? (this.ITR_Obj.everOptedOutOfNewRegime.acknowledgementNumber =
-                          ItrJSON[
-                            this.ITR_Type
-                          ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
+                        ItrJSON[
+                          this.ITR_Type
+                        ].PartA_GEN1?.FilingStatus?.OptedOutNewTaxRegimeDtls?.Form10IEDtls?.Form10IEAckNo)
                       : null;
                   }
 
@@ -2867,16 +2875,16 @@ export class PrefillIdComponent implements OnInit {
 
                 ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEDate
                   ? (this.ITR_Obj.optionForCurrentAY.date =
-                      this.parseAndFormatDate(
-                        ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
-                          ?.Form10IEDate
-                      ))
+                    this.parseAndFormatDate(
+                      ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus
+                        ?.Form10IEDate
+                    ))
                   : null;
                 ItrJSON[this.ITR_Type].PartA_GEN1?.FilingStatus?.Form10IEAckNo
                   ? (this.ITR_Obj.optionForCurrentAY.acknowledgementNumber =
-                      ItrJSON[
-                        this.ITR_Type
-                      ].PartA_GEN1?.FilingStatus?.Form10IEAckNo)
+                    ItrJSON[
+                      this.ITR_Type
+                    ].PartA_GEN1?.FilingStatus?.Form10IEAckNo)
                   : null;
 
                 sessionStorage.setItem(
@@ -3055,15 +3063,19 @@ export class PrefillIdComponent implements OnInit {
 
                 this.ITR_Obj.seventhProviso139.clauseiv7provisio139i =
                   ItrJSON[this.ITR_Type]?.FilingStatus?.clauseiv7provisio139i;
-                this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
-                  ItrJSON[
-                    this.ITR_Type
-                  ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
-                    (element) => ({
-                      nature: parseFloat(element?.clauseiv7provisio139iNature),
-                      amount: parseFloat(element?.clauseiv7provisio139iAmount),
-                    })
-                  );
+                if (ItrJSON[
+                  this.ITR_Type
+                ]?.FilingStatus?.clauseiv7provisio139iDtls) {
+                  this.ITR_Obj.seventhProviso139.clauseiv7provisio139iDtls =
+                    ItrJSON[
+                      this.ITR_Type
+                    ]?.FilingStatus?.clauseiv7provisio139iDtls?.map(
+                      (element) => ({
+                        nature: parseFloat(element?.clauseiv7provisio139iNature),
+                        amount: parseFloat(element?.clauseiv7provisio139iAmount),
+                      })
+                    );
+                }
 
                 this.ITR_Obj.seventhProviso139.strDepAmtAggAmtExcd1CrPrYrFlg =
                   ItrJSON[
@@ -3541,111 +3553,111 @@ export class PrefillIdComponent implements OnInit {
                   allowance:
                     this.regime === 'NEW'
                       ? [
-                          {
-                            allowanceType: 'GRATUITY',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'COMMUTED_PENSION',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'LEAVE_ENCASHMENT',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'ANY_OTHER',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                        ]
+                        {
+                          allowanceType: 'GRATUITY',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'COMMUTED_PENSION',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'LEAVE_ENCASHMENT',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'ANY_OTHER',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                      ]
                       : [
-                          {
-                            allowanceType: 'HOUSE_RENT',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'LTA',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'CHILDREN_EDUCATION',
-                            taxableAmount: 0,
-                            exemptAmount: 0,
-                          },
-                          {
-                            allowanceType: 'GRATUITY',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'COMMUTED_PENSION',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'LEAVE_ENCASHMENT',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'ANY_OTHER',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
+                        {
+                          allowanceType: 'HOUSE_RENT',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'LTA',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'CHILDREN_EDUCATION',
+                          taxableAmount: 0,
+                          exemptAmount: 0,
+                        },
+                        {
+                          allowanceType: 'GRATUITY',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'COMMUTED_PENSION',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'LEAVE_ENCASHMENT',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'ANY_OTHER',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
 
-                          {
-                            allowanceType: 'REMUNERATION_REC',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'US_10_7',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'FIRST_PROVISO',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'SECOND_PROVISO',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'COMPENSATION_ON_VRS',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'NON_MONETARY_PERQUISITES',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'US_10_14I',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
+                        {
+                          allowanceType: 'REMUNERATION_REC',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'US_10_7',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'FIRST_PROVISO',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'SECOND_PROVISO',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'COMPENSATION_ON_VRS',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'NON_MONETARY_PERQUISITES',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'US_10_14I',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
 
-                          {
-                            allowanceType: 'US_10_14II',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                          {
-                            allowanceType: 'ALL_ALLOWANCES',
-                            taxableAmount: 0,
-                            exemptAmount: null,
-                          },
-                        ],
+                        {
+                          allowanceType: 'US_10_14II',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                        {
+                          allowanceType: 'ALL_ALLOWANCES',
+                          taxableAmount: 0,
+                          exemptAmount: null,
+                        },
+                      ],
                   perquisites: perquisiteTypes
                     .map((type) => {
                       if (type?.code === 'SEC17_2') {
@@ -3702,18 +3714,18 @@ export class PrefillIdComponent implements OnInit {
                     this.regime === 'NEW'
                       ? []
                       : [
-                          {
-                            deductionType: 'PROFESSIONAL_TAX',
-                            taxableAmount: null,
-                            exemptAmount: 0,
-                          },
+                        {
+                          deductionType: 'PROFESSIONAL_TAX',
+                          taxableAmount: null,
+                          exemptAmount: 0,
+                        },
 
-                          {
-                            deductionType: 'ENTERTAINMENT_ALLOW',
-                            taxableAmount: null,
-                            exemptAmount: 0,
-                          },
-                        ],
+                        {
+                          deductionType: 'ENTERTAINMENT_ALLOW',
+                          taxableAmount: null,
+                          exemptAmount: 0,
+                        },
+                      ],
                   upload: [],
                   calculators: null,
                 };
@@ -3737,23 +3749,23 @@ export class PrefillIdComponent implements OnInit {
                 //Setting professional tax
                 this.ITR_Obj.employers.forEach(
                   (employer) =>
-                    (employer.deductions.find(
-                      (deductionType) =>
-                        deductionType.deductionType === 'PROFESSIONAL_TAX'
-                    ).exemptAmount =
-                      ItrJSON[this.ITR_Type].ScheduleS?.ProfessionalTaxUs16iii /
-                      salaries.length)
+                  (employer.deductions.find(
+                    (deductionType) =>
+                      deductionType.deductionType === 'PROFESSIONAL_TAX'
+                  ).exemptAmount =
+                    ItrJSON[this.ITR_Type].ScheduleS?.ProfessionalTaxUs16iii /
+                    salaries.length)
                 );
 
                 //Setting entertainment allowance
                 this.ITR_Obj.employers.forEach(
                   (employer) =>
-                    (employer.deductions.find(
-                      (deductionType) =>
-                        deductionType.deductionType === 'ENTERTAINMENT_ALLOW'
-                    ).exemptAmount =
-                      ItrJSON[this.ITR_Type].ScheduleS
-                        ?.EntertainmntalwncUs16ii / salaries.length)
+                  (employer.deductions.find(
+                    (deductionType) =>
+                      deductionType.deductionType === 'ENTERTAINMENT_ALLOW'
+                  ).exemptAmount =
+                    ItrJSON[this.ITR_Type].ScheduleS
+                      ?.EntertainmntalwncUs16ii / salaries.length)
                 );
               }
             }
@@ -3773,10 +3785,10 @@ export class PrefillIdComponent implements OnInit {
                     houseProperty?.ifLetOut === 'Y'
                       ? 'LOP'
                       : houseProperty?.ifLetOut === 'N'
-                      ? 'SOP'
-                      : houseProperty?.ifLetOut === 'D'
-                      ? 'DLOP'
-                      : 'LOP',
+                        ? 'SOP'
+                        : houseProperty?.ifLetOut === 'D'
+                          ? 'DLOP'
+                          : 'LOP',
                   grossAnnualRentReceivedTotal:
                     houseProperty?.Rentdetails?.AnnualLetableValue,
                   grossAnnualRentReceived:
@@ -4648,7 +4660,7 @@ export class PrefillIdComponent implements OnInit {
                             costOfImprovement: zcb.Proviso112Applicabledtls
                               ?.DeductSec48?.ImproveCost
                               ? zcb.Proviso112Applicabledtls?.DeductSec48
-                                  ?.ImproveCost
+                                ?.ImproveCost
                               : null,
                             indexCostOfImprovement: null,
                           },
@@ -4909,38 +4921,38 @@ export class PrefillIdComponent implements OnInit {
                           landAndBuilding?.ExemptionOrDednUs54
                             ?.ExemptionOrDednUs54Dtls
                             ? landAndBuilding?.ExemptionOrDednUs54?.ExemptionOrDednUs54Dtls?.map(
-                                (
-                                  { ExemptionSecCode, ExemptionAmount },
-                                  index
-                                ) => ({
-                                  srn: index,
-                                  underSection: ExemptionSecCode,
-                                  orgAssestTransferDate: null,
-                                  purchaseDate: null,
-                                  panOfEligibleCompany: null,
-                                  purchaseDatePlantMachine: null,
-                                  costOfNewAssets: null,
-                                  investmentInCGAccount: null,
-                                  totalDeductionClaimed: ExemptionAmount
-                                    ? ExemptionAmount
-                                    : null,
-                                  costOfPlantMachinary: null,
-                                  usedDeduction: null,
-                                })
-                              )
-                            : {
+                              (
+                                { ExemptionSecCode, ExemptionAmount },
+                                index
+                              ) => ({
                                 srn: index,
-                                underSection: 'Deduction 54F',
+                                underSection: ExemptionSecCode,
                                 orgAssestTransferDate: null,
                                 purchaseDate: null,
                                 panOfEligibleCompany: null,
                                 purchaseDatePlantMachine: null,
                                 costOfNewAssets: null,
                                 investmentInCGAccount: null,
-                                totalDeductionClaimed: null,
+                                totalDeductionClaimed: ExemptionAmount
+                                  ? ExemptionAmount
+                                  : null,
                                 costOfPlantMachinary: null,
                                 usedDeduction: null,
-                              },
+                              })
+                            )
+                            : {
+                              srn: index,
+                              underSection: 'Deduction 54F',
+                              orgAssestTransferDate: null,
+                              purchaseDate: null,
+                              panOfEligibleCompany: null,
+                              purchaseDatePlantMachine: null,
+                              costOfNewAssets: null,
+                              investmentInCGAccount: null,
+                              totalDeductionClaimed: null,
+                              costOfPlantMachinary: null,
+                              usedDeduction: null,
+                            },
                         ],
                         improvement: [
                           {
@@ -5528,6 +5540,465 @@ export class PrefillIdComponent implements OnInit {
             }
           }
 
+          // SCHEDULE FOREIGN INCOME
+          {
+            if (!this.ITR_Obj.foreignIncome) {
+              this.ITR_Obj.foreignIncome = {
+                id: 1,
+                taxPaidOutsideIndiaFlag: null,
+                taxReliefAssessmentYear: null,
+                taxAmountRefunded: null,
+                taxReliefClaimed: [],
+                foreignAssets: {
+                  id: null,
+                  depositoryAccounts: [],
+                  custodialAccounts: [],
+                  equityAndDebtInterest: [],
+                  cashValueInsurance: [],
+                  financialInterestDetails: [],
+                  immovablePropertryDetails: [],
+                  capitalAssetsDetails: [],
+                  signingAuthorityDetails: [],
+                  trustsDetails: [],
+                  otherIncomeDetails: [],
+                },
+              };
+            }
+
+            this.ITR_Obj.foreignIncome.taxReliefClaimed = this.uploadedJson[
+              this.ITR_Type
+            ]?.ScheduleFSI?.ScheduleFSIDtls?.map((element, index) => ({
+              id: '0',
+              claimedDTAA:
+                this.uploadedJson[this.ITR_Type]?.ScheduleTR1?.ScheduleTR[index]
+                  ?.ReliefClaimedUsSection,
+              reliefClaimedUsSection:
+                this.uploadedJson[this.ITR_Type]?.ScheduleTR1?.ScheduleTR[index]
+                  ?.ReliefClaimedUsSection,
+              countryCode: element?.CountryCodeExcludingIndia,
+              countryName: element?.CountryName,
+              taxPayerID: element?.TaxIdentificationNo,
+              headOfIncome: [
+                {
+                  id: '0',
+                  incomeType: 'SALARY',
+                  claimedDTAA: element?.IncFromSal?.DTAAReliefUs90or90A,
+                  outsideIncome: element?.IncFromSal?.IncFrmOutsideInd,
+                  outsideTaxPaid: element?.IncFromSal?.TaxPaidOutsideInd,
+                  taxPayable: element?.IncFromSal?.TaxPayableinInd,
+                  taxRelief: element?.IncFromSal?.TaxReliefinInd,
+                },
+                {
+                  id: '0',
+                  incomeType: 'HOUSE',
+                  claimedDTAA: element?.IncFromHP?.DTAAReliefUs90or90A,
+                  outsideIncome: element?.IncFromHP?.IncFrmOutsideInd,
+                  outsideTaxPaid: element?.IncFromHP?.TaxPaidOutsideInd,
+                  taxPayable: element?.IncFromHP?.TaxPayableinInd,
+                  taxRelief: element?.IncFromHP?.TaxReliefinInd,
+                },
+                {
+                  id: '0',
+                  incomeType: 'CAPITAL_GAIN',
+                  claimedDTAA: element?.IncCapGain?.DTAAReliefUs90or90A,
+                  outsideIncome: element?.IncCapGain?.IncFrmOutsideInd,
+                  outsideTaxPaid: element?.IncCapGain?.TaxPaidOutsideInd,
+                  taxPayable: element?.IncCapGain?.TaxPayableinInd,
+                  taxRelief: element?.IncCapGain?.TaxReliefinInd,
+                },
+                {
+                  id: '0',
+                  incomeType: 'OTHER',
+                  claimedDTAA: element?.IncOthSrc?.DTAAReliefUs90or90A,
+                  outsideIncome: element?.IncOthSrc?.IncFrmOutsideInd,
+                  outsideTaxPaid: element?.IncOthSrc?.TaxPaidOutsideInd,
+                  taxPayable: element?.IncOthSrc?.TaxPayableinInd,
+                  taxRelief: element?.IncOthSrc?.TaxReliefinInd,
+                },
+                this.ITR_Type === 'ITR3' && element?.IncFromBusiness
+                  ? {
+                    id: '0',
+                    incomeType: 'BUSINESS_OR_PROFESSION',
+                    claimedDTAA:
+                      element?.IncFromBusiness?.DTAAReliefUs90or90A,
+                    outsideIncome: element?.IncFromBusiness?.IncFrmOutsideInd,
+                    outsideTaxPaid:
+                      element?.IncFromBusiness?.TaxPaidOutsideInd,
+                    taxPayable: element?.IncFromBusiness?.TaxPayableinInd,
+                    taxRelief: element?.IncFromBusiness?.TaxReliefinInd,
+                  }
+                  : null,
+              ].filter(Boolean),
+            }));
+          }
+
+          // SCHEDULE TR
+          {
+            this.ITR_Obj.foreignIncome.taxPaidOutsideIndiaFlag =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleTR1?.TaxPaidOutsideIndFlg;
+
+            if (
+              this.uploadedJson[this.ITR_Type]?.ScheduleTR1
+                ?.TaxPaidOutsideIndFlg === 'YES'
+            ) {
+              this.ITR_Obj.foreignIncome.taxAmountRefunded =
+                this.uploadedJson[this.ITR_Type]?.ScheduleTR1?.AmtTaxRefunded;
+              this.ITR_Obj.foreignIncome.taxReliefAssessmentYear =
+                this.uploadedJson[this.ITR_Type]?.ScheduleTR1?.AssmtYrTaxRelief;
+            }
+          }
+
+          // SCHEDULE FA
+          {
+            // depositoryAccounts - DetailsForiegnBank
+            if (!this.ITR_Obj.foreignIncome.foreignAssets.depositoryAccounts) {
+              this.ITR_Obj.foreignIncome.foreignAssets.depositoryAccounts = [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.depositoryAccounts =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsForiegnBank?.map((element) => ({
+                accountNumber: element?.ForeignAccountNumber,
+                accountOpeningDate: element?.AccOpenDate,
+                addressOfInstitution: element?.AddressOfBank,
+                cashValue: null,
+                closingBalance: element?.ClosingBalance,
+                countryCode: element?.CountryCodeExcludingIndia,
+                countryName: element?.CountryName,
+                dateOfContract: null,
+                grossAmountNature: null,
+                grossInterestPaid: element?.IntrstAccured,
+                nameOfInstitution: element?.Bankname,
+                peakBalance: element?.PeakBalanceDuringYear,
+                status: element?.OwnerStatus,
+                totalGrossAmountPaid: null,
+                zipCode: element?.ZipCode,
+              }));
+
+            // custodialAccounts - DtlsForeignCustodialAcc
+            if (!this.ITR_Obj.foreignIncome.foreignAssets.custodialAccounts) {
+              this.ITR_Obj.foreignIncome.foreignAssets.custodialAccounts = [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.custodialAccounts =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DtlsForeignCustodialAcc?.map((element) => ({
+                accountNumber: element?.AccountNumber,
+                accountOpeningDate: element?.AccOpenDate,
+                addressOfInstitution: element?.FinancialInstAddress,
+                cashValue: null,
+                closingBalance: element?.ClosingBalance,
+                countryCode: element?.CountryCodeExcludingIndia,
+                countryName: element?.CountryName,
+                dateOfContract: null,
+                grossAmountNature:
+                  element?.NatureOfAmount === 'I'
+                    ? 'Interest'
+                    : element?.NatureOfAmount === 'D'
+                      ? 'Dividend'
+                      : element?.NatureOfAmount === 'S'
+                        ? 'Proceeds from sale or redemption of financial assets'
+                        : element?.NatureOfAmount === 'O'
+                          ? 'Other income'
+                          : element?.NatureOfAmount === 'N'
+                            ? 'No Amount Paid/Credited'
+                            : 'Select',
+                grossInterestPaid: element?.GrossAmtPaidCredited,
+                nameOfInstitution: element?.FinancialInstName,
+                peakBalance: element?.PeakBalanceDuringPeriod,
+                status: element?.Status,
+                totalGrossAmountPaid: null,
+                zipCode: element?.ZipCode,
+              }));
+
+            // // equityAndDebtInterest - DtlsForeignEquityDebtInterest
+            if (
+              !this.ITR_Obj.foreignIncome.foreignAssets.equityAndDebtInterest
+            ) {
+              this.ITR_Obj.foreignIncome.foreignAssets.equityAndDebtInterest =
+                [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.equityAndDebtInterest =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DtlsForeignEquityDebtInterest?.map((element) => ({
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                nameOfEntity: element?.NameOfEntity,
+                addressOfEntity: element?.AddressOfEntity,
+                zipCode: element?.ZipCode,
+                natureOfEntity: element?.NatureOfEntity,
+                dateOfInterest: element?.InterestAcquiringDate,
+                initialValue: element?.InitialValOfInvstmnt,
+                peakValue: element?.PeakBalanceDuringPeriod,
+                closingValue: element?.ClosingBalance,
+                totalGrossAmountPaid: element?.TotGrossAmtPaidCredited,
+                totalGrossProceedsFromSale: element?.TotGrossProceeds,
+              }));
+
+            // // cashValueInsurance - DtlsForeignCashValueInsurance
+            if (!this.ITR_Obj.foreignIncome.foreignAssets.cashValueInsurance) {
+              this.ITR_Obj.foreignIncome.foreignAssets.cashValueInsurance = [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.cashValueInsurance =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DtlsForeignCashValueInsurance?.map((element) => ({
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                nameOfInstitution: element?.FinancialInstName,
+                addressOfInstitution: element?.FinancialInstAddress,
+                zipCode: element?.ZipCode,
+                dateOfContract: element?.ContractDate,
+                cashValue: element?.CashValOrSurrenderVal,
+                totalGrossAmountPaid: element?.TotGrossAmtPaidCredited,
+                accountNumber: null,
+                accountOpeningDate: null,
+                closingBalance: null,
+                grossAmountNature: null,
+                grossInterestPaid: null,
+                peakBalance: null,
+                status: null,
+              }));
+
+            // // financialInterestDetails - DetailsFinancialInterest
+            if (
+              !this.ITR_Obj.foreignIncome.foreignAssets.financialInterestDetails
+            ) {
+              this.ITR_Obj.foreignIncome.foreignAssets.financialInterestDetails =
+                [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.financialInterestDetails =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsFinancialInterest?.map((element) => ({
+                id: null,
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                zipCode: element?.ZipCode,
+                natureOfEntity: element?.NatureOfEntity,
+                nameOfEntity: element?.NameOfEntity,
+                address: element?.AddressOfEntity,
+                natureOfInterest: element?.NatureOfInt,
+                date: element?.DateHeld,
+                totalInvestments: element?.TotalInvestment,
+                accruedIncome: element?.IncFromInt,
+                amount: element?.IncTaxAmt,
+                natureOfIncome: element?.NatureOfInc,
+                numberOfSchedule: parseFloat(element?.IncTaxSchNo),
+                scheduleOfferd:
+                  element?.IncTaxSch === 'SA'
+                    ? 'Salary'
+                    : element?.IncTaxSch === 'HP'
+                      ? 'House Property'
+                      : element?.IncTaxSch === 'BU'
+                        ? 'Business'
+                        : element?.IncTaxSch === 'CG'
+                          ? 'Capital Gains'
+                          : element?.IncTaxSch === 'OS'
+                            ? 'Other Sources'
+                            : element?.IncTaxSch === 'EI'
+                              ? 'Exempt Income'
+                              : element?.IncTaxSch === 'NI'
+                                ? 'No Income during the year'
+                                : 'Select',
+              }));
+
+            // // immovablePropertryDetails - DetailsImmovableProperty
+            if (
+              !this.ITR_Obj.foreignIncome.foreignAssets
+                .immovablePropertryDetails
+            ) {
+              this.ITR_Obj.foreignIncome.foreignAssets.immovablePropertryDetails =
+                [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.immovablePropertryDetails =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsImmovableProperty?.map((element) => ({
+                id: null,
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                zipCode: element?.ZipCode,
+                address: element?.AddressOfProperty,
+                ownerShip: element?.Ownership,
+                date: element?.DateOfAcq,
+                totalInvestments: element?.TotalInvestment,
+                derivedIncome: element?.IncDrvProperty,
+                natureOfIncome: element?.NatureOfInc,
+                amount: element?.IncTaxAmt,
+                numberOfSchedule: parseFloat(element?.IncTaxSchNo),
+                scheduleOfferd:
+                  element?.IncTaxSch === 'SA'
+                    ? 'Salary'
+                    : element?.IncTaxSch === 'HP'
+                      ? 'House Property'
+                      : element?.IncTaxSch === 'BU'
+                        ? 'Business'
+                        : element?.IncTaxSch === 'CG'
+                          ? 'Capital Gains'
+                          : element?.IncTaxSch === 'OS'
+                            ? 'Other Sources'
+                            : element?.IncTaxSch === 'EI'
+                              ? 'Exempt Income'
+                              : element?.IncTaxSch === 'NI'
+                                ? 'No Income during the year'
+                                : 'Select',
+              }));
+
+            // capitalAssetsDetails - DetailsOthAssets
+            if (
+              !this.ITR_Obj.foreignIncome.foreignAssets.capitalAssetsDetails
+            ) {
+              this.ITR_Obj.foreignIncome.foreignAssets.capitalAssetsDetails =
+                [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.capitalAssetsDetails =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsOthAssets?.map((element) => ({
+                id: null,
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                zipCode: element?.ZipCode,
+                natureOfAsstes: element?.NatureOfAsset,
+                ownerShip: element?.Ownership,
+                date: element?.DateOfAcq,
+                totalInvestments: element?.TotalInvestment,
+                derivedIncome: element?.IncDrvAsset,
+                natureOfIncome: element?.NatureOfInc,
+                amount: element?.IncTaxAmt,
+                scheduleOfferd:
+                  element?.IncTaxSch === 'SA'
+                    ? 'Salary'
+                    : element?.IncTaxSch === 'HP'
+                      ? 'House Property'
+                      : element?.IncTaxSch === 'BU'
+                        ? 'Business'
+                        : element?.IncTaxSch === 'CG'
+                          ? 'Capital Gains'
+                          : element?.IncTaxSch === 'OS'
+                            ? 'Other Sources'
+                            : element?.IncTaxSch === 'EI'
+                              ? 'Exempt Income'
+                              : element?.IncTaxSch === 'NI'
+                                ? 'No Income during the year'
+                                : 'Select',
+                numberOfSchedule: parseFloat(element?.IncTaxSchNo),
+              }));
+
+            // signingAuthorityDetails - DetailsOfAccntsHvngSigningAuth
+            if (
+              !this.ITR_Obj.foreignIncome.foreignAssets.signingAuthorityDetails
+            ) {
+              this.ITR_Obj.foreignIncome.foreignAssets.signingAuthorityDetails =
+                [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.signingAuthorityDetails =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsOfAccntsHvngSigningAuth?.map((element) => ({
+                id: null,
+                institutionName: element?.NameOfInstitution,
+                address: element?.AddressOfInstitution,
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                zipCode: element?.ZipCode,
+                accountHolderName: element?.NameMentionedInAccnt,
+                accountNumber: element?.InstitutionAccountNumber,
+                peakBalance: element?.PeakBalanceOrInvestment,
+                isTaxableinYourHand: element?.IncAccuredTaxFlag,
+                accruedIncome: element?.IncAccuredInAcc,
+                amount: element?.IncOfferedAmt,
+                scheduleOfferd:
+                  element?.IncOfferedSch === 'SA'
+                    ? 'Salary'
+                    : element?.IncOfferedSch === 'HP'
+                      ? 'House Property'
+                      : element?.IncOfferedSch === 'BU'
+                        ? 'Business'
+                        : element?.IncOfferedSch === 'CG'
+                          ? 'Capital Gains'
+                          : element?.IncOfferedSch === 'OS'
+                            ? 'Other Sources'
+                            : element?.IncOfferedSch === 'EI'
+                              ? 'Exempt Income'
+                              : element?.IncOfferedSch === 'NI'
+                                ? 'No Income during the year'
+                                : 'Select',
+                numberOfSchedule: parseFloat(element?.IncOfferedSchNo),
+              }));
+
+            // trustsDetails - DetailsOfTrustOutIndiaTrustee
+            if (!this.ITR_Obj.foreignIncome.foreignAssets.trustsDetails) {
+              this.ITR_Obj.foreignIncome.foreignAssets.trustsDetails = [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.trustsDetails =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsOfTrustOutIndiaTrustee?.map((element) => ({
+                id: null,
+                countryName: element?.CountryName,
+                countryCode: element?.CountryCodeExcludingIndia,
+                zipCode: element?.ZipCode,
+                trustName: element?.NameOfTrust,
+                trustAddress: element?.AddressOfTrust,
+                trusteesName: element?.NameOfOtherTrustees,
+                trusteesAddress: element?.AddressOfOtherTrustees,
+                settlorName: element?.NameOfSettlor,
+                settlorAddress: element?.AddressOfSettlor,
+                beneficiariesName: element?.NameOfBeneficiaries,
+                beneficiariesAddress: element?.AddressOfBeneficiaries,
+                date: element?.DateHeld,
+                isTaxableinYourHand: element?.IncDrvTaxFlag,
+                derivedIncome: element?.IncDrvFromTrust,
+                amount: element?.IncOfferedAmt,
+                scheduleOfferd:
+                  element?.IncOfferedSch === 'SA'
+                    ? 'Salary'
+                    : element?.IncOfferedSch === 'HP'
+                      ? 'House Property'
+                      : element?.IncOfferedSch === 'BU'
+                        ? 'Business'
+                        : element?.IncOfferedSch === 'CG'
+                          ? 'Capital Gains'
+                          : element?.IncOfferedSch === 'OS'
+                            ? 'Other Sources'
+                            : element?.IncOfferedSch === 'EI'
+                              ? 'Exempt Income'
+                              : element?.IncOfferedSch === 'NI'
+                                ? 'No Income during the year'
+                                : 'Select',
+                numberOfSchedule: parseFloat(element?.IncOfferedSchNo),
+              }));
+
+            // // otherIncomeDetails - DetailsOthAssets
+            if (!this.ITR_Obj.foreignIncome.foreignAssets.otherIncomeDetails) {
+              this.ITR_Obj.foreignIncome.foreignAssets.otherIncomeDetails = [];
+            }
+            this.ITR_Obj.foreignIncome.foreignAssets.otherIncomeDetails =
+              this.uploadedJson[
+                this.ITR_Type
+              ]?.ScheduleFA?.DetailsOfOthSourcesIncOutsideIndia?.map(
+                (element) => ({
+                  id: null,
+                  countryName: element?.CountryName,
+                  countryCode: element?.CountryCodeExcludingIndia,
+                  zipCode: element?.ZipCode,
+                  name: element?.NameOfPerson,
+                  address: element?.AddressOfPerson,
+                  derivedIncome: element?.IncDerived,
+                  natureOfIncome: element?.NatureOfInc,
+                  isTaxableinYourHand: element?.IncDrvTaxFlag,
+                  amount: element?.IncOfferedAmt,
+                  scheduleOfferd: element?.IncOfferedSch,
+                  numberOfSchedule: element?.IncOfferedSchNo,
+                })
+              );
+          }
+
           // SCHEDULE CFL
           {
             const CFL = this.uploadedJson[this.ITR_Type]?.ScheduleCFL;
@@ -6000,14 +6471,14 @@ export class PrefillIdComponent implements OnInit {
                   ],
                   expenses:
                     TradingAc?.OtherIncDtls ||
-                    TradingAc?.DirectExpensesTotal > 0 ||
-                    TradingAc?.DutyTaxPay?.ExciseCustomsVAT
-                      ?.TotExciseCustomsVAT > 0
+                      TradingAc?.DirectExpensesTotal > 0 ||
+                      TradingAc?.DutyTaxPay?.ExciseCustomsVAT
+                        ?.TotExciseCustomsVAT > 0
                       ? getExpenses(
-                          TradingAc?.OtherIncDtls,
-                          TradingAc?.DutyTaxPay?.ExciseCustomsVAT
-                            ?.TotExciseCustomsVAT
-                        )
+                        TradingAc?.OtherIncDtls,
+                        TradingAc?.DutyTaxPay?.ExciseCustomsVAT
+                          ?.TotExciseCustomsVAT
+                      )
                       : [],
                 };
                 this.ITR_Obj.business.profitLossACIncomes.push(nonSpecIncome);

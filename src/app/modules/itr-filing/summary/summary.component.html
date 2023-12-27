@@ -1099,10 +1099,166 @@
                       </div>
                     </mat-expansion-panel-header>
 
+                    <!-- spec non-spec -->
                     <div>
                       <table
                         class="table table-bordered table-striped table-hover"
                         style="margin-top: 20px"
+                        *ngIf="
+                          (finalCalculations?.businessIncome
+                            ?.businessIncomeDetails?.nonSpecIncome
+                            ?.grossTurnover &&
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncome
+                              ?.grossTurnover !== 0) ||
+                          finalCalculations?.businessIncome
+                            ?.businessIncomeDetails?.nonSpecIncomePl
+                        "
+                      >
+                        <tbody>
+                          <tr>
+                            <th>Business section</th>
+                            <th>Nature Of Business Code</th>
+                            <th>Trade Name</th>
+                            <th>Gross Turnover/Receipt</th>
+                            <th>Taxable Income</th>
+                          </tr>
+                        </tbody>
+                        <!-- Non speculative Income  -->
+                        <tr
+                          *ngIf="
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncome
+                              ?.grossTurnover &&
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncome
+                              ?.grossTurnover !== 0
+                          "
+                        >
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.businessSection
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.natureOfBusinessCode
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.tradeName
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.nonSpecIncome
+                                ?.grossTurnover
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.businessIncome
+                                  ?.businessIncomeDetails?.nonSpecIncome
+                                  ?.TaxableIncome
+                              )
+                            }}
+                          </td>
+                        </tr>
+                        <tr
+                          *ngIf="
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.nonSpecIncomePl
+                          "
+                        >
+                          <td colspan="4">P&L details</td>
+                          <td>
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.businessIncome
+                                  ?.businessIncomeDetails?.nonSpecIncomePl
+                              )
+                            }}
+                          </td>
+                        </tr>
+
+                        <!-- speculative Income  -->
+
+                        <tr
+                          *ngIf="
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.specIncome
+                              ?.grossTurnover &&
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.specIncome
+                              ?.grossTurnover !== 0
+                          "
+                        >
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome
+                                ?.businessSection
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome
+                                ?.natureOfBusinessCode
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome?.tradeName
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              finalCalculations?.businessIncome
+                                ?.businessIncomeDetails?.specIncome
+                                ?.grossTurnover
+                            }}
+                          </td>
+                          <td>
+                            Rs
+                            {{
+                              utilsService.currencyFormatter(
+                                finalCalculations?.businessIncome
+                                  ?.businessIncomeDetails?.specIncome
+                                  ?.TaxableIncome
+                              )
+                            }}
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+
+                    <div>
+                      <table
+                        class="table table-bordered table-striped table-hover"
+                        style="margin-top: 20px"
+                        *ngIf="
+                          finalCalculations?.businessIncome
+                            ?.businessIncomeDetails?.business44AD?.length > 0 ||
+                          finalCalculations?.businessIncome
+                            ?.businessIncomeDetails?.business44ADA?.length >
+                            0 ||
+                          (finalSummary?.assessment?.summaryIncome
+                            ?.summaryBusinessIncome.totalIncomeFromFirm &&
+                            finalSummary?.assessment?.summaryIncome
+                              ?.summaryBusinessIncome.totalIncomeFromFirm !== 0)
+                        "
                       >
                         <tbody>
                           <tr>
@@ -1118,10 +1274,8 @@
                           <ng-container
                             *ngIf="
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44AD &&
-                              finalCalculations?.businessIncome
                                 ?.businessIncomeDetails?.business44AD?.length >
-                                0
+                              0
                             "
                           >
                             <tr
@@ -1159,10 +1313,8 @@
                           <ng-container
                             *ngIf="
                               finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.business44ADA &&
-                              finalCalculations?.businessIncome
                                 ?.businessIncomeDetails?.business44ADA?.length >
-                                0
+                              0
                             "
                           >
                             <tr
@@ -1196,119 +1348,13 @@
                             </tr>
                           </ng-container>
 
-                          <!-- PROFIT AND LOSS INCOMES  -->
-                          <!-- Non speculative Income  -->
-                          <ng-container
-                            *ngIf="
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.nonSpecIncome
-                                ?.grossTurnover &&
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.nonSpecIncome
-                                ?.grossTurnover !== 0
-                            "
-                          >
-                            <tr>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.nonSpecIncome
-                                    ?.businessSection
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.nonSpecIncome
-                                    ?.natureOfBusinessCode
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.nonSpecIncome
-                                    ?.tradeName
-                                }}
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.nonSpecIncome
-                                    ?.grossTurnover
-                                }}
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                  utilsService.currencyFormatter(
-                                    finalCalculations?.businessIncome
-                                      ?.businessIncomeDetails?.nonSpecIncome
-                                      ?.TaxableIncome
-                                  )
-                                }}
-                              </td>
-                            </tr>
-                          </ng-container>
-                          <!-- speculative Income  -->
-                          <ng-container
-                            *ngIf="
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.specIncome
-                                ?.grossTurnover &&
-                              finalCalculations?.businessIncome
-                                ?.businessIncomeDetails?.specIncome
-                                ?.grossTurnover !== 0
-                            "
-                          >
-                            <tr>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.specIncome
-                                    ?.businessSection
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.specIncome
-                                    ?.natureOfBusinessCode
-                                }}
-                              </td>
-                              <td>
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.specIncome
-                                    ?.tradeName
-                                }}
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                  finalCalculations?.businessIncome
-                                    ?.businessIncomeDetails?.specIncome
-                                    ?.grossTurnover
-                                }}
-                              </td>
-                              <td>
-                                Rs
-                                {{
-                                  utilsService.currencyFormatter(
-                                    finalCalculations?.businessIncome
-                                      ?.businessIncomeDetails?.specIncome
-                                      ?.TaxableIncome
-                                  )
-                                }}
-                              </td>
-                            </tr>
-                          </ng-container>
-
                           <ng-container
                             *ngIf="
                               finalSummary?.assessment?.summaryIncome
+                                ?.summaryBusinessIncome.totalIncomeFromFirm &&
+                              finalSummary?.assessment?.summaryIncome
                                 ?.summaryBusinessIncome.totalIncomeFromFirm !==
-                              0
+                                0
                             "
                           >
                             <tr>
@@ -1336,6 +1382,8 @@
                       class="bxHed"
                       *ngIf="
                         finalSummary?.assessment?.summaryIncome
+                          ?.summaryBusinessIncome.totalIncomeFromFirm &&
+                        finalSummary?.assessment?.summaryIncome
                           ?.summaryBusinessIncome.totalIncomeFromFirm !== 0
                       "
                     >
@@ -1348,6 +1396,8 @@
 
                     <div
                       *ngIf="
+                        finalSummary?.assessment?.summaryIncome
+                          ?.summaryBusinessIncome.totalIncomeFromFirm &&
                         finalSummary?.assessment?.summaryIncome
                           ?.summaryBusinessIncome.totalIncomeFromFirm !== 0
                       "
@@ -1445,6 +1495,8 @@
                     <table
                       class="table table-bordered table-striped table-hover"
                       *ngIf="
+                        finalCalculations?.businessIncome?.businessIncomeDetails
+                          ?.crypto?.cryptoDetails &&
                         finalCalculations?.businessIncome?.businessIncomeDetails
                           ?.crypto?.cryptoDetails?.length > 0
                       "
@@ -1989,8 +2041,10 @@
                     >
                       Short term capital gain @ slab rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermAppSlabRateTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.shortTerm
+                            ?.ShortTermAppSlabRateTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2152,8 +2206,10 @@
                     >
                       Short term capital gain @ 15% rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm15PerTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.shortTerm
+                            ?.ShortTerm15PerTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2225,8 +2281,10 @@
                     >
                       Short term capital gain @ 30% rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTerm30PerTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.shortTerm
+                            ?.ShortTerm30PerTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2303,8 +2361,10 @@
                     >
                       Short term capital gain @ special rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.shortTerm
-                          ?.ShortTermSplRateDTAATotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.shortTerm
+                            ?.ShortTermSplRateDTAATotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2377,8 +2437,10 @@
                     >
                       Long term capital gain @ 10% rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.longTerm
-                          ?.LongTerm10PerTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.longTerm
+                            ?.LongTerm10PerTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2447,8 +2509,10 @@
                     >
                       Long term capital gain @ 20% rate
                       <span style="float: right">{{
-                        utilsService.currencyFormatter(finalCalculations?.capitalGain?.longTerm
-                          ?.LongTerm20PerTotal)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.longTerm
+                            ?.LongTerm20PerTotal
+                        )
                       }}</span>
                     </div>
                     <table
@@ -2687,7 +2751,9 @@
                     >
                       Income from crypto
                       <span style="float: right">{{
-                       utilsService.currencyFormatter(finalCalculations?.capitalGain?.totalCryptoIncome)
+                        utilsService.currencyFormatter(
+                          finalCalculations?.capitalGain?.totalCryptoIncome
+                        )
                       }}</span>
                     </div>
                     <table
@@ -3307,27 +3373,6 @@
                             </td>
                           </tr>
 
-                          <tr
-                            *ngIf="
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.giftExemptIncome &&
-                              finalCalculations?.otherIncome?.otherIncomes
-                                ?.giftExemptIncome > 0
-                            "
-                          >
-                            <td>Gift u/s 56(2)(x)</td>
-                            <td class="">
-                              <i class="material-icons" style="font-size: 15px"
-                                >₹</i
-                              >&nbsp;{{
-                                utilsService.currencyFormatter(
-                                  finalCalculations?.otherIncome?.otherIncomes
-                                    ?.giftExemptIncome
-                                )
-                              }}
-                            </td>
-                          </tr>
-
                           <tr>
                             <th>Total</th>
                             <th>
@@ -3418,9 +3463,87 @@
                         </div>
                       </div>
                     </mat-expansion-panel-header>
+                    <!-- summary json uploaded -->
                     <table
                       class="table table-bordered table-striped table-hover"
                       style="margin-top: 20px"
+                      *ngIf="
+                        !ITR_JSON.isItrSummaryJsonEdited &&
+                        ITR_JSON.itrSummaryJson
+                      "
+                    >
+                      <tbody>
+                        <tr>
+                          <td><b>Head/Source of Income</b></td>
+                          <td><b>Income of current year</b></td>
+                          <td>
+                            <b
+                              >House Property loss of the current year set
+                              off</b
+                            >
+                          </td>
+                          <td>
+                            <b>Business loss of the current year set off</b>
+                          </td>
+                          <td>
+                            <b
+                              >Other source loss excluding race horse of the
+                              current year set off</b
+                            >
+                          </td>
+                          <td>
+                            <b>Current years Income remaining after set off</b>
+                          </td>
+                        </tr>
+
+                        <tr
+                          *ngFor="
+                            let currentYearLoss of finalCalculations
+                              ?.currentYearLosses?.currentYearLossesSetOff;
+                            let i = index
+                          "
+                        >
+                          <td>
+                            {{ currentYearLoss?.headOfIncome }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.currentYearInc }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.houseProperty }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.businessSetOff }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.otherThanHpBusiness }}
+                          </td>
+                          <td>
+                            {{ currentYearLoss?.IncOfCurYrAfterSetOff }}
+                          </td>
+                        </tr>
+                        <tr
+                          *ngFor="
+                            let currentYearLossTotal of finalCalculations
+                              ?.currentYearLosses?.totals;
+                            let i = index
+                          "
+                        >
+                          <td>{{ currentYearLossTotal.headOfIncome }}</td>
+                          <td></td>
+                          <td>{{ currentYearLossTotal.HP }}</td>
+                          <td>{{ currentYearLossTotal.BUS }}</td>
+                          <td>{{ currentYearLossTotal.OTH }}</td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <!-- if json not uploaded -->
+                    <table
+                      class="table table-bordered table-striped table-hover"
+                      style="margin-top: 20px"
+                      *ngIf="!ITR_JSON.itrSummaryJson"
                     >
                       <tbody>
                         <tr>
@@ -7923,7 +8046,9 @@
                     class="color-panel accordion-border"
                     *ngIf="
                       !ITR_JSON.isItrSummaryJsonEdited &&
-                      ITR_JSON.itrSummaryJson
+                      ITR_JSON.itrSummaryJson &&
+                      finalCalculations?.SchedulePTI?.SchedulePTIDtls?.length >
+                        0
                     "
                     #SchedulePTI
                   >
@@ -8092,7 +8217,7 @@
                         <!-- row 5 -->
                         <tr>
                           <td rowspan="1">
-                            {{ "aiii. Section 111A" }}
+                            {{ "aiii. Other than Section 111A" }}
                           </td>
                           <td rowspan="1">
                             {{ pti?.CapitalGainsPTI?.STCG_Others?.AmountOfInc }}
@@ -9852,12 +9977,15 @@
                               </mat-icon>
                             </div>
                             <label class="rtNumb1">
-                              <i class="material-icons icRup">&#8377;</i>&nbsp;{{
+                              <i class="material-icons icRup">&#8377;</i
+                              >&nbsp;{{
                                 keys.ExemptIncAgriOthUs10Total
-                                  ?  (keys?.ExemptIncAgriOthUs10Total || 0) + (finalCalculations?.giftExemptIncome || 0)
-                                  :  getExemptIncomeTotal() + (finalCalculations?.exemptIncome?.total || 0) + (finalCalculations?.giftExemptIncome || 0)
+                                  ? keys?.ExemptIncAgriOthUs10Total || 0
+                                  : getExemptIncomeTotal() +
+                                    (finalCalculations?.exemptIncome?.total ||
+                                      0)
                               }}
-                            </label>                            
+                            </label>
                           </div>
                         </div>
                       </div>
