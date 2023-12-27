@@ -4,8 +4,7 @@
     <div class="space">
       <span class="normal_text">Details of foreign assets and income from any source outside India -
         Applicable to Resident Assessee only</span>
-      <div class="wrapper">
-        <div class="div-4">
+  
           <div class="frame-wrapper-2A">
             <div class="accordion" id="myAccordion">
               <div *ngFor="let topic of topicList">
@@ -70,7 +69,7 @@
                                   <span class="normal_text">Country code </span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
-                                <div class="form-control-wrapper select_arrow">
+                                <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
                                     <mat-select formControlName="countryCode" name="countryCode[i]" required>
                                       <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
@@ -111,7 +110,7 @@
                                     <span class="normal_text">Status</span>
                                     <span class="text-wrapper-2">*</span>
                                   </div>
-                                  <div class="form-control-wrapper select_arrow">
+                                  <div class="form-control-wrapper">
                                     <mat-form-field appearance="outline">
                                       <mat-select matInput formControlName="status" required>
                                         <mat-option *ngFor="let status of status" [value]="status"
@@ -180,11 +179,11 @@
                             </button>
                           </div>
                         </div>
-                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                        <!-- <button class="delete-btn" style="width: 15%; margin: 10px"
                           (click)="delete('depositoryAccounts', 'formArray', 0)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
-                        </button>
+                        </button> -->
                       </div>
                     </form>
                   </div>
@@ -250,7 +249,7 @@
                                   <span class="normal_text">Country code </span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
-                                <div class="form-control-wrapper select_arrow">
+                                <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
                                     <mat-select formControlName="countryCode" name="countryCode[i]" required>
                                       <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
@@ -293,7 +292,7 @@
                                     <span class="normal_text">Status</span>
                                     <span class="text-wrapper-2">*</span>
                                   </div>
-                                  <div class="form-control-wrapper select_arrow">
+                                  <div class="form-control-wrapper">
                                     <mat-form-field appearance="outline">
                                       <mat-select matInput name="status[j]" formControlName="status" required>
                                         <mat-option *ngFor="let status of status" [value]="status"
@@ -376,11 +375,11 @@
                             </button>
                           </div>
                         </div>
-                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                        <!-- <button class="delete-btn" style="width: 15%; margin: 10px"
                           (click)="delete('custodialAccounts', 'formArray', 1)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
-                        </button>
+                        </button> -->
                       </div>
                     </form>
                   </div>
@@ -443,7 +442,7 @@
                                 <span class="normal_text">Country code </span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
-                              <div class="form-control-wrapper select_arrow">
+                              <div class="form-control-wrapper">
                                 <mat-form-field appearance="outline">
                                   <mat-select formControlName="countryCode" name="countryCode[i]" required>
                                     <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
@@ -537,11 +536,11 @@
                             </div>
                           </div>
                         </div>
-                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                        <!-- <button class="delete-btn" style="width: 15%; margin: 10px"
                           (click)="delete('equityAndDebtInterest', 'formArray', 2)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
-                        </button>
+                        </button> -->
                       </form>
                     </div>
                   </div>
@@ -665,11 +664,11 @@
                             </div>
                           </div>
                         </div>
-                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                        <!-- <button class="delete-btn" style="width: 15%; margin: 10px"
                           (click)="delete('cashValueInsurance', 'formArray', 3)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
-                        </button>
+                        </button> -->
                       </form>
                     </div>
                   </div>
@@ -733,7 +732,7 @@
                                 <span class="normal_text">Country code </span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
-                              <div class="form-control-wrapper select_arrow">
+                              <div class="form-control-wrapper">
                                 <mat-form-field appearance="outline">
                                   <mat-select formControlName="countryCode" name="countryCode[i]" required>
                                     <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
@@ -824,7 +823,7 @@
                                 <span class="normal_text">Schedule Where Offered</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
-                              <div class="form-control-wrapper select_arrow">
+                              <div class="form-control-wrapper">
                                 <mat-form-field appearance="outline">
                                   <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
                                     required>
@@ -849,12 +848,12 @@
                             </div>
                           </div>
                         </div>
-                        <button class="delete-btn" style="width: 15%; margin: 10px" (click)="
+                        <!-- <button class="delete-btn" style="width: 15%; margin: 10px" (click)="
                             delete('financialInterestDetails', 'formArray', 4)
                           ">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
-                        </button>
+                        </button> -->
                       </form>
                     </div>
                   </div>
@@ -909,7 +908,7 @@
                                 <span class="normal_text">Country code </span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
-                              <div class="form-control-wrapper select_arrow">
+                              <div class="form-control-wrapper">
                                 <mat-form-field appearance="outline">
                                   <mat-select formControlName="countryCode" name="countryCode[i]" required>
                                     <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
@@ -925,7 +924,7 @@
                                 <span class="normal_text">Ownership</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
-                              <div class="form-control-wrapper select_arrow">
+                              <div class="form-control-wrapper">
                                 <mat-form-field appearance="outline">
                                   <mat-select matInput name="ownerShip[i]" formControlName="ownerShip" required>
                                     <mat-option *ngFor="
@@ -997,7 +996,7 @@
                                 <span class="normal_text">Schedule where Offered</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
-                              <div class="form-control-wrapper select_arrow">
+                              <div class="form-control-wrapper">
                                 <mat-form-field appearance="outline">
                                   <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
                                     required>
@@ -1022,12 +1021,12 @@
                             </div>
                           </div>
                         </div>
-                        <button class="delete-btn" style="width: 15%; margin: 10px" (click)="
+                        <!-- <button class="delete-btn" style="width: 15%; margin: 10px" (click)="
                             delete('immovablePropertryDetails', 'formArray', 5)
                           ">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete
                           All
-                        </button>
+                        </button> -->
                       </form>
                     </div>
                   </div>
@@ -1061,7 +1060,7 @@
                                 <span class="normal_text">Country code </span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
-                              <div class="form-control-wrapper select_arrow">
+                              <div class="form-control-wrapper">
                                 <mat-form-field appearance="outline">
                                   <mat-select formControlName="countryCode" name="countryCode[i]" required>
                                     <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
@@ -1097,7 +1096,7 @@
                                 <span class="normal_text">Ownership</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
-                              <div class="form-control-wrapper select_arrow">
+                              <div class="form-control-wrapper">
                                 <mat-form-field appearance="outline">
                                   <mat-label>Ownership</mat-label>
                                   <mat-select matInput name="ownerShip[i]" formControlName="ownerShip" required>
@@ -1172,7 +1171,7 @@
                                 <span class="normal_text">Schedule where Offered</span>
                                 <span class="text-wrapper-2">*</span>
                               </div>
-                              <div class="form-control-wrapper select_arrow">
+                              <div class="form-control-wrapper">
                                 <mat-form-field appearance="outline">
                                   <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
                                     required>
@@ -1269,7 +1268,7 @@
                                   <span class="normal_text">Country code </span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
-                                <div class="form-control-wrapper select_arrow">
+                                <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
                                     <mat-select formControlName="countryCode" name="countryCode[i]" required>
                                       <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
@@ -1383,7 +1382,7 @@
                                       <span class="normal_text">Scheduled Where Offered</span>
                                       <span class="text-wrapper-2">*</span>
                                     </div>
-                                    <div class="form-control-wrapper select_arrow">
+                                    <div class="form-control-wrapper">
                                       <mat-form-field appearance="outline">
                                         <mat-select matInput name="scheduleOfferd[j]" formControlName="scheduleOfferd"
                                           required>
@@ -1485,7 +1484,7 @@
                                   <span class="normal_text">Country code </span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
-                                <div class="form-control-wrapper select_arrow">
+                                <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
                                     <mat-select formControlName="countryCode" name="countryCode[i]" required>
                                       <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
@@ -1626,7 +1625,7 @@
                                   <span class="normal_text">Schedule where Offered</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
-                                <div class="form-control-wrapper select_arrow">
+                                <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
                                     <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
                                       required>
@@ -1722,7 +1721,7 @@
                                   <span class="normal_text">Country code </span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
-                                <div class="form-control-wrapper select_arrow">
+                                <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
                                     <mat-select formControlName="countryCode" name="countryCode[i]" required>
                                       <mat-option *ngFor="let nature of countryCodeList" [value]="nature"
@@ -1790,7 +1789,7 @@
                                   <span class="normal_text">Schedule where Offered</span>
                                   <span class="text-wrapper-2">*</span>
                                 </div>
-                                <div class="form-control-wrapper select_arrow">
+                                <div class="form-control-wrapper">
                                   <mat-form-field appearance="outline">
                                     <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
                                       required>
@@ -1829,8 +1828,8 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
+     
+      
 
       <div class="out-box">
         <div class="box-left">

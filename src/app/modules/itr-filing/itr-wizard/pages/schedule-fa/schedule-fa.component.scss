@@ -53,12 +53,17 @@
   border-top: 0;
 }
 
+.accordion-item .accordion__item-body {
+  padding: 0px!important;
+}
+
 .frameC {
   display: flex;
   flex-direction: column;
   width: auto;
   align-items: flex-start;
   position: relative;
+  margin:25px 25px 0px 25px;
 }
 
 .div-5 {
