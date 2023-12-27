@@ -2,6 +2,8 @@
         [show]="loading"
         [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
+<div class="page-wrapper">
+<main>
 <div class="mrgArd" *ngIf="bondType === 'listed'">
 
 </div>
@@ -782,3 +784,6 @@
 
   </mat-dialog-content>
 </ng-template>
+</main>
+<app-side-summary-panel type="listedEquityShares"></app-side-summary-panel>
+</div>

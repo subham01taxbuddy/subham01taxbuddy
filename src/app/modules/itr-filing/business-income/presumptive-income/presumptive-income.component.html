@@ -1,4 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
+<div class="page-wrapper">
+<main>
 <div class="spc-blw mrgArd">
   <mat-accordion class="headers-align">
     <app-presumptive-business-income #PresumptiveBusinessIncomeComponentRef
@@ -16,4 +18,7 @@
       <span class="font-semibold">Save All</span>
     </button>
   </div>
+</div>
+</main>
+<app-side-summary-panel type="presumptiveIncome"></app-side-summary-panel>
 </div>

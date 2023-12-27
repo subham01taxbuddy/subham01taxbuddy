@@ -81,6 +81,16 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     this.assetLiabilitiesForm.controls['totalLoans'].setValue(totalLoans);
   }
 
+  createNatOfBusinessForm(index, detail: BusinessDescription) {
+    return this.fb.group({
+      id: detail?.id ? detail?.id : index,
+      hasEdit: [false],
+      natureOfBusiness: [detail?.natureOfBusiness || null, Validators.required],
+      tradeName: detail?.tradeName,
+      businessDescription: detail?.businessDescription,
+    });
+  }
+
   pageChanged(event) {
     this.config.currentPage = event;
   }
