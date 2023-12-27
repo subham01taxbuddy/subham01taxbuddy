@@ -19,43 +19,53 @@
                   <div id="collapse1" class="accordion-collapse collapse show">
                     <form formArrayName="depositoryAccounts" style="padding: 20px">
                       <div class="accordion__item-body" *ngIf="topic.code === 'A1'">
-                        <button class="btn btn__default btn__add pull-right" (click)="addMore('depositoryAccounts')">
-                          Add More
-                        </button>
+                        
                         <div *ngFor="
                             let depositoryAccounts of getDepositoryAccounts.controls;
                             let i = index
                           " [formGroupName]="i">
-                          <div class="White_box">
-                            <div class="div-6">
-                              <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                type="checkbox" (click)="$event.stopPropagation()"
-                                [checked]="selectedIndexes.includes(getCheckboxId(0, i))"
-                                (click)="toggleSelectedIndex(0, i)" />
-                              <div class="form-field">
-                                <div>
-                                  <span class="span">Name of the financial institution</span>
-                                  <span class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input matInput name="nameOfInstitution[i]" formControlName="nameOfInstitution"
-                                    required />
-                                </mat-form-field>
-                              </div>
+                          
 
-                              <div class="form-field">
-                                <div>
-                                  <span class="span">Address of the financial institution</span>
-                                  <span class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input matInput name="addressOfInstitution[i]" formControlName="addressOfInstitution"
-                                    required />
-                                </mat-form-field>
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-sm-12">
+                                <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('depositoryAccounts')">
+                                  Add More
+                                </button>
                               </div>
-                            </div>
-                            <div class="div-6">
-                              <div class="form-field">
+                              <div class="col-sm-1 p-3">
+                                <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                          type="checkbox" (click)="$event.stopPropagation()"
+                          [checked]="selectedIndexes.includes(getCheckboxId(0, i))"
+                          (click)="toggleSelectedIndex(0, i)" />
+                              </div> 
+                              <div class="col-sm-5 px-2">
+                                <div class="form-field">
+                                  <div>
+                                    <span class="span">Name of the financial institution</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
+                                  <mat-form-field appearance="outline">
+                                    <input matInput name="nameOfInstitution[i]" formControlName="nameOfInstitution"
+                                      required />
+                                  </mat-form-field>
+                                </div>
+                              </div>                              
+                              <div class="col-sm-6 px-2">
+                                <div class="form-field">
+                                  <div>
+                                    <span class="span">Address of the financial institution</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
+                                  <mat-form-field appearance="outline">
+                                    <input matInput name="addressOfInstitution[i]" formControlName="addressOfInstitution"
+                                      required />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="col-sm-1"></div>
+                              <div class="col-sm-5 px-2">
+                                <div class="form-field">
                                 <div>
                                   <span class="span">Zip code</span>
                                   <span class="text-wrapper-2">*</span>
@@ -64,7 +74,8 @@
                                   <input matInput name="zipCode[i]" formControlName="zipCode" required />
                                 </mat-form-field>
                               </div>
-                              <div class="form-field">
+                            </div>                          
+                              <div class="col-sm-6 px-2"><div class="form-field">
                                 <div>
                                   <span class="normal_text">Country code </span>
                                   <span class="text-wrapper-2">*</span>
@@ -81,109 +92,150 @@
                                 </div>
                               </div>
                             </div>
+
+                            </div>
                           </div>
-                          <div class="White_box" formArrayName="account">
-                            <button class="btn btn__default btn__add pull-right" (click)="add('depositoryAccounts', i)">
-                              Add
-                            </button>
+                     <hr class="hrBdr">                  
+
+
+
+
+                          <div class="" formArrayName="account">                           
                             <div *ngFor="
                                 let accountCtrl of getAccountControls(i)
                                   .controls;
                                 let j = index
                               " [formGroupName]="j">
-                              <div class="div-6">
-                                <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                  type="checkbox" (click)="$event.stopPropagation()"
-                                  [checked]="selectedAccountIndexes.includes(getCheckboxIdAccount(0, i, j))"
-                                  (click)="toggleSelectedAccountIndex(0, i, j)" />
-                                <div class="form-field">
-                                  <div>
-                                    <span class="span">Account Number</span>
-                                    <span class="text-wrapper-2">*</span>
+                           
+                              <div class="container">
+                                <div class="row">
+                                  <div class="col-sm-12">
+                                    <button class="btn btn__default btn__add pull-right btnRght" (click)="add('depositoryAccounts', i)">
+                                      Add
+                                    </button>
                                   </div>
-                                  <mat-form-field appearance="outline">
-                                    <input matInput formControlName="accountNumber" digitsOnly required />
-                                  </mat-form-field>
+                                  <div class="col-sm-1 p-3">
+                                    <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                    type="checkbox" (click)="$event.stopPropagation()"
+                                    [checked]="selectedAccountIndexes.includes(getCheckboxIdAccount(0, i, j))"
+                                    (click)="toggleSelectedAccountIndex(0, i, j)" />
+                                  </div>
+                                  <div class="col-sm-3 px-2">
+                                    <div class="form-field">
+                                      <div>
+                                        <span class="span">Account Number</span>
+                                        <span class="text-wrapper-2">*</span>
+                                      </div>
+                                      <mat-form-field appearance="outline">
+                                        <input matInput formControlName="accountNumber" digitsOnly required />
+                                      </mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-4 px-2">
+                                    <div class="form-field">
+                                      <div>
+                                        <span class="normal_text">Status</span>
+                                        <span class="text-wrapper-2">*</span>
+                                      </div>
+                                      <div class="form-control-wrapper">
+                                        <mat-form-field appearance="outline">
+                                          <mat-select matInput formControlName="status" required>
+                                            <mat-option *ngFor="let status of status" [value]="status"
+                                              matTooltip="{{ status }}">
+                                              {{ status }}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-4 px-2">
+                                    <div class="form-field">
+                                      <div>
+                                        <span class="span">Account Opening Date</span><span class="text-wrapper-2">*</span>
+                                      </div>
+                                      <mat-form-field appearance="outline">
+                                        <input matInput placeholder="DD/MM/YYYY" [matDatepicker]="dateofFilling"
+                                          autocomplete="off" formControlName="accountOpeningDate" [max]="maxPurchaseDate"
+                                          required />
+                                        <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
+                                        <mat-datepicker #dateofFilling></mat-datepicker>
+                                      </mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-1 px-2">
+                                   
+                                  </div>
+                                  <div class="col-sm-3 px-2">
+                                    <div class="form-field">
+                                      <div>
+                                        <span class="span">
+                                          Peak Balance During the Period</span>
+                                        <span class="text-wrapper-2">*</span>
+                                      </div>
+                                      <mat-form-field appearance="outline">
+                                        <input matInput formControlName="peakBalance" digitsOnly required />
+                                      </mat-form-field>
+                                    </div>                                   
+                                  </div>
+                                  <div class="col-sm-4 px-2">
+                                    <div class="form-field">
+                                      <div>
+                                        <span class="span">Closing Balance</span>
+                                        <span class="text-wrapper-2">*</span>
+                                      </div>
+                                      <mat-form-field appearance="outline">
+                                        <input matInput formControlName="closingBalance" digitsOnly required />
+                                      </mat-form-field>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-4 px-2">
+                                    <div class="form-field">
+                                      <div>
+                                        <span class="span">Gross Interest paid/credited to the
+                                          account during the period
+                                        </span>
+                                        <span class="text-wrapper-2">*</span>
+                                      </div>
+                                      <mat-form-field appearance="outline">
+                                        <input matInput formControlName="grossInterestPaid" digitsOnly required />
+                                      </mat-form-field>
+                                    </div>
+                                  </div>
                                 </div>
-                                <div class="form-field">
-                                  <div>
-                                    <span class="normal_text">Status</span>
-                                    <span class="text-wrapper-2">*</span>
-                                  </div>
-                                  <div class="form-control-wrapper">
-                                    <mat-form-field appearance="outline">
-                                      <mat-select matInput formControlName="status" required>
-                                        <mat-option *ngFor="let status of status" [value]="status"
-                                          matTooltip="{{ status }}">
-                                          {{ status }}
-                                        </mat-option>
-                                      </mat-select>
-                                    </mat-form-field>
-                                  </div>
-                                </div>
-                                <div class="form-field">
-                                  <div>
-                                    <span class="span">Account Opening Date</span><span class="text-wrapper-2">*</span>
-                                  </div>
-                                  <mat-form-field appearance="outline">
-                                    <input matInput placeholder="DD/MM/YYYY" [matDatepicker]="dateofFilling"
-                                      autocomplete="off" formControlName="accountOpeningDate" [max]="maxPurchaseDate"
-                                      required />
-                                    <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
-                                    <mat-datepicker #dateofFilling></mat-datepicker>
-                                  </mat-form-field>
-                                </div>
-                              </div>
-                              <div class="div-6">
-                                <div class="form-field">
-                                  <div>
-                                    <span class="span">
-                                      Peak Balance During the Period</span>
-                                    <span class="text-wrapper-2">*</span>
-                                  </div>
-                                  <mat-form-field appearance="outline">
-                                    <input matInput formControlName="peakBalance" digitsOnly required />
-                                  </mat-form-field>
-                                </div>
-                                <div class="form-field">
-                                  <div>
-                                    <span class="span">Closing Balance</span>
-                                    <span class="text-wrapper-2">*</span>
-                                  </div>
-                                  <mat-form-field appearance="outline">
-                                    <input matInput formControlName="closingBalance" digitsOnly required />
-                                  </mat-form-field>
-                                </div>
-                                <div class="form-field">
-                                  <div>
-                                    <span class="span">Gross Interest paid/credited to the
-                                      account during the period
-                                    </span>
-                                    <span class="text-wrapper-2">*</span>
-                                  </div>
-                                  <mat-form-field appearance="outline">
-                                    <input matInput formControlName="grossInterestPaid" digitsOnly required />
-                                  </mat-form-field>
-                                </div>
-                              </div>
+                              </div> 
+                              <hr class="hrBdr"> 
+
+                             
                               <!--                              <button class="delete-btn" style="width: 15%"-->
                               <!--                                      (click)="delete('depositoryAccounts', 'account', i)">-->
                               <!--                                <i class="fa fa-trash" aria-hidden="true"></i> Delete-->
                               <!--                              </button>-->
                             </div>
-                            <button class="delete-btn" style="width: 15%" (click)="
-                                delete('depositoryAccounts', 'account', i, i)
-                              ">
-                              <i class="fa fa-trash" aria-hidden="true"></i>
-                              Delete
-                            </button>
+                            <div class="container">
+                              <div class="row">
+                                <div class="col-sm-4">
+                                  <button class="delete-btn1" (click)="
+                                  delete('depositoryAccounts', 'account', i, i)
+                                ">
+                                <i class="fa-regular fa-circle-xmark" aria-hidden="true"></i>
+                                Select & Remove Account details
+                              </button>
+                                </div>
+                                <div class="col-sm-4">
+                                  <button class="delete-box"
+                                  (click)="delete('depositoryAccounts', 'formArray', 0)">
+                                  <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
+                                </button>
+                                </div>
+                                <div class="col-sm-4"></div>
+                              </div>
+                            </div>
+
+                            
                           </div>
                         </div>
-                        <!-- <button class="delete-btn" style="width: 15%; margin: 10px"
-                          (click)="delete('depositoryAccounts', 'formArray', 0)">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                          All
-                        </button> -->
+                       
                       </div>
                     </form>
                   </div>
@@ -375,11 +427,11 @@
                             </button>
                           </div>
                         </div>
-                        <!-- <button class="delete-btn" style="width: 15%; margin: 10px"
+                        <hr>
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
                           (click)="delete('custodialAccounts', 'formArray', 1)">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                          All
-                        </button> -->
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
+                        </button>
                       </div>
                     </form>
                   </div>
@@ -536,11 +588,10 @@
                             </div>
                           </div>
                         </div>
-                        <!-- <button class="delete-btn" style="width: 15%; margin: 10px"
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
                           (click)="delete('equityAndDebtInterest', 'formArray', 2)">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                          All
-                        </button> -->
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
+                        </button>
                       </form>
                     </div>
                   </div>
@@ -664,11 +715,10 @@
                             </div>
                           </div>
                         </div>
-                        <!-- <button class="delete-btn" style="width: 15%; margin: 10px"
+                        <button class="delete-btn" style="width: 15%; margin: 10px"
                           (click)="delete('cashValueInsurance', 'formArray', 3)">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                          All
-                        </button> -->
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
+                        </button>
                       </form>
                     </div>
                   </div>
@@ -848,12 +898,11 @@
                             </div>
                           </div>
                         </div>
-                        <!-- <button class="delete-btn" style="width: 15%; margin: 10px" (click)="
+                        <button class="delete-btn" style="width: 15%; margin: 10px" (click)="
                             delete('financialInterestDetails', 'formArray', 4)
                           ">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                          All
-                        </button> -->
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
+                        </button>
                       </form>
                     </div>
                   </div>
@@ -1199,8 +1248,7 @@
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px"
                           (click)="delete('capitalAssetsDetails', 'formArray', 6)">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                          All
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
                         </button>
                       </form>
                     </div>
@@ -1418,8 +1466,7 @@
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px"
                           (click)="delete('signingAuthorityDetails', 'formArray', 7)">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                          All
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
                         </button>
                       </form>
                     </div>
@@ -1654,8 +1701,7 @@
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px"
                           (click)="delete('trustsDetails', 'formArray', 8)">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                          All
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
                         </button>
                       </form>
                     </div>
@@ -1818,8 +1864,7 @@
                         </div>
                         <button class="delete-btn" style="width: 15%; margin: 10px"
                           (click)="delete('otherIncomeDetails', 'formArray', 9)">
-                          <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                          All
+                          <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
                         </button>
                       </form>
                     </div>
