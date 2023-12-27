@@ -61,7 +61,6 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   natOfBusinessDtlForm: FormGroup;
   natOfBusinessDtlsArray: FormArray;
 
-  totalOtherExpenses: any;
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,

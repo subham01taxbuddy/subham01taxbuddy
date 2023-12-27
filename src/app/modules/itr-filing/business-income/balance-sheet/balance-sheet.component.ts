@@ -91,15 +91,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     });
   }
 
-  addNatOfBusinessForm() {
-    let form = this.createNatOfBusinessForm(0, null);
-    (this.natOfBusinessDtlForm.controls['natOfBusinessDtlsArray'] as FormArray).insert(0, form);
-  }
-
-  get getnatOfBusinessDtlsArray() {
-    return <FormArray>this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray');
-  }
-
   pageChanged(event) {
     this.config.currentPage = event;
   }
