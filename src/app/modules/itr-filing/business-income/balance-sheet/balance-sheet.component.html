@@ -12,6 +12,40 @@
           <div class="div-4">
             <div class="frame-wrapper-2A">
               <div class="accordion" id="myAccordion">
+
+                <div class="accordion__item-body">
+                  <div class="gray_container">
+                    <div class="div-6">
+                      <div class="form-field">
+                        <div><span class="span">GST Turnover </span>
+                        </div>
+                      </div>
+                      <div class="form-field">
+                        <input matInput placeholder="GST Turnover" name="grossTurnOverAmount"
+                          [formControl]="$any(assetLiabilitiesForm.controls['grossTurnOverAmount'])"
+                          class="form-control inpplac" maxlength="14" />
+                        <mat-error *ngIf="assetLiabilitiesForm.controls['grossTurnOverAmount'].hasError('pattern')">
+                          Enter positive number without decimal.</mat-error>
+                      </div>
+                    </div>
+
+                    <div class="div-6">
+                      <div class="form-field">
+                        <div><span class="span">GSTR Number</span>
+                        </div>
+                      </div>
+                      <div class="form-field">
+                        <input matInput placeholder="GST Number" name="GSTRNumber"
+                          [formControl]="$any(assetLiabilitiesForm.controls['GSTRNumber'])" class="form-control inpplac"
+                          matTooltip="(GST pattern is NNXXXXXNNNNXZZZ N is number, X is character, Z is number or character)"
+                          matTooltipClass="tab-tooltip" matTooltipPosition="above" matInput upperCase />
+                        <mat-error *ngIf="assetLiabilitiesForm.controls['GSTRNumber'].hasError('pattern')">Enter valid
+                          GST Number</mat-error>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="heading1">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
