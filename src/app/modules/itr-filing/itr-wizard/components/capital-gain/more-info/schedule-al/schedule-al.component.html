@@ -44,7 +44,7 @@
                     <div class="contents-wrapper">
                       <div class="contents" style="cursor: pointer;">
                         <div class="field-text" (click)="$event.stopPropagation();markActive(i)">Entry {{i+1}}</div>
-                        <div class="group"><img class="material-symbols" src="assets/img/new/del.png" /></div>
+                        <div class="group" (click)="deleteIndex(i)"><img class="material-symbols" src="assets/img/new/del.png" /></div>
                       </div>
                     </div>
                   </div>
@@ -172,7 +172,7 @@
                           <button class="btn btn__white" (click)="changeMode()">Back</button>
                         </div>
                         <div class="box-right">
-                          <button class="btn btn__primary" (click)="saveAll()">Save</button>
+                          <button class="btn btn__primary" (click)="saveImmovableAssets()">Save</button>
                         </div>
                       </div>
 

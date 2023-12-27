@@ -727,9 +727,9 @@ export class LabFormComponent implements OnInit {
 
       const shareValue = buyersDetails.controls['share'].value;
       if (shareValue >= 0 && shareValue <= 100) {
-        buyersDetails.controls['amount'].setValue(
+        buyersDetails.controls['amount'].setValue(Math.round(
           (assetDetails.controls['sellValue'].value * shareValue) / 100
-        );
+        ));
       } else {
         console.log(
           this.immovableForm.controls['assetDetails'],
@@ -1376,7 +1376,7 @@ export class LabFormComponent implements OnInit {
     }
     let assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
-    ).controls[index] as FormGroup;
+    ).controls[this.currentCgIndex] as FormGroup;
     let selectedYear = moment(assetDetails.controls['sellDate'].value);
     let sellFinancialYear =
       selectedYear.get('month') > 2

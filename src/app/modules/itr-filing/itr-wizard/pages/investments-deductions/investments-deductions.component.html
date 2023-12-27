@@ -184,10 +184,11 @@
                 <!--            <button type="button" class="accordion-button" data-bs-toggle="collapse"-->
                 <!--                    attr.data-bs-target="{{type === '80g' ? '#80g' : '#80gga'}}">Deduction related to Donation</button>-->
                 <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
-                        aria-expanded="false" data-bs-target="#col80g">Deduction related to Donation</button>
+                        aria-expanded="false" data-bs-target="#donation">Deduction related to Donation</button>
               </h2>
-              <div id="col80g" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
+              <div id="donation" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
                 <div class="accordion__item-body">
+
                   <app-donations
                           #donationsComponentRef
                           [type]="'80g'"
@@ -199,6 +200,7 @@
                           [type]="'80gga'"
                           [isAddDonation]="isAddDonation">
                   </app-donations>
+
                 </div>
               </div>
             </div>

@@ -19,7 +19,7 @@
                 </h2>
                 <div id="tdsSalary" class="accordion-collapse collapse" data-bs-parent="#tdsAccordion">
                   <div class="accordion__item-body">
-                    <div class="Bx4R">
+                    <div class="Bx4R" *ngIf="tdsMode === 'VIEW'">
                       <button type="button" class="addAno" (click)="editTaxesPaid(TDS_TYPE_CODE)">
                         + Add more
                       </button>
@@ -27,7 +27,7 @@
 
                     <div class="card__row display-flex" *ngIf="tdsMode === 'EDIT'">
                       <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12">
-                        <app-tds-on-salary (onSave)="saveAll($event)"></app-tds-on-salary>
+                        <app-tds-on-salary [editIndex]="tdsEditIndex" (onSave)="saveAll($event)"></app-tds-on-salary>
                       </div>
                     </div>
                     <ag-grid-angular *ngIf="tdsMode === 'VIEW'"
@@ -57,7 +57,7 @@
                 </h2>
                 <div id="tdsOther" class="accordion-collapse collapse" data-bs-parent="#tdsOtherAccordion">
                   <div class="accordion__item-body">                 
-                    <div class="Bx4R">
+                    <div class="Bx4R" *ngIf="tdsOtherMode === 'VIEW'" >
                       <button type="button" class="addAno" (click)="editTaxesPaid(TDS_OTHER_TYPE_CODE)">
                         + Add more
                       </button>
@@ -67,7 +67,7 @@
                  
                     <div class="card__row" *ngIf="tdsOtherMode === 'EDIT'">
                       <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12 fullBox">
-                        <app-tds-other-than-salary
+                        <app-tds-other-than-salary [editIndex]="tdsOtherEditIndex"
                                 #other
                                 [addData]="isAddOther"
                                 [showHeadOfIncome]="'TDTS'"
@@ -100,14 +100,14 @@
                 </h2>
                 <div id="tdsPan" class="accordion-collapse collapse" data-bs-parent="#tdsPanAccordion">
                   <div class="accordion__item-body">
-                    <div class="Bx4R">
+                    <div class="Bx4R" *ngIf="tdsPanMode === 'VIEW'">
                       <button type="button" class="addAno" (click)="editTaxesPaid(TDS_PAN_TYPE_CODE)">
                         + Add more
                       </button>
                     </div>
                     <div class="card__row" *ngIf="tdsPanMode === 'EDIT'">
                       <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12 fullBox">
-                      <app-tds-other-than-salary
+                      <app-tds-other-than-salary [editIndex]="tdsPanEditIndex"
                               #panBased
                               [addData]="isAddPanBased"
                               [showHeadOfIncome]="'TDTSP'"
@@ -141,14 +141,14 @@
                 </h2>
                 <div id="tcs" class="accordion-collapse collapse" data-bs-parent="#tcsAccordion">
                   <div class="accordion__item-body">
-                    <div class="Bx4R">
+                    <div class="Bx4R" *ngIf="tcsMode === 'VIEW'">
                       <button type="button" class="addAno" (click)="editTaxesPaid(TCS_TYPE_CODE)">
                         + Add more
                       </button>
                     </div>
                     <div class="card__row" *ngIf="tcsMode === 'EDIT'">
                       <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12 fullBox">
-                        <app-tcs [isAddTcs]="isAddTcs" (onSave)="saveAll($event)"></app-tcs>
+                        <app-tcs [isAddTcs]="isAddTcs" [editIndex]="tcsEditIndex" (onSave)="saveAll($event)"></app-tcs>
                       </div>
                     </div>
                     <ag-grid-angular *ngIf="tcsMode === 'VIEW'"
@@ -178,7 +178,7 @@
                 </h2>
                 <div id="collapse1" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
                   <div class="accordion__item-body">
-                    <div class="Bx4R">
+                    <div class="Bx4R" *ngIf="advanceMode === 'VIEW'">
                       <button type="button" class="addAno" (click)="editTaxesPaid(ADVANCE_TYPE_CODE)">
                         + Add more
                       </button>
@@ -186,7 +186,7 @@
 
                     <div class="card__row" *ngIf="advanceMode === 'EDIT'">
                       <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12 fullBox">
-                        <app-advance-tax-paid
+                        <app-advance-tax-paid [editIndex]="advanceEditIndex"
                                 [isAddAdvance]="isAddAdvance"
                                 (onSave)="saveAll($event)"></app-advance-tax-paid>
                       </div>

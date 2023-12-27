@@ -22,7 +22,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
-import { GridOptions, RowGroupingDisplayType } from 'ag-grid-community';
+import {GridApi, GridOptions, RowGroupingDisplayType} from 'ag-grid-community';
 import { TdsTypeCellRenderer } from '../../../../pages/taxes-paid/tds-type-cell-renderer';
 import { AddAssetsComponent } from './add-assets/add-assets.component';
 import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
@@ -79,6 +79,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     pageSize: 20,
   };
   immovableAssetGridOptions: GridOptions;
+  immovableAssetGridApi: GridApi;
   public groupDisplayType: RowGroupingDisplayType = 'groupRows';
 
   constructor(
@@ -113,7 +114,10 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
       isRowSelectable: (params) => {
         return !params.data.isFullWidth;
       },
-      onGridReady: (params) => {},
+      onGridReady: (params) => {
+        this.immovableAssetGridApi = params.api;
+        params.api.setRowData(this.immovableAssets);
+      },
       isFullWidthRow: (params) => {
         // return isFullWidth(params.rowNode.data);
         return params.rowNode.data.isFullWidth;
@@ -171,7 +175,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     }
 
     // this.immovableAssetForm?.disable();
-     this.movableAssetsForm?.disable();
+    //  this.movableAssetsForm?.disable();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -317,17 +321,6 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
 
   }
 
-  // deleteImmovableAssetsArray() {
-  //   const immovableAssetArray = <FormArray>(
-  //     this.immovableAssetForm?.get('immovableAssetArray')
-  //   );
-  //   immovableAssetArray.controls.forEach((element, index) => {
-  //     if ((element as FormGroup).controls['hasEdit'].value) {
-  //       immovableAssetArray.removeAt(index);
-  //     }
-  //   });
-  // }
-
   pageChanged(event) {
     this.config.currentPage = event;
   }
@@ -361,6 +354,9 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
           );
           this.loading = false;
           this.utilsService.smoothScrollToTop();
+          this.mode = 'VIEW';
+          this.immovableAssets = this.Copy_ITR_JSON.immovableAsset;
+          this.immovableAssetGridApi?.setRowData(this.immovableAssets);
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -544,31 +540,16 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
   }
 
   editAsset(data){
-    // const dialogRefSelect = this.matDialog.open(AddAssetsComponent, {
-    //   data:{
-    //     data:data,
-    //     mode:'edit',
-    //     isEdit :true,
-    //     rowIndex: ,
-    //   },
-    //   closeOnNavigation: true,
-    //   disableClose: false,
-    //   width: '800px',
-    // });
     this.mode = 'EDIT';
     this.activeIndex = this.immovableAssets.indexOf(data);
-
-    // dialogRefSelect.afterClosed().subscribe((result) => {
-    //   if (result !== undefined) {
-    //     if (result.isEdit) {
-    //       const rowIndex = result.rowIndex;
-    //       this.immovableAssets[rowIndex] = result.data;
-    //       this.immovableAssetGridOptions.api?.setRowData(this.immovableAssets);
-    //     }
-    //   }
-    // });
   }
 
+  deleteIndex(index) {
+    const immovableAssetArray = <FormArray>(
+      this.immovableAssetForm?.get('immovableAssetArray')
+    );
+    immovableAssetArray.removeAt(index);
+  }
   deleteAsset(data) {
     const dialogRef = this.matDialog.open(ConfirmDialogComponent, {
       data: {
@@ -582,7 +563,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
         const index = this.immovableAssets.indexOf(data);
         if (index !== -1) {
           this.immovableAssets.splice(index, 1);
-          this.immovableAssetGridOptions.api?.setRowData(this.immovableAssets);
+          this.immovableAssetGridApi?.setRowData(this.immovableAssets);
         }
       }
     });
