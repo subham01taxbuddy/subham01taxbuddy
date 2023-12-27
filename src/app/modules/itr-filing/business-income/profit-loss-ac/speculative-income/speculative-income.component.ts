@@ -168,7 +168,6 @@ export class SpeculativeIncomeComponent implements OnInit {
     this.calculateNetIncome(0);
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
     let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter(
       (acIncome) => acIncome?.businessType === 'SPECULATIVEINCOME'
     );

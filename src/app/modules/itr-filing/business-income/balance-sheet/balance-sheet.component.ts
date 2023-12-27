@@ -28,8 +28,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   natureOfBusinessDropdownAll: any;
   assetLiabilitiesForm: FormGroup;
-  natOfBusinessDtlForm: FormGroup;
-  natOfBusinessDtlsArray: FormArray;
   total1 = 0;
   total2 = 0;
   difference = 0;
@@ -69,26 +67,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     if (this.ITR_JSON.business?.fixedAssetsDetails) {
       this.depreciationObj = this.ITR_JSON.business.fixedAssetsDetails;
     }
-    // this.getLiabilitiesAssets();
-
-    let natOfBusiness = this.ITR_JSON.business?.businessDescription;
-    this.natOfBusinessDtlsArray = new FormArray([]);
-    if (natOfBusiness && natOfBusiness.length > 0) {
-      let index = 0;
-      for (let detail of natOfBusiness) {
-        let form = this.createNatOfBusinessForm(index++, detail);
-        this.natOfBusinessDtlsArray.push(form);
-      }
-      // this.speculativeIncome = specBusiness?.incomes[0];
-    } else {
-      let form = this.createNatOfBusinessForm(0, null);
-      this.natOfBusinessDtlsArray.push(form);
-    }
-
-    this.natOfBusinessDtlForm = this.fb.group({
-      natOfBusinessDtlsArray: this.natOfBusinessDtlsArray,
-    });
-
     this.calculateTotalLoans();
     this.calSourcesOfFunds();
     this.calTotalLiabilitiesProvision();
@@ -103,55 +81,12 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     this.assetLiabilitiesForm.controls['totalLoans'].setValue(totalLoans);
   }
 
-  createNatOfBusinessForm(index, detail: BusinessDescription) {
-    return this.fb.group({
-      id: detail?.id ? detail?.id : index,
-      hasEdit: [false],
-      natureOfBusiness: [detail?.natureOfBusiness || null, Validators.required],
-      tradeName: detail?.tradeName,
-      businessDescription: detail?.businessDescription,
-    });
-  }
-
-  addNatOfBusinessForm() {
-    let form = this.createNatOfBusinessForm(0, null);
-    (
-      this.natOfBusinessDtlForm.controls['natOfBusinessDtlsArray'] as FormArray
-    ).insert(0, form);
-  }
-
-  get getnatOfBusinessDtlsArray() {
-    return <FormArray>this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray');
-  }
-
   pageChanged(event) {
     this.config.currentPage = event;
   }
 
   fieldGlobalIndex(index) {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
-  }
-
-  deleteArray() {
-    const natOfBusinessDtlsArray = <FormArray>(
-      this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray')
-    );
-    natOfBusinessDtlsArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        natOfBusinessDtlsArray.removeAt(index);
-      }
-    });
-  }
-
-  specSelected() {
-    const natOfBusinessDtlsArray = <FormArray>(
-      this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray')
-    );
-    return (
-      natOfBusinessDtlsArray.controls.filter(
-        (element) => (element as FormGroup).controls['hasEdit'].value === true
-      ).length > 0
-    );
   }
 
   displayedColumns: string[] = [
@@ -433,28 +368,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     });
   }
 
-  // getLiabilitiesAssets() {
-  //   if (this.utilsService.isNonEmpty(this.ITR_JSON.business) && this.utilsService.isNonEmpty(this.ITR_JSON.business.financialParticulars)) {
-  //     this.assetLiabilitiesForm.setValue({
-  //       gstrNumber: this.ITR_JSON.business.financialParticulars.GSTRNumber,
-  //       turnOverAsPerGST: this.ITR_JSON.business.financialParticulars.grossTurnOverAmount,
-  //       partnerOwnCapital: this.ITR_JSON.business.financialParticulars.membersOwnCapital,
-  //       securedLoan: this.ITR_JSON.business.financialParticulars.securedLoans,
-  //       unsecuredLoan: this.ITR_JSON.business.financialParticulars.unSecuredLoans,
-  //       advances: this.ITR_JSON.business.financialParticulars.advances,
-  //       sundryCreditors: this.ITR_JSON.business.financialParticulars.sundryCreditorsAmount,
-  //       otherLiabilities: this.ITR_JSON.business.financialParticulars.otherLiabilities,
-  //       fixedAssets: this.ITR_JSON.business.financialParticulars.fixedAssets,
-  //       inventories: this.ITR_JSON.business.financialParticulars.inventories,
-  //       sundryDeptors: this.ITR_JSON.business.financialParticulars.sundryDebtorsAmount,
-  //       balanceWithBank: this.ITR_JSON.business.financialParticulars.balanceWithBank,
-  //       cashInHand: this.ITR_JSON.business.financialParticulars.cashInHand,
-  //       loanandAdvance: this.ITR_JSON.business.financialParticulars.loanAndAdvances,
-  //       investment: this.ITR_JSON.business.financialParticulars.investment,
-  //       otherAsset: this.ITR_JSON.business.financialParticulars.otherAssets,
-  //     });
-  //   }
-  // }
 
   calSourcesOfFunds() {
     let totalSourcesOfFunds = 0;
@@ -589,10 +502,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     }
 
     if (this.ITR_JSON?.liableSection44AAflag === 'Y') {
-      if (
-        this.assetLiabilitiesForm?.controls['difference']?.value === 0 &&
-        this.natOfBusinessDtlForm.valid
-      ) {
+      if (this.assetLiabilitiesForm?.controls['difference']?.value === 0) {
         valid = true;
       } else {
         valid = false;
@@ -648,8 +558,6 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         };
       }
 
-      this.Copy_ITR_JSON.business.businessDescription =
-        this.natOfBusinessDtlsArray.value;
       this.Copy_ITR_JSON.business.financialParticulars =
         this.assetLiabilitiesForm.value;
       this.Copy_ITR_JSON.business.fixedAssetsDetails = this.depreciationObj;
@@ -684,11 +592,5 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       }
       $('input.ng-invalid').first().focus();
     }
-  }
-
-  businessClicked(event, index) {
-    (this.natOfBusinessDtlsArray.controls[index] as FormGroup).controls[
-      'natureOfBusiness'
-    ].setValue(event);
   }
 }
