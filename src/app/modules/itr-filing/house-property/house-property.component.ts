@@ -126,14 +126,19 @@ export class HousePropertyComponent implements OnInit {
       this.ITR_JSON.houseProperties instanceof Array &&
       this.ITR_JSON.houseProperties.length > 0
     ) {
-      this.housePropertyForm.patchValue(this.ITR_JSON.houseProperties[0]);
-      if (this.ITR_JSON.houseProperties[0].isEligibleFor80EE) {
-        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EE');
-      } else if (this.ITR_JSON.houseProperties[0].isEligibleFor80EEA) {
-        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EEA');
-      } else {
-        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('');
-      }
+      this.ITR_JSON.houseProperties?.forEach((element) => {
+        this.housePropertyForm.patchValue(element);
+
+        if (element.isEligibleFor80EE) {
+          this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EE');
+        } else if (element.isEligibleFor80EEA) {
+          this.housePropertyForm.controls['isEligibleFor80EE'].setValue(
+            '80EEA'
+          );
+        } else {
+          this.housePropertyForm.controls['isEligibleFor80EE'].setValue('');
+        }
+      });
     }
 
     this.updateHpTaxaxbleIncome();
@@ -588,6 +593,12 @@ export class HousePropertyComponent implements OnInit {
         itrJsonHp?.loans[0]?.interestAmount
       );
 
+      this.calAnnualValue();
+      this.housePropertyForm.controls[
+        'totalArrearsUnrealizedRentReceived'
+      ].setValue(itrJsonHp?.totalArrearsUnrealizedRentReceived);
+      this.calculateArrears30();
+
       if (itrJsonHp?.eligible80EEAAmount > 0) {
         this.housePropertyForm.controls['interestAmount'].setValue(
           itrJsonHp?.loans[0]?.interestAmount + itrJsonHp?.eligible80EEAAmount
@@ -633,10 +644,26 @@ export class HousePropertyComponent implements OnInit {
         itrJsonHp?.loans[0]?.interestAmount
       );
 
+      this.housePropertyForm?.controls['annualRentReceived']?.setValue(
+        itrJsonHp?.grossAnnualRentReceived
+          ? itrJsonHp?.grossAnnualRentReceived
+          : itrJsonHp?.grossAnnualRentReceivedTotal
+      );
+
       this.changePropType(
         this.housePropertyForm.controls['propertyType'].value,
         'EDIT'
       );
+
+      this.calAnnualValue();
+      this.housePropertyForm.controls[
+        'totalArrearsUnrealizedRentReceived'
+      ].setValue(itrJsonHp?.totalArrearsUnrealizedRentReceived);
+      this.calculateArrears30();
+
+      itrJsonHp?.tenant?.forEach((element) => {
+        this.createTenantForm({ name: element.name, panNumber: element?.panNumber });
+      });      
     }
   }
 
@@ -1516,6 +1543,22 @@ export class HousePropertyComponent implements OnInit {
         eligible80EEAmount?.setValue(0);
         eligible80EEAmount?.updateValueAndValidity();
       }
+    } else {
+      eligible80EEAmount?.setValue(0);
+      eligible80EEAmount?.updateValueAndValidity();
+
+      eligible80EEAAmount?.setValue(0);
+      eligible80EEAAmount?.updateValueAndValidity();
+
+      if (
+        propertyType?.value === 'SOP' &&
+        parseFloat(interest24b?.value) > 200000
+      ) {
+        interest24b?.setValue(200000);
+      } else {
+        interest24b?.setValue(interest.value);
+      }
+      interest24b?.updateValueAndValidity();
     }
   }
 }

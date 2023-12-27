@@ -12,6 +12,7 @@ export interface ITR_JSON {
   contactNumber: string;
   panNumber: string;
   aadharNumber: string;
+  aadhaarEnrolmentId:any;
   residentialStatus: string;
   maritalStatus: string;
   assesseeType: string;
@@ -493,6 +494,8 @@ export interface HouseProperties {
   loans: Loans[];
   eligible80EEAAmount?: any;
   eligible80EEAmount?: any;
+  totalArrearsUnrealizedRentReceived?:any;
+  arrearsUnrealizedRentReceived?:any;
 }
 
 export interface PresumptiveIncomes {

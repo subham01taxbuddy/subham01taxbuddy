@@ -76,6 +76,13 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   tcsMode = 'VIEW';
   advanceMode = 'VIEW';
 
+  //index when switching view to edit
+  tdsEditIndex = 0;
+  tdsOtherEditIndex = 0;
+  tdsPanEditIndex = 0;
+  tcsEditIndex = 0;
+  advanceEditIndex = 0;
+
   constructor(
     public utilsService: UtilsService,
     private itrMsService: ItrMsService,
@@ -178,125 +185,19 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   editTaxesPaid(type, index?) {
     if (type === this.TDS_TYPE_CODE) {
       this.tdsMode = 'EDIT';
-      // const dialogRef = this.matDialog.open(TdsOnSalaryComponent, {
-      //   data: {
-      //     isTaxesPaid: this.isTaxesPaid,
-      //     assetIndex: index,
-      //   },
-      //   closeOnNavigation: true,
-      //   disableClose: false,
-      //   width: '100%',
-      // });
-
-      // dialogRef.afterClosed().subscribe((result) => {
-      //   this.tdsMode = 'VIEW';
-      //   console.log('Result of tdsOnSalary:', result);
-      //   if (result !== undefined) {
-      //     if (index != null) {
-      //       this.taxPaid.onSalary[index] = result.cgObject.salaryArray[0];
-      //       this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-      //     }
-      //     this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
-      //     // this.saveAll();
-      //   }
-      // });
+      this.tdsEditIndex = index;
     } else if (type === this.TDS_OTHER_TYPE_CODE) {
       this.tdsOtherMode = 'EDIT';
-      // const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
-      //   data: {
-      //     isTaxesPaid: this.isTaxesPaid,
-      //     assetIndex: index,
-      //     showHeadOfIncome: 'TDTS',
-      //   },
-      //   closeOnNavigation: true,
-      //   disableClose: false,
-      //   width: '100%',
-      // });
-      //
-      // dialogRef.afterClosed().subscribe((result) => {
-      //   console.log('Result of tdsOtherThanSalary16A:', result);
-      //   if (result !== undefined) {
-      //     if (index != null) {
-      //       this.taxPaid.otherThanSalary16A[index] =
-      //         result?.cgObject?.salaryArray[0];
-      //       this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-      //       this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData(this.TDS_OTHER_TYPE_CODE));
-      //       // this.saveAll();
-      //     }
-      //   }
-      // });
+      this.tdsOtherEditIndex = index;
     } else if (type === this.TDS_PAN_TYPE_CODE) {
       this.tdsPanMode = 'EDIT';
-      // const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
-      //   data: {
-      //     isTaxesPaid: this.isTaxesPaid,
-      //     assetIndex: index,
-      //     showHeadOfIncome: 'TDTSP',
-      //   },
-      //   closeOnNavigation: true,
-      //   disableClose: false,
-      //   width: '100%',
-      // });
-      //
-      // dialogRef.afterClosed().subscribe((result) => {
-      //   console.log('Result of tdsOtherThanSalary16A:', result);
-      //   if (result !== undefined) {
-      //     if (index != null) {
-      //       this.taxPaid.otherThanSalary26QB[index] =
-      //         result?.cgObject?.salaryArray[0];
-      //       this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-      //       this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData(this.TDS_PAN_TYPE_CODE));
-      //       // this.saveAll();
-      //     }
-      //   }
-      // });
+      this.tdsPanEditIndex = index;
     } else if (type === this.TCS_TYPE_CODE) {
       this.tcsMode = 'EDIT';
-      // const dialogRef = this.matDialog.open(TcsComponent, {
-      //   data: {
-      //     isTaxesPaid: this.isTaxesPaid,
-      //     assetIndex: index,
-      //   },
-      //   closeOnNavigation: true,
-      //   disableClose: false,
-      //   width: '100%',
-      // });
-      //
-      // dialogRef.afterClosed().subscribe((result) => {
-      //   console.log('Result of tcs:', result);
-      //   if (result !== undefined) {
-      //     if (index != null) {
-      //       this.taxPaid.tcs[index] = result?.cgObject?.salaryArray[0];
-      //       this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-      //       this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData(this.TCS_TYPE_CODE));
-      //       // this.saveAll();
-      //     }
-      //   }
-      // });
+      this.tcsEditIndex = index;
     } else if (type === this.ADVANCE_TYPE_CODE) {
       this.advanceMode = 'EDIT';
-      // const dialogRef = this.matDialog.open(AdvanceTaxPaidComponent, {
-      //   data: {
-      //     isTaxesPaid: this.isTaxesPaid,
-      //     assetIndex: index,
-      //   },
-      //   closeOnNavigation: true,
-      //   disableClose: false,
-      //   width: '100%',
-      // });
-      //
-      // dialogRef.afterClosed().subscribe((result) => {
-      //   console.log('Result of advanceTax:', result);
-      //   if (result !== undefined) {
-      //     if (index != null) {
-      //       this.taxPaid.otherThanTDSTCS[index] =
-      //         result?.cgObject?.salaryArray[0];
-      //       this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-      //       this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData(this.ADVANCE_TYPE_CODE));
-      //       // this.saveAll();
-      //     }
-      //   }
-      // });
+      this.advanceEditIndex = index;
     }
   }
 

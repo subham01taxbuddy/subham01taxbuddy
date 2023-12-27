@@ -338,6 +338,7 @@ export class UserProfileComponent implements OnInit {
   // }
   roles: any;
   unMaskedMobileNo: any;
+  serviceType: any;
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserMsService,
@@ -356,11 +357,15 @@ export class UserProfileComponent implements OnInit {
     this.roles = this.utilsService.getUserRoles();
     // this.getStateInfo().then(res => {
     this.activatedRoute.params.subscribe(params => {
-      console.log("99999999999999999:", params)
       this.getUserInfo(params['id']);
       this.userId = params['id'];
     });
     // })
+    this.activatedRoute.queryParams.subscribe((params) => {
+      if (params) {
+        this.serviceType = params['serviceType'];
+      }
+    });
 
     this.userProfileForm = this.fb.group({
       fName: [''],
@@ -751,7 +756,8 @@ export class UserProfileComponent implements OnInit {
       this.userInfo.gstDetails = this.gstForm.value;
       console.log('After User Info : -> ', this.userInfo);
       this.loading = true;
-      let param = '/profile/' + this.userInfo.userId;
+      //'https://uat-api.taxbuddy.com/user/profile/12383?serviceType=GST'
+      let param = '/profile/' + this.userInfo.userId + '?serviceType=' + this.serviceType;
       this.userService.putMethod(param, this.userInfo).subscribe(res => {
         this.maskMobileNumber(this.unMaskedMobileNo);
         this._toastMessageService.alert("success", this.userInfo.fName + "'s profile updated successfully.");

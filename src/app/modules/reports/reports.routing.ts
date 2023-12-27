@@ -15,6 +15,7 @@ import { ProformaInvoiceComponent } from './proforma-invoice/proforma-invoice.co
 import { TdsReportComponent } from './tds-report/tds-report.component';
 import { MissedChatListComponent } from './missed-chat-list/missed-chat-list.component';
 import { MissedInboundCallListComponent } from './missed-inbound-call-list/missed-inbound-call-list.component';
+import { DailySignUpReportComponent } from './daily-sign-up-report/daily-sign-up-report.component';
 
 
 const routes: Routes = [
@@ -89,6 +90,10 @@ const routes: Routes = [
       {
         path: 'missed-chat-list',
         component: MissedChatListComponent,
+      },
+      {
+        path: 'daily-sign-up-report',
+        component: DailySignUpReportComponent,
       },
     ],
 

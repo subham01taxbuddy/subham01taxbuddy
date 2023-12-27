@@ -26,14 +26,14 @@
               </h2>
               <div id="collapse3" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                 <div class="accordion__item-body">
-                  <div>
+                 
                     <button
                             *ngIf="compactView || selectedBroker === ''"
-                            class="edit_btn float-right"
+                            class="edit_btn float-right btnStyl"
                             (click)="$event.stopPropagation(); addMore()">
-                      <i class="fa fa-plus"></i>Add
+                      <i class="fa fa-plus"></i> Add
                     </button>
-                  </div>
+                
                   <ag-grid-angular
                           class="ag-theme-balham topSps"
                           [gridOptions]="equityGridOptions"
@@ -51,7 +51,7 @@
 
                     <div class="col-sm-3">
                       <button type="submit" class="cancel" (click)="showCompactView()">
-                        Back to Brokers
+                        {{ this.bondType === 'listed' ? 'Back to Brokers' : 'Back'}}
                       </button>
                     </div>
                   </div>

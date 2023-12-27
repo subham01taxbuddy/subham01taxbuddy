@@ -312,6 +312,29 @@
                   </div>
                 </div>
 
+                <div class="hp4-2">
+                  <div class="field">
+                    <div class="field-label">
+                      <span class="span">Year Of Improvement </span> <span class="redAst">*</span>
+                    </div>
+                    <mat-form-field class="input-field-width">
+                      <mat-select
+                              name="improve[i]"
+                              formControlName="dateOfImprovement"
+                              required
+                              (selectionChange)="
+                      isImprovementValid(this.immovableForm, i)">
+                        <mat-option
+                                [value]="year"
+                                *ngFor="let year of improvementYears"
+                        >
+                          {{ year }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
                 <div class="hp4-1">
                   <div class="field">
                     <div class="field-label">
@@ -335,29 +358,6 @@
                               *ngIf="improve.get('costOfImprovement').hasError('pattern')">
                         Enter valid amount.
                       </mat-error>
-                    </mat-form-field>
-                  </div>
-                </div>
-
-                <div class="hp4-2">
-                  <div class="field">
-                    <div class="field-label">
-                      <span class="span">Year Of Improvement </span> <span class="redAst">*</span>
-                    </div>
-                    <mat-form-field class="input-field-width">
-                      <mat-select
-                              name="improve[i]"
-                              formControlName="dateOfImprovement"
-                              required
-                              (selectionChange)="
-                      isImprovementValid(this.immovableForm, i)">
-                        <mat-option
-                                [value]="year"
-                                *ngFor="let year of improvementYears"
-                        >
-                          {{ year }}
-                        </mat-option>
-                      </mat-select>
                     </mat-form-field>
                   </div>
                 </div>
@@ -602,7 +602,7 @@
               </div>
               <div class="item-right1">
                 ₹ {{
-                cgArrayElement?.assetDetails[currentCgIndex]?.capitalGain
+                cgArrayElement?.assetDetails[currentCgIndex]?.capitalGain !== null
                         ? cgArrayElement?.assetDetails[currentCgIndex]?.capitalGain
                         : "NA"
                 }}

@@ -21,6 +21,7 @@ declare let $: any;
 export class TcsComponent implements OnInit {
   @Input() isAddTcs: Number;
   @Output() onSave = new EventEmitter();
+  @Input() editIndex: any;
   salaryForm: FormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
@@ -58,11 +59,11 @@ export class TcsComponent implements OnInit {
     } else {
       this.addMoreSalary();
     }
-    // if(this.data?.assetIndex != null && this.data.assetIndex >= 0){
-    //   this.addMoreSalary(this.Copy_ITR_JSON.taxPaid?.tcs?.[this.data.assetIndex]);
-    // } else {
-    //   this.addMoreSalary();
-    // }
+    if (this.editIndex != undefined && this.editIndex >= 0) {
+      this.activeIndex = this.editIndex;
+    } else {
+      this.addMoreSalary();
+    }
 
   }
 
@@ -183,15 +184,12 @@ export class TcsComponent implements OnInit {
   addMoreSalary(item?) {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     salaryArray.push(this.createForm(item));
+    this.activeIndex = salaryArray.length - 1;
   }
 
-  deleteSalaryArray() {
+  deleteSalaryArray(index) {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    salaryArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        salaryArray.removeAt(index);
-      }
-    });
+    salaryArray.removeAt(index);
   }
 
   pageChanged(event) {

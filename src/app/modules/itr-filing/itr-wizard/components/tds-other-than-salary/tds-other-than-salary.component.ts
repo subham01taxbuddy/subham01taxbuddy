@@ -16,6 +16,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   @Input() showHeadOfIncome: String;
   @Output() onSave = new EventEmitter();
 
+  @Input() editIndex: any;
   salaryForm: FormGroup;
   COPY_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
@@ -62,19 +63,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     if(this.data && this.data.showHeadOfIncome){
       this.showHeadOfIncome = this.data.showHeadOfIncome;
     }
-    // if (this.showHeadOfIncome === 'TDTS') {
-    //   if (this.data.assetIndex !== null) {
-    //     this.addMoreSalary(this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A[this.data.assetIndex]);
-    //   } else {
-    //     this.addMoreSalary();
-    //   }
-    // } else if (this.showHeadOfIncome === 'TDTSP') {
-    //   if (this.data.assetIndex !== null && this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB) {
-    //     this.addMoreSalary(this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB[this.data.assetIndex]);
-    //   } else {
-    //     this.addMoreSalary();
-    //   }
-    // }
+
     if (
         this.showHeadOfIncome === 'TDTS' &&
         this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A &&
@@ -92,6 +81,11 @@ export class TdsOtherThanSalaryComponent implements OnInit {
       this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB.forEach((item) => {
         this.addMoreSalary(item);
       });
+    } else {
+      this.addMoreSalary();
+    }
+    if (this.editIndex != undefined && this.editIndex >= 0) {
+      this.activeIndex = this.editIndex;
     } else {
       this.addMoreSalary();
     }
@@ -265,14 +259,10 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     this.changed();
   }
 
-  deleteSalaryArray() {
+  deleteSalaryArray(index) {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    salaryArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        salaryArray.removeAt(index);
-        this.changed();
-      }
-    });
+    salaryArray.removeAt(index);
+    this.changed();
   }
 
 

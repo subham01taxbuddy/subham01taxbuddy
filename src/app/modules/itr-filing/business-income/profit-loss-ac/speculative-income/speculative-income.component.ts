@@ -54,21 +54,19 @@ export class SpeculativeIncomeComponent implements OnInit {
       currentPage: 1,
     };
 
-    let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter(
-      (acIncome) => acIncome.businessType === 'SPECULATIVEINCOME'
-    )[0];
+    let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter((acIncome) => acIncome.businessType === 'SPECULATIVEINCOME')[0];
     this.specIncomeFormArray = new FormArray([]);
-    if (specBusiness?.incomes) {
+    if (specBusiness?.incomes.length) {
       let index = 0;
       for (let income of specBusiness.incomes) {
         let form = this.createSpecIncomeForm(index++, income);
         this.specIncomeFormArray.push(form);
       }
       // this.speculativeIncome = specBusiness?.incomes[0];
-    } /*else {
+    } else {
       let form = this.createSpecIncomeForm(0, null);
       this.specIncomeFormArray.push(form);
-    }*/
+    }
     this.specIncomeForm = this.fb.group({
       specIncomesArray: this.specIncomeFormArray,
     });
@@ -168,7 +166,6 @@ export class SpeculativeIncomeComponent implements OnInit {
     this.calculateNetIncome(0);
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
     let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter(
       (acIncome) => acIncome?.businessType === 'SPECULATIVEINCOME'
     );
@@ -251,13 +248,7 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   deleteArray() {
-    const specIncomesArray = <FormArray>(
-      this.specIncomeForm.get('specIncomesArray')
-    );
-    specIncomesArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        specIncomesArray.removeAt(index);
-      }
-    });
+    const specIncomesArray = <FormArray>this.specIncomeForm.get('specIncomesArray');
+    specIncomesArray.controls = specIncomesArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
   }
 }

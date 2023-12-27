@@ -53,12 +53,52 @@
   border-top: 0;
 }
 
+.accordion-item .accordion__item-body {
+  padding: 0px!important;
+}
+
+.btnRght {
+  margin-right: 7px!important;
+}
+
+.hrBdr {
+  margin-top: 20px;
+  border-color: #a9a8a8;
+  margin-bottom:20px;
+}
+
+.delete-btn1{
+  width:100%;
+  text-align:left;
+  color:#8b0808;
+  font-size: 14.5px;
+  margin-left: 16px;
+}
+.delete-btn1:hover{
+  color:#ff0000;
+}
+
+.delete-box{
+  border-radius:6px;
+  padding:8px;
+  border:1px solid #ff0000;
+  color:#ff0000;
+  width:40%;
+  float:left;
+}
+.delete-box:hover{
+  background-color:#ff0000;
+  color:#ffffff;
+}
+
+
 .frameC {
   display: flex;
   flex-direction: column;
   width: auto;
   align-items: flex-start;
   position: relative;
+  margin:25px 25px 0px 25px;
 }
 
 .div-5 {

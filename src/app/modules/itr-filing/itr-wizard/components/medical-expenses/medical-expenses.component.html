@@ -17,7 +17,7 @@
               <div class="gray_container">
                 <div class="div-6">
                   <div class="form-field">
-                    <div><span class="span">Health Insurance for self/spouce/children </span>
+                    <div><span class="span">Health Insurance for self/spouse/children </span>
                     </div>
                     <mat-form-field appearance="outline">
                       <input
@@ -68,41 +68,7 @@
                 </div>
               </div>
 
-              <div class="gray_container">
-                <div class="div-6">
-                  <div class="form-field">
-                    <div><span class="span">Health Insurance premium for parents </span></div>
-                    <mat-form-field appearance="outline">
-                      <input
-                             matInput
-                             placeholder="Health insurance premium paid for parents"
-                             maxlength="8"
-                             formControlName="premium"
-                             autocomplete="off"
-                             digitsOnly
-                      />
-                    </mat-form-field>
-                  </div>
-                  <div class="form-field">
-                    <div><span class="span">Preventive Health Checkup</span></div>
-                    <mat-form-field appearance="outline">
-                      <input
-                             matInput
-                             placeholder="Preventive Health Check-up"
-                             maxlength="8"
-                             formControlName="preventiveCheckUp"
-                             autocomplete="off"
-                             digitsOnly
-                             (blur)="max5000Limit('PARENTS')"
-                      />
-                      <mat-error
-                              *ngIf="investmentDeductionForm.controls['preventiveCheckUp'].hasError('max')">
-                        Max limit is 5k for both self and parents
-                      </mat-error>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
+
               <div class="White_box">
                 <div class="row mb-10">
                   <div class="col-10 ">
@@ -118,7 +84,42 @@
                   </div>
                 </div>
                 <div class="gray_container">
-                  <div class="div-6" *ngIf="investmentDeductionForm.controls['hasParentOverSixty'].value">
+                  <div class="div-6">
+                    <div class="form-field">
+                      <div><span class="span">Health Insurance premium for parents </span></div>
+                      <mat-form-field appearance="outline">
+                        <input
+                                matInput
+                                placeholder="Health insurance premium paid for parents"
+                                maxlength="8"
+                                formControlName="premium"
+                                autocomplete="off"
+                                digitsOnly
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="form-field">
+                      <div><span class="span">Preventive Health Checkup</span></div>
+                      <mat-form-field appearance="outline">
+                        <input
+                                matInput
+                                placeholder="Preventive Health Check-up"
+                                maxlength="8"
+                                formControlName="preventiveCheckUp"
+                                autocomplete="off"
+                                digitsOnly
+                                (blur)="max5000Limit('PARENTS')"
+                        />
+                        <mat-error
+                                *ngIf="investmentDeductionForm.controls['preventiveCheckUp'].hasError('max')">
+                          Max limit is 5k for both self and parents
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="gray_container" *ngIf="investmentDeductionForm.controls['hasParentOverSixty'].value">
+                  <div class="div-6">
                     <div class="form-field">
                       <div>
                         <span class="span">Medical Expenditure for senior citizen</span>
