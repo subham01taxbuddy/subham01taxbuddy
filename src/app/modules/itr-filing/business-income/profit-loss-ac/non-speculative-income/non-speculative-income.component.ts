@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import {
+  BusinessDescription,
   ITR_JSON,
   NewExpenses,
   ProfitLossIncomes,
@@ -57,12 +58,16 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   loading: boolean = false;
   totalNetProfit: any;
   totalOtherExpenses: any;
+  natOfBusinessDtlForm: FormGroup;
+  natOfBusinessDtlsArray: FormArray;
+
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
     private formBuilder: FormBuilder,
     public utilsService: UtilsService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    public fb: FormBuilder,
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -77,6 +82,20 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.nonspecIncomeFormArray = new FormArray([]);
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    let natOfBusiness = this.ITR_JSON.business?.businessDescription;
+    this.natOfBusinessDtlsArray = new FormArray([]);
+    if (natOfBusiness && natOfBusiness.length > 0) {
+      let index = 0;
+      for (let detail of natOfBusiness) {
+        let form = this.createNatOfBusinessForm(index++, detail);
+        this.natOfBusinessDtlsArray.push(form);
+      }
+      // this.speculativeIncome = specBusiness?.incomes[0];
+    } else {
+      let form = this.createNatOfBusinessForm(0, null);
+      this.natOfBusinessDtlsArray.push(form);
+    }
     if (this.Copy_ITR_JSON?.business?.profitLossACIncomes) {
       let data = this.Copy_ITR_JSON?.business?.profitLossACIncomes.filter(
         (item: any) => item.businessType === 'NONSPECULATIVEINCOME'
@@ -118,6 +137,54 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     ).controls.forEach((element, index) => {
       this.calculateIncome(index);
     });
+
+    this.natOfBusinessDtlForm = this.fb.group({
+      natOfBusinessDtlsArray: this.natOfBusinessDtlsArray,
+    });
+  }
+
+  get getnatOfBusinessDtlsArray() {
+    return <FormArray>this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray');
+  }
+  createNatOfBusinessForm(index, detail: BusinessDescription) {
+    return this.fb.group({
+      id: detail?.id ? detail?.id : index,
+      hasEdit: [false],
+      natureOfBusiness: [detail?.natureOfBusiness || null, Validators.required],
+      tradeName: detail?.tradeName,
+      businessDescription: detail?.businessDescription,
+    });
+  }
+
+  addNatOfBusinessForm() {
+    let form = this.createNatOfBusinessForm(0, null);
+    (this.natOfBusinessDtlForm.controls['natOfBusinessDtlsArray'] as FormArray).insert(0, form);
+  }
+
+  deleteArray() {
+    const natOfBusinessDtlsArray = <FormArray>(
+      this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray')
+    );
+    natOfBusinessDtlsArray.controls.forEach((element, index) => {
+      if ((element as FormGroup).controls['hasEdit'].value) {
+        natOfBusinessDtlsArray.removeAt(index);
+      }
+    });
+  }
+
+  specSelected() {
+    const natOfBusinessDtlsArray = <FormArray>(
+      this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray')
+    );
+    return (
+      natOfBusinessDtlsArray.controls.filter(
+        (element) => (element as FormGroup).controls['hasEdit'].value === true
+      ).length > 0
+    );
+  }
+
+  businessClicked(event, index) {
+    (this.natOfBusinessDtlsArray.controls[index] as FormGroup).controls['natureOfBusiness'].setValue(event);
   }
 
   get getIncomeArray() {
@@ -240,7 +307,6 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     form.expenses.forEach((element) => {
       allExpenses += parseFloat(element.expenseAmount);
     });
-    this.totalOtherExpenses = allExpenses;
     const net = form.netProfit - allExpenses;
     this.profitLossForm.controls['netProfit'].setValue(net);
     this.totalNetProfit = net;
@@ -261,9 +327,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   onContinue() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
-    if (this.profitLossForm.valid) {
-      this.loading = true;
+    if (this.profitLossForm.valid && this.natOfBusinessDtlForm.valid) {
       this.calculateNetProfit();
       const row = this.profitLossForm.getRawValue();
       const profitLossACIncomes = [];
@@ -293,6 +357,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         this.Copy_ITR_JSON.business.profitLossACIncomes =
           data.concat(profitLossACIncomes);
       }
+      this.Copy_ITR_JSON.business.businessDescription = this.natOfBusinessDtlsArray.value;
       console.log(this.Copy_ITR_JSON);
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
@@ -328,7 +393,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     );
   }
 
-  deleteArray() {
+  deleteNonSpecArray() {
     const nonspecIncomesArray = <FormArray>this.nonspecIncomeForm.get('nonspecIncomesArray');
     nonspecIncomesArray.controls = nonspecIncomesArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
   }

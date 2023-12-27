@@ -54,9 +54,11 @@ export class SpeculativeIncomeComponent implements OnInit {
       currentPage: 1,
     };
 
-    let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter((acIncome) => acIncome.businessType === 'SPECULATIVEINCOME')[0];
+    let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter(
+      (acIncome) => acIncome.businessType === 'SPECULATIVEINCOME'
+    )[0];
     this.specIncomeFormArray = new FormArray([]);
-    if (specBusiness?.incomes.length) {
+    if (specBusiness?.incomes) {
       let index = 0;
       for (let income of specBusiness.incomes) {
         let form = this.createSpecIncomeForm(index++, income);
@@ -166,7 +168,6 @@ export class SpeculativeIncomeComponent implements OnInit {
     this.calculateNetIncome(0);
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
     let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter(
       (acIncome) => acIncome?.businessType === 'SPECULATIVEINCOME'
     );

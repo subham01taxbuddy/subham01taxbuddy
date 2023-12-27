@@ -197,7 +197,6 @@ export class OtherInformationComponent implements OnInit {
       this.Copy_ITR_JSON.partnerInFirmFlag = 'N';
     }
     this.firmForm = this.initFirmsForm();
-    this.formAdded = true;
     let formArray = this.firmForm.controls['firmsArray'] as FormArray;
     for (let i = 0; i < this.ITR_JSON?.partnerInFirms.length; i++) {
       const val = this.ITR_JSON.partnerInFirms[i];

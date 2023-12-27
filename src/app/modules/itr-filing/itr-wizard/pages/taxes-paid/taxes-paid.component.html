@@ -14,16 +14,16 @@
             <div class="accordion" id="tdsAccordion">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="tdsSalaryHeading">
-                  <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                  <button type="button" class="accordion-button" data-bs-toggle="collapse"
                           data-bs-target="#tdsSalary">Tax Deducted at Source from Salary</button>
                 </h2>
-                <div id="tdsSalary" class="accordion-collapse collapse" data-bs-parent="#tdsAccordion">
+                <div id="tdsSalary" class="accordion-collapse collapse show" data-bs-parent="#tdsAccordion">
                   <div class="accordion__item-body">
-                    <div class="Bx4R">
+                    <!-- <div class="Bx4R">
                       <button type="button" class="addAno" (click)="editTaxesPaid(TDS_TYPE_CODE)">
                         + Add more
                       </button>
-                    </div>
+                    </div> -->
 
                     <div class="card__row display-flex" *ngIf="tdsMode === 'EDIT'">
                       <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12">
@@ -52,10 +52,10 @@
             <div class="accordion" id="tdsOtherAccordion">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="tdsOtherHeading">
-                  <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                  <button type="button" class="accordion-button" data-bs-toggle="collapse"
                           data-bs-target="#tdsOther">Tax Deducted at Source (TDS) on Income other than salary</button>
                 </h2>
-                <div id="tdsOther" class="accordion-collapse collapse" data-bs-parent="#tdsOtherAccordion">
+                <div id="tdsOther" class="accordion-collapse collapse show" data-bs-parent="#tdsOtherAccordion">
                   <div class="accordion__item-body">                 
                     <div class="Bx4R">
                       <button type="button" class="addAno" (click)="editTaxesPaid(TDS_OTHER_TYPE_CODE)">
@@ -95,10 +95,10 @@
             <div class="accordion" id="tdsPanAccordion">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="tdsPanHeading">
-                  <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                  <button type="button" class="accordion-button" data-bs-toggle="collapse"
                           data-bs-target="#tdsPan">Tax Deducted at Source (TDS) on Sale/Rent of Immovable Property</button>
                 </h2>
-                <div id="tdsPan" class="accordion-collapse collapse" data-bs-parent="#tdsPanAccordion">
+                <div id="tdsPan" class="accordion-collapse collapse show" data-bs-parent="#tdsPanAccordion">
                   <div class="accordion__item-body">
                     <div class="Bx4R">
                       <button type="button" class="addAno" (click)="editTaxesPaid(TDS_PAN_TYPE_CODE)">
@@ -136,10 +136,10 @@
             <div class="accordion" id="tcsAccordion">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="tcsHeading">
-                  <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                  <button type="button" class="accordion-button" data-bs-toggle="collapse"
                           data-bs-target="#tcs">Tax collected at source(TCS)</button>
                 </h2>
-                <div id="tcs" class="accordion-collapse collapse" data-bs-parent="#tcsAccordion">
+                <div id="tcs" class="accordion-collapse collapse show" data-bs-parent="#tcsAccordion">
                   <div class="accordion__item-body">
                     <div class="Bx4R">
                       <button type="button" class="addAno" (click)="editTaxesPaid(TCS_TYPE_CODE)">
@@ -173,10 +173,10 @@
             <div class="accordion" id="myAccordion">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="heading1">
-                  <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                  <button type="button" class="accordion-button" data-bs-toggle="collapse"
                           data-bs-target="#collapse1">Advance tax and Self Assessment Tax</button>
                 </h2>
-                <div id="collapse1" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
+                <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                   <div class="accordion__item-body">
                     <div class="Bx4R">
                       <button type="button" class="addAno" (click)="editTaxesPaid(ADVANCE_TYPE_CODE)">

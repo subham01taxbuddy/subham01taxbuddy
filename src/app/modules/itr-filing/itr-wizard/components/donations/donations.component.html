@@ -8,13 +8,15 @@
     <div class="frame-wrapper-2A">
       <form [formGroup]="generalDonationForm">
         <div class="accordion-item">
-          <h2 class="accordion-header" *ngIf="false">
+          <h2 class="accordion-header">
+<!--            <button type="button" class="accordion-button" data-bs-toggle="collapse"-->
+<!--                    attr.data-bs-target="{{type === '80g' ? '#80g' : '#80gga'}}">Deduction related to Donation</button>-->
             <button *ngIf="type === '80g'" type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
                     aria-expanded="false" data-bs-target="#col80g">Deduction related to Donation</button>
             <button *ngIf="type === '80gga'" type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
                     aria-expanded="false" data-bs-target="#col80gga">Deduction related to Donation</button>
           </h2>
-          <div id="col80g" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
+          <div id="{{type === '80g' ? 'col80g' : 'col80gga'}}" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
             <div class="accordion__item-body">
               <div class="gray_container" formArrayName="donationArray" >
                 <div class="div-6">

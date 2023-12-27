@@ -12,91 +12,10 @@
           <div class="div-4">
             <div class="frame-wrapper-2A">
               <div class="accordion" id="myAccordion">
-
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="heading3">
-                    <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                      data-bs-target="#collapse3">Nature of Business (Other than 44AD, 44ADA,44AE)</button>
-
-                  </h2>
-
-                  <div id="collapse3" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-                    <div class="accordion__item-body">
-                      <form [formGroup]="natOfBusinessDtlForm">
-                        <div class="pre-box1">
-                          <div class="hdByr-L">
-                            &nbsp; </div>
-                          <div class="hdByr-R">
-                            <div class="Bx4">
-                              <div class="Bx4L">
-                                <button type="submit" (click)="deleteArray()" [disabled]="!specSelected()">
-                                  <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
-                                </button>
-                              </div>
-                              <div class="Bx4R">
-                                <button type="button" class="addAno" (click)="addNatOfBusinessForm()"> + Add Another
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="row" formArrayName="natOfBusinessDtlsArray">
-                          <div *ngFor="
-                          let income of getnatOfBusinessDtlsArray.controls
-                            | paginate : config;
-                          let i = index
-                        " [formGroupName]="fieldGlobalIndex(i)">
-                            <div class=" gray_box">
-                              <div class="div-6 ">
-                                <div class="col-sm-1 spsTp">
-                                  <mat-checkbox name="hasEdit[i]" formControlName="hasEdit" class="tpBtn1">
-                                  </mat-checkbox>
-                                </div>
-
-                                <div class="form-field">
-                                  <app-business-input-autocomplete [businessType]="'ALL'" [selectedInput]="
-                                  natOfBusinessDtlsArray.controls[i].get('natureOfBusiness')
-                                    .value
-                                " (businessSelected)="businessClicked($event, i)">
-                                  </app-business-input-autocomplete>
-                                </div>
-                                <div class="form-field">
-                                  <div><span class="normal_text">Trade Name </span> </div>
-                                  <mat-form-field appearance="outline">
-                                    <input formControlName="tradeName" matInput name="tradeName[i]"
-                                      class="input-field" />
-                                  </mat-form-field>
-                                </div>
-                                <div class="form-field">
-                                  <div><span class="normal_text">Business Description</span></div>
-                                  <mat-form-field appearance="outline">
-                                    <input formControlName="businessDescription" matInput name="businessDescription[i]"
-                                      class="input-field" />
-                                  </mat-form-field>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </form>
-                      <div class="row spsTp bdrTp" style="align-items: center">
-                        <div class="col-sm-6 txt-center">
-                          <table>
-                            <tr *ngFor="let item of getnatOfBusinessDtlsArray.controls | paginate : config"></tr>
-                          </table>
-                          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="heading1">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                      data-bs-target="#collapse1">{{this.ITR_JSON.liableSection44AAflag === 'Y' ? 'Sources Of Fund' :
+                      data-bs-target="#collapse1">{{this.ITR_JSON.liableSection44AAflag === 'Y' ? 'Source Of Fund' :
                       'Information In Respect To Business'}}</button>
 
                   </h2>
@@ -163,7 +82,7 @@
                           </div>
                           <div class="div-6">
                             <div class="form-field">
-                              <div><span class="span">Advances </span> <span class="text-wrapper-2">*</span>
+                              <div><span class="span">Advance </span> <span class="text-wrapper-2">*</span>
                               </div>
                             </div>
                             <div class="form-field">
@@ -176,7 +95,7 @@
                           </div>
                           <div class="div-6">
                             <div class="form-field">
-                              <div><span class="span">Total Sources of Funds </span> <span
+                              <div><span class="span">Total Source of Funds </span> <span
                                   class="text-wrapper-2">*</span>
                               </div>
                             </div>

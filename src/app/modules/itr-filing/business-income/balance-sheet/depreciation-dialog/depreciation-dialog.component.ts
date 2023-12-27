@@ -71,17 +71,12 @@ export class DepreciationDialogComponent implements OnInit {
     };
     console.log(this.Copy_ITR_JSON);
     this.depreciationForm = this.initDepreciationForm();
-    const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
     if (this.Copy_ITR_JSON?.business.fixedAssetsDetails && this.Copy_ITR_JSON?.business.fixedAssetsDetails.length > 0) {
       this.Copy_ITR_JSON.business.fixedAssetsDetails.forEach(item => {
-        let index = 0;
-        let form = this.createForm(index++, item);
-        depreciationArray.push(form);
-        this.calculateDepreciationTotal();
+        this.addMore(item);
       })
     } else {
-      let form = this.createForm(0, null);
-      depreciationArray.push(form);
+      this.addMore();
     }
   }
 
@@ -97,10 +92,10 @@ export class DepreciationDialogComponent implements OnInit {
     })
   }
 
-  createForm(index, obj?: FixedAssetsDetails): FormGroup {
+  createForm(obj?: FixedAssetsDetails): FormGroup {
     return this.fb.group({
       hasEdit: [],
-      id: [obj?.id ? obj?.id : index],
+      id: [obj?.id || null],
       assetType: [obj?.assetType || null, Validators.required],
       description: [obj?.description || null, Validators.required],
       bookValue: [obj?.bookValue || null, Validators.required],
@@ -147,19 +142,16 @@ export class DepreciationDialogComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     if (this.depreciationForm.valid) {
       console.log("formGroup", this.depreciationForm)
+      // this.Copy_ITR_JSON.fixedAssetsDetails = this.depreciationForm.value;
       const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
       this.Copy_ITR_JSON.fixedAssetsDetails = depreciationArray.getRawValue();
       sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
       this.onSave.emit(this.Copy_ITR_JSON);
       this.loading = false;
-      // this.utilsService.showSnackBar('depreciation data saved successfully.');
+      this.utilsService.showSnackBar('depreciation data saved successfully.');
     } else {
       this.loading = false;
-      // this.utilsService.showSnackBar('Failed to save depreciation data.');
-      const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
-      this.Copy_ITR_JSON.fixedAssetsDetails = depreciationArray.getRawValue();
-      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.Copy_ITR_JSON));
-      this.onSave.emit(this.Copy_ITR_JSON);
+      this.utilsService.showSnackBar('Failed to save depreciation data.');
     }
   }
 
@@ -168,8 +160,9 @@ export class DepreciationDialogComponent implements OnInit {
   }
 
   addMore(item?) {
-    let form = this.createForm(0, item);
-    (this.depreciationForm.controls['depreciationArray'] as FormArray).insert(0, form);
+    const depreciationArray = <FormArray>this.depreciationForm.get('depreciationArray');
+    depreciationArray.push(this.createForm(item));
+    this.calculateDepreciationTotal();
   }
 
   edit(i, formGroup: any) {
@@ -203,20 +196,14 @@ export class DepreciationDialogComponent implements OnInit {
         if ((element as FormGroup).controls['bookValue'].value) {
           totalGrossBlock += Number((element as FormGroup).controls['bookValue'].value);
           this.depreciationForm.controls['totalGrossBlock'].setValue(totalGrossBlock);
-        } else {
-          this.depreciationForm.controls['totalGrossBlock'].setValue(0);
         }
         if ((element as FormGroup).controls['depreciationAmount'].value) {
           totalDepreciationAmount += Number((element as FormGroup).controls['depreciationAmount'].value);
           this.depreciationForm.controls['totalDepreciationAmount'].setValue(totalDepreciationAmount);
-        } else {
-          this.depreciationForm.controls['totalDepreciationAmount'].setValue(0);
         }
         if ((element as FormGroup).controls['fixedAssetClosingAmount'].value) {
           totalNetBlock += Number((element as FormGroup).controls['fixedAssetClosingAmount'].value);
           this.depreciationForm.controls['totalNetBlock'].setValue(totalNetBlock);
-        } else {
-          this.depreciationForm.controls['totalNetBlock'].setValue(0);
         }
       })
       this.save();
