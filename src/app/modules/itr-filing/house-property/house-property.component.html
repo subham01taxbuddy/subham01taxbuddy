@@ -812,41 +812,7 @@
 
 
   <!-- right side summary -->
-  <aside class="aside-right">
-    <button class="open-button" onclick="openForm()"><img class="icoSum" src="assets/img/new/summary.png">
-      <div class="txAln">Show Summary</div>
-    </button>
-    <div class="form-popup" id="myForm">
-      <div class="frameS">
-        <div class="contents-wrapper">
-          <div class="contents">
-            <div class="field-text">Summary</div>
-            <a onclick="closeForm()"><img class="clos" src="assets/img/new/close.png" /></a>
-          </div>
-        </div>
-        <div class="space">
-          <table class="table table-borderless f-size">
-            <tbody>
-              <tr class="border-bottom">
-              <th>HP</th>
-              <th>Ownership Category</th>
-              <th>Net Income</th>
-              </tr>
-              <tr *ngFor="let house of ITR_JSON.houseProperties; let i = index">
-              <td>{{i+1}}</td>
-              <td>{{getOwnershipCategory(house.propertyType)}}</td>
-              <td class="text-end">₹{{utilsService.currencyFormatter(house.taxableIncome)}}</td>
-              </tr>
-              <tr class="border-top">
-                <th colspan="2">Total income from all HPs</th>
-                <th class="text-end">₹{{utilsService.currencyFormatter(getTotalTaxableIncome())}}</th>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </aside>
+  <app-side-summary-panel type="houseProperty"></app-side-summary-panel>
   <!-- right side summary ends-->
 </div>
 <!-- main area ends -->
