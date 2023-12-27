@@ -1763,19 +1763,25 @@
                   <div id="collapse9" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <form formArrayName="trustsDetails" style="padding: 20px">
-                        <button class="btn btn__default btn__add pull-right" (click)="addMore('trustsDetails')">
-                          Add More
-                        </button>
+                        
                         <div *ngFor="
                             let trustsDetails of getTrustsDetails.controls;
                             let i = index
                           " [formGroupName]="i">
-                          <div class="White_box">
-                            <div class="div-6">
+                          <div class="container">
+                            <div class="row">
+                            <div class="col-sm-12">
+                              <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('trustsDetails')">
+                                Add More
+                              </button>
+                            </div>
+                            <div class="col-sm-1 p-3">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                 type="checkbox" (click)="$event.stopPropagation()"
                                 [checked]="selectedIndexes.includes(getCheckboxId(8, i))"
                                 (click)="toggleSelectedIndex(8, i)" />
+                            </div>
+                            <div class="col-sm-5 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Name of the trust</span>
@@ -1785,6 +1791,8 @@
                                   <input matInput name="trustName[i]" formControlName="trustName" required />
                                 </mat-form-field>
                               </div>
+                            </div>
+                            <div class="col-sm-6 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Address of the trust</span>
@@ -1795,7 +1803,8 @@
                                 </mat-form-field>
                               </div>
                             </div>
-                            <div class="div-6">
+                            <div class="col-sm-1 p-3"></div>
+                            <div class="col-sm-5 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Zip code</span>
@@ -1805,6 +1814,8 @@
                                   <input matInput name="zipCode[i]" formControlName="zipCode" required />
                                 </mat-form-field>
                               </div>
+                            </div>
+                            <div class="col-sm-6 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="normal_text">Country code </span>
@@ -1822,7 +1833,8 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="div-6">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-2 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Name of the trustee</span>
@@ -1832,6 +1844,8 @@
                                   <input matInput name="trusteesName[i]" formControlName="trusteesName" required />
                                 </mat-form-field>
                               </div>
+                            </div>
+                            <div class="col-sm-3 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Address of the trustee</span>
@@ -1842,7 +1856,8 @@
                                     required />
                                 </mat-form-field>
                               </div>
-
+                            </div>
+                            <div class="col-sm-3 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">
@@ -1854,6 +1869,8 @@
                                   <input matInput name="settlorName[i]" formControlName="settlorName" required />
                                 </mat-form-field>
                               </div>
+                            </div>
+                            <div class="col-sm-3 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Address of the settlor
@@ -1865,7 +1882,8 @@
                                 </mat-form-field>
                               </div>
                             </div>
-                            <div class="div-6">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-3 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Name of the beneficiaries</span>
@@ -1876,6 +1894,8 @@
                                     required />
                                 </mat-form-field>
                               </div>
+                            </div>
+                            <div class="col-sm-4 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Address of the beneficiaries</span>
@@ -1886,6 +1906,8 @@
                                     required />
                                 </mat-form-field>
                               </div>
+                            </div>
+                            <div class="col-sm-4 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Date since position held </span><span
@@ -1900,88 +1922,106 @@
                                 </mat-form-field>
                               </div>
                             </div>
-                          </div>
-                          <div class="White_box">
-                            <div class="row mb-10">
-                              <div class="col-10">
-                                <p>
-                                  <span class="span">Whether income accrued is taxable in your
-                                    hands? </span><span class="text-wrapper-2">*</span>
-                                </p>
-                              </div>
-                              <div class="col-2">
-                                <mat-radio-group formControlName="isTaxableinYourHand" required
-                                  (change)="handleSelectionChange($event.value)">
-                                  <mat-radio-button value="Y" style="margin-right: 10px">Yes</mat-radio-button>
-                                  <mat-radio-button value="N">No</mat-radio-button>
-                                </mat-radio-group>
-                              </div>
-                            </div>
-                            <div class="div-6" *ngIf="
-                                trustsDetails?.get('isTaxableinYourHand')
-                                  ?.value === 'Y'
-                              ">
-                              <div class="form-field">
-                                <div>
-                                  <span class="span">Income derived in the account</span>
-                                  <span class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input matInput name="derivedIncome[i]" formControlName="derivedIncome" digitsOnly
-                                    required />
-                                </mat-form-field>
-                              </div>
+                            <div class="col-sm-1 spcTpA">
 
-                              <div class="form-field">
-                                <div>
-                                  <span class="span">Amount</span>
-                                  <span class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input matInput name="amount[i]" formControlName="amount" digitsOnly required />
-                                </mat-form-field>
-                              </div>
                             </div>
-                            <div class="div-6" *ngIf="
-                                trustsDetails?.get('isTaxableinYourHand')
-                                  ?.value === 'Y'
-                              ">
-                              <div class="form-field">
-                                <div>
-                                  <span class="normal_text">Schedule where Offered</span>
-                                  <span class="text-wrapper-2">*</span>
-                                </div>
-                                <div class="form-control-wrapper">
+                            <div class="col-sm-5 px-2 spcTpA">
+                              <span class="span">Whether income accrued is taxable in your
+                                hands? </span><span class="text-wrapper-2">*</span>
+                            </div>
+                            <div class="col-sm-6 px-2 spcTpA">
+                              <mat-radio-group formControlName="isTaxableinYourHand" required
+                              (change)="handleSelectionChange($event.value)">
+                              <mat-radio-button value="Y" style="margin-right: 10px">Yes</mat-radio-button>
+                              <mat-radio-button value="N">No</mat-radio-button>
+                            </mat-radio-group>
+                            </div>
+
+                            </div>
+                            </div>
+
+                            <div class="container" *ngIf="trustsDetails?.get('isTaxableinYourHand')?.value === 'Y'">
+                            <div class="row">
+                            <div class="col-sm-1">
+                              
+                             </div>
+                              <div class="col-sm-5 px-2">
+                                <div class="form-field">
+                                  <div>
+                                    <span class="span">Income derived in the account</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
-                                      required>
-                                      <mat-option *ngFor="
-                                          let option of scheduleWhereOffered
-                                        " [value]="option">
-                                        {{ option }}
-                                      </mat-option>
-                                    </mat-select>
+                                    <input matInput name="derivedIncome[i]" formControlName="derivedIncome" digitsOnly
+                                      required />
                                   </mat-form-field>
                                 </div>
                               </div>
-                              <div class="form-field">
-                                <div>
-                                  <span class="span">Item number of Schedule</span>
-                                  <span class="text-wrapper-2">*</span>
+                              <div class="col-sm-6 px-2">
+                                <div class="form-field">
+                                  <div>
+                                    <span class="span">Amount</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
+                                  <mat-form-field appearance="outline">
+                                    <input matInput name="amount[i]" formControlName="amount" digitsOnly required />
+                                  </mat-form-field>
                                 </div>
-                                <mat-form-field appearance="outline">
-                                  <input matInput name="numberOfSchedule[i]" formControlName="numberOfSchedule"
-                                    required />
-                                </mat-form-field>
+                              </div>
+                              <div class="col-sm-1">
+
+                              </div>
+                              <div class="col-sm-5 px-2">
+                                <div class="form-field">
+                                  <div>
+                                    <span class="normal_text">Schedule where Offered</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
+                                  <div class="form-control-wrapper">
+                                    <mat-form-field appearance="outline">
+                                      <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
+                                        required>
+                                        <mat-option *ngFor="
+                                            let option of scheduleWhereOffered
+                                          " [value]="option">
+                                          {{ option }}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-6 px-2">
+                                <div class="form-field">
+                                  <div>
+                                    <span class="span">Item number of Schedule</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
+                                  <mat-form-field appearance="outline">
+                                    <input matInput name="numberOfSchedule[i]" formControlName="numberOfSchedule"
+                                      required />
+                                  </mat-form-field>
+                                </div>
                               </div>
 
-                            </div>
-                          </div>
-                        </div>
-                        <button class="delete-btn" style="width: 15%; margin: 10px"
+
+                              </div>
+                              </div>
+
+                              <hr class="hrBdr"> 
+                              <div class="container">
+                                <div class="row">
+                                <div class="col-sm-12">
+                                  <button class="delete-box"
                           (click)="delete('trustsDetails', 'formArray', 8)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
                         </button>
+                              </div>
+                              </div>
+                            </div>
+                          
+                        </div>
+                        
                       </form>
                     </div>
                   </div>
@@ -1997,20 +2037,27 @@
                   </h2>
                   <div id="collapse10" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
-                      <button class="btn btn__default btn__add pull-right" (click)="addMore('otherIncomeDetails')">
-                        Add More
-                      </button>
+                      
                       <form formArrayName="otherIncomeDetails" style="padding: 20px">
                         <div *ngFor="
                             let otherIncomeDetails of getOtherIncomeDetails.controls;
                             let i = index
                           " [formGroupName]="i">
-                          <div class="White_box">
-                            <div class="div-6">
+                           
+                          <div class="container">
+                            <div class="row">
+                            <div class="col-sm-12">
+                              <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('otherIncomeDetails')">
+                                Add More
+                              </button>
+                            </div>
+                            <div class="col-sm-1 p-3">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                 type="checkbox" (click)="$event.stopPropagation()"
                                 [checked]="selectedIndexes.includes(getCheckboxId(9, i))"
                                 (click)="toggleSelectedIndex(9, i)" />
+                            </div>
+                            <div class="col-sm-5 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Name of the person from whom derived</span>
@@ -2020,6 +2067,8 @@
                                   <input matInput name="name[i]" formControlName="name" required />
                                 </mat-form-field>
                               </div>
+                            </div>
+                            <div class="col-sm-6 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Address of the person from whom
@@ -2031,7 +2080,10 @@
                                 </mat-form-field>
                               </div>
                             </div>
-                            <div class="div-6">
+                            <div class="col-sm-1">
+                            
+                            </div>
+                            <div class="col-sm-5 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Zip code</span>
@@ -2041,6 +2093,8 @@
                                   <input matInput name="zipCode[i]" formControlName="zipCode" required />
                                 </mat-form-field>
                               </div>
+                            </div>
+                            <div class="col-sm-6 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="normal_text">Country code </span>
@@ -2057,7 +2111,10 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="div-6">
+                            <div class="col-sm-1">
+                             
+                            </div>
+                            <div class="col-sm-5 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Nature of Income</span>
@@ -2067,7 +2124,8 @@
                                   <input matInput name="natureOfIncome[i]" formControlName="natureOfIncome" required />
                                 </mat-form-field>
                               </div>
-
+                            </div>
+                            <div class="col-sm-6 px-2">
                               <div class="form-field">
                                 <div>
                                   <span class="span">Income Derived</span>
@@ -2079,72 +2137,96 @@
                                 </mat-form-field>
                               </div>
                             </div>
-                          </div>
-                          <div class="White_box">
-                            <div class="row mb-10">
-                              <div class="col-10">
-                                <p>
-                                  <span class="span">Whether income accrued is taxable in your
-                                    hands? </span><span class="text-wrapper-2">*</span>
-                                </p>
-                              </div>
-                              <div class="col-2">
-                                <mat-radio-group formControlName="isTaxableinYourHand" required
-                                  (change)="handleSelectionChange($event.value)">
-                                  <mat-radio-button value="Y" style="margin-right: 10px">Yes</mat-radio-button>
-                                  <mat-radio-button value="N">No</mat-radio-button>
-                                </mat-radio-group>
-                              </div>
+
+                            <div class="col-sm-1 spcTpA"></div>
+                            <div class="col-sm-5 px-2 spcTpA">
+                              <span class="span">Whether income accrued is taxable in your
+                                hands? </span><span class="text-wrapper-2">*</span>
                             </div>
-                            <div class="div-6" *ngIf="
-                                otherIncomeDetails?.get('isTaxableinYourHand')
-                                  ?.value === 'Y'
-                              ">
-                              <div class="form-field">
-                                <div>
-                                  <span class="span">Amount</span>
-                                  <span class="text-wrapper-2">*</span>
-                                </div>
-                                <mat-form-field appearance="outline">
-                                  <input matInput name="amount[i]" formControlName="amount" digitsOnly required />
-                                </mat-form-field>
+                            <div class="col-sm-6 px-2 spcTpA">
+                              <mat-radio-group formControlName="isTaxableinYourHand" required
+                              (change)="handleSelectionChange($event.value)">
+                              <mat-radio-button value="Y" style="margin-right: 10px">Yes</mat-radio-button>
+                              <mat-radio-button value="N">No</mat-radio-button>
+                            </mat-radio-group>
+                            </div>
+
+                            </div>
+                            </div>
+                           
+                            <div class="container" *ngIf="otherIncomeDetails?.get('isTaxableinYourHand')?.value === 'Y' ">
+                              <div class="row">
+                              <div class="col-sm-1">
+                                 
                               </div>
-                              <div class="form-field">
-                                <div>
-                                  <span class="normal_text">Schedule where Offered</span>
-                                  <span class="text-wrapper-2">*</span>
-                                </div>
-                                <div class="form-control-wrapper">
+                              <div class="col-sm-5 px-2">
+                                <div class="form-field">
+                                  <div>
+                                    <span class="span">Amount</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
                                   <mat-form-field appearance="outline">
-                                    <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
-                                      required>
-                                      <mat-option *ngFor="
-                                          let option of scheduleWhereOffered
-                                        " [value]="option">
-                                        {{ option }}
-                                      </mat-option>
-                                    </mat-select>
+                                    <input matInput name="amount[i]" formControlName="amount" digitsOnly required />
                                   </mat-form-field>
                                 </div>
                               </div>
-                              <div class="form-field">
-                                <div>
-                                  <span class="span">Item number of Schedule</span>
-                                  <span class="text-wrapper-2">*</span>
+                              <div class="col-sm-6 px-2">
+                                <div class="form-field">
+                                  <div>
+                                    <span class="normal_text">Schedule where Offered</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
+                                  <div class="form-control-wrapper">
+                                    <mat-form-field appearance="outline">
+                                      <mat-select matInput name="scheduleOfferd[i]" formControlName="scheduleOfferd"
+                                        required>
+                                        <mat-option *ngFor="
+                                            let option of scheduleWhereOffered
+                                          " [value]="option">
+                                          {{ option }}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div>
                                 </div>
-                                <mat-form-field appearance="outline">
-                                  <mat-label>Item number of Schedule</mat-label>
-                                  <input matInput name="numberOfSchedule[i]" formControlName="numberOfSchedule"
-                                    required />
-                                </mat-form-field>
                               </div>
-                            </div>
-                          </div>
-                        </div>
-                        <button class="delete-btn" style="width: 15%; margin: 10px"
+                              <div class="col-sm-1"> </div>
+                              <div class="col-sm-5 px-2">
+                                <div class="form-field">
+                                  <div>
+                                    <span class="span">Item number of Schedule</span>
+                                    <span class="text-wrapper-2">*</span>
+                                  </div>
+                                  <mat-form-field appearance="outline">
+                                    <mat-label>Item number of Schedule</mat-label>
+                                    <input matInput name="numberOfSchedule[i]" formControlName="numberOfSchedule"
+                                      required />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="col-sm-6 px-2">
+                              
+                              </div>
+
+                              </div>
+                              </div>
+                              <hr class="hrBdr"> 
+                              <div class="container">
+                                <div class="row">
+                                <div class="col-sm-12">
+                                  <button class="delete-box"
                           (click)="delete('otherIncomeDetails', 'formArray', 9)">
                           <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
                         </button>
+                                </div>
+                                </div>
+                                </div>
+                       
+                    
+                        
+                         
+                        </div>
+                        
                       </form>
                     </div>
                   </div>
