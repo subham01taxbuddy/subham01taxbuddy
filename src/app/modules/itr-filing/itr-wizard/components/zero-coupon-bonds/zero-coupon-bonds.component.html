@@ -18,14 +18,17 @@
                   <button type="button" class="accordion-button" data-bs-toggle="collapse"
                           data-bs-target="#collapse1"><span class="box-left">
                                           {{title}}
-                                      </span> <button class="btn btn__default btn__add btn-rt"
-                                                      (click)="$event.stopPropagation(); addMore()">Add</button> </button>
-
-
+                                      </span></button>
                 </h2>
                 <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
 
+                  <div class="row">
+                    <div class="col-sm-9"></div>
+                    <div class="col-sm-3"><button class="btn btn__default btn__add btn-rt"
+                                           (click)="$event.stopPropagation(); addMore()">Add</button></div>
+                  </div>
                     <div class="accordion__item-body" >
+
                       <form [formGroup]="bondsForm">
                       <!-- Start - This code can be used in popup for add button-->
                         <div class="gray_container" formArrayName="bondsArray">

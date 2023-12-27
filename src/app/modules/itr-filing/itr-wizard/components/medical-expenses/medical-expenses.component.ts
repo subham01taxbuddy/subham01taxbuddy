@@ -378,7 +378,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   }
 
   saveInvestmentDeductions() {
-    let isParentOverSixty = this.Copy_ITR_JSON.systemFlags.hasParentOverSixty;
+    let isParentOverSixty = this.investmentDeductionForm.controls['hasParentOverSixty'].value;
     let parentExpenseLimit = isParentOverSixty ? 50000 : 25000;
 
     let fieldArray = [this.investmentDeductionForm.controls['premium'],
