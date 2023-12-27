@@ -292,14 +292,14 @@
                             <br />
                             <div class="customradiobtn bdr_btm">
                               <mat-radio-button style="margin: 0" [value]="'80EE'" class="right-mrgn"
-                                [disabled]="EEStatus && deduction80EEValue() > 50000 ">Interest on loan taken for
+                                [disabled]="EEStatus || jsonAmt80ee > 50000">Interest on loan taken for
                                 residential house
                                 property (80EE)</mat-radio-button>
                             </div>
                             <br />
                             <div class="customradiobtn">
                               <mat-radio-button style="margin: 0" [value]="'80EEA'" class="right-mrgn"
-                                [disabled]="EAStatus && deduction80EEAValue() > 150000">Deduction in respect of interest
+                                [disabled]="EAStatus  || jsonAmt80ee > 150000">Deduction in respect of interest
                                 on loan taken
                                 for certain house property
                                 (80EEA)</mat-radio-button>
