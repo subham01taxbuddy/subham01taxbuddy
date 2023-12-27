@@ -81,8 +81,6 @@ export class TdsOtherThanSalaryComponent implements OnInit {
       this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB.forEach((item) => {
         this.addMoreSalary(item);
       });
-    } else {
-      this.addMoreSalary();
     }
     if (this.editIndex != undefined && this.editIndex >= 0) {
       this.activeIndex = this.editIndex;
