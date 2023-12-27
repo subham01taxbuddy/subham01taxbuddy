@@ -36,6 +36,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   config: any;
   fixedAssetData: any;
   totalAppOfFunds: number = 0;
+  totalDepNetBlock: any;
 
   constructor(
     public matDialog: MatDialog,
@@ -426,11 +427,11 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     this.fixedAssetData = data;
     this.depreciationObj = this.fixedAssetData.fixedAssetsDetails;
     if (this.depreciationObj.length) {
-      let totalNetBlock = 0;
+      this.totalDepNetBlock = 0;
       this.depreciationObj.forEach(element => {
-        totalNetBlock += element.fixedAssetClosingAmount;
+        this.totalDepNetBlock += element.fixedAssetClosingAmount;
       });
-      this.totalApplicationOfFunds(totalNetBlock);
+      this.totalApplicationOfFunds();
     }
   }
 
@@ -463,11 +464,11 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     this.totalApplicationOfFunds();
   }
 
-  totalApplicationOfFunds(totalNetBlock?) {
+  totalApplicationOfFunds() {
     this.totalAppOfFunds = 0;
     this.totalAppOfFunds = Number(this.assetLiabilitiesForm.controls['investment'].value) + Number(this.assetLiabilitiesForm.controls['netCurrentAsset'].value);
-    if (totalNetBlock) {
-      this.totalAppOfFunds += Number(totalNetBlock);
+    if (this.totalDepNetBlock) {
+      this.totalAppOfFunds += Number(this.totalDepNetBlock);
     }
     this.calDifference();
   }
