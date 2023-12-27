@@ -1287,6 +1287,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   enableOnOverAllValue() {
+    let propertyType = this.housePropertyForm.controls['propertyType'];
     // current value of interest amount
     const currentInterestValue = parseFloat(
       this.housePropertyForm.controls['interestAmount']?.value
@@ -1306,12 +1307,19 @@ export class HousePropertyComponent implements OnInit {
         return acc;
       }, 0);
 
-
-    if ((itrJsonInterestValue || 0) + (currentInterestValue
-      || 0) > 200000) {
-      return true;
+    if (propertyType?.value === 'SOP') {
+      if ((itrJsonInterestValue || 0) + (currentInterestValue
+        || 0) > 200000) {
+        return true;
+      } else {
+        return false
+      }
     } else {
-      return false;
+      if (currentInterestValue > 200000) {
+        return true;
+      } else {
+        return false
+      }
     }
   }
 
@@ -1410,7 +1418,6 @@ export class HousePropertyComponent implements OnInit {
       .filter((element, index) => index !== this.currentIndex)
       .reduce((acc, element) => acc + element.eligible80EEAAmount, 0);
 
-    let interestValueBoolean = this.enableOnOverAllValue();
     const itrJsonInterestValue = this.ITR_JSON.houseProperties
       ?.filter((item, index) => index !== this.currentIndex)
       ?.reduce((acc, property, index) => {
@@ -1434,18 +1441,6 @@ export class HousePropertyComponent implements OnInit {
       interest.clearValidators();
       interest.updateValueAndValidity();
     }
-
-    if (!interestValueBoolean) {
-      eligible80EE?.setValue('');
-      eligible80EE?.updateValueAndValidity();
-      eligible80EEAmount?.setValue(0);
-      eligible80EEAmount?.updateValueAndValidity();
-      eligible80EEAAmount?.setValue(0);
-      eligible80EEAAmount?.updateValueAndValidity();
-      interest24b?.setValue(interest?.value);
-      interest24b?.updateValueAndValidity();
-      return;
-    };
 
     if (eligible80EE?.value === '80EE') {
       if (propertyType?.value === 'SOP') {
