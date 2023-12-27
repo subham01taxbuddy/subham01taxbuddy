@@ -30,8 +30,8 @@ import { ReAssignActionDialogComponent } from '../../components/re-assign-action
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ReportService } from 'src/app/services/report-service';
 import * as moment from 'moment';
-import {KommunicateSsoService} from "../../../../services/kommunicate-sso.service";
-import {DomSanitizer} from "@angular/platform-browser";
+import { KommunicateSsoService } from "../../../../services/kommunicate-sso.service";
+import { DomSanitizer } from "@angular/platform-browser";
 
 declare function we_track(key: string, value: any);
 
@@ -277,6 +277,36 @@ export class ItrAssignedUsersComponent implements OnInit {
         break;
       }
     }
+  }
+
+  checkFilerAssignment(data: any) {
+    // https://uat-api.taxbuddy.com/user/check-filer-assignment?userId=16387&assessmentYear=2023-2024&serviceType=ITR
+    let param = `/check-filer-assignment?userId=${data.userId}`;
+    this.userMsService.getMethod(param).subscribe(
+      (response: any) => {
+        this.loading = false;
+        if (response.success) {
+          if (response.data.filerAssignmentStatus === 'FILER_ASSIGNED') {
+            this.checkSubscription(data);
+          } else {
+            this.utilsService.showSnackBar(
+              'Please make sure that filer assignment should be done before ITR filing.'
+            );
+          }
+        } else {
+          this.utilsService.showSnackBar(
+            'Please make sure that filer assignment should be done before ITR filing.'
+          );
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'Please make sure that filer assignment should be done before ITR filing.'
+        );
+      }
+    );
+
   }
 
   checkSubscription(data: any) {
@@ -835,8 +865,8 @@ export class ItrAssignedUsersComponent implements OnInit {
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
             if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" style="border: none;
-              background: transparent; font-size: 13px; cursor:pointer;color:#ffa704;" data-action-type="startFiling">
-              <i class="fas fa-flag-checkered" title="No action taken yet" aria-hidden="true" data-action-type="startFiling"></i> Yet to Start
+              background: transparent; font-size: 13px; cursor:pointer;color:#ffa704;" data-action-type="yetToStart">
+              <i class="fas fa-flag-checkered" title="No action taken yet" aria-hidden="true" data-action-type="yetToStart"></i> Yet to Start
               </button>`;
             } else if (params.data.statusId === 14) { //backed out
               return `<button type="button" class="action_icon add_button" style="border: none;
@@ -1034,6 +1064,10 @@ export class ItrAssignedUsersComponent implements OnInit {
           this.moreOptions(params.data);
           break;
         }
+        case 'yetToStart': {
+          this.checkFilerAssignment(params.data);
+          break;
+        }
         case 'startFiling': {
           this.checkSubscription(params.data);
           break;
@@ -1146,7 +1180,7 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   openReviseReturnDialog(data) {
     console.log('Data for revise return ', data);
-    if(data.statusId != 11){
+    if (data.statusId != 11) {
       let disposable = this.dialog.open(ReviseReturnDialogComponent, {
         width: '50%',
         height: 'auto',
@@ -1165,12 +1199,12 @@ export class ItrAssignedUsersComponent implements OnInit {
         }
         console.log('The dialog was closed', result);
       });
-    }else{
+    } else {
       this.utilsService.showSnackBar(
         'Please complete e-verification before starting with revised return'
       );
     }
-    }
+  }
 
 
   redirectTowardInvoice(userInfo: any) {
