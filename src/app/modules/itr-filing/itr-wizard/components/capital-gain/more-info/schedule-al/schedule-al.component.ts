@@ -171,7 +171,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
     }
 
     // this.immovableAssetForm?.disable();
-     this.movableAssetsForm?.disable();
+    //  this.movableAssetsForm?.disable();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -361,6 +361,7 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
           );
           this.loading = false;
           this.utilsService.smoothScrollToTop();
+          this.mode = 'VIEW';
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
