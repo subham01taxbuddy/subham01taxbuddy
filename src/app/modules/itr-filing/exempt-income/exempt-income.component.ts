@@ -271,7 +271,8 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
             ? [null]
             : [null, Validators.min(0)],
       });
-    if(this.ITR_JSON.exemptIncomes.length == 0) {
+      let filtered = this.ITR_JSON.exemptIncomes.filter(element=> element.natureDesc !== 'AGRI');
+    if(filtered?.length == 0) {
       data.push(formGroup);
     }
     // }
@@ -608,12 +609,14 @@ export class ExemptIncomeComponent extends WizardNavigation implements OnInit {
     });
 
     this.Copy_ITR_JSON.agriculturalIncome = agriIncome;
-    const agri = exemptIncomes?.controls?.find((element) => {
-      return element?.get('incomeType')?.value === 'AGRI';
-    });
 
-    if (agri?.value?.incomeType === 'AGRI' && agri?.value?.incomeValue > 0) {
+    if (agriIncome.grossAgriculturalReceipts > 0) {
       this.Copy_ITR_JSON.systemFlags.hasAgricultureIncome = true;
+      this.Copy_ITR_JSON.exemptIncomes.push({
+        natureDesc: 'AGRI',
+        OthNatOfInc: '',
+        amount: agriIncome.netAgriculturalIncome,
+      })
     } else {
       this.Copy_ITR_JSON.systemFlags.hasAgricultureIncome = false;
     }

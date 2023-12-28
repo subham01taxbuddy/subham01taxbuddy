@@ -13,7 +13,7 @@
     <li>Assessment Year: {{ITR_JSON.assessmentYear}}</li>
     <li>Financial Year: {{ITR_JSON.financialYear}}</li>
     <li>ITR Form Type: {{ITR_JSON.itrType}}</li>
-    <li>Return Type: -</li>
+    <li>Return Type: {{ITR_JSON.isRevised ? 'Revised' : 'Original' }}</li>
     <li>PAN: {{ITR_JSON.panNumber}}</li>
     <li>Acknowledgement No: {{data.acknowledgementNo}}</li>
   </ul>
@@ -50,7 +50,7 @@
       href="mailto:support@taxbuddy.com"><strong>support@taxbuddy.com</strong></a> You can access all your documents on
     your taxbuddy account "My Document cloud" Like this to <a href="https://itr.taxbuddy.com/#/taxcloud"
       target="_blank">www.taxbuddy.com</a></p> -->
-  <!-- 
+  <!--
 <p class="pTxSu1">For any other queries related to your e-filing, write to us at <a
     href="mailto:itrhelp@taxbuddy.com">itrhelp@taxbuddy.com</a></p> -->
 
