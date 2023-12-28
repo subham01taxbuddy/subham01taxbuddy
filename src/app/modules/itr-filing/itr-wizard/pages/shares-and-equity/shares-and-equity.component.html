@@ -26,35 +26,40 @@
               </h2>
               <div id="collapse3" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                 <div class="accordion__item-body">
-                 
-                    <button
-                            *ngIf="compactView || selectedBroker === ''"
-                            class="edit_btn float-right btnStyl"
-                            (click)="$event.stopPropagation(); addMore()">
-                      <i class="fa fa-plus"></i> Add
-                    </button>
-                
-                  <ag-grid-angular
-                          class="ag-theme-balham topSps"
-                          [gridOptions]="equityGridOptions"
-                          (rowClicked)="editSecuritiesForm($event)">
-                  </ag-grid-angular>
 
-                  <div class="row spsTp bdrTp">
-                    <div class="col-sm-3">
-                      <button type="submit" class="delete-btn"
-                              [disabled]="!equitySelected()"
-                              (click)="deleteArray()">
-                        <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
-                      </button>
-                    </div>
-
-                    <div class="col-sm-3">
-                      <button type="submit" class="cancel" (click)="showCompactView()">
-                        {{ this.bondType === 'listed' ? 'Back to Brokers' : 'Back'}}
-                      </button>
-                    </div>
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-sm-12 bdrBlw">
+                        <button
+                        *ngIf="compactView || selectedBroker === ''"
+                        class="btnStyl"
+                        (click)="$event.stopPropagation(); addMore()">
+                        <i class="fa fa-plus"></i> Add
+                        </button>
+                      </div>
+                      <div class="col-sm-12">
+                        <ag-grid-angular
+                        class="ag-theme-balham topSps"
+                        [gridOptions]="equityGridOptions"
+                        (rowClicked)="editSecuritiesForm($event)">
+                        </ag-grid-angular>
+                      </div>
+                      <div class="col-sm-6">
+                        <button type="submit" class="delete-btn"
+                        [disabled]="!equitySelected()"
+                        (click)="deleteArray()">
+                       <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+                       </button>
+                      </div>
+                      <div class="col-sm-6">
+                        <button type="submit" class="cancel rghtBack" (click)="showCompactView()">
+                          {{ this.bondType === 'listed' ? 'Back to Brokers' : 'Back'}}
+                        </button>
+                      </div>
+                   </div>
                   </div>
+                 
+           
                 </div>
               </div>
             </div>
@@ -73,15 +78,19 @@
                   <!--                      </div>-->
                   <!--                    </mat-tab>-->
                   <!--                    <mat-tab label="By Broker">-->
-                  <div>
+                  <div class="container">
+                   <div class="row">
+                    <div class="col-sm-12 bdrBlw">
                     <button
                             *ngIf="compactView || selectedBroker === ''"
-                            class="edit_btn"
+                            class="btnStyl "
                             (click)="$event.stopPropagation(); addMore()">
                       <i class="fa fa-plus"></i>Add
                     </button>
+                    </div>
+                   </div>
                   </div>
-                  <div class="card__col-xs-12">
+                  <div class="card__col-xs-12 bdrBlw">
                     <div class="card__col-sm-1 delete-icon"></div>
                     <div class="card__col-sm-3 broker-view-title">Broker Name</div>
                     <div class="card__col-sm-3 broker-view-title">LTCG</div>
@@ -306,11 +315,22 @@
   <mat-dialog-content>
     <form [formGroup]="selectedFormGroup">
       <div class="accordion-item">
-        <h2 class="accordion-header" id="heading2">
-          <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                  data-bs-target="#collapse2">Manual Update</button>
+    
+        
 
-        </h2>
+        <div class="container bdrBlw">
+          <div class="row">
+            <div class="col-sm-6">
+              <h2 class="fntTx" id="heading2">
+                Manual Update      
+              </h2>
+            </div>
+            <div class="col-sm-6">
+              <button class="crossTop" (click)="addDialogRef.close()"><i class="fa fa-times"></i></button>
+            </div>
+        </div>
+        </div>
+
         <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
           <div class="accordion__item-body">
             <div class="div-6">
@@ -324,7 +344,7 @@
                           name="nameOfTheUnits"
                           (change)="calculateTotalCG(selectedFormGroup)"
                   />
-                  <mat-hint style="font-size: 75%"
+                  <mat-hint class="spcTpBtm"
                   >If Scrip Name is not available, we will take
                     INNOTREQUIRD</mat-hint
                   >
@@ -709,7 +729,7 @@
             <div class="row">
               <div class="form-field">
                 <div><span class="normal_text">Year Of Improvement</span></div>
-                <div class="form-field">
+                <div class="form-field px-2">
                   <mat-form-field
                           class="input-field-width"
                           appearance="outline">
@@ -728,7 +748,7 @@
               </div>
               <div class="form-field">
                 <div><span class="normal_text">Cost of Improvement</span></div>
-                <div class="form-field">
+                <div class="form-field px-2">
                   <mat-form-field
                           class="input-field-width"
                           appearance="outline">
@@ -748,7 +768,7 @@
               </div>
               <div class="form-field">
                 <div><span class="normal_text">Cost of Improvement with Indexation</span></div>
-                <div class="form-field">
+                <div class="form-field px-2">
                   <mat-form-field
                           class="input-field-width"
                           appearance="outline">
