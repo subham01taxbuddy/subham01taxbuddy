@@ -343,7 +343,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   }
 
   markActive(index){
-    if(this.currentIndex > 0){
+    if(this.currentIndex > 0 && this.currentIndex > this.ITR_JSON.employers.length){
       this.saveEmployerDetails(false);
     }
     if(index === -1) {
@@ -1665,7 +1665,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     this.allowanceFormGroup = this.createAllowanceFormGroup();
     this.currentIndex = index;
 
-    this.localEmployer = this.ITR_JSON.employers[index];
+    this.localEmployer = this.Copy_ITR_JSON.employers[index];
 
     /* Employer set values */
     this.employerDetailsFormGroup.patchValue(this.localEmployer);
@@ -1791,7 +1791,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
     // this.maxPT = 5000;
     this.maxEA = 5000;
-    this.ITR_JSON.employers.forEach((item: any) => {
+    this.Copy_ITR_JSON.employers.forEach((item: any) => {
       if (item.deductions instanceof Array) {
         item.deductions.forEach((deductions) => {
           if (deductions.deductionType === 'PROFESSIONAL_TAX') {
@@ -1810,9 +1810,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       this.maxEA +
       Number(this.deductionsFormGroup.controls['entertainmentAllow'].value);
     if (
-      this.ITR_JSON.employerCategory !== 'GOVERNMENT' &&
-      this.ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
-      this.ITR_JSON.employerCategory !== 'PRIVATE'
+      this.Copy_ITR_JSON.employerCategory !== 'GOVERNMENT' &&
+      this.Copy_ITR_JSON.employerCategory !== 'CENTRAL_GOVT' &&
+      this.Copy_ITR_JSON.employerCategory !== 'PRIVATE'
     ) {
       this.deductionsFormGroup.controls['entertainmentAllow'].disable();
     } else {
@@ -1829,7 +1829,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     // this.deductionsFormGroup.controls['entertainmentAllow'].setValidators(Validators.compose([Validators.pattern(AppConstants.numericRegex), Validators.max(this.maxEA)]));
     // this.deductionsFormGroup.controls['entertainmentAllow'].updateValueAndValidity();
 
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
   }
 
   goBack() {
