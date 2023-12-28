@@ -361,14 +361,16 @@
                             </div>
                           </div>
 
-                          <div class="div-6">
+                          <div class="div-6 mb-20">
                             <div class="form-field">
                               <div><span class="normal_text">Total Other Expenses</span>
                               </div>
                             </div>
                             <div class="form-field">
-                              <input readonly type="text" class="form-control inpplac disable"
-                                value="{{totalOtherExpenses}}" id="exampleInputEmail1" aria-describedby="emailHelp">
+                              <mat-form-field appearance="outline">
+                                <input readonly type="text" matInput class="input-field" value="{{totalOtherExpenses}}"
+                                  id="exampleInputEmail1" aria-describedby="emailHelp">
+                              </mat-form-field>
                             </div>
                           </div>
                         </form>
@@ -378,8 +380,10 @@
                             </div>
                           </div>
                           <div class="form-field">
-                            <input readonly type="text" class="form-control inpplac disable" value="{{totalNetProfit}}"
-                              id="exampleInputEmail1" aria-describedby="emailHelp">
+                            <mat-form-field appearance="outline">
+                              <input readonly type="text" matInput class="input-field" value="{{totalNetProfit}}"
+                                id="exampleInputEmail1" aria-describedby="emailHelp">
+                            </mat-form-field>
                           </div>
                         </div>
                       </div>

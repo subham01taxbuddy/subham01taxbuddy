@@ -245,13 +245,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
 
   deleteExpenseForm() {
     const expenses = this.expenses;
-    let index = 0;
-    this.expenses.controls.forEach((form: FormGroup) => {
-      if (form.controls['hasExpense'].value) {
-        expenses.removeAt(index);
-      }
-      index++;
-    });
+    expenses.controls = expenses.controls.filter(element => !(element as FormGroup).controls['hasExpense'].value);
     this.calculateNetProfit();
     this.changed();
   }

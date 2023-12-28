@@ -126,7 +126,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   addBusIncomeForm() {
-    if (this.busIncomeForm.valid) {
+    if (this.busIncomeForm.valid || !this.busIncomeForm.controls['busIncomeFormArray']['controls'].length) {
       this.submitted = false;
       let form = this.createBusIncomeForm(0, null);
       (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).insert(
@@ -162,13 +162,13 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   calculatePresumptive(index, incomeType, setValue?) {
     const bankReceipts = (
       (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
-        index
+      index
       ] as FormGroup
     ).controls['bankReceipts'];
 
     const cashReceipts = (
       (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
-        index
+      index
       ] as FormGroup
     ).controls['cashReceipts'];
 
@@ -554,7 +554,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   businessClicked(event, index) {
     (
       (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
-        index
+      index
       ] as FormGroup
     ).controls['natureOfBusiness'].setValue(event);
   }
