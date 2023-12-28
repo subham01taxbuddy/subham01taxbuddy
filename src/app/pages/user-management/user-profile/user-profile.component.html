@@ -383,6 +383,7 @@
             <span class="header-text-1">User Information</span>
           </div>
         </div>
+        <form [formGroup]="userProfileForm">
         <div class="user-data-container">
           <div class="row">
             <div class="col-sm-4">
@@ -582,11 +583,14 @@
 
           </div>
         </div>
+      </form>
+
         <div class="row mt-3">
           <div class="col-sm-12 TxHd-12">
             <span class="header-text-1">User GST Information:</span>
           </div>
         </div>
+        <form [formGroup]="gstForm">
         <div class="user-data-container">
           <div class="row">
             <div class="col-sm-4">
@@ -683,6 +687,7 @@
             </div>
           </div>
         </div>
+      </form>
         <div class="row mt-3">
           <div style="flex: 1 0 0; text-align: left;">
             <button class="new-cancel-button-1" (click)="onCancelClick()">Cancel</button>
