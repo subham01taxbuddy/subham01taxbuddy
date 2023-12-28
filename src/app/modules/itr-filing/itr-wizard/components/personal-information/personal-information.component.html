@@ -340,7 +340,7 @@
           "
             >
               <div formArrayName="clauseiv7provisio139iDtls">
-                <div class="flex justify-content-end" style="margin-right: 17%">
+                <div class="flex justify-content-end">
                   <button
                           mat-icon-button
                           color="warn"
@@ -380,13 +380,13 @@
                     <div style="width: 75%">
                       <mat-form-field appearance="outline">
                         <mat-label>Nature*</mat-label>
-                        <mat-select
+                        <mat-select 
                                 placeholder="Nature"
                                 name="nature[i]"
                                 formControlName="nature"
                                 (selectionChange)="onSelectionChange(i)"
                         >
-                          <mat-option
+                          <mat-option class="spcBlwOver"
                                   *ngFor="
                           let clauseiv7provisio139iDtls of clauseiv7provisio139iDtlsList
                         "

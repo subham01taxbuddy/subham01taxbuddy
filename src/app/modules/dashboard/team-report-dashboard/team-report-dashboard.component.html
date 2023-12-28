@@ -1,7 +1,7 @@
 <div class="main-1">
   <div class="row rowClr-1">
     <div class="col-sm-12">
-      
+
       <div class="row">
         <div class="col-sm-12">
           <div class="filter-box">
@@ -47,7 +47,7 @@
         </div>
 
       </div>
-    
+
     </div>
   </div>
   <div class="new-table-container">
@@ -216,12 +216,16 @@
             <div class="total-box"><span class="total-box-text">Total</span></div>
             <div class="total-box-value"><span class="total-value">{{commissionData?.totalItrFiled || 'NA'}}</span>
             </div>
-            <div class="dropdown-box" [class.open]="isDropdownOpen" (click)="toggleDropdown()">
+            <!-- <div class="dropdown-box" [class.open]="isDropdownOpen" (click)="toggleDropdown()">
               <select [(ngModel)]="selectedType">
                 <option value="Original">Original</option>
                 <option value="Revised">Revised</option>
               </select>
-            </div>
+            </div> -->
+            <mat-select [(ngModel)]="selectedType" class="dropdown-box"  (click)="toggleDropdown()">
+              <mat-option value="Original">Original</mat-option>
+              <mat-option value="Revised">Revised</mat-option>
+            </mat-select>
             <div class="total-box-value">
               <div *ngIf="selectedType ==='Original' "><span class="total-value">{{totalOriginal || 'NA'}}</span></div>
               <div *ngIf="selectedType ==='Revised' "><span class="total-value">{{totalRevised || 'NA'}}</span></div>
@@ -232,7 +236,8 @@
       <div class="row">
         <div class="col-sm-12">
           <div class="count-chips-container">
-            <div class="row">
+            <div class="serTypeTesxt"><span class="TxHd">{{selectedType}}:</span></div>
+            <div class="row mt-2">
               <div class="col-sm-2">
                 <div class="itr-box-container">
                   <div class="count-inBxR-1">
