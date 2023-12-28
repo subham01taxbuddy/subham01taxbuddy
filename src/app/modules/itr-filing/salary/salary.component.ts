@@ -373,10 +373,13 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         calculators: null,
       };
       this.Copy_ITR_JSON.employers.push(this.localEmployer);
+      this.editEmployerDetails(this.Copy_ITR_JSON.employers.length -1);
+      this.bifurcationResult = this.utilsService.getBifurcation(this.localEmployer);
     } else {
       this.currentIndex = index;
       this.editEmployerDetails(this.currentIndex);
     }
+    this.changeConsetGiven = true;
   }
 
   isVrsExemptionTaken = false;
