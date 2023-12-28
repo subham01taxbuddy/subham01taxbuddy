@@ -24,8 +24,8 @@
                     <thead>
                     <tr>
                       <th class=""></th>
-                      <th class="">DATE OF ACQUISITION (2)</th>
-                      <th class="">DATE OF TRANSFER (3)</th>
+                      <th class="">DATE OF TRANSFER (2)</th>
+                      <th class="">DATE OF ACQUISITION (3)</th>
                       <th class="">HEAD UNDER WHICH INCOME
                         TO BE TAXED<br /> (BUSINESS/CAPITAL GAIN) (4)
                       </th>
@@ -56,7 +56,6 @@
                         <td>
                           <mat-form-field appearance="outline">
                             <input
-                                    [min]="vda.get('dateOfAcquisition').value"
                                     [max]="maxDate"
                                     matInput
                                     placeholder="DD/MM/YYYY"
@@ -77,7 +76,7 @@
                         <td>
                           <mat-form-field appearance="outline">
                             <input
-                                    [max]="maxDate"
+                                    [max]="vda.get('dateOfTransfer').value"
                                     matInput
                                     placeholder="DD/MM/YYYY"
                                     name="dateOfAcquisition[i]"
@@ -85,7 +84,6 @@
                                     autocomplete="off"
                                     formControlName="dateOfAcquisition"
                                     required
-                                    (dateChange)="updateValidations(vda)"
                             />
                             <mat-datepicker-toggle
                                     matSuffix [for]="dateofAcquisition"></mat-datepicker-toggle>
