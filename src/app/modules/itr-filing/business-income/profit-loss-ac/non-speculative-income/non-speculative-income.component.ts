@@ -162,14 +162,8 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   }
 
   deleteArray() {
-    const natOfBusinessDtlsArray = <FormArray>(
-      this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray')
-    );
-    natOfBusinessDtlsArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        natOfBusinessDtlsArray.removeAt(index);
-      }
-    });
+    const natOfBusinessDtlsArray = <FormArray>this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray');
+    natOfBusinessDtlsArray.controls = natOfBusinessDtlsArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
   }
 
   specSelected() {
