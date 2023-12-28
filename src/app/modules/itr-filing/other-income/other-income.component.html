@@ -37,6 +37,26 @@
                           </div>
                         </div>
                       </div>
+                      <div class="accordion__item-body">
+                        <div class="div-6">
+                          <div class="form-field">
+                            <div><span class="span">Interest accrued on contributions to a provident fund</span></div>
+                            <mat-form-field appearance="outline" class="class1">
+                              <mat-select formControlName="providentFundLabel" required>
+                                <mat-option *ngFor="let fund of providentFundArray" [value]="fund.incomeType">
+                                  <span> {{fund.label}}</span>
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                          <div class="form-field mt-4">
+                            <mat-form-field appearance="outline">
+                              <input type="text" trim matInput placeholder="" formControlName="providentFundValue"
+                                type="number" maxlength="125" />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -92,7 +112,6 @@
                       </div>
                     </div>
                   </div>
-
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="headingThree">
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
@@ -117,7 +136,7 @@
                               <td>
                                 Money received without consideration
                               </td>
-                              <td>
+                              <td class="text-center">
                                 <mat-checkbox formControlName="aggregateValueWithoutConsiderationNotTaxable">
                                 </mat-checkbox>
                               </td>
@@ -134,7 +153,7 @@
                               <td>
                                 Immovable property received without consideration
                               </td>
-                              <td>
+                              <td class="text-center">
                                 <mat-checkbox formControlName="immovablePropertyWithoutConsiderationNotTaxable">
                                 </mat-checkbox>
                               </td>
@@ -151,7 +170,7 @@
                               <td>
                                 Immovable property received for inadequate consideration
                               </td>
-                              <td>
+                              <td class="text-center">
                                 <mat-checkbox formControlName="immovablePropertyInadequateConsiderationNotTaxable">
                                 </mat-checkbox>
                               </td>
@@ -168,7 +187,7 @@
                               <td>
                                 Any Other property received without consideration
                               </td>
-                              <td>
+                              <td class="text-center">
                                 <mat-checkbox formControlName="anyOtherPropertyWithoutConsiderationNotTaxable">
                                 </mat-checkbox>
                               </td>
@@ -185,7 +204,7 @@
                               <td>
                                 Any Other property received for inadequate consideration
                               </td>
-                              <td>
+                              <td class="text-center">
                                 <mat-checkbox formControlName="anyOtherPropertyInadequateConsiderationNotTaxable">
                                 </mat-checkbox>
                               </td>
@@ -208,11 +227,25 @@
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
                         data-bs-target="#collapseThree">Any Other Income
                         <input type="number" class="form-control inpClr2" disabled
-                          value="{{otherIncomeFormGroup.getRawValue().totalFamPenDeduction}}">
+                          value="{{getTotalAnyOtherIncome()}}">
                       </button>
                     </h2>
                     <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                       <div class="accordion__item-body">
+                        <div class="" formArrayName="anyOtherIncomes">
+                          <div class="div-6" *ngFor="let income of getAnyIncomeArray.controls; let i = index"
+                            [formGroupName]="i">
+                            <div class="form-field">
+                              <div><span class="span">{{ income.value.label }} </span></div>
+                            </div>
+                            <div class="form-field">
+                              <mat-form-field appearance="outline">
+                                <input type="text" trim matInput placeholder="" name="incomeValue[i]"
+                                  formControlName="incomeValue" type="number" maxlength="125" />
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
                         <div class="txHdg">Family Pension</div>
                         <div class="div-6 gray_box">
                           <div class="form-field">
