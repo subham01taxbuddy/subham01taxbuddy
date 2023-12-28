@@ -658,6 +658,17 @@ main {
     border-radius: 4px 4px 0px 0px;
     border: 1.5px solid;
   }
+  .frameC .contents-selected {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 8px 24px;
+    position: relative;
+    flex: 0 0 auto;
+    background-color: #448AFF;
+    border-radius: 4px 4px 0px 0px;
+    border: 1.5px solid;
+  }
 
   .frameC .field-text {
     position: relative;
