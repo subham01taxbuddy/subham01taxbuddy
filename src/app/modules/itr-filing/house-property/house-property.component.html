@@ -83,10 +83,10 @@
                               </div>
                               <div class="hprgt">
                                 <mat-form-field appearance="outline">
-                                  <input
-                                          formControlName="annualRentReceived"
-                                          matInput
-                                          placeholder="{{
+                            <input
+                              formControlName="annualRentReceived"
+                              matInput
+                              placeholder="{{
                                   housePropertyForm.controls['propertyType']
                                     .value === 'LOP'
                                     ? 'Gross rent received / receivable / letable value'
@@ -94,9 +94,9 @@
                                         .value === 'DLOP'
                                     ? 'What was the expected rent amount from said property?'
                                     : ''
-                                }}"
-                                          matTooltipClass="tab-tooltip"
-                                          matTooltip="{{
+                              }}"
+                              matTooltipClass="tab-tooltip"
+                              matTooltip="{{
                                   housePropertyForm.controls['propertyType']
                                     .value === 'LOP'
                                     ? 'Gross rent received / receivable / letable value'
@@ -271,7 +271,7 @@
                                             style="margin: 0"
                                             [value]="'80EE'"
                                             class="right-mrgn"
-                                            [disabled]="EEStatus">Interest on loan taken for residential house
+                                            [disabled]="EEStatus || jsonAmt80ee > 50000">Interest on loan taken for residential house
                                       property (80EE)
                                     </mat-radio-button
                                     >
@@ -282,7 +282,7 @@
                                             style="margin: 0"
                                             [value]="'80EEA'"
                                             class="right-mrgn"
-                                            [disabled]="EAStatus">Deduction in respect of interest on loan taken
+                                            [disabled]="EAStatus  || jsonAmt80ee > 150000">Deduction in respect of interest on loan taken
                                       for certain house property
                                       (80EEA)
                                     </mat-radio-button>

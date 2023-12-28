@@ -805,5 +805,8 @@
   </mat-dialog-content>
 </ng-template>
 </main>
-<app-side-summary-panel type="listedEquityShares"></app-side-summary-panel>
+  <app-side-summary-panel *ngIf="bondType === 'listed'; else unlisted" type="listedEquityShares"></app-side-summary-panel>
+  <ng-template #unlisted>
+  <app-side-summary-panel type="unlistedEquityShares"></app-side-summary-panel>
+  </ng-template>
 </div>

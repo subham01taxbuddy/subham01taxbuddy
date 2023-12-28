@@ -405,9 +405,9 @@ export class LoginComponent implements OnInit {
           console.log('Error:', event.error);
           this._toastMessageService.alert("error", event.error.error.error);
         } else {
-          if (event?.result?.data[0].roles.includes('ROLE_FILER')) {
-            this.assignUnassignedUsersToFiler(event.result.data[0]);
-          }
+          // if (event?.result?.data[0].roles.includes('ROLE_FILER')) {
+          //   this.assignUnassignedUsersToFiler(event.result.data[0]);
+          // }
           console.log('Success:', event.result);
         }
       }
