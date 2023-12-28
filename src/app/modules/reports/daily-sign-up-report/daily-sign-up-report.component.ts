@@ -39,7 +39,7 @@ export const MY_FORMATS = {
   ],
 })
 export class DailySignUpReportComponent implements OnInit, OnDestroy {
-  loading:boolean =false;
+  loading: boolean = false;
   startDate = new FormControl('');
   endDate = new FormControl('');
   minStartDate: string = '2023-04-01';
@@ -85,7 +85,7 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
       currentPage: 1,
       totalItems: null,
     };
-   }
+  }
 
   ngOnInit() {
     this.roles = this.utilsService.getUserRoles();
@@ -143,28 +143,32 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
         const rowData = this.createRowData(this.dailySignUpList);
         if (this.totals) {
           const totalsRow = {
-              leaderName: 'Total',
-              totalAssignedUsersForITR: this.totals.totalAssignedUsersForITR,
-              signUpNumbersForITR: this.totals.totalSignUpNumbersForITR,
-              totalAssignedUsersForTPA: this.totals.totalAssignedUsersForTPA,
-              signUpNumbersForTPA: this.totals.totalSignUpNumbersForTPA,
-              totalAssignedUsersForGST: this.totals.totalAssignedUsersForGST,
-              signUpNumbersForGST: this.totals.totalSignUpNumbersForGST,
-              totalAssignedUsersForNotice: this.totals.totalAssignedUsersForNotice,
-              signUpNumbersForNotice: this.totals.totalSignUpNumbersForNotice,
-              totalAssignedUsers: this.totals.totalAssignedClientCount,
-              totalSignUpNumbers: this.totals.totalSignUpNumbers,
+            leaderName: 'Total',
+            totalAssignedUsersForITR: this.totals.totalAssignedUsersForITR,
+            signUpNumbersForITR: this.totals.totalSignUpNumbersForITR,
+            totalAssignedUsersForTPA: this.totals.totalAssignedUsersForTPA,
+            signUpNumbersForTPA: this.totals.totalSignUpNumbersForTPA,
+            totalAssignedUsersForGST: this.totals.totalAssignedUsersForGST,
+            signUpNumbersForGST: this.totals.totalSignUpNumbersForGST,
+            totalAssignedUsersForNotice: this.totals.totalAssignedUsersForNotice,
+            signUpNumbersForNotice: this.totals.totalSignUpNumbersForNotice,
+            totalAssignedUsers: this.totals.totalAssignedClientCount,
+            totalSignUpNumbers: this.totals.totalSignUpNumbers,
+            roundRobinCount_GST: this.totals.roundRobinCount_GST,
+            roundRobinCount_ITR: this.totals.roundRobinCount_ITR,
+            roundRobinCount_NOTICE: this.totals.roundRobinCount_NOTICE,
+            roundRobinCount_TPA: this.totals.roundRobinCount_TPA
           };
 
           rowData.push(totalsRow);
-      }
+        }
 
         this.dailySignUpListGridOptions.api?.setRowData(rowData);
 
         this.cacheManager.initializeCache(rowData);
 
         const currentPageNumber = pageNumber || this.searchParam.page + 1;
-        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData( this.dailySignUpList));
+        this.cacheManager.cachePageContent(currentPageNumber, this.createRowData(this.dailySignUpList));
         this.config.currentPage = currentPageNumber;
 
       } else {
@@ -193,6 +197,10 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
         signUpNumbersForNotice: signUpData[i].signUpNumbersForNotice,
         totalAssignedUsers: signUpData[i].totalAssignedUsers,
         totalSignUpNumbers: signUpData[i].totalSignUpNumbers,
+        roundRobinCount_GST: signUpData[i].roundRobinCount_GST,
+        roundRobinCount_ITR: signUpData[i].roundRobinCount_ITR,
+        roundRobinCount_NOTICE: signUpData[i].roundRobinCount_NOTICE,
+        roundRobinCount_TPA: signUpData[i].roundRobinCount_TPA
       })
       signUpRepoInfoArray.push(agentReportInfo);
     }
@@ -249,6 +257,13 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
+          {
+            headerName: 'Round Robbin Count',
+            field: 'roundRobinCount_ITR',
+            width: 180,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
         ]
       },
       {
@@ -275,6 +290,13 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
           {
             headerName: 'Total Assigned Users',
             field: 'totalAssignedUsersForTPA',
+            width: 180,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+          {
+            headerName: 'Round Robbin Count',
+            field: 'roundRobinCount_TPA',
             width: 180,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
@@ -309,6 +331,13 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
           },
+          {
+            headerName: 'Round Robbin Count',
+            field: 'roundRobinCount_NOTICE',
+            width: 180,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
         ]
       },
       {
@@ -335,6 +364,13 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
           {
             headerName: 'Total Assigned Users',
             field: 'totalAssignedUsersForGST',
+            width: 180,
+            suppressMovable: true,
+            cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+          },
+          {
+            headerName: 'Round Robbin Count',
+            field: 'roundRobinCount_GST',
             width: 180,
             suppressMovable: true,
             cellStyle: { textAlign: 'center', 'font-weight': 'bold' },

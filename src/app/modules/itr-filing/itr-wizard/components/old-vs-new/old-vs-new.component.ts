@@ -1694,6 +1694,7 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
     }
 
     this.dueDateCheck();
+    this.allowNewRegime = this.ITR_JSON.isLate === 'N' && this.ITR_JSON.isRevised === 'Y';
   }
 
   getITRType() {
