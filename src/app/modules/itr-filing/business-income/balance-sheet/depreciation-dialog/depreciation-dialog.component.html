@@ -5,7 +5,7 @@
         </div>
     </div>
     <div class="form-field">
-        <!-- <input type="text" class="form-control inpplac" id="exampleInputEmail1" aria-describedby="emailHelp"
+        <!-- <input type="text" class="input-field" id="exampleInputEmail1" aria-describedby="emailHelp"
             placeholder="₹ Enter Amount"> -->
     </div>
     <div class="button_style">
@@ -28,71 +28,82 @@
                     <div class="form-field">
                         <div><span class="span">Assets Type </span> </div>
                         <div class="form-control-wrapper select_arrow">
-                            <mat-select placeholder="Asset Type" class="form-control inpplac drop-down"
-                                formControlName="assetType" name="assetType"
-                                (selectionChange)="saveDepreciationDetails(depreciation)">
-                                <mat-option *ngFor="let type of assetTypeList" [value]="type.key">
-                                    {{type.value}}
-                                </mat-option></mat-select>
-                            <mat-error
-                                *ngIf="depreciation.get('assetType').hasError('required') && (depreciation.get('assetType').dirty || depreciation.get('assetType').touched)">Please
-                                select Asset Type</mat-error>
+                            <mat-form-field appearance="outline">
+                                <mat-select placeholder="Asset Type" class="input-field" formControlName="assetType"
+                                    name="assetType" (selectionChange)="saveDepreciationDetails(depreciation)">
+                                    <mat-option *ngFor="let type of assetTypeList" [value]="type.key">
+                                        {{type.value}}
+                                    </mat-option></mat-select>
+                                <mat-error
+                                    *ngIf="depreciation.get('assetType').hasError('required') && (depreciation.get('assetType').dirty || depreciation.get('assetType').touched)">Please
+                                    select Asset Type</mat-error>
+                            </mat-form-field>
                         </div>
                     </div>
                     <div class="form-field">
                         <div><span class="span">Description </span></div>
-                        <input matInput class="form-control inpplac" placeholder="description"
-                            formControlName="description" maxlength="30">
-                        <mat-error
-                            *ngIf="depreciation.get('description').hasError('required')  && (depreciation.get('description').dirty || depreciation.get('description').touched)">Please
-                            enter
-                            description</mat-error>
+                        <mat-form-field appearance="outline">
+                            <input matInput class="input-field" placeholder="description" formControlName="description"
+                                maxlength="30">
+                            <mat-error
+                                *ngIf="depreciation.get('description').hasError('required')  && (depreciation.get('description').dirty || depreciation.get('description').touched)">Please
+                                enter
+                                description</mat-error>
+                        </mat-form-field>
                     </div>
                     <div class=" form-field">
                         <div><span class="span">Gross Block </span></div>
-                        <input matInput class="form-control inpplac" placeholder="₹ Enter Amount"
-                            formControlName="bookValue" maxlength="14" (blur)="saveDepreciationDetails(depreciation)"
-                            (change)="calculateDepreciationTotal()">
-                        <mat-error
-                            *ngIf="depreciation.get('bookValue').hasError('required')  && (depreciation.get('bookValue').dirty || depreciation.get('bookValue').touched)">Please
-                            enter book value</mat-error>
+                        <mat-form-field appearance="outline">
+                            <input matInput class="input-field" placeholder="₹ Enter Amount" formControlName="bookValue"
+                                maxlength="14" (blur)="saveDepreciationDetails(depreciation)"
+                                (change)="calculateDepreciationTotal()">
+                            <mat-error
+                                *ngIf="depreciation.get('bookValue').hasError('required')  && (depreciation.get('bookValue').dirty || depreciation.get('bookValue').touched)">Please
+                                enter book value</mat-error>
+                        </mat-form-field>
                     </div>
                 </div>
                 <div class="div-6">
                     <div class="form-field">
                         <div><span class="span">Dep Rate </span></div>
                         <div class="form-control-wrapper select_arrow">
-                            <mat-select class="form-control inpplac drop-down" placeholder="Depreciation Rate"
-                                formControlName="depreciationRate" name="depreciationRate"
-                                (selectionChange)="saveDepreciationDetails(depreciation)">
-                                <mat-option *ngFor="let rate of depreciationRateList" [value]="rate.key">
-                                    {{rate.value}} </mat-option></mat-select>
-                            <mat-error
-                                *ngIf="depreciation.get('depreciationRate').hasError('required')  && (depreciation.get('depreciationRate').dirty || depreciation.get('depreciationRate').touched)">Please
-                                select Depreciation Rate</mat-error>
+                            <mat-form-field appearance="outline">
+                                <mat-select class="input-field" placeholder="Depreciation Rate"
+                                    formControlName="depreciationRate" name="depreciationRate"
+                                    (selectionChange)="saveDepreciationDetails(depreciation)">
+                                    <mat-option *ngFor="let rate of depreciationRateList" [value]="rate.key">
+                                        {{rate.value}} </mat-option></mat-select>
+                                <mat-error
+                                    *ngIf="depreciation.get('depreciationRate').hasError('required')  && (depreciation.get('depreciationRate').dirty || depreciation.get('depreciationRate').touched)">Please
+                                    select Depreciation Rate</mat-error>
+                            </mat-form-field>
                         </div>
                     </div>
                     <div class="form-field">
                         <div><span class="span">Depreciation</span></div>
-                        <input matInput class="form-control inpplac" placeholder="₹ Enter Amount"
-                            formControlName="depreciationAmount" maxlength="14" (change)="calculateDepreciationTotal()"
-                            readonly>
-                        <mat-error
-                            *ngIf="depreciation.get('depreciationAmount').hasError('required')  && (depreciation.get('depreciationAmount').dirty || depreciation.get('depreciationAmount').touched)">Please
-                            enter the
-                            amount
-                        </mat-error>
+                        <mat-form-field appearance="outline">
+                            <input matInput class="input-field" placeholder="₹ Enter Amount"
+                                formControlName="depreciationAmount" maxlength="14"
+                                (change)="calculateDepreciationTotal()" readonly>
+                            <mat-error
+                                *ngIf="depreciation.get('depreciationAmount').hasError('required')  && (depreciation.get('depreciationAmount').dirty || depreciation.get('depreciationAmount').touched)">Please
+                                enter the
+                                amount
+                            </mat-error>
+                        </mat-form-field>
                     </div>
                     <div class="form-field">
                         <div><span class="span">Net Block </span></div>
-                        <input matInput class="form-control inpplac" placeholder="₹ Enter Amount"
-                            formControlName="fixedAssetClosingAmount" maxlength="14"
-                            (change)="calculateDepreciationTotal()" readonly>
-                        <mat-error
-                            *ngIf="depreciation.get('fixedAssetClosingAmount').hasError('required')  && (depreciation.get('fixedAssetClosingAmount').dirty || depreciation.get('fixedAssetClosingAmount').touched)">Please
-                            enter
-                            the amount
-                        </mat-error>
+                        <mat-form-field appearance="outline">
+                            <input matInput class="input-field" placeholder="₹ Enter Amount"
+                                formControlName="fixedAssetClosingAmount" maxlength="14"
+                                (change)="calculateDepreciationTotal()" readonly>
+                            <mat-error
+                                *ngIf="depreciation.get('fixedAssetClosingAmount').hasError('required')  && (depreciation.get('fixedAssetClosingAmount').dirty || depreciation.get('fixedAssetClosingAmount').touched)">Please
+                                enter
+                                the amount
+                            </mat-error>
+                        </mat-form-field>
                     </div>
                 </div>
             </div>
@@ -101,18 +112,24 @@
     <div class="div-6 gray_box">
         <div class="form-field">
             <div><span class="span">Gross Block </span></div>
-            <input type="text" formControlName="totalGrossBlock" class="form-control inpplac" id="exampleInputEmail1"
-                aria-describedby="emailHelp" placeholder="₹ Enter Amount" readonly>
+            <mat-form-field appearance="outline">
+                <input matInput type="text" formControlName="totalGrossBlock" class="input-field"
+                    id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹ Enter Amount" readonly>
+            </mat-form-field>
         </div>
         <div class="form-field">
             <div><span class="span">Depreciation </span></div>
-            <input type="text" formControlName="totalDepreciationAmount" class="form-control inpplac"
-                id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹ Enter Amount" readonly>
+            <mat-form-field appearance="outline">
+                <input matInput type="text" formControlName="totalDepreciationAmount" class="input-field"
+                    id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹ Enter Amount" readonly>
+            </mat-form-field>
         </div>
         <div class="form-field">
             <div><span class="span">Net Block </span></div>
-            <input type="text" formControlName="totalNetBlock" class="form-control inpplac disable"
-                id="exampleInputEmail1" aria-describedby="emailHelp" readonly>
+            <mat-form-field appearance="outline">
+                <input matInput type="text" formControlName="totalNetBlock" class="input-field" id="exampleInputEmail1"
+                    aria-describedby="emailHelp" readonly>
+            </mat-form-field>
         </div>
     </div>
 
@@ -126,8 +143,6 @@
             </table>
             <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
         </div>
-        <!-- <div class="card__col-sm-3" style="text-align: right;">
-            <button class="tbd-btn save-btn" (click)="save()">Save</button>
-        </div> -->
+
     </div>
 </div>
