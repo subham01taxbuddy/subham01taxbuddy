@@ -69,8 +69,7 @@
                             </div>
                             <div class="field">
                               <div class="field-label">
-                                <span class="span">Employer TAN </span> <span class="text-wrapper-2">*</span>
-                              </div>
+                                <span class="span">Employer TAN </span></div>
                               <mat-form-field appearance="outline">
                                 <input
                                         type="text"
@@ -232,6 +231,7 @@
                                             class="input-field-width">
                               <input
                                       type="text"
+                                      digitsOnly
                                       trim
                                       matInput
                                       placeholder=""
@@ -296,6 +296,7 @@
                                 <input
                                         type="text"
                                         trim
+                                        digitsOnly
                                         matInput
                                         placeholder=""
                                         name="allowValue[i]"
@@ -412,6 +413,7 @@
                                 <input
                                         type="number"
                                         trim
+                                        digitsOnly
                                         matInput
                                         placeholder=""
                                         name="allowValue[i]"
@@ -552,15 +554,13 @@
             </div>
 
 
-            <div class="frame-wrapper-2" *ngIf="false">
-
-
+            <div class="frame-wrapper-2">
               <div class="div-8B">
                 <div class="item-left1">
-                  <div class="field-label-3">Net Taxable Salary from Employer 1</div>
+                  <div class="field-label-3">Net Taxable Salary from Employer {{currentIndex+1}}</div>
                 </div>
                 <div class="item-right1">
-                  ₹ 56,000
+                  ₹ {{utilsService.currencyFormatter(getNetTaxableSalary())}}
                 </div>
               </div>
             </div>
