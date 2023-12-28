@@ -19,24 +19,24 @@
             </div>
           </div>
           <div class="col-sm-3 spsTp">
+            <mat-label>PAN Number</mat-label>
             <mat-form-field appearance="outline" class="class1">
-              <mat-label>PAN Number</mat-label>
               <input placeholder="PAN" formControlName="panNumber" autocomplete="off" (blur)="getUserInfoByPan()"
                 type="text" maxlength="10" minlength="10" upperCase matInput>
             </mat-form-field>
           </div>
 
           <div class="col-sm-3 spsTp">
+            <mat-label>First name *</mat-label>
             <mat-form-field appearance="outline" class="class1">
-              <mat-label>First name</mat-label>
               <input matInput placeholder="First Name" required type="text" formControlName="firstName" capitalizeFirst>
               <mat-error class="error-msg" *ngIf="signUpForm.controls['firstName'].hasError('pattern')">Please enter the
                 valid name.</mat-error>
             </mat-form-field>
           </div>
           <div class="col-sm-3 spsTp">
+            <mat-label>Middle Name</mat-label>
             <mat-form-field appearance="outline" class="class1">
-              <mat-label>Middle Name</mat-label>
               <input placeholder="Middle Name" type="text" formControlName="middleName" capitalizeFirst matInput>
               <mat-error class="error-msg" *ngIf="signUpForm.controls['middleName'].hasError('pattern')">Please enter
                 the
@@ -44,16 +44,16 @@
             </mat-form-field>
           </div>
           <div class="col-sm-3 spsTp">
+            <mat-label>Last Name *</mat-label>
             <mat-form-field appearance="outline" class="class1">
-              <mat-label>Last Name</mat-label>
               <input matInput placeholder="Last Name" type="text" formControlName="lastName" capitalizeFirst required>
               <mat-error class="error-msg" *ngIf="signUpForm.controls['lastName'].hasError('pattern')">Please enter the
                 valid name.</mat-error>
             </mat-form-field>
           </div>
           <div class="col-sm-3 spsTp">
+            <mat-label>Select country *</mat-label>
             <mat-form-field appearance="outline" class="class1">
-              <mat-label>Select country</mat-label>
               <input type="text" placeholder="Select country" matInput formControlName="countryCode"
                 [matAutocomplete]="auto" required>
               <mat-autocomplete #auto="matAutocomplete">
@@ -65,8 +65,8 @@
             </mat-form-field>
           </div>
           <div class="col-sm-3 spsTp">
+            <mat-label>Mobile Number *</mat-label>
             <mat-form-field appearance="outline" class="class1">
-              <mat-label>Mobile Number</mat-label>
               <input matInput [numbersOnly]="true" placeholder="Enter mobile number" formControlName="mobile"
                 name="mobile" [maxlength]="maxNo" [minlength]="minNo" required />
               <mat-error class="error-msg" *ngIf="signUpForm.controls['mobile'].hasError('required')">Mobile number
@@ -82,8 +82,8 @@
             </mat-form-field>
           </div>
           <div class="col-sm-3 spsTp">
+            <mat-label>Email Address *</mat-label>
             <mat-form-field appearance="outline" class="class1">
-              <mat-label>Email Address</mat-label>
               <input matInput type="email" placeholder="Enter email address" formControlName="email" name="mobile"
                 pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" maxLength="50" required />
               <mat-error class="error-msg" *ngIf="signUpForm.controls['email'].hasError('required')">Email address is
@@ -93,15 +93,15 @@
             </mat-form-field>
           </div>
           <div class="col-sm-3 spsTp">
+            <mat-label>Service Type *</mat-label>
             <mat-form-field appearance="outline" class="class1">
-              <mat-label>Service Type</mat-label>
               <mat-select placeholder="Service Type" formControlName="serviceType"
                 (selectionChange)="changeServiceType()" required>
                 <mat-option *ngFor="let service of services" [disabled]="!service.isHide" [value]="service.value">
                   <span> {{service.key}}</span>
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="signUpForm.controls['serviceType'].hasError('required')">Select
+              <mat-error class="error-msg" *ngIf="signUpForm.controls['serviceType'].hasError('required')">Select
                 Service type </mat-error>
             </mat-form-field>
           </div>
@@ -110,6 +110,7 @@
               [ngModelOptions]="{standalone: true}" disabled (change)="isAssignedToMe()">Assigned
               to me!</mat-checkbox>
           </div>
+          <div class="mt-2"></div>
           <div class="col-sm-12 spsTp bdrTp">
             <button class="rt-btn" (click)="userSignUp()" [disabled]="disableUserSignUp"> User Sign-up </button>
           </div>

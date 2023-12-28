@@ -64,8 +64,31 @@
   width: auto;
   align-items: flex-start;
   position: relative;
+  margin: 25px 25px 0px 25px;
 }
 
+.frame-wrapper-2A{
+  margin-top:20px!important;
+}
+
+.btn-rt {
+  margin-right: 0px!important;
+}
+
+.delBtn{
+ color:#db0a0a;
+ border:1px solid #db0a0a;
+ border-radius:6px;
+ padding:10px;
+ margin-top:15px;
+ background-color:#ffffff!important;
+ width:130px;
+}
+.delBtn:hover{
+  color:#ffffff; 
+  background-color:#db0a0a!important;
+ }
+ 
 .div-5 {
   display: flex;
   flex-direction: column;
