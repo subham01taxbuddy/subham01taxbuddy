@@ -279,7 +279,7 @@ export class OtherInformationComponent implements OnInit {
       typeOfCompany: [director?.typeOfCompany, Validators.required],
       companyPAN: [
         director?.companyPAN,
-        Validators.compose([Validators.pattern(AppConstants.panNumberRegex)]),
+        Validators.compose([Validators.required,Validators.pattern(AppConstants.panNumberRegex)]),
       ],
       sharesType: [director?.sharesType, Validators.required],
       din: [
@@ -346,12 +346,14 @@ export class OtherInformationComponent implements OnInit {
       transferredShares: [
         share?.transferredShares,
         Validators.compose([
+          Validators.required,
           Validators.pattern(AppConstants.amountWithoutDecimal),
         ]),
       ],
       saleConsideration: [
         share?.saleConsideration,
         Validators.compose([
+          Validators.required,
           Validators.pattern(AppConstants.amountWithDecimal),
         ]),
       ],
