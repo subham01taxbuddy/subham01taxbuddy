@@ -637,23 +637,14 @@ export class HousePropertyComponent implements OnInit {
   editHouseProperty(index) {
     this.currentIndex = index;
     this.hpView = 'FORM';
-    // this.housingView = 'FORM';
     this.mode = 'UPDATE';
     this.housePropertyForm = this.createHousePropertyForm();
-
-    let itrJsonHp = this.Copy_ITR_JSON.houseProperties[index];
+    let itrJsonHp = this.ITR_JSON.houseProperties[index];
     this.housePropertyForm.patchValue(itrJsonHp);
-    if (itrJsonHp.tenant?.length > 0) {
-      itrJsonHp.tenant.forEach(ten => {
-        const tenant = <FormArray>this.housePropertyForm.get('tenant');
-        tenant.push(this.createTenantForm(ten));
-      });
-    }
     this.housePropertyForm.controls['country'].setValue('91');
     this.housePropertyForm.controls['principalAmount'].setValue(
-      itrJsonHp?.loans[0]?.principalAmount
+        itrJsonHp?.loans[0]?.principalAmount
     );
-    this.housePropertyForm.controls['annualRentReceived'].setValue(itrJsonHp.grossAnnualRentReceived);
 
     // setting coOwners Details
     if (itrJsonHp?.coOwners?.length > 0) {
@@ -667,56 +658,35 @@ export class HousePropertyComponent implements OnInit {
           isSelf: element?.isSelf
         };
         coOwner?.push(
-          this.createCoOwnerForm(obj)
+            this.createCoOwnerForm(obj)
         )
       });
     }
 
     if (itrJsonHp?.propertyType === 'SOP') {
       this.housePropertyForm.controls[
-        'totalArrearsUnrealizedRentReceived'
-      ].setValue(itrJsonHp?.totalArrearsUnrealizedRentReceived);
+          'totalArrearsUnrealizedRentReceived'
+          ].setValue(itrJsonHp?.totalArrearsUnrealizedRentReceived);
       this.calAnnualValue();
       this.calculateArrears30();
       this.settingInterestValues(itrJsonHp);
     } else {
-      // this.housePropertyForm.controls['interestAmount'].setValue(
-      //   itrJsonHp?.loans[0]?.interestAmount +
-      //     (itrJsonHp?.eligible80EEAAmount > 0
-      //       ? itrJsonHp?.eligible80EEAAmount
-      //       : itrJsonHp?.eligible80EEAmount)
-      // );
-
-      if (itrJsonHp?.eligible80EEAAmount > 0) {
-        this.housePropertyForm.controls['interestAmount'].setValue(
-          itrJsonHp?.loans[0]?.interestAmount + itrJsonHp?.eligible80EEAAmount
-        );
-        this.housePropertyForm.controls['isEligibleFor80EE']?.setValue('80EEA');
-      } else if (itrJsonHp?.eligible80EEAmount > 0) {
-        this.housePropertyForm.controls['interestAmount'].setValue(
-          itrJsonHp?.loans[0]?.interestAmount + itrJsonHp?.eligible80EEAmount
-        );
-        this.housePropertyForm.controls['isEligibleFor80EE']?.setValue('80EE');
-      } else {
-        this.housePropertyForm.controls['interestAmount'].setValue(
-            itrJsonHp?.loans[0]?.interestAmount);
-      }
-
+      const tenant = <FormArray>this.housePropertyForm.get('tenant');
       this.housePropertyForm.controls['nav'].setValue(
-        itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax
+          itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax
       );
       this.housePropertyForm.controls['standardDeduction'].setValue(
-        ((itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax) * 30) /
-        100
+          ((itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax) * 30) /
+          100
       );
       this.housePropertyForm?.controls['annualRentReceived']?.setValue(
-        itrJsonHp?.grossAnnualRentReceived
-          ? itrJsonHp?.grossAnnualRentReceived
-          : itrJsonHp?.grossAnnualRentReceivedTotal
+          itrJsonHp?.grossAnnualRentReceived
+              ? itrJsonHp?.grossAnnualRentReceived
+              : itrJsonHp?.grossAnnualRentReceivedTotal
       );
       this.housePropertyForm.controls[
-        'totalArrearsUnrealizedRentReceived'
-      ].setValue(itrJsonHp?.totalArrearsUnrealizedRentReceived);
+          'totalArrearsUnrealizedRentReceived'
+          ].setValue(itrJsonHp?.totalArrearsUnrealizedRentReceived);
 
       // setting tenant details
       itrJsonHp?.tenant?.forEach((element) => {
@@ -724,8 +694,8 @@ export class HousePropertyComponent implements OnInit {
       });
 
       this.changePropType(
-        this.housePropertyForm.controls['propertyType'].value,
-        'EDIT'
+          this.housePropertyForm.controls['propertyType'].value,
+          'EDIT'
       );
       this.calAnnualValue();
       this.calculateArrears30();
