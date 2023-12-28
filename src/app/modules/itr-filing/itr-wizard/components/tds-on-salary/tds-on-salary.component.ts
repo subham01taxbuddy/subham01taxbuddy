@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Inject, ViewChild } from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, Inject, ViewChild, Input} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   ITR_JSON,
@@ -17,6 +17,7 @@ declare let $: any;
 export class TdsOnSalaryComponent implements OnInit {
   @Output() onSave = new EventEmitter();
   @Output() formDataSubmitted = new EventEmitter<any>();
+  @Input() editIndex: any;
   salaryForm: FormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
@@ -45,15 +46,13 @@ export class TdsOnSalaryComponent implements OnInit {
       this.Copy_ITR_JSON.taxPaid?.onSalary.forEach((item) => {
         this.addMore(item);
       });
+    }
+
+    if (this.editIndex != undefined && this.editIndex >= 0) {
+      this.activeIndex = this.editIndex;
     } else {
       this.addMore();
     }
-
-    // if (this.data && this.data.assetIndex >= 0) {
-    //   this.addMore(this.Copy_ITR_JSON.taxPaid?.onSalary[this.data.assetIndex]);
-    // } else {
-    //   this.addMore();
-    // }
 
     this.config = {
       id: 'salaryPagination',
@@ -203,13 +202,9 @@ export class TdsOnSalaryComponent implements OnInit {
     }
   }
 
-  deleteSalaryArray() {
+  deleteSalaryArray(index) {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    salaryArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        salaryArray.removeAt(index);
-      }
-    });
+    salaryArray.removeAt(index);
   }
 
   pageChanged(event) {

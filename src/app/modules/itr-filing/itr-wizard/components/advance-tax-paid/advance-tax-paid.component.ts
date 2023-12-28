@@ -21,6 +21,7 @@ declare let $: any;
 export class AdvanceTaxPaidComponent implements OnInit {
   @Input() isAddAdvance: Number;
   @Output() onSave = new EventEmitter();
+  @Input() editIndex: any;
   salaryForm: FormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
@@ -55,15 +56,13 @@ export class AdvanceTaxPaidComponent implements OnInit {
       this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS.forEach((item) => {
         this.addMoreSalary(item);
       });
+    }
+
+    if (this.editIndex != undefined && this.editIndex >= 0) {
+      this.activeIndex = this.editIndex;
     } else {
       this.addMoreSalary();
     }
-
-    // if (this.data.assetIndex !== null && this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS) {
-    //   this.addMoreSalary(this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS[this.data.assetIndex]);
-    // } else {
-    //   this.addMoreSalary();
-    // }
 
     // this.salaryForm.disable();
 
@@ -183,23 +182,12 @@ export class AdvanceTaxPaidComponent implements OnInit {
   addMoreSalary(item?) {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     salaryArray.push(this.createForm(item));
+    this.activeIndex = salaryArray.length - 1;
   }
 
-  deleteSalaryArray() {
-    // salaryArray.controls.forEach((element, index) => {
-    //   if ((element as FormGroup).controls['hasEdit'].value) {
-    //     salaryArray.removeAt(index);
-    //   }
-    // });
+  deleteSalaryArray(index) {
     const salaryArray = this.salaryForm.get('salaryArray') as FormArray;
-
-    for (let i = salaryArray.length - 1; i >= 0; i--) {
-      const item = salaryArray.at(i) as FormGroup;
-      if (item.controls['hasEdit'].value) {
-        salaryArray.removeAt(i);
-        // (this.salaryForm.controls['salaryArray'] as FormGroup).enable();
-      }
-    }
+    salaryArray.removeAt(index);
   }
 
   goBack(){

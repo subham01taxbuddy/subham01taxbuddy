@@ -87,14 +87,14 @@ export class HousePropertyComponent implements OnInit {
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
-    if (
-      this.utilsService.isNonEmpty(this.ITR_JSON) &&
-      this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
-      this.ITR_JSON.houseProperties instanceof Array &&
-      this.ITR_JSON.houseProperties.length > 0
-    ) {
-      this.hpView = 'TABLE';
-    }
+    // if (
+    //   this.utilsService.isNonEmpty(this.ITR_JSON) &&
+    //   this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
+    //   this.ITR_JSON.houseProperties instanceof Array &&
+    //   this.ITR_JSON.houseProperties.length > 0
+    // ) {
+    //   this.hpView = 'TABLE';
+    // }
 
     if (!this.Copy_ITR_JSON.systemFlags) {
       this.Copy_ITR_JSON.systemFlags = {
@@ -139,9 +139,42 @@ export class HousePropertyComponent implements OnInit {
           this.housePropertyForm.controls['isEligibleFor80EE'].setValue('');
         }
       });
+      this.markActive(0);
+    } else {
+      this.addHousingIncome();
     }
 
     this.updateHpTaxaxbleIncome();
+
+  }
+
+  markActive(index){
+    if(this.currentIndex > 0){
+      this.saveHpDetails(false);
+    }
+    if(index === -1) {
+      this.addHousingIncome();
+    } else {
+      this.currentIndex = index;
+      this.editHouseProperty(this.currentIndex);
+    }
+  }
+
+  deleteHousingIncome(index){
+    if(index >= 0 && index < this.Copy_ITR_JSON.houseProperties.length) {
+      this.hpView = 'FORM';
+      // this.housingView = 'FORM';
+      this.mode = 'ADD';
+      this.housePropertyForm = this.createHousePropertyForm();
+      this.housePropertyForm.controls['country'].setValue('91');
+      this.Copy_ITR_JSON.houseProperties.splice(index, 1);
+      this.ITR_JSON = this.Copy_ITR_JSON;
+      sessionStorage.setItem(
+          AppConstants.ITR_JSON,
+          JSON.stringify(this.ITR_JSON)
+      );
+      this.serviceCall('DELETE', this.Copy_ITR_JSON);
+    }
   }
 
   getPropertyTypeLabel(){
@@ -559,6 +592,7 @@ export class HousePropertyComponent implements OnInit {
     this.chekIsSOPAdded();
     this.defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
     this.setStoredValues(this.ITR_JSON.houseProperties.length, 'add');
+    this.Copy_ITR_JSON.houseProperties.push(this.housePropertyForm.getRawValue());
   }
 
   editHouseProperty(index) {
@@ -893,7 +927,7 @@ export class HousePropertyComponent implements OnInit {
     this.calculateInterestOrDeduction();
   }
 
-  saveHpDetails() {
+  saveHpDetails(apiCall: boolean) {
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
@@ -921,7 +955,9 @@ export class HousePropertyComponent implements OnInit {
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = true;
       // this.ITR_JSON = JSON.parse(JSON.stringify(this.Copy_ITR_JSON));
       // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-      this.serviceCall(this.Copy_ITR_JSON, 'SAVE');
+      if(apiCall) {
+        this.serviceCall(this.Copy_ITR_JSON, 'SAVE');
+      }
     } else {
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
       $('input.ng-invalid').first().focus();
@@ -1099,7 +1135,8 @@ export class HousePropertyComponent implements OnInit {
             this.viewForm = false;
 
             if (this.ITR_JSON.houseProperties.length !== 0) {
-              this.hpView = 'TABLE';
+              // this.hpView = 'TABLE';
+              this.goBack();
             } else {
               this.hpView = 'FORM';
               this.housePropertyForm = this.createHousePropertyForm();

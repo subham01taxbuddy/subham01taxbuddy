@@ -60,13 +60,13 @@ const routes: Routes = [
       { path: 'old-vs-new', component: OldVsNewComponent },
       {
         path: 'salary',
-        component: AllSalaryIncomeComponent,
-        children: [
-          {
-            path: 'details/:id',
-            component: SalaryComponent,
-          },
-        ],
+        component: SalaryComponent,
+        // children: [
+        //   {
+        //     path: 'details/:id',
+        //     component: SalaryComponent,
+        //   },
+        // ],
       },
       { path: 'house-property', component: HousePropertyComponent },
       {
