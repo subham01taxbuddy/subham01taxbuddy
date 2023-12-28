@@ -564,6 +564,10 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit, OnC
         if (index !== -1) {
           this.immovableAssets.splice(index, 1);
           this.immovableAssetGridApi?.setRowData(this.immovableAssets);
+          const immovableAssetArray = <FormArray>(
+            this.immovableAssetForm?.get('immovableAssetArray')
+          );
+          immovableAssetArray.removeAt(index);
         }
       }
     });
