@@ -300,6 +300,57 @@
                 </table>
             </div>
 
+            <div class="space" *ngIf="type === 'unlistedEquityShares'">
+                <table class="table table-borderless f-size">
+                    <tbody>
+                        <tr class="border-bottom">
+                            <th>Gain Type</th>
+                            <th>Short Term</th>
+                            <th>Long Term</th>
+                        </tr>
+                        <tr>
+                            <td>Sale Value</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalSTCGSaleValue)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalLTCGSaleValue)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Buy Value</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalSTCGBuyValue)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalLTCGIndexCostOfAcquisition)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Cost of Improvement</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalSTCGCostOfImprovement)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalLTCGCostOfImprovement)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Expenses</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalSTCGExpenses)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalLTCGExpenses)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Capital Gain</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalSTCG)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalLTCG)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Deduction</td>
+                            <td>₹ {{utilsService.currencyFormatter(0)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedEquityShares.totalLTCGDeduction)}}</td>
+                        </tr>
+                        <tr class="border-top">
+                            <th>Net Capital Gain</th>
+                            <th>
+                                ₹{{utilsService.currencyFormatter(unlistedEquityShares.totalSTCG)}}
+                            </th>
+                            <th>
+                                ₹{{utilsService.currencyFormatter(unlistedEquityShares.netLTCG)}}
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <div class="space" *ngIf="type === 'zeroCouponBonds'">
                 <table class="table table-borderless f-size">
                     <tbody>
@@ -460,6 +511,43 @@
                             <th>
                                 ₹{{utilsService.currencyFormatter(taxesPaid.total)}}
                             </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="space" *ngIf="type === 'scheduleAL'">
+                <table class="table table-borderless f-size">
+                    <tbody>
+                        <tr class="border-bottom">
+                            <th>Particulars</th>
+                            <th>Amount</th>
+                        </tr>
+                        <tr>
+                            <td>Immovable Assets</td>
+                            <td>₹
+                                {{utilsService.currencyFormatter(scheduleAL.immmovableAssets)}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Movable Assets</td>
+                            <td>₹
+                                {{utilsService.currencyFormatter(scheduleAL.movableAssets)}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Liabilities in Relation to Assets</td>
+                            <td>₹
+                                {{utilsService.currencyFormatter(scheduleAL.liabilitiesInRelationToAssets)}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="border-top">
+                            <th>Total Amount</th>
+                            <th>₹{{utilsService.currencyFormatter(scheduleAL.total)}}</th>
                         </tr>
                     </tbody>
                 </table>

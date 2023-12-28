@@ -22,9 +22,11 @@ export class SideSummaryPanelComponent implements OnInit {
   presumptiveIncome: any = {};
   otherIncome: any = {};
   otherAssets: any = {};
+  unlistedEquityShares: any = {};
   zeroCouponBonds: any = {};
   landAndBuilding: any = {};
   taxesPaid: any = {};
+  scheduleAL: any = {};
 
   constructor(private summaryHelper: SummaryHelperService, public utilsService: UtilsService) {
 
@@ -35,39 +37,51 @@ export class SideSummaryPanelComponent implements OnInit {
   }
 
   setSummaryData(){
-    if (this.type !== 'taxesPaid' && this.type !== 'listedEquityShares' && this.type !== 'profitLossAccount' && this.type !== 'houseProperty' && this.type !== 'presumptiveIncome')
+    if (this.type !== 'scheduleAL' && this.type !== 'taxesPaid' && this.type !== 'listedEquityShares' && this.type !== 'profitLossAccount' && this.type !== 'houseProperty' && this.type !== 'presumptiveIncome')
       this.getSummary();
     else
       this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
 
-    if (this.type === 'listedEquityShares')
-      this.setListedEquityShares();
+    switch(this.type){
+      case 'listedEquityShares': this.setListedEquityShares();
+      break;
 
-    if (this.type === 'profitLossAccount')
-      this.setProfitLossAccount();
-    
-    if (this.type === 'presumptiveIncome')
-      this.setPresumptiveIncome();
+      case 'profitLossAccount': this.setProfitLossAccount();
+      break;
 
-    if (this.type === 'taxesPaid')
-      this.setTaxesPaid();
+      case 'presumptiveIncome': this.setPresumptiveIncome();
+      break;
+
+      case 'taxesPaid': this.setTaxesPaid();
+      break;
+
+      case 'scheduleAL': this.setScheduleAL();
+      break;
+    }
   }
 
   async getSummary() {
     await this.summaryHelper.getSummary().then((res: any) => {
       if (res) {
         this.summary = res;
-        if (this.type === 'otherIncome')
-         this.setOtherIncome();  
 
-        if (this.type === 'otherAssets')
-          this.setOtherAssets();
+        switch(this.type){
+          case 'otherIncome': this.setOtherIncome();
+          break;
 
-        if (this.type === 'zeroCouponBonds')
-          this.setZeroCouponBonds();
+          case 'otherAssets': this.setOtherAssets();
+          break;
 
-        if (this.type === 'landAndBuilding')
-          this.setLandAndBuilding();
+          case 'unlistedEquityShares': this.setUnlistedEquityShares();
+          break;
+
+          case 'zeroCouponBonds': this.setZeroCouponBonds();
+          break;
+
+          case 'landAndBuilding': this.setLandAndBuilding();
+          break;
+        }
+
       }
     })
   }
@@ -255,6 +269,48 @@ export class SideSummaryPanelComponent implements OnInit {
     this.otherAssets.otherAssetNetLTCG = this.otherAssets.totalOtherAssetsLTCG- this.otherAssets.totalOtherAssetLTCGDeduction;
   }
 
+  setUnlistedEquityShares(){
+    let capitalGain = this.summary.summaryIncome.cgIncomeN.capitalGain;
+    this.unlistedEquityShares.totalSTCGSaleValue = capitalGain.filter(cg => cg.assetType === 'EQUITY_SHARES_UNLISTED' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.netSellValue, 0);
+
+    this.unlistedEquityShares.totalLTCGSaleValue = capitalGain.filter(cg => cg.assetType === 'EQUITY_SHARES_UNLISTED' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.netSellValue, 0);
+
+    this.unlistedEquityShares.totalSTCGBuyValue = capitalGain.filter(cg => cg.assetType === 'EQUITY_SHARES_UNLISTED' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.purchesCost, 0);
+
+    this.unlistedEquityShares.totalLTCGIndexCostOfAcquisition = capitalGain.filter(cg => cg.assetType === 'EQUITY_SHARES_UNLISTED' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.indexCostOfAcquisition, 0);
+
+    this.unlistedEquityShares.totalSTCGExpenses = capitalGain.filter(cg => cg.assetType === 'EQUITY_SHARES_UNLISTED' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.saleExpense, 0);
+
+    this.unlistedEquityShares.totalLTCGExpenses = capitalGain.filter(cg => cg.assetType === 'EQUITY_SHARES_UNLISTED' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.saleExpense, 0);
+
+    this.unlistedEquityShares.totalSTCGCostOfImprovement = capitalGain.filter(cg => cg.assetType === 'EQUITY_SHARES_UNLISTED' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.costOfImprovement, 0);
+
+    this.unlistedEquityShares.totalLTCGCostOfImprovement = capitalGain.filter(cg => cg.assetType === 'EQUITY_SHARES_UNLISTED' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.costOfImprovement, 0);
+
+    this.unlistedEquityShares.totalLTCGDeduction = capitalGain.filter(cg => cg.assetType === 'EQUITY_SHARES_UNLISTED' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.deductionAmount, 0);
+    
+    this.unlistedEquityShares.totalLTCG = this.unlistedEquityShares.totalLTCGSaleValue -
+    this.unlistedEquityShares.totalLTCGIndexCostOfAcquisition -
+    this.unlistedEquityShares.totalLTCGExpenses -
+    this.unlistedEquityShares.totalLTCGCostOfImprovement;
+
+    this.unlistedEquityShares.totalSTCG = this.unlistedEquityShares.totalSTCGSaleValue -
+    this.unlistedEquityShares.totalSTCGBuyValue -
+    this.unlistedEquityShares.totalSTCGExpenses -
+    this.unlistedEquityShares.totalSTCGCostOfImprovement;
+
+    this.unlistedEquityShares.netLTCG = this.unlistedEquityShares.totalLTCG- this.unlistedEquityShares.totalLTCGDeduction;
+  }
+
   setZeroCouponBonds(){
     let capitalGain = this.summary.summaryIncome.cgIncomeN.capitalGain;
     this.zeroCouponBonds.totalSTCGSaleValue = capitalGain.filter(cg => cg.assetType === 'ZERO_COUPON_BONDS' && cg.gainType === 'SHORT')
@@ -361,5 +417,24 @@ export class SideSummaryPanelComponent implements OnInit {
     +this.taxesPaid.tdsOnPropertyTDSAmount+this.taxesPaid.tcsAmount+this.taxesPaid.advanceTaxTDSAmount;
 
     this.taxesPaid.total = isNaN(this.taxesPaid.total) ? 0 : this.taxesPaid.total;
+  }
+
+  setScheduleAL(){
+   this.scheduleAL.immmovableAssets = this.ITR_JSON?.immovableAsset?.reduce((total, element) => total + element.amount, 0);
+   
+   let movableAsset = this.ITR_JSON?.movableAsset?.[0];
+   
+   this.scheduleAL.movableAssets = 
+   movableAsset?.artWorkAmount
+   + movableAsset?.bankAmount +
+   + movableAsset?.cashInHand +
+   + movableAsset?.insuranceAmount +
+   + movableAsset?.jwelleryAmount +
+   + movableAsset?.loanAmount +
+   + movableAsset?.shareAmount +
+   + movableAsset?.vehicleAmount;
+
+   this.scheduleAL.liabilitiesInRelationToAssets = movableAsset?.assetLiability;
+   this.scheduleAL.total = this.scheduleAL.immmovableAssets + this.scheduleAL.movableAssets + this.scheduleAL.liabilitiesInRelationToAssets;
   }
 }
