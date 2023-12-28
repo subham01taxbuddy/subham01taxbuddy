@@ -888,6 +888,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     }
   }
 
+  getNetTaxableSalary(): number {
+    return Math.max(this.getTotalGrossSalary() - this.getTotalAllowances() - (this.currentIndex === 0 ? 50000 : 0) - this.deductionsFormGroup.controls['professionalTax'].value - this.deductionsFormGroup.controls['entertainmentAllow'].value, 0);
+  }
+
   prescribed14Expenses(section) {
     const allowance = this.allowanceFormGroup?.controls[
       'allowances'

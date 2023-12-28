@@ -552,15 +552,13 @@
             </div>
 
 
-            <div class="frame-wrapper-2" *ngIf="false">
-
-
+            <div class="frame-wrapper-2">
               <div class="div-8B">
                 <div class="item-left1">
-                  <div class="field-label-3">Net Taxable Salary from Employer 1</div>
+                  <div class="field-label-3">Net Taxable Salary from Employer {{currentIndex+1}}</div>
                 </div>
                 <div class="item-right1">
-                  ₹ 56,000
+                  ₹ {{utilsService.currencyFormatter(getNetTaxableSalary())}}
                 </div>
               </div>
             </div>
