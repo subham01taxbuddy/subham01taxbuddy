@@ -34,6 +34,44 @@
   }
 }
 
+.crossTop { 
+  font-size: 28px;
+  position: absolute;
+  right: 5px;
+  top: 0px;
+}
+
+.bdrBlw{
+  border-bottom:1px solid #cccccc;
+  padding-bottom:10px;
+}
+
+.bdrAbv{
+  border-top:1px solid #cccccc;
+  padding-top:10px;
+}
+
+.gray_container {
+  margin: 25px 0px 12px 0px!important;
+}
+
+.mat-form-field{
+  background-color:#ddedff!important;
+}
+
+.spcTpBtm{
+  font-size: 75%; 
+  margin-top: 15px; 
+  margin-bottom:20px;
+}
+
+
+.fntTx {
+  font-size: 20px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+}
+
 .wrapper {
   display: flex;
   align-items: flex-start;
@@ -46,9 +84,18 @@
 }
 
 .btnStyl{
-  border:1px solid #cccccc;
+  border:1px solid #1B67BA;
   border-radius:6px;
+  padding:8px;
+  float:right;
+  color:#1B67BA;
 }
+
+.rghtBack{
+  float:right;
+}
+
+
 
 .space {
   background-color: #ffffff;
