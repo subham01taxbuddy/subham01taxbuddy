@@ -603,13 +603,14 @@ export class HousePropertyComponent implements OnInit {
     this.mode = 'UPDATE';
     this.housePropertyForm = this.createHousePropertyForm();
 
-    let itrJsonHp = this.ITR_JSON.houseProperties[index];
+    let itrJsonHp = this.Copy_ITR_JSON.houseProperties[index];
     this.housePropertyForm.patchValue(itrJsonHp);
-    if(itrJsonHp.tenant?.length > 0){}
-    itrJsonHp.tenant.forEach(ten => {
-      const tenant = <FormArray>this.housePropertyForm.get('tenant');
-      tenant.push(this.createTenantForm(ten));
-    });
+    if (itrJsonHp.tenant?.length > 0) {
+      itrJsonHp.tenant.forEach(ten => {
+        const tenant = <FormArray>this.housePropertyForm.get('tenant');
+        tenant.push(this.createTenantForm(ten));
+      });
+    }
     this.housePropertyForm.controls['country'].setValue('91');
     this.housePropertyForm.controls['principalAmount'].setValue(
       itrJsonHp?.loans[0]?.principalAmount
