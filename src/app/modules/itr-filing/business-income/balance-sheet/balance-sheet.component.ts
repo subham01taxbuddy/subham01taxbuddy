@@ -312,10 +312,8 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   initForm(obj?: NewFinancialParticulars) {
     this.assetLiabilitiesForm = this.fb.group({
       id: [obj?.id],
-      membersOwnCapital: [
-        obj?.membersOwnCapital,
-        [Validators.pattern(AppConstants.numericRegex)],
-      ],
+      membersOwnCapital: [obj?.membersOwnCapital, [Validators.pattern(AppConstants.numericRegex)],],
+      reservesAndSurplus: [obj?.reservesAndSurplus, [Validators.pattern(AppConstants.numericRegex)]],
       securedLoans: [
         obj?.securedLoans,
         Validators.pattern(AppConstants.numericRegex),
@@ -364,10 +362,9 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         obj?.loanAndAdvances,
         Validators.pattern(AppConstants.numericRegex),
       ],
-      investment: [
-        obj?.investment,
-        Validators.pattern(AppConstants.numericRegex),
-      ],
+      investment: [obj?.investment, Validators.pattern(AppConstants.numericRegex),],
+      shortTermInvestment: [obj?.shortTermInvestment, Validators.pattern(AppConstants.numericRegex),],
+      longTermInvestment: [obj?.longTermInvestment, Validators.pattern(AppConstants.numericRegex),],
       otherAssets: [
         obj?.otherAssets,
         Validators.pattern(AppConstants.numericRegex),
@@ -384,6 +381,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     let totalSourcesOfFunds = 0;
     totalSourcesOfFunds =
       Number(this.assetLiabilitiesForm.controls['membersOwnCapital'].value) +
+      Number(this.assetLiabilitiesForm.controls['reservesAndSurplus'].value) +
       Number(this.assetLiabilitiesForm.controls['securedLoans'].value) +
       Number(this.assetLiabilitiesForm.controls['unSecuredLoans'].value) +
       Number(this.assetLiabilitiesForm.controls['advances'].value);
@@ -466,6 +464,8 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
 
   totalApplicationOfFunds() {
     this.totalAppOfFunds = 0;
+    let totalInvestment = Number(this.assetLiabilitiesForm.controls['longTermInvestment'].value) + Number(this.assetLiabilitiesForm.controls['shortTermInvestment'].value);
+    this.assetLiabilitiesForm.controls['investment'].setValue(totalInvestment);
     this.totalAppOfFunds = Number(this.assetLiabilitiesForm.controls['investment'].value) + Number(this.assetLiabilitiesForm.controls['netCurrentAsset'].value);
     if (this.totalDepNetBlock) {
       this.totalAppOfFunds += Number(this.totalDepNetBlock);
@@ -548,6 +548,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
             id: null,
             grossTurnOverAmount: null,
             membersOwnCapital: null,
+            reservesAndSurplus: null,
             securedLoans: null,
             unSecuredLoans: null,
             advances: null,
@@ -565,12 +566,18 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
             otherAssets: null,
             totalAssets: null,
             investment: null,
+            shortTermInvestment: null,
+            longTermInvestment: null,
             GSTRNumber: null,
           },
           businessDescription: [],
           fixedAssetsDetails: [],
           profitLossACIncomes: [],
         };
+      }
+
+      if (!this.utilsService.isNonEmpty(this.assetLiabilitiesForm.controls['GSTRNumber'].value)) {
+        this.assetLiabilitiesForm.controls['GSTRNumber'].setValue(null);
       }
 
       this.Copy_ITR_JSON.business.financialParticulars =

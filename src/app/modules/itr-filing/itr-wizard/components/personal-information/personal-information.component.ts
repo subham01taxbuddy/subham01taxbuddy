@@ -2661,6 +2661,7 @@ export class PersonalInformationComponent implements OnInit {
         .focus();
       this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
       this.personalInfoSaved.emit(false);
+      this.openAcc();
       return;
     }
 
@@ -2717,6 +2718,18 @@ export class PersonalInformationComponent implements OnInit {
       this.loading = false;
       this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
       this.personalInfoSaved.emit(false);
+      this.openAcc();
+    }
+  }
+
+  openAcc(){
+    const accordionButton = document.getElementById('bankButtonId');
+    if(accordionButton){
+      accordionButton.click();
+    }
+    const accordion = document.getElementById('perDetailsId');
+    if(accordion){
+      accordion.click();
     }
   }
 

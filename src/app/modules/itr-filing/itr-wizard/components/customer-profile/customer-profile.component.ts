@@ -563,8 +563,17 @@ export class CustomerProfileComponent implements OnInit {
         );
       }
       this.customerProfileSaved.emit(false);
+      this.openAccordion();
     }
   }
+
+  openAccordion(){
+    const accordionButton = document.getElementsByClassName('accordion-button');
+    if(accordionButton){
+     ( accordionButton[0] as HTMLDivElement).click();
+    }
+  }
+
   calAge(dob) {
     const birthday: any = new Date(dob);
     const currentYear = Number(this.ITR_JSON.assessmentYear.substring(0, 4));
