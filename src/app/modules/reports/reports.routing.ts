@@ -16,6 +16,7 @@ import { TdsReportComponent } from './tds-report/tds-report.component';
 import { MissedChatListComponent } from './missed-chat-list/missed-chat-list.component';
 import { MissedInboundCallListComponent } from './missed-inbound-call-list/missed-inbound-call-list.component';
 import { DailySignUpReportComponent } from './daily-sign-up-report/daily-sign-up-report.component';
+import { CustomerSignUpComponent } from './customer-sign-up/customer-sign-up.component';
 
 
 const routes: Routes = [
@@ -95,6 +96,10 @@ const routes: Routes = [
         path: 'daily-sign-up-report',
         component: DailySignUpReportComponent,
       },
+      {
+        path:'customer-sign-up',
+        component:CustomerSignUpComponent,
+      }
     ],
 
   },

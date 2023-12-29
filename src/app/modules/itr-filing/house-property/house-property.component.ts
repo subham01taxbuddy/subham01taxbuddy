@@ -147,14 +147,15 @@ export class HousePropertyComponent implements OnInit {
     this.updateHpTaxaxbleIncome();
     this.enableOnOverAllValue();
     this.calculateInterestOrDeduction();
+    this.editHouseProperty(0);
 
   }
 
-  markActive(index){
-    if(this.currentIndex > 0){
+  markActive(index) {
+    if (this.currentIndex > 0) {
       this.saveHpDetails(false);
     }
-    if(index === -1) {
+    if (index === -1) {
       this.addHousingIncome();
     } else {
       this.currentIndex = index;
@@ -162,8 +163,8 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  deleteHousingIncome(index){
-    if(index >= 0 && index < this.Copy_ITR_JSON.houseProperties.length) {
+  deleteHousingIncome(index) {
+    if (index >= 0 && index < this.Copy_ITR_JSON.houseProperties.length) {
       this.hpView = 'FORM';
       // this.housingView = 'FORM';
       this.mode = 'ADD';
@@ -172,17 +173,17 @@ export class HousePropertyComponent implements OnInit {
       this.Copy_ITR_JSON.houseProperties.splice(index, 1);
       this.ITR_JSON = this.Copy_ITR_JSON;
       sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.ITR_JSON)
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.ITR_JSON)
       );
       this.serviceCall('DELETE', this.Copy_ITR_JSON);
     }
   }
 
-  getPropertyTypeLabel(){
-    if(this.housePropertyForm.controls['propertyType'].value) {
+  getPropertyTypeLabel() {
+    if (this.housePropertyForm.controls['propertyType'].value) {
       return this.propertyTypeDropdown.filter(prop =>
-          prop.value === this.housePropertyForm.controls['propertyType'].value)[0].label + ' Property';
+        prop.value === this.housePropertyForm.controls['propertyType'].value)[0].label + ' Property';
     } else {
       return 'Property'
     }
@@ -449,16 +450,16 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  getTotalTaxableIncome(){
+  getTotalTaxableIncome() {
     return this.ITR_JSON.houseProperties?.reduce((total, element) => total + element.taxableIncome, 0);
   }
 
-  getOwnershipCategory(propertyType: string){
-    if("SOP"===propertyType)
+  getOwnershipCategory(propertyType: string) {
+    if ("SOP" === propertyType)
       return "Self Occupied";
-    if("LOP"===propertyType)
+    if ("LOP" === propertyType)
       return "Let Out";
-    if("DLOP"===propertyType)
+    if ("DLOP" === propertyType)
       return "Deemed Let Out";
   }
 
@@ -597,6 +598,7 @@ export class HousePropertyComponent implements OnInit {
     this.defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
     this.setStoredValues(this.ITR_JSON.houseProperties.length, 'add');
     this.Copy_ITR_JSON.houseProperties.push(this.housePropertyForm.getRawValue());
+    this.currentIndex = -1;
   }
 
   settingInterestValues(itrJsonHp) {
@@ -643,8 +645,20 @@ export class HousePropertyComponent implements OnInit {
     this.housePropertyForm.patchValue(itrJsonHp);
     this.housePropertyForm.controls['country'].setValue('91');
     this.housePropertyForm.controls['principalAmount'].setValue(
-        itrJsonHp?.loans[0]?.principalAmount
+      itrJsonHp?.loans[0]?.principalAmount
     );
+
+    if (
+      typeof itrJsonHp?.isEligibleFor80EE === 'boolean'
+    ) {
+      this.housePropertyForm?.controls['isEligibleFor80EE']?.setValue('80EE');
+    } else if (
+      typeof itrJsonHp?.isEligibleFor80EEA === 'boolean'
+    ) {
+      this.housePropertyForm?.controls['isEligibleFor80EE']?.setValue('80EEA');
+    } else {
+      this.housePropertyForm?.controls['isEligibleFor80EE']?.setValue('');
+    }
 
     // setting coOwners Details
     if (itrJsonHp?.coOwners?.length > 0) {
@@ -658,35 +672,35 @@ export class HousePropertyComponent implements OnInit {
           isSelf: element?.isSelf
         };
         coOwner?.push(
-            this.createCoOwnerForm(obj)
+          this.createCoOwnerForm(obj)
         )
       });
     }
 
     if (itrJsonHp?.propertyType === 'SOP') {
       this.housePropertyForm.controls[
-          'totalArrearsUnrealizedRentReceived'
-          ].setValue(itrJsonHp?.totalArrearsUnrealizedRentReceived);
+        'totalArrearsUnrealizedRentReceived'
+      ].setValue(itrJsonHp?.totalArrearsUnrealizedRentReceived);
       this.calAnnualValue();
       this.calculateArrears30();
       this.settingInterestValues(itrJsonHp);
     } else {
       const tenant = <FormArray>this.housePropertyForm.get('tenant');
       this.housePropertyForm.controls['nav'].setValue(
-          itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax
+        itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax
       );
       this.housePropertyForm.controls['standardDeduction'].setValue(
-          ((itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax) * 30) /
-          100
+        ((itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax) * 30) /
+        100
       );
       this.housePropertyForm?.controls['annualRentReceived']?.setValue(
-          itrJsonHp?.grossAnnualRentReceived
-              ? itrJsonHp?.grossAnnualRentReceived
-              : itrJsonHp?.grossAnnualRentReceivedTotal
+        itrJsonHp?.grossAnnualRentReceived
+          ? itrJsonHp?.grossAnnualRentReceived
+          : itrJsonHp?.grossAnnualRentReceivedTotal
       );
       this.housePropertyForm.controls[
-          'totalArrearsUnrealizedRentReceived'
-          ].setValue(itrJsonHp?.totalArrearsUnrealizedRentReceived);
+        'totalArrearsUnrealizedRentReceived'
+      ].setValue(itrJsonHp?.totalArrearsUnrealizedRentReceived);
 
       // setting tenant details
       itrJsonHp?.tenant?.forEach((element) => {
@@ -694,8 +708,8 @@ export class HousePropertyComponent implements OnInit {
       });
 
       this.changePropType(
-          this.housePropertyForm.controls['propertyType'].value,
-          'EDIT'
+        this.housePropertyForm.controls['propertyType'].value,
+        'EDIT'
       );
       this.calAnnualValue();
       this.calculateArrears30();
@@ -957,7 +971,7 @@ export class HousePropertyComponent implements OnInit {
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = true;
       // this.ITR_JSON = JSON.parse(JSON.stringify(this.Copy_ITR_JSON));
       // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-      if(apiCall) {
+      if (apiCall) {
         this.serviceCall(this.Copy_ITR_JSON, 'SAVE');
       }
     } else {

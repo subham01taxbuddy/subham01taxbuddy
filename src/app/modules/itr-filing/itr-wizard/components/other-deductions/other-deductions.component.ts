@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -11,6 +11,9 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./other-deductions.component.scss'],
 })
 export class OtherDeductionsComponent implements OnInit {
+
+  @Output() ded80TTA = new EventEmitter();
+  @Output() ded80TTB = new EventEmitter();
   loading: boolean = false;
   otherDeductionForm: FormGroup;
   ITR_JSON: ITR_JSON;
@@ -206,7 +209,9 @@ export class OtherDeductionsComponent implements OnInit {
               deduction.sectionType === '80QQB' ||
               deduction.sectionType === '80RRB' ||
               deduction.sectionType === '80EE' ||
-              deduction.sectionType === '80EEA'
+              deduction.sectionType === '80EEA' ||
+              deduction.sectionType === '80TTA' ||
+              deduction.sectionType === '80TTB'
           );
           console.log(deductionDetails, 'filteredDeductions');
 
@@ -215,6 +220,8 @@ export class OtherDeductionsComponent implements OnInit {
             'us80eea',
             'us80qqb',
             'us80rrb',
+            'us80tta',
+            'us80ttb'
           ];
 
           deductionArray.forEach((element) => {
@@ -230,6 +237,18 @@ export class OtherDeductionsComponent implements OnInit {
                 (deduction) => deduction.sectionType === '80EEA'
               );
               key.setValue(value[0].eligibleAmount);
+            } else if (element === 'us80tta') {
+              let value = deductionDetails?.filter(
+                (deduction) => deduction.sectionType === '80TTA'
+              );
+              this.ded80TTA.emit(value[0]?.eligibleAmount);
+              // key.setValue(value[0].eligibleAmount);
+            } else if (element === 'us80ttb') {
+              let value = deductionDetails?.filter(
+                (deduction) => deduction.sectionType === '80TTB'
+              );
+              this.ded80TTB.emit(value[0]?.eligibleAmount);
+              // key.setValue(value[0].eligibleAmount);
             } else if (element === 'us80qqb') {
               let value = deductionDetails?.filter(
                 (deduction) => deduction.sectionType === '80QQB'
