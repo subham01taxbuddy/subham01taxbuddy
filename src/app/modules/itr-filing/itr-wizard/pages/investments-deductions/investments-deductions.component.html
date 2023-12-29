@@ -205,7 +205,10 @@
               </div>
             </div>
 
-            <app-other-deductions #otherDeductionsRef></app-other-deductions>
+            <app-other-deductions #otherDeductionsRef
+                                  (ded80TTA)="setValue('us80tta', $event)"
+                                  (ded80TTB)="setValue('us80ttb', $event)">
+            </app-other-deductions>
 
           </div>
         </div>

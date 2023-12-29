@@ -727,6 +727,9 @@ export class InvestmentsDeductionsComponent
     this.setInvestmentsDeductionsValues();
   }
 
+  setValue(type, value){
+    this.investmentDeductionForm.get(type).setValue(value);
+  }
   saveInvestmentDeductions() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
