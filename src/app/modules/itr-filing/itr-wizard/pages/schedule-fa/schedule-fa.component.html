@@ -1593,10 +1593,18 @@
                               " [formGroupName]="j">
 
                               <div class="container">
-                                <div class="row">                              
-                                <div class="col-sm-1 p-3">
-                                
-                                </div>
+                                <div class="row">
+                                  <div class="col-sm-12">
+                                    <button class="btn btn__default btn__add pull-right btnRght" (click)="add('signingAuthorityDetails', i)">
+                                      Add
+                                    </button>
+                                  </div>
+                                  <div class="col-sm-1 p-3">
+                                    <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                                    type="checkbox" (click)="$event.stopPropagation()"
+                                    [checked]="selectedAccountIndexes.includes(getCheckboxIdAccount(7, i, j))"
+                                    (click)="toggleSelectedAccountIndex(7, i, j)" />
+                                  </div>
                                 <div class="col-sm-3 px-2">
                                   <div class="form-field">
                                     <div>
@@ -1721,28 +1729,29 @@
                                 </div>
                            
                                 <hr class="hrBdr"> 
-                                <div class="container">
-                                  <div class="row">
-                                  <div class="col-sm-4">
-                                    <button class="delete-btn1" (click)="delete('signingAuthorityDetails', 'account', i, i)">
-                                    <i class="fa-regular fa-circle-xmark" aria-hidden="true"></i> Select & Remove Account details
-                                     </button>                                 
-                                  </div>
-                                  <div class="col-sm-4">
-                                    <button class="delete-box"
-                                    (click)="delete('signingAuthorityDetails', 'formArray', 7)">
-                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
-                                  </button>
-                                  </div>
-                                  <div class="col-sm-4">
-                                  
-                                  </div>
-                                  </div>
-                                  </div>
+                                
                             
                                
                            
                             </div>
+                            <div class="container">
+                              <div class="row">
+                              <div class="col-sm-4">
+                                <button class="delete-btn1" (click)="delete('signingAuthorityDetails', 'account', i, i)">
+                                <i class="fa-regular fa-circle-xmark" aria-hidden="true"></i> Select & Remove Account details
+                                 </button>                                 
+                              </div>
+                              <div class="col-sm-4">
+                                <button class="delete-box"
+                                (click)="delete('signingAuthorityDetails', 'formArray', 7)">
+                                <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
+                              </button>
+                              </div>
+                              <div class="col-sm-4">
+                              
+                              </div>
+                              </div>
+                              </div>
                           </div>
                           
                         </div>
