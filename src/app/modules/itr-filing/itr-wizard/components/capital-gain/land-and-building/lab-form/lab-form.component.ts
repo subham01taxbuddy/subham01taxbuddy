@@ -828,7 +828,7 @@ export class LabFormComponent implements OnInit {
   }
 
   mergeImprovements() {
-    let otherImprovements = this.cgArrayElement.improvement.filter(
+    let otherImprovements = this.cgArrayElement.improvement?.filter(
       (imp) => imp.srn != this.data.assetSelected?.srn
     );
     if (otherImprovements == null) {
@@ -1010,7 +1010,11 @@ export class LabFormComponent implements OnInit {
     } else {
       this.isImprovements.setValue(false);
       formGroupName.controls['improvement'] = this.fb.array([]);
-      //this.calculateCapitalGain(formGroupName, '', index);
+      let otherImprovements = this.cgArrayElement.improvement.filter(
+          (ded) => ded.srn != this.data.assetSelected.srn
+      );
+      this.cgArrayElement.improvement = otherImprovements;
+      this.calculateCapitalGain(formGroupName, '', this.currentCgIndex);
     }
   }
 
@@ -1488,26 +1492,21 @@ export class LabFormComponent implements OnInit {
         'cgProperty';
 
       let tempImprovements = [];
-      this.cgArrayElement.assetDetails.forEach((asset) => {
-        //find improvement
-        let improvements = this.cgArrayElement.improvement.filter(
-          (imp) => imp.srn == asset.srn
-        );
-        if (!improvements || improvements.length == 0) {
-          let improvement = {
-            indexCostOfImprovement: 0,
-            id: asset.srn,
-            dateOfImprovement: ' ',
-            costOfImprovement: 0,
-            financialYearOfImprovement: null,
-            srn: asset.srn,
-          };
-          tempImprovements.push(improvement);
-        } else {
-          tempImprovements = tempImprovements.concat(improvements);
-        }
-      });
-      this.cgArrayElement.improvement = tempImprovements;
+
+      if (this.isImprovements.value) {
+        const improve = <FormArray>formGroupName.get('improvement');
+        let ded = [];
+        improve.controls.forEach((obj: FormGroup) => {
+          ded.push(obj.value);
+        });
+        this.cgArrayElement.improvement = ded;
+      } else {
+        this.cgArrayElement.improvement = [];
+      }
+      if (this.cgArrayElement.improvement?.length == 0) {
+        this.cgArrayElement.improvement = null;
+      }
+
       if (this.isDeductions.value) {
         const deductions = <FormArray>this.immovableForm.get('deductions');
         let ded = [];

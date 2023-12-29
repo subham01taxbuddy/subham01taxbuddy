@@ -42,9 +42,11 @@
                   <div class="div-3"
                        *ngFor="let salary of immovableAssetArray.controls;let i = index">
                     <div class="contents-wrapper">
-                      <div class="contents" style="cursor: pointer;">
-                        <div class="field-text" (click)="$event.stopPropagation();markActive(i)">Entry {{i+1}}</div>
-                        <div class="group" (click)="deleteIndex(i)"><img class="material-symbols" src="assets/img/new/del.png" /></div>
+                      <div [ngClass]="i === activeIndex ? 'contents-selected' : 'contents'" style="cursor: pointer;">
+                        <div [ngClass]="i === activeIndex ? 'field-text-selected' :'field-text'" (click)="$event.stopPropagation();markActive(i)">Entry {{i+1}}</div>
+                        <div class="group" (click)="deleteIndex(i)">
+                          <i class="fa fa-trash-o delbt" [ngClass]="i === activeIndex ? 'field-text-selected' :'field-text'"></i>
+                        </div>
                       </div>
                     </div>
                   </div>

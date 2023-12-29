@@ -665,7 +665,7 @@ main {
     padding: 8px 24px;
     position: relative;
     flex: 0 0 auto;
-    background-color: #448AFF;
+    background-color: #BDD5F0;
     border-radius: 4px 4px 0px 0px;
     border: 1.5px solid;
   }
@@ -677,6 +677,19 @@ main {
     font-family: "DM Sans-Medium", Helvetica;
     font-weight: 500;
     color: #ffffff;
+    font-size: 12px;
+    letter-spacing: 0;
+    line-height: 28px;
+    white-space: nowrap;
+  }
+  .frameC .field-text-selected {
+    position: relative;
+    width: fit-content;
+    margin-top: -1.5px;
+    font-family: "DM Sans-Medium", Helvetica;
+    font-weight: 500;
+    color: #124A5B;
+    font-weight: 700;
     font-size: 12px;
     letter-spacing: 0;
     line-height: 28px;
@@ -1906,6 +1919,7 @@ main {
     height: 28px;
     background-color: #ffffff57;
     border-radius: 14px;
+    text-align: center;
   }
 
   .space .material-symbols {

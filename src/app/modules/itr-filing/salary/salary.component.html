@@ -17,9 +17,10 @@
           <div class="div-3">
             <div class="contents-wrapper" *ngFor="let employer of Copy_ITR_JSON.employers; let i = index;">
               <div [ngClass]="i === currentIndex ? 'contents-selected' : 'contents'">
-<!--                <div class="field-text">Employer {{ this.currentIndex !== -1 ? this.currentIndex + 1 : this.ITR_JSON.employers.length + 1}}</div>-->
-                <div class="field-text" (click)="markActive(i)">Employer {{ i + 1}}</div>
-                <div class="group" (click)="deleteEmployer(i)"><img class="material-symbols" src="assets/img/new/del.png" /></div>
+                <div [ngClass]="i === currentIndex ? 'field-text-selected' :'field-text'" (click)="markActive(i)">Employer {{ i + 1}}</div>
+                <div class="group" (click)="deleteEmployer(i)">
+                  <i class="fa fa-trash-o delbt" [ngClass]="i === currentIndex ? 'field-text-selected' :'field-text'"></i>
+                </div>
               </div>
             </div>
             <div class="contents-wrapper">
