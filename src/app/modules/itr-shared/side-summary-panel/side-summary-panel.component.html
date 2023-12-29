@@ -60,7 +60,7 @@
                         <tr>
                             <td>Deduction u/s 16</td>
                             <td>₹
-                                {{utilsService.currencyFormatter(summary.summaryIncome.summarySalaryIncome.totalStandardDeduction)}}
+                                {{utilsService.currencyFormatter(summary.summaryIncome.summarySalaryIncome.totalStandardDeduction + summary.summaryIncome.summarySalaryIncome.totalSummaryPTDeductionsExemptIncome + summary.summaryIncome.summarySalaryIncome.totalSummaryETDeductionsExemptIncome)}}
                             </td>
                         </tr>
                         <tr class="border-top">
