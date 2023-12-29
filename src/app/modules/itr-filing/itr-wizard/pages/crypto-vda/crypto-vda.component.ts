@@ -120,11 +120,10 @@ export class CryptoVdaComponent implements OnInit {
 
   deleteVdaArray() {
     const vdaArray = <FormArray>this.scheduleVda.get('vdaArray');
-    vdaArray?.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        vdaArray?.removeAt(index);
-      }
-    });
+    let filteredVdaArrayToDelete = vdaArray?.controls?.filter(item => (item as FormGroup)?.controls['hasEdit']?.value);
+    for (let i = filteredVdaArrayToDelete?.length - 1; i >= 0; i--) {
+      vdaArray?.removeAt(vdaArray?.controls?.indexOf(filteredVdaArrayToDelete[i]));
+    }
     this.calcTotal();
   }
 

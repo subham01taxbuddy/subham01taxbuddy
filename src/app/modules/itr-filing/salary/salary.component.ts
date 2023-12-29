@@ -326,6 +326,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
     if (this.currentIndex >= 0) {
       this.editEmployerDetails(this.currentIndex);
+    } else {
+      this.markActive(-1);
     }
   }
 
@@ -343,7 +345,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   }
 
   markActive(index){
-    if(this.currentIndex > 0 && this.currentIndex > this.ITR_JSON.employers.length){
+    if(this.currentIndex >= 0 && this.currentIndex >= this.ITR_JSON.employers.length){
       this.saveEmployerDetails(false);
     }
     if(index === -1) {
@@ -1099,7 +1101,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
   saveEmployerDetails(apiCall: boolean) {
     this.validations();
-    if (this.employerDetailsFormGroup?.valid && this.allowanceFormGroup?.valid) {
+    if ((this.employerDetailsFormGroup?.valid && this.allowanceFormGroup?.valid && apiCall) || !apiCall) {
       this.checkGrossSalary();
 
       this.localEmployer.address =
@@ -1469,6 +1471,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
       if(apiCall) {
         this.serviceCall();
+      } else {
+        this.Copy_ITR_JSON.employers[this.currentIndex] = this.localEmployer;
       }
     } else {
       $('input.ng-invalid').first().focus();
@@ -1643,19 +1647,19 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   confirmChange(event: Event, incomeType: string){
 
     if (incomeType === 'SEC17_1' && this.utilsService.isNonZero(this.bifurcationResult?.SEC17_1?.total)) {
-      this.showWarningPopup();
+      this.showWarningPopup(incomeType);
     }
 
     if(incomeType === 'SEC17_2' && this.utilsService.isNonZero(this.bifurcationResult?.SEC17_2?.total)) {
-      this.showWarningPopup();
+      this.showWarningPopup(incomeType);
     }
 
     if(incomeType === 'SEC17_3' && this.utilsService.isNonZero(this.bifurcationResult?.SEC17_3?.total)) {
-      this.showWarningPopup();
+      this.showWarningPopup(incomeType);
     }
   }
 
-  showWarningPopup(){
+  showWarningPopup(incomeType){
     if(this.changeConsetGiven){
       return;
     }
@@ -1669,7 +1673,27 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       this.changeConsetGiven = true;
-      this.bifurcationResult = null;
+      // this.bifurcationResult = null;
+      this.localEmployer = this.utilsService.resetBifurcation(this.localEmployer, incomeType);
+      sessionStorage.setItem('localEmployer', JSON.stringify(this.localEmployer));
+      if (incomeType === 'SEC17_1') {
+        this.bifurcationResult.SEC17_1 = {
+          total: 0,
+          value: {}
+        }
+      }
+      if (incomeType === 'SEC17_2') {
+        this.bifurcationResult.SEC17_2 = {
+          total: 0,
+          value: {}
+        }
+      }
+      if (incomeType === 'SEC17_3') {
+        this.bifurcationResult.SEC17_3 = {
+          total: 0,
+          value: {}
+        }
+      }
     });
   }
 
@@ -1855,7 +1879,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
     this.valueChanged = this.utilsService.getChange();
     const dialogRef = this.matDialog.open(BifurcationComponent, {
       data: {
-        data: this.ITR_JSON.employers[this.currentIndex],
+        data: this.localEmployer,//this.ITR_JSON.employers[this.currentIndex],
         index: this.currentIndex,
         typeIndex: i,
         valueChanged: this.changeConsetGiven,

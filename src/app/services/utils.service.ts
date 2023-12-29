@@ -1836,4 +1836,22 @@ export class UtilsService {
 
     return bifurcation;
   }
+
+  resetBifurcation(localEmployer: Employer, section) {
+    let total = 0;
+    if(section === 'SEC17_1') {
+      localEmployer.salary = localEmployer.salary.filter(income => income.salaryType === 'SEC17_1');
+    }
+
+    if(section === 'SEC17_2') {
+      localEmployer.perquisites = localEmployer.perquisites.filter(income => income.perquisiteType === 'SEC17_2');
+    }
+
+    if(section === 'SEC17_3') {
+      localEmployer.profitsInLieuOfSalaryType = localEmployer.profitsInLieuOfSalaryType.filter(
+          income => income.salaryType === 'SEC17_3');
+    }
+
+    return localEmployer;
+  }
 }

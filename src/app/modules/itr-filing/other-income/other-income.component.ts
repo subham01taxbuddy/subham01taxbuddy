@@ -262,6 +262,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.setNetAgriIncome();
   }
 
+  clearProvidentFund() {
+    this.otherIncomeFormGroup.controls['providentFundLabel'].setValue(null);
+    this.otherIncomeFormGroup.controls['providentFundValue'].setValue(null);
+  }
+
   private createOtherIncomeForm() {
     const data = [];
     for (let i = 0; i < this.otherIncomeDropdown.length; i++) {
@@ -369,13 +374,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
   saveAll() {
     let agriIncome = this.agriIncFormGroup.get('netAgriculturalIncome');
-    if (
-      this.exemptIncomeFormGroup.valid &&
-      this.otherIncomeFormGroup.valid &&
-      (agriIncome && agriIncome?.value > 500000
-        ? this.agriIncFormGroup.valid
-        : true)
-    ) {
+    if (this.exemptIncomeFormGroup.valid && this.otherIncomeFormGroup.valid && (agriIncome && agriIncome?.value > 500000 ?
+      this.agriIncFormGroup.valid : true)) {
       this.saveOtherIncome();
       this.saveExemptIncomes();
       this.saveAndNext.emit(false);
