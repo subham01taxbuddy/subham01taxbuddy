@@ -9,8 +9,9 @@ import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import {ITR_JSON} from "../../interfaces/itr-input.interface";
-import {Router} from "@angular/router";
+import { ITR_JSON } from "../../interfaces/itr-input.interface";
+import { Router } from "@angular/router";
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -51,12 +52,18 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
   ngOnInit() {
     console.log(this.data);
     const param = `/profile/${this.data.userId}`;
-    this.userMsService.getMethod(param).subscribe((res:any) => {
+    this.userMsService.getMethod(param).subscribe((res: any) => {
       this.userProfile = res;
     });
   }
 
   updateManualDetails() {
+    const assessmentYearLastTwoDigits = this.data.assessmentYear.substr(2, 2);
+    const ackNumberLastTwoDigits = this.ackNumber.value.substr(-2);
+    if (ackNumberLastTwoDigits !== assessmentYearLastTwoDigits) {
+      this.utilsService.showSnackBar(`Ack Number must end with "${assessmentYearLastTwoDigits}" for the Assessment Year ${this.data.assessmentYear}`);
+      return;
+    }
     if (this.eFillingDate.valid && this.ackNumber.valid) {
       this.loading = true;
 
@@ -128,7 +135,7 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
                   } else {
                     //multiple ITRs found, navigate to ITR tab with the results
                     this.router.navigateByUrl('/tasks/filings', {
-                      state: {mobileNumber: this.data?.mobileNumber},
+                      state: { mobileNumber: this.data?.mobileNumber },
                     });
                   }
                 },
@@ -150,32 +157,32 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
     }
   }
 
-  serviceCall(itrObj: ITR_JSON){
+  serviceCall(itrObj: ITR_JSON) {
     let req = {
-      userId:this.data.userId,
-      itrId:itrObj.itrId,
-      email:this.data.email,
-      contactNumber:this.data.mobileNumber,
+      userId: this.data.userId,
+      itrId: itrObj.itrId,
+      email: this.data.email,
+      contactNumber: this.data.mobileNumber,
       panNumber: this.userProfile.panNumber,
-      "aadharNumber":"",
-      "assesseeType":"INDIVIDUAL",
+      "aadharNumber": "",
+      "assesseeType": "INDIVIDUAL",
       assessmentYear: this.data.assessmentYear,
-      financialYear:"2022-2023",
+      financialYear: "2022-2023",
       isRevised: this.returnType.value,
-      "eFillingCompleted":true,
-      eFillingDate:this.eFillingDate.value,
-      ackNumber:this.ackNumber.value,
-      itrType:`${this.itrType.value}`,
-      itrTokenNumber:'',
-      "filingTeamMemberId":this.data.callerAgentUserId,
-      filingSource:"MANUALLY"
+      "eFillingCompleted": true,
+      eFillingDate: this.eFillingDate.value,
+      ackNumber: this.ackNumber.value,
+      itrType: `${this.itrType.value}`,
+      itrTokenNumber: '',
+      "filingTeamMemberId": this.data.callerAgentUserId,
+      filingSource: "MANUALLY"
     }
     console.log('Updated Data:', req)
     const param = `${ApiEndpoints.itrMs.itrManuallyData}`
     this.itrMsService.putMethod(param, req).subscribe((res: any) => {
       console.log(res);
       this.loading = false;
-      if(res.success) {
+      if (res.success) {
         this.updateStatus();
         this.utilsService.showSnackBar('Manual Filing Details updated successfully');
         this.location.back();
@@ -212,6 +219,8 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
   }
 
   setFilingDate() {
+    // let today = moment().format("YYYY-MM-DD");
+    let today = moment().startOf('day').valueOf();
     var id = this.ackNumber.value;
     var lastSix = id.substr(id.length - 6);
     var day = lastSix.slice(0, 2);
@@ -219,7 +228,18 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
     var year = lastSix.slice(4, 6);
     let dateString = `20${year}-${month}-${day}`;
     console.log(dateString, year, month, day)
-    this.eFillingDate.setValue(dateString);
+    let efillingDateTime = moment(dateString, "YYYY-MM-DD").startOf('day').valueOf();
+    if (efillingDateTime > today) {
+      this.eFillingDate.setValue(null);
+      this.utilsService.showSnackBar('Please enter the valid acknowledgement number');
+      return
+    } {
+      this.eFillingDate.setValue(dateString);
+      if (this.eFillingDate.status != 'VALID') {
+        this.utilsService.showSnackBar('Please enter the valid acknowledgement number');
+      }
+    }
+
   }
 }
 
