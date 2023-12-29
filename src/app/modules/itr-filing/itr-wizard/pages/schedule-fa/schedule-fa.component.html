@@ -20,6 +20,11 @@
                     <form formArrayName="depositoryAccounts" style="padding: 20px">
                       <div class="accordion__item-body" *ngIf="topic.code === 'A1'">
                         
+                        <div class="col-sm-12">
+                          <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('depositoryAccounts')">
+                            Add More
+                          </button>
+                        </div>
                         <div *ngFor="
                             let depositoryAccounts of getDepositoryAccounts.controls;
                             let i = index
@@ -28,11 +33,6 @@
 
                           <div class="container">
                             <div class="row">
-                              <div class="col-sm-12">
-                                <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('depositoryAccounts')">
-                                  Add More
-                                </button>
-                              </div>
                               <div class="col-sm-1 p-3">
                                 <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                           type="checkbox" (click)="$event.stopPropagation()"
@@ -101,6 +101,11 @@
 
 
                           <div class="" formArrayName="account">                           
+                            <div class="col-sm-12">
+                              <button class="btn btn__default btn__add pull-right btnRght" (click)="add('depositoryAccounts', i)">
+                                Add
+                              </button>
+                            </div>
                             <div *ngFor="
                                 let accountCtrl of getAccountControls(i)
                                   .controls;
@@ -109,11 +114,6 @@
                            
                               <div class="container">
                                 <div class="row">
-                                  <div class="col-sm-12">
-                                    <button class="btn btn__default btn__add pull-right btnRght" (click)="add('depositoryAccounts', i)">
-                                      Add
-                                    </button>
-                                  </div>
                                   <div class="col-sm-1 p-3">
                                     <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                     type="checkbox" (click)="$event.stopPropagation()"
@@ -252,19 +252,19 @@
                   <div id="collapse2" class="accordion-collapse collapse show">
                     <form formArrayName="custodialAccounts" style="padding: 20px">
                       <div class="accordion__item-body">
+                        <div class="col-sm-12">
+                          <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('custodialAccounts')">
+                            Add More
+                          </button>                              
+                        </div>
                        
                         <div *ngFor="
                             let custodialAccounts of getCustodialAccounts?.controls;
                             let i = index
                           " [formGroupName]="i">
-                         
+                          
                             <div class="container">
                               <div class="row">
-                              <div class="col-sm-12">
-                                <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('custodialAccounts')">
-                                  Add More
-                                </button>                              
-                              </div>
                               <div class="col-sm-1 p-3">
                                 <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                 type="checkbox" (click)="$event.stopPropagation()"
@@ -335,6 +335,11 @@
                               <hr class="hrBdr"> 
                         
                           <div class="" formArrayName="account">                            
+                            <div class="col-sm-12">
+                              <button class="btn btn__default btn__add pull-right btnRght" (click)="add('custodialAccounts', i)">
+                                Add
+                              </button>
+                            </div>
                             <div *ngFor="
                                 let accountCtrl of getCustodialAccountControls(
                                   i
@@ -344,11 +349,6 @@
 
                               <div class="container">
                                 <div class="row">
-                                  <div class="col-sm-12">
-                                    <button class="btn btn__default btn__add pull-right btnRght" (click)="add('custodialAccounts', i)">
-                                      Add
-                                    </button>
-                                  </div>
                                 <div class="col-sm-1 p-3">
                                   <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                   type="checkbox" (click)="$event.stopPropagation()"
@@ -507,6 +507,11 @@
                     <div class="accordion__item-body">
                       <form formArrayName="equityAndDebtInterest" style="padding: 20px">
                         
+                        <div class="col-sm-12">
+                          <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('equityAndDebtInterest')">
+                            Add More
+                          </button>
+                        </div>
                         <div class="" *ngFor="
                             let equityAndDebtInterest of getEquityAndDebtInterest.controls;
                             let i = index
@@ -514,11 +519,6 @@
                         
                           <div class="container">
                             <div class="row">
-                            <div class="col-sm-12">
-                              <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('equityAndDebtInterest')">
-                                Add More
-                              </button>
-                            </div>
                             <div class="col-sm-1 p-3">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                               type="checkbox" (click)="$event.stopPropagation()"
@@ -695,6 +695,11 @@
                     <div class="accordion__item-body">
                       <form formArrayName="cashValueInsurance" style="padding: 20px">
                        
+                        <div class="col-sm-12">
+                          <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('cashValueInsurance')">
+                            Add More
+                          </button>
+                        </div>
                         <div class="" *ngFor="
                             let CashValueInsurance of getCashValueInsurance.controls;
                             let i = index
@@ -702,11 +707,6 @@
 
                           <div class="container">
                             <div class="row">
-                            <div class="col-sm-12">
-                              <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('cashValueInsurance')">
-                                Add More
-                              </button>
-                            </div>
                             <div class="col-sm-1 p-3">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                               type="checkbox" (click)="$event.stopPropagation()"
@@ -857,6 +857,12 @@
                     <div class="accordion__item-body">
                       <form formArrayName="financialInterestDetails" style="padding: 20px">
                         
+                        <div class="col-sm-12">
+                          <button class="btn btn__default btn__add pull-right btnRght"
+                          (click)="addMore('financialInterestDetails')">
+                            Add More
+                          </button>
+                        </div>
                         <div class="" *ngFor="
                             let financialInterestDetails of getFinancialInterestDetails.controls;
                             let i = index
@@ -864,12 +870,6 @@
 
                           <div class="container">
                             <div class="row">
-                            <div class="col-sm-12">
-                              <button class="btn btn__default btn__add pull-right btnRght"
-                              (click)="addMore('financialInterestDetails')">
-                                Add More
-                              </button>
-                            </div>
                             <div class="col-sm-1 p-3">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                               type="checkbox" (click)="$event.stopPropagation()"
@@ -1086,6 +1086,12 @@
                     <div class="accordion__item-body">
                       <form formArrayName="immovablePropertryDetails" style="padding: 20px">
                         
+                        <div class="col-sm-12">
+                          <button class="btn btn__default btn__add pull-right btnRght"
+                        (click)="addMore('immovablePropertryDetails')">
+                        Add More
+                      </button>
+                        </div>
                         <div class="" *ngFor="
                             let immovablePropertryDetails of getImmovablePropertryDetails.controls;
                             let i = index
@@ -1093,12 +1099,6 @@
 
                           <div class="container">
                           <div class="row">
-                          <div class="col-sm-12">
-                            <button class="btn btn__default btn__add pull-right btnRght"
-                          (click)="addMore('immovablePropertryDetails')">
-                          Add More
-                        </button>
-                          </div>
                           <div class="col-sm-1 p-3">
                             <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                               type="checkbox" (click)="$event.stopPropagation()"
@@ -1266,7 +1266,17 @@
                           </div>
                           </div>
 
-                 
+                          <hr class="hrBdr"> 
+                          <div class="container">
+                            <div class="row">
+                            <div class="col-sm-12">
+                              <button class="delete-box"
+                              (click)="delete('immovablePropertryDetails', 'formArray', 5)">
+                              <i class="fa fa-trash" aria-hidden="true"></i> Delete All Data
+                            </button>
+                            </div>                              
+                            </div>
+                            </div>
                         </div>
                         <!-- <button class="delete-btn" style="width: 15%; margin: 10px" (click)="
                             delete('immovablePropertryDetails', 'formArray', 5)
@@ -1291,6 +1301,11 @@
                     <div class="accordion__item-body">
                       <form formArrayName="capitalAssetsDetails" style="padding: 20px">
                         
+                            <div class="col-sm-12">
+                              <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('capitalAssetsDetails')">
+                                Add More
+                              </button>
+                            </div>
                         <div class="" *ngFor="
                             let capitalAssetsDetails of getCapitalAssetsDetails.controls;
                             let i = index
@@ -1298,11 +1313,6 @@
 
                           <div class="container">
                             <div class="row">
-                            <div class="col-sm-12">
-                              <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('capitalAssetsDetails')">
-                                Add More
-                              </button>
-                            </div>
                             <div class="col-sm-1 p-3">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                               type="checkbox" (click)="$event.stopPropagation()"
@@ -1502,6 +1512,12 @@
                   <div id="collapse8" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <form formArrayName="signingAuthorityDetails" style="padding: 20px">
+                              <div class="col-sm-12">
+                                <button class="btn btn__default btn__add pull-right btnRght"
+                                (click)="addMore('signingAuthorityDetails')">
+                                Add More
+                              </button>
+                              </div>
                         <div *ngFor="
                             let signingAuthorityDetails of getSigningAuthorityDetails?.controls;
                             let i = index
@@ -1510,12 +1526,6 @@
                             
                             <div class="container">
                               <div class="row">
-                              <div class="col-sm-12">
-                                <button class="btn btn__default btn__add pull-right btnRght"
-                                (click)="addMore('signingAuthorityDetails')">
-                                Add More
-                              </button>
-                              </div>
                               <div class="col-sm-1 p-3">
                                 <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                 type="checkbox" (click)="$event.stopPropagation()"
@@ -1585,6 +1595,11 @@
                      
                           
                           <div formArrayName="account">
+                            <div class="col-sm-12">
+                              <button class="btn btn__default btn__add pull-right btnRght" (click)="add('signingAuthorityDetails', i)">
+                                Add
+                              </button>
+                            </div>
                             <div *ngFor="
                                 let accountCtrl of getSigningAuthAccountControls(
                                   i
@@ -1594,11 +1609,6 @@
 
                               <div class="container">
                                 <div class="row">
-                                  <div class="col-sm-12">
-                                    <button class="btn btn__default btn__add pull-right btnRght" (click)="add('signingAuthorityDetails', i)">
-                                      Add
-                                    </button>
-                                  </div>
                                   <div class="col-sm-1 p-3">
                                     <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                     type="checkbox" (click)="$event.stopPropagation()"
@@ -1772,18 +1782,17 @@
                   <div id="collapse9" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <form formArrayName="trustsDetails" style="padding: 20px">
-                        
+                        <div class="col-sm-12">
+                          <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('trustsDetails')">
+                            Add More
+                          </button>
+                        </div>
                         <div *ngFor="
                             let trustsDetails of getTrustsDetails.controls;
                             let i = index
                           " [formGroupName]="i">
                           <div class="container">
                             <div class="row">
-                            <div class="col-sm-12">
-                              <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('trustsDetails')">
-                                Add More
-                              </button>
-                            </div>
                             <div class="col-sm-1 p-3">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                 type="checkbox" (click)="$event.stopPropagation()"
@@ -2047,6 +2056,11 @@
                   <div id="collapse10" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       
+                            <div class="col-sm-12">
+                              <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('otherIncomeDetails')">
+                                Add More
+                              </button>
+                            </div>
                       <form formArrayName="otherIncomeDetails" style="padding: 20px">
                         <div *ngFor="
                             let otherIncomeDetails of getOtherIncomeDetails.controls;
@@ -2055,11 +2069,6 @@
                            
                           <div class="container">
                             <div class="row">
-                            <div class="col-sm-12">
-                              <button class="btn btn__default btn__add pull-right btnRght" (click)="addMore('otherIncomeDetails')">
-                                Add More
-                              </button>
-                            </div>
                             <div class="col-sm-1 p-3">
                               <input class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
                                 type="checkbox" (click)="$event.stopPropagation()"
