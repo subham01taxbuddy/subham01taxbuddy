@@ -40,3 +40,38 @@ td.mat-cell {
   border: none !important;
   padding: 0 !important;
 }
+
+
+.percentage-head {
+  position: absolute;
+  right: 0px;
+  width: 25%;
+  min-height: 25px;
+  // background-color: #CEE5FF;
+  background-color: white;
+  top: 2px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-color: var(--gray-200) !important;
+  border-style: solid !important;
+  border-width: 0 !important;
+
+  .percentage {
+    // background-color: #2D8EF9;
+    // style="z-index: 1; font-size: 11px; font-weight: 700;"
+    z-index: 1;
+    font-size: 11px;
+    font-weight: 700;
+  }
+}
+
+.page-wrapper {
+  min-height: 0 !important;
+}
+
+.bar {
+  display: block;
+  position: absolute;
+  height: 25px;
+}
