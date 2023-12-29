@@ -22,6 +22,7 @@ import { TdsReportComponent } from './tds-report/tds-report.component';
 import { MissedInboundCallListComponent } from './missed-inbound-call-list/missed-inbound-call-list.component';
 import { MissedChatListComponent } from './missed-chat-list/missed-chat-list.component';
 import { DailySignUpReportComponent } from './daily-sign-up-report/daily-sign-up-report.component';
+import { CustomerSignUpComponent } from './customer-sign-up/customer-sign-up.component';
 
 @NgModule({
   imports: [
@@ -51,6 +52,7 @@ import { DailySignUpReportComponent } from './daily-sign-up-report/daily-sign-up
     MissedInboundCallListComponent,
     MissedChatListComponent,
     DailySignUpReportComponent,
+    CustomerSignUpComponent,
   ],
   entryComponents: [
     ReportsComponent,
