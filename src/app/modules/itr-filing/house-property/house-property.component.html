@@ -17,9 +17,11 @@
         <div class="div-2">
           <div class="div-3">
             <div class="contents-wrapper">
-              <div class="contents" *ngFor="let house of Copy_ITR_JSON.houseProperties; let i = index">
-                <div class="field-text" (click)="editHouseProperty(i)">House Property {{ i+1 }}</div>
-                <div class="group" (click)="deleteHousingIncome(i)"><img class="material-symbols" src="assets/img/new/del.png" /></div>
+              <div [ngClass]="i === currentIndex ? 'contents-selected' : 'contents'" *ngFor="let house of Copy_ITR_JSON.houseProperties; let i = index">
+                <div [ngClass]="i === currentIndex ? 'field-text-selected' :'field-text'" (click)="editHouseProperty(i)">House Property {{ i+1 }}</div>
+                <div class="group" (click)="deleteHousingIncome(i)">
+                  <i class="fa fa-trash-o delbt" [ngClass]="i === currentIndex ? 'field-text-selected' :'field-text'"></i>
+                </div>
               </div>
             </div>
             <div class="contents-wrapper">
