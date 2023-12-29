@@ -144,25 +144,31 @@ export class CreateNewUserComponent implements OnInit {
 
   fromSme(event, item) {
     if (item === 1) {
-      this.leaderName = event ? event.name : null;
-      this.leaderId = event ? event.userId : null;
-      if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.leaderId) {
-        this.assignedToMe = false;
-        this.getSmeInfoDetails(this.leaderId);
+      if(event && Object.keys(event).length > 0){
+        this.leaderName = event ? event.name : null;
+        this.leaderId = event ? event.userId : null;
+        if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.leaderId) {
+          this.assignedToMe = false;
+          this.getSmeInfoDetails(this.leaderId);
+        }
       }
     } else if (item === 2) {
-      this.partnerType = event.partnerType;
-      this.filerId = event ? event.userId : null;
-      this.filerName = event ? event.name : null;
-      if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.filerId) {
-        this.getSmeInfoDetails(this.filerId);
+      if(event && Object.keys(event).length > 0){
+        this.partnerType = event.partnerType;
+        this.filerId = event ? event.userId : null;
+        this.filerName = event ? event.name : null;
+        if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.filerId) {
+          this.getSmeInfoDetails(this.filerId);
+        }
       }
     } else if (item === 3) {
-      this.partnerType = event.partnerType;
-      this.filerId = event ? event.userId : null;
-      this.filerName = event ? event.name : null;
-      if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.filerId) {
-        this.getSmeInfoDetails(this.filerId);
+      if(event && Object.keys(event).length > 0){
+        this.partnerType = event.partnerType;
+        this.filerId = event ? event.userId : null;
+        this.filerName = event ? event.name : null;
+        if (this.loggedInUserRoles.includes('ROLE_ADMIN') && this.filerId) {
+          this.getSmeInfoDetails(this.filerId);
+        }
       }
     }
     if (this.filerId) {
@@ -263,10 +269,12 @@ export class CreateNewUserComponent implements OnInit {
     } else if (this.loggedInUserRoles.includes('ROLE_FILER')) {
       param = param + `&filerUserId=${this.loggedInId}`;
     } else if (this.loggedInUserRoles.includes('ROLE_ADMIN')) {
-      if (this.filerId) {
-        param = param + `&filerUserId=${this.filerId}`;
-      } else if (this.leaderId) {
+      if(this.leaderId && !this.filerId){
         param = param + `&leaderUserId=${this.leaderId}`;
+      }else if (this.leaderId && this.filerId){
+        param = param + `&leaderUserId=${this.leaderId}&filerUserId=${this.filerId}`
+      }else if(this.filerId && !this.leaderId){
+        param = param + `&filerUserId=${this.filerId}`
       }
     }
     this.userService.getMethod(param).subscribe((res: any) => {
