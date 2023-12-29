@@ -19,7 +19,7 @@ font-weight: bold;">Update ITR-U Filing Details for : {{data.name}}</label>
 </div>
 
 <div *ngIf="showDetails">
-  <div class="card__row" >
+  <div class="card__row">
     <div class="card__col-xs-12">
       <span>User Name: {{ data.name }}</span><br>
       <span>User PAN: {{ this.userProfile?.panNumber }}</span><br>
@@ -47,27 +47,26 @@ font-weight: bold;">Update ITR-U Filing Details for : {{data.name}}</label>
     </div>
     <div class="card__col-xs-12 card__col-sm-4">
       <mat-form-field appearance="outline" class="class1">
-          <mat-label>Ack Number</mat-label>
-          <input matInput placeholder="Ack Number" name="ackNumber" [formControl]="ackNumber" class="input-field"
-              required (blur)="setFilingDate()" maxlength="15" minlength="15">
-          <mat-error *ngIf="ackNumber.hasError('minlength')">Enter 15 digit valid ack number</mat-error>
-          <mat-error *ngIf="ackNumber.hasError('pattern')">Please enter only numbers</mat-error>
+        <mat-label>Ack Number</mat-label>
+        <input matInput placeholder="Ack Number" name="ackNumber" [formControl]="ackNumber" class="input-field" required
+          (blur)="setFilingDate()" maxlength="15" minlength="15">
+        <mat-error *ngIf="ackNumber.hasError('minlength')">Enter 15 digit valid ack number</mat-error>
+        <mat-error *ngIf="ackNumber.hasError('pattern')">Please enter only numbers</mat-error>
       </mat-form-field>
     </div>
     <div class="card__col-xs-12 card__col-sm-4">
       <mat-form-field appearance="outline" class="class1">
-          <mat-label>E-Filing Date</mat-label>
-          <input matInput [max]="maxDate" [matDatepicker]="picker" class="input-field" placeholder="E-Filing Date"
-              name="e-filling-date" [formControl]="eFillingDate" required>
-          <mat-hint>Format: DD/MM/YYYY</mat-hint>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+        <mat-label>E-Filing Date</mat-label>
+        <input matInput readonly [max]="maxDate" [matDatepicker]="picker" class="input-field"
+          placeholder="E-Filing Date" name="e-filling-date" [formControl]="eFillingDate" required>
+        <mat-hint>Format: DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle disabled matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
     </div>
 
   </div>
   <div class="footer__buttons clearfix" style="margin-top: 25px;">
-    <button class="tbd-btn" (click)="updateItrUDetails()">Update</button>
+    <button class="tbd-btn" [disabled]="eFillingDate.status!='VALID'" (click)="updateItrUDetails()">Update</button>
   </div>
 </div>
-
