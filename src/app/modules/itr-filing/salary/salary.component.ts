@@ -326,6 +326,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
     if (this.currentIndex >= 0) {
       this.editEmployerDetails(this.currentIndex);
+    } else {
+      this.markActive(-1);
     }
   }
 
@@ -343,7 +345,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
   }
 
   markActive(index){
-    if(this.currentIndex > 0 && this.currentIndex > this.ITR_JSON.employers.length){
+    if(this.currentIndex >= 0 && this.currentIndex >= this.ITR_JSON.employers.length){
       this.saveEmployerDetails(false);
     }
     if(index === -1) {
@@ -1099,7 +1101,7 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
   saveEmployerDetails(apiCall: boolean) {
     this.validations();
-    if (this.employerDetailsFormGroup?.valid && this.allowanceFormGroup?.valid) {
+    if ((this.employerDetailsFormGroup?.valid && this.allowanceFormGroup?.valid && apiCall) || !apiCall) {
       this.checkGrossSalary();
 
       this.localEmployer.address =
@@ -1469,6 +1471,8 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
 
       if(apiCall) {
         this.serviceCall();
+      } else {
+        this.Copy_ITR_JSON.employers[this.currentIndex] = this.localEmployer;
       }
     } else {
       $('input.ng-invalid').first().focus();
