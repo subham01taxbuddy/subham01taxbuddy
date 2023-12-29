@@ -129,6 +129,13 @@
                                       <input formControlName="minimumPresumptiveIncome" matInput
                                         name="minimumPresumptiveIncome[i]" class="input-field" required digitsOnly
                                         readonly />
+                                      <div class="percentage-head" style="width: 50px;">
+                                        <span class="percentage">
+                                          50% </span>
+                                        <div class="bar"
+                                          [ngStyle]="{'width': minGrossIncome+'px','background-color': '#2D8EF9'}">
+                                        </div>
+                                      </div>
                                     </mat-form-field>
                                     <mat-error *ngIf="
                                           (profIncomeFormArray.controls[i].get(
@@ -143,19 +150,11 @@
                                 </div>
                                 <div class="pre-box">
                                   <div class="lndBldg-L">Presumptive income <span>
-                                    <ng-container
-                                        *ngFor="let percentage of percentage; let id = index">
+                                      <ng-container *ngFor="let percentage of percentage; let id = index">
                                         <ng-container *ngIf="id === i">
-                                          ({{
-                                          percentage?.natOfBusiness ===
-                                          profIncomeFormArray?.controls[i]?.get(
-                                          "natureOfBusiness"
-                                          )?.value
-                                          ? percentage?.percentage
-                                          ? percentage?.percentage
-                                          : 0
-                                          : 0
-                                          }}%)
+                                          ({{ percentage?.natOfBusiness === profIncomeFormArray?.controls[i]?.get(
+                                          "natureOfBusiness" )?.value ? percentage?.percentage ? percentage?.percentage
+                                          : 0 : 0 }}%)
                                         </ng-container>
                                       </ng-container></span><span class="redAst">*</span>
                                   </div>
@@ -164,6 +163,17 @@
                                       <input formControlName="presumptiveIncome" placeholder="₹ Enter Amount" matInput
                                         name="presumptiveIncome[i]" class="input-field" required digitsOnly
                                         (change)="calculatePresumptive($event, i)" />
+
+                                      <div class="percentage-head" style="width: 50px;"
+                                        *ngFor="let percentage of percentage; let id = index">
+                                        <span class="percentage" *ngIf="id === i">
+                                          {{ percentage?.natOfBusiness === profIncomeFormArray?.controls[i]?.get(
+                                          "natureOfBusiness" )?.value ? percentage?.percentage ? percentage?.percentage
+                                          : 0 : 0 }}% </span>
+                                        <div class="bar" [ngStyle]="{'width':  (50/100)* (percentage?.natOfBusiness === profIncomeFormArray?.controls[i]?.get('natureOfBusiness')?.value ? percentage?.percentage ?
+                                          percentage?.percentage : 0 : 0)  +'px','background-color': '#2D8EF9' }">
+                                        </div>
+                                      </div>
                                     </mat-form-field>
                                     <mat-error *ngIf="
                       (profIncomeFormArray.controls[i].get('presumptiveIncome')
