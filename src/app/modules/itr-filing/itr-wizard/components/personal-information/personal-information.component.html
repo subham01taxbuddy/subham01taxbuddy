@@ -6,12 +6,12 @@
 <form [formGroup]="customerProfileForm">
   <div class="accordion-item">
     <h2 class="accordion-header" id="heading2">
-      <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" aria-expanded="false"
+      <button id="perDetailsId" type="button" class="accordion-button collapsed" data-bs-toggle="collapse" aria-expanded="false"
               aria-controls="collapse2"
               data-bs-target="#collapse2">Personal Details</button>
 
     </h2>
-    <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#myAccordion" aria-labelledby="collapse2">
+    <div id="collapse2" class="accordion-collapse collapse"  aria-labelledby="collapse2">
       <div class="accordion__item-body divider_border" formGroupName="address">
         <h3>Address Details</h3>
         <div class="div-6">
@@ -380,7 +380,7 @@
                     <div style="width: 75%">
                       <mat-form-field appearance="outline">
                         <mat-label>Nature*</mat-label>
-                        <mat-select 
+                        <mat-select
                                 placeholder="Nature"
                                 name="nature[i]"
                                 formControlName="nature"
@@ -523,11 +523,11 @@
 
   <div class="accordion-item">
     <h2 class="accordion-header" id="heading2">
-      <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" aria-expanded="false"
+      <button id="bankButtonId" type="button" class="accordion-button collapsed" data-bs-toggle="collapse" aria-expanded="false"
               aria-controls="collapseB" data-bs-target="#collapseB">Bank Details</button>
 
     </h2>
-    <div id="collapseB" class="accordion-collapse collapse" data-bs-parent="#myAccordion" aria-labelledby="collapseB">
+    <div id="collapseB" class="accordion-collapse collapse"  aria-labelledby="collapseB">
       <div class="accordion__item-body" formArrayName="bankDetails">
         <div class="div-11 mb-20">
           <h3>Bank Details</h3>
