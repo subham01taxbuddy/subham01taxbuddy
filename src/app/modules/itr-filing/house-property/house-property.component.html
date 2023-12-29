@@ -253,7 +253,7 @@
                             <div class="hplft">Interest paid on housing loan * <br><span class="subTx">(If amount is more than 2Lakh, additional deduction is available u/s 80EE/80EEA)</span></div>
                             <div class="hprgt">
                               <div
-                                      *ngIf="housePropertyForm.get('interestAmount').value > 200000"
+                                      *ngIf="enableOnOverAllValue()"
                                       style="padding-top: 20px">
                                 <mat-radio-group
                                         [formControl]="housePropertyForm.get('isEligibleFor80EE') | formControlType"
@@ -282,7 +282,7 @@
                                             style="margin: 0"
                                             [value]="'80EEA'"
                                             class="right-mrgn"
-                                            [disabled]="EAStatus  || jsonAmt80ee > 150000">Deduction in respect of interest on loan taken
+                                            [disabled]="EAStatus  || jsonAmt80eea > 150000">Deduction in respect of interest on loan taken
                                       for certain house property
                                       (80EEA)
                                     </mat-radio-button>
