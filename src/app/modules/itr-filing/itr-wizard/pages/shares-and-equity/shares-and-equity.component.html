@@ -385,7 +385,7 @@
                 <mat-form-field appearance="outline">
                   <input
                           matInput
-                          [max]="maxPurchaseDate"
+                          [max]="selectedFormGroup.get('sellDate').value"
                           formControlName="purchaseDate"
                           name="purchaseDate"
                           [matDatepicker]="purchaseDate"

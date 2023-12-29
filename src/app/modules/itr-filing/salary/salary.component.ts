@@ -599,9 +599,9 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
       label = this.allowanceDropdown.filter(element => element.value === allowance.allowanceType)[0]?.label;
     }
     const formGroup = this.fb.group({
-      label: [label],
-      allowType: [allowance? allowance.allowanceType : this.allowanceDropdown[1].value],
-      allowValue: [allowance ? allowance.exemptAmount : null],
+      label: [],
+      allowType: [],
+      allowValue: [],
     });
     exemptIncomesFormArray.push(formGroup);
   }
