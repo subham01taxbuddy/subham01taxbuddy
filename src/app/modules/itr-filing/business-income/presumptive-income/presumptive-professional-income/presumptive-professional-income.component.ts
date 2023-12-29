@@ -45,6 +45,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   submitted = false;
   @Output() presProfessionalSaved = new EventEmitter<boolean>();
   percentage: any[] = [];
+  minGrossIncome = (50 / 100) * 50;
 
   constructor(
     public matDialog: MatDialog,
