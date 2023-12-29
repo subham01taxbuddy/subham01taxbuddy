@@ -1057,6 +1057,7 @@ export interface NewExpenses {
 export interface NewFinancialParticulars {
   id: Number;
   membersOwnCapital: any;
+  reservesAndSurplus?:any;
   securedLoans: any;
   unSecuredLoans: any;
   totalLoans?: any;
@@ -1075,6 +1076,8 @@ export interface NewFinancialParticulars {
   cashInHand: Number;
   loanAndAdvances: any;
   investment: any;
+  longTermInvestment?:any;
+  shortTermInvestment?:any;
   totalCurrentAssets?: Number;
   otherAssets: any;
   totalAssets: any;
