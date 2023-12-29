@@ -152,7 +152,7 @@ export class HousePropertyComponent implements OnInit {
   }
 
   markActive(index) {
-    if (this.currentIndex > 0) {
+    if (this.currentIndex >= 0 && this.currentIndex >= this.ITR_JSON.houseProperties.length) {
       this.saveHpDetails(false);
     }
     if (index === -1) {
@@ -641,7 +641,7 @@ export class HousePropertyComponent implements OnInit {
     this.hpView = 'FORM';
     this.mode = 'UPDATE';
     this.housePropertyForm = this.createHousePropertyForm();
-    let itrJsonHp = this.ITR_JSON.houseProperties[index];
+    let itrJsonHp = this.Copy_ITR_JSON.houseProperties[index];
     this.housePropertyForm.patchValue(itrJsonHp);
     this.housePropertyForm.controls['country'].setValue('91');
     this.housePropertyForm.controls['principalAmount'].setValue(
@@ -944,12 +944,12 @@ export class HousePropertyComponent implements OnInit {
   }
 
   saveHpDetails(apiCall: boolean) {
-    this.Copy_ITR_JSON = JSON.parse(
-      sessionStorage.getItem(AppConstants.ITR_JSON)
-    );
+    // this.Copy_ITR_JSON = JSON.parse(
+    //   sessionStorage.getItem(AppConstants.ITR_JSON)
+    // );
 
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
-    if (this.housePropertyForm.valid) {
+    if ((this.housePropertyForm.valid && apiCall) || !apiCall) {
       let hp: HouseProperties = this.housePropertyForm.getRawValue();
       if (
         this.housePropertyForm.controls['isEligibleFor80EE'].value === '80EE'
@@ -966,13 +966,16 @@ export class HousePropertyComponent implements OnInit {
         hp.isEligibleFor80EEA = false;
       }
 
-      this.Copy_ITR_JSON.houseProperties = [];
-      this.Copy_ITR_JSON.houseProperties.push(hp);
+      // this.Copy_ITR_JSON.houseProperties = [];
+      // this.Copy_ITR_JSON.houseProperties.push(hp);
+      this.Copy_ITR_JSON.houseProperties[this.currentIndex] = hp;
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = true;
       // this.ITR_JSON = JSON.parse(JSON.stringify(this.Copy_ITR_JSON));
       // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       if (apiCall) {
         this.serviceCall(this.Copy_ITR_JSON, 'SAVE');
+      } else {
+        this.Copy_ITR_JSON.houseProperties[this.currentIndex] = hp;
       }
     } else {
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
