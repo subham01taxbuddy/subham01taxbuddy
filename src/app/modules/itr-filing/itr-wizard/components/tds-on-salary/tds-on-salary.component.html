@@ -8,9 +8,11 @@
   <div class="div-3" *ngFor="let salary of getSalaryArray.controls; let i = index">
     <!--      <div>-->
     <div class="contents-wrapper">
-      <div class="contents delBox">
-        <div class="field-text" (click)="markActive(i)">Entry {{i+1}}</div>
-        <div class="group" (click)="deleteSalaryArray(i)"><img class="material-symbols" src="assets/img/new/del.png" /></div>
+      <div [ngClass]="i === activeIndex ? 'contents-selected' : 'contents'">
+        <div [ngClass]="i === activeIndex ? 'field-text-selected' :'field-text'" (click)="markActive(i)">Entry {{i+1}}</div>
+        <div class="group" (click)="deleteSalaryArray(i)">
+          <i class="fa fa-trash-o delbt" [ngClass]="i === activeIndex ? 'field-text-selected' :'field-text'"></i>
+        </div>
       </div>
     </div>      
   </div>
