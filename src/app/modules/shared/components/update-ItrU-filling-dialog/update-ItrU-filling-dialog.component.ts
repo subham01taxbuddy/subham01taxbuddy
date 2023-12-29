@@ -10,6 +10,7 @@ import { AppConstants } from '../../constants';
 import { ApiEndpoints } from '../../api-endpoint';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import * as moment from 'moment';
 
 export const MY_FORMATS = {
   parse: {
@@ -113,6 +114,12 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   }
 
   updateItrUDetails() {
+    const assessmentYearLastTwoDigits = this.data.assessmentYear.substr(2, 2);//2023-2024 //23
+    const ackNumberLastTwoDigits = this.ackNumber.value.substr(-2);//23 or 24
+    if ((ackNumberLastTwoDigits !== '24' && ackNumberLastTwoDigits !== '23')) {
+      this.utilsService.showSnackBar(`Ack Number must end with '23' or '24' for the Year ${this.data.assessmentYear}`);
+      return;
+    }
     if (this.eFillingDate.valid && this.ackNumber.valid) {
       this.loading = true;
       let itrType = `ITRU-${this.itrType.value}`;
@@ -158,6 +165,7 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   }
 
   setFilingDate() {
+    let today = moment().startOf('day').valueOf();
     var id = this.ackNumber.value;
     var lastSix = id.substr(id.length - 6);
     var day = lastSix.slice(0, 2);
@@ -165,6 +173,17 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
     var year = lastSix.slice(4, 6);
     let dateString = `20${year}-${month}-${day}`;
     console.log(dateString, year, month, day)
-    this.eFillingDate.setValue(dateString);
+    let efillingDateTime = moment(dateString, "YYYY-MM-DD").startOf('day').valueOf();
+    if (efillingDateTime > today) {
+      this.eFillingDate.setValue(null);
+      this.utilsService.showSnackBar('Please enter the valid acknowledgement number. Last 6 digit of acknowledgement number should not be after todays date in (dd/mm/yy) format');
+      return
+    } {
+      this.eFillingDate.setValue(dateString);
+      if (this.eFillingDate.status != 'VALID') {
+        this.utilsService.showSnackBar('Please enter the valid acknowledgement number. Last 6 digit of acknowledgement number should not be after todays date in (dd/mm/yy) format');
+      }
+    }
+
   }
 }

@@ -231,12 +231,12 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
     let efillingDateTime = moment(dateString, "YYYY-MM-DD").startOf('day').valueOf();
     if (efillingDateTime > today) {
       this.eFillingDate.setValue(null);
-      this.utilsService.showSnackBar('Please enter the valid acknowledgement number');
+      this.utilsService.showSnackBar('Please enter the valid acknowledgement number. Last 6 digit of acknowledgement number should not be after todays date in (dd/mm/yy) format');
       return
     } {
       this.eFillingDate.setValue(dateString);
       if (this.eFillingDate.status != 'VALID') {
-        this.utilsService.showSnackBar('Please enter the valid acknowledgement number');
+        this.utilsService.showSnackBar('Please enter the valid acknowledgement number. Last 6 digit of acknowledgement number should not be after todays date in (dd/mm/yy) format');
       }
     }
 
