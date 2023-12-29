@@ -224,6 +224,29 @@
                             />
                           </div>
                           <div class="form-field">
+                            <div><span class="normal_text">Year of improvement
+                                                                              </span>
+                              <span class="text-wrapper-2">*</span>
+                            </div>
+                            <div class="form-control-wrapper select_arrow">
+                              <mat-form-field
+                                      class="input-field-width"
+                                      appearance="outline">
+                                <mat-select
+                                        placeholder="Year of Improvement"
+                                        formControlName="financialYearOfImprovement"
+                                        (blur)="calculateCoiIndexation(this.assetsForm?.controls['gainType'].value)"
+                                        required>
+                                  <mat-option
+                                          [value]="year"
+                                          *ngFor="let year of improvementYears">
+                                    {{ year }}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="form-field">
                             <div><span class="normal_text">Cost of improvement
                                                                               </span>
                               <span class="text-wrapper-2">*</span>
@@ -248,29 +271,7 @@
                               />
                             </mat-form-field>
                           </div>
-                          <div class="form-field">
-                            <div><span class="normal_text">Year of improvement
-                                                                              </span>
-                              <span class="text-wrapper-2">*</span>
-                            </div>
-                            <div class="form-control-wrapper select_arrow">
-                              <mat-form-field
-                                      class="input-field-width"
-                                      appearance="outline">
-                                <mat-select
-                                        placeholder="Year of Improvement"
-                                        formControlName="financialYearOfImprovement"
-                                        (blur)="calculateCoiIndexation(this.assetsForm?.controls['gainType'].value)"
-                                        required>
-                                  <mat-option
-                                          [value]="year"
-                                          *ngFor="let year of improvementYears">
-                                    {{ year }}
-                                  </mat-option>
-                                </mat-select>
-                              </mat-form-field>
-                            </div>
-                          </div>
+                          
                           <div class="form-field">
                             <div><span class="normal_text">Index cost of improvement
                                                                               </span>

@@ -6,8 +6,7 @@
 <div class="frameC">
   <h1 class="heading__title">Deductions</h1>
   <div class="space">
-    <div class="wrapper">
-      <div class="div-4">
+ 
         <div class="frame-wrapper-2A">
           <div class="accordion" id="myAccordion">
 
@@ -205,12 +204,14 @@
               </div>
             </div>
 
-            <app-other-deductions #otherDeductionsRef></app-other-deductions>
+            <app-other-deductions #otherDeductionsRef
+                                  (ded80TTA)="setValue('us80tta', $event)"
+                                  (ded80TTB)="setValue('us80ttb', $event)">
+            </app-other-deductions>
 
           </div>
         </div>
-      </div>
-
+     
 
       <div class="out-box">
         <div class="box-left">
@@ -220,6 +221,6 @@
           <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
         </div>
       </div>
-    </div>
+   
   </div>
 </div>
