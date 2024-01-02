@@ -47,9 +47,9 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
   });
   sortBy: any = {};
   sortMenus = [
-    { value: 'userName', name: 'Name' },
     { value: 'cancellationRequestDate', name: 'Request Date' },
-    { value: 'payableSubscriptionAmount', name: 'Amount to be approved / refunded' },
+    // { value: 'userName', name: 'Name' },
+    // { value: 'payableSubscriptionAmount', name: 'Amount to be approved / refunded' },
   ];
   get mobile() {
     return this.invoiceFormGroup.controls['mobile'] as FormControl;

@@ -64,7 +64,9 @@ export class ItrAssignedUsersComponent implements OnInit {
   sortBy: any = {};
   sortMenus = [
     { value: 'name', name: 'Name' },
-    { value: 'createdDate', name: 'Creation Date' }
+    { value: 'createdDate', name: 'Creation Date' },
+    {value: 'statusUpdatedDate', name: 'Status Updated Date'},
+    {value: 'userId', name: 'User Id '}
   ];
   searchBy: any = {};
   searchMenus = [];
