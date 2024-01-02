@@ -55,12 +55,14 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
   dialogRef: any;
   sortBy: any = {};
   sortMenus = [
-    { value: 'name', name: 'Name' },
-    { value: 'refundRequestType', name: 'Request Type' },
-    { value: 'serviceType', name: 'Service Type' },
-    { value: 'invoiceAmount', name: 'Invoice amount' },
-    { value: 'payableRefundAmount', name: 'Amount to refund' },
-    { value: 'refundPaidAmount', name: 'Amount Paid Updates' },
+    { value: 'requestCreatedDate', name: 'Request Date' },
+    { value: 'invoiceNo', name: 'Invoice number ' },
+    // { value: 'name', name: 'Name' },
+    // { value: 'refundRequestType', name: 'Request Type' },
+    // { value: 'serviceType', name: 'Service Type' },
+    // { value: 'invoiceAmount', name: 'Invoice amount' },
+    // { value: 'payableRefundAmount', name: 'Amount to refund' },
+    // { value: 'refundPaidAmount', name: 'Amount Paid Updates' },
   ];
   Type: any = [
     { label: 'Cancel', value: 'CANCEL' },

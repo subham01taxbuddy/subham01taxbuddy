@@ -31,8 +31,8 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
   sortBy: any = {};
   sortMenus = [
     { value: 'name', name: 'Name' },
-    { value: 'roles', name: 'Roles' },
-    { value: 'parentName', name: 'Parent Name' },
+    // { value: 'roles', name: 'Roles' },
+    // { value: 'parentName', name: 'Parent Name' },
   ];
 
   searchBy: any = {};

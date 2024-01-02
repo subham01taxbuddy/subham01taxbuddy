@@ -59,9 +59,9 @@ export class AssignedSmeComponent implements OnInit, OnDestroy {
   showCsvMessage: boolean;
   sortBy: any = {};
   sortMenus = [
-    { value: 'name', name: 'Name' },
     { value: 'roles', name: 'Roles' },
-    { value: 'parentName', name: 'Parent Name' },
+    // { value: 'name', name: 'Name' },
+    // { value: 'parentName', name: 'Parent Name' },
   ];
   selectRoleFilter = [
     { value: '&roles=ROLE_LEADER&internal=true', name: 'Leader- Internal' },
