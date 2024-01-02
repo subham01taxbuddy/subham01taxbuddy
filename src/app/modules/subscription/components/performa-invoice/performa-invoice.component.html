@@ -61,7 +61,7 @@
 
             <div class="col-sm-3">
               <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
-                [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
+                [(ngModel)]="searchParam.serviceType" [fromInvoices]="true"></app-service-drop-down>
             </div>
 
             <div class="col-sm-9 ">
