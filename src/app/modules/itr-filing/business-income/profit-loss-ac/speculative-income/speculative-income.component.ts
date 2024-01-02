@@ -169,7 +169,7 @@ export class SpeculativeIncomeComponent implements OnInit {
     let specBusiness = this.ITR_JSON.business?.profitLossACIncomes?.filter(
       (acIncome) => acIncome?.businessType === 'SPECULATIVEINCOME'
     );
-    if (this.specIncomeForm.valid) {
+    if (this.specIncomeForm.valid || !this.specIncomeForm.controls['specIncomesArray']['controls'].length) {
       let specBusinessIncome = {
         id: null,
         businessType: 'SPECULATIVEINCOME',
