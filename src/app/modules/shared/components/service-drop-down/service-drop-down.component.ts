@@ -50,6 +50,10 @@ export class ServiceDropDownComponent implements OnInit {
           label: 'ACADEMY',
           value: 'ACADEMY',
         },
+        {
+          label: 'OTHER',
+          value: 'OTHER',
+        },
       ]
     }else{
       this.serviceTypes =[
