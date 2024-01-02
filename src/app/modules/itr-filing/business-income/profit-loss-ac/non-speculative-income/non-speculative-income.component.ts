@@ -316,7 +316,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   onContinue() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-    if (this.profitLossForm.valid && this.natOfBusinessDtlForm.valid) {
+    if (this.profitLossForm.valid) {
       this.calculateNetProfit();
       const row = this.profitLossForm.getRawValue();
       const profitLossACIncomes = [];
@@ -346,7 +346,10 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         this.Copy_ITR_JSON.business.profitLossACIncomes =
           data.concat(profitLossACIncomes);
       }
-      this.Copy_ITR_JSON.business.businessDescription = this.natOfBusinessDtlsArray.value;
+
+      if (this.natOfBusinessDtlForm.valid) {
+        this.Copy_ITR_JSON.business.businessDescription = this.natOfBusinessDtlsArray.value;
+      }
       console.log(this.Copy_ITR_JSON);
       sessionStorage.setItem(
         AppConstants.ITR_JSON,
