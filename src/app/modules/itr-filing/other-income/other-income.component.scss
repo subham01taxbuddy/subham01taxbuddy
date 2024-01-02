@@ -93,3 +93,27 @@
   position: relative;
   flex: 0 0 auto;
 }
+
+.form-control {
+  min-height:0px!important;
+  background-color:#fafafa!important;
+}
+
+.input-field{
+  padding-left: 10px!important;
+}
+
+.note2 {
+  background-color: #fafafa;
+  padding: 10px;
+  width: 650px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-style: italic;
+  border: 1px solid #efefef;
+  color: #b60000;
+  min-width: 180px;
+  margin-top: 10px;
+  margin-left: 10px;
+  line-height:1.5;
+}
