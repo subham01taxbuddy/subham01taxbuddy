@@ -30,7 +30,7 @@ export class ResignedSmeComponent implements OnInit, OnDestroy {
   };
   sortBy: any = {};
   sortMenus = [
-    { value: 'name', name: 'Name' },
+    { value: 'resigningDate', name: 'Resigned Date ' },
     // { value: 'roles', name: 'Roles' },
     // { value: 'parentName', name: 'Parent Name' },
   ];
