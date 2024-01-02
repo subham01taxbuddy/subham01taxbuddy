@@ -12,45 +12,45 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div class="row">
-            <div class="col-sm-12">
-              <div class="filter-box">
-                <div class="row">
-                  <div class="col-sm-12 bckClr">
-                    <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
-                      (sendPrincipleIndividual)="fromSme($event, false, true)"
-                      (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-                  </div>
-                  <div class="col-sm-4 spsTp">
-                    <mat-label> Select FY </mat-label>
-                    <mat-form-field appearance="outline" class="custom-bg-new">
-                      <input type="text" matInput [formControl]="assessmentYear" readonly>
-                    </mat-form-field>
-                  </div>
-                  <div class="col-sm-4 dtTp">
-                    <mat-form-field appearance="outline" class="class1 custom-bg-new">
-                      <mat-label>From Date</mat-label>
-                      <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate"
-                        [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()">
-                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                      <mat-datepicker #picker1></mat-datepicker>
-                      <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
-                    </mat-form-field>
-                  </div>
-                  <div class="col-sm-4 dtTp">
-                    <mat-form-field appearance="outline" class="class1 custom-bg-new">
-                      <mat-label>To Date</mat-label>
-                      <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="toDateMin" [max]="maxEndDate"
-                        autocomplete="off">
-                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                      <mat-datepicker #picker2></mat-datepicker>
-                      <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
-                      <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
-                    </mat-form-field>
-                  </div>
-                  <div class="col-sm-3">
-                    <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
-                      [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
-                  </div>
+            <div class="col-sm-12 bckClr">
+              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                (sendPrincipleIndividual)="fromSme($event,false, true)"
+                (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+            </div>
+            <div class="col-sm-4 spsTp">
+              <mat-label> Select FY </mat-label>
+              <mat-form-field appearance="outline">
+                <input type="text" matInput [formControl]="assessmentYear" readonly>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4 dtTp">
+              <mat-form-field appearance="outline" class="class1">
+                <mat-label>From Date</mat-label>
+                <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate" [max]="maxStartDate"
+                  autocomplete="off" (dateChange)="setToDateValidation()">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error *ngIf="startDate.hasError('required')">Select From
+                  date</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-4 dtTp">
+              <mat-form-field appearance="outline" class="class1">
+                <mat-label>To Date</mat-label>
+                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxEndDate"
+                  autocomplete="off" (dateChange)="setToDateValidation()">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <mat-error *ngIf="endDate.hasError('required')">Select To
+                  date</mat-error>
+                <mat-error *ngIf="endDate.hasError('min')">To date always greater
+                  than from date</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-3">
+              <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+                [(ngModel)]="searchParam.serviceType" [fromInvoices]="true"></app-service-drop-down>
+            </div>
 
                   <div class="col-sm-9 ">
                     <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
@@ -120,4 +120,12 @@
       <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
     </div>
   </div>
+
+  <table>
+    <tr *ngFor="let item of invoiceInfo | paginate : config"></tr>
+  </table>
+  <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="invoiceListGridOptions"
+    (rowClicked)="onInvoiceRowClicked($event)">
+  </ag-grid-angular>
+  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
 </div>
