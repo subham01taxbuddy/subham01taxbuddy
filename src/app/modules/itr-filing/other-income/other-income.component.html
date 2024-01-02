@@ -40,8 +40,8 @@
                       <div class="div-6">
                         <div class="form-field">
                           <div><span class="span mr-5">Interest accrued on contributions to a provident fund</span>
-                            <button type="submit" (click)="clearProvidentFund()">
-                              <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
+                            <button type="submit" (click)="clearProvidentFund()" class="delbt">
+                              <i class="fa fa-broom-wide" aria-hidden="true"></i> Clear
                             </button>
                           </div>
                           <mat-form-field appearance="outline" class="class1">
@@ -121,7 +121,7 @@
                       data-bs-target="#collapseThree">Income from Gift
                       <input type="number" class="form-control inpClr2" disabled value="{{getTotalGiftIncome()}}">
                     </button>
-                    <div>Note for Gift- Gift received from Relative will be excluded from the total as it's not part
+                    <div class="note2">Note for Gift- Gift received from Relative will be excluded from the total as it's not part
                       of taxable income.</div>
                   </h2>
                   <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">

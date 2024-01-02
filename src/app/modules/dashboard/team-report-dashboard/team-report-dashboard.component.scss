@@ -502,6 +502,7 @@ align-items: center;
 gap: 8px;
 border-radius: 4px 0px 0px 4px;
 background: #CEE5FF;
+margin-left: 120px;
 }
 .total-box-text{
 color: #2D8EF9;
@@ -520,7 +521,22 @@ align-items: center;
 gap: 8px;
 border-radius: 0px 4px 4px 0px;
 background: #2D8EF9;
+margin-right: 115px;
 }
+
+.total-box-value1{
+  display: flex;
+height: 36px;
+width: auto;
+padding: 8px;
+align-items: center;
+gap: 8px;
+border-radius: 0px 4px 4px 0px;
+background: #2D8EF9;
+margin-right:5px;
+}
+
+
 .total-value{
   color: #FFF;
 font-family: DM Sans;
@@ -624,4 +640,12 @@ background: #FFF;
 .serTypeTesxt{
   margin-left: 6px;
   margin-top: 10px;
+  margin-bottom:10px;
+  font-weight:600;
+  font-size:16px;
+}
+
+.movRgt{
+  position:relative;
+  right:-60px;
 }

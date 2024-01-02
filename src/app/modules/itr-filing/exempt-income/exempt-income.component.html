@@ -26,9 +26,7 @@
                   </h2>
                   <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion"
                        [formGroupName]="0">
-                    <div class="card-body extra-pad" [formGroup]="agriIncFormGroup">
-
-                      <div class="surBx1">
+                    <div class="card-body extra-pad" [formGroup]="agriIncFormGroup">                    
 
                         <div class="hp2main">
                           <div class="hplft">Gross Agricultural Receipts </div>
@@ -115,7 +113,7 @@
                             </mat-form-field>
                           </div>
                         </div>
-                      </div>
+                     
 
                       <div class="txHdg" *ngIf="isAgriIncomeExceedMaxLimit()">
                         Since the Net Agriculture income amount entered is more than INR 5 Lakh, enter the following details-
