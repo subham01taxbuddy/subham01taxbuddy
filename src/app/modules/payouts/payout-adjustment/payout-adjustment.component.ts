@@ -98,6 +98,7 @@ export class PayoutAdjustmentComponent implements OnInit {
   fromLeader(event) {
     if(event) {
       this.leaderId = event ? event.userId : null;
+      this.agentId = this.leaderId;
     }
   }
   fromPrinciple(event){
@@ -106,10 +107,12 @@ export class PayoutAdjustmentComponent implements OnInit {
         this.filerId = event ? event.userId : null;
         this.partnerName = event ? event.name : null;
         this.searchAsPrinciple = true;
+        this.agentId = this.filerId;
       } else {
         this.filerId = event ? event.userId : null;
         this.partnerName = event ? event.name : null;
         this.searchAsPrinciple = false;
+        this.agentId = this.filerId;
       }
     }
   }
