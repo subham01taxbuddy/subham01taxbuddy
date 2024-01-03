@@ -71,6 +71,13 @@ export class CreditNoteComponent implements OnInit {
   ];
   clearUserFilter: number;
 
+  sortBy: any = {};
+  sortMenus = [
+    { value: 'creditNoteDate', name: 'Note date' },
+    { value: 'invoiceDate', name: 'Invoice date' },
+    { value: 'invoiceNo', name: 'Invoice number' },
+  ];
+
   creditNoteFormGroup: FormGroup = this.fb.group({
     mobile: new FormControl(''),
     email: new FormControl(''),
@@ -151,6 +158,11 @@ export class CreditNoteComponent implements OnInit {
   searchByObject(object) {
     this.searchBy = object;
     console.log('object from search param ', this.searchBy);
+  }
+
+
+  sortByObject(object) {
+    this.sortBy = object;
   }
 
   filerId: number;
@@ -237,6 +249,11 @@ export class CreditNoteComponent implements OnInit {
 
     let data = this.utilsService.createUrlParams(this.searchParam);
     let param = `/bo/credit-note?fromDate=${fromData}&toDate=${toData}&${data}${userFilter}${mobileFilter}${emailFilter}${invoiceFilter}`
+
+    let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
+    if (Object.keys(this.sortBy).length) {
+      param = param + sortByJson;
+    }
 
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
