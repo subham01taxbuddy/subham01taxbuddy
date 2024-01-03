@@ -26,7 +26,7 @@
                     <div class="row">
                       <div class="col-sm-4 spsTp">
                         <mat-label>Select Role</mat-label>
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline"  class="custom-bg-new">
                           <mat-select (selectionChange)="clearValue()" [formControl]="selectRole" #selectRoleKey
                             [ngClass]="{'error': showError && (selectRole.invalid || !searchVal)}">
                             <mat-option *ngFor="let drop of selectRoleFilter" [value]="drop.value"
@@ -38,7 +38,7 @@
                       </div>
                       <div class="col-sm-4 spsTp">
                         <mat-label>Select Language</mat-label>
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline"  class="custom-bg-new">
                           <mat-select [formControl]="selectedLangControl" (selectionChange)="onLangChange($event)">
                             <mat-option *ngFor="let lang of langList" [value]="lang">
                               {{ lang }}
@@ -48,7 +48,7 @@
                       </div>
                       <div class="col-sm-4 spsTp">
                         <mat-label>Select ITR Capability</mat-label>
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline"  class="custom-bg-new">
                           <mat-select [formControl]="selectedITRCapabilityControl">
                             <mat-option *ngFor="let capability of itrCapabilities" [value]="capability.planId"
                               (click)="getPlanFilterValue(capability)">

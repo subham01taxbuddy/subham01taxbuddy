@@ -35,7 +35,7 @@
 
                         <div *ngIf="itrStatus" class="col-sm-3 spsTp">
                           <label class="input__label" for="attr">Select Status </label>
-                          <mat-form-field appearance="outline">
+                          <mat-form-field appearance="outline" class="custom-bg-new">
                             <mat-select placeholder="" [(ngModel)]="searchParam.statusId">
                               <mat-option *ngFor="let status of itrStatus" [value]="status.statusId">
                                 {{ status.statusName }}
