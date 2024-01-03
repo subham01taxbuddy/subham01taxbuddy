@@ -70,10 +70,10 @@ export class OtherAssetImprovementComponent implements OnInit {
       };
     }
 
-    // Set the minimum to January 1st 20 years in the past and December 31st a year in the future.
-    const currentYear = new Date().getFullYear() - 1;
-    const thisYearStartDate = new Date(currentYear, 3, 1); // April 1st of the current year
-    const nextYearEndDate = new Date(currentYear + 1, 2, 31); // March 31st of the next year
+    //get financial year from ITR object
+    let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
+    const thisYearStartDate = new Date(year, 3, 1); // April 1st of the financial year
+    const nextYearEndDate = new Date(year + 1, 2, 31); // March 31st of the financial year
 
     this.minDate = thisYearStartDate;
     this.maxDate = nextYearEndDate;
