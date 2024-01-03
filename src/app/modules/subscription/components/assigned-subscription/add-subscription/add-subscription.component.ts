@@ -36,7 +36,7 @@ export class AddSubscriptionComponent implements OnInit {
   partnerType: any;
   searchAsPrinciple: boolean = false;
   cancelSubscriptionData: any;
-  onlyServiceITR :boolean =false;
+  onlyServiceITR: boolean = false;
   constructor(
     public dialogRef: MatDialogRef<AddSubscriptionComponent>,
     private dialog: MatDialog,
@@ -59,7 +59,7 @@ export class AddSubscriptionComponent implements OnInit {
     if (this.roles.includes('ROLE_FILER')) {
       this.isAllowed = false;
       this.getSmeDetail();
-    }else if(this.data.filerId){
+    } else if (this.data.filerId) {
       this.getSmeDetail();
     }
     if (this.data.mobileNo) {
@@ -74,9 +74,9 @@ export class AddSubscriptionComponent implements OnInit {
     // https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000'
     let loggedInSmeUserId = this.loggedInSme[0]?.userId;
     let userId;
-    if(this.data.filerId){
+    if (this.data.filerId) {
       userId = this.data.filerId
-    }else{
+    } else {
       userId = loggedInSmeUserId;
     }
     let param = `/bo/sme-details-new/${userId}`
@@ -86,9 +86,9 @@ export class AddSubscriptionComponent implements OnInit {
         this.smeDetails = response.data[0];
         console.log('new sme', this.smeDetails);
         this.serviceEligibility = this.smeDetails.serviceEligibility_ITR;
-        if(this.data.filerId){
+        if (this.data.filerId) {
           this.showMessage = 'Filer is not eligible for the disabled plans. Please give plan capability and then try or reassign the user.'
-        }else{
+        } else {
           this.showMessage = 'Disabled plans are not available in your eligibility please contact with your leader'
         }
       }
@@ -96,15 +96,15 @@ export class AddSubscriptionComponent implements OnInit {
   }
 
   isPlanEnabled(plan: any): boolean {
-    if (this.roles.includes('ROLE_FILER') || (this.data.filerId && plan.servicesType ==='ITR') ) {
+    if (this.roles.includes('ROLE_FILER') || (this.data.filerId && plan.servicesType === 'ITR')) {
       if (this.smeDetails?.skillSetPlanIdList) {
         const planId = plan.planId;
-        this.onlyServiceITR =true;
+        this.onlyServiceITR = true;
         return this.smeDetails?.skillSetPlanIdList.includes(planId);
       }
       return false;
     } else {
-      this.onlyServiceITR =false;
+      this.onlyServiceITR = false;
       return true;
     }
   }
@@ -158,17 +158,19 @@ export class AddSubscriptionComponent implements OnInit {
     this.reportService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       this.allSubscriptions = response.data.content
-      let smeSelectedPlan = [];
-      smeSelectedPlan = [...smeSelectedPlan, ... this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan).filter(data => {
-        if (data) return data;
-      })];
-      smeSelectedPlan = [...smeSelectedPlan, ...this.allSubscriptions?.map((item: any) => item?.userSelectedPlan).filter(data => {
-        if (data) return data;
-      })];
-      if (smeSelectedPlan.length) {
-        let itrPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'ITR')
-        this.service = itrPlanDetails[0]?.servicesType;
-        this.serviceDetails = itrPlanDetails[0]?.name;
+      if (this.allSubscriptions && this.allSubscriptions.length) {
+        let smeSelectedPlan = [];
+        smeSelectedPlan = [...smeSelectedPlan, ... this.allSubscriptions?.map((item: any) => item?.smeSelectedPlan).filter(data => {
+          if (data) return data;
+        })];
+        smeSelectedPlan = [...smeSelectedPlan, ...this.allSubscriptions?.map((item: any) => item?.userSelectedPlan).filter(data => {
+          if (data) return data;
+        })];
+        if (smeSelectedPlan.length) {
+          let itrPlanDetails = smeSelectedPlan.filter(element => element.servicesType === 'ITR')
+          this.service = itrPlanDetails[0]?.servicesType;
+          this.serviceDetails = itrPlanDetails[0]?.name;
+        }
       }
     })
   }
