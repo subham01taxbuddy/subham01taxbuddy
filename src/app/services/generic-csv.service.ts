@@ -16,6 +16,7 @@ export class GenericCsvService {
   roles: any;
   smeList: any;
   allPlanDetails: any;
+  allResignedActiveSmeList: any;
   constructor(
     private httpClient: HttpClient,
     private jsonToCsvService: JsonToCsvService,
@@ -24,6 +25,7 @@ export class GenericCsvService {
   ) {
     this.roles = this.utilsService.getUserRoles();
     this.smeList = JSON.parse(sessionStorage.getItem('SME_LIST'));
+    this.allResignedActiveSmeList = JSON.parse(sessionStorage.getItem('ALL_RESIGNED_ACTIVE_SME_LIST'));
     this.allPlanDetails = JSON.parse(sessionStorage.getItem('ALL_PLAN_LIST'));
   }
 
@@ -64,7 +66,7 @@ export class GenericCsvService {
   }
 
   mapFiledItrDetails() {
-    this.smeList.forEach((item) => {
+    this.allResignedActiveSmeList.forEach((item) => {
       this.data.forEach((element) => {
         if (item.userId === element.leaderUserId)
           element['leaderUserId'] = item.name;

@@ -182,6 +182,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         console.log('filingTeamMemberId: ', res);
         if (res?.data?.content instanceof Array && res?.data?.content?.length > 0) {
           this.allFilerList = res?.data?.content;
+          sessionStorage.setItem(AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST, JSON.stringify(this.allFilerList));
           this.myItrsGridOptions.api.setColumnDefs(this.columnDef(this.allFilerList));
         } else {
           this.allFilerList = [];
