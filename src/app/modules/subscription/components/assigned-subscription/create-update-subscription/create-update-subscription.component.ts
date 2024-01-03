@@ -585,7 +585,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   getRefundProcessedInvoices() {
-    if (this.userSubscription.invoiceDetail.length) {
+    if (this.userSubscription?.invoiceDetail?.length) {
       if (this.userSubscription?.invoiceDetail[0]?.invoiceRefundDetails && this.userSubscription?.invoiceDetail[0]?.invoiceRefundDetails?.length) {
         this.refundInvoiceDetails = this.userSubscription?.invoiceDetail[0]?.invoiceRefundDetails.filter(item => item.refundStatus === 'PROCESSED');
       }
