@@ -13,4 +13,13 @@ export class DigitsOnlyDirective {
         this.document.all ? e.keyCode : e.keyCode
         return e.keyCode == 8 || (e.keyCode >= 48 && e.keyCode <= 57)
     }
+
+    @HostListener('paste', ['$event'])
+    onPaste(event: ClipboardEvent) {
+        event.preventDefault();
+        const pastedInput: string = event.clipboardData
+            .getData('text/plain')
+            .replace(/\D/g, ''); // get a digit-only string
+        document.execCommand('insertText', false, pastedInput);
+    }
 }

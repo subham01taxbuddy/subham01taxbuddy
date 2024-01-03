@@ -598,7 +598,7 @@ export class HousePropertyComponent implements OnInit {
     this.defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
     this.setStoredValues(this.ITR_JSON.houseProperties.length, 'add');
     this.Copy_ITR_JSON.houseProperties.push(this.housePropertyForm.getRawValue());
-    this.currentIndex = -1;
+    this.currentIndex = this.Copy_ITR_JSON.houseProperties.length -1;
   }
 
   settingInterestValues(itrJsonHp) {
@@ -624,12 +624,14 @@ export class HousePropertyComponent implements OnInit {
       housePropertyForm['isEligibleFor80EE']?.setValue('80EE');
       housePropertyForm['eligible80EEAmount']?.setValue(itrJsonHp?.eligible80EEAmount);
     } else {
-      housePropertyForm['interestAmount'].setValue(
-        itrJsonHp?.loans[0]?.interestAmount
-      );
-      housePropertyForm['interest24bAmount'].setValue(
-        itrJsonHp?.loans[0]?.interestAmount
-      );
+      if(itrJsonHp?.loans) {
+        housePropertyForm['interestAmount'].setValue(
+            itrJsonHp?.loans[0]?.interestAmount
+        );
+        housePropertyForm['interest24bAmount'].setValue(
+            itrJsonHp?.loans[0]?.interestAmount
+        );
+      }
       housePropertyForm['isEligibleFor80EE']?.setValue('');
       housePropertyForm['eligible80EEAAmount']?.setValue(0);
       housePropertyForm['eligible80EEAmount']?.setValue(0);
@@ -644,9 +646,13 @@ export class HousePropertyComponent implements OnInit {
     let itrJsonHp = this.Copy_ITR_JSON.houseProperties[index];
     this.housePropertyForm.patchValue(itrJsonHp);
     this.housePropertyForm.controls['country'].setValue('91');
-    this.housePropertyForm.controls['principalAmount'].setValue(
-      itrJsonHp?.loans[0]?.principalAmount
-    );
+
+    if(itrJsonHp?.loans) {
+      this.housePropertyForm.controls['principalAmount'].setValue(
+          itrJsonHp?.loans[0]?.principalAmount
+      );
+    }
+
 
     if (
       typeof itrJsonHp?.isEligibleFor80EE === 'boolean'
@@ -1170,6 +1176,7 @@ export class HousePropertyComponent implements OnInit {
               this.utilsService.showSnackBar(
                 'House Property income deleted successfully.'
               );
+              this.saveAndNext.emit(true);
             }
             this.loading = false;
           },

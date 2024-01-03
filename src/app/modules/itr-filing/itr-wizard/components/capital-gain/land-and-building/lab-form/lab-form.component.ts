@@ -1157,7 +1157,7 @@ export class LabFormComponent implements OnInit {
           this.currentCgIndex
         ].isIndexationBenefitAvailable = false; //this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].hasIndexation;
 
-        let filtered = this.cgArrayElement.improvement.filter(
+        let filtered = this.cgArrayElement.improvement?.filter(
           (imp) => imp.srn != this.currentCgIndex
         );
         if (this.improvements.length > 0) {
@@ -1498,7 +1498,7 @@ export class LabFormComponent implements OnInit {
         const improve = <FormArray>formGroupName.get('improvement');
         let ded = [];
         improve.controls.forEach((obj: FormGroup) => {
-          ded.push(obj.value);
+          ded.push(obj.getRawValue());
         });
         this.cgArrayElement.improvement = ded;
       } else {
