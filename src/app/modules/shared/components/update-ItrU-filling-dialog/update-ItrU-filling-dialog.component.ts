@@ -69,6 +69,9 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
       } else if (year === "2021-2022") {
         this.ay.setValue('2022-2023');
       }
+      else if (year === "2022-2023") {
+        this.ay.setValue('2023-2024');
+      }
     }
     else {
       this.showDetails = false;
