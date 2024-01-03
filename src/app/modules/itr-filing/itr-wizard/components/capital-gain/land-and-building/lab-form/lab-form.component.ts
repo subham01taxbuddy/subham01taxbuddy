@@ -84,9 +84,10 @@ export class LabFormComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
-    const currentYear = new Date().getFullYear() - 1;
-    const thisYearStartDate = new Date(currentYear, 3, 1); // April 1st of the current year
-    const nextYearEndDate = new Date(currentYear + 1, 2, 31); // March 31st of the next year
+    //get financial year from ITR object
+    let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
+    const thisYearStartDate = new Date(year, 3, 1); // April 1st of the financial year
+    const nextYearEndDate = new Date(year + 1, 2, 31); // March 31st of the financial year
 
     this.minSellDate = thisYearStartDate;
     this.maxSellDate = nextYearEndDate;

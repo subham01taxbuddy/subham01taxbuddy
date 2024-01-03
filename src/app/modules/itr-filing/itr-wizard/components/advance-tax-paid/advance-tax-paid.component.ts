@@ -66,12 +66,11 @@ export class AdvanceTaxPaidComponent implements OnInit {
 
     // this.salaryForm.disable();
 
-    // Set the minimum to financial year and max to current date
-    const currentYear = new Date().getFullYear() - 1;
-    const thisYearStartDate = new Date(currentYear, 3, 1); // April 1st of the current year
+    //get financial year from ITR object
+    let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
+    const thisYearStartDate = new Date(year, 3, 1); // April 1st of the financial year
+    // const nextYearEndDate = new Date(year + 1, 2, 31); // March 31st of the financial year
     const nextYearEndDate = new Date(); // Current date
-
-    console.log(currentYear);
 
     this.minDate = thisYearStartDate;
     this.maxDate = nextYearEndDate;
