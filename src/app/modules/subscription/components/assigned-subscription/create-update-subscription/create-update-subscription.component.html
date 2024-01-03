@@ -422,7 +422,7 @@
         </tbody>
       </table>
       <!-- start refund details -->
-      <table class="table pb-table" *ngIf="refundInvoiceDetails.length">
+      <table class="table pb-table" *ngIf="refundInvoiceDetails && refundInvoiceDetails?.length">
         <tbody>
           <tr>
             <th>Refund Details</th>
