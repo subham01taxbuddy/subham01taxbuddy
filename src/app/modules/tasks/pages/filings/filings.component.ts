@@ -101,10 +101,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private reportService: ReportService,
     private genericCsvService: GenericCsvService,
   ) {
-    this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
+    this.getAllFilerList();
     this.myItrsGridOptions = <GridOptions>{
       rowData: this.createOnSalaryRowData([]),
-      columnDefs: this.columnDef(this.allFilerList),
+      columnDefs: this.columnDef(),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => {
@@ -170,6 +170,34 @@ export class FilingsComponent implements OnInit, OnDestroy {
     }else {
       this.dataOnLoad = false;
     }
+  }
+
+  getAllFilerList() {
+    this.loading = true;
+    const param = `/bo/sme/all-list?page=0&pageSize=10000`;
+    this.reportService.getMethod(param).subscribe(
+      (res: any) => {
+        this.loading = false;
+        if (res.success == false) {
+          this.allFilerList = [];
+          this.toastMsgService.alert("error", res.message);
+        }
+        console.log('filingTeamMemberId: ', res);
+        if (res?.data?.content instanceof Array && res?.data?.content?.length > 0) {
+          this.allFilerList = res?.data?.content;
+          this.myItrsGridOptions.api.setColumnDefs(this.columnDef(this.allFilerList));
+        } else {
+          this.allFilerList = [];
+          if (res.message) { this.toastMsgService.alert('error', res.message); }
+          else { this.toastMsgService.alert('error', 'No Data Found'); }
+        }
+      },
+      (error) => {
+        this.allFilerList = [];
+        this.toastMsgService.alert("error", 'No Data Found ');
+        this.loading = false;
+      }
+    );
   }
 
   // ngAfterContentChecked() {
@@ -489,7 +517,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     ).length;
   }
 
-  columnDef(filerList) {
+  columnDef(filerList?) {
     return [
       {
         headerName: 'Client Name',
@@ -1033,7 +1061,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       'User Number': data.contactNumber,
     });
 
-    if(data.isEverified){
+    if (data.isEverified) {
       let disposable = this.dialog.open(ReviseReturnDialogComponent, {
         width: '50%',
         height: 'auto',
@@ -1052,7 +1080,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
         }
         console.log('The dialog was closed', result);
       });
-    }else{
+    } else {
       this.utilsService.showSnackBar(
         'Please complete e-verification before starting with revised return'
       );
