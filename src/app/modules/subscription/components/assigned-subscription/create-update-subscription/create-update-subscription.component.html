@@ -418,8 +418,34 @@
                   }}</b></span>
             </td>
           </tr>
+
         </tbody>
       </table>
+      <!-- start refund details -->
+      <table class="table pb-table" *ngIf="refundInvoiceDetails.length">
+        <tbody>
+          <tr>
+            <th>Refund Details</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>Invoice No</td>
+            <td><span class="head"><b>{{ userSubscription?.invoiceDetail[0].invoiceNo }}</b></span></td>
+          </tr>
+          <tr *ngFor="let invoiceDetail of refundInvoiceDetails">
+            <td></td>
+            <td></td>
+            <td>Refund Paid Amount</td>
+            <td><span class="head"><b>{{
+                  invoiceDetail.refundPaidAmount | currency : "INR" }}</b></span></td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- end refund details -->
     </div>
     <hr />
     <div class="row">
