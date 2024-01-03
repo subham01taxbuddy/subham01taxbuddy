@@ -112,10 +112,13 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   ];
   sortBy: any = {};
   sortMenus = [
-    { value: 'billTo', name: 'Name' },
     { value: 'invoiceDate', name: 'Invoice Date' },
     { value: 'paymentDate', name: 'Paid Date' },
-    { value: 'total', name: 'Amount Payable' },
+    {value: 'invoiceNo', name: ' Invoice number'},
+    // { value: 'billTo', name: 'Name' },
+    // { value: 'invoiceDate', name: 'Invoice Date' },
+    // { value: 'paymentDate', name: 'Paid Date' },
+    // { value: 'total', name: 'Amount Payable' },
   ];
   dataOnLoad = true;
   searchAsPrinciple: boolean = false;

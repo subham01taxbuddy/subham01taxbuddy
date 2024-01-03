@@ -32,6 +32,12 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-6 spcTp">
+                      <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                        (onChange)="sortByObject($event)"></app-generic-sorting>
+                    </div>
+                  </div>
                   <div class="button-container">
                     <button class="srch-btn-1" (click)="applyFilter()"><i class="fa fa-search" aria-hidden="true"></i> Search
                     </button>
@@ -40,7 +46,7 @@
                       Clear form
                     </button>
                   </div>
-                  <div class="row">
+                  <div class="row mt-3">
                     <div class="col-sm-12">
                       <span class="new-note1 note">
                         Note : Please select required filters above and click on search to get information
