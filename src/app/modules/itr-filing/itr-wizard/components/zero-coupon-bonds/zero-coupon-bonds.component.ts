@@ -55,6 +55,10 @@ export class ZeroCouponBondsComponent
     private activateRoute: ActivatedRoute
   ) {
     super();
+    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    this.Copy_ITR_JSON = JSON.parse(
+        sessionStorage.getItem(AppConstants.ITR_JSON)
+    );
     //get financial year from ITR object
     let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
     const thisYearStartDate = new Date(year, 3, 1); // April 1st of the financial year
@@ -72,10 +76,7 @@ export class ZeroCouponBondsComponent
         ? (this.title = ' Bonds & Debenture')
         : (this.title = 'Zero Coupon Bonds');
     }
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(
-      sessionStorage.getItem(AppConstants.ITR_JSON)
-    );
+
     this.config = {
       itemsPerPage: 2,
       currentPage: 1,
