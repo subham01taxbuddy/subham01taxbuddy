@@ -77,7 +77,6 @@
   </div>
   <div *ngIf="labView === 'FORM'">
     <app-lab-form
-      [data]="data"
       (cancelForm)="cancelForm($event)"
       (saveForm)="formSaved($event)"
     ></app-lab-form>

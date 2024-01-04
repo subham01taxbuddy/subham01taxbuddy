@@ -26,6 +26,7 @@ import {
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import * as moment from 'moment';
 import {Location} from "@angular/common";
+import {WizardNavigation} from "../../../../../../itr-shared/WizardNavigation";
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
   $(this).blur();
@@ -56,19 +57,19 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class LabFormComponent implements OnInit {
+export class LabFormComponent extends WizardNavigation implements OnInit {
   @Output() cancelForm = new EventEmitter<any>();
   @Output() saveForm = new EventEmitter<any>();
   disableFutureDates: any;
   loading = false;
   improvementYears = [];
   stateDropdown = AppConstants.stateDropdown;
-  // data: any; // TODO use input output to decide view edit or add
-  @Input() data: any;
   selectedIndexes: number[] = [];
 
   config: any;
   active: any;
+
+  labData: NewCapitalGain[] = [];
   constructor(
     private fb: FormBuilder,
     private itrMsService: ItrMsService,
@@ -77,12 +78,17 @@ export class LabFormComponent implements OnInit {
     public snackBar: MatSnackBar,
     public location: Location
   ) {
+    super();
     this.config = {
       itemsPerPage: 1,
       currentPage: 1,
     };
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    this.labData = this.ITR_JSON.capitalGain?.filter(
+        (item) => item.assetType === 'PLOT_OF_LAND'
+    );
 
     //get financial year from ITR object
     let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
@@ -188,163 +194,203 @@ export class LabFormComponent implements OnInit {
 
   STCGOutput: any = [];
   LTCGOutput: any = [];
+  mode:string;
 
   ngOnInit() {
-    if (this.data.mode === 'EDIT') {
-      console.log('this.data = ', this.data.assetSelected);
-      // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       const dataToPatch = this.ITR_JSON.capitalGain?.filter(
         (item) => item.assetType === 'PLOT_OF_LAND'
       );
       dataToPatch[0].assetDetails.forEach((element, index) => {
-        if (element.srn === this.data.assetSelected.srn) {
+        if (element.srn === 0) {
           this.currentCgIndex = index;
         }
       });
 
       console.log('selected index=', this.currentCgIndex);
-      console.log('dataToPatch = ', dataToPatch, this.data.assetSelected);
       this.cgArrayElement = dataToPatch[0];
-      this.addMissingKeys(this.cgArrayElement);
-      this.investmentsCreateRowData();
-      this.immovableForm = this.createImmovableForm();
-      const assetDetails = <FormArray>this.immovableForm.get('assetDetails');
-      //assetDetailsForm.controls['description'].setValue('test1') //need to check this
-      assetDetails.push(
+      if(this.cgArrayElement.assetDetails?.length > 0) {
+        this.editProperty(0);
+        this.mode = 'EDIT';
+      } else {
+        this.addNewProperty();
+        this.mode = 'ADD';
+      }
+  }
+
+  addNewProperty(){
+    this.amountRegex = AppConstants.amountWithoutDecimal;
+    this.cgArrayElement = this.ITR_JSON.capitalGain?.filter(
+        (item) => item.assetType === 'PLOT_OF_LAND'
+    )[0];
+    if (this.cgArrayElement?.assetDetails?.length > 0) {
+      this.currentCgIndex = this.cgArrayElement.assetDetails.length;
+    } else {
+      this.cgArrayElement = {
+        assessmentYear: this.ITR_JSON.assessmentYear,
+        assesseeType: this.ITR_JSON.assesseeType,
+        residentialStatus: this.ITR_JSON.residentialStatus,
+        assetType: 'PLOT_OF_LAND',
+        improvement: [],
+        deduction: [],
+        buyersDetails: [],
+        assetDetails: [],
+      };
+      this.currentCgIndex = 0;
+    }
+
+    this.immovableForm = this.createImmovableForm();
+    const buyersDetails = <FormArray>this.immovableForm.get('buyersDetails');
+    buyersDetails.push(this.createBuyersDetailsForm());
+    const assetDetails = <FormArray>this.immovableForm.get('assetDetails');
+    assetDetails.push(this.createAssetDetailsForm());
+    const deductions = <FormArray>this.immovableForm.get('deductions');
+    // deductions.push(this.createDeductionForm());
+
+    this.calMaxPurchaseDate(
+        (assetDetails.getRawValue() as AssetDetails[])[0].sellDate,
+        this.immovableForm,
+        0
+    );
+    this.calMinImproveDate(
+        (assetDetails.getRawValue() as AssetDetails[])[0].purchaseDate,
+        this.immovableForm,
+        0
+    );
+    console.log('assets for ADD', assetDetails);
+
+    this.cgArrayElement.assetDetails.push(
+        (assetDetails.controls[0] as FormGroup).getRawValue()
+    );
+    console.log('cgArrayElement', this.cgArrayElement);
+  }
+
+  editProperty(editIndex){
+    this.addMissingKeys(this.cgArrayElement);
+    this.investmentsCreateRowData();
+    this.immovableForm = this.createImmovableForm();
+    const assetDetails = <FormArray>this.immovableForm.get('assetDetails');
+    assetDetails.push(
         this.createAssetDetailsForm(
-          this.cgArrayElement.assetDetails[this.currentCgIndex]
+            this.cgArrayElement.assetDetails[this.currentCgIndex]
         )
-      );
-      // this.calMaxPurchaseDate((assetDetails.getRawValue() as AssetDetails[])[0].sellDate, this.immovableForm, 0);
-      // this.calMinImproveDate((assetDetails.getRawValue() as AssetDetails[])[0].purchaseDate, this.immovableForm, 0);
-      this.calculateIndexCost(0);
+    );
+    this.calculateIndexCost(0);
 
-      // const cgOutPut = dataToPatch.filter(item => item.assetType === this.assetType.value);
-      // this.amount = cgOutPut.cgIncome;
-      this.immovableForm.patchValue(this.data.assetSelected);
+    this.immovableForm.patchValue(this.cgArrayElement.assetDetails[this.currentCgIndex]);
 
-      // IMPROVEMENTS SECTION
-      this.improvements = dataToPatch[0].improvement.filter(
+    // IMPROVEMENTS SECTION
+    this.improvements = this.cgArrayElement.improvement.filter(
         (imp) =>
-          imp.srn == this.data.assetSelected.srn &&
-          this.utilsService.isNonEmpty(imp.dateOfImprovement)
-      );
+            imp.srn == editIndex &&
+            this.utilsService.isNonEmpty(imp.dateOfImprovement)
+    );
 
-      let isCostOfImprovementPresent = false;
-      this.improvements.forEach((element, index) => {
-        const costOfImprovementPresent: boolean = !element.costOfImprovement;
-        if (!costOfImprovementPresent) {
-          isCostOfImprovementPresent = true;
-        }
-      });
+    let isCostOfImprovementPresent = false;
+    this.improvements.forEach((element, index) => {
+      const costOfImprovementPresent: boolean = !element.costOfImprovement;
+      if (!costOfImprovementPresent) {
+        isCostOfImprovementPresent = true;
+      }
+    });
 
-      if (isCostOfImprovementPresent) {
-        if (
+    if (isCostOfImprovementPresent) {
+      if (
           this.improvements instanceof Array &&
           this.improvements.length > 0
-        ) {
-          this.isImprovements.setValue(true);
-          const improvement = <FormArray>this.immovableForm.get('improvement');
-          this.improvements.forEach((obj) => {
-            let improvementForm = this.createImprovementForm(obj);
-            improvement.push(improvementForm);
-            this.isImprovementValid(
+      ) {
+        this.isImprovements.setValue(true);
+        const improvement = <FormArray>this.immovableForm.get('improvement');
+        this.improvements.forEach((obj) => {
+          let improvementForm = this.createImprovementForm(obj);
+          improvement.push(improvementForm);
+          this.isImprovementValid(
               this.immovableForm,
               this.improvements.indexOf(obj)
-            );
-          });
-          console.log('Immovable Form===', this.immovableForm);
-        } else {
-          this.isImprovements.setValue(false);
-        }
-      }
-
-      if (this.deductions instanceof Array && this.deductions.length > 0) {
-        this.isDeductions.setValue(true);
-        const deductions = <FormArray>this.immovableForm.get('deductions');
-        this.deductions.forEach((obj) => {
-          let deductionForm = this.createDeductionForm(obj);
-          deductions.push(deductionForm);
-          this.isDeductionsValid(
-            this.immovableForm,
-            this.deductions.indexOf(obj)
           );
         });
         console.log('Immovable Form===', this.immovableForm);
       } else {
-        this.isDeductions.setValue(false);
+        this.isImprovements.setValue(false);
       }
-      this.buyers = dataToPatch[0].buyersDetails.filter(
-        (buyer) => buyer.srn == this.data.assetSelected.srn
-      );
-      if (this.buyers instanceof Array) {
-        console.log('in buyer if', this.buyers);
-        const buyersDetails = <FormArray>(
-          this.immovableForm.get('buyersDetails')
+    }
+
+    if (this.deductions instanceof Array && this.deductions.length > 0) {
+      this.isDeductions.setValue(true);
+      const deductions = <FormArray>this.immovableForm.get('deductions');
+      this.deductions.forEach((obj) => {
+        let deductionForm = this.createDeductionForm(obj);
+        deductions.push(deductionForm);
+        this.isDeductionsValid(
+            this.immovableForm,
+            this.deductions.indexOf(obj)
         );
-        let index = 0;
-        this.buyers.forEach((obj) => {
-          console.log('b obj', obj);
-          buyersDetails.push(this.createBuyersDetailsForm(obj));
-          this.updateDataByPincode(index++);
-        });
-      }
-      this.calMaxPurchaseDate(
+      });
+      console.log('Immovable Form===', this.immovableForm);
+    } else {
+      this.isDeductions.setValue(false);
+    }
+    this.buyers = this.cgArrayElement.buyersDetails.filter(
+        (buyer) => buyer.srn == editIndex
+    );
+    if (this.buyers instanceof Array) {
+      console.log('in buyer if', this.buyers);
+      const buyersDetails = <FormArray>(
+          this.immovableForm.get('buyersDetails')
+      );
+      let index = 0;
+      this.buyers.forEach((obj) => {
+        console.log('b obj', obj);
+        buyersDetails.push(this.createBuyersDetailsForm(obj));
+        this.updateDataByPincode(index++);
+      });
+    }
+    this.calMaxPurchaseDate(
         this.immovableForm.value.sellDate,
         this.immovableForm,
         0
-      );
-      this.calMinImproveDate(
+    );
+    this.calMinImproveDate(
         this.immovableForm.value.purchaseDate,
         this.immovableForm,
         0
-      );
-      this.cgOutput = [];
-    } else if (this.data.mode === 'ADD') {
-      this.amountRegex = AppConstants.amountWithoutDecimal;
-      this.cgArrayElement = this.ITR_JSON.capitalGain?.filter(
-        (item) => item.assetType === 'PLOT_OF_LAND'
+    );
+    this.cgOutput = [];
+  }
+
+  markActive(index){
+    if(this.currentCgIndex >= 0 && this.currentCgIndex >= this.labData?.length){
+      this.saveImmovableCG(this.immovableForm, index, false);
+    }
+    if(index === -1) {
+      this.addNewProperty();
+      // this.cgArrayElement.assetDetails.push(this.cgArrayElement.assetDetails[this.currentCgIndex]);
+      // this.editEmployerDetails(this.Copy_ITR_JSON.employers.length -1);
+      this.mode = 'ADD';
+      this.saveImmovableCG(this.immovableForm, this.currentCgIndex, false);
+    } else {
+      this.currentCgIndex = index;
+      this.mode = 'EDIT';
+      this.editProperty(this.currentCgIndex);
+    }
+
+  }
+
+  deleteProperty(index){
+    if(index >= 0 && index < this.cgArrayElement.assetDetails?.length) {
+      this.cgArrayElement.assetDetails.splice(index, 1);
+      let labData = this.Copy_ITR_JSON.capitalGain?.filter(
+          (item) => item.assetType === 'PLOT_OF_LAND'
       )[0];
-      if (this.cgArrayElement?.assetDetails?.length > 0) {
-        this.currentCgIndex = this.cgArrayElement.assetDetails.length;
-      } else {
-        this.cgArrayElement = {
-          assessmentYear: this.ITR_JSON.assessmentYear,
-          assesseeType: this.ITR_JSON.assesseeType,
-          residentialStatus: this.ITR_JSON.residentialStatus,
-          assetType: 'PLOT_OF_LAND',
-          improvement: [],
-          deduction: [],
-          buyersDetails: [],
-          assetDetails: [],
-        };
-        this.currentCgIndex = 0;
+      if (labData) {
+        this.Copy_ITR_JSON.capitalGain.splice(
+            this.Copy_ITR_JSON.capitalGain.indexOf(labData),
+            1,
+            this.cgArrayElement
+        );
+        //this.Copy_ITR_JSON.capitalGain.filter(item => item.assetType === 'PLOT_OF_LAND')[0] = this.cgArrayElement;
       }
-
-      this.immovableForm = this.createImmovableForm();
-      const buyersDetails = <FormArray>this.immovableForm.get('buyersDetails');
-      buyersDetails.push(this.createBuyersDetailsForm());
-      const assetDetails = <FormArray>this.immovableForm.get('assetDetails');
-      assetDetails.push(this.createAssetDetailsForm());
-      const deductions = <FormArray>this.immovableForm.get('deductions');
-      // deductions.push(this.createDeductionForm());
-
-      this.calMaxPurchaseDate(
-        (assetDetails.getRawValue() as AssetDetails[])[0].sellDate,
-        this.immovableForm,
-        0
-      );
-      this.calMinImproveDate(
-        (assetDetails.getRawValue() as AssetDetails[])[0].purchaseDate,
-        this.immovableForm,
-        0
-      );
-      console.log('assets for ADD', assetDetails);
-
-      this.cgArrayElement.assetDetails.push(
-        (assetDetails.controls[0] as FormGroup).getRawValue()
-      );
-      console.log('cgArrayElement', this.cgArrayElement);
+      this.ITR_JSON = this.Copy_ITR_JSON;
+      this.saveCG();
     }
   }
 
@@ -770,67 +816,10 @@ export class LabFormComponent implements OnInit {
       this.calculateIndexCost(index);
     }
   }
-  isUniqueDescription(formGroupName, index) {
-    this.duplicateDescription = false;
-    this.ErrorMsg = '';
-    if (this.data.mode === 'ADD') {
-      const cgAdd = this.ITR_JSON.capitalGain?.filter(
-        (item) =>
-          item.assetType === this.assetType.value &&
-          item.assetDetails[this.currentCgIndex].description ===
-            formGroupName.controls['description'].value.toString().trim()
-      );
-      if (cgAdd.length === 0) {
-        //this.calculateCapitalGain(formGroupName, '', index);
-      } else {
-        this.duplicateDescription = true;
-        this.ErrorMsg = 'Description should be unique.';
-      }
-    } else {
-      const cg = this.ITR_JSON.capitalGain?.filter(
-        (item) => item.assetType === this.assetType.value
-      );
-      const singleCG = cg.filter(
-        (item) =>
-          item.assetDetails[this.currentCgIndex].description ===
-          formGroupName.controls['description'].value.toString().trim()
-      );
-      let typeChanged = false;
-      let descriptionChanged = false;
-      if (
-        this.ITR_JSON.capitalGain[this.data.assetSelected.id - 1].assetType !==
-        this.assetType.value
-      ) {
-        typeChanged = true;
-      }
-
-      if (
-        this.ITR_JSON.capitalGain[this.data.assetSelected.id - 1].assetDetails[
-          this.currentCgIndex
-        ].description !==
-        formGroupName.controls['description'].value.toString().trim()
-      ) {
-        descriptionChanged = true;
-      }
-
-      if (
-        typeChanged
-          ? singleCG.length === 0
-          : descriptionChanged
-          ? singleCG.length === 0
-          : singleCG.length <= 1
-      ) {
-        // this.calculateCapitalGain(formGroupName, '', index);
-      } else {
-        this.duplicateDescription = true;
-        this.ErrorMsg = 'Description should be unique.';
-      }
-    }
-  }
 
   mergeImprovements() {
     let otherImprovements = this.cgArrayElement.improvement?.filter(
-      (imp) => imp.srn != this.data.assetSelected?.srn
+      (imp) => imp.srn != this.currentCgIndex
     );
     if (otherImprovements == null) {
       otherImprovements = [];
@@ -1012,7 +1001,7 @@ export class LabFormComponent implements OnInit {
       this.isImprovements.setValue(false);
       formGroupName.controls['improvement'] = this.fb.array([]);
       let otherImprovements = this.cgArrayElement.improvement.filter(
-          (ded) => ded.srn != this.data.assetSelected.srn
+          (ded) => ded.srn != this.currentCgIndex
       );
       this.cgArrayElement.improvement = otherImprovements;
       this.calculateCapitalGain(formGroupName, '', this.currentCgIndex);
@@ -1037,7 +1026,7 @@ export class LabFormComponent implements OnInit {
     } else {
       deductions.clear();
       let otherDeductions = this.cgArrayElement.deduction.filter(
-        (ded) => ded.srn != this.data.assetSelected.srn
+        (ded) => ded.srn != this.currentCgIndex
       );
       this.cgArrayElement.deduction = otherDeductions;
     }
@@ -1115,21 +1104,20 @@ export class LabFormComponent implements OnInit {
     this.calculateDeduction(index);
   }
 
-  saveImmovableCG(formGroupName, index) {
+  saveImmovableCG(formGroupName, index, apiCall:boolean) {
     //re-intialise the ITR objects
-    this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+    // this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
+    // this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
 
     // this.cgOutput = []
     console.log('saveImmovableCG', formGroupName, formGroupName.getRawValue());
     console.log('cgOutput', this.cgOutput);
-    if (
-      formGroupName.controls['assetDetails'].valid &&
+    if (!apiCall || (apiCall && formGroupName.controls['assetDetails'].valid &&
       formGroupName.controls['buyersDetails'].valid &&
       formGroupName.controls['improvement'] &&
       !this.panValidation() &&
       !this.deductionValidation() &&
-      !this.calPercentage()
+      !this.calPercentage())
     ) {
       this.saveBusy = true;
       if (this.utilsService.isNonEmpty(this.cgOutput)) {
@@ -1157,18 +1145,18 @@ export class LabFormComponent implements OnInit {
           this.currentCgIndex
         ].isIndexationBenefitAvailable = false; //this.assestTypesDropdown.filter(item => item.assetCode === this.assetType.value)[0].hasIndexation;
 
-        let filtered = this.cgArrayElement.improvement?.filter(
-          (imp) => imp.srn != this.currentCgIndex
-        );
-        if (this.improvements.length > 0) {
-          this.cgArrayElement.improvement = filtered.concat(this.improvements);
-        }
+        // let filtered = this.cgArrayElement.improvement?.filter(
+        //   (imp) => imp.srn != this.currentCgIndex
+        // );
+        // if (this.improvements.length > 0) {
+        //   this.cgArrayElement.improvement = filtered.concat(this.improvements);
+        // }
 
         if (!this.Copy_ITR_JSON.capitalGain) {
           this.Copy_ITR_JSON.capitalGain = [];
         }
 
-        if (this.data.mode === 'ADD') {
+        if (this.mode === 'ADD') {
           let labData = this.Copy_ITR_JSON.capitalGain?.filter(
             (item) => item.assetType === 'PLOT_OF_LAND'
           )[0];
@@ -1194,7 +1182,9 @@ export class LabFormComponent implements OnInit {
           console.log('copy', this.Copy_ITR_JSON);
         }
 
-        this.saveCG();
+        if(apiCall) {
+          this.saveCG();
+        }
       } else {
         console.log('cgOutput is empty');
         this.calculateCapitalGain(formGroupName, 'SAVE', index);
@@ -1216,13 +1206,13 @@ export class LabFormComponent implements OnInit {
         this.ITR_JSON = result;
         sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
         this.loading = false;
-        this.utilsService.showSnackBar('Capital gain added successfully');
+        this.utilsService.showSnackBar('Capital gain updated successfully');
         console.log('Capital gain save result=', result);
         // this.dialogRef.close(this.ITR_JSON); // TODO send data to table back
         this.utilsService.smoothScrollToTop();
         this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
         this.saveBusy = false;
-        this.saveForm.emit({ saved: this.saveBusy });
+        this.saveAndNext.emit(true);
       },
       (error) => {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -1232,7 +1222,7 @@ export class LabFormComponent implements OnInit {
         );
         this.utilsService.smoothScrollToTop();
         this.saveBusy = false;
-        this.saveForm.emit({ saved: this.saveBusy });
+        this.saveAndNext.emit(false);
       }
     );
   }
@@ -1381,7 +1371,7 @@ export class LabFormComponent implements OnInit {
     }
     let assetDetails = (
       this.immovableForm.controls['assetDetails'] as FormArray
-    ).controls[this.currentCgIndex] as FormGroup;
+    ).controls[index] as FormGroup;
     let selectedYear = moment(assetDetails.controls['sellDate'].value);
     let sellFinancialYear =
       selectedYear.get('month') > 2
@@ -1576,7 +1566,7 @@ export class LabFormComponent implements OnInit {
           this.busyGain = false;
 
           if (val === 'SAVE') {
-            this.saveImmovableCG(formGroupName, index);
+            this.saveImmovableCG(formGroupName, index, true);
           }
         },
         (error) => {
@@ -1668,8 +1658,8 @@ export class LabFormComponent implements OnInit {
   }
 
   goBack(){
-    // this.location.back();
-    this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
-    // this.saveAndNext.emit(false);
+    this.location.back();
+    // this.cancelForm.emit({ view: 'TABLE', data: this.ITR_JSON });
+    this.saveAndNext.emit(false);
   }
 }
