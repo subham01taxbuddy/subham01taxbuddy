@@ -9,7 +9,7 @@
 
     <div class="col-sm-6">
         <label class="input__label">Enter Value </label>
-        <input type="text" class="select__box ogp_select" style="background-image:none" (change)="changeInput()"
+        <input type="text" class="select__box ogp_select noBg" style="background-image:none" (change)="changeInput()"
             [formControl]="searchValue" />
         <div *ngIf="searchValue?.invalid && (searchValue?.dirty || searchValue?.touched)" class="errorMessage">
             <div *ngIf="searchValue.errors?.['required']">
