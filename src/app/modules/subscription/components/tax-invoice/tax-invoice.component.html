@@ -22,12 +22,12 @@
                   </div>
                   <div class="col-sm-4 spsTp">
                     <mat-label> Select FY </mat-label>
-                    <mat-form-field appearance="outline">
+                    <mat-form-field appearance="outline" class="custom-bg-new">
                       <input type="text" matInput [formControl]="assessmentYear" readonly>
                     </mat-form-field>
                   </div>
                   <div class="col-sm-4 dtTp">
-                    <mat-form-field appearance="outline" class="class1">
+                    <mat-form-field appearance="outline" class="class1 custom-bg-new">
                       <mat-label>From Date</mat-label>
                       <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate"
                         [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()">
@@ -37,7 +37,7 @@
                     </mat-form-field>
                   </div>
                   <div class="col-sm-4 dtTp">
-                    <mat-form-field appearance="outline" class="class1">
+                    <mat-form-field appearance="outline" class="class1 custom-bg-new">
                       <mat-label>To Date</mat-label>
                       <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="toDateMin" [max]="maxEndDate"
                         autocomplete="off">

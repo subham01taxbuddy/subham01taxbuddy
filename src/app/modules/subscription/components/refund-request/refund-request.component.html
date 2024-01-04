@@ -22,7 +22,7 @@
                   </div>
                   <div class="col-sm-3 spsTp" style="padding:15px;">
                     <mat-label>Request Type </mat-label>
-                    <mat-form-field appearance="outline">
+                    <mat-form-field appearance="outline" class="custom-bg-new">
                       <mat-select placeholder="Select Request Type" [formControl]="requestType">
                         <mat-option *ngFor="let item of Type" [value]="item.value">
                           {{ item.label }}

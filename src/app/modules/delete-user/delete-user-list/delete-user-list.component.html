@@ -14,7 +14,7 @@
           <div class="row">
             <div class="col-sm-4">
               <mat-label>Search By Mobile Number: </mat-label>
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" class="custom-bg-new">
                 <input matInput placeholder="Enter Mobile Number" [formControl]="mobileNumber" (change)="clearValue1()"
                   type="text" digitsOnly
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -23,7 +23,7 @@
             </div>
             <div class="col-sm-4">
               <mat-label>From Date</mat-label>
-              <mat-form-field class="input-field-width" appearance="outline">
+              <mat-form-field class="input-field-width" appearance="outline" class="custom-bg-new">
                 <input matInput placeholder="DD/MM/YYYY" [formControl]="fromDate" [min]="minStartDate" [max]="maxStartDate"
                   (dateChange)="setToDateValidation()" [matDatepicker]="picker1" autocomplete="off" />
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -34,7 +34,7 @@
 
             <div class="col-sm-4">
               <mat-label>To Date</mat-label>
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" class="custom-bg-new">
                 <input matInput placeholder="DD/MM/YYYY" [formControl]="toDate" [max]="maxEndDate" [min]="minEndDate"
                   [matDatepicker]="picker2" autocomplete="off" (dateChange)="setToDateValidation()" />
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
