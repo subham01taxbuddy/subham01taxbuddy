@@ -47,7 +47,7 @@
                               <div class="form-field">
                                 <mat-form-field appearance="outline">
                                   <input formControlName="turnOver" placeholder="₹ Enter Amount" matInput
-                                    name="turnOver[i]" class="input-field" required type="number" trim
+                                    name="turnOver[i]" digitsOnly class="input-field" required trim
                                     (change)="calculateNetIncome(fieldGlobalIndex(i))" />
                                 </mat-form-field>
                               </div>
@@ -72,8 +72,8 @@
                               </div>
                               <div class="form-field">
                                 <mat-form-field appearance="outline">
-                                  <input formControlName="expenditure" placeholder="₹ Enter Amount" matInput
-                                    name="expenditure[i]" class="input-field" required type="number" trim
+                                  <input formControlName="expenditure" digitsOnly placeholder="₹ Enter Amount" matInput
+                                    name="expenditure[i]" class="input-field" required trim
                                     (change)="calculateNetIncome(fieldGlobalIndex(i))" />
                                 </mat-form-field>
                               </div>
