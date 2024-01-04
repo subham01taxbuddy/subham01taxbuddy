@@ -207,7 +207,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       if (response.success) {
         this.smeDetails = response.data[0];
         if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
-          if (this.assignedFilerId && this.serviceType === 'ITR') {
+          if (this.assignedFilerId && (this.serviceType === 'ITR' ||this.serviceType === 'ITRU' )) {
             this.showMessage = 'Filer is not eligible for the disabled plans. Please give plan capability and then try or reassign the user.'
           }
         } else if (this.roles.includes('ROLE_FILER')) {
@@ -725,7 +725,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
           );
           if (this.utilsService.isNonEmpty(serviceType)) {
             this.allPlans = activePlans.filter((item: any) => item.servicesType === serviceType);
-            if (this.roles.includes('ROLE_FILER') || (this.assignedFilerId && serviceType === 'ITR')) {
+            if (this.roles.includes('ROLE_FILER') || (this.assignedFilerId && (serviceType === 'ITR' || serviceType === 'ITRU' ))) {
               this.allPlans.forEach((item: any) => {
                 item.disable = true;
                 if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
