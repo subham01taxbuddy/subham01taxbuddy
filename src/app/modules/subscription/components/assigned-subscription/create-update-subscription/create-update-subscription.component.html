@@ -463,7 +463,7 @@
                 <mat-select [(ngModel)]="service" (ngModelChange)="onNgModelChange()"
                   [ngModelOptions]="{ standalone: true }" matInput placeholder="Select Service" autocomplete="off"
                   (selectionChange)="changeService()" [disabled]="isButtonDisable">
-                  <mat-option value="ITR"> ITR Filing </mat-option>
+                  <mat-option *ngIf="false" value="ITR"> ITR Filing </mat-option>
                   <mat-option value="ITRU"> ITR U </mat-option>
                   <mat-option value="GST"> GST
                   </mat-option>
