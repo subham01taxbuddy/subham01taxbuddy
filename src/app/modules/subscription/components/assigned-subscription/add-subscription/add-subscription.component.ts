@@ -32,6 +32,7 @@ export class AddSubscriptionComponent implements OnInit {
   isAllowed: boolean = true;
   smeDetails: any
   serviceEligibility: any;
+  itrUServiceEligibility:any;
   showMessage = '';
   partnerType: any;
   searchAsPrinciple: boolean = false;
@@ -86,6 +87,7 @@ export class AddSubscriptionComponent implements OnInit {
         this.smeDetails = response.data[0];
         console.log('new sme', this.smeDetails);
         this.serviceEligibility = this.smeDetails.serviceEligibility_ITR;
+        this.itrUServiceEligibility = this.smeDetails.serviceEligibility_ITR
         if (this.data.filerId) {
           this.showMessage = 'Filer is not eligible for the disabled plans. Please give plan capability and then try or reassign the user.'
         } else {
@@ -96,7 +98,7 @@ export class AddSubscriptionComponent implements OnInit {
   }
 
   isPlanEnabled(plan: any): boolean {
-    if (this.roles.includes('ROLE_FILER') || (this.data.filerId && plan.servicesType === 'ITR')) {
+    if (this.roles.includes('ROLE_FILER') || (this.data.filerId && (plan.servicesType === 'ITR' || plan.servicesType ==='ITRU'))) {
       if (this.smeDetails?.skillSetPlanIdList) {
         const planId = plan.planId;
         this.onlyServiceITR = true;
