@@ -43,7 +43,7 @@ export class ShowUserDocumnetsComponent implements OnInit {
       // this.getCommonDocuments(params['userId']);
       this.userId = params['userId'];
       this.serviceType = params['serviceType']
-      this.mobileNumber = params['mobileNumber'];
+      // this.mobileNumber = params['mobileNumber'];
       // For directly navigating to ITR folder docs
       if (this.serviceType == 'ITR') {
         this.breadcrumbsPart = ["Home", "ITR", "2022-23", "Original", "ITR Filing Docs"];
@@ -61,8 +61,14 @@ export class ShowUserDocumnetsComponent implements OnInit {
         this.breadcrumbsPart = ["Home", "ITR", "2021-22", "Original", "ITR Filing Docs"];
       }
 
-
       this.getCloudFilePath(this.serviceType);
+
+      this.utilsService.getUserDetailsByUserId(this.userId).subscribe((res: any) => {
+        console.log(res);
+        if (res?.records) {
+          this.mobileNumber = res?.records[0]?.mobileNumber;
+        }
+      });
     });
 
     let roles = this.utilsService.getUserRoles();

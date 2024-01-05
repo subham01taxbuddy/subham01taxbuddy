@@ -73,6 +73,7 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     if (this.router?.url?.includes('user-docs')) {
       this.isDocumentCloud = false
+      this.openSidebar = false;
     }
     const data = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
     let smeMobileNumber = '';
