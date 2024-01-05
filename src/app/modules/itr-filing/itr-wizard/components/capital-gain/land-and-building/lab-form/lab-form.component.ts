@@ -200,7 +200,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       const dataToPatch = this.ITR_JSON.capitalGain?.filter(
         (item) => item.assetType === 'PLOT_OF_LAND'
       );
-      dataToPatch[0].assetDetails.forEach((element, index) => {
+      dataToPatch[0]?.assetDetails.forEach((element, index) => {
         if (element.srn === 0) {
           this.currentCgIndex = index;
         }
@@ -208,7 +208,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
 
       console.log('selected index=', this.currentCgIndex);
       this.cgArrayElement = dataToPatch[0];
-      if(this.cgArrayElement.assetDetails?.length > 0) {
+      if(this.cgArrayElement?.assetDetails?.length > 0) {
         this.editProperty(0);
         this.mode = 'EDIT';
       } else {

@@ -120,7 +120,7 @@ export class SourceOfIncomesComponent implements OnInit {
       let assets = this.ITR_JSON.foreignIncome.foreignAssets;
       let relief = this.ITR_JSON.foreignIncome.taxReliefClaimed;
       let isForeignIncome = false;
-      relief.forEach(r => {
+      relief?.forEach(r => {
         r.headOfIncome.forEach(income =>{
           let testIncome = income.outsideIncome > 0 || income.outsideTaxPaid > 0;
           if(testIncome === true) {
