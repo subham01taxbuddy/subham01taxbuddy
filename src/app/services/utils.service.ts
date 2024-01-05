@@ -1332,6 +1332,12 @@ export class UtilsService {
     return this.userMsService.getMethodNew(param);
   }
 
+  getUserDetailsByUserId(userId) {
+    //https://uat-api.taxbuddy.com/user/search/userprofile/query?userId=3210
+    const param = `/search/userprofile/query?userId=${userId}`;
+    return this.userMsService.getMethodNew(param);
+  }
+
   getFilerIdByMobile(mobile,ITR?){
     //user list api to get filerId for create subscription
     //https://uat-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=20&serviceType=ITR&mobileNumber=3263636364
