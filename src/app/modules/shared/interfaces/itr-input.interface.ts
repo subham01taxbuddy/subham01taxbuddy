@@ -1036,7 +1036,7 @@ export interface ProfitLossACIncomes {
 
 export interface ProfitLossIncomes {
   id: Number;
-
+  netIncome?:Number;
   brokerName: string;
   incomeType: string;
   turnOver: Number;
