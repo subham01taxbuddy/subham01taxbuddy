@@ -34,6 +34,7 @@ export class AppConstants {
     public static NAME = environment.production ? 'name' : 'name';
     public static ITR_DOCS = environment.production ? 'ITR_DOCS' : 'ITR_DOCS';
     public static SME_LIST = environment.production ? 'SME_LIST' : 'SME_LIST';
+    public static ALL_RESIGNED_ACTIVE_SME_LIST = environment.production ? 'ALL_RESIGNED_ACTIVE_SME_LIST' : 'ALL_RESIGNED_ACTIVE_SME_LIST';
     public static MASTER_STATUS = environment.production ? 'MASTER_STATUS' : 'MASTER_STATUS';
     public static FY_LIST = environment.production ? 'FY_LIST' : 'FY_LIST';
     public static AGENT_LIST = environment.production ? 'AGENT_LIST' : 'AGENT_LIST';
@@ -116,8 +117,8 @@ export class AppConstants {
     public static reviewStatusList: any = [{ label: 'Yes', value: true }, { label: 'No', value: false }];
     public static ratingList: any = [{ label: '1', value: '1' }, { label: '2', value: '2' }, { label: '3', value: '3' }, { label: '4', value: '4' }, { label: '5', value: '5' }];
     public static sentimentList: any = [{ label: 'Positive', value: 'Positive' }, { label: 'Negative', value: 'Negative' }];
-    public static statusList: any = [{ label: 'All', value: 'All' },{ label: 'open', value: 'OPEN' }, { label: 'Resolved', value: 'RESOLVED' }, { label: 'Unresolved', value: 'UNRESOLVED' }];
-    public static platformList: any = [{ label: 'All', value: 'All' },{ label: 'Play Store', value: 'Play Store' }, { label: 'Kommunicate', value: 'Kommunicate' }, { label: 'Google My Business', value: 'Google My Business' }, {label:'Apple Store' ,value:'Apple Store'} ];
+    public static statusList: any = [{ label: 'All', value: 'All' }, { label: 'open', value: 'OPEN' }, { label: 'Resolved', value: 'RESOLVED' }, { label: 'Unresolved', value: 'UNRESOLVED' }];
+    public static platformList: any = [{ label: 'All', value: 'All' }, { label: 'Play Store', value: 'Play Store' }, { label: 'Kommunicate', value: 'Kommunicate' }, { label: 'Google My Business', value: 'Google My Business' }, { label: 'Apple Store', value: 'Apple Store' }];
     public static defaultCountry = '91';
     public static stateDropdown: any = [{
         "id": "5b4599c9c15a76370a3424c2",

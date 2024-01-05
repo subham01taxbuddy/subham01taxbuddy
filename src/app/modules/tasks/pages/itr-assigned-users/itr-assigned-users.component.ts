@@ -336,10 +336,10 @@ export class ItrAssignedUsersComponent implements OnInit {
         response.data.content.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
-          if (smeSelectedPlan && smeSelectedPlan.servicesType === 'ITR') {
+          if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR' || smeSelectedPlan.servicesType === 'ITRU')) {
             itrSubscriptionFound = true;
             return;
-          } else if (userSelectedPlan && userSelectedPlan.servicesType === 'ITR') {
+          } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITR' || userSelectedPlan.servicesType === 'ITRU')) {
             itrSubscriptionFound = true;
             return;
           }

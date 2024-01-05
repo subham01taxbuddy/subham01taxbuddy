@@ -15,6 +15,7 @@ export class ServiceDropDownComponent implements OnInit {
 
   serviceTypes = [];
   selectedService = new FormControl('', []);
+  @Input() fromInvoices : boolean =false;
   constructor(public utilsService: UtilsService,
               private itrMsService: ItrMsService) { }
 
@@ -27,6 +28,33 @@ export class ServiceDropDownComponent implements OnInit {
           value: 'ITR',
         },
       ];
+    }else if(this.fromInvoices){
+      this.serviceTypes =[
+        {
+          label: 'ITR',
+          value: 'ITR',
+        },
+        {
+          label: 'GST',
+          value: 'GST',
+        },
+        {
+          label: 'NOTICE',
+          value: 'NOTICE',
+        },
+        {
+          label: 'TPA',
+          value: 'TPA',
+        },
+        {
+          label: 'ACADEMY',
+          value: 'ACADEMY',
+        },
+        {
+          label: 'OTHER',
+          value: 'OTHER',
+        },
+      ]
     }else{
       this.serviceTypes =[
         {

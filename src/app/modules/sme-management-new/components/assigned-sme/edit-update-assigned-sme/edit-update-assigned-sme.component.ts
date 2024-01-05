@@ -750,6 +750,9 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
         this.utilsService.showSnackBar('Please verify bank details to continue.');
         return;
       } else {
+        if (!this.smeObj?.['partnerDetails']) {
+          this.smeObj['partnerDetails'] = {};
+        }
         if (!this.smeObj?.['partnerDetails'].bankDetails) {
           this.smeObj['partnerDetails']['bankDetails'] = {
             "accountType": this.bankDetailsFormGroup.controls['accountType'].value,
