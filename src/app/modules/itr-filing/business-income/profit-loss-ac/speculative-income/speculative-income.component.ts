@@ -26,12 +26,12 @@ export class SpeculativeIncomeComponent implements OnInit {
     id: null,
     brokerName: '',
     incomeType: 'SPECULATIVEINCOME',
-    turnOver: 0,
+    turnOver: null,
     finishedGoodsOpeningStock: null,
     finishedGoodsClosingStock: null,
     purchase: null,
     COGS: null,
-    grossProfit: 0,
+    grossProfit: null,
     expenditure: null,
     netIncomeFromSpeculativeIncome: null,
   };
@@ -74,7 +74,7 @@ export class SpeculativeIncomeComponent implements OnInit {
   }
 
   get getIncomeArray() {
-    return <FormArray>this.specIncomeForm.get('specIncomesArray');
+    return (this.specIncomeForm.get('specIncomesArray') as FormArray).controls;
   }
 
   createSpecIncomeForm(index, income: ProfitLossIncomes) {
@@ -85,7 +85,7 @@ export class SpeculativeIncomeComponent implements OnInit {
       turnOver: [income?.turnOver],
       grossProfit: [income?.grossProfit],
       expenditure: [income?.expenditure],
-      netIncome: [income?.grossProfit - income?.expenditure],
+      netIncome: [income ? (income?.netIncome) : 0],
     });
   }
 
@@ -97,10 +97,23 @@ export class SpeculativeIncomeComponent implements OnInit {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
 
+  addSpeculativeFormValidation(index) {
+    debugger
+    let specIncome = (this.specIncomeForm?.controls['specIncomesArray'] as FormArray)?.controls[index] as FormGroup;
+    if (specIncome) {
+      if (specIncome.controls['expenditure'].value && (!specIncome.controls['turnOver'].value || !specIncome.controls['grossProfit'].value)) {
+        debugger
+        specIncome.controls['grossProfit'].setValidators(Validators.required);
+        specIncome.controls['grossProfit'].updateValueAndValidity();
+        specIncome.controls['turnOver'].setValidators(Validators.required);
+        specIncome.controls['turnOver'].updateValueAndValidity();
+        // specIncome.markAsDirty();
+      }
+    }
+  }
+
   calculateNetIncome(index) {
-    let specIncome = (
-      this.specIncomeForm?.controls['specIncomesArray'] as FormArray
-    )?.controls[index] as FormGroup;
+    let specIncome = (this.specIncomeForm?.controls['specIncomesArray'] as FormArray)?.controls[index] as FormGroup;
 
     // inputs
     let turnover = specIncome?.controls['turnOver'];
@@ -108,50 +121,59 @@ export class SpeculativeIncomeComponent implements OnInit {
     let grossProfit = specIncome?.controls['grossProfit'];
 
     // values
-    let turnoverValue = parseFloat(
-      specIncome?.controls['turnOver']?.value
-        ? specIncome?.controls['turnOver']?.value
-        : 0
-    );
-    let grossProfitValue = parseFloat(
-      specIncome?.controls['grossProfit']?.value
-        ? specIncome?.controls['grossProfit']?.value
-        : 0
-    );
-    let expenditureValue = parseFloat(
-      specIncome?.controls['expenditure']?.value
-        ? specIncome?.controls['expenditure']?.value
-        : 0
-    );
-    let netIncomeValue = parseFloat(
-      specIncome?.controls['netIncome']?.value
-        ? specIncome?.controls['netIncome']?.value
-        : 0
+    let turnoverValue = parseFloat(specIncome?.controls['turnOver']?.value ?
+      specIncome?.controls['turnOver']?.value : null);
+    let grossProfitValue = parseFloat(specIncome?.controls['grossProfit']?.value
+      ? specIncome?.controls['grossProfit']?.value : 0);
+    let expenditureValue = parseFloat(specIncome?.controls['expenditure']?.value
+      ? specIncome?.controls['expenditure']?.value : 0);
+    let netIncomeValue = parseFloat(specIncome?.controls['netIncome']?.value
+      ? specIncome?.controls['netIncome']?.value : 0
     );
 
     // if turnover is not 0 calculate net income else set all to 0
-    if (turnover && turnoverValue !== 0) {
-      netIncome?.setValue(grossProfitValue - expenditureValue);
-      netIncome?.updateValueAndValidity();
-      netIncomeValue = netIncome?.value;
-    } else if (turnover && turnoverValue === 0) {
-      grossProfit?.setValue(0);
-      grossProfit?.updateValueAndValidity();
-      grossProfitValue = grossProfit?.value;
-
+    // if (turnover && grossProfitValue) {
+    netIncome?.setValue(grossProfitValue - expenditureValue);
+    netIncome?.updateValueAndValidity();
+    netIncomeValue = netIncome?.value;
+    // } else 
+    if (turnover && turnover.value == 0) {
+      // grossProfit?.setValue(0);
+      // grossProfit?.updateValueAndValidity();
+      // grossProfitValue = grossProfit?.value;
+      specIncome.controls['grossProfit'].setValidators([Validators.required, Validators.max(turnover.value)]);
+      specIncome.controls['turnOver'].setValidators([Validators.required]);
+      specIncome.controls['expenditure'].setValue(0);
+      specIncome.controls['grossProfit'].setValue(0);
       netIncome?.setValue(0);
       netIncome?.updateValueAndValidity();
       netIncomeValue = netIncome?.value;
     }
-
+    if (specIncome) {
+      if (specIncome.controls['expenditure'].value && (!specIncome.controls['turnOver'].value || !specIncome.controls['grossProfit'].value)) {
+        debugger
+        specIncome.controls['grossProfit'].setValidators([Validators.required, Validators.max(specIncome.controls['turnOver'].value)]);
+        specIncome.controls['grossProfit'].updateValueAndValidity();
+        specIncome.controls['turnOver'].setValidators([Validators.required]);
+        specIncome.controls['turnOver'].updateValueAndValidity();
+        specIncome.controls['turnOver'].markAllAsTouched();
+        specIncome.controls['grossProfit'].markAllAsTouched();
+        // specIncome.controls['grossProfit'].markAsDirty();
+      }
+    }
     // set validator for gp if gp greater than turnover
     if (grossProfitValue > turnoverValue) {
-      grossProfit?.setValidators(Validators.max(turnoverValue));
+      grossProfit?.setValidators([Validators.required, Validators.max(specIncome.controls['turnOver'].value)]);
       grossProfit?.updateValueAndValidity();
-    } else {
-      grossProfit?.clearValidators();
+    } else if (grossProfitValue <= turnoverValue) {
+      grossProfit?.setValidators([Validators.required]);
       grossProfit?.updateValueAndValidity();
+
     }
+    //else {
+    //   grossProfit?.clearValidators();
+    //   grossProfit?.updateValueAndValidity();
+    // }
   }
 
   addSpecIncomeForm() {
