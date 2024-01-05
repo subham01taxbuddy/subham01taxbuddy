@@ -72,7 +72,9 @@ export class GenericCsvService {
           element['leaderUserId'] = item.name;
         if (item.userId === element.filingTeamMemberId)
           element['filingTeamMemberId'] = item.name;
-      })
+        if (item.userId === element.filerUserId)
+          element['filerUserId'] = item.name;
+      });
     });
     this.data.forEach((element) => {
       element['isRevised'] = (element.isRevised === 'Y') ? 'Revised' : 'Original';
