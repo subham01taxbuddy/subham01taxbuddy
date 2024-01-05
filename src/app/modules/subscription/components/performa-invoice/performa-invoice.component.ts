@@ -119,6 +119,8 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
   sortMenus = [
     { value: 'invoiceDate', name: 'Invoice Date'},
     { value: 'txbdyInvoiceId', name: 'Invoice number'},
+    // { value: 'billTo', name: 'Name' },
+    // { value: 'txbdyInvoiceId', name: 'Invoice number'},
   ];
   dataOnLoad = true;
   searchAsPrinciple: boolean = false;

@@ -80,7 +80,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   smeDetails: any;
   showMessage = '';
   serviceEligibility: any;
-  assignedFilerId:any;
+  assignedFilerId: any;
+  refundInvoiceDetails: any;
   constructor(
     private fb: FormBuilder,
     public utilsService: UtilsService,
@@ -147,6 +148,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     } else {
       this.subscriptionObj = this.createSubscriptionObj;
       this.userSubscription = this.createSubscriptionObj;
+      this.getRefundProcessedInvoices();
       this.serviceType =
         this.createSubscriptionObj?.smeSelectedPlan?.servicesType;
       this.smeSelectedPlanId =
@@ -194,9 +196,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     // https://dev-api.taxbuddy.com/report/bo/sme-details-new/3000'
     let loggedInSmeUserId = this.loggedInSme[0]?.userId;
     let userId;
-    if(this.assignedFilerId){
+    if (this.assignedFilerId) {
       userId = this.assignedFilerId;
-    }else{
+    } else {
       userId = loggedInSmeUserId;
     }
     let param = `/bo/sme-details-new/${userId}`
@@ -204,11 +206,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       this.loading = false;
       if (response.success) {
         this.smeDetails = response.data[0];
-        if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')){
-          if(this.assignedFilerId && this.serviceType ==='ITR'){
+        if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+          if (this.assignedFilerId && (this.serviceType === 'ITR' ||this.serviceType === 'ITRU' )) {
             this.showMessage = 'Filer is not eligible for the disabled plans. Please give plan capability and then try or reassign the user.'
           }
-        }else if(this.roles.includes('ROLE_FILER')){
+        } else if (this.roles.includes('ROLE_FILER')) {
           this.showMessage = 'Disabled plans are not available in your eligibility please contact with your leader'
         }
       }
@@ -397,6 +399,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       }
       this.isPromoRemoved = false;
       this.userSubscription = res;
+      this.getRefundProcessedInvoices();
       this.setFinalPricing();
       this.utilsService.showSnackBar(
         `Promo Code ${this.selectedPromoCode} applied successfully!`
@@ -427,6 +430,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       );
       this.isPromoRemoved = true;
       this.userSubscription = res;
+      this.getRefundProcessedInvoices();
       this.setFinalPricing();
     });
   }
@@ -493,6 +497,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.itrService.getMethod(param).subscribe(
       (subscription: any) => {
         this.userSubscription = subscription;
+        this.getRefundProcessedInvoices();
         console.log('user Subscription', this.userSubscription);
         this.gstUserInfoByUserId(subscription.userId);
         this.loading = false;
@@ -577,6 +582,14 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.loading = false;
       }
     );
+  }
+
+  getRefundProcessedInvoices() {
+    if (this.userSubscription?.invoiceDetail?.length) {
+      if (this.userSubscription?.invoiceDetail[0]?.invoiceRefundDetails && this.userSubscription?.invoiceDetail[0]?.invoiceRefundDetails?.length) {
+        this.refundInvoiceDetails = this.userSubscription?.invoiceDetail[0]?.invoiceRefundDetails.filter(item => item.refundStatus === 'PROCESSED');
+      }
+    }
   }
 
   setServiceDetails() {
@@ -712,7 +725,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
           );
           if (this.utilsService.isNonEmpty(serviceType)) {
             this.allPlans = activePlans.filter((item: any) => item.servicesType === serviceType);
-            if (this.roles.includes('ROLE_FILER') || (this.assignedFilerId && serviceType ==='ITR')) {
+            if (this.roles.includes('ROLE_FILER') || (this.assignedFilerId && (serviceType === 'ITR' || serviceType === 'ITRU' ))) {
               this.allPlans.forEach((item: any) => {
                 item.disable = true;
                 if (this.smeDetails?.skillSetPlanIdList.includes(item.planId))
@@ -767,6 +780,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         this.loading = false;
         console.log('SME Selected plan:', response);
         this.userSubscription = response;
+        this.getRefundProcessedInvoices();
         this.loading = false;
         if (
           this.utilsService.isNonEmpty(this.userSubscription) &&
@@ -822,7 +836,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   changeService() {
     if (this.service === 'ITRU') {
       this.filteredFinancialYears = this.financialYear.filter(
-        (year) => year.financialYear === '2020-2021' || year.financialYear === '2021-2022'
+        (year) => year.financialYear === '2020-2021' || year.financialYear === '2021-2022' || year.financialYear === '2022-2023'
       );
 
     } else {
@@ -907,8 +921,8 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       console.log('owner filer name  -> ', result);
       this.filerName.setValue(result.data[0]?.name);
       this.leaderName.setValue(result.data[0]?.parentName);
-      if(this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')){
-        if(result.data[0].filer && !result.data[0].leader ){
+      if (this.roles.includes('ROLE_ADMIN') || this.roles.includes('ROLE_LEADER')) {
+        if (result.data[0].filer && !result.data[0].leader) {
           this.assignedFilerId = result.data[0].userId;
           this.getSmeDetail();
           this.getAllPlanInfo(this.serviceType);

@@ -700,6 +700,27 @@ export class FilingsComponent implements OnInit, OnDestroy {
         }
       },
       {
+        headerName: 'ITR Actually Filed',
+        field: 'filerUserId',
+        cellStyle: { textAlign: 'center' },
+        sortable: true,
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          defaultOption: 'startsWith',
+          debounceMs: 0,
+        },
+        valueGetter: function (params) {
+          let createdUserId = parseInt(params?.data?.filerUserId)
+          let filer1 = filerList;
+          let filer = filer1.filter((item) => {
+            return item.userId === createdUserId;
+          }).map((item) => {
+            return item.name;
+          });
+          return filer
+        }
+      },
+      {
         headerName: 'ITR ID',
         field: 'itrId',
         cellStyle: { textAlign: 'center' },
