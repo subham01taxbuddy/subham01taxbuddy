@@ -6277,7 +6277,12 @@ export class SummaryComponent implements OnInit {
                 this.finalSummary?.assessment?.taxSummary?.taxpayable,
               amountRefund:
                 this.finalSummary?.assessment?.taxSummary?.taxRefund,
-
+              giftExemptIncome: getTotalGiftExemptIncome(
+                  this.finalSummary?.itr?.giftTax
+                ),
+              profitShareAmount:
+                  this.finalSummary.assessment?.scheduleIF
+                    ?.totalProfitShareAmount,
               exemptIncome: {
                 partnerFirms: (this.finalSummary?.itr?.partnerFirms || [])?.map((element, index) => ({
                   srNo: index + 1,
@@ -6288,19 +6293,11 @@ export class SummaryComponent implements OnInit {
                   .filter(([key, value]) => key !== 'srNo')
                   .some(([key, value]) => value !== null || value!== 0)
                 ),
-                            
                 
-                total: this.finalSummary?.itr?.partnerFirms?.reduce(
-                  (total, item) => total + item?.profitShareAmount,
-                  0
-                ),
+                total: getTotalGiftExemptIncome(this.finalSummary?.itr?.giftTax) + 
+                this.finalSummary.assessment?.scheduleIF?.totalProfitShareAmount
               },
-              giftExemptIncome: getTotalGiftExemptIncome(
-                this.finalSummary?.itr?.giftTax
-              ),
-              profitShareAmount:
-                this.finalSummary.assessment?.scheduleIF
-                  ?.totalProfitShareAmount,
+         
             };
 
             console.log(this.finalCalculations, 'finalCalculations');
