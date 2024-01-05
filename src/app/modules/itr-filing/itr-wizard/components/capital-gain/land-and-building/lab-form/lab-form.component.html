@@ -10,15 +10,16 @@
   <div class="space">
     <div class="div-2">
       <div class="div-3">
-        <div class="contents-wrapper">
-          <div class="contents">
-            <div class="field-text">Land & Building Property {{ this.currentCgIndex !== -1 ? this.currentCgIndex + 1 : this.ITR_JSON.employers.length + 1}}</div>
-            <div class="group" *ngIf="false"><img class="material-symbols" src="assets/img/new/del.png"
-            /></div>
+        <div class="contents-wrapper" *ngFor="let property of cgArrayElement.assetDetails; let i = index;">
+          <div [ngClass]="i === currentCgIndex ? 'contents-selected' : 'contents'">
+            <div [ngClass]="i === currentCgIndex ? 'field-text-selected' :'field-text'" (click)="markActive(i)">Land & Building Property {{ i + 1}}</div>
+            <div class="group" (click)="deleteProperty(i)">
+              <i class="fa fa-trash-o delbt" [ngClass]="i === currentCgIndex ? 'field-text-selected' :'field-text'"></i>
+            </div>
           </div>
         </div>
-        <div class="contents-wrapper" *ngIf="false">
-          <div class="field-text-wrapper"><div class="field-text-2">+ Add Another Property</div></div>
+        <div class="contents-wrapper">
+          <div class="field-text-wrapper" (click)="markActive(-1)"><div class="field-text-2">+ Add Another Property</div></div>
         </div>
       </div>
 
@@ -34,7 +35,7 @@
                 <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion"
                      formArrayName="assetDetails">
                   <div class="card-body"
-                       *ngFor="let asset of getAssetDetailsArrayForImmovable.controls; let i = index"
+                       *ngFor="let asset of getAssetDetailsArrayForImmovable.controls | slice:0:1; let i = index"
                        [formGroupName]="i">
                     <div class="div-5">
                       <div class="div-6">
@@ -872,7 +873,7 @@
               <div class="lft-btn" (click)="goBack()">Back</div>
             </div>
             <div class="box-right">
-              <div class="rght-btn" (click)="saveImmovableCG(immovableForm, 0)">Save & View Summary</div>
+              <div class="rght-btn" (click)="saveImmovableCG(immovableForm, 0, true)">Save & View Summary</div>
             </div>
           </div>
 

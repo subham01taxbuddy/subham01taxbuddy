@@ -336,10 +336,10 @@ export class ItrAssignedUsersComponent implements OnInit {
         response.data.content.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
-          if (smeSelectedPlan && smeSelectedPlan.servicesType === 'ITR') {
+          if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR' || smeSelectedPlan.servicesType === 'ITRU')) {
             itrSubscriptionFound = true;
             return;
-          } else if (userSelectedPlan && userSelectedPlan.servicesType === 'ITR') {
+          } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITR' || userSelectedPlan.servicesType === 'ITRU')) {
             itrSubscriptionFound = true;
             return;
           }
@@ -781,25 +781,27 @@ export class ItrAssignedUsersComponent implements OnInit {
         sortable: true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
-          let statusText = '';
-          // if (itrStatus.length !== 0) {
-          //   const nameArray = itrStatus.filter(
-          //     (item: any) => item.statusId === params.data.statusId
-          //   );
-          //   if (nameArray.length !== 0) {
-          //     statusSequence = nameArray[0].sequence;
-          //     statusText = nameArray[0].statusName;
-          //   } else {
-          //     statusText = '-';
-          //   }
-          // } else {
-          statusText = params.data.statusName;
-          // }
-          return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
-          style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
-          <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
-           </button>`;
+          const statusName = params.data.statusName;
+          const statusColors = {
+            'Open': { background: '#DDEDFF', color: '#2D629B' },
+            'Not Interested': { background: '#DCDCDC', color: '#808080' },
+            'Payment Received': { background: '#FBEED3', color: '#A36543' },
+            'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+            'Upgraded Invoice Sent' : {background : '#EFF6FF', color: '#86af39'}
+          };
+          const statusStyle = statusColors[statusName] || { background: 'transparent', color: '#000' };
+
+          return `<button class="status-chip" title="Update Status" data-action-type="updateStatus" style="padding: 0px 18px;  border-radius: 40px;
+          cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
+          <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${params.data.statusName}
+          </button>`;
+
+          // return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
+          // style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
+          // <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${statusText}
+          //  </button>`;
         },
+
         width: 220,
         pinned: 'right',
         cellStyle: function (params: any) {
@@ -866,23 +868,23 @@ export class ItrAssignedUsersComponent implements OnInit {
           if (params.data.serviceType === 'ITR') {
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
             if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
-              return `<button type="button" class="action_icon add_button" style="border: none;
-              background: transparent; font-size: 13px; cursor:pointer;color:#ffa704;" data-action-type="yetToStart">
+              return `<button type="button" class="action_icon add_button" data-action-type="yetToStart" style="padding: 0px 18px;  border-radius: 40px;
+              cursor:pointer; background-color:#FBEED3; color:#A36543;" >
               <i class="fas fa-flag-checkered" title="No action taken yet" aria-hidden="true" data-action-type="yetToStart"></i> Yet to Start
               </button>`;
             } else if (params.data.statusId === 14) { //backed out
-              return `<button type="button" class="action_icon add_button" style="border: none;
-              background: transparent; font-size: 16px; cursor:pointer;color: red" data-action-type="startFiling">
+              return `<button type="button" class="action_icon add_button" data-action-type="startFiling" style="border: none;
+              background: transparent; font-size: 16px; cursor:pointer;color: red" >
               <i class="fa fa-circle" title="User Backed out" aria-hidden="true" data-action-type="startFiling"></i>
               </button>`;
             } else if (params.data.itrObjectStatus === 'ITR_FILED') { // ITR filed
-              return `<button type="button" class="action_icon add_button" title="ITR filed successfully / Click to start revise return" style="border: none;
-              background: transparent; font-size: 16px; cursor:pointer;color: green" data-action-type="startFiling">
+              return `<button type="button" class="action_icon add_button" data-action-type="startRevise" title="ITR filed successfully / Click to start revise return" style="padding: 0px 18px;  border-radius: 40px;
+              cursor:pointer; background-color:#D3FBDA; color:#43A352;">
               <i class="fa fa-check" aria-hidden="true" data-action-type="startRevise"></i>
             </button>`;
             } else {
-              return `<button type="button" class="action_icon add_button" title="Start ITR Filing" style="text-align:left; border: none;
-              background: transparent; font-size: 13px;  font-weight:bold; cursor:pointer;color:#04a4bc;" data-action-type="startFiling">
+              return `<button type="button" class="action_icon add_button" data-action-type="startFiling" title="Start ITR Filing" style="padding: 0px 18px;  border-radius: 40px;
+              cursor:pointer; background-color:#DDEDFF; color:#2D629B;">
               <i class="fa-regular fa-money-check-pen" data-action-type="startFiling"></i> Resume Filing
             </button>`;
             }

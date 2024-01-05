@@ -207,6 +207,7 @@ export class SidebarComponent {
         { name: 'Calling Report', url: '/reports/calling-reports', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
         { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Missed Inbound Calls', url: '/reports/missed-inbound-calls-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
         { name: 'Missed Chat List', url: '/reports/missed-chat-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },

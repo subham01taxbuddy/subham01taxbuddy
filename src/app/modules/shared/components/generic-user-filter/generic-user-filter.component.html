@@ -1,29 +1,27 @@
 <div class="row">
-    <div class="col-sm-5">
-        <label class="input__label">Select attribute </label>
-        <select class="select__box ogp_select" [(ngModel)]="searchKey" (change)="changeInput();clearValue()">
-            <option *ngFor="let drop of searchParameter" class="un-select-list" [value]="drop.value">
-                {{drop.name}}</option>
-        </select>
-    </div>
+  <div class="col-sm-5">
+    <label class="input__label" for="attr">Select attribute</label>
+    <mat-form-field appearance="outline" class="custom-bg-new ">
+      <mat-select [(ngModel)]="searchKey" (selectionChange)="changeInput(); clearValue()">
+        <mat-option *ngFor="let drop of searchParameter" [value]="drop.value">
+          {{ drop.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
-    <div class="col-sm-6">
-        <label class="input__label">Enter Value </label>
-        <input type="text" class="select__box ogp_select noBg" style="background-image:none" (change)="changeInput()"
-            [formControl]="searchValue" />
-        <div *ngIf="searchValue?.invalid && (searchValue?.dirty || searchValue?.touched)" class="errorMessage">
-            <div *ngIf="searchValue.errors?.['required']">
-                Please enter the field.
-            </div>
-            <div *ngIf="searchValue.errors?.['pattern'] || searchValue.errors?.['minlength'] || searchValue.errors?.['maxlength'] ">
-                Please enter the proper value.
-            </div>
-            <!-- <div *ngIf="searchValue.errors?.['minlength']">
-                Please enter the proper value.
-            </div>
-            <div *ngIf="searchValue.errors?.['maxlength']">
-                Please enter the proper value.
-            </div> -->
-        </div>
+  <div class="col-sm-6">
+    <label class="input__label">Enter Value </label>
+    <input type="text" class="select__box ogp_select noBg" style="background-image:none" (change)="changeInput()"
+      [formControl]="searchValue" />
+    <div *ngIf="searchValue?.invalid && (searchValue?.dirty || searchValue?.touched)" class="errorMessage">
+      <div *ngIf="searchValue.errors?.['required']">
+        Please enter the field.
+      </div>
+      <div
+        *ngIf="searchValue.errors?.['pattern'] || searchValue.errors?.['minlength'] || searchValue.errors?.['maxlength'] ">
+        Please enter the proper value.
+      </div>
     </div>
+  </div>
 </div>

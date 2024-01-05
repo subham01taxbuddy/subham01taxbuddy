@@ -397,9 +397,35 @@
           | currency : "INR"
           }}</b></td>
       </tr>
+
     </tbody>
   </table>
 
+      <!-- start refund details -->
+      <table class="table pb-table" *ngIf="refundInvoiceDetails && refundInvoiceDetails?.length">
+        <tbody>
+          <tr>
+            <th>Refund Details</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>Invoice No</td>
+            <td><span class="head"><b>{{ userSubscription?.invoiceDetail[0].invoiceNo }}</b></span></td>
+          </tr>
+          <tr *ngFor="let invoiceDetail of refundInvoiceDetails">
+            <td></td>
+            <td></td>
+            <td>Refund Paid Amount</td>
+            <td><span class="head"><b>{{
+                  invoiceDetail.refundPaidAmount | currency : "INR" }}</b></span></td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- end refund details -->
                 </div>
               </div>
             </div>
@@ -417,7 +443,7 @@
                   <mat-select [(ngModel)]="service" (ngModelChange)="onNgModelChange()"
                     [ngModelOptions]="{ standalone: true }" matInput placeholder="Select Service" autocomplete="off"
                     (selectionChange)="changeService()" [disabled]="isButtonDisable">
-                    <mat-option value="ITR"> ITR Filing </mat-option>
+                  <mat-option *ngIf="false" value="ITR"> ITR Filing </mat-option>
                     <mat-option value="ITRU"> ITR U </mat-option>
                     <mat-option value="GST"> GST
                     </mat-option>
