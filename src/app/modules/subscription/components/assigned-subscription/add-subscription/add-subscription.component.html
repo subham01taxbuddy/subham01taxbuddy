@@ -10,9 +10,8 @@
     <mat-dialog-content>
       <div class="container ">
         <div class="row">
-          <div class="col-lg-2 col-md-4 col-sm-6 ">
           <!-- Below *ngIf="false" change is needed in April -->
-          <div class="col-lg-2 col-md-4 col-sm-6 space" *ngIf="false">
+          <div class="col-lg-2 col-md-4 col-sm-6 " *ngIf="false">
             <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false"
               [class.disabled]="service === 'ITR'" (click)="showSelectedServicePlans('ITR')">ITR</a>
           </div>
@@ -61,8 +60,6 @@
           </div>
         </div>
       </div>
-      </div>
-
     </mat-dialog-content>
     <hr>
     <mat-dialog-actions align="center">

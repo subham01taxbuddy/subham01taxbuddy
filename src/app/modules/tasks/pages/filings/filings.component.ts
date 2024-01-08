@@ -452,6 +452,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       { key: 'email', value: 'Email' },
       { key: 'leaderUserId', value: 'Leader Name' },
       { key: 'filingTeamMemberId', value: 'Filer Name' },
+      { key: 'filerUserId', value: 'ITR Actually Filed' },
       { key: 'itrId', value: 'ITR ID' }
     ]
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'Filed-ITR', fieldName, {});

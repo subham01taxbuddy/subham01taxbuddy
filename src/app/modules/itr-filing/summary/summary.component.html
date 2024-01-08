@@ -450,9 +450,9 @@
                   <mat-expansion-panel
                     class="color-panel accordion-border"
                     [disabled]="
-                      finalCalculations?.salary?.salaryTotalIncome === 0
-                        ? true
-                        : false
+                      (finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.totalSummaryPerquisitesTaxableIncome +
+                      finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.totalSummaryProfitsInLieuOfSalaryTaxableIncome +
+                      finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.totalSummarySalaryTaxableIncome) === 0
                     "
                     #salary
                   >
@@ -1110,6 +1110,11 @@
                             ?.grossTurnover &&
                             finalCalculations?.businessIncome
                               ?.businessIncomeDetails?.nonSpecIncome
+                              ?.grossTurnover !== 0) || (finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.specIncome
+                              ?.grossTurnover &&
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.specIncome
                               ?.grossTurnover !== 0) ||
                           finalCalculations?.businessIncome
                             ?.businessIncomeDetails?.nonSpecIncomePl

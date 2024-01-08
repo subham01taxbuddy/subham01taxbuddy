@@ -507,6 +507,8 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.showCsvMessage = true;
     let loggedInId = this.utilsService.getLoggedInUserID();
+    let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
     let param = ''
     let userFilter = '';
     if (this.leaderId && !this.filerId) {
@@ -519,7 +521,7 @@ export class PayoutReportComponent implements OnInit, OnDestroy {
       userFilter += `&filerUserId=${this.filerId}`;
     }
 
-    param = `/payout/report?${userFilter}`;
+    param = `/payout/report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
 
     let fieldName = [
       { key: 'filerName', value: 'filerName' },

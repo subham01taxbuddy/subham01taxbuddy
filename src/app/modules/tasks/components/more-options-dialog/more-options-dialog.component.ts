@@ -199,7 +199,7 @@ export class MoreOptionsDialogComponent implements OnInit {
         queryParams: {
           userId: this.data.userId,
           serviceType: this.data.serviceType,
-          mobileNumber: this.data.mobileNumber
+          // mobileNumber: this.data.mobileNumber
         },
       })
       .toString();

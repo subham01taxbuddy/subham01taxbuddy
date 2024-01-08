@@ -175,23 +175,13 @@
                                         </div>
                                       </div>
                                     </mat-form-field>
-                                    <mat-error *ngIf="
-                      (profIncomeFormArray.controls[i].get('presumptiveIncome')
-                        .touched ||
-                        submitted) &&
-                      profIncomeFormArray.controls[i]
-                        .get('presumptiveIncome')
-                        .hasError('min')
-                    ">Amount should be greater than {{ amountFifty }}
+                                    <mat-error
+                                      *ngIf="(profIncomeFormArray.controls[i].get('presumptiveIncome').touched ||submitted) &&profIncomeFormArray.controls[i].get('presumptiveIncome').hasError('min')">Amount
+                                      should be greater than {{ profIncomeFormArray.controls[i].get('minimumPresumptiveIncome').value }}
                                     </mat-error>
-                                    <mat-error *ngIf="
-                      (profIncomeFormArray.controls[i].get('presumptiveIncome')
-                        .touched ||
-                        submitted) &&
-                      profIncomeFormArray.controls[i]
-                        .get('presumptiveIncome')
-                        .hasError('max')
-                    ">Amount cannot be greater than {{ amountFiftyMax }}
+                                    <mat-error *ngIf="(profIncomeFormArray.controls[i].get('presumptiveIncome').touched ||submitted) && 
+                                    profIncomeFormArray.controls[i].get('presumptiveIncome').hasError('max')">Amount
+                                      cannot be greater than {{ amountFiftyMax }}
                                     </mat-error>
                                   </div>
                                 </div>
