@@ -55,10 +55,6 @@
   margin: 25px 0px 12px 0px!important;
 }
 
-.mat-form-field{
-  background-color:#ddedff!important;
-}
-
 .spcTpBtm{
   font-size: 75%; 
   margin-top: 15px; 
@@ -234,26 +230,51 @@ float: left;
   }
 }
 
-.broker-card {
-  border-bottom-width: thin;
-  padding-bottom: 10px;
-  padding-top: 10px;
-  margin-left: 5px;
+.broker-row {
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  background: white;
+  border-left: 1px rgba(85, 86, 90, 0.12) solid;
+  border-right: 1px rgba(85, 86, 90, 0.12) solid;
+  border-bottom: 1px rgba(85, 86, 90, 0.12) solid;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  display: inline-flex
+}
+
+.broker-title-row {
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  background: #FCFCFC;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border: 1px rgba(85, 86, 90, 0.12) solid;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  display: inline-flex;
 }
 
 .broker-view-title {
-  color: #858383;
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 22.50px;
-  word-wrap: break-word
+  flex: 1 1 0;
+  text-align: center;
+  color: #121212;
+  font-size: 14px;
+  font-family: DM Sans;
+  font-weight: 500;
+  line-height: 21px;
+  word-wrap: break-word;
 }
 
 .broker-view-value {
-  color: black;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 30px;
+  color: #121212;
+  font-size: 14px;
+  font-family: DM Sans;
+  font-weight: 700;
   word-wrap: break-word;
   text-align: center;
 }
@@ -267,50 +288,11 @@ float: left;
 }
 
 .broker-view-btn {
-  text-align: right;
+  //text-align: right;
 }
 
 .card__col-sm-3 {
   padding: 10px !important;
-}
-
-.mat-form-field {
-  width: 90%;
-  background: #ffffff;
-  border-radius: 6.62375px;
-
-  .mat-form-field-wrapper {
-    // padding-bottom: 0px !important;
-
-    .mat-form-field-flex {
-      .mat-form-field-infix {
-        padding: 0.4em 0 !important;
-        margin-bottom: 5px;
-
-        .mat-input-element {
-          font-weight: 400;
-          font-size: 12.6259px;
-          line-height: 14px;
-          color: #9a9aaf;
-        }
-
-        .mat-select {
-          .mat-select-trigger {
-            .mat-select-value {
-              .mat-select-value-text {
-                .mat-select-min-line {
-                  font-weight: 400;
-                  font-size: 12.6259px;
-                  line-height: 14px;
-                  color: #9a9aaf;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
 }
 
 .cancel {
