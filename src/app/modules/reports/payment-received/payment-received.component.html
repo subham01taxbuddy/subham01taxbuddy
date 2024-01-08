@@ -37,12 +37,14 @@
                             <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
                           </mat-form-field>
                         </div>
+                        <div class="col-sm-4">
+                          <div class="button-container">
+                            <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+                              <i class="fa fa-download" aria-hidden="true"></i> Download File
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div class="button-container">
-                      <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
-                        <i class="fa fa-download" aria-hidden="true"></i> Download File
-                      </button>
                     </div>
                   </div>
                 </div>
