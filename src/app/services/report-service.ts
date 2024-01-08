@@ -18,4 +18,16 @@ export class ReportService {
     this.headers.append('Content-Type', 'application/json');
     return this.httpClient.get<T>(environment.url + this.microService + param[0], { headers: this.headers });
   }
+
+  invoiceDownload(params: any) {
+    const userData = JSON.parse(localStorage.getItem('UMD') || '');
+    const TOKEN = userData ? userData.id_token : null;
+    this.headers = new Headers();
+    this.headers.append('Content-Type', 'application/json');
+    this.headers.append('Authorization', 'Bearer ' + TOKEN);
+    return this.http.get(environment.url + this.microService + params, {
+      headers: this.headers,
+      responseType: 'blob',
+    });
+  }
 }

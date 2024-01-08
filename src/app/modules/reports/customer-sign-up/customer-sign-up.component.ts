@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import * as moment from 'moment';
+import { ReportService } from 'src/app/services/report-service';
 import { environment } from 'src/environments/environment';
 
 export const MY_FORMATS = {
@@ -42,6 +43,7 @@ export class CustomerSignUpComponent implements OnInit {
 
   constructor(
     public datePipe: DatePipe,
+    private reportService: ReportService,
   ) {
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
@@ -62,7 +64,18 @@ export class CustomerSignUpComponent implements OnInit {
     let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
     let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
 
-    let param = `/report/bo/customer-signup-report?fromDate=${fromDate}&toDate=${toDate}`;
-    location.href = environment.url + param;
+    let param = `/bo/customer-signup-report?fromDate=${fromDate}&toDate=${toDate}`;
+    // location.href = environment.url + param;
+    this.reportService.invoiceDownload(param).subscribe((response:any) => {
+      const blob = new Blob([response], { type: 'application/octet-stream' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Customer-SignUp-Report.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    });
   }
 }
