@@ -1110,6 +1110,11 @@
                             ?.grossTurnover &&
                             finalCalculations?.businessIncome
                               ?.businessIncomeDetails?.nonSpecIncome
+                              ?.grossTurnover !== 0) || (finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.specIncome
+                              ?.grossTurnover &&
+                            finalCalculations?.businessIncome
+                              ?.businessIncomeDetails?.specIncome
                               ?.grossTurnover !== 0) ||
                           finalCalculations?.businessIncome
                             ?.businessIncomeDetails?.nonSpecIncomePl

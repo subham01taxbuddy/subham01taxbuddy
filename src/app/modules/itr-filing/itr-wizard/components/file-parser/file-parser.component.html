@@ -14,7 +14,10 @@
           </div>
 
           <div class="col-5">
-            <button class="btn btn__primary float-right" (click)="upload()"><i
+            <button class="btn__upload float-right" (click)="cloudUpload()"><i class="fa-regular fa-cloud"></i> Upload From Cloud
+            </button>
+
+            <button class="btn__upload float-right" (click)="upload()"><i
                     class="fa-solid fa-arrow-up-from-bracket"></i> Manual Upload
               <input
                       type="file"
@@ -24,8 +27,7 @@
                       (change)="uploadFile($event)"
                       accept=".xls, .xlsx"/>
             </button>
-            <button class="btn btn__primary float-right" (click)="cloudUpload()"><i class="fa-regular fa-cloud"></i> Upload From Cloud
-            </button>
+
           </div>
         </div>
 
@@ -63,8 +65,8 @@
             <p class="normal_text">Use Taxbuddy Template</p>
           </div>
           <div class="col-5">
-            <button class="btn btn__primary float-right" (click)="downloadTemplate()">
-              <i class="fa fa-download" aria-hidden="true"></i> Download Taxbuddy Template</button>
+            <button class="btn__upload float-right" (click)="downloadTemplate()">
+              <img src="assets/img/tabler_template.svg"/> Download Taxbuddy Template</button>
           </div>
         </div>
         <hr style="border-top:1px solid #cccccc; margin-top: 20px; padding-bottom: 20px">

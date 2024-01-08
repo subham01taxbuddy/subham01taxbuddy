@@ -9,9 +9,7 @@
     color: #07070c;
   }
 
-  .btn__primary{   
-    margin-right:-30px!important;
-  }
+
 
   .warn {
     padding:8px!important;
@@ -59,6 +57,27 @@
   font-size: 20px;
   font-weight: 600;
 }
+
+.btn__upload{
+  margin-right:30px!important;
+  background-color: #C7E0FC;
+  color: #17477C;
+  font-size: 12px;
+  font-family: DM Sans;
+  font-weight: 500;
+  line-height: 28px;
+  word-wrap: break-word;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-radius: 4px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  display: inline-flex;
+}
+
 .card {
   padding: 20px !important;
   border: 1px solid #00aeca !important;
