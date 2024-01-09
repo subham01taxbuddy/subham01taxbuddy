@@ -544,7 +544,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd');
       let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd');
 
-      let param = '/report/invoice/csv-report?fromDate=' + fromDate + '&toDate=' + toDate;
+      let param = '/invoice/csv-report?fromDate=' + fromDate + '&toDate=' + toDate;
 
       if (this.utilService.isNonEmpty(this.status.value)) {
         param = param + '&paymentStatus=' + this.status.value;
@@ -581,16 +581,20 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         let searchByValue = Object.values(this.searchBy);
         param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
       }
-      // if (this.loginSmeDetails[0].roles.includes('ROLE_ADMIN')) {
-      //   param = param;
-      // } else if (this.loginSmeDetails[0].roles.includes('ROLE_LEADER')) {
-      //   param = param + '&leaderUserId=' + this.loginSmeDetails[0].userId;
-      // } else if (this.loginSmeDetails[0].roles.includes('ROLE_FILER')) {
-      //   param = param + '&filerUserId=' + this.loginSmeDetails[0].userId;
-      // }
-
-      location.href = environment.url + param;
+      // location.href = environment.url + param;
+      this.reportService.invoiceDownload(param).subscribe((response:any) => {
+        const blob = new Blob([response], { type: 'application/octet-stream' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Invoice-Report.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      });
     }
+
   }
 
   invoicesCreateColumnDef(List) {

@@ -16,14 +16,13 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { WizardNavigation } from '../../../../itr-shared/WizardNavigation';
 import { TotalCg } from '../../../../../services/itr-json-helper-service';
-import {GridOptions} from "ag-grid-community";
 
 @Component({
   selector: 'app-zero-coupon-bonds',
-  templateUrl: './zero-coupon-bonds.component.html',
-  styleUrls: ['./zero-coupon-bonds.component.scss'],
+  templateUrl: './bonds-debentures.html',
+  styleUrls: ['./bonds-debentures.scss'],
 })
-export class ZeroCouponBondsComponent
+export class BondsDebentures
   extends WizardNavigation
   implements OnInit
 {
@@ -48,10 +47,6 @@ export class ZeroCouponBondsComponent
   isDisable: boolean;
   bondType: any;
   title: string;
-  bondsGridOptions: GridOptions;
-  selectedFormGroup: FormGroup;
-
-  activeIndex: number;
   constructor(
     private fb: FormBuilder,
     public utilsService: UtilsService,
@@ -71,31 +66,6 @@ export class ZeroCouponBondsComponent
 
     this.minDate = thisYearStartDate;
     this.maxDate = nextYearEndDate;
-
-    // setting grids data
-    this.bondsGridOptions = <GridOptions>{
-      rowData: [],
-      columnDefs: this.bondsColumnDef(),
-      enableCellChangeFlash: true,
-      enableCellTextSelection: true,
-      onGridReady: (params) => {
-        params.api?.setRowData(
-            this.getBondsArray.controls
-        );
-      },
-      onSelectionChanged: (event) => {
-        event.api.getSelectedRows().forEach((row) => {
-          row.controls['hasEdit'].setValue(true);
-        });
-        if (event.api.getSelectedRows().length === 0) {
-          this.getBondsArray.controls.forEach((formGroup: FormGroup) => {
-            formGroup.controls['hasEdit'].setValue(false);
-          });
-        }
-        this.bondSelected();
-      },
-      sortable: true,
-    };
   }
 
   ngOnInit(): void {
@@ -206,15 +176,10 @@ export class ZeroCouponBondsComponent
           this.updateDeductionUI();
         });
       }
+    } else {
+      this.addMoreBondsData();
+      this.isDisable = true;
     }
-    this.isDisable = true;
-
-    this.bondsGridOptions.api?.setRowData(
-        this.getBondsArray.controls
-    );
-    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length -1 : 0;
-    this.selectedFormGroup = this.createForm(srn);
-    this.activeIndex = -1;
 
     this.getImprovementYears();
     // this.onChanges();
@@ -254,6 +219,20 @@ export class ZeroCouponBondsComponent
   calMaxPurchaseDate(sellDate, formGroupName, index) {
     if (this.utilsService.isNonEmpty(sellDate)) {
       this.maxPurchaseDate = sellDate;
+    }
+  }
+
+  addMore() {
+    const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
+    if (bondsArray.valid) {
+      this.addMoreBondsData();
+    } else {
+      bondsArray.controls.forEach((element) => {
+        if ((element as FormGroup).invalid) {
+          element.markAsDirty();
+          element.markAllAsTouched();
+        }
+      });
     }
   }
 
@@ -317,42 +296,24 @@ export class ZeroCouponBondsComponent
     });
   }
 
-  clearForm(){
-    this.selectedFormGroup.reset();
-  }
-
-  saveManualEntry() {
-    if(this.selectedFormGroup.invalid){
-      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup);
-      return;
-    }
-
-    let result = this.selectedFormGroup.getRawValue();
-    if(this.activeIndex === -1){
-      let srn = (this.bondsForm.controls['bondsArray'] as FormArray).length - 1;
-      let form = this.createForm(srn);
-      form.patchValue(this.selectedFormGroup.getRawValue());
-      (this.bondsForm.controls['bondsArray'] as FormArray).push(form);
-    } else {
-      (this.bondsForm.controls['bondsArray'] as FormGroup).controls[this.activeIndex].patchValue(result);
-    }
-    this.bondsGridOptions?.api?.setRowData(this.getBondsArray.controls);
-    this.activeIndex = -1;
-    this.selectedFormGroup.reset();
-  }
-
-  editBondsForm(event) {
-    let i = event.rowIndex;
-    this.selectedFormGroup.patchValue(
-        ((this.bondsForm.controls['bondsArray'] as FormGroup).controls[i] as FormGroup).getRawValue());
-    this.activeIndex = i;
+  editBondsForm(i) {
+    (
+      (this.bondsForm.controls['bondsArray'] as FormGroup).controls[
+        i
+      ] as FormGroup
+    ).enable();
+    (
+      (this.bondsForm.controls['bondsArray'] as FormGroup).controls[
+        i
+      ] as FormGroup
+    ).controls['gainType'].disable();
   }
 
   get getBondsArray() {
     return <FormArray>this.bondsForm.get('bondsArray');
   }
 
-  addMoreBondsData(item) {
+  addMoreBondsData(item?) {
     const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
     bondsArray.push(this.createForm(bondsArray.length, item));
   }
@@ -367,10 +328,7 @@ export class ZeroCouponBondsComponent
       this.deduction = false;
       this.isDisable = true;
     }
-    this.bondsGridOptions?.api?.setRowData(this.getBondsArray.controls);
-    this.activeIndex = -1;
   }
-
 
   pageChanged(event) {
     this.config.currentPage = event;
@@ -378,160 +336,6 @@ export class ZeroCouponBondsComponent
 
   fieldGlobalIndex(index) {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
-  }
-
-  bondsColumnDef() {
-    return [
-      {
-        field: '',
-        headerCheckboxSelection: true,
-        width: 80,
-        pinned: 'left',
-        checkboxSelection: (params) => {
-          return true;
-        },
-        // valueGetter: function nameFromCode(params) {
-        //   return params.data.controls['hasEdit'].value;
-        // },
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
-        },
-      },
-      // {
-      //   headerName: 'Buy/Sell Quantity',
-      //   field: 'sellOrBuyQuantity',
-      //   width: 100,
-      //   cellStyle: { textAlign: 'center' },
-      //   valueGetter: function nameFromCode(params) {
-      //     return params.data.controls['sellOrBuyQuantity'].value;
-      //   },
-      // },
-      // {
-      //   headerName: 'Sale Date',
-      //   field: 'sellDate',
-      //   width: 100,
-      //   cellStyle: { textAlign: 'center' },
-      //   cellRenderer: (data: any) => {
-      //     if (data.value) {
-      //       return formatDate(data.value, 'dd/MM/yyyy', this.locale);
-      //     } else {
-      //       return '-';
-      //     }
-      //   },
-      //   valueGetter: function nameFromCode(params) {
-      //     return params.data.controls['sellDate'].value;
-      //   },
-      // },
-      // {
-      //   headerName: 'Sale Price',
-      //   field: 'sellValuePerUnit',
-      //   width: 100,
-      //   textAlign: 'center',
-      //   cellStyle: { textAlign: 'center' },
-      //   valueGetter: function nameFromCode(params) {
-      //     return params.data.controls['sellValuePerUnit'].value;
-      //   },
-      // },
-      {
-        headerName: 'Sale Value',
-        field: 'sellValue',
-        width: 150,
-        cellStyle: { textAlign: 'center' },
-        valueGetter: function nameFromCode(params) {
-          return params.data.controls['valueInConsideration'].value;
-        },
-      },
-      // {
-      //   headerName: 'Buy Date',
-      //   field: 'purchaseDate',
-      //   width: 100,
-      //   cellStyle: { textAlign: 'center' },
-      //   cellRenderer: (data: any) => {
-      //     if (data.value) {
-      //       return formatDate(data.value, 'dd/MM/yyyy', this.locale);
-      //     } else {
-      //       return '-';
-      //     }
-      //   },
-      //   valueGetter: function nameFromCode(params) {
-      //     return params.data.controls['purchaseDate'].value;
-      //   },
-      // },
-      // {
-      //   headerName: 'Buy Price',
-      //   field: 'purchaseValuePerUnit',
-      //   width: 100,
-      //   textAlign: 'center',
-      //   cellStyle: { textAlign: 'center' },
-      //   valueGetter: function nameFromCode(params) {
-      //     return params.data.controls['purchaseValuePerUnit'].value;
-      //   },
-      // },
-      {
-        headerName: 'Buy Value',
-        field: 'purchaseCost',
-        width: 150,
-        cellStyle: { textAlign: 'center' },
-        valueGetter: function nameFromCode(params) {
-          return params.data.controls['purchaseCost'].value;
-        },
-      },
-      {
-        headerName: 'Expenses',
-        field: 'sellExpense',
-        width: 150,
-        cellStyle: { textAlign: 'center' },
-        valueGetter: function nameFromCode(params) {
-          return params.data.controls['sellExpense'].value;
-        },
-      },
-      {
-        headerName: 'Type of Capital Gain*',
-        field: 'gainType',
-        // width: 100,
-        cellStyle: { textAlign: 'center' },
-        valueGetter: function nameFromCode(params) {
-          return params.data.controls['gainType'].value;
-        },
-      },
-      {
-        headerName: 'Gain Amount',
-        field: 'capitalGain',
-        width: 150,
-        cellStyle: { textAlign: 'center' },
-        valueGetter: function nameFromCode(params) {
-          return params.data.controls['capitalGain'].value;
-        },
-      },
-      {
-        headerName: 'Edit',
-        editable: false,
-        suppressMenu: true,
-        sortable: true,
-        suppressMovable: true,
-        cellRenderer: function (params: any) {
-          return `<button type="button" class="action_icon add_button" title="Edit"
-          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
-          <i class="fa-solid fa-pencil" data-action-type="edit"></i>
-           </button>`;
-        },
-        width: 60,
-        pinned: 'right',
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
-        },
-      },
-    ];
   }
 
   getGainType(bonds) {
@@ -677,7 +481,11 @@ export class ZeroCouponBondsComponent
         this.Copy_ITR_JSON.capitalGain = [];
       }
       let bondIndex;
-      if (this.bondType === 'zeroCouponBonds') {
+      if (this.bondType === 'bonds') {
+        bondIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
+          (element) => element.assetType === 'BONDS'
+        );
+      } else if (this.bondType === 'zeroCouponBonds') {
         bondIndex = this.Copy_ITR_JSON.capitalGain?.findIndex(
           (element) => element.assetType === 'ZERO_COUPON_BONDS'
         );
@@ -685,10 +493,13 @@ export class ZeroCouponBondsComponent
       let bondImprovement = [];
       const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
       let bondsList = [];
-
-      if(this.bondType === 'zeroCouponBonds'){
-        bondsList = bondIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails?.filter(
-            e => e.whetherDebenturesAreListed && !e.isIndexationBenefitAvailable) : [];
+      if(this.bondType !== 'bonds'){
+        if(this.bondType === 'zeroCouponBonds'){
+          bondsList = bondIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails?.filter(
+              e => e.whetherDebenturesAreListed && !e.isIndexationBenefitAvailable) : [];
+        } else {
+          bondsList = bondIndex >= 0 ? this.Copy_ITR_JSON.capitalGain[bondIndex].assetDetails : [];
+        }
       }
       bondsArray.controls.forEach((element) => {
         if (
