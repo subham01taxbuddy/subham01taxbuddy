@@ -1,4 +1,4 @@
-<div class="sortBy">Sort By : </div>
+<!-- <div class="sortBy">Sort By : </div>
 <div class="row">
     <div class="col-sm-5">
         <label class="input__label" for="attr">Select attribute </label>
@@ -15,59 +15,33 @@
                 {{level.name}}</option>
         </select>
     </div>
-</div>
-
-
-<!-- <div>
-  <div class="sortByContainer" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-
-
-
-    <mat-form-field  class="sortingDropdown">
-      <mat-label>Sort By</mat-label>
-      <mat-select [(ngModel)]="sortName" (change)="changeInput(true)">
-        <mat-option *ngFor="let drop of sortingParameter" [value]="drop.value">
-            {{drop.name}}
-        </mat-option>
-    </mat-select>
-  </mat-form-field>
-
-    <mat-form-field class="sortingDropdown">
-        <mat-label>Sorting Order</mat-label>
-        <mat-select [(ngModel)]="sortOrder" (change)="changeInput(true)">
-            <mat-option *ngFor="let level of sortLevel" [value]="level.value">
-                {{level.name}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-</div>
-
 </div> -->
 
-<!-- <div>
-  <div class="row">
+
+<div>
+  <div class="sortBy">Sort By : </div>
+  <div class="">
     <div class="sorting-Container">
-      <div class="col-sm-7">
-        <div class="sortParameter">
-        <mat-label>Sort By</mat-label>
-        <mat-select [(ngModel)]="sortName" (change)="changeInput(true)">
-          <mat-option *ngFor="let drop of sortingParameter" [value]="drop.value">
+      <div class="col-sm-4">
+        <mat-form-field appearance="outline" class="custom-bg-new">
+          <mat-label>Select attribute</mat-label>
+          <mat-select [(ngModel)]="sortName" (change)="changeInput(true)">
+            <mat-option *ngFor="let drop of sortingParameter" [value]="drop.value">
               {{drop.name}}
-          </mat-option>
-        </mat-select>
-        </div>
-
-        <div class="sortOrder">
-          <span class="sortOrderIcon" [class.rotate]="_isDescending" (click)="toggleSortOrder()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M3.3335 14.1663H8.3335M3.3335 9.99967H10.8335M15.0002 9.16634V15.833M15.0002 15.833L17.5002 13.333M15.0002 15.833L12.5002 13.333M3.3335 5.83301H13.3335" stroke="#2D8EF9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-        </div>
-
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
-
+      <div class="col-sm-4" style="margin-left: -10px;">
+        <mat-form-field appearance="outline" class="custom-bg-new" >
+          <mat-label>Sorting Order</mat-label>
+          <mat-select [(ngModel)]="sortOrder" (selectionChange)="changeInput(true)">
+            <mat-option *ngFor="let level of sortLevel" [value]="level.value">
+              {{ level.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
-
   </div>
-</div> -->
+</div>
