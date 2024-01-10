@@ -27,6 +27,9 @@ export class SideSummaryPanelComponent implements OnInit {
   landAndBuilding: any = {};
   taxesPaid: any = {};
   scheduleAL: any = {};
+  indexedBonds: any = {};
+  listedBonds: any = {};
+  unlistedBonds: any = {};
 
   constructor(private summaryHelper: SummaryHelperService, public utilsService: UtilsService) {
 
@@ -76,6 +79,15 @@ export class SideSummaryPanelComponent implements OnInit {
           break;
 
           case 'zeroCouponBonds': this.setZeroCouponBonds();
+          break;
+
+          case 'indexedBonds': this.setIndexedBonds();
+          break;
+
+          case 'listedBonds': this.setListedBonds();
+          break;
+
+          case 'unlistedBonds': this.setUnlistedBonds();
           break;
 
           case 'landAndBuilding': this.setLandAndBuilding();
@@ -356,6 +368,147 @@ export class SideSummaryPanelComponent implements OnInit {
 
     this.zeroCouponBonds.netLTCG = this.zeroCouponBonds.totalLTCG - this.zeroCouponBonds.totalLTCGDeduction;
     this.zeroCouponBonds.netLTCG = isNaN(this.zeroCouponBonds.netLTCG) ? 0 : this.zeroCouponBonds.netLTCG;
+  }
+
+  setIndexedBonds(){
+    let capitalGain = this.summary.summaryIncome.cgIncomeN.capitalGain;
+    this.indexedBonds.totalSTCGSaleValue = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.netSellValue, 0);
+
+    this.indexedBonds.totalLTCGSaleValue = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.netSellValue, 0);
+
+    this.indexedBonds.totalSTCGBuyValue = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.purchesCost, 0);
+
+    this.indexedBonds.totalLTCGBuyValue = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.purchesCost, 0);
+
+    this.indexedBonds.totalSTCGExpenses = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.saleExpense, 0);
+
+    this.indexedBonds.totalLTCGExpenses = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.saleExpense, 0);
+
+    this.indexedBonds.totalSTCGCostOfImprovement = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.costOfImprovement, 0);
+
+    this.indexedBonds.totalLTCGCostOfImprovement = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.costOfImprovement, 0);
+
+    this.indexedBonds.totalLTCGDeduction = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.deductionAmount, 0);
+    
+    this.indexedBonds.totalLTCG = this.indexedBonds.totalLTCGSaleValue -
+    this.indexedBonds.totalLTCGBuyValue -
+    this.indexedBonds.totalLTCGExpenses -
+    this.indexedBonds.totalLTCGCostOfImprovement;
+
+    this.indexedBonds.totalLTCG = isNaN(this.indexedBonds.totalLTCG) ? 0 : this.indexedBonds.totalLTCG;
+
+    this.indexedBonds.totalSTCG = this.indexedBonds.totalSTCGSaleValue -
+    this.indexedBonds.totalSTCGBuyValue -
+    this.indexedBonds.totalSTCGExpenses -
+    this.indexedBonds.totalSTCGCostOfImprovement;
+
+    this.indexedBonds.totalSTCG = isNaN(this.indexedBonds.totalSTCG) ? 0 : this.indexedBonds.totalSTCG;
+
+    this.indexedBonds.netLTCG = this.indexedBonds.totalLTCG - this.indexedBonds.totalLTCGDeduction;
+    this.indexedBonds.netLTCG = isNaN(this.indexedBonds.netLTCG) ? 0 : this.indexedBonds.netLTCG;
+  }
+
+  setListedBonds(){
+    let capitalGain = this.summary.summaryIncome.cgIncomeN.capitalGain;
+    this.listedBonds.totalSTCGSaleValue = capitalGain.filter(cg => cg.assetType === 'LISTED_DEBENTURES' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.netSellValue, 0);
+
+    this.listedBonds.totalLTCGSaleValue = capitalGain.filter(cg => cg.assetType === 'LISTED_DEBENTURES' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.netSellValue, 0);
+
+    this.listedBonds.totalSTCGBuyValue = capitalGain.filter(cg => cg.assetType === 'LISTED_DEBENTURES' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.purchesCost, 0);
+
+    this.listedBonds.totalLTCGBuyValue = capitalGain.filter(cg => cg.assetType === 'LISTED_DEBENTURES' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.purchesCost, 0);
+
+    this.listedBonds.totalSTCGExpenses = capitalGain.filter(cg => cg.assetType === 'LISTED_DEBENTURES' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.saleExpense, 0);
+
+    this.listedBonds.totalLTCGExpenses = capitalGain.filter(cg => cg.assetType === 'LISTED_DEBENTURES' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.saleExpense, 0);
+
+    this.listedBonds.totalSTCGCostOfImprovement = capitalGain.filter(cg => cg.assetType === 'LISTED_DEBENTURES' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.costOfImprovement, 0);
+
+    this.listedBonds.totalLTCGCostOfImprovement = capitalGain.filter(cg => cg.assetType === 'LISTED_DEBENTURES' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.costOfImprovement, 0);
+
+    this.listedBonds.totalLTCGDeduction = capitalGain.filter(cg => cg.assetType === 'LISTED_DEBENTURES' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.deductionAmount, 0);
+    
+    this.listedBonds.totalLTCG = this.listedBonds.totalLTCGSaleValue -
+    this.listedBonds.totalLTCGBuyValue -
+    this.listedBonds.totalLTCGExpenses -
+    this.listedBonds.totalLTCGCostOfImprovement;
+
+    this.listedBonds.totalLTCG = isNaN(this.listedBonds.totalLTCG) ? 0 : this.listedBonds.totalLTCG;
+
+    this.listedBonds.totalSTCG = this.listedBonds.totalSTCGSaleValue -
+    this.listedBonds.totalSTCGBuyValue -
+    this.listedBonds.totalSTCGExpenses -
+    this.listedBonds.totalSTCGCostOfImprovement;
+
+    this.listedBonds.totalSTCG = isNaN(this.listedBonds.totalSTCG) ? 0 : this.listedBonds.totalSTCG;
+
+    this.listedBonds.netLTCG = this.listedBonds.totalLTCG - this.listedBonds.totalLTCGDeduction;
+    this.listedBonds.netLTCG = isNaN(this.listedBonds.netLTCG) ? 0 : this.listedBonds.netLTCG;
+  }
+
+  setUnlistedBonds(){
+    let capitalGain = this.summary.summaryIncome.cgIncomeN.capitalGain;
+    this.unlistedBonds.totalSTCGSaleValue = capitalGain.filter(cg => cg.assetType === 'BONDS' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.netSellValue, 0);
+
+    this.unlistedBonds.totalLTCGSaleValue = capitalGain.filter(cg => cg.assetType === 'BONDS' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.netSellValue, 0);
+
+    this.unlistedBonds.totalSTCGBuyValue = capitalGain.filter(cg => cg.assetType === 'BONDS' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.purchesCost, 0);
+
+    this.unlistedBonds.totalLTCGBuyValue = capitalGain.filter(cg => cg.assetType === 'BONDS' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.purchesCost, 0);
+
+    this.unlistedBonds.totalSTCGExpenses = capitalGain.filter(cg => cg.assetType === 'BONDS' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.saleExpense, 0);
+
+    this.unlistedBonds.totalLTCGExpenses = capitalGain.filter(cg => cg.assetType === 'BONDS' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.saleExpense, 0);
+
+    this.unlistedBonds.totalSTCGCostOfImprovement = capitalGain.filter(cg => cg.assetType === 'BONDS' && cg.gainType === 'SHORT')
+    .reduce((total, element) => total + element.costOfImprovement, 0);
+
+    this.unlistedBonds.totalLTCGCostOfImprovement = capitalGain.filter(cg => cg.assetType === 'BONDS' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.costOfImprovement, 0);
+
+    this.unlistedBonds.totalLTCGDeduction = capitalGain.filter(cg => cg.assetType === 'BONDS' && cg.gainType === 'LONG')
+    .reduce((total, element) => total + element.deductionAmount, 0);
+    
+    this.unlistedBonds.totalLTCG = this.unlistedBonds.totalLTCGSaleValue -
+    this.unlistedBonds.totalLTCGBuyValue -
+    this.unlistedBonds.totalLTCGExpenses -
+    this.unlistedBonds.totalLTCGCostOfImprovement;
+
+    this.unlistedBonds.totalLTCG = isNaN(this.unlistedBonds.totalLTCG) ? 0 : this.unlistedBonds.totalLTCG;
+
+    this.unlistedBonds.totalSTCG = this.unlistedBonds.totalSTCGSaleValue -
+    this.unlistedBonds.totalSTCGBuyValue -
+    this.unlistedBonds.totalSTCGExpenses -
+    this.unlistedBonds.totalSTCGCostOfImprovement;
+
+    this.unlistedBonds.totalSTCG = isNaN(this.unlistedBonds.totalSTCG) ? 0 : this.unlistedBonds.totalSTCG;
+
+    this.unlistedBonds.netLTCG = this.unlistedBonds.totalLTCG - this.unlistedBonds.totalLTCGDeduction;
+    this.unlistedBonds.netLTCG = isNaN(this.unlistedBonds.netLTCG) ? 0 : this.unlistedBonds.netLTCG;
   }
 
   setLandAndBuilding(){

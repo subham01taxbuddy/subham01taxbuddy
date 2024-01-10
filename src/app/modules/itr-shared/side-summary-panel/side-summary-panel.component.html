@@ -402,6 +402,159 @@
                 </table>
             </div>
 
+            <div class="space" *ngIf="type === 'indexedBonds'">
+                <table class="table table-borderless f-size">
+                    <tbody>
+                        <tr class="border-bottom">
+                            <th>Gain Type</th>
+                            <th>Short Term</th>
+                            <th>Long Term</th>
+                        </tr>
+                        <tr>
+                            <td>Sale Value</td>
+                            <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalSTCGSaleValue)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalLTCGSaleValue)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Buy Value</td>
+                            <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalSTCGBuyValue)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalLTCGBuyValue)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Cost of Improvement</td>
+                            <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalSTCGCostOfImprovement)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalLTCGCostOfImprovement)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Expenses</td>
+                            <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalSTCGExpenses)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalLTCGExpenses)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Capital Gain</td>
+                            <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalSTCG)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalLTCG)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Deduction</td>
+                            <td>₹ {{utilsService.currencyFormatter(0)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(indexedBonds.totalLTCGDeduction)}}</td>
+                        </tr>
+                        <tr class="border-top">
+                            <th>Net Capital Gain</th>
+                            <th>
+                                ₹{{utilsService.currencyFormatter(indexedBonds.totalSTCG)}}
+                            </th>
+                            <th>
+                                ₹{{utilsService.currencyFormatter(indexedBonds.netLTCG)}}
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="space" *ngIf="type === 'listedBonds'">
+                <table class="table table-borderless f-size">
+                    <tbody>
+                        <tr class="border-bottom">
+                            <th>Gain Type</th>
+                            <th>Short Term</th>
+                            <th>Long Term</th>
+                        </tr>
+                        <tr>
+                            <td>Sale Value</td>
+                            <td>₹ {{utilsService.currencyFormatter(listedBonds.totalSTCGSaleValue)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(listedBonds.totalLTCGSaleValue)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Buy Value</td>
+                            <td>₹ {{utilsService.currencyFormatter(listedBonds.totalSTCGBuyValue)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(listedBonds.totalLTCGBuyValue)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Cost of Improvement</td>
+                            <td>₹ {{utilsService.currencyFormatter(listedBonds.totalSTCGCostOfImprovement)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(listedBonds.totalLTCGCostOfImprovement)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Expenses</td>
+                            <td>₹ {{utilsService.currencyFormatter(listedBonds.totalSTCGExpenses)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(listedBonds.totalLTCGExpenses)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Capital Gain</td>
+                            <td>₹ {{utilsService.currencyFormatter(listedBonds.totalSTCG)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(listedBonds.totalLTCG)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Deduction</td>
+                            <td>₹ {{utilsService.currencyFormatter(0)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(listedBonds.totalLTCGDeduction)}}</td>
+                        </tr>
+                        <tr class="border-top">
+                            <th>Net Capital Gain</th>
+                            <th>
+                                ₹{{utilsService.currencyFormatter(listedBonds.totalSTCG)}}
+                            </th>
+                            <th>
+                                ₹{{utilsService.currencyFormatter(listedBonds.netLTCG)}}
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="space" *ngIf="type === 'unlistedBonds'">
+                <table class="table table-borderless f-size">
+                    <tbody>
+                        <tr class="border-bottom">
+                            <th>Gain Type</th>
+                            <th>Short Term</th>
+                            <th>Long Term</th>
+                        </tr>
+                        <tr>
+                            <td>Sale Value</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedBonds.totalSTCGSaleValue)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedBonds.totalLTCGSaleValue)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Buy Value</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedBonds.totalSTCGBuyValue)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedBonds.totalLTCGBuyValue)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Cost of Improvement</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedBonds.totalSTCGCostOfImprovement)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedBonds.totalLTCGCostOfImprovement)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Expenses</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedBonds.totalSTCGExpenses)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedBonds.totalLTCGExpenses)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Capital Gain</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedBonds.totalSTCG)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedBonds.totalLTCG)}}</td>
+                        </tr>
+                        <tr>
+                            <td>Deduction</td>
+                            <td>₹ {{utilsService.currencyFormatter(0)}}</td>
+                            <td>₹ {{utilsService.currencyFormatter(unlistedBonds.totalLTCGDeduction)}}</td>
+                        </tr>
+                        <tr class="border-top">
+                            <th>Net Capital Gain</th>
+                            <th>
+                                ₹{{utilsService.currencyFormatter(unlistedBonds.totalSTCG)}}
+                            </th>
+                            <th>
+                                ₹{{utilsService.currencyFormatter(unlistedBonds.netLTCG)}}
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <div class="space" *ngIf="type === 'landAndBuilding'">
                 <table class="table table-borderless f-size">
                     <tbody>
