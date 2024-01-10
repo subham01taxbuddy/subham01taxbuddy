@@ -181,11 +181,11 @@
                             <div class="form-field">
                               <mat-form-field appearance="outline">
                                 <input matInput digitsOnly
-                                  [formControl]="$any(assetLiabilitiesForm.controls['sundryCreditorsAmount'])"
-                                  placeholder="₹ Enter Amount" name="sundryCreditorsAmount" class="input-field"
+                                  [formControl]="$any(assetLiabilitiesForm.controls['sundryDebtorsAmount'])"
+                                  placeholder="₹ Enter Amount" name="sundryDebtorsAmount" class="input-field"
                                   maxlength="14" required />
                                 <mat-error
-                                  *ngIf="assetLiabilitiesForm.controls['sundryCreditorsAmount'].hasError('pattern')">
+                                  *ngIf="assetLiabilitiesForm.controls['sundryDebtorsAmount'].hasError('pattern')">
                                   Enter positive number without decimal.</mat-error>
                               </mat-form-field>
                             </div>
