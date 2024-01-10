@@ -552,5 +552,7 @@
         </div>
     </main>
 
-    <app-side-summary-panel *ngIf="bondType !== 'bonds'" type="zeroCouponBonds"></app-side-summary-panel>
+    <app-side-summary-panel *ngIf="bondType === 'indexedBonds'" type="indexedBonds"></app-side-summary-panel>
+    <app-side-summary-panel *ngIf="bondType === 'listedBonds'" type="listedBonds"></app-side-summary-panel>
+    <app-side-summary-panel *ngIf="bondType === 'unlistedBonds'" type="unlistedBonds"></app-side-summary-panel>
 </div>
