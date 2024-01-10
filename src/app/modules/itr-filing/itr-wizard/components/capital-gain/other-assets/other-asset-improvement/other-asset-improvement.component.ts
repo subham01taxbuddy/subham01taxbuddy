@@ -692,5 +692,6 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
 
   clearForm(){
     this.assetsForm.reset();
+    this.assetsForm.controls['algorithm'].setValue('cgProperty');
   }
 }
