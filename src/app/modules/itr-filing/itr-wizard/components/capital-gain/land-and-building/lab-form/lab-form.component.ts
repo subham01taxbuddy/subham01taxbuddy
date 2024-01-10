@@ -279,14 +279,14 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
     this.immovableForm.patchValue(this.cgArrayElement.assetDetails[this.currentCgIndex]);
 
     // IMPROVEMENTS SECTION
-    this.improvements = this.cgArrayElement.improvement.filter(
+    this.improvements = this.cgArrayElement.improvement?.filter(
         (imp) =>
             imp.srn == editIndex &&
             this.utilsService.isNonEmpty(imp.dateOfImprovement)
     );
 
     let isCostOfImprovementPresent = false;
-    this.improvements.forEach((element, index) => {
+    this.improvements?.forEach((element, index) => {
       const costOfImprovementPresent: boolean = !element.costOfImprovement;
       if (!costOfImprovementPresent) {
         isCostOfImprovementPresent = true;
@@ -310,6 +310,7 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
         });
         console.log('Immovable Form===', this.immovableForm);
       } else {
+        this.improvements = [];
         this.isImprovements.setValue(false);
       }
     }
@@ -1494,9 +1495,9 @@ export class LabFormComponent extends WizardNavigation implements OnInit {
       } else {
         this.cgArrayElement.improvement = [];
       }
-      if (this.cgArrayElement.improvement?.length == 0) {
-        this.cgArrayElement.improvement = null;
-      }
+      // if (this.cgArrayElement.improvement?.length == 0) {
+      //   this.cgArrayElement.improvement = null;
+      // }
 
       if (this.isDeductions.value) {
         const deductions = <FormArray>this.immovableForm.get('deductions');
