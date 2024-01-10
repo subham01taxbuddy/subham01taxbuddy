@@ -625,9 +625,9 @@ export class HousePropertyComponent implements OnInit {
         100
       );
       this.housePropertyForm?.controls['annualRentReceived']?.setValue(
-        itrJsonHp?.grossAnnualRentReceived
-          ? itrJsonHp?.grossAnnualRentReceived
-          : itrJsonHp?.grossAnnualRentReceivedTotal
+        itrJsonHp?.grossAnnualRentReceivedTotal
+          ? itrJsonHp?.grossAnnualRentReceivedTotal
+          : itrJsonHp?.grossAnnualRentReceived
       );
       this.housePropertyForm.controls[
         'totalArrearsUnrealizedRentReceived'
