@@ -787,11 +787,22 @@ export class ItrAssignedUsersComponent implements OnInit {
             'Not Interested': { background: '#DCDCDC', color: '#808080' },
             'Payment Received': { background: '#FBEED3', color: '#A36543' },
             'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-            'Upgraded Invoice Sent' : {background : '#EFF6FF', color: '#86af39'}
+            'Upgraded Invoice Sent' : {background : '#EFF6FF', color: '#86af39'},
+            'Follow Up':{ background: '#FBEED3', color: '#A36543' },
+            'Interested': { background: '#F8F8F8', color: '#404040' },
+            'ITR Confirmation Received': { background: '#FFFFE0', color: '#404040' },
+            'ITR Filed - E Verification Pending': { background: '#FFC0CB', color: '#FFFFFF' },
+            'Preparing ITR': { background: '#E0FFE0', color: '#404040' },
+            'Chat Initiated': { background: '#FFC0CB', color: '#404040' },
+            'Back Out - With Refund': { background: '#ADD8E6', color: '#FFFFFF' },
+            'Chat Resolved': { background: '#FFD700', color: '#404040' },
+            'ITR Filed - E Verification Completed': { background: '#EE82EE', color: '#FFFFFF' },
+            'Back Out - Without Refund': { background: '#90EE90', color: '#FFFFFF' },
+            'Pay Later': { background: '#00FFFF', color: '#404040' },
           };
           const statusStyle = statusColors[statusName] || { background: 'transparent', color: '#000' };
 
-          return `<button class="status-chip" title="Update Status" data-action-type="updateStatus" style="padding: 0px 18px;  border-radius: 40px;
+          return `<button class="status-chip" title="Update Status" data-action-type="updateStatus" style="padding: 0px 10px;  border-radius: 40px;
           cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
           <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${params.data.statusName}
           </button>`;
@@ -821,7 +832,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; color: #2dd35c; cursor:pointer;">
+            style="border: none; background: transparent; font-size: 16px; color: #3E82CD; cursor:pointer;">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
@@ -845,7 +856,7 @@ export class ItrAssignedUsersComponent implements OnInit {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 17px; cursor:pointer;">
-          <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
+          <i class="far fa-file-alt" style="color:#3E82CD;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 70,
@@ -868,7 +879,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           if (params.data.serviceType === 'ITR') {
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
             if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
-              return `<button type="button" class="action_icon add_button" data-action-type="yetToStart" style="padding: 0px 18px;  border-radius: 40px;
+              return `<button type="button" class="action_icon add_button" data-action-type="yetToStart" style="padding: 0px 10px;  border-radius: 40px;
               cursor:pointer; background-color:#FBEED3; color:#A36543;" >
               <i class="fas fa-flag-checkered" title="No action taken yet" aria-hidden="true" data-action-type="yetToStart"></i> Yet to Start
               </button>`;
@@ -883,7 +894,7 @@ export class ItrAssignedUsersComponent implements OnInit {
               <i class="fa fa-check" aria-hidden="true" data-action-type="startRevise"></i>
             </button>`;
             } else {
-              return `<button type="button" class="action_icon add_button" data-action-type="startFiling" title="Start ITR Filing" style="padding: 0px 18px;  border-radius: 40px;
+              return `<button type="button" class="action_icon add_button" data-action-type="startFiling" title="Start ITR Filing" style="padding: 0px 10px;  border-radius: 40px;
               cursor:pointer; background-color:#DDEDFF; color:#2D629B;">
               <i class="fa-regular fa-money-check-pen" data-action-type="startFiling"></i> Resume Filing
             </button>`;

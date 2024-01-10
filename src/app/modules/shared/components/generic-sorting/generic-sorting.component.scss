@@ -2,99 +2,12 @@
     margin: 30px 15px 5px;
 }
 
-// .sortByContainer {
-//   display: flex;
-//   align-items: center;
-//   gap: 20px;
-// }
-
-// .sortBy {
-//   display: flex;
-//   height: 48px;
-//   padding: 12px 24px 12px 22px;
-//   align-items: center;
-//   gap: 9px;
-//   flex-shrink: 0;
-//   border-radius: 4px;
-//   background: #DDEDFF;
-// }
-
-// .sortingDropdown {
-//   height: 48px;
-//   padding: 12px;
-//   border-radius: 4px;
-//   background: #DDEDFF;
-//   width: 121px !important;
-
-// }
-// .sorting-Container{
-//   display: flex;
-//   align-items: center;
-//   gap: 20px;
-// }
-// .sortParameter{
-// display: inline-flex;
-// height: 48px;
-// padding: 12px 24px 12px 22px;
-// align-items: center;
-// gap: 9px;
-// flex-shrink: 0;
-// border-radius: 4px;
-// background: #DDEDFF;
-// }
-
-// .sortOrder{
-// display: inline-flex;
-// height: 48px;
-// padding: 12px;
-// align-items: center;
-// gap: 9px;
-// flex-shrink: 0;
-// border-radius: 4px;
-// background: #DDEDFF;
-// }
-
-// .sorting-Container {
-//   display: flex;
-//   align-items: center;
-//   gap: 20px;
-
-//   .col-sm-7 {
-//     display: flex;
-//     align-items: center;
-//     gap: 20px;
-//   }
-
-//   .sortParameter {
-//     display: inline-flex;
-//     height: 48px;
-//     padding: 12px 24px 12px 22px;
-//     align-items: center;
-//     gap: 9px;
-//     flex-shrink: 0;
-//     border-radius: 4px;
-//     background: #DDEDFF;
-//   }
-
-//   .sortOrder {
-//     display: inline-flex;
-//     height: 48px;
-//     padding: 12px;
-//     align-items: center;
-//     gap: 9px;
-//     flex-shrink: 0;
-//     border-radius: 4px;
-//     background: #DDEDFF;
-
-//     .sortOrderIcon {
-//       cursor: pointer;
-//       transition: transform 0.3s ease-in-out;
-//     }
-
-//     &.rotate {
-//       transform: rotate(180deg);
-//     }
-//   }
-// }
-
-
+.sorting-Container{
+  display: flex;
+  align-items: center;
+  // gap: 5px;
+  margin-left: -15px;
+}
+.spsTp123{
+  margin-top: 10px;
+}

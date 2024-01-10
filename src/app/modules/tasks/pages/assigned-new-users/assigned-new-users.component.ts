@@ -653,7 +653,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; color: #2dd35c; cursor:pointer;">
+            style="border: none; background: transparent; font-size: 16px; color: #3E82CD; cursor:pointer;">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
@@ -677,7 +677,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 17px; cursor:pointer;">
-          <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
+          <i class="far fa-file-alt" style="color:#3E82CD;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 70,

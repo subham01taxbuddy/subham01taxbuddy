@@ -36,6 +36,7 @@ import { CryptoVdaComponent } from './itr-wizard/pages/crypto-vda/crypto-vda.com
 import { PartnerInFirmsComponent } from './itr-wizard/pages/partner-in-firms/partner-in-firms.component';
 import {ExemptIncomeComponent} from "./exempt-income/exempt-income.component";
 import {LabFormComponent} from "./itr-wizard/components/capital-gain/land-and-building/lab-form/lab-form.component";
+import {BondsDebentureComponent} from "./itr-wizard/components/capital-gain/bonds-debenture/bonds-debenture.component";
 
 const routes: Routes = [
   {
@@ -86,7 +87,7 @@ const routes: Routes = [
           { path: 'lab', component: LabFormComponent },
           { path: 'listed', component: SharesAndEquityComponent },
           { path: 'unlisted', component: SharesAndEquityComponent },
-          { path: 'bonds', component: ZeroCouponBondsComponent },
+          { path: 'bonds', component: BondsDebentureComponent },
           { path: 'zcb', component: ZeroCouponBondsComponent },
           { path: 'other', component: OtherAssetsComponent },
         ],

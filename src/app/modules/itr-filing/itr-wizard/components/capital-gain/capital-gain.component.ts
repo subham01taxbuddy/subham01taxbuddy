@@ -26,6 +26,7 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
   isEditZeroCouponBonds: boolean;
   isEditOtherAssets: boolean;
   topicList = [];
+  bondsList = [];
 
   constructor(
     private router: Router,
@@ -63,7 +64,7 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
       },
       {
         label: 'Zero Coupon Bonds',
-        path: 'bonds',
+        path: 'zcb',
         type: 'zeroCouponBonds'
       },
       {
@@ -72,6 +73,22 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
         type: 'other'
       }
     ];
+    this.bondsList = [
+      {
+        label: 'Unlisted Bonds with Indexation',
+        path: 'bonds',
+        type: 'indexedBonds'
+      },
+      {
+        label: 'Listed Bonds without Indexation',
+        path: 'bonds',
+        type: 'listedBonds'
+      },
+      {
+        label: 'Unlisted Bonds without Indexation',
+        path: 'bonds',
+        type: 'unlistedBonds'
+      }];
   }
 
   ngOnInit() {
@@ -106,10 +123,24 @@ export class CapitalGainComponent extends WizardNavigation implements OnInit {
     }
   }
 
+  showSubTypes = false;
   gotoSection(topic) {
+    if(topic.type !== 'bonds') {
+      this.showList = false;
+      this.showSubTypes = false;
+      let basePath = '/itr-filing/itr/capital-gain/';
+      this.router.navigate([basePath + topic.path], {queryParams: {bondType: topic.type}});
+      this.nextBreadcrumb.emit(topic.label);
+    } else {
+      this.showSubTypes = true;
+    }
+  }
+
+  gotoBondsSection(topic) {
     this.showList = false;
+    this.showSubTypes = false;
     let basePath = '/itr-filing/itr/capital-gain/';
-    this.router.navigate([basePath + topic.path], { queryParams: { bondType: topic.type } });
+    this.router.navigate([basePath + topic.path], {queryParams: {bondType: topic.type}});
     this.nextBreadcrumb.emit(topic.label);
   }
 

@@ -211,6 +211,7 @@ import { AddAssetsComponent } from './itr-wizard/components/capital-gain/more-in
     AllBusinessIncomeComponent,
     AddClientsComponent,
     ZeroCouponBondsComponent,
+    BondsDebentureComponent,
     AllSalaryIncomeComponent,
     SecurityDeductionComponent,
     SharesAndEquityComponent,
