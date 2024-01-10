@@ -615,6 +615,9 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       let bondsList = [];
 
       bondsList = this.Copy_ITR_JSON.capitalGain[bondIndex]?.assetDetails;
+      if(!bondsList){
+        bondsList = [];
+      }
       bondsArray.controls.forEach((element) => {
         if (
             !(element as FormGroup).controls['isIndexationBenefitAvailable'].value
