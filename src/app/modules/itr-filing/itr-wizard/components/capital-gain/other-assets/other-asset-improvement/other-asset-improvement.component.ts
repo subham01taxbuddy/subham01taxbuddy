@@ -676,6 +676,7 @@ export class OtherAssetImprovementComponent implements OnInit, OnChanges {
       this.utilsService.showSnackBar('Other Assets Saved Successfully');
       this.onSave.emit(this.goldCg);
       this.loading = false;
+      this.clearForm();
     } else {
       this.utilsService.showSnackBar(
         'Please make sure all the details are properly entered.'
