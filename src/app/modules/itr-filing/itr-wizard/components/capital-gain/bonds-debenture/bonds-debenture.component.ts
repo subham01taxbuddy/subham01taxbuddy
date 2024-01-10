@@ -524,7 +524,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       const param = '/singleCgCalculate';
       let type = this.assetType;
       let request = {
-        assessmentYear: '2022-2023',
+        assessmentYear: this.ITR_JSON.assessmentYear,
         assesseeType: 'INDIVIDUAL',
         residentialStatus: 'RESIDENT',
         assetType: type,

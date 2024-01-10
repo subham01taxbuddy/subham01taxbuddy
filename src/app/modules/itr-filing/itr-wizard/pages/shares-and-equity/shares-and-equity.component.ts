@@ -359,6 +359,7 @@ export class SharesAndEquityComponent
 
   clearForm(){
     this.selectedFormGroup.reset();
+    this.selectedFormGroup.controls['algorithm'].setValue('cgSharesMF');
   }
 
   saveManualEntry(){

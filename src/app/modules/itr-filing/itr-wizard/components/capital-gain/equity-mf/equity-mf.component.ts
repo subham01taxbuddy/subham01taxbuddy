@@ -991,7 +991,7 @@ export class EquityMfComponent implements OnInit {
   }
   calculateSingleCg(request) {
     request = {
-      "assessmentYear": "2022-2023",
+      "assessmentYear": this.ITR_JSON.assessmentYear,
       "assesseeType": "INDIVIDUAL",
       "residentialStatus": "RESIDENT",
       "assetType": "EQUITY_SHARES_LISTED",
@@ -1085,7 +1085,7 @@ export class EquityMfComponent implements OnInit {
     this.loading = true;
     const param = '/singleCgCalculate';
     let request = {
-      assessmentYear: "2022-2023",
+      assessmentYear: this.ITR_JSON.assessmentYear,
       assesseeType: "INDIVIDUAL",
       residentialStatus: "RESIDENT",
       assetType: type,
