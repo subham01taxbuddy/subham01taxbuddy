@@ -1,5 +1,5 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<div class="mrgArdTog">
+
   <div class="col-sm-12">
     <h5 class="bdrbl">Bulk Status Update:</h5>
   </div>
@@ -11,9 +11,9 @@
           <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
             [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
         </div>
-        <div class="col-sm-3 spsTp">
+        <div class="col-sm-3 spcAbv">
           <mat-label>Status which needs to be updated in bulk &nbsp;&nbsp; </mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="custom-bg-new">
             <mat-select placeholder="Select Status" [formControl]="fromStatusValue" multiple>
               <mat-option *ngFor="let status of itrStatus" [value]="status.statusId"
                 (click)="onStatusChange(fromStatusValue)">
@@ -23,13 +23,13 @@
           </mat-form-field>
         </div>
         <div class="col-sm-6 spsTp">
-          <div class="text-center">
-            <mat-label>Date range on which the last status was updated</mat-label>
+          <div class="text-left">
+            <mat-label>Date range on which the last status was updated:</mat-label>
           </div>
           <div class="row">
             <div class="col-sm-6 spsTp ">
               <mat-label>From Date</mat-label>
-              <mat-form-field appearance="outline" class="class1">
+              <mat-form-field appearance="outline" class="class1 custom-bg-new">
                 <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
                   [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()" />
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -39,7 +39,7 @@
             </div>
             <div class="col-sm-6 spsTp ">
               <mat-label>To Date</mat-label>
-              <mat-form-field appearance="outline" class="class1">
+              <mat-form-field appearance="outline" class="class1 custom-bg-new">
                 <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxEndDate"
                   autocomplete="off" (dateChange)="setToDateValidation()" />
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
@@ -55,7 +55,7 @@
         <div class="col-sm-6 spsTp">
           <mat-label>All the <span class="status-text"> {{ this.selectedStatus }} </span> status will be updated
             to</mat-label>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="custom-bg-new">
             <mat-select placeholder="Select Status" [formControl]="toStatusValue">
               <mat-option *ngFor="let status of itrToStatus" [value]="status.value" (click)="onToStatusChange(status)">
                 {{ status.label }}
@@ -64,10 +64,10 @@
           </mat-form-field>
         </div>
         <div class="col-sm-6">
-          <button class="tbd-btn spRt margin" (click)="update()">
+          <button class="btnUpdate spRt margin" (click)="update()">
             Update Status </button>
         </div>
       </div>
     </div>
   </div>
-</div>
+

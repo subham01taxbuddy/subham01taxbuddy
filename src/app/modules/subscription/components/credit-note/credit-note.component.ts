@@ -70,6 +70,7 @@ export class CreditNoteComponent implements OnInit {
     { value: 'invoiceNo', name: 'Invoice No' },
   ];
   clearUserFilter: number;
+
   sortBy: any = {};
   sortMenus = [
     { value: 'creditNoteDate', name: 'Note date' },
@@ -158,6 +159,7 @@ export class CreditNoteComponent implements OnInit {
     this.searchBy = object;
     console.log('object from search param ', this.searchBy);
   }
+
 
   sortByObject(object) {
     this.sortBy = object;

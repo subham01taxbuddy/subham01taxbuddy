@@ -1,0 +1,105 @@
+/*----------------------
+    Accordions
+------------------------*/
+.accordion-item {
+    background-color: $color-gray-body;
+    margin-bottom: 27px;
+    width: 100%;
+    border-radius: 4px;
+
+    .accordion__item-title {
+        font-family: $font-heading;
+        color: $color-dark;
+        font-weight: 500;
+        line-height: 28px;
+        font-size: 12px;
+        cursor: pointer;
+        display: block;
+        position: relative;
+        background-color: $accordian-header-bg-color;
+        padding: 8px 24px;
+        border-radius:4px 4px 0px 0px;
+
+        &:after {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            content: "\f077";
+            font-family: fontawesome;
+            background-color: transparent;
+            color: $color-heading;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            width: 20px;
+            height: 20px;
+            line-height: 28px;
+            border-radius: 4px 4px 0px 0px;
+        }
+    }
+
+    &.opened {
+        border-color: $color-theme;
+
+        .accordion__item-title {
+            color: $color-theme;
+
+            &:after {
+                background-color: $color-theme;
+                color: $color-white;
+                content: "\f078";
+            }
+        }
+    }
+
+    .accordion__item-body {
+        padding:24px;
+
+        p {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.accordion-input{
+    margin-right: 10px;
+    width: 201px;
+}
+.accordion-title {
+    font-family: $font-heading;
+    color: $color-dark;
+    font-weight: 500;
+    line-height: 28px;
+    font-size: 14px;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    background-color: $accordian-header-bg-color;
+    padding: 8px 24px;
+    border-radius:4px;
+}
+
+.inner_accordion-title {
+    font-family: $font-heading;
+    color: $color-dark;
+    font-weight: 500;
+    height: 44px;
+    line-height: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    background-color: $inner-accordian-header-bg-color;
+    padding: 12px 24px;
+    gap:32px;
+}
+.accordion-btn{
+    float: right;
+}
+
+/* Mobile Phones and tablets */
+@include xs-sm-screens {
+    .accordion-item {
+        padding: 15px 20px;
+    }
+}

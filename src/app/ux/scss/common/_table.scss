@@ -1,0 +1,35 @@
+.table {
+    width: 100%;
+    border: 0 none;
+
+    tr {
+        border: 0 none;
+    }
+    th {
+        padding: 16px 10px;
+        border: 0 none;
+    }
+
+    td {
+        padding: 16px 10px;
+        border: 0 none;
+        background-color: transparent;
+    }
+
+    tbody {
+        tr:nth-child(even) {background: $color-gray-body}
+        tr:nth-child(odd) {background: $color-white}
+    }
+}
+.table-wrapper {
+    display: flex;
+    align-items: flex-start;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    flex-direction: column;
+    padding: 10px;
+    position: relative;
+    overflow: auto;
+    margin-bottom: 25px;
+}

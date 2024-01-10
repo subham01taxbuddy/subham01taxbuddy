@@ -1,4 +1,3 @@
-import { filter, result } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import {
   FormGroup,
@@ -17,8 +16,8 @@ import {
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { DeleteConfirmationDialogComponent } from '../components/delete-confirmation-dialog/delete-confirmation-dialog.component';
-import { empty } from 'rxjs';
 import { Output, EventEmitter } from '@angular/core';
+import { UserMsService } from 'src/app/services/user-ms.service';
 
 @Component({
   selector: 'app-house-property',
@@ -62,8 +61,6 @@ export class HousePropertyComponent implements OnInit {
   stateDropdown = AppConstants.stateDropdown;
   thirtyPctOfAnnualValue = 0;
   annualValue = 0;
-  // totalArrearsUnrealizedRentReceived = 0;
-  // arrearsUnrealizedRentReceived = 0;
   step = 0;
   displayedColumns: string[] = ['Questions', 'Amount'];
   defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
@@ -83,25 +80,22 @@ export class HousePropertyComponent implements OnInit {
     private itrMsService: ItrMsService,
     public utilsService: UtilsService,
     public snackBar: MatSnackBar,
-    public matDialog: MatDialog
+    public matDialog: MatDialog,
+    private userMsService: UserMsService
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
-    // if (this.ITR_JSON.regime === 'NEW') {
-    //   this.propertyTypeDropdown = this.propertyTypeDropdown.filter(
-    //     (item) => item.value !== 'SOP'
-    //   );
+    // if (
+    //   this.utilsService.isNonEmpty(this.ITR_JSON) &&
+    //   this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
+    //   this.ITR_JSON.houseProperties instanceof Array &&
+    //   this.ITR_JSON.houseProperties.length > 0
+    // ) {
+    //   this.hpView = 'TABLE';
     // }
-    if (
-      this.utilsService.isNonEmpty(this.ITR_JSON) &&
-      this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
-      this.ITR_JSON.houseProperties instanceof Array &&
-      this.ITR_JSON.houseProperties.length > 0
-    ) {
-      this.hpView = 'TABLE';
-    }
+
     if (!this.Copy_ITR_JSON.systemFlags) {
       this.Copy_ITR_JSON.systemFlags = {
         hasSalary: false,
@@ -121,38 +115,79 @@ export class HousePropertyComponent implements OnInit {
         haveUnlistedShares: false,
       };
     }
-
   }
 
   ngOnInit() {
-    // this.getItrDocuments();
-    // this.getHpDocsUrl(0);
-
     this.housePropertyForm = this.createHousePropertyForm();
+
     if (
       this.utilsService.isNonEmpty(this.ITR_JSON) &&
       this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
       this.ITR_JSON.houseProperties instanceof Array &&
       this.ITR_JSON.houseProperties.length > 0
     ) {
-      this.housePropertyForm.patchValue(this.ITR_JSON.houseProperties[0]);
-      if (this.ITR_JSON.houseProperties[0].isEligibleFor80EE) {
-        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EE');
-      } else if (this.ITR_JSON.houseProperties[0].isEligibleFor80EEA) {
-        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EEA');
-      } else {
-        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('');
-      }
+      this.ITR_JSON.houseProperties?.forEach((element) => {
+        this.housePropertyForm.patchValue(element);
+
+        if (element.isEligibleFor80EE) {
+          this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EE');
+        } else if (element.isEligibleFor80EEA) {
+          this.housePropertyForm.controls['isEligibleFor80EE'].setValue(
+            '80EEA'
+          );
+        } else {
+          this.housePropertyForm.controls['isEligibleFor80EE'].setValue('');
+        }
+      });
+      this.markActive(0);
+    } else {
+      this.addHousingIncome();
     }
 
-    console.log(
-      'HOUSING deletedFileData LENGTH ---> ',
-      this.deletedFileData.length
-    );
-
     this.updateHpTaxaxbleIncome();
+    this.enableOnOverAllValue();
+    this.calculateInterestOrDeduction();
+    this.editHouseProperty(0);
+
   }
 
+  markActive(index) {
+    if (this.currentIndex >= 0 && this.currentIndex >= this.ITR_JSON.houseProperties.length) {
+      this.saveHpDetails(false);
+    }
+    if (index === -1) {
+      this.addHousingIncome();
+    } else {
+      this.currentIndex = index;
+      this.editHouseProperty(this.currentIndex);
+    }
+  }
+
+  deleteHousingIncome(index) {
+    if (index >= 0 && index < this.Copy_ITR_JSON.houseProperties.length) {
+      this.hpView = 'FORM';
+      // this.housingView = 'FORM';
+      this.mode = 'ADD';
+      this.housePropertyForm = this.createHousePropertyForm();
+      this.housePropertyForm.controls['country'].setValue('91');
+      this.Copy_ITR_JSON.houseProperties.splice(index, 1);
+      this.ITR_JSON = this.Copy_ITR_JSON;
+      sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.ITR_JSON)
+      );
+      this.serviceCall('DELETE', this.Copy_ITR_JSON);
+    }
+  }
+
+  getPropertyTypeLabel() {
+    if (this.housePropertyForm.controls['propertyType'].value) {
+      return this.propertyTypeDropdown.filter(prop =>
+        prop.value === this.housePropertyForm.controls['propertyType'].value)[0].label + ' Property';
+    } else {
+      return 'Property'
+    }
+  }
   updateHpTaxaxbleIncome(save?) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     // Loop through each index in the ITR_JSON.employers array
@@ -175,6 +210,7 @@ export class HousePropertyComponent implements OnInit {
     //re-initialize the ITR objects
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.housePropertyForm = this.createHousePropertyForm();
+
     if (
       this.utilsService.isNonEmpty(this.ITR_JSON) &&
       this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
@@ -205,15 +241,47 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
-  async updateDataByPincode() {
-    await this.utilsService
-      .getPincodeData(this.housePropertyForm.controls['pinCode'])
-      .then((result) => {
-        console.log('pindata', result);
-        this.housePropertyForm.controls['city'].setValue(result.city);
-        this.housePropertyForm.controls['country'].setValue(result.countryCode);
-        this.housePropertyForm.controls['state'].setValue(result.stateCode);
-      });
+  changeCountry(country) {
+    // const param = '/fnbmaster/statebycountrycode?countryCode=' + country;
+    // this.itrMsService.getMethod(param).subscribe((result: any) => {
+    //   // this.stateDropdown = result;
+    // }, error => {
+    // });
+    if (country !== '91') {
+      this.stateDropdown = [
+        {
+          id: '5b4599c9c15a76370a3424e9',
+          stateId: '1',
+          countryCode: '355',
+          stateName: 'Foreign',
+          stateCode: '99',
+          status: true,
+        },
+      ];
+      this.housePropertyForm.controls['state'].setValue('99');
+    }
+  }
+
+  getCityData() {
+    let pinCode = this.housePropertyForm?.controls['pinCode'];
+    if (pinCode.valid) {
+      this.changeCountry('91');
+      const param = '/pincode/' + pinCode?.value;
+      this.userMsService.getMethod(param).subscribe(
+        (result: any) => {
+          this.housePropertyForm?.controls['country'].setValue('91');
+          this.housePropertyForm?.controls['city'].setValue(result.taluka);
+          this.housePropertyForm?.controls['state'].setValue(result.stateCode);
+
+          console.log('Picode Details:', result);
+        },
+        (error) => {
+          if (error.status === 404) {
+            this.housePropertyForm?.controls['city'].setValue(null);
+          }
+        }
+      );
+    }
   }
 
   createHousePropertyForm(): FormGroup {
@@ -222,24 +290,7 @@ export class HousePropertyComponent implements OnInit {
     if (type === 2 || type === 3) {
       return this.fb.group({
         propertyType: ['', Validators.required],
-        address: ['', Validators.required],
-        city: [
-          '',
-          Validators.compose([
-            Validators.required,
-            Validators.pattern(AppConstants.charRegex),
-          ]),
-        ],
-        state: ['', Validators.required],
-        country: ['', Validators.required],
-        pinCode: [
-          '',
-          Validators.compose([
-            Validators.required,
-            Validators.maxLength(6),
-            Validators.pattern(AppConstants.PINCode),
-          ]),
-        ],
+        principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
         grossAnnualRentReceived: [null],
         grossAnnualRentReceivedTotal: null,
         annualRentReceived: [
@@ -250,38 +301,113 @@ export class HousePropertyComponent implements OnInit {
             Validators.min(1),
           ],
         ],
-        rentPercentage: [{ value: null, disabled: true }],
         propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
-        totalArrearsUnrealizedRentReceived: [''],
+        nav: null,
+
+        // intereset details
+        standardDeduction: null,
+        interestAmount: [
+          '',
+          [
+            Validators.pattern(
+              AppConstants.numericRegex
+            ) /* , Validators.min(1) */,
+          ],
+        ],
+        interest24bAmount: [
+          '',
+          [
+            Validators.pattern(
+              AppConstants.numericRegex
+            ) /* , Validators.min(1) */,
+          ],
+        ],
+
+        // arrears details
         arrearsUnrealizedRentReceived: [''],
-        isEligibleFor80EE: [null],
-        // isEligibleFor80EEA: [false],
-        loans: this.fb.array([
-          this.fb.group({
-            loanType: ['HOUSING'],
-            principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
-            interestAmount: [
-              '',
-              [
-                Validators.pattern(
-                  AppConstants.numericRegex
-                ) /* , Validators.min(1) */,
-              ],
-            ],
-          }),
-        ]),
+        totalArrearsUnrealizedRentReceived: [''],
+
+        // 80ee and 80eea details
+        isEligibleFor80EE: null,
+        // isEligibleFor80EEA:null,
+        eligible80EEAmount: null,
+        eligible80EEAAmount: null,
+
+        // property details
+        address: ['', Validators.required],
+        city: [
+          '',
+          [Validators.required, Validators.pattern(AppConstants.charRegex)],
+        ],
+
+        state: ['', Validators.required],
+        country: ['', Validators.required],
+        pinCode: [
+          '',
+
+          Validators.compose([
+            Validators.required,
+            Validators.maxLength(6),
+            Validators.pattern(AppConstants.PINCode),
+          ]),
+        ],
+
+        // other details
+        loanType: ['HOUSING'],
         coOwners: this.fb.array([]),
         tenant: this.fb.array([]),
         ownerPercentage: [],
+        rentPercentage: [],
       });
     } else {
       return this.fb.group({
         propertyType: ['', Validators.required],
-        address: [''],
-        city: [
-          '',
-          Validators.compose([Validators.pattern(AppConstants.charRegex)]),
+        principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
+        grossAnnualRentReceived: [null],
+        grossAnnualRentReceivedTotal: null,
+        annualRentReceived: [
+          null,
+          [
+            Validators.required,
+            Validators.pattern(AppConstants.numericRegex),
+            Validators.min(1),
+          ],
         ],
+        propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
+        nav: null,
+
+        // intereset details
+        standardDeduction: null,
+        interestAmount: [
+          '',
+          [
+            Validators.pattern(
+              AppConstants.numericRegex
+            ) /* , Validators.min(1) */,
+          ],
+        ],
+        interest24bAmount: [
+          '',
+          [
+            Validators.pattern(
+              AppConstants.numericRegex
+            ) /* , Validators.min(1) */,
+          ],
+        ],
+
+        // arrears details
+        isEligibleFor80EE: null,
+        // isEligibleFor80EEA:null,
+        arrearsUnrealizedRentReceived: [''],
+        totalArrearsUnrealizedRentReceived: [''],
+
+        // 80ee and 80eea details
+        eligible80EEAmount: null,
+        eligible80EEAAmount: null,
+
+        // property details
+        address: [''],
+        city: ['', Validators.pattern(AppConstants.charRegex)],
         state: [''],
         country: [''],
         pinCode: [
@@ -291,42 +417,17 @@ export class HousePropertyComponent implements OnInit {
             Validators.pattern(AppConstants.PINCode),
           ]),
         ],
-        grossAnnualRentReceived: [null],
-        grossAnnualRentReceivedTotal: null,
-        annualRentReceived: [
-          null,
-          [
-            Validators.required,
-            Validators.pattern(AppConstants.numericRegex),
-            Validators.min(1),
-          ],
-        ],
-        rentPercentage: [{ value: null, disabled: true }],
-        propertyTax: [null, [Validators.pattern(AppConstants.numericRegex)]],
-        isEligibleFor80EE: [''],
-        // isEligibleFor80EEA: [false],
-        loans: this.fb.array([
-          this.fb.group({
-            loanType: ['HOUSING'],
-            principalAmount: [0, Validators.pattern(AppConstants.numericRegex)],
-            interestAmount: [
-              '',
-              [
-                Validators.pattern(
-                  AppConstants.numericRegex
-                ) /* , Validators.min(1) */,
-              ],
-            ],
-          }),
-        ]),
+
+        // other details
+        loanType: ['HOUSING'],
         coOwners: this.fb.array([]),
         tenant: this.fb.array([]),
         ownerPercentage: [],
-        totalArrearsUnrealizedRentReceived: [''],
-        arrearsUnrealizedRentReceived: [''],
+        rentPercentage: [],
       });
     }
   }
+
   createTenantForm(obj: { name?: string; panNumber?: string } = {}): FormGroup {
     let type = parseInt(this.ITR_JSON.itrType);
     console.log('hurray', type);
@@ -348,6 +449,20 @@ export class HousePropertyComponent implements OnInit {
       });
     }
   }
+
+  getTotalTaxableIncome() {
+    return this.ITR_JSON.houseProperties?.reduce((total, element) => total + element.taxableIncome, 0);
+  }
+
+  getOwnershipCategory(propertyType: string) {
+    if ("SOP" === propertyType)
+      return "Self Occupied";
+    if ("LOP" === propertyType)
+      return "Let Out";
+    if ("DLOP" === propertyType)
+      return "Deemed Let Out";
+  }
+
   createCoOwnerForm(
     obj: {
       name?: string;
@@ -356,27 +471,30 @@ export class HousePropertyComponent implements OnInit {
       percentage?: number;
     } = {}
   ): FormGroup {
-    return this.fb.group({
-      name: [obj.name || '', [Validators.required]],
-      // isSelf: [obj.isSelf || false],
-      panNumber: [
-        obj.panNumber || '',
-        Validators.pattern(AppConstants.panNumberRegex),
-      ],
-      percentage: [
-        obj.percentage || 0,
-        Validators.compose([
-          Validators.required,
-          Validators.pattern(AppConstants.numericRegex),
-          Validators.max(99),
-          Validators.min(0),
-        ]),
-      ],
-    });
+    let formGroup =
+      this.fb.group({
+        name: [obj.name || '', [Validators.required]],
+        panNumber: [
+          obj.panNumber || '',
+          Validators.pattern(AppConstants.panNumberRegex),
+        ],
+        percentage: [
+          obj.percentage || 0,
+          Validators.compose([
+            Validators.required,
+            Validators.pattern(AppConstants.numericRegex),
+            Validators.max(99),
+            Validators.min(0),
+          ]),
+        ],
+      });
+    return formGroup;
   }
+
   get getCoOwnersArray() {
     return <FormArray>this.housePropertyForm.get('coOwners');
   }
+
   addMoreCoOwner() {
     const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
     if (coOwner.valid) {
@@ -405,6 +523,7 @@ export class HousePropertyComponent implements OnInit {
       coOwner.value
     );
     let userPanExist = [];
+
     if (coOwner.value instanceof Array) {
       userPanExist = coOwner.value.filter(
         (item) => item.panNumber === this.ITR_JSON.panNumber
@@ -419,6 +538,7 @@ export class HousePropertyComponent implements OnInit {
       );
       panRepeat = true;
     }
+
     console.log('Form + coowner=', this.housePropertyForm.valid);
     return panRepeat;
   }
@@ -441,6 +561,7 @@ export class HousePropertyComponent implements OnInit {
       return false;
     }
   }
+
   isduplicatePAN(i, formArrayName) {
     const formArray = <FormArray>this.housePropertyForm.get(formArrayName);
     const dup = formArray.controls.filter(
@@ -448,6 +569,7 @@ export class HousePropertyComponent implements OnInit {
         item['controls'].panNumber.value ===
         formArray.controls[i]['controls'].panNumber.value
     );
+
     if (dup.length > 1) {
       return true;
     } else {
@@ -456,7 +578,6 @@ export class HousePropertyComponent implements OnInit {
   }
 
   loanSection = '';
-
   currentIndex: number = null;
   housingView = '';
   mode = 'ADD';
@@ -476,115 +597,130 @@ export class HousePropertyComponent implements OnInit {
     this.chekIsSOPAdded();
     this.defaultTypeOfCoOwner = this.propertyTypeDropdown[0].value;
     this.setStoredValues(this.ITR_JSON.houseProperties.length, 'add');
+    this.Copy_ITR_JSON.houseProperties.push(this.housePropertyForm.getRawValue());
+    this.currentIndex = this.Copy_ITR_JSON.houseProperties.length -1;
+  }
+
+  settingInterestValues(itrJsonHp) {
+    let housePropertyForm = this.housePropertyForm.controls;
+    if (itrJsonHp?.eligible80EEAAmount > 0) {
+      housePropertyForm['interestAmount'].setValue(
+        itrJsonHp?.loans[0]?.interestAmount +
+        itrJsonHp?.eligible80EEAAmount || 0
+      );
+      housePropertyForm['interest24bAmount'].setValue(
+        itrJsonHp?.loans[0]?.interestAmount
+      );
+      housePropertyForm['isEligibleFor80EE']?.setValue('80EEA');
+      housePropertyForm['eligible80EEAAmount']?.setValue(itrJsonHp?.eligible80EEAAmount);
+    } else if (itrJsonHp?.eligible80EEAmount > 0) {
+      housePropertyForm['interestAmount'].setValue(
+        itrJsonHp?.loans[0]?.interestAmount +
+        itrJsonHp?.eligible80EEAmount || 0
+      );
+      housePropertyForm['interest24bAmount'].setValue(
+        itrJsonHp?.loans[0]?.interestAmount
+      );
+      housePropertyForm['isEligibleFor80EE']?.setValue('80EE');
+      housePropertyForm['eligible80EEAmount']?.setValue(itrJsonHp?.eligible80EEAmount);
+    } else {
+      if(itrJsonHp?.loans) {
+        housePropertyForm['interestAmount'].setValue(
+            itrJsonHp?.loans[0]?.interestAmount
+        );
+        housePropertyForm['interest24bAmount'].setValue(
+            itrJsonHp?.loans[0]?.interestAmount
+        );
+      }
+      housePropertyForm['isEligibleFor80EE']?.setValue('');
+      housePropertyForm['eligible80EEAAmount']?.setValue(0);
+      housePropertyForm['eligible80EEAmount']?.setValue(0);
+    }
   }
 
   editHouseProperty(index) {
     this.currentIndex = index;
-    // ASHISH HULWEAN changed view as per new view changes requirement
     this.hpView = 'FORM';
-    // this.housingView = 'FORM';
     this.mode = 'UPDATE';
-
     this.housePropertyForm = this.createHousePropertyForm();
-
-    this.changePropType(
-      this.housePropertyForm.controls['propertyType'].value,
-      'EDIT'
-    );
-
-    this.housePropertyForm.patchValue(this.ITR_JSON.houseProperties[index]);
+    let itrJsonHp = this.Copy_ITR_JSON.houseProperties[index];
+    this.housePropertyForm.patchValue(itrJsonHp);
     this.housePropertyForm.controls['country'].setValue('91');
-    if (this.ITR_JSON.houseProperties[index].tenant instanceof Array) {
-      const tenant = <FormArray>this.housePropertyForm.get('tenant');
-      this.ITR_JSON.houseProperties[index].tenant.forEach((obj) => {
-        tenant.push(this.createTenantForm(obj));
-      });
-    }
-    if (this.ITR_JSON.houseProperties[index].coOwners instanceof Array) {
-      const coOwners = <FormArray>this.housePropertyForm.get('coOwners');
-      let totalCoOwnPercent = 0;
-      this.ITR_JSON.houseProperties[index].coOwners.forEach((obj) => {
-        if (!obj.isSelf) {
-          coOwners.push(this.createCoOwnerForm(obj));
-          totalCoOwnPercent += obj.percentage;
-        }
-      });
-      //reverse calculate the gross rent based on owner percentage
-      // let ownerPercentage = 100 - totalCoOwnPercent;
-      // let grossRent = this.ITR_JSON.houseProperties[index].grossAnnualRentReceived * 100/ownerPercentage;
-      let grossRent =
-        this.ITR_JSON.houseProperties[index].grossAnnualRentReceivedTotal;
-      this.housePropertyForm.controls['annualRentReceived'].setValue(grossRent);
 
-      let rentPercentageValue =
-        this.ITR_JSON.houseProperties[index].grossAnnualRentReceived;
-      this.housePropertyForm.controls['rentPercentage'].setValue(
-        rentPercentageValue
+    if(itrJsonHp?.loans) {
+      this.housePropertyForm.controls['principalAmount'].setValue(
+          itrJsonHp?.loans[0]?.principalAmount
       );
+    }
+
+
+    if (
+      typeof itrJsonHp?.isEligibleFor80EE === 'boolean'
+    ) {
+      this.housePropertyForm?.controls['isEligibleFor80EE']?.setValue('80EE');
+    } else if (
+      typeof itrJsonHp?.isEligibleFor80EEA === 'boolean'
+    ) {
+      this.housePropertyForm?.controls['isEligibleFor80EE']?.setValue('80EEA');
     } else {
-      this.housePropertyForm.controls['annualRentReceived'].setValue(
-        this.ITR_JSON.houseProperties[index].grossAnnualRentReceivedTotal
-      );
-
-      this.housePropertyForm.controls['rentPercentage'].setValue(
-        this.ITR_JSON.houseProperties[index].grossAnnualRentReceived
-      );
-    }
-    if (this.ITR_JSON.houseProperties[index].loans instanceof Array) {
-      const loans = <FormArray>this.housePropertyForm.get('loans');
-      loans.controls[0].patchValue(
-        this.ITR_JSON.houseProperties[index].loans[0]
-      );
-      // this.ITR_JSON.houseProperties[index].loans.forEach(obj => {
-      //   loans.push(this.createLoanForm(obj));
-      // });
+      this.housePropertyForm?.controls['isEligibleFor80EE']?.setValue('');
     }
 
-    if (
-      this.utilsService.isNonEmpty(
-        this.housePropertyForm.controls['country'].value
-      )
-    ) {
-      // this.changeCountry(this.housePropertyForm.controls['country'].value);
-    }
-
-    if (this.housePropertyForm.getRawValue().coOwners.length > 0) {
+    // setting coOwners Details
+    if (itrJsonHp?.coOwners?.length > 0) {
+      const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
       this.isCoOwners.setValue(true);
-    }
-    this.calAnnualValue();
-
-    if (
-      this.utilsService.isNonEmpty(this.ITR_JSON) &&
-      this.utilsService.isNonEmpty(this.ITR_JSON.houseProperties) &&
-      this.ITR_JSON.houseProperties instanceof Array &&
-      this.ITR_JSON.houseProperties.length > 0
-    ) {
-      if (this.ITR_JSON.houseProperties[index].isEligibleFor80EE) {
-        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EE');
-      } else if (this.ITR_JSON.houseProperties[index].isEligibleFor80EEA) {
-        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('80EEA');
-      } else {
-        this.housePropertyForm.controls['isEligibleFor80EE'].setValue('');
-      }
+      itrJsonHp?.coOwners?.forEach(element => {
+        let obj = {
+          name: element.name,
+          panNumber: element?.panNumber,
+          percentage: element?.percentage,
+          isSelf: element?.isSelf
+        };
+        coOwner?.push(
+          this.createCoOwnerForm(obj)
+        )
+      });
     }
 
-    // if (this.housePropertyForm.getRawValue().loans.length > 0) {
-    //   this.isHomeLoan.setValue(true);
-    // }
+    if (itrJsonHp?.propertyType === 'SOP') {
+      this.housePropertyForm.controls[
+        'totalArrearsUnrealizedRentReceived'
+      ].setValue(itrJsonHp?.totalArrearsUnrealizedRentReceived);
+      this.calAnnualValue();
+      this.calculateArrears30();
+      this.settingInterestValues(itrJsonHp);
+    } else {
+      const tenant = <FormArray>this.housePropertyForm.get('tenant');
+      this.housePropertyForm.controls['nav'].setValue(
+        itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax
+      );
+      this.housePropertyForm.controls['standardDeduction'].setValue(
+        ((itrJsonHp?.grossAnnualRentReceived - itrJsonHp?.propertyTax) * 30) /
+        100
+      );
+      this.housePropertyForm?.controls['annualRentReceived']?.setValue(
+        itrJsonHp?.grossAnnualRentReceivedTotal
+          ? itrJsonHp?.grossAnnualRentReceivedTotal
+          : itrJsonHp?.grossAnnualRentReceived
+      );
+      this.housePropertyForm.controls[
+        'totalArrearsUnrealizedRentReceived'
+      ].setValue(itrJsonHp?.totalArrearsUnrealizedRentReceived);
 
-    this.setStoredValues(index, 'edit');
-    this.EEStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-      .isEligibleFor80EE
-      ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EE
-      : false;
-    this.EAStatus = this.ITR_JSON.houseProperties[this.storedIndex]
-      .isEligibleFor80EEA
-      ? this.ITR_JSON.houseProperties[this.storedIndex].isEligibleFor80EEA
-      : false;
+      // setting tenant details
+      itrJsonHp?.tenant?.forEach((element) => {
+        tenant.push(this.createTenantForm({ name: element.name, panNumber: element?.panNumber }));
+      });
 
-    this.EeEaValueChanges();
-    this.chekIsSOPAdded();
-
+      this.changePropType(
+        this.housePropertyForm.controls['propertyType'].value,
+        'EDIT'
+      );
+      this.calAnnualValue();
+      this.calculateArrears30();
+      this.settingInterestValues(itrJsonHp);
+    }
   }
 
   haveCoOwners() {
@@ -609,6 +745,7 @@ export class HousePropertyComponent implements OnInit {
   get getTenantArray() {
     return <FormArray>this.housePropertyForm.get('tenant');
   }
+
   addMoreTenants() {
     const tenant = <FormArray>this.housePropertyForm.get('tenant');
     if (tenant.valid) {
@@ -674,6 +811,7 @@ export class HousePropertyComponent implements OnInit {
       ],
     });
   }
+
   get getLoansArray() {
     return <FormArray>this.housePropertyForm.get('loans');
   }
@@ -684,24 +822,25 @@ export class HousePropertyComponent implements OnInit {
       for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
         if (this.ITR_JSON.houseProperties[i].propertyType === 'SOP') {
           this.isSelfOccupied++;
-          if(this.storedIndex != i) {
-            this.sopInterestClaimed = this.ITR_JSON.houseProperties[i].loans[0]?.interestAmount;
+          if (this.storedIndex != i) {
+            this.sopInterestClaimed =
+              this.ITR_JSON.houseProperties[i].loans[0]?.interestAmount;
           }
           // break;
         }
       }
     }
+
     let typeOfHp = this.housePropertyForm.controls['propertyType'].value;
-    if(typeOfHp === 'SOP') {
+    if (typeOfHp === 'SOP') {
       console.log('updating validations');
-      (
-        (this.housePropertyForm.controls['loans'] as FormGroup)
-          .controls[0] as FormGroup
-      ).controls['interestAmount'].setValidators([Validators.max(200000 - this.sopInterestClaimed)]);
-      (
-        (this.housePropertyForm.controls['loans'] as FormGroup)
-          .controls[0] as FormGroup
-      ).controls['interestAmount'].updateValueAndValidity();
+
+      this.housePropertyForm.controls['interestAmount'].setValidators([
+        Validators.max(200000 - this.sopInterestClaimed),
+      ]);
+      this.housePropertyForm.controls[
+        'interestAmount'
+      ].updateValueAndValidity();
     }
   }
 
@@ -713,8 +852,8 @@ export class HousePropertyComponent implements OnInit {
       if (this.isSelfOccupied >= this.maxSopAllowed) {
         this.utilsService.showSnackBar(
           'You cannot add more than ' +
-            this.maxSopAllowed +
-            ' self occupied properties'
+          this.maxSopAllowed +
+          ' self occupied properties'
         );
 
         this.isDisable = true;
@@ -752,18 +891,18 @@ export class HousePropertyComponent implements OnInit {
       ].updateValueAndValidity();
       this.housePropertyForm.controls['propertyTax'].setValue(null);
       this.housePropertyForm.controls['tenant'] = this.fb.array([]);
-      (
-        (this.housePropertyForm.controls['loans'] as FormGroup)
-          .controls[0] as FormGroup
-      ).controls['interestAmount'].setValidators([Validators.min(1)]);
-      (
-        (this.housePropertyForm.controls['loans'] as FormGroup)
-          .controls[0] as FormGroup
-      ).controls['interestAmount'].setValidators([Validators.max(200000 - this.sopInterestClaimed)]);
-      (
-        (this.housePropertyForm.controls['loans'] as FormGroup)
-          .controls[0] as FormGroup
-      ).controls['interestAmount'].updateValueAndValidity();
+
+      this.housePropertyForm.controls['interestAmount'].setValidators([
+        Validators.min(1),
+      ]);
+
+      this.housePropertyForm.controls['interestAmount'].setValidators([
+        Validators.max(200000 - this.sopInterestClaimed),
+      ]);
+
+      this.housePropertyForm.controls[
+        'interestAmount'
+      ].updateValueAndValidity();
     } else if (type === 'LOP') {
       if (!mode && mode !== 'EDIT') {
         const tenant = <FormArray>this.housePropertyForm.get('tenant');
@@ -785,14 +924,10 @@ export class HousePropertyComponent implements OnInit {
         'annualRentReceived'
       ].updateValueAndValidity();
 
-      (
-        (this.housePropertyForm.controls['loans'] as FormGroup)
-          .controls[0] as FormGroup
-      ).controls['interestAmount'].setValidators(null);
-      (
-        (this.housePropertyForm.controls['loans'] as FormGroup)
-          .controls[0] as FormGroup
-      ).controls['interestAmount'].updateValueAndValidity();
+      this.housePropertyForm.controls['interestAmount'].setValidators(null);
+      this.housePropertyForm.controls[
+        'interestAmount'
+      ].updateValueAndValidity();
     } else if (type === 'DLOP') {
       this.housePropertyForm.controls['tenant'] = this.fb.array([]);
       // this.housePropertyForm.controls['isEligibleFor80EE'].setValue(false);
@@ -805,24 +940,22 @@ export class HousePropertyComponent implements OnInit {
         'annualRentReceived'
       ].updateValueAndValidity();
 
-      (
-        (this.housePropertyForm.controls['loans'] as FormGroup)
-          .controls[0] as FormGroup
-      ).controls['interestAmount'].setValidators(null);
-      (
-        (this.housePropertyForm.controls['loans'] as FormGroup)
-          .controls[0] as FormGroup
-      ).controls['interestAmount'].updateValueAndValidity();
+      this.housePropertyForm.controls['interestAmount'].setValidators(null);
+      this.housePropertyForm.controls[
+        'interestAmount'
+      ].updateValueAndValidity();
     }
+
+    this.calculateInterestOrDeduction();
   }
 
-  saveHpDetails() {
-    this.Copy_ITR_JSON = JSON.parse(
-      sessionStorage.getItem(AppConstants.ITR_JSON)
-    );
+  saveHpDetails(apiCall: boolean) {
+    // this.Copy_ITR_JSON = JSON.parse(
+    //   sessionStorage.getItem(AppConstants.ITR_JSON)
+    // );
 
     console.log('this.housePropertyForm = ', this.housePropertyForm.controls);
-    if (this.housePropertyForm.valid) {
+    if ((this.housePropertyForm.valid && apiCall) || !apiCall) {
       let hp: HouseProperties = this.housePropertyForm.getRawValue();
       if (
         this.housePropertyForm.controls['isEligibleFor80EE'].value === '80EE'
@@ -839,12 +972,17 @@ export class HousePropertyComponent implements OnInit {
         hp.isEligibleFor80EEA = false;
       }
 
-      this.Copy_ITR_JSON.houseProperties = [];
-      this.Copy_ITR_JSON.houseProperties.push(hp);
+      // this.Copy_ITR_JSON.houseProperties = [];
+      // this.Copy_ITR_JSON.houseProperties.push(hp);
+      this.Copy_ITR_JSON.houseProperties[this.currentIndex] = hp;
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = true;
       // this.ITR_JSON = JSON.parse(JSON.stringify(this.Copy_ITR_JSON));
       // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-      this.serviceCall(this.Copy_ITR_JSON, 'SAVE');
+      if (apiCall) {
+        this.serviceCall(this.Copy_ITR_JSON, 'SAVE');
+      } else {
+        this.Copy_ITR_JSON.houseProperties[this.currentIndex] = hp;
+      }
     } else {
       this.Copy_ITR_JSON.systemFlags.hasHouseProperty = false;
       $('input.ng-invalid').first().focus();
@@ -900,6 +1038,10 @@ export class HousePropertyComponent implements OnInit {
 
     this.EeEaValueChanges();
 
+    this.housePropertyForm.statusChanges.subscribe((status) => {
+      console.log(status, this.housePropertyForm);
+    });
+
     if (this.housePropertyForm.valid) {
       this.housePropertyForm.controls['country'].setValue('91');
       const hp = this.housePropertyForm.getRawValue();
@@ -941,19 +1083,19 @@ export class HousePropertyComponent implements OnInit {
         hp.isEligibleFor80EE = false;
         hp.isEligibleFor80EEA = false;
       }
+
       if (
-        (
-          (this.housePropertyForm.controls['loans'] as FormGroup)
-            .controls[0] as FormGroup
-        ).controls['interestAmount'].value ||
-        (
-          (this.housePropertyForm.controls['loans'] as FormGroup)
-            .controls[0] as FormGroup
-        ).controls['principalAmount'].value
+        this.housePropertyForm.controls['interest24bAmount'].value ||
+        this.housePropertyForm.controls['principalAmount'].value
       ) {
-        hp.loans.forEach((element) => {
-          element.principalAmount = parseFloat(element.principalAmount);
-          element.interestAmount = parseFloat(element.interestAmount);
+        hp.loans = [];
+        hp.loans.push({
+          id: null,
+          interestAmount:
+            this.housePropertyForm.controls['interest24bAmount']?.value,
+          loanType: this.housePropertyForm.controls['loanType']?.value,
+          principalAmount:
+            this.housePropertyForm.controls['principalAmount']?.value,
         });
       } else {
         hp.loans = [];
@@ -973,6 +1115,7 @@ export class HousePropertyComponent implements OnInit {
       $('input.ng-invalid').first().focus();
     }
   }
+
   isSelfOccupied = 0;
   sopInterestClaimed = 0;
   serviceCall(ref, request) {
@@ -1017,7 +1160,8 @@ export class HousePropertyComponent implements OnInit {
             this.viewForm = false;
 
             if (this.ITR_JSON.houseProperties.length !== 0) {
-              this.hpView = 'TABLE';
+              // this.hpView = 'TABLE';
+              this.goBack();
             } else {
               this.hpView = 'FORM';
               this.housePropertyForm = this.createHousePropertyForm();
@@ -1032,6 +1176,7 @@ export class HousePropertyComponent implements OnInit {
               this.utilsService.showSnackBar(
                 'House Property income deleted successfully.'
               );
+              this.saveAndNext.emit(true);
             }
             this.loading = false;
           },
@@ -1105,26 +1250,7 @@ export class HousePropertyComponent implements OnInit {
       }
     });
   }
-  // serviceCall(request, ref) {
-  //   this.loading = true;
-  //   const param = '/taxitr?type=houseProperties';
-  //   this.itrMsService.postMethod(param, request).subscribe((result: ITR_JSON) => {
-  //     this.ITR_JSON = result;
-  //     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-  //     sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
-  //     if (ref === 'DELETE') {
-  //       this.utilsService.showSnackBar('House Property income deleted successfully.');
-  //       this.housePropertyForm = this.createHousePropertyForm();
-  //     } else {
-  //       this.utilsService.showSnackBar('House Property income updated successfully.');
-  //     }
-  //     this.loading = false;
-  //   }, error => {
-  //     this.loading = false;
-  //     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-  //     this.utilsService.showSnackBar('Failed to update House Property income.');
-  //   });
-  // }
+
   getHpTaxableIncome() {
     let taxable = 0;
     for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
@@ -1133,58 +1259,6 @@ export class HousePropertyComponent implements OnInit {
     return this.utilsService.currencyFormatter(taxable);
   }
 
-  calAnnualValue() {
-    if (
-      this.housePropertyForm.controls['annualRentReceived'].valid &&
-      this.housePropertyForm.controls['propertyTax'].valid
-    ) {
-      const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
-      let totalCoOwnerPercent = 0;
-      if (coOwner.value instanceof Array) {
-        coOwner.value.forEach((item) => {
-          totalCoOwnerPercent += parseInt(item.percentage);
-        });
-      }
-      let ownerPercentage = 100 - totalCoOwnerPercent;
-
-      this.housePropertyForm.controls['ownerPercentage'].setValue(
-        ownerPercentage
-      );
-      let rentPercent =
-        Number(this.housePropertyForm.controls['annualRentReceived'].value) *
-        ownerPercentage *
-        0.01;
-      //this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(rentPercent);
-      this.housePropertyForm.controls['grossAnnualRentReceivedTotal'].setValue(
-        this.housePropertyForm.controls['annualRentReceived'].value
-      );
-      this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(
-        rentPercent
-      );
-      this.housePropertyForm.controls['rentPercentage'].setValue(rentPercent);
-      // this.annualValue = rentPercent - Number(this.housePropertyForm.controls['propertyTax'].value);
-      this.annualValue =
-        ((this.housePropertyForm.controls['annualRentReceived'].value -
-          Number(this.housePropertyForm.controls['propertyTax'].value)) *
-          ownerPercentage) /
-        100;
-      this.thirtyPctOfAnnualValue = this.annualValue * 0.3;
-      // this.housePropertyForm.controls['annualRentReceived'].setValue(this.annualValue);
-    }
-  }
-
-  calTotalArrValue() {
-    let arrearsUnrealizedRentReceived =
-      this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived']
-        .value -
-      this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived']
-        .value *
-        0.3;
-    console.log(arrearsUnrealizedRentReceived);
-    this.housePropertyForm.controls['arrearsUnrealizedRentReceived'].setValue(
-      arrearsUnrealizedRentReceived
-    );
-  }
   // Function to set the stored values
   setStoredValues(i: any, v: string) {
     this.storedIndex = i;
@@ -1203,19 +1277,14 @@ export class HousePropertyComponent implements OnInit {
       this.storedValue === 'onInit' ||
       this.storedValue === 'edit'
     ) {
+      // interest form control
+      const interestAmountControl =
+        this.housePropertyForm.controls['interestAmount'];
+
       // current value of interest amount
       const currentInterestValue = Number(
-        (
-          (this.housePropertyForm.controls['loans'] as FormArray)
-            .controls[0] as FormGroup
-        ).controls['interestAmount']?.value
+        this.housePropertyForm.controls['interestAmount']?.value
       );
-
-      // interest form control
-      const interestAmountControl = (
-        (this.housePropertyForm.controls['loans'] as FormArray)
-          .controls[0] as FormGroup
-      ).controls['interestAmount'];
 
       let interestTotal = 0;
 
@@ -1297,17 +1366,468 @@ export class HousePropertyComponent implements OnInit {
         this.EEStatus = false;
       }
     }
+
+    this.calculateInterestOrDeduction();
   }
 
+  enableOnOverAllValue() {
+    // FINDING OUT THE FILTERED INDEX EXCEPT THE CURRENT ONE OF 80EE
+    const filteredJsonArray = this.ITR_JSON.houseProperties?.filter((element, index) => index !== this.currentIndex);
+
+    // current value of interest amount
+    const currentInterestValue = parseFloat(
+      this.housePropertyForm.controls['interestAmount']?.value
+    );
+
+    const itrJsonInterestValue = filteredJsonArray
+      ?.reduce((acc, property) => {
+        if (property?.loans?.length > 0) {
+          const totalInterest = property?.loans?.reduce((loanAcc, loan) => loanAcc + (loan?.interestAmount || 0), 0);
+          acc += totalInterest;
+        }
+        return acc;
+      }, 0);
+
+    if ((itrJsonInterestValue || 0) + (currentInterestValue
+      || 0) > 200000) {
+      return true;
+    } else {
+      return false
+    }
+  }
+
+  // other functions
   setStep(index: number) {
     this.step = index;
   }
 
-  editForm() {}
-
-  closed() {}
-
   goBack() {
     this.saveAndNext.emit(true);
+  }
+
+  calAnnualValue() {
+    let annualRentReceived =
+      this.housePropertyForm.controls['annualRentReceived'];
+    let propertyTax = this.housePropertyForm.controls['propertyTax'];
+    let nav = this.housePropertyForm.controls['nav'];
+    let standardDeduction =
+      this.housePropertyForm.controls['standardDeduction'];
+    let propertyType = this.housePropertyForm.controls['propertyType'];
+
+    if (annualRentReceived?.valid && propertyTax?.valid) {
+      // setting nav and standard deduction values
+      if (propertyType?.value === 'LOP' || propertyType?.value === 'DLOP') {
+        nav?.setValue(annualRentReceived?.value - propertyTax?.value);
+        // standard deduction = 30% of nav
+        standardDeduction.setValue((nav?.value * 30) / 100);
+      } else {
+        nav?.setValue(0);
+        standardDeduction.setValue(0);
+      }
+
+      const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+      let totalCoOwnerPercent = 0;
+      if (coOwner.value instanceof Array) {
+        coOwner.value.forEach((item) => {
+          totalCoOwnerPercent += parseInt(item.percentage);
+        });
+      }
+      let ownerPercentage = 100 - totalCoOwnerPercent;
+
+      this.housePropertyForm.controls['ownerPercentage'].setValue(
+        ownerPercentage
+      );
+      let rentPercent =
+        Number(this.housePropertyForm.controls['annualRentReceived'].value) *
+        ownerPercentage *
+        0.01;
+      //this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(rentPercent);
+      this.housePropertyForm.controls['grossAnnualRentReceivedTotal'].setValue(
+        this.housePropertyForm.controls['annualRentReceived'].value
+      );
+      this.housePropertyForm.controls['grossAnnualRentReceived'].setValue(
+        rentPercent
+      );
+      this.housePropertyForm.controls['rentPercentage'].setValue(rentPercent);
+      // this.annualValue = rentPercent - Number(this.housePropertyForm.controls['propertyTax'].value);
+      this.annualValue =
+        ((this.housePropertyForm.controls['annualRentReceived'].value -
+          Number(this.housePropertyForm.controls['propertyTax'].value)) *
+          ownerPercentage) /
+        100;
+      this.thirtyPctOfAnnualValue = this.annualValue * 0.3;
+      // this.housePropertyForm.controls['annualRentReceived'].setValue(this.annualValue);
+    }
+    this.calculateInterestOrDeduction();
+  }
+
+  calculateArrears30() {
+    let arrearsUnrealizedRentReceived =
+      this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived']
+        .value -
+      this.housePropertyForm.controls['totalArrearsUnrealizedRentReceived']
+        .value *
+      0.3;
+    console.log(arrearsUnrealizedRentReceived);
+    this.housePropertyForm.controls['arrearsUnrealizedRentReceived'].setValue(
+      arrearsUnrealizedRentReceived
+    );
+  }
+
+  jsonAmt80ee: any;
+  jsonAmt80eea: any;
+  calculateInterestOrDeduction() {
+    let eligible80EE = this.housePropertyForm?.controls['isEligibleFor80EE'];
+    let interest = this.housePropertyForm?.controls['interestAmount'];
+    let interest24b = this.housePropertyForm?.controls['interest24bAmount'];
+    let eligible80EEAmount =
+      this.housePropertyForm?.controls['eligible80EEAmount'];
+    let eligible80EEAAmount =
+      this.housePropertyForm?.controls['eligible80EEAAmount'];
+    let propertyType = this.housePropertyForm?.controls['propertyType'];
+
+    // FINDING OUT THE FILTERED INDEX EXCEPT THE CURRENT ONE OF 80EE
+    const filteredJsonArray = this.ITR_JSON.houseProperties?.filter((element, index) => index !== this.currentIndex);
+
+    // GETTING TOTAL OF 80EE AMOUNT
+    const totalEligible80EEAmount = filteredJsonArray?.reduce((acc, element) => {
+      const eligibleAmount = element?.eligible80EEAmount || 0;
+      return acc + eligibleAmount;
+    }, 0);
+    this.jsonAmt80ee = totalEligible80EEAmount;
+
+    // GETTING TOTAL OF 80EEA AMOUNT
+    const totalEligible80EEAAmount = filteredJsonArray?.reduce((acc, element) => {
+      const eligibleAmount = element?.eligible80EEAAmount || 0;
+      return acc + eligibleAmount;
+    }, 0);
+    this.jsonAmt80eea = totalEligible80EEAAmount;
+    this.enableOnOverAllValue();
+
+    // TOTAL OF ALL ITR OBJ INTEREST AMOUNT
+    const itrJsonInterestValue = filteredJsonArray?.reduce((acc, property) => {
+      if (property?.loans?.length > 0) {
+        const totalInterest = property?.loans?.reduce((loanAcc, loan) => loanAcc + (loan?.interestAmount || 0), 0);
+        acc += totalInterest;
+      }
+      return acc;
+    }, 0);
+
+    // TOTAL OF ALL ITR OBJ INTEREST AMOUNT ONLY OF SOP
+    const itrJsonSopInterestValue = filteredJsonArray?.filter((item, index) => item?.propertyType === 'SOP')
+      ?.reduce((acc, property) => {
+        if (property?.loans?.length > 0) {
+          const totalInterest = property?.loans?.reduce((loanAcc, loan) => loanAcc + (loan?.interestAmount || 0), 0);
+          acc += totalInterest;
+        }
+        return acc;
+      }, 0);
+
+    // Adding and removing validations based on property type
+    if (propertyType?.value === 'SOP') {
+      interest24b.setValidators([Validators.max(200000)]);
+      interest24b.updateValueAndValidity();
+      interest.clearValidators();
+      interest.updateValueAndValidity();
+    } else {
+      interest24b.clearValidators();
+      interest24b.updateValueAndValidity();
+      interest.clearValidators();
+      interest.updateValueAndValidity();
+    }
+
+    if (eligible80EE?.value === '80EE') {
+      // SETTING 80EE FOR SOP
+      if (propertyType?.value === 'SOP') {
+        if (parseFloat(interest?.value) > 250000) {
+          // SETTING 80EE FIRST
+          let eligible80EEValue = 50000 - (this.jsonAmt80ee || 0);
+          eligible80EEAmount?.setValue(this.jsonAmt80ee < 50000 ? eligible80EEValue : 0);
+          eligible80EEAmount?.updateValueAndValidity();
+
+          // SETTING 24B VALUE
+          let eligible24b;
+          if (itrJsonSopInterestValue && itrJsonSopInterestValue > 0) {
+            eligible24b = 200000 - itrJsonSopInterestValue;
+            interest24b?.setValue(Math.min(eligible24b, (interest?.value - eligible80EEAmount?.value)));
+          } else {
+            eligible24b = interest?.value - eligible80EEAmount?.value;
+            interest24b?.setValue(Math.min(eligible24b, 200000));
+          }
+          interest24b?.updateValueAndValidity();
+
+          // SETTING 80EEA VALUE TO 0 AS BOTH CANNOT BE CLAIMED
+          eligible80EEAAmount?.setValue(0);
+          eligible80EEAAmount?.updateValueAndValidity();
+        } else if (parseFloat(interest?.value) > 200000) {
+          // SETTING 24B VALUE FIRST
+          let eligible24b;
+          if (itrJsonSopInterestValue && itrJsonSopInterestValue > 0) {
+            eligible24b = 200000 - itrJsonSopInterestValue;
+            interest24b?.setValue(Math.min(eligible24b, interest?.value));
+          } else {
+            eligible24b = interest?.value;
+            interest24b?.setValue(Math.min(eligible24b, 200000));
+          }
+          interest24b?.updateValueAndValidity();
+
+          // SETTING 80EE
+          let eligible80EEValue = 50000 - (this.jsonAmt80ee || 0);
+          let difference = interest?.value - interest24b?.value;
+          // if total json 80ee is less than 50k then only setting 80ee else setting it to 0
+          eligible80EEAmount?.setValue(Math.min(this.jsonAmt80ee < 50000 ? eligible80EEValue : 0, difference));
+          eligible80EEAmount?.updateValueAndValidity();
+
+          // SETTING 80EEA VALUE TO 0 AS BOTH CANNOT BE CLAIMED
+          eligible80EEAAmount?.setValue(0);
+          eligible80EEAAmount?.updateValueAndValidity();
+        } else {
+          // SETTING 24B VALUE FIRST
+          let eligible24b;
+          if (itrJsonSopInterestValue && itrJsonSopInterestValue > 0) {
+            eligible24b = 200000 - itrJsonSopInterestValue;
+            interest24b?.setValue(Math.min(eligible24b, interest?.value));
+          } else {
+            eligible24b = interest?.value;
+            interest24b?.setValue(Math.min(eligible24b, 200000));
+          }
+          interest24b?.updateValueAndValidity();
+
+          // SETTING 80EE VALUE
+          if ((itrJsonSopInterestValue || 0) + interest24b?.value <= 200000) {
+            let eligible80EEValue = 50000 - (this.jsonAmt80ee || 0);
+            let difference = interest?.value - interest24b?.value;
+            eligible80EEAmount?.setValue(Math.min(this.jsonAmt80ee < 50000 ? eligible80EEValue : 0, difference));
+            eligible80EEAmount?.updateValueAndValidity();
+
+            // SETTING 80EEA VALUE TO 0 AS BOTH CANNOT BE CLAIMED
+            eligible80EEAAmount?.setValue(0);
+            eligible80EEAAmount?.updateValueAndValidity();
+          }
+        }
+      } else {
+        if (parseFloat(interest?.value) > 250000) {
+          let eligible80EEValue = 50000 - (this.jsonAmt80ee || 0);
+          eligible80EEAmount?.setValue(this.jsonAmt80ee < 50000 ? eligible80EEValue : 0);
+          eligible80EEAmount?.updateValueAndValidity();
+          let eligible24b;
+          if (itrJsonInterestValue && itrJsonInterestValue > 0) {
+            eligible24b = 200000 - itrJsonInterestValue;
+            interest24b?.setValue(Math.max(eligible24b, (interest?.value - eligible80EEAmount?.value)));
+          } else {
+            eligible24b = interest?.value - eligible80EEAmount?.value;
+            interest24b?.setValue(Math.max(eligible24b, 200000));
+          }
+          interest24b?.updateValueAndValidity();
+          eligible80EEAAmount?.setValue(0);
+          eligible80EEAAmount?.updateValueAndValidity();
+        } else if (parseFloat(interest?.value) > 200000) {
+          let eligible24b;
+          let eligible80EEValue = 50000 - (this.jsonAmt80ee || 0);
+          if (itrJsonInterestValue && itrJsonInterestValue > 0) {
+            interest24b?.setValue(Math.min(interest?.value, 200000));
+            eligible80EEAmount?.setValue(Math.min(this.jsonAmt80ee < 50000 ? interest?.value - interest24b?.value : 0, eligible80EEValue));
+            eligible80EEAmount?.updateValueAndValidity();
+            eligible80EEAAmount?.setValue(0);
+            eligible80EEAAmount?.updateValueAndValidity();
+            if (eligible80EEAmount?.value === 0) {
+              interest24b?.setValue(interest?.value);
+            } else {
+              interest24b?.setValue(interest?.value - eligible80EEAmount?.value);
+            }
+          } else {
+            eligible24b = interest?.value;
+            interest24b?.setValue(Math.min(eligible24b, 200000));
+          }
+          interest24b?.updateValueAndValidity();
+          let difference = interest?.value - interest24b?.value;
+          eligible80EEAmount?.setValue(Math.min(this.jsonAmt80ee < 50000 ? eligible80EEValue : 0, difference));
+          eligible80EEAmount?.updateValueAndValidity();
+          eligible80EEAAmount?.setValue(0);
+          eligible80EEAAmount?.updateValueAndValidity();
+        } else {
+          let eligible24b;
+          let eligible80EEValue = 50000 - (this.jsonAmt80ee || 0);
+          if (itrJsonInterestValue && itrJsonInterestValue > 0) {
+            interest24b?.setValue(Math.min(interest?.value, 200000));
+            eligible80EEAmount?.setValue(this.jsonAmt80ee < 50000 ? interest?.value - interest24b?.value : 0);
+            eligible80EEAmount?.updateValueAndValidity();
+            eligible80EEAAmount?.setValue(0);
+            eligible80EEAAmount?.updateValueAndValidity();
+          } else {
+            eligible24b = interest?.value;
+            interest24b?.setValue(Math.min(eligible24b, 200000));
+            let difference = interest?.value - interest24b?.value;
+            eligible80EEAmount?.setValue(Math.min(this.jsonAmt80ee < 50000 ? eligible80EEValue : 0, difference));
+            eligible80EEAmount?.updateValueAndValidity();
+            eligible80EEAAmount?.setValue(0);
+            eligible80EEAAmount?.updateValueAndValidity();
+          }
+          interest24b?.updateValueAndValidity();
+        }
+      }
+    } else if (eligible80EE?.value === '80EEA') {
+      // SETTING 80EEA FOR SOP
+      if (propertyType?.value === 'SOP') {
+        if (parseFloat(interest?.value) > 350000) {
+          // SETTING 80EEA FIRST
+          let eligible80EEAValue = 150000 - (this.jsonAmt80eea || 0);
+          eligible80EEAAmount?.setValue(this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0);
+          eligible80EEAAmount?.updateValueAndValidity();
+
+          // SETTING 24B VALUE
+          let eligible24b;
+          if (itrJsonSopInterestValue && itrJsonSopInterestValue > 0) {
+            eligible24b = 200000 - itrJsonSopInterestValue;
+            interest24b?.setValue(Math.min(eligible24b, (interest?.value - eligible80EEAAmount?.value)));
+          } else {
+            eligible24b = interest?.value - eligible80EEAAmount?.value;
+            interest24b?.setValue(Math.min(eligible24b, 200000));
+          }
+          interest24b?.updateValueAndValidity();
+
+          // SETTING 80EE VALUE TO 0 AS BOTH CANNOT BE CLAIMED
+          eligible80EEAmount?.setValue(0);
+          eligible80EEAmount?.updateValueAndValidity();
+        } else if (parseFloat(interest?.value) > 200000) {
+          // SETTING 24B VALUE FIRST
+          let eligible24b;
+          if (itrJsonSopInterestValue && itrJsonSopInterestValue > 0) {
+            eligible24b = 200000 - itrJsonSopInterestValue;
+            interest24b?.setValue(Math.min(eligible24b, interest?.value));
+          } else {
+            eligible24b = interest?.value;
+            interest24b?.setValue(Math.min(eligible24b, 200000));
+          }
+          interest24b?.updateValueAndValidity();
+
+          // SETTING 80EEA
+          let eligible80EEAValue = 150000 - (this.jsonAmt80eea || 0);
+          let difference = interest?.value - interest24b?.value;
+          // if total json 80eea is less than 50k then only setting 80eea else setting it to 0
+          eligible80EEAAmount?.setValue(Math.min(this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0, difference));
+          eligible80EEAAmount?.updateValueAndValidity();
+
+          // SETTING 80EE VALUE TO 0 AS BOTH CANNOT BE CLAIMED
+          eligible80EEAmount?.setValue(0);
+          eligible80EEAmount?.updateValueAndValidity();
+        } else {
+          // SETTING 24B VALUE FIRST
+          let eligible24b;
+          if (itrJsonSopInterestValue && itrJsonSopInterestValue > 0) {
+            eligible24b = 200000 - itrJsonSopInterestValue;
+            interest24b?.setValue(Math.min(eligible24b, interest?.value));
+          } else {
+            eligible24b = interest?.value;
+            interest24b?.setValue(Math.min(eligible24b, 200000));
+          }
+          interest24b?.updateValueAndValidity();
+
+          // SETTING 80EEA VALUE
+          if ((itrJsonSopInterestValue || 0) + interest24b?.value <= 200000) {
+            let eligible80EEAValue = 150000 - (this.jsonAmt80eea || 0);
+            let difference = interest?.value - interest24b?.value;
+            // if total json 80eea is less than 50k then only setting 80eea else setting it to 0
+            eligible80EEAAmount?.setValue(Math.min(this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0, difference));
+            eligible80EEAAmount?.updateValueAndValidity();
+
+            // SETTING 80EE VALUE TO 0 AS BOTH CANNOT BE CLAIMED
+            eligible80EEAmount?.setValue(0);
+            eligible80EEAmount?.updateValueAndValidity();
+          }
+        }
+      } else {
+        if (parseFloat(interest?.value) > 350000) {
+          let eligible80EEAValue = 150000 - (this.jsonAmt80eea || 0);
+          eligible80EEAAmount?.setValue(this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0);
+          eligible80EEAAmount?.updateValueAndValidity();
+          let eligible24b;
+          if (itrJsonInterestValue && itrJsonInterestValue > 0) {
+            eligible24b = 200000 - itrJsonInterestValue;
+            interest24b?.setValue(Math.max(eligible24b, (interest?.value - eligible80EEAAmount?.value)));
+          } else {
+            eligible24b = interest?.value - eligible80EEAAmount?.value;
+            interest24b?.setValue(Math.max(eligible24b, 200000));
+          }
+          interest24b?.updateValueAndValidity();
+
+          // SETTING 80EE AS 0 because both cannot be claimed
+          eligible80EEAmount?.setValue(0);
+          eligible80EEAmount?.updateValueAndValidity();
+        } else if (parseFloat(interest?.value) > 200000) {
+          let eligible24b;
+          let eligible80EEAValue = 150000 - (this.jsonAmt80eea || 0);
+
+          if (itrJsonInterestValue && itrJsonInterestValue > 0) {
+            interest24b?.setValue(Math.min(interest?.value, 200000));
+            eligible80EEAAmount?.setValue(Math.min(this.jsonAmt80eea < 150000 ? interest?.value - interest24b?.value : 0, eligible80EEAValue));
+            eligible80EEAAmount?.updateValueAndValidity();
+
+            // SETTING 80EE AS 0 because both cannot be claimed
+            eligible80EEAmount?.setValue(0);
+            eligible80EEAmount?.updateValueAndValidity();
+
+            if (eligible80EEAAmount?.value === 0) {
+              interest24b?.setValue(interest?.value);
+            } else {
+              interest24b?.setValue(interest?.value - eligible80EEAAmount?.value);
+            }
+          } else {
+            eligible24b = interest?.value;
+            interest24b?.setValue(Math.min(eligible24b, 200000));
+          }
+          interest24b?.updateValueAndValidity();
+          let difference = interest?.value - interest24b?.value;
+          eligible80EEAAmount?.setValue(Math.min(this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0, difference));
+          eligible80EEAAmount?.updateValueAndValidity();
+
+          // SETTING 80EE AS 0 because both cannot be claimed
+          eligible80EEAmount?.setValue(0);
+          eligible80EEAmount?.updateValueAndValidity();
+        } else {
+          let eligible24b;
+          let eligible80EEAValue = 150000 - (this.jsonAmt80eea || 0);
+          if (itrJsonInterestValue && itrJsonInterestValue > 0) {
+            interest24b?.setValue(Math.min(interest?.value, 200000));
+            eligible80EEAAmount?.setValue(this.jsonAmt80eea < 150000 ? interest?.value - interest24b?.value : 0);
+            eligible80EEAAmount?.updateValueAndValidity();
+
+            // SETTING 80EE AS 0 because both cannot be claimed
+            eligible80EEAmount?.setValue(0);
+            eligible80EEAmount?.updateValueAndValidity();
+          } else {
+            // SETTING INTEREST FIRST
+            eligible24b = interest?.value;
+            interest24b?.setValue(Math.min(eligible24b, 200000));
+            let difference = interest?.value - interest24b?.value;
+
+            // SETTING 80EEA AMOUNT
+            eligible80EEAAmount?.setValue(Math.min(this.jsonAmt80eea < 150000 ? eligible80EEAValue : 0, difference));
+            eligible80EEAAmount?.updateValueAndValidity();
+
+            // SETTING 80EE AMOUNT AS 0 BECAUSE BOTH CANNOT BE CLAIMED
+            eligible80EEAmount?.setValue(0);
+            eligible80EEAmount?.updateValueAndValidity();
+          }
+          interest24b?.updateValueAndValidity();
+        }
+      }
+    } else {
+      eligible80EEAmount?.setValue(0);
+      eligible80EEAmount?.updateValueAndValidity();
+
+      eligible80EEAAmount?.setValue(0);
+      eligible80EEAAmount?.updateValueAndValidity();
+
+      if (
+        propertyType?.value === 'SOP' &&
+        parseFloat(interest24b?.value) > 200000
+      ) {
+        interest24b?.setValue(200000);
+      } else {
+        interest24b?.setValue(interest.value);
+      }
+      interest24b?.updateValueAndValidity();
+    }
   }
 }

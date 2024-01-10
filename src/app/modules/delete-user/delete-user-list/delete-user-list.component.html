@@ -1,6 +1,6 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <!-- New Open Close Filter Starts -->
-<div class="mrgArdTog">
+<div class="">
   <mat-accordion class="headers-align">
     <mat-expansion-panel [expanded]=true>
       <mat-expansion-panel-header>
@@ -9,12 +9,12 @@
           Filter - Delete-User:
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <div class="rowClr">
+      <div class="rowClr tpSpc">
         <div class="surround">
           <div class="row">
             <div class="col-sm-4">
               <mat-label>Search By Mobile Number: </mat-label>
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" class="custom-bg-new">
                 <input matInput placeholder="Enter Mobile Number" [formControl]="mobileNumber" (change)="clearValue1()"
                   type="text" digitsOnly
                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -23,7 +23,7 @@
             </div>
             <div class="col-sm-4">
               <mat-label>From Date</mat-label>
-              <mat-form-field class="input-field-width" appearance="outline">
+              <mat-form-field class="input-field-width" appearance="outline" class="custom-bg-new">
                 <input matInput placeholder="DD/MM/YYYY" [formControl]="fromDate" [min]="minStartDate" [max]="maxStartDate"
                   (dateChange)="setToDateValidation()" [matDatepicker]="picker1" autocomplete="off" />
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -34,7 +34,7 @@
 
             <div class="col-sm-4">
               <mat-label>To Date</mat-label>
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" class="custom-bg-new">
                 <input matInput placeholder="DD/MM/YYYY" [formControl]="toDate" [max]="maxEndDate" [min]="minEndDate"
                   [matDatepicker]="picker2" autocomplete="off" (dateChange)="setToDateValidation()" />
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
@@ -47,7 +47,12 @@
 
           </div>
           <div class="row">
-            <div class="col-sm-12 spsTp text-end">
+            <div class="col-sm-6 mt-4">
+              <span class="new-note1 note">
+                Note : Please select required filters above and click on search to get information
+              </span>
+            </div>
+            <div class="col-sm-6 spsTp text-end">
               <button class="srch-btn" style=" cursor: pointer" [disabled]="loading" (click)="getUserSearchList(0)">
                 <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search
               </button>
@@ -63,7 +68,7 @@
   </mat-accordion>
 </div>
 <!-- New Open Close Filter Ends -->
-<div class="main clearfix">
+<div class="clearfix">
   <!-- Table -->
   <div class="tableSpc">
     <div class="row">

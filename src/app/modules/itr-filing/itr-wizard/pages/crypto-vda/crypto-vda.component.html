@@ -1,212 +1,205 @@
 <form [formGroup]="scheduleVda">
-  <div class="mrgArdSpcBlw">
-    <!-- header and sub header -->
-    <div class="flex justify-between align-items-center">
-      <div>
-        <div class="txtTitle" style="margin-bottom: 0px">
-          <strong> Crypto - Schedule VDA </strong>
+  <div class="frameC">
+    <h1 class="heading__title">Schedule VDA</h1>
+    <div class="space">
+      <span class="normal_text">Income from transfer of Virtual Digital Assets</span>
+      <button class="btn btn__default btn__add btn-rt" (click)="add('addEmpty')">Add</button>
+
+      <div class="frame-wrapper-2A">
+        <div class="accordion" id="myAccordion">
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading1">
+              <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                      data-bs-target="#collapse1"><span class="box-left">
+                                            Crypto - Schedule VDA
+                                        </span>
+              </button>
+            </h2>
+            <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+              <div class="accordion__item-body">
+
+                <div style="overflow-x:auto;">
+                  <table>
+                    <thead>
+                    <tr>
+                      <th class=""></th>
+                      <th class="">DATE OF TRANSFER (2)</th>
+                      <th class="">DATE OF ACQUISITION (3)</th>
+                      <th class="">HEAD UNDER WHICH INCOME
+                        TO BE TAXED<br /> (BUSINESS/CAPITAL GAIN) (4)
+                      </th>
+                      <th class="">COST OF ACQUISITION (5)</th>
+                      <th class="">CONSIDERATION RECEVIED (6)
+                      </th>
+                      <th class="">INCOME
+                        (ENTER NIL IN CASE OF LOSS) (7)</th>
+                    </tr>
+                    </thead>
+                    <tbody formArrayName="vdaArray">
+                      <tr
+                              class="tds-on"
+                              *ngFor="let vda of getVdaArray.controls; let i = index"
+                              [formGroupName]="i"
+                      >
+                        <!-- checkbox -->
+                        <td>
+                          <mat-checkbox
+                                  color="primary"
+                                  name="hasEdit[i]"
+                                  formControlName="hasEdit"
+                                  class="">
+                          </mat-checkbox>
+                        </td>
+
+                        <!-- date of transfer -->
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    [max]="maxDate"
+                                    matInput
+                                    placeholder="DD/MM/YYYY"
+                                    name="dateOfTransfer[i]"
+                                    [matDatepicker]="dateofTransfer"
+                                    autocomplete="off"
+                                    formControlName="dateOfTransfer"
+                                    required
+                            />
+                            <mat-datepicker-toggle
+                                    matSuffix
+                                    [for]="dateofTransfer"></mat-datepicker-toggle>
+                            <mat-datepicker #dateofTransfer></mat-datepicker>
+                          </mat-form-field>
+                        </td>
+
+                        <!-- date of acquisition-->
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    [max]="vda.get('dateOfTransfer').value"
+                                    matInput
+                                    placeholder="DD/MM/YYYY"
+                                    name="dateOfAcquisition[i]"
+                                    [matDatepicker]="dateofAcquisition"
+                                    autocomplete="off"
+                                    formControlName="dateOfAcquisition"
+                                    required
+                            />
+                            <mat-datepicker-toggle
+                                    matSuffix [for]="dateofAcquisition"></mat-datepicker-toggle>
+                            <mat-datepicker #dateofAcquisition></mat-datepicker>
+                          </mat-form-field>
+                        </td>
+
+                        <!-- head of income -->
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <mat-select
+                                    formControlName="headOfIncome"
+                                    name="headOfIncome[i]"
+                                    placeholder="headOfIncome"
+                                    (selectionChange)="calcInc(i)"
+                                    required
+                            >
+                              <mat-option
+                                      *ngFor="let headOfIncome of headOfIncomes"
+                                      [value]="headOfIncome"
+                                      matTooltip="{{ headOfIncome }}"
+                              >
+                                {{ headOfIncome }}
+                              </mat-option></mat-select
+                            >
+                          </mat-form-field>
+                        </td>
+
+                        <!-- cost of acquisition -->
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    matInput
+                                    name="costOfAcquisition[i]"
+                                    formControlName="costOfAcquisition"
+                                    placeholder="costOfAcquisition"
+                                    (change)="calcInc(i)"
+                                    readOnly
+                                    required
+                            />
+                          </mat-form-field>
+                        </td>
+
+                        <!-- consideration received -->
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    matInput
+                                    name="considerationReceived[i]"
+                                    formControlName="considerationReceived"
+                                    placeholder="considerationReceived"
+                                    (change)="calcInc(i)"
+                                    required
+                            />
+                          </mat-form-field>
+                        </td>
+
+                        <!-- income -->
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <input
+                                    matInput
+                                    name="income[i]"
+                                    formControlName="income"
+                                    placeholder="income"
+                                    readonly
+                                    required
+                            />
+                          </mat-form-field>
+                        </td>
+                      </tr>
+
+                      <!-- 2nd question -->
+                      <tr class="table-header">
+                        <td colspan="6">
+                          Total (Sum of all Positive Incomes of Business Income in Col. 7)
+                        </td>
+                        <td>
+                          {{ businessTotal }}
+                        </td>
+                      </tr>
+                      <!-- 3rd Question -->
+                      <tr class="table-header">
+                        <td colspan="6">
+                          Total (Sum of all Positive Incomes of Capital Gain in Col. 7)
+                        </td>
+                        <td>
+                          {{ capitalGainTotal }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+
+                </div>
+                <button class="btn btn__white mt-20" (click)="deleteVdaArray()"><i class="fa-solid fa-trash-can"></i>
+                  Delete</button>
+              </div>
+            </div>
+          </div>
+
         </div>
-        <div>Income from transfer of Virtual Digital Assets</div>
       </div>
-      <button class="lgtBtn" (click)="add('addEmpty')">+ Add</button>
-    </div>
-    <br />
 
-    <!-- table -->
-    <div class="row cardBack">
-      <div class="table-responsive">
-        <table class="table table-bordered" style="border: 1px solid #bdc3c7">
-          <thead class="table-header">
-            <tr class="table-head">
-              <th></th>
-              <th>Date of acquisition (2)</th>
-              <th>Date of transfer (3)</th>
-              <th>
-                Head under which income
-                <br />
-                to be taxed (Business/Capital Gain) (4)
-              </th>
-              <th>Cost of Acquisition (5)</th>
-              <th>Consideration recevied (6)</th>
-              <th>
-                Income
-                <br />
-                (enter nil in case of loss) (7)
-              </th>
-            </tr>
-          </thead>
 
-          <tbody formArrayName="vdaArray">
-            <tr
-              class="tds-on"
-              *ngFor="let vda of getVdaArray.controls; let i = index"
-              [formGroupName]="i"
-            >
-              <!-- checkbox -->
-              <td>
-                <mat-checkbox
-                  color="primary"
-                  name="hasEdit[i]"
-                  formControlName="hasEdit"
-                  class=""
-                >
-                </mat-checkbox>
-              </td>
 
-              <!-- date of acquisition-->
-              <td>
-                <mat-form-field appearance="outline">
-                  <mat-label>Date of acquisition</mat-label>
-                  <input
-                    [max]="maxDate"
-                    matInput
-                    placeholder="DD/MM/YYYY"
-                    name="dateOfAcquisition[i]"
-                    [matDatepicker]="dateofAcquisition"
-                    autocomplete="off"
-                    formControlName="dateOfAcquisition"
-                    required
-                    (dateChange)="updateValidations(vda)"
-                  />
-                  <mat-datepicker-toggle
-                    matSuffix
-                    [for]="dateofAcquisition"
-                  ></mat-datepicker-toggle>
-                  <mat-datepicker #dateofAcquisition></mat-datepicker>
-                </mat-form-field>
-              </td>
 
-              <!-- date of transfer -->
-              <td>
-                <mat-form-field appearance="outline">
-                  <mat-label>Date of Transfer</mat-label>
-                  <input
-                    [min]="vda.get('dateOfAcquisition').value"
-                    [max]="maxDate"
-                    matInput
-                    placeholder="DD/MM/YYYY"
-                    name="dateOfTransfer[i]"
-                    [matDatepicker]="dateofTransfer"
-                    autocomplete="off"
-                    formControlName="dateOfTransfer"
-                    required
-                  />
-                  <mat-datepicker-toggle
-                    matSuffix
-                    [for]="dateofTransfer"
-                  ></mat-datepicker-toggle>
-                  <mat-datepicker #dateofTransfer></mat-datepicker>
-                </mat-form-field>
-              </td>
-
-              <!-- head of income -->
-              <td>
-                <mat-form-field appearance="outline">
-                  <mat-label>Head of Income</mat-label>
-                  <mat-select
-                    formControlName="headOfIncome"
-                    name="headOfIncome[i]"
-                    placeholder="headOfIncome"
-                    (selectionChange)="calcInc(i)"
-                    required
-                  >
-                    <mat-option
-                      *ngFor="let headOfIncome of headOfIncomes"
-                      [value]="headOfIncome"
-                      matTooltip="{{ headOfIncome }}"
-                    >
-                      {{ headOfIncome }}
-                    </mat-option></mat-select
-                  >
-                </mat-form-field>
-              </td>
-
-              <!-- cost of acquisition -->
-              <td>
-                <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="costOfAcquisition[i]"
-                    formControlName="costOfAcquisition"
-                    placeholder="costOfAcquisition"
-                    (change)="calcInc(i)"
-                    readOnly
-                    required
-                  />
-                </mat-form-field>
-              </td>
-
-              <!-- consideration received -->
-              <td>
-                <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="considerationReceived[i]"
-                    formControlName="considerationReceived"
-                    placeholder="considerationReceived"
-                    (change)="calcInc(i)"
-                    required
-                  />
-                </mat-form-field>
-              </td>
-
-              <!-- income -->
-              <td>
-                <mat-form-field appearance="outline">
-                  <input
-                    matInput
-                    name="income[i]"
-                    formControlName="income"
-                    placeholder="income"
-                    readonly
-                    required
-                  />
-                </mat-form-field>
-              </td>
-            </tr>
-
-            <!-- 2nd question -->
-            <tr class="table-header">
-              <td colspan="6">
-                Total (Sum of all Positive Incomes of Business Income in Col. 7)
-              </td>
-              <td>
-                {{ businessTotal }}
-              </td>
-            </tr>
-            <!-- 3rd Question -->
-            <tr class="table-header">
-              <td colspan="6">
-                Total (Sum of all Positive Incomes of Capital Gain in Col. 7)
-              </td>
-              <td>
-                {{ capitalGainTotal }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="out-box">
+        <div class="box-left">
+          <button class="btn btn__white" (click)="goBack()">Back</button>
+        </div>
+        <div class="box-right">
+          <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
+        </div>
       </div>
-    </div>
 
-    <!-- delete button for the table -->
-    <div class="row">
-      <div class="col-sm-6" style="margin: 15px">
-        <button type="submit" class="delete-btn" (click)="deleteVdaArray()">
-          <i class="fa fa-trash" aria-hidden="true">&nbsp;</i> Delete
-        </button>
-      </div>
-    </div>
-
-    <!-- navigation buttons -->
-    <div class="flex justify-between p-[30px] back-foot">
-      <button class="lgtBtn" (click)="goBack()">
-        <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-        <span class="font-semibold">&nbsp;Back to More Info List</span>
-      </button>
-
-      <button class="saveBtnIn" (click)="saveAll()">
-        <span class="font-semibold">Save All</span>
-      </button>
     </div>
   </div>
 </form>

@@ -1,22 +1,34 @@
 import { FormArray, FormControl, Validators } from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { UtilsService } from 'src/app/services/utils.service';
-import { ItrMsService } from 'src/app/services/itr-ms.service';
-import { Location } from '@angular/common';
 import { WizardNavigation } from '../../itr-shared/WizardNavigation';
 
 @Component({
   selector: 'app-other-income',
   templateUrl: './other-income.component.html',
-  styleUrls: ['./other-income.component.css'],
+  styleUrls: ['./other-income.component.scss'],
 })
 export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   loading: boolean = false;
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
+  anyOtherIncomeDropdown = [
+    {
+      value: 'ROYALTY_US_80QQB',
+      label: 'Royalty for Books/Author/Publishers (80QQB)',
+    },
+    {
+      value: 'ROYALTY_US_80RRB',
+      label: 'Royalty Against Patent (80RRB)',
+    },
+    {
+      value: 'ANY_OTHER',
+      label: 'Any Other Income',
+    },
+  ];
 
   otherIncomeDropdown = [
     {
@@ -31,37 +43,36 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       value: 'TAX_REFUND_INTEREST',
       label: 'Interest from Income tax refund',
     },
+  ];
+
+  providentFundArray = [
     {
-      value: 'ROYALTY_US_80QQB',
-      label: 'Royalty for Books/Author/Publishers (80QQB)',
-    },
-    {
-      value: 'ROYALTY_US_80RRB',
-      label: 'Royalty Against Patent (80RRB)',
-    },
-    {
-      value: 'INTEREST_ACCRUED_10_11_I_P',
+      incomeType: 'INTEREST_ACCRUED_10_11_I_P',
       label:
-        'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(11)',
+        'To the extent taxable as per the first proviso to section 10(11)',
+      amount: 0, details: null,
+      expenses: 0
     },
     {
-      value: 'INTEREST_ACCRUED_10_11_II_P',
+      incomeType: 'INTEREST_ACCRUED_10_11_II_P',
       label:
-        'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(11)',
+        'To the extent taxable as per the second proviso to section 10(11)',
+      amount: 0, details: null,
+      expenses: 0
     },
     {
-      value: 'INTEREST_ACCRUED_10_12_I_P',
+      incomeType: 'INTEREST_ACCRUED_10_12_I_P',
       label:
-        'Interest accrued on contributions to a provident fund to the extent taxable as per the first proviso to section 10(12)',
+        'To the extent taxable as per the first proviso to section 10(12)',
+      amount: 0, details: null,
+      expenses: 0
     },
     {
-      value: 'INTEREST_ACCRUED_10_12_II_P',
+      incomeType: 'INTEREST_ACCRUED_10_12_II_P',
       label:
-        'Interest accrued on contributions to a provident fund to the extent taxable as per the second proviso to section 10(12)',
-    },
-    {
-      value: 'ANY_OTHER',
-      label: 'Any Other Income',
+        'To the extent taxable as per the second proviso to section 10(12)',
+      amount: 0, details: null,
+      expenses: 0
     },
   ];
 
@@ -179,6 +190,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
   otherIncomeFormGroup: FormGroup;
   otherIncomesFormArray: FormArray;
+  anyOtherIncomesFormArray: FormArray;
   exemptIncomeFormGroup: FormGroup;
   exemptIncomesFormArray: FormArray;
   agriIncFormGroup: FormGroup;
@@ -187,9 +199,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
   constructor(
     public utilsService: UtilsService,
-    private itrMsService: ItrMsService,
     public fb: FormBuilder,
-    private location: Location
   ) {
     super();
   }
@@ -201,8 +211,12 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     );
 
     this.otherIncomesFormArray = this.createOtherIncomeForm();
+    this.anyOtherIncomesFormArray = this.createAnyOtherIncomeForm();
     this.otherIncomeFormGroup = this.fb.group({
       otherIncomes: this.otherIncomesFormArray,
+      anyOtherIncomes: this.anyOtherIncomesFormArray,
+      providentFundValue: new FormControl(null),
+      providentFundLabel: new FormControl(null),
       giftTax: this.fb.group({
         aggregateValueWithoutConsideration: [],
         aggregateValueWithoutConsiderationNotTaxable: [false],
@@ -245,6 +259,12 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.setExemptIncomeValues();
     this.setAgriIncValues();
     this.validateIncomeValueOnBlur();
+    this.setNetAgriIncome();
+  }
+
+  clearProvidentFund() {
+    this.otherIncomeFormGroup.controls['providentFundLabel'].setValue(null);
+    this.otherIncomeFormGroup.controls['providentFundValue'].setValue(null);
   }
 
   private createOtherIncomeForm() {
@@ -260,6 +280,21 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     }
     return this.fb.array(data);
   }
+
+  private createAnyOtherIncomeForm() {
+    const data = [];
+    for (let i = 0; i < this.anyOtherIncomeDropdown.length; i++) {
+      data.push(
+        this.fb.group({
+          label: this.anyOtherIncomeDropdown[i].label,
+          incomeType: this.anyOtherIncomeDropdown[i].value,
+          incomeValue: [null, Validators.min(0)],
+        })
+      );
+    }
+    return this.fb.array(data);
+  }
+
   private createExemptIncomeForm() {
     const data = [];
     for (let i = 0; i < this.exemptIncomesDropdown.length; i++) {
@@ -313,10 +348,15 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.Copy_ITR_JSON.agriculturalLandDetails = agriIncArray;
     this.agriIncFormArray = this.fb.array(agriIncArray);
     this.saveExemptIncomes('delete');
+    this.selectedIndexes = [];
   }
 
   get getIncomeArray() {
     return <FormArray>this.otherIncomeFormGroup.get('otherIncomes');
+  }
+
+  get getAnyIncomeArray() {
+    return <FormArray>this.otherIncomeFormGroup.get('anyOtherIncomes');
   }
 
   get getExemptIncomeArray() {
@@ -334,13 +374,8 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
   saveAll() {
     let agriIncome = this.agriIncFormGroup.get('netAgriculturalIncome');
-    if (
-      this.exemptIncomeFormGroup.valid &&
-      this.otherIncomeFormGroup.valid &&
-      (agriIncome && agriIncome?.value > 500000
-        ? this.agriIncFormGroup.valid
-        : true)
-    ) {
+    if (this.exemptIncomeFormGroup.valid && this.otherIncomeFormGroup.valid && (agriIncome && agriIncome?.value > 500000 ?
+      this.agriIncFormGroup.valid : true)) {
       this.saveOtherIncome();
       this.saveExemptIncomes();
       this.saveAndNext.emit(false);
@@ -449,15 +484,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     if (!this.Copy_ITR_JSON.incomes) {
       this.Copy_ITR_JSON.incomes = [];
     }
-    let otherIncomes = this.otherIncomeFormGroup.controls[
-      'otherIncomes'
-    ] as FormArray;
+    let otherIncomes = this.otherIncomeFormGroup.controls['otherIncomes'] as FormArray;
     for (let i = 0; i < otherIncomes.controls.length; i++) {
       console.log(otherIncomes.controls[i]);
       let otherIncome = otherIncomes.controls[i] as FormGroup;
-      if (
-        this.utilsService.isNonEmpty(otherIncome.controls['incomeValue'].value)
-      ) {
+      if (this.utilsService.isNonEmpty(otherIncome.controls['incomeValue'].value)) {
         this.Copy_ITR_JSON.incomes.push({
           expenses: 0,
           amount: otherIncome.controls['incomeValue'].value,
@@ -466,11 +497,32 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         });
       }
     }
-    if (
-      this.utilsService.isNonZero(
-        this.otherIncomeFormGroup.controls['familyPension'].value
-      )
-    ) {
+
+    let anyOtherIncomes = this.otherIncomeFormGroup.controls['anyOtherIncomes'] as FormArray;
+    for (let i = 0; i < anyOtherIncomes.controls.length; i++) {
+      console.log(anyOtherIncomes.controls[i]);
+      let anyOtherIncome = anyOtherIncomes.controls[i] as FormGroup;
+      if (this.utilsService.isNonEmpty(anyOtherIncome.controls['incomeValue'].value)) {
+        this.Copy_ITR_JSON.incomes.push({
+          expenses: 0,
+          amount: anyOtherIncome.controls['incomeValue'].value,
+          incomeType: anyOtherIncome.controls['incomeType'].value,
+          details: null,
+        });
+      }
+    }
+
+    this.providentFundArray.forEach(element => {
+      if (element.incomeType === this.otherIncomeFormGroup.controls['providentFundLabel'].value) {
+        element.amount = this.otherIncomeFormGroup.controls['providentFundValue'].value
+      } else {
+        element.amount = 0
+      }
+    });
+
+    this.Copy_ITR_JSON.incomes = [...this.Copy_ITR_JSON.incomes, ...this.providentFundArray];
+
+    if (this.utilsService.isNonZero(this.otherIncomeFormGroup.controls['familyPension'].value)) {
       this.Copy_ITR_JSON.incomes.push({
         amount: this.otherIncomeFormGroup.controls['familyPension'].value,
         incomeType: 'FAMILY_PENSION',
@@ -613,18 +665,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         (item) =>
           item.incomeType === 'SAVING_INTEREST' ||
           item.incomeType === 'FD_RD_INTEREST' ||
-          item.incomeType === 'TAX_REFUND_INTEREST' ||
-          item.incomeType === 'ROYALTY_US_80RRB' ||
-          item.incomeType === 'ROYALTY_US_80QQB' ||
-          item.incomeType === 'INTEREST_ACCRUED_10_11_I_P' ||
-          item.incomeType === 'INTEREST_ACCRUED_10_11_II_P' ||
-          item.incomeType === 'INTEREST_ACCRUED_10_12_I_P' ||
-          item.incomeType === 'INTEREST_ACCRUED_10_12_II_P' ||
-          item.incomeType === 'ANY_OTHER'
+          item.incomeType === 'TAX_REFUND_INTEREST'
       );
-      let otherIncomesFormArray = this.otherIncomeFormGroup.controls[
-        'otherIncomes'
-      ] as FormArray;
+      let otherIncomesFormArray = this.otherIncomeFormGroup.controls['otherIncomes'] as FormArray;
       for (let i = 0; i < otherIncomes.length; i++) {
         console.log(otherIncomes[i].incomeType);
         const control = otherIncomesFormArray.controls.filter(
@@ -633,6 +676,37 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
         )[0] as FormGroup;
         control.controls['incomeValue'].setValue(otherIncomes[i].amount);
       }
+
+      let anyOtherIncomes = this.ITR_JSON.incomes.filter(
+        (item) =>
+          item.incomeType === 'ROYALTY_US_80RRB' ||
+          item.incomeType === 'ROYALTY_US_80QQB' ||
+          item.incomeType === 'ANY_OTHER'
+      );
+      let anyOtherIncomesFormArray = this.otherIncomeFormGroup.controls['anyOtherIncomes'] as FormArray;
+      for (let i = 0; i < anyOtherIncomes.length; i++) {
+        console.log(anyOtherIncomes[i].incomeType);
+        const control = anyOtherIncomesFormArray.controls.filter(
+          (item: any) =>
+            item.controls['incomeType'].value === anyOtherIncomes[i].incomeType
+        )[0] as FormGroup;
+        control.controls['incomeValue'].setValue(anyOtherIncomes[i].amount);
+      }
+
+      let providentValues = this.ITR_JSON.incomes.filter(
+        (item) =>
+          item.incomeType === 'INTEREST_ACCRUED_10_11_I_P' ||
+          item.incomeType === 'INTEREST_ACCRUED_10_11_II_P' ||
+          item.incomeType === 'INTEREST_ACCRUED_10_12_I_P' ||
+          item.incomeType === 'INTEREST_ACCRUED_10_12_II_P'
+      );
+
+      providentValues.forEach(element => {
+        if (element.amount > 0) {
+          this.otherIncomeFormGroup.controls['providentFundLabel'].setValue(element.incomeType);
+          this.otherIncomeFormGroup.controls['providentFundValue'].setValue(element.amount);
+        }
+      })
 
       let famPension = this.ITR_JSON.incomes.filter(
         (item) => item.incomeType === 'FAMILY_PENSION'
@@ -812,7 +886,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     }
   }
 
-  setNetAgriIncome(index) {
+  setNetAgriIncome(index?) {
     const formValues = this.agriIncFormGroup.value;
 
     // List of keys to ignore
@@ -903,7 +977,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   getTotalExemptIncome() {
     let total = 0;
     for (let i = 0; i < this.exemptIncomesFormArray.controls.length; i++) {
-      if (
+      if (this.exemptIncomesFormArray.controls[i].value.incomeType !== 'AGRI' &&
         this.utilsService.isNonZero(
           this.exemptIncomesFormArray.controls[i].value.incomeValue
         )
@@ -916,55 +990,95 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     return total;
   }
 
+  getTotalOtherIncome() {
+    let total = 0;
+    for (let i = 0; i < this.otherIncomesFormArray.controls.length; i++) {
+      if (this.utilsService.isNonZero(this.otherIncomesFormArray.controls[i].value.incomeValue)) {
+        total = total + Number(this.otherIncomesFormArray.controls[i].value.incomeValue);
+      }
+    }
+
+    this.providentFundArray.forEach(element => {
+      if (element.incomeType === this.otherIncomeFormGroup.controls['providentFundLabel'].value) {
+        total += Number(this.otherIncomeFormGroup.controls['providentFundValue'].value);
+      }
+    });
+    return total;
+  }
+
+  getTotalAnyOtherIncome() {
+    let total = 0;
+    for (let i = 0; i < this.anyOtherIncomesFormArray.controls.length; i++) {
+      if (this.utilsService.isNonZero(this.anyOtherIncomesFormArray.controls[i].value.incomeValue)) {
+        total = total + Number(this.anyOtherIncomesFormArray.controls[i].value.incomeValue);
+      }
+    }
+    total += Number(this.otherIncomeFormGroup.getRawValue().totalFamPenDeduction);
+    return total;
+  }
+
+  getTotalGiftIncome() {
+    let giftTax = this.otherIncomeFormGroup.get('giftTax') as FormGroup;
+    let total = 0;
+
+    if (!giftTax.get('aggregateValueWithoutConsiderationNotTaxable').value &&
+      this.utilsService.isNonZero(giftTax.get('aggregateValueWithoutConsideration').value)) {
+      total += Number(giftTax.get('aggregateValueWithoutConsideration').value);
+    }
+
+    if (!giftTax.get('immovablePropertyWithoutConsiderationNotTaxable').value &&
+      this.utilsService.isNonZero(giftTax.get('immovablePropertyWithoutConsideration').value)) {
+      total += Number(giftTax.get('immovablePropertyWithoutConsideration').value);
+    }
+
+    if (!giftTax.get('immovablePropertyInadequateConsiderationNotTaxable').value &&
+      this.utilsService.isNonZero(giftTax.get('immovablePropertyInadequateConsideration').value)) {
+      total += Number(giftTax.get('immovablePropertyInadequateConsideration').value);
+    }
+
+    if (!giftTax.get('anyOtherPropertyWithoutConsiderationNotTaxable').value &&
+      this.utilsService.isNonZero(giftTax.get('anyOtherPropertyWithoutConsideration').value)) {
+      total += Number(giftTax.get('anyOtherPropertyWithoutConsideration').value);
+    }
+
+    if (!giftTax.get('anyOtherPropertyInadequateConsiderationNotTaxable').value &&
+      this.utilsService.isNonZero(giftTax.get('anyOtherPropertyInadequateConsideration').value)) {
+      total += Number(giftTax.get('anyOtherPropertyInadequateConsideration').value);
+    }
+
+    return total;
+  }
+
   validateIncomeValueOnBlur() {
-    if (
-      this.otherIncomeFormGroup
-        .get('otherIncomes')
-        .value.some(
-          (otherIncome: { incomeType: string; incomeValue: any }) =>
-            (otherIncome.incomeType === 'INTEREST_ACCRUED_10_11_I_P' ||
-              otherIncome.incomeType === 'INTEREST_ACCRUED_10_11_II_P' ||
-              otherIncome.incomeType === 'INTEREST_ACCRUED_10_12_I_P' ||
-              otherIncome.incomeType === 'INTEREST_ACCRUED_10_12_II_P') &&
-            otherIncome.incomeValue !== null &&
-            otherIncome.incomeValue !== ''
-        )
-    ) {
-      const otherIncomes = this.otherIncomeFormGroup.get(
-        'otherIncomes'
-      ) as FormArray;
+    if (this.otherIncomeFormGroup.get('otherIncomes').value.some(
+      (otherIncome: { incomeType: string; incomeValue: any }) =>
+        (otherIncome.incomeType === 'INTEREST_ACCRUED_10_11_I_P' ||
+          otherIncome.incomeType === 'INTEREST_ACCRUED_10_11_II_P' ||
+          otherIncome.incomeType === 'INTEREST_ACCRUED_10_12_I_P' ||
+          otherIncome.incomeType === 'INTEREST_ACCRUED_10_12_II_P') &&
+        otherIncome.incomeValue !== null &&
+        otherIncome.incomeValue !== '')) {
+      const otherIncomes = this.otherIncomeFormGroup.get('otherIncomes') as FormArray;
       for (let i = 0; i < otherIncomes.length; i++) {
         const otherIncome = otherIncomes.at(i) as FormGroup;
         if (
-          (otherIncome.get('incomeType').value ===
-            'INTEREST_ACCRUED_10_11_I_P' ||
-            otherIncome.get('incomeType').value ===
-              'INTEREST_ACCRUED_10_11_II_P' ||
-            otherIncome.get('incomeType').value ===
-              'INTEREST_ACCRUED_10_12_I_P' ||
-            otherIncome.get('incomeType').value ===
-              'INTEREST_ACCRUED_10_12_II_P') &&
-          (otherIncome.get('incomeValue').value === '' ||
-            otherIncome.get('incomeValue').value === null)
+          (otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_I_P' ||
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_II_P' ||
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_I_P' ||
+            otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_II_P') &&
+          (otherIncome.get('incomeValue').value === '' || otherIncome.get('incomeValue').value === null)
         ) {
           otherIncome.disable();
         }
       }
     } else {
-      const otherIncomes = this.otherIncomeFormGroup.get(
-        'otherIncomes'
-      ) as FormArray;
+      const otherIncomes = this.otherIncomeFormGroup.get('otherIncomes') as FormArray;
       for (let i = 0; i < otherIncomes.length; i++) {
         const otherIncome = otherIncomes.at(i) as FormGroup;
-        if (
-          otherIncome.get('incomeType').value ===
-            'INTEREST_ACCRUED_10_11_I_P' ||
-          otherIncome.get('incomeType').value ===
-            'INTEREST_ACCRUED_10_11_II_P' ||
-          otherIncome.get('incomeType').value ===
-            'INTEREST_ACCRUED_10_12_I_P' ||
-          otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_II_P'
-        ) {
+        if (otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_I_P' ||
+          otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_11_II_P' ||
+          otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_I_P' ||
+          otherIncome.get('incomeType').value === 'INTEREST_ACCRUED_10_12_II_P') {
           otherIncome.enable();
         }
       }

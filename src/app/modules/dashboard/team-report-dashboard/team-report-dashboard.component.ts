@@ -127,7 +127,9 @@ export class TeamReportDashboardComponent implements OnInit {
   totalOriginal: number;
   totalRevised: number;
   scheduledCallData: any;
-  totalScheduledCall: any
+  totalScheduledCall: any;
+  selectedType:any = 'Original';
+  isDropdownOpen:boolean = false;
 
   constructor(
     private userMsService: UserMsService,
@@ -150,6 +152,10 @@ export class TeamReportDashboardComponent implements OnInit {
       this.leaderId = this.loggedInSmeUserId;
     }
     this.search();
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
   }
 
   search() {

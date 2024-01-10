@@ -1,68 +1,97 @@
-.edit-donation {
-    background: #E5F2F6;
-    border: 0.5px solid #D9D9D9;
-    border-radius: 3px;
+@import "../../../../../ux/scss/style.scss";
+.header_content {
     display: flex;
-    padding: 5px 4px;
-    border: 1px solid #838383;
-    margin-top: 8px;
-    margin-right: -13px;
-    float: right;
-    width: 60px;
+    align-items: flex-start;
+    justify-content: space-around;
+    gap: 8px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    padding: 8px 24px;
+    flex-grow: 1;
+    background-color: #e7e7e7;
+    border-radius: 4px 4px 0px 0px;
 }
 
-.ml30 {
-    margin-top: 15px;
-    margin-left: -10px;
+.input-field-width{
+    padding-left:10px!important;
+    padding-right:10px!important;
+  }
+
+.wrap-content {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    background-color: #ffffff;
+    border-radius: 0px 0px 8px 8px;
+
+    img {
+        position: relative;
+        width: 24px;
+        height: 24px;
+    }
 }
 
-.fotSp {
-    margin-top: 25px;
+.wrapper {
+    display: flex;
+    align-items: flex-start;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    flex-direction: column;
+    padding: 24px;
+    position: relative;
 }
 
-.btnGry {
-    border: 1px solid #cccccc;
-    padding: 10px;
-    color: #cccccc;
-    width: 95px;
-    border-radius: 5px;
-    margin-left: -15px;
+.space {
+    background-color: #ffffff;
+    border-radius: 0px 0px 8px 8px;
+    padding: 20px;
+    border: 1px solid #E2E4E5;
+    border-top: 0;
 }
 
-.gryBk{
-    background-color: #f7f7f7;
-    border-radius: 10px;
-    padding: 20px 20px 10px 20px;
+.frameC {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    align-items: flex-start;
+    position: relative;
 }
 
-.gryBk1{
-    background-color: #f7f7f7;
-    border-radius: 10px;
-    padding: 20px 20px 10px 20px;
-    margin-top:20px;
+.div-5 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 24px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    background-color: #ffffff;
+    border-radius: 0px 0px 4px 4px;
+}
+.div-6 {
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
 }
 
-.txBg{
- font-size:18px;
- font-weight:600;
-}
-
-.spsTp {
-    margin: 25px 0px 15px 0px;
-}
-
-.card {
-    margin-bottom: 15px;
-    padding: 10px 30px 10px 30px;
-    border: 1px solid #ebebeb!important;
-    display: block;
-}
-
-.new-color{
-  color:black !important;
-}
-.new-border{
-  border-radius: 8px;
-  padding: 15px 10px 10px 10px;
-  border: 1px solid #cccccc!important;
+.frame-wrapper-3 {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+    flex: 0 0 auto;
 }

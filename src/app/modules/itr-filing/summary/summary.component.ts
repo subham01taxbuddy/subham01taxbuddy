@@ -264,7 +264,6 @@ export class SummaryComponent implements OnInit {
         IntrstSec10XISecondProviso?: any;
         IntrstSec10XIIFirstProviso?: any;
         IntrstSec10XIISecondProviso?: any;
-        giftExemptIncome?: any;
       };
       otherIncomeTotal: number;
     };
@@ -313,14 +312,15 @@ export class SummaryComponent implements OnInit {
           ];
           totalPresInc?: any;
         };
-        nonSpecIncome: {
-          businessSection: String;
-          natureOfBusinessCode: any;
-          tradeName: String;
-          grossTurnover: Number;
-          TaxableIncome: Number;
+        nonSpecIncome?: {
+          businessSection?: String;
+          natureOfBusinessCode?: any;
+          tradeName?: String;
+          grossTurnover?: Number;
+          TaxableIncome?: Number;
         };
-        specIncome: {
+        nonSpecIncomePl?:any;
+        specIncome?: {
           businessSection: String;
           natureOfBusinessCode: any;
           tradeName: String;
@@ -462,13 +462,15 @@ export class SummaryComponent implements OnInit {
 
     totalHeadWiseIncome: number;
     currentYearLosses: {
-      currentYearLossesSetOff: [
-        {
-          houseProperty: number;
-          businessSetOff: number;
-          otherThanHpBusiness: number;
-        }
-      ];
+      currentYearLossesSetOff: {
+        headOfIncome?: any;
+        currentYearInc?: any;
+        houseProperty: number;
+        businessSetOff: number;
+        otherThanHpBusiness: number;
+        IncOfCurYrAfterSetOff?: any;
+      }[];
+      totals?: any[];
       totalCurrentYearSetOff: number;
     };
     balanceAfterSetOffCurrentYearLosses: number;
@@ -794,14 +796,14 @@ export class SummaryComponent implements OnInit {
       DetailsOfOthSourcesIncOutsideIndia?: any;
     };
     exemptIncome: {
-      partnerFirms: [
+      partnerFirms: 
         {
-          name: string;
-          panNumber: string;
-          profitShareAmount: number;
-        }
-      ];
-      total: number;
+          name?: string;
+          panNumber?: string;
+          profitShareAmount?: number;
+        }[]
+      ;
+      total?: number;
     };
     giftExemptIncome?: number;
     profitShareAmount?: number;
@@ -1220,34 +1222,34 @@ export class SummaryComponent implements OnInit {
                 Qqb80: null,
                 Rrb80: null,
                 anyOtherInterest:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
-                  ]?.IncomeOthSrc -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  ]?.IncomeOthSrc || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val?.OthSrcNatureDesc === 'SAV'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  )?.OthSrcOthAmount || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val?.OthSrcNatureDesc === 'IFD'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  )?.OthSrcOthAmount || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val?.OthSrcNatureDesc === 'TAX'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  )?.OthSrcOthAmount || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val.OthSrcNatureDesc === 'FAP'
-                  )?.OthSrcOthAmount -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                  )?.OthSrcOthAmount || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                     this.ITR14IncomeDeductions
                   ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
                     (val) => val?.OthSrcNatureDesc === 'DIV'
-                  )?.OthSrcOthAmount,
+                  )?.OthSrcOthAmount || 0),
 
                 dividendIncome: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -1338,7 +1340,8 @@ export class SummaryComponent implements OnInit {
                           .ScheduleBP?.NatOfBus44AD?.length
                       ),
                   };
-                }),
+                })?.filter(item => Object.entries(item)
+                .some(([key, value]) => value !== null || value!== 0)),
 
                 business44ADA: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -1373,7 +1376,8 @@ export class SummaryComponent implements OnInit {
                           .ScheduleBP?.NatOfBus44ADA?.length
                       ),
                   };
-                }),
+                })?.filter(item => Object.entries(item)
+                .some(([key, value]) => value !== null || value!== 0)),
 
                 business44AE: {
                   businessDetails: this.ITR_JSON.itrSummaryJson['ITR'][
@@ -1390,7 +1394,8 @@ export class SummaryComponent implements OnInit {
                         }
                       )?.label,
                     };
-                  }),
+                  })?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
 
                   GoodsDtlsUs44AE: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
@@ -1400,7 +1405,8 @@ export class SummaryComponent implements OnInit {
                     TonnageCapacity: element?.TonnageCapacity,
                     HoldingPeriod: element?.HoldingPeriod,
                     PresumptiveIncome: element?.PresumptiveIncome,
-                  })),
+                  }))?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
 
                   totalPresInc: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
@@ -2378,11 +2384,6 @@ export class SummaryComponent implements OnInit {
 
             exemptIncome: {
               partnerFirms: [
-                {
-                  name: '',
-                  panNumber: '',
-                  profitShareAmount: 0,
-                },
               ],
               total: 0,
             },
@@ -2863,29 +2864,38 @@ export class SummaryComponent implements OnInit {
                 Rrb80: null,
 
                 anyOtherInterest:
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncChargeable -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IntrstFrmSavingBank -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IntrstFrmTermDeposit -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IntrstFrmIncmTaxRefund -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.DividendGross -
                   (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.FamilyPension -
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.IncChargeable || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstFrmSavingBank || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstFrmTermDeposit || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IntrstFrmIncmTaxRefund || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.DividendGross || 0) -
+                  ((this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.ScheduleOS?.IncOthThanOwnRaceHorse?.FamilyPension || 0) -
+                    (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                       ?.ScheduleOS?.IncOthThanOwnRaceHorse?.Deductions
-                      ?.DeductionUs57iia) -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncFromOwnHorse?.BalanceOwnRaceHorse -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedPrYr89AOS -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS -
-                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.Tot562x,
+                      ?.DeductionUs57iia || 0)) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncFromOwnHorse?.BalanceOwnRaceHorse || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedPrYr89AOS || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.IncomeNotifiedOther89AOS || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Aggrtvaluewithoutcons562x || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Immovpropwithoutcons562x || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Immovpropinadeqcons562x || 0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Anyotherpropwithoutcons562x ||
+                    0) -
+                  (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Anyotherpropinadeqcons562x || 0),
 
                 dividendIncome:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
@@ -2960,9 +2970,21 @@ export class SummaryComponent implements OnInit {
                   0
                 ),
 
-                giftExemptIncome:
+                aggregateValueWithoutConsideration:
                   this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
-                    ?.IncOthThanOwnRaceHorse?.Tot562x,
+                    ?.IncOthThanOwnRaceHorse?.Aggrtvaluewithoutcons562x,
+                immovablePropertyWithoutConsideration:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Immovpropwithoutcons562x,
+                immovablePropertyInadequateConsideration:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Immovpropinadeqcons562x,
+                anyOtherPropertyWithoutConsideration:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Anyotherpropwithoutcons562x,
+                anyOtherPropertyInadequateConsideration:
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleOS
+                    ?.IncOthThanOwnRaceHorse?.Anyotherpropwithoutcons562x,
               },
 
               otherIncomeTotal:
@@ -3007,7 +3029,8 @@ export class SummaryComponent implements OnInit {
                               ?.PARTA_PL?.NatOfBus44AD?.length
                           ),
                       };
-                    })
+                    })?.filter(item => Object.entries(item)
+                    .some(([key, value]) => value !== null || value!== 0))
                     : [
                       {
                         businessSection: null,
@@ -3016,7 +3039,8 @@ export class SummaryComponent implements OnInit {
                         grossTurnover: null,
                         TaxableIncome: null,
                       },
-                    ],
+                    ]?.filter(item => Object.entries(item)
+                    .some(([key, value]) => value !== null || value!== 0)),
 
                 business44ADA:
                   this.itrType === 'ITR3'
@@ -3053,7 +3077,8 @@ export class SummaryComponent implements OnInit {
                               ?.PARTA_PL?.NatOfBus44ADA?.length
                           ),
                       };
-                    })
+                    })?.filter(item => Object.entries(item)
+                    .some(([key, value]) => value !== null || value!== 0))
                     : [
                       {
                         businessSection: null,
@@ -3062,7 +3087,8 @@ export class SummaryComponent implements OnInit {
                         grossTurnover: null,
                         TaxableIncome: null,
                       },
-                    ],
+                    ]?.filter(item => Object.entries(item)
+                    .some(([key, value]) => value !== null || value!== 0)),
 
                 business44AE: {
                   businessDetails: this.ITR_JSON.itrSummaryJson['ITR'][
@@ -3079,7 +3105,8 @@ export class SummaryComponent implements OnInit {
                         }
                       )?.label,
                     };
-                  }),
+                  })?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
 
                   GoodsDtlsUs44AE: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
@@ -3089,7 +3116,8 @@ export class SummaryComponent implements OnInit {
                     TonnageCapacity: element?.TonnageCapacity,
                     HoldingPeriod: element?.HoldingPeriod,
                     PresumptiveIncome: element?.PresumptiveIncome,
-                  })),
+                  }))?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
 
                   totalPresInc: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
@@ -3101,29 +3129,47 @@ export class SummaryComponent implements OnInit {
                 },
 
                 nonSpecIncome:
-                  this.itrType === 'ITR3'
+                  this.itrType === 'ITR3' &&
+                  this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                    ?.TradingAccount?.OtherOperatingRevenueDtls
                     ? {
-                      businessSection: 'Non-Speculative Income',
-                      natureOfBusinessCode: 'nonSpec',
-                      tradeName: 'Non-Speculative Income',
-                      grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][
-                        this.itrType
-                      ]?.TradingAccount?.OtherOperatingRevenueDtls?.reduce(
-                        (sum, obj) => sum + obj.OperatingRevenueAmt,
-                        0
-                      ),
-                      TaxableIncome:
-                        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                          ?.TradingAccount?.GrossProfitFrmBusProf,
-                    }
+                        businessSection: 'Non-Speculative Income',
+                        natureOfBusinessCode: 'nonSpec',
+                        tradeName: 'Non-Speculative Income',
+                        grossTurnover: this.ITR_JSON.itrSummaryJson['ITR'][
+                          this.itrType
+                        ]?.TradingAccount?.OtherOperatingRevenueDtls?.reduce(
+                          (sum, obj) => sum + obj.OperatingRevenueAmt,
+                          0
+                        ),
+                        TaxableIncome:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.TradingAccount?.GrossProfitFrmBusProf,
+                      }
+                    : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.TradingAccount?.GrossProfitFrmBusProf
+                    ? {
+                        businessSection: 'Non-Speculative Income',
+                        natureOfBusinessCode: 'nonSpec',
+                        tradeName: 'Non-Speculative Income',
+                        grossTurnover:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.TradingAccount?.TardingAccTotCred,
+                        TaxableIncome:
+                          this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                            ?.TradingAccount?.GrossProfitFrmBusProf,
+                      }
                     : {
-                      businessSection: null,
-                      natureOfBusinessCode: null,
-                      tradeName: null,
-                      grossTurnover: null,
-                      TaxableIncome: null,
-                    },
+                        businessSection: null,
+                        natureOfBusinessCode: null,
+                        tradeName: null,
+                        grossTurnover: null,
+                        TaxableIncome: null,
+                      },
 
+                      nonSpecIncomePl: this.itrType === 'ITR3' ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PARTA_PL?.DebitsToPL?.PBT : null,
+                      
                 specIncome:
                   this.itrType === 'ITR3'
                     ? {
@@ -3158,7 +3204,8 @@ export class SummaryComponent implements OnInit {
                       SaleValue: element?.ConsidReceived,
                       income: element?.IncomeFromVDA,
                     };
-                  }),
+                  })?.filter(item => Object.entries(item)
+                  .some(([key, value]) => value !== null || value!== 0)),
                 },
                 totalCryptoIncome: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
@@ -3408,23 +3455,10 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                 ?.TotalTI,
             // Need to set losses for uploadedJson
+
             currentYearLosses: {
-              currentYearLossesSetOff: [
-                {
-                  houseProperty:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.TotalLossSetOff?.TotHPlossCurYrSetoff,
-                  businessSetOff:
-                    this.itrType === 'ITR3'
-                      ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                        ?.ScheduleCYLA?.TotalLossSetOff?.TotBusLossSetoff
-                      : 0,
-                  otherThanHpBusiness:
-                    this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                      ?.ScheduleCYLA?.TotalLossSetOff
-                      ?.TotOthSrcLossNoRaceHorseSetoff,
-                },
-              ],
+              currentYearLossesSetOff: this.getCurrentYearLossJson(),
+              totals: this.getCurrentYearLossJsonTotal(),
               totalCurrentYearSetOff:
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
                   ?.CurrentYearLoss,
@@ -4657,11 +4691,7 @@ export class SummaryComponent implements OnInit {
 
             exemptIncome: {
               partnerFirms: [
-                {
-                  name: '',
-                  panNumber: '',
-                  profitShareAmount: 0,
-                },
+                
               ],
               total: 0,
             },
@@ -6247,29 +6277,27 @@ export class SummaryComponent implements OnInit {
                 this.finalSummary?.assessment?.taxSummary?.taxpayable,
               amountRefund:
                 this.finalSummary?.assessment?.taxSummary?.taxRefund,
-
-              exemptIncome: {
-                partnerFirms: this.finalSummary?.itr?.partnerFirms
-                  ?.map((element, index) => {
-                    return {
-                      srNo: index + 1,
-                      name: element.name,
-                      panNumber: element.panNumber,
-                      profitShareAmount: element.profitShareAmount,
-                    };
-                  })
-                  .flat(),
-                total: this.finalSummary?.itr?.partnerFirms?.reduce(
-                  (total, item) => total + item?.profitShareAmount,
-                  0
-                ),
-              },
               giftExemptIncome: getTotalGiftExemptIncome(
-                this.finalSummary?.itr?.giftTax
-              ),
+                  this.finalSummary?.itr?.giftTax
+                ),
               profitShareAmount:
-                this.finalSummary.assessment?.scheduleIF
-                  ?.totalProfitShareAmount,
+                  this.finalSummary.assessment?.scheduleIF
+                    ?.totalProfitShareAmount,
+              exemptIncome: {
+                partnerFirms: (this.finalSummary?.itr?.partnerFirms || [])?.map((element, index) => ({
+                  srNo: index + 1,
+                  name: element?.name || null,
+                  panNumber: element?.panNumber || null,
+                  profitShareAmount: element?.profitShareAmount || null,
+                })).filter(item => Object.entries(item)
+                  .filter(([key, value]) => key !== 'srNo')
+                  .some(([key, value]) => value !== null || value!== 0)
+                ),
+                
+                total: getTotalGiftExemptIncome(this.finalSummary?.itr?.giftTax) + 
+                this.finalSummary.assessment?.scheduleIF?.totalProfitShareAmount
+              },
+         
             };
 
             console.log(this.finalCalculations, 'finalCalculations');
@@ -7100,6 +7128,113 @@ export class SummaryComponent implements OnInit {
         ?.map((detail) => detail?.IncClmdPTI?.TotalSec23FBB?.NetIncomeLoss || 0)
         ?.reduce((total, value) => total + value, 0);
     }
+  }
+
+  getCurrentYearLossJson() {
+    let array = [
+      'Salary',
+      'HP',
+      'BusProfExclSpecProf',
+      'SpeculativeInc',
+      'SpecifiedInc',
+      'STCG15Per',
+      'STCG30Per',
+      'STCGAppRate',
+      'STCGDTAARate',
+      'LTCG10Per',
+      'LTCG20Per',
+      'LTCGDTAARate',
+      'OthSrcExclRaceHorse',
+      'OthSrcRaceHorse',
+      'IncOSDTAA',
+    ];
+
+    let result = array.map((element, index) => ({
+      headOfIncome: element,
+      currentYearInc:
+        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+          element
+        ]?.IncCYLA?.IncOfCurYrUnderThatHead || 0,
+      houseProperty:
+        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+          element
+        ]?.IncCYLA?.HPlossCurYrSetoff || 0,
+      businessSetOff:
+        this.itrType === 'ITR3'
+          ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.IncCYLA?.BusLossSetoff || 0
+          : 0,
+      otherThanHpBusiness:
+        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+          element
+        ]?.IncCYLA?.OthSrcLossNoRaceHorseSetoff || 0,
+
+      IncOfCurYrAfterSetOff:
+        this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+          element
+        ]?.IncCYLA?.IncOfCurYrAfterSetOff || 0,
+    }));
+    return result;
+  }
+
+  getCurrentYearLossJsonTotal() {
+    let array = ['TotalCurYr', 'TotalLossSetOff', 'LossRemAftSetOff'];
+    let arrayToBeReturned = [];
+
+    array.map((element) => {
+      if (element === 'TotalCurYr') {
+        arrayToBeReturned.push({
+          headOfIncome: element,
+          HP:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotHPlossCurYr || 0,
+          BUS:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotBusLoss || 0,
+          OTH:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotOthSrcLossNoRaceHorse || 0,
+        });
+      } else if ('TotalLossSetOff') {
+        arrayToBeReturned.push({
+          headOfIncome: element,
+          HP:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotHPlossCurYrSetoff || 0,
+          BUS:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotBusLossSetoff || 0,
+          OTH:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.TotOthSrcLossNoRaceHorseSetoff || 0,
+        });
+      } else if ('LossRemAftSetOff') {
+        arrayToBeReturned.push({
+          headOfIncome: element,
+          HP:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.BalHPlossCurYrAftSetoff || 0,
+          BUS:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.BalBusLossAftSetoff || 0,
+          OTH:
+            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCYLA?.[
+              element
+            ]?.BalOthSrcLossNoRaceHorseAftSetoff || 0,
+        });
+      }
+    });
+
+    return arrayToBeReturned;
   }
 }
 

@@ -29,7 +29,7 @@
 .input_active .calendar__view,
 .select__box_active .select__box,
 *:focus {
-    outline-color: #63b12d;
+    outline-color: #00A4BF;
 }
 
 @media screen and (max-width: 768px) {

@@ -77,7 +77,7 @@ export class SourceOfIncomesComponent implements OnInit {
           schedule: this.schedules.CAPITAL_GAIN,
         },
         {
-          name: 'Futures / Options',
+          name: 'P&L',
           selected:
             this.ITR_JSON.business?.profitLossACIncomes != null &&
             this.ITR_JSON.business?.profitLossACIncomes?.length > 0
@@ -120,7 +120,7 @@ export class SourceOfIncomesComponent implements OnInit {
       let assets = this.ITR_JSON.foreignIncome.foreignAssets;
       let relief = this.ITR_JSON.foreignIncome.taxReliefClaimed;
       let isForeignIncome = false;
-      relief.forEach(r => {
+      relief?.forEach(r => {
         r.headOfIncome.forEach(income =>{
           let testIncome = income.outsideIncome > 0 || income.outsideTaxPaid > 0;
           if(testIncome === true) {

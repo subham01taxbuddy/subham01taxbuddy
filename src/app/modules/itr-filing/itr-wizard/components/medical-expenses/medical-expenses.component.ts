@@ -67,6 +67,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
         };
       }
     }
+    this.Copy_ITR_JSON = this.ITR_JSON;
   }
 
   ngOnInit(): void {
@@ -100,7 +101,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
       us80u: [null, Validators.pattern(AppConstants.numericRegex)],
       us80dd: [null, Validators.pattern(AppConstants.numericRegex)],
       us80ddb: [null, Validators.pattern(AppConstants.numericRegex)],
-      hasParentOverSixty: [null],
+      hasParentOverSixty: [this.Copy_ITR_JSON.systemFlags?.hasParentOverSixty],
     });
   }
 
@@ -155,10 +156,12 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
           'selfMedicalExpenditure'
         ].setValue(this.ITR_JSON.insurances[i].medicalExpenditure);
       } else if (this.ITR_JSON.insurances[i].policyFor === 'PARENTS') {
-        this.ITR_JSON.systemFlags.hasParentOverSixty = true;
-        this.investmentDeductionForm.controls['hasParentOverSixty'].setValue(
-          true
-        );
+        // this.Copy_ITR_JSON.systemFlags.hasParentOverSixty = true;
+        // this.investmentDeductionForm.controls['hasParentOverSixty'].setValue(
+        //   true
+        // );
+        this.investmentDeductionForm.controls['hasParentOverSixty'].markAsTouched();
+        this.investmentDeductionForm.controls['hasParentOverSixty'].updateValueAndValidity();
         this.investmentDeductionForm.controls['premium'].setValue(
           this.ITR_JSON.insurances[i].premium
         );
@@ -259,7 +262,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   }
 
   isParentOverSixty() {
-    if (!this.Copy_ITR_JSON?.systemFlags?.hasParentOverSixty) {
+    if (this.investmentDeductionForm.controls['hasParentOverSixty'].value !== true) {
       console.log('clear parent related values');
       this.investmentDeductionForm.controls['medicalExpenditure'].setValue(
         null
@@ -375,7 +378,7 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
   }
 
   saveInvestmentDeductions() {
-    let isParentOverSixty = this.Copy_ITR_JSON.systemFlags.hasParentOverSixty;
+    let isParentOverSixty = this.investmentDeductionForm.controls['hasParentOverSixty'].value;
     let parentExpenseLimit = isParentOverSixty ? 50000 : 25000;
 
     let fieldArray = [this.investmentDeductionForm.controls['premium'],
@@ -503,7 +506,8 @@ export class MedicalExpensesComponent implements OnInit, DoCheck {
           this.investmentDeductionForm.controls['medicalExpenditure'].value
         )
       ) {
-        // this.Copy_ITR_JSON.systemFlags.hasParentOverSixty = true;
+        this.Copy_ITR_JSON.systemFlags.hasParentOverSixty =
+            this.investmentDeductionForm.controls['hasParentOverSixty'].value;
         this.Copy_ITR_JSON.insurances?.push({
           insuranceType: 'HEALTH',
           typeOfPolicy: null,

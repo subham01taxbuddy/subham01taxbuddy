@@ -49,6 +49,7 @@ export class CancelSubscriptionComponent implements OnInit, OnDestroy {
   sortMenus = [
     { value: 'cancellationRequestDate', name: 'Request Date' },
     // { value: 'userName', name: 'Name' },
+    // { value: 'cancellationRequestDate', name: 'Request Date' },
     // { value: 'payableSubscriptionAmount', name: 'Amount to be approved / refunded' },
   ];
   get mobile() {

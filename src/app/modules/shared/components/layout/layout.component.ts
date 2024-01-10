@@ -1,6 +1,6 @@
-import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, DoCheck, NgZone, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { interval } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { DirectCallingComponent } from '../direct-calling/direct-calling.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -9,6 +9,8 @@ import { AppConstants } from '../../constants';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 import { Router, NavigationStart, NavigationEnd, ActivatedRoute, ActivationEnd, Params } from '@angular/router';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { SidebarService } from 'src/app/services/sidebar.service';
 
 @Component({
   selector: 'app-layout',
@@ -16,7 +18,7 @@ import { Router, NavigationStart, NavigationEnd, ActivatedRoute, ActivationEnd, 
   styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent implements OnInit {
-  isDocumentCloud:boolean=true;
+  isDocumentCloud: boolean = true;
   timer: any;
   userMsgInfo: any;
   msgCount: any = 0;
@@ -24,6 +26,8 @@ export class LayoutComponent implements OnInit {
   routePath: any;
   updatedChat: any;
   urlSafe: any;
+  openSidebar: boolean = true;
+  subscription: Subscription
   constructor(
     private router: Router,
     private dialog: MatDialog,
@@ -31,6 +35,8 @@ export class LayoutComponent implements OnInit {
     private ngZone: NgZone,
     private matBottomSheet: MatBottomSheet,
     public sanitizer: DomSanitizer,
+    private observer: BreakpointObserver,
+    private sidebarService: SidebarService,
   ) {
     this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(environment.assistedKmScript);
 
@@ -45,9 +51,29 @@ export class LayoutComponent implements OnInit {
       this.routePath = router.url;
     });
   }
+  ngDoCheck() {
+    this.detectSidebar();
+  }
+
+  detectSidebar() {
+    this.subscription = this.sidebarService.isLoading
+      .subscribe((state) => {
+        if (state) {
+          this.openSidebar = true;
+        } else {
+          this.openSidebar = false;
+        }
+      });
+  }
+
+  ngAfterViewInit() {
+    this.detectSidebar();
+  }
+
   ngOnInit(): void {
-    if(this.router?.url?.includes('user-docs')){
-      this.isDocumentCloud=false
+    if (this.router?.url?.includes('user-docs')) {
+      this.isDocumentCloud = false
+      this.openSidebar = false;
     }
     const data = JSON.parse(sessionStorage.getItem(AppConstants.LOGGED_IN_SME_INFO));
     let smeMobileNumber = '';

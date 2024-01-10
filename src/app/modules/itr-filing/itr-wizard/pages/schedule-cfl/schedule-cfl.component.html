@@ -1,141 +1,163 @@
-
 <form [formGroup]="cflForm">
-  <div class="mrgArdSpcBlw">
-    <div class="txtTitle"> Losses To Be Carried Forward (Schedule CFL):</div>
-    <div class="row cardBack">
-        <div class="table-responsive">
-    <table class="table" style="border: 1px solid #bdc3c7;">
-        <thead class="table-header">
-            <tr class="table-head">
-                <th class="" rowspan="2">Action</th>
-                <th class="" rowspan="2">Assessment Year</th>
-                <th class="" rowspan="2">Date of Filing</th>
-                <th class="" rowspan="2">House Property Loss</th>
-                <th class="" colspan="2">Business & Speculative income</th>
-                <th class="" colspan="2"> Capital Gain Loss</th>
-            </tr>
-            <tr>
-                <th class="">Brought Forward<br> Business Loss</th>
-                <th class=""> Loss from <br>Speculative Business</th>
-                <th class=""> Short Term <br>Capital Loss</th>
-                <th class=""> Long Term <br>Capital Loss</th>
-            </tr>
-        </thead>
-        <tbody formArrayName="cflArray">
-            <tr class="tds-on" *ngFor="let cfl of getCflArray.controls;let i=index" [formGroupName]="i">
-                <td>
-                    <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="">
-                    </mat-checkbox>
-                </td>
-                <td class="total-losses">
-                    {{cfl.get('assessmentPastYear').value}}
-                </td>
-                <td>
-                    <mat-form-field appearance="outline">
-                        <input matInput placeholder="DD/MM/YYYY" readonly name="dateofFilling[i]" [max]="today"
-                            [matDatepicker]="dateofFilling" autocomplete="off" formControlName="dateofFilling">
-                        <mat-datepicker-toggle matSuffix [for]="dateofFilling"></mat-datepicker-toggle>
-                        <mat-datepicker #dateofFilling></mat-datepicker>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field appearance="outline">
-                        <input matInput class="input-field" name="housePropertyLoss[i]" maxlength="14"
-                            (change)="calculateTotalLosses()" formControlName="housePropertyLoss">
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field appearance="outline">
-                        <input matInput class="input-field" name="broughtForwordBusinessLoss[i]" maxlength="14"
-                            formControlName="broughtForwordBusinessLoss" (change)="calculateTotalLosses()">
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field [appearance]="getApperance(i, 'speculativeBusinessLoss')"
-                                    >
-                        <input matInput class="input-field" name="speculativeBusinessLoss[i]" maxlength="14"
-                            formControlName="speculativeBusinessLoss" (change)="calculateTotalLosses()">
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field appearance="outline">
-                        <input matInput class="input-field" name="STCGLoss[i]" maxlength="14" formControlName="STCGLoss"
-                            (change)="calculateTotalLosses()">
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field appearance="outline">
-                        <input matInput class="input-field" name="LTCGLoss[i]" maxlength="14" formControlName="LTCGLoss"
-                            (change)="calculateTotalLosses()">
-                    </mat-form-field>
-                </td>
-            </tr>
-        </tbody>
-        <hr>
-        <tbody>
-            <tr>
-                <td></td>
-                <td class="total-losses">
-                    Total of earlier year losses
-                </td>
-                <td></td>
-                <td>
-                    <mat-form-field appearance="outline">
-                        <input matInput class="input-field" readonly name="totalHPLoss" formControlName="totalHPLoss"
-                            maxlength="14">
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field appearance="outline">
-                        <input matInput class="input-field" name="totalBFBusinessLoss"
-                            formControlName="totalBFBusinessLoss" readonly maxlength="14">
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field appearance="outline">
-                        <input matInput class="input-field" readonly name="totalSIBusinessLoss"
-                            formControlName="totalSIBusinessLoss" maxlength="14">
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field appearance="outline">
-                        <input matInput class="input-field" readonly name="totalSTCGLoss"
-                            formControlName="totalSTCGLoss" maxlength="14">
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field appearance="outline">
-                        <input matInput class="input-field" readonly name="totalLTCGLoss"
-                            formControlName="totalLTCGLoss" maxlength="14">
-                    </mat-form-field>
-                </td>
-            </tr>
-        </tbody>
+    <div class="frameC">
+        <h1 class="heading__title">Losses To Be Carried Forward (Schedule CFL)
+        </h1>
+        <div class="space">
+                    <div class="frame-wrapper-2A">
+                        <div class="accordion" id="myAccordion">
 
-    </table>
+                            <div class="table-responsive">
+                                <table class="table table-bordered mb-20">
+                                    <thead>
+                                    <tr class="table-head">
+                                        <th class="text-center" rowspan="2">ACTION</th>
+                                        <th class="text-center" rowspan="2">ASSESSMENT YEAR</th>
+                                        <th class="text-center" rowspan="2">DATE OF FILING</th>
+                                        <th class="text-center" rowspan="2">HOUSE PROPERTY LOSS</th>
+                                        <th class="text-center" colspan="2">Business & Speculative income</th>
+                                        <th class="text-center" colspan="2"> Capital Gain Loss</th>
+                                    </tr>
+                                    <tr class="table-head">
+                                        <th class="text-center">BROUGHT FORWARD
+                                            BUSINESS LOSS
+                                        </th>
+                                        <th class="text-center">LOSS FROM
+                                            SPECULATIVE BUSINESS
+                                        </th>
+                                        <th class="text-center">SHORT TERM
+                                            CAPITAL LOSS
+                                        </th>
+                                        <th class="text-center">LONG TERM
+                                            CAPITAL LOSS
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody formArrayName="cflArray">
+                                    <tr *ngFor="let cfl of getCflArray.controls;let i=index" [formGroupName]="i">
+                                        <td>
+                                            <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit">
+                                            </mat-checkbox>
+                                        </td>
+                                        <td class="txCen">
+                                            {{cfl.get('assessmentPastYear').value}}
+                                        </td>
+                                        <td>
+                                            <mat-form-field appearance="outline">
+                                                <input matInput placeholder="DD/MM/YYYY" readonly
+                                                       name="dateofFilling[i]" [max]="today"
+                                                       [matDatepicker]="dateofFilling" autocomplete="off"
+                                                       formControlName="dateofFilling">
+                                                <mat-datepicker-toggle matSuffix
+                                                                       [for]="dateofFilling"></mat-datepicker-toggle>
+                                                <mat-datepicker #dateofFilling></mat-datepicker>
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field appearance="outline">
+                                                <input matInput class="input-field" name="housePropertyLoss[i]"
+                                                       maxlength="14"
+                                                       (change)="calculateTotalLosses()"
+                                                       formControlName="housePropertyLoss">
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field appearance="outline">
+                                                <input matInput class="input-field" name="broughtForwordBusinessLoss[i]"
+                                                       maxlength="14"
+                                                       formControlName="broughtForwordBusinessLoss"
+                                                       (change)="calculateTotalLosses()">
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field appearance="outline" class="colrOut">
+                                                <input matInput class="input-field" name="speculativeBusinessLoss[i]"
+                                                       maxlength="14"
+                                                       formControlName="speculativeBusinessLoss"
+                                                       (change)="calculateTotalLosses()">
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field appearance="outline">
+                                                <input matInput class="input-field" name="STCGLoss[i]" maxlength="14"
+                                                       formControlName="STCGLoss"
+                                                       (change)="calculateTotalLosses()">
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field appearance="outline">
+                                                <input matInput class="input-field" name="LTCGLoss[i]" maxlength="14"
+                                                       formControlName="LTCGLoss"
+                                                       (change)="calculateTotalLosses()">
+                                            </mat-form-field>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <hr>
+                                    <tbody>
+                                    <tr>                                       
+                                        <td colspan="3" class="total-losses">
+                                            Total of earlier year losses
+                                        </td>                                        
+                                        <td>
+                                            <mat-form-field appearance="outline">
+                                                <input matInput class="input-field" readonly name="totalHPLoss"
+                                                       formControlName="totalHPLoss"
+                                                       maxlength="14">
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field appearance="outline">
+                                                <input matInput class="input-field" name="totalBFBusinessLoss"
+                                                       formControlName="totalBFBusinessLoss" readonly maxlength="14">
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field appearance="outline">
+                                                <input matInput class="input-field" readonly name="totalSIBusinessLoss"
+                                                       formControlName="totalSIBusinessLoss" maxlength="14">
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field appearance="outline">
+                                                <input matInput class="input-field" readonly name="totalSTCGLoss"
+                                                       formControlName="totalSTCGLoss" maxlength="14">
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field appearance="outline">
+                                                <input matInput class="input-field" readonly name="totalLTCGLoss"
+                                                       formControlName="totalLTCGLoss" maxlength="14">
+                                            </mat-form-field>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
 
-</div>
-<div class="col-sm-12 spsTp bdrTp">
-    <div class="row">
-        <div class="col-sm-6">
-            <button type="submit" class="clr-btn" (click)="deleteCflArray()"><i class="fa fa-close"
-                    aria-hidden="true">&nbsp;</i>Clear</button>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-12 spsTp bdrTp">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <button type="button" class="delete-btn delete-icon" (click)="deleteCflArray()">
+                                        <i class="fa fa-trash-o delbt"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+               
+
+
+                <div class="out-box">
+                    <div class="box-left">
+                        <div class="btn__white" (click)="goBack()">Back</div>
+                    </div>
+                    <div class="box-right">
+                        <div class="btn__primary" (click)="save()">Save & View Summary</div>
+                    </div>
+                </div>
+         
         </div>
     </div>
-</div>
-</div>
-
-    <div class="flex justify-between p-[30px] back-foot">
-    <button class="lgtBtn" (click)="goBack()">
-      <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-      <span class="font-semibold"
-        >&nbsp;Back to More Info List</span
-      >
-    </button>
-
-    <button class="saveBtnIn" (click)="save()">
-      <span class="font-semibold">Save All</span>
-    </button>
-  </div>
-  </div>
 </form>

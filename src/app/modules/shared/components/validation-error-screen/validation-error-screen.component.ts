@@ -31,7 +31,7 @@ export class ValidationErrorScreenComponent implements OnInit {
       const state = window.history.state;
       this.errors = state.validationErrors;
       this.apiErrors = state.apiErrors;
-      this.itrType = this.errors[0]?.itrType;
+      // this.itrType = this.errors[0]?.itrType;
     });
     console.log(this.errors, 'errors to be displayed');
   }

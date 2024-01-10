@@ -1,92 +1,90 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
-<!-- New Open Close Filter Starts -->
-<div class="mrgArdTog1">
-  <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]="!dataOnLoad">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon> arrow_forward_ios </mat-icon>
-          Filter - Refund Request:
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="rowClr">
-        <div class="surround">
+<div class="main-1">
+  <div class="row rowClr-1">
+    <div class="col-sm-12">
+      <mat-accordion class="headers-align">
+        <mat-expansion-panel [expanded]="!dataOnLoad">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon> arrow_forward_ios </mat-icon>
+              Filter - Refund Request:
+            </mat-panel-title>
+          </mat-expansion-panel-header>
           <div class="row">
-
-            <div class="col-sm-12 bckClr" >
-              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
-                (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-            </div>
-            <div class="col-sm-3 spsTp" style="padding:15px;">
-              <mat-label>Request Type </mat-label>
-              <mat-form-field appearance="outline">
-                <mat-select placeholder="Select Request Type" [formControl]="requestType">
-                  <mat-option *ngFor="let item of Type" [value]="item.value">
-                    {{ item.label }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div class="col-sm-3 spsTp" >
-              <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
-                [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
-            </div>
-
-            <div class="col-sm-6 spsTp">
-              <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
-                  (onChange)="searchByObject($event)"></app-generic-user-filter>
-            </div>
-            <div class="row spsTp bdrTp">
-              <div class="col-6">
-                <app-generic-sorting [sortingParameter]="sortMenus"
-                  (onChange)="sortByObject($event)"></app-generic-sorting>
-              </div>
-              <div class="col-sm-6">
-                <div class="col-sm-12">
-                  <button class="clrLnk mvRth" [disabled]="loading" (click)="resetFilters()">
-                    Clear form
-                  </button>
-
-                  <button class="srch-btn mvRth" [disabled]="loading" (click)="applyFilter()">
-                    <i class="fas fa-search" aria-hidden="true"></i> Search
-                  </button>
-
+            <div class="col-sm-12">
+              <div class="filter-box">
+                <div class="row">
+                  <div class="col-sm-12 bckClr">
+                    <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                      (sendPrincipleIndividual)="fromSme($event,false, true)"
+                      (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
+                  </div>
+                  <div class="col-sm-3 spsTp" style="padding:15px;">
+                    <mat-label>Request Type </mat-label>
+                    <mat-form-field appearance="outline" class="custom-bg-new">
+                      <mat-select placeholder="Select Request Type" [formControl]="requestType">
+                        <mat-option *ngFor="let item of Type" [value]="item.value">
+                          {{ item.label }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-3 spsTp">
+                    <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+                      [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
+                  </div>
+                  <div class="col-sm-6 spsTp">
+                    <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                      (onChange)="searchByObject($event)"></app-generic-user-filter>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-6 spcTp">
+                      <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                        (onChange)="sortByObject($event)"></app-generic-sorting>
+                    </div>
+                  </div>
+                  <div class="button-container">
+                    <button class="srch-btn-1" [disabled]="loading" (click)="applyFilter()">
+                      <i class="fas fa-search" aria-hidden="true"></i> Search
+                    </button>
+                    <button class="clrLnk-1" [disabled]="loading" (click)="resetFilters()">
+                      Clear form
+                    </button>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col-sm-12">
+                      <span class="new-note1 note">
+                        Note : Please select required filters above and click on search to get information
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-sm-12 row">
-                  <span class="note1 note">
-                    Note : Please select required filters above and click on search to get information
-                  </span>
-                </div>
               </div>
             </div>
+
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+  <div class="tableSpc mt-3">
+
+    <div>
+      <div class="row">
+        <div class="col-sm-9 row">
+          <div class="table-info-text col-sm-4">
+            Refund Request Details:
           </div>
         </div>
       </div>
-    </mat-expansion-panel>
-  </mat-accordion>
-</div>
-<!-- New Open Close Filter Ends -->
-
-<!-- Table Below -->
-<div class="tableSpc">
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="txTit">
-        Refund Request Details:
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <!-- <div class="count"> Total Invoice Count: <b>{{ totalInvoice }}</b></div>  -->
+      <table>
+        <tr *ngFor="let item of userInfo | paginate:config"></tr>
+      </table>
+      <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="refundListGridOptions" [rowSelection]="rowSelection"
+        (rowClicked)="onRefundRowClicked($event)">
+      </ag-grid-angular>
+      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
     </div>
   </div>
-
-  <table>
-    <tr *ngFor="let item of userInfo | paginate : config"></tr>
-  </table>
-  <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="refundListGridOptions" [rowSelection]="rowSelection"
-    (rowClicked)="onRefundRowClicked($event)">
-  </ag-grid-angular>
-  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-
 </div>

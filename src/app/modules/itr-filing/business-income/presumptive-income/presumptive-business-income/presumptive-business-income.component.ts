@@ -33,7 +33,10 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   @Output() presBusinessSaved = new EventEmitter<boolean>();
   cashPercentage: any[] = [];
   bankPercentage: any[] = [];
-
+  bankPerWidth: any[] = [];
+  cashPerWidth: any[] = [];
+  bankMinIncomePercentage = (50 / 100) * 6;
+  cashMinIncomePercentage = (50 / 100) * 8;
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
@@ -126,7 +129,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   addBusIncomeForm() {
-    if (this.busIncomeForm.valid) {
+    if (this.busIncomeForm.valid || !this.busIncomeForm.controls['busIncomeFormArray']['controls'].length) {
       this.submitted = false;
       let form = this.createBusIncomeForm(0, null);
       (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).insert(
@@ -162,13 +165,13 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   calculatePresumptive(index, incomeType, setValue?) {
     const bankReceipts = (
       (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
-        index
+      index
       ] as FormGroup
     ).controls['bankReceipts'];
 
     const cashReceipts = (
       (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
-        index
+      index
       ] as FormGroup
     ).controls['cashReceipts'];
 
@@ -250,7 +253,8 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
     this.cashPercentage = [];
     this.bankPercentage = [];
-
+    this.bankPerWidth = [];
+    this.cashPerWidth = [];
     for (let i = 0; i < cashIncomeFormArray.length; i++) {
       // cash Percentage
       const cashReceipts = parseFloat(
@@ -260,8 +264,13 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         (cashIncomeFormArray.at(i) as FormGroup).get('cashPreIncome').value
       );
 
-      const cashPercentage = Math.ceil((cashPreIncome * 100) / cashReceipts);
+      let cashPercentage = 0;
+      if (cashReceipts > 0) {
+        cashPercentage = Math.ceil((cashPreIncome * 100) / cashReceipts);
+      }
       this.cashPercentage.push(cashPercentage);
+      let cashPerWidth = (50 / 100) * cashPercentage
+      this.cashPerWidth.push(cashPerWidth);
 
       // bank percentage
       const bankReceipts = parseFloat(
@@ -271,10 +280,15 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
         (cashIncomeFormArray.at(i) as FormGroup).get('bankPreIncome').value
       );
 
-      const bankPercentage = Math.ceil((bankPreIncome * 100) / bankReceipts);
+      let bankPercentage = 0;
+      if (bankReceipts > 0) {
+        bankPercentage = Math.ceil((bankPreIncome * 100) / bankReceipts);
+      }
       this.bankPercentage.push(bankPercentage);
+      let bankPerWidth = (50 / 100) * bankPercentage
+      this.bankPerWidth.push(bankPerWidth);
+
     }
-    console.log(this.cashPercentage);
   }
 
   getByBank(item, incomeType, incomeSubType) {
@@ -554,7 +568,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   businessClicked(event, index) {
     (
       (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
-        index
+      index
       ] as FormGroup
     ).controls['natureOfBusiness'].setValue(event);
   }

@@ -3,8 +3,8 @@ import { Subscription } from 'rxjs';
 import { WizardNavigation } from '../../../itr-shared/WizardNavigation';
 import { NonSpeculativeIncomeComponent } from './non-speculative-income/non-speculative-income.component';
 import { SpeculativeIncomeComponent } from './speculative-income/speculative-income.component';
-import {AppConstants} from "../../../shared/constants";
-import {UtilsService} from "../../../../services/utils.service";
+import { AppConstants } from "../../../shared/constants";
+import { UtilsService } from "../../../../services/utils.service";
 @Component({
   selector: 'app-profit-loss-ac',
   templateUrl: './profit-loss-ac.component.html',
@@ -21,17 +21,16 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
     super();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   reloadData() {
     //to be done
   }
 
   saveAll() {
-
     let nonSpecSaved = this.NonSpeculativeIncomeComponent.onContinue();
     let specSaved = this.SpeculativeIncomeComponent.onContinue();
-    if(specSaved && nonSpecSaved) {
+    if (specSaved && nonSpecSaved) {
       this.loading = true;
       let Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
       this.utilsService.saveItrObject(Copy_ITR_JSON).subscribe(
@@ -54,6 +53,9 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
         }
       );
       this.saveAndNext.emit(true);
+    } else {
+      this.loading = false;
+      this.utilsService.showSnackBar('Please enter the all input field details.');
     }
   }
 
@@ -61,7 +63,7 @@ export class ProfitLossAcComponent extends WizardNavigation implements OnInit {
 
   subscribeToEmitter(componentRef) {
     //this may not be needed for us
-    // if (!(componentRef instanceof OtherIncomeComponent)){
+    // if (!(componentRef instanceof ExemptIncomeComponent)){
     //   return;
     // }
     const child: WizardNavigation = componentRef;

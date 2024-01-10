@@ -1,4 +1,14 @@
-import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Inject,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ChangeDetectorRef,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -7,11 +17,16 @@ import {
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
+import {GridApi, GridOptions, RowGroupingDisplayType} from 'ag-grid-community';
+import { TdsTypeCellRenderer } from '../../../../pages/taxes-paid/tds-type-cell-renderer';
+import { AddAssetsComponent } from './add-assets/add-assets.component';
+import { ConfirmDialogComponent } from 'src/app/modules/shared/components/confirm-dialog/confirm-dialog.component';
+import {MatPaginator} from "@angular/material/paginator";
 declare let $: any;
 $(document).on('wheel', 'input[type=number]', function (e) {
   $(this).blur();
@@ -42,13 +57,15 @@ export const MY_FORMATS = {
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
-export class ScheduleALComponent extends WizardNavigation implements OnInit {
+export class ScheduleALComponent extends WizardNavigation implements OnInit, OnChanges {
   step = 1;
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() onSave = new EventEmitter();
   Copy_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
   loading: boolean = false;
   config: any;
+  editConfig: any;
   immovableAssetForm: FormGroup;
   movableAssetsForm: FormGroup;
 
@@ -56,28 +73,88 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
   stateDropdown = [];
   stateDropdownMaster = AppConstants.stateDropdown;
 
+  immovableAssets: any;
+  searchParam: any = {
+    page: 0,
+    pageSize: 20,
+  };
+  immovableAssetGridOptions: GridOptions;
+  immovableAssetGridApi: GridApi;
+  public groupDisplayType: RowGroupingDisplayType = 'groupRows';
+
   constructor(
     public fb: FormBuilder,
     private utilsService: UtilsService,
     private itrMsService: ItrMsService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    private matDialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private cdRef: ChangeDetectorRef
   ) {
     super();
-  }
-
-  ngOnInit() {
-    // this.immovableAssetForm = this.createImmovableAssetForm();
-    this.stateDropdown = this.stateDropdownMaster;
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
-    this.config = {
-      itemsPerPage: 2,
-      currentPage: 1,
+
+    let asset = this.Copy_ITR_JSON.immovableAsset;
+    console.log('assets',asset)
+    if(asset){
+      this.immovableAssets = asset
+    }else{
+      this.immovableAssets =[];
+    }
+
+
+    this.immovableAssetGridOptions = <GridOptions>{
+      rowData: this.immovableAssets,
+      columnDefs: this.reportsCodeColumnDef(),
+      enableCellChangeFlash: true,
+      enableCellTextSelection: true,
+      rowSelection: 'multiple',
+      isRowSelectable: (params) => {
+        return !params.data.isFullWidth;
+      },
+      onGridReady: (params) => {
+        this.immovableAssetGridApi = params.api;
+        params.api.setRowData(this.immovableAssets);
+      },
+      isFullWidthRow: (params) => {
+        // return isFullWidth(params.rowNode.data);
+        return params.rowNode.data.isFullWidth;
+      },
+      fullWidthCellRenderer: TdsTypeCellRenderer,
+      onSelectionChanged: (event) => {
+        event.api.getSelectedRows().forEach((row) => {
+          row.hasEdit = true;
+        });
+      },
+      sortable: true,
+      pagination: true,
+      paginationPageSize: 20,
+      filter: true,
+
     };
 
-    this.immovableAssetForm = this.initForm();
+    this.immovableAssetGridOptions.api?.setRowData(this.immovableAssets);
+
+    this.config = {
+      itemsPerPage: this.searchParam.pageSize,
+      currentPage: 1,
+      totalItems: null,
+    };
+    this.editConfig = {
+      // id: 'schALPagination',
+      itemsPerPage: 1,
+      currentPage: 1,
+      // totalItems: this.immovableAssets.length
+    };
+  }
+
+  ngOnInit() {
+    // this.immovableAssetForm = this.createImmovableAssetForm(0);
+    this.stateDropdown = this.stateDropdownMaster;
+
+     this.immovableAssetForm = this.initForm();
 
     if (this.Copy_ITR_JSON.immovableAsset) {
       this.Copy_ITR_JSON.immovableAsset.forEach((obj) => {
@@ -98,7 +175,11 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
     }
 
     // this.immovableAssetForm?.disable();
-    // this.movableAssetsForm?.disable();
+    //  this.movableAssetsForm?.disable();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('changed')
   }
 
   initForm() {
@@ -156,7 +237,10 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
     });
   }
 
+  mode = 'VIEW';
+
   addMore() {
+    this.mode = 'EDIT';
     const immovableAssetArray = <FormArray>(
       this.immovableAssetForm.get('immovableAssetArray')
     );
@@ -170,6 +254,44 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
         }
       });
     }
+
+    // const dialogRefSelect = this.matDialog.open(AddAssetsComponent, {
+    //   closeOnNavigation: true,
+    //   disableClose: false,
+    //   width: '800px',
+    // });
+    //
+    // dialogRefSelect.afterClosed().subscribe((result) => {
+    //   if (result !== undefined) {
+    //     this.immovableAssets.push(result.data);
+    //     this.immovableAssetGridOptions.api?.setRowData(this.immovableAssets);
+    //   }
+    // });
+  }
+
+
+  activeIndex = 0;
+  markActive(index){
+    this.activeIndex = index;
+    setTimeout(()=>{
+      let assetsArray = this.immovableAssetForm.get('immovableAssetArray') as FormArray;
+      let value = assetsArray.controls[index].value;
+      assetsArray.controls[index].reset();
+      assetsArray.controls[index].setValue(value);
+      (assetsArray.controls[index] as FormGroup).controls['amount'].setValue(value.amount);
+      assetsArray.controls[index].markAsDirty();
+      assetsArray.controls[index].updateValueAndValidity();
+      this.immovableAssetForm.markAsTouched();
+      this.immovableAssetForm.updateValueAndValidity();
+      this.cdRef.detectChanges();
+    }, 100);
+    this.editConfig.currentPage = this.activeIndex;
+
+  }
+
+  @ViewChild('paginator') paginator: MatPaginator;
+  getTotalCount(){
+    return (<FormArray>this.immovableAssetForm.get('immovableAssetArray')).controls.length;
   }
 
   editAssetForm(i, type) {
@@ -193,17 +315,10 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
     immovableAssetArray.push(
       this.createImmovableAssetForm(immovableAssetArray.length, item)
     );
-  }
+    this.activeIndex = immovableAssetArray.length -1;
+    this.immovableAssetForm.markAsTouched();
+    this.immovableAssetForm.updateValueAndValidity();
 
-  deleteImmovableAssetsArray() {
-    const immovableAssetArray = <FormArray>(
-      this.immovableAssetForm?.get('immovableAssetArray')
-    );
-    immovableAssetArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        immovableAssetArray.removeAt(index);
-      }
-    });
   }
 
   pageChanged(event) {
@@ -239,6 +354,9 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
           );
           this.loading = false;
           this.utilsService.smoothScrollToTop();
+          this.mode = 'VIEW';
+          this.immovableAssets = this.Copy_ITR_JSON.immovableAsset;
+          this.immovableAssetGridApi?.setRowData(this.immovableAssets);
         },
         (error) => {
           this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -286,8 +404,173 @@ export class ScheduleALComponent extends WizardNavigation implements OnInit {
     }
   }
 
+  changeMode(){
+    this.mode = 'VIEW';
+  }
+
   goBack() {
     this.saveAndNext.emit(false);
+  }
+
+  reportsCodeColumnDef() {
+    return [
+      {
+        headerName: 'Sr. No.',
+        width: 50,
+        pinned: 'left',
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        valueGetter: function (params) {
+          return params.node.rowIndex + 1;
+        }
+      },
+      {
+        headerName: 'Description',
+        field: 'description',
+        sortable: true,
+        width: 240,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        valueGetter: function nameFromCode(params) {
+          return params.data.description;
+        },
+      },
+      {
+        headerName: 'Address',
+        field: 'address',
+        sortable: true,
+        width: 440,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        valueGetter: function nameFromCode(params) {
+          return params.data.flatNo +','+params.data.premisesName +','+params.data.road+','+params.data.area
+          +','+params.data.city+','+params.data.state+'('+params.data.pinCode+')';
+        },
+      },
+      {
+        headerName: 'Amount',
+        field: 'amount',
+        sortable: true,
+        width: 200,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: "agTextColumnFilter",
+        filterParams: {
+          filterOptions: ["contains", "notContains"],
+          debounceMs: 0
+        },
+        valueGetter: (params) => params.data.amount,
+        valueFormatter: (params) => this.formatAmount(params.value),
+      },
+      {
+        headerName: 'Edit',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Edit"
+          style="border: none; background: transparent; font-size: 16px; cursor:pointer;color:#04a4bc;">
+          <i class="fa-solid fa-pencil" data-action-type="edit"></i>
+           </button>`;
+        },
+        width: 90,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+      },
+      {
+        headerName: 'Delete',
+        field: '',
+        width: 90,
+        pinned: 'right',
+        lockPosition: true,
+        suppressMovable: false,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Click to delete/cancel Subscription" data-action-type="remove"
+            style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:red; ">
+            <i class="fa fa-trash fa-xs" aria-hidden="true" data-action-type="remove"></i>
+             </button>`;
+        },
+      },
+    ]
+  }
+
+  formatAmount(amount: number): string {
+    return `₹ ${amount.toLocaleString()}`;
+  }
+
+  onAssetsRowClicked(params:any){
+    if (params.event.target !== undefined) {
+      const actionType = params.event.target.getAttribute('data-action-type');
+      switch (actionType) {
+        case 'remove': {
+          console.log('DATA FOR DELETE Asset:', params.data);
+          this.deleteAsset(params.data);
+          break;
+        }
+        case 'edit': {
+          this.editAsset(params.data);
+          break;
+        }
+      }
+    }
+  }
+
+  editAsset(data){
+    this.mode = 'EDIT';
+    this.activeIndex = this.immovableAssets.indexOf(data);
+  }
+
+  deleteIndex(index) {
+    const immovableAssetArray = <FormArray>(
+      this.immovableAssetForm?.get('immovableAssetArray')
+    );
+    immovableAssetArray.removeAt(index);
+  }
+  deleteAsset(data) {
+    const dialogRef = this.matDialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirm Deletion',
+        message: 'Are you sure you want to delete this asset?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        const index = this.immovableAssets.indexOf(data);
+        if (index !== -1) {
+          this.immovableAssets.splice(index, 1);
+          this.immovableAssetGridApi?.setRowData(this.immovableAssets);
+          const immovableAssetArray = <FormArray>(
+            this.immovableAssetForm?.get('immovableAssetArray')
+          );
+          immovableAssetArray.removeAt(index);
+        }
+      }
+    });
   }
 
   saveAll() {

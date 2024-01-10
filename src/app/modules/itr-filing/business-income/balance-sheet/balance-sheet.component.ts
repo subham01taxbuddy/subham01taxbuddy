@@ -28,14 +28,15 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   natureOfBusinessDropdownAll: any;
   assetLiabilitiesForm: FormGroup;
-  natOfBusinessDtlForm: FormGroup;
-  natOfBusinessDtlsArray: FormArray;
   total1 = 0;
   total2 = 0;
   difference = 0;
   depreciationObj: any[];
   loading: boolean;
   config: any;
+  fixedAssetData: any;
+  totalAppOfFunds: number = 0;
+  totalDepNetBlock: any;
 
   constructor(
     public matDialog: MatDialog,
@@ -67,25 +68,18 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     if (this.ITR_JSON.business?.fixedAssetsDetails) {
       this.depreciationObj = this.ITR_JSON.business.fixedAssetsDetails;
     }
-    // this.getLiabilitiesAssets();
+    this.calculateTotalLoans();
+    this.calSourcesOfFunds();
+    this.calTotalLiabilitiesProvision();
+    this.calCurrentAssets();
+    this.calTotalCurrentAssetsLoansAdv();
+    this.calNetCurrentAssets();
+  }
 
-    let natOfBusiness = this.ITR_JSON.business?.businessDescription;
-    this.natOfBusinessDtlsArray = new FormArray([]);
-    if (natOfBusiness && natOfBusiness.length > 0) {
-      let index = 0;
-      for (let detail of natOfBusiness) {
-        let form = this.createNatOfBusinessForm(index++, detail);
-        this.natOfBusinessDtlsArray.push(form);
-      }
-      // this.speculativeIncome = specBusiness?.incomes[0];
-    } else {
-      let form = this.createNatOfBusinessForm(0, null);
-      this.natOfBusinessDtlsArray.push(form);
-    }
-
-    this.natOfBusinessDtlForm = this.fb.group({
-      natOfBusinessDtlsArray: this.natOfBusinessDtlsArray,
-    });
+  calculateTotalLoans() {
+    let totalLoans = 0;
+    totalLoans = Number(this.assetLiabilitiesForm.controls['securedLoans'].value) + Number(this.assetLiabilitiesForm.controls['unSecuredLoans'].value);
+    this.assetLiabilitiesForm.controls['totalLoans'].setValue(totalLoans);
   }
 
   createNatOfBusinessForm(index, detail: BusinessDescription) {
@@ -98,45 +92,12 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     });
   }
 
-  addNatOfBusinessForm() {
-    let form = this.createNatOfBusinessForm(0, null);
-    (
-      this.natOfBusinessDtlForm.controls['natOfBusinessDtlsArray'] as FormArray
-    ).insert(0, form);
-  }
-
-  get getnatOfBusinessDtlsArray() {
-    return <FormArray>this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray');
-  }
-
   pageChanged(event) {
     this.config.currentPage = event;
   }
 
   fieldGlobalIndex(index) {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
-  }
-
-  deleteArray() {
-    const natOfBusinessDtlsArray = <FormArray>(
-      this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray')
-    );
-    natOfBusinessDtlsArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        natOfBusinessDtlsArray.removeAt(index);
-      }
-    });
-  }
-
-  specSelected() {
-    const natOfBusinessDtlsArray = <FormArray>(
-      this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray')
-    );
-    return (
-      natOfBusinessDtlsArray.controls.filter(
-        (element) => (element as FormGroup).controls['hasEdit'].value === true
-      ).length > 0
-    );
   }
 
   displayedColumns: string[] = [
@@ -351,10 +312,8 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
   initForm(obj?: NewFinancialParticulars) {
     this.assetLiabilitiesForm = this.fb.group({
       id: [obj?.id],
-      membersOwnCapital: [
-        obj?.membersOwnCapital,
-        [Validators.pattern(AppConstants.numericRegex)],
-      ],
+      membersOwnCapital: [obj?.membersOwnCapital, [Validators.pattern(AppConstants.numericRegex)],],
+      reservesAndSurplus: [obj?.reservesAndSurplus, [Validators.pattern(AppConstants.numericRegex)]],
       securedLoans: [
         obj?.securedLoans,
         Validators.pattern(AppConstants.numericRegex),
@@ -363,7 +322,9 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         obj?.unSecuredLoans,
         Validators.pattern(AppConstants.numericRegex),
       ],
+      totalLoans: [obj?.totalLoans],
       advances: [obj?.advances, Validators.pattern(AppConstants.numericRegex)],
+      totalSourcesOfFunds: [obj?.totalSourcesOfFunds],
       sundryCreditorsAmount: [
         obj?.sundryCreditorsAmount ? obj?.sundryCreditorsAmount : 0,
         [Validators.required, Validators.pattern(AppConstants.numericRegex)],
@@ -373,6 +334,8 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         Validators.pattern(AppConstants.numericRegex),
       ],
       totalCapitalLiabilities: [obj?.totalCapitalLiabilities],
+      totalLiabilitiesProvision: [obj?.totalLiabilitiesProvision],
+      netCurrentAsset: [obj?.netCurrentAsset],
       fixedAssets: [
         obj?.fixedAssets,
         Validators.pattern(AppConstants.numericRegex),
@@ -381,6 +344,8 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         obj?.inventories ? obj?.inventories : 0,
         [Validators.required, Validators.pattern(AppConstants.numericRegex)],
       ],
+      totalCurrentAssets: [obj?.totalCurrentAssets],
+      totalCurrentAssetsLoansAdv: [obj?.totalCurrentAssetsLoansAdv],
       sundryDebtorsAmount: [
         obj?.sundryDebtorsAmount ? obj?.sundryDebtorsAmount : 0,
         [Validators.required, Validators.pattern(AppConstants.numericRegex)],
@@ -397,10 +362,9 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         obj?.loanAndAdvances,
         Validators.pattern(AppConstants.numericRegex),
       ],
-      investment: [
-        obj?.investment,
-        Validators.pattern(AppConstants.numericRegex),
-      ],
+      investment: [obj?.investment, Validators.pattern(AppConstants.numericRegex),],
+      shortTermInvestment: [obj?.shortTermInvestment, Validators.pattern(AppConstants.numericRegex),],
+      longTermInvestment: [obj?.longTermInvestment, Validators.pattern(AppConstants.numericRegex),],
       otherAssets: [
         obj?.otherAssets,
         Validators.pattern(AppConstants.numericRegex),
@@ -412,28 +376,19 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     });
   }
 
-  // getLiabilitiesAssets() {
-  //   if (this.utilsService.isNonEmpty(this.ITR_JSON.business) && this.utilsService.isNonEmpty(this.ITR_JSON.business.financialParticulars)) {
-  //     this.assetLiabilitiesForm.setValue({
-  //       gstrNumber: this.ITR_JSON.business.financialParticulars.GSTRNumber,
-  //       turnOverAsPerGST: this.ITR_JSON.business.financialParticulars.grossTurnOverAmount,
-  //       partnerOwnCapital: this.ITR_JSON.business.financialParticulars.membersOwnCapital,
-  //       securedLoan: this.ITR_JSON.business.financialParticulars.securedLoans,
-  //       unsecuredLoan: this.ITR_JSON.business.financialParticulars.unSecuredLoans,
-  //       advances: this.ITR_JSON.business.financialParticulars.advances,
-  //       sundryCreditors: this.ITR_JSON.business.financialParticulars.sundryCreditorsAmount,
-  //       otherLiabilities: this.ITR_JSON.business.financialParticulars.otherLiabilities,
-  //       fixedAssets: this.ITR_JSON.business.financialParticulars.fixedAssets,
-  //       inventories: this.ITR_JSON.business.financialParticulars.inventories,
-  //       sundryDeptors: this.ITR_JSON.business.financialParticulars.sundryDebtorsAmount,
-  //       balanceWithBank: this.ITR_JSON.business.financialParticulars.balanceWithBank,
-  //       cashInHand: this.ITR_JSON.business.financialParticulars.cashInHand,
-  //       loanandAdvance: this.ITR_JSON.business.financialParticulars.loanAndAdvances,
-  //       investment: this.ITR_JSON.business.financialParticulars.investment,
-  //       otherAsset: this.ITR_JSON.business.financialParticulars.otherAssets,
-  //     });
-  //   }
-  // }
+
+  calSourcesOfFunds() {
+    let totalSourcesOfFunds = 0;
+    totalSourcesOfFunds =
+      Number(this.assetLiabilitiesForm.controls['membersOwnCapital'].value) +
+      Number(this.assetLiabilitiesForm.controls['reservesAndSurplus'].value) +
+      Number(this.assetLiabilitiesForm.controls['securedLoans'].value) +
+      Number(this.assetLiabilitiesForm.controls['unSecuredLoans'].value) +
+      Number(this.assetLiabilitiesForm.controls['advances'].value);
+    this.assetLiabilitiesForm.controls['totalSourcesOfFunds'].setValue(totalSourcesOfFunds);
+    this.calDifference();
+
+  }
 
   calculateTotal1() {
     this.total1 = 0;
@@ -446,9 +401,10 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         this.assetLiabilitiesForm.controls['sundryCreditorsAmount'].value
       ) +
       Number(this.assetLiabilitiesForm.controls['otherLiabilities'].value);
-    this.difference = this.total1 - this.total2;
-    this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
+    // this.difference = this.total1 - this.total2;
+    // this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
   }
+
 
   calculateTotal2() {
     this.total2 = 0;
@@ -461,8 +417,66 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       Number(this.assetLiabilitiesForm.controls['loanAndAdvances'].value) +
       Number(this.assetLiabilitiesForm.controls['investment'].value) +
       Number(this.assetLiabilitiesForm.controls['otherAssets'].value);
-    this.difference = this.total1 - this.total2;
-    this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
+    // this.difference = this.total1 - this.total2;
+    // this.assetLiabilitiesForm.controls['difference'].setValue(this.difference);
+  }
+
+  getFixedAssetData(data) {
+    this.fixedAssetData = data;
+    this.depreciationObj = this.fixedAssetData.fixedAssetsDetails;
+    if (this.depreciationObj.length) {
+      this.totalDepNetBlock = 0;
+      this.depreciationObj.forEach(element => {
+        this.totalDepNetBlock += element.fixedAssetClosingAmount;
+      });
+      this.totalApplicationOfFunds();
+    }
+  }
+
+  calTotalLiabilitiesProvision() {
+    let totalLiabilitiesProvision = 0;
+    totalLiabilitiesProvision = Number(this.assetLiabilitiesForm.controls['sundryCreditorsAmount'].value) + Number(this.assetLiabilitiesForm.controls['otherLiabilities'].value);
+    this.assetLiabilitiesForm.controls['totalLiabilitiesProvision'].setValue(totalLiabilitiesProvision);
+    this.calNetCurrentAssets();
+  }
+
+  calCurrentAssets() {
+    let totalCurrentAssets = 0;
+    totalCurrentAssets = Number(this.assetLiabilitiesForm.controls['inventories'].value) + Number(this.assetLiabilitiesForm.controls['sundryDebtorsAmount'].value)
+      + Number(this.assetLiabilitiesForm.controls['balanceWithBank'].value) + Number(this.assetLiabilitiesForm.controls['cashInHand'].value);
+    this.assetLiabilitiesForm.controls['totalCurrentAssets'].setValue(totalCurrentAssets);
+    this.calTotalCurrentAssetsLoansAdv();
+  }
+
+  calTotalCurrentAssetsLoansAdv() {
+    let totalCurrentAssetsLoansAdv = 0;
+    totalCurrentAssetsLoansAdv = Number(this.assetLiabilitiesForm.controls['totalCurrentAssets'].value) + Number(this.assetLiabilitiesForm.controls['loanAndAdvances'].value);
+    this.assetLiabilitiesForm.controls['totalCurrentAssetsLoansAdv'].setValue(totalCurrentAssetsLoansAdv);
+    this.calNetCurrentAssets();
+  }
+
+  calNetCurrentAssets() {
+    let netCurrentAsset = 0;
+    netCurrentAsset = Number(this.assetLiabilitiesForm.controls['totalCurrentAssetsLoansAdv'].value) - Number(this.assetLiabilitiesForm.controls['totalLiabilitiesProvision'].value);
+    this.assetLiabilitiesForm.controls['netCurrentAsset'].setValue(netCurrentAsset);
+    this.totalApplicationOfFunds();
+  }
+
+  totalApplicationOfFunds() {
+    this.totalAppOfFunds = 0;
+    let totalInvestment = Number(this.assetLiabilitiesForm.controls['longTermInvestment'].value) + Number(this.assetLiabilitiesForm.controls['shortTermInvestment'].value);
+    this.assetLiabilitiesForm.controls['investment'].setValue(totalInvestment);
+    this.totalAppOfFunds = Number(this.assetLiabilitiesForm.controls['investment'].value) + Number(this.assetLiabilitiesForm.controls['netCurrentAsset'].value);
+    if (this.totalDepNetBlock) {
+      this.totalAppOfFunds += Number(this.totalDepNetBlock);
+    }
+    this.calDifference();
+  }
+
+  calDifference() {
+    let difference = 0;
+    difference = Number(this.assetLiabilitiesForm.controls['totalSourcesOfFunds'].value) - Number(this.totalAppOfFunds);
+    this.assetLiabilitiesForm.controls['difference'].setValue(difference);
   }
 
   showPopUp(value) {
@@ -503,10 +517,7 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
     }
 
     if (this.ITR_JSON?.liableSection44AAflag === 'Y') {
-      if (
-        this.assetLiabilitiesForm?.controls['difference']?.value === 0 &&
-        this.natOfBusinessDtlForm.valid
-      ) {
+      if (this.assetLiabilitiesForm?.controls['difference']?.value === 0) {
         valid = true;
       } else {
         valid = false;
@@ -537,10 +548,13 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
             id: null,
             grossTurnOverAmount: null,
             membersOwnCapital: null,
+            reservesAndSurplus: null,
             securedLoans: null,
             unSecuredLoans: null,
             advances: null,
             sundryCreditorsAmount: null,
+            totalLiabilitiesProvision: null,
+            totalCurrentAssets: null,
             otherLiabilities: null,
             totalCapitalLiabilities: null,
             fixedAssets: null,
@@ -552,6 +566,8 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
             otherAssets: null,
             totalAssets: null,
             investment: null,
+            shortTermInvestment: null,
+            longTermInvestment: null,
             GSTRNumber: null,
           },
           businessDescription: [],
@@ -560,8 +576,10 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
         };
       }
 
-      this.Copy_ITR_JSON.business.businessDescription =
-        this.natOfBusinessDtlsArray.value;
+      if (!this.utilsService.isNonEmpty(this.assetLiabilitiesForm.controls['GSTRNumber'].value)) {
+        this.assetLiabilitiesForm.controls['GSTRNumber'].setValue(null);
+      }
+
       this.Copy_ITR_JSON.business.financialParticulars =
         this.assetLiabilitiesForm.value;
       this.Copy_ITR_JSON.business.fixedAssetsDetails = this.depreciationObj;
@@ -596,11 +614,5 @@ export class BalanceSheetComponent extends WizardNavigation implements OnInit {
       }
       $('input.ng-invalid').first().focus();
     }
-  }
-
-  businessClicked(event, index) {
-    (this.natOfBusinessDtlsArray.controls[index] as FormGroup).controls[
-      'natureOfBusiness'
-    ].setValue(event);
   }
 }

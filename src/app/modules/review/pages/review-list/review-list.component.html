@@ -1,8 +1,8 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 <!-- New Open Close Filter Starts -->
-<div class="mrgArdTog">
+<div class="">
   <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]=false>
+    <mat-expansion-panel [expanded]=true>
       <mat-expansion-panel-header>
         <mat-panel-title>
         <mat-icon> arrow_forward_ios </mat-icon>
@@ -12,11 +12,11 @@
           <button class="new-add new-add-tp-spc mvRth1" (click)="$event.stopPropagation(); addReview('Add Review', 'Add', '')"><i aria-hidden="true" class="fa fa-plus"></i> Add Review</button>
         </div>
       </mat-expansion-panel-header>
-      <div class="rowClr">
+      <div class="rowClr tpSpc">
         <div class="surround">
       <div class="row">
-            <div class="col-sm-5">
-              <mat-form-field appearance="outline">
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline" class="custom-bg-new">
                 <mat-label>Select Platform</mat-label>
                 <mat-select
                   placeholder="Select Platform"
@@ -32,8 +32,8 @@
               </mat-form-field>
             </div>
 
-            <div class="col-sm-5">
-              <mat-form-field appearance="outline">
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline" class="custom-bg-new">
                 <mat-label>Select Status</mat-label>
                 <mat-select
                   placeholder="Select Status"
@@ -64,7 +64,7 @@
    </mat-accordion>
 </div>
 <!-- New Open Close Filter Ends -->
-<div class="main clearfix">
+<div class="clearfix">
 <!-- Table -->
   <div class="tableSpc">
   <div class="row">

@@ -1,730 +1,307 @@
-<ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
-<mat-accordion class="headers-align mrgArd">
-  <mat-expansion-panel hideToggle>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <mat-icon> arrow_forward_ios </mat-icon>
-        Other incomes
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <div class="card">
-      <form [formGroup]="otherIncomeFormGroup">
-        <div class="col-sm-12">
-          <div>
-            <table class="table table-bordered" style="width: 100%">
-              <thead style="background: #eaeaea">
-                <tr class="table-head">
-                  <th class="text-center">Income Type</th>
-                  <th class="text-center">Gross Amount</th>
-                </tr>
-              </thead>
-              <tbody formArrayName="otherIncomes">
-                <tr
-                  *ngFor="let income of getIncomeArray.controls; let i = index"
-                  [formGroupName]="i"
-                >
-                  <td>
-                    {{ income.value.label }}
-                  </td>
-
-                  <td>
-                    <mat-form-field
-                      class="input-field-width"
-                      style="width: 90% !important"
-                    >
-                      <input
-                        type="text"
-                        trim
-                        matInput
-                        placeholder=""
-                        name="incomeValue[i]"
-                        formControlName="incomeValue"
-                        type="number"
-                        class="input-field"
-                        maxlength="125"
-                        (blur)="validateIncomeValueOnBlur()"
-                      />
-                    </mat-form-field>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          
-          <hr />
-
-          <div>
-            <div class="subTitle">
-             Income from Gift:
-            </div>
-            <table class="table table-bordered" style="width: 100%">
-              <thead style="background: #eaeaea">
-                <tr class="table-head">
-                  <th></th>
-                  <th class="text-center">Whether GIft is received from Relative</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody formGroupName="giftTax">
-                <tr>
-                  <td>
-                    Money received without consideration
-                  </td>
-                  <td>
-                    <mat-checkbox formControlName="aggregateValueWithoutConsiderationNotTaxable">
-                    </mat-checkbox>
-                  </td>
-                  <td>
-                    <mat-form-field
-                      class="input-field-width"
-                      style="width: 90% !important"
-                    >
-                      <input
-                        type="text"
-                        trim
-                        matInput
-                        placeholder=""
-                        formControlName="aggregateValueWithoutConsideration"
-                        type="number"
-                        class="input-field"
-                        maxlength="125"
-                      />
-                    </mat-form-field>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>
-                    Immovable property received without consideration
-                  </td>
-                  <td>
-                    <mat-checkbox formControlName="immovablePropertyWithoutConsiderationNotTaxable">
-                    </mat-checkbox>
-                  </td>
-                  <td>
-                    <mat-form-field
-                      class="input-field-width"
-                      style="width: 90% !important"
-                    >
-                      <input
-                        type="text"
-                        trim
-                        matInput
-                        placeholder=""
-                        formControlName="immovablePropertyWithoutConsideration"
-                        type="number"
-                        class="input-field"
-                        maxlength="125"
-                      />
-                    </mat-form-field>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>
-                    Immovable property received for inadequate consideration
-                  </td>
-                  <td>
-                    <mat-checkbox formControlName="immovablePropertyInadequateConsiderationNotTaxable">
-                    </mat-checkbox>
-                  </td>
-                  <td>
-                    <mat-form-field
-                      class="input-field-width"
-                      style="width: 90% !important"
-                    >
-                      <input
-                        type="text"
-                        trim
-                        matInput
-                        placeholder=""
-                        formControlName="immovablePropertyInadequateConsideration"
-                        type="number"
-                        class="input-field"
-                        maxlength="125"
-                      />
-                    </mat-form-field>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>
-                    Any Other property received without consideration
-                  </td>
-                  <td>
-                    <mat-checkbox formControlName="anyOtherPropertyWithoutConsiderationNotTaxable">
-                    </mat-checkbox>
-                  </td>
-                  <td>
-                    <mat-form-field
-                      class="input-field-width"
-                      style="width: 90% !important"
-                    >
-                      <input
-                        type="text"
-                        trim
-                        matInput
-                        placeholder=""
-                        formControlName="anyOtherPropertyWithoutConsideration"
-                        type="number"
-                        class="input-field"
-                        maxlength="125"
-                      />
-                    </mat-form-field>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>
-                    Any Other property received for inadequate consideration
-                  </td>
-                  <td>
-                    <mat-checkbox formControlName="anyOtherPropertyInadequateConsiderationNotTaxable">
-                    </mat-checkbox>
-                  </td>
-                  <td>
-                    <mat-form-field
-                      class="input-field-width"
-                      style="width: 90% !important"
-                    >
-                      <input
-                        type="text"
-                        trim
-                        matInput
-                        placeholder=""
-                        formControlName="anyOtherPropertyInadequateConsideration"
-                        type="number"
-                        class="input-field"
-                        maxlength="125"
-                      />
-                    </mat-form-field>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <hr />
-          <div style="padding-top: 20px" formGroupName="dividendIncomes">
-            <div class="row">
-              <div class="col-sm-6">
-                <div class="subTitle">
-                  Quartely Break-up of Dividend Income:
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="count1">
-                  Total Count: <span class="txClr1">{{ getTotal() }}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="row spsTp bdrTp">
-              <div class="col-sm-4">
-                <mat-label class="inputLabel">Upto 15 June 2022</mat-label>
-                <mat-form-field appearance="outline">
-                  <input
-                    digitsOnly
-                    trim
-                    matInput
-                    placeholder="Upto 15 June 2022"
-                    name="quarter1"
-                    formControlName="quarter1"
-                    class="input-field"
-                    maxlength="50"
-                    digitsOnly
-                  />
-                </mat-form-field>
-              </div>
-              <div class="col-sm-4">
-                <mat-label class="inputLabel"
-                  >16 June 2022 - 15 Sep 2022</mat-label
-                >
-                <mat-form-field appearance="outline">
-                  <input
-                    digitsOnly
-                    trim
-                    matInput
-                    placeholder="16 June 2022 - 15 Sep 2022"
-                    name="quarter2"
-                    formControlName="quarter2"
-                    class="input-field"
-                    maxlength="50"
-                    digitsOnly
-                  />
-                </mat-form-field>
-              </div>
-              <div class="col-sm-4">
-                <mat-label class="inputLabel"
-                  >16 Sep 2022 - 15 Dec 2022</mat-label
-                >
-                <mat-form-field appearance="outline">
-                  <input
-                    digitsOnly
-                    trim
-                    matInput
-                    placeholder="16 Sep 2022 - 15 Dec 2022"
-                    name="quarter3"
-                    formControlName="quarter3"
-                    class="input-field"
-                    maxlength="50"
-                    digitsOnly
-                  />
-                </mat-form-field>
-              </div>
-              <div class="col-sm-4 spsTp">
-                <mat-label class="inputLabel"
-                  >16 Dec 2022 - 15 March 2023</mat-label
-                >
-                <mat-form-field appearance="outline">
-                  <input
-                    digitsOnly
-                    trim
-                    matInput
-                    placeholder="16 Dec 2022 - 15 March 2023"
-                    name="quarter4"
-                    formControlName="quarter4"
-                    class="input-field"
-                    maxlength="50"
-                    digitsOnly
-                  />
-                </mat-form-field>
-              </div>
-              <div class="col-sm-4 spsTp">
-                <mat-label class="inputLabel"
-                  >16 March 2023 - 31 March 2023</mat-label
-                >
-                <mat-form-field appearance="outline">
-                  <input
-                    digitsOnly
-                    trim
-                    matInput
-                    placeholder="16 March 2023 - 31 March 2023"
-                    name="quarter5"
-                    formControlName="quarter5"
-                    class="input-field"
-                    maxlength="50"
-                    digitsOnly
-                  />
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-          <hr />
-
-          <div class="subTitle">
-            Family Pension:
-            <!-- <span style="float: right;">Total:{{getTotalExemptIncome()}}</span> -->
-          </div>
-          <div class="row">
-            <div class="col-sm-4 spsTp">
-              <mat-label class="inputLabel">Family pension</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  digitsOnly
-                  trim
-                  matInput
-                  placeholder="Family pension"
-                  name="quarter1"
-                  formControlName="familyPension"
-                  class="input-field"
-                  maxlength="50"
-                  digitsOnly
-                  (blur)="calFamPension()"
-                />
-              </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-              <mat-label class="inputLabel"
-                >(-) Deduction u/s 57(iia)</mat-label
-              >
-              <mat-form-field appearance="outline">
-                <input
-                  digitsOnly
-                  trim
-                  matInput
-                  name="quarter2"
-                  class="input-field"
-                  formControlName="famPenDeduction"
-                  digitsOnly
-                  [disabled]="true"
-                />
-              </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-              <mat-label class="inputLabel">Total Family Pension</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  digitsOnly
-                  trim
-                  matInput
-                  name="quarter3"
-                  class="input-field"
-                  formControlName="totalFamPenDeduction"
-                  digitsOnly
-                  [disabled]="true"
-                />
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-  </mat-expansion-panel>
-
-  <mat-expansion-panel hideToggle>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <mat-icon> arrow_forward_ios </mat-icon>
-        Exempted Incomes
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <div class="card__col-xs-12 card__col-sm-12">
-      <div class="sectionTitle" style="padding: 10px; font-size: 20px">
-        <div class="count1">
-          Total Count: <span class="txClr1">{{ getTotalExemptIncome() }}</span>
-        </div>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<div class="page-wrapper">
+  <main>
+    <div class="frameC">
+      <div class="div">
+        <div class="text-wrapper">Other Source of Income</div>
+        <div class="mingcute-down-fill"></div>
       </div>
-      <form [formGroup]="exemptIncomeFormGroup">
-        <div>
-          <table class="table table-bordered">
-            <thead style="background: #eaeaea">
-              <tr class="table-head">
-                <th class="text-center">Sr. No</th>
-                <th class="text-center">Allowance Type</th>
-                <th class="text-center">Exempt Amount</th>
-              </tr>
-            </thead>
-            <tbody formArrayName="exemptIncomes">
-              <tr
-                *ngFor="
-                  let income of getExemptIncomeArray.controls;
-                  let i = index
-                "
-                [formGroupName]="i"
-              >
-                <td>{{ i + 1 }}</td>
-                <td class="label-td note">
-                  {{ income.value.label }}
+      <div class="space">
+        <div class="div-2">
 
-                  <!-- Additional fields for AGRI -->
-                  <div
-                    [formGroup]="agriIncFormGroup"
-                    *ngIf="income.value.incomeType === 'AGRI'"
-                    class="surround"
-                  >
-                    <div class="note" style="margin-left: 25px">
-                      Agriculture Details
-                    </div>
-                    <div>
-                      <!-- grossAgriculturalReceipts -->
-                      <div class="flex justify-between align-items-center">
-                        <mat-label style="margin-left: 25px"
-                          >Gross Agricultural Receipts</mat-label
-                        >
-                        <div class="col-sm-2" style="margin-right: 75px">
-                          <mat-form-field appearance="outline">
-                            <input
-                              type="number"
-                              trim
-                              matInput
-                              placeholder=""
-                              name="grossAgriculturalReceipts[i]"
-                              formControlName="grossAgriculturalReceipts"
-                              maxlength="125"
-                              (change)="setNetAgriIncome(i)"
-                            />
-                          </mat-form-field>
+          <div class="frame-wrapper-2A">
+            <form [formGroup]="otherIncomeFormGroup">
+              <div class="accordion" id="myAccordion">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingTwo">
+                    <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseTwo">Interest Income
+                      <input type="number" class="form-control inpClr2" disabled value="{{getTotalOtherIncome()}}">
+                    </button>
+
+                  </h2>
+                  <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                    <div class="accordion__item-body" formArrayName="otherIncomes">
+                      <div class="div-6" *ngFor="let income of getIncomeArray.controls; let i = index"
+                        [formGroupName]="i">
+                        <div class="form-field">
+                          <div><span class="span">{{ income.value.label }} </span></div>
                         </div>
-                      </div>
-
-                      <!-- expenditureIncurredOnAgriculture -->
-                      <div class="flex justify-between align-items-center">
-                        <mat-label style="margin-left: 25px"
-                          >Expenditure incurred on agriculture</mat-label
-                        >
-                        <div class="col-sm-2" style="margin-right: 75px">
+                        <div class="form-field">
                           <mat-form-field appearance="outline">
-                            <input
-                              type="number"
-                              trim
-                              matInput
-                              placeholder=""
-                              name="expenditureIncurredOnAgriculture[i]"
-                              formControlName="expenditureIncurredOnAgriculture"
-                              class="input-field"
-                              maxlength="125"
-                              (change)="setNetAgriIncome(i)"
-                            />
-                          </mat-form-field>
-                        </div>
-                      </div>
-
-                      <!-- unabsorbedAgriculturalLoss -->
-                      <div class="flex justify-between align-items-center">
-                        <mat-label style="margin-left: 25px"
-                          >Unabsorbed agricultural loss of the previous eight
-                          assessment years</mat-label
-                        >
-                        <div class="col-sm-2" style="margin-right: 75px">
-                          <mat-form-field appearance="outline">
-                            <input
-                              type="number"
-                              trim
-                              matInput
-                              placeholder=""
-                              name="unabsorbedAgriculturalLoss[i]"
-                              formControlName="unabsorbedAgriculturalLoss"
-                              class="input-field"
-                              maxlength="125"
-                              (change)="setNetAgriIncome(i)"
-                            />
-                          </mat-form-field>
-                        </div>
-                      </div>
-
-                      <!-- agriIncomePortionRule7 -->
-                      <div class="flex justify-between align-items-center">
-                        <mat-label style="margin-left: 25px"
-                          >The agricultural income portion relating to rules 7,
-                          7A, 7B(1), 7B(1A) & 8</mat-label
-                        >
-                        <div class="col-sm-2" style="margin-right: 75px">
-                          <mat-form-field appearance="outline">
-                            <input
-                              type="number"
-                              trim
-                              matInput
-                              placeholder=""
-                              name="agriIncomePortionRule7[i]"
-                              formControlName="agriIncomePortionRule7"
-                              class="input-field"
-                              maxlength="125"
-                              (change)="setNetAgriIncome(i)"
-                              readonly
-                            />
-                          </mat-form-field>
-                        </div>
-                      </div>
-
-                      <!-- netAgriculturalIncome -->
-                      <div class="flex justify-between align-items-center">
-                        <mat-label style="margin-left: 25px"
-                          >Net Agricultural income</mat-label
-                        >
-                        <div class="col-sm-2" style="margin-right: 75px">
-                          <mat-form-field appearance="outline">
-                            <input
-                              type="number"
-                              trim
-                              matInput
-                              placeholder=""
-                              name="netAgriculturalIncome[i]"
-                              formControlName="netAgriculturalIncome"
-                              class="input-field"
-                              maxlength="125"
-                              readonly
-                            />
+                            <input type="text" trim matInput placeholder="" name="incomeValue[i]"
+                              formControlName="incomeValue" type="number" maxlength="125"
+                              (blur)="validateIncomeValueOnBlur()" />
                           </mat-form-field>
                         </div>
                       </div>
                     </div>
-
-                    <!-- agriculture income details -->
-                    <div
-                      class="surround"
-                      *ngIf="
-                        income.value.incomeType === 'AGRI' &&
-                        income.value.incomeValue > 500000
-                      "
-                      formArrayName="agriInc"
-                    >
-                      <div
-                        class="flex align-items-center justify-between"
-                        style="margin: 0px 25px 25px 25px"
-                      >
-                        <div class="note">Agriculture Income Details</div>
-                        <button (click)="addAgriLandDtls()">+Add More</button>
-                      </div>
-                      <div
-                        *ngFor="
-                          let agriIncArray of getAgriIncomeArray.controls;
-                          let j = index
-                        "
-                        [formGroupName]="j"
-                      >
-                        <div style="margin: 0px 25px 25px 25px">
-                          <!-- checkbox -->
-                          <div class="flex justify-between align-items-center">
-                            <div class="custom-control custom-checkbox">
-                              <input
-                                class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                type="checkbox"
-                                (click)="$event.stopPropagation()"
-                                [checked]="selectedIndexes.includes(j)"
-                                (click)="toggleSelectedIndex(j)"
-                              />
-                            </div>
-
-                            <!-- name of district -->
-                            <div class="col-sm-5">
-                              <mat-label style="margin-bottom: 16px"
-                                >Name Of District</mat-label
-                              >
-                              <mat-form-field appearance="outline">
-                                <input
-                                  trim
-                                  matInput
-                                  placeholder="Name of District"
-                                  name="nameOfDistrict[j]"
-                                  formControlName="nameOfDistrict"
-                                  class="input-field"
-                                />
-                              </mat-form-field>
-                            </div>
-
-                            <!-- landInAcre -->
-                            <div class="col-sm-3">
-                              <mat-label
-                                >Measurement of agricultural land* (In acres)
-                              </mat-label>
-                              <mat-form-field appearance="outline">
-                                <input
-                                  trim
-                                  matInput
-                                  placeholder="land In Acre"
-                                  name="landInAcre[j]"
-                                  formControlName="landInAcre"
-                                  class="input-field"
-                                />
-                              </mat-form-field>
-                            </div>
-
-                            <!-- pincode -->
-                            <div class="col-sm-3">
-                              <mat-label style="margin-bottom: 16px"
-                                >Pincode</mat-label
-                              >
-                              <mat-form-field appearance="outline">
-                                <input
-                                  trim
-                                  matInput
-                                  placeholder="Pincode"
-                                  name="pinCode[j]"
-                                  formControlName="pinCode"
-                                  class="input-field"
-                                />
-                              </mat-form-field>
-                            </div>
+                    <div class="accordion__item-body">
+                      <div class="div-6">
+                        <div class="form-field">
+                          <div><span class="span mr-5">Interest accrued on contributions to a provident fund</span>
+                            <button type="submit" (click)="clearProvidentFund()" class="delbt">
+                              <i class="fa fa-broom-wide" aria-hidden="true"></i> Clear
+                            </button>
                           </div>
-                          <br />
-
-                          <!-- owner -->
-                          <div class="flex justify-between align-items-center">
-                            <mat-label
-                              >Whether the agricultural land is owned or held on
-                              lease*</mat-label
-                            >
-                            <mat-radio-group
-                              formControlName="owner"
-                              placeholder="owner"
-                              required
-                            >
-                              <mat-radio-button
-                                [value]="'O'"
-                                style="margin-left: 0px; margin-right: 2px"
-                                labelPosition="before"
-                              >
-                                Owner
-                              </mat-radio-button>
-                              <mat-radio-button
-                                [value]="'H'"
-                                labelPosition="before"
-                              >
-                                Held on lease
-                              </mat-radio-button>
-                            </mat-radio-group>
-                          </div>
-                          <br />
-
-                          <!-- typeOfLand -->
-                          <div class="flex justify-between align-items-center">
-                            <mat-label
-                              >Whether the agricultural land is irrigated or
-                              rain-fed?
-                            </mat-label>
-                            <mat-radio-group
-                              formControlName="typeOfLand"
-                              placeholder="Type Of Land"
-                            >
-                              <mat-radio-button
-                                [value]="'IRG'"
-                                style="margin-left: 0px; margin-right: 2px"
-                                labelPosition="before"
-                              >
-                                Irrigated
-                              </mat-radio-button>
-                              <mat-radio-button
-                                [value]="'RF'"
-                                labelPosition="before"
-                              >
-                                Rain-fed
-                              </mat-radio-button>
-                            </mat-radio-group>
-                          </div>
+                          <mat-form-field appearance="outline" class="class1">
+                            <mat-select formControlName="providentFundLabel">
+                              <mat-option *ngFor="let fund of providentFundArray" [value]="fund.incomeType">
+                                <span> {{fund.label}}</span>
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
                         </div>
-                      </div>
-                      <div (click)="delete()">
-                        <button>Delete</button>
+                        <div class="form-field mt-4">
+                          <mat-form-field appearance="outline">
+                            <input type="text" trim matInput placeholder="" formControlName="providentFundValue"
+                              type="number" maxlength="125" />
+                          </mat-form-field>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </td>
+                </div>
 
-                <td>
-                  <mat-form-field appearance="outline">
-                    <input
-                      type="number"
-                      trim
-                      matInput
-                      placeholder=""
-                      name="incomeValue[i]"
-                      formControlName="incomeValue"
-                      class="input-field"
-                      maxlength="125"
-                      [readonly]="income.value.incomeType === 'AGRI'"
-                    />
-                  </mat-form-field>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingThree">
+                    <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseThree">Dividend Income
+                      <input type="number" disabled class="form-control inpClr2" [value]="getTotal()" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" placeholder="₹0">
+                    </button>
+                  </h2>
+                  <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                    <div class="accordion__item-body" formGroupName="dividendIncomes">
+                      <div class="div-6">
+                        <div class="form-field">
+                          <div><span class="span">Upto 15 June </span></div>
+                          <mat-form-field appearance="outline">
+                            <input digitsOnly trim matInput placeholder="Upto 15 June 2022" name="quarter1"
+                              formControlName="quarter1" maxlength="50" digitsOnly />
+                          </mat-form-field>
+                        </div>
+                        <div class="form-field">
+                          <div><span class="span">16th June- 15th Sep</span></div>
+                          <mat-form-field appearance="outline">
+                            <input digitsOnly trim matInput placeholder="16 June 2022 - 15 Sep 2022" name="quarter2"
+                              formControlName="quarter2" maxlength="50" digitsOnly />
+                          </mat-form-field>
+                        </div>
+                        <div class="form-field">
+                          <div><span class="span">16th Sep- 15th Dec </span></div>
+                          <mat-form-field appearance="outline">
+                            <input digitsOnly trim matInput placeholder="16 Sep 2022 - 15 Dec 2022" name="quarter3"
+                              formControlName="quarter3" maxlength="50" digitsOnly />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="div-6">
+                        <div class="form-field">
+                          <div> <span class="span">16th Dec- 15th Mar</span></div>
+                          <mat-form-field appearance="outline">
+                            <input digitsOnly trim matInput placeholder="16 Dec 2022 - 15 March 2023" name="quarter4"
+                              formControlName="quarter4" maxlength="50" digitsOnly />
+                          </mat-form-field>
+                        </div>
+                        <div class="form-field">
+                          <div><span class="span">16th Mar- 31th Mar</span></div>
+                          <mat-form-field appearance="outline">
+                            <input digitsOnly trim matInput placeholder="16 March 2023 - 31 March 2023" name="quarter5"
+                              formControlName="quarter5" maxlength="50" digitsOnly />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingThree">
+                    <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseThree">Income from Gift
+                      <input type="number" class="form-control inpClr2" disabled value="{{getTotalGiftIncome()}}">
+                    </button>
+                    <div class="note2">Note for Gift- Gift received from Relative will be excluded from the total as it's not part
+                      of taxable income.</div>
+                  </h2>
+                  <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                    <div class="accordion__item-body">
+                      <table class="table table-bordered" style="width: 100%">
+                        <thead style="background: #eaeaea">
+                          <tr class="table-head">
+                            <th></th>
+                            <th class="text-center">Whether GIft is received from Relative</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody formGroupName="giftTax">
+                          <tr>
+                            <td>
+                              Money received without consideration
+                            </td>
+                            <td class="text-center">
+                              <mat-checkbox formControlName="aggregateValueWithoutConsiderationNotTaxable">
+                              </mat-checkbox>
+                            </td>
+                            <td>
+                              <mat-form-field class="input-field-width" style="width: 90% !important">
+                                <input type="text" trim matInput placeholder=""
+                                  formControlName="aggregateValueWithoutConsideration" type="number" class="input-field"
+                                  maxlength="125" />
+                              </mat-form-field>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td>
+                              Immovable property received without consideration
+                            </td>
+                            <td class="text-center">
+                              <mat-checkbox formControlName="immovablePropertyWithoutConsiderationNotTaxable">
+                              </mat-checkbox>
+                            </td>
+                            <td>
+                              <mat-form-field class="input-field-width" style="width: 90% !important">
+                                <input type="text" trim matInput placeholder=""
+                                  formControlName="immovablePropertyWithoutConsideration" type="number"
+                                  class="input-field" maxlength="125" />
+                              </mat-form-field>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td>
+                              Immovable property received for inadequate consideration
+                            </td>
+                            <td class="text-center">
+                              <mat-checkbox formControlName="immovablePropertyInadequateConsiderationNotTaxable">
+                              </mat-checkbox>
+                            </td>
+                            <td>
+                              <mat-form-field class="input-field-width" style="width: 90% !important">
+                                <input type="text" trim matInput placeholder=""
+                                  formControlName="immovablePropertyInadequateConsideration" type="number"
+                                  class="input-field" maxlength="125" />
+                              </mat-form-field>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td>
+                              Any Other property received without consideration
+                            </td>
+                            <td class="text-center">
+                              <mat-checkbox formControlName="anyOtherPropertyWithoutConsiderationNotTaxable">
+                              </mat-checkbox>
+                            </td>
+                            <td>
+                              <mat-form-field class="input-field-width" style="width: 90% !important">
+                                <input type="text" trim matInput placeholder=""
+                                  formControlName="anyOtherPropertyWithoutConsideration" type="number"
+                                  class="input-field" maxlength="125" />
+                              </mat-form-field>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td>
+                              Any Other property received for inadequate consideration
+                            </td>
+                            <td class="text-center">
+                              <mat-checkbox formControlName="anyOtherPropertyInadequateConsiderationNotTaxable">
+                              </mat-checkbox>
+                            </td>
+                            <td>
+                              <mat-form-field class="input-field-width" style="width: 90% !important">
+                                <input type="text" trim matInput placeholder=""
+                                  formControlName="anyOtherPropertyInadequateConsideration" type="number"
+                                  class="input-field" maxlength="125" />
+                              </mat-form-field>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingThree">
+                    <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseThree">Any Other Income
+                      <input type="number" class="form-control inpClr2" disabled value="{{getTotalAnyOtherIncome()}}">
+                    </button>
+                  </h2>
+                  <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                    <div class="accordion__item-body">
+                      <div class="" formArrayName="anyOtherIncomes">
+                        <div class="div-6" *ngFor="let income of getAnyIncomeArray.controls; let i = index"
+                          [formGroupName]="i">
+                          <div class="form-field">
+                            <div><span class="span">{{ income.value.label }} </span></div>
+                          </div>
+                          <div class="form-field">
+                            <mat-form-field appearance="outline">
+                              <input type="text" trim matInput placeholder="" name="incomeValue[i]"
+                                formControlName="incomeValue" type="number" maxlength="125" />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="txHdg">Family Pension</div>
+                      <div class="div-6 gray_box">
+                        <div class="form-field">
+                          <div><span class="span">Family Pension amount </span></div>
+
+                          <div class="form-field">
+                            <mat-form-field appearance="outline">
+                              <input digitsOnly matInput placeholder="Family pension" name="quarter1"
+                                formControlName="familyPension" maxlength="50" (blur)="calFamPension()" />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="form-field">
+                          <div><span class="span">Deduction u/s 57(2)a </span></div>
+                          <div class="form-field">
+                            <mat-form-field appearance="outline">
+                              <input digitsOnly matInput name="quarter2" formControlName="famPenDeduction" readonly />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="form-field">
+                          <div><span class="span">Net family pension</span></div>
+                          <div class="form-field">
+                            <mat-form-field appearance="outline">
+                              <input digitsOnly matInput name="quarter3" formControlName="totalFamPenDeduction"
+                                readonly />
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </form>
+
+            <div class="out-box">
+              <div class="box-left">
+                <div class="btn btn__white" (click)="goBack()">Back</div>
+              </div>
+              <div class="box-right">
+                <div class="btn btn__primary" (click)="saveAll()">Save & View Summary</div>
+              </div>
+            </div>
+          </div>
+
+
         </div>
-        <div class="note">
-          Note: 1. Sec 10(26) - Deduction is available only for certain category
-          of assesses of NE Region and Ladakh
-          <br />
-          Note: 2. Sec 10(26AAA) - Deduction is available only for certain
-          Sikkimese assessees
-        </div>
-      </form>
+      </div>
     </div>
-  </mat-expansion-panel>
-</mat-accordion>
-
-<div class="flex justify-between p-[30px] back-foot">
-  <button class="lgtBtn">
-    <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-    <span class="font-semibold" (click)="goBack()"
-      >&nbsp;Back to Source Page</span
-    >
-  </button>
-
-  <button class="saveBtnIn" (click)="saveAll()">
-    <span class="font-semibold">Save All</span>
-  </button>
+  </main>
+  <!-- right side summary -->
+  <app-side-summary-panel type="otherIncome"></app-side-summary-panel>
+  <!-- right side summary ends-->
 </div>
-<div class="card__row"></div>

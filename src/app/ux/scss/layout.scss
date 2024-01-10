@@ -1,0 +1,21 @@
+.header-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 18px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    background-color: #157999;
+    border-radius: 8px 8px 0px 0px;
+    border: 1px solid;
+    border-color: #a6a6a6;
+    align-items: center;
+    font-family: "DM Sans-Bold", Helvetica;
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 17px;
+    letter-spacing: 0;
+    line-height: 28px;
+}

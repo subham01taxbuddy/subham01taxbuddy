@@ -24,7 +24,7 @@
           <div class="flex flex-col items-center">
             <div class="flex flex-row items-center space-between">
               <button
-                class="lgtBtn"
+                class="lgtBtnTp"
                 type="button"
                 (click)="addAisCredentials()"
               >
@@ -34,7 +34,7 @@
               </button>
 
               <button
-                class="lgtBtn btn1"
+                class="lgtBtnTp1"
                 type="button"
                 (click)="addClientOverBot()"
               >
@@ -43,7 +43,7 @@
                 </span>
               </button>
               <button
-                class="lgtBtn btn2"
+                class="lgtBtnTp"
                 type="button"
                 (click)="addClient()"
                 style="margin-left: 6%"
@@ -122,7 +122,7 @@
                         class="btn btn-primary"
                         (click)="downloadPrefillOpt()"
                         [disabled]="!downloadPrefillChecked"
-                        style="background-color: #00aeca"
+                        style="background-color: #1b67ba"
                       >
                         Start
                       </button>
@@ -190,7 +190,7 @@
                         class="btn btn-primary"
                         (click)="upload('pre-filled')"
                         [disabled]="!uploadPrefillChecked"
-                        style="background-color: #00aeca"
+                        style="background-color: #1b67ba"
                       >
                         Upload
                       </button>
@@ -250,7 +250,7 @@
                         class="btn btn-primary"
                         (click)="downloadAisOpt()"
                         [disabled]="!downloadAisChecked"
-                        style="background-color: #00aeca"
+                        style="background-color: #1b67ba"
                       >
                         Start
                       </button>
@@ -318,7 +318,7 @@
                         class="btn btn-primary"
                         (click)="upload('ais')"
                         [disabled]="!uploadAisChecked"
-                        style="background-color: #00aeca"
+                        style="background-color: #1b67ba"
                       >
                         Upload
                       </button>
@@ -405,7 +405,7 @@
                         class="btn btn-primary"
                         (click)="upload('utility')"
                         [disabled]="!uploadJsonChecked"
-                        style="background-color: #00aeca"
+                        style="background-color: #1b67ba"
                       >
                         Upload
                       </button>

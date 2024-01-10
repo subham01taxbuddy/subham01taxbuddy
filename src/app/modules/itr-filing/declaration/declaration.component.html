@@ -4,10 +4,9 @@
   <div class="card__title">Customer Declaration</div>
   <form [formGroup]="declarationsForm">
     <div class="row">
-    <div class="col-sm-12">
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="col-sm-12">  
       <strong>I</strong>,&nbsp;
-      <mat-form-field style="width: 30% !important; ">
+      <mat-form-field class="spcInp spcBtm">
         <input id="name" matInput formControlName="name" placeholder="" class="input-field" maxlength="50">
         <mat-error *ngIf="declarationsForm.controls['name'].hasError('pattern')">Only
           alphabets
@@ -17,7 +16,7 @@
         </mat-error>
       </mat-form-field>
       Son/daughter of&nbsp;&nbsp;
-      <mat-form-field style="width: 30% !important;">
+      <mat-form-field class="spcInp spcBtm">
         <input maxlength="50" matInput formControlName="childOf" placeholder="" class="input-field"
                (blur)="initCap(declarationsForm.controls['childOf'])">
         <mat-error *ngIf="declarationsForm.controls['childOf'].hasError('pattern')">Enter
@@ -34,7 +33,7 @@
       <strong>{{declarationsForm.controls['capacity'].value}}</strong> and I am also competent
       to make this return and verify it. I am holding permanent account number
       &nbsp;&nbsp;
-      <mat-form-field style="width: 17% !important;">
+      <mat-form-field class="spcInp spcTp">
         <input matInput type="text" upperCase formControlName="panNumber" placeholder="" class="input-field">
         <mat-error *ngIf="declarationsForm.controls['panNumber'].hasError('pattern')">Enter
           valid PAN (XXXPXNNNNX).
@@ -44,7 +43,7 @@
         </mat-error>
       </mat-form-field>
     
-      <mat-form-field style="width: 35% !important;">
+      <mat-form-field class="spcInp1 spcTp">
         <input matInput type="text" maxlength="25" formControlName="place" placeholder="Place" class="input-field"
                required>
         <mat-error *ngIf="declarationsForm.controls['place'].hasError('pattern')">Please enter only
@@ -55,7 +54,7 @@
       </mat-form-field>
     </div>
     <div class="col-sm-12 spsTp bdrTp">
-      <button class="tbd-btn save-btn mvRth" (click)="saveAndContinue()">Save
+      <button class="btnSav" (click)="saveAndContinue()">Save
       </button>
     </div>
     <!--  <div class="card_footer">
