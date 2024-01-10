@@ -319,6 +319,7 @@ export class ZeroCouponBondsComponent
 
   clearForm(){
     this.selectedFormGroup.reset();
+    this.selectedFormGroup.controls['algorithm'].setValue('cgProperty');
   }
 
   saveManualEntry() {
@@ -338,7 +339,7 @@ export class ZeroCouponBondsComponent
     }
     this.bondsGridOptions?.api?.setRowData(this.getBondsArray.controls);
     this.activeIndex = -1;
-    this.selectedFormGroup.reset();
+    this.clearForm();
     this.updateDeductionUI();
   }
 

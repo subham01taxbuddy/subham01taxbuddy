@@ -257,6 +257,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
   clearForm(){
     this.selectedFormGroup.reset();
+    this.selectedFormGroup.controls['algorithm'].setValue('cgPropert');
   }
 
   saveManualEntry() {
@@ -276,7 +277,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     }
     this.bondsGridOptions?.api?.setRowData(this.getBondsArray.controls);
     this.activeIndex = -1;
-    this.selectedFormGroup.reset();
+    this.clearForm();
     this.updateDeductionUI();
   }
 
