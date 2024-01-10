@@ -470,9 +470,9 @@ export class ScheduleFsiComponent implements OnInit {
           );
 
           if (hastaxPaidOutIndValue) {
-            this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'YES';
+            this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'Y';
           } else{
-            this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'NO';
+            this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'N';
           }
 
           // pushing fsi income in taxReliefClaimed

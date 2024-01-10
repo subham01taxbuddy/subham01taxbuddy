@@ -399,7 +399,7 @@ export class BondsDebentures
           ? 'ZERO_COUPON_BONDS'
           : bonds.controls['whetherDebenturesAreListed'].value ? 'ZERO_COUPON_BONDS' : 'BONDS';
       let request = {
-        assessmentYear: '2022-2023',
+        assessmentYear: this.ITR_JSON.assessmentYear,
         assesseeType: 'INDIVIDUAL',
         residentialStatus: 'RESIDENT',
         assetType: type,
