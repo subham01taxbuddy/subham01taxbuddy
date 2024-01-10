@@ -672,6 +672,7 @@
                                       placeholder="Purchase date of new asset"
                                       formControlName="purchaseDate"
                                       name="purchaseDate"
+                                      [max]="maximumDate"
                                       [matDatepicker]="purchaseDate"/>
                               <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
                               <mat-datepicker #purchaseDate></mat-datepicker>

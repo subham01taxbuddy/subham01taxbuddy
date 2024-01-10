@@ -52,6 +52,7 @@ export class SharesAndEquityComponent
   minDate: Date;
   maxDate: Date;
   maxPurchaseDate: Date;
+  maximumDate = new Date();
   gainTypeList = [
     { name: 'STCG', value: 'SHORT' },
     { name: 'LTCG', value: 'LONG' },
