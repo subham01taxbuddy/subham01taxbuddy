@@ -339,6 +339,7 @@ export class ZeroCouponBondsComponent
     this.bondsGridOptions?.api?.setRowData(this.getBondsArray.controls);
     this.activeIndex = -1;
     this.selectedFormGroup.reset();
+    this.updateDeductionUI();
   }
 
   editBondsForm(event) {

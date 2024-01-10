@@ -204,10 +204,10 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   createForm(srn, item?): FormGroup {
     return this.fb.group({
       isIndexationBenefitAvailable: [
-        item ? item.isIndexationBenefitAvailable : false,
+        this.assetType === 'INDEXED_BONDS' ? true : false,
       ],
       whetherDebenturesAreListed: [
-        item ? item.whetherDebenturesAreListed : false,
+        this.assetType === 'LISTED_DEBENTURES' ? true : false,
       ],
       hasEdit: [item ? item.hasEdit : false],
       srn: [item ? item.srn : srn],
@@ -277,6 +277,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.bondsGridOptions?.api?.setRowData(this.getBondsArray.controls);
     this.activeIndex = -1;
     this.selectedFormGroup.reset();
+    this.updateDeductionUI();
   }
 
   editBondsForm(event) {
