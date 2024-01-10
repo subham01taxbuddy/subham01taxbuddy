@@ -15,22 +15,6 @@
     border-radius: 4px 4px 0px 0px;
 }
 
-.lftSpc{
-    padding-left: 25px;
-    padding-bottom: 10px;
-    padding-top: 25px;
-}
-
-.mvRth{
-    padding-right: 25px;
-    padding-bottom: 10px;
-    padding-top: 20px;
-}
-
-.radSpc {
-    margin-left: 20px;
-}
-
 .wrap-content {
     align-items: flex-start;
     display: flex;
@@ -61,6 +45,10 @@
     position: relative;
 }
 
+.btn-rt{
+    position:absolute;
+    right:20px;
+}
 .space {
     background-color: #ffffff;
     border-radius: 0px 0px 8px 8px;
@@ -107,4 +95,247 @@
     gap: 12px;
     position: relative;
     flex: 0 0 auto;
+}
+
+.gray_container {
+    margin: 25px 0px 12px 0px!important;
+}
+
+.header_content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    gap: 8px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    padding: 8px 24px;
+    flex-grow: 1;
+    background-color: #e7e7e7;
+    border-radius: 4px 4px 0px 0px;
+}
+
+.wrap-content {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    background-color: #ffffff;
+    border-radius: 0px 0px 8px 8px;
+
+    img {
+        position: relative;
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.crossTop {
+    font-size: 28px;
+    position: absolute;
+    right: 5px;
+    top: 0px;
+}
+
+.bdrBlw{
+    border-bottom:1px solid #cccccc;
+    padding-bottom:10px;
+}
+
+.bdrAbv{
+    border-top:1px solid #cccccc;
+    padding-top:10px;
+}
+
+.gray_container {
+    margin: 25px 0px 12px 0px!important;
+}
+
+.spcTpBtm{
+    font-size: 75%;
+    margin-top: 15px;
+    margin-bottom:20px;
+}
+
+
+.fntTx {
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-top: 15px;
+}
+
+.wrapper {
+    display: flex;
+    align-items: flex-start;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    flex-direction: column;
+    padding: 24px;
+    position: relative;
+}
+
+.btnStyl{
+    border:1px solid #1B67BA;
+    border-radius:6px;
+    padding:8px;
+    float:right;
+    color:#1B67BA;
+}
+
+.rghtBack{
+    float:right;
+}
+
+
+
+.space {
+    background-color: #ffffff;
+    border-radius: 0px 0px 8px 8px;
+    padding: 20px;
+    border: 1px solid #E2E4E5;
+    border-top: 0;
+}
+
+.frameC {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    align-items: flex-start;
+    position: relative;
+    margin:25px 25px 0px 25px;
+}
+
+.div-5 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 24px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    background-color: #ffffff;
+    border-radius: 0px 0px 4px 4px;
+}
+.div-6 {
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+}
+
+.frame-wrapper-3 {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.bdrArnd {
+    border: 1px solid #00AECA!important;
+    padding: 20px 30px 10px 25px!important;
+}
+
+.mat-radio-button {
+    margin-right: 15px!important;
+}
+
+.hide {
+    .mat-select-trigger {
+        .mat-select-arrow-wrapper {
+            display: none;
+        }
+    }
+}
+.edit-head .edit-donation {
+    background: #E5F2F6;
+    border: 0.5px solid #D9D9D9;
+    border-radius: 3px;
+    display: block!important;
+    padding: 10px;
+}
+.btm {
+    margin-bottom:150px!important;
+    float: left;
+}
+
+.gainHeader {
+    padding-bottom: 20px;
+    text-align: right;
+}
+
+.delete-icon{
+    margin-top: 20px;
+}
+
+.drop {
+    cursor:pointer!important;
+    background-color:#fbfbff!important;
+}
+
+.isDeduction {
+    font-weight: 500;
+    font-size: 22px;
+    color: #ff6b00;
+}
+
+.separation {
+    border-top: 1px solid gray;
+}
+
+.head-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 11px;
+    color: #000000;
+}
+
+.tds-on {
+    display: inline-flex;
+}
+
+.tds-title {
+    padding: 10px;
+    font-size: 21px;
+    color: #ff6b00;
+    font-weight: 500;
+}
+
+.card__col-sm-3 {
+    padding: 10px !important;
+}
+
+.cancel {
+    font-weight: 400;
+    border-width: 1px;
+    border-style: solid;
+    padding: 9px 15px;
+    text-transform: capitalize;
+    width: auto;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-top: 7px;
+}
+
+.cancel:hover {
+    font-weight: 400;
+    border-width: 1px;
+    border:1px solid #cccccc;
+    background-color: #fafafa;
+}
+
+.deduction-form {
+    padding-top: 50px;
 }
