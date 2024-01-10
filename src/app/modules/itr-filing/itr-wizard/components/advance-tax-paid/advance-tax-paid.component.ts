@@ -21,6 +21,7 @@ declare let $: any;
 export class AdvanceTaxPaidComponent implements OnInit {
   @Input() isAddAdvance: Number;
   @Output() onSave = new EventEmitter();
+  @Input() editIndex: any;
   salaryForm: FormGroup;
   donationToolTip: any;
   Copy_ITR_JSON: ITR_JSON;
@@ -48,28 +49,28 @@ export class AdvanceTaxPaidComponent implements OnInit {
     };
 
     this.salaryForm = this.inItForm();
-    // if (
-    //   this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS &&
-    //   this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS.length > 0
-    // ) {
-    //   this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS.forEach((item) => {
-    //     this.addMoreSalary(item);
-    //   });
-    // } else {
-    if (this.data.assetIndex !== null && this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS) {
-      this.addMoreSalary(this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS[this.data.assetIndex]);
+    if (
+        this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS &&
+        this.Copy_ITR_JSON.taxPaid?.otherThanTDSTCS.length > 0
+    ) {
+      this.Copy_ITR_JSON.taxPaid.otherThanTDSTCS.forEach((item) => {
+        this.addMoreSalary(item);
+      });
+    }
+
+    if (this.editIndex != undefined && this.editIndex >= 0) {
+      this.activeIndex = this.editIndex;
     } else {
       this.addMoreSalary();
     }
-    // }
+
     // this.salaryForm.disable();
 
-    // Set the minimum to financial year and max to current date
-    const currentYear = new Date().getFullYear() - 1;
-    const thisYearStartDate = new Date(currentYear, 3, 1); // April 1st of the current year
+    //get financial year from ITR object
+    let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
+    const thisYearStartDate = new Date(year, 3, 1); // April 1st of the financial year
+    // const nextYearEndDate = new Date(year + 1, 2, 31); // March 31st of the financial year
     const nextYearEndDate = new Date(); // Current date
-
-    console.log(currentYear);
 
     this.minDate = thisYearStartDate;
     this.maxDate = nextYearEndDate;
@@ -155,9 +156,12 @@ export class AdvanceTaxPaidComponent implements OnInit {
         rowIndex: this.data.rowIndex,
         type:'selfAssessment'
       };
-      this.dialogRef.close(result);
+      // this.dialogRef.close(result);
       // (this.salaryForm.controls['salaryArray'] as FormGroup).disable();
-      this.onSave.emit();
+      this.onSave.emit({
+        type: 'selfAssessment',
+        saved: true
+      });
       this.loading = false;
       this.utilsService.showSnackBar(
         'advance tax or self assessment tax paid data saved successfully.'
@@ -177,23 +181,26 @@ export class AdvanceTaxPaidComponent implements OnInit {
   addMoreSalary(item?) {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     salaryArray.push(this.createForm(item));
+    this.activeIndex = salaryArray.length - 1;
   }
 
-  deleteSalaryArray() {
-    // salaryArray.controls.forEach((element, index) => {
-    //   if ((element as FormGroup).controls['hasEdit'].value) {
-    //     salaryArray.removeAt(index);
-    //   }
-    // });
+  deleteSalaryArray(index) {
     const salaryArray = this.salaryForm.get('salaryArray') as FormArray;
+    salaryArray.removeAt(index);
+  }
 
-    for (let i = salaryArray.length - 1; i >= 0; i--) {
-      const item = salaryArray.at(i) as FormGroup;
-      if (item.controls['hasEdit'].value) {
-        salaryArray.removeAt(i);
-        // (this.salaryForm.controls['salaryArray'] as FormGroup).enable();
-      }
-    }
+  goBack(){
+    this.onSave.emit({
+      type: 'selfAssessment',
+      saved: false
+    })
+  }
+  activeIndex = 0;
+  markActive(index){
+    this.activeIndex = index;
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
+    this.config.currentPage = this.activeIndex;
   }
 
   pageChanged(event) {

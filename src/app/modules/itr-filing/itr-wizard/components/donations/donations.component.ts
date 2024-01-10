@@ -624,19 +624,19 @@ export class DonationsComponent implements OnInit {
     }
     if (this.generalDonationForm.valid) {
       if (this.type === '80gga') {
-        this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.filter(
+        this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations?.filter(
           (item) => item.donationType !== 'SCIENTIFIC'
         );
-        if (this.generalDonationForm.value.donationArray.length > 0) {
+        if (this.generalDonationForm.value.donationArray?.length > 0) {
           this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.concat(
             this.generalDonationForm.value.donationArray
           );
         }
       } else if (this.type === '80g') {
-        this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.filter(
+        this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations?.filter(
           (item) => item.donationType !== 'OTHER'
         );
-        if (this.generalDonationForm.value.donationArray.length > 0) {
+        if (this.generalDonationForm.value.donationArray?.length > 0) {
           this.Copy_ITR_JSON.donations = this.Copy_ITR_JSON.donations.concat(
             this.generalDonationForm.value.donationArray
           );

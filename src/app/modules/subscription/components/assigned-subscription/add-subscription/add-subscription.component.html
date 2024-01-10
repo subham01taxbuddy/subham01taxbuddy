@@ -1,86 +1,73 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-<h1 mat-dialog-title>Add Subscription Plan</h1>
-<hr>
-<form>
-
-  <mat-dialog-content>
-    <!--  <div *ngIf="selectedPlanInfo" style="text-align: center;">
-      <span><b>Selected Plan: {{selectedPlanInfo.name}}</b></span>&nbsp;&nbsp;&nbsp;&nbsp; <span><b>Selected Plan
-          Amount: ₹{{selectedPlanInfo.totalAmount}}</b></span>&nbsp;&nbsp;&nbsp;&nbsp; <span><b>Selected Plan Type:
-          {{selectedPlanInfo.servicesType}}</b></span>
-    </div>
-    <br> -->
-
-    <div>
-      <div class="container">
+<div class="">
+  <span class="title-123">Add Subscription Plan</span>
+    <button mat-dialog-close tabindex="-1" (click)="close()" style="float: right; color:#3E82CD; width: 24px;
+      height: 24px;" class="tbd-btn-close">
+      <i class="fa fa-times" aria-hidden="true"></i>
+    </button>
+  <hr>
+  <form>
+    <mat-dialog-content>
+      <div class="container ">
         <div class="row">
           <!-- Below *ngIf="false" change is needed in April -->
-          <div class="col-lg-2 col-md-4 col-sm-6 space" *ngIf="false">
+          <div class="col-lg-2 col-md-4 col-sm-6 " *ngIf="false">
             <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false"
               [class.disabled]="service === 'ITR'" (click)="showSelectedServicePlans('ITR')">ITR</a>
           </div>
-          <div class="col-lg-2 col-md-4 col-sm-6 space">
-            <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITRU' ? true : false" href="javascript:"
+          <div class="col-lg-2 col-md-4 col-sm-6 ">
+            <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'ITRU' ? true : false"
               (click)="showSelectedServicePlans('ITRU')">ITR-U</a>
           </div>
-          <div class="col-lg-2 col-md-4 col-sm-6 space" *ngIf="isAllowed">
-            <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'NOTICE' ? true : false" href="javascript:"
+          <div class="col-lg-2 col-md-4 col-sm-6 " *ngIf="isAllowed">
+            <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'NOTICE' ? true : false"
               (click)="showSelectedServicePlans('NOTICE')">NOTICE</a>
           </div>
-          <div class="col-lg-2 col-md-4 col-sm-6 space" *ngIf="isAllowed">
-            <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'GST' ? true : false" href="javascript:"
+          <div class="col-lg-2 col-md-4 col-sm-6 " *ngIf="isAllowed">
+            <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'GST' ? true : false"
               (click)="showSelectedServicePlans('GST')">GST</a>
           </div>
-          <div class="col-lg-2 col-md-4 col-sm-6 space" *ngIf="isAllowed">
-            <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'TPA' ? true : false"
+          <div class="col-lg-2 col-md-4 col-sm-6 " *ngIf="isAllowed">
+            <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'TPA' ? true : false"
               [class.disabled]="service && service.includes('TPA')" (click)="showSelectedServicePlans('TPA')">TPA</a>
           </div>
-          <div class="col-lg-2 col-md-4 col-sm-6 space" *ngIf="isAllowed">
-            <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'OTHER' ? true : false" href="javascript:"
+          <div class="col-lg-2 col-md-4 col-sm-6 " *ngIf="isAllowed">
+            <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'OTHER' ? true : false"
               (click)="showSelectedServicePlans('OTHER')">OTH SERVICE</a>
           </div>
-          <div class="col-lg-2 col-md-4 col-sm-6 space" *ngIf="isAllowed">
-            <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ALL' ? true : false" href="javascript:"
+          <div class="col-lg-2 col-md-4 col-sm-6 mt-2 " *ngIf="isAllowed">
+            <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'ALL' ? true : false"
               (click)="showSelectedServicePlans('ALL')">ALL</a>
           </div>
         </div>
       </div>
-    </div>
 
+      <div class="mt-2" *ngIf="serviceTypeSelected">
+        <div class="row" *ngIf="this.roles.includes('ROLE_FILER') || (data.filerId &&  onlyServiceITR )">
+          <span *ngIf="showMessage && !(filteredPlans.length === 0)" class="show-note">Note: {{showMessage}}</span>
+        </div>
+        <label *ngIf="filteredPlans.length === 0">Selected service plan detail not available.</label>
 
-
-    <div *ngIf="serviceTypeSelected">
-      <div class="row" *ngIf="this.roles.includes('ROLE_FILER') || (data.filerId &&  onlyServiceITR )">
-        <span *ngIf="showMessage && !(filteredPlans.length === 0)" class="show-note">Note: {{showMessage}}</span>
-      </div>
-      <label *ngIf="filteredPlans.length === 0">Selected service plan detail not available.</label>
-
-      <div *ngFor="let plan of filteredPlans">
-        <div class="card__col-lg-2 plan" id="plans" (click)="selectPlan(plan)" style="cursor: pointer;"
-          [class.disabled]="(serviceDetails && serviceDetails.includes('Schedule call') && plan.name === 'Schedule call') || !isPlanEnabled(plan)"
-          [style.background-color]="plan.planId === selectedPlanInfo?.planId ? 'lightgreen':''">
-          <h1 class="plan-head"><b>₹ {{plan.totalAmount}}</b></h1><br>
-          <p class="plan-info">{{plan.name}}</p><br>
-          <b>
-            <p class="plan-info" style="vertical-align: bottom;">{{plan.servicesType}}</p>
-          </b>
+        <div *ngFor="let plan of filteredPlans">
+          <div class="card__col-lg-2 plan" id="plans" (click)="selectPlan(plan)" style="cursor: pointer;"
+            [class.disabled]="(serviceDetails && serviceDetails.includes('Schedule call') && plan.name === 'Schedule call') || !isPlanEnabled(plan)"
+            [style.background-color]="plan.planId === selectedPlanInfo?.planId ? 'aliceblue':''">
+            <h1 class="plan-head"><b>₹ {{plan.totalAmount}}</b></h1><br>
+            <p class="plan-info">{{plan.name}}</p><br>
+            <b>
+              <p class="plan-info" style="vertical-align: bottom;">{{plan.servicesType}}</p>
+            </b>
+          </div>
         </div>
       </div>
-    </div>
-
-
-  </mat-dialog-content>
-
-  <hr>
-
-  <mat-dialog-actions align="center">
-
-
-    <button mat-raised-button mat-dialog-close tabindex="-1">Cancel</button>
-
-    <button mat-raised-button color="primary" style="margin-top: 0px;" [disabled]="loading"
-      (click)="createSubscription()" tabindex="1">
-      Create
-    </button>
-  </mat-dialog-actions>
-</form>
+    </mat-dialog-content>
+    <hr>
+    <mat-dialog-actions align="center">
+      <button class="new-cancel-button-1" mat-dialog-close tabindex="-1">Cancel</button>
+      <button class="new-create" [disabled]="loading"
+        (click)="createSubscription()" tabindex="1">
+        Create
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

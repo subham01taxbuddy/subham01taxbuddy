@@ -1,0 +1,32 @@
+.sidebar_item-title {
+    font-family: $font-body;
+    color: $color-dark;
+    font-weight: 700;
+    line-height: 28px;
+    font-size: 12px;
+    cursor: pointer;
+    display: block;
+    position: relative;
+    background-color: $bgcolor-sidebutton;
+    padding: 8px 24px;
+    border-radius:4px 4px 0px 0px;
+    width: 100%;
+    color: $color-sidebutton;
+
+    &:after {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        content: "\f05c";
+        font-family: fontawesome;
+        background-color: transparent;
+        font-size: 16px;
+        font-weight: 700;
+        text-align: center;
+        width: 20px;
+        height: 20px;
+        line-height: 28px;
+        border-radius: 4px 4px 0px 0px;
+        color: $color-sidebutton;
+    }
+}

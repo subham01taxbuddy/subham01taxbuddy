@@ -16,6 +16,7 @@ export class TdsOtherThanSalaryComponent implements OnInit {
   @Input() showHeadOfIncome: String;
   @Output() onSave = new EventEmitter();
 
+  @Input() editIndex: any;
   salaryForm: FormGroup;
   COPY_ITR_JSON: ITR_JSON;
   ITR_JSON: ITR_JSON;
@@ -55,25 +56,36 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     this.COPY_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.config = {
       id: this.showHeadOfIncome,
-      itemsPerPage: 2,
+      itemsPerPage: 1,
       currentPage: 1,
     };
     this.salaryForm = this.initForm();
     if(this.data && this.data.showHeadOfIncome){
       this.showHeadOfIncome = this.data.showHeadOfIncome;
     }
-    if (this.showHeadOfIncome === 'TDTS') {
-      if (this.data.assetIndex !== null) {
-        this.addMoreSalary(this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A[this.data.assetIndex]);
-      } else {
-        this.addMoreSalary();
-      }
-    } else if (this.showHeadOfIncome === 'TDTSP') {
-      if (this.data.assetIndex !== null && this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB) {
-        this.addMoreSalary(this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB[this.data.assetIndex]);
-      } else {
-        this.addMoreSalary();
-      }
+
+    if (
+        this.showHeadOfIncome === 'TDTS' &&
+        this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A &&
+        this.COPY_ITR_JSON.taxPaid?.otherThanSalary16A.length > 0
+    ) {
+      this.COPY_ITR_JSON.taxPaid.otherThanSalary16A.forEach((item) => {
+        this.addMoreSalary(item);
+      });
+      // this.addSalary();
+    } else if (
+        this.showHeadOfIncome === 'TDTSP' &&
+        this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB &&
+        this.COPY_ITR_JSON.taxPaid?.otherThanSalary26QB.length > 0
+    ) {
+      this.COPY_ITR_JSON.taxPaid.otherThanSalary26QB.forEach((item) => {
+        this.addMoreSalary(item);
+      });
+    }
+    if (this.editIndex != undefined && this.editIndex >= 0) {
+      this.activeIndex = this.editIndex;
+    } else {
+      this.addMoreSalary();
     }
   }
 
@@ -136,6 +148,16 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     }
   }
 
+  activeIndex = 0;
+  markActive(index){
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
+    this.activeIndex = index;
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].markAsTouched();
+    (this.salaryForm.get('salaryArray') as FormArray).controls[this.activeIndex].updateValueAndValidity();
+    this.config.currentPage = this.activeIndex;
+  }
+
   changed() {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
     if (this.showHeadOfIncome === 'TDTS') {
@@ -163,6 +185,13 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     ((this.salaryForm.controls['salaryArray'] as FormGroup).controls[i] as FormGroup).enable();
   }
 
+  goBack(){
+    this.onSave.emit({
+      type: this.showHeadOfIncome === 'TDTS' ? 'tdsOtherThanSalary16A' : 'tdsOtherThanSalaryPanBased',
+      saved: false
+    })
+  }
+
   save() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.COPY_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -182,9 +211,12 @@ export class TdsOtherThanSalaryComponent implements OnInit {
           cgObject: this.salaryForm.value,
           rowIndex: this.data.rowIndex,
         };
-        this.dialogRef.close(result);
+        // this.dialogRef.close(result);
 
-        this.onSave.emit();
+        this.onSave.emit({
+          type: this.showHeadOfIncome === 'TDTS' ? 'tdsOtherThanSalary16A' : 'tdsOtherThanSalaryPanBased',
+          saved: true
+        });
         this.loading = false;
         this.utilsService.showSnackBar('data saved successfully.');
       } else if (this.showHeadOfIncome === 'TDTSP') {
@@ -196,9 +228,12 @@ export class TdsOtherThanSalaryComponent implements OnInit {
           cgObject: this.salaryForm.value,
           rowIndex: this.data.rowIndex,
         };
-        this.dialogRef.close(result);
+        // this.dialogRef.close(result);
 
-        this.onSave.emit();
+        this.onSave.emit({
+          type: this.showHeadOfIncome === 'TDTS' ? 'tdsOtherThanSalary16A' : 'tdsOtherThanSalaryPanBased',
+          saved: false
+        });
         this.loading = false;
         this.utilsService.showSnackBar('data saved successfully.');
       }
@@ -222,14 +257,10 @@ export class TdsOtherThanSalaryComponent implements OnInit {
     this.changed();
   }
 
-  deleteSalaryArray() {
+  deleteSalaryArray(index) {
     const salaryArray = <FormArray>this.salaryForm.get('salaryArray');
-    salaryArray.controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        salaryArray.removeAt(index);
-        this.changed();
-      }
-    });
+    salaryArray.removeAt(index);
+    this.changed();
   }
 
 

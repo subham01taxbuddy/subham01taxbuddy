@@ -26,6 +26,9 @@ import { ChatOptionsDialogComponent } from '../../tasks/components/chat-options/
 import { UserMsService } from 'src/app/services/user-ms.service';
 import { ReviewService } from '../../review/services/review.service';
 import { MoreInformationComponent } from './pages/more-information/more-information.component';
+import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
+import {NavbarService} from "../../../services/navbar.service";
+import {SidebarService} from "../../../services/sidebar.service";
 
 @Component({
   selector: 'app-itr-wizard',
@@ -60,7 +63,8 @@ export class ItrWizardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     public schedules: Schedules,
     private matDialog: MatDialog,
-    private itrValidationService: ItrValidationService
+    private itrValidationService: ItrValidationService,
+    private sidebarService: SidebarService
   ) {
     this.navigationData = this.router.getCurrentNavigation()?.extras?.state;
   }
@@ -110,6 +114,7 @@ export class ItrWizardComponent implements OnInit {
       this.showIncomeSources = true;
     }
     this.getCustomerName();
+    // this.sidebarService.hide();
   }
 
   getCustomerName() {
@@ -139,7 +144,7 @@ export class ItrWizardComponent implements OnInit {
 
   subscribeToEmmiter(componentRef) {
     //this may not be needed for us
-    // if (!(componentRef instanceof OtherIncomeComponent)){
+    // if (!(componentRef instanceof ExemptIncomeComponent)){
     //   return;
     // }
     const child: WizardNavigation = componentRef;
@@ -204,82 +209,44 @@ export class ItrWizardComponent implements OnInit {
             state: { validationErrors: errorMapping },
           });
         }
+      if (this.validationErrors?.length > 0) {
+        this.breadcrumb = null;
+        this.showIncomeSources = false;
+        this.selectedSchedule = 'Validation Errors';
+        this.router.navigate(['/itr-filing/itr/validation-errors'], {
+          state: { validationErrors: this.validationErrors },
+        });
+      } else {
+        if(!this.ITR_JSON.systemFlags.hasAgricultureIncome){
+          this.ITR_JSON.agriculturalDetails = null;
+          this.ITR_JSON.agriculturalLandDetails = null;
+          this.ITR_JSON.agriculturalIncome = null;
+        }
+        if(this.ITR_JSON.portugeseCC5AFlag === 'N'){
+          this.ITR_JSON.schedule5a = null;
+        }
+        if(this.ITR_JSON.partnerInFirmFlag === 'N'){
+          this.ITR_JSON.partnerFirms = [];
+        }
+        this.ITR_JSON = this.itrValidationService.removeNullProperties(
+            this.ITR_JSON
+        );
+        this.ITR_JSON = this.itrValidationService.removeDuplicateCg(
+            this.ITR_JSON
+        );
+        sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(this.ITR_JSON)
+        );
+      }
+
+      this.breadcrumb = null;
+      this.showIncomeSources = false;
+      this.selectedSchedule = 'Comparison of New v/s Old Regime';
+      this.router.navigate(['/itr-filing/itr/old-vs-new']);
       // }
     });
 
-    if (this.validationErrors?.length > 0) {
-      this.breadcrumb = null;
-      this.showIncomeSources = false;
-      this.selectedSchedule = 'Validation Errors';
-      this.router.navigate(['/itr-filing/itr/validation-errors'], {
-        state: { validationErrors: this.validationErrors },
-      });
-    } else {
-      if(!this.ITR_JSON.systemFlags.hasAgricultureIncome){
-        this.ITR_JSON.agriculturalDetails = null;
-        this.ITR_JSON.agriculturalLandDetails = null;
-        this.ITR_JSON.agriculturalIncome = null;
-      }
-      if(this.ITR_JSON.portugeseCC5AFlag === 'N'){
-        this.ITR_JSON.schedule5a = null;
-      }
-      if(this.ITR_JSON.partnerInFirmFlag === 'N'){
-        this.ITR_JSON.partnerFirms = [];
-      }
-      this.ITR_JSON = this.itrValidationService.removeNullProperties(
-        this.ITR_JSON
-      );
-      this.ITR_JSON = this.itrValidationService.removeDuplicateCg(
-        this.ITR_JSON
-      );
-      sessionStorage.setItem(
-        AppConstants.ITR_JSON,
-        JSON.stringify(this.ITR_JSON)
-      );
-    }
-      // }
-    // }
-
-    this.breadcrumb = null;
-    this.showIncomeSources = false;
-    this.selectedSchedule = 'Comparison of New v/s Old Regime';
-    this.router.navigate(['/itr-filing/itr/old-vs-new']);
-    // this.breadcrumb = null;
-    // this.showIncomeSources = false;
-    // this.selectedSchedule = 'Summary';
-    // this.router.navigate(['/itr-filing/itr/summary']);
-
-    // VALIDATION ERROR SCREEN - HIDDEN FOR NOW TESTING
-    // this.validationErrors = this.itrValidationService.validateItrObj(
-    //   this.ITR_JSON
-    // );
-
-    // if (this.validationErrors.length > 0) {
-    //   this.breadcrumb = null;
-    //   this.showIncomeSources = false;
-    //   this.selectedSchedule = 'Validation Errors';
-    //   this.router.navigate(['/itr-filing/itr/validation-errors'], {
-    //     state: { validationErrors: this.validationErrors },
-    //   });
-    // } else {
-    //   this.ITR_JSON = this.itrValidationService.removeNullProperties(
-    //     this.ITR_JSON
-    //   );
-    //   sessionStorage.setItem(
-    //     AppConstants.ITR_JSON,
-    //     JSON.stringify(this.ITR_JSON)
-    //   );
-    //   // }
-
-    //   this.breadcrumb = null;
-    //   this.showIncomeSources = false;
-    //   this.selectedSchedule = 'Comparison of New v/s Old Regime';
-    //   this.router.navigate(['/itr-filing/itr/old-vs-new']);
-    //   // this.breadcrumb = null;
-    //   // this.showIncomeSources = false;
-    //   // this.selectedSchedule = 'Summary';
-    //   // this.router.navigate(['/itr-filing/itr/summary']);
-    // }
   }
 
   validateItrObj() {

@@ -1,45 +1,122 @@
-.edit-head {
-    width: 132px;
+@import "../../../../../ux/scss/style.scss";
+.header_content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    gap: 8px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    padding: 8px 24px;
+    flex-grow: 1;
+    background-color: #e7e7e7;
+    border-radius: 4px 4px 0px 0px;
+}
 
-    .edit-donation {
-        background: #E5F2F6;
-        border: 0.5px solid #D9D9D9;
-        border-radius: 3px;
-        display: flex;
-        padding: 5px 4px;
+.wrap-content {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    background-color: #ffffff;
+    border-radius: 0px 0px 8px 8px;
 
-        .mat-icon {
-            height: 15px;
-            width: 19px;
-        }
-
-        .material-icons {
-            font-size: 14px;
-        }
+    img {
+        position: relative;
+        width: 24px;
+        height: 24px;
     }
 }
 
-.head-title {
-    font-size: 14px;
-    font-weight: 500;
-    margin-left: 11px;
-    color: #000000;
+.wrapper {
+    display: flex;
+    align-items: flex-start;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    flex-direction: column;
+    padding: 24px;
+    position: relative;
 }
 
-.tds-on {
+.space {
+    background-color: #ffffff;
+    border-radius: 0px 0px 8px 8px;
+    padding: 20px;
+    border: 1px solid #E2E4E5;
+    border-top: 0;
+}
+
+.frameC {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    align-items: flex-start;
+    position: relative;
+}
+
+.div-5 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 24px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+    background-color: #ffffff;
+    border-radius: 0px 0px 4px 4px;
+}
+.div-6 {
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+    position: relative;
+    align-self: stretch;
+    width: 100%;
+    flex: 0 0 auto;
+}
+
+.frame-wrapper-3 {
     display: inline-flex;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+    flex: 0 0 auto;
 }
 
-.tds-title {
-    padding: 10px;
-    font-size: 21px;
-    color: #FF6B00;
-    font-weight: 500;
+
+.delBox {
+    margin-left: 0px;
 }
 
-.pgNmbr{
-    float: right !important;
-    margin-right: -50px !important;
-    margin-top: 0px;
-    width: 100%!important;
+.out-box{
+    border-top: 1px solid #ececec;
+    padding-top: 10px!important;     
 }
+.box-right{
+    margin-right: -30px;  
+}
+.spcDwn{
+    margin-bottom:20px;
+    border-bottom: 1px solid #ececec;
+    padding-bottom:0px;
+}    
+.spcLft{
+    left:10px;
+    top:2px;
+}
+.form-field{
+  margin-left:10px;
+}
+.spcBlw{
+    margin-bottom:30px;
+}
+
+

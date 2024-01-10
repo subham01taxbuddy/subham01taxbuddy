@@ -6744,7 +6744,7 @@ export class PrefillIdComponent implements OnInit {
   subscription: Subscription;
   subscribeToEmmiter(componentRef) {
     //this may not be needed for us
-    // if (!(componentRef instanceof OtherIncomeComponent)){
+    // if (!(componentRef instanceof ExemptIncomeComponent)){
     //   return;
     // }
     const child: AddClientsComponent = componentRef;

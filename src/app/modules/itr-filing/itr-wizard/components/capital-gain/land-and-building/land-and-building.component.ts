@@ -162,7 +162,7 @@ export class LandAndBuildingComponent
       let improvements = labData[0].improvement?.filter(
         (imp) => imp.srn == assetDetails.srn
       );
-      for (let j = 0; j < improvements.length; j++) {
+      for (let j = 0; j < improvements?.length; j++) {
         costOfImprovement =
           costOfImprovement + improvements[j].costOfImprovement;
       }
@@ -318,7 +318,7 @@ export class LandAndBuildingComponent
 
   saveFormData(){
     this.loading = true;
-    this.labFormComponent.saveImmovableCG(this.labFormComponent.immovableForm, 0);
+    this.labFormComponent.saveImmovableCG(this.labFormComponent.immovableForm, 0, true);
     this.loading = false;
   }
 

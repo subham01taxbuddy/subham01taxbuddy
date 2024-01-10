@@ -55,7 +55,7 @@ export const MY_FORMATS = {
 @Component({
   selector: 'app-customer-profile',
   templateUrl: './customer-profile.component.html',
-  styleUrls: ['./customer-profile.component.css'],
+  styleUrls: ['./customer-profile.component.scss'],
   animations: [
     // Each unique animation requires its own trigger. The first argument of the trigger function is the name
     trigger('rotatedState', [
@@ -563,8 +563,17 @@ export class CustomerProfileComponent implements OnInit {
         );
       }
       this.customerProfileSaved.emit(false);
+      this.openAccordion();
     }
   }
+
+  openAccordion(){
+    const accordionButton = document.getElementsByClassName('accordion-button');
+    if(accordionButton){
+     ( accordionButton[0] as HTMLDivElement).click();
+    }
+  }
+
   calAge(dob) {
     const birthday: any = new Date(dob);
     const currentYear = Number(this.ITR_JSON.assessmentYear.substring(0, 4));

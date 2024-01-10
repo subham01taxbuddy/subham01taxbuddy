@@ -120,7 +120,7 @@ export class PerformaInvoiceComponent implements OnInit, OnDestroy {
     { value: 'invoiceDate', name: 'Invoice Date'},
     { value: 'txbdyInvoiceId', name: 'Invoice number'},
     // { value: 'billTo', name: 'Name' },
-    // { value: 'total', name: 'Amount Payable' },
+    // { value: 'txbdyInvoiceId', name: 'Invoice number'},
   ];
   dataOnLoad = true;
   searchAsPrinciple: boolean = false;

@@ -310,4 +310,7 @@ export class AddSubscriptionComponent implements OnInit {
     console.log('LAST filteredPlans : ', this.filteredPlans)
   }
 
+  close() {
+    this.dialogRef.close();
+  }
 }

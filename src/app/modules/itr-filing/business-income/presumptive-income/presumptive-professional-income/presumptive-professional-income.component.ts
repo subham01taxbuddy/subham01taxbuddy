@@ -45,6 +45,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
   submitted = false;
   @Output() presProfessionalSaved = new EventEmitter<boolean>();
   percentage: any[] = [];
+  minGrossIncome = (50 / 100) * 50;
 
   constructor(
     public matDialog: MatDialog,
@@ -160,6 +161,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     profIncomeFormArray.controls = profIncomeFormArray.controls.filter(
       (element) => !(element as FormGroup).controls['hasEdit'].value
     );
+    this.profIncomeForm.controls['profIncomeFormArray'].setValue(profIncomeFormArray.controls);
     this.config.totalItems = profIncomeFormArray.controls.length;
   }
 

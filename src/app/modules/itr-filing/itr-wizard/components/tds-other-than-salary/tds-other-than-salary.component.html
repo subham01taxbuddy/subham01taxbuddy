@@ -2,48 +2,60 @@
   [show]="loading"
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
-<div class="container">
-  <div class="head-title mb-4" style="font-size: 18px">
-    <strong> TDS other than salary </strong>
+<div class="div-3" *ngFor="let salary of getSalaryArray.controls;
+            let i = index">
+  <!--      <div>-->
+  <div class="contents-wrapper">
+    <div [ngClass]="i === activeIndex ? 'contents-selected' : 'contents'">
+      <div [ngClass]="i === activeIndex ? 'field-text-selected' :'field-text'" (click)="markActive(i)">Entry {{i+1}}</div>
+      <div class="group" (click)="deleteSalaryArray(i)">
+        <i class="fa fa-trash-o delbt" [ngClass]="i === activeIndex ? 'field-text-selected' :'field-text'"></i>
+      </div>
+    </div>
+  </div>
+  <!--      </div>-->
+</div>
+<div class="contents-wrapper">
+  <div class="field-text-wrapper">
+    <div class="field-text-2" (click)="$event.stopPropagation(); addSalary();">+ Add Another</div>
   </div>
 </div>
-<form [formGroup]="salaryForm">
+<form [formGroup]="salaryForm" class="spcAbv">
   <div formArrayName="salaryArray">
-    <div
-      class="display-flex"
-      *ngFor="
-        let donation of getSalaryArray.controls | paginate : config;
-        let i = index
-      "
-      [formGroupName]="fieldGlobalIndex(i)"
-    >
+    <div *ngFor="let item of getSalaryArray.controls | slice:0:activeIndex+1; let i=index"
+      class="container-fluid"
+      [formGroupName]="activeIndex">
+      <div class="row" *ngIf="activeIndex === i">
+        <div class="col-sm-6">
+          <div class="form-field" *ngIf="showHeadOfIncome === 'TDTS'">
+            <div class="field-label">
+              <span class="span">TAN of Deductor</span><span class="text-wrapper-2">*</span>
+            </div>
+            <mat-form-field appearance="outline">
+              <input
+                matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number"
+                matTooltipClass="tab-tooltip"
+                matTooltipPosition="above"
+                formControlName="deductorTAN"
+                matInput
+                currencyMask
+                placeholder="Tan of deductor"
+                name="deductorTAN[activeIndex]"
+                class="input-field"
+                maxlength="10"
+                minlength="10"
+                required
+                type="text"
+                trim
+                upperCase
+              />
 
-      <div class="row">
-        <div class="col-sm-4" *ngIf="showHeadOfIncome === 'TDTS'">
-          <mat-label>TAN of Deductor*</mat-label>
-          <mat-form-field appearance="outline">
-            <input
-              matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number"
-              matTooltipClass="tab-tooltip"
-              matTooltipPosition="above"
-              formControlName="deductorTAN"
-              matInput
-              currencyMask
-              placeholder="Tan of deductor"
-              name="deductorTAN[i]"
-              class="input-field"
-              maxlength="10"
-              minlength="10"
-              required
-              type="text"
-              trim
-              upperCase
-            />
-
-          </mat-form-field>
-        </div>
-        <div class="col-sm-4" *ngIf="showHeadOfIncome === 'TDTSP'">
-          <mat-label>PAN of Deductor*</mat-label>
+            </mat-form-field>
+          </div>
+          <div class="form-field" *ngIf="showHeadOfIncome === 'TDTSP'">
+          <div class="field-label">
+            <span class="span">PAN of Deductor</span><span class="text-wrapper-2">*</span>
+          </div>
           <mat-form-field appearance="outline">
             <input
               matTooltip="Format should like this(e.g. XXXXXNNNNX) X indicate character and N indicates number"
@@ -53,7 +65,7 @@
               matInput
               currencyMask
               placeholder="Pan of deductor"
-              name="deductorPAN[i]"
+              name="deductorPAN[activeIndex]"
               class="input-field"
               maxlength="10"
               minlength="10"
@@ -65,80 +77,91 @@
 
           </mat-form-field>
         </div>
-        <div class="col-sm-4" *ngIf="showHeadOfIncome === 'TDTS'">
-          <mat-label>Select Head of Income*</mat-label>
-          <mat-form-field appearance="outline">
-            <mat-select
-              (selectionChange)="changed()"
-              matTooltipClass="tab-tooltip"
-              matTooltipPosition="above"
-              placeholder="Head of Income"
-              formControlName="headOfIncome"
-              name="headOfIncome[i]"
-              required
-            >
-              <mat-option
-                *ngFor="let dropdown of headOfIncomeDropdownTDS2"
-                [value]="dropdown.code"
-                matTooltip="{{ dropdown.name }}"
+
+          <div class="form-field" *ngIf="showHeadOfIncome === 'TDTS'">
+            <div class="field-label">
+              <span class="span">Select Head of Income</span><span class="text-wrapper-2">*</span>
+            </div>
+            <mat-form-field appearance="outline">
+              <mat-select
+                (selectionChange)="changed()"
                 matTooltipClass="tab-tooltip"
                 matTooltipPosition="above"
+                placeholder="Head of Income"
+                formControlName="headOfIncome"
+                name="headOfIncome[activeIndex]"
+                required
               >
-                {{ dropdown.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-4" *ngIf="showHeadOfIncome === 'TDTSP'">
-          <mat-label>Select Head of Income*</mat-label>
-          <mat-form-field appearance="outline">
-            <mat-select
-              (selectionChange)="changed()"
-              matTooltipClass="tab-tooltip"
-              matTooltipPosition="above"
-              placeholder="Head of Income"
-              formControlName="headOfIncome"
-              name="headOfIncome[i]"
-              required
-            >
-              <mat-option
-                *ngFor="let dropdown of headOfIncomeDropdownTDS3"
-                [value]="dropdown.code"
-                matTooltip="{{ dropdown.name }}"
+                <mat-option
+                  *ngFor="let dropdown of headOfIncomeDropdownTDS2"
+                  [value]="dropdown.code"
+                  matTooltip="{{ dropdown.name }}"
+                  matTooltipClass="tab-tooltip"
+                  matTooltipPosition="above"
+                >
+                  {{ dropdown.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="form-field" *ngIf="showHeadOfIncome === 'TDTSP'">
+            <div class="field-label">
+              <span class="span">Select Head of Income</span><span class="text-wrapper-2">*</span>
+            </div>
+            <mat-form-field appearance="outline">
+              <mat-select
+                (selectionChange)="changed()"
                 matTooltipClass="tab-tooltip"
                 matTooltipPosition="above"
+                placeholder="Head of Income"
+                formControlName="headOfIncome"
+                name="headOfIncome[activeIndex]"
+                required
               >
-                {{ dropdown.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+                <mat-option
+                  *ngFor="let dropdown of headOfIncomeDropdownTDS3"
+                  [value]="dropdown.code"
+                  matTooltip="{{ dropdown.name }}"
+                  matTooltipClass="tab-tooltip"
+                  matTooltipPosition="above"
+                >
+                  {{ dropdown.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </div>
-        <div class="col-sm-4">
-          <mat-label>Name of Deductor*</mat-label>
-          <mat-form-field appearance="outline">
-            <input
-              formControlName="deductorName"
-              matInput
-              placeholder="Name of deductor"
-              name="deductorName[i]"
-              class="input-field"
-              maxlength="125"
-              required
-              type="text"
-              trim
-            />
+        <div class="col-sm-6">
+          <div class="form-field">
+            <div class="field-label">
+              <span class="span">Name of Deductor</span><span class="text-wrapper-2">*</span>
+            </div>
+            <mat-form-field appearance="outline">
+              <input
+                formControlName="deductorName"
+                matInput
+                placeholder="Name of deductor"
+                name="deductorName[activeIndex]"
+                class="input-field"
+                maxlength="125"
+                required
+                type="text"
+                trim
+              />
 
-          </mat-form-field>
-        </div>
+            </mat-form-field>
+          </div>
 
-        <div class="col-sm-4 spsTp">
-          <mat-label>Total Amount credited*</mat-label>
+          <div class="form-field">
+          <div class="field-label">
+            <span class="span">Total Amount credited</span><span class="text-wrapper-2">*</span>
+          </div>
           <mat-form-field appearance="outline">
             <input
               formControlName="totalAmountCredited"
               matInput
               placeholder="Total amount credited"
-              name="totalAmountCredited[i]"
+              name="totalAmountCredited[activeIndex]"
               required
               class="input-field"
               maxlength="14"
@@ -147,15 +170,19 @@
 
           </mat-form-field>
         </div>
+        </div>
 
-        <div class="col-sm-4 spsTp">
-          <mat-label>Total Tax Deducted*</mat-label>
+        <div class="col-sm-6">
+          <div class="form-field">
+          <div class="field-label">
+            <span class="span">Total Tax Deducted</span><span class="text-wrapper-2">*</span>
+          </div>
           <mat-form-field appearance="outline">
             <input
               formControlName="totalTdsDeposited"
               matInput
               placeholder="Total tax deposited"
-              name="totalTdsDeposited[i]"
+              name="totalTdsDeposited[activeIndex]"
               required
               class="input-field"
               maxlength="14"
@@ -164,12 +191,15 @@
 
           </mat-form-field>
         </div>
+        </div>
       </div>
-
     </div>
-    <div class="row spsTp bdrTp">
-      <div class="col-sm-3">
-        <button class="tbd-btn save-btn mvRth" (click)="save()">Save</button>
+    <div class="out-box">
+      <div class="box-left">
+        <button class="btn btn__white" (click)="goBack()">Back</button>
+      </div>
+      <div class="box-right">
+        <button class="btn btn__primary" (click)="save()">Save</button>
       </div>
     </div>
   </div>

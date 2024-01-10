@@ -1,0 +1,25 @@
+/*-------------------------
+    Breadcrumb
+--------------------------*/
+.breadcrumb {
+    background-color: $color-breadcrumb_gray;
+    padding: 8px 24px;
+    margin: 0px 0px 12px 30px;
+    position: absolute;
+    width: 80%;
+}
+
+.breadcrumb-item {
+    position: relative;
+    line-height: 28px;
+    font-family: $font-body;
+    font-size: 13px;
+    color: $color-dark;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+    font-family: FontAwesome;
+    content: "\f105";
+}

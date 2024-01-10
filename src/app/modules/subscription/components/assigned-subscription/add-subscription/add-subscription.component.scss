@@ -10,18 +10,27 @@
 
 .plan{
   margin: 4px 10px;
-  border: 1px solid #cccccc;
+  // border: 1px solid #cccccc;
   padding: 15px;
   width: 30%;
   border-radius:8px;
   height: 140px;
   display: block;
+  border: 1.5px solid #2D8EF9;
+  color: #2D8EF9;
+  font-family: DM Sans;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+  letter-spacing: -0.28px;
 }
 
 
 .plan:active{
   color: #ffffff!important;
-  background-color: green;
+  // background-color: green;
+  background-color: aliceblue;
   display: block;
 }
 
@@ -75,7 +84,8 @@ a.disabled,#plans.disabled{
 
 .btnHeghlight{
   color: white;
-  background-color: black;
+  // background-color: black;
+  background-color: aliceblue;
 }
 
 .show-note{
@@ -83,4 +93,67 @@ a.disabled,#plans.disabled{
   font-weight: bold;
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+//rohit-new Ui
+
+
+
+.title-123{
+  flex: 1 0 0;
+  color: #242426;
+font-family: DM Sans;
+font-size: 18px;
+font-style: normal;
+font-weight: 500;
+line-height: 25px; /* 142.857% */
+}
+
+.serviceBtn-1{
+display: flex;
+height: 48px;
+padding: 8px 24px;
+align-items: center;
+gap: 9px;
+border-radius: 4px;
+border: 1.5px solid #2D8EF9;
+color: #2D8EF9;
+font-family: DM Sans;
+font-size: 14px;
+font-style: normal;
+font-weight: 500;
+line-height: 20px; /* 142.857% */
+letter-spacing: -0.28px;
+}
+.new-cancel-button-1{
+  display: flex;
+  padding: 8px 24px;
+  align-items: flex-start;
+  gap: 16px;
+  border-radius: 4px;
+  border: 1.5px solid #3E82CD;
+  color: #3E82CD;
+  font-family: DM Sans;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28px; /* 233.333% */
+}
+.new-create{
+margin-left: 10px;
+display: flex;
+height: 48px;
+padding: 8px 24px;
+align-items: center;
+gap: 9px;
+border-radius: 4px;
+background: #EB5757;
+color: #FFF;
+font-family: DM Sans;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 20px; /* 142.857% */
+letter-spacing: -0.28px;
+
 }

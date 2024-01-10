@@ -337,7 +337,7 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
 
     let fieldName = [
       { key: 'name', value: 'Name' },
-      { key: 'mobileNumber', value: 'Mobile No' },
+      { key: 'customerNumber', value: 'Mobile No' },
       { key: 'email', value: 'Email' },
       { key: 'source', value: 'Status' },
       { key: 'eriClientValidUpto', value: 'ERI Client' },

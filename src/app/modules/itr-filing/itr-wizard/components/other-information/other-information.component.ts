@@ -129,12 +129,10 @@ export class OtherInformationComponent implements OnInit {
   ngOnInit() {
     this.isEditable();
 
-    // Set the minimum to financial year and max to current date
-    const currentYear = new Date().getFullYear() - 1;
-    const thisYearStartDate = new Date(currentYear, 3, 1); // April 1st of the current year
-    const nextYearEndDate = new Date(currentYear + 1, 2, 31); // March 31st of the next year
-
-    console.log(currentYear);
+    //get financial year from ITR object
+    let year = parseInt(this.ITR_JSON.financialYear.split('-')[0]);
+    const thisYearStartDate = new Date(year, 3, 1); // April 1st of the financial year
+    const nextYearEndDate = new Date(year + 1, 2, 31); // March 31st of the financial year
 
     this.minDate = thisYearStartDate;
     this.maxDate = nextYearEndDate;
@@ -197,6 +195,7 @@ export class OtherInformationComponent implements OnInit {
       this.Copy_ITR_JSON.partnerInFirmFlag = 'N';
     }
     this.firmForm = this.initFirmsForm();
+    this.formAdded = true;
     let formArray = this.firmForm.controls['firmsArray'] as FormArray;
     for (let i = 0; i < this.ITR_JSON?.partnerInFirms.length; i++) {
       const val = this.ITR_JSON.partnerInFirms[i];
@@ -278,7 +277,7 @@ export class OtherInformationComponent implements OnInit {
       typeOfCompany: [director?.typeOfCompany, Validators.required],
       companyPAN: [
         director?.companyPAN,
-        Validators.compose([Validators.pattern(AppConstants.panNumberRegex)]),
+        Validators.compose([Validators.required,Validators.pattern(AppConstants.panNumberRegex)]),
       ],
       sharesType: [director?.sharesType, Validators.required],
       din: [
@@ -345,12 +344,14 @@ export class OtherInformationComponent implements OnInit {
       transferredShares: [
         share?.transferredShares,
         Validators.compose([
+          Validators.required,
           Validators.pattern(AppConstants.amountWithoutDecimal),
         ]),
       ],
       saleConsideration: [
         share?.saleConsideration,
         Validators.compose([
+          Validators.required,
           Validators.pattern(AppConstants.amountWithDecimal),
         ]),
       ],

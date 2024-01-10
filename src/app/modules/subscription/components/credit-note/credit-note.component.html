@@ -1,68 +1,70 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
 
-<div class="mrgArdTog1">
-  <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]="dataOnLoad">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon> arrow_forward_ios </mat-icon>
-          Filter - Credit Note:
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="rowClr">
-        <div class="surround">
-          <div class="row">
-            <div class="col-sm-12 bckClr" >
-              <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
-                (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
-            </div>
-            <div class="col-sm-3 spsTp">
-              <mat-label>From Date</mat-label>
-              <mat-form-field appearance="outline" class="class1">
-                <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate" [max]="maxStartDate"
-                  autocomplete="off" (dateChange)="setToDateValidation()" />
-                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                <mat-datepicker #picker1></mat-datepicker>
-                <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-sm-3 spsTp">
-              <mat-label>To Date</mat-label>
-              <mat-form-field appearance="outline" class="class1">
-                <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate" [max]="maxEndDate"
-                  autocomplete="off"  (dateChange)="setToDateValidation()" />
-                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                <mat-datepicker #picker2></mat-datepicker>
-                <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
-                <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-6">
-              <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
-                  (onChange)="searchByObject($event)"></app-generic-user-filter>
-            </div>
-            <div class="row spsTp bdrTp">
-              <div class="col-sm-6">
-                <app-generic-sorting [sortingParameter]="sortMenus"
-                  (onChange)="sortByObject($event)"></app-generic-sorting>
+<div class="main-1">
+  <div class="row rowClr-1">
+    <div class="col-sm-12">
+      <mat-accordion class="headers-align">
+        <mat-expansion-panel [expanded]="dataOnLoad">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon> arrow_forward_ios </mat-icon>
+              Filter - Credit Note:
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="filter-box">
+            <div class="row">
+              <div class="col-sm-12 bckClr" >
+                <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
+                  (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
               </div>
-              <div class="col-sm-6">
-                <div class="col-sm-12">
-                  <button
-                    *ngIf="loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER') "
-                    class="dwldBtn" [disabled]="loading" (click)="downloadCreditNote()">
-                    <i class="fa fa-download" aria-hidden="true"></i> Download
-                    File
-                  </button>
-                  <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()">
-                    Clear form
-                  </button>
+              <div class="col-sm-3 spsTp">
+                <mat-label>From Date</mat-label>
+                <mat-form-field appearance="outline" class="class1 custom-bg-new">
+                  <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate"
+                    [max]="maxDate" autocomplete="off" (dateChange)="setToDateValidation()" />
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                  <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-3 spsTp">
+                <mat-label>To Date</mat-label>
+                <mat-form-field appearance="outline" class="class1 custom-bg-new">
+                  <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="toDateMin"
+                    [max]="maxDate" autocomplete="off" />
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                  <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                  <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-6">
+                <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
+                  (onChange)="searchByObject($event)"></app-generic-user-filter>
+              </div>
+              <div class="row mt-3">
+                <div class="col-sm-6 spcTp">
+                  <app-generic-sorting [sortingParameter]="sortMenus" [clearSortFilter]="clearUserFilter"
+                    (onChange)="sortByObject($event)"></app-generic-sorting>
                 </div>
-                <button class="srch-btn mvRth" [disabled]="loading" (click)="getCreditNote()">
+              </div>
+              <div class="button-container">
+                <button class="srch-btn-1" [disabled]="loading" (click)="getCreditNote()">
                   <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Credit
                 </button>
-                <div class="col-sm-12 row">
-                  <span class="note1 note">
+                <button
+                  *ngIf="loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER')"
+                  class="dwldBtn-1" [disabled]="loading" (click)="downloadCreditNote()">
+                  <i class="fa fa-download" aria-hidden="true"></i> Download File
+                </button>
+                <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()">Clear form</button>
+
+              </div>
+              <div class="row mt-3">
+                <div class="col-sm-12">
+                  <span class="new-note1 note">
                     Note : Please select required filters above and click on search to get information
                   </span>
                 </div>
@@ -70,26 +72,31 @@
             </div>
           </div>
         </div>
+
       </div>
     </mat-expansion-panel>
   </mat-accordion>
-</div>
-
-<div class="tableSpc">
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="txTit">
-        Credit Note Details:
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="count1"> Total Count: <span class="txClr1">{{ this.config.totalItems }}</span></div>
     </div>
   </div>
-  <table>
-    <tr *ngFor="let item of creditNoteInfo | paginate : config"></tr>
-  </table>
-  <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="creditNoteGridOptions">
-  </ag-grid-angular>
-  <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+  <div class="tableSpc mt-3">
+
+    <div>
+      <div class="row">
+        <div class="col-sm-8 row">
+          <div class="table-info-text col-sm-4">
+            Credit Note Details:
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="count1"> Total Count: <span class="txClr1">{{ this.config.totalItems }}</span></div>
+        </div>
+      </div>
+      <table>
+        <tr *ngFor="let item of creditNoteInfo | paginate:config"></tr>
+      </table>
+      <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="creditNoteGridOptions">
+      </ag-grid-angular>
+      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+    </div>
+  </div>
 </div>

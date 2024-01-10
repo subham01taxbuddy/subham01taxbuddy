@@ -314,7 +314,6 @@ export class LeaderAttendanceDashboardComponent implements OnInit {
       { key: 'averageUserRating', value: 'Average of users Rating' },
     ]
 
-    // param = `/calling-report/daily-calling-report?fromDate=${fromDate}&toDate=${toDate}${userFilter}`;
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0,'attendance-performance-report', fieldName, {});
     this.loading = false;
   }

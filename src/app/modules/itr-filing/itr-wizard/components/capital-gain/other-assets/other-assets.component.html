@@ -2,225 +2,322 @@
   [show]="loading"
   [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
+<div class="page-wrapper">
+<main>
+<div class="frameC">
+  <h1 class="heading__title">Other Assets</h1>
+  <div class="space">
+    <div class="div-2">
 
-<div class="mrgArd">
-  <!-- other-assets  -->
-  <mat-accordion class="headers-align">
-    <mat-expansion-panel
-      [expanded]="step === 0"
-      (opened)="setStep(0)"
-      (closed)="closed()"
-      hideToggle
-      class="hide-close"
-    >
-      <mat-expansion-panel-header class="flex justify-between items-center">
-        <mat-panel-title>
-          <mat-icon> arrow_forward_ios </mat-icon>
-          Other Assets
-        </mat-panel-title>
-        <div class="edit clearfix isShow">
-          <button
-            class="new-add mvRth"
-            (click)="$event.stopPropagation(); addOtherAssets(false)"
-          >
-            <i class="fa fa-plus" aria-hidden="true"></i>
-            <span> Add Other Assets</span>
-          </button>
-        </div>
-      </mat-expansion-panel-header>
-      <div>
-        <div>
-          <div>
-            <!--            <app-other-asset-improvement-->
-            <!--              style="padding-top: 25px"-->
-            <!--              [isAddOtherAssetsImprovement]="isAddOtherAssetsImprovement"-->
-            <!--            ></app-other-asset-improvement>-->
-            <ag-grid-angular
-              class="ag-theme-balham topSps"
-              [gridOptions]="gridOptions"
-              (rowClicked)="onOtherAssetsRowClicked($event)"
-            >
-            </ag-grid-angular>
-            <button
-              class="delete-btn delete-icon"
-              (click)="$event.stopPropagation(); deleteAsset()"
-              [disabled]="!isAssetSelected()"
-            >
-              <i class="fa fa-trash" aria-hidden="true"></i> Delete
-            </button>
+      <div class="wrapper">
+
+          <div class="frame-wrapper-2A">
+            <div class="accordion" id="myAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading1">
+                        <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse1">Manual Update</button>
+
+                    </h2>
+                    <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+
+                        <app-other-asset-improvement [data]="assetData" (onSave)="assetSaved($event)"></app-other-asset-improvement>
+                    </div>
+                </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="heading3">
+                  <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                          data-bs-target="#collapse3">
+                    Any Other Assets</button>
+
+                </h2>
+                <div id="collapse3" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                  <div class="accordion__item-body">
+                    <mat-tab-group mat-align-tabs="start">
+                      <mat-tab label="All Other Assets">
+                        <div class="table-responsive" style="overflow-x: scroll;">
+                          <div>
+                            <div class="col-sm-12">
+                              <ag-grid-angular
+                                      class="ag-theme-balham topSps"
+                                      [gridOptions]="gridOptions"
+                                      (rowClicked)="onOtherAssetsRowClicked($event)">
+                              </ag-grid-angular>
+                            </div>
+                            <div class="row col-sm-12">
+                              <div class="col-sm-6">
+                                <button type="submit" class="delete-btn"
+                                        (click)="$event.stopPropagation(); deleteAsset()"
+                                        [disabled]="!isAssetSelected()">
+                                  <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete
+                                </button>
+                              </div>
+                              <div class="col-sm-6" *ngIf="false">
+<!--                                <button type="submit" class="cancel rghtBack" (click)="showCompactView()">-->
+                                <button type="submit" class="cancel rghtBack">
+<!--                                  {{ this.bondType === 'listed' ? 'Back to Brokers' : 'Back'}}-->
+                                  {{'Back'}}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </mat-tab>
+                      <!-- This tab is commented for now but will be required for showing parsed entries-->
+<!--                      <mat-tab label="By Broker" *ngIf="bondType ==='listed'">-->
+<!--                        <div *ngIf="compactView">-->
+<!--                          <div class="card__row">-->
+<!--                            <div class="broker-row">-->
+<!--                              <div class="col-sm-1"></div>-->
+<!--                              <div class="col-sm-3 broker-view-title">Broker Name</div>-->
+<!--                              <div class="col-sm-3 broker-view-title">LTCG</div>-->
+<!--                              <div class="col-sm-3 broker-view-title">STCG</div>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                          <div class="card__row"-->
+<!--                               *ngFor="let securities of brokerList; let i = index">-->
+<!--                            <div class="broker-row">-->
+<!--                              <div class="col-sm-1">-->
+<!--                                <mat-checkbox-->
+<!--                                        color="primary"-->
+<!--                                        (change)="changeSelection(i)"-->
+<!--                                        [ngModel]="brokerSelected[i]"-->
+<!--                                        class="ml30"></mat-checkbox>-->
+<!--                              </div>-->
+<!--                              <div class="row col-sm-12"-->
+<!--                                   (click)="showBroker(securities.brokerName)">-->
+<!--                                <div class="col-sm-3 broker-view-value">-->
+<!--                                  {{ securities.brokerName }}-->
+<!--                                </div>-->
+<!--                                <div class="col-sm-3 broker-view-value">-->
+<!--                                  ₹{{ securities.LTCG.toFixed(2) }}-->
+<!--                                </div>-->
+<!--                                <div class="col-sm-3 broker-view-value">-->
+<!--                                  ₹{{ securities.STCG.toFixed(2) }}-->
+<!--                                </div>-->
+<!--                                <div class="col-sm-2 broker-view-btn">-->
+<!--                                  <button-->
+<!--                                          type="button"-->
+<!--                                          style="-->
+<!--                              border: none;-->
+<!--                              background: transparent;-->
+<!--                              font-size: 12px;-->
+<!--                              cursor: pointer;-->
+<!--                            ">-->
+<!--                                    <i class="fas fa-chevron-right broker-view-icon"></i>-->
+<!--                                  </button>-->
+<!--                                </div>-->
+<!--                              </div>-->
+
+<!--                            </div>-->
+<!--                          </div>-->
+
+<!--                          <button-->
+<!--                                  class="delete-btn delete-icon"-->
+<!--                                  (click)="$event.stopPropagation(); deleteBroker()"-->
+<!--                                  [disabled]="!isBrokerSelected()">-->
+<!--                            <i class="fa fa-trash" aria-hidden="true"></i> Delete-->
+<!--                          </button>-->
+<!--                        </div>-->
+<!--                        <div *ngIf="!compactView">-->
+<!--                          <div class="col-sm-12">-->
+<!--                            <ag-grid-angular-->
+<!--                                    class="ag-theme-balham topSps"-->
+<!--                                    [gridOptions]="equityGridOptions"-->
+<!--                                    (rowClicked)="editSecuritiesForm($event)">-->
+<!--                            </ag-grid-angular>-->
+<!--                          </div>-->
+<!--                          <div class="row col-sm-12">-->
+<!--                            <div class="col-sm-6">-->
+<!--                              <button type="submit" class="delete-btn"-->
+<!--                                      [disabled]="!equitySelected()"-->
+<!--                                      (click)="deleteArray()">-->
+<!--                                <i class="fa fa-trash" aria-hidden="true">&nbsp;</i>Delete-->
+<!--                              </button>-->
+<!--                            </div>-->
+<!--                            <div class="col-sm-6">-->
+<!--                              <button type="submit" class="cancel rghtBack" (click)="showCompactView()">-->
+<!--                                {{ this.bondType === 'listed' ? 'Back to Brokers' : 'Back'}}-->
+<!--                              </button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                      </mat-tab>-->
+                    </mat-tab-group>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="heading2">
+                  <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                          data-bs-target="#collapse2">Add Deduction under section 54F (Applicable for any capital assets other than residential House Property)</button>
+
+                </h2>
+                <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                  <form [formGroup]="deductionForm">
+                    <div class="accordion__item-body">
+                      <div class="White_box">
+                        <div class="row mb-10">
+                          <div class="col-10 ">
+                            <p><span class="span">Add Deduction under section 54F (Applicable for any capital assets other than residential House Property)<span
+                                    class="text-wrapper-2">*</span></span></p>
+                          </div>
+                          <div class="col-2">
+                            <mat-radio-group [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="deduction"
+                                    [disabled]="isDisable"
+                                    class="mvRth">
+                              <mat-radio-button [value]="true" labelPosition="before">Yes</mat-radio-button>
+                              <mat-radio-button class="radSpc" [value]="false" labelPosition="before">No</mat-radio-button>
+                            </mat-radio-group>
+                          </div>
+                        </div>
+                      </div>
+
+
+                        <div class="gray_container" formArrayName="deductions" *ngIf="deduction">
+
+                          <div class="row cardClr" *ngFor="let deduction of getDeductions?.controls | paginate : config;let i = index"
+                                 [formGroupName]="fieldGlobalIndex(i)">
+
+                              <div class="div-6 mb-20">
+                                  <div class="form-field">
+                                    <div><span class="span">Type of deduction </span> <span
+                                            class="text-wrapper-2">*</span></div>
+                                  </div>
+                                <div class="form-field">
+                                  <mat-form-field class="input-field-width" appearance="outline">
+                                    <input
+                                            matInput
+                                            digitsOnly
+                                            formControlName="typeOfDeduction"
+                                            placeholder="Section 54F"
+                                            name="typeOfDeduction"
+                                            class="input-field"
+                                            maxlength="14"
+                                            readonly
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="div-6 mb-20">
+                                <div class="form-field">
+                                  <div><span class="span">Purchase Date Of New Assets </span> <span
+                                          class="text-wrapper-2">*</span></div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field appearance="outline">
+                                    <input
+                                            matInput
+                                            formControlName="purchaseDate"
+                                            name="purchaseDate"
+                                            [matDatepicker]="purchaseDate"
+                                            placeholder="Buy Date / Date of Acquisition"
+                                            [max]="maximumDate"
+                                            (change)="calculateDeduction()"/>
+                                    <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #purchaseDate></mat-datepicker>
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="div-6 mb-20">
+                                <div class="form-field">
+                                  <div><span class="span">Cost Of New Assets</span> <span
+                                          class="text-wrapper-2">*</span></div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field class="input-field-width" appearance="outline">
+                                    <input
+                                            matInput
+                                            digitsOnly
+                                            formControlName="costOfNewAsset"
+                                            placeholder="Cost Of New Asset"
+                                            name="costOfNewAsset"
+                                            class="input-field"
+                                            maxlength="14"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            (change)="calculateDeduction()"
+                                    />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="div-6 mb-20">
+                                <div class="form-field">
+                                  <div><span class="span">Amount Deposited on CGAS </span> <span
+                                          class="text-wrapper-2">*</span></div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field class="input-field-width" appearance="outline">
+                                    <input
+                                            matInput
+                                            digitsOnly
+                                            formControlName="CGASAmount"
+                                            placeholder="Amount deposited in CGAS before due date"
+                                            name="CGASAmount"
+                                            class="input-field"
+                                            maxlength="14"
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            (change)="calculateDeduction()"
+                                    />
+                                    <!-- <mat-error
+                                      *ngIf="
+                                        assetDetailsForm.controls['sellExpense'].hasError('pattern')
+                                      "
+                                      >Enter valid amount.</mat-error
+                                    > -->
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="div-6 mb-20">
+                                <div class="form-field">
+                                  <div><span class="span">Amount Of Deduction Claimed </span> <span
+                                          class="text-wrapper-2">*</span></div>
+                                </div>
+                                <div class="form-field">
+                                  <mat-form-field class="input-field-width" appearance="outline">
+                                    <input
+                                            matInput
+                                            digitsOnly
+                                            formControlName="deductionClaimed"
+                                            placeholder="Amount of Deduction Claimed"
+                                            name="deductionClaimed"
+                                            class="input-field"
+                                            maxlength="14"
+                                            readonly
+                                            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+            </div>
           </div>
-        </div>
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
+      
 
-  <br />
 
-  <!-- deductions  -->
-  <div class="card bdrArnd">
-    <!-- header  -->
-    <div class="flex items-center justify-between">
-      <div class="row">
-        <div class="isDeduction">Add Deduction under section 54F</div>
-        <div class="row">
-          <div class="col-sm-9 subheading">
-            (Applicable for any capital assets other than residential House
-            Property)
+        <div class="out-box">
+          <div class="box-left">
+            <button class="btn btn__white" (click)="goBack()">Back</button>
           </div>
-          <div class="col-sm-3">
-            <mat-radio-group
-              [(ngModel)]="deduction"
-              [disabled]="isDisable"
-              class="mvRth"
-            >
-              <mat-radio-button [value]="true" labelPosition="before"
-                >Yes
-              </mat-radio-button>
-              <mat-radio-button [value]="false" labelPosition="before"
-                >No</mat-radio-button
-              >
-            </mat-radio-group>
+          <div class="box-right">
+            <button class="btn btn__primary" (click)="saveCg()">Save & View Summary</button>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- form  -->
-    <form [formGroup]="deductionForm" *ngIf="deduction">
-      <div formArrayName="deductions">
-        <div
-          *ngFor="
-            let deduction of getDeductions?.controls | paginate : config;
-            let i = index
-          "
-          [formGroupName]="fieldGlobalIndex(i)"
-        >
-          <div class="row cardClr2">
-            <!-- inputs  -->
-
-            <!-- type-of-deduction  -->
-            <div class="col-sm-4">
-              <mat-label>Type of Deduction</mat-label>
-              <mat-form-field class="input-field-width" appearance="outline">
-                <input
-                  matInput
-                  digitsOnly
-                  formControlName="typeOfDeduction"
-                  placeholder="Section 54F"
-                  name="typeOfDeduction"
-                  class="input-field"
-                  maxlength="14"
-                  readonly
-                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                />
-                <!-- <mat-error
-                  *ngIf="
-                    assetDetailsForm.controls['purchaseCost'].hasError(
-                      'pattern'
-                    )
-                  "
-                  >Enter valid amount.</mat-error
-                > -->
-              </mat-form-field>
-            </div>
-            <!-- buy-date  -->
-            <div class="col-sm-4">
-              <mat-label> Buy Date / Date of Acquisition </mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  formControlName="purchaseDate"
-                  name="purchaseDate"
-                  [matDatepicker]="purchaseDate"
-                  placeholder="Buy Date / Date of Acquisition"
-                  [max]="maximumDate"
-                  (change)="calculateDeduction()"
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="purchaseDate"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #purchaseDate></mat-datepicker>
-              </mat-form-field>
-            </div>
-            <!-- cost-of-new-asset  -->
-            <div class="col-sm-4">
-              <mat-label>Cost of New Asset</mat-label>
-              <mat-form-field class="input-field-width" appearance="outline">
-                <input
-                  matInput
-                  digitsOnly
-                  formControlName="costOfNewAsset"
-                  placeholder="Cost Of New Asset"
-                  name="costOfNewAsset"
-                  class="input-field"
-                  maxlength="14"
-                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  (change)="calculateDeduction()"
-                />
-                <!-- <mat-error
-                  *ngIf="
-                    assetDetailsForm.controls['sellValue'].hasError('pattern')
-                  "
-                  >Enter valid amount.</mat-error
-                > -->
-              </mat-form-field>
-            </div>
-            <!-- CGAS Deposit  -->
-            <div class="col-sm-4 spsTp">
-              <mat-label>CGAS Amount Deposited Before Due Date</mat-label>
-              <mat-form-field class="input-field-width" appearance="outline">
-                <input
-                  matInput
-                  digitsOnly
-                  formControlName="CGASAmount"
-                  placeholder="Amount deposited in CGAS before due date"
-                  name="CGASAmount"
-                  class="input-field"
-                  maxlength="14"
-                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                  (change)="calculateDeduction()"
-                />
-                <!-- <mat-error
-                  *ngIf="
-                    assetDetailsForm.controls['sellExpense'].hasError('pattern')
-                  "
-                  >Enter valid amount.</mat-error
-                > -->
-              </mat-form-field>
-            </div>
-            <!-- deduction claimed  -->
-            <div class="col-sm-4 spsTp">
-              <mat-label><br />Amount of Deduction Claimed</mat-label>
-              <mat-form-field class="input-field-width" appearance="outline">
-                <input
-                  matInput
-                  digitsOnly
-                  formControlName="deductionClaimed"
-                  placeholder="Amount of Deduction Claimed"
-                  name="deductionClaimed"
-                  class="input-field"
-                  maxlength="14"
-                  readonly
-                  oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                />
-              </mat-form-field>
-            </div>
-          </div>
-          <!-- Row Ends -->
-        </div>
-
-        <!-- edit Other Assets deduction -->
-      </div>
-    </form>
   </div>
-
-  <!-- page-navigation-buttons  -->
-  <div class="flex justify-between p-[30px] back-foot">
-    <button class="lgtBtn" (click)="goBack()">
-      Back to Capital Gain Topics
-    </button>
-
-    <button class="saveBtnIn" (click)="saveCg()">Save All</button>
-  </div>
+</div>
+</main>
+<app-side-summary-panel type="otherAssets"></app-side-summary-panel>
 </div>

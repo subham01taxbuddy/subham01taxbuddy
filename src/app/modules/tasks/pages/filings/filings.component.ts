@@ -83,6 +83,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
   searchAsPrinciple: boolean = false
   partnerType: any;
   showCsvMessage: boolean;
+  dataOnLoad = true;
 
   constructor(
     private reviewService: ReviewService,
@@ -166,6 +167,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
     if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
       this.agentId = this.loggedInSme[0]?.userId;
       this.myItrsList(0, '');
+    }else {
+      this.dataOnLoad = false;
     }
   }
 
@@ -449,6 +452,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       { key: 'email', value: 'Email' },
       { key: 'leaderUserId', value: 'Leader Name' },
       { key: 'filingTeamMemberId', value: 'Filer Name' },
+      { key: 'filerUserId', value: 'ITR Actually Filed' },
       { key: 'itrId', value: 'ITR ID' }
     ]
     await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'Filed-ITR', fieldName, {});
@@ -1414,12 +1418,25 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.cacheManager.clearCache();
     this.searchParams.selectedStatusId = 'ITR_FILED';
     this.config.page = 0;
-    this.config.itemsPerPage = 10;
+    this.config.totalItems = 0;
+    this.config.itemsPerPage = 20;
     this.searchParams.mobileNumber = null;
     this.searchParams.email = null;
     this.searchParams.panNumber = null;
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
+
+    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+      this.agentId = this.utilsService.getLoggedInUserID();
+      this.filerUserId = this.filerUserId = this.agentId;
+      this.partnerType = this.utilsService.getPartnerType();
+    }
+    if (this.dataOnLoad) {
+      this.search();
+    } else {
+      this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
+      this.config.totalItems = 0;
+    }
   }
 
   eriITRLifeCycleStatus(data) {

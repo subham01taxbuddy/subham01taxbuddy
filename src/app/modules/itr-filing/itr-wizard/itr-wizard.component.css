@@ -10,6 +10,7 @@
     margin-right: 6.5%;
 }
 
+
 .mat-icon {
     -webkit-user-select: none;
     user-select: none;
@@ -50,4 +51,12 @@
 
 .mat-focus-indicator:hover {
 background-color:#f8f8fc;
+}
+
+.frameC {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 8px;
+    position: relative;
+    padding: 10px 0px 0px 15px!important;
 }

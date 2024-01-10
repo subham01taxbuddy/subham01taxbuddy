@@ -116,6 +116,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     { value: 'paymentDate', name: 'Paid Date' },
     {value: 'invoiceNo', name: ' Invoice number'},
     // { value: 'billTo', name: 'Name' },
+    // { value: 'invoiceDate', name: 'Invoice Date' },
+    // { value: 'paymentDate', name: 'Paid Date' },
     // { value: 'total', name: 'Amount Payable' },
   ];
   dataOnLoad = true;
@@ -592,6 +594,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         window.URL.revokeObjectURL(url);
       });
     }
+
   }
 
   invoicesCreateColumnDef(List) {

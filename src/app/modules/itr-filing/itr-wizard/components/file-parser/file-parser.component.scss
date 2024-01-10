@@ -9,6 +9,14 @@
     color: #07070c;
   }
 
+
+
+  .warn {
+    padding:8px!important;
+}
+
+
+
   .left-label {
     // Upload Capital Gain/F&O statement here:
     color: #1E1E1E;
@@ -26,12 +34,13 @@
     font-size: 13px;
   }
 
-  .download {
-    color: #087586;
-    padding: 5px;
-    font-size: 14px;
-    text-decoration: none;
+  .bdr{
+    border-top:1px solid #cccccc;
+    margin-top: 20px!important;
+    padding-bottom: 20px!important;
   }
+
+
 
   .filename {
     overflow-wrap: break-word;
@@ -48,6 +57,27 @@
   font-size: 20px;
   font-weight: 600;
 }
+
+.btn__upload{
+  margin-right:30px!important;
+  background-color: #C7E0FC;
+  color: #17477C;
+  font-size: 12px;
+  font-family: DM Sans;
+  font-weight: 500;
+  line-height: 28px;
+  word-wrap: break-word;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-radius: 4px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  display: inline-flex;
+}
+
 .card {
   padding: 20px !important;
   border: 1px solid #00aeca !important;
@@ -69,4 +99,97 @@
   color: blue;
   text-decoration: underline;
   white-space: nowrap;
+}
+@import "../../../../../ux/scss/style.scss";
+@import '../../../../../ux/scss/layout.scss';
+.header_content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  gap: 8px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  padding: 8px 24px;
+  flex-grow: 1;
+  background-color: #e7e7e7;
+  border-radius: 4px 4px 0px 0px;
+}
+
+.wrap-content {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  background-color: #ffffff;
+  border-radius: 0px 0px 8px 8px;
+
+  img {
+    position: relative;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.wrapper {
+  display: flex;
+  align-items: flex-start;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  flex-direction: column;
+  padding: 24px;
+  position: relative;
+}
+
+.space {
+  background-color: #ffffff;
+  border-radius: 0px 0px 8px 8px;
+  padding: 20px;
+  border: 1px solid #E2E4E5;
+  border-top: 0;
+}
+
+.frameC {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  align-items: flex-start;
+  position: relative;
+}
+
+.div-5 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  padding: 24px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  background-color: #ffffff;
+  border-radius: 0px 0px 4px 4px;
+}
+.div-6 {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.frame-wrapper-3 {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 12px;
+  position: relative;
+  flex: 0 0 auto;
 }

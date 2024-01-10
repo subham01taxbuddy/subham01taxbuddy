@@ -14,19 +14,19 @@
 }
 
 .btn-logout:hover {
-    background-color:#7e7e7e;
+    background-color: #7e7e7e;
 }
 
 .header__breadcrumbs {
     float: left;
-    padding-left:5px!important;
+    padding-left: 5px !important;
 }
 
-.user{
+.user {
     color: #424242;
-    font-weight:normal;
-    margin-top: -4px;
-    font-size:14px!important;
+    font-weight: normal;
+    margin-top: 20px;
+    font-size: 14px !important;
 }
 
 .titl-tx {
@@ -38,9 +38,10 @@
     margin-top: 15px;
 }
 
-.back{
+.back {
     color: #2199e8;
 }
+
 .back:hover {
     color: #0d65a0;
 }
@@ -54,18 +55,18 @@
     line-height: 1em;
     border-radius: 5px;
     cursor: pointer;
-    color:#63b12d;
+    color: #63b12d;
     padding: 10px 15px;
     // border: solid 2px;
     // background-color: #63b12d;
 }
 
 .btn-help:hover {
-    color:#41751b;
+    color: #41751b;
 }
 
 .btn-call {
-    display:block;
+    display: block;
     margin: 8px;
     padding: 12px 15px;
     text-align: center;
@@ -73,7 +74,7 @@
     line-height: 1em;
     border-radius: 5px;
     cursor: pointer;
-    color:#63b12d;
+    color: #63b12d;
     padding: 10px 15px;
     background-color: white;
     color: #63b12d;
@@ -81,7 +82,7 @@
     // border: solid 2px;
     // background-color: #63b12d;
     margin-top: 10px;
-    width:190px;   
+    width: 190px;
 }
 
 .btn-call:hover {
@@ -96,4 +97,13 @@
     margin-top: 20px;
     margin-right: 10px;
     font-weight: 600;
+}
+
+.hamburger {
+    color: #1b67ba;
+    font-size: 37px;
+    text-align: center;
+    justify-content: flex-end;
+    display: flex;
+    margin-left:22px;
 }

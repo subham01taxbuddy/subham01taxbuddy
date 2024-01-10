@@ -1,644 +1,592 @@
 <ngx-loading
-  [show]="loading"
-  [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+        [show]="loading"
+        [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
 ></ngx-loading>
-<div class="mrgArdSpcBlw">
-  <mat-accordion class="headers-align">
-    <mat-expansion-panel hideToggle>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon> arrow_forward_ios </mat-icon>
-          Gross Salary
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <form [formGroup]="employerDetailsFormGroup">
-        <div class="cardRect">
-          <div class="sectionTitle">Employer Details:</div>
-          <div class="row">
-            <div class="col-sm-4">
-              <mat-label class="inputLabel">Name of the employer:*</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  type="text"
-                  trim
-                  matInput
-                  placeholder="Name of the employer"
-                  name="NameOfEmployer"
-                  class="input-field"
-                  formControlName="employerName"
-                  maxlength="125"
-                  required
-                />
-                <mat-error
-                  *ngIf="
-                    employerDetailsFormGroup.controls['employerName'].hasError(
-                      'required'
-                    )
-                  "
-                >
-                  Enter the name of employer
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-sm-4">
-              <mat-label class="inputLabel">Employer TAN:</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  type="text"
-                  trim
-                  matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number."
-                  matTooltipClass="tab-tooltip"
-                  matTooltipPosition="above"
-                  matInput
-                  upperCase
-                  placeholder="TAN"
-                  name="TAN"
-                  class="input-field"
-                  formControlName="employerTAN"
-                  maxlength="10"
-                />
-                <mat-error
-                  *ngIf="
-                    employerDetailsFormGroup.controls['employerTAN'].hasError(
-                      'pattern'
-                    )
-                  "
-                >
-                  Enter valid TAN (e.g XXXX12345X)
-                </mat-error>
-              </mat-form-field>
-            </div>
+<div class="page-wrapper">
 
-            <div class="col-sm-4">
-              <mat-label class="inputLabel">Address of employer:</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  type="text"
-                  trim
-                  matInput
-                  placeholder="Address of employer"
-                  name="AddressOfEmployer"
-                  class="input-field"
-                  formControlName="address"
-                  maxlength="200"
-                />
-                <mat-error
-                  *ngIf="
-                    employerDetailsFormGroup.controls['address'].hasError(
-                      'required'
-                    )
-                  "
-                >
-                  Enter the address
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-              <mat-label class="inputLabel">Town/City</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  type="text"
-                  trim
-                  matInput
-                  placeholder="Town/City"
-                  name="TAN"
-                  class="input-field"
-                  formControlName="city"
-                  maxlength="35"
-                />
-                <mat-error
-                  *ngIf="
-                    employerDetailsFormGroup.controls['city'].hasError(
-                      'required'
-                    )
-                  "
-                >
-                  Enter the town/city
-                </mat-error>
-                <mat-error
-                  *ngIf="
-                    employerDetailsFormGroup.controls['city'].hasError(
-                      'pattern'
-                    )
-                  "
-                >
-                  Enter character only.</mat-error
-                >
-              </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-              <mat-label class="inputLabel">Select state:</mat-label>
-              <mat-form-field appearance="outline">
-                <mat-select
-                  placeholder="Select state"
-                  name="state"
-                  formControlName="state"
-                >
-                  <mat-option
-                    *ngFor="let state of stateDropdown"
-                    [value]="state.stateCode"
-                  >
-                    {{ state.stateName | titlecase }}
-                  </mat-option>
-                </mat-select>
-                <mat-error
-                  *ngIf="
-                    employerDetailsFormGroup.controls['state'].hasError(
-                      'required'
-                    )
-                  "
-                >
-                  Select the state
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-sm-4 spsTp">
-              <mat-label class="inputLabel">Pin Code</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  type="text"
-                  trim
-                  digitsOnly
-                  matInput
-                  placeholder="Pin Code"
-                  name="pinCode"
-                  class="input-field"
-                  formControlName="pinCode"
-                  maxlength="6"
-                  (blur)="updateDataByPincode()"
-                />
-                <mat-error
-                  *ngIf="
-                    employerDetailsFormGroup.controls['pinCode'].hasError(
-                      'required'
-                    )
-                  "
-                >
-                  Enter pincode
-                </mat-error>
-                <mat-error
-                  *ngIf="
-                    employerDetailsFormGroup.controls['pinCode'].hasError(
-                      'pattern'
-                    )
-                  "
-                >
-                  Enter valid pin
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-          <hr style="margin-bottom: 10px" />
-          <div class="sectionTitle">Salary Details:</div>
-          <table class="table table-bordered col-sm-12">
-            <thead>
-              <tr class="table-head">
-                <th>Salary Type</th>
-                <th>Gross Amount</th>
-              </tr>
-            </thead>
-            <tbody formArrayName="salaryDetails">
-              <tr
-                *ngFor="let income of getSalaryArray.controls; let i = index"
-                [formGroupName]="i"
-              >
-                <td>
-                  {{ income.value.label }}
-                </td>
+  <!-- main area -->
+  <main>
 
-                <td>
-                  <mat-form-field
-                    class="input-field-width"
-                    style="width: 80% !important; margin-right: 5px"
-                  >
-                    <input
-                      type="text"
-                      trim
-                      matInput
-                      placeholder=""
-                      name="salaryValue[i]"
-                      formControlName="salaryValue"
-                      (blur)="checkGrossSalary()"
-                      class="input-field"
-                      maxlength="125"
-                      (change)="changed(true);"
-                      (beforeinput)="confirmChange($event, income.value.salaryType)"
-                    />
-                  </mat-form-field>
-
-                  <!-- Bifurcation button -->
-                  <i
-                    class="fa-solid fa-circle-chevron-down fa-2xl"
-                    style="color: #00b0cb; margin-left: 5%"
-                    (click)="bifurcation(i)"
-                  ></i>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </form>
-    </mat-expansion-panel>
-
-    <mat-expansion-panel hideToggle>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon> arrow_forward_ios </mat-icon>
-          Exempt Allowance
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-
-      <form [formGroup]="allowanceFormGroup">
-        <div class="cardRect">
-          <!-- <div class="sectionTitle">Exempt Allowance</div> -->
-          <table class="table table-bordered">
-            <thead style="background: #eaeaea">
-              <tr class="table-head">
-                <th>Allowance Type</th>
-                <th>Exempt Amount</th>
-              </tr>
-            </thead>
-            <tbody formArrayName="allowances">
-              <tr
-                *ngFor="let income of getAllowanceArray.controls; let i = index"
-                [formGroupName]="i"
-              >
-                <td class="allowance-label">
-                  {{ income.value.label }}
-                </td>
-
-                <td
-                  class="flex align-items-center allowance-label"
-                  style="flex-direction: column"
-                  *ngIf="income.value.allowType === 'COMPENSATION_ON_VRS'"
-                >
-                  <div>
-                    Whether Exemption u/s 10(10C) is taken in Previous
-                    Assessment Year ??<br />
-                    <mat-radio-group
-                      [formControl]="
-                        allowanceFormGroup.get('vrsLastYear') | formControlType
-                      "
-                      (change)="updateVrsExemptionTaken()"
-                    >
-                      <mat-radio-button [value]="true">Yes</mat-radio-button>
-                      <mat-radio-button [value]="false"
-                        >No</mat-radio-button
-                      > </mat-radio-group
-                    ><br />
-                    Where any relief u/s 89 has been allowed to an assessee for
-                    any assessment year<br />
-                    in respect of any amount on his voluntary retirement or
-                    termination of service?<br />
-                    <mat-radio-group
-                      [formControl]="
-                        allowanceFormGroup.get('sec89') | formControlType
-                      "
-                      (change)="updateVrsExemptionTaken()"
-                    >
-                      <mat-radio-button [value]="true">Yes</mat-radio-button>
-                      <mat-radio-button [value]="false"
-                        >No</mat-radio-button
-                      > </mat-radio-group
-                    ><br />
-                  </div>
-                  <div style="width: 100%" class="flex align-items-center">
-                    <div style="width: 100%">
-                      <mat-form-field
-                        class="input-field-width"
-                        style="width: 70% !important"
-                      >
-                        <input
-                          type="number"
-                          trim
-                          matInput
-                          placeholder=""
-                          name="allowValue[i]"
-                          formControlName="allowValue"
-                          class="input-field"
-                          (change)="validations()"
-                          [disabled]="isVrsExemptionTaken"
-                        />
-                      </mat-form-field>
-                      <mat-error
-                        *ngIf="
-                          freeze &&
-                          (income.value.allowType === 'COMPENSATION_ON_VRS' ||
-                            income.value.allowType === 'FIRST_PROVISO' ||
-                            income.value.allowType === 'SECOND_PROVISO')
-                        "
-                      >
-                        Only any one of the three is allowed
-                      </mat-error>
-                      <mat-error
-                        style="width: 70%"
-                        *ngIf="
-                          income.value.allowType === 'COMPENSATION_ON_VRS' &&
-                          compensationOnVrsError
-                        "
-                      >
-                        Compensation on VRS cannot be more than 17(1) or 5 lakh
-                        or if it is already claimed in any previous year then it
-                        cannot be claimed again
-                      </mat-error>
-                    </div>
-                    <!-- Calculator button -->
-                    <!-- <i
-                      #buttonContainer
-                      class="fa-duotone fa-calculator fa-2xl"
-                      style="
-                        --fa-primary-color: #00b0cb;
-                        --fa-secondary-color: #000000;
-                        --fa-secondary-opacity: 0;
-                        margin-right: 5%;
-                      "
-                      id="buttonContainer"
-                      (click)="calculator(income.value.allowType, i)"
-                    ></i> -->
-                  </div>
-                </td>
-                <td
-                  class="flex align-items-center allowance-label"
-                  *ngIf="income.value.allowType !== 'COMPENSATION_ON_VRS'"
-                >
-                  <div style="width: 100%">
-                    <mat-form-field
-                      class="input-field-width"
-                      style="width: 70% !important; margin-right: 5px"
-                    >
-                      <input
-                        type="text"
-                        trim
-                        matInput
-                        placeholder=""
-                        name="allowValue[i]"
-                        formControlName="allowValue"
-                        class="input-field"
-                        maxlength="125"
-                        (change)="validations()"
-                      />
-                    </mat-form-field>
-                    <mat-error
-                      *ngIf="
-                        freeze &&
-                        (income.value.allowType === 'COMPENSATION_ON_VRS' ||
-                          income.value.allowType === 'FIRST_PROVISO' ||
-                          income.value.allowType === 'SECOND_PROVISO')
-                      "
-                    >
-                      Only any one is allowed of the three
-                    </mat-error>
-                    <mat-error
-                      style="width: 70%"
-                      *ngIf="
-                        income.value.allowType === 'HOUSE_RENT' && hraError
-                      "
-                    >
-                      House rent allowance cannot be more than 50% of Basic or
-                      Total HRA
-                    </mat-error>
-                    <mat-error
-                      style="width: 70%"
-                      *ngIf="income.value.allowType === 'LTA' && ltaError"
-                    >
-                      LTA to be claimed cannot be more than the LTA that is
-                      provided
-                    </mat-error>
-                    <mat-error
-                      style="width: 70%"
-                      *ngIf="
-                        income.value.allowType === 'GRATUITY' && gratuityError
-                      "
-                    >
-                      Gratuity to be claimed cannot be more than the gratuity
-                      that is provided or salary entered in Salary 17(1) or 20
-                      lakhs, whichever is lower
-                    </mat-error>
-                    <mat-error
-                      style="width: 70%"
-                      *ngIf="
-                        income.value.allowType === 'COMMUTED_PENSION' &&
-                        pensionError
-                      "
-                    >
-                      Commuted pension u/s 10(10A) to be claimed cannot be more
-                      than the commuted pension u/s 10(10A) that is provided
-                    </mat-error>
-                    <mat-error
-                      style="width: 70%"
-                      *ngIf="
-                        income.value.allowType === 'LEAVE_ENCASHMENT' &&
-                        leaveEncashError
-                      "
-                    >
-                      Leave Encashment to be claimed cannot be more than the
-                      Leave Encashment that is provided or salary entered in
-                      Salary 17(1) or 3 lakhs (for non-goverment employees),
-                      whichever is lower
-                    </mat-error>
-                    <mat-error
-                      style="width: 70%"
-                      *ngIf="
-                        income.value.allowType === 'SECOND_PROVISO_CGOV' &&
-                        secProvisoCgovError
-                      "
-                    >
-                      Second proviso under central government can be only
-                      claimed by government employees and should be less than
-                      salary in 17(1) or 5 lakhs, whichever is lower
-                    </mat-error>
-                    <mat-error
-                      style="width: 70%"
-                      *ngIf="
-                        income.value.allowType === 'FIRST_PROVISO' &&
-                        firstProvisoError
-                      "
-                    >
-                      First proviso under central government cannot be claimed
-                      by government employees
-                    </mat-error>
-                    <mat-error
-                      style="width: 70%"
-                      *ngIf="
-                        income.value.allowType === 'SECOND_PROVISO' &&
-                        secondProvisoError
-                      "
-                    >
-                      Second proviso allowance cannot be claimed by government
-                      employees
-                    </mat-error>
-                    <mat-error
-                      style="width: 70%"
-                      *ngIf="
-                        income.value.allowType === '10(6)' && remunerationError
-                      "
-                    >
-                      Deduction claimed cannot be more than the total Salary
-                      under 17(1), 17(2) and 17(3)
-                    </mat-error>
-                    <mat-error
-                      style="width: 70%"
-                      *ngIf="
-                        income.value.allowType === '10(7)' && serviceOutIndError
-                      "
-                    >
-                      Deduction claimed cannot be more than the total Salary
-                      under 17(1), 17(2) and 17(3)
-                    </mat-error>
-                    <mat-error
-                      style="width: 70%"
-                      *ngIf="
-                        income.value.allowType === '10(14)(ii)' &&
-                        prescPersonalExpError
-                      "
-                    >
-                      Deduction cannot be more than the value of Salary under
-                      Conveyance Allowance, Other Allowance & Others in Section
-                      17(1)
-                    </mat-error>
-                    <mat-error
-                      style="width: 70%"
-                      *ngIf="
-                        income.value.allowType === '10(14)(i)' &&
-                        prescProfExpError
-                      "
-                    >
-                      Deduction cannot be more than the value of Salary under
-                      Conveyance Allowance, Other Allowance & Others in Section
-                      17(1)
-                    </mat-error>
-                    <mat-error
-                      style="width: 70%"
-                      *ngIf="
-                        income.value.allowType === 'EIC' && eicProfExpError
-                      "
-                    >
-                      Deduction can claimed only by state or central government
-                      employees
-                    </mat-error>
-                  </div>
-                  <!-- Calculator button -->
-                  <!-- <i
-                    #buttonContainer
-                    class="fa-duotone fa-calculator fa-2xl"
-                    style="
-                      --fa-primary-color: #00b0cb;
-                      --fa-secondary-color: #000000;
-                      --fa-secondary-opacity: 0;
-                      margin-right: 5%;
-                    "
-                    id="buttonContainer"
-                    (click)="calculator(income.value.allowType, i)"
-                  ></i> -->
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </form>
-    </mat-expansion-panel>
-
-    <mat-expansion-panel hideToggle>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon> arrow_forward_ios </mat-icon>
-          Deductions u/s 16
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="cardRect">
-        <!-- <div class="sectionTitle">Deductions u/s 16</div> -->
-        <form [formGroup]="deductionsFormGroup">
-          <div class="row">
-            <div class="col-sm-4">
-              <mat-label class="inputLabel">Entertainment Allowance:</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  digitsOnly
-                  trim
-                  matInput
-                  placeholder="Entertainment Allowance u/s 16(ii)"
-                  name="entertainmentAllow"
-                  class="input-field"
-                  formControlName="entertainmentAllow"
-                />
-                <mat-error
-                  *ngIf="
-                    deductionsFormGroup.controls['entertainmentAllow'].hasError(
-                      'max'
-                    )
-                  "
-                >
-                  Enter valid amount
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-sm-4">
-              <mat-label class="inputLabel">Professional Tax:</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  digitsOnly
-                  trim
-                  class="input-field"
-                  matInput
-                  placeholder="Professional Tax u/s 16(iii)"
-                  name="professionalTax"
-                  formControlName="professionalTax"
-                  maxlength="10"
-                />
-                <mat-error
-                  *ngIf="
-                    deductionsFormGroup.controls['professionalTax'].hasError(
-                      'max'
-                    )
-                  "
-                >
-                  Enter valid amount
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- // Deduction  -->
-            <div class="col-sm-4">
-              <mat-label class="inputLabel">Standard Deduction:</mat-label>
-              <mat-form-field appearance="outline">
-                <input
-                  digitsOnly
-                  trim
-                  class="input-field"
-                  matInput
-                  placeholder="standard Deduction"
-                  name="standardDeduction"
-                  formControlName="standardDeduction"
-                  readonly
-                />
-                <mat-error
-                  *ngIf="
-                    deductionsFormGroup.controls['standardDeduction'].hasError(
-                      'max'
-                    )
-                  "
-                >
-                  Enter valid amount
-                </mat-error>
-              </mat-form-field>
-              <mat-hint>
-                Standard deduction applies to one employer only
-              </mat-hint>
-            </div>
-          </div>
-        </form>
+    <div class="frameC">
+      <div class="div">
+        <div class="text-wrapper">Salary Income</div>
+        <div class="mingcute-down-fill"></div>
       </div>
-    </mat-expansion-panel>
-  </mat-accordion>
-  <div class="flex justify-between p-[30px] back-foot">
-    <button class="lgtBtn" (click)="goBack()">
-      <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-      <span class="font-semibold">&nbsp;Back to Main Page</span>
-    </button>
+      <div class="space">
+        <div class="div-2">
+          <div class="div-3">
+            <div class="contents-wrapper" *ngFor="let employer of Copy_ITR_JSON.employers; let i = index;">
+              <div [ngClass]="i === currentIndex ? 'contents-selected' : 'contents'">
+                <div [ngClass]="i === currentIndex ? 'field-text-selected' :'field-text'" (click)="markActive(i)">Employer {{ i + 1}}</div>
+                <div class="group" (click)="deleteEmployer(i)">
+                  <i class="fa fa-trash-o delbt" [ngClass]="i === currentIndex ? 'field-text-selected' :'field-text'"></i>
+                </div>
+              </div>
+            </div>
+            <div class="contents-wrapper">
+              <div class="field-text-wrapper">
+                <div class="field-text-2" (click)="markActive(-1)">+ Add Another Employer</div>
+              </div>
+            </div>
+          </div>
 
-    <button class="saveBtnIn" (click)="saveEmployerDetails()">
-      <span class="font-semibold">Save All</span>
-    </button>
-  </div>
+
+          <div class="div-4">
+            <div class="frame-wrapper-2A">
+
+              <div class="accordion" id="myAccordion">
+                <form [formGroup]="employerDetailsFormGroup">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header accoHdclr" id="headingOne">
+                      <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                              data-bs-target="#collapseOne">Employer Details</button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                      <div class="card-body">
+                        <div class="div-5">
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Name of the employer </span> <span class="text-wrapper-2">*</span>
+                              </div>
+
+                              <mat-form-field appearance="outline">
+                                <input
+                                        type="text"
+                                        trim
+                                        matInput
+                                        placeholder="Name of the employer"
+                                        name="NameOfEmployer"
+                                        class="form-control inpplac"
+                                        formControlName="employerName"
+                                        maxlength="125"
+                                        required
+                                />
+                                <mat-error
+                                        *ngIf=" employerDetailsFormGroup.controls['employerName'].hasError('required')">
+                                  Enter the name of employer
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Employer TAN </span></div>
+                              <mat-form-field appearance="outline">
+                                <input
+                                        type="text"
+                                        trim
+                                        matTooltip="Format should like this(e.g. XXXXNNNNNX) X indicate character and N indicates number."
+                                        matTooltipClass="tab-tooltip"
+                                        matTooltipPosition="above"
+                                        matInput
+                                        upperCase
+                                        placeholder="TAN"
+                                        name="TAN"
+                                        class="form-control inpplac"
+                                        formControlName="employerTAN"
+                                        maxlength="10"
+                                />
+                                <mat-error
+                                        *ngIf="employerDetailsFormGroup.controls['employerTAN'].hasError('pattern')">
+                                  Enter valid TAN (e.g XXXX12345X)
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Address of the Employer </span> <span class="text-wrapper-2">*</span>
+                              </div>
+
+                              <mat-form-field appearance="outline">
+                                <input
+                                        type="text"
+                                        trim
+                                        matInput
+                                        placeholder="Address of employer"
+                                        name="AddressOfEmployer"
+                                        class="form-control inpplac"
+                                        formControlName="address"
+                                        maxlength="200"
+                                />
+                                <mat-error
+                                        *ngIf="employerDetailsFormGroup.controls['address'].hasError('required')">
+                                  Enter the address
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">PIN Code </span> <span class="text-wrapper-2">*</span>
+                              </div>
+
+                              <mat-form-field appearance="outline">
+                                <input
+                                        type="text"
+                                        trim
+                                        digitsOnly
+                                        matInput
+                                        placeholder="Pin Code"
+                                        name="pinCode"
+                                        class="form-control inpplac"
+                                        formControlName="pinCode"
+                                        maxlength="6"
+                                        (blur)="updateDataByPincode()"
+                                />
+                                <mat-error
+                                        *ngIf="employerDetailsFormGroup.controls['pinCode'].hasError('required')">
+                                  Enter pincode
+                                </mat-error>
+                                <mat-error
+                                        *ngIf="employerDetailsFormGroup.controls['pinCode'].hasError('pattern')">
+                                  Enter valid pin
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">City </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input
+                                        type="text"
+                                        trim
+                                        matInput
+                                        placeholder="Town/City"
+                                        name="TAN"
+                                        class="form-control inpplac"
+                                        formControlName="city"
+                                        maxlength="35"
+                                />
+                                <mat-error
+                                        *ngIf="employerDetailsFormGroup.controls['city'].hasError('required')">
+                                  Enter the town/city
+                                </mat-error>
+                                <mat-error
+                                        *ngIf="employerDetailsFormGroup.controls['city'].hasError('pattern')">
+                                  Enter character only.
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">State </span> <span class="text-wrapper-2">*</span>
+                                <mat-form-field appearance="outline">
+                                  <mat-select
+                                          placeholder="Select state"
+                                          name="state"
+                                          formControlName="state">
+                                    <mat-option
+                                            *ngFor="let state of stateDropdown"
+                                            [value]="state.stateCode">
+                                      {{ state.stateName | titlecase }}
+                                    </mat-option>
+                                  </mat-select>
+                                  <mat-error
+                                          *ngIf="employerDetailsFormGroup.controls['state'].hasError('required')">
+                                    Select the state
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Country </span> <span class="text-wrapper-2">*</span>
+                                <mat-form-field appearance="outline">
+                                  <mat-select value="India">
+                                    <mat-option value="India">India</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                      <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                              data-bs-target="#collapseTwo">Gross Salary
+                        <input type="number" class="form-control inpClr2" value="{{getTotalGrossSalary()}}" readonly></button>
+
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                      <div class="card-body" formArrayName="salaryDetails">
+
+                        <!-- 4 Box -->
+                        <div class="out-4box"
+                             *ngFor="let income of getSalaryArray.controls; let i = index"
+                             [formGroupName]="i">
+                          <div class="area-1">
+                            {{ income.value.label }}
+                          </div>
+                          <div class="area-2">
+                            <mat-form-field appearance="outline"
+                                            class="input-field-width">
+                              <input
+                                      type="text"
+                                      digitsOnly
+                                      trim
+                                      matInput
+                                      placeholder=""
+                                      name="salaryValue[i]"
+                                      formControlName="salaryValue"
+                                      (blur)="checkGrossSalary()"
+                                      class="form-control inpClr1"
+                                      maxlength="125"
+                                      (change)="changed(true);"
+                                      (beforeinput)="confirmChange($event, income.value.salaryType)"
+                              />
+                            </mat-form-field>
+                          </div>
+                          <div class="area-3">
+                            OR
+                          </div>
+                          <div class="area-4">
+                            <button type="button" class="btnSal" (click)="bifurcation(i)"> + Add based on category </button>
+                          </div>
+                        </div>
+                        <img class="line" src="img/line-2-2.svg" />
+                        <!-- 4 Box -->
+
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+                <form [formGroup]="allowanceFormGroup">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo1">
+                      <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                              data-bs-target="#collapseTwo1">Exemptions
+                        <input type="number" class="form-control inpClr2" value="{{getTotalAllowances()}}" readonly>
+                      </button>
+                    </h2>
+                    <div id="collapseTwo1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                      <div class="card-body" formArrayName="allowances">
+                        <div class="div-8A" *ngFor="let income of getAllowanceArray.controls; let i = index"
+                             [formGroupName]="i">
+
+                          <div class="item1">
+                            <div class="field-label-3">Type of Allowance</div>
+                          </div>
+
+                          <div class="item2">
+                            <div class="contents-10">
+                              <mat-form-field appearance="outline">
+                                <mat-select name="allowType[i]" formControlName="allowType"
+                                            (selectionChange)="validateExemptIncomes($event)">
+                                  <mat-option *ngFor="let exempt of allowanceDropdown; let k = index"
+                                          [value]="exempt.value">{{ exempt.label }}</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                          </div>
+
+                          <div class="item3">
+                            <div class="mb-3" *ngIf="income.value.allowType !== 'COMPENSATION_ON_VRS'">
+
+                              <mat-form-field appearance="outline">
+                                <input
+                                        type="text"
+                                        trim
+                                        digitsOnly
+                                        matInput
+                                        placeholder=""
+                                        name="allowValue[i]"
+                                        formControlName="allowValue"
+                                        maxlength="125"
+                                        (change)="validations()"/>
+                              </mat-form-field>
+                              <mat-error *ngIf="freeze && (income.value.allowType === 'COMPENSATION_ON_VRS' ||
+                              income.value.allowType === 'FIRST_PROVISO' || income.value.allowType === 'SECOND_PROVISO')">
+                                Only any one is allowed of the three
+                              </mat-error>
+                              <mat-error style="width: 70%"
+                                      *ngIf=" income.value.allowType === 'HOUSE_RENT' && hraError">
+                                House rent allowance cannot be more than 50% of Basic or
+                                Total HRA
+                              </mat-error>
+                              <mat-error style="width: 70%"
+                                      *ngIf="income.value.allowType === 'LTA' && ltaError">
+                                LTA to be claimed cannot be more than the LTA that is
+                                provided
+                              </mat-error>
+                              <mat-error style="width: 70%"
+                                      *ngIf="income.value.allowType === 'GRATUITY' && gratuityError">
+                                Gratuity to be claimed cannot be more than the gratuity
+                                that is provided or salary entered in Salary 17(1) or 20
+                                lakhs, whichever is lower
+                              </mat-error>
+                              <mat-error style="width: 70%"
+                                      *ngIf="income.value.allowType === 'COMMUTED_PENSION' && pensionError">
+                                Commuted pension u/s 10(10A) to be claimed cannot be more
+                                than the commuted pension u/s 10(10A) that is provided
+                              </mat-error>
+                              <mat-error style="width: 70%"
+                                      *ngIf=" income.value.allowType === 'LEAVE_ENCASHMENT' && leaveEncashError">
+                                Leave Encashment to be claimed cannot be more than the
+                                Leave Encashment that is provided or salary entered in
+                                Salary 17(1) or 3 lakhs (for non-goverment employees),
+                                whichever is lower
+                              </mat-error>
+                              <mat-error style="width: 70%"
+                                      *ngIf="income.value.allowType === 'SECOND_PROVISO_CGOV' && secProvisoCgovError">
+                                Second proviso under central government can be only
+                                claimed by government employees and should be less than
+                                salary in 17(1) or 5 lakhs, whichever is lower
+                              </mat-error>
+                              <mat-error style="width: 70%"
+                                      *ngIf="income.value.allowType === 'FIRST_PROVISO' && firstProvisoError">
+                                First proviso under central government cannot be claimed
+                                by government employees
+                              </mat-error>
+                              <mat-error style="width: 70%"
+                                      *ngIf="income.value.allowType === 'SECOND_PROVISO' &&secondProvisoError">
+                                Second proviso allowance cannot be claimed by government
+                                employees
+                              </mat-error>
+                              <mat-error style="width: 70%"
+                                      *ngIf="income.value.allowType === '10(6)' && remunerationError">
+                                Deduction claimed cannot be more than the total Salary
+                                under 17(1), 17(2) and 17(3)
+                              </mat-error>
+                              <mat-error style="width: 70%"
+                                      *ngIf="income.value.allowType === '10(7)' && serviceOutIndError">
+                                Deduction claimed cannot be more than the total Salary
+                                under 17(1), 17(2) and 17(3)
+                              </mat-error>
+                              <mat-error style="width: 70%"
+                                      *ngIf="income.value.allowType === '10(14)(ii)' && prescPersonalExpError">
+                                Deduction cannot be more than the value of Salary under
+                                Conveyance Allowance, Other Allowance & Others in Section
+                                17(1)
+                              </mat-error>
+                              <mat-error
+                                      style="width: 70%"
+                                      *ngIf="income.value.allowType === '10(14)(i)' && prescProfExpError">
+                                Deduction cannot be more than the value of Salary under
+                                Conveyance Allowance, Other Allowance & Others in Section
+                                17(1)
+                              </mat-error>
+                              <mat-error style="width: 70%"
+                                      *ngIf="income.value.allowType === 'EIC' && eicProfExpError">
+                                Deduction can claimed only by state or central government
+                                employees
+                              </mat-error>
+                              <!--                            <div class="input-group-append">-->
+                              <!--                              <div class="input-group-text btnIco"><i class="fa fa-calculator"></i> </div>-->
+                              <!--                            </div>-->
+                            </div>
+
+                            <div class="mb-3" *ngIf="income.value.allowType === 'COMPENSATION_ON_VRS'">
+
+                              <div>
+                                Whether Exemption u/s 10(10C) is taken in Previous
+                                Assessment Year ??<br />
+                                <mat-radio-group
+                                        [formControl]="allowanceFormGroup.get('vrsLastYear') | formControlType"
+                                        (change)="updateVrsExemptionTaken()">
+                                  <mat-radio-button [value]="true">Yes</mat-radio-button>
+                                  <mat-radio-button [value]="false">No</mat-radio-button>
+                                </mat-radio-group><br />
+                                Where any relief u/s 89 has been allowed to an assessee for
+                                any assessment year<br />
+                                in respect of any amount on his voluntary retirement or
+                                termination of service?<br />
+                                <mat-radio-group
+                                        [formControl]="allowanceFormGroup.get('sec89') | formControlType"
+                                        (change)="updateVrsExemptionTaken()">
+                                  <mat-radio-button [value]="true">Yes</mat-radio-button>
+                                  <mat-radio-button [value]="false"
+                                  >No</mat-radio-button
+                                  > </mat-radio-group
+                                ><br />
+                              </div>
+                              <mat-form-field appearance="outline">
+                                <input
+                                        type="number"
+                                        trim
+                                        digitsOnly
+                                        matInput
+                                        placeholder=""
+                                        name="allowValue[i]"
+                                        formControlName="allowValue"
+                                        class="form-control"
+                                        (change)="validations()"
+                                        [disabled]="isVrsExemptionTaken"
+                                />
+                              </mat-form-field>
+                              <mat-error
+                                      *ngIf="freeze && (income.value.allowType === 'COMPENSATION_ON_VRS' ||
+                            income.value.allowType === 'FIRST_PROVISO' || income.value.allowType === 'SECOND_PROVISO')">
+                                Only any one of the three is allowed
+                              </mat-error>
+                              <mat-error style="width: 70%"
+                                      *ngIf="income.value.allowType === 'COMPENSATION_ON_VRS' && compensationOnVrsError">
+                                Compensation on VRS cannot be more than 17(1) or 5 lakh
+                                or if it is already claimed in any previous year then it
+                                cannot be claimed again
+                              </mat-error>
+
+                            </div>
+                          </div>
+
+                          <div class="hp4-4 extra-pad">
+                            <div class="Bx4">
+                              <div class="Bx4L">
+                                <button type="button" (click)="deleteExemptIncome(i)"> <i class="fa fa-trash-o delbt"></i> </button>
+                              </div>
+                              <div class="Bx4R">
+                                <button type="button" class="addAno" (click)="addExemptIncome()"> + Add Another </button>
+                              </div>
+                            </div>
+                          </div>
+
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingThree">
+                    <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseThree">Deductions</button>
+                  </h2>
+                  <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                    <form [formGroup]="deductionsFormGroup">
+                      <div class="card-body">
+
+                        <div class="div-8A">
+                          <div class="item-left">
+                            <div class="field-label-3">Standard Deduction sec 16(i)</div>
+                          </div>
+                          <div class="item-right">
+                            <mat-form-field appearance="outline">
+                              <input
+                                      digitsOnly
+                                      trim
+                                      class="form-control inpplac1"
+                                      matInput
+                                      placeholder="standard Deduction"
+                                      name="standardDeduction"
+                                      formControlName="standardDeduction"
+                                      readonly/>
+                              <mat-error
+                                      *ngIf="deductionsFormGroup.controls['standardDeduction'].hasError('max')">
+                                Enter valid amount
+                              </mat-error>
+                            </mat-form-field>
+                            <mat-hint>
+                              Standard deduction applies to one employer only
+                            </mat-hint>
+
+
+                          </div>
+                        </div>
+
+                        <div class="div-8A">
+                          <div class="item-left">
+                            <div class="field-label-3">Entertainment Allowance sec 16(ii)</div>
+                          </div>
+                          <div class="item-right">
+                            <mat-form-field appearance="outline">
+                              <input
+                                      digitsOnly
+                                      trim
+                                      matInput
+                                      placeholder="Entertainment Allowance u/s 16(ii)"
+                                      name="entertainmentAllow"
+                                      class="form-control inpplac1"
+                                      formControlName="entertainmentAllow"
+                              />
+                              <mat-error
+                                      *ngIf="deductionsFormGroup.controls['entertainmentAllow'].hasError('max')">
+                                Enter valid amount
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="div-8A">
+                          <div class="item-left">
+                            <div class="field-label-3">Professional Tax sec 16(iii)</div>
+                          </div>
+                          <div class="item-right">
+                            <mat-form-field appearance="outline">
+                              <input
+                                      digitsOnly
+                                      trim
+                                      class="form-control inpplac1"
+                                      matInput
+                                      placeholder="Professional Tax u/s 16(iii)"
+                                      name="professionalTax"
+                                      formControlName="professionalTax"
+                                      maxlength="10"
+                              />
+                              <mat-error
+                                      *ngIf="deductionsFormGroup.controls['professionalTax'].hasError('max')">
+                                Enter valid amount
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+
+
+              </div>
+
+            </div>
+
+
+            <div class="frame-wrapper-2">
+              <div class="div-8B">
+                <div class="item-left1">
+                  <div class="field-label-3">Net Taxable Salary from Employer {{currentIndex+1}}</div>
+                </div>
+                <div class="item-right1">
+                  ₹ {{utilsService.currencyFormatter(getNetTaxableSalary())}}
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="out-box">
+              <div class="box-left">
+                <div class="lft-btn" (click)="goBack()">Back</div>
+              </div>
+              <div class="box-right">
+                <div class="rght-btn" (click)="saveEmployerDetails(true)">Save & View Summary</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <app-side-summary-panel type="salary"></app-side-summary-panel>
+
+
+
 </div>
+<!-- main area ends -->
+

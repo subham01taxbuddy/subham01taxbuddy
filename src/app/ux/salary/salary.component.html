@@ -1,0 +1,614 @@
+<div class="page-wrapper">
+
+  <!-- left side bar start -->
+  <div [ngClass]="openSidebar?'sidebar open': 'sidebar close'">
+
+    <ul class="nav-links">
+      <li>
+        <a href="#">
+          <!-- <i class='bx bx-grid-alt' ></i> -->
+          <img src="assets/img/new/leader.svg" class="iconL">
+          <span class="link_name">Leader Dashboard</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Leader Dashboard</a></li>
+        </ul>
+      </li>
+      <li>
+        <div class="iocn-link">
+          <a href="#">
+            <img src="assets/img/new/mytask.svg" class="iconL1">
+            <span class="link_name" href="#">My Tasks</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow'></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">My Tasks</a></li>
+          <li><a href="#">My Users</a></li>
+          <li><a href="#">Scheduled Calls</a></li>
+          <li><a href="#">ITRs</a></li>
+          <li><a href="#">Create User</a></li>
+          <li><a href="#">Potential Users</a></li>
+        </ul>
+      </li>
+      <li>
+        <div class="iocn-link">
+          <a href="#">
+            <img src="assets/img/new/sme.svg" class="iconL1">
+            <span class="link_name" href="#">SME Mngmt</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow'></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">SME Management</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">
+          <img src="assets/img/new/subscription.svg" class="iconL">
+          <span class="link_name">Subscription</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Subscription</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">
+          <img src="assets/img/new/invoice.svg" class="iconL1">
+          <span class="link_name">Invoice</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Invoice</a></li>
+        </ul>
+      </li>
+      <li>
+        <div class="iocn-link">
+          <a href="#">
+            <img src="assets/img/new/payout.svg" class="iconL1">
+            <span class="link_name">Payouts</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow'></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">Payouts</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">
+          <img src="assets/img/new/bulk.svg" class="iconL1">
+          <span class="link_name">Bulk Status Update</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Bulk Status Update</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">
+          <img src="assets/img/new/alluser.svg" class="iconL1">
+          <span class="link_name">All Users</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">All Users</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">
+          <img src="assets/img/new/review.svg" class="iconL1">
+          <span class="link_name">Review</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Review</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">
+          <img src="assets/img/new/bo-partner.svg" class="iconL1">
+          <span class="link_name">BO-Partners</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">BO-Partners</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">
+          <img src="assets/img/new/promo.svg" class="iconL1">
+          <span class="link_name">Promo Codes</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Promo Codes</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">
+          <img src="assets/img/new/academic.svg" class="iconL1">
+          <span class="link_name">Academic Courses</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Academic Courses</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+
+  <!-- 
+
+  <aside class="aside-left">
+    <div class="frameL">
+
+      <div class="contents">
+        <div class="field-text">Leader Dashboard</div>
+      </div>
+      <div class="div">
+        <div class="text-wrapper">My Tasks</div>
+        <img class="mingcute-down-fill" src="assets/img/new/up.png" />
+      </div>
+      <div class="div-2">
+        <div class="field-text-wrapper">
+          <div class="field-text">My Users</div>
+        </div>
+        <div class="field-text-wrapper">
+          <div class="field-text-2">Scheduled Calls</div>
+        </div>
+        <div class="div-wrapper">
+          <div class="text-wrapper">ITRs</div>
+        </div>
+        <div class="field-text-wrapper">
+          <div class="field-text">Create User</div>
+        </div>
+        <div class="field-text-wrapper">
+          <div class="field-text">Potential Users</div>
+        </div>
+      </div>
+      <div class="contents">
+        <div class="field-text">SME Management</div>
+      </div>
+      <div class="contents">
+        <div class="field-text">Subscription</div>
+      </div>
+      <div class="contents">
+        <div class="field-text">Invoice</div>
+      </div>
+      <div class="contents">
+        <div class="field-text">Payouts</div>
+      </div>
+      <div class="contents">
+        <div class="field-text">Bulk Status Update</div>
+      </div>
+      <div class="contents">
+        <div class="field-text">All Users</div>
+      </div>
+      <div class="contents">
+        <div class="field-text">Review</div>
+      </div>
+      <div class="contents">
+        <div class="field-text">BO-Partners</div>
+      </div>
+      <div class="contents">
+        <div class="field-text">Promo Codes</div>
+      </div>
+      <div class="contents">
+        <div class="field-text">Academic Courses</div>
+      </div>
+    </div>
+  </aside> -->
+  <!-- left side bar ends -->
+  <!-- main area -->
+  <section class="home-section">
+    <div class="home-content" (click)="toggleSidebar()">
+      <i class='bx bx-menu'></i>
+      <!-- <span class="text">Drop Down Sidebar</span> -->
+    </div>
+    <main>
+      <!-- breadcrumb area -->
+      <div class="rectangleB">
+        <div class="frameB">
+          <div class="large-title">Prefill Data</div>
+          <div class="text-wrapper">&gt;</div>
+          <div class="large-title">Sources of Income</div>
+          <div class="text-wrapper">&gt;</div>
+          <div class="large-title">Other Source of income</div>
+        </div>
+      </div>
+
+      <!-- breadcrumb area ends -->
+
+      <div class="frameC">
+        <div class="div">
+          <div class="text-wrapper">Salary Income</div>
+          <div class="mingcute-down-fill"></div>
+        </div>
+        <div class="space">
+          <div class="div-2">
+            <div class="div-3">
+              <div class="contents-wrapper">
+                <div class="contents">
+                  <div class="field-text">Employer 1</div>
+                  <div class="group"><img class="material-symbols" src="assets/img/new/del.png" /></div>
+                </div>
+              </div>
+              <div class="contents-wrapper">
+                <div class="field-text-wrapper">
+                  <div class="field-text-2">+ Add Another Employer</div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="div-4">
+              <div class="frame-wrapper-2A">
+
+                <div class="accordion" id="myAccordion">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header accoHdclr" id="headingOne">
+                      <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne">Employer Details</button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                      <div class="card-body">
+                        <div class="div-5">
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Name of the employer </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" placeholder="AC technologies">
+                            </div>
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Employer TAN </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" placeholder="56886TTFG">
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Address of the Employer </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" placeholder="">
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">PIN Code </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" placeholder="">
+                            </div>
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">City </span> <span class="text-wrapper-2">*</span>
+                              </div>
+                              <input type="text" class="form-control inpplac" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" placeholder="Mumbai">
+                            </div>
+                          </div>
+                          <div class="div-6">
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">State </span> <span class="text-wrapper-2">*</span>
+                                <select class="form-control select" id="exampleFormControlSelect1">
+                                  <option>Select</option>
+                                  <option>2</option>
+                                  <option>3</option>
+                                  <option>4</option>
+                                  <option>5</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="field">
+                              <div class="field-label">
+                                <span class="span">Country </span> <span class="text-wrapper-2">*</span>
+                                <select class="form-control select" id="exampleFormControlSelect1">
+                                  <option>India</option>
+                                  <option>2</option>
+                                  <option>3</option>
+                                  <option>4</option>
+                                  <option>5</option>
+                                </select>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                      <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo">Gross Salary <input type="number" class="form-control inpClr2"
+                          id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹0"></button>
+
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                      <div class="card-body">
+
+                        <!-- 4 Box -->
+                        <div class="out-4box">
+                          <div class="area-1">
+                            Salary as per section 17(1)
+                          </div>
+                          <div class="area-2">
+                            <input type="number" class="form-control inpClr1" placeholder="₹0">
+                          </div>
+                          <div class="area-3">
+                            OR
+                          </div>
+                          <div class="area-4">
+                            <button type="button" class="btnSal"> + Add based on category </button>
+                          </div>
+                        </div>
+                        <img class="line" src="img/line-2-2.svg" />
+                        <!-- 4 Box -->
+
+                        <!-- 4 Box -->
+                        <div class="out-4box">
+                          <div class="area-1">
+                            Salary as per section 17(1)
+                          </div>
+                          <div class="area-2">
+                            <input type="number" class="form-control inpClr1" placeholder="₹0">
+                          </div>
+                          <div class="area-3">
+                            OR
+                          </div>
+                          <div class="area-4">
+                            <button type="button" class="btnSal"> + Add based on category </button>
+                          </div>
+                        </div>
+                        <img class="line" src="img/line-2-2.svg" />
+                        <!-- 4 Box -->
+
+                        <!-- 4 Box -->
+                        <div class="out-4box">
+                          <div class="area-1">
+                            Salary as per section 17(1)
+                          </div>
+                          <div class="area-2">
+                            <input type="number" class="form-control inpClr1" placeholder="₹0">
+                          </div>
+                          <div class="area-3">
+                            OR
+                          </div>
+                          <div class="area-4">
+                            <button type="button" class="btnSal"> + Add based on category </button>
+                          </div>
+                        </div>
+
+                        <!-- 4 Box -->
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                      <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree">Exemptions <input type="number" class="form-control inpClr2"
+                          id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹0"></button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                      <div class="card-body">
+                        <div class="div-8A">
+
+                          <div class="item1">
+                            <div class="field-label-3">Type of Allowance</div>
+                          </div>
+
+                          <div class="item2">
+                            <div class="contents-10">
+                              <select class="form-control select">
+                                <option>Select</option>
+                                <option>2</option>
+                                <option>4</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="item3">
+                            <div class="input-group mb-3">
+                              <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                              <div class="input-group-append">
+                                <div class="input-group-text btnIco"><i class="fa fa-calculator"></i> </div>
+                              </div>
+                            </div>
+                          </div>
+
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                      <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree">Deductions</button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                      <div class="card-body">
+
+                        <div class="div-8A">
+                          <div class="item-left">
+                            <div class="field-label-3">Standard Deduction sec 16(i)</div>
+                          </div>
+                          <div class="item-right">
+                            <input type="text" id="exampleInputEmail1" aria-describedby="emailHelp"
+                              placeholder="₹ Enter Amount" class="form-control inpplac1">
+                          </div>
+                        </div>
+
+                        <div class="div-8A">
+                          <div class="item-left">
+                            <div class="field-label-3">Entertainment Allowance sec 16(ii)</div>
+                          </div>
+                          <div class="item-right">
+                            <input type="text" id="exampleInputEmail1" aria-describedby="emailHelp"
+                              placeholder="₹ Enter Amount" class="form-control inpplac1">
+                          </div>
+                        </div>
+
+                        <div class="div-8A">
+                          <div class="item-left">
+                            <div class="field-label-3">Professional Tax sec 16(iii)</div>
+                          </div>
+                          <div class="item-right">
+                            <input type="text" id="exampleInputEmail1" aria-describedby="emailHelp"
+                              placeholder="₹ Enter Amount" class="form-control inpplac1">
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                </div>
+
+              </div>
+
+
+              <div class="frame-wrapper-2">
+
+
+                <div class="div-8B">
+                  <div class="item-left1">
+                    <div class="field-label-3">Net Taxable Salary from Employer 1</div>
+                  </div>
+                  <div class="item-right1">
+                    ₹ 56,000
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="out-box">
+                <div class="box-left">
+                  <div class="lft-btn">Back</div>
+                </div>
+                <div class="box-right">
+                  <div class="rght-btn">Save & View Summary</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+
+  </section>
+
+
+
+
+
+
+  <!-- right side summary -->
+  <aside class="aside-right">
+    <button class="open-button" onclick="openForm()"><img class="icoSum" src="assets/img/new/summary.png">
+      <div class="txAln">Show Summary</div>
+    </button>
+    <div class="form-popup" id="myForm">
+      <div class="frameS">
+        <div class="contents-wrapper">
+          <div class="contents">
+            <div class="field-text">Summary</div>
+            <a onclick="closeForm()"><img class="clos" src="assets/img/new/close.png" /></a>
+          </div>
+        </div>
+        <div class="space">
+          <div class="div">
+            <div class="field-wrapper">
+              <div class="field-2">
+                <div class="field-label-2 hedTx">Particulars</div>
+                <div class="field-label-3 hedTx">All Employers</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="div">
+            <div class="field-wrapper">
+              <div class="field-2">
+                <div class="field-label-2">17 (1)</div>
+                <div class="field-label-3">₹ 40,00,000</div>
+              </div>
+            </div>
+            <div class="field-wrapper">
+              <div class="field-2">
+                <div class="field-label-2">17 (2)</div>
+                <div class="field-label-3">₹0</div>
+              </div>
+            </div>
+            <div class="field-wrapper">
+              <div class="field-2">
+                <div class="field-label-2">17 (3)</div>
+                <div class="field-label-3">₹0</div>
+              </div>
+            </div>
+            <div class="field-wrapper">
+              <div class="field-2">
+                <div class="field-label-2">Gross Salary</div>
+                <div class="field-label-3">₹0</div>
+              </div>
+            </div>
+            <div class="field-wrapper">
+              <div class="field-2">
+                <div class="field-label-2">Exemptions u/s 10</div>
+                <div class="field-label-3">₹0</div>
+              </div>
+            </div>
+            <div class="field-wrapper">
+              <div class="field-2">
+                <div class="field-label-4">Net Salary</div>
+                <div class="field-label-3">₹ 50,000</div>
+              </div>
+            </div>
+            <div class="field-wrapper">
+              <div class="field-2">
+                <div class="field-label-4">Deduction u/s 16</div>
+                <div class="field-label-3">₹ 50,000</div>
+              </div>
+            </div>
+          </div>
+          <div class="div">
+            <img class="img" src="img/line-2.svg" />
+            <div class="field-wrapper">
+              <div class="field-2">
+                <div class="field-label-2 hedTx">Taxable Salary</div>
+                <div class="field-label-3 hedTx">₹ 39,50,000</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <!-- right side summary ends-->
+</div>
+<!-- main area ends -->
+
+<!--  <div class="one"></div> -->
+<script>
+  let arrow = document.querySelectorAll(".arrow");
+  for (var i = 0; i < arrow.length; i++) {
+    arrow[i].addEventListener("click", (e) => {
+      let arrowParent = e.target.parentElement.parentElement;//selecting main parent of arrow
+      arrowParent.classList.toggle("showMenu");
+    });
+  }
+  let sidebar = document.querySelector(".sidebar");
+  let sidebarBtn = document.querySelector(".bx-menu");
+  console.log(sidebarBtn);
+  sidebarBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("close");
+  });
+</script>

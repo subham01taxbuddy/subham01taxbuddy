@@ -1,48 +1,230 @@
-<div class="spc-blw mrgArd">
-  <ngx-loading
-    [show]="loading"
-    [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-  ></ngx-loading>
 
-  <!-- ag-grid table -->
-  <div>
-    <div>
-      <span class="subTitle">Taxes Paid Details:</span>
-      <button type="button" class="new-add btnRt" (click)="addTaxesPaid(false)">
-        + Add more
-      </button>
+<ngx-loading
+        [show]="loading"
+        [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
+></ngx-loading>
+
+<!--<main>-->
+  <div class="page-wrapper">
+  <main>
+  <div class="frameC">
+    <h1 class="heading__title">Taxes Paid</h1>
+    <div class="space">    
+          <div class="frame-wrapper-2A">
+            <!--            TDS on salary-->
+            <div class="accordion" id="tdsAccordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="tdsSalaryHeading">
+                  <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                          data-bs-target="#tdsSalary">Tax Deducted at Source from Salary</button>
+                </h2>
+                <div id="tdsSalary" class="accordion-collapse collapse" data-bs-parent="#tdsAccordion">
+                  <div class="accordion__item-body">
+                    <div class="Bx4R" *ngIf="tdsMode === 'VIEW'">
+                      <button type="button" class="addAno" (click)="editTaxesPaid(TDS_TYPE_CODE)">
+                        + Add more
+                      </button>
+                    </div>
+
+                    <div class="card__row display-flex" *ngIf="tdsMode === 'EDIT'">
+                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12">
+                        <app-tds-on-salary [editIndex]="tdsEditIndex" (onSave)="saveAll($event)"></app-tds-on-salary>
+                      </div>
+                    </div>
+                    <ag-grid-angular *ngIf="tdsMode === 'VIEW'"
+                            style="width: 100%; height: 150%"
+                            class="ag-theme-balham spsTp"
+                            [gridOptions]="onSalaryGridOptions"
+                            [animateRows]="true"
+                            (rowClicked)="onTdsDetailRowClicked($event)"></ag-grid-angular>
+<!--                    <button *ngIf="false"-->
+<!--                            class="delete-btn delete-icon"-->
+<!--                            (click)="$event.stopPropagation(); deleteAsset()"-->
+<!--                            [disabled]="!isAssetSelected()">-->
+<!--                      <i class="fa fa-trash" aria-hidden="true"></i> Delete-->
+<!--                    </button>-->
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--            TDS other than salary-->
+            <div class="accordion" id="tdsOtherAccordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="tdsOtherHeading">
+                  <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                          data-bs-target="#tdsOther">Tax Deducted at Source (TDS) on Income other than salary</button>
+                </h2>
+                <div id="tdsOther" class="accordion-collapse collapse" data-bs-parent="#tdsOtherAccordion">
+                  <div class="accordion__item-body">                 
+                    <div class="Bx4R" *ngIf="tdsOtherMode === 'VIEW'" >
+                      <button type="button" class="addAno" (click)="editTaxesPaid(TDS_OTHER_TYPE_CODE)">
+                        + Add more
+                      </button>
+                    </div>
+         
+                
+                 
+                    <div class="card__row" *ngIf="tdsOtherMode === 'EDIT'">
+                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12 fullBox">
+                        <app-tds-other-than-salary [editIndex]="tdsOtherEditIndex"
+                                #other
+                                [addData]="isAddOther"
+                                [showHeadOfIncome]="'TDTS'"
+                                (onSave)="saveAll($event)"></app-tds-other-than-salary>
+                      </div>
+                    </div>
+                    <ag-grid-angular *ngIf="tdsOtherMode === 'VIEW'"                           
+                            class="ag-theme-balham spsTp"
+                            [gridOptions]="tdsOtherThanSalary16AGridOptions"
+                            [animateRows]="true"
+                            (rowClicked)="onTdsDetailRowClicked($event)"></ag-grid-angular>
+<!--                    <button *ngIf="false"-->
+<!--                            class="delete-btn delete-icon"-->
+<!--                            (click)="$event.stopPropagation(); deleteAsset()"-->
+<!--                            [disabled]="!isAssetSelected()">-->
+<!--                      <i class="fa fa-trash" aria-hidden="true"></i> Delete-->
+<!--                    </button>-->
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--            TDS other than salary pan based-->
+            <div class="accordion" id="tdsPanAccordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="tdsPanHeading">
+                  <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                          data-bs-target="#tdsPan">Tax Deducted at Source (TDS) on Sale/Rent of Immovable Property</button>
+                </h2>
+                <div id="tdsPan" class="accordion-collapse collapse" data-bs-parent="#tdsPanAccordion">
+                  <div class="accordion__item-body">
+                    <div class="Bx4R" *ngIf="tdsPanMode === 'VIEW'">
+                      <button type="button" class="addAno" (click)="editTaxesPaid(TDS_PAN_TYPE_CODE)">
+                        + Add more
+                      </button>
+                    </div>
+                    <div class="card__row" *ngIf="tdsPanMode === 'EDIT'">
+                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12 fullBox">
+                      <app-tds-other-than-salary [editIndex]="tdsPanEditIndex"
+                              #panBased
+                              [addData]="isAddPanBased"
+                              [showHeadOfIncome]="'TDTSP'"
+                              (onSave)="saveAll($event)"></app-tds-other-than-salary>
+                      </div>
+                    </div>
+                    <ag-grid-angular *ngIf="tdsPanMode === 'VIEW'"
+                            style="width: 100%; height: 150%"
+                            class="ag-theme-balham spsTp"
+                            [gridOptions]="tdsOtherThanSalary26QBGridOptions"
+                            [animateRows]="true"
+                            (rowClicked)="onTdsDetailRowClicked($event)"></ag-grid-angular>
+<!--                    <button *ngIf="false"-->
+<!--                            class="delete-btn delete-icon"-->
+<!--                            (click)="$event.stopPropagation(); deleteAsset()"-->
+<!--                            [disabled]="!isAssetSelected()">-->
+<!--                      <i class="fa fa-trash" aria-hidden="true"></i> Delete-->
+<!--                    </button>-->
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--            TCS-->
+            <div class="accordion" id="tcsAccordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="tcsHeading">
+                  <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                          data-bs-target="#tcs">Tax collected at source(TCS)</button>
+                </h2>
+                <div id="tcs" class="accordion-collapse collapse" data-bs-parent="#tcsAccordion">
+                  <div class="accordion__item-body">
+                    <div class="Bx4R" *ngIf="tcsMode === 'VIEW'">
+                      <button type="button" class="addAno" (click)="editTaxesPaid(TCS_TYPE_CODE)">
+                        + Add more
+                      </button>
+                    </div>
+                    <div class="card__row" *ngIf="tcsMode === 'EDIT'">
+                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12 fullBox">
+                        <app-tcs [isAddTcs]="isAddTcs" [editIndex]="tcsEditIndex" (onSave)="saveAll($event)"></app-tcs>
+                      </div>
+                    </div>
+                    <ag-grid-angular *ngIf="tcsMode === 'VIEW'"
+                            style="width: 100%; height: 150%"
+                            class="ag-theme-balham spsTp"
+                            [gridOptions]="tcsGridOptions"
+                            [animateRows]="true"
+                            (rowClicked)="onTdsDetailRowClicked($event)"></ag-grid-angular>
+<!--                    <button *ngIf="false"-->
+<!--                            class="delete-btn delete-icon"-->
+<!--                            (click)="$event.stopPropagation(); deleteAsset()"-->
+<!--                            [disabled]="!isAssetSelected()">-->
+<!--                      <i class="fa fa-trash" aria-hidden="true"></i> Delete-->
+<!--                    </button>-->
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--            Advance tax-->
+            <div class="accordion" id="myAccordion">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="heading1">
+                  <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                          data-bs-target="#collapse1">Advance tax and Self Assessment Tax</button>
+                </h2>
+                <div id="collapse1" class="accordion-collapse collapse" data-bs-parent="#myAccordion">
+                  <div class="accordion__item-body">
+                    <div class="Bx4R" *ngIf="advanceMode === 'VIEW'">
+                      <button type="button" class="addAno" (click)="editTaxesPaid(ADVANCE_TYPE_CODE)">
+                        + Add more
+                      </button>
+                    </div>
+
+                    <div class="card__row" *ngIf="advanceMode === 'EDIT'">
+                      <div class="card card__col-sm-12 card__col-md-12 card__col-lg-12 card__col-xl-12 fullBox">
+                        <app-advance-tax-paid [editIndex]="advanceEditIndex"
+                                [isAddAdvance]="isAddAdvance"
+                                (onSave)="saveAll($event)"></app-advance-tax-paid>
+                      </div>
+                    </div>
+
+                    <ag-grid-angular *ngIf="advanceMode === 'VIEW'"
+                            style="width: 100%; height: 150%"
+                            class="ag-theme-balham spsTp"
+                            [gridOptions]="otherThanTdsTcsGridOptions"
+                            [animateRows]="true"
+                            (rowClicked)="onTdsDetailRowClicked($event)"></ag-grid-angular>
+<!--                    <button *ngIf="false"-->
+<!--                            class="delete-btn delete-icon"-->
+<!--                            (click)="$event.stopPropagation(); deleteAsset()"-->
+<!--                            [disabled]="!isAssetSelected()">-->
+<!--                      <i class="fa fa-trash" aria-hidden="true"></i> Delete-->
+<!--                    </button>-->
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+     
+
+        <div class="out-box">
+          <div class="box-left">
+            <button class="btn btn__white" (click)="goBack()">Back</button>
+          </div>
+          <div class="box-right">
+            <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
+          </div>
+        </div>
+   
     </div>
-    <div>
-
-    </div>
-    <ag-grid-angular
-      style="width: 100%; height: 150%"
-      class="ag-theme-balham spsTp"
-      [gridOptions]="allTdsDetails"
-      [groupDisplayType]="groupDisplayType"
-      [animateRows]="true"
-      (rowClicked)="onTdsDetailRowClicked($event)"
-    ></ag-grid-angular>
-    <button
-      class="delete-btn delete-icon"
-      (click)="$event.stopPropagation(); deleteAsset()"
-      [disabled]="!isAssetSelected()"
-    >
-      <i class="fa fa-trash" aria-hidden="true"></i> Delete
-    </button>
   </div>
-
-  <!-- navigation buttons -->
-  <div class="flex justify-between p-[30px] back-foot">
-    <button class="lgtBtn">
-      <mat-icon class="icoAdj">keyboard_backspace</mat-icon>
-      <span class="font-semibold" (click)="goBack()"
-        >&nbsp;Back to Source Page</span
-      >
-    </button>
-
-    <button class="saveBtnIn">
-      <span class="font-semibold" (click)="saveAll()">Save All</span>
-    </button>
-  </div>
+</main>
+<app-side-summary-panel type="taxesPaid"></app-side-summary-panel>
 </div>
+<!--</main>-->

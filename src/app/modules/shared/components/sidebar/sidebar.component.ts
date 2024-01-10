@@ -2,6 +2,11 @@ import { Component, DoCheck } from '@angular/core';
 import { RoleBaseAuthGuardService } from 'src/app/modules/shared/services/role-base-auth-guard.service';
 import { UtilsService } from '../../../../services/utils.service';
 import { Router } from '@angular/router';
+import { NavbarService } from "../../../../services/navbar.service";
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { SidebarService } from 'src/app/services/sidebar.service';
+import { MatSidenav } from '@angular/material/sidenav';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,24 +20,35 @@ export class SidebarComponent {
   loggedInSme: any;
   roles: any;
   currentPath = '';
+  sidenav!: MatSidenav;
+  subscription: Subscription;
 
   constructor(
     private roleBaseAuthGuardService: RoleBaseAuthGuardService,
     private route: Router,
     private utilsService: UtilsService,
+    private sidebarService: SidebarService,
   ) {
     this.currentPath = route.url;
     this.loggedInUserRoles = this.utilsService.getUserRoles();
-    console.log('loggedInUserData', this.loggedInUserRoles);
-    this.route.events.subscribe((url: any) => {
-      // if (route.url === '/itr-filing/itr') {
-      //   this.hideSideBar = true;
-      // } else {
-      //   this.hideSideBar = false;
-      // }
-    });
     this.setActiveMenu();
   }
+
+  openOtherMenu() {
+    this.openSidebar = true;
+  }
+
+  ngAfterViewInit() {
+    this.subscription = this.sidebarService.isLoading
+      .subscribe((state) => {
+        if (state) {
+          this.openSidebar = true;
+        } else {
+          this.openSidebar = false;
+        }
+      });
+  }
+
 
   setActiveMenu() {
     this.menus.forEach(element => {
@@ -49,29 +65,24 @@ export class SidebarComponent {
           }
         });
       }
-
+      if (this.roleBaseAuthGuardService.checkHasPermission(this.loggedInUserRoles, ['ROLE_ADMIN']) && element.name === 'Leader Dashboard') {
+        element.name = 'Admin Dashboard';
+      }
     });
   }
 
   menus: Menu[] = [
     {
       name: 'Partner Dashboard',
-      // iconClass: 'fa fa-globe',
+      icon: 'partners.png',
       active: false,
       url: '/dashboard',
       roles: ['ROLE_FILER'],
       submenu: []
     },
-    // {
-    //   name: 'Owner Dashboard',
-    //   active: false,
-    //   url: '/dashboard/main',
-    //   roles: ['ROLE_OWNER'],
-    //   submenu: []
-    // },
     {
       name: 'Leader Dashboard',
-      // iconClass: 'fa fa-globe',
+      icon: 'dashboard.png',
       active: false,
       url: '/dashboard/leader',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
@@ -79,7 +90,7 @@ export class SidebarComponent {
     },
     {
       name: 'My Tasks',
-      // iconClass: 'fa fa-code',
+      icon: 'tasks.png',
       active: false,
       url: null,
       roles: [],
@@ -90,14 +101,6 @@ export class SidebarComponent {
         { name: 'ITR Assigned Users', url: '/tasks/itr-assigned-users', roles: [] },
         { name: 'Scheduled Calls', url: '/tasks/schedule-call', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Filed ITRs', url: '/tasks/filings', roles: [] },
-        // {
-        //   name: 'Exceptions', url: '/tasks/exceptions', roles: [],
-        //   // submenu: [
-        //   //   { path: 'signup', component: SignUpExceptionsComponent },
-        //   //   { path: 'eri', component: EriExceptionsComponent },
-        //   //   { path: '', redirectTo: 'signup', pathMatch: 'full' }
-        //   // ]
-        // },
         { name: 'Create User', url: '/pages/user-management/create-user', roles: [] },
         { name: 'Potential Users', url: '/tasks/potential-users', roles: [] },
 
@@ -106,7 +109,7 @@ export class SidebarComponent {
     },
     {
       name: 'SME Management',
-      // iconClass: 'fa fa-mobile',
+      icon: 'sme-mgmt.png',
       active: false,
       url: null,
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
@@ -118,7 +121,7 @@ export class SidebarComponent {
     },
     {
       name: 'Subscription',
-      // iconClass: 'fa fa-globe',
+      icon: 'subscription.png',
       active: false,
       url: null,
       roles: [],
@@ -129,7 +132,7 @@ export class SidebarComponent {
     },
     {
       name: 'Invoice',
-      // iconClass: 'fa fa-globe',
+      icon: 'invoice.png',
       active: false,
       url: null,
       roles: [],
@@ -139,12 +142,11 @@ export class SidebarComponent {
         { name: 'Tax Invoice', url: '/subscription/tax-invoice', roles: [] },
         { name: 'Credit Note', url: '/subscription/credit-note', roles: ['ROLE_ADMIN'] },
         { name: 'Old Invoices', url: '/subscription/old-invoices', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
-        // { name: 'Pause Reminders', url: '/subscription/pause-reminders', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
       ]
     },
     {
       name: 'Payouts',
-      // iconClass: 'fa fa-code',
+      icon: 'payouts.png',
       active: false,
       url: null,
       roles: [],
@@ -156,7 +158,7 @@ export class SidebarComponent {
     },
     {
       name: 'Bulk Status Update',
-      // iconClass: 'fa fa-globe',
+      icon: 'bulk-update.png',
       active: false,
       url: '/pages/user-management/bulk-status-update',
       roles: ['ROLE_ADMIN'],
@@ -164,7 +166,7 @@ export class SidebarComponent {
     },
     {
       name: 'All Users',
-      // iconClass: 'fa fa-code',
+      icon: 'all-users.png',
       active: true,
       url: '/pages/user-management/users',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
@@ -172,22 +174,15 @@ export class SidebarComponent {
     },
     {
       name: 'Review',
-      // iconClass: 'fa fa-code',
+      icon: 'review.png',
       active: true,
       url: '/review',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
-    // {
-    //   name: 'BO-Partners',
-    //   active: true,
-    //   url: '/bo-partners',
-    //   roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
-    //   submenu: []
-    // },
     {
       name: 'Promo-Codes',
-      // iconClass: 'fa fa-code',
+      icon: 'promocode.png',
       active: true,
       url: '/promo-code',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
@@ -195,7 +190,7 @@ export class SidebarComponent {
     },
     {
       name: 'Academy Courses',
-      // iconClass: 'fa fa-code',
+      icon: 'academy.png',
       active: true,
       url: '/academy-courses',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
@@ -204,43 +199,39 @@ export class SidebarComponent {
 
     {
       name: 'Reports',
-      // iconClass: 'fa fa-code',
+      icon: 'invoice.png',
       active: false,
       url: null,
       roles: [],
       submenu: [
-        { name: 'Calling Report', url: '/reports/calling-reports', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
-        { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
-        { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
-        // { name: 'Revenue Report', url: '/reports/revenue-report', roles: [] },
+        { name: 'Calling Report', url: '/reports/calling-reports', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Missed Chat Report', url: '/reports/missed-chat-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'ITR Filing Report', url: '/reports/itr-filing-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
         { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN','ROLE_LEADER'] },
-        // { name: 'ITR Payment Done', url: '/reports/users-itr-payment-done', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
-        { name: 'Missed Inbound Calls', url: '/reports/missed-inbound-calls-list', roles: ['ROLE_LEADER','ROLE_FILER'] },
-        { name: 'Missed Chat List', url: '/reports/missed-chat-list', roles: ['ROLE_LEADER','ROLE_FILER'] },
+        { name: 'Payout Report', url: '/reports/payout-report', roles: ['ROLE_ADMIN', 'ROLE_LEADER'] },
+        { name: 'Missed Inbound Calls', url: '/reports/missed-inbound-calls-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
+        { name: 'Missed Chat List', url: '/reports/missed-chat-list', roles: ['ROLE_LEADER', 'ROLE_FILER'] },
         { name: 'Daily Sign-Up Report', url: '/reports/daily-sign-up-report', roles: ['ROLE_ADMIN'] },
       ]
     },
     {
       name: 'Other Report', active: false, url: null, roles: ['ROLE_ADMIN'],
+      icon: 'invoice.png',
       submenu: [
         { name: 'Proforma Invoice', url: '/reports/proforma-invoice', roles: [] },
         { name: 'Payment Received', url: '/reports/payment-received', roles: [] },
         { name: 'Customer Sign-Up', url: '/reports/customer-sign-up', roles: [] },
-        // { name: 'TDS Report', url: '/reports/tds-report', roles: [] },
       ]
     },
     {
       name: 'Delete User Request',
+      icon: 'sme-mgmt.png',
       active: false,
       url: '/delete-user',
       roles: ['ROLE_ADMIN', 'ROLE_LEADER'],
       submenu: []
     },
   ];
-
-  // ngDoCheck() {
-  //   // this.showSidebar = NavbarService.getInstance().showSideBar;
-  // }
 
   isApplicable(permissionRoles: any) {
     if (permissionRoles.length === 0) {
@@ -266,8 +257,8 @@ export class SidebarComponent {
 
 export type Menu = {
   name: string,
+  icon: string,
   url: string | null,
-  // iconClass: string,
   active: boolean,
   roles: string[],
   submenu: { name: string, url: string, roles: string[] }[]

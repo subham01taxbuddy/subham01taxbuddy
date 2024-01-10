@@ -597,26 +597,43 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         suppressMenu: true,
         sortable: true,
         suppressMovable: true,
+        // cellRenderer: function (params: any) {
+        //   // let statusText = '';
+        //   // if (itrStatus.length !== 0) {
+        //   //   const nameArray = itrStatus.filter(
+        //   //     (item: any) => item.statusId === params.data.statusId
+        //   //   );
+        //   //   if (nameArray.length !== 0) {
+        //   //     statusSequence = nameArray[0].sequence;
+        //   //     statusText = nameArray[0].statusName;
+        //   //   } else {
+        //   //     statusText = '-';
+        //   //   }
+        //   // } else {
+        //   //   statusText = params.data.statusId;
+        //   // }
+        //   return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
+        //   style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
+        //   <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${params.data.statusName}
+        //    </button>`;
+        // },
         cellRenderer: function (params: any) {
-          // let statusText = '';
-          // if (itrStatus.length !== 0) {
-          //   const nameArray = itrStatus.filter(
-          //     (item: any) => item.statusId === params.data.statusId
-          //   );
-          //   if (nameArray.length !== 0) {
-          //     statusSequence = nameArray[0].sequence;
-          //     statusText = nameArray[0].statusName;
-          //   } else {
-          //     statusText = '-';
-          //   }
-          // } else {
-          //   statusText = params.data.statusId;
-          // }
-          return `<button type="button" class="action_icon add_button" title="Update Status" data-action-type="updateStatus"
-          style="border: none; background: transparent; font-size: 13px; cursor:pointer;color:#0f7b2e;">
+          const statusName = params.data.statusName;
+          const statusColors = {
+            'Open': { background: '#DDEDFF', color: '#2D629B' },
+            'Not Interested': { background: '#DCDCDC', color: '#808080' },
+            'Payment Received': { background: '#FBEED3', color: '#A36543' },
+            'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+            'Upgraded Invoice Sent' : {background : '#EFF6FF', color: '#86af39'}
+          };
+          const statusStyle = statusColors[statusName] || { background: 'transparent', color: '#000' };
+
+          return `<button class="status-chip" title="Update Status" data-action-type="updateStatus" style="padding: 0px 18px;  border-radius: 40px;
+          cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
           <i class="fa-sharp fa-regular fa-triangle-exclamation" data-action-type="updateStatus"></i> ${params.data.statusName}
-           </button>`;
+          </button>`;
         },
+
         width: 170,
         pinned: 'right',
         cellStyle: function (params: any) {
@@ -636,7 +653,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Open Chat"
-            style="border: none; background: transparent; font-size: 16px; color: #2dd35c; cursor:pointer;">
+            style="border: none; background: transparent; font-size: 16px; color: #3E82CD; cursor:pointer;">
               <i class="fa fa-comments-o" aria-hidden="true" data-action-type="open-chat"></i>
              </button>`;
         },
@@ -660,7 +677,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         cellRenderer: function (params: any) {
           return `<button type="button" class="action_icon add_button" title="Click see/add notes"
           style="border: none; background: transparent; font-size: 17px; cursor:pointer;">
-          <i class="far fa-file-alt" style="color:#ab8708;" aria-hidden="true" data-action-type="addNotes"></i>
+          <i class="far fa-file-alt" style="color:#3E82CD;" aria-hidden="true" data-action-type="addNotes"></i>
            </button>`;
         },
         width: 70,
@@ -1127,7 +1144,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
   updateStatus(mode, client) {
     let disposable = this.dialog.open(ChangeStatusComponent, {
-      width: '50%',
+      width: '60%',
       height: 'auto',
       data: {
         userId: client.userId,
@@ -1169,7 +1186,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
 
   openChat(client) {
     let disposable = this.dialog.open(ChatOptionsDialogComponent, {
-      width: '50%',
+      width: '40%',
       height: 'auto',
       data: {
         userId: client.userId,

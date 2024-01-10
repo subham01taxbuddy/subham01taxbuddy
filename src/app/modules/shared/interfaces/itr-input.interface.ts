@@ -1015,7 +1015,7 @@ export interface NewIncomes {
   id: any;
   incomeType: string;
   receipts: Number;
-  presumptiveIncome: Number;
+  presumptiveIncome: number;
   periodOfHolding: Number;
   minimumPresumptiveIncome: Number;
   registrationNo: any;
@@ -1026,17 +1026,17 @@ export interface NewIncomes {
 export interface ProfitLossACIncomes {
   id: Number;
   businessType: string;
-  totalgrossProfitFromNonSpeculativeIncome?: Number;
-  netProfitfromNonSpeculativeIncome?: Number;
+  totalgrossProfitFromNonSpeculativeIncome?: number;
+  netProfitfromNonSpeculativeIncome?: number;
   incomes: ProfitLossIncomes[];
   expenses?: NewExpenses[];
   totalgrossProfitFromSpeculativeIncome?: Number;
-  netProfitfromSpeculativeIncome?: Number;
+  netProfitfromSpeculativeIncome?: number;
 }
 
 export interface ProfitLossIncomes {
   id: Number;
-
+  netIncome?:Number;
   brokerName: string;
   incomeType: string;
   turnOver: Number;
@@ -1051,16 +1051,22 @@ export interface ProfitLossIncomes {
 
 export interface NewExpenses {
   expenseType: string;
-  expenseAmount: Number;
+  expenseAmount: number;
   description: any;
 }
 export interface NewFinancialParticulars {
   id: Number;
   membersOwnCapital: any;
+  reservesAndSurplus?:any;
   securedLoans: any;
   unSecuredLoans: any;
+  totalLoans?: any;
   advances: any;
+  totalSourcesOfFunds?: any;
   sundryCreditorsAmount: Number;
+  totalLiabilitiesProvision?: Number;
+  totalCurrentAssetsLoansAdv?: Number;
+  netCurrentAsset?:Number;
   otherLiabilities: any;
   totalCapitalLiabilities: any;
   fixedAssets: any;
@@ -1070,6 +1076,9 @@ export interface NewFinancialParticulars {
   cashInHand: Number;
   loanAndAdvances: any;
   investment: any;
+  longTermInvestment?:any;
+  shortTermInvestment?:any;
+  totalCurrentAssets?: Number;
   otherAssets: any;
   totalAssets: any;
   GSTRNumber: any;

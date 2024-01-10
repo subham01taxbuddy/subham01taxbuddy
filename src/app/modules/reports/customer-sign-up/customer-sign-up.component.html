@@ -1,50 +1,61 @@
-<div class="row">
-  <div class="col-sm-6">
-      <h4>Customer Sign-Up Report:</h4>
+<div class="main-1">
+  <div class="row rowClr-1">
+    <div class="col-sm-12">
+        <mat-accordion class="headers-align">
+          <mat-expansion-panel [expanded]=true>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon> arrow_forward_ios </mat-icon>
+                Filter - Customer Sign-Up Report:
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="filter-box">
+                  <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="row">
+                        <div class="col-sm-4 spsTp">
+                          <mat-form-field appearance="outline" class="custom-bg-new">
+                            <mat-label>From Date</mat-label>
+                            <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minEndDate"
+                              [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()" />
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                            <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-4 spsTp">
+                          <mat-form-field appearance="outline" class="custom-bg-new">
+                            <mat-label>To Date</mat-label>
+                            <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
+                              [max]="maxEndDate" autocomplete="off" />
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2></mat-datepicker>
+                            <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
+                            <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="button-container">
+                            <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()">
+                              <i class="fa fa-download" aria-hidden="true"></i> Download File
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+
+    </div>
   </div>
 </div>
-<div class="mrgArdTog2">
-  <mat-accordion class="headers-align">
-      <mat-expansion-panel [expanded]=true>
-          <mat-expansion-panel-header>
-              <mat-panel-title>
-                  <mat-icon> arrow_forward_ios </mat-icon>
-                  Filter - Customer Sign-Up Report:
-              </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="rowClr">
-              <div class="surround">
-                  <div class="row">
-                      <div class="col-sm-4 spsTp">
-                          <mat-form-field appearance="outline">
-                              <mat-label>From Date</mat-label>
-                              <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minStartDate"
-                                  [max]="maxStartDate" autocomplete="off" (dateChange)="setToDateValidation()" />
-                              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                              <mat-datepicker #picker1></mat-datepicker>
-                              <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
-                          </mat-form-field>
-                      </div>
-                      <div class="col-sm-4 spsTp">
-                          <mat-form-field appearance="outline">
-                              <mat-label>To Date</mat-label>
-                              <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="minEndDate"
-                                  [max]="maxEndDate" autocomplete="off" (dateChange)="setToDateValidation()" />
-                              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                              <mat-datepicker #picker2></mat-datepicker>
-                              <mat-error *ngIf="endDate.hasError('required')">Select To date</mat-error>
-                              <mat-error *ngIf="endDate.hasError('min')">To date always greater than from
-                                  date</mat-error>
-                          </mat-form-field>
-                      </div>
-                      <div class="col-sm-4">
-                          <button class="srch-btn mvRth spsTp" [disabled]="loading" (click)="downloadReport()">
-                              <i class="fa fa-download" aria-hidden="true"></i> Download File
-                          </button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </mat-expansion-panel>
-  </mat-accordion>
-</div>
+
+

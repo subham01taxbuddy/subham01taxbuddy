@@ -2,77 +2,80 @@
 <span class="loader-text" *ngIf="showCsvMessage">We are preparing the CSV it might take few minutes pls hold on and not
   move
   away from the page...</span>
-<!-- New Open Close Filter Starts -->
-<div class="mrgArdTog2">
-  <mat-accordion class="headers-align">
-    <mat-expansion-panel [expanded]="!dataOnLoad">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon> arrow_forward_ios </mat-icon>
-          Filter - Schedule Call Report:
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="rowClr">
-        <div class="surround">
-          <div class="row">
-            <div class="col-sm-12 bckClr">
-              <div class="col-sm-6">
-                <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event)"
-                [showOwnerList]="true"></app-leader-list-dropdown>
+
+<div class="main-1">
+  <div class="row rowClr-1">
+    <div class="col-sm-12">
+      <div class="">
+        <mat-accordion class="headers-align">
+          <mat-expansion-panel [expanded]="!dataOnLoad">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon> arrow_forward_ios </mat-icon>
+                Filter - Schedule Call Report:
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="filter-box">
+                  <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-sm-6 bckClr">
+                      <app-leader-list-dropdown #leaderDropDown (sendLeader)="fromSme1($event)"
+                        [showOwnerList]="true"></app-leader-list-dropdown>
+                    </div>
+                    <div class="button-container">
+                      <button class="srch-btn-1" [disabled]="loading" (click)="showReports()"
+                        *ngIf="!roles?.includes('ROLE_FILER')">
+                        <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
+                      </button>
+                      <button class="dwldBtn-1" [disabled]="loading" (click)="downloadReport()"
+                        *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_OWNER') || this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')">
+                        <i class="fa fa-download" aria-hidden="true"></i> Download File
+                      </button>
+                      <button class="clrLnk-1" [disabled]="loading" (click)="this.resetFilters()"
+                        *ngIf="!roles?.includes('ROLE_FILER')">
+                        Clear form
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <span class="new-note1 note">
+                        Note : Please select required filters Above and click on Show Reports to get information
+                      </span>
+                    </div>
+                  </div>
+                  </div>
+                </div>
               </div>
+
             </div>
-            <div class="col-sm-12 spsTp bdrTp">
-              <button class="dwldBtn" [disabled]="loading" (click)="downloadReport()"
-                *ngIf="(this.config.totalItems<=1000 && (this.roles.includes('ROLE_OWNER') || this.roles.includes('ROLE_LEADER'))) || this.roles.includes('ROLE_ADMIN')">
-                <i class="fa fa-download" aria-hidden="true"></i> Download File
-              </button>
-              <button class="clrLnk mvRth" [disabled]="loading" (click)="this.resetFilters()"
-                *ngIf="!roles?.includes('ROLE_FILER')">
-                Clear form
-              </button>
-              <button class="srch-btn mvRth" [disabled]="loading" (click)="showReports()"
-                *ngIf="!roles?.includes('ROLE_FILER')">
-                <i class="fas fa-file-invoice" aria-hidden="true"></i> Show Reports
-              </button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12 ">
-              <span class="note1">
-                Note : Please select required filters Above and click on Show Reports to get information
-              </span>
-            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+
+    </div>
+  </div>
+  <div class="tableSpc mt-3">
+    <div>
+      <div class="row">
+        <div class="col-sm-9 row">
+          <div class="table-info-text col-sm-4">
+            Schedule Call Reports Details:
           </div>
         </div>
+        <div class="col-sm-3">
+          <div class="count1"> Total Count: <span class="txClr1">{{config.totalItems}}</span></div>
+        </div>
       </div>
+      <table>
+        <tr *ngFor="let item of scheduleCallingReport | paginate:config"></tr>
+      </table>
 
-    </mat-expansion-panel>
-  </mat-accordion>
-</div>
-<!-- New Open Close Filter Ends -->
-
-
-<div class="tableSpc">
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="txTit">
-        Schedule Call Reports Details:
-      </div>
+      <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="scheduleCallingReportGridOptions">
+      </ag-grid-angular>
+      <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
     </div>
-    <!-- <div class="col-sm-4">
-  <div class="count"> Total Count: <b>{{ totalReports }}</b></div>
-  </div> -->
   </div>
-
-  <table>
-    <tr *ngFor="let item of scheduleCallingReport | paginate : config"></tr>
-  </table>
-
-  <ag-grid-angular class="ag-theme-balham topSps" [gridOptions]="scheduleCallingReportGridOptions">
-  </ag-grid-angular>
-  <div *ngIf="config.totalItems > 1">
-    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-  </div>
-
-
 </div>

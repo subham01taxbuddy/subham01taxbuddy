@@ -7,7 +7,7 @@ import {
   Input,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { GridOptions, ValueSetterParams } from 'ag-grid-community';
+import {GridApi, GridOptions, GridReadyEvent, RowNode, ValueSetterParams} from 'ag-grid-community';
 import {
   ITR_JSON,
   OnSalary,
@@ -37,7 +37,7 @@ import { param } from 'jquery';
 @Component({
   selector: 'app-taxes-paid',
   templateUrl: './taxes-paid.component.html',
-  styleUrls: ['./taxes-paid.component.css'],
+  styleUrls: ['./taxes-paid.component.scss'],
 })
 export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   loading: boolean = false;
@@ -47,16 +47,41 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   Copy_ITR_JSON: ITR_JSON;
   itrDocuments = [];
   deletedFileData: any = [];
+  isAddOther: number;
   step: any = 0;
   isAddSalary: number;
+  isAddPanBased: number;
   isAddTcs: number;
   isAddAdvance: number;
+  onSalaryGridOptions: GridOptions;
+  onSalaryGridApi: GridApi;
+  tdsOtherThanSalary16AGridOptions: GridOptions;
+  tdsOtherThanSalary16AGridApi: GridApi;
+  tdsOtherThanSalary26QBGridOptions: GridOptions;
+  tdsOtherThanSalary26QBGridApi: GridApi;
+  tcsGridOptions: GridOptions;
+  tcsGridApi: GridApi;
+  otherThanTdsTcsGridOptions: GridOptions;
+  otherThanTdsTcsGridApi: GridApi;
+
   allTdsDetails: GridOptions;
   public groupDisplayType: RowGroupingDisplayType = 'groupRows';
   onSalary: any = [];
   isTaxesPaid: Number;
   @Input() taxPaid: TaxPaid;
   assetList: any;
+  tdsMode = 'VIEW';
+  tdsOtherMode = 'VIEW';
+  tdsPanMode = 'VIEW';
+  tcsMode = 'VIEW';
+  advanceMode = 'VIEW';
+
+  //index when switching view to edit
+  tdsEditIndex = 0;
+  tdsOtherEditIndex = 0;
+  tdsPanEditIndex = 0;
+  tcsEditIndex = 0;
+  advanceEditIndex = 0;
 
   constructor(
     public utilsService: UtilsService,
@@ -72,23 +97,18 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     let taxPaidData = this.ITR_JSON.taxPaid;
     if (taxPaidData) {
       this.taxPaid = taxPaidData;
-    } else {
-      this.taxPaid = {
-        onSalary: [],
-        otherThanSalary16A: [],
-        otherThanSalary26QB: [],
-        otherThanTDSTCS: [],
-        paidRefund: [],
-        tcs: []
-      };
     }
 
+    this.onSalaryGridOptions = this.initGridOptions(this.TDS_TYPE_CODE, this.onSalaryGridApi);
+    // this.onSalaryGridApi = this.onSalaryGridOptions.api;
+    this.tdsOtherThanSalary16AGridOptions = this.initGridOptions(this.TDS_OTHER_TYPE_CODE, this.tdsOtherThanSalary16AGridApi);
+    this.tdsOtherThanSalary26QBGridOptions = this.initGridOptions(this.TDS_PAN_TYPE_CODE, this.tdsOtherThanSalary26QBGridOptions);
+    this.tcsGridOptions = this.initGridOptions(this.TCS_TYPE_CODE, this.tcsGridApi);
+    this.otherThanTdsTcsGridOptions = this.initGridOptions(this.ADVANCE_TYPE_CODE, this.otherThanTdsTcsGridApi);
+
     this.allTdsDetails = <GridOptions>{
-      rowData: this.tdsDetailCreateRowData(),
-      columnDefs: this.tdsDetailCreateColumnDef(
-        this.headOfIncomeDropdownTDS2,
-        this.headOfIncomeDropdownTDS3
-      ),
+      rowData: this.tdsDetailCreateRowData(''),
+      columnDefs: this.tdsDetailCreateColumnDef(''),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       rowSelection: 'multiple',
@@ -117,6 +137,19 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       paginationPageSize: 20,
     };
     this.allTdsDetails.api?.setRowData(this.assetList);
+  }
+
+  initGridOptions(type, gridApi){
+    return <GridOptions>{
+      rowData: this.tdsDetailCreateRowData(type),
+      columnDefs: this.tdsDetailCreateColumnDef(type),
+      pagination: true,
+      paginationPageSize: 20,
+      onGridReady(params: GridReadyEvent) {
+        console.log('api updated', params.api)
+        this.onSalaryGridApi = params.api;
+      }
+    };
   }
 
   headOfIncomeDropdownTDS2 = [
@@ -150,121 +183,21 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
   }
 
   editTaxesPaid(type, index?) {
-    if (type === 'tdsOnSalary') {
-      const dialogRef = this.matDialog.open(TdsOnSalaryComponent, {
-        data: {
-          isTaxesPaid: this.isTaxesPaid,
-          assetIndex: index,
-        },
-        closeOnNavigation: true,
-        disableClose: false,
-        width: '100%',
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        console.log('Result of tdsOnSalary:', result);
-        if (result !== undefined) {
-          if (index != null) {
-            this.taxPaid.onSalary[index] = result.cgObject.salaryArray[0];
-            this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-          }
-          this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
-          this.saveAll();
-        }
-      });
-    } else if (type === 'tdsOtherThanSalary16A') {
-      const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
-        data: {
-          isTaxesPaid: this.isTaxesPaid,
-          assetIndex: index,
-          showHeadOfIncome: 'TDTS',
-        },
-        closeOnNavigation: true,
-        disableClose: false,
-        width: '100%',
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        console.log('Result of tdsOtherThanSalary16A:', result);
-        if (result !== undefined) {
-          if (index != null) {
-            this.taxPaid.otherThanSalary16A[index] =
-              result?.cgObject?.salaryArray[0];
-            this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-            this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
-            this.saveAll();
-          }
-        }
-      });
-    } else if (type === 'tdsOtherThanSalaryPanBased') {
-      const dialogRef = this.matDialog.open(TdsOtherThanSalaryComponent, {
-        data: {
-          isTaxesPaid: this.isTaxesPaid,
-          assetIndex: index,
-          showHeadOfIncome: 'TDTSP',
-        },
-        closeOnNavigation: true,
-        disableClose: false,
-        width: '100%',
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        console.log('Result of tdsOtherThanSalary16A:', result);
-        if (result !== undefined) {
-          if (index != null) {
-            this.taxPaid.otherThanSalary26QB[index] =
-              result?.cgObject?.salaryArray[0];
-            this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-            this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
-            this.saveAll();
-          }
-        }
-      });
-    } else if (type === 'tcs') {
-      const dialogRef = this.matDialog.open(TcsComponent, {
-        data: {
-          isTaxesPaid: this.isTaxesPaid,
-          assetIndex: index,
-        },
-        closeOnNavigation: true,
-        disableClose: false,
-        width: '100%',
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        console.log('Result of tcs:', result);
-        if (result !== undefined) {
-          if (index != null) {
-            this.taxPaid.tcs[index] = result?.cgObject?.salaryArray[0];
-            this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-            this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
-            this.saveAll();
-          }
-        }
-      });
-    } else if (type === 'selfAssessment') {
-      const dialogRef = this.matDialog.open(AdvanceTaxPaidComponent, {
-        data: {
-          isTaxesPaid: this.isTaxesPaid,
-          assetIndex: index,
-        },
-        closeOnNavigation: true,
-        disableClose: false,
-        width: '100%',
-      });
-
-      dialogRef.afterClosed().subscribe((result) => {
-        console.log('Result of advanceTax:', result);
-        if (result !== undefined) {
-          if (index != null) {
-            this.taxPaid.otherThanTDSTCS[index] =
-              result?.cgObject?.salaryArray[0];
-            this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-            this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
-            this.saveAll();
-          }
-        }
-      });
+    if (type === this.TDS_TYPE_CODE) {
+      this.tdsMode = 'EDIT';
+      this.tdsEditIndex = index;
+    } else if (type === this.TDS_OTHER_TYPE_CODE) {
+      this.tdsOtherMode = 'EDIT';
+      this.tdsOtherEditIndex = index;
+    } else if (type === this.TDS_PAN_TYPE_CODE) {
+      this.tdsPanMode = 'EDIT';
+      this.tdsPanEditIndex = index;
+    } else if (type === this.TCS_TYPE_CODE) {
+      this.tcsMode = 'EDIT';
+      this.tcsEditIndex = index;
+    } else if (type === this.ADVANCE_TYPE_CODE) {
+      this.advanceMode = 'EDIT';
+      this.advanceEditIndex = index;
     }
   }
 
@@ -281,216 +214,230 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
 
     dialogRefSelect.afterClosed().subscribe((result) => {
       if (result !== undefined) {
-        if (result.type === 'tdsOnSalary') {
+        if (result.type === this.TDS_TYPE_CODE) {
+          this.tdsMode = 'VIEW';
           if(!this.taxPaid?.onSalary){
             this.taxPaid.onSalary = [];
           }
           this.taxPaid?.onSalary?.push(result.cgObject.salaryArray[0]);
+          this.updateDataTables(this.TDS_TYPE_CODE);
         }
-        if (result.type === 'tdsOtherThanSalary16A') {
+        if (result.type === this.TDS_OTHER_TYPE_CODE) {
           if(!this.taxPaid?.otherThanSalary16A){
             this.taxPaid.otherThanSalary16A = [];
           }
           this.taxPaid?.otherThanSalary16A?.push(
             result.cgObject.salaryArray[0]
           );
+          this.updateDataTables(this.TDS_OTHER_TYPE_CODE);
         }
-        if (result.type === 'tdsOtherThanSalaryPanBased') {
+        if (result.type === this.TDS_PAN_TYPE_CODE) {
           if(!this.taxPaid?.otherThanSalary26QB){
             this.taxPaid.otherThanSalary26QB = [];
           }
           this.taxPaid?.otherThanSalary26QB?.push(
             result.cgObject.salaryArray[0]
           );
+          this.updateDataTables(this.TDS_PAN_TYPE_CODE);
         }
-        if (result.type === 'tcs') {
+        if (result.type === this.TCS_TYPE_CODE) {
           if(!this.taxPaid?.tcs){
             this.taxPaid.tcs = [];
           }
           this.taxPaid?.tcs?.push(result.cgObject.salaryArray[0]);
+          this.updateDataTables(this.TCS_TYPE_CODE);
         }
-        if (result.type === 'selfAssessment') {
+        if (result.type === this.ADVANCE_TYPE_CODE) {
           if(!this.taxPaid?.otherThanTDSTCS){
             this.taxPaid.otherThanTDSTCS = [];
           }
           this.taxPaid?.otherThanTDSTCS?.push(result.cgObject.salaryArray[0]);
+          this.updateDataTables(this.ADVANCE_TYPE_CODE);
         }
-        this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-        sessionStorage.setItem(
-          AppConstants.ITR_JSON,
-          JSON.stringify(this.Copy_ITR_JSON)
-        );
-        this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
+
       }
     });
-    this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
+    // this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData());
+  }
+
+  updateDataTables(type){
+    this.Copy_ITR_JSON.taxPaid = this.taxPaid;
+    sessionStorage.setItem(
+        AppConstants.ITR_JSON,
+        JSON.stringify(this.Copy_ITR_JSON)
+    );
+    this.allTdsDetails.api?.setRowData(this.tdsDetailCreateRowData(type));
   }
 
   totalEntries = 0;
-  tdsDetailCreateRowData() {
+  TDS_TYPE_CODE = 'tdsOnSalary';
+  TCS_TYPE_CODE = 'tcs';
+  TDS_OTHER_TYPE_CODE = 'tdsOtherThanSalary16A';
+  TDS_PAN_TYPE_CODE = 'tdsOtherThanSalaryPanBased';
+  ADVANCE_TYPE_CODE = 'selfAssessment';
+  tdsDetailCreateRowData(type) {
     let counter = 0;
     this.totalEntries = 0;
     this.assetList = [];
-    if (this.taxPaid?.onSalary?.length > 0) {
-      this.assetList.push({
-        isFullWidth: true,
-        tdsType: 'TDS On Salary',
+    if(type === this.TDS_TYPE_CODE) {
+      this.taxPaid?.onSalary?.forEach((asset) => {
+        let copy: any = {};
+        Object.assign(copy, asset);
+        copy.isFullWidth = false;
+        copy.hasEdit = false;
+        // set tds Type
+        copy.tdsType = 'TDS On Salary';
+        copy.tdsCode = this.TDS_TYPE_CODE;
+        this.assetList.push(copy);
+        copy.index = counter++;
+        copy.srNo = copy.index;
       });
+      this.totalEntries += counter;
+      this.tdsMode = counter === 0 ? 'EDIT' : 'VIEW';
     }
-    this.taxPaid?.onSalary?.forEach((asset) => {
-      let copy: any = {};
-      Object.assign(copy, asset);
-      copy.isFullWidth = false;
-      copy.hasEdit = false;
-      // set tds Type
-      copy.tdsType = 'TDS On Salary';
-      copy.tdsCode = 'tdsOnSalary';
-      this.assetList.push(copy);
-      copy.index = counter++;
-      copy.srNo = copy.index;
-    });
-    this.totalEntries += counter;
 
-    counter = 0;
-    if (this.taxPaid?.otherThanSalary16A?.length > 0) {
-      this.assetList.push({
-        isFullWidth: true,
-        tdsType: 'TDS Other than Salary',
+    if(type === this.TDS_OTHER_TYPE_CODE) {
+      counter = 0;
+      this.taxPaid?.otherThanSalary16A?.forEach((asset) => {
+        let copy: any = {};
+        Object.assign(copy, asset);
+        copy.hasEdit = false;
+        // set tds Type
+        copy.tdsType = 'TDS Other than Salary';
+        copy.tdsCode = this.TDS_OTHER_TYPE_CODE;
+        this.assetList.push(copy);
+        copy.index = counter++;
+        copy.srNo = copy.index;
       });
+      this.totalEntries += counter;
     }
-    this.taxPaid?.otherThanSalary16A?.forEach((asset) => {
-      let copy: any = {};
-      Object.assign(copy, asset);
-      copy.hasEdit = false;
-      // set tds Type
-      copy.tdsType = 'TDS Other than Salary';
-      copy.tdsCode = 'tdsOtherThanSalary16A';
-      this.assetList.push(copy);
-      copy.index = counter++;
-      copy.srNo = copy.index;
-    });
-    this.totalEntries += counter;
 
-    counter = 0;
-    if (this.taxPaid?.otherThanSalary26QB?.length > 0) {
-      this.assetList.push({
-        isFullWidth: true,
-        tdsType: 'TDS other than salary (panBased) 26QB',
+    if(type === this.TDS_PAN_TYPE_CODE) {
+      counter = 0;
+      this.taxPaid?.otherThanSalary26QB?.forEach((asset) => {
+        let copy: any = {};
+        Object.assign(copy, asset);
+        copy.hasEdit = false;
+
+        // set tds Type
+        copy.tdsType = 'TDS other than salary (panBased) 26QB';
+        copy.tdsCode = this.TDS_PAN_TYPE_CODE;
+
+        // Rename specific properties
+        copy.deductorTAN = copy.deductorPAN;
+        delete copy.deductorPAN;
+
+        this.assetList.push(copy);
+        copy.index = counter++;
+        copy.srNo = copy.index;
       });
+      this.totalEntries += counter;
     }
-    this.taxPaid?.otherThanSalary26QB?.forEach((asset) => {
-      let copy: any = {};
-      Object.assign(copy, asset);
-      copy.hasEdit = false;
 
-      // set tds Type
-      copy.tdsType = 'TDS other than salary (panBased) 26QB';
-      copy.tdsCode = 'tdsOtherThanSalaryPanBased';
+    if(type === this.ADVANCE_TYPE_CODE){
+      counter = 0;
+      this.taxPaid?.otherThanTDSTCS?.forEach((asset) => {
+        let copy: any = {};
+        Object.assign(copy, asset);
+        copy.hasEdit = false;
 
-      // Rename specific properties
-      copy.deductorTAN = copy.deductorPAN;
-      delete copy.deductorPAN;
+        // Rename specific properties
+        copy.deductorName = copy.bsrCode;
+        copy.deductorTAN = copy.challanNumber;
+        copy.totalAmountCredited = this.datePipe.transform(
+            new Date(copy.dateOfDeposit),
+            'dd/MM/yyyy'
+        );
+        copy.totalTdsDeposited = copy.totalTax;
 
-      this.assetList.push(copy);
-      copy.index = counter++;
-      copy.srNo = copy.index;
-    });
-    this.totalEntries += counter;
-
-    counter = 0;
-    if (this.taxPaid?.otherThanTDSTCS?.length > 0) {
-      this.assetList.push({
-        isFullWidth: true,
-        tdsType: 'Self assessment or Advance tax',
+        delete copy.bsrCode;
+        delete copy.challanNumber;
+        delete copy.dateOfDeposit;
+        delete copy.totalTax;
+        // set tds Type
+        copy.tdsType = 'Self assessment or Advance tax';
+        copy.tdsCode = this.ADVANCE_TYPE_CODE;
+        this.assetList.push(copy);
+        copy.index = counter++;
+        copy.srNo = copy.index;
       });
+      this.totalEntries += counter;
     }
-    this.taxPaid?.otherThanTDSTCS?.forEach((asset) => {
-      let copy: any = {};
-      Object.assign(copy, asset);
-      copy.hasEdit = false;
 
-      // Rename specific properties
-      copy.deductorName = copy.bsrCode;
-      copy.deductorTAN = copy.challanNumber;
-      copy.totalAmountCredited = this.datePipe.transform(
-        new Date(copy.dateOfDeposit),
-        'dd/MM/yyyy'
-      );
-      copy.totalTdsDeposited = copy.totalTax;
+    if(type === this.TCS_TYPE_CODE){
+      counter = 0;
+      this.taxPaid?.tcs?.forEach((asset) => {
+        let copy: any = {};
+        Object.assign(copy, asset);
+        copy.hasEdit = false;
+        // Rename specific properties
+        copy.deductorName = copy.collectorName;
+        copy.deductorTAN = copy.collectorTAN;
+        copy.totalAmountCredited = copy.totalAmountPaid;
+        copy.totalTdsDeposited = copy.totalTcsDeposited;
 
-      delete copy.bsrCode;
-      delete copy.challanNumber;
-      delete copy.dateOfDeposit;
-      delete copy.totalTax;
-      // set tds Type
-      copy.tdsType = 'Self assessment or Advance tax';
-      copy.tdsCode = 'selfAssessment';
-      this.assetList.push(copy);
-      copy.index = counter++;
-      copy.srNo = copy.index;
-    });
-    this.totalEntries += counter;
+        // set tds Type
+        copy.tdsType = 'TCS';
+        copy.tdsCode = this.TCS_TYPE_CODE;
 
-    counter = 0;
-    if (this.taxPaid?.tcs?.length > 0) {
-      this.assetList.push({
-        isFullWidth: true,
-        tdsType: 'TCS',
+        delete copy.collectorName;
+        delete copy.collectorTAN;
+        delete copy.totalAmountPaid;
+        delete copy.totalTcsDeposited;
+        this.assetList.push(copy);
+        copy.index = counter++;
+        // copy.srNo = copy.index;
       });
+      this.totalEntries += counter;
     }
-    this.taxPaid?.tcs?.forEach((asset) => {
-      let copy: any = {};
-      Object.assign(copy, asset);
-      copy.hasEdit = false;
-      // Rename specific properties
-      copy.deductorName = copy.collectorName;
-      copy.deductorTAN = copy.collectorTAN;
-      copy.totalAmountCredited = copy.totalAmountPaid;
-      copy.totalTdsDeposited = copy.totalTcsDeposited;
-
-      // set tds Type
-      copy.tdsType = 'TCS';
-      copy.tdsCode = 'tcs';
-
-      delete copy.collectorName;
-      delete copy.collectorTAN;
-      delete copy.totalAmountPaid;
-      delete copy.totalTcsDeposited;
-      this.assetList.push(copy);
-      copy.index = counter++;
-      // copy.srNo = copy.index;
-    });
-    this.totalEntries += counter;
 
     return this.assetList;
   }
 
-  tdsDetailCreateColumnDef(headOfIncomeDropdownTDS2, headOfIncomeDropdownTDS3) {
+  salaryColNames = {
+    'deductorTAN' : 'TAN of the Employer',
+    'deductorName' : 'Name of the Employer',
+    'totalAmountCredited' : 'Income chargeable under salaries',
+    'totalTdsDeposited' : 'Total tax deducted'
+  }
+  otherColNames = {
+    'deductorTAN' : 'TAN of Deductor',
+    'deductorName' : 'Name of Deductor',
+    'totalAmountCredited' : 'Total Amount credited',
+    'totalTdsDeposited' : 'Total tax deducted'
+  }
+
+  tcsColNames = {
+    'deductorTAN' : 'TAN of Collector',
+    'deductorName' : 'Name of Collector',
+    'totalAmountCredited' : 'Total Amount credited',
+    'totalTdsDeposited' : 'Total TCS deposited'
+  }
+  advanceColNames = {
+    'deductorTAN' : 'Serial No of Challan',
+    'deductorName' : 'BSR Code',
+    'totalAmountCredited' : 'Date of Deposit',
+    'totalTdsDeposited' : 'Total Tax Paid'
+  }
+
+  getColumnName(type, column){
+    if(type === this.TDS_TYPE_CODE){
+      return this.salaryColNames[column];
+    }
+    if(type === this.TCS_TYPE_CODE){
+      return this.tcsColNames[column];
+    }
+    if(type === this.ADVANCE_TYPE_CODE){
+      return this.advanceColNames[column];
+    }
+    return this.otherColNames[column];
+  }
+
+  tdsDetailCreateColumnDef(type) {
+    var self = this;
     return [
-      // {
-      //   headerName: 'TDS Type',
-      //   field: 'tdsType',
-      //   rowGroup: true,
-      // },
       {
-        field: '',
-        headerCheckboxSelection: true,
-        width: 80,
-        pinned: 'left',
-        checkboxSelection: (params) => {
-          return true;
-        },
-        cellStyle: function (params: any) {
-          return {
-            textAlign: 'center',
-            display: 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-          };
-        },
-      },
-      {
-        headerName: 'TAN / PAN / Challan Number',
+        headerName: this.getColumnName(type, 'deductorTAN'),
         field: 'deductorTAN',
         editable: false,
         suppressMovable: true,
@@ -499,9 +446,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         },
       },
       {
-        headerName: 'Name / BSR Code',
+        headerName: this.getColumnName(type, 'deductorName'),
         field: 'deductorName',
-        width: 120,
+        // width: 120,
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
@@ -509,9 +456,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         },
       },
       {
-        headerName: 'Total Amount Credited / Date of Deposit',
+        headerName: this.getColumnName(type, 'totalAmountCredited'),
         field: 'totalAmountCredited',
-        width: 120,
+        // width: 120,
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
@@ -519,9 +466,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         },
       },
       {
-        headerName: 'Total TDS deposited',
+        headerName: this.getColumnName(type, 'totalTdsDeposited'),
         field: 'totalTdsDeposited',
-        width: 120,
+        // width: 120,
         editable: false,
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
@@ -533,18 +480,13 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         field: 'headOfIncome',
         editable: false,
         suppressMovable: true,
+        hide: !(type === self.TDS_OTHER_TYPE_CODE || type === self.TDS_PAN_TYPE_CODE),
         valueGetter: function nameFromCode(params) {
-          if (params.data.tdsCode === 'tdsOtherThanSalary16A' && params.data.headOfIncome) {
-            return headOfIncomeDropdownTDS2.filter(
-              (item) => item.code === params.data.headOfIncome
-            )[0]?.name;
+          if(type === self.TDS_OTHER_TYPE_CODE){
+            return self.headOfIncomeDropdownTDS2.filter(element => element.code === params.data.headOfIncome)[0]?.name;
+          } else {
+            return self.headOfIncomeDropdownTDS3.filter(element => element.code === params.data.headOfIncome)[0]?.name;
           }
-          if (params.data.tdsCode === 'tdsOtherThanSalaryPanBased' && params.data.headOfIncome) {
-            return headOfIncomeDropdownTDS3.filter(
-              (item) => item.code === params.data.headOfIncome
-            )[0]?.name;
-          }
-          return '';
         },
       },
       {
@@ -567,7 +509,35 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
           'justify-content': 'center',
         },
       },
+      {
+        headerName: 'Delete',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        width: 70,
+        pinned: 'right',
+        cellRenderer: function (params) {
+          return `<button type="button" class="action_icon add_button" title="Delete">
+          <i class="fa fa-trash" aria-hidden="true" data-action-type="remove"></i>
+         </button>`;
+        },
+        cellStyle: {
+          textAlign: 'center',
+          display: 'flex',
+          'align-items': 'center',
+          'justify-content': 'center',
+        },
+      },
     ];
+  }
+
+  getIncomeHead(type, headOfIncome){
+    if(type === this.TDS_OTHER_TYPE_CODE){
+      return this.headOfIncomeDropdownTDS2.filter(element => element.code === headOfIncome)[0].name;
+    } else {
+      return this.headOfIncomeDropdownTDS3.filter(element => element.code === headOfIncome)[0].name;
+    }
   }
 
   public onTdsDetailRowClicked(params) {
@@ -576,7 +546,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       switch (actionType) {
         case 'remove': {
           console.log('DATA FOR DELETE Asset:', params.data);
-          this.deleteAsset();
+          this.deleteAsset(params.data, params.api, params.node);
           break;
         }
         case 'edit': {
@@ -591,91 +561,104 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
     return this.assetList.filter((asset) => asset.hasEdit === true).length > 0;
   }
 
-  deleteAsset() {
-    //delete improvement for asset
-    let filteredArray = this.assetList.filter(
-      (asset) => asset.hasEdit === true
-    );
+  deleteAsset(data, gridapi:GridApi, rowNode:RowNode) {
 
-    if (filteredArray && filteredArray.length > 0) {
-      let filtered = this.taxPaid?.onSalary?.filter(
-        (item) =>
-          !filteredArray
-            ?.filter((element) => element?.tdsType === 'TDS On Salary')
-            ?.map((element) => element.srNo)
-            ?.includes(parseInt(item.srNo))
-      );
-      console.log(filtered);
-      if(filtered){
-        this.taxPaid.onSalary = filtered;
-      }
-
-      let filtered1 = this.taxPaid?.otherThanSalary16A?.filter(
-        (item) =>
-          !filteredArray
-            ?.filter((element) => element?.tdsType === 'TDS Other than Salary')
-            ?.map((element) => element?.srNo)
-            ?.includes(parseInt(item?.srNo))
-      );
-      console.log(filtered1);
-
-      if(filtered1){
-        this.taxPaid.otherThanSalary16A = filtered1;
-      }
-
-      let filtered2 = this.taxPaid?.otherThanSalary26QB?.filter(
-        (item) =>
-          !filteredArray
-            ?.filter(
-              (element) =>
-                element?.tdsType === 'TDS other than salary (panBased) 26QB'
-            )
-            ?.map((element) => element?.srNo)
-            ?.includes(parseInt(item?.srNo))
-      );
-      console.log(filtered2);
-      if(filtered2){
-        this.taxPaid.otherThanSalary26QB = filtered2;
-      }
-
-      let filtered3 = this.taxPaid?.otherThanTDSTCS?.filter(
-        (item) =>
-          !filteredArray
-            ?.filter(
-              (element) => element?.tdsType === 'Self assessment or Advance tax'
-            )
-            ?.map((element) => element?.srNo)
-            ?.includes(parseInt(item?.srNo))
-      );
-      console.log(filtered3);
-      if(filtered3){
-        this.taxPaid.otherThanTDSTCS = filtered3;
-      }
-
-      let filtered4 = this.taxPaid?.tcs?.filter(
-        (item) =>
-          !filteredArray
-            ?.filter((element) => element?.tdsType === 'TCS')
-            ?.map((element) => element?.srNo)
-            ?.includes(item?.srNo)
-      );
-      console.log(filtered4);
-      if(filtered4){
-        this.taxPaid.tcs = filtered4;
-      }
+    gridapi?.removeItems([rowNode]);
+    if(data.tdsCode === this.TDS_TYPE_CODE){
+      this.taxPaid?.onSalary?.splice(data.index, 1);
+    } else if(data.tdsCode === this.TDS_OTHER_TYPE_CODE){
+      this.taxPaid?.otherThanSalary16A.splice(data.index, 1);
+    } else if(data.tdsCode === this.TDS_PAN_TYPE_CODE){
+      this.taxPaid?.otherThanSalary26QB.splice(data.index, 1);
+    } else if(data.tdsCode === this.TCS_TYPE_CODE){
+      this.taxPaid?.tcs.splice(data.index, 1);
+    } else if(data.tdsCode === this.ADVANCE_TYPE_CODE){
+      this.taxPaid?.otherThanTDSTCS?.splice(data.index);
     }
 
     console.log(this.taxPaid);
     this.Copy_ITR_JSON.taxPaid = this.taxPaid;
-    sessionStorage.setItem(
-      AppConstants.ITR_JSON,
-      JSON.stringify(this.Copy_ITR_JSON)
-    );
-    this.assetList = this.assetList?.filter((asset) => asset?.hasEdit != true);
-    this.allTdsDetails?.api?.setRowData(this.tdsDetailCreateRowData());
+    // sessionStorage.setItem(
+    //     AppConstants.ITR_JSON,
+    //     JSON.stringify(this.Copy_ITR_JSON)
+    // );
   }
 
-  saveAll() {
+  saveAll(save?) {
+    if(save && save.type === this.TDS_TYPE_CODE){
+      if(!save.saved){
+        this.tdsMode = 'VIEW';
+        this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
+        this.taxPaid = this.Copy_ITR_JSON.taxPaid;
+        // this.onSalaryGridApi?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
+        this.onSalaryGridOptions = this.initGridOptions(this.TDS_TYPE_CODE, this.onSalaryGridApi);
+        return;
+      } else {
+        this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
+        this.taxPaid = this.Copy_ITR_JSON.taxPaid;
+        // this.onSalaryGridApi?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
+        this.onSalaryGridOptions = this.initGridOptions(this.TDS_TYPE_CODE, this.onSalaryGridApi);
+      }
+
+    }
+    if(save && (save.type === this.TDS_OTHER_TYPE_CODE || save.type === this.TDS_PAN_TYPE_CODE)){
+      if(!save.saved){
+        this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
+        this.taxPaid = this.Copy_ITR_JSON.taxPaid;
+        if(save.type === this.TDS_OTHER_TYPE_CODE){
+          this.tdsOtherMode = 'VIEW';
+          this.tdsOtherThanSalary16AGridOptions = this.initGridOptions(save.type, this.tdsOtherThanSalary16AGridApi);
+        } else {
+          this.tdsPanMode = 'VIEW';
+          this.tdsOtherThanSalary26QBGridOptions = this.initGridOptions(save.type, this.tdsOtherThanSalary26QBGridApi);
+        }
+
+        return;
+      } else {
+        this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
+        this.taxPaid = this.Copy_ITR_JSON.taxPaid;
+        if(save.type === this.TDS_OTHER_TYPE_CODE){
+          this.tdsOtherMode = 'VIEW';
+          this.tdsOtherThanSalary16AGridOptions = this.initGridOptions(save.type, this.tdsOtherThanSalary16AGridApi);
+        } else {
+          this.tdsPanMode = 'VIEW';
+          this.tdsOtherThanSalary26QBGridOptions = this.initGridOptions(save.type, this.tdsOtherThanSalary26QBGridApi);
+        }
+      }
+    }
+
+    if(save && save.type === this.TCS_TYPE_CODE){
+      if(!save.saved){
+        this.tcsMode = 'VIEW';
+        this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
+        this.taxPaid = this.Copy_ITR_JSON.taxPaid;
+        // this.onSalaryGridApi?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
+        this.tcsGridOptions = this.initGridOptions(this.TCS_TYPE_CODE, this.tcsGridApi);
+        return;
+      } else {
+        this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
+        this.taxPaid = this.Copy_ITR_JSON.taxPaid;
+        // this.onSalaryGridApi?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
+        this.tcsGridOptions = this.initGridOptions(this.TCS_TYPE_CODE, this.tcsGridApi);
+      }
+    }
+
+    if(save && save.type === this.ADVANCE_TYPE_CODE){
+      if(!save.saved){
+        this.advanceMode = 'VIEW';
+        this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
+        this.taxPaid = this.Copy_ITR_JSON.taxPaid;
+        // this.onSalaryGridApi?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
+        this.otherThanTdsTcsGridOptions = this.initGridOptions(this.ADVANCE_TYPE_CODE, this.otherThanTdsTcsGridApi);
+        return;
+      } else {
+        this.Copy_ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON))
+        this.taxPaid = this.Copy_ITR_JSON.taxPaid;
+        // this.onSalaryGridApi?.setRowData(this.tdsDetailCreateRowData(this.TDS_TYPE_CODE));
+        this.otherThanTdsTcsGridOptions = this.initGridOptions(this.ADVANCE_TYPE_CODE, this.otherThanTdsTcsGridApi);
+      }
+    }
+
     this.loading = true;
 
     this.utilsService.saveItrObject(this.Copy_ITR_JSON).subscribe(
@@ -688,7 +671,9 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
         this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
         this.loading = false;
         this.utilsService.showSnackBar('Tds updated successfully.');
-        this.saveAndNext.emit(false);
+        if(!save) {
+          this.saveAndNext.emit(false);
+        }
         // this.saveAndNext.emit({ subTab: true, tabName: 'CAPITAL' });
       },
       (error) => {
@@ -792,6 +777,7 @@ export class TaxesPaidComponent extends WizardNavigation implements OnInit {
       this.isAddAdvance = Math.random();
     }
   }
+
   setStep(index: number) {
     this.step = index;
   }

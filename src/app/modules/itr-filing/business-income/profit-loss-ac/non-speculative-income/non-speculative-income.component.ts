@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import {
+  BusinessDescription,
   ITR_JSON,
   NewExpenses,
   ProfitLossIncomes,
@@ -56,13 +57,17 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   };
   loading: boolean = false;
   totalNetProfit: any;
+  totalOtherExpenses: any;
+  natOfBusinessDtlForm: FormGroup;
+  natOfBusinessDtlsArray: FormArray;
 
   constructor(
     public matDialog: MatDialog,
     public itrMsService: ItrMsService,
     private formBuilder: FormBuilder,
     public utilsService: UtilsService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    public fb: FormBuilder,
   ) {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
@@ -77,6 +82,20 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.nonspecIncomeFormArray = new FormArray([]);
     this.ITR_JSON = JSON.parse(sessionStorage.getItem('ITR_JSON'));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
+
+    let natOfBusiness = this.ITR_JSON.business?.businessDescription;
+    this.natOfBusinessDtlsArray = new FormArray([]);
+    if (natOfBusiness && natOfBusiness.length > 0) {
+      let index = 0;
+      for (let detail of natOfBusiness) {
+        let form = this.createNatOfBusinessForm(index++, detail);
+        this.natOfBusinessDtlsArray.push(form);
+      }
+      // this.speculativeIncome = specBusiness?.incomes[0];
+    } else {
+      let form = this.createNatOfBusinessForm(0, null);
+      this.natOfBusinessDtlsArray.push(form);
+    }
     if (this.Copy_ITR_JSON?.business?.profitLossACIncomes) {
       let data = this.Copy_ITR_JSON?.business?.profitLossACIncomes.filter(
         (item: any) => item.businessType === 'NONSPECULATIVEINCOME'
@@ -118,6 +137,48 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     ).controls.forEach((element, index) => {
       this.calculateIncome(index);
     });
+
+    this.natOfBusinessDtlForm = this.fb.group({
+      natOfBusinessDtlsArray: this.natOfBusinessDtlsArray,
+    });
+  }
+
+  get getnatOfBusinessDtlsArray() {
+    return <FormArray>this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray');
+  }
+  createNatOfBusinessForm(index, detail: BusinessDescription) {
+    return this.fb.group({
+      id: detail?.id ? detail?.id : index,
+      hasEdit: [false],
+      natureOfBusiness: [detail?.natureOfBusiness || null, Validators.required],
+      tradeName: detail?.tradeName,
+      businessDescription: detail?.businessDescription,
+    });
+  }
+
+  addNatOfBusinessForm() {
+    let form = this.createNatOfBusinessForm(0, null);
+    (this.natOfBusinessDtlForm.controls['natOfBusinessDtlsArray'] as FormArray).insert(0, form);
+  }
+
+  deleteArray() {
+    const natOfBusinessDtlsArray = <FormArray>this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray');
+    natOfBusinessDtlsArray.controls = natOfBusinessDtlsArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
+  }
+
+  specSelected() {
+    const natOfBusinessDtlsArray = <FormArray>(
+      this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray')
+    );
+    return (
+      natOfBusinessDtlsArray.controls.filter(
+        (element) => (element as FormGroup).controls['hasEdit'].value === true
+      ).length > 0
+    );
+  }
+
+  businessClicked(event, index) {
+    (this.natOfBusinessDtlsArray.controls[index] as FormGroup).controls['natureOfBusiness'].setValue(event);
   }
 
   get getIncomeArray() {
@@ -143,7 +204,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       finishedGoodsOpeningStock: [income?.finishedGoodsOpeningStock],
       purchase: [income?.purchase],
       netIncome: [0],
-      cogc: [0],
+      totalCredit: [0],
       expenditure: [income?.expenditure == null ? 0 : income?.expenditure],
     });
   }
@@ -184,13 +245,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
 
   deleteExpenseForm() {
     const expenses = this.expenses;
-    let index = 0;
-    this.expenses.controls.forEach((form: FormGroup) => {
-      if (form.controls['hasExpense'].value) {
-        expenses.removeAt(index);
-      }
-      index++;
-    });
+    expenses.controls = expenses.controls.filter(element => !(element as FormGroup).controls['hasExpense'].value);
     this.calculateNetProfit();
     this.changed();
   }
@@ -200,17 +255,17 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     let specIncome = (
       this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
     ).controls[index] as FormGroup;
-    specIncome.controls['cogc'].setValue(
-      specIncome.controls['finishedGoodsOpeningStock'].value +
-        specIncome.controls['purchase'].value -
-        specIncome.controls['finishedGoodsClosingStock'].value
+    specIncome.controls['totalCredit'].setValue(
+      Number(specIncome.controls['turnOver'].value) +
+      Number(specIncome.controls['finishedGoodsClosingStock'].value)
     );
     specIncome.controls['grossProfit'].setValue(
-      specIncome.controls['turnOver'].value - specIncome.controls['cogc'].value
+      Number(specIncome.controls['totalCredit'].value) - Number(specIncome.controls['finishedGoodsOpeningStock'].value)
+      - Number(specIncome.controls['purchase'].value)
     );
     specIncome.controls['netIncome'].setValue(
-      specIncome.controls['grossProfit'].value -
-        specIncome.controls['expenditure'].value
+      Number(specIncome.controls['grossProfit'].value) -
+      Number(specIncome.controls['expenditure'].value)
     );
     this.calculateNetProfit();
   }
@@ -240,6 +295,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     form.expenses.forEach((element) => {
       allExpenses += parseFloat(element.expenseAmount);
     });
+    this.totalOtherExpenses = allExpenses;
     const net = form.netProfit - allExpenses;
     this.profitLossForm.controls['netProfit'].setValue(net);
     this.totalNetProfit = net;
@@ -260,9 +316,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   onContinue() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-
     if (this.profitLossForm.valid) {
-      this.loading = true;
       this.calculateNetProfit();
       const row = this.profitLossForm.getRawValue();
       const profitLossACIncomes = [];
@@ -291,6 +345,10 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         );
         this.Copy_ITR_JSON.business.profitLossACIncomes =
           data.concat(profitLossACIncomes);
+      }
+
+      if (this.natOfBusinessDtlForm.valid) {
+        this.Copy_ITR_JSON.business.businessDescription = this.natOfBusinessDtlsArray.value;
       }
       console.log(this.Copy_ITR_JSON);
       sessionStorage.setItem(
@@ -327,20 +385,8 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     );
   }
 
-  deleteArray() {
-    let indexToRemove: number[] = [];
-    (
-      this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
-    ).controls.forEach((element, index) => {
-      if ((element as FormGroup).controls['hasEdit'].value) {
-        //indexToRemove.push(index);
-        (
-          this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray
-        ).controls.splice(index, 1);
-      }
-    });
-    // indexToRemove.reverse().forEach((index) => {
-    //   (this.nonspecIncomeForm.controls['nonspecIncomesArray'] as FormArray).controls.splice(index, 1);
-    // });
+  deleteNonSpecArray() {
+    const nonspecIncomesArray = <FormArray>this.nonspecIncomeForm.get('nonspecIncomesArray');
+    nonspecIncomesArray.controls = nonspecIncomesArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
   }
 }

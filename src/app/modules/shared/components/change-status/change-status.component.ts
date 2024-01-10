@@ -269,6 +269,7 @@ export class ChangeStatusComponent implements OnInit {
 export interface ConfirmModel {
   userId: any;
   userName: string;
+  clientName:string;
   serviceType: any;
   mode: any;
   userInfo: any;

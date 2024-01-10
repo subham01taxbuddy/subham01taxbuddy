@@ -42,6 +42,7 @@ export class CustomerSignUpComponent implements OnInit {
   minEndDate = new Date().toISOString().slice(0, 10);  loading: boolean;
 
   constructor(
+    private reportService: ReportService,
     public datePipe: DatePipe,
     private reportService: ReportService,
   ) {

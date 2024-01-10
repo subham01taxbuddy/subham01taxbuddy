@@ -1,5 +1,9 @@
 @import './../../../../../assets/styles/mixins'
 
+.imgAli
+  margin-right:15px
+
+
 .hideSideMenu
   visibility: hidden
 
@@ -8,12 +12,11 @@
   //width: 180px
   float: left
   min-height: 100vh
-  background-color: $color-1
+  background-color: #1b67ba
 
 .left-sidebar.fixed
   overflow: auto
   position: fixed
-  padding-top: 100px
   top: 0
   bottom: 0
   z-index: 40
@@ -34,6 +37,9 @@
   position: relative
   z-index: 1
 
+.float-left
+float-left
+
 .sidebar__item:visited,
 .sidebar__item
   display: block
@@ -45,7 +51,9 @@
   cursor: pointer
   transition-property: color, background-color
   transition-duration: .25s
-  margin-left:0px
+  //margin-left:0px
+  font-size: 14px
+  font-weight: 400
 
 .sidebar__subitem
   display: block
@@ -96,7 +104,7 @@
 
 .sidebar__item:visited,
 .sidebar__item
-  color: #ccc
+  color: #fff
  
 
 .sidebar__ico-img
@@ -111,14 +119,15 @@
   width: 100%
   max-width: 360px
   margin: auto
-  background-color: #21415B!important
+  background-color: #1B67BA
   border-radius: 4px
+  padding-top:5px
 
 .accordion li
   margin-left: 15px!important  
 
 .submenu ul
-  background-color: #2A5273!important
+  background-color: #1B67BA
 
 /* MEDIA */
 +max-responsive($semi-medium)
@@ -135,7 +144,6 @@
   .left-sidebar.fixed
     height: auto
     padding-top: 109px
-
 
 
 
