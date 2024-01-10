@@ -381,37 +381,33 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
     return this.config.itemsPerPage * (this.config.currentPage - 1) + index;
   }
 
-  // add event that allows the form to be looped
+  assetData: any;
+
   addOtherAssets(isEdit, index?) {
     this.isAddOtherAssetsImprovement = Math.random();
+    this.assetData = {
+      isAddOtherAssetsImprovement: this.isAddOtherAssetsImprovement,
+      assetIndex: index,
+    };
+  }
 
-    let dialogRef = this.matDialog.open(OtherAssetImprovementComponent, {
-      width: '70%',
-      height: 'auto',
-      data: {
-        isAddOtherAssetsImprovement: this.isAddOtherAssetsImprovement,
-        assetIndex: index,
-      },
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result !== undefined) {
-        this.ITR_JSON = JSON.parse(
+  assetSaved(result){
+    if (result !== undefined) {
+      this.ITR_JSON = JSON.parse(
           sessionStorage.getItem(AppConstants.ITR_JSON)
-        );
-        let listedData = this.ITR_JSON.capitalGain?.filter(
+      );
+      let listedData = this.ITR_JSON.capitalGain?.filter(
           (item) => item.assetType === 'GOLD'
-        );
-        if (listedData?.length > 0) {
-          this.goldCg = listedData[0];
-        }
-        this.createRowData();
-        this.gridOptions.api?.setRowData(this.assetList);
-        if (this.deduction && this.deductionForm.valid) {
-          this.calculateDeduction();
-        }
+      );
+      if (listedData?.length > 0) {
+        this.goldCg = listedData[0];
       }
-    });
-    // this.goldCg.deduction.push(result.deduction);
+      this.createRowData();
+      this.gridOptions.api?.setRowData(this.assetList);
+      if (this.deduction && this.deductionForm.valid) {
+        this.calculateDeduction();
+      }
+    }
   }
 
   setStep(index: number) {

@@ -1,6 +1,6 @@
 import {
-  Component,
-  Inject,
+  Component, EventEmitter,
+  Inject, OnChanges,
   OnInit,
   Output,
   SimpleChanges,
@@ -27,7 +27,7 @@ import * as moment from 'moment/moment';
   templateUrl: './other-asset-improvement.component.html',
   styleUrls: ['./other-asset-improvement.component.scss'],
 })
-export class OtherAssetImprovementComponent implements OnInit {
+export class OtherAssetImprovementComponent implements OnInit, OnChanges {
   assetType = 'GOLD';
   config: any;
   ITR_JSON: ITR_JSON;
@@ -42,13 +42,13 @@ export class OtherAssetImprovementComponent implements OnInit {
   index: number;
   @Input() goldCg: NewCapitalGain;
   @Input() isAddOtherAssetsImprovement: Number;
+  @Input() data: any;
+  @Output() onSave = new EventEmitter();
   selectedIndexes: number[] = [];
   constructor(
     public fb: FormBuilder,
     private itrMsService: ItrMsService,
-    public utilsService: UtilsService,
-    public dialogRef: MatDialogRef<OtherAssetImprovementComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    public utilsService: UtilsService
   ) {
     this.getImprovementYears();
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
@@ -78,22 +78,7 @@ export class OtherAssetImprovementComponent implements OnInit {
     this.minDate = thisYearStartDate;
     this.maxDate = nextYearEndDate;
 
-    this.isAddOtherAssetsImprovement = this.data.isAddOtherAssetsImprovement;
-    this.assetIndex = this.data?.assetIndex;
-    this.addMoreOtherAssetsForm(this.assetIndex);
-
-    let obj: any = this.assetIndex >= 0 ?
-        this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[this.assetIndex] : null;
-    // setting improvement flag
-    this.goldCg?.improvement?.forEach((element) => {
-      if (
-        element &&
-        element.indexCostOfImprovement &&
-        element.indexCostOfImprovement !== 0 && element.srn === obj?.srn
-      ) {
-        this.isImprovement?.setValue(true);
-      }
-    });
+    this.addMoreOtherAssetsForm();
   }
 
   ngOnInit() {
@@ -142,7 +127,7 @@ export class OtherAssetImprovementComponent implements OnInit {
       this.financialyears = res.data;
       this.improvementYears = this.financialyears;
       // sessionStorage.setItem('improvementYears', res.data)
-      let purchaseDate = this.assetsForm.getRawValue().purchaseDate;
+      let purchaseDate = this.assetsForm.getRawValue()?.purchaseDate;
       let purchaseYear = new Date(purchaseDate).getFullYear();
       let purchaseMonth = new Date(purchaseDate).getMonth();
 
@@ -178,10 +163,22 @@ export class OtherAssetImprovementComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     setTimeout(() => {
-      if (this.isAddOtherAssetsImprovement) {
-        this.isAddMoreOtherAssets();
-        // this.haveImprovement();
-      }
+      this.isAddOtherAssetsImprovement = this.data?.isAddOtherAssetsImprovement;
+      this.assetIndex = this.data?.assetIndex;
+      this.addMoreOtherAssetsForm(this.assetIndex);
+
+      let obj: any = this.assetIndex >= 0 ?
+          this.goldCg?.assetDetails.filter(e => !e.isIndexationBenefitAvailable)[this.assetIndex] : null;
+      // setting improvement flag
+      this.goldCg?.improvement?.forEach((element) => {
+        if (
+            element &&
+            element.indexCostOfImprovement &&
+            element.indexCostOfImprovement !== 0 && element.srn === obj?.srn
+        ) {
+          this.isImprovement?.setValue(true);
+        }
+      });
     }, 1000);
   }
 
@@ -196,6 +193,7 @@ export class OtherAssetImprovementComponent implements OnInit {
       this.goldCg.assetDetails.length,
       index
     );
+    this.assetsForm.updateValueAndValidity();
   }
 
   objSrn = 0;
@@ -676,7 +674,7 @@ export class OtherAssetImprovementComponent implements OnInit {
       );
 
       this.utilsService.showSnackBar('Other Assets Saved Successfully');
-      this.dialogRef.close(this.goldCg);
+      this.onSave.emit(this.goldCg);
       this.loading = false;
     } else {
       this.utilsService.showSnackBar(
@@ -690,5 +688,9 @@ export class OtherAssetImprovementComponent implements OnInit {
       'improvementsArray'
     ) as FormArray;
     return improvementsArray;
+  }
+
+  clearForm(){
+    this.assetsForm.reset();
   }
 }

@@ -1,314 +1,311 @@
-<ngx-loading
-        [show]="loading"
-        [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"
-></ngx-loading>
-
 <form [formGroup]="assetsForm" class="scroll" style="padding: 0 40px">
-  <div class="wrapper">
 
-    <div class="div-4">
-      <div class="frame-wrapper-2A">
-        <div class="accordion" id="myAccordion">
+    <div class="accordion__item-body">
 
-          <div class="accordion-item">
-            <h2 class="accordion-title">
-              Capital Gain
-              <button type="button" class="accordion-btn" data-bs-toggle="collapse"
-                      data-bs-target="#collapseTwo">
-                Type: {{assetsForm.getRawValue().gainType}} Amount: ₹ {{assetsForm.getRawValue().capitalGain}}
-              </button>
-            </h2>
-            <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-              <div class="accordion__item-body">
-                <div class="div-6">
-                  <div class="form-field">
-                    <div><span class="span">Sale Date </span> <span
-                            class="text-wrapper-2">*</span>
-                    </div>
-                    <mat-form-field appearance="outline">
-                      <input
-                              matInput
-                              formControlName="sellDate"
-                              name="sellDate"
-                              [matDatepicker]="sellDate"
-                              placeholder="Sale Date/Date of Transfer"
-                              (dateChange)="
-                  calculateGainType();
-                  calMaxPurchaseDate(assetsForm.get('sellDate')?.value)
-                "
-                              [min]="minDate"
-                              [max]="maxDate"
-                      />
-                      <mat-datepicker-toggle
-                              matSuffix
-                              [for]="sellDate"
-                      ></mat-datepicker-toggle>
-                      <mat-datepicker #sellDate></mat-datepicker>
-                    </mat-form-field>
-                  </div>
+      <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+        <div class="accordion__item-body">
+          <div class="div-6">
+            <div class="form-field">
+              <div><span class="span">Sale Date </span> <span
+                      class="text-wrapper-2">*</span>
+              </div>
+              <mat-form-field appearance="outline">
+                <input
+                        matInput
+                        formControlName="sellDate"
+                        name="sellDate"
+                        [matDatepicker]="sellDate"
+                        placeholder="Sale Date/Date of Transfer"
+                        (dateChange)="
+            calculateGainType();
+            calMaxPurchaseDate(assetsForm.get('sellDate')?.value)
+          "
+                        [min]="minDate"
+                        [max]="maxDate"
+                />
+                <mat-datepicker-toggle
+                        matSuffix
+                        [for]="sellDate"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #sellDate></mat-datepicker>
+              </mat-form-field>
+            </div>
 
-                  <div class="form-field">
-                    <div><span class="span">Buy Date </span> <span
-                            class="text-wrapper-2">*</span>
-                    </div>
-                    <mat-form-field appearance="outline">
-                      <input
-                              matInput
-                              formControlName="purchaseDate"
-                              name="purchaseDate"
-                              [matDatepicker]="purchaseDate"
-                              placeholder="Buy Date / Date of Acquisition"
-                              (dateChange)="getImprovementYears(); calculateGainType()"
-                              [max]="maxPurchaseDate"
-                      />
-                      <mat-datepicker-toggle
-                              matSuffix
-                              [for]="purchaseDate"
-                      ></mat-datepicker-toggle>
-                      <mat-datepicker #purchaseDate></mat-datepicker>
-                    </mat-form-field>
-                  </div>
+            <div class="form-field">
+              <div><span class="span">Buy Date </span> <span
+                      class="text-wrapper-2">*</span>
+              </div>
+              <mat-form-field appearance="outline">
+                <input
+                        matInput
+                        formControlName="purchaseDate"
+                        name="purchaseDate"
+                        [matDatepicker]="purchaseDate"
+                        placeholder="Buy Date / Date of Acquisition"
+                        (dateChange)="getImprovementYears(); calculateGainType()"
+                        [max]="maxPurchaseDate"
+                />
+                <mat-datepicker-toggle
+                        matSuffix
+                        [for]="purchaseDate"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #purchaseDate></mat-datepicker>
+              </mat-form-field>
+            </div>
 
+            <div class="form-field">
+              <div><span class="span">Type of gain </span></div>
+              <input type="text" class="form-control inpplac disable" formControlName="gainType"
+                     aria-describedby="emailHelp" readonly>
+            </div>
+          </div>
+          <div class="gray_container">
+            <div class="div-6">
+              <div class="form-field">
+                <div><span class="span">Sale Value </span> <span
+                        class="text-wrapper-2">*</span>
                 </div>
-                <div class="gray_container">
-                  <div class="div-6">
+              </div>
+              <div class="form-field">
+                <mat-form-field class="input-field-width" appearance="outline">
+                  <input
+                          matInput
+                          digitsOnly
+                          formControlName="sellValue"
+                          placeholder="Sell Value"
+                          name="sellValue"
+                          class="input-field"
+                          maxlength="14"
+                          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          (blur)="calculateCg()"
+                  />
+
+                  <!-- <mat-error
+                    *ngIf="
+                      OtherAsssetImprovementForm.controls['otherAssets'].controls[
+                        i
+                      ].controls['otherAssetsArray'].controls['sellValue'].hasError(
+                        'pattern'
+                      )
+                    "
+                    >Enter valid amount.</mat-error
+                  > -->
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="div-6">
+              <div class="form-field">
+                <div><span class="span">Buy Value</span> <span
+                        class="text-wrapper-2">*</span>
+                </div>
+              </div>
+              <div class="form-field">
+                <mat-form-field class="input-field-width" appearance="outline">
+                  <input
+                          matInput
+                          digitsOnly
+                          formControlName="purchaseCost"
+                          placeholder="Buy Value"
+                          name="purchaseCost[i]"
+                          class="input-field"
+                          maxlength="14"
+                          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          (blur)="calculateGainType()"
+                  />
+
+                  <!-- <mat-error
+                    *ngIf="
+                      getOtherAssetsArray.controls['purchaseCost'].hasError(
+                        'pattern'
+                      )
+                    "
+                    >Enter valid amount.</mat-error
+                  > -->
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="div-6" *ngIf="assetsForm.controls['gainType'].value === 'LONG'">
+              <div class="form-field">
+                <div><span class="span">Index cost of buy value</span> <span
+                        class="text-wrapper-2">*</span></div>
+              </div>
+              <div class="form-field">
+                <mat-form-field class="input-field-width" appearance="outline">
+                  <input
+                          matInput
+                          digitsOnly
+                          formControlName="indexCostOfAcquisition"
+                          placeholder="Indexed cost of acquistion"
+                          name="indexCostOfAcquisition[i]"
+                          class="input-field"
+                          readonly
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="div-6">
+              <div class="form-field">
+                <div><span class="span"> Expenses</span> <span
+                        class="text-wrapper-2">*</span>
+                </div>
+              </div>
+              <div class="form-field">
+                <mat-form-field class="input-field-width" appearance="outline">
+                  <input
+                          matInput
+                          digitsOnly
+                          formControlName="sellExpense"
+                          placeholder="Expenses"
+                          name="sellExpense"
+                          class="input-field"
+                          maxlength="14"
+                          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          (blur)="calculateGainType()"
+                  />
+                  <!-- <mat-error
+                    *ngIf="
+                      getOtherAssetsArray.controls['sellExpense'].hasError(
+                        'pattern'
+                      )
+                    "
+                    >Enter valid amount.</mat-error
+                  > -->
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="gray_container">
+            <div class="row mb-10">
+              <div class="col-8 ">
+                <p><span class="span">Add cost of improvement details? </span><span
+                        class="text-wrapper-2">*</span></p>
+              </div>
+              <div class="col-4">
+                <mat-radio-group [formControl]="isImprovement">
+                  <mat-radio-button
+                          [value]="true"
+                          style="margin-left: 0px"
+                          labelPosition="before">Yes </mat-radio-button>&nbsp;&nbsp;&nbsp;
+                  <mat-radio-button [value]="false" labelPosition="before"
+                  >No</mat-radio-button
+                  >
+                </mat-radio-group>
+              </div>
+            </div>
+            <div class="row" *ngIf="isImprovement.value">
+              <div class="col-4 mt-20">
+                <div class="ml-20">
+                  <i class="fa fa-trash-o delbt mr-20" (click)="deleteImprovementsArray()"></i>
+                  <button class="btn btn__default btn__add" (click)="addImprovementsArray()">Add Another</button>
+                </div>
+              </div>
+              <div class="col-12" formArrayName="improvementsArray">
+                <div class="gray_box" *ngFor="let improve of getImprovementsArray.controls;let j = index"
+                     [formGroupName]="j">
+                  <div class="div-6 ">
+                    <div class="custom-control custom-checkbox">
+                      <input
+                              class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
+                              type="checkbox"
+                              (click)="$event.stopPropagation()"
+                              [checked]="selectedIndexes.includes(j)"
+                              (click)="toggleSelectedIndex(j)"
+                      />
+                    </div>
                     <div class="form-field">
-                      <div><span class="span">Sale Value </span> <span
-                              class="text-wrapper-2">*</span>
+                      <div><span class="normal_text">Year of improvement
+                                                                        </span>
+                        <span class="text-wrapper-2">*</span>
+                      </div>
+                      <div class="form-control-wrapper">
+                        <mat-form-field
+                                class="input-field-width"
+                                appearance="outline">
+                          <mat-select
+                                  placeholder="Year of Improvement"
+                                  formControlName="financialYearOfImprovement"
+                                  (blur)="calculateCoiIndexation(this.assetsForm?.controls['gainType'].value)"
+                                  required>
+                            <mat-option
+                                    [value]="year"
+                                    *ngFor="let year of improvementYears">
+                              {{ year }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
                       </div>
                     </div>
                     <div class="form-field">
-                      <mat-form-field class="input-field-width" appearance="outline">
-                        <input
-                                matInput
-                                digitsOnly
-                                formControlName="sellValue"
-                                placeholder="Sell Value"
-                                name="sellValue"
-                                class="input-field"
-                                maxlength="14"
-                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                (blur)="calculateCg()"
-                        />
-
-                        <!-- <mat-error
-                          *ngIf="
-                            OtherAsssetImprovementForm.controls['otherAssets'].controls[
-                              i
-                            ].controls['otherAssetsArray'].controls['sellValue'].hasError(
-                              'pattern'
-                            )
-                          "
-                          >Enter valid amount.</mat-error
-                        > -->
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="div-6">
-                    <div class="form-field">
-                      <div><span class="span">Buy Value</span> <span
-                              class="text-wrapper-2">*</span>
+                      <div><span class="normal_text">Cost of improvement
+                                                                        </span>
+                        <span class="text-wrapper-2">*</span>
                       </div>
-                    </div>
-                    <div class="form-field">
-                      <mat-form-field class="input-field-width" appearance="outline">
+
+                      <mat-form-field
+                              class="input-field-width"
+                              appearance="outline">
                         <input
                                 matInput
                                 digitsOnly
-                                formControlName="purchaseCost"
-                                placeholder="Buy Value"
-                                name="purchaseCost[i]"
+                                formControlName="costOfImprovement"
+                                placeholder="Cost Of Improvement"
+                                (blur)="
+                      calculateCoiIndexation(
+                        this.assetsForm?.controls['gainType'].value
+                      )
+                    "
                                 class="input-field"
                                 maxlength="14"
                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                (blur)="calculateGainType()"
                         />
-
-                        <!-- <mat-error
-                          *ngIf="
-                            getOtherAssetsArray.controls['purchaseCost'].hasError(
-                              'pattern'
-                            )
-                          "
-                          >Enter valid amount.</mat-error
-                        > -->
                       </mat-form-field>
                     </div>
-                  </div>
-                  <div class="div-6" *ngIf="assetsForm.controls['gainType'].value === 'LONG'">
+
                     <div class="form-field">
-                      <div><span class="span">Index cost of buy value</span> <span
-                              class="text-wrapper-2">*</span></div>
-                    </div>
-                    <div class="form-field">
-                      <mat-form-field class="input-field-width" appearance="outline">
+                      <div><span class="normal_text">Index cost of improvement
+                                                                        </span>
+                        <span class="text-wrapper-2">*</span>
+                      </div>
+                      <mat-form-field
+                              class="input-field-width"
+                              appearance="outline">
                         <input
                                 matInput
                                 digitsOnly
-                                formControlName="indexCostOfAcquisition"
-                                placeholder="Indexed cost of acquistion"
-                                name="indexCostOfAcquisition[i]"
+                                formControlName="indexCostOfImprovement"
+                                placeholder="Cost Of Improvement with Indexation"
                                 class="input-field"
+                                maxlength="14"
+                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 readonly
                         />
                       </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="div-6">
-                    <div class="form-field">
-                      <div><span class="span"> Expenses</span> <span
-                              class="text-wrapper-2">*</span>
-                      </div>
-                    </div>
-                    <div class="form-field">
-                      <mat-form-field class="input-field-width" appearance="outline">
-                        <input
-                                matInput
-                                digitsOnly
-                                formControlName="sellExpense"
-                                placeholder="Expenses"
-                                name="sellExpense"
-                                class="input-field"
-                                maxlength="14"
-                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                (blur)="calculateGainType()"
-                        />
-                        <!-- <mat-error
-                          *ngIf="
-                            getOtherAssetsArray.controls['sellExpense'].hasError(
-                              'pattern'
-                            )
-                          "
-                          >Enter valid amount.</mat-error
-                        > -->
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </div>
-                <div class="gray_container">
-                  <div class="row mb-10">
-                    <div class="col-8 ">
-                      <p><span class="span">Add cost of improvement details? </span><span
-                              class="text-wrapper-2">*</span></p>
-                    </div>
-                    <div class="col-4">
-                      <mat-radio-group [formControl]="isImprovement">
-                        <mat-radio-button
-                                [value]="true"
-                                style="margin-left: 0px"
-                                labelPosition="before">Yes </mat-radio-button>&nbsp;&nbsp;&nbsp;
-                        <mat-radio-button [value]="false" labelPosition="before"
-                        >No</mat-radio-button
-                        >
-                      </mat-radio-group>
-                    </div>
-                  </div>
-                  <div class="row" *ngIf="isImprovement.value">
-                    <div class="col-4 mt-20">
-                      <div class="ml-20">
-                        <i class="fa fa-trash-o delbt mr-20" (click)="deleteImprovementsArray()"></i>
-                        <button class="btn btn__default btn__add" (click)="addImprovementsArray()">Add Another</button>
-                      </div>
-                    </div>
-                    <div class="col-12" formArrayName="improvementsArray">
-                      <div class="gray_box" *ngFor="let improve of getImprovementsArray.controls;let j = index"
-                           [formGroupName]="j">
-                        <div class="div-6 ">
-                          <div class="custom-control custom-checkbox">
-                            <input
-                                    class="checkbox checkbox-secondary rounded border-2 w-[18px] h-[18px] mb-[-6px]"
-                                    type="checkbox"
-                                    (click)="$event.stopPropagation()"
-                                    [checked]="selectedIndexes.includes(j)"
-                                    (click)="toggleSelectedIndex(j)"
-                            />
-                          </div>
-                          <div class="form-field">
-                            <div><span class="normal_text">Year of improvement
-                                                                              </span>
-                              <span class="text-wrapper-2">*</span>
-                            </div>
-                            <div class="form-control-wrapper select_arrow">
-                              <mat-form-field
-                                      class="input-field-width"
-                                      appearance="outline">
-                                <mat-select
-                                        placeholder="Year of Improvement"
-                                        formControlName="financialYearOfImprovement"
-                                        (blur)="calculateCoiIndexation(this.assetsForm?.controls['gainType'].value)"
-                                        required>
-                                  <mat-option
-                                          [value]="year"
-                                          *ngFor="let year of improvementYears">
-                                    {{ year }}
-                                  </mat-option>
-                                </mat-select>
-                              </mat-form-field>
-                            </div>
-                          </div>
-                          <div class="form-field">
-                            <div><span class="normal_text">Cost of improvement
-                                                                              </span>
-                              <span class="text-wrapper-2">*</span>
-                            </div>
-
-                            <mat-form-field
-                                    class="input-field-width"
-                                    appearance="outline">
-                              <input
-                                      matInput
-                                      digitsOnly
-                                      formControlName="costOfImprovement"
-                                      placeholder="Cost Of Improvement"
-                                      (blur)="
-                            calculateCoiIndexation(
-                              this.assetsForm?.controls['gainType'].value
-                            )
-                          "
-                                      class="input-field"
-                                      maxlength="14"
-                                      oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                              />
-                            </mat-form-field>
-                          </div>
-                          
-                          <div class="form-field">
-                            <div><span class="normal_text">Index cost of improvement
-                                                                              </span>
-                              <span class="text-wrapper-2">*</span>
-                            </div>
-                            <mat-form-field
-                                    class="input-field-width"
-                                    appearance="outline">
-                              <input
-                                      matInput
-                                      digitsOnly
-                                      formControlName="indexCostOfImprovement"
-                                      placeholder="Cost Of Improvement with Indexation"
-                                      class="input-field"
-                                      maxlength="14"
-                                      oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                      readonly
-                              />
-                            </mat-form-field>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
       </div>
-    </div>
-
-    <div class="out-box">
-      <div class="box-right">
-        <button class="btn btn__primary" (click)="saveCg()">Save</button>
+      <div class="accordion-item">
+        <h2 class="accordion-title">
+          Gain Amount
+          <button type="button" class="accordion-btn" data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo">
+            ₹ {{ assetsForm.controls["capitalGain"].value }}
+          </button>
+        </h2>
       </div>
     </div>
+
+  <div class="out-box">
+    <div class="box-left">
+      <button class="btn btn__white" (click)="clearForm()">cancel</button>
+    </div>
+    <div class="box-right">
+      <button class="btn btn__primary" (click)="saveCg()">Save Details</button>
+    </div>
   </div>
+
 </form>
