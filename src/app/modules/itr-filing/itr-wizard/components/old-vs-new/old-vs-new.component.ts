@@ -102,10 +102,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       });
 
       if (totalTaxRelief9090A && totalTaxRelief9090A > 0) {
-        this.ITR_JSON.acknowledgement90 = totalTaxRelief9090A;
 
         this.summaryToolReliefsForm.controls['section90']?.setValue(
-          this.ITR_JSON.acknowledgement90
+          totalTaxRelief9090A
         );
       }
     }
@@ -126,10 +125,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       });
 
       if (totalTaxRelief91 && totalTaxRelief91 > 0) {
-        this.ITR_JSON.acknowledgement91 = totalTaxRelief91;
 
         this.summaryToolReliefsForm?.controls['section91']?.setValue(
-          this.ITR_JSON?.acknowledgement91
+            totalTaxRelief91
         );
       }
     }
