@@ -3869,6 +3869,10 @@ pagination-controls {
 .mat-expansion-panel-header.mat-expanded {
   height: 55px;
   /* margin-bottom: 15px; */
+  background: white;
+}
+.mat-expansion-panel-header{
+  background: #DDEDFF;
 }
 
 .material-icons {
