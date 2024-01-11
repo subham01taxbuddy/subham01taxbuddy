@@ -1381,6 +1381,7 @@ export class SharesAndEquityComponent
   }
 
   equityColumnDef() {
+    let self = this;
     return [
       {
         field: '',
@@ -1489,6 +1490,17 @@ export class SharesAndEquityComponent
         valueGetter: function nameFromCode(params) {
           return params.data.controls['purchaseCost'].value;
         },
+      },
+      {
+        headerName: 'Buy Value with Indexation',
+        field: 'purchaseCost',
+        width: 150,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return self.bondType === 'unlisted' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfAcquisition'].value :
+              params.data.controls['purchaseCost'].value;
+        },
+        hide: self.bondType === 'listed',
       },
       {
         headerName: 'Expenses',
