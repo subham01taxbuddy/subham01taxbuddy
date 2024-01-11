@@ -20,8 +20,9 @@
                       (sendPrincipleIndividual)="fromSme($event,false, true)"
                       (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
                   </div>
-                  <div class="col-sm-3 spsTp" style="padding:15px;">
-                    <mat-label>Request Type </mat-label>
+                  <div class="col-sm-2 spsTp" >
+                    <!-- <mat-label>Request Type </mat-label> -->
+                    <label class="input__label" for="attr">Request Type </label>
                     <mat-form-field appearance="outline" class="custom-bg-new">
                       <mat-select placeholder="Select Request Type" [formControl]="requestType">
                         <mat-option *ngFor="let item of Type" [value]="item.value">
@@ -30,11 +31,23 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
-                  <div class="col-sm-3 spsTp">
+
+                  <div class="col-sm-2 spsTp">
                     <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
                       [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
                   </div>
-                  <div class="col-sm-6 spsTp">
+                  <div class="col-sm-3 spsTp" >
+                    <!-- <mat-label>Status</mat-label> -->
+                    <label class="input__label" for="attr">Refund Status </label>
+                    <mat-form-field appearance="outline" class="custom-bg-new">
+                      <mat-select placeholder="Select status " [formControl]="status">
+                        <mat-option *ngFor="let item of statusList" [value]="item.value">
+                          {{ item.label }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-sm-5 spsTp">
                     <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                       (onChange)="searchByObject($event)"></app-generic-user-filter>
                   </div>

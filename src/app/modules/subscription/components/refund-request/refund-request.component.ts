@@ -68,6 +68,10 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     { label: 'Cancel', value: 'CANCEL' },
     { label: 'Downgraded', value: 'DOWNGRADE' },
   ];
+  statusList:any=[
+    { label: 'Refund Done', value: 'PROCESSED' },
+    { label: 'Pending For Refund', value: 'IN_PROGRESS,INITIATED,FAILED' },
+  ]
   searchAsPrinciple :boolean =false;
   searchBy: any = {};
   searchMenus = [
@@ -85,6 +89,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     email: new FormControl(''),
     invoiceNo: new FormControl(''),
     name: new FormControl(''),
+    status:new FormControl('')
   });
 
   get mobile() {
@@ -102,8 +107,13 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
   get requestType() {
     return this.invoiceFormGroup.controls['requestType'] as FormControl;
   }
+
   get name() {
     return this.invoiceFormGroup.controls['name'] as FormControl;
+  }
+
+  get status() {
+    return this.invoiceFormGroup.controls['status'] as FormControl;
   }
 
   constructor(
@@ -284,6 +294,10 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['requestType'].value)) {
       invoiceFilter ='&requestType=' +this.invoiceFormGroup.controls['requestType'].value;
     }
+    let statusFilter ='';
+    if (this.utilService.isNonEmpty(this.invoiceFormGroup.controls['status'].value)) {
+      statusFilter ='&status=' +this.invoiceFormGroup.controls['status'].value;
+    }
 
     let userFilter = '';
 
@@ -299,7 +313,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
     let data = this.utilService.createUrlParams(this.searchParam);
 
-    param = `/bo/refund/requests?${data}${userFilter}${reqFilter}${mobileFilter}${emailFilter}${invoiceFilter}${nameFilter}`;
+    param = `/bo/refund/requests?${data}${userFilter}${reqFilter}${mobileFilter}${emailFilter}${invoiceFilter}${nameFilter}${statusFilter}`;
 
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {
