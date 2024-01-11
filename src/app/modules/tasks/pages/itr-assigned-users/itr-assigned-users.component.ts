@@ -787,20 +787,22 @@ export class ItrAssignedUsersComponent implements OnInit {
             'Not Interested': { background: '#DCDCDC', color: '#808080' },
             'Payment Received': { background: '#FBEED3', color: '#A36543' },
             'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-            'Upgraded Invoice Sent' : {background : '#EFF6FF', color: '#86af39'},
+            'Upgraded Invoice Sent' : {background : '#D3FBDA', color: '#43A352'},
             'Follow Up':{ background: '#FBEED3', color: '#A36543' },
-            'Interested': { background: '#F8F8F8', color: '#404040' },
+            'Waiting for Confirmation' : { background: '#D3FBDA', color: '#43A352' },
+            'Interested': { background: '#D3FBDA', color: '#43A352' },
+            'Documents Uploaded' : { background: '#D3FBDA', color: '#43A352' },
             'ITR Confirmation Received': { background: '#FFFFE0', color: '#404040' },
-            'ITR Filed - E Verification Pending': { background: '#FFC0CB', color: '#FFFFFF' },
-            'Preparing ITR': { background: '#E0FFE0', color: '#404040' },
-            'Chat Initiated': { background: '#FFC0CB', color: '#404040' },
-            'Back Out - With Refund': { background: '#ADD8E6', color: '#FFFFFF' },
-            'Chat Resolved': { background: '#FFD700', color: '#404040' },
-            'ITR Filed - E Verification Completed': { background: '#EE82EE', color: '#FFFFFF' },
-            'Back Out - Without Refund': { background: '#90EE90', color: '#FFFFFF' },
-            'Pay Later': { background: '#00FFFF', color: '#404040' },
+            'ITR Filed - E Verification Pending': { background: '#FBEED3', color: '#A36543' },
+            'Preparing ITR': { background: '#FBEED3', color: '#A36543' },
+            'Chat Initiated': { background: '#D3FBDA', color: '#43A352' },
+            'Back Out - With Refund': { background: '#DCDCDC', color: '#808080' },
+            'Chat Resolved': { background: '#DCDCDC;', color: '#808080' },
+            'ITR Filed - E Verification Completed': { background: '#DCDCDC;', color: '#808080' },
+            'Back Out - Without Refund': { background: '#DCDCDC;', color: '#808080' },
+            'Pay Later': { background: '#DDEDFF', color: '#2D629B' },
           };
-          const statusStyle = statusColors[statusName] || { background: 'transparent', color: '#000' };
+          const statusStyle = statusColors[statusName] || { background: '#DCDCDC', color: '#808080' };
 
           return `<button class="status-chip" title="Update Status" data-action-type="updateStatus" style="padding: 0px 10px;  border-radius: 40px;
           cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
