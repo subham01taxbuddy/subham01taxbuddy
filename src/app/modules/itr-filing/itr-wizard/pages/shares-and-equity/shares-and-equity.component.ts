@@ -1488,7 +1488,8 @@ export class SharesAndEquityComponent
         width: 150,
         cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
-          return params.data.controls['purchaseCost'].value;
+          return self.checkBuyDateBefore31stJan(params.data) ? params.data.controls['grandFatheredValue'].value :
+              params.data.controls['purchaseCost'].value;
         },
       },
       {
