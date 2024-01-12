@@ -100,6 +100,7 @@ export class SideSummaryPanelComponent implements OnInit {
 
   openPanel() {
     this.displayPanel = true;
+    this.utilsService.smoothScrollToTop();
     this.setSummaryData();
   }
 
