@@ -226,6 +226,10 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     this.clearUserFilter = moment.now().valueOf();
     this.searchBy = {};
     this.cacheManager.clearCache();
+    this.searchParam.serviceType = null;
+    this?.serviceDropDown?.resetService();
+    this.status.setValue(null);
+    this.requestType.setValue(null);
     this.invoiceFormGroup.controls['email'].setValue(null);
     this.invoiceFormGroup.controls['mobile'].setValue(null);
     this.invoiceFormGroup.controls['invoiceNo'].setValue(null);
@@ -234,7 +238,6 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
     const loginSMEInfo = data[0];
     this.invoiceFormGroup.reset();
     this.invoiceFormGroup.updateValueAndValidity();
-    this?.serviceDropDown?.resetService();
     this.filerId = null;
     this.ownerId = null;
     this.leaderId =null;
