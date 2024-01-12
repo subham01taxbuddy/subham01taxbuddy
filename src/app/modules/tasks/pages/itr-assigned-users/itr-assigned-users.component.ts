@@ -783,24 +783,24 @@ export class ItrAssignedUsersComponent implements OnInit {
         cellRenderer: function (params: any) {
           const statusName = params.data.statusName;
           const statusColors = {
-            'Open': { background: '#DDEDFF', color: '#2D629B' },
+            'Open': { background: '#D3FBDA', color: '#43A352' },
             'Not Interested': { background: '#DCDCDC', color: '#808080' },
-            'Payment Received': { background: '#FBEED3', color: '#A36543' },
+            'Payment Received': { background: '#D3FBDA', color: '#43A352' },
             'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
             'Upgraded Invoice Sent' : {background : '#D3FBDA', color: '#43A352'},
-            'Follow Up':{ background: '#FBEED3', color: '#A36543' },
-            'Waiting for Confirmation' : { background: '#D3FBDA', color: '#43A352' },
+            'Follow Up':{ background: '#DCDCDC', color: '#808080' },
+            'Waiting for Confirmation' : { background: '#DCDCDC', color: '#808080' },
             'Interested': { background: '#D3FBDA', color: '#43A352' },
             'Documents Uploaded' : { background: '#D3FBDA', color: '#43A352' },
-            'ITR Confirmation Received': { background: '#FFFFE0', color: '#404040' },
-            'ITR Filed - E Verification Pending': { background: '#FBEED3', color: '#A36543' },
-            'Preparing ITR': { background: '#FBEED3', color: '#A36543' },
+            'ITR Confirmation Received': { background: '#D3FBDA', color: '#43A352' },
+            'ITR Filed - E Verification Pending': { background: '#DCDCDC', color: '#808080' },
+            'Preparing ITR': { background: '#D3FBDA', color: '#43A352' },
             'Chat Initiated': { background: '#D3FBDA', color: '#43A352' },
             'Back Out - With Refund': { background: '#DCDCDC', color: '#808080' },
             'Chat Resolved': { background: '#DCDCDC;', color: '#808080' },
-            'ITR Filed - E Verification Completed': { background: '#DCDCDC;', color: '#808080' },
+            'ITR Filed - E Verification Completed': { background: '#D3FBDA;', color: '#43A352' },
             'Back Out - Without Refund': { background: '#DCDCDC;', color: '#808080' },
-            'Pay Later': { background: '#DDEDFF', color: '#2D629B' },
+            'Pay Later': { background: '#DCDCDC', color: '#808080' },
           };
           const statusStyle = statusColors[statusName] || { background: '#DCDCDC', color: '#808080' };
 

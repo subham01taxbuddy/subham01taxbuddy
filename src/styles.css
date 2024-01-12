@@ -12671,3 +12671,20 @@ body[dir=rtl] .checkbox[checked=true] {
 .custom-bg-new{
   background-color: #EFF6FF !important;
 }
+
+.accordion-header:has(:not(.collapse.show)){
+  background: #DDEDFF;
+}
+
+.custom-bg-lightBlue{
+  background: #DDEDFF !important;
+}
+.accordion-button:not(.collapse){
+  background: #DDEDFF !important;
+
+}
+
+.noBorder .accordion-item{
+ border: 0 !important;
+ margin-bottom: 10px ;
+}

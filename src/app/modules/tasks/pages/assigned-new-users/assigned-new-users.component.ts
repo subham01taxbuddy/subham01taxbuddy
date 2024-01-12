@@ -620,12 +620,12 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
         cellRenderer: function (params: any) {
           const statusName = params.data.statusName;
           const statusColors = {
-            'Open': { background: '#DDEDFF', color: '#2D629B' },
+            'Open': { background: '#D3FBDA', color: '#43A352' },
             'Not Interested': { background: '#DCDCDC', color: '#808080' },
-            'Payment Received': { background: '#FBEED3', color: '#A36543' },
+            'Payment Received': { background: '#D3FBDA', color: '#43A352' },
             'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
             'Upgraded Invoice Sent' : {background : '#D3FBDA', color: '#43A352'},
-            'Follow Up':{ background: '#FBEED3', color: '#A36543' },
+            'Follow Up':{ background: '#DCDCDC', color: '#808080' },
             'Documents Uploaded' : { background: '#D3FBDA', color: '#43A352' },
             'Backed Out': { background: '#DCDCDC', color: '#808080' },
           };
