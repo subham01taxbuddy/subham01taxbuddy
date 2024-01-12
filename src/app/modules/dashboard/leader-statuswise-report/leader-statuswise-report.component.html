@@ -54,11 +54,11 @@
                   Clear form
                 </button>
               </div>
-              
+
             </div>
           </div>
         </div>
- 
+
       </div>
     </div>
   </div>
@@ -70,19 +70,19 @@
             <table class="table">
               <thead>
                 <tr *ngIf="columns">
-                  <th scope="col">Sr.No</th>
-                  <th scope="col" *ngFor="let column of columns">{{ addSpaces(column) }}</th>
+                  <th scope="col" class="sticky-column">Sr.No</th>
+                  <th scope="col" class="sticky-column" *ngFor="let column of columns">{{ addSpaces(column) }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let item of data?.statusWiseData; let i = index">
-                  <td>{{ i + 1 }}</td>
-                  <td *ngFor="let key of dataKeys">{{ item[key] }}</td>
+                  <td class="sticky-column">{{ i + 1 }}</td>
+                  <td class="sticky-column" *ngFor="let key of dataKeys">{{ item[key] }}</td>
                 </tr>
                 <tr *ngIf="grandTotal">
-                  <td colspan="1"></td>
-                  <td class="text-bold">Grand Total</td>
-                  <td *ngFor="let key of grandTotalKeys">{{ grandTotal[key] }}</td>
+                  <td colspan="1" class="sticky-column"></td>
+                  <td class="text-bold sticky-column">Grand Total</td>
+                  <td *ngFor="let key of grandTotalKeys" class="sticky-column">{{ grandTotal[key] }}</td>
                 </tr>
                 <tr *ngIf="!data?.statusWiseData || data?.statusWiseData.length === 0">
                   <td colspan="19" class="text-center">No Records Found</td>

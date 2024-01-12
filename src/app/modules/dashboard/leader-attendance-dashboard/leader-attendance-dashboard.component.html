@@ -105,8 +105,8 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">Sr No.</th>
-                  <th scope="col">Name of Partners </th>
+                  <th scope="col" class="sticky-column">Sr No.</th>
+                  <th scope="col" class="sticky-column">Name of Partners </th>
                   <th scope="col">Attendance on Date<br>({{ today | date:'dd MMMM yyyy' }})</th>
                   <th scope="col">Assignment Status</th>
                   <th scope="col">No of clients assigned<br>(where filer is allotted)</th>
@@ -130,8 +130,8 @@
               </thead>
               <tbody>
                 <tr *ngFor="let item of allDetails ; let i = index">
-                  <td>{{ i+1 }}</td>
-                  <td>{{ item.nameOfFiler }}</td>
+                  <td class="sticky-column">{{ i+1 }}</td>
+                  <td class="sticky-column">{{ item.nameOfFiler }}</td>
                   <td>
                     <span *ngIf="item.attendanceOnDateInBo === 'Active'; else inactive"
                       class="active-status">Active</span>

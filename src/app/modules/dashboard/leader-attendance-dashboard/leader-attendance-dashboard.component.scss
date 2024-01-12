@@ -448,3 +448,21 @@ letter-spacing: -0.32px;
   border: 1px solid #DEDEDE;
   background: var(--secondary-primary-white, #FFF);
 }
+th.sticky-column,
+td.sticky-column {
+  position: sticky;
+  left: 0;
+}
+
+th.sticky-column:nth-child(1),
+td.sticky-column:nth-child(1) {
+  left: 0;
+  z-index: 2;
+}
+
+th.sticky-column:nth-child(2),
+td.sticky-column:nth-child(2) {
+  left:55px;
+  z-index: 1;
+}
+
