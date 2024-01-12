@@ -94,11 +94,16 @@
  .ag-theme-balham .ag-row {
   height: 28px;
   border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
  }
 
  .ag-body-viewport.ag-selectable.ag-layout-normal.ag-row-no-animation {
   border: 1px solid #8CBDF2;
 }
+
+/* .ag-theme-balham .ag-row:nth-child(odd) {
+  background-color: rgba(251, 238, 211, 0.49);
+} */
 
 /* .ag-theme-balham .ag-row-odd:nth-child(2n) {
   background-color:rgba(251, 238, 211, 0.49);
