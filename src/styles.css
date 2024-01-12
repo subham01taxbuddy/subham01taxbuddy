@@ -2614,7 +2614,7 @@ main {
   position: relative;
   bottom: 0;
   top: -16px;
-  right: -16px;
+  /*right: -16px;*/
   /* border: 3px solid #f1f1f1; */
   z-index: 9;
 }
