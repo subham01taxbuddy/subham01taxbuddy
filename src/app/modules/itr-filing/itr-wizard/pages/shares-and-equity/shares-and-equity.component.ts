@@ -475,6 +475,7 @@ export class SharesAndEquityComponent
     }
     this.clearForm();
     this.isAdd = true;
+    this.calculateDeductionGain();
   }
 
   addMore() {
