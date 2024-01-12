@@ -195,8 +195,13 @@ export class ItrWizardComponent implements OnInit {
 
   gotoSummary() {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
-    // if (this.jsonUploaded) {
-
+    if (this.ITR_JSON.itrSummaryJson) {
+      this.breadcrumb = null;
+      this.showIncomeSources = false;
+      this.selectedSchedule = 'Comparison of New v/s Old Regime';
+      this.router.navigate(['/itr-filing/itr/old-vs-new']);
+      return;
+    }
     this.itrMsService.getMethod(`/validate/${this.ITR_JSON.itrId}`).subscribe((result:any)=>{
       console.log(result);
       // if(result.success){
