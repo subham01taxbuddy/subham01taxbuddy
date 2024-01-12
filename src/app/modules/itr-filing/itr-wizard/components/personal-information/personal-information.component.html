@@ -532,13 +532,19 @@
         <div class="div-11 mb-20">
           <h3>Bank Details</h3>
           <div class="frame-wrapper-3">
+            <button
+                    mat-icon-button
+                    class="btn table-add-remove-button text-left"
+                    (click)="deleteSelectedBanks(this.customerProfileForm)">
+              <i class="fa fa-trash" aria-hidden="true"></i> Delete
+            </button>
             <button class="btn btn__default btn__add" (click)="addMoreBanks(this.customerProfileForm)"> Add Bank</button>
           </div>
         </div>
         <div *ngFor="let bank of getBankDetailsArray.controls; let i = index"
              [formGroupName]="i">
           <div class="div-6">
-            <mat-checkbox *ngIf="false"
+            <mat-checkbox
                     color="primary"
                     name="hasEdit[i]"
                     formControlName="hasEdit">
@@ -616,7 +622,7 @@
                       formControlName="hasRefund">
               </mat-checkbox>
             </div>
-            <div class="form-field">
+            <div class="form-field" *ngIf="false">
               <button
                       mat-icon-button
                       class="table-add-remove-button text-left"
