@@ -562,6 +562,15 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
+  getUserSharePercent(){
+    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+    let sum = 0;
+    coOwner.controls.forEach((controlName) => {
+      sum = Number(sum) + Number(controlName.value.percentage);
+    });
+    return 100- sum;
+  }
+
   isduplicatePAN(i, formArrayName) {
     const formArray = <FormArray>this.housePropertyForm.get(formArrayName);
     const dup = formArray.controls.filter(

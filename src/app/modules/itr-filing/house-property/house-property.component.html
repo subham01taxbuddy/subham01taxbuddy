@@ -589,6 +589,16 @@
                           </div>
                         </div>
 
+                        <div class="hdTxMnBt">
+                          <div class="hdTxL">
+                            Your Percentage Share in the Property
+                          </div>
+                          <div class="hdTxR">
+                            <input class="share-view" [value]="getUserSharePercent()" readonly/><input value="%" readonly/>
+                          </div>
+
+                        </div>
+
                         <div formArrayName="coOwners" *ngIf="isCoOwners.value">
                           <div class="hp4main1"
                              *ngFor="let coOwn of getCoOwnersArray.controls; let i = index"

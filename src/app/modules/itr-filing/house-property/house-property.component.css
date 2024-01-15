@@ -106,6 +106,12 @@ table {
   font-size:13px;
 }
 
+.share-view{
+  text-align: right;
+  border-width: thin;
+  border-color: darkgray;
+  border-radius: 5px;
+}
 /* tr:nth-child(even) {
   background-color: #f2f2f2;
 } */
