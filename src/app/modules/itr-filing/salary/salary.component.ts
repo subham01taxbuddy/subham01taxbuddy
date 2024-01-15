@@ -1972,6 +1972,12 @@ export class SalaryComponent extends WizardNavigation implements OnInit {
         previousValue + currentValue, 0);
   }
 
+  getTotalDeductions(){
+    return (this.deductionsFormGroup.controls['standardDeduction'].value ? parseInt(this.deductionsFormGroup.controls['standardDeduction'].value) : 0)+
+        (this.deductionsFormGroup.controls['entertainmentAllow'].value ? parseInt(this.deductionsFormGroup.controls['entertainmentAllow'].value) : 0)+
+        (this.deductionsFormGroup.controls['professionalTax'].value ? parseInt(this.deductionsFormGroup.controls['professionalTax'].value) : 0);
+  }
+
   getTotalGrossSalary(){
     return this.getSalaryArray.getRawValue().map(val=> val.salaryValue ? parseInt(val.salaryValue) : 0).reduce((previousValue, currentValue) =>
         previousValue + currentValue, 0);
