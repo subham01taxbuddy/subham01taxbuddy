@@ -1120,8 +1120,9 @@ export class HousePropertyComponent implements OnInit {
 
       this.serviceCall(view, this.Copy_ITR_JSON);
     } else {
-      this.utilsService.showSnackBar('failed to save.');
+      // this.utilsService.showSnackBar('failed to save.');
       $('input.ng-invalid').first().focus();
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm);
     }
   }
 
@@ -1834,7 +1835,7 @@ export class HousePropertyComponent implements OnInit {
       ) {
         interest24b?.setValue(200000);
       } else {
-        interest24b?.setValue(interest.value);
+        interest24b?.setValue(Math.min(interest?.value, 200000));
       }
       interest24b?.updateValueAndValidity();
     }
