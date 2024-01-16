@@ -703,6 +703,7 @@ main {
     background-color: #3d82cd;
     border-radius: 4px 4px 0px 0px;
     border: 1.5px solid;
+    cursor: pointer;
   }
   .frameC .contents-selected {
     display: inline-flex;
@@ -714,6 +715,7 @@ main {
     background-color: #BDD5F0;
     border-radius: 4px 4px 0px 0px;
     border: 1.5px solid;
+    cursor: pointer;
   }
 
   .frameC .field-text {
