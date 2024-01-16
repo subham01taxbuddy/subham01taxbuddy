@@ -375,112 +375,149 @@
                   (change)="laderAssignment( assignmentToggle)"></mat-slide-toggle>
               </span>
               <div class="col-sm-12 mt-3" *ngIf="assignmentToggle.value" [formGroup]="assignmentFormGroup">
-                <div class="row countContainer mb-3 ">
+                <div class="row countContainer mb-3">
                   <div class="col-sm-3">
                     <p><b>ITR:</b></p>
                   </div>
                   <div class="col-sm-4">
-                    <span>1.Highest:{{roundRobinData?.highestRoundRobinLeaderCount_ITR}}</span><br>
-                    <span>2.Median:{{roundRobinData?.medianRoundRobinLeaderCount_ITR}}</span><br>
-                    <span>3.Lowest:{{roundRobinData?.lowestRoundRobinLeaderCount_ITR}}</span><br>
+                    <div class="mb-2">
+                      <span class="info-label">Highest:</span>
+                      <span class="info-value">  {{ roundRobinData?.highestRoundRobinLeaderCount_ITR }}</span>
+                    </div>
+                    <div class="mb-2">
+                      <span class="info-label">Median:</span>
+                      <span class="info-value">  {{ roundRobinData?.medianRoundRobinLeaderCount_ITR }}</span>
+                    </div>
+                    <div>
+                      <span class="info-label">Lowest:</span>
+                      <span class="info-value">  {{ roundRobinData?.lowestRoundRobinLeaderCount_ITR }}</span>
+                    </div>
                   </div>
                   <div class="col-sm-5 mb-2">
-                    <mat-label> Count Value </mat-label>
                     <mat-form-field appearance="outline">
+                      <mat-label>Count Value</mat-label>
                       <input type="number" [numbersOnly]="true" matInput formControlName="itrCount"
                         [min]="roundRobinData?.lowestRoundRobinLeaderCount_ITR"
-                        [max]="roundRobinData?.highestRoundRobinLeaderCount_ITR" />
+                        [max]="roundRobinData?.highestRoundRobinLeaderCount_ITR" [readonly]="isReadOnly" />
 
                       <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['itrCount'].hasError('required')">This field is required.</mat-error>
                       <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['itrCount'].hasError('min')">
-                        Value cannot be less than {{roundRobinData?.lowestRoundRobinLeaderCount_ITR}}
+                        Value cannot be less than {{ roundRobinData?.lowestRoundRobinLeaderCount_ITR }}
                       </mat-error>
                       <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['itrCount'].hasError('max')">
-                        Value cannot be greater than {{roundRobinData?.highestRoundRobinLeaderCount_ITR}}
+                        Value cannot be greater than {{ roundRobinData?.highestRoundRobinLeaderCount_ITR }}
                       </mat-error>
                     </mat-form-field>
                   </div>
                 </div>
+                <hr>
                 <div class="row countContainer mt-3 mb-3">
                   <div class="col-sm-3">
                     <p><b>TPA:</b></p>
                   </div>
                   <div class="col-sm-4">
-                    <span>1.Highest: {{roundRobinData?.highestRoundRobinLeaderCount_TPA}}</span><br>
-                    <span>2.Median: {{roundRobinData?.medianRoundRobinLeaderCount_TPA}}</span><br>
-                    <span>3.Lowest: {{roundRobinData?.lowestRoundRobinLeaderCount_TPA}}</span><br>
+                    <div class="mb-2">
+                      <span class="info-label">Highest:</span>
+                      <span class="info-value">  {{ roundRobinData?.highestRoundRobinLeaderCount_TPA }}</span>
+                    </div>
+                    <div class="mb-2">
+                      <span class="info-label">Median:</span>
+                      <span class="info-value">  {{ roundRobinData?.medianRoundRobinLeaderCount_TPA }}</span>
+                    </div>
+                    <div>
+                      <span class="info-label">Lowest:</span>
+                      <span class="info-value">  {{ roundRobinData?.lowestRoundRobinLeaderCount_TPA }}</span>
+                    </div>
                   </div>
                   <div class="col-sm-5 mb-2">
-                    <mat-label> Count Value </mat-label>
                     <mat-form-field appearance="outline">
+                      <mat-label>Count Value</mat-label>
                       <input type="number" [numbersOnly]="true" matInput formControlName="tpaCount"
                         [min]="roundRobinData?.lowestRoundRobinLeaderCount_TPA"
-                        [max]="roundRobinData?.highestRoundRobinLeaderCount_TPA" />
+                        [max]="roundRobinData?.highestRoundRobinLeaderCount_TPA" [readonly]="isReadOnly" />
 
                       <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['tpaCount'].hasError('required')">This field is required.</mat-error>
                       <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['tpaCount'].hasError('min')">
-                        Value cannot be less than {{roundRobinData?.lowestRoundRobinLeaderCount_TPA}}
+                        Value cannot be less than {{ roundRobinData?.lowestRoundRobinLeaderCount_TPA }}
                       </mat-error>
                       <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['tpaCount'].hasError('max')">
-                        Value cannot be greater than {{roundRobinData?.highestRoundRobinLeaderCount_TPA}}
+                        Value cannot be greater than {{ roundRobinData?.highestRoundRobinLeaderCount_TPA }}
                       </mat-error>
                     </mat-form-field>
                   </div>
                 </div>
-
+                <hr>
                 <div class="row countContainer mt-3 mb-3">
                   <div class="col-sm-3">
                     <p><b>Notice:</b></p>
                   </div>
                   <div class="col-sm-4">
-                    <span>1.Highest: {{roundRobinData?.highestRoundRobinLeaderCount_NOTICE}}</span><br>
-                    <span>2.Median: {{roundRobinData?.medianRoundRobinLeaderCount_NOTICE}}</span><br>
-                    <span>3.Lowest: {{roundRobinData?.lowestRoundRobinLeaderCount_NOTICE}}</span><br>
+                    <div class="mb-2">
+                      <span class="info-label">Highest:</span>
+                      <span class="info-value">  {{ roundRobinData?.highestRoundRobinLeaderCount_NOTICE }}</span>
+                    </div>
+                    <div class="mb-2">
+                      <span class="info-label">Median:</span>
+                      <span class="info-value">  {{ roundRobinData?.medianRoundRobinLeaderCount_NOTICE }}</span>
+                    </div>
+                    <div>
+                      <span class="info-label">Lowest:</span>
+                      <span class="info-value">  {{ roundRobinData?.lowestRoundRobinLeaderCount_NOTICE }}</span>
+                    </div>
                   </div>
                   <div class="col-sm-5 mb-2">
-                    <mat-label> Count Value </mat-label>
                     <mat-form-field appearance="outline">
+                      <mat-label>Count Value</mat-label>
                       <input type="number" [numbersOnly]="true" matInput formControlName="noticeCount"
                         [min]="roundRobinData?.lowestRoundRobinLeaderCount_NOTICE"
-                        [max]="roundRobinData?.highestRoundRobinLeaderCount_NOTICE" />
+                        [max]="roundRobinData?.highestRoundRobinLeaderCount_NOTICE" [readonly]="isReadOnly" />
 
                       <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['noticeCount'].hasError('required')">This field is required.</mat-error>
                       <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['noticeCount'].hasError('min')">
-                        Value cannot be less than {{roundRobinData?.lowestRoundRobinLeaderCount_NOTICE}}
+                        Value cannot be less than {{ roundRobinData?.lowestRoundRobinLeaderCount_NOTICE }}
                       </mat-error>
                       <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['noticeCount'].hasError('max')">
-                        Value cannot be greater than {{roundRobinData?.highestRoundRobinLeaderCount_NOTICE}}
+                        Value cannot be greater than {{ roundRobinData?.highestRoundRobinLeaderCount_NOTICE }}
                       </mat-error>
                     </mat-form-field>
                   </div>
                 </div>
+                <hr>
                 <div class="row countContainer mt-3 mb-3" *ngIf="smeObj?.serviceEligibility_GST">
                   <div class="col-sm-3">
                     <p><b>GST:</b></p>
                   </div>
                   <div class="col-sm-4">
-                    <span>1.Highest: {{roundRobinData?.highestRoundRobinLeaderCount_GST}}</span><br>
-                    <span>2.Median: {{roundRobinData?.medianRoundRobinLeaderCount_GST}}</span><br>
-                    <span>3.Lowest: {{roundRobinData?.lowestRoundRobinLeaderCount_GST}}</span><br>
+                    <div class="mb-2">
+                      <span class="info-label">Highest:</span>
+                      <span class="info-value">  {{ roundRobinData?.highestRoundRobinLeaderCount_GST }}</span>
+                    </div>
+                    <div class="mb-2">
+                      <span class="info-label">Median:</span>
+                      <span class="info-value">  {{ roundRobinData?.medianRoundRobinLeaderCount_GST }}</span>
+                    </div>
+                    <div>
+                      <span class="info-label">Lowest:</span>
+                      <span class="info-value">  {{ roundRobinData?.lowestRoundRobinLeaderCount_GST }}</span>
+                    </div>
                   </div>
                   <div class="col-sm-5 mb-2">
-                    <mat-label> Count Value </mat-label>
                     <mat-form-field appearance="outline">
+                      <mat-label>Count Value</mat-label>
                       <input type="number" [numbersOnly]="true" matInput formControlName="gstCount"
                         [min]="roundRobinData?.lowestRoundRobinLeaderCount_GST"
-                        [max]="roundRobinData?.highestRoundRobinLeaderCount_GST" />
+                        [max]="roundRobinData?.highestRoundRobinLeaderCount_GST" [readonly]="isReadOnly" />
 
                       <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['gstCount'].hasError('required')">This field is required.</mat-error>
                       <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['gstCount'].hasError('min')">
-                        Value cannot be less than {{roundRobinData?.lowestRoundRobinLeaderCount_GST}}
+                        Value cannot be less than {{ roundRobinData?.lowestRoundRobinLeaderCount_GST }}
                       </mat-error>
                       <mat-error class="mt-3" *ngIf="assignmentFormGroup.controls['gstCount'].hasError('max')">
-                        Value cannot be greater than {{roundRobinData?.highestRoundRobinLeaderCount_GST}}
+                        Value cannot be greater than {{ roundRobinData?.highestRoundRobinLeaderCount_GST }}
                       </mat-error>
                     </mat-form-field>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
