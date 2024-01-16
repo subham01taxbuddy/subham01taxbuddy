@@ -609,6 +609,11 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       ltcg20Per16SepTo15Dec: 0,
       ltcg20Per16DecTo15Mar: 0,
       ltcg20Per16MarTo31Mar: 0,
+      vda30PerUpto15Jun: 0,
+      vda30Per16JunTo15Sep: 0,
+      vda30Per16SepTo15Dec: 0,
+      vda30Per16DecTo15Mar: 0,
+      vda30Per16MarTo31Mar: 0,
     }
 
     this.assessment = {};
@@ -2199,6 +2204,12 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       ltcg20Per16SepTo15Dec: getCgQuarterWise(capitalGains, 20, "2022-09-15T18:30:00.000Z", "2022-12-15T18:30:00.000Z"),
       ltcg20Per16DecTo15Mar: getCgQuarterWise(capitalGains, 20, "2022-12-15T18:30:00.000Z", "2023-03-15T18:30:00.000Z"),
       ltcg20Per16MarTo31Mar: getCgQuarterWise(capitalGains, 20, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
+    
+      vda30PerUpto15Jun: getVDACgQuarterWise(capitalGains, 30, "2022-03-31T18:30:00.000Z", "2022-06-15T18:30:00.000Z"),
+      vda30Per16JunTo15Sep: getVDACgQuarterWise(capitalGains, 30, "2022-06-15T18:30:00.000Z", "2022-09-15T18:30:00.000Z"),
+      vda30Per16SepTo15Dec: getVDACgQuarterWise(capitalGains, 30, "2022-09-15T18:30:00.000Z", "2022-12-15T18:30:00.000Z"),
+      vda30Per16DecTo15Mar: getVDACgQuarterWise(capitalGains, 30, "2022-12-15T18:30:00.000Z", "2023-03-15T18:30:00.000Z"),
+      vda30Per16MarTo31Mar: getVDACgQuarterWise(capitalGains, 30, "2023-03-15T18:30:00.000Z", "2023-03-31T18:30:00.000Z"),
     }
   }
 
@@ -2218,4 +2229,8 @@ function getCFL(cfl: any): number {
 
 function getCgQuarterWise(capitalGains: Array<any>, taxRate: number, startDate: string, endDate: string) {
   return capitalGains.filter(item=>item.taxRate === taxRate && item.sellDate>=startDate && item.sellDate<endDate).reduce((total, element) => total + (Math.abs(element?.belAdjustmentAmount)+Math.max(element?.cgIncome, 0) || 0), 0);
+}
+
+function getVDACgQuarterWise(capitalGains: Array<any>, taxRate: number, startDate: string, endDate: string) {
+  return capitalGains.filter(item=> item.assetType === 'VDA' && item.headOfIncome === 'CG' && item.taxRate === taxRate && item.sellDate>=startDate && item.sellDate<endDate).reduce((total, element) => total + (Math.abs(element?.belAdjustmentAmount)+Math.max(element?.cgIncome, 0) || 0), 0);
 }
