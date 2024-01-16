@@ -5276,17 +5276,17 @@ export class SummaryComponent implements OnInit {
                             : element.assetType,
                         capitalGain:
                           element.netSellValue -
-                          (element.indexCostOfAcquisition > 0
+                          (element.grandFatheredValue>0 ? element.grandFatheredValue : (element.indexCostOfAcquisition > 0
                             ? element.indexCostOfAcquisition
-                            : element.purchesCost) -
+                            : element.purchesCost)) -
                           element.saleExpense -
                           element.costOfImprovement,
                         Deduction: element.deductionAmount,
                         netCapitalGain:
                           element.netSellValue -
-                          (element.indexCostOfAcquisition > 0
+                          (element.grandFatheredValue>0 ? element.grandFatheredValue : (element.indexCostOfAcquisition > 0
                             ? element.indexCostOfAcquisition
-                            : element.purchesCost) -
+                            : element.purchesCost)) -
                           element.saleExpense -
                           element.costOfImprovement -
                           element.deductionAmount,
@@ -5297,9 +5297,9 @@ export class SummaryComponent implements OnInit {
                       .reduce((total, element) => {
                         const cgIncome =
                           element.netSellValue -
-                          (element.indexCostOfAcquisition > 0
+                          (element.grandFatheredValue>0 ? element.grandFatheredValue : (element.indexCostOfAcquisition > 0
                             ? element.indexCostOfAcquisition
-                            : element.purchesCost) -
+                            : element.purchesCost)) -
                           element.saleExpense -
                           element.costOfImprovement -
                           element.deductionAmount;
