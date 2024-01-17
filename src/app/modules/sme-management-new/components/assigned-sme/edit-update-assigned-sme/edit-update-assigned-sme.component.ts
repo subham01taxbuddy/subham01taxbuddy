@@ -815,7 +815,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
             "roundRobinCount":this.smeObj?.serviceEligibility_GST?.roundRobinCount || 0,
           }
         }else{
-          this.utilsService.showSnackBar('Please give all count values properly');
+          this.utilsService.showSnackBar('Fill the required count value');
           return;
         }
 
