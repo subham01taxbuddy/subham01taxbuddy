@@ -638,7 +638,7 @@ export class HousePropertyComponent implements OnInit {
             itrJsonHp?.loans[0]?.interestAmount
         );
         housePropertyForm['interest24bAmount'].setValue(
-            itrJsonHp?.loans[0]?.interestAmount
+            Math.min(itrJsonHp?.loans[0]?.interestAmount, 200000)
         );
       }
       housePropertyForm['isEligibleFor80EE']?.setValue('');
@@ -1094,14 +1094,14 @@ export class HousePropertyComponent implements OnInit {
       }
 
       if (
-        this.housePropertyForm.controls['interest24bAmount'].value ||
+        this.housePropertyForm.controls['interestAmount'].value ||
         this.housePropertyForm.controls['principalAmount'].value
       ) {
         hp.loans = [];
         hp.loans.push({
           id: null,
           interestAmount:
-            this.housePropertyForm.controls['interest24bAmount']?.value,
+            this.housePropertyForm.controls['interestAmount']?.value,
           loanType: this.housePropertyForm.controls['loanType']?.value,
           principalAmount:
             this.housePropertyForm.controls['principalAmount']?.value,
