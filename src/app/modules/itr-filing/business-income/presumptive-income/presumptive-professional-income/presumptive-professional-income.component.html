@@ -1,11 +1,11 @@
 <div style="overflow: hidden">
   <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-  <div class="page-wrapper">
+  <div class="">
     <main>
-      <div class="frameC">
+      <div class="frameC p-10">
         <div class="space">
-          <div class="div-2">
-            <div class="div-4">
+          <div class="div-2 p-0">
+            <div class="div-4 p-15">
               <div class="frame-wrapper-2A">
 
                 <div class="accordion" id="myAccordion">
@@ -179,7 +179,7 @@
                                       *ngIf="(profIncomeFormArray.controls[i].get('presumptiveIncome').touched ||submitted) &&profIncomeFormArray.controls[i].get('presumptiveIncome').hasError('min')">Amount
                                       should be greater than {{ profIncomeFormArray.controls[i].get('minimumPresumptiveIncome').value }}
                                     </mat-error>
-                                    <mat-error *ngIf="(profIncomeFormArray.controls[i].get('presumptiveIncome').touched ||submitted) && 
+                                    <mat-error *ngIf="(profIncomeFormArray.controls[i].get('presumptiveIncome').touched ||submitted) &&
                                     profIncomeFormArray.controls[i].get('presumptiveIncome').hasError('max')">Amount
                                       cannot be greater than {{ amountFiftyMax }}
                                     </mat-error>

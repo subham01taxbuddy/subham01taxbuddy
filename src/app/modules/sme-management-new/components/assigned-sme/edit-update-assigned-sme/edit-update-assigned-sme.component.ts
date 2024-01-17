@@ -97,6 +97,7 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
   smeDetails: any;
   isBankDetailsFormChange: boolean;
   roundRobinData: any = {};
+  isReadOnly:boolean =false;
 
   constructor(
     private fb: FormBuilder,
@@ -144,8 +145,10 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
     if(this.smeObj.serviceEligibility_ITR?.assignmentStart){
       this.assignmentToggle.setValue(true);
       this.getRoundRobinCount();
+      this.isReadOnly =true;
     }else{
       this.assignmentToggle.setValue(false);
+      this.isReadOnly =false
     }
 
   }
@@ -538,8 +541,6 @@ export class EditUpdateAssignedSmeComponent implements OnInit {
       });
     }
   }
-
-
 
   getDurationControl(duration: string): FormControl {
     return this.inactivityTimeForm.get(duration) as FormControl;

@@ -1,25 +1,25 @@
 <div style="overflow: hidden">
   <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
-  <div class="page-wrapper">
+  <div class="">
     <!-- main area -->
     <main>
-      <div class="frameC">
+      <div class="frameC p-10">
         <div class="div">
           <div class="text-wrapper">Presumptive Income</div>
           <div class="mingcute-down-fill"></div>
         </div>
-        <div class="space">
-          <div class="div-2">
-            <div class="div-4">
+        <div class="space ">
+          <div class="div-2 p-0">
+            <div class="div-4 p-15">
               <div class="frame-wrapper-2A">
                 <div class="accordion" id="myAccordion">
-                  <div class="accordion-item">
+                  <div class="accordion-item ">
                     <h2 class="accordion-header accoHdclr" id="headingOne">
                       <button type="button" class="accordion-button" data-bs-toggle="collapse"
                         data-bs-target="#collapseOne">Business Income</button>
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
-                      <div class="card-body">
+                      <div class="card-body p-0">
                         <form [formGroup]="busIncomeForm">
 
                           <!-- hdRow -->
@@ -100,7 +100,7 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline">
                                       <input formControlName="bankReceipts" matInput name="bankReceipts[i]"
-                                        class="input-field" required digitsOnly placeholder="₹ Enter Amount" (change)=" 
+                                        class="input-field" required digitsOnly placeholder="₹ Enter Amount" (change)="
                                           calculatePresumptive(fieldGlobalIndex(i), 'bank', true)" />
                                     </mat-form-field>
                                     <mat-error *ngIf="(busIncomeFormArray.controls[i].get('bankReceipts')
