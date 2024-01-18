@@ -1192,6 +1192,7 @@ export class PrefillIdComponent implements OnInit {
           );
           return;
         }
+        
         if (
           JSONData.ITR.hasOwnProperty('ITR1') ||
           JSONData.ITR.hasOwnProperty('ITR4') ||
@@ -1202,6 +1203,14 @@ export class PrefillIdComponent implements OnInit {
           this.itrSummaryJson = JSONData;
           this.uploadedJson = JSONData.ITR;
           if (this.uploadedJson) {
+            let itr = JSONData.ITR.hasOwnProperty('ITR1') ? this.uploadedJson.ITR1 : JSONData.ITR.hasOwnProperty('ITR2') ? this.uploadedJson.ITR2 : JSONData.ITR.hasOwnProperty('ITR3') ? this.uploadedJson.ITR3 : JSONData.ITR.hasOwnProperty('ITR4') ? this.uploadedJson.ITR4: undefined;
+            if(itr?.PartA_139_8A?.AssessmentYear !== '2023'){
+              this.utilsService.showSnackBar(
+                'AY is other than 2023-24'
+              );
+              return;
+            }
+
             this.utilsService.showSnackBar(
               'JSON has been sucessfully uploaded'
             );
