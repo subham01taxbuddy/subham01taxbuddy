@@ -2377,6 +2377,12 @@ export class PersonalInformationComponent implements OnInit {
     bank.removeAt(index);
   }
 
+  deleteSelectedBanks(formGroupName) {
+    const banks = <FormArray>formGroupName.get('bankDetails');
+    banks.controls = banks.controls.filter((element:FormGroup)=> !element.controls['hasEdit'].value);
+    banks.updateValueAndValidity();
+  }
+
   getAllBankByIfsc() {
     const param = '/bankCodeDetails';
     this.userMsService.getMethod(param).subscribe(

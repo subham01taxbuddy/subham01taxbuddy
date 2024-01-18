@@ -100,6 +100,7 @@ export class SideSummaryPanelComponent implements OnInit {
 
   openPanel() {
     this.displayPanel = true;
+    this.utilsService.smoothScrollToTop();
     this.setSummaryData();
   }
 
@@ -371,50 +372,45 @@ export class SideSummaryPanelComponent implements OnInit {
   }
 
   setIndexedBonds(){
-    let capitalGain = this.summary.summaryIncome.cgIncomeN.capitalGain;
-    this.indexedBonds.totalSTCGSaleValue = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'SHORT')
-    .reduce((total, element) => total + element.netSellValue, 0);
-
-    this.indexedBonds.totalLTCGSaleValue = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
-    .reduce((total, element) => total + element.netSellValue, 0);
-
-    this.indexedBonds.totalSTCGBuyValue = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'SHORT')
-    .reduce((total, element) => total + element.purchesCost, 0);
-
-    this.indexedBonds.totalLTCGBuyValue = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
-    .reduce((total, element) => total + element.purchesCost, 0);
-
-    this.indexedBonds.totalSTCGExpenses = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'SHORT')
-    .reduce((total, element) => total + element.saleExpense, 0);
-
-    this.indexedBonds.totalLTCGExpenses = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
-    .reduce((total, element) => total + element.saleExpense, 0);
-
-    this.indexedBonds.totalSTCGCostOfImprovement = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'SHORT')
-    .reduce((total, element) => total + element.costOfImprovement, 0);
-
-    this.indexedBonds.totalLTCGCostOfImprovement = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
-    .reduce((total, element) => total + element.costOfImprovement, 0);
-
-    this.indexedBonds.totalLTCGDeduction = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
-    .reduce((total, element) => total + element.deductionAmount, 0);
-    
-    this.indexedBonds.totalLTCG = this.indexedBonds.totalLTCGSaleValue -
-    this.indexedBonds.totalLTCGBuyValue -
-    this.indexedBonds.totalLTCGExpenses -
-    this.indexedBonds.totalLTCGCostOfImprovement;
-
-    this.indexedBonds.totalLTCG = isNaN(this.indexedBonds.totalLTCG) ? 0 : this.indexedBonds.totalLTCG;
-
-    this.indexedBonds.totalSTCG = this.indexedBonds.totalSTCGSaleValue -
-    this.indexedBonds.totalSTCGBuyValue -
-    this.indexedBonds.totalSTCGExpenses -
-    this.indexedBonds.totalSTCGCostOfImprovement;
-
-    this.indexedBonds.totalSTCG = isNaN(this.indexedBonds.totalSTCG) ? 0 : this.indexedBonds.totalSTCG;
-
-    this.indexedBonds.netLTCG = this.indexedBonds.totalLTCG - this.indexedBonds.totalLTCGDeduction;
-    this.indexedBonds.netLTCG = isNaN(this.indexedBonds.netLTCG) ? 0 : this.indexedBonds.netLTCG;
+      let capitalGain = this.summary.summaryIncome.cgIncomeN.capitalGain;
+      this.indexedBonds.totalSTCGSaleValue = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'SHORT')
+      .reduce((total, element) => total + element.netSellValue, 0);
+  
+      this.indexedBonds.totalLTCGSaleValue = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
+      .reduce((total, element) => total + element.netSellValue, 0);
+  
+      this.indexedBonds.totalSTCGBuyValue = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'SHORT')
+      .reduce((total, element) => total + element.purchesCost, 0);
+  
+      this.indexedBonds.totalLTCGIndexCostOfAcquisition = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
+      .reduce((total, element) => total + element.indexCostOfAcquisition, 0);
+  
+      this.indexedBonds.totalSTCGExpenses = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'SHORT')
+      .reduce((total, element) => total + element.saleExpense, 0);
+  
+      this.indexedBonds.totalLTCGExpenses = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
+      .reduce((total, element) => total + element.saleExpense, 0);
+  
+      this.indexedBonds.totalSTCGCostOfImprovement = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'SHORT')
+      .reduce((total, element) => total + element.costOfImprovement, 0);
+  
+      this.indexedBonds.totalLTCGCostOfImprovement = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
+      .reduce((total, element) => total + element.costOfImprovement, 0);
+  
+      this.indexedBonds.totalLTCGDeduction = capitalGain.filter(cg => cg.assetType === 'INDEXED_BONDS' && cg.gainType === 'LONG')
+      .reduce((total, element) => total + element.deductionAmount, 0);
+      
+      this.indexedBonds.totalLTCG = this.indexedBonds.totalLTCGSaleValue -
+      this.indexedBonds.totalLTCGIndexCostOfAcquisition -
+      this.indexedBonds.totalLTCGExpenses -
+      this.indexedBonds.totalLTCGCostOfImprovement;
+  
+      this.indexedBonds.totalSTCG = this.indexedBonds.totalSTCGSaleValue -
+      this.indexedBonds.totalSTCGBuyValue -
+      this.indexedBonds.totalSTCGExpenses -
+      this.indexedBonds.totalSTCGCostOfImprovement;
+  
+      this.indexedBonds.netLTCG = this.indexedBonds.totalLTCG- this.indexedBonds.totalLTCGDeduction;
   }
 
   setListedBonds(){

@@ -1451,6 +1451,6 @@ ul {
 }
 
 .sidebar__item_active {
-  color: #c3fff7 !important; 
-  background-color:#0f58a7;
+  /* color: #c3fff7 !important;
+  background-color:#0f58a7; */
 }

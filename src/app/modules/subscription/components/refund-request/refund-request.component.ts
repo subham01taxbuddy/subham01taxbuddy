@@ -131,7 +131,7 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
   ) {
     let roles = this.utilsService.getUserRoles();
     let show: boolean;
-    if (roles.includes('ROLE_ADMIN')) {
+    if (roles.includes('ROLE_ADMIN') || roles.includes('ROLE_LEADER')) {
       show = true;
     }
     this.refundListGridOptions = <GridOptions>{

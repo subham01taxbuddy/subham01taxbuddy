@@ -16,10 +16,10 @@
         <div class="div-2">
           <div class="div-3">
             <div class="contents-wrapper" *ngFor="let employer of Copy_ITR_JSON.employers; let i = index;">
-              <div [ngClass]="i === currentIndex ? 'contents-selected' : 'contents'">
-                <div [ngClass]="i === currentIndex ? 'field-text-selected' :'field-text'" (click)="markActive(i)">Employer {{ i + 1}}</div>
+              <div [ngClass]="i === currentIndex ? 'contents' : 'contents-selected'">
+                <div [ngClass]="i === currentIndex ? 'field-text' :'field-text-selected'" (click)="markActive(i)">Employer {{ i + 1}}</div>
                 <div class="group" (click)="deleteEmployer(i)">
-                  <i class="fa fa-trash-o delbt" [ngClass]="i === currentIndex ? 'field-text-selected' :'field-text'"></i>
+                  <i class="fa fa-trash-o delbt" [ngClass]="i === currentIndex ? 'field-text' :'field-text-selected'"></i>
                 </div>
               </div>
             </div>
@@ -34,7 +34,7 @@
           <div class="div-4">
             <div class="frame-wrapper-2A">
 
-              <div class="accordion" id="myAccordion">
+              <div class="accordion noBorder" id="myAccordion">
                 <form [formGroup]="employerDetailsFormGroup">
                   <div class="accordion-item">
                     <h2 class="accordion-header accoHdclr" id="headingOne">
@@ -462,7 +462,9 @@
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingThree">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseThree">Deductions</button>
+                            data-bs-target="#collapseThree">Deductions
+                      <input type="number" class="form-control inpClr2" value="{{getTotalDeductions()}}" readonly>
+                    </button>
                   </h2>
                   <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                     <form [formGroup]="deductionsFormGroup">

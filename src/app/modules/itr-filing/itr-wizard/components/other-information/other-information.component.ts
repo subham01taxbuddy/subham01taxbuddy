@@ -485,10 +485,10 @@ export class OtherInformationComponent implements OnInit {
   }
 
   ChangeSharesStatus() {
-    if (this.ITR_JSON.systemFlags.haveUnlistedShares) {
+    if (this.Copy_ITR_JSON.systemFlags?.haveUnlistedShares) {
       this.addSharesDetails('Add unlisted shares details', 'ADD', null);
     } else {
-      if (this.ITR_JSON.unlistedSharesDetails.length > 0) {
+      if (this.Copy_ITR_JSON.unlistedSharesDetails.length > 0) {
         this.Copy_ITR_JSON.unlistedSharesDetails = [];
         (this.sharesForm.controls['sharesArray'] as FormArray).clear();
         this.Copy_ITR_JSON.systemFlags.haveUnlistedShares = false;

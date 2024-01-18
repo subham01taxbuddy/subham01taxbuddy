@@ -562,6 +562,15 @@ export class HousePropertyComponent implements OnInit {
     }
   }
 
+  getUserSharePercent(){
+    const coOwner = <FormArray>this.housePropertyForm.get('coOwners');
+    let sum = 0;
+    coOwner.controls.forEach((controlName) => {
+      sum = Number(sum) + Number(controlName.value.percentage);
+    });
+    return 100- sum;
+  }
+
   isduplicatePAN(i, formArrayName) {
     const formArray = <FormArray>this.housePropertyForm.get(formArrayName);
     const dup = formArray.controls.filter(
@@ -629,7 +638,7 @@ export class HousePropertyComponent implements OnInit {
             itrJsonHp?.loans[0]?.interestAmount
         );
         housePropertyForm['interest24bAmount'].setValue(
-            itrJsonHp?.loans[0]?.interestAmount
+            Math.min(itrJsonHp?.loans[0]?.interestAmount, 200000)
         );
       }
       housePropertyForm['isEligibleFor80EE']?.setValue('');
@@ -1085,14 +1094,14 @@ export class HousePropertyComponent implements OnInit {
       }
 
       if (
-        this.housePropertyForm.controls['interest24bAmount'].value ||
+        this.housePropertyForm.controls['interestAmount'].value ||
         this.housePropertyForm.controls['principalAmount'].value
       ) {
         hp.loans = [];
         hp.loans.push({
           id: null,
           interestAmount:
-            this.housePropertyForm.controls['interest24bAmount']?.value,
+            this.housePropertyForm.controls['interestAmount']?.value,
           loanType: this.housePropertyForm.controls['loanType']?.value,
           principalAmount:
             this.housePropertyForm.controls['principalAmount']?.value,
@@ -1111,8 +1120,9 @@ export class HousePropertyComponent implements OnInit {
 
       this.serviceCall(view, this.Copy_ITR_JSON);
     } else {
-      this.utilsService.showSnackBar('failed to save.');
+      // this.utilsService.showSnackBar('failed to save.');
       $('input.ng-invalid').first().focus();
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm);
     }
   }
 
@@ -1825,7 +1835,7 @@ export class HousePropertyComponent implements OnInit {
       ) {
         interest24b?.setValue(200000);
       } else {
-        interest24b?.setValue(interest.value);
+        interest24b?.setValue(Math.min(interest?.value, 200000));
       }
       interest24b?.updateValueAndValidity();
     }

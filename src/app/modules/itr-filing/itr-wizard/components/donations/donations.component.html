@@ -22,16 +22,16 @@
                   <p class="mb-10" *ngIf="type==='80gga'">Section 8OGGA - Donations for Scientific research or Rural
                     Development
                   </p>
-                  <div style="float: right">
+                  <div style="float: right" *ngIf="getDonationArray.controls.length === 0">
                     <button class="btn btn__default btn__add" (click)="addDonations()"> Add Another</button>
                   </div>
                 </div>
                 <div class="row" *ngFor="let donation of getDonationArray.controls | paginate : config;let i = index"
                      [formGroupName]="fieldGlobalIndex(i)">
-                  <div class="col-8">
+                  <div class="col-10">
                     <div class="gray_box">
                       <div class="div-6 ">
-                        <mat-checkbox
+                        <mat-checkbox *ngIf="false"
                                 color="primary"
                                 name="hasEdit[i]"
                                 formControlName="hasEdit"
@@ -287,9 +287,12 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-4 mt-20">
-                    <div class="ml-20">
+                  <div class="col-2 mt-20 side-view">
+                    <div class="ml-20 del-btn-view">
                       <i class="fa fa-trash-o delbt mr-20" (click)="deleteDonationArray()"></i>
+                    </div>
+                    <div class="add-btn-view">
+                      <button class="btn btn__default btn__add" (click)="addDonations()"> Add Another</button>
                     </div>
                   </div>
                 </div>

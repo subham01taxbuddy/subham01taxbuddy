@@ -20,7 +20,7 @@
                     </button>
 
                   </h2>
-                  <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                  <div id="collapseTwo" class="accordion-collapse collapse show">
                     <div class="accordion__item-body" formArrayName="otherIncomes">
                       <div class="div-6" *ngFor="let income of getIncomeArray.controls; let i = index"
                         [formGroupName]="i">
@@ -64,14 +64,14 @@
                 </div>
 
                 <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingThree">
+                  <h2 class="accordion-header" id="headingOne">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseThree">Dividend Income
+                      data-bs-target="#collapseOne">Dividend Income
                       <input type="number" disabled class="form-control inpClr2" [value]="getTotal()" id="exampleInputEmail1"
                         aria-describedby="emailHelp" placeholder="₹0">
                     </button>
                   </h2>
-                  <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                  <div id="collapseOne" class="accordion-collapse collapse show">
                     <div class="accordion__item-body" formGroupName="dividendIncomes">
                       <div class="div-6">
                         <div class="form-field">
@@ -116,15 +116,15 @@
                   </div>
                 </div>
                 <div class="accordion-item">
-                  <h2 class="accordion-header" id="headingThree">
+                  <h2 class="accordion-header" id="headingTwo">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseThree">Income from Gift
+                      data-bs-target="#collapseTwo">Income from Gift
                       <input type="number" class="form-control inpClr2" disabled value="{{getTotalGiftIncome()}}">
                     </button>
                     <div class="note2">Note for Gift- Gift received from Relative will be excluded from the total as it's not part
                       of taxable income.</div>
                   </h2>
-                  <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                  <div id="collapseTwo" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <table class="table table-bordered" style="width: 100%">
                         <thead style="background: #eaeaea">
@@ -232,7 +232,7 @@
                       <input type="number" class="form-control inpClr2" disabled value="{{getTotalAnyOtherIncome()}}">
                     </button>
                   </h2>
-                  <div id="collapseThree" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
+                  <div id="collapseThree" class="accordion-collapse collapse show">
                     <div class="accordion__item-body">
                       <div class="" formArrayName="anyOtherIncomes">
                         <div class="div-6" *ngFor="let income of getAnyIncomeArray.controls; let i = index"

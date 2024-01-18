@@ -258,6 +258,8 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   clearForm(){
     this.selectedFormGroup.reset();
     this.selectedFormGroup.controls['algorithm'].setValue('cgProperty');
+    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length -1 : 0;
+    this.selectedFormGroup.controls['srn'].setValue(srn);
   }
 
   saveManualEntry() {
@@ -321,6 +323,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
   }
 
   bondsColumnDef() {
+    let self = this;
     return [
       {
         field: '',
@@ -419,6 +422,26 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['purchaseCost'].value;
+        },
+      },
+      {
+        headerName: 'Buy Value with Indexation',
+        field: 'purchaseCost',
+        width: 150,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfAcquisition'].value :
+              params.data.controls['purchaseCost'].value;
+        },
+      },
+      {
+        headerName: 'Cost of Improvement',
+        field: 'costOfImprovement',
+        width: 150,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfImprovement'].value :
+              params.data.controls['costOfImprovement'].value;
         },
       },
       {
@@ -616,15 +639,11 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       const bondsArray = <FormArray>this.bondsForm.get('bondsArray');
       let bondsList = [];
 
-      bondsList = this.Copy_ITR_JSON.capitalGain[bondIndex]?.assetDetails;
-      if(!bondsList){
-        bondsList = [];
-      }
+      // bondsList = this.Copy_ITR_JSON.capitalGain[bondIndex]?.assetDetails;
+      // if(!bondsList){
+      //   bondsList = [];
+      // }
       bondsArray.controls.forEach((element) => {
-        if (
-            !(element as FormGroup).controls['isIndexationBenefitAvailable'].value
-            && !(element as FormGroup).controls['whetherDebenturesAreListed'].value
-        ) {
           let costOfImprovement = (element as FormGroup).controls[
               'costOfImprovement'
               ].value;
@@ -641,7 +660,6 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
                 ].value,
           });
           bondsList.push((element as FormGroup).getRawValue());
-        }
       });
 
       const bondData = {
@@ -674,19 +692,15 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
             this.ITR_JSON = result;
             this.loading = false;
             sessionStorage.setItem('ITR_JSON', JSON.stringify(this.ITR_JSON));
-            let bondType =
-                this.bondType === 'bonds' ? 'Bonds' : 'Zero coupon bonds';
             this.utilsService.showSnackBar(
-                `${bondType} data updated successfully`
+                `Bonds data updated successfully`
             );
             this.utilsService.smoothScrollToTop();
           },
           (error) => {
             this.Copy_ITR_JSON = JSON.parse(JSON.stringify(this.ITR_JSON));
-            let bondType =
-                this.bondType === 'bonds' ? 'bonds' : 'zero coupon bonds';
             this.utilsService.showSnackBar(
-                `Failed to update ${bondType} data, please try again.`
+                `Failed to update bonds data, please try again.`
             );
             this.utilsService.smoothScrollToTop();
           }

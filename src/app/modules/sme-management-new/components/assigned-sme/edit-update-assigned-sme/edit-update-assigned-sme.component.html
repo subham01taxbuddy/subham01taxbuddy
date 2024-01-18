@@ -76,7 +76,7 @@
           <div class="col-sm-4">
             <mat-label> Calling Number </mat-label>
             <mat-form-field appearance="outline">
-              <input type="text" matInput placeholder="Calling Number" [numbersOnly]="true"
+              <input type="text" matInput placeholder="Calling Number" [numbersOnly]="true" trim
                 [formControl]="callingNumber" class="input-field" />
               <mat-error class="mt-3"> <span *ngIf="otherSmeInfo.controls['callingNumber'].hasError('required')">Please
                   enter mobile no.</span>

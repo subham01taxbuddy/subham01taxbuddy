@@ -1,2 +1,15 @@
 @import "../../../../../ux/scss/style.scss";
 @import '../../../../../ux/scss/layout.scss';
+
+.side-view {
+  display: inline-flex;
+}
+
+.del-btn-view {
+  align-self: center;
+}
+
+.add-btn-view {
+    float: right;
+    align-self: center;
+}
