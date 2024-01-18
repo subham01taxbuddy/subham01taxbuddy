@@ -101,6 +101,81 @@
   border: 1px solid #8CBDF2;
 }
 
+.newAG .ag-root-wrapper-body.ag-layout-normal{
+  /* border: 1px solid #8CBDF2; */
+  background-color:white ;
+  border-radius: 8px 8px 0px 0px;
+  border: 1px solid rgba(85, 86, 90, 0.12);
+
+
+}
+
+/* .newAG  .ag-row {
+  height: 50px !important;
+  line-height: 50px !important;
+} */
+
+.newAG .ag-body-viewport.ag-selectable.ag-layout-normal.ag-row-no-animation {
+  border:none;
+}
+.newAG .ag-header {
+  border-bottom: solid 1px;
+  border-bottom-color: rgba(85, 86, 90, 0.12);
+  /* border-bottom-color: var(--ag-border-color, #8CBDF2); */
+}
+
+.newAG .ag-header-viewport{
+  background-color:#FCFCFC !important;
+  padding-top: 5px !important;
+  /* border: 1px solid #8CBDF2 !important; */
+ }
+
+ .newAG .ag-pinned-right-header{
+  background-color:#FCFCFC !important;
+  padding-top: 5px !important;
+  border-left: none !important;
+  /* border: 1px solid #8CBDF2 !important; */
+ }
+ .newAG .ag-pinned-left-header{
+   background-color: #FCFCFC !important;
+   padding-top: 5px !important;
+   border-right: none !important;
+   /* border: 1px solid #8CBDF2 !important; */
+  }
+
+  .newAG .ag-pinned-right-cols-container{
+    background-color:#FFFFFF !important;
+    border-left: none !important;
+   }
+
+   .newAG .ag-pinned-right-cols-container .ag-row {
+    background-color: #FFFFFF !important;
+  }
+
+  .newAG .ag-cell.ag-cell-first-right-pinned:not(.ag-cell-range-left):not(.ag-cell-range-single-cell) {
+    border-left: none !important;
+  }
+  .newAG .ag-cell.ag-cell-last-left-pinned:not(.ag-cell-range-right):not(.ag-cell-range-single-cell) {
+    border-right: none !important;
+  }
+
+ .ag-theme-balham .ag-header-cell::after,
+.ag-theme-balham .ag-header-group-cell::after {
+  /* content: ""; */
+  position: absolute;
+  z-index: 1;
+  display: block;
+  width: 0px;
+  height: 0%;
+  top: calc(50% - 25%);
+  background-color: white;
+}
+
+.newAG .ag-ltr .ag-header-select-all {
+  /* margin-right: 12px; */
+  margin-left: 15px;
+}
+
 /* .ag-theme-balham .ag-row:nth-child(odd) {
   background-color: rgba(251, 238, 211, 0.49);
 } */
