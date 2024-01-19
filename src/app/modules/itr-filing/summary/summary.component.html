@@ -456,11 +456,7 @@
                   <!-- *************** Income from Salary ********************-->
                   <mat-expansion-panel
                     class="color-panel accordion-border"
-                    [disabled]="
-                      (finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.totalSummaryPerquisitesTaxableIncome +
-                      finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.totalSummaryProfitsInLieuOfSalaryTaxableIncome +
-                      finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.totalSummarySalaryTaxableIncome) === 0
-                    "
+                    [disabled]="!finalCalculations?.salary?.salaryExpand"
                     #salary
                   >
                     <mat-expansion-panel-header>

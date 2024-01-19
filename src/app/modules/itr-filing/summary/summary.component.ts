@@ -197,6 +197,7 @@ export class SummaryComponent implements OnInit {
       Status?: any;
     };
     salary: {
+      salaryExpand: boolean,
       employers: [
         {
           employerNo: number;
@@ -1083,6 +1084,10 @@ export class SummaryComponent implements OnInit {
               )?.BankName,
             },
             salary: {
+              salaryExpand: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.ITR14IncomeDeductions
+              ]?.GrossSalary > 0,
+
               employers: [
                 {
                   employerNo: 0,
@@ -2611,6 +2616,10 @@ export class SummaryComponent implements OnInit {
               )?.BankName,
             },
             salary: {
+              salaryExpand: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.ITR14IncomeDeductions
+              ]?.GrossSalary > 0,
+
               employers: this.ITR_JSON.itrSummaryJson['ITR'][
                 this.itrType
               ]?.ScheduleS?.Salaries?.map((element, index) => {
@@ -5012,6 +5021,10 @@ export class SummaryComponent implements OnInit {
                 )?.name,
               },
               salary: {
+                salaryExpand: (this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.totalSummaryPerquisitesTaxableIncome +
+                  this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.totalSummaryProfitsInLieuOfSalaryTaxableIncome +
+                  this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.totalSummarySalaryTaxableIncome) > 0,
+
                 employers:
                   this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.employers.map(
                     (
