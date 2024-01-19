@@ -295,15 +295,17 @@
                       </tr>
                       <tr>
                         <td class="bdrBtm2">Promo Code:</td>
-                        <td class="bdrBtm2">{{ totalCon | currency : "INR" }}</td>
+                        <td class="bdrBtm2"><span class="head" *ngIf="
+                          this?.userSubscription && this?.userSubscription?.promoCode
+                        "><b> {{ getExactPromoDiscount() | currency : "INR" }} </b><br /></span><br /></td>
                       </tr>
-                      <tr *ngFor="let item of this?.userSubscription?.concessionsApplied">
+                      <!-- <tr *ngFor="let item of this?.userSubscription?.concessionsApplied">
                         <td class="bdrBtm2">Promo Code:</td>
                         <td class="bdrBtm2"><span class="head">{{ item.amount | currency : "INR" }}</span></td>
-                      </tr>
+                      </tr> -->
                     </tbody>
                   </table>
-                  <div class="col-sm-12">
+                  <div class="col-sm-12" >
                     <div style="font-weight: bold; font-size: small; margin-bottom: 10px;">
                       <span>Note:
                         &bull; Apply the SME selected plan then only Promo code apply/remove will be enabled</span>
