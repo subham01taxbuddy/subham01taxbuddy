@@ -490,6 +490,18 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 100,
         editable: false,
         suppressMovable: true,
+        cellStyle: { textAlign: 'center',
+        color: '#7D8398',
+        fontFamily: 'DM Sans',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 400,
+        lineHeight: 'normal' },
+        cellRenderer: function(params) {
+          const saleValue = params.value;
+          const formattedValue = `₹${saleValue}`;
+          return formattedValue;
+        },
       },
       {
         headerName: 'Indexed cost of acquisition',
@@ -497,6 +509,11 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 150,
         editable: false,
         suppressMovable: true,
+        cellRenderer: function(params) {
+          const saleValue = params.value;
+          const formattedValue = `₹${saleValue}`;
+          return formattedValue;
+        },
       },
       {
         headerName: 'Buy Date / Date of Acquisition',
@@ -517,10 +534,15 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 150,
         editable: false,
         suppressMovable: true,
+        // cellRenderer: (params) => {
+        //   return params.data.costOfImprovement
+        //     ? params.data.costOfImprovement
+        //     : '';
+        // },
         cellRenderer: (params) => {
-          return params.data.costOfImprovement
-            ? params.data.costOfImprovement
-            : '';
+          const costOfImprovement = params.data.costOfImprovement;
+          const formattedValue = costOfImprovement ? `₹${costOfImprovement}` : '';
+          return formattedValue;
         },
       },
       {
@@ -541,6 +563,18 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 100,
         editable: false,
         suppressMovable: true,
+        cellStyle: { textAlign: 'center',
+        color: '#7D8398',
+        fontFamily: 'DM Sans',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 400,
+        lineHeight: 'normal' },
+        cellRenderer: function(params) {
+          const purchaseCost = params.value;
+          const formattedValue = `₹${purchaseCost}`;
+          return formattedValue;
+        },
       },
       {
         headerName: 'Expenses',
@@ -548,6 +582,18 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 100,
         editable: false,
         suppressMovable: true,
+        cellStyle: { textAlign: 'center',
+        color: '#33353F',
+        fontFamily: 'DM Sans',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 500,
+        lineHeight: 'normal' },
+        cellRenderer: function(params) {
+          const sellExpense = params.value;
+          const formattedValue = `₹${sellExpense}`;
+          return formattedValue;
+        },
       },
       {
         headerName: 'Type of Gain',
@@ -558,6 +604,20 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         valueGetter: function nameFromCode(params) {
           return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
         },
+        cellRenderer: function (params: any) {
+          const gainType = params.data;
+          if(gainType === 'LONG'){
+            return `<button class="gain-chip"  style="padding: 0px 30px;  border-radius: 40px;
+             background-color:rgba(214, 162, 67, 0.12); color: #D6A243; cursor:auto;">
+             ${gainType}
+            </button>`;
+          }else if(gainType === 'SHORT'){
+            return `<button class="gain-chip"  style="padding: 0px 30px;  border-radius: 40px;
+            background-color:rgba(145, 197, 97, 0.12); color: #91C561; cursor:auto;">
+            ${gainType}
+           </button>`;
+          }
+        }
       },
       {
         headerName: 'Gain Amount',
@@ -565,10 +625,23 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 100,
         editable: false,
         suppressMovable: true,
+        cellStyle: {
+          textAlign: 'center',
+          color: '#33353F',
+          fontFamily: 'DM Sans',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: 500,
+          lineHeight: 'normal'
+        },
         valueGetter: function nameFromCode(params) {
           return params.data.capitalGain
-            ? params.data.capitalGain.toLocaleString('en-IN')
+            ? params.data.capitalGain
             : 0;
+        },
+        valueFormatter: function (params) {
+          const formattedValue = params.value ? `₹${params.value.toLocaleString('en-IN')}` : '₹0';
+          return formattedValue;
         },
       },
       {

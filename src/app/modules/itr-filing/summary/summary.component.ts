@@ -163,6 +163,7 @@ export class SummaryComponent implements OnInit {
   isValidItr: boolean;
   summaryIncome: any;
   itrType: any;
+  isITRU: boolean;
   ITR14IncomeDeductions: any;
   taxComputation: any;
   keys: any = {};
@@ -179,6 +180,7 @@ export class SummaryComponent implements OnInit {
       resStatus: any;
       returnType: any;
       Address: any;
+      assessmentYear: any;
       dob: any;
       panNumber: any;
       email: any;
@@ -195,6 +197,7 @@ export class SummaryComponent implements OnInit {
       Status?: any;
     };
     salary: {
+      salaryExpand: boolean,
       employers: [
         {
           employerNo: number;
@@ -745,6 +748,14 @@ export class SummaryComponent implements OnInit {
       totalOtherThanTDSTCS: Number;
       totalTaxesPaid: Number;
     };
+
+    taxPaidUs140BDtls: {
+      bsrCode: String;
+      date: Date;
+      challanNo: Number;
+      amount: Number;
+    }[];
+
     amountPayable: number;
     amountRefund: number;
     ScheduleAMT?: {
@@ -841,6 +852,9 @@ export class SummaryComponent implements OnInit {
         clauseiv7provisio139iAmount: any;
       }
     ];
+    additionalIncomeTax: number;
+    netIncomeTaxLiability: number;
+    taxesPaidUS140B: number;
   };
   natureOfBusiness: any = [];
   business44adDetails: any = [];
@@ -931,6 +945,7 @@ export class SummaryComponent implements OnInit {
   calculations() {
     this.loading = true;
     if (this.utilsService.isNonEmpty(this.ITR_JSON.itrSummaryJson)) {
+
       if (this.ITR_JSON.isItrSummaryJsonEdited === false) {
         this.show = true;
         let entAllowance;
@@ -962,6 +977,10 @@ export class SummaryComponent implements OnInit {
           }
         }
 
+        this.isITRU = this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+        ?.FilingStatus?.ReturnFileSec === 21 || this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+        ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 21;
+        
         if (this.itrType === 'ITR1' || this.itrType === 'ITR4') {
           // console.log(this.finalSummary, 'this.finalSummary');
           this.finalCalculations = {
@@ -1004,7 +1023,8 @@ export class SummaryComponent implements OnInit {
                     ? 'Revised'
                     : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                       ?.FilingStatus?.ReturnFileSec === 12
-                      ? 'After Due Date'
+                      ? 'After Due Date' : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.FilingStatus?.ReturnFileSec === 21 ? 'Updated Return u/s 139(8A)'
                       : 'Other',
 
               Address:
@@ -1019,6 +1039,10 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PersonalInfo
                   ?.Address?.PinCode,
 
+              assessmentYear: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+              ?.FilingStatus?.ReturnFileSec === 21 ? 
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_139_8A?.AssessmentYear: '',
+              
               dob: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                 ?.PersonalInfo?.DOB,
 
@@ -1060,6 +1084,10 @@ export class SummaryComponent implements OnInit {
               )?.BankName,
             },
             salary: {
+              salaryExpand: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
+                this.ITR14IncomeDeductions
+              ]?.GrossSalary > 0,
+
               employers: [
                 {
                   employerNo: 0,
@@ -2327,6 +2355,64 @@ export class SummaryComponent implements OnInit {
             amountPayable:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
                 ?.BalTaxPayable,
+
+            additionalIncomeTax: this.isITRU ? 
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                  ?.AddtnlIncTax : 0,
+             
+            netIncomeTaxLiability: this.isITRU ? 
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                        ?.NetPayable : 0,
+
+            taxesPaidUS140B: this.isITRU  ? 
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                              ?.TaxUS140B : 0,
+
+            taxPaidUs140BDtls: this.isITRU  && this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                              ?.TaxUS140B > 0 ? (Object.entries(
+                                this.itrType === 'ITR1' || this.itrType === 'ITR4' ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']?.ScheduleIT1?.TaxPayment1?.ITTaxPayments :
+                                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']?.ScheduleIT1?.TaxPayment1?.TaxPayments
+                              ).map(([key, item]) => ({
+                                bsrCode: (
+                                  item as {
+                                    BSRCode: String;
+                                    DateDep: Date;
+                                    SrlNoOfChaln: Number;
+                                    Amt: Number;
+                                  }
+                                ).BSRCode,
+                                date: (
+                                  item as {
+                                    BSRCode: String;
+                                    DateDep: Date;
+                                    SrlNoOfChaln: Number;
+                                    Amt: Number;
+                                  }
+                                ).DateDep,
+                                challanNo: (
+                                  item as {
+                                    BSRCode: String;
+                                    DateDep: Date;
+                                    SrlNoOfChaln: Number;
+                                    Amt: Number;
+                                  }
+                                ).SrlNoOfChaln,
+                                amount: (
+                                  item as {
+                                    BSRCode: String;
+                                    DateDep: Date;
+                                    SrlNoOfChaln: Number;
+                                    Amt: Number;
+                                  }
+                                ).Amt,
+                              })) as {
+                                bsrCode: String;
+                                date: Date;
+                                challanNo: Number;
+                                amount: Number;
+                              }[])
+                                     : [],                              
+              
             amountRefund:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.Refund
                 ?.RefundDue,
@@ -2474,7 +2560,8 @@ export class SummaryComponent implements OnInit {
                     ? 'Revised'
                     : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                       ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 12
-                      ? 'After Due Date'
+                      ? 'After Due Date' : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 21 ? 'Updated Return u/s 139(8A)'
                       : 'Other',
 
               Address:
@@ -2488,6 +2575,11 @@ export class SummaryComponent implements OnInit {
                 ' ' +
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
                   ?.PersonalInfo?.Address?.PinCode,
+
+              assessmentYear: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                ?.FilingStatus?.ReturnFileSec === 21 || this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 21 ? 
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_139_8A?.AssessmentYear: '',
 
               dob: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
                 ?.PersonalInfo?.DOB,
@@ -2524,6 +2616,9 @@ export class SummaryComponent implements OnInit {
               )?.BankName,
             },
             salary: {
+              salaryExpand: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+              ?.ScheduleS?.TotalGrossSalary > 0,
+
               employers: this.ITR_JSON.itrSummaryJson['ITR'][
                 this.itrType
               ]?.ScheduleS?.Salaries?.map((element, index) => {
@@ -3446,10 +3541,12 @@ export class SummaryComponent implements OnInit {
                 : 0,
 
               totalCapitalGain:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
-                  ?.CapGain?.TotalCapGains -
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
-                  ?.CapGain?.CapGains30Per115BBH,
+                (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                  ?.CapGain?.TotalCapGains ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                  ?.CapGain?.TotalCapGains : 0) -
+                (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                  ?.CapGain?.CapGains30Per115BBH ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                  ?.CapGain?.CapGains30Per115BBH : 0),
             },
             totalHeadWiseIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
@@ -4465,6 +4562,70 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.TaxPaid?.BalTaxPayable,
 
+            additionalIncomeTax: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            ?.FilingStatus?.ReturnFileSec === 21 || this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 21 ? 
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                  ?.AddtnlIncTax : 0,
+
+            netIncomeTaxLiability: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                  ?.FilingStatus?.ReturnFileSec === 21 || this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                  ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 21 ? 
+                      this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                        ?.NetPayable : 0,
+            
+            taxesPaidUS140B: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.FilingStatus?.ReturnFileSec === 21 || this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                        ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 21 ? 
+                            this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                              ?.TaxUS140B : 0,
+
+                              taxPaidUs140BDtls: (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.FilingStatus?.ReturnFileSec === 21 || this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                              ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 21) && this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                              ?.TaxUS140B > 0 ? (Object.entries(
+                                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']?.ScheduleIT1?.TaxPayment1?.TaxPayments
+                              ).map(([key, item]) => ({
+                                bsrCode: (
+                                  item as {
+                                    BSRCode: String;
+                                    DateDep: Date;
+                                    SrlNoOfChaln: Number;
+                                    Amt: Number;
+                                  }
+                                ).BSRCode,
+                                date: (
+                                  item as {
+                                    BSRCode: String;
+                                    DateDep: Date;
+                                    SrlNoOfChaln: Number;
+                                    Amt: Number;
+                                  }
+                                ).DateDep,
+                                challanNo: (
+                                  item as {
+                                    BSRCode: String;
+                                    DateDep: Date;
+                                    SrlNoOfChaln: Number;
+                                    Amt: Number;
+                                  }
+                                ).SrlNoOfChaln,
+                                amount: (
+                                  item as {
+                                    BSRCode: String;
+                                    DateDep: Date;
+                                    SrlNoOfChaln: Number;
+                                    Amt: Number;
+                                  }
+                                ).Amt,
+                              })) as {
+                                bsrCode: String;
+                                date: Date;
+                                challanNo: Number;
+                                amount: Number;
+                              }[])
+                                     : [],   
+
             amountRefund:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.Refund?.RefundDue,
@@ -4812,7 +4973,7 @@ export class SummaryComponent implements OnInit {
                     : '' + this.ITR_JSON?.family[0]?.lName
                       ? this.ITR_JSON?.family[0]?.lName
                       : '',
-
+                
                 aadhaarNumber: this.ITR_JSON?.aadharNumber,
 
                 mobileNumber: this.ITR_JSON?.contactNumber,
@@ -4833,6 +4994,8 @@ export class SummaryComponent implements OnInit {
                   this.ITR_JSON.address?.city +
                   '' +
                   this.ITR_JSON.address?.pinCode,
+                
+                assessmentYear:'',
 
                 dob: this.ITR_JSON?.family[0]?.dateOfBirth,
 
@@ -4857,6 +5020,10 @@ export class SummaryComponent implements OnInit {
                 )?.name,
               },
               salary: {
+                salaryExpand: (this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.totalSummaryPerquisitesTaxableIncome +
+                  this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.totalSummaryProfitsInLieuOfSalaryTaxableIncome +
+                  this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.totalSummarySalaryTaxableIncome) > 0,
+
                 employers:
                   this.finalSummary?.assessment?.summaryIncome?.summarySalaryIncome?.employers.map(
                     (
@@ -6275,6 +6442,11 @@ export class SummaryComponent implements OnInit {
               },
               amountPayable:
                 this.finalSummary?.assessment?.taxSummary?.taxpayable,
+              
+              additionalIncomeTax: 0,
+              netIncomeTaxLiability : 0,
+              taxesPaidUS140B: 0,
+              taxPaidUs140BDtls : [],
               amountRefund:
                 this.finalSummary?.assessment?.taxSummary?.taxRefund,
               giftExemptIncome: getTotalGiftExemptIncome(

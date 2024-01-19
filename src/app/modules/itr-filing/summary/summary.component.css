@@ -206,6 +206,15 @@ table {
   background-color: #ffffff !important;
 }
 
+.counter-item {
+  counter-reset: myCounter; /* Initialize the counter to 0 */
+}
+
+.counter::before {
+  counter-increment: myCounter; /* Increment the counter on each occurrence */
+  content: counter(myCounter) "."; /* Display the counter value before the content of element with ID "heading2" */
+}
+
 .icRup {
   font-size: 20px !important;
 }
