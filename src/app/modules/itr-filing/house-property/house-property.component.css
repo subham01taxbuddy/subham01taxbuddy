@@ -107,10 +107,22 @@ table {
 }
 
 .share-view{
+  width: 110px;
   text-align: right;
   border-width: thin;
   border-color: darkgray;
-  border-radius: 5px;
+  border-radius: 3px;
+  padding-left: 5px;
+}
+.number-view{
+  width: 75px;
+  border-right-width: thin;
+  border-right-color: darkgray;
+}
+.percent-view{
+  padding-left: 5px;
+  width: 28px;
+  background: #f6f6f6;
 }
 /* tr:nth-child(even) {
   background-color: #f2f2f2;
