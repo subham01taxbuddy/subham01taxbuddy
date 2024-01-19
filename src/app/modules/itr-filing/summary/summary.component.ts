@@ -2616,9 +2616,8 @@ export class SummaryComponent implements OnInit {
               )?.BankName,
             },
             salary: {
-              salaryExpand: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
-                this.ITR14IncomeDeductions
-              ]?.GrossSalary > 0,
+              salaryExpand: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+              ?.ScheduleS?.TotalGrossSalary > 0,
 
               employers: this.ITR_JSON.itrSummaryJson['ITR'][
                 this.itrType
