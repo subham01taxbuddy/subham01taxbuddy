@@ -262,94 +262,89 @@
             <div class="row">
               <div class="col-sm-12">
                 <div class="breakup-container-2">
-
-  <table>
-    <thead>
-      <tr>
-        <th class="bdrBtm1">Particulars</th>
-        <th class="bdrBtm1">Amount</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="spcTd">  {{
-          userSubscription?.smeSelectedPlan === null ||
-          userSubscription?.userSelectedPlan?.planId ===
-          userSubscription?.smeSelectedPlan?.planId
-          ? "Actual Plan Amount"
-          : "Change in Plan"
-          }}</td>
-        <td class="spcTd">{{
-          (userSubscription?.smeSelectedPlan !== null
-          ? userSubscription?.smeSelectedPlan?.totalAmount
-          : userSubscription?.userSelectedPlan?.totalAmount
-          ) | currency : "INR"
-          }}</td>
-      </tr>
-      <tr *ngFor="let item of this?.userSubscription?.concessionsApplied">
-        <td class="spcTd">Less: {{ item.title }}</td>
-        <td class="spcTd"><span class="head">{{ item.amount | currency : "INR" }}</span></td>
-      </tr>
-      <tr>
-        <td class="spcTd">Total</td>
-        <td class="spcTd">{{ totalCon | currency : "INR" }}</td>
-      </tr>
-      <tr>
-        <td class="bdrBtm2">Promo Code:</td>
-        <td class="bdrBtm2">{{ totalCon | currency : "INR" }}</td>
-      </tr>
-      <tr *ngFor="let item of this?.userSubscription?.concessionsApplied">
-        <td class="bdrBtm2">Promo Code:</td>
-        <td class="bdrBtm2"><span class="head">{{ item.amount | currency : "INR" }}</span></td>
-      </tr>
-      <tr>
-        <td class="spcTdA">
-          <div style="font-weight: bold; font-size: small; margin-bottom: 10px;">
-            <span>Note:
-              &bull; Apply the SME selected plan then only Promo code apply/remove will be enabled</span>
-          </div>
-          Search & Select Promo Code
-        </td>
-        <td class="spcTdB">
-          <div class="col-sm-12">
-            <mat-form-field appearance="outline" class="class1">
-              <input type="text" placeholder="Start typing..." matInput [disabled]="!smeSelectedPlanId"
-                [formControl]="searchedPromoCode" [matAutocomplete]="auto" (blur)="getCodeFromLabelOnBlur()"
-                required />
-              <mat-error *ngIf="searchedPromoCode.invalid">
-                Please select value from dropdown only.
-              </mat-error>
-              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
-                  {{ option.title }}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-          <div class="col-sm-12" style="margin-top: 20px;">
-            <button class="save-all"
-              (click)="applyPromo(smeSelectedPlanId); onNgModelChange()" [disabled]="!smeSelectedPlanId">
-              Apply Code
-            </button>
-            &nbsp;
-
-            <button [disabled]="!selectedPromoCode" class="delete-icon-btn" (click)="removePromoCode(smeSelectedPlanId); onNgModelChange()" type="reset">
-              <i class="fa fa-trash fa-xs" aria-hidden="true" data-action-type="remove"></i>
-            </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-
-
-
-
-
-
-
-
+                  <table>
+                    <thead>
+                      <tr>
+                        <th class="bdrBtm1">Particulars</th>
+                        <th class="bdrBtm1">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="spcTd"> {{
+                          userSubscription?.smeSelectedPlan === null ||
+                          userSubscription?.userSelectedPlan?.planId ===
+                          userSubscription?.smeSelectedPlan?.planId
+                          ? "Actual Plan Amount"
+                          : "Change in Plan"
+                          }}</td>
+                        <td class="spcTd">{{
+                          (userSubscription?.smeSelectedPlan !== null
+                          ? userSubscription?.smeSelectedPlan?.totalAmount
+                          : userSubscription?.userSelectedPlan?.totalAmount
+                          ) | currency : "INR"
+                          }}</td>
+                      </tr>
+                      <tr *ngFor="let item of this?.userSubscription?.concessionsApplied">
+                        <td class="spcTd">Less: {{ item.title }}</td>
+                        <td class="spcTd"><span class="head">{{ item.amount | currency : "INR" }}</span></td>
+                      </tr>
+                      <tr>
+                        <td class="spcTd">Total</td>
+                        <td class="spcTd">{{ totalCon | currency : "INR" }}</td>
+                      </tr>
+                      <tr>
+                        <td class="bdrBtm2">Promo Code:</td>
+                        <td class="bdrBtm2"><span class="head" *ngIf="
+                          this?.userSubscription && this?.userSubscription?.promoCode
+                        "><b> {{ getExactPromoDiscount() | currency : "INR" }} </b><br /></span><br /></td>
+                      </tr>
+                      <!-- <tr *ngFor="let item of this?.userSubscription?.concessionsApplied">
+                        <td class="bdrBtm2">Promo Code:</td>
+                        <td class="bdrBtm2"><span class="head">{{ item.amount | currency : "INR" }}</span></td>
+                      </tr> -->
+                    </tbody>
+                  </table>
+                  <div class="col-sm-12" >
+                    <div style="font-weight: bold; font-size: small; margin-bottom: 10px;">
+                      <span>Note:
+                        &bull; Apply the SME selected plan then only Promo code apply/remove will be enabled</span>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <label for="promoCodeInput">Search & Select Promo Code</label>
+                      </div>
+                      <div class="col-sm-5">
+                        <mat-form-field appearance="outline" class="class1">
+                          <input id="promoCodeInput" type="text" placeholder="Start typing..." matInput
+                            [disabled]="!smeSelectedPlanId" [formControl]="searchedPromoCode" [matAutocomplete]="auto"
+                            (blur)="getCodeFromLabelOnBlur()" required />
+                          <mat-error class="mt-3" *ngIf="searchedPromoCode.invalid">
+                            Please select value from dropdown only.
+                          </mat-error>
+                          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                            <mat-option *ngFor="let option of filteredOptions | async" [value]="option.title">
+                              {{ option.title }}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-sm-3">
+                        <div class="buttons">
+                          <button class="save-all" (click)="applyPromo(smeSelectedPlanId); onNgModelChange()" [disabled]="!smeSelectedPlanId">
+                            Apply Code
+                          </button>
+                          &nbsp;&nbsp;
+                          <button [disabled]="!selectedPromoCode" class="delete-icon-btn"
+                            (click)="removePromoCode(smeSelectedPlanId); onNgModelChange()" type="reset">
+                            <i class="fa fa-trash fa-xs" aria-hidden="true" data-action-type="remove"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
