@@ -3,7 +3,7 @@ import {
   OnInit,
   Inject,
   ElementRef,
-  ViewChild,
+  ViewChild, Input, OnChanges, SimpleChanges, Output, EventEmitter,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -24,11 +24,12 @@ import { SalaryComponent } from '../salary.component';
   templateUrl: './bifurcation.component.html',
   styleUrls: ['./bifurcation.component.scss'],
 })
-export class BifurcationComponent implements OnInit {
+export class BifurcationComponent implements OnInit, OnChanges {
+  @Input() typeIndex: number;
   @ViewChild('breakUp') breakUp: ElementRef;
   ITR_JSON: ITR_JSON;
   bifurcationFormGroup: FormGroup;
-  localEmployer: Employer;
+  @Input() localEmployer: Employer;
   total = {
     salary: 0,
     perquisites: 0,
@@ -39,7 +40,7 @@ export class BifurcationComponent implements OnInit {
     perquisites: 0,
     profitsInLieuOfSalary: 0,
   };
-  index: any;
+  @Input() index: any;
   Copy_ITR_JSON: ITR_JSON;
   loading: boolean = false;
   overlayRef: any;
@@ -49,9 +50,200 @@ export class BifurcationComponent implements OnInit {
     'Dearness Allowance (DA)': 'DA',
   };
 
+  @Output() valueChanged: EventEmitter<any> = new EventEmitter<any>();
+
+  salaryNames = [
+    {
+      key: 'BASIC_SALARY',
+      value: 'Basic',
+      breakup: true,
+    },
+    {
+      key: 'DA',
+      value: 'Dearness Allowance (DA)'
+    },
+    {
+      key: 'CONVEYANCE',
+      value: 'Conveyance Allowance'
+    },
+    {
+      key: 'HOUSE_RENT',
+      value: 'House Rent Allowance (HRA)'
+    },
+    {
+      key: 'LTA',
+      value: 'Leave Travel Allowance (LTA)'
+    },
+    {
+      key: 'CHILDREN_EDUCATION',
+      value: 'Children Education Allowance (CEA)'
+    },
+    {
+      key: 'OTHER_ALLOWANCE',
+      value: 'Other Allowance'
+    },
+    {
+      key: 'CONTRI_80CCD',
+      value: 'The contribution made by the employer towards the pension scheme\n' +
+          '              as referred under section 80CCD'
+    },
+    {
+      key: 'RULE_6_PART_A_4TH_SCHEDULE',
+      value: 'The amount deemed to be income under rule 6 of part A of the\n' +
+          '              fourth schedule'
+    },
+    {
+      key: 'RULE_11_4_PART_A_4TH_SCHEDULE',
+      value: 'The amount deemed to be income under rule 11(4) of Part-A of the\n' +
+          '              Fourth Schedule'
+    },
+    {
+      key: 'PENSION',
+      value: 'Annuity or Pension'
+    },
+    {
+      key: 'COMMUTED_PENSION',
+      value: 'Commuted Pension'
+    },
+    {
+      key: 'GRATUITY',
+      value: 'Gratuity'
+    },
+    {
+      key: 'COMMISSION',
+      value: 'Fees/Commission'
+    },
+    {
+      key: 'ADVANCE_SALARY',
+      value: 'Advance Salary'
+    },
+    {
+      key: 'LEAVE_ENCASHMENT',
+      value: 'Leave Encashment'
+    },
+    {
+      key: 'OTHER',
+      value: 'Others'
+    },
+  ];
+  perquisiteNames = [
+    {
+      key: 'ACCOMODATION',
+      value: 'Accommodation'
+    },
+    {
+      key: 'MOTOR_CAR',
+      value: 'Cars/other automotive'
+    },
+    {
+      key: 'SWEEPER_GARDNER_WATCHMAN_OR_PERSONAL_ATTENDANT',
+      value: 'Sweeper/Gardner/Watchman/Personal attendant'
+    },
+    {
+      key: 'GAST_ELECTRICITY_WATER',
+      value: 'Gas, electricity, water'
+    },
+    {
+      key: 'INTEREST_FREE_LOANS',
+      value: 'Interest-free or concessional loans'
+    },
+    {
+      key: 'HOLIDAY_EXPENSES',
+      value: 'Holiday expenses'
+    },
+    {
+      key: 'FREE_OR_CONCESSIONAL_TRAVEL',
+      value: 'Free or concessional travel'
+    },
+    {
+      key: 'FREE_MEALS',
+      value: 'Free meals'
+    },
+    {
+      key: 'FREE_EDU',
+      value: 'Free education'
+    },
+    {
+      key: 'GIFT_VOUCHERS',
+      value: 'Gift vouchers etc.'
+    },
+    {
+      key: 'CREDIT_CARD_EXPENSES',
+      value: 'Credit card expenses'
+    },
+    {
+      key: 'CLUB_EXP',
+      value: 'Club expenses'
+    },
+    {
+      key: 'USE_OF_MOVABLE_ASSETS_BY_EMPLOYEE',
+      value: 'Use of movable assets by employee'
+    },
+    {
+      key: 'TRANSFER_OF_ASSET_TO_EMPLOYEE',
+      value: 'Transfer of asset to employee'
+    },
+    {
+      key: 'VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE',
+      value: 'Value of any other benefits/amenity/service/privilege'
+    },
+    {
+      key: 'SECTION_80_IAC_TAX_TO_BE_DEFERED',
+      value: 'Stock option allotted or transferred by the employer being an\n' +
+          '              eligible start-up referred to in section 80-IAC-tax to be deferred'
+    },
+    {
+      key: 'SECTION_80_IAC_TAX_NOT_TO_BE_DEFERED',
+      value: 'Stock option allotted or transferred by the employer being an' +
+          'eligible start-up referred to in section 80-IAC-tax not to be deferred'
+    },
+    {
+      key: 'STOCK_OPTIONS_OTHER_THAN_ESOP',
+      value: 'Stock options(non-qualified options) other than ESOP in col 16\n' +
+          '              above'
+    },
+    {
+      key: 'SCHEME_TAXABLE_US_17_2_VII',
+      value: 'Contribution by employer to fund and scheme taxable under sec\n' +
+          '              17(2)(vii)'
+    },
+    {
+      key: 'SCHEME_TAXABLE_US_17_2_VIIA',
+      value: 'Annual accretion by way of interest, dividend etc. to the balance\n' +
+          '              at the credit of the fund and scheme referred to in section\n' +
+          '              17(2)(vii) and taxable under section 17(2)(viia)'
+    },
+    {
+      key: 'OTH_BENEFITS_AMENITIES',
+      value: 'Other benefits or amenities'
+    }
+  ];
+  profitInLieuNames = [
+    {
+      key: 'COMPENSATION_ON_VRS',
+      value: 'Any compensation is due or received by an assessee from an\n' +
+          '              employer or former employer in connection with the termination of\n' +
+          '              his employment or modification thereto.'
+    },
+    {
+      key: 'AMOUNT_DUE',
+      value: 'Any amount due or received by an assessee from any person before\n' +
+          '              joining any employment with that person, or after cessation of his\n' +
+          '              employment with that person'
+    },
+    {
+      key: 'PAYMENT_DUE',
+      value: 'Any Payment due or received by an assessee from an employer, or\n' +
+          '              from provident or other funds, sum received under keyman insurance\n' +
+          '              policy, including bonus on such policy.'
+    },
+    {
+      key: 'ANY_OTHER',
+      value: 'Any Other'
+    }
+  ]
   constructor(
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<BifurcationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private overlay: Overlay,
     private itrMsService: ItrMsService,
@@ -63,66 +255,53 @@ export class BifurcationComponent implements OnInit {
     this.ITR_JSON = JSON.parse(sessionStorage.getItem(AppConstants.ITR_JSON));
     this.bifurcationFormGroup = this.createBifurcationForm();
 
-    // if (this.data.valueChanged !== true) {
-      this.index = this.data?.index;
-      this.localEmployer = JSON.parse(sessionStorage.getItem('localEmployer'));
-      this.localEmployer = this.data?.data
-        ? this.data?.data
-        : this.localEmployer;
-
+    const salaryForm = this.getControls as FormGroup;
+    if(this.typeIndex === 0) {
       // Salary
-      const salaryFormArray = this.getSalary;
       let salaryDataToPatch = this.localEmployer?.salary?.filter(
-        (item) => item?.salaryType !== 'SEC17_1'
+          (item) => item?.salaryType !== 'SEC17_1'
       );
 
       if (salaryDataToPatch && salaryDataToPatch?.length > 0) {
         salaryDataToPatch?.forEach((item) => {
-          const matchingControl = salaryFormArray?.controls[0]?.get(
-            item?.salaryType
-          );
-
-          if (matchingControl) {
-            matchingControl?.setValue(item?.taxableAmount);
-          }
+          let control = this.fb.control('');
+          control?.setValue(item?.taxableAmount);
+          salaryForm.addControl(item?.salaryType, control);
         });
       }
+    }
 
-      // perquisities
-      const perquisitesFormArray = this.getPerquisites;
+    if(this.typeIndex === 1) {
       let perquisitesDataToPatch = this.localEmployer?.perquisites?.filter(
-        (item) => item?.perquisiteType !== 'SEC17_2'
+          (item) => item?.perquisiteType !== 'SEC17_2'
       );
 
       if (perquisitesDataToPatch && perquisitesDataToPatch?.length > 0) {
         perquisitesDataToPatch?.forEach((item) => {
-          const matchingControl = perquisitesFormArray?.controls[0]?.get(
-            item?.perquisiteType
-          );
-
-          if (matchingControl) {
-            matchingControl?.setValue(item?.taxableAmount);
-          }
+          let control = this.fb.control('');
+          control?.setValue(item?.taxableAmount);
+          salaryForm.addControl(item?.perquisiteType, control);
         });
       }
+    }
 
+    if(this.typeIndex === 2) {
       // profits in lieu
       let profitsInLieuDataToPatch =
-        this.localEmployer?.profitsInLieuOfSalaryType?.filter(
-          (item) => item?.salaryType !== 'SEC17_3'
-        );
-      const profitsInLieuFormArray = this.getProfitsInLieu;
-      if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
-        profitsInLieuDataToPatch?.forEach((item) => {
-          const matchingControl = profitsInLieuFormArray?.controls[0]?.get(
-            item?.salaryType
+          this.localEmployer?.profitsInLieuOfSalaryType?.filter(
+              (item) => item?.salaryType !== 'SEC17_3'
           );
 
-          if (matchingControl) {
-            matchingControl?.setValue(item?.taxableAmount);
-          }
+      if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
+        profitsInLieuDataToPatch?.forEach((item) => {
+          profitsInLieuDataToPatch?.forEach((item) => {
+            let control = this.fb.control('');
+            control?.setValue(item?.taxableAmount);
+            salaryForm.addControl(item?.salaryType, control);
+          });
         });
       }
+    }
 
       this.utilsService.getData().subscribe((data) => {
         this.handleData(data);
@@ -133,66 +312,115 @@ export class BifurcationComponent implements OnInit {
     this.utilsService.setSalaryValues(values);
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('Hurray!!');
+    if(!this.bifurcationFormGroup){
+      this.bifurcationFormGroup = this.createBifurcationForm();
+    }
+    const salaryForm = this.getControls as FormGroup;
+    if(this.typeIndex === 0) {
+      // Salary
+      let salaryDataToPatch = this.localEmployer?.salary?.filter(
+          (item) => item?.salaryType !== 'SEC17_1'
+      );
+
+      if (salaryDataToPatch && salaryDataToPatch?.length > 0) {
+        salaryDataToPatch?.forEach((item) => {
+          let control = this.fb.control('');
+          control?.setValue(item?.taxableAmount);
+          salaryForm.addControl(item?.salaryType, control);
+        });
+      }
+    }
+
+    if(this.typeIndex === 1) {
+      let perquisitesDataToPatch = this.localEmployer?.perquisites?.filter(
+          (item) => item?.perquisiteType !== 'SEC17_2'
+      );
+
+      if (perquisitesDataToPatch && perquisitesDataToPatch?.length > 0) {
+        perquisitesDataToPatch?.forEach((item) => {
+          let control = this.fb.control('');
+          control?.setValue(item?.taxableAmount);
+          salaryForm.addControl(item?.perquisiteType, control);
+        });
+      }
+    }
+
+    if(this.typeIndex === 2) {
+      // profits in lieu
+      let profitsInLieuDataToPatch =
+          this.localEmployer?.profitsInLieuOfSalaryType?.filter(
+              (item) => item?.salaryType !== 'SEC17_3'
+          );
+
+      if (profitsInLieuDataToPatch && profitsInLieuDataToPatch?.length > 0) {
+        profitsInLieuDataToPatch?.forEach((item) => {
+          profitsInLieuDataToPatch?.forEach((item) => {
+            let control = this.fb.control('');
+            control?.setValue(item?.taxableAmount);
+            salaryForm.addControl(item?.salaryType, control);
+          });
+        });
+      }
+    }
+  }
+
   createBifurcationForm() {
     return this.fb.group({
-      salary: this.fb.array([
+      salary:
         this.fb.group({
-          BASIC_SALARY: 0,
-          DA: 0,
-          CONVEYANCE: 0,
-          HOUSE_RENT: 0,
-          LTA: 0,
-          CHILDREN_EDUCATION: 0,
-          OTHER_ALLOWANCE: 0,
-          CONTRI_80CCD: 0,
-          RULE_6_PART_A_4TH_SCHEDULE: 0,
-          RULE_11_4_PART_A_4TH_SCHEDULE: 0,
-          PENSION: 0,
-          COMMUTED_PENSION: 0,
-          GRATUITY: 0,
-          COMMISSION: 0,
-          ADVANCE_SALARY: 0,
-          LEAVE_ENCASHMENT: 0,
-          OTHER: 0,
         }),
-      ]),
-      perquisites: this.fb.array([
+      perquisites: this.fb.group({
+        }),
+      profitsInLieu:
         this.fb.group({
-          ACCOMODATION: 0,
-          MOTOR_CAR: 0,
-          SWEEPER_GARDNER_WATCHMAN_OR_PERSONAL_ATTENDANT: 0,
-          GAST_ELECTRICITY_WATER: 0,
-          INTEREST_FREE_LOANS: 0,
-          HOLIDAY_EXPENSES: 0,
-          FREE_OR_CONCESSIONAL_TRAVEL: 0,
-          FREE_MEALS: 0,
-          FREE_EDU: 0,
-          GIFT_VOUCHERS: 0,
-          CREDIT_CARD_EXPENSES: 0,
-          CLUB_EXP: 0,
-          USE_OF_MOVABLE_ASSETS_BY_EMPLOYEE: 0,
-          TRANSFER_OF_ASSET_TO_EMPLOYEE: 0,
-          VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE: 0,
-          SECTION_80_IAC_TAX_TO_BE_DEFERED: 0,
-          SECTION_80_IAC_TAX_NOT_TO_BE_DEFERED: 0,
-          STOCK_OPTIONS_OTHER_THAN_ESOP: 0,
-          SCHEME_TAXABLE_US_17_2_VII: 0,
-          SCHEME_TAXABLE_US_17_2_VIIA: 0,
-          OTH_BENEFITS_AMENITIES: 0,
         }),
-      ]),
-      profitsInLieu: this.fb.array([
-        this.fb.group({
-          COMPENSATION_ON_VRS: 0,
-          AMOUNT_DUE: 0,
-          PAYMENT_DUE: 0,
-          ANY_OTHER: 0,
-        }),
-      ]),
     });
   }
 
-  saveBifurcations(type) {
+  formValuesChanged(prevKey, event?){
+    if(event) {
+      let type = 'salary';
+      if (this.typeIndex === 0) {
+        type = 'salary';
+      } else if(this.typeIndex === 1) {
+        type = 'perquisites';
+      } else if(this.typeIndex === 2){
+        type = 'profitsInLieu';
+      }
+      let value = (this.bifurcationFormGroup.controls[type] as FormGroup).controls[prevKey].value;
+      (this.bifurcationFormGroup.controls[type] as FormGroup).removeControl(prevKey);
+      let control = this.fb.control('');
+      control.setValue(value);
+      (this.bifurcationFormGroup.controls[type] as FormGroup).addControl(event.value, control);
+    }
+
+    if(this.valid()) {
+      this.valueChanged.emit(this.bifurcationFormGroup.getRawValue());
+    }
+  }
+
+  valid(){
+    let type = 'salary';
+    if (this.typeIndex === 0) {
+      type = 'salary';
+    } else if(this.typeIndex === 1) {
+      type = 'perquisites';
+    } else if(this.typeIndex === 2){
+      type = 'profitsInLieu';
+    }
+    let keys = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls);
+    keys.every(key => {
+      if(keys.filter(v => v === key).length > 1){
+        console.log('key repeated', key);
+        return false;
+      }
+    });
+    return true;
+  }
+  saveBifurcations() {
+
     this.Copy_ITR_JSON = JSON.parse(
       sessionStorage.getItem(AppConstants.ITR_JSON)
     );
@@ -232,44 +460,16 @@ export class BifurcationComponent implements OnInit {
     console.log(this.bifurcationFormGroup, 'bifurcationsForm');
     let result;
 
-    if (type === 'salary') {
-      const salaryArray = this.getSalary.value;
-      const keysToSum = [
-        'BASIC_SALARY',
-        'DA',
-        'CONVEYANCE',
-        'HOUSE_RENT',
-        'LTA',
-        'CHILDREN_EDUCATION',
-        'OTHER_ALLOWANCE',
-        'CONTRI_80CCD',
-        'RULE_6_PART_A_4TH_SCHEDULE',
-        'RULE_11_4_PART_A_4TH_SCHEDULE',
-        'PENSION',
-        'COMMUTED_PENSION',
-        'GRATUITY',
-        'COMMISSION',
-        'ADVANCE_SALARY',
-        'LEAVE_ENCASHMENT',
-        'OTHER',
-      ];
+    if (this.typeIndex === 0) {
+      const salaryArray = this.getControls.value;
 
       let total = 0;
-      for (const obj of salaryArray) {
-        for (const key of keysToSum) {
-          total += parseFloat(obj[key]) || 0;
-        }
+      for (let obj of Object.values(salaryArray)) {
+        total += obj as number;
       }
 
       this.total.salary = total;
-      this.value.salary = this.getSalary.value;
-
-      result = {
-        total: this.total.salary,
-        value: this.value.salary,
-        type: 'salary',
-        index: this.index,
-      };
+      this.value.salary = this.getControls.value;
 
       // NEED TO CONFIRM WITH ASHWINI IF I SHOULD CALL API OR NOT
       if (this.localEmployer) {
@@ -300,48 +500,16 @@ export class BifurcationComponent implements OnInit {
       console.log('salary copyItrJson', this.Copy_ITR_JSON);
     }
 
-    if (type === 'perquisites') {
-      const perquisitesArray = this.getPerquisites.value;
-      const perquisitesKeysToSum = [
-        'ACCOMODATION',
-        'MOTOR_CAR',
-        'SWEEPER_GARDNER_WATCHMAN_OR_PERSONAL_ATTENDANT',
-        'GAST_ELECTRICITY_WATER',
-        'INTEREST_FREE_LOANS',
-        'HOLIDAY_EXPENSES',
-        'FREE_OR_CONCESSIONAL_TRAVEL',
-        'FREE_MEALS',
-        'FREE_EDU',
-        'GIFT_VOUCHERS',
-        'CREDIT_CARD_EXPENSES',
-        'CLUB_EXP',
-        'USE_OF_MOVABLE_ASSETS_BY_EMPLOYEE',
-        'TRANSFER_OF_ASSET_TO_EMPLOYEE',
-        'VALUE_OF_OTHER_BENIFITS_AMENITY_SERVICE_PRIVILEGE',
-        'SECTION_80_IAC_TAX_TO_BE_DEFERED',
-        'SECTION_80_IAC_TAX_NOT_TO_BE_DEFERED',
-        'STOCK_OPTIONS_OTHER_THAN_ESOP',
-        'SCHEME_TAXABLE_US_17_2_VII',
-        'SCHEME_TAXABLE_US_17_2_VIIA',
-        'OTH_BENEFITS_AMENITIES',
-      ];
+    if (this.typeIndex === 1) {
+      const perquisitesArray = this.getControls.value;
 
       let perquisitesTotal = 0;
-      for (const obj of perquisitesArray) {
-        for (const key of perquisitesKeysToSum) {
-          perquisitesTotal += parseFloat(obj[key]) || 0;
-        }
+      for (let obj of Object.values(perquisitesArray)) {
+        perquisitesTotal += obj as number;
       }
 
       this.total.perquisites = perquisitesTotal;
-      this.value.perquisites = this.getPerquisites.value;
-
-      result = {
-        total: this.total.perquisites,
-        value: this.value.perquisites,
-        type: 'perquisites',
-        index: this.index,
-      };
+      this.value.perquisites = this.getControls.value;
 
       // NEED TO CONFIRM WITH ASHWINI IF I SHOULD CALL API OR NOT
       if (this.localEmployer) {
@@ -372,8 +540,8 @@ export class BifurcationComponent implements OnInit {
       console.log('perqusities copyItrJson', this.Copy_ITR_JSON);
     }
 
-    if (type === 'profitsInLieu') {
-      const profitsInLieuArray = this.getProfitsInLieu.value;
+    if (this.typeIndex === 2) {
+      const profitsInLieuArray = this.getControls.value;
       const profitsInLieuKeysToSum = [
         'COMPENSATION_ON_VRS',
         'AMOUNT_DUE',
@@ -382,14 +550,12 @@ export class BifurcationComponent implements OnInit {
       ];
 
       let profitsInLieuTotal = 0;
-      for (const obj of profitsInLieuArray) {
-        for (const key of profitsInLieuKeysToSum) {
-          profitsInLieuTotal += parseFloat(obj[key]) || 0;
-        }
+      for (let obj of Object.values(profitsInLieuArray)) {
+        profitsInLieuTotal += obj as number;
       }
 
       this.total.profitsInLieuOfSalary = profitsInLieuTotal;
-      this.value.profitsInLieuOfSalary = this.getProfitsInLieu.value;
+      this.value.profitsInLieuOfSalary = this.getControls.value;
 
       result = {
         total: this.total.profitsInLieuOfSalary,
@@ -430,8 +596,40 @@ export class BifurcationComponent implements OnInit {
     this.utilsService.setChange(false);
     const values = this.bifurcationFormGroup.getRawValue();
     this.utilsService.setSalaryValues(values);
-    this.dialogRef.close(result);
     sessionStorage.setItem('localEmployer', JSON.stringify(this.localEmployer));
+  }
+
+  deleteItem(index){
+    let type = 'salary';
+    if (this.typeIndex === 0) {
+      type = 'salary';
+    } else if(this.typeIndex === 1) {
+      type = 'perquisites';
+    } else if(this.typeIndex === 2){
+      type = 'profitsInLieu';
+    }
+    let key = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls)[index];
+    (this.bifurcationFormGroup.controls[type] as FormGroup).removeControl(key);
+  }
+
+  addItem(){
+    let type = 'salary';
+    let salaryType = 'SEC17_1';
+    if (this.typeIndex === 0) {
+      type = 'salary';
+      let existingKeys = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls);
+      salaryType = this.salaryNames.filter(element=> !existingKeys.includes(element.key))[0]?.key;
+    } else if(this.typeIndex === 1) {
+      type = 'perquisites';
+      let existingKeys = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls);
+      salaryType = this.perquisiteNames.filter(element=> !existingKeys.includes(element.key))[0]?.key;
+    } else if(this.typeIndex === 2){
+      type = 'profitsInLieu';
+      let existingKeys = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls);
+      salaryType = this.profitInLieuNames.filter(element=> !existingKeys.includes(element.key))[0]?.key;
+    }
+    let control = this.fb.control('');
+    (this.bifurcationFormGroup.controls[type] as FormGroup).addControl(salaryType, control);
   }
 
   //  BREAKUP MONTHLY WISE
@@ -461,7 +659,7 @@ export class BifurcationComponent implements OnInit {
     const componentRef = this.overlayRef.attach(userProfilePortal);
 
     const value = parseFloat(
-      this.getSalary.value[0]?.[this.controlMappings[component]]
+      this.getControls.value[0]?.[this.controlMappings[component]]
     );
     (componentRef.instance as BreakUpComponent).data = { value, component };
 
@@ -474,7 +672,7 @@ export class BifurcationComponent implements OnInit {
   handleData(data: any) {
     const controlName = this.controlMappings[data?.component];
     if (controlName) {
-      (this.getSalary?.controls[0] as FormGroup)?.controls[
+      (this.getControls as FormGroup)?.controls[
         controlName
       ]?.setValue(Math.ceil(data?.data));
       this.overlayRef.dispose();
@@ -482,15 +680,24 @@ export class BifurcationComponent implements OnInit {
   }
 
   // get functions
-  get getSalary() {
-    return this.bifurcationFormGroup.get('salary') as FormArray;
+  get getControls() {
+    // console.log('typeIndex', this.typeIndex);
+    if(this.typeIndex === 2){
+      return this.bifurcationFormGroup.get('profitsInLieu') as FormGroup;
+    } else if(this.typeIndex === 1){
+      return this.bifurcationFormGroup.get('perquisites') as FormGroup;
+    } else {
+      return this.bifurcationFormGroup.get('salary') as FormGroup;
+    }
   }
 
-  get getPerquisites() {
-    return this.bifurcationFormGroup.get('perquisites') as FormArray;
-  }
-
-  get getProfitsInLieu() {
-    return this.bifurcationFormGroup.get('profitsInLieu') as FormArray;
+  getTitle() {
+    if(this.typeIndex === 2){
+      return 'Profit in lieu of salary as per section 17(3)';
+    } else if(this.typeIndex === 1){
+      return 'Perquisites as per section 17(2)';
+    } else {
+      return 'Salary as per section 17(1)';
+    }
   }
 }

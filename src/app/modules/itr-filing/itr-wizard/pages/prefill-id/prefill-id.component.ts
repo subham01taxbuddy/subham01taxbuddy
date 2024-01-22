@@ -6929,7 +6929,7 @@ export class PrefillIdComponent implements OnInit {
 
     var data = new FormData();
     data.append('from', 'support@taxbuddy.com');
-    data.append('subject', 'Summary Json Paring Failed!!!');
+    data.append('subject', 'Summary Json Parsing Failed!!!');
     data.append(
       'body',
       `<!DOCTYPE html>
@@ -6989,7 +6989,7 @@ export class PrefillIdComponent implements OnInit {
     data.append('cc', 'divya@taxbuddy.com');
     data.append('isHtml', 'true');
     data.append('file', this.uploadDoc);
-    data.append('to', 'shrikanth.eligeti@taxbuddy.com, ashwini@taxbuddy.com');
+    data.append('to', 'gitanjali.kakade@taxbuddy.com, pratik.bharda@taxbuddy.com');
 
     let param = '/send-mail';
     this.userService.postMethod(param, data).subscribe(

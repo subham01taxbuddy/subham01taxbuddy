@@ -29,6 +29,7 @@ import {
   FormGroup,
   ValidationErrors,
 } from '@angular/forms';
+import {BifurcationComponent} from "../modules/itr-filing/salary/bifurcation/bifurcation.component";
 
 @Injectable()
 export class UtilsService {
@@ -1858,6 +1859,68 @@ export class UtilsService {
           income => income.salaryType === 'SEC17_3');
     }
 
+    return localEmployer;
+  }
+
+  updateEmployerBifurcation(localEmployer: Employer, section, bifurcationResult: any){
+    const salaryValues = this.getSalaryValues()?.salary;
+    if(section === 'SEC17_1') {
+      const bifurcationValues = bifurcationResult?.SEC17_1?.value
+          ? bifurcationResult?.SEC17_1?.value
+          : salaryValues?.[0];
+
+      for (const key in bifurcationValues) {
+        if (bifurcationValues.hasOwnProperty(key)) {
+          const element = parseFloat(bifurcationValues[key]);
+          console.log(element);
+          // if (element && element !== 0) {
+            localEmployer?.salary?.push({
+              salaryType: key,
+              taxableAmount: element,
+              exemptAmount: 0,
+            });
+          // }
+        }
+      }
+    }
+    if(section === 'SEC17_2') {
+      const bifurcationValues = bifurcationResult?.SEC17_2?.value
+          ? bifurcationResult?.SEC17_2?.value
+          : salaryValues?.[0];
+
+      for (const key in bifurcationValues) {
+        if (bifurcationValues.hasOwnProperty(key)) {
+          const element = parseFloat(bifurcationValues[key]);
+          console.log(element);
+          // if (element && element !== 0) {
+            localEmployer?.perquisites?.push({
+              perquisiteType: key,
+              taxableAmount: element,
+              exemptAmount: 0
+            });
+          // }
+        }
+      }
+    }
+    if(section === 'SEC17_3') {
+      const bifurcationValues = bifurcationResult?.SEC17_3?.value
+          ? bifurcationResult?.SEC17_3?.value
+          : salaryValues?.[0];
+
+      for (const key in bifurcationValues) {
+        if (bifurcationValues.hasOwnProperty(key)) {
+          const element = parseFloat(bifurcationValues[key]);
+          console.log(element);
+          // if (element && element !== 0) {
+            localEmployer?.profitsInLieuOfSalaryType?.push({
+              salaryType: key,
+              taxableAmount: element,
+              exemptAmount: 0,
+            });
+          // }
+        }
+      }
+    }
     return localEmployer;
   }
 }
