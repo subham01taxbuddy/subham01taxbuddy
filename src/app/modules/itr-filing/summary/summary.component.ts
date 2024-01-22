@@ -1023,7 +1023,7 @@ export class SummaryComponent implements OnInit {
                     ? 'Revised'
                     : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                       ?.FilingStatus?.ReturnFileSec === 12
-                      ? 'After Due Date' : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ? 'Belated return u/s 139(4)' : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                       ?.FilingStatus?.ReturnFileSec === 21 ? 'Updated Return u/s 139(8A)'
                       : 'Other',
 
@@ -2560,7 +2560,7 @@ export class SummaryComponent implements OnInit {
                     ? 'Revised'
                     : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                       ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 12
-                      ? 'After Due Date' : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+                      ? 'Belated return u/s 139(4)' : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                       ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 21 ? 'Updated Return u/s 139(8A)'
                       : 'Other',
 
@@ -4981,6 +4981,7 @@ export class SummaryComponent implements OnInit {
                 resStatus: this.ITR_JSON?.residentialStatus,
 
                 returnType:
+                this.ITR_JSON.isLate === 'Y' ? 'Belated return u/s 139(4)' :
                   this.ITR_JSON.isDefective === 'Y'
                     ? 'Defective'
                     : this.ITR_JSON?.isRevised === 'Y'
