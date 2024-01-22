@@ -108,7 +108,14 @@ export interface ITR_JSON {
 
   itrSummaryJson: any;
   isItrSummaryJsonEdited: boolean;
+
   liableSection44AAflag: string;
+  incomeDeclaredUsFlag: string;
+	totalSalesExceedOneCr: string;
+	aggregateOfAllAmountsReceivedFlag: string;
+	aggregateOfAllPaymentsMadeFlag: string;
+  liableSection44ABFlag: string;
+
   portugeseCC5AFlag: string;
   schedule5a: Schedule5A;
 

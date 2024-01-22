@@ -689,7 +689,12 @@ export class UtilsService {
 
       itrSummaryJson: null,
       isItrSummaryJsonEdited: false,
-      liableSection44AAflag: '',
+      liableSection44AAflag: 'N',
+      incomeDeclaredUsFlag: 'N',
+      totalSalesExceedOneCr: null,
+      aggregateOfAllAmountsReceivedFlag: null,
+      aggregateOfAllPaymentsMadeFlag: null,
+      liableSection44ABFlag:'N',
 
       agriculturalIncome: {
         grossAgriculturalReceipts: null,

@@ -2305,6 +2305,12 @@ export class PersonalInformationComponent implements OnInit {
         ]),
       }),
       liableSection44AAflag: 'N',
+      incomeDeclaredUsFlag: 'N',
+      totalSalesExceedOneCr: null,
+      aggregateOfAllAmountsReceivedFlag: null,
+      aggregateOfAllPaymentsMadeFlag: null,
+      liableSection44ABFlag: 'N',
+
       bankDetails: this.fb.array([
         this.createBankDetailsForm({ hasRefund: true }),
       ]),
@@ -2621,6 +2627,38 @@ export class PersonalInformationComponent implements OnInit {
     } else {
       this.customerProfileForm.controls['liableSection44AAflag'].setValue('N');
     }
+
+    this.customerProfileForm.controls['incomeDeclaredUsFlag'].setValue(
+      this.ITR_JSON.incomeDeclaredUsFlag);
+
+    if(this.ITR_JSON.incomeDeclaredUsFlag === 'N'){
+      this.customerProfileForm.get('totalSalesExceedOneCr').setValidators([Validators.required]);
+
+      this.customerProfileForm.controls['totalSalesExceedOneCr'].setValue(
+        this.ITR_JSON.totalSalesExceedOneCr);
+
+      this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
+
+      if(this.ITR_JSON.totalSalesExceedOneCr === 'Y'){
+        this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').setValidators([Validators.required]);
+
+        this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(
+          this.ITR_JSON.aggregateOfAllAmountsReceivedFlag);
+        
+        this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').updateValueAndValidity();
+
+        this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').setValidators([Validators.required]);
+
+        this.customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].setValue(
+          this.ITR_JSON.aggregateOfAllPaymentsMadeFlag);
+
+        this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').updateValueAndValidity();
+      }
+    }
+    
+    this.customerProfileForm.controls['liableSection44ABFlag'].setValue(
+      this.ITR_JSON.liableSection44ABFlag);
+
     this.seventhProvisio139();
   }
 
@@ -2731,11 +2769,13 @@ export class PersonalInformationComponent implements OnInit {
   openAcc(){
     const accordionButton = document.getElementById('bankButtonId');
     if(accordionButton){
-      accordionButton.click();
+      if(accordionButton.getAttribute("aria-expanded") === "false")
+        accordionButton.click();
     }
     const accordion = document.getElementById('perDetailsId');
     if(accordion){
-      accordion.click();
+      if(accordion.getAttribute("aria-expanded") === "false")
+        accordion.click();
     }
   }
 
@@ -3170,5 +3210,31 @@ export class PersonalInformationComponent implements OnInit {
     } else {
       this.selectedIndexes.push(index);
     }
+  }
+
+  onChangeIncomeDeclaredUsFlag(){
+    this.customerProfileForm.controls['totalSalesExceedOneCr'].setValue(null);
+    this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(null);
+    this.customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].setValue(null);
+
+    if(this.customerProfileForm.controls['incomeDeclaredUsFlag'].value === 'N')
+      this.customerProfileForm.get('totalSalesExceedOneCr').setValidators([Validators.required]);
+    else 
+      this.customerProfileForm.get('totalSalesExceedOneCr').clearValidators();
+    
+    this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
+  }
+
+  onChangeTotalSalesExceedOneCr(){
+    if(this.customerProfileForm.controls['totalSalesExceedOneCr'].value === 'Y'){
+      this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').setValidators([Validators.required]);
+      this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').setValidators([Validators.required]);
+    } else {
+      this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').clearValidators();
+      this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').clearValidators();
+    }
+
+    this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').updateValueAndValidity();
+    this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').updateValueAndValidity();
   }
 }
