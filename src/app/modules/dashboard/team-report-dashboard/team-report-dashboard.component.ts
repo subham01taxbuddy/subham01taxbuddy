@@ -126,6 +126,7 @@ export class TeamReportDashboardComponent implements OnInit {
   today: Date;
   totalOriginal: number;
   totalRevised: number;
+  totalItrU :number;
   scheduledCallData: any;
   totalScheduledCall: any;
   selectedType:any = 'Original';
@@ -307,6 +308,11 @@ export class TeamReportDashboardComponent implements OnInit {
             this.commissionData.itr3_revised +
             this.commissionData.itr4_revised +
             this.commissionData.reviseReturnOther;
+          this.totalItrU =
+            this.commissionData.itrU_1 +
+            this.commissionData.itrU_2 +
+            this.commissionData.itrU_3 +
+            this.commissionData.itrU_4 ;
           console.log('original items', this.totalOriginal);
         } else {
           this.loading = false;

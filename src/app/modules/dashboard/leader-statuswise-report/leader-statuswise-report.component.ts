@@ -61,6 +61,10 @@ export class LeaderStatuswiseReportComponent implements OnInit {
       value: 'ITR',
     },
     {
+      label: 'ITRU',
+      value: 'ITRU',
+    },
+    {
       label: 'TPA',
       value: 'TPA',
     },
@@ -208,6 +212,21 @@ export class LeaderStatuswiseReportComponent implements OnInit {
             registrationDone: 'registrationDone',
             gstCancelled: 'gstCancelled',
             backOut: 'backOut'
+          },
+          ITRU: {
+            filerName: 'filerName',
+            open: 'open',
+            interested: 'interested',
+            notInterested: 'notInterested',
+            chatInitiated: 'chatInitiated',
+            proformaInvoiceSent: 'proformaInvoiceSent',
+            paymentReceived: 'paymentReceived',
+            payLater: 'payLater',
+            preparingItr: 'preparingItr',
+            itrFiled20_21: 'itrFiled20_21',
+            itrFiled21_22: 'itrFiled21_22',
+            itrFiled22_23: 'itrFiled22_23',
+            backedOut: 'backedOut'
           },
 
         };

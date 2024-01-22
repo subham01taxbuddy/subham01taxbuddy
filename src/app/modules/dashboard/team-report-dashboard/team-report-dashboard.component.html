@@ -272,20 +272,22 @@
     <div class="row spsTp1">
       <div class="col-sm-12 mt-2">
         <div class="TxHd-12 d-flex justify-content-between">
-          <div class="col-sm-8">
+          <div class="col-sm-7">
             <span class="TxHd-13"><i class="fa fa-handshake-o"></i> Total ITR Filed</span>
           </div>
-          <div class="col-sm-4 d-flex align-items-center">
+          <div class="col-sm-5 d-flex align-items-center">
             <div class="total-box"><span class="total-box-text">Total</span></div>
             <div class="total-box-value1"><span class="total-value">{{commissionData?.totalItrFiled || 'NA'}}</span>
             </div>
             <mat-select [(ngModel)]="selectedType" class="dropdown-box"  (click)="toggleDropdown()">
               <mat-option value="Original">Original</mat-option>
               <mat-option value="Revised">Revised</mat-option>
+              <mat-option value="ITRU">ITR U(updated)</mat-option>
             </mat-select>
             <div class="total-box-value">
               <div *ngIf="selectedType ==='Original' "><span class="total-value">{{totalOriginal || 'NA'}}</span></div>
               <div *ngIf="selectedType ==='Revised' "><span class="total-value">{{totalRevised || 'NA'}}</span></div>
+              <div *ngIf="selectedType ==='ITRU' "><span class="total-value">{{totalItrU || 'NA'}}</span></div>
             </div>
 
           </div>
@@ -301,40 +303,48 @@
               <div class="col-sm-2">
                 <div class="itr-box-container">
                   <div class="count-inBxR-1">
-                    <span class="itr-box-text">ITR1</span>
+                    <span class="itr-box-text" *ngIf="selectedType !== 'ITRU'">ITR1</span>
+                    <span class="itr-box-text" *ngIf="selectedType === 'ITRU'">ITRU-1</span>
                     <span class="itr-box-value" *ngIf="selectedType === 'Original'">{{commissionData?.itr1 ||'NA'}}</span>
                     <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.itr1_revised ||'NA'}}</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'ITRU'">{{commissionData.itrU_1 ||'NA'}}</span>
                   </div>
                 </div>
               </div>
               <div class="col-sm-2">
                 <div class="itr-box-container">
                   <div class="count-inBxR-1">
-                    <span class="itr-box-text">ITR2</span>
+                    <span class="itr-box-text" *ngIf="selectedType !== 'ITRU'">ITR2</span>
+                    <span class="itr-box-text" *ngIf="selectedType === 'ITRU'">ITRU-2</span>
                     <span class="itr-box-value" *ngIf="selectedType === 'Original'">{{commissionData?.itr2 ||'NA'}}</span>
                     <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.itr2_revised ||'NA'}}</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'ITRU'">{{commissionData.itrU_2 ||'NA'}}</span>
                   </div>
                 </div>
               </div>
               <div class="col-sm-2">
                 <div class="itr-box-container">
                   <div class="count-inBxR-1">
-                    <span class="itr-box-text">ITR3</span>
+                    <span class="itr-box-text" *ngIf="selectedType !== 'ITRU'">ITR3</span>
+                    <span class="itr-box-text" *ngIf="selectedType === 'ITRU'">ITRU-3</span>
                     <span class="itr-box-value" *ngIf="selectedType === 'Original'">{{commissionData?.itr3 ||'NA'}}</span>
                     <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.itr3_revised ||'NA'}}</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'ITRU'">{{commissionData.itrU_3 ||'NA'}}</span>
                   </div>
                 </div>
               </div>
               <div class="col-sm-2">
                 <div class="itr-box-container">
                   <div class="count-inBxR-1">
-                    <span class="itr-box-text">ITR4</span>
+                    <span class="itr-box-text" *ngIf="selectedType !== 'ITRU'">ITR4</span>
+                    <span class="itr-box-text" *ngIf="selectedType === 'ITRU'">ITRU-4</span>
                     <span class="itr-box-value" *ngIf="selectedType === 'Original'">{{commissionData?.itr4 ||'NA'}}</span>
                     <span class="itr-box-value" *ngIf="selectedType === 'Revised'">{{commissionData?.itr4_revised ||'NA'}}</span>
+                    <span class="itr-box-value" *ngIf="selectedType === 'ITRU'">{{commissionData.itrU_4 ||'NA'}}</span>
                   </div>
                 </div>
               </div>
-              <div class="col-sm-2">
+              <div class="col-sm-2" *ngIf="selectedType === 'Original' || selectedType === 'Revised' ">
                 <div class="itr-box-container">
                   <div class="count-inBxR-1">
                     <span class="itr-box-text">Other</span>
@@ -343,14 +353,14 @@
                   </div>
                 </div>
               </div>
-              <div class="col-sm-2" *ngIf="selectedType === 'Original'">
+              <!-- <div class="col-sm-2" *ngIf="selectedType === 'Original'">
                 <div class="itr-box-container">
                   <div class="count-inBxR-1">
                     <span class="itr-box-text">ITR U</span>
-                    <span class="itr-box-value">{{commissionData?.itrU || 'NA'}}</span>
+                    <span class="itr-box-value">{{commissionData?.ITRU || 'NA'}}</span>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
