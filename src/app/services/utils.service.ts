@@ -1367,7 +1367,7 @@ export class UtilsService {
     if(ITR){
       param = `/bo/user-list-new?page=0&pageSize=20&mobileNumber=${mobile}${userFilter}`
     }else{
-      param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&serviceType=ITR&mobileNumber=${mobile}${userFilter}`
+      param = `/bo/user-list-new?page=0&pageSize=20&itrChatInitiated=true&mobileNumber=${mobile}${userFilter}`
     }
 
     return this.userMsService.getMethodNew(param);

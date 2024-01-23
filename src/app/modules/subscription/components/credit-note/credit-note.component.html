@@ -19,9 +19,9 @@
                 <app-sme-list-drop-down #smeDropDown (sendLeader)="fromSme($event, true)"
                   (sendPrincipleIndividual)="fromSme($event,false, true)" (sendFiler)="fromSme($event, false)"></app-sme-list-drop-down>
               </div>
-              <div class="col-sm-3 spsTp">
-                <mat-label>From Date</mat-label>
-                <mat-form-field appearance="outline" class="class1 custom-bg-new">
+              <div class="col-sm-2 spsTp">
+                <mat-label style="margin-top: 4px;">From Date</mat-label>
+                <mat-form-field appearance="outline" class="class1 custom-bg-new" style="margin-top: 9px;">
                   <input matInput [formControl]="startDate" [matDatepicker]="picker1" [min]="minDate"
                     [max]="maxDate" autocomplete="off" (dateChange)="setToDateValidation()" />
                   <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -29,9 +29,9 @@
                   <mat-error *ngIf="startDate.hasError('required')">Select From date</mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-sm-3 spsTp">
-                <mat-label>To Date</mat-label>
-                <mat-form-field appearance="outline" class="class1 custom-bg-new">
+              <div class="col-sm-2 spsTp">
+                <mat-label style="margin-top: 4px;">To Date</mat-label>
+                <mat-form-field appearance="outline" class="class1 custom-bg-new" style="margin-top: 9px;">
                   <input matInput [formControl]="endDate" [matDatepicker]="picker2" [min]="toDateMin"
                     [max]="maxDate" autocomplete="off" />
                   <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
@@ -40,7 +40,11 @@
                   <mat-error *ngIf="endDate.hasError('min')">To date always greater than from date</mat-error>
                 </mat-form-field>
               </div>
-              <div class="col-6">
+              <div class="col-sm-2 spsTp">
+                <app-service-drop-down #serviceDropDown ngDefaultControl (sendService)="fromServiceType($event)"
+                  [(ngModel)]="searchParam.serviceType"></app-service-drop-down>
+              </div>
+              <div class="col-6 spsTp">
                 <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                   (onChange)="searchByObject($event)"></app-generic-user-filter>
               </div>
