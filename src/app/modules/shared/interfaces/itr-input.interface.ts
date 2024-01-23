@@ -141,6 +141,18 @@ export interface ITR_JSON {
     anyOtherPropertyInadequateConsideration: number;
     anyOtherPropertyInadequateConsiderationNotTaxable: boolean;
   };
+
+  winningsUS115BB: WinningUS115BB[];
+}
+
+export interface WinningUS115BB {
+  source: string;
+  quarter1: number;
+  quarter2: number;
+  quarter3: number;
+  quarter4: number;
+  quarter5: number;
+  total: number;
 }
 
 export interface agriculturalLandDetails {
