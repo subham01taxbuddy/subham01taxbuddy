@@ -6,6 +6,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { GridOptions, ICellRendererParams } from 'ag-grid-community';
 import * as moment from 'moment';
 import { AgTooltipComponent } from 'src/app/modules/shared/components/ag-tooltip/ag-tooltip.component';
+import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import { SmeListDropDownComponent } from 'src/app/modules/shared/components/sme-list-drop-down/sme-list-drop-down.component';
 import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
@@ -56,6 +57,7 @@ export class CreditNoteComponent implements OnInit {
     statusId: null,
     page: 0,
     pageSize: 20,
+    serviceType:null,
     mobileNumber: null,
     emailId: null,
     invoiceNo: null,
@@ -160,9 +162,12 @@ export class CreditNoteComponent implements OnInit {
     console.log('object from search param ', this.searchBy);
   }
 
-
   sortByObject(object) {
     this.sortBy = object;
+  }
+
+  fromServiceType(event) {
+    this.searchParam.serviceType = event;
   }
 
   filerId: number;
@@ -546,10 +551,13 @@ export class CreditNoteComponent implements OnInit {
 
   }
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
+  @ViewChild('serviceDropDown') serviceDropDown: ServiceDropDownComponent;
   resetFilters() {
     this.clearUserFilter = moment.now().valueOf();
     this?.smeDropDown?.resetDropdown();
     this.cacheManager.clearCache();
+    this.searchParam.serviceType = null;
+    this?.serviceDropDown?.resetService();
     this.searchParam.page = 0;
     this.searchParam.pageSize = 20;
     this.searchParam.mobileNumber = null;

@@ -32,7 +32,16 @@
                     </div>
                     <div class="col-sm-12">
                       <div class="row">
-
+                        <div class="col-sm-3 spsTp">
+                          <label class="input__label" for="attr">Select Service </label>
+                          <mat-form-field appearance="outline" class="custom-bg-new">
+                            <mat-select placeholder="" [(ngModel)]="searchParam.serviceType" >
+                              <mat-option *ngFor="let service of serviceTypes" [value]="service.value">
+                                {{service.label}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
                         <div *ngIf="itrStatus" class="col-sm-3 spsTp">
                           <label class="input__label" for="attr">Select Status </label>
                           <mat-form-field appearance="outline" class="custom-bg-new">
@@ -43,7 +52,7 @@
                             </mat-select>
                           </mat-form-field>
                         </div>
-                        <div class="col-sm-9 spsTp">
+                        <div class="col-sm-6 spsTp">
                           <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                             (onChange)="searchByObject($event)"></app-generic-user-filter>
                         </div>
