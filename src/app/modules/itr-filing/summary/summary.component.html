@@ -3099,7 +3099,8 @@
                           <tr
                             *ngIf="
                               finalCalculations?.otherIncome?.otherIncomes
-                                ?.winningFromLotteries
+                                ?.winningFromLotteries && finalCalculations?.otherIncome?.otherIncomes
+                                ?.winningFromLotteries > 0
                             "
                           >
                             <td>Income from lotteries and winings</td>

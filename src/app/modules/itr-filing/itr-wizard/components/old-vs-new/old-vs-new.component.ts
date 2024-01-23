@@ -1528,9 +1528,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
               {
                 label: 'Income from Other Sources',
                 old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
-                  .totalOtherTaxableIncome,
+                  .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB,
                 new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
-                  .totalOtherTaxableIncome,
+                  .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB,
               },
               {
                 label: 'Total Headwise Income',
@@ -1677,9 +1677,9 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
             {
               label: 'Income from Other Sources',
               old: this.oldSummaryIncome?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome,
+              .totalOtherTaxableIncome + this.oldSummaryIncome?.taxSummary?.totalWinningsUS115BB,
               new: this.newSummaryIncome?.summaryIncome.summaryOtherIncome
-                .totalOtherTaxableIncome,
+              .totalOtherTaxableIncome + this.newSummaryIncome?.taxSummary?.totalWinningsUS115BB,
             },
             {
               label: 'Total Headwise Income',
