@@ -74,6 +74,16 @@ export class ItrAssignedUsersComponent implements OnInit {
   partnerType: any;
   unAssignedUsersView = new FormControl(false);
   disableCheckboxes = false;
+  serviceTypes =[
+    {
+      label: 'ITR',
+      value: 'ITR',
+    },
+    {
+      label: 'ITR-U',
+      value: 'ITRU',
+    },
+  ]
 
   constructor(
     private reviewService: ReviewService,
@@ -1467,7 +1477,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     // 'https://dev-api.taxbuddy.com/report/bo/user-list-new?page=0&pageSize=5&itrChatInitiated=true&serviceType=ITR'
     //'https://dev-api.taxbuddy.com/bo/user-list-new?page=0&pageSize=5&itrChatInitiated=true&serviceType=ITR&filerUserId=779519'
     // 'https://dev-api.taxbuddy.com/bo/user-list-new?page=0&pageSize=5&itrChatInitiated=true&leaderUserId=1064&serviceType=ITR'
-    let param = `/bo/user-list-new?${data}&itrChatInitiated=true&serviceType=ITR`;
+    let param = `/bo/user-list-new?${data}&itrChatInitiated=true`;
 
     let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
     if (Object.keys(this.sortBy).length) {

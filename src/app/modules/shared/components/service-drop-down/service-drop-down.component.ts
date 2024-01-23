@@ -35,6 +35,10 @@ export class ServiceDropDownComponent implements OnInit {
           value: 'ITR',
         },
         {
+          label: 'ITR-U',
+          value: 'ITRU',
+        },
+        {
           label: 'GST',
           value: 'GST',
         },
@@ -60,6 +64,10 @@ export class ServiceDropDownComponent implements OnInit {
         {
           label: 'ITR',
           value: 'ITR',
+        },
+        {
+          label: 'ITR-U',
+          value: 'ITRU',
         },
         {
           label: 'GST',
