@@ -82,6 +82,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   serviceEligibility: any;
   assignedFilerId: any;
   refundInvoiceDetails: any;
+  selectedITRUFy: any =[];
+  partnerType:any;
+
   constructor(
     private fb: FormBuilder,
     public utilsService: UtilsService,
@@ -95,7 +98,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   ) {
     this.roles = this.utilsService.getUserRoles();
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-
+    this.partnerType = this.utilsService.getPartnerType();
   }
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -620,6 +623,10 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
           console.log('this.selectedUserInfo:', this.selectedUserInfo);
           this.personalInfoForm.patchValue(this.selectedUserInfo); // all
           this.setFormValues(this.selectedUserInfo);
+          if(this.serviceType === 'ITRU'){
+            this.mobileNumber.setValue(this.selectedUserInfo.mobileNumber)
+            this.checkPreviousITRuSub();
+          }
           this.updateIgstFlag();
           if (
             this.utilsService.isNonEmpty(this.selectedUserInfo) &&
@@ -831,7 +838,39 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.invoiceForm.controls['gstin'].updateValueAndValidity();
   }
 
+  checkPreviousITRuSub(){
+     // https://dev-api.taxbuddy.com/report/bo/subscription-dashboard-new?page=0&pageSize=20
+     const loggedInSmeUserId = this?.loggedInSme[0]?.userId
+     let filter = '';
+    filter = '&mobileNumber=' + this.mobileNumber.value
+
+     let userFilter = ''
+     if (this.roles.includes('ROLE_LEADER')) {
+       userFilter += `&leaderUserId=${loggedInSmeUserId}`;
+
+     }
+     if (this.roles.includes('ROLE_FILER') && this.partnerType != "PRINCIPAL") {
+       userFilter += `&filerUserId=${loggedInSmeUserId}`;
+     }
+
+     if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL") {
+       userFilter += `&searchAsPrincipal=true&filerUserId=${loggedInSmeUserId}`;
+     }
+
+     this.loading = true;
+     let param = `/bo/subscription-dashboard-new?page=0&pageSize=20${userFilter}${filter}`;
+     this.reportService.getMethod(param).subscribe((response: any) => {
+      this.loading = false;
+      // this.selectedITRUFy = response?.data?.content.map(sub => sub?.item?.financialYear);
+      this.selectedITRUFy = response?.data?.content.filter(sub => sub?.item?.service === 'ITRU').map(sub => sub?.item?.financialYear);
+     })
+  }
+
   filteredFinancialYears: any[] = this.financialYear;
+
+  isYearDisabled(year: string): boolean {
+    return this.service === 'ITRU' && this.selectedITRUFy.includes(year);
+  }
 
   changeService() {
     if (this.service === 'ITRU') {
