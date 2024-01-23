@@ -14,6 +14,8 @@ import {
   FormArray,
   ValidationErrors,
   FormControl,
+  ValidatorFn,
+  AbstractControl,
 } from '@angular/forms';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -2640,14 +2642,14 @@ export class PersonalInformationComponent implements OnInit {
       this.customerProfileForm.get('totalSalesExceedOneCr').updateValueAndValidity();
 
       if(this.ITR_JSON.totalSalesExceedOneCr === 'Y'){
-        this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').setValidators([Validators.required]);
+        this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
 
         this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(
           this.ITR_JSON.aggregateOfAllAmountsReceivedFlag);
         
         this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').updateValueAndValidity();
 
-        this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').setValidators([Validators.required]);
+        this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
 
         this.customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].setValue(
           this.ITR_JSON.aggregateOfAllPaymentsMadeFlag);
@@ -3227,8 +3229,8 @@ export class PersonalInformationComponent implements OnInit {
 
   onChangeTotalSalesExceedOneCr(){
     if(this.customerProfileForm.controls['totalSalesExceedOneCr'].value === 'Y'){
-      this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').setValidators([Validators.required]);
-      this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').setValidators([Validators.required]);
+      this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
+      this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').setValidators([Validators.required, auditAplicableNotAllowedValidator()]);
     } else {
       this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(null);
       this.customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].setValue(null);
@@ -3239,4 +3241,14 @@ export class PersonalInformationComponent implements OnInit {
     this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').updateValueAndValidity();
     this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').updateValueAndValidity();
   }
+}
+
+function auditAplicableNotAllowedValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value: string = control.value as string;
+    if (value && value === 'N')
+      return { auditAplicableNotAllowed: true };
+    else 
+      return null;
+  };
 }

@@ -609,8 +609,7 @@
                   No
                 </mat-radio-button>
               </mat-radio-group>
-              <mat-error class="text-sm" *ngIf="customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag']
-              ?.value === 'N'">
+              <mat-error class="text-sm" *ngIf="customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].hasError('auditAplicableNotAllowed')">
                 Audit is applicable - Income in Cash exceeds 5% of Turnover
               </mat-error>
               <mat-error class="text-sm" *ngIf="customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].hasError('required')">
@@ -647,8 +646,7 @@
                   No
                 </mat-radio-button>
               </mat-radio-group>
-              <mat-error class="text-sm" *ngIf="customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag']
-              ?.value === 'N'">
+              <mat-error class="text-sm" *ngIf="customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].hasError('auditAplicableNotAllowed')">
                 Audit is applicable - Expense in Cash exceeds 5% of Turnover
               </mat-error>
               <mat-error class="text-sm" *ngIf="customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].hasError('required')">
