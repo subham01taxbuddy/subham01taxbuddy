@@ -196,12 +196,12 @@
               >
                 <mat-radio-button
                         [value]="'Y'"
-                        style="margin-left: 0px; margin-right: 2px"
-                        labelPosition="before"
+                        style="margin-left: 0px; margin-right: 7px"
+                        labelPosition="after"
                 >
                   Yes
                 </mat-radio-button>
-                <mat-radio-button [value]="'N'" labelPosition="before">
+                <mat-radio-button [value]="'N'" labelPosition="after">
                   No
                 </mat-radio-button>
               </mat-radio-group>
@@ -225,11 +225,11 @@
                         (change)="strIncrExpAggAmt2LkTrvFrgnCntryFlg()">
                   <mat-radio-button
                           [value]="'Y'"
-                          style="margin-left: 0px; margin-right: 2px"
-                          labelPosition="before">
+                          style="margin-left: 0px; margin-right: 7px"
+                          labelPosition="after">
                     Yes
                   </mat-radio-button>
-                  <mat-radio-button [value]="'N'" labelPosition="before">
+                  <mat-radio-button [value]="'N'" labelPosition="after">
                     No
                   </mat-radio-button>
                 </mat-radio-group>
@@ -274,12 +274,12 @@
                 >
                   <mat-radio-button
                           [value]="'Y'"
-                          style="margin-left: 0px; margin-right: 2px"
-                          labelPosition="before"
+                          style="margin-left: 0px; margin-right: 7px"
+                          labelPosition="after"
                   >
                     Yes
                   </mat-radio-button>
-                  <mat-radio-button [value]="'N'" labelPosition="before">
+                  <mat-radio-button [value]="'N'" labelPosition="after">
                     No
                   </mat-radio-button>
                 </mat-radio-group>
@@ -322,12 +322,12 @@
                 >
                   <mat-radio-button
                           [value]="'Y'"
-                          style="margin-left: 0px; margin-right: 2px"
-                          labelPosition="before"
+                          style="margin-left: 0px; margin-right: 7px"
+                          labelPosition="after"
                   >
                     Yes
                   </mat-radio-button>
-                  <mat-radio-button [value]="'N'" labelPosition="before">
+                  <mat-radio-button [value]="'N'" labelPosition="after">
                     No
                   </mat-radio-button>
                 </mat-radio-group>
@@ -445,12 +445,12 @@
                 >
                   <mat-radio-button
                           [value]="'Y'"
-                          style="margin-left: 0px; margin-right: 2px"
-                          labelPosition="before"
+                          style="margin-left: 0px; margin-right: 7px"
+                          labelPosition="after"
                   >
                     Yes
                   </mat-radio-button>
-                  <mat-radio-button [value]="'N'" labelPosition="before">
+                  <mat-radio-button [value]="'N'" labelPosition="after">
                     No
                   </mat-radio-button>
                 </mat-radio-group>
@@ -505,18 +505,183 @@
               >
                 <mat-radio-button
                         [value]="'Y'"
-                        style="margin-left: 0px; margin-right: 2px"
-                        labelPosition="before"
+                        style="margin-left: 0px; margin-right: 7px"
+                        labelPosition="after"
                 >
                   Yes
                 </mat-radio-button>
-                <mat-radio-button [value]="'N'" labelPosition="before">
+                <mat-radio-button [value]="'N'" labelPosition="after">
                   No
                 </mat-radio-button>
               </mat-radio-group>
             </div>
           </div>
         </div>
+
+        <div class="White_box">
+          <div class="row mb-10">
+            <div class="col-10 ">
+              <p><span class="span">Whether assessee is declaring income only under section 44AE/44B/44BB/44AD/44ADA/44BBA?</span></p>
+            </div>
+            <div class="col-2">
+              <mat-radio-group
+                      name="incomeDeclaredUsFlag[i]"
+                      formControlName="incomeDeclaredUsFlag"
+                      (change)="onChangeIncomeDeclaredUsFlag()"
+              >
+                <mat-radio-button
+                        [value]="'Y'"
+                        style="margin-left: 0px; margin-right: 7px"
+                        labelPosition="after"
+                >
+                  Yes
+                </mat-radio-button>
+                <mat-radio-button [value]="'N'" labelPosition="after">
+                  No
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="customerProfileForm.controls['incomeDeclaredUsFlag']
+          ?.value === 'N'" class="White_box">
+          <div class="row mb-10">
+            <div class="col-10 ">
+              <p><span class="span">Whether during the year Total sales/turnover/gross receipts of business is between Rs. 1 crore and Rs. 10 crores?</span></p>
+            </div>
+          </div>
+          <div class="row mb-10">
+            <div class="col-10">
+              <mat-radio-group
+                      name="totalSalesExceedOneCr[i]"
+                      formControlName="totalSalesExceedOneCr"
+                      (change)="onChangeTotalSalesExceedOneCr()"
+              >
+                <mat-radio-button
+                        [value]="'Y'"
+                        style="margin-left: 0px; margin-right: 15px"
+                        labelPosition="after"
+                >
+                  Yes
+                </mat-radio-button>
+                <mat-radio-button [value]="'N'" 
+                style="margin-left: 0px; margin-right: 15px"
+                labelPosition="after">
+                  No, turnover does not exceed 1 crore
+                </mat-radio-button>
+                <mat-radio-button [value]="'M'" labelPosition="after">
+                  No, turnover exceeds 10 crores
+                </mat-radio-button>
+              </mat-radio-group>
+              <mat-error class="text-sm" *ngIf="customerProfileForm.controls['totalSalesExceedOneCr'].hasError('required')">
+                Please select Whether during the year Total sales/turnover/gross receipts of business exceeds Rs. 1 crore but does not exceeds Rs. 10 Crore?
+              </mat-error>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="customerProfileForm.controls['totalSalesExceedOneCr']
+          ?.value === 'Y'" class="White_box">
+          <div class="row mb-10">
+            <div class="col-10 ">
+              <p><span class="span">Whether aggregate of all amounts received including amount
+                received for sales, turnover or gross receipts or on capital account
+                like capital contributions, loans etc. during the previous year, in
+                cash & non-a/c payee cheque/DD, does not exceed five per cent of said amount?
+                </span></p>
+            </div>
+          </div>
+            <div class="row mb-10">
+              <div class="col-10 ">
+              <mat-radio-group
+                      name="aggregateOfAllAmountsReceivedFlag[i]"
+                      formControlName="aggregateOfAllAmountsReceivedFlag"
+              >
+                <mat-radio-button
+                        [value]="'Y'"
+                        style="margin-left: 0px; margin-right: 15px"
+                        labelPosition="after"
+                >
+                  Yes
+                </mat-radio-button>
+                <mat-radio-button [value]="'N'" labelPosition="after">
+                  No
+                </mat-radio-button>
+              </mat-radio-group>
+              <mat-error class="text-sm" *ngIf="customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].hasError('auditAplicableNotAllowed')">
+                Audit is applicable - Income in Cash exceeds 5% of Turnover
+              </mat-error>
+              <mat-error class="text-sm" *ngIf="customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].hasError('required')">
+                Please select, whether aggregate of all amounts received including amount received for sales, turnover or gross receipts during the previous year, in cash & non-a/c payee cheque/DD, does not exceed five per cent of said amount.
+              </mat-error>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="customerProfileForm.controls['totalSalesExceedOneCr']
+          ?.value === 'Y'" class="White_box">
+          <div class="row mb-10">
+            <div class="col-10 ">
+              <p><span class="span">Whether aggregate of all payments made including amount incurred for
+                expenditure or on capital account such as asset acquisition, repayment of
+                loans etc., in cash & non-a/c payee cheque/DD, during the previous year does not exceed five per cent of the said payment?                
+                </span></p>
+            </div>
+          </div>
+            <div class="row mb-10">
+              <div class="col-10 ">
+              <mat-radio-group
+                      name="aggregateOfAllPaymentsMadeFlag[i]"
+                      formControlName="aggregateOfAllPaymentsMadeFlag"
+              >
+                <mat-radio-button
+                        [value]="'Y'"
+                        style="margin-left: 0px; margin-right: 15px"
+                        labelPosition="after"
+                >
+                  Yes
+                </mat-radio-button>
+                <mat-radio-button [value]="'N'" labelPosition="after">
+                  No
+                </mat-radio-button>
+              </mat-radio-group>
+              <mat-error class="text-sm" *ngIf="customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].hasError('auditAplicableNotAllowed')">
+                Audit is applicable - Expense in Cash exceeds 5% of Turnover
+              </mat-error>
+              <mat-error class="text-sm" *ngIf="customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].hasError('required')">
+                Please select, whether aggregate of all payments made including amount incurred for expenditure, in cash & non-a/c payee cheque/DD, during the previous year does not exceed five per cent of the said payment ?
+              </mat-error>
+            </div>
+          </div>
+        </div>
+
+        <div class="White_box">
+          <div class="row mb-10">
+            <div class="col-10 ">
+              <p><span class="span">Are you liable for audit under section 44AB?
+                </span></p>
+            </div>
+            <div class="col-2">
+              <mat-radio-group
+                      name="liableSection44ABFlag[i]"
+                      formControlName="liableSection44ABFlag"
+              >
+                <mat-radio-button
+                        [value]="'Y'"
+                        style="margin-left: 0px; margin-right: 7px"
+                        labelPosition="after" [disabled]="true"
+                >
+                  Yes
+                </mat-radio-button>
+                <mat-radio-button [value]="'N'" labelPosition="after" [checked]="true">
+                  No
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
