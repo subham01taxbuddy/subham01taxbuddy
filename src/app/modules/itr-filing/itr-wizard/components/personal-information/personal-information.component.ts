@@ -3230,6 +3230,8 @@ export class PersonalInformationComponent implements OnInit {
       this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').setValidators([Validators.required]);
       this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').setValidators([Validators.required]);
     } else {
+      this.customerProfileForm.controls['aggregateOfAllAmountsReceivedFlag'].setValue(null);
+      this.customerProfileForm.controls['aggregateOfAllPaymentsMadeFlag'].setValue(null);
       this.customerProfileForm.get('aggregateOfAllAmountsReceivedFlag').clearValidators();
       this.customerProfileForm.get('aggregateOfAllPaymentsMadeFlag').clearValidators();
     }
