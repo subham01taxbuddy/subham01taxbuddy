@@ -64,10 +64,10 @@
       <div class="col-sm-3">
         <button class="update-button-new" (click)="addStatus()" tabindex="1">{{data.mode}}</button>
       </div>
-      <div class="col-sm-3" *ngIf="data.userInfo.statusId === 39">
+      <div class="col-sm-3" *ngIf="hideUndoButton">
         <button class="update-button-new" (click)="undoStatus()" tabindex="1">undo status</button>
       </div>
-      <span class="note1 note" style="flex-basis: content;" *ngIf="data.userInfo.statusId === 39">
+      <span class="note1 note" style="flex-basis: content; margin-left: 0px;" *ngIf="hideUndoButton">
         Note - Status will be changed to previous saved status
       </span>
     </div>

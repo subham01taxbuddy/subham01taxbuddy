@@ -70,8 +70,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
   sortMenus = [
     { value: 'family.fName', name: 'Name' },
     { value: 'eFillingDate', name: 'Date of Filing ' },
-    { value: 'itrType', name: 'ITR Type' },
-    { value: 'isRevised', name: 'Return Type' },
+    // { value: 'itrType', name: 'ITR Type' },
+    // { value: 'isRevised', name: 'Return Type' },
   ];
   searchBy: any = {};
   searchMenus = [
@@ -84,6 +84,18 @@ export class FilingsComponent implements OnInit, OnDestroy {
   partnerType: any;
   showCsvMessage: boolean;
   dataOnLoad = true;
+  itrTypes = [
+    { value: '1,ITR-1', name: 'ITR-1' },
+    { value: '2,ITR-2', name: 'ITR-2' },
+    { value: '3,ITR-3', name: 'ITR-3' },
+    { value: '4,ITR-4', name: 'ITR-4' },
+  ]
+  itrType = new FormControl('');
+  returnType = new FormControl('');
+  returnTypes = [
+    { value: 'N', name: 'Original' },
+    { value: 'Y', name: 'Revised' },
+  ]
 
   constructor(
     private reviewService: ReviewService,
@@ -363,6 +375,12 @@ export class FilingsComponent implements OnInit, OnDestroy {
       }
       if (this.utilsService.isNonEmpty(this.searchParams.panNumber)) {
         param = param + `&panNumber=${this.searchParams.panNumber}`;
+      }
+      if(this.utilsService.isNonEmpty(this.itrType.value)){
+        param = param + `&itrType=${this.itrType.value}`
+      }
+      if(this.utilsService.isNonEmpty(this.returnType.value)){
+        param = param + `&returnType=${this.returnType.value}`
       }
 
       console.log('My Params:', param);
@@ -1416,6 +1434,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
   resetFilters() {
     this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
+    this.itrType.setValue(null);
+    this.returnType.setValue(null);
     this.searchParams.selectedStatusId = 'ITR_FILED';
     this.config.page = 0;
     this.config.totalItems = 0;

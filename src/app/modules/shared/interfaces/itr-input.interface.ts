@@ -111,6 +111,7 @@ export interface ITR_JSON {
   liableSection44AAflag: string;
   portugeseCC5AFlag: string;
   schedule5a: Schedule5A;
+  isITRU : boolean;
 
   agriculturalIncome: {
     grossAgriculturalReceipts: number;
