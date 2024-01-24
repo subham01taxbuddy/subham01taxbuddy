@@ -16,6 +16,7 @@ export class ChangeStatusComponent implements OnInit {
   itrStatus: any = [];
   callers: any = [];
   changeStatus!: FormGroup;
+  hideUndoButton :boolean =false;
 
   constructor(
     public dialogRef: MatDialogRef<ChangeStatusComponent>,
@@ -27,6 +28,13 @@ export class ChangeStatusComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if(this.data.userInfo.statusId == '39' ){
+      this.hideUndoButton =true;
+    }else if(this.data.serviceType == 'ITRU' && this.data.userInfo?.statusId == '14' ){
+      this.hideUndoButton =true;
+    }else{
+      this.hideUndoButton =false;
+    }
     this.changeStatus = this.fb.group({
       selectStatus: [this.data.userInfo.statusId || null],
       callerAgentUserId: [''],

@@ -231,6 +231,10 @@ export class ItrAssignedUsersComponent implements OnInit {
           });
           let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
           objITR.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
+
+          if (this.rowData.serviceType === 'ITRU') {
+            objITR.isITRU = true;
+          }
           console.log('obj:', objITR);
 
           const param = '/itr';
@@ -293,7 +297,12 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   checkFilerAssignment(data: any) {
     // https://uat-api.taxbuddy.com/user/check-filer-assignment?userId=16387&assessmentYear=2023-2024&serviceType=ITR
-    let param = `/check-filer-assignment?userId=${data.userId}`;
+    let serviceType='';
+    debugger
+    if(data.serviceType === 'ITRU'){
+      serviceType = `&serviceType=ITRU`
+    }
+    let param = `/check-filer-assignment?userId=${data.userId}${serviceType}`;
     this.userMsService.getMethod(param).subscribe(
       (response: any) => {
         this.loading = false;
@@ -888,7 +897,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
-          if (params.data.serviceType === 'ITR') {
+          if (params.data.serviceType === 'ITR' || params.data.serviceType === 'ITRU') {
+            const isITRU = params.data.serviceType === 'ITRU';
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
             if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" data-action-type="yetToStart" style="padding: 0px 10px;  border-radius: 40px;
@@ -902,7 +912,7 @@ export class ItrAssignedUsersComponent implements OnInit {
               </button>`;
             } else if (params.data.itrObjectStatus === 'ITR_FILED') { // ITR filed
               return `<button type="button" class="action_icon add_button" data-action-type="startRevise" title="ITR filed successfully / Click to start revise return" style="padding: 0px 18px;  border-radius: 40px;
-              cursor:pointer; background-color:#D3FBDA; color:#43A352;">
+              cursor:pointer; background-color:#D3FBDA; color:#43A352;" ${isITRU ? 'disabled' : ''} >
               <i class="fa fa-check" aria-hidden="true" data-action-type="startRevise"></i>
             </button>`;
             } else {
@@ -1151,6 +1161,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     headers = headers.append('Authorization', 'Bearer ' + TOKEN);
     this.rowData = data;
     this.loading = true;
+    debugger
     this.requestManager.addRequest(this.LIFECYCLE,
       this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
     we_track('Start Filing', {

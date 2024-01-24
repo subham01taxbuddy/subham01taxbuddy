@@ -23,10 +23,30 @@
                     </div>
                     <div class="col-sm-12">
                       <div class="row">
-                        <div class="col-sm-3 spsTp">
+                        <div class="col-sm-2 spsTp">
                           <app-fy-drop-down (sendFy)="fromFy($event)"></app-fy-drop-down>
                         </div>
-                        <div class="col-sm-9 ">
+                        <div class="col-sm-2">
+                          <label class="input__label" for="attr">ITR Type</label>
+                          <mat-form-field appearance="outline" class="custom-bg-new">
+                            <mat-select placeholder="" [formControl]="itrType">
+                              <mat-option *ngFor="let itr of itrTypes" [value]="itr.value">
+                                {{itr.name}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-2">
+                          <label class="input__label" for="attr">Return Type</label>
+                          <mat-form-field appearance="outline" class="custom-bg-new">
+                            <mat-select placeholder="" [formControl]="returnType">
+                              <mat-option *ngFor="let return of returnTypes" [value]="return.value">
+                                {{return.name}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-6 ">
                           <app-generic-user-filter [searchParameter]="searchMenus" [clearUserFilter]="clearUserFilter"
                             (onChange)="searchByObject($event)"></app-generic-user-filter>
                         </div>
