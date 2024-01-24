@@ -256,7 +256,7 @@ export class SummaryComponent implements OnInit {
         anyOtherPropertyWithoutConsideration?: number;
         anyOtherPropertyInadequateConsideration?: number;
         dividendIncome: number;
-        winningFromLotteries?: any;
+        winningFromLotteries: any;
         incFromOwnAndMaintHorses?: any;
         NOT89A?: any;
         OTHNOT89A?: any;
@@ -1227,6 +1227,7 @@ export class SummaryComponent implements OnInit {
             },
             otherIncome: {
               otherIncomes: {
+                winningFromLotteries: 0,
                 saving: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType][
                   this.ITR14IncomeDeductions
                 ]?.OthersInc?.OthersIncDtlsOthSrc?.find(
@@ -5096,6 +5097,7 @@ export class SummaryComponent implements OnInit {
               },
               otherIncome: {
                 otherIncomes: {
+                  winningFromLotteries: this.finalSummary?.assessment?.taxSummary?.totalWinningsUS115BB,
                   saving:
                     this.finalSummary?.assessment?.summaryIncome?.summaryOtherIncome?.incomes?.find(
                       (val) => val.incomeType === 'SAVING_INTEREST'
@@ -5183,7 +5185,7 @@ export class SummaryComponent implements OnInit {
                 },
 
                 otherIncomeTotal:
-                  this.finalSummary?.assessment?.taxSummary.otherIncome,
+                  this.finalSummary?.assessment?.taxSummary.otherIncome + this.finalSummary?.assessment?.taxSummary?.totalWinningsUS115BB,
               },
               businessIncome: {
                 businessIncomeDetails: {

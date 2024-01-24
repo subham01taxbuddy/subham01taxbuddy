@@ -726,6 +726,16 @@ export class UtilsService {
         anyOtherPropertyInadequateConsideration: 0,
         anyOtherPropertyInadequateConsiderationNotTaxable: false,
       },
+
+      winningsUS115BB: [{ 
+        source: null,
+        quarter1: 0,
+        quarter2: 0,
+        quarter3: 0,
+        quarter4: 0,
+        quarter5: 0,
+        total: 0,
+      }],
     };
 
     return ITR_JSON;
