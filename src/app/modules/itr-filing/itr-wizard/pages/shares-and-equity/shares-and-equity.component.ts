@@ -1537,6 +1537,24 @@ export class SharesAndEquityComponent
         }
       },
       {
+        headerName: 'Indexed Cost of Improvement',
+        field: 'costOfImprovement',
+        width: 150,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return self.bondType === 'unlisted' && params.data.controls['improvementsArray'].value.costOfImprovement ?
+              params.data.controls['improvementsArray'].value.indexCostOfImprovement :
+              0;
+        },
+        hide: self.bondType === 'listed',
+        valueFormatter: function (params) {
+          const purchaseCost = params.data.controls['improvementsArray'].value.costOfImprovement ?
+              params.data.controls['improvementsArray'].value.indexCostOfImprovement :
+              0;
+          return `₹ ${purchaseCost}`;
+        }
+      },
+      {
         headerName: 'Expenses',
         field: 'sellExpense',
         width: 150,
