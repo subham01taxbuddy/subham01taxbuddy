@@ -95,6 +95,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
   returnTypes = [
     { value: 'N', name: 'Original' },
     { value: 'Y', name: 'Revised' },
+    { value: 'Updated', name: 'Updated' },
   ]
 
   constructor(
