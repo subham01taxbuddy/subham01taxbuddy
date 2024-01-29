@@ -1041,7 +1041,7 @@ export class SummaryComponent implements OnInit {
 
               assessmentYear: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
               ?.FilingStatus?.ReturnFileSec === 21 ? 
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_139_8A?.AssessmentYear: '',
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_139_8A?.AssessmentYear + '-' +(Number(this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_139_8A?.AssessmentYear)+1): '',
               
               dob: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                 ?.PersonalInfo?.DOB,
@@ -2353,7 +2353,7 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
                   ?.TaxesPaid?.TotalTaxesPaid,
             },
-            amountPayable:
+            amountPayable: this.isITRU ? 0:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
                 ?.BalTaxPayable,
 
@@ -2580,7 +2580,7 @@ export class SummaryComponent implements OnInit {
               assessmentYear: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                 ?.FilingStatus?.ReturnFileSec === 21 || this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
                 ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 21 ? 
-              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_139_8A?.AssessmentYear: '',
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_139_8A?.AssessmentYear + '-'+ (Number(this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_139_8A?.AssessmentYear)+1): '',
 
               dob: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.PartA_GEN1
                 ?.PersonalInfo?.DOB,
@@ -2939,8 +2939,9 @@ export class SummaryComponent implements OnInit {
                 };
               }),
               hpTotalIncome:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleHP
-                  ?.TotalIncomeChargeableUnHP,
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+              ?.IncomeFromHP ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+              ?.IncomeFromHP : 0,
             },
             otherIncome: {
               otherIncomes: {
@@ -3290,7 +3291,7 @@ export class SummaryComponent implements OnInit {
                 crypto: {
                   cryptoDetails: this.ITR_JSON.itrSummaryJson['ITR'][
                     this.itrType
-                  ]?.ScheduleVDA?.ScheduleVDADtls?.map((element, index) => {
+                  ]?.ScheduleVDA?.ScheduleVDADtls?.filter(element=>element?.HeadUndIncTaxed === 'BI')?.map((element, index) => {
                     return {
                       srNo: index + 1,
                       buyDate: element?.DateofAcquisition,
@@ -3303,12 +3304,10 @@ export class SummaryComponent implements OnInit {
                   })?.filter(item => Object.entries(item)
                   .some(([key, value]) => value !== null || value!== 0)),
                 },
-                totalCryptoIncome: this.ITR_JSON.itrSummaryJson['ITR'][
-                  this.itrType
-                ]?.ScheduleVDA?.TotIncCapGain
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-                    ?.ScheduleVDA?.TotIncCapGain
-                  : 0,
+                totalCryptoIncome: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                ?.ProfBusGain ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+                ?.ProfBusGain?.ProfIncome115BBF: 0,
+
                 incomeFromFirm: {
                   salary: 0,
                   bonus: 0,
@@ -3522,7 +3521,7 @@ export class SummaryComponent implements OnInit {
               crypto: {
                 cryptoDetails: this.ITR_JSON.itrSummaryJson['ITR'][
                   this.itrType
-                ]?.ScheduleVDA?.ScheduleVDADtls?.map((element, index) => {
+                ]?.ScheduleVDA?.ScheduleVDADtls?.filter(element=>element?.HeadUndIncTaxed === 'CG')?.map((element, index) => {
                   return {
                     srNo: index + 1,
                     buyDate: element?.DateofAcquisition,
@@ -3534,20 +3533,14 @@ export class SummaryComponent implements OnInit {
                   };
                 }),
               },
-              totalCryptoIncome: this.ITR_JSON.itrSummaryJson['ITR'][
-                this.itrType
-              ]?.ScheduleVDA?.TotIncCapGain
-                ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleVDA
-                  ?.TotIncCapGain
-                : 0,
+              totalCryptoIncome: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+              ?.CapGain ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
+              ?.CapGain?.CapGains30Per115BBH : 0,
 
               totalCapitalGain:
                 (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
                   ?.CapGain?.TotalCapGains ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
-                  ?.CapGain?.TotalCapGains : 0) -
-                (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
-                  ?.CapGain?.CapGains30Per115BBH ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-TI']
-                  ?.CapGain?.CapGains30Per115BBH : 0),
+                  ?.CapGain?.TotalCapGains : 0),
             },
             totalHeadWiseIncome:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
@@ -4559,7 +4552,7 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB_TTI']
                   ?.TaxPaid?.TaxesPaid?.TotalTaxesPaid,
             },
-            amountPayable:
+            amountPayable:this.isITRU ? 0:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.TaxPaid?.BalTaxPayable,
 
@@ -5322,7 +5315,7 @@ export class SummaryComponent implements OnInit {
                     : 0,
                 },
                 businessIncomeTotal:
-                  this.finalSummary?.assessment?.taxSummary?.businessIncome,
+                  this.finalSummary?.assessment?.taxSummary?.businessIncome+ this.finalSummary?.assessment?.taxSummary?.totalVDABusinessIncome,
               },
               capitalGain: {
                 // short term gain
@@ -5593,7 +5586,7 @@ export class SummaryComponent implements OnInit {
 
                 // total capital gain
                 totalCapitalGain:
-                  this.finalSummary?.assessment?.taxSummary?.capitalGain,
+                  this.finalSummary?.assessment?.taxSummary?.capitalGain- this.finalSummary?.assessment?.taxSummary?.totalVDABusinessIncome,
               },
               totalHeadWiseIncome:
                 this.finalSummary?.assessment?.taxSummary?.totalIncome,
@@ -7374,7 +7367,7 @@ export class SummaryComponent implements OnInit {
               element
             ]?.TotOthSrcLossNoRaceHorse || 0,
         });
-      } else if ('TotalLossSetOff') {
+      } else if (element === 'TotalLossSetOff') {
         arrayToBeReturned.push({
           headOfIncome: element,
           HP:
@@ -7390,7 +7383,7 @@ export class SummaryComponent implements OnInit {
               element
             ]?.TotOthSrcLossNoRaceHorseSetoff || 0,
         });
-      } else if ('LossRemAftSetOff') {
+      } else if (element === 'LossRemAftSetOff') {
         arrayToBeReturned.push({
           headOfIncome: element,
           HP:
