@@ -229,7 +229,14 @@ export class ItrAssignedUsersComponent implements OnInit {
             this.utilsService.showSnackBar(error.error.detail);
             return;
           });
-          let objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+
+          let objITR
+          if (this.rowData.serviceType === 'ITRU') {
+            objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, "2022-2023");
+            objITR.isITRU = true;
+          }else{
+            objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
+          }
           objITR.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
           console.log('obj:', objITR);
 
@@ -293,7 +300,11 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   checkFilerAssignment(data: any) {
     // https://uat-api.taxbuddy.com/user/check-filer-assignment?userId=16387&assessmentYear=2023-2024&serviceType=ITR
-    let param = `/check-filer-assignment?userId=${data.userId}`;
+    let serviceType='';
+    if(data.serviceType === 'ITRU'){
+      serviceType = `&serviceType=ITRU`
+    }
+    let param = `/check-filer-assignment?userId=${data.userId}${serviceType}`;
     this.userMsService.getMethod(param).subscribe(
       (response: any) => {
         this.loading = false;
@@ -346,13 +357,33 @@ export class ItrAssignedUsersComponent implements OnInit {
         response.data.content.forEach((item: any) => {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
-          if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR' || smeSelectedPlan.servicesType === 'ITRU')) {
-            itrSubscriptionFound = true;
-            return;
-          } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITR' || userSelectedPlan.servicesType === 'ITRU')) {
-            itrSubscriptionFound = true;
-            return;
+          let item1 = item?.item;
+          console.log(data.serviceType )
+          if(data.serviceType === 'ITR'){
+            if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR')) {
+              itrSubscriptionFound = true;
+              return;
+            } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITR')) {
+              itrSubscriptionFound = true;
+              return;
+            }
           }
+
+          if(data.serviceType === 'ITRU'){
+            if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2022-2023" || item1.financialYear === "2022-23")))) {
+              itrSubscriptionFound = true;
+              return;
+            } else if (userSelectedPlan && (userSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2022-2023" || item1.financialYear === "2022-23")))) {
+              itrSubscriptionFound = true;
+              return;
+            }
+            // if (item1.service === 'ITRU' && (item1.financialYear === "2022-2023" || item1.financialYear === "2022-23") ) {
+            //   itrSubscriptionFound = true;
+            //   return;
+            // }
+          }
+
+
         });
         if (itrSubscriptionFound) {
           this.startFiling(data);
@@ -888,7 +919,8 @@ export class ItrAssignedUsersComponent implements OnInit {
         sortable: true,
         pinned: 'right',
         cellRenderer: function (params: any) {
-          if (params.data.serviceType === 'ITR') {
+          if (params.data.serviceType === 'ITR' || params.data.serviceType === 'ITRU') {
+            const isITRU = params.data.serviceType === 'ITRU';
             console.log(params.data.itrObjectStatus, params.data.openItrId, params.data.lastFiledItrId);
             if (params.data.itrObjectStatus === 'CREATE') { // From open till Document uploaded)
               return `<button type="button" class="action_icon add_button" data-action-type="yetToStart" style="padding: 0px 10px;  border-radius: 40px;
@@ -902,7 +934,7 @@ export class ItrAssignedUsersComponent implements OnInit {
               </button>`;
             } else if (params.data.itrObjectStatus === 'ITR_FILED') { // ITR filed
               return `<button type="button" class="action_icon add_button" data-action-type="startRevise" title="ITR filed successfully / Click to start revise return" style="padding: 0px 18px;  border-radius: 40px;
-              cursor:pointer; background-color:#D3FBDA; color:#43A352;">
+              cursor:pointer; background-color:#D3FBDA; color:#43A352;" ${isITRU ? 'disabled' : ''} >
               <i class="fa fa-check" aria-hidden="true" data-action-type="startRevise"></i>
             </button>`;
             } else {

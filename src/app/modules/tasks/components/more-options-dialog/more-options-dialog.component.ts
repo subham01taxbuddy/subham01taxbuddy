@@ -31,7 +31,7 @@ import { ToastMessageService } from 'src/app/services/toast-message.service';
 })
 export class MoreOptionsDialogComponent implements OnInit {
   showDetails = '';
-  services = ['ITR', 'TPA', 'NOTICE', 'GST'];
+  services = ['ITR', 'ITRU', 'TPA', 'NOTICE', 'GST'];
   selectedService = '';
   optedServicesData = [];
   loading = false;
@@ -323,7 +323,11 @@ export class MoreOptionsDialogComponent implements OnInit {
   checkFilerAssignment(action) {
     // https://uat-api.taxbuddy.com/user/check-filer-assignment?userId=16387&assessmentYear=2023-2024&serviceType=ITR
     let hasFilerAssignment = false;
-    let param = `/check-filer-assignment?userId=${this.data.userId}`
+    let serviceType='';
+    if(this.data.serviceType === 'ITRU'){
+      serviceType = `&serviceType=ITRU`
+    }
+    let param = `/check-filer-assignment?userId=${this.data.userId}${serviceType}`
     this.userMsService.getMethod(param).subscribe((response: any) => {
       this.loading = false;
       if (response.success) {

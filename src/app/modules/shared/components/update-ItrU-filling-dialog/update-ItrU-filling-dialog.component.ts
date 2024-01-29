@@ -141,7 +141,8 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
         itrType: `${itrType}`,
         itrTokenNumber: '',
         "filingTeamMemberId": this.data.callerAgentUserId,
-        filingSource: "MANUALLY"
+        filingSource: "MANUALLY",
+        "isITRU" : true
       }
       console.log('Updated Data:', req)
       const param = `${ApiEndpoints.itrMs.itrManuallyData}`

@@ -29,6 +29,10 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
       value: 'ITR',
     },
     {
+      label: 'ITR-U',
+      value: 'ITRU',
+    },
+    {
       label: 'GST',
       value: 'GST',
     },

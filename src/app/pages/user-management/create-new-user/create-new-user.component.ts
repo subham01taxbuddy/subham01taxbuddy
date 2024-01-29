@@ -23,6 +23,7 @@ export class CreateNewUserComponent implements OnInit {
   signUpForm!: FormGroup;
   services = [
     { key: 'ITR', value: 'ITR', isHide: false },
+    { key: 'ITR-U', value: 'ITRU', isHide: false },
     { key: 'GST', value: 'GST', isHide: false },
     { key: 'TPA', value: 'TPA', isHide: false },
     { key: 'NOTICE', value: 'NOTICE', isHide: false },
@@ -89,6 +90,8 @@ export class CreateNewUserComponent implements OnInit {
     if (this.loggedInUserRoles.includes('ROLE_LEADER') || this.loggedInUserRoles.includes('ROLE_FILER')) {
       this.services.forEach(item => {
         if (item.value === 'ITR' && this.loggedInSme[0].serviceEligibility_ITR)
+          item.isHide = true;
+        if (item.value === 'ITRU' && this.loggedInSme[0].serviceEligibility_ITR)
           item.isHide = true;
         if (item.value === 'TPA' && this.loggedInSme[0].serviceEligibility_TPA)
           item.isHide = true;
@@ -212,6 +215,8 @@ export class CreateNewUserComponent implements OnInit {
       this.services.forEach(item => {
         this.signUpForm.controls['serviceType'].setValue(null);
         if (item.value === 'ITR' && this.smeInfo[0].serviceEligibility_ITR)
+          item.isHide = true;
+        if (item.value === 'ITRU' && this.smeInfo[0].serviceEligibility_ITR)
           item.isHide = true;
         if (item.value === 'TPA' && this.smeInfo[0].serviceEligibility_TPA)
           item.isHide = true;
@@ -353,6 +358,9 @@ export class CreateNewUserComponent implements OnInit {
     let newServices = [];
     if (this.smeInfo[0].serviceEligibility_ITR) {
       newServices.push('ITR');
+    }
+    if (this.smeInfo[0].serviceEligibility_ITR) {
+      newServices.push('ITRU');
     }
     if (this.smeInfo[0].serviceEligibility_TPA) {
       newServices.push('TPA');
