@@ -1,0 +1,164 @@
+@import "../../../../../ux/scss/style.scss";
+.header_content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  gap: 8px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  padding: 8px 24px;
+  flex-grow: 1;
+  background-color: #e7e7e7;
+  border-radius: 4px 4px 0px 0px;
+}
+
+hr {
+    height: 0.5px!important;
+}
+
+.frameC {
+   padding: 0px 25px 0px 25px;
+}
+
+.table-responsive{
+  height:400px;
+  overflow: scroll;
+}
+
+.table th {
+  border: 1px solid #dfdfdf!important;
+  padding:10px!important;
+}
+
+.table td {
+  border: 1px solid #dfdfdf!important;
+  padding:8px!important;
+}
+
+.fa-pencil {
+    color:#04a4bc!important;
+}
+
+.table :where(th, td) {
+  white-space: normal!important;
+}
+
+.mat-form-field {
+  width: 165px !important;  
+}
+
+.txCen {
+  text-align: center;
+}
+
+mat-checkbox {
+  margin: 0 auto;
+  width: 20%;
+  display: block;
+}
+
+.midChck{
+  margin:0 auto;
+}
+
+.colrOut {
+    background-color: #f9f9f9!important;
+}
+
+
+.wrap-content {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  background-color: #ffffff;
+  border-radius: 0px 0px 8px 8px;
+
+  img {
+    position: relative;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.wrapper {
+  display: flex;
+  align-items: flex-start;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  flex-direction: column;
+  padding: 24px;
+  position: relative;
+}
+
+.space {
+  background-color: #ffffff;
+  border-radius: 0px 0px 8px 8px;
+  padding: 20px;
+  border: 1px solid #E2E4E5;
+  border-top: 0;
+}
+
+.frameC {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  align-items: flex-start;
+  position: relative;
+}
+
+.div-5 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  padding: 24px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  background-color: #ffffff;
+  border-radius: 0px 0px 4px 4px;
+}
+.div-6 {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.frame-wrapper-3 {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 12px;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+#small-note{
+    font-weight: 500;
+    font-size: 14px;
+}
+
+p {
+    margin-bottom: 2px !important;
+}
+
+.page-wrapper{
+    font-size: 15px!important;
+}
+
+.gray_box {
+    background-color:#ffffff!important;
+    border: 1px solid #d9cdcd!important;
+}

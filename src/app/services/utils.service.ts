@@ -736,6 +736,9 @@ export class UtilsService {
         quarter5: 0,
         total: 0,
       }],
+
+      scheduleESOP: null,
+
     };
 
     return ITR_JSON;

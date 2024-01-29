@@ -143,6 +143,30 @@ export interface ITR_JSON {
   };
 
   winningsUS115BB: WinningUS115BB[];
+  scheduleESOP: ScheduleESOP;
+
+}
+
+export interface ScheduleESOP {
+  scheduleESOPDetails: ScheduleESOPDetail[];
+  totalTaxAttributedAmount: number;
+}
+
+export interface ScheduleESOPDetail {
+	assessmentYear: string;
+	taxDeferredBFEarlierAY: string;
+	securityType: string;
+	ceasedEmployee: string;
+	dateOfCeasing: number;
+	scheduleESOPEventDetails: ScheduleESOPEventDetail[];
+	totalTaxAttributedAmount: number;
+	taxPayableCurrentAY: number;
+	balanceTaxCF: number;
+}
+
+export interface ScheduleESOPEventDetail {
+  dateOfSale: string;
+  taxAttributedAmount: number;
 }
 
 export interface WinningUS115BB {
