@@ -5,7 +5,7 @@ import {
   ElementRef,
   ViewChild, Input, OnChanges, SimpleChanges, Output, EventEmitter,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   Employer,
@@ -379,7 +379,7 @@ export class BifurcationComponent implements OnInit, OnChanges {
     });
   }
 
-  formValuesChanged(prevKey, event?){
+  formValuesChanged(prevKey, index, event?){
     if(event) {
       let type = 'salary';
       if (this.typeIndex === 0) {
@@ -390,10 +390,24 @@ export class BifurcationComponent implements OnInit, OnChanges {
         type = 'profitsInLieu';
       }
       let value = (this.bifurcationFormGroup.controls[type] as FormGroup).controls[prevKey].value;
-      (this.bifurcationFormGroup.controls[type] as FormGroup).removeControl(prevKey);
       let control = this.fb.control('');
       control.setValue(value);
-      (this.bifurcationFormGroup.controls[type] as FormGroup).addControl(event.value, control);
+
+      let entries = Object.entries((this.bifurcationFormGroup.controls[type] as FormGroup).value);
+      let salaryForm = this.getControls as FormGroup;
+      salaryForm = this.fb.group({});
+      for(let i=0; i<index; i++){
+        let ctrl = this.fb.control('');
+        ctrl.setValue(entries[0][1]);
+        salaryForm.addControl(entries[i][0], ctrl);
+      }
+      // (this.bifurcationFormGroup.controls[type] as FormGroup).removeControl(prevKey);
+      salaryForm.addControl(event.value, control);
+      for(let i=index+1; i<index; entries.length){
+        let ctrl = this.fb.control('');
+        ctrl.setValue(entries[0][1]);
+        salaryForm.addControl(entries[i][0], ctrl);
+      }
     }
 
     if(this.valid()) {
@@ -599,7 +613,7 @@ export class BifurcationComponent implements OnInit, OnChanges {
     sessionStorage.setItem('localEmployer', JSON.stringify(this.localEmployer));
   }
 
-  deleteItem(index){
+  deleteItem(key){
     let type = 'salary';
     if (this.typeIndex === 0) {
       type = 'salary';
@@ -608,8 +622,8 @@ export class BifurcationComponent implements OnInit, OnChanges {
     } else if(this.typeIndex === 2){
       type = 'profitsInLieu';
     }
-    let key = Object.keys((this.bifurcationFormGroup.controls[type] as FormGroup).controls)[index];
     (this.bifurcationFormGroup.controls[type] as FormGroup).removeControl(key);
+    this.bifurcationFormGroup.updateValueAndValidity();
   }
 
   addItem(){
@@ -690,6 +704,8 @@ export class BifurcationComponent implements OnInit, OnChanges {
       return this.bifurcationFormGroup.get('salary') as FormGroup;
     }
   }
+
+  unsorted(a: any, b: any): number { return 0; }
 
   getTitle() {
     if(this.typeIndex === 2){
