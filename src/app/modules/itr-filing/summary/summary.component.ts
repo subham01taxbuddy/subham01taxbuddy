@@ -1657,7 +1657,11 @@ export class SummaryComponent implements OnInit {
                 },
               ],
               lossSetOffDuringYear: 0,
-              cflTotal: 0,
+              cflTotal: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+              ?.LossesOfCurrentYearCarriedFwd
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.LossesOfCurrentYearCarriedFwd
+            : 0
             },
             scheduleCflDetails: {
               LossCFFromPrev12thYearFromAY: {
@@ -3676,7 +3680,11 @@ export class SummaryComponent implements OnInit {
                 },
               ],
               lossSetOffDuringYear: 0,
-              cflTotal: 0,
+              cflTotal: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+              ?.LossesOfCurrentYearCarriedFwd
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.LossesOfCurrentYearCarriedFwd
+            : 0
             },
 
             ScheduleBFLA:
