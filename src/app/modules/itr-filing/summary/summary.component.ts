@@ -1657,7 +1657,11 @@ export class SummaryComponent implements OnInit {
                 },
               ],
               lossSetOffDuringYear: 0,
-              cflTotal: 0,
+              cflTotal: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+              ?.LossesOfCurrentYearCarriedFwd
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.LossesOfCurrentYearCarriedFwd
+            : 0
             },
             scheduleCflDetails: {
               LossCFFromPrev12thYearFromAY: {
@@ -1793,7 +1797,11 @@ export class SummaryComponent implements OnInit {
                 totalLossCFOthSrcLossRaceHorseCF: 0,
                 totalLossCFSpeculativeBus: 0,
               },
-              TotalOfAllLossCFSummary: 0,
+              TotalOfAllLossCFSummary: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+              ?.LossesOfCurrentYearCarriedFwd
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.LossesOfCurrentYearCarriedFwd
+            : 0,
             },
             totalTax: {
               taxAtNormalRate:
@@ -3676,7 +3684,11 @@ export class SummaryComponent implements OnInit {
                 },
               ],
               lossSetOffDuringYear: 0,
-              cflTotal: 0,
+              cflTotal: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+              ?.LossesOfCurrentYearCarriedFwd
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.LossesOfCurrentYearCarriedFwd
+            : 0
             },
 
             ScheduleBFLA:
@@ -4190,23 +4202,11 @@ export class SummaryComponent implements OnInit {
                     ?.TotalLossCFSummary?.LossSummaryDetail?.LossFrmSpecBusCF,
               },
               TotalOfAllLossCFSummary:
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                  ?.TotalLossCFSummary?.LossSummaryDetail?.TotalHPPTILossCF +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                  ?.TotalLossCFSummary?.LossSummaryDetail
-                  ?.BusLossOthThanSpecLossCF +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                  ?.TotalLossCFSummary?.LossSummaryDetail
-                  ?.LossFrmSpecifiedBusCF +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                  ?.TotalLossCFSummary?.LossSummaryDetail?.TotalSTCGPTILossCF +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                  ?.TotalLossCFSummary?.LossSummaryDetail?.TotalLTCGPTILossCF +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                  ?.TotalLossCFSummary?.LossSummaryDetail
-                  ?.OthSrcLossRaceHorseCF +
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.ScheduleCFL
-                  ?.TotalLossCFSummary?.LossSummaryDetail?.LossFrmSpecBusCF,
+              this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+              ?.LossesOfCurrentYearCarriedFwd
+            ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB-TI']
+                ?.LossesOfCurrentYearCarriedFwd
+            : 0
             },
             totalTax: {
               taxAtNormalRate:
