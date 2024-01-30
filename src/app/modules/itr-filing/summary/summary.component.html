@@ -194,7 +194,7 @@
         </div>
 
         <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">
-          <div *ngIf="finalCalculations?.amountPayable > 0">
+          <div *ngIf="!isITRU && finalCalculations?.amountPayable > 0">
             <div class="incBx">
               <span class="inTex">Income Tax Payable:</span><br /><br />
               <span class="inNo"
@@ -1177,7 +1177,7 @@
                             }}
                           </td>
                         </tr>
-                        <tr
+                        <!-- <tr
                           *ngIf="
                             finalCalculations?.businessIncome
                               ?.businessIncomeDetails?.nonSpecIncomePl
@@ -1192,7 +1192,7 @@
                               )
                             }}
                           </td>
-                        </tr>
+                        </tr> -->
 
                         <!-- speculative Income  -->
 
@@ -7563,6 +7563,34 @@
                     </mat-expansion-panel-header>
                   </mat-expansion-panel>
 
+          <!-- *********************** Refund claimed on the basis of last valid return  ************************* -->
+
+                <mat-expansion-panel *ngIf="isITRU"
+                  class="color-panel accordion-border"
+                  [disabled]="true"
+                >
+                  <mat-expansion-panel-header>
+                    <div
+                      class="font80"
+                      style="width: 100%"
+                      cellpadding="0"
+                      cellspacing="0"
+                    >
+                      <div class="nav nav-stacked">
+                        <div class="counter col-lg-8 col-md-8 col-sm-8 whieTx">
+                          Refund claimed on the basis of last valid return
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                          <label class="rtNumb">
+                            <i class="material-icons icRup">&#8377;</i
+                            >&nbsp;{{finalCalculations?.refund
+                            }}</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </mat-expansion-panel-header>
+                </mat-expansion-panel>
                   
                   <!-- *********************** Additional income-tax liability on updated income  ************************* -->
                   <mat-expansion-panel *ngIf="isITRU"

@@ -852,6 +852,7 @@ export class SummaryComponent implements OnInit {
         clauseiv7provisio139iAmount: any;
       }
     ];
+    refund: number;
     additionalIncomeTax: number;
     netIncomeTaxLiability: number;
     taxesPaidUS140B: number;
@@ -2353,9 +2354,13 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
                   ?.TaxesPaid?.TotalTaxesPaid,
             },
-            amountPayable: this.isITRU ? 0:
+            amountPayable: 
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.TaxPaid
                 ?.BalTaxPayable,
+
+            refund: this.isITRU ? 
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                  ?.TotRefund : 0,
 
             additionalIncomeTax: this.isITRU ? 
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
@@ -4224,7 +4229,7 @@ export class SummaryComponent implements OnInit {
                   ?.ComputationOfTaxLiability?.Rebate87A
                 : this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                   ?.ComputationOfTaxLiability?.TaxPayableOnTI
-                  ?.RebateOnAgriInc,
+                  ?.Rebate87A,
 
             taxAfterRebate:
               this.itrType === 'ITR2'
@@ -4552,9 +4557,15 @@ export class SummaryComponent implements OnInit {
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB_TTI']
                   ?.TaxPaid?.TaxesPaid?.TotalTaxesPaid,
             },
-            amountPayable:this.isITRU ? 0:
+            amountPayable:
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.TaxPaid?.BalTaxPayable,
+
+            refund: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            ?.FilingStatus?.ReturnFileSec === 21 || this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
+            ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 21 ? 
+                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                  ?.TotRefund : 0,
 
             additionalIncomeTax: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
             ?.FilingStatus?.ReturnFileSec === 21 || this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
@@ -6438,7 +6449,7 @@ export class SummaryComponent implements OnInit {
               },
               amountPayable:
                 this.finalSummary?.assessment?.taxSummary?.taxpayable,
-              
+              refund:0,
               additionalIncomeTax: 0,
               netIncomeTaxLiability : 0,
               taxesPaidUS140B: 0,

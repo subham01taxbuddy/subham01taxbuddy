@@ -1009,6 +1009,20 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
           if(this.isITRU){
             this.particularsArray.push({
+              label: 'Refund claimed on the basis of last valid return',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                  ?.TotRefund
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                ?.TotRefund
+                : 0,
+            },);
+
+            this.particularsArray.push({
               label: 'Additional income-tax liability on updated income(25% or 50% of Tax Payable less late fees u/s 234F)',
               old:
                 this.ITR_JSON.regime === 'OLD'
@@ -1463,6 +1477,20 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
           ];
 
           if(this.isITRU){
+            this.particularsArray.push({
+              label: 'Refund claimed on the basis of last valid return',
+              old:
+                this.ITR_JSON.regime === 'OLD'
+                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                  ?.TotRefund
+                  : 0,
+              new:
+                this.ITR_JSON.regime === 'NEW'
+                ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                ?.TotRefund
+                : 0,
+            },);
+            
             this.particularsArray.push({
               label: 'Additional income-tax liability on updated income(25% or 50% of Tax Payable less late fees u/s 234F)',
               old:
