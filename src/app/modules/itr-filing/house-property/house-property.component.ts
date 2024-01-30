@@ -614,9 +614,7 @@ export class HousePropertyComponent implements OnInit {
     let housePropertyForm = this.housePropertyForm.controls;
     if (itrJsonHp?.eligible80EEAAmount > 0) {
       housePropertyForm['interestAmount'].setValue(
-        itrJsonHp?.loans[0]?.interestAmount +
-        itrJsonHp?.eligible80EEAAmount || 0
-      );
+        itrJsonHp?.loans[0]?.interestAmount);
       housePropertyForm['interest24bAmount'].setValue(
         itrJsonHp?.loans[0]?.interestAmount
       );
@@ -624,9 +622,7 @@ export class HousePropertyComponent implements OnInit {
       housePropertyForm['eligible80EEAAmount']?.setValue(itrJsonHp?.eligible80EEAAmount);
     } else if (itrJsonHp?.eligible80EEAmount > 0) {
       housePropertyForm['interestAmount'].setValue(
-        itrJsonHp?.loans[0]?.interestAmount +
-        itrJsonHp?.eligible80EEAmount || 0
-      );
+        itrJsonHp?.loans[0]?.interestAmount);
       housePropertyForm['interest24bAmount'].setValue(
         itrJsonHp?.loans[0]?.interestAmount
       );
