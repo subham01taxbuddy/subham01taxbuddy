@@ -194,7 +194,7 @@
         </div>
 
         <div class="card__col-xs-12 card__col-sm-4 card__col-md-4">
-          <div *ngIf="finalCalculations?.amountPayable > 0">
+          <div *ngIf="!isITRU && finalCalculations?.amountPayable > 0">
             <div class="incBx">
               <span class="inTex">Income Tax Payable:</span><br /><br />
               <span class="inNo"
@@ -1088,10 +1088,7 @@
                                     finalCalculations?.businessIncome
                                       ?.businessIncomeTotal === 0
                                     ? finalCalculations?.businessIncome
-                                        ?.businessIncomeTotal +
-                                        finalCalculations?.businessIncome
-                                          ?.businessIncomeDetails
-                                          ?.totalCryptoIncome
+                                        ?.businessIncomeTotal
                                     : 0
                                 )
                               }}</label
@@ -1180,7 +1177,7 @@
                             }}
                           </td>
                         </tr>
-                        <tr
+                        <!-- <tr
                           *ngIf="
                             finalCalculations?.businessIncome
                               ?.businessIncomeDetails?.nonSpecIncomePl
@@ -1195,7 +1192,7 @@
                               )
                             }}
                           </td>
-                        </tr>
+                        </tr> -->
 
                         <!-- speculative Income  -->
 
@@ -2027,9 +2024,7 @@
                               >&nbsp;{{
                                 utilsService.currencyFormatter(
                                   finalCalculations?.capitalGain
-                                    ?.totalCapitalGain -
-                                    finalCalculations?.businessIncome
-                                      ?.businessIncomeDetails?.totalCryptoIncome
+                                    ?.totalCapitalGain
                                 )
                               }}</label
                             >
@@ -7568,6 +7563,34 @@
                     </mat-expansion-panel-header>
                   </mat-expansion-panel>
 
+          <!-- *********************** Refund claimed/Tax payable on the basis of last valid return  ************************* -->
+
+                <mat-expansion-panel *ngIf="isITRU"
+                  class="color-panel accordion-border"
+                  [disabled]="true"
+                >
+                  <mat-expansion-panel-header>
+                    <div
+                      class="font80"
+                      style="width: 100%"
+                      cellpadding="0"
+                      cellspacing="0"
+                    >
+                      <div class="nav nav-stacked">
+                        <div class="counter col-lg-8 col-md-8 col-sm-8 whieTx">
+                          Refund claimed/Tax payable on the basis of last valid return
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                          <label class="rtNumb">
+                            <i class="material-icons icRup">&#8377;</i
+                            >&nbsp;{{finalCalculations?.refund
+                            }}</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </mat-expansion-panel-header>
+                </mat-expansion-panel>
                   
                   <!-- *********************** Additional income-tax liability on updated income  ************************* -->
                   <mat-expansion-panel *ngIf="isITRU"
@@ -7583,7 +7606,7 @@
                       >
                         <div class="nav nav-stacked">
                           <div class="counter col-lg-8 col-md-8 col-sm-8 whieTx">
-                            Additional income-tax liability on updated income
+                            Additional income-tax liability on updated income(25% or 50% of Tax Payable less late fees u/s 234F)
                           </div>
                           <div class="col-lg-4 col-md-4 col-sm-4">
                             <label class="rtNumb">
