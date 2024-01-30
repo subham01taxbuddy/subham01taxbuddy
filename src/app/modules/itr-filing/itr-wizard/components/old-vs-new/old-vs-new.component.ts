@@ -1009,16 +1009,22 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
           if(this.isITRU){
             this.particularsArray.push({
-              label: 'Refund claimed on the basis of last valid return',
+              label: 'Refund claimed/Tax payable on the basis of last valid return',
               old:
                 this.ITR_JSON.regime === 'OLD'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
-                  ?.TotRefund
+                  ? (this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                  ?.TotRefund > 0 ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                  ?.TotRefund : (this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                  ?.LastAmtPayable > 0 ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                  ?.LastAmtPayable : 0))
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
-                ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
-                ?.TotRefund
+                ? (this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                ?.TotRefund > 0 ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                ?.TotRefund : (this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                ?.LastAmtPayable > 0 ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                ?.LastAmtPayable : 0))
                 : 0,
             },);
 
@@ -1478,16 +1484,22 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
 
           if(this.isITRU){
             this.particularsArray.push({
-              label: 'Refund claimed on the basis of last valid return',
+              label: 'Refund claimed/Tax payable on the basis of last valid return',
               old:
                 this.ITR_JSON.regime === 'OLD'
-                  ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
-                  ?.TotRefund
+                  ? (this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                  ?.TotRefund > 0 ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                  ?.TotRefund : (this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                  ?.LastAmtPayable > 0 ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                  ?.LastAmtPayable : 0))
                   : 0,
               new:
                 this.ITR_JSON.regime === 'NEW'
-                ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
-                ?.TotRefund
+                ? (this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                ?.TotRefund > 0 ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                ?.TotRefund : (this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                ?.LastAmtPayable > 0 ? this.ITR_JSON.itrSummaryJson['ITR'][itrType]?.['PartB-ATI']
+                ?.LastAmtPayable : 0))
                 : 0,
             },);
             

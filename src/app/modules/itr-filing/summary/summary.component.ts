@@ -2359,8 +2359,12 @@ export class SummaryComponent implements OnInit {
                 ?.BalTaxPayable,
 
             refund: this.isITRU ? 
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
-                  ?.TotRefund : 0,
+                (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                ?.TotRefund > 0 ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                ?.TotRefund : (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                ?.LastAmtPayable > 0 ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                ?.LastAmtPayable : 0))
+                : 0,
 
             additionalIncomeTax: this.isITRU ? 
                 this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
@@ -4561,11 +4565,13 @@ export class SummaryComponent implements OnInit {
               this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]['PartB_TTI']
                 ?.TaxPaid?.BalTaxPayable,
 
-            refund: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            ?.FilingStatus?.ReturnFileSec === 21 || this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
-            ?.PartA_GEN1?.FilingStatus?.ReturnFileSec === 21 ? 
-                this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
-                  ?.TotRefund : 0,
+                refund: this.isITRU ? 
+                (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                ?.TotRefund > 0 ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                ?.TotRefund : (this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                ?.LastAmtPayable > 0 ? this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]?.['PartB-ATI']
+                ?.LastAmtPayable : 0))
+                : 0,
 
             additionalIncomeTax: this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
             ?.FilingStatus?.ReturnFileSec === 21 || this.ITR_JSON.itrSummaryJson['ITR'][this.itrType]
