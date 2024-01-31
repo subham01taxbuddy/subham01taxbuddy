@@ -214,12 +214,12 @@ export class ItrWizardComponent implements OnInit {
             state: { validationErrors: errorMapping },
           });
         }
-      if (this.validationErrors?.length > 0) {
+      if (result.data.errors.length > 0) {
         this.breadcrumb = null;
         this.showIncomeSources = false;
         this.selectedSchedule = 'Validation Errors';
         this.router.navigate(['/itr-filing/itr/validation-errors'], {
-          state: { validationErrors: this.validationErrors },
+          state: { validationErrors: result.data.errors },
         });
       } else {
         if(!this.ITR_JSON.systemFlags.hasAgricultureIncome){
@@ -243,12 +243,14 @@ export class ItrWizardComponent implements OnInit {
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_JSON)
         );
+
+        this.breadcrumb = null;
+        this.showIncomeSources = false;
+        this.selectedSchedule = 'Comparison of New v/s Old Regime';
+        this.router.navigate(['/itr-filing/itr/old-vs-new']);
       }
 
-      this.breadcrumb = null;
-      this.showIncomeSources = false;
-      this.selectedSchedule = 'Comparison of New v/s Old Regime';
-      this.router.navigate(['/itr-filing/itr/old-vs-new']);
+      
       // }
     });
 
