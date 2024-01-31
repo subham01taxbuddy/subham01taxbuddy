@@ -641,6 +641,7 @@ export class HousePropertyComponent implements OnInit {
       housePropertyForm['eligible80EEAAmount']?.setValue(0);
       housePropertyForm['eligible80EEAmount']?.setValue(0);
     }
+    this.calculateInterestOrDeduction();
   }
 
   editHouseProperty(index) {
