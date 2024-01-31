@@ -509,6 +509,9 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 150,
         editable: false,
         suppressMovable: true,
+        cellStyle: {
+          textAlign: 'center',
+        },
         cellRenderer: function(params) {
           const saleValue = params.value;
           const formattedValue = `₹${saleValue}`;
@@ -539,6 +542,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         //     ? params.data.costOfImprovement
         //     : '';
         // },
+        cellStyle: { textAlign: 'center' },
         cellRenderer: (params) => {
           const costOfImprovement = params.data.costOfImprovement;
           const formattedValue = costOfImprovement ? `₹${costOfImprovement}` : '';
@@ -551,6 +555,7 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
         width: 150,
         editable: false,
         suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
         cellRenderer: (params) => {
           return params.data.sellDate
             ? new Date(params.data.sellDate).toLocaleDateString('en-IN')
@@ -598,14 +603,17 @@ export class OtherAssetsComponent extends WizardNavigation implements OnInit {
       {
         headerName: 'Type of Gain',
         field: 'gainType',
-        width: 100,
+        width: 150,
         editable: false,
+        cellStyle: {
+          textAlign: 'center',
+        },
         suppressMovable: true,
         valueGetter: function nameFromCode(params) {
           return params.data.gainType === 'LONG' ? 'Long Term' : 'Short Term';
         },
         cellRenderer: function (params: any) {
-          const gainType = params.data;
+          const gainType = params.data.gainType;
           if(gainType === 'LONG'){
             return `<button class="gain-chip"  style="padding: 0px 30px;  border-radius: 40px;
              background-color:rgba(214, 162, 67, 0.12); color: #D6A243; cursor:auto;">

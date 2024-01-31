@@ -1526,7 +1526,7 @@ export class SharesAndEquityComponent
       {
         headerName: 'Buy Value with Indexation',
         field: 'purchaseCost',
-        width: 150,
+        width: 200,
         cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return self.bondType === 'unlisted' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfAcquisition'].value :
@@ -1541,7 +1541,7 @@ export class SharesAndEquityComponent
       {
         headerName: 'Indexed Cost of Improvement',
         field: 'costOfImprovement',
-        width: 150,
+        width: 220,
         cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return self.bondType === 'unlisted' && params.data.controls['improvementsArray'].value.costOfImprovement ?
