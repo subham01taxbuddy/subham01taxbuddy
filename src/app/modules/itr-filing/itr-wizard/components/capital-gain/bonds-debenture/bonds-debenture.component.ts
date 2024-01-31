@@ -447,7 +447,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       {
         headerName: 'Buy Value with Indexation',
         field: 'purchaseCost',
-        width: 150,
+        width: 200,
         cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfAcquisition'].value :
@@ -461,7 +461,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       {
         headerName: 'Cost of Improvement',
         field: 'costOfImprovement',
-        width: 150,
+        width: 180,
         cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfImprovement'].value :
