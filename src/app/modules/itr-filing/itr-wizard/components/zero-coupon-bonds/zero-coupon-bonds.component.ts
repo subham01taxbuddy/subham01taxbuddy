@@ -504,6 +504,19 @@ export class ZeroCouponBondsComponent
         }
       },
       {
+        headerName: 'Cost of Improvement',
+        field: 'costOfImprovement',
+        // width: 150,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['costOfImprovement'].value;
+        },
+        valueFormatter: function (params) {
+          const costOfImprovement = params.data.controls['costOfImprovement'].value;
+          return `₹ ${costOfImprovement}`;
+        }
+      },
+      {
         headerName: 'Expenses',
         field: 'sellExpense',
         width: 150,
