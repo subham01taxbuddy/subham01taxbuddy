@@ -689,7 +689,7 @@ export class UtilsService {
       isITRU :false,
       itrSummaryJson: null,
       isItrSummaryJsonEdited: false,
-      liableSection44AAflag: 'N',
+      liableSection44AAflag: 'Y',
       incomeDeclaredUsFlag: 'N',
       totalSalesExceedOneCr: null,
       aggregateOfAllAmountsReceivedFlag: null,

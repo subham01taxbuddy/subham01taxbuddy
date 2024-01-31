@@ -205,21 +205,14 @@ export class ItrWizardComponent implements OnInit {
     this.itrMsService.getMethod(`/validate/${this.ITR_JSON.itrId}`).subscribe((result:any)=>{
       console.log(result);
       // if(result.success){
-        if (result.data.errors.length > 0) {
-          let errorMapping = this.itrValidationService.getItrValidationErrorMappring(result.data.errors);
-          this.breadcrumb = null;
-          this.showIncomeSources = false;
-          this.selectedSchedule = 'Validation Errors';
-          this.router.navigate(['/itr-filing/itr/validation-errors'], {
-            state: { validationErrors: errorMapping },
-          });
-        }
+ 
       if (result.data.errors.length > 0) {
+        let errorMapping = this.itrValidationService.getItrValidationErrorMappring(result.data.errors);
         this.breadcrumb = null;
         this.showIncomeSources = false;
         this.selectedSchedule = 'Validation Errors';
         this.router.navigate(['/itr-filing/itr/validation-errors'], {
-          state: { validationErrors: result.data.errors },
+          state: { validationErrors: errorMapping },
         });
       } else {
         if(!this.ITR_JSON.systemFlags.hasAgricultureIncome){

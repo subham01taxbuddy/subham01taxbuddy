@@ -672,6 +672,11 @@ export const ErrorMsgsSchedule = {
     code: 'PAN_NOT_FOUND',
     message: '1(193) Return which is getting filed should be as per role CD of the PAN',
     relatedSchedule: 'personalInfo',
+  },
+  BS_DIFF_NEEDS_ZERO_OR_MAKE_44AA_FLAG_NO: {
+    code: 'BS_DIFF_NEEDS_ZERO_OR_MAKE_44AA_FLAG_NO',
+    message: 'In case of ITR 3 balance sheet difference needs to be zero or select BOA as "No"',
+    relatedSchedule: 'balanceSheet',
   }
 };
 export interface Schedules {

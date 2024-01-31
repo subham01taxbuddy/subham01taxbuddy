@@ -2306,7 +2306,7 @@ export class PersonalInformationComponent implements OnInit {
           }),
         ]),
       }),
-      liableSection44AAflag: 'N',
+      liableSection44AAflag: 'Y',
       incomeDeclaredUsFlag: 'N',
       totalSalesExceedOneCr: null,
       aggregateOfAllAmountsReceivedFlag: null,
@@ -2627,7 +2627,7 @@ export class PersonalInformationComponent implements OnInit {
         this.ITR_JSON.liableSection44AAflag
       );
     } else {
-      this.customerProfileForm.controls['liableSection44AAflag'].setValue('N');
+      this.customerProfileForm.controls['liableSection44AAflag'].setValue('Y');
     }
 
     this.customerProfileForm.controls['incomeDeclaredUsFlag'].setValue(
