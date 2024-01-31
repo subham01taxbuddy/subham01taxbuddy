@@ -146,6 +146,7 @@ export class SourceOfIncomesComponent implements OnInit {
       return false;
     }
   }
+
   arrayContains(array, schedule) {
     return array?.indexOf(this.schedules.getKey(schedule)) > -1;
   }
@@ -155,6 +156,51 @@ export class SourceOfIncomesComponent implements OnInit {
       (item) => item.name === source.name
     )[0];
     clickedSource.selected = !clickedSource.selected;
+
+    if(!clickedSource.selected){
+      //clear data for the income source
+      switch(clickedSource.schedule){
+        case this.schedules.SALARY:
+        {
+          this.ITR_JSON.employers = null;
+          break;
+        }
+        case this.schedules.HOUSE_PROPERTY: 
+        {
+          this.ITR_JSON.houseProperties = null;
+          break;
+        }
+        case this.schedules.BUSINESS_INCOME:
+        {
+          this.ITR_JSON.business = null;
+          break;
+        }
+        case this.schedules.CAPITAL_GAIN:
+        {
+          this.ITR_JSON.capitalGain = null;
+          break;
+        }
+        case this.schedules.SPECULATIVE_INCOME:
+        {
+          this.ITR_JSON.business.profitLossACIncomes = null;
+          break;
+        }
+        case this.schedules.CRYPTO_VDA:
+        {
+          this.ITR_JSON.capitalGain = this.ITR_JSON.capitalGain.filter(item=> item?.assetType !== 'VDA');
+          break;
+        }
+        case this.schedules.FOREIGN_INCOME:
+        {
+          this.ITR_JSON.foreignIncome = null;
+          break;
+        }
+      }
+      sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
+      //show popup
+      this.utilsService.showSnackBar("Data for " + clickedSource.name + " will be deleted");
+    }
+
     let event = {
       schedule: clickedSource,
       sources: this.sourcesList,
