@@ -424,6 +424,7 @@ export class SharesAndEquityComponent
         this.initDetailedForm(this.Copy_ITR_JSON);
       }
       // this.compactView = true;
+      this.utilsService.showSnackBar("Record saved successfully.");
     } else {
       result.hasEdit = false;
       let data;
@@ -467,6 +468,7 @@ export class SharesAndEquityComponent
       );
       if (this.deduction && this.deductionForm.valid) {
         this.calculateDeductionGain();
+        this.utilsService.showSnackBar("Record saved successfully.");
       } else if (!this.deductionForm.valid && this.deduction) {
         this.utilsService.showSnackBar(
             'Please make sure deduction details are entered correctly'
