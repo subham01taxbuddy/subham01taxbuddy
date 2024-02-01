@@ -59,7 +59,7 @@ export class SourceOfIncomesComponent implements OnInit {
           schedule: this.schedules.HOUSE_PROPERTY,
         },
         {
-          name: 'Business / Profession',
+          name: 'B&P Presumptive',
           selected:
             this.ITR_JSON.business != null &&
             this.ITR_JSON.business.presumptiveIncomes?.length > 0
@@ -77,7 +77,7 @@ export class SourceOfIncomesComponent implements OnInit {
           schedule: this.schedules.CAPITAL_GAIN,
         },
         {
-          name: 'P&L',
+          name: 'F&O Business',
           selected:
             this.ITR_JSON.business?.profitLossACIncomes != null &&
             this.ITR_JSON.business?.profitLossACIncomes?.length > 0
