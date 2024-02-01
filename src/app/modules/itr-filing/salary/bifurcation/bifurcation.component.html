@@ -40,7 +40,7 @@
               </div>
               <!-- add button-->
               <div class="col-2" style="padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px;  justify-content: flex-start; align-items: flex-start; gap: 16px; display: flex">
-                <div *ngIf="n !== (getControls.controls | keyvalue).length - 1">
+                <div>
                   <button type="button" (click)="deleteItem(salary.key)"> <i class="fa fa-trash-o delbt"></i> </button>
                 </div>
                 <div *ngIf="n === (getControls.controls | keyvalue).length - 1"
