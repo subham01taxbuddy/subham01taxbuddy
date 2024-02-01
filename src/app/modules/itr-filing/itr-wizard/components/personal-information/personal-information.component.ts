@@ -2675,8 +2675,9 @@ export class PersonalInformationComponent implements OnInit {
 
     if (!isBankSelected) {
       this.utilsService.showSnackBar(
-        'Please select atleast one bank account in which you prefer to get refund'
+        'Please select at least one bank account in which you prefer to get refund'
       );
+      this.openAcc();
       return false;
     }
 
@@ -2705,9 +2706,8 @@ export class PersonalInformationComponent implements OnInit {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
         .first()
         .focus();
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
+      // this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
       this.personalInfoSaved.emit(false);
-      this.openAcc();
       return;
     }
 
@@ -2774,11 +2774,11 @@ export class PersonalInformationComponent implements OnInit {
       if(accordionButton.getAttribute("aria-expanded") === "false")
         accordionButton.click();
     }
-    const accordion = document.getElementById('perDetailsId');
-    if(accordion){
-      if(accordion.getAttribute("aria-expanded") === "false")
-        accordion.click();
-    }
+    // const accordion = document.getElementById('perDetailsId');
+    // if(accordion){
+    //   if(accordion.getAttribute("aria-expanded") === "false")
+    //     accordion.click();
+    // }
   }
 
   async verifyAllBanks() {
