@@ -281,6 +281,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.activeIndex = -1;
     this.clearForm();
     this.updateDeductionUI();
+    this.utilsService.showSnackBar("Record saved successfully.");
   }
 
   editBondsForm(event) {

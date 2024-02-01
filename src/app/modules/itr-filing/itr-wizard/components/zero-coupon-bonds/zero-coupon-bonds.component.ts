@@ -341,6 +341,7 @@ export class ZeroCouponBondsComponent
     this.activeIndex = -1;
     this.clearForm();
     this.updateDeductionUI();
+    this.utilsService.showSnackBar("Record saved successfully.");
   }
 
   editBondsForm(event) {
