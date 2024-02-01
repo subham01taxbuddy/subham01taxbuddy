@@ -624,6 +624,7 @@ export class BifurcationComponent implements OnInit, OnChanges {
     }
     (this.bifurcationFormGroup.controls[type] as FormGroup).removeControl(key);
     this.bifurcationFormGroup.updateValueAndValidity();
+    this.valueChanged.emit(this.bifurcationFormGroup.getRawValue());
   }
 
   addItem(){
