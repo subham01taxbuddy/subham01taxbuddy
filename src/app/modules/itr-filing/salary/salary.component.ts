@@ -1129,7 +1129,10 @@ export class SalaryComponent extends WizardNavigation implements OnInit, AfterVi
     if ((this.employerDetailsFormGroup?.valid && this.allowanceFormGroup?.valid && apiCall) || !apiCall) {
       this.checkGrossSalary();
 
-      this.localEmployer = JSON.parse(sessionStorage.getItem('localEmployer'));
+      let employer = JSON.parse(sessionStorage.getItem('localEmployer'));
+      if(employer){
+        this.localEmployer = employer;
+      }
       console.log('updated employer:', this.localEmployer);
 
       this.localEmployer.address =
