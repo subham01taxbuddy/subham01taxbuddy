@@ -775,8 +775,6 @@
 
 
 </main>
-  <app-side-summary-panel *ngIf="bondType === 'listed'; else unlisted" type="listedEquityShares"></app-side-summary-panel>
-  <ng-template #unlisted>
-  <app-side-summary-panel type="unlistedEquityShares"></app-side-summary-panel>
-  </ng-template>
+  <app-side-summary-panel *ngIf="bondType === 'listed'" type="listedEquityShares"></app-side-summary-panel>
+  <app-side-summary-panel *ngIf="bondType === 'unlisted'" type="unlistedEquityShares"></app-side-summary-panel>
 </div>
