@@ -49,6 +49,7 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.config = {
+      id: 'businessConfig',
       itemsPerPage: 1,
       currentPage: 1,
     };

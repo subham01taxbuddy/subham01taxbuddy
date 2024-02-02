@@ -256,7 +256,7 @@
                             <table>
                               <tr *ngFor="let item of getBusIncomeArray.controls | paginate : config"></tr>
                             </table>
-                            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                            <pagination-controls id="businessConfig" (pageChange)="pageChanged($event)"></pagination-controls>
                           </div>
                         </div>
                       </div>
