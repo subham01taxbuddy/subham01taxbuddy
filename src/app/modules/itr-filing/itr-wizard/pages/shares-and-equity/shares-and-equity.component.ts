@@ -1519,7 +1519,7 @@ export class SharesAndEquityComponent
               params.data.controls['purchaseCost'].value;
         },
         valueFormatter: function (params) {
-          const purchaseCost = params.data.controls['purchaseCost'].value;
+          const purchaseCost = params.data.controls['gainType'].value === 'LONG' && params.data.controls['grandFatheredValue'].value > 0 ? params.data.controls['grandFatheredValue'].value : params.data.controls['purchaseCost'].value;
           return `₹ ${purchaseCost}`;
         }
       },
@@ -1789,7 +1789,7 @@ export class SharesAndEquityComponent
     return (
       this.utilsService.isNonEmpty(securities.controls['purchaseDate'].value) &&
       new Date(securities.controls['purchaseDate'].value) <
-        new Date('02/01/2018')
+        new Date('31/01/2018')
     );
   }
 

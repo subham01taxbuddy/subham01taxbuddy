@@ -211,7 +211,7 @@ export class SideSummaryPanelComponent implements OnInit {
     this.listedEquityShares.totalEquityLTCGBuyValue = this.ITR_JSON?.capitalGain?.filter(cg => cg.assetType === 'EQUITY_SHARES_LISTED')
       .flatMap(cg => cg.assetDetails)
       .filter(cgad => cgad.gainType === 'LONG')
-      .reduce((total, element) => total + element.purchaseCost, 0);
+      .reduce((total, element) => total + (element?.grandFatheredValue > 0 ? element?.grandFatheredValue : element?.purchaseCost), 0);
 
     this.listedEquityShares.totalEquitySTCGExpenses = this.ITR_JSON?.capitalGain?.filter(cg => cg.assetType === 'EQUITY_SHARES_LISTED')
       .flatMap(cg => cg.assetDetails)
