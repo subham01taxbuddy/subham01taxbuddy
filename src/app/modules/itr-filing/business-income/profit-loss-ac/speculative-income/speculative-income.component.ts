@@ -85,7 +85,7 @@ export class SpeculativeIncomeComponent implements OnInit {
       turnOver: [income?.turnOver],
       grossProfit: [income?.grossProfit],
       expenditure: [income?.expenditure],
-      netIncome: [income ? (income?.netIncome) : 0],
+      netIncome: [income ? (income?.netIncomeFromSpeculativeIncome) : 0],
     });
   }
 
