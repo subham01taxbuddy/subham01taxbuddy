@@ -1239,7 +1239,7 @@ export class ItrValidationService {
       let filtered = ITR_JSON.capitalGain?.filter(
         (item) => item.assetType === element
       );
-      if (filtered.length > 0) {
+      if (filtered?.length > 0) {
         let nonFiltered = ITR_JSON.capitalGain?.filter(
           (item) => item.assetType !== element
         );
