@@ -824,8 +824,8 @@ export class HousePropertyComponent implements OnInit {
 
   chekIsSOPAdded() {
     this.isSelfOccupied = 0;
-    if (this.ITR_JSON.houseProperties.length > 0) {
-      for (let i = 0; i < this.ITR_JSON.houseProperties.length; i++) {
+    if (this.ITR_JSON.houseProperties?.length > 0) {
+      for (let i = 0; i < this.ITR_JSON.houseProperties?.length; i++) {
         if (this.ITR_JSON.houseProperties[i].propertyType === 'SOP') {
           this.isSelfOccupied++;
           if (this.storedIndex != i) {
