@@ -1,23 +1,48 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',fullScreenBackdrop:true }"></ngx-loading>
-<div class="div-6">
-    <div class="form-field">
-        <div><span class="span">Fixed Assets </span> <span class="text-wrapper-2">*</span>
+<form [formGroup]="depreciationForm">
+    <div class="div-6 gray_box">
+        <div class="form-field">
+            <div><span class="span">Gross Block </span></div>
+            <mat-form-field appearance="outline">
+                <input matInput type="text" formControlName="totalGrossBlock" class="input-field"
+                    id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹ Enter Amount" readonly>
+            </mat-form-field>
+        </div>
+        <div class="form-field">
+            <div><span class="span">Depreciation </span></div>
+            <mat-form-field appearance="outline">
+                <input matInput type="text" formControlName="totalDepreciationAmount" class="input-field"
+                    id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹ Enter Amount" readonly>
+            </mat-form-field>
+        </div>
+        <div class="form-field">
+            <div><span class="span">Net Block </span></div>
+            <mat-form-field appearance="outline">
+                <input matInput type="text" formControlName="totalNetBlock" class="input-field" id="exampleInputEmail1"
+                    aria-describedby="emailHelp" readonly>
+            </mat-form-field>
         </div>
     </div>
-    <div class="form-field">
-        <!-- <input type="text" class="input-field" id="exampleInputEmail1" aria-describedby="emailHelp"
+    <div class="div-6">
+        <div class="form-field">
+            <div><span class="span">Fixed Assets </span> <span class="text-wrapper-2">*</span>
+            </div>
+        </div>
+        <div class="form-field">
+            <!-- <input type="text" class="input-field" id="exampleInputEmail1" aria-describedby="emailHelp"
             placeholder="₹ Enter Amount"> -->
-    </div>
-    <div class="button_style">
-        <button type="submit" (click)="deleteDepreciationArray()">
-            <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
-        </button>
-        <button class="btn__primary ml-3" [disabled]="depreciationForm.invalid" (click)="addMore()">+ Add Asset</button>
+        </div>
+        <div class="button_style">
+            <button type="submit" (click)="deleteDepreciationArray()">
+                <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
+            </button>
+            <button class="btn__primary ml-3" [disabled]="depreciationForm.invalid" (click)="addMore()">+ Add
+                Asset</button>
+
+        </div>
 
     </div>
 
-</div>
-<form [formGroup]="depreciationForm">
     <div formArrayName="depreciationArray">
         <div *ngFor="let depreciation of getDepreciationArray.controls | paginate:config ;let i=index"
             [formGroupName]="fieldGlobalIndex(i)">
@@ -109,29 +134,7 @@
             </div>
         </div>
     </div>
-    <div class="div-6 gray_box">
-        <div class="form-field">
-            <div><span class="span">Gross Block </span></div>
-            <mat-form-field appearance="outline">
-                <input matInput type="text" formControlName="totalGrossBlock" class="input-field"
-                    id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹ Enter Amount" readonly>
-            </mat-form-field>
-        </div>
-        <div class="form-field">
-            <div><span class="span">Depreciation </span></div>
-            <mat-form-field appearance="outline">
-                <input matInput type="text" formControlName="totalDepreciationAmount" class="input-field"
-                    id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹ Enter Amount" readonly>
-            </mat-form-field>
-        </div>
-        <div class="form-field">
-            <div><span class="span">Net Block </span></div>
-            <mat-form-field appearance="outline">
-                <input matInput type="text" formControlName="totalNetBlock" class="input-field" id="exampleInputEmail1"
-                    aria-describedby="emailHelp" readonly>
-            </mat-form-field>
-        </div>
-    </div>
+
 
 </form>
 

@@ -100,7 +100,8 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline">
                                       <input formControlName="bankReceipts" matInput name="bankReceipts[i]"
-                                        class="input-field" required digitsOnly placeholder="₹ Enter Amount" (change)="
+                                        class="input-field" maxlength="8" required digitsOnly
+                                        placeholder="₹ Enter Amount" (change)="
                                           calculatePresumptive(fieldGlobalIndex(i), 'bank', true)" />
                                     </mat-form-field>
                                     <mat-error *ngIf="(busIncomeFormArray.controls[i].get('bankReceipts')
@@ -144,7 +145,9 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline">
                                       <input formControlName="bankPreIncome" placeholder="₹ Enter Amount" matInput
-                                        name="bankPreIncome[i]" class="input-field" required digitsOnly (change)="
+                                        name="bankPreIncome[i]" class="input-field"
+                                        maxlength="{{busIncomeFormArray.controls[i].get('bankReceipts').value.length}}"
+                                        required digitsOnly (change)="
                                           calculatePresumptive(fieldGlobalIndex(i), 'bank', true)" />
                                       <div class="percentage-head" style="width: 50px;">
                                         <span class="percentage">
@@ -178,7 +181,8 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline">
                                       <input formControlName="cashReceipts" placeholder="₹ Enter Amount" matInput
-                                        name="cashReceipts[i]" class="input-field" required digitsOnly (change)="
+                                        name="cashReceipts[i]" maxlength="8" class="input-field" required digitsOnly
+                                        (change)="
                                             calculatePresumptive(fieldGlobalIndex(i), 'cash', true)" />
                                     </mat-form-field>
                                     <mat-error *ngIf="
@@ -222,7 +226,9 @@
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline">
                                       <input formControlName="cashPreIncome" placeholder="₹ Enter Amount" matInput
-                                        name="cashPreIncome[i]" class="input-field" required digitsOnly (change)="
+                                        name="cashPreIncome[i]" class="input-field"
+                                        maxlength="{{busIncomeFormArray.controls[i].get('cashReceipts').value.length}}"
+                                        required digitsOnly (change)="
                                           calculatePresumptive(fieldGlobalIndex(i), 'cash', true)
                                         " />
                                       <div class="percentage-head" style="width: 50px;">
@@ -256,7 +262,8 @@
                             <table>
                               <tr *ngFor="let item of getBusIncomeArray.controls | paginate : config"></tr>
                             </table>
-                            <pagination-controls id="businessConfig" (pageChange)="pageChanged($event)"></pagination-controls>
+                            <pagination-controls id="businessConfig"
+                              (pageChange)="pageChanged($event)"></pagination-controls>
                           </div>
                         </div>
                       </div>

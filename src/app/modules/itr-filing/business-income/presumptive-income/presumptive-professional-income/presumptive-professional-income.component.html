@@ -99,8 +99,8 @@
                                   <div class="lndBldg-L">Gross Receipts </div>
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline">
-                                      <input formControlName="receipts" placeholder="₹ Enter Amount" matInput
-                                        name="receipts[i]" class="input-field" required digitsOnly
+                                      <input formControlName="receipts" maxlength="7" placeholder="₹ Enter Amount"
+                                        matInput name="receipts[i]" class="input-field" required digitsOnly
                                         (change)="calculatePresumptive($event, i, true)" />
                                     </mat-form-field>
                                     <mat-error *ngIf="
@@ -150,19 +150,21 @@
                                 </div>
                                 <div class="pre-box">
                                   <div class="lndBldg-L">Presumptive income <span>
-                                      <ng-container *ngFor="let percentage of percentage; let id = index">
+                                      <!-- <ng-container *ngFor="let percentage of percentage; let id = index">
                                         <ng-container *ngIf="id === i">
                                           ({{ percentage?.natOfBusiness === profIncomeFormArray?.controls[i]?.get(
                                           "natureOfBusiness" )?.value ? percentage?.percentage ? percentage?.percentage
                                           : 0 : 0 }}%)
                                         </ng-container>
-                                      </ng-container></span><span class="redAst">*</span>
+                                      </ng-container> -->
+                                    </span><span class="redAst">*</span>
                                   </div>
                                   <div class="lndBldg-R">
                                     <mat-form-field appearance="outline">
                                       <input formControlName="presumptiveIncome" placeholder="₹ Enter Amount" matInput
-                                        name="presumptiveIncome[i]" class="input-field" required digitsOnly
-                                        (change)="calculatePresumptive($event, i)" />
+                                        name="presumptiveIncome[i]" class="input-field"
+                                        maxlength="{{profIncomeFormArray.controls[i].get('receipts').value.length}}"
+                                        required digitsOnly (change)="calculatePresumptive($event, i)" />
 
                                       <div class="percentage-head" style="width: 50px;"
                                         *ngFor="let percentage of percentage; let id = index">
