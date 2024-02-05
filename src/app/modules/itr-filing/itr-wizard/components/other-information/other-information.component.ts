@@ -461,6 +461,7 @@ export class OtherInformationComponent implements OnInit {
       this.validationBusiness();
       this.validationOth();
     } else {
+      this.schedule5AForm.reset();
       this.schedule5AForm.get('isGovernedByPortuguese').setValue('N');
       panOfSpouse.clearValidators();
       panOfSpouse.updateValueAndValidity();
