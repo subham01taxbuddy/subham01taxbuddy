@@ -188,8 +188,7 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     },
   ];
 
-  winningsUS115BBArraySoures: any[];
-
+  winningsUS115BBFormGroup: FormGroup;
   otherIncomeFormGroup: FormGroup;
   otherIncomesFormArray: FormArray;
   anyOtherIncomesFormArray: FormArray;
@@ -197,7 +196,6 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
   exemptIncomesFormArray: FormArray;
   agriIncFormGroup: FormGroup;
   agriIncFormArray: FormArray;
-  winningsUS115BBFormArray: FormArray;
   selectedIndexes: number[] = [];
 
   constructor(
@@ -215,11 +213,12 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
     this.otherIncomesFormArray = this.createOtherIncomeForm();
     this.anyOtherIncomesFormArray = this.createAnyOtherIncomeForm();
-    
+    this.createOrSetWinningsUS115BBForm(this.ITR_JSON.winningsUS115BB);
+
     this.otherIncomeFormGroup = this.fb.group({
       otherIncomes: this.otherIncomesFormArray,
       anyOtherIncomes: this.anyOtherIncomesFormArray,
-      winningsUS115BB: this.fb.array([]),
+      winningsUS115BB: this.winningsUS115BBFormGroup,
       providentFundValue: new FormControl(null),
       providentFundLabel: new FormControl(null),
       giftTax: this.fb.group({
@@ -265,8 +264,6 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.setAgriIncValues();
     this.validateIncomeValueOnBlur();
     this.setNetAgriIncome();
-    this.setWinningsUS115BBArraySources();
-    this.setWinningsUS115BBValues();
   }
 
   clearProvidentFund() {
@@ -357,81 +354,21 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.saveExemptIncomes('delete');
     this.selectedIndexes = [];
   }
-  
-  addWinningsUS115BB(index:number){
-    if(this.validateWinningsUS115BB(index)){
-      this.getWinningsUS115BBArray.push(this.fb.group({
-        source: null,
-        quarter1: 0,
-        quarter2: 0,
-        quarter3: 0,
-        quarter4: 0,
-        quarter5: 0,
-        total: 0,
-      }));
-    }
+
+  onChangeCalculateTotal(){
+    this.winningsUS115BBFormGroup.get('total').setValue(this.winningsUS115BBFormGroup.get('quarter1').value + this.winningsUS115BBFormGroup.get('quarter2').value +
+    this.winningsUS115BBFormGroup.get('quarter3').value + this.winningsUS115BBFormGroup.get('quarter4').value + this.winningsUS115BBFormGroup.get('quarter5').value);
+    this.winningsUS115BBFormGroup.get('total').updateValueAndValidity();
   }
 
-  validateWinningsUS115BB(index:number) {
-    if(this.winningsUS115BBArraySoures.every(item=>item.disabled === true))
-      return false;
-    else if(this.getWinningsUS115BBArray.length > 0) {
-      const formGroup = this.getWinningsUS115BBArray.at(index) as FormGroup;
-      if(formGroup.get("source").value == null) {
-       formGroup.get("source").setValidators([Validators.required]);
-       formGroup.get("source").updateValueAndValidity();
-       return false;
-      } else if(this.getWinningsUS115BBArray.getRawValue().some(item=>item.source === null)) {
-        this.getWinningsUS115BBArray.controls.forEach((group: FormGroup) => {
-          group.get("source").setValidators([Validators.required]);
-          group.get("source").updateValueAndValidity();
-        });
-        return false;
-      } else if(formGroup.get('total').value === 0) {
-        this.utilsService.showSnackBar('Please enter the amount');
-        return false;
-      } else {
-        this.winningsUS115BBArraySoures = this.winningsUS115BBArraySoures.map(item =>{
-          if(formGroup.get("source")?.value === item.source)
-            item.disabled = true;
-          return item;
-        });
-      }
-     }
-     return true;
+  onClickRemoveZero(quarter: string){
+    if(this.winningsUS115BBFormGroup.get(quarter).value === 0)
+    this.winningsUS115BBFormGroup.get(quarter).setValue(null);
   }
 
-  onChangeCalculateTotal(index:number, quarter: string){
-    const formGroup = this.getWinningsUS115BBArray.at(index) as FormGroup;
-    formGroup.get('total').setValue(formGroup.get('quarter1').value + formGroup.get('quarter2').value +
-    formGroup.get('quarter3').value + formGroup.get('quarter4').value + formGroup.get('quarter5').value);
-    formGroup.get('total').updateValueAndValidity();
-  }
-
-  onClickRemoveZero(index:number, quarter: string){
-    const formGroup = this.getWinningsUS115BBArray.at(index) as FormGroup;
-    if(formGroup.get(quarter).value === 0)
-      formGroup.get(quarter).setValue(null);
-  }
-
-  onBlurAddZero(index:number, quarter: string){
-    const formGroup = this.getWinningsUS115BBArray.at(index) as FormGroup;
-    if(!formGroup.get(quarter).value || formGroup.get(quarter).value === null)
-      formGroup.get(quarter).setValue(0);
-  }
-
-  removeWinningsUS115BB(index:number){
-    this.enableOptionSelection(index);
-    this.getWinningsUS115BBArray.removeAt(index);
-  }
-
-  enableOptionSelection(index){
-    const formGroup = this.getWinningsUS115BBArray.at(index) as FormGroup;
-    this.winningsUS115BBArraySoures = this.winningsUS115BBArraySoures.map(item =>{
-      if(formGroup.get("source")?.value === item.source)
-        item.disabled = false;
-      return item;
-    });
+  onBlurAddZero(quarter: string){
+    if(!this.winningsUS115BBFormGroup.get(quarter).value || this.winningsUS115BBFormGroup.get(quarter).value === null)
+    this.winningsUS115BBFormGroup.get(quarter).setValue(0);
   }
 
   get getIncomeArray() {
@@ -444,10 +381,6 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
   get getExemptIncomeArray() {
     return <FormArray>this.exemptIncomeFormGroup.get('exemptIncomes');
-  }
-
-   get getWinningsUS115BBArray() {
-    return <FormArray>this.otherIncomeFormGroup.get('winningsUS115BB');
   }
 
   get getAgriIncomeArray() {
@@ -600,18 +533,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     }
 
     //save winningsUS115BB
-    this.Copy_ITR_JSON.winningsUS115BB = [];
-    this.getWinningsUS115BBArray.getRawValue().filter(winningUS115BB=> winningUS115BB.source !== null && winningUS115BB.total > 0).forEach(winningUS115BB => {
-      this.Copy_ITR_JSON.winningsUS115BB.push({
-          source: winningUS115BB.source,
-          quarter1: winningUS115BB.quarter1,
-          quarter2: winningUS115BB.quarter2,
-          quarter3: winningUS115BB.quarter3,
-          quarter4: winningUS115BB.quarter4,
-          quarter5: winningUS115BB.quarter5,
-          total: winningUS115BB.total,
-      });
-    });
+    this.Copy_ITR_JSON.winningsUS115BB = null;
+    if(this.winningsUS115BBFormGroup.get('total').value > 0)
+      this.Copy_ITR_JSON.winningsUS115BB = this.winningsUS115BBFormGroup.getRawValue();
 
     this.providentFundArray.forEach(element => {
       if (element.incomeType === this.otherIncomeFormGroup.controls['providentFundLabel'].value) {
@@ -1018,65 +942,15 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     agriIncome?.get('incomeValue').setValue(total);
   }
 
-  setWinningsUS115BBValues(){
-    if(this.ITR_JSON.winningsUS115BB?.length>0) {
-      const sources = [];
-      this.ITR_JSON.winningsUS115BB
-        .forEach(item => {
-          sources.push(item.source);
-          this.getWinningsUS115BBArray.push(this.fb.group({
-          source: item.source,
-          quarter1: item.quarter1,
-          quarter2: item.quarter2,
-          quarter3: item.quarter3,
-          quarter4: item.quarter4,
-          quarter5: item.quarter5,
-          total: item.total,
-        }));
-      }
-      );
-
-      this.winningsUS115BBArraySoures = this.winningsUS115BBArraySoures.map(item =>{
-        if(sources.includes(item.source))
-          item.disabled = true;
-        return item;
-      });
-    }
-  }
-
-  setWinningsUS115BBArraySources() {
-    this.winningsUS115BBArraySoures = [{
-      'source' : 'Winning from Lottery',
-      'disabled': false
-    },
-    {
-      'source' : 'Crossword Puzzles',
-      'disabled': false
-    },
-    {
-      'source' : 'Online Gaming',
-      'disabled': false
-    },
-    {
-      'source' : 'Betting',
-      'disabled': false
-    },
-    {
-      'source' : 'Card Games',
-      'disabled': false
-    },
-    {
-      'source' : 'Gambling',
-      'disabled': false
-    },
-    {
-      'source' : 'Other Games Shows',
-      'disabled': false
-    },
-    {
-      'source' : 'Others',
-      'disabled': false
-    },]
+  createOrSetWinningsUS115BBForm(winningsUS115BB: any = {}){
+    this.winningsUS115BBFormGroup = this.fb.group({
+      quarter1: winningsUS115BB.quarter1,
+      quarter2: winningsUS115BB.quarter2,
+      quarter3: winningsUS115BB.quarter3,
+      quarter4: winningsUS115BB.quarter4,
+      quarter5: winningsUS115BB.quarter5,
+      total: winningsUS115BB.quarter1 + winningsUS115BB.quarter2 + winningsUS115BB.quarter3 + winningsUS115BB.quarter4 + winningsUS115BB.quarter5,
+    })
   }
 
   getTotal() {
@@ -1179,10 +1053,6 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     return total;
   }
 
-  get totalWinningsUS115BB() {
-    return this.getWinningsUS115BBArray.getRawValue().reduce((total, item) => total+ item.total, 0);
-  }
-
   getTotalGiftIncome() {
     let giftTax = this.otherIncomeFormGroup.get('giftTax') as FormGroup;
     let total = 0;
@@ -1250,16 +1120,4 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
       }
     }
   }
-
-  selectionChangeUS115BBSource() {
-    const sources = this.getWinningsUS115BBArray.getRawValue().map(item => item.source);
-    this.winningsUS115BBArraySoures = this.winningsUS115BBArraySoures.map(item =>{
-      if(sources.includes(item.source))
-        item.disabled = true;
-      else
-        item.disabled = false;
-      return item;
-    });  
-  }
-
 }
