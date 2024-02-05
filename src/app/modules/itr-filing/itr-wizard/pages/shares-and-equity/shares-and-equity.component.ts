@@ -424,6 +424,7 @@ export class SharesAndEquityComponent
         this.initDetailedForm(this.Copy_ITR_JSON);
       }
       // this.compactView = true;
+      this.utilsService.showSnackBar("Record saved successfully.");
     } else {
       result.hasEdit = false;
       let data;
@@ -467,6 +468,7 @@ export class SharesAndEquityComponent
       );
       if (this.deduction && this.deductionForm.valid) {
         this.calculateDeductionGain();
+        this.utilsService.showSnackBar("Record saved successfully.");
       } else if (!this.deductionForm.valid && this.deduction) {
         this.utilsService.showSnackBar(
             'Please make sure deduction details are entered correctly'
@@ -1408,7 +1410,13 @@ export class SharesAndEquityComponent
         headerName: 'Scrip Name',
         field: 'nameOfTheUnits',
         // width: 100,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'center',
+        color:' #121212',
+        fontFamily: 'DM Sans',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 700,
+        lineHeight: 'normal'},
         valueGetter: function nameFromCode(params) {
           return params.data.controls['nameOfTheUnits'].value;
         },
@@ -1452,10 +1460,21 @@ export class SharesAndEquityComponent
         headerName: 'Sale Value',
         field: 'sellValue',
         width: 150,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {
+        textAlign: 'center',
+        color: '#7D8398',
+        fontFamily: 'DM Sans',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 400,
+        lineHeight: 'normal' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['sellValue'].value;
         },
+        valueFormatter: function (params) {
+          const sellValue = params.data.controls['sellValue'].value;
+          return `₹ ${sellValue}`;
+        }
       },
       // {
       //   headerName: 'Buy Date',
@@ -1487,31 +1506,76 @@ export class SharesAndEquityComponent
         headerName: 'Buy Value',
         field: 'purchaseCost',
         width: 150,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: {
+        textAlign: 'center',
+        color: '#7D8398',
+        fontFamily: 'DM Sans',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 400,
+        lineHeight: 'normal' },
         valueGetter: function nameFromCode(params) {
           return self.checkBuyDateBefore31stJan(params.data) ? params.data.controls['grandFatheredValue'].value :
               params.data.controls['purchaseCost'].value;
         },
+        valueFormatter: function (params) {
+          const purchaseCost = self.checkBuyDateBefore31stJan(params.data) ? params.data.controls['grandFatheredValue'].value :
+          params.data.controls['purchaseCost'].value;
+          return `₹ ${purchaseCost}`;
+        }
       },
       {
         headerName: 'Buy Value with Indexation',
         field: 'purchaseCost',
-        width: 150,
+        width: 200,
         cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return self.bondType === 'unlisted' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfAcquisition'].value :
               params.data.controls['purchaseCost'].value;
         },
         hide: self.bondType === 'listed',
+        valueFormatter: function (params) {
+          const purchaseCost = params.data.controls['purchaseCost'].value;
+          return `₹ ${purchaseCost}`;
+        }
+      },
+      {
+        headerName: 'Indexed Cost of Improvement',
+        field: 'costOfImprovement',
+        width: 220,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return self.bondType === 'unlisted' && params.data.controls['improvementsArray'].value.costOfImprovement ?
+              params.data.controls['improvementsArray'].value.indexCostOfImprovement :
+              0;
+        },
+        hide: self.bondType === 'listed',
+        valueFormatter: function (params) {
+          const purchaseCost = params.data.controls['improvementsArray'].value.costOfImprovement ?
+              params.data.controls['improvementsArray'].value.indexCostOfImprovement :
+              0;
+          return `₹ ${purchaseCost}`;
+        }
       },
       {
         headerName: 'Expenses',
         field: 'sellExpense',
         width: 150,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'center',
+        color: '#33353F',
+        fontFamily: 'DM Sans',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 500,
+        lineHeight: 'normal'
+       },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['sellExpense'].value;
         },
+        valueFormatter: function (params) {
+          const sellExpense = params.data.controls['sellExpense'].value;
+          return `₹ ${sellExpense}`;
+        }
       },
       {
         headerName: 'Type of Capital Gain*',
@@ -1521,15 +1585,40 @@ export class SharesAndEquityComponent
         valueGetter: function nameFromCode(params) {
           return params.data.controls['gainType'].value;
         },
+        cellRenderer: function (params: any) {
+          const gainType = params.data.controls['gainType'].value;
+          if(gainType === 'LONG'){
+            return `<button class="gain-chip"  style="padding: 0px 30px;  border-radius: 40px;
+             background-color:rgba(214, 162, 67, 0.12); color: #D6A243; cursor:auto;">
+             ${gainType}
+            </button>`;
+          }else if(gainType === 'SHORT'){
+            return `<button class="gain-chip"  style="padding: 0px 30px;  border-radius: 40px;
+            background-color:rgba(145, 197, 97, 0.12); color: #91C561; cursor:auto;">
+            ${gainType}
+           </button>`;
+          }
+        }
+
       },
       {
         headerName: 'Gain Amount',
         field: 'capitalGain',
         width: 150,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'center',
+        color: '#33353F',
+        fontFamily: 'DM Sans',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 500,
+        lineHeight: 'normal'},
         valueGetter: function nameFromCode(params) {
           return params.data.controls['capitalGain'].value;
         },
+        valueFormatter: function (params) {
+          const capitalGain = params.data.controls['capitalGain'].value;
+          return `₹ ${capitalGain}`;
+        }
       },
       {
         headerName: 'Edit',
@@ -1701,8 +1790,8 @@ export class SharesAndEquityComponent
     return (
       this.utilsService.isNonEmpty(securities.controls['purchaseDate'].value) &&
       new Date(securities.controls['purchaseDate'].value) <
-        new Date('02/01/2018')
-    );
+      new Date('02/01/2018')    
+      );
   }
 
   goBack() {

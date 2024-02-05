@@ -81,11 +81,11 @@ export class SpeculativeIncomeComponent implements OnInit {
     return this.fb.group({
       index: [index],
       hasEdit: [false],
-      brokerName: [income?.brokerName],
+      brokerName: [income?.brokerName ? income?.brokerName : 'Manual'],
       turnOver: [income?.turnOver],
       grossProfit: [income?.grossProfit],
       expenditure: [income?.expenditure],
-      netIncome: [income ? (income?.netIncome) : 0],
+      netIncome: [income ? (income?.netIncomeFromSpeculativeIncome) : 0],
     });
   }
 

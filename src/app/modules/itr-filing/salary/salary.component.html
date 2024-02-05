@@ -221,37 +221,43 @@
                       <div class="card-body" formArrayName="salaryDetails">
 
                         <!-- 4 Box -->
-                        <div class="out-4box"
-                             *ngFor="let income of getSalaryArray.controls; let i = index"
+                        <div *ngFor="let income of getSalaryArray.controls; let i = index"
                              [formGroupName]="i">
-                          <div class="area-1">
-                            {{ income.value.label }}
+                          <div class="out-4box">
+                            <div class="area-1">
+                              {{ income.value.label }}
+                            </div>
+                            <div class="area-2">
+                              <mat-form-field appearance="outline"
+                                              class="input-field-width">
+                                <input
+                                        type="text"
+                                        digitsOnly
+                                        trim
+                                        matInput
+                                        placeholder=""
+                                        name="salaryValue[i]"
+                                        formControlName="salaryValue"
+                                        (blur)="checkGrossSalary()"
+                                        class="form-control inpClr1"
+                                        maxlength="125"
+                                        (change)="changed(true);"
+                                        (beforeinput)="confirmChange($event, income.value.salaryType)"
+                                />
+                              </mat-form-field>
+                            </div>
+                            <div class="area-3" *ngIf="!hasBifurcation(i)" >
+                              OR
+                            </div>
+                            <div class="area-4" *ngIf="!hasBifurcation(i)" >
+                              <button type="button" class="btnSal" (click)="bifurcation(i)"> + Add based on category </button>
+                            </div>
+
                           </div>
-                          <div class="area-2">
-                            <mat-form-field appearance="outline"
-                                            class="input-field-width">
-                              <input
-                                      type="text"
-                                      digitsOnly
-                                      trim
-                                      matInput
-                                      placeholder=""
-                                      name="salaryValue[i]"
-                                      formControlName="salaryValue"
-                                      (blur)="checkGrossSalary()"
-                                      class="form-control inpClr1"
-                                      maxlength="125"
-                                      (change)="changed(true);"
-                                      (beforeinput)="confirmChange($event, income.value.salaryType)"
-                              />
-                            </mat-form-field>
-                          </div>
-                          <div class="area-3">
-                            OR
-                          </div>
-                          <div class="area-4">
-                            <button type="button" class="btnSal" (click)="bifurcation(i)"> + Add based on category </button>
-                          </div>
+                          <!--Bifurcation component-->
+                          <app-bifurcation #bifurcation *ngIf="hasBifurcation(i)" [typeIndex]="i"
+                                           [localEmployer]="localEmployer" [index]="currentIndex"
+                          (valueChanged)="onBifurcationUpdated($event)"></app-bifurcation>
                         </div>
                         <img class="line" src="img/line-2-2.svg" />
                         <!-- 4 Box -->

@@ -37,6 +37,7 @@ import { PartnerInFirmsComponent } from './itr-wizard/pages/partner-in-firms/par
 import {ExemptIncomeComponent} from "./exempt-income/exempt-income.component";
 import {LabFormComponent} from "./itr-wizard/components/capital-gain/land-and-building/lab-form/lab-form.component";
 import {BondsDebentureComponent} from "./itr-wizard/components/capital-gain/bonds-debenture/bonds-debenture.component";
+import { ScheduleEsopComponent } from './itr-wizard/pages/schedule-esop/schedule-esop.component';
 
 const routes: Routes = [
   {
@@ -100,6 +101,7 @@ const routes: Routes = [
           { path: 'exempt-income', component: ExemptIncomeComponent },
           { path: 'schedule-al', component: ScheduleALComponent },
           { path: 'schedule-cfl', component: ScheduleCflComponent },
+          { path: 'schedule-esop', component: ScheduleEsopComponent },
           { path: 'partner-in-firms', component: PartnerInFirmsComponent },
         ],
       },

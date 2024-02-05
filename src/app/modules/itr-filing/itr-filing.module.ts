@@ -107,6 +107,7 @@ import { OtherDeductionsComponent } from './itr-wizard/components/other-deductio
 import {ItrSharedModule} from "../itr-shared/itr-shared.module";
 import {ExemptIncomeComponent} from "./exempt-income/exempt-income.component";
 import { AddAssetsComponent } from './itr-wizard/components/capital-gain/more-info/schedule-al/add-assets/add-assets.component';
+import { ScheduleEsopComponent } from './itr-wizard/pages/schedule-esop/schedule-esop.component';
 
 @NgModule({
     imports: [
@@ -234,6 +235,7 @@ import { AddAssetsComponent } from './itr-wizard/components/capital-gain/more-in
     OtherDeductionsComponent,
     ExemptIncomeComponent,
     AddAssetsComponent,
+    ScheduleEsopComponent,
   ],
 
   exports: [CustomerProfileComponent],

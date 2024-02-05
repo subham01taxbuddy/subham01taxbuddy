@@ -235,9 +235,16 @@
                     <div class="card-body extra-pad" *ngFor="let income of getExemptIncomeArray.controls;let i = index"
                          [formGroupName]="i">
 
+                        <div class="hp4-4 extra-pad align-right">
+                          <div class="Bx4">
+                            <div class="Bx4R">
+                              <button type="button" class="addAno" (click)="addExemptIncome()"> + Add Another </button>
+                            </div>
+                          </div>
+                        </div>
                       <div class="hp4main1">
 
-                        <div class="hp4-2 extra-pad">
+                        <div class="col-8 extra-pad">
                           <div class="field">
                             <div class="field-label">
                               <span class="span">Income Category </span>
@@ -247,13 +254,14 @@
                                           formControlName="incomeType"
                               (selectionChange)="validateExemptIncomes($event)">
                                 <mat-option *ngFor="let exempt of exemptIncomesDropdown; let k = index"
+                                matTooltip="{{exempt.label}}"
                                         [value]="exempt.value">{{ exempt.label }}</mat-option>
                               </mat-select>
                             </mat-form-field>
                           </div>
                         </div>
 
-                        <div class="hp4-3 extra-pad">
+                        <div class="col-3 extra-pad">
                           <div class="field">
                             <div class="field-label">
                               <span class="span">Amount </span>
@@ -273,13 +281,10 @@
                           </div>
                         </div>
 
-                        <div class="hp4-4 extra-pad">
+                        <div class="col-1 extra-pad">
                           <div class="Bx4">
-                            <div class="Bx4L">
+                            <div class="Bx4L delete-align">
                               <button type="button" (click)="deleteExemptIncome(i)"> <i class="fa fa-trash-o delbt"></i> </button>
-                            </div>
-                            <div class="Bx4R">
-                              <button type="button" class="addAno" (click)="addExemptIncome()"> + Add Another </button>
                             </div>
                           </div>
                         </div>

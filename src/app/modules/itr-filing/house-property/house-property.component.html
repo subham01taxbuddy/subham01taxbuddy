@@ -594,7 +594,10 @@
                             Your Percentage Share in the Property
                           </div>
                           <div class="hdTxR">
-                            <input class="share-view" [value]="getUserSharePercent()" readonly/><input value="%" readonly/>
+                            <div class="flex share-view">
+                              <input class="number-view" [value]="getUserSharePercent()" readonly disabled/>
+                              <input class="percent-view" value="%" readonly disabled/>
+                            </div>
                           </div>
 
                         </div>

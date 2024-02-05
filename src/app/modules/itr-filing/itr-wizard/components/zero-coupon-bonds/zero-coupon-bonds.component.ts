@@ -341,6 +341,7 @@ export class ZeroCouponBondsComponent
     this.activeIndex = -1;
     this.clearForm();
     this.updateDeductionUI();
+    this.utilsService.showSnackBar("Record saved successfully.");
   }
 
   editBondsForm(event) {
@@ -443,10 +444,20 @@ export class ZeroCouponBondsComponent
         headerName: 'Sale Value',
         field: 'sellValue',
         width: 150,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'center',
+        color: '#7D8398',
+        fontFamily: 'DM Sans',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 400,
+        lineHeight: 'normal' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['valueInConsideration'].value;
         },
+        valueFormatter: function (params) {
+          const sellValue = params.data.controls['valueInConsideration'].value;
+          return `₹ ${sellValue}`;
+        }
       },
       // {
       //   headerName: 'Buy Date',
@@ -478,19 +489,52 @@ export class ZeroCouponBondsComponent
         headerName: 'Buy Value',
         field: 'purchaseCost',
         width: 150,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'center',
+        color: '#7D8398',
+        fontFamily: 'DM Sans',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 400,
+        lineHeight: 'normal' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['purchaseCost'].value;
         },
+        valueFormatter: function (params) {
+          const purchaseCost = params.data.controls['purchaseCost'].value;
+          return `₹ ${purchaseCost}`;
+        }
+      },
+      {
+        headerName: 'Cost of Improvement',
+        field: 'costOfImprovement',
+        // width: 150,
+        cellStyle: { textAlign: 'center' },
+        valueGetter: function nameFromCode(params) {
+          return params.data.controls['costOfImprovement'].value;
+        },
+        valueFormatter: function (params) {
+          const costOfImprovement = params.data.controls['costOfImprovement'].value;
+          return `₹ ${costOfImprovement}`;
+        }
       },
       {
         headerName: 'Expenses',
         field: 'sellExpense',
         width: 150,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'center',
+        color: '#33353F',
+        fontFamily: 'DM Sans',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 500,
+        lineHeight: 'normal' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['sellExpense'].value;
         },
+        valueFormatter: function (params) {
+          const sellExpense = params.data.controls['sellExpense'].value;
+          return `₹ ${sellExpense}`;
+        }
       },
       {
         headerName: 'Type of Capital Gain*',
@@ -500,15 +544,39 @@ export class ZeroCouponBondsComponent
         valueGetter: function nameFromCode(params) {
           return params.data.controls['gainType'].value;
         },
+        cellRenderer: function (params: any) {
+          const gainType = params.data.controls['gainType'].value;
+          if(gainType === 'LONG'){
+            return `<button class="gain-chip"  style="padding: 0px 30px;  border-radius: 40px;
+             background-color:rgba(214, 162, 67, 0.12); color: #D6A243; cursor:auto;">
+             ${gainType}
+            </button>`;
+          }else if(gainType === 'SHORT'){
+            return `<button class="gain-chip"  style="padding: 0px 30px;  border-radius: 40px;
+            background-color:rgba(145, 197, 97, 0.12); color: #91C561; cursor:auto;">
+            ${gainType}
+           </button>`;
+          }
+        }
       },
       {
         headerName: 'Gain Amount',
         field: 'capitalGain',
         width: 150,
-        cellStyle: { textAlign: 'center' },
+        cellStyle: { textAlign: 'center',
+        color: '#33353F',
+        fontFamily: 'DM Sans',
+        fontSize: '14px',
+        fontStyle: 'normal',
+        fontWeight: 500,
+        lineHeight: 'normal' },
         valueGetter: function nameFromCode(params) {
           return params.data.controls['capitalGain'].value;
         },
+        valueFormatter: function (params) {
+          const capitalGain = params.data.controls['capitalGain'].value;
+          return `₹ ${capitalGain}`;
+        }
       },
       {
         headerName: 'Edit',

@@ -205,21 +205,14 @@ export class ItrWizardComponent implements OnInit {
     this.itrMsService.getMethod(`/validate/${this.ITR_JSON.itrId}`).subscribe((result:any)=>{
       console.log(result);
       // if(result.success){
-        if (result.data.errors.length > 0) {
-          let errorMapping = this.itrValidationService.getItrValidationErrorMappring(result.data.errors);
-          this.breadcrumb = null;
-          this.showIncomeSources = false;
-          this.selectedSchedule = 'Validation Errors';
-          this.router.navigate(['/itr-filing/itr/validation-errors'], {
-            state: { validationErrors: errorMapping },
-          });
-        }
-      if (this.validationErrors?.length > 0) {
+ 
+      if (result.data.errors.length > 0) {
+        let errorMapping = this.itrValidationService.getItrValidationErrorMappring(result.data.errors);
         this.breadcrumb = null;
         this.showIncomeSources = false;
         this.selectedSchedule = 'Validation Errors';
         this.router.navigate(['/itr-filing/itr/validation-errors'], {
-          state: { validationErrors: this.validationErrors },
+          state: { validationErrors: errorMapping },
         });
       } else {
         if(!this.ITR_JSON.systemFlags.hasAgricultureIncome){
@@ -243,12 +236,14 @@ export class ItrWizardComponent implements OnInit {
             AppConstants.ITR_JSON,
             JSON.stringify(this.ITR_JSON)
         );
+
+        this.breadcrumb = null;
+        this.showIncomeSources = false;
+        this.selectedSchedule = 'Comparison of New v/s Old Regime';
+        this.router.navigate(['/itr-filing/itr/old-vs-new']);
       }
 
-      this.breadcrumb = null;
-      this.showIncomeSources = false;
-      this.selectedSchedule = 'Comparison of New v/s Old Regime';
-      this.router.navigate(['/itr-filing/itr/old-vs-new']);
+      
       // }
     });
 

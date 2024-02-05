@@ -469,11 +469,11 @@ export class ScheduleFsiComponent implements OnInit {
               hastaxPaidOutIndValueElement?.get('taxPaidOutInd')?.value
           );
 
-          if (hastaxPaidOutIndValue) {
-            this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'YES';
-          } else{
-            this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'NO';
-          }
+          // if (hastaxPaidOutIndValue) {
+          //   this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'YES';
+          // } else{
+          //   this.Copy_ITR_JSON.foreignIncome.taxPaidOutsideIndiaFlag = 'NO';
+          // }
 
           // pushing fsi income in taxReliefClaimed
           const checkIfValid: boolean =

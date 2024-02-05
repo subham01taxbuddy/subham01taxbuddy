@@ -17,7 +17,7 @@ font-weight: bold;">{{data.title}}</label>
           </mat-form-field>
         </div>
         <div class="card__col-xs-12 card__col-sm-4">
-          <mat-form-field class="input-field-width">
+          <mat-form-field class="input-field-width" appearance="outline">
             <mat-select placeholder="Type of Company" (selectionChange)="addPanValidator()" name="typeOfCompany"
               formControlName="typeOfCompany" required>
               <mat-option *ngFor="let type of typeOfCompanies" [value]="type.value">
@@ -29,7 +29,7 @@ font-weight: bold;">{{data.title}}</label>
           </mat-form-field>
         </div>
         <div class="card__col-xs-12 card__col-sm-4">
-          <mat-form-field class="input-field-width">
+          <mat-form-field class="input-field-width" appearance="outline">
             <input trim upperCase matInput formControlName="companyPAN" placeholder="PAN of company" name="companyPAN"
               class="input-field" maxlength="10" [required]="sharesForm.controls['typeOfCompany'].value === 'D'">
             <mat-error *ngIf="sharesForm.controls['companyPAN'].hasError('pattern')">Enter valid PAN number.</mat-error>
@@ -41,7 +41,7 @@ font-weight: bold;">{{data.title}}</label>
       <div class="card__row">
         <!-- Opening -->
         <div class="card__col-xs-12 card__col-sm-4">
-          <mat-form-field class="input-field-width">
+          <mat-form-field class="input-field-width" appearance="outline">
             <input matInput formControlName="openingShares" placeholder="Opening No. of shares" name="openingShares"
               class="input-field" maxlength="14" digitsOnly
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -51,7 +51,7 @@ font-weight: bold;">{{data.title}}</label>
           </mat-form-field>
         </div>
         <div class="card__col-xs-12 card__col-sm-4">
-          <mat-form-field class="input-field-width">
+          <mat-form-field class="input-field-width" appearance="outline">
             <input matInput formControlName="openingCOA" placeholder="Opening Cost of acquisition" name="openingCOA"
               class="input-field" maxlength="14" digitsOnly
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -63,7 +63,7 @@ font-weight: bold;">{{data.title}}</label>
         <!-- Opening End -->
         <!-- Shares Aquired -->
         <div class="card__col-xs-12 card__col-sm-4">
-          <mat-form-field class="input-field-width">
+          <mat-form-field class="input-field-width" appearance="outline">
             <input digitsOnly matInput formControlName="acquiredShares" placeholder="No. of shares acquired"
               name="acquiredShares" class="input-field" maxlength="14"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -75,7 +75,7 @@ font-weight: bold;">{{data.title}}</label>
       </div>
       <div class="card__row">
         <div class="card__col-xs-12 card__col-sm-4">
-          <mat-form-field>
+          <mat-form-field appearance="outline">
             <input matInput [min]="minPurchaseDate" readonly [max]="maxPurchaseDate" formControlName="purchaseDate"
               name="purchaseDate" [matDatepicker]="purchaseDate" placeholder="Date of purchase" required>
             <mat-datepicker-toggle matSuffix [for]="purchaseDate"></mat-datepicker-toggle>
@@ -83,7 +83,7 @@ font-weight: bold;">{{data.title}}</label>
           </mat-form-field>
         </div>
         <div class="card__col-xs-12 card__col-sm-4">
-          <mat-form-field class="input-field-width">
+          <mat-form-field class="input-field-width" appearance="outline">
             <input digitsOnly matInput formControlName="faceValuePerShare" placeholder="Face value per share"
               name="faceValuePerShare" class="input-field" maxlength="14"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -93,7 +93,7 @@ font-weight: bold;">{{data.title}}</label>
           </mat-form-field>
         </div>
         <div class="card__col-xs-12 card__col-sm-4">
-          <mat-form-field class="input-field-width">
+          <mat-form-field class="input-field-width" appearance="outline">
             <input digitsOnly matInput formControlName="issuePricePerShare" placeholder="Issue price per share"
               name="issuePricePerShare" class="input-field" maxlength="14"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -106,7 +106,7 @@ font-weight: bold;">{{data.title}}</label>
       </div>
       <div class="card__row">
         <div class="card__col-xs-12 card__col-sm-4">
-          <mat-form-field class="input-field-width">
+          <mat-form-field class="input-field-width" appearance="outline">
             <input digitsOnly matInput formControlName="purchasePricePerShare" placeholder="Purchase price per share"
               name="purchasePricePerShare" class="input-field" maxlength="14"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -120,7 +120,7 @@ font-weight: bold;">{{data.title}}</label>
         <!-- Shares Quired End -->
         <!-- Shares Transferred -->
         <div class="card__col-xs-12 card__col-sm-4">
-          <mat-form-field class="input-field-width">
+          <mat-form-field class="input-field-width" appearance="outline">
             <input digitsOnly matInput formControlName="transferredShares" placeholder="No. of shares transferred"
               name="transferredShares" class="input-field" maxlength="14"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -132,7 +132,7 @@ font-weight: bold;">{{data.title}}</label>
           </mat-form-field>
         </div>
         <div class="card__col-xs-12 card__col-sm-4">
-          <mat-form-field class="input-field-width">
+          <mat-form-field class="input-field-width" appearance="outline">
             <input digitsOnly matInput formControlName="saleConsideration" placeholder="Sale consideration"
               name="saleConsideration" class="input-field" maxlength="14"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -147,7 +147,7 @@ font-weight: bold;">{{data.title}}</label>
       <!-- Closing -->
       <div class="card__row">
         <div class="card__col-xs-12 card__col-sm-4">
-          <mat-form-field class="input-field-width">
+          <mat-form-field class="input-field-width" appearance="outline">
             <input digitsOnly matInput formControlName="closingShares" placeholder="Closing no of shares"
               name="closingShares" class="input-field" maxlength="14"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -157,7 +157,7 @@ font-weight: bold;">{{data.title}}</label>
           </mat-form-field>
         </div>
         <div class="card__col-xs-12 card__col-sm-4">
-          <mat-form-field class="input-field-width">
+          <mat-form-field class="input-field-width" appearance="outline">
             <input digitsOnly matInput formControlName="closingCOA" placeholder="Closing cost of acquisition"
               name="closingCOA" class="input-field" maxlength="14"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"

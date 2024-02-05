@@ -339,3 +339,32 @@
 .deduction-form {
   padding-top: 50px;
 }
+.long-style {
+  display: flex;
+  padding: 4px 18px;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 40px;
+  background: rgba(145, 197, 97, 0.12);
+  color: #91C561;
+  font-family: DM Sans;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.short-style {
+  display: flex;
+  padding: 4px 18px;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 40px;
+  background: rgba(214, 162, 67, 0.12);
+  color: #D6A243;
+  font-family: DM Sans;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}

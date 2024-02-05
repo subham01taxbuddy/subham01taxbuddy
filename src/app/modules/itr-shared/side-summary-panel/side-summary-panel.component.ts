@@ -211,7 +211,7 @@ export class SideSummaryPanelComponent implements OnInit {
     this.listedEquityShares.totalEquityLTCGBuyValue = this.ITR_JSON?.capitalGain?.filter(cg => cg.assetType === 'EQUITY_SHARES_LISTED')
       .flatMap(cg => cg.assetDetails)
       .filter(cgad => cgad.gainType === 'LONG')
-      .reduce((total, element) => total + element.purchaseCost, 0);
+      .reduce((total, element) => total + (this.checkBuyDateBefore31stJan(element?.purchaseDate) ? element?.grandFatheredValue : element?.purchaseCost), 0);
 
     this.listedEquityShares.totalEquitySTCGExpenses = this.ITR_JSON?.capitalGain?.filter(cg => cg.assetType === 'EQUITY_SHARES_LISTED')
       .flatMap(cg => cg.assetDetails)
@@ -585,5 +585,13 @@ export class SideSummaryPanelComponent implements OnInit {
 
    this.scheduleAL.liabilitiesInRelationToAssets = movableAsset?.assetLiability;
    this.scheduleAL.total = this.scheduleAL.immmovableAssets + this.scheduleAL.movableAssets + this.scheduleAL.liabilitiesInRelationToAssets;
+  }
+
+  checkBuyDateBefore31stJan(purchaseDate) {
+    return (
+      this.utilsService.isNonEmpty(purchaseDate) &&
+      new Date(purchaseDate) <
+      new Date('02/01/2018')    
+      );
   }
 }

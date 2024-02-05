@@ -354,73 +354,73 @@
               <div class="col-sm-12">
                 <div class="breakup-container-2">
 
-  <table>
-    <thead>
-      <tr>
-        <th class="bdrBtm1">Final Amount To Pay</th>
-        <th class="bdrBtm1"> {{
-          this?.userSubscription?.payableSubscriptionAmount
-          | currency : "INR"
-          }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="spcTd">Base Price</td>
-        <td class="spcTd">{{ this?.userSubscription?.basePrice | currency : "INR" }}</td>
-      </tr>
-      <tr>
-        <td class="spcTd">CGST</td>
-        <td class="spcTd">{{ this?.userSubscription?.cgst | currency : "INR" }}</td>
-      </tr>
-      <tr>
-        <td class="spcTd">SGST</td>
-        <td class="spcTd">{{ this?.userSubscription?.sgst | currency : "INR" }}</td>
-      </tr>
-      <tr>
-        <td class="spcTd">IGST</td>
-        <td class="spcTd">{{ this?.userSubscription?.igst | currency : "INR" }}</td>
-      </tr>
-      <tr>
-        <td class="bdrBtm2">Total Tax</td>
-        <td class="bdrBtm2">{{ this?.userSubscription?.totalTax | currency : "INR" }}</td>
-      </tr>
-      <tr>
-        <td class="spcTd">Total Amount</td>
-        <td class="spcTd"><b>{{
-          this?.userSubscription?.payableSubscriptionAmount
-          | currency : "INR"
-          }}</b></td>
-      </tr>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th class="bdrBtm1">Final Amount To Pay</th>
+                        <th class="bdrBtm1"> {{
+                          this?.userSubscription?.payableSubscriptionAmount
+                          | currency : "INR"
+                          }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="spcTd">Base Price</td>
+                        <td class="spcTd">{{ this?.userSubscription?.basePrice | currency : "INR" }}</td>
+                      </tr>
+                      <tr>
+                        <td class="spcTd">CGST</td>
+                        <td class="spcTd">{{ this?.userSubscription?.cgst | currency : "INR" }}</td>
+                      </tr>
+                      <tr>
+                        <td class="spcTd">SGST</td>
+                        <td class="spcTd">{{ this?.userSubscription?.sgst | currency : "INR" }}</td>
+                      </tr>
+                      <tr>
+                        <td class="spcTd">IGST</td>
+                        <td class="spcTd">{{ this?.userSubscription?.igst | currency : "INR" }}</td>
+                      </tr>
+                      <tr>
+                        <td class="bdrBtm2">Total Tax</td>
+                        <td class="bdrBtm2">{{ this?.userSubscription?.totalTax | currency : "INR" }}</td>
+                      </tr>
+                      <tr>
+                        <td class="spcTd">Total Amount</td>
+                        <td class="spcTd"><b>{{
+                            this?.userSubscription?.payableSubscriptionAmount
+                            | currency : "INR"
+                            }}</b></td>
+                      </tr>
 
-    </tbody>
-  </table>
+                    </tbody>
+                  </table>
 
-      <!-- start refund details -->
-      <table class="table pb-table" *ngIf="refundInvoiceDetails && refundInvoiceDetails?.length">
-        <tbody>
-          <tr>
-            <th>Refund Details</th>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td>Invoice No</td>
-            <td><span class="head"><b>{{ userSubscription?.invoiceDetail[0].invoiceNo }}</b></span></td>
-          </tr>
-          <tr *ngFor="let invoiceDetail of refundInvoiceDetails">
-            <td></td>
-            <td></td>
-            <td>Refund Paid Amount</td>
-            <td><span class="head"><b>{{
-                  invoiceDetail.refundPaidAmount | currency : "INR" }}</b></span></td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- end refund details -->
+                  <!-- start refund details -->
+                  <table class="table pb-table" *ngIf="refundInvoiceDetails && refundInvoiceDetails?.length">
+                    <tbody>
+                      <tr>
+                        <th>Refund Details</th>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td>Invoice No</td>
+                        <td><span class="head"><b>{{ userSubscription?.invoiceDetail[0].invoiceNo }}</b></span></td>
+                      </tr>
+                      <tr *ngFor="let invoiceDetail of refundInvoiceDetails">
+                        <td></td>
+                        <td></td>
+                        <td>Refund Paid Amount</td>
+                        <td><span class="head"><b>{{
+                              invoiceDetail.refundPaidAmount | currency : "INR" }}</b></span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <!-- end refund details -->
                 </div>
               </div>
             </div>

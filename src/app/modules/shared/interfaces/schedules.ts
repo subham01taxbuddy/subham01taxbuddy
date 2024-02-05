@@ -8,6 +8,7 @@ export class Schedules {
   public TAXES_PAID = 'taxesPaid';
   public DECLARATION = 'declaration';
   public SALARY = 'salary';
+  public BALANCE_SHEET = 'balanceSheet';
   public HOUSE_PROPERTY = 'houseProperty';
   public BUSINESS_INCOME = 'businessIncome';
   public CAPITAL_GAIN = 'capitalGain';
@@ -28,6 +29,7 @@ export class Schedules {
     this.titleMap[this.MORE_INFORMATION] = 'More Information';
     this.titleMap[this.DECLARATION] = 'Declaration/Errors';
     this.titleMap[this.SALARY] = 'Salary';
+    this.titleMap[this.BALANCE_SHEET] = 'Balance Sheet';
     this.titleMap[this.HOUSE_PROPERTY] = 'House Property';
     this.titleMap[this.BUSINESS_INCOME] = 'Business/Professional Income';
     this.titleMap[this.CAPITAL_GAIN] = 'Capital Gain';
@@ -42,6 +44,7 @@ export class Schedules {
     this.pathMap[this.MORE_INFORMATION] = '/itr/more-info';
     this.pathMap[this.DECLARATION] = '/itr/declaration';
     this.pathMap[this.SALARY] = '/itr/salary';
+    this.pathMap[this.BALANCE_SHEET] = '/itr/business/balance-sheet';
     this.pathMap[this.HOUSE_PROPERTY] = '/itr/house-property';
     this.pathMap[this.BUSINESS_INCOME] = '/itr/business';
     this.pathMap[this.CAPITAL_GAIN] = '/itr/capital-gain';

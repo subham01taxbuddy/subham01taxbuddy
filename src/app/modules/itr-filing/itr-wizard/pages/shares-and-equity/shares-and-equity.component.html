@@ -504,7 +504,7 @@
                           <div>
                             <div class="col-sm-12">
                               <ag-grid-angular
-                                      class="ag-theme-balham topSps"
+                                      class=" newAG ag-theme-balham topSps "
                                       [gridOptions]="equityGridOptions"
                                       (rowClicked)="editSecuritiesForm($event)">
                               </ag-grid-angular>
@@ -584,7 +584,7 @@
                         <div *ngIf="!compactView">
                           <div class="col-sm-12">
                             <ag-grid-angular
-                                    class="ag-theme-balham topSps"
+                                    class="newAG ag-theme-balham topSps  "
                                     [gridOptions]="equityGridOptions"
                                     (rowClicked)="editSecuritiesForm($event)">
                             </ag-grid-angular>
@@ -757,7 +757,7 @@
 
           </div>
         </div>
- 
+
 
 
 
@@ -769,14 +769,12 @@
           <button class="btn btn__primary" (click)="saveAll()">Save & View Summary</button>
         </div>
       </div>
-    
+
   </div>
 </div>
 
 
 </main>
-  <app-side-summary-panel *ngIf="bondType === 'listed'; else unlisted" type="listedEquityShares"></app-side-summary-panel>
-  <ng-template #unlisted>
-  <app-side-summary-panel type="unlistedEquityShares"></app-side-summary-panel>
-  </ng-template>
+  <app-side-summary-panel *ngIf="bondType === 'listed'" type="listedEquityShares"></app-side-summary-panel>
+  <app-side-summary-panel *ngIf="bondType === 'unlisted'" type="unlistedEquityShares"></app-side-summary-panel>
 </div>

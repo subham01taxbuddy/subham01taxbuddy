@@ -35,9 +35,17 @@
                         <div class="gray_container" formArrayName="specIncomesArray">
                           <div *ngFor="let income of getIncomeArray | paginate : config;let i = index"
                             [formGroupName]="fieldGlobalIndex(i)">
-                            <div class="col-sm-1 spsTp">
-                              <mat-checkbox name="hasEdit[i]" formControlName="hasEdit" class="tpBtn1">
-                              </mat-checkbox>
+                            <div class="div-6 mb-20">
+                              <div class="form-field">
+                                <mat-checkbox color="primary" name="hasEdit[i]" formControlName="hasEdit" class="ml30">
+                                </mat-checkbox>
+                              </div>
+                              <div class="form-field">
+                                <mat-form-field appearance="outline">
+                                  <input formControlName="brokerName" matInput [disabled]="true" name="brokerName[i]"
+                                    class="col-sm-1" />
+                                </mat-form-field>
+                              </div>
                             </div>
                             <div class="div-6 mb-20">
                               <div class="form-field">

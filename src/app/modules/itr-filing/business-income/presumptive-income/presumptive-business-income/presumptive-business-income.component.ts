@@ -50,9 +50,8 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   ngOnInit(): void {
     this.config = {
       id: 'businessConfig',
-      itemsPerPage: 2,
+      itemsPerPage: 1,
       currentPage: 1,
-      totalItems: 0,
     };
 
     let presBusiness = this.ITR_JSON.business?.presumptiveIncomes?.filter(
@@ -77,7 +76,6 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
       this.calculatePresumptive(index, 'cash', false);
       this.calculatePresumptive(index, 'bank', false);
     });
-    this.config.totalItems = this.busIncomeFormArray.controls.length;
   }
 
   get getBusIncomeArray() {
@@ -153,13 +151,8 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
   }
 
   deleteArray() {
-    const busIncomeFormArray = <FormArray>(
-      this.busIncomeForm.get('busIncomeFormArray')
-    );
-    busIncomeFormArray.controls = busIncomeFormArray.controls.filter(
-      (element) => !(element as FormGroup).controls['hasEdit'].value
-    );
-    this.config.totalItems = busIncomeFormArray.controls.length;
+    const busIncomeFormArray = <FormArray>this.busIncomeForm.get('busIncomeFormArray');
+    busIncomeFormArray.controls = busIncomeFormArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
   }
 
   calculatePresumptive(index, incomeType, setValue?) {

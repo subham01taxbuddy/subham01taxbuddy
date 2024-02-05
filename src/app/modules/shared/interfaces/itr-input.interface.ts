@@ -108,7 +108,14 @@ export interface ITR_JSON {
 
   itrSummaryJson: any;
   isItrSummaryJsonEdited: boolean;
+
   liableSection44AAflag: string;
+  incomeDeclaredUsFlag: string;
+	totalSalesExceedOneCr: string;
+	aggregateOfAllAmountsReceivedFlag: string;
+	aggregateOfAllPaymentsMadeFlag: string;
+  liableSection44ABFlag: string;
+
   portugeseCC5AFlag: string;
   schedule5a: Schedule5A;
   isITRU : boolean;
@@ -135,6 +142,42 @@ export interface ITR_JSON {
     anyOtherPropertyInadequateConsideration: number;
     anyOtherPropertyInadequateConsiderationNotTaxable: boolean;
   };
+
+  winningsUS115BB: WinningUS115BB[];
+  scheduleESOP: ScheduleESOP;
+
+}
+
+export interface ScheduleESOP {
+  scheduleESOPDetails: ScheduleESOPDetail[];
+  totalTaxAttributedAmount: number;
+}
+
+export interface ScheduleESOPDetail {
+	assessmentYear: string;
+	taxDeferredBFEarlierAY: string;
+	securityType: string;
+	ceasedEmployee: string;
+	dateOfCeasing: number;
+	scheduleESOPEventDetails: ScheduleESOPEventDetail[];
+	totalTaxAttributedAmount: number;
+	taxPayableCurrentAY: number;
+	balanceTaxCF: number;
+}
+
+export interface ScheduleESOPEventDetail {
+  dateOfSale: string;
+  taxAttributedAmount: number;
+}
+
+export interface WinningUS115BB {
+  source: string;
+  quarter1: number;
+  quarter2: number;
+  quarter3: number;
+  quarter4: number;
+  quarter5: number;
+  total: number;
 }
 
 export interface agriculturalLandDetails {

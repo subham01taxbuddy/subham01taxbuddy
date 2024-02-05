@@ -64,6 +64,12 @@ export class MoreInformationComponent
         showOnUi :true
       },
       {
+        label: 'Schedule Tax deferred on ESOP',
+        path: 'schedule-esop',
+        type: 'scheduleESOP',
+        showOnUi :true
+      },
+      {
         label:
           'Income From Firms in which you are Partner',
         path: 'partner-in-firms',
