@@ -269,6 +269,9 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     }
 
     let result = this.selectedFormGroup.getRawValue();
+    
+    result.costOfImprovement = result.indexCostOfImprovement;
+    
     if(this.activeIndex === -1){
       let srn = (this.bondsForm.controls['bondsArray'] as FormArray).length - 1;
       let form = this.createForm(srn);
@@ -451,11 +454,13 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         width: 200,
         cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
+          console.log(self, params.data);
           return self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfAcquisition'].value :
               params.data.controls['purchaseCost'].value;
         },
         valueFormatter: function (params) {
-          const purchaseCost = params.data.controls['purchaseCost'].value;
+          let purchaseCost = self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfAcquisition'].value :
+              params.data.controls['purchaseCost'].value;
           return `₹ ${purchaseCost}`;
         }
       },
