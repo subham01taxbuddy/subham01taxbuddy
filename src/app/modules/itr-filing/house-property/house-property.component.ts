@@ -978,6 +978,22 @@ export class HousePropertyComponent implements OnInit {
         hp.isEligibleFor80EEA = false;
       }
 
+      if (
+        this.housePropertyForm.controls['interestAmount'].value ||
+        this.housePropertyForm.controls['principalAmount'].value
+      ) {
+        hp.loans = [];
+        hp.loans.push({
+          interestAmount:
+            this.housePropertyForm.controls['interestAmount']?.value,
+          loanType: this.housePropertyForm.controls['loanType']?.value,
+          principalAmount:
+            this.housePropertyForm.controls['principalAmount']?.value,
+        });
+      } else {
+        hp.loans = [];
+      }
+
       // this.Copy_ITR_JSON.houseProperties = [];
       // this.Copy_ITR_JSON.houseProperties.push(hp);
       this.Copy_ITR_JSON.houseProperties[this.currentIndex] = hp;
@@ -985,7 +1001,7 @@ export class HousePropertyComponent implements OnInit {
       // this.ITR_JSON = JSON.parse(JSON.stringify(this.Copy_ITR_JSON));
       // sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(this.ITR_JSON));
       if (apiCall) {
-        this.serviceCall(this.Copy_ITR_JSON, 'SAVE');
+        this.serviceCall('SAVE', this.Copy_ITR_JSON);
       } else {
         this.Copy_ITR_JSON.houseProperties[this.currentIndex] = hp;
       }
