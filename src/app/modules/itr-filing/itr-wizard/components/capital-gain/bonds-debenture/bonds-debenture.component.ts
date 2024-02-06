@@ -126,7 +126,8 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
                 (data) => data.srn == element.srn
             );
             if (filterImp?.length > 0) {
-              element['costOfImprovement'] = filterImp[0].costOfImprovement;
+              element.costOfImprovement = filterImp[0].indexCostOfImprovement;
+              element['improvementCost'] = filterImp[0].costOfImprovement;
               element['indexCostOfImprovement'] =
                   filterImp[0].indexCostOfImprovement;
               element['dateOfImprovement'] = filterImp[0].dateOfImprovement;
@@ -150,7 +151,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
     this.bondsGridOptions.api?.setRowData(
         this.getBondsArray.controls
     );
-    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length -1 : 0;
+    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length : 0;
     this.selectedFormGroup = this.createForm(srn);
     this.activeIndex = -1;
 
@@ -236,7 +237,9 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       indexCostOfAcquisition: [item ? item.indexCostOfAcquisition : null],
       dateOfImprovement: [item ? item.dateOfImprovement : null],
       costOfImprovement: [
-        item ? item.costOfImprovement : null,
+        item ? item.costOfImprovement : null],
+      improvementCost: [
+        item ? item.improvementCost : null,
         [Validators.pattern(AppConstants.amountWithDecimal)],
       ],
       indexCostOfImprovement: [item ? item.indexCostOfImprovement : null],
@@ -257,23 +260,29 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
   clearForm(){
     this.selectedFormGroup.reset();
+    this.selectedFormGroup.controls['isIndexationBenefitAvailable'].setValue(
+      this.assetType === 'INDEXED_BONDS' ? true : false
+    );
+    this.selectedFormGroup.controls['whetherDebenturesAreListed'].setValue(
+      this.assetType === 'LISTED_DEBENTURES' ? true : false
+    );
     this.selectedFormGroup.controls['algorithm'].setValue('cgProperty');
-    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length -1 : 0;
+    let srn = this.getBondsArray.controls.length > 0 ? this.getBondsArray.controls.length : 0;
     this.selectedFormGroup.controls['srn'].setValue(srn);
   }
 
   saveManualEntry() {
     if(this.selectedFormGroup.invalid){
-      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup);
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
       return;
     }
 
     let result = this.selectedFormGroup.getRawValue();
     
-    result.costOfImprovement = result.indexCostOfImprovement;
+    // result.costOfImprovement = result.indexCostOfImprovement;
     
     if(this.activeIndex === -1){
-      let srn = (this.bondsForm.controls['bondsArray'] as FormArray).length - 1;
+      let srn = (this.bondsForm.controls['bondsArray'] as FormArray).length;
       let form = this.createForm(srn);
       form.patchValue(this.selectedFormGroup.getRawValue());
       (this.bondsForm.controls['bondsArray'] as FormArray).push(form);
@@ -471,10 +480,11 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
         cellStyle: { textAlign: 'center' },
         valueGetter: function nameFromCode(params) {
           return self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfImprovement'].value :
-              params.data.controls['costOfImprovement'].value;
+              params.data.controls['improvementCost'].value;
         },
         valueFormatter: function (params) {
-          const costOfImprovement = params.data.controls['costOfImprovement'].value;
+          const costOfImprovement = self.assetType === 'INDEXED_BONDS' && params.data.controls['gainType'].value === 'LONG' ? params.data.controls['indexCostOfImprovement'].value :
+          params.data.controls['improvementCost'].value;
           return `₹ ${costOfImprovement}`;
         }
       },
@@ -625,7 +635,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
           {
             srn: bonds.controls['srn'].value,
             dateOfImprovement: bonds.controls['dateOfImprovement'].value,
-            costOfImprovement: bonds.controls['costOfImprovement'].value,
+            costOfImprovement: bonds.controls['improvementCost'].value,
             indexCostOfImprovement: bonds.controls[
                 'isIndexationBenefitAvailable'
                 ].value
@@ -713,20 +723,24 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
       // }
       bondsArray.controls.forEach((element) => {
           let costOfImprovement = (element as FormGroup).controls[
-              'costOfImprovement'
+              'improvementCost'
               ].value;
+          let indexedValue = (element as FormGroup).controls['indexCostOfImprovement'].value;
           bondImprovement.push({
             srn: (element as FormGroup).controls['srn'].value,
             dateOfImprovement: (element as FormGroup).controls[
                 'dateOfImprovement'
                 ].value,
-            indexCostOfImprovement: (element as FormGroup).controls[
-                'indexCostOfImprovement'
-                ].value,
-            costOfImprovement: (element as FormGroup).controls[
-                'costOfImprovement'
-                ].value,
+            indexCostOfImprovement: indexedValue,
+            costOfImprovement: costOfImprovement,
           });
+          if(this.assetType === 'INDEXED_BONDS'){
+            if(indexedValue > 0){
+              (element as FormGroup).controls['costOfImprovement'].setValue(indexedValue);
+            } else {
+              (element as FormGroup).controls['costOfImprovement'].setValue(costOfImprovement);
+            }
+          }
           bondsList.push((element as FormGroup).getRawValue());
       });
 
@@ -840,7 +854,7 @@ export class BondsDebentureComponent extends WizardNavigation implements OnInit 
 
     // for improvements indexation
     let costOfImprovement = parseFloat(
-        asset.controls['costOfImprovement'].value
+        asset.controls['improvementCost'].value
     );
     let improvementFinancialYear = asset.controls['dateOfImprovement'].value;
 

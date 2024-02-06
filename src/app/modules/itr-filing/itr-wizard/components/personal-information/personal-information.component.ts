@@ -2706,7 +2706,7 @@ export class PersonalInformationComponent implements OnInit {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
         .first()
         .focus();
-      // this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'perDetailsId');
       this.personalInfoSaved.emit(false);
       return;
     }
@@ -2762,7 +2762,7 @@ export class PersonalInformationComponent implements OnInit {
       );
     } else {
       this.loading = false;
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'perDetailId');
       this.personalInfoSaved.emit(false);
       this.openAcc();
     }

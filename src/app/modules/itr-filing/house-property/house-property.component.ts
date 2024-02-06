@@ -1135,7 +1135,10 @@ export class HousePropertyComponent implements OnInit {
     } else {
       // this.utilsService.showSnackBar('failed to save.');
       $('input.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(this.housePropertyForm);
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn1');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn2');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn3');
+      this.utilsService.highlightInvalidFormFields(this.housePropertyForm, 'accordBtn4');
     }
   }
 
