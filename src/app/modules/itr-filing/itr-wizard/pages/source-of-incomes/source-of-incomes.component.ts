@@ -188,7 +188,34 @@ export class SourceOfIncomesComponent implements OnInit {
             }
             case this.schedules.BUSINESS_INCOME:
             {
-              this.ITR_JSON.business = null;
+              this.ITR_JSON.business = {
+                presumptiveIncomes: [],
+                financialParticulars: {
+                  difference: null,
+                  id: null,
+                  grossTurnOverAmount: null,
+                  membersOwnCapital: null,
+                  securedLoans: null,
+                  unSecuredLoans: null,
+                  advances: null,
+                  sundryCreditorsAmount: null,
+                  otherLiabilities: null,
+                  totalCapitalLiabilities: null,
+                  fixedAssets: null,
+                  inventories: null,
+                  sundryDebtorsAmount: null,
+                  balanceWithBank: null,
+                  cashInHand: null,
+                  loanAndAdvances: null,
+                  otherAssets: null,
+                  totalAssets: null,
+                  investment: null,
+                  GSTRNumber: null,
+                },
+                businessDescription: [],
+                fixedAssetsDetails: [],
+                profitLossACIncomes: [],
+              };
               break;
             }
             case this.schedules.CAPITAL_GAIN:
@@ -198,6 +225,7 @@ export class SourceOfIncomesComponent implements OnInit {
             }
             case this.schedules.SPECULATIVE_INCOME:
             {
+              this.ITR_JSON.business.businessDescription = null;
               this.ITR_JSON.business.profitLossACIncomes = null;
               break;
             }
