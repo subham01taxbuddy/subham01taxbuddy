@@ -116,9 +116,13 @@ export class NonSpeculativeIncomeComponent implements OnInit {
 
         this.totalNetProfit = data[0].netProfitfromNonSpeculativeIncome;
         let expenseList = data[0].expenses;
-        expenseList?.forEach((element) => {
-          this.addExpenseForm(element);
-        });
+        if (expenseList?.length) {
+          expenseList?.forEach((element) => {
+            this.addExpenseForm(element);
+          });
+        } else {
+          this.addExpenseForm();
+        }
       } else {
         let form = this.createNonSpecIncomeForm(0, null);
         form.enable();
@@ -227,9 +231,9 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   initExpenseForm(obj: NewExpenses) {
     return this.formBuilder.group({
       hasExpense: [false],
-      expenseType: [obj.expenseType || null, [Validators.required]],
-      expenseAmount: [obj.expenseAmount || null, [Validators.required]],
-      description: [obj.description || null],
+      expenseType: [obj ? obj.expenseType : null, [Validators.required]],
+      expenseAmount: [obj ? obj.expenseAmount : 0, [Validators.required]],
+      description: [obj ? obj.description : null],
     });
   }
 
@@ -237,9 +241,13 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     return <FormArray>this.profitLossForm.get('expenses');
   }
 
-  addExpenseForm(element) {
+  addExpenseForm(element?) {
     const expenses = this.expenses;
-    expenses.push(this.initExpenseForm(element));
+    if (element) {
+      expenses.push(this.initExpenseForm(element));
+    } else {
+      expenses.push(this.initExpenseForm(null));
+    }
     this.changed();
   }
 
