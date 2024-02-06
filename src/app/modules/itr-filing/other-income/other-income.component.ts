@@ -944,12 +944,12 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
   createOrSetWinningsUS115BBForm(winningsUS115BB: any = {}){
     this.winningsUS115BBFormGroup = this.fb.group({
-      quarter1: winningsUS115BB.quarter1,
-      quarter2: winningsUS115BB.quarter2,
-      quarter3: winningsUS115BB.quarter3,
-      quarter4: winningsUS115BB.quarter4,
-      quarter5: winningsUS115BB.quarter5,
-      total: winningsUS115BB.quarter1 + winningsUS115BB.quarter2 + winningsUS115BB.quarter3 + winningsUS115BB.quarter4 + winningsUS115BB.quarter5,
+      quarter1: winningsUS115BB?.quarter1,
+      quarter2: winningsUS115BB?.quarter2,
+      quarter3: winningsUS115BB?.quarter3,
+      quarter4: winningsUS115BB?.quarter4,
+      quarter5: winningsUS115BB?.quarter5,
+      total: winningsUS115BB?.quarter1 + winningsUS115BB?.quarter2 + winningsUS115BB?.quarter3 + winningsUS115BB?.quarter4 + winningsUS115BB?.quarter5,
     })
   }
 
