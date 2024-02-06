@@ -1484,7 +1484,7 @@ export class HousePropertyComponent implements OnInit {
   jsonAmt80ee: any;
   jsonAmt80eea: any;
   calculateInterestOrDeduction() {
-    let eligible80EE = this.housePropertyForm?.controls['isEligibleFor80EE'];
+    
     let interest = this.housePropertyForm?.controls['interestAmount'];
     let interest24b = this.housePropertyForm?.controls['interest24bAmount'];
     let eligible80EEAmount =
@@ -1510,6 +1510,8 @@ export class HousePropertyComponent implements OnInit {
     }, 0);
     this.jsonAmt80eea = totalEligible80EEAAmount;
     this.enableOnOverAllValue();
+
+    let eligible80EE = this.housePropertyForm?.controls['isEligibleFor80EE'];
 
     // TOTAL OF ALL ITR OBJ INTEREST AMOUNT
     const itrJsonInterestValue = filteredJsonArray?.reduce((acc, property) => {
@@ -1831,8 +1833,10 @@ export class HousePropertyComponent implements OnInit {
         parseFloat(interest24b?.value) > 200000
       ) {
         interest24b?.setValue(200000);
-      } else {
+      } else if(propertyType?.value === 'SOP'){
         interest24b?.setValue(Math.min(interest?.value, 200000));
+      } else {
+        interest24b?.setValue(interest?.value);
       }
       interest24b?.updateValueAndValidity();
     }
