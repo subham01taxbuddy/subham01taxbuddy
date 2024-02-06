@@ -128,11 +128,12 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         form.enable();
         this.nonspecIncomeFormArray.push(form);
       }
-    } /* else {
-      let form = this.createNonSpecIncomeForm(0, null);
-      form.enable();
-      this.nonspecIncomeFormArray.push(form);
-    }*/
+    } else {
+      this.addExpenseForm();
+      // let form = this.createNonSpecIncomeForm(0, null);
+      // form.enable();
+      // this.nonspecIncomeFormArray.push(form);
+    }
     this.nonspecIncomeForm = this.formBuilder.group({
       nonspecIncomesArray: this.nonspecIncomeFormArray,
     });
