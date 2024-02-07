@@ -163,6 +163,11 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
   }
 
   validateScheduleESOPDetail() {
+    if (this.selectedFormGroup.get('securityType').value === 'PS' && this.selectedFormGroup?.get('taxDeferredBFEarlierAY').value < this.getTotalTaxAttributedAmount())
+      this.selectedFormGroup?.get('taxDeferredBFEarlierAY')?.setErrors({ 'partly_sold_sum_cant_be_greater_than_tax_deferred': true });
+    else
+      this.selectedFormGroup?.get('taxDeferredBFEarlierAY')?.setErrors(null);
+
     if (this.selectedFormGroup?.get('ceasedEmployee')?.value === 'Y' && !this.selectedFormGroup?.get('dateOfCeasing')?.value)
       this.selectedFormGroup?.get('dateOfCeasing')?.setErrors(Validators.required);
     else

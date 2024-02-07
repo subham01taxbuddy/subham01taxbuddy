@@ -44,8 +44,8 @@
                                     <mat-error *ngIf="selectedFormGroup?.get('taxDeferredBFEarlierAY')?.hasError('required') && selectedFormGroup?.get('taxDeferredBFEarlierAY')?.touched">
                                       Please enter the amount
                                     </mat-error>
-                                    <mat-error *ngIf="selectedFormGroup?.get('taxDeferredBFEarlierAY')?.hasError('sumMismatch') && selectedFormGroup?.get('taxDeferredBFEarlierAY')?.touched">
-                                      In case of fully sold Amount of Tax deferred brought forward from earlier AY should be equal to sum of Amount of Tax Attributed out of the sale.
+                                    <mat-error *ngIf="selectedFormGroup?.get('taxDeferredBFEarlierAY')?.hasError('partly_sold_sum_cant_be_greater_than_tax_deferred') && selectedFormGroup?.get('taxDeferredBFEarlierAY')?.touched">
+                                        In case of partly sold sum of Amount of Tax Attributed out of the sale cann't be greater than Amount of Tax deferred brought forward from earlier AY.
                                     </mat-error>
                                 </div>
                             </div>
