@@ -62,7 +62,7 @@
                 <div class="accordion" id="myAccordion">
                   <div class="accordion-item">
                     <h2 class="accordion-header accoHdclr" id="headingOne">
-                      <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                      <button id="accordBtn1" type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
                         {{ getPropertyTypeLabel()}} </button>
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
@@ -428,7 +428,7 @@
                   </div>
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="heading2">
-                      <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse2">Property Address</button>
+                      <button id="accordBtn2" type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse2">Property Address</button>
 
                     </h2>
                     <div id="collapse2" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
@@ -560,7 +560,7 @@
                   </div>
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="heading3">
-                      <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse3">Co-ownership Details</button>
+                      <button id="accordBtn3" type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse3">Co-ownership Details</button>
 
                     </h2>
                     <div id="collapse3" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
@@ -718,7 +718,7 @@
                   </div>
                   <div class="accordion-item" *ngIf="housePropertyForm.controls['propertyType'].value === 'LOP'">
                     <h2 class="accordion-header" id="heading4">
-                      <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse4">Tenant Details</button>
+                      <button id="accordBtn4" type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapse4">Tenant Details</button>
 
                     </h2>
                     <div id="collapse4" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
@@ -812,7 +812,7 @@
                 <div class="lft-btn" (click)="goBack()">Back</div>
               </div>
               <div class="box-right">
-                <div class="rght-btn" (click)="saveHouseProperty('', '')">Save & View Summary</div>
+                <div class="rght-btn" (click)="saveHpDetails(true)">Save & View Summary</div>
               </div>
             </div>
 

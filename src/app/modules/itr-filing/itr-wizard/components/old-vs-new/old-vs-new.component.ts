@@ -2022,26 +2022,26 @@ export class OldVsNewComponent extends WizardNavigation implements OnInit {
       // this.summaryToolReliefsForm.controls['section90']?.setValue(
       //   this.ITR_JSON.section90
       // );
-      // if (this.ITR_JSON.section90 && this.ITR_JSON.section90 !== 0) {
-      //   this.summaryToolReliefsForm.controls['acknowledgement90']?.setValue(
-      //     this.ITR_JSON.acknowledgement90
-      //   );
-      //   this.summaryToolReliefsForm.controls['acknowledgementDate90']?.setValue(
-      //     this.ITR_JSON.acknowledgementDate90
-      //   );
-      // }
+      if (this.ITR_JSON.section90 && this.ITR_JSON.section90 !== 0) {
+        this.summaryToolReliefsForm.controls['acknowledgement90']?.setValue(
+          this.ITR_JSON.acknowledgement90
+        );
+        this.summaryToolReliefsForm.controls['acknowledgementDate90']?.setValue(
+          this.ITR_JSON.acknowledgementDate90
+        );
+      }
 
       // this.summaryToolReliefsForm.controls['section91']?.setValue(
       //   this.ITR_JSON.section91
       // );
-      // if (this.ITR_JSON.section91 && this.ITR_JSON.section91 !== 0) {
-      //   this.summaryToolReliefsForm.controls['acknowledgement91']?.setValue(
-      //     this.ITR_JSON.acknowledgement91
-      //   );
-      //   this.summaryToolReliefsForm.controls['acknowledgementDate91']?.setValue(
-      //     this.ITR_JSON.acknowledgementDate91
-      //   );
-      // }
+      if (this.ITR_JSON.section91 && this.ITR_JSON.section91 !== 0) {
+        this.summaryToolReliefsForm.controls['acknowledgement91']?.setValue(
+          this.ITR_JSON.acknowledgement91
+        );
+        this.summaryToolReliefsForm.controls['acknowledgementDate91']?.setValue(
+          this.ITR_JSON.acknowledgementDate91
+        );
+      }
     }
   }
 

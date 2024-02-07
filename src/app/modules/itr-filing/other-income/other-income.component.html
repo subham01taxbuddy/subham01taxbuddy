@@ -229,34 +229,13 @@
                   <h2 class="accordion-header" id="heading4">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
                       data-bs-target="#collapse4">Winning from lotteries, crossword puzzles etc. chargeable u/s 115BB
-                      <input type="number" class="form-control inpClr2" disabled value="{{totalWinningsUS115BB}}">
+                      <input type="number" class="form-control inpClr2" disabled value="{{winningsUS115BBFormGroup.get('total').value}}">
                     </button>
                   </h2>
                 <div id="collapse4" class="accordion-collapse collapse show">
-                <div class="accordion__item-body">
-                <div *ngIf="getWinningsUS115BBArray?.length !== 0" formArrayName="winningsUS115BB">  
-                <div class="card-body gray_box" *ngFor="let income of getWinningsUS115BBArray.controls;let i = index"
-                       [formGroupName]="i">
+                <div class="accordion__item-body" formGroupName="winningsUS115BB">
                     <div class="container px-4">
                     <div class="row">
-                      <div class="col p-2">
-                        <div class="field">
-                          <div class="field-label">
-                            <span class="span">Source</span>
-                          </div>
-                          <mat-form-field appearance="outline">
-                            <mat-select name="source[i]"
-                                        formControlName="source" 
-                                        (selectionChange)="selectionChangeUS115BBSource()">
-                              <mat-option *ngFor="let winningsSource of winningsUS115BBArraySoures;"  [disabled]="winningsSource.disabled"
-                                      [value]="winningsSource.source">{{ winningsSource.source }}</mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                          <mat-error *ngIf="income.get('source').hasError('required')"> 
-                            Please select source</mat-error>
-                        </div>
-                      </div>
-
                       <div class="col p-2">
                         <div class="field">
                           <div class="field-label">
@@ -267,13 +246,13 @@
                             <input
                                     type="number"
                                     matInput
-                                    placeholder=""
-                                    name="quarter1[i]"
+                                    placeholder="Upto 15 June 2022"
+                                    name="quarter1"
                                     formControlName="quarter1"
                                     maxlength="125"
-                                    (change)="onChangeCalculateTotal(i, 'quarter1')" 
-                                    (mousedown)="onClickRemoveZero(i, 'quarter1')"
-                                    (blur)="onBlurAddZero(i, 'quarter1')"
+                                    (change)="onChangeCalculateTotal()" 
+                                    (mousedown)="onClickRemoveZero('quarter1')"
+                                    (blur)="onBlurAddZero('quarter1')"
                             />
                           </mat-form-field>
                         </div>
@@ -289,13 +268,13 @@
                             <input
                                     type="number"
                                     matInput
-                                    placeholder=""
+                                    placeholder="16th June 2022 - 15th Sep 2022"
                                     name="quarter2[i]"
                                     formControlName="quarter2"
                                     maxlength="125"
-                                    (change)="onChangeCalculateTotal(i, 'quarter2')" 
-                                    (mousedown)="onClickRemoveZero(i, 'quarter2')"
-                                    (blur)="onBlurAddZero(i, 'quarter2')"
+                                    (change)="onChangeCalculateTotal()" 
+                                    (mousedown)="onClickRemoveZero('quarter2')"
+                                    (blur)="onBlurAddZero('quarter2')"
                             />
                           </mat-form-field>
                         </div>
@@ -311,13 +290,13 @@
                             <input
                                     type="number"
                                     matInput
-                                    placeholder=""
+                                    placeholder="16th Sep 2022 - 15th Dec 2022"
                                     name="quarter3[i]"
                                     formControlName="quarter3"
                                     maxlength="125"
-                                    (change)="onChangeCalculateTotal(i, 'quarter3')" 
-                                    (mousedown)="onClickRemoveZero(i, 'quarter3')"
-                                    (blur)="onBlurAddZero(i, 'quarter3')"
+                                    (change)="onChangeCalculateTotal()" 
+                                    (mousedown)="onClickRemoveZero('quarter3')"
+                                    (blur)="onBlurAddZero('quarter3')"
                             />
                           </mat-form-field>
                         </div>
@@ -334,13 +313,13 @@
                             <input
                                     type="number"
                                     matInput
-                                    placeholder=""
+                                    placeholder="16th Dec 2022 - 15th Mar 2023"
                                     name="quarter4[i]"
                                     formControlName="quarter4"
                                     maxlength="125"
-                                    (change)="onChangeCalculateTotal(i, 'quarter4')" 
-                                    (mousedown)="onClickRemoveZero(i, 'quarter4')"
-                                    (blur)="onBlurAddZero(i, 'quarter4')"
+                                    (change)="onChangeCalculateTotal()" 
+                                    (mousedown)="onClickRemoveZero('quarter4')"
+                                    (blur)="onBlurAddZero('quarter4')"
                             />
                           </mat-form-field>
                         </div>
@@ -356,52 +335,19 @@
                             <input
                                     type="number"
                                     matInput
-                                    placeholder=""
+                                    placeholder="16th Mar 2023- 31th Mar 2023"
                                     name="quarter5[i]"
                                     formControlName="quarter5"
                                     maxlength="125"
-                                    (change)="onChangeCalculateTotal(i, 'quarter5')" 
-                                    (mousedown)="onClickRemoveZero(i, 'quarter5')"
-                                    (blur)="onBlurAddZero(i, 'quarter5')"
+                                    (change)="onChangeCalculateTotal()" 
+                                    (mousedown)="onClickRemoveZero('quarter5')"
+                                    (blur)="onBlurAddZero('quarter5')"
                             />
                           </mat-form-field>
                         </div>
                       </div>
-
-                      <div class="col p-2">
-                        <div class="field">
-                          <div class="field-label">
-                            <span class="span">Total
-                            </span>
-                          </div>
-                          <mat-form-field appearance="outline">
-                            <input
-                                    type="number"
-                                    matInput
-                                    placeholder=""
-                                    name="total[i]"
-                                    formControlName="total"
-                                    maxlength="125"
-                                    readonly
-                            />
-                          </mat-form-field>
-                        </div>
-                      </div>
-
-                        <div class="col p-2">
-                          <div style="padding-top:38px;">
-                            <button type="button" class="addAno me-5" (click)="addWinningsUS115BB(i)"> + Add Another </button>
-                            <button type="button" (click)="removeWinningsUS115BB(i)"> <i class="fa fa-trash-o delbt"></i> </button>
-                          </div>
-                        </div>
-                    </div>
                     </div>
                   </div>
-                </div>
-                <div *ngIf="getWinningsUS115BBArray.length === 0">
-                    <div style="padding-top:10px;">
-                      <button type="button" class="addAno" (click)="addWinningsUS115BB(0)"> + Add Details </button>
-                    </div>
                 </div>
                 </div>
               </div>
@@ -462,7 +408,6 @@
                     </div>
                   </div>
                 </div>
-              </div>
             </form>
 
             <div class="out-box">

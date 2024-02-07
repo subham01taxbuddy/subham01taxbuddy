@@ -200,7 +200,7 @@ export class SpeculativeIncomeComponent implements OnInit {
       if (!this.Copy_ITR_JSON.business.profitLossACIncomes) {
         this.Copy_ITR_JSON.business.profitLossACIncomes = [];
       }
-      if (!specBusiness || specBusiness.length === 0) {
+      if (!specBusiness || specBusiness?.length === 0) {
         this.Copy_ITR_JSON.business.profitLossACIncomes.push(
           specBusinessIncome
         );
@@ -253,7 +253,7 @@ export class SpeculativeIncomeComponent implements OnInit {
     } else {
       //show errors
       $('input.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(this.specIncomeForm);
+      this.utilsService.highlightInvalidFormFields(this.specIncomeForm, 'accordBtn');
       return false;
     }
   }

@@ -727,18 +727,8 @@ export class UtilsService {
         anyOtherPropertyInadequateConsiderationNotTaxable: false,
       },
 
-      winningsUS115BB: [{ 
-        source: null,
-        quarter1: 0,
-        quarter2: 0,
-        quarter3: 0,
-        quarter4: 0,
-        quarter5: 0,
-        total: 0,
-      }],
-
+      winningsUS115BB: null,
       scheduleESOP: null,
-
     };
 
     return ITR_JSON;
@@ -1536,7 +1526,7 @@ export class UtilsService {
     return this.salaryValues;
   }
 
-  highlightInvalidFormFields(formGroup: FormGroup) {
+  highlightInvalidFormFields(formGroup: FormGroup, accordionBtnId) {
     Object.keys(formGroup.controls).forEach((key) => {
       if (formGroup.get(key) instanceof FormControl) {
         const controlErrors: ValidationErrors = formGroup.get(key).errors;
@@ -1551,16 +1541,22 @@ export class UtilsService {
                 ', err value: ',
               controlErrors[keyError]
             );
+            console.log('parent', formGroup.parent);
             formGroup.controls[key].markAsTouched();
+            const accordionButton = document.getElementById(accordionBtnId);
+            if(accordionButton){
+              if(accordionButton.getAttribute("aria-expanded") === "false")
+                accordionButton.click();
+            }
             return;
           });
         }
       } else if (formGroup.get(key) instanceof FormGroup) {
-        this.highlightInvalidFormFields(formGroup.get(key) as FormGroup);
+        this.highlightInvalidFormFields(formGroup.get(key) as FormGroup, accordionBtnId);
       } else if (formGroup.get(key) instanceof FormArray) {
         let formArray = formGroup.get(key) as FormArray;
         formArray.controls.forEach((element) => {
-          this.highlightInvalidFormFields(element as FormGroup);
+          this.highlightInvalidFormFields(element as FormGroup, accordionBtnId);
         });
       }
     });

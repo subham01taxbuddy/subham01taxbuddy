@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Subscription} from "rxjs";
 import {WizardNavigation} from "../../../../itr-shared/WizardNavigation";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {AppConstants} from "../../../../shared/constants";
 import {Schedules} from "../../../../shared/interfaces/schedules";
 
@@ -19,7 +19,8 @@ export class AllBusinessIncomeComponent extends WizardNavigation implements OnIn
 
   isFnO = false;
   constructor(private router: Router,
-              private schedules: Schedules) {
+              private schedules: Schedules,
+              private route: ActivatedRoute) {
     super();
   }
 
@@ -33,6 +34,13 @@ export class AllBusinessIncomeComponent extends WizardNavigation implements OnIn
     let incomeSources = JSON.parse(sessionStorage.getItem('incomeSources'));
     let fnoSelection = incomeSources.filter(item => item.schedule === this.schedules.SPECULATIVE_INCOME)[0];
     this.isFnO = (filtered && filtered.length > 0) || (fnoSelection.selected);
+
+    this.route.paramMap.subscribe(() => {
+      const state = window.history.state;
+      if(state && typeof state.hideOutlet === 'boolean')
+        this.hideOutlet = state.hideOutlet;
+    });
+
   }
 
   initList() {

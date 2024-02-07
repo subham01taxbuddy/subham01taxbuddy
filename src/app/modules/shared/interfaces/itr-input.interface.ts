@@ -143,7 +143,7 @@ export interface ITR_JSON {
     anyOtherPropertyInadequateConsiderationNotTaxable: boolean;
   };
 
-  winningsUS115BB: WinningUS115BB[];
+  winningsUS115BB: WinningUS115BB;
   scheduleESOP: ScheduleESOP;
 
 }
@@ -171,7 +171,6 @@ export interface ScheduleESOPEventDetail {
 }
 
 export interface WinningUS115BB {
-  source: string;
   quarter1: number;
   quarter2: number;
   quarter3: number;

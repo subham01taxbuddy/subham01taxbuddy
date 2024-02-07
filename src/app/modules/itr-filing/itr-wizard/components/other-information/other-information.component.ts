@@ -461,6 +461,7 @@ export class OtherInformationComponent implements OnInit {
       this.validationBusiness();
       this.validationOth();
     } else {
+      this.schedule5AForm.reset();
       this.schedule5AForm.get('isGovernedByPortuguese').setValue('N');
       panOfSpouse.clearValidators();
       panOfSpouse.updateValueAndValidity();
@@ -726,40 +727,45 @@ export class OtherInformationComponent implements OnInit {
         this.Copy_ITR_JSON?.portugeseCC5AFlag ||
         '';
 
-      const schedule5a = {
-        nameOfSpouse: this.schedule5AForm.get('nameOfSpouse').value || '',
-        panOfSpouse: this.schedule5AForm.get('panOfSpouse').value || '',
-        aadhaarOfSpouse: this.schedule5AForm.get('aadhaarOfSpouse').value || '',
-        booksSpouse44ABFlg:
-          this.schedule5AForm.get('booksSpouse44ABFlg').value || '',
-        booksSpouse92EFlg:
-          this.schedule5AForm.get('booksSpouse92EFlg').value || '',
-        headIncomes: [],
-      };
+      if(this.Copy_ITR_JSON.portugeseCC5AFlag === 'Y') { 
 
-      const incomeTypes = [
-        'houseProperty',
-        'businessOrProfession',
-        'capitalGain',
-        'otherSource',
-      ];
+        const schedule5a = {
+          nameOfSpouse: this.schedule5AForm.get('nameOfSpouse').value || '',
+          panOfSpouse: this.schedule5AForm.get('panOfSpouse').value || '',
+          aadhaarOfSpouse: this.schedule5AForm.get('aadhaarOfSpouse').value || '',
+          booksSpouse44ABFlg:
+            this.schedule5AForm.get('booksSpouse44ABFlg').value || '',
+          booksSpouse92EFlg:
+            this.schedule5AForm.get('booksSpouse92EFlg').value || '',
+          headIncomes: [],
+        };
 
-      incomeTypes.forEach((incomeType) => {
-        let incomeItem = this.schedule5AForm.controls[`${incomeType}`].value;
-        if (incomeItem) {
-          const incomeObject = {
-            headOfIncome: incomeItem.headOfIncome,
-            incomeReceived: incomeItem.incomeReceived || 0,
-            apportionedAmountOfSpouse:
-              incomeItem.apportionedAmountOfSpouse || 0,
-            tdsDeductedAmount: incomeItem.tdsDeductedAmount || 0,
-            apportionedTDSOfSpouse: incomeItem.apportionedTDSOfSpouse || 0,
-          };
-          schedule5a.headIncomes.push(incomeObject);
-        }
-      });
+        const incomeTypes = [
+          'houseProperty',
+          'businessOrProfession',
+          'capitalGain',
+          'otherSource',
+        ];
 
-      this.Copy_ITR_JSON.schedule5a = schedule5a;
+        incomeTypes.forEach((incomeType) => {
+          let incomeItem = this.schedule5AForm.controls[`${incomeType}`].value;
+          if (incomeItem) {
+            const incomeObject = {
+              headOfIncome: incomeItem.headOfIncome,
+              incomeReceived: incomeItem.incomeReceived || 0,
+              apportionedAmountOfSpouse:
+                incomeItem.apportionedAmountOfSpouse || 0,
+              tdsDeductedAmount: incomeItem.tdsDeductedAmount || 0,
+              apportionedTDSOfSpouse: incomeItem.apportionedTDSOfSpouse || 0,
+            };
+            schedule5a.headIncomes.push(incomeObject);
+          }
+        });
+
+        this.Copy_ITR_JSON.schedule5a = schedule5a;
+      } else {
+        this.Copy_ITR_JSON.schedule5a = null;
+      }
     } else {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid')
         .first()

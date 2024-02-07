@@ -538,7 +538,7 @@ export class CustomerProfileComponent implements OnInit {
       );
     } else {
       $('input.ng-invalid, mat-form-field.ng-invalid, mat-select.ng-invalid').first().focus();
-      this.utilsService.highlightInvalidFormFields(this.customerProfileForm);
+      this.utilsService.highlightInvalidFormFields(this.customerProfileForm, 'accordBtn');
 
       if(gender?.status === 'INVALID'){
         gender?.setValidators(Validators.required);

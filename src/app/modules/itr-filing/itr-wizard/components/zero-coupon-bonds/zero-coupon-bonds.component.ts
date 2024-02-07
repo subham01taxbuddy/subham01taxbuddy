@@ -324,7 +324,7 @@ export class ZeroCouponBondsComponent
 
   saveManualEntry() {
     if(this.selectedFormGroup.invalid){
-      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup);
+      this.utilsService.highlightInvalidFormFields(this.selectedFormGroup, 'accordBtn1');
       return;
     }
 

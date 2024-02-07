@@ -22,6 +22,7 @@ import { TotalCg } from '../../../../../services/itr-json-helper-service';
   templateUrl: './bonds-debentures.html',
   styleUrls: ['./bonds-debentures.scss'],
 })
+//TODO: needs to be removed after confirming it is unused
 export class BondsDebentures
   extends WizardNavigation
   implements OnInit
@@ -114,7 +115,7 @@ export class BondsDebentures
               (data) => data.srn == element.srn
             );
             if (filterImp?.length > 0) {
-              element['costOfImprovement'] = filterImp[0].costOfImprovement;
+              element['improvementCost'] = filterImp[0].costOfImprovement;
               element['indexCostOfImprovement'] =
                 filterImp[0].indexCostOfImprovement;
               element['dateOfImprovement'] = filterImp[0].dateOfImprovement;
@@ -135,7 +136,7 @@ export class BondsDebentures
               (data) => data.srn == element.srn
             );
             if (filterImp.length > 0) {
-              element['costOfImprovement'] = filterImp[0].costOfImprovement;
+              element['improvementCost'] = filterImp[0].costOfImprovement;
               element['indexCostOfImprovement'] =
                 filterImp[0].indexCostOfImprovement;
               element['dateOfImprovement'] = filterImp[0].dateOfImprovement;
@@ -158,7 +159,7 @@ export class BondsDebentures
               (data) => data.srn == element.srn
             );
             if (filterImp.length > 0) {
-              element['costOfImprovement'] = filterImp[0].costOfImprovement;
+              element['improvementCost'] = filterImp[0].costOfImprovement;
 
             }
             if (this.bondType === 'zeroCouponBonds' && !element.whetherDebenturesAreListed) {
@@ -276,7 +277,7 @@ export class BondsDebentures
       purchaseDate: [item ? item.purchaseDate : null, Validators.required],
       indexCostOfAcquisition: [item ? item.indexCostOfAcquisition : null],
       dateOfImprovement: [item ? item.dateOfImprovement : null],
-      costOfImprovement: [
+      improvementCost: [
         item ? item.costOfImprovement : null,
         [Validators.pattern(AppConstants.amountWithDecimal)],
       ],
@@ -408,7 +409,7 @@ export class BondsDebentures
           {
             srn: bonds.controls['srn'].value,
             dateOfImprovement: bonds.controls['dateOfImprovement'].value,
-            costOfImprovement: bonds.controls['costOfImprovement'].value,
+            costOfImprovement: bonds.controls['improvementCost'].value,
             indexCostOfImprovement: bonds.controls[
               'isIndexationBenefitAvailable'
             ].value
@@ -507,7 +508,7 @@ export class BondsDebentures
           && !(element as FormGroup).controls['whetherDebenturesAreListed'].value
         ) {
           let costOfImprovement = (element as FormGroup).controls[
-            'costOfImprovement'
+            'improvementCost'
           ].value;
           bondImprovement.push({
             srn: (element as FormGroup).controls['srn'].value,
@@ -518,7 +519,7 @@ export class BondsDebentures
               'indexCostOfImprovement'
             ].value,
             costOfImprovement: (element as FormGroup).controls[
-              'costOfImprovement'
+              'improvementCost'
             ].value,
           });
           bondsList.push((element as FormGroup).getRawValue());
@@ -616,7 +617,7 @@ export class BondsDebentures
             }
 
             let costOfImprovement = (element as FormGroup).controls[
-              'costOfImprovement'
+              'improvementCost'
             ].value;
             bondImprovement.push({
               srn: (element as FormGroup).controls['srn'].value,
@@ -630,7 +631,7 @@ export class BondsDebentures
             });
 
             //Ashwini: This adjustment is done to persist indexed cost of improvement for backend cg calculations
-            (element as FormGroup).controls['costOfImprovement'].setValue(
+            (element as FormGroup).controls['improvementCost'].setValue(
               (element as FormGroup).controls['indexCostOfImprovement'].value);
 
             debsList.push((element as FormGroup).getRawValue());
@@ -745,7 +746,7 @@ export class BondsDebentures
             }
 
             let costOfImprovement = (element as FormGroup).controls[
-              'costOfImprovement'
+              'improvementCost'
               ].value;
             bondImprovement.push({
               srn: (element as FormGroup).controls['srn'].value,
@@ -900,7 +901,7 @@ export class BondsDebentures
 
     // for improvements indexation
     let costOfImprovement = parseFloat(
-      asset.controls['costOfImprovement'].value
+      asset.controls['improvementCost'].value
     );
     let improvementFinancialYear = asset.controls['dateOfImprovement'].value;
 
