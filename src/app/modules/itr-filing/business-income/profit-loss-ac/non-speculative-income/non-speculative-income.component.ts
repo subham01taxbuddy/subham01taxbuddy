@@ -235,8 +235,8 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   initExpenseForm(obj: NewExpenses) {
     return this.formBuilder.group({
       hasExpense: [false],
-      expenseType: [obj ? obj.expenseType : null, [Validators.required]],
-      expenseAmount: [obj ? obj.expenseAmount : 0, [Validators.required]],
+      expenseType: [obj ? obj.expenseType : null, []],
+      expenseAmount: [obj ? obj.expenseAmount : 0, []],
       description: [obj ? obj.description : null],
     });
   }
