@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as moment from 'moment';
 import { WizardNavigation } from 'src/app/modules/itr-shared/WizardNavigation';
 import { AppConstants } from 'src/app/modules/shared/constants';
 import { ITR_JSON } from 'src/app/modules/shared/interfaces/itr-input.interface';
@@ -276,6 +277,18 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
       let totalTaxAttributedAmount = this.scheduleESOPDetailsFormArray.getRawValue().reduce((total, item) => total + (item.scheduleESOPEventDetails?.reduce((total, element) => total + (element?.taxAttributedAmount || 0), 0) || 0), 0);
       this.scheduleESOPForm.get('totalTaxAttributedAmount').setValue(totalTaxAttributedAmount);
       this.Copy_ITR_JSON.scheduleESOP = this.scheduleESOPForm.getRawValue();
+      this.Copy_ITR_JSON.scheduleESOP.scheduleESOPDetails
+      .forEach(esop => {
+        if(esop.dateOfCeasing)
+          esop.dateOfCeasing = moment(esop.dateOfCeasing).format('YYYY-MM-DD');
+
+        if(esop.securityType !== 'NS') {
+          esop.scheduleESOPEventDetails
+          .filter(esopEvent => esopEvent.dateOfSale)
+          .forEach(esop => esop.dateOfSale = moment(esop.dateOfSale).format('YYYY-MM-DD'));
+        } else 
+            esop.scheduleESOPEventDetails = [];
+      });
     }
 
     sessionStorage.setItem(
