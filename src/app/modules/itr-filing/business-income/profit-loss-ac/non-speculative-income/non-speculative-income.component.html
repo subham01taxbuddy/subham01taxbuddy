@@ -20,8 +20,8 @@
 
                   <div id="collapse3" class="accordion-collapse collapse show" data-bs-parent="#myAccordion">
                     <div class="accordion__item-body">
-                      <form [formGroup]="natOfBusinessDtlForm">
-                        <div class="pre-box1">
+                      <form [formGroup]="natOfBusinessDtlForm" style="position: relative;">
+                        <!-- <div class="pre-box1">
                           <div class="hdByr-L">
                             &nbsp; </div>
                           <div class="hdByr-R">
@@ -37,44 +37,55 @@
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div> -->
 
-                        <div class="row" formArrayName="natOfBusinessDtlsArray">
-                          <div *ngFor="
-          let income of getnatOfBusinessDtlsArray.controls
-            | paginate : config;
-          let i = index
-        " [formGroupName]="fieldGlobalIndex(i)">
-                            <div class=" gray_box">
-                              <div class="div-6 ">
-                                <div class="col-sm-1 spsTp">
+                        <div class="" formArrayName="natOfBusinessDtlsArray">
+                          <div class="row"
+                            *ngFor="let income of getnatOfBusinessDtlsArray.controls | paginate : config;let i = index"
+                            [formGroupName]="fieldGlobalIndex(i)">
+                            <div class="col-10">
+                              <div class=" gray_box">
+                                <div class="div-6 ">
+                                  <!-- <div class="col-sm-1 spsTp">
                                   <mat-checkbox name="hasEdit[i]" formControlName="hasEdit" class="tpBtn1">
                                   </mat-checkbox>
-                                </div>
+                                </div> -->
 
-                                <div class="form-field">
-                                  <app-business-input-autocomplete [businessType]="'ALL'" [selectedInput]="
-                  natOfBusinessDtlsArray.controls[i].get('natureOfBusiness')
-                    .value" (businessSelected)="businessClicked($event, i)">
-                                  </app-business-input-autocomplete>
-                                </div>
-                                <div class="form-field">
-                                  <div><span class="normal_text">Trade Name </span> </div>
-                                  <mat-form-field appearance="outline">
-                                    <input formControlName="tradeName" matInput name="tradeName[i]"
-                                      class="input-field" />
-                                  </mat-form-field>
-                                </div>
-                                <div class="form-field">
-                                  <div><span class="normal_text">Business Description</span></div>
-                                  <mat-form-field appearance="outline">
-                                    <input formControlName="businessDescription" matInput name="businessDescription[i]"
-                                      class="input-field" />
-                                  </mat-form-field>
+                                  <div class="form-field">
+                                    <app-business-input-autocomplete [businessType]="'ALL'"
+                                      [selectedInput]="natOfBusinessDtlsArray.controls[i].get('natureOfBusiness').value"
+                                      (businessSelected)="businessClicked($event, i)">
+                                    </app-business-input-autocomplete>
+                                  </div>
+                                  <div class="form-field">
+                                    <div><span class="normal_text">Trade Name </span> </div>
+                                    <mat-form-field appearance="outline">
+                                      <input formControlName="tradeName" matInput name="tradeName[i]"
+                                        class="input-field" />
+                                    </mat-form-field>
+                                  </div>
+                                  <div class="form-field">
+                                    <div><span class="normal_text">Business Description</span></div>
+                                    <mat-form-field appearance="outline">
+                                      <input formControlName="businessDescription" matInput
+                                        name="businessDescription[i]" class="input-field" />
+                                    </mat-form-field>
+                                  </div>
                                 </div>
                               </div>
                             </div>
+                            <div class="col-2 mt-5">
+                              <div class="ml-20 mt-4">
+                                <i class="fa fa-trash-o delbt mr-20" (click)="deleteArray(i)"></i>
+
+                              </div>
+                            </div>
                           </div>
+
+                        </div>
+                        <div [ngClass]="getnatOfBusinessDtlsArray.controls.length?'addBtn':'byDefaultAddBtn'">
+                          <button type="button" [disabled]="natOfBusinessDtlForm.invalid" class="addAno" (click)="addNatOfBusinessForm()">
+                            Add Another</button>
                         </div>
                       </form>
                       <div class="row spsTp bdrTp" style="align-items: center">
