@@ -39,7 +39,7 @@
                                 <div class="col-md-8">
                                     <mat-form-field appearance="outline">
                                         <input digitsOnly type="number" trim matInput name="taxDeferredBFEarlierAY"
-                                            formControlName="taxDeferredBFEarlierAY" maxlength="50" placeholder="Amount" (blur)="onBlurSetFullySoldTaxAttributedAmount()"/>
+                                            formControlName="taxDeferredBFEarlierAY" maxlength="50" placeholder="Amount" (blur)="onBlurTaxDeferredBFEarlierAY()"/>
                                     </mat-form-field>
                                     <mat-error *ngIf="selectedFormGroup?.get('taxDeferredBFEarlierAY')?.hasError('required') && selectedFormGroup?.get('taxDeferredBFEarlierAY')?.touched">
                                       Please enter the amount
@@ -58,7 +58,7 @@
                                         Such specified security or sweat equity shares were sold
                                     </span>
                                     <mat-form-field appearance="outline">
-                                        <mat-select placeholder="Select" name="securityType" formControlName="securityType" (selectionChange)="selectionChangeSecurityType()">
+                                        <mat-select placeholder="Select" name="securityType" formControlName="securityType" (selectionChange)="selectionChangeSecurityType(true)">
                                             <mat-option *ngFor="let securityType of securityTypes;"
                                                 [value]="securityType.type">{{ securityType.label}}</mat-option>
                                         </mat-select>
@@ -118,7 +118,8 @@
                                 <div class="col-md-4">
                                     <mat-form-field appearance="outline">
                                         <input digitsOnly type="number" trim matInput name="taxAttributedAmount[i]"
-                                            formControlName="taxAttributedAmount" maxlength="50" placeholder="Amount"/>
+                                            formControlName="taxAttributedAmount" maxlength="50" placeholder="Amount"
+                                            (blur)="setBalanceCF()"/>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-md-3">
@@ -229,7 +230,7 @@
                                 <div class="col-md-8">
                                     <mat-form-field appearance="outline">
                                         <input digitsOnly trim matInput name="balanceTaxCF"
-                                            formControlName="balanceTaxCF" maxlength="50" [value]="getBalanceCF()" placeholder="Amount"/>
+                                            formControlName="balanceTaxCF" maxlength="50" placeholder="Amount"/>
                                     </mat-form-field>
                                 </div>
                         </div>
@@ -256,6 +257,7 @@
                                     <th>Security Sold</th>
                                     <th>Ceased to be employee</th>
                                     <th>Date of ceased to be employee</th>
+                                    <th>Tax-deferred to be carried forward to the Next AY</th>
                                     <th>Delete</th>
                                     <th>Edit</th>
                                 </thead>
@@ -269,6 +271,7 @@
                                         </td>
                                         <td>{{scheduleESOPDetail.get('ceasedEmployee').value === 'Y' ? 'Yes':'No'}}</td>
                                         <td>{{scheduleESOPDetail.get('dateOfCeasing').value | date: 'dd/MM/yyyy'}}</td>
+                                        <td>₹{{utilsService.currencyFormatter(scheduleESOPDetail.get('balanceTaxCF').value)}}</td>
                                         <td class="text-center"><button type="button" class="p-0"
                                                 (click)="deleteScheduleEsop(i)"> <i class="fa fa-trash-o delbt"></i>
                                             </button></td>
