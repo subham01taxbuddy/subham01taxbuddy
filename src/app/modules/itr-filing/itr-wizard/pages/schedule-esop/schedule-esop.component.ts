@@ -227,6 +227,8 @@ export class ScheduleEsopComponent extends WizardNavigation implements OnInit {
       scheduleESOPEventDetailsFormGroup?.get('dateOfSale').disable();
       scheduleESOPEventDetailsFormGroup?.get('taxAttributedAmount').disable();
     }
+
+    this.setBalanceCF();
   }
 
   deleteScheduleESOPEventDetail(index: number) {
