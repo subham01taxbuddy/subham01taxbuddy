@@ -151,9 +151,10 @@
                                           calculatePresumptive(fieldGlobalIndex(i), 'bank', true)" />
                                       <div class="percentage-head" style="width: 50px;">
                                         <span class="percentage">
-                                          {{bankPercentage[i]?bankPercentage[i]:0}}% </span>
+                                          {{bankPercentage[fieldGlobalIndex(i)]?bankPercentage[fieldGlobalIndex(i)]:0}}%
+                                        </span>
                                         <div class="bar"
-                                          [ngStyle]="{'width': bankPerWidth[i]?bankPerWidth[i]+'px' : 0+'px','background-color': '#2D8EF9'}">
+                                          [ngStyle]="{'width': bankPerWidth[fieldGlobalIndex(i)]?bankPerWidth[fieldGlobalIndex(i)]+'px' : 0+'px','background-color': '#2D8EF9'}">
                                         </div>
                                       </div>
                                     </mat-form-field>
@@ -233,9 +234,9 @@
                                         " />
                                       <div class="percentage-head" style="width: 50px;">
                                         <span class="percentage">
-                                          {{cashPercentage[i]?cashPercentage[i]:0}}% </span>
+                                          {{cashPercentage[fieldGlobalIndex(i)]?cashPercentage[fieldGlobalIndex(i)]:0}}% </span>
                                         <div class="bar"
-                                          [ngStyle]="{'width': cashPerWidth[i]?cashPerWidth[i]+'px' : 0+'px','background-color': '#2D8EF9'}">
+                                          [ngStyle]="{'width': cashPerWidth[fieldGlobalIndex(i)]?cashPerWidth[fieldGlobalIndex(i)]+'px' : 0+'px','background-color': '#2D8EF9'}">
                                         </div>
                                       </div>
                                     </mat-form-field>

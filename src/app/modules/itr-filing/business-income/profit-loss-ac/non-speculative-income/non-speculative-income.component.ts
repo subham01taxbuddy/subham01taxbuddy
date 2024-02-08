@@ -162,13 +162,16 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   }
 
   addNatOfBusinessForm() {
-    let form = this.createNatOfBusinessForm(0, null);
-    (this.natOfBusinessDtlForm.controls['natOfBusinessDtlsArray'] as FormArray).insert(0, form);
+    if (this.natOfBusinessDtlForm.valid) {
+      let form = this.createNatOfBusinessForm(0, null);
+      (this.natOfBusinessDtlForm.controls['natOfBusinessDtlsArray'] as FormArray).insert(0, form);
+    }
   }
 
-  deleteArray() {
-    const natOfBusinessDtlsArray = <FormArray>this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray');
-    natOfBusinessDtlsArray.controls = natOfBusinessDtlsArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
+  deleteArray(index) {
+    this.natOfBusinessDtlsArray.removeAt(index);
+    // const natOfBusinessDtlsArray = <FormArray>this.natOfBusinessDtlForm.get('natOfBusinessDtlsArray');
+    // natOfBusinessDtlsArray.controls = natOfBusinessDtlsArray.controls.filter(element => !(element as FormGroup).controls['hasEdit'].value);
   }
 
   specSelected() {
@@ -232,8 +235,8 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   initExpenseForm(obj: NewExpenses) {
     return this.formBuilder.group({
       hasExpense: [false],
-      expenseType: [obj ? obj.expenseType : null, [Validators.required]],
-      expenseAmount: [obj ? obj.expenseAmount : 0, [Validators.required]],
+      expenseType: [obj ? obj.expenseType : null, []],
+      expenseAmount: [obj ? obj.expenseAmount : 0, []],
       description: [obj ? obj.description : null],
     });
   }

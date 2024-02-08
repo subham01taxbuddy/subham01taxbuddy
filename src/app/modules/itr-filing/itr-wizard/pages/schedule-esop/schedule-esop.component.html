@@ -39,13 +39,13 @@
                                 <div class="col-md-8">
                                     <mat-form-field appearance="outline">
                                         <input digitsOnly type="number" trim matInput name="taxDeferredBFEarlierAY"
-                                            formControlName="taxDeferredBFEarlierAY" maxlength="50" placeholder="Amount"/>
+                                            formControlName="taxDeferredBFEarlierAY" maxlength="50" placeholder="Amount" (blur)="onBlurTaxDeferredBFEarlierAY()"/>
                                     </mat-form-field>
                                     <mat-error *ngIf="selectedFormGroup?.get('taxDeferredBFEarlierAY')?.hasError('required') && selectedFormGroup?.get('taxDeferredBFEarlierAY')?.touched">
                                       Please enter the amount
                                     </mat-error>
-                                    <mat-error *ngIf="selectedFormGroup?.get('taxDeferredBFEarlierAY')?.hasError('sumMismatch') && selectedFormGroup?.get('taxDeferredBFEarlierAY')?.touched">
-                                      In case of fully sold Amount of Tax deferred brought forward from earlier AY should be equal to sum of Amount of Tax Attributed out of the sale.
+                                    <mat-error *ngIf="selectedFormGroup?.get('taxDeferredBFEarlierAY')?.hasError('partly_sold_sum_cant_be_greater_than_tax_deferred') && selectedFormGroup?.get('taxDeferredBFEarlierAY')?.touched">
+                                        In case of partly sold sum of Amount of Tax Attributed out of the sale cann't be greater than Amount of Tax deferred brought forward from earlier AY.
                                     </mat-error>
                                 </div>
                             </div>
@@ -58,7 +58,7 @@
                                         Such specified security or sweat equity shares were sold
                                     </span>
                                     <mat-form-field appearance="outline">
-                                        <mat-select placeholder="Select" name="securityType" formControlName="securityType">
+                                        <mat-select placeholder="Select" name="securityType" formControlName="securityType" (selectionChange)="selectionChangeSecurityType(true)">
                                             <mat-option *ngFor="let securityType of securityTypes;"
                                                 [value]="securityType.type">{{ securityType.label}}</mat-option>
                                         </mat-select>
@@ -118,11 +118,12 @@
                                 <div class="col-md-4">
                                     <mat-form-field appearance="outline">
                                         <input digitsOnly type="number" trim matInput name="taxAttributedAmount[i]"
-                                            formControlName="taxAttributedAmount" maxlength="50" placeholder="Amount"/>
+                                            formControlName="taxAttributedAmount" maxlength="50" placeholder="Amount"
+                                            (blur)="setBalanceCF()"/>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-md-3">
-                                    <button type="button" class="p-0"
+                                    <button type="button" class="p-0" [disabled]="disableDeleteScheduleESOPEventDetailButton"
                                                 (click)="deleteScheduleESOPEventDetail(i)"> <i class="fa fa-trash-o delbt"></i>
                                     </button>
                                 </div>
@@ -131,7 +132,7 @@
                             <div class="row mb-2">
                                 <div class="col-md-8">
                                     <p>Do you want to add more?</p>
-                                    <button type="button" class="addAno pb-3" (click)="addScheduleESOPEventDetail()"> +
+                                    <button type="button" [disabled]="disableAddScheduleESOPEventDetail" class="addAno pb-3" (click)="addScheduleESOPEventDetail()"> +
                                         Add Another
                                     </button>
                                 </div>
@@ -256,6 +257,7 @@
                                     <th>Security Sold</th>
                                     <th>Ceased to be employee</th>
                                     <th>Date of ceased to be employee</th>
+                                    <th>Tax-deferred to be carried forward to the Next AY</th>
                                     <th>Delete</th>
                                     <th>Edit</th>
                                 </thead>
@@ -269,6 +271,7 @@
                                         </td>
                                         <td>{{scheduleESOPDetail.get('ceasedEmployee').value === 'Y' ? 'Yes':'No'}}</td>
                                         <td>{{scheduleESOPDetail.get('dateOfCeasing').value | date: 'dd/MM/yyyy'}}</td>
+                                        <td>₹{{utilsService.currencyFormatter(scheduleESOPDetail.get('balanceTaxCF').value)}}</td>
                                         <td class="text-center"><button type="button" class="p-0"
                                                 (click)="deleteScheduleEsop(i)"> <i class="fa fa-trash-o delbt"></i>
                                             </button></td>

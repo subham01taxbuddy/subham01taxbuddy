@@ -229,7 +229,7 @@
                   <h2 class="accordion-header" id="heading4">
                     <button type="button" class="accordion-button" data-bs-toggle="collapse"
                       data-bs-target="#collapse4">Winning from lotteries, crossword puzzles etc. chargeable u/s 115BB
-                      <input type="number" class="form-control inpClr2" disabled value="{{winningsUS115BBFormGroup.get('total').value}}">
+                      <input type="number" class="form-control inpClr2" disabled value="{{winningsUS115BBTotal}}">
                     </button>
                   </h2>
                 <div id="collapse4" class="accordion-collapse collapse show">
@@ -250,7 +250,6 @@
                                     name="quarter1"
                                     formControlName="quarter1"
                                     maxlength="125"
-                                    (change)="onChangeCalculateTotal()" 
                                     (mousedown)="onClickRemoveZero('quarter1')"
                                     (blur)="onBlurAddZero('quarter1')"
                             />
@@ -272,7 +271,6 @@
                                     name="quarter2[i]"
                                     formControlName="quarter2"
                                     maxlength="125"
-                                    (change)="onChangeCalculateTotal()" 
                                     (mousedown)="onClickRemoveZero('quarter2')"
                                     (blur)="onBlurAddZero('quarter2')"
                             />
@@ -294,7 +292,6 @@
                                     name="quarter3[i]"
                                     formControlName="quarter3"
                                     maxlength="125"
-                                    (change)="onChangeCalculateTotal()" 
                                     (mousedown)="onClickRemoveZero('quarter3')"
                                     (blur)="onBlurAddZero('quarter3')"
                             />
@@ -317,7 +314,6 @@
                                     name="quarter4[i]"
                                     formControlName="quarter4"
                                     maxlength="125"
-                                    (change)="onChangeCalculateTotal()" 
                                     (mousedown)="onClickRemoveZero('quarter4')"
                                     (blur)="onBlurAddZero('quarter4')"
                             />
@@ -339,7 +335,6 @@
                                     name="quarter5[i]"
                                     formControlName="quarter5"
                                     maxlength="125"
-                                    (change)="onChangeCalculateTotal()" 
                                     (mousedown)="onClickRemoveZero('quarter5')"
                                     (blur)="onBlurAddZero('quarter5')"
                             />
