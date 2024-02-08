@@ -146,6 +146,8 @@ export class DailySignUpReportComponent implements OnInit, OnDestroy {
             leaderName: 'Total',
             totalAssignedUsersForITR: this.totals.totalAssignedUsersForITR,
             signUpNumbersForITR: this.totals.totalSignUpNumbersForITR,
+            totalAssignedUsersForITRU:this.totals.totalAssignedUsersForITRU,
+            signUpNumbersForITRU:this.totals.totalSignUpNumbersForITRU,
             totalAssignedUsersForTPA: this.totals.totalAssignedUsersForTPA,
             signUpNumbersForTPA: this.totals.totalSignUpNumbersForTPA,
             totalAssignedUsersForGST: this.totals.totalAssignedUsersForGST,

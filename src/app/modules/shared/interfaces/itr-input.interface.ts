@@ -158,7 +158,7 @@ export interface ScheduleESOPDetail {
 	taxDeferredBFEarlierAY: string;
 	securityType: string;
 	ceasedEmployee: string;
-	dateOfCeasing: number;
+	dateOfCeasing: string;
 	scheduleESOPEventDetails: ScheduleESOPEventDetail[];
 	totalTaxAttributedAmount: number;
 	taxPayableCurrentAY: number;

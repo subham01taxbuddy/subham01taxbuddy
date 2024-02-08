@@ -355,10 +355,9 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
     this.selectedIndexes = [];
   }
 
-  onChangeCalculateTotal(){
-    this.winningsUS115BBFormGroup.get('total').setValue(this.winningsUS115BBFormGroup.get('quarter1').value + this.winningsUS115BBFormGroup.get('quarter2').value +
-    this.winningsUS115BBFormGroup.get('quarter3').value + this.winningsUS115BBFormGroup.get('quarter4').value + this.winningsUS115BBFormGroup.get('quarter5').value);
-    this.winningsUS115BBFormGroup.get('total').updateValueAndValidity();
+  get winningsUS115BBTotal(){
+   return this.winningsUS115BBFormGroup.get('quarter1').value + this.winningsUS115BBFormGroup.get('quarter2').value +
+    this.winningsUS115BBFormGroup.get('quarter3').value + this.winningsUS115BBFormGroup.get('quarter4').value + this.winningsUS115BBFormGroup.get('quarter5').value;
   }
 
   onClickRemoveZero(quarter: string){
@@ -534,8 +533,11 @@ export class OtherIncomeComponent extends WizardNavigation implements OnInit {
 
     //save winningsUS115BB
     this.Copy_ITR_JSON.winningsUS115BB = null;
-    if(this.winningsUS115BBFormGroup.get('total').value > 0)
+    if(this.winningsUS115BBTotal > 0){
+      this.winningsUS115BBFormGroup.get('total').setValue(this.winningsUS115BBTotal);
+      this.winningsUS115BBFormGroup.get('total').updateValueAndValidity();
       this.Copy_ITR_JSON.winningsUS115BB = this.winningsUS115BBFormGroup.getRawValue();
+    }
 
     this.providentFundArray.forEach(element => {
       if (element.incomeType === this.otherIncomeFormGroup.controls['providentFundLabel'].value) {
