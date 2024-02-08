@@ -130,10 +130,11 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
     if (this.busIncomeForm.valid || !this.busIncomeForm.controls['busIncomeFormArray']['controls'].length) {
       this.submitted = false;
       let form = this.createBusIncomeForm(0, null);
-      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).insert(
-        0,
-        form
-      );
+      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).insert(0, form);
+      this.cashPercentage.unshift(0);
+      this.bankPercentage.unshift(0);
+      this.cashPerWidth.unshift(0);
+      this.bankPerWidth.unshift(0);
     } else {
       this.submitted = true;
     }
@@ -157,16 +158,10 @@ export class PresumptiveBusinessIncomeComponent implements OnInit {
 
   calculatePresumptive(index, incomeType, setValue?) {
     const bankReceipts = (
-      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
-      index
-      ] as FormGroup
-    ).controls['bankReceipts'];
+      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[index] as FormGroup).controls['bankReceipts'];
 
     const cashReceipts = (
-      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[
-      index
-      ] as FormGroup
-    ).controls['cashReceipts'];
+      (this.busIncomeForm.controls['busIncomeFormArray'] as FormArray).controls[index] as FormGroup).controls['cashReceipts'];
 
     let total = parseFloat(bankReceipts.value) + parseFloat(cashReceipts.value);
 
