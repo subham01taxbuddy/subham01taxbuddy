@@ -43,16 +43,16 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   incomeTypeList: any[] = [
     { key: 'RENT', value: 'Rent' },
     { key: 'COMMISSION', value: 'Commission' },
-    { key: 'DIVIDEND', value: 'Dividend' },
-    { key: 'INTEREST', value: 'Interest' },
-    { key: 'PROFIT_ON_SALE_OF_FIXED_ASSETS', value: 'Profit on Sale of Fixed Assets' },
-    { key: 'PROFIT_ON_SALE_OF_SECURITIES', value: 'Profit on Sale of securities' },
-    { key: 'PROFIT_ON_SALE_OF_OTHER_INVESTMENT', value: 'Profit on Sale of Other Investment' },
-    { key: 'GAIN_LOSS_ON_ACC_OF_FOREIGN_EXCHANGE', value: 'Gain Loss on ACC of Foreign Exchange' },
-    { key: 'PROFIT_ON_CONVERSION_OF_INVENTORY_INTO_CAPITAL_ASSET', value: 'Profit on Conversion of Inventory into capital Asset' },
-    { key: 'AGRICULTURAL', value: 'Agricultural' },
-    { key: 'LIABILITY_WRITTEN_BACK', value: 'Liability Written Back' },
-    { key: 'ANY_OTHER', value: 'Any Other' },
+    { key: 'DIVIDEND', value: 'Dividend income' },
+    { key: 'INTEREST', value: 'Interest income' },
+    { key: 'PROFIT_ON_SALE_OF_FIXED_ASSETS', value: 'Profit on sale of fixed assets' },
+    { key: 'PROFIT_ON_SALE_OF_SECURITIES', value: 'Profit on sale of investment being securities chargeable to STT' },
+    { key: 'PROFIT_ON_SALE_OF_OTHER_INVESTMENT', value: 'Profit on sale of other investment' },
+    { key: 'GAIN_LOSS_ON_ACC_OF_FOREIGN_EXCHANGE', value: 'Gain/loss on account of foreign exchange fluctuation u/s 43AA' },
+    { key: 'PROFIT_ON_CONVERSION_OF_INVENTORY_INTO_CAPITAL_ASSET', value: 'Profit on conversion of inventory into capital asset u/s 28 (via)' },
+    { key: 'AGRICULTURAL', value: 'Agriculture income' },
+    { key: 'LIABILITY_WRITTEN_BACK', value: 'Liability written back' },
+    { key: 'ANY_OTHER', value: 'Any other income' },
 
   ];
   ITR_JSON: ITR_JSON;
