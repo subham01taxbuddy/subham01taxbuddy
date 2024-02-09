@@ -1,17 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { GridOptions } from 'ag-grid-community';
 import { AppConstants } from 'src/app/modules/shared/constants';
-import {
-  BusinessDescription,
-  ITR_JSON,
-  NewExpenses,
-  ProfitLossIncomes,
-} from 'src/app/modules/shared/interfaces/itr-input.interface';
+import { BusinessDescription, ITR_JSON, NewExpenses, NewIncome, ProfitLossIncomes, } from 'src/app/modules/shared/interfaces/itr-input.interface';
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { AddUpdateTradingComponent } from './add-update-trading/add-update-trading.component';
 
 @Component({
   selector: 'app-non-speculative-income',
@@ -29,6 +22,11 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     expenseAmount: null,
     description: null,
   };
+  newIncomes: NewIncome = {
+    type: null,
+    amount: null,
+    description: null,
+  };
 
   expenseTypeList: any[] = [
     // { key: 'TRADING_EXPENSES', value: 'Trading Expenses' },
@@ -40,6 +38,21 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     { key: 'INTEREST', value: 'Interest' },
     { key: 'TAXES_AND_CESS', value: 'Taxes & Cess' },
     { key: 'OTHER_EXPENSES', value: 'Other Expenses' },
+  ];
+
+  incomeTypeList: any[] = [
+    { key: 'RENT', value: 'Rent' },
+    { key: 'COMMISSION', value: 'Commission' },
+    { key: 'DIVIDEND', value: 'Dividend' },
+    { key: 'PROFIT_ON_SALE_OF_FIXED_ASSETS', value: 'Profit on Sale of Fixed Assets' },
+    { key: 'PROFIT_ON_SALE_OF_SECURITIES', value: 'Profit on Sale of securities' },
+    { key: 'PROFIT_ON_SALE_OF_OTHER_INVESTMENT', value: 'Profit on Sale of Other Expenses' },
+    { key: 'GAIN_LOSS_ON_ACC_OF_FOREIGN_EXCHANGE', value: 'Gain Loss on ACC of Foreign Exchange' },
+    { key: 'PROFIT_ON_CONVERSION_OF_INVENTORY_INTO_CAPITAL_ASSET', value: 'Profit on Conversion of Inventory into capital Asset' },
+    { key: 'AGRICULTURAL', value: 'Agricultural' },
+    { key: 'LIABILITY_WRITTEN_BACK', value: 'Liability Written Back' },
+    { key: 'ANY_OTHER', value: 'Any Other' },
+
   ];
   ITR_JSON: ITR_JSON;
   Copy_ITR_JSON: ITR_JSON;
@@ -58,6 +71,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
   loading: boolean = false;
   totalNetProfit: any;
   totalOtherExpenses: any;
+  totalOtherIncomes: any;
   natOfBusinessDtlForm: FormGroup;
   natOfBusinessDtlsArray: FormArray;
 
@@ -123,6 +137,14 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         } else {
           this.addExpenseForm();
         }
+        let incomeList = data[0].otherIncomes;
+        if (incomeList?.length) {
+          incomeList?.forEach((element) => {
+            this.addIncomeForm(element);
+          });
+        } else {
+          this.addIncomeForm();
+        }
       } else {
         let form = this.createNonSpecIncomeForm(0, null);
         form.enable();
@@ -130,6 +152,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       }
     } else {
       this.addExpenseForm();
+      this.addIncomeForm();
       // let form = this.createNonSpecIncomeForm(0, null);
       // form.enable();
       // this.nonspecIncomeFormArray.push(form);
@@ -229,6 +252,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       grossProfit: [''],
       netProfit: [''],
       expenses: this.formBuilder.array([]),
+      incomes: this.formBuilder.array([]),
     });
   }
 
@@ -241,8 +265,21 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     });
   }
 
+  initIncomeForm(obj: NewIncome) {
+    return this.formBuilder.group({
+      hasIncome: [false],
+      type: [obj ? obj.type : null, []],
+      amount: [obj ? obj.amount : 0, []],
+      description: [obj ? obj.description : null],
+    });
+  }
+
   get expenses() {
     return <FormArray>this.profitLossForm.get('expenses');
+  }
+
+  get incomes() {
+    return <FormArray>this.profitLossForm.get('incomes');
   }
 
   addExpenseForm(element?) {
@@ -255,11 +292,29 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.changed();
   }
 
+
+  addIncomeForm(element?) {
+    const incomes = this.incomes;
+    if (element) {
+      incomes.push(this.initIncomeForm(element));
+    } else {
+      incomes.push(this.initIncomeForm(null));
+    }
+    this.changeIncomes();
+  }
+
   deleteExpenseForm() {
     const expenses = this.expenses;
     expenses.controls = expenses.controls.filter(element => !(element as FormGroup).controls['hasExpense'].value);
     this.calculateNetProfit();
     this.changed();
+  }
+
+  deleteIncomeForm() {
+    const incomes = this.incomes;
+    incomes.controls = incomes.controls.filter(element => !(element as FormGroup).controls['hasIncome'].value);
+    this.calculateNetProfit();
+    this.changeIncomes();
   }
 
   calculateIncome(index) {
@@ -282,7 +337,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     this.calculateNetProfit();
   }
 
-  calculateNetProfit(index?) {
+  calculateNetProfit() {
     let specIncomeArray = this.nonspecIncomeForm.get(
       'nonspecIncomesArray'
     ) as FormArray;
@@ -308,7 +363,12 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       allExpenses += parseFloat(element.expenseAmount);
     });
     this.totalOtherExpenses = allExpenses;
-    const net = form.netProfit - allExpenses;
+    let allIncomes = 0;
+    form.incomes.forEach((element) => {
+      allIncomes += parseFloat(element.amount);
+    });
+    this.totalOtherIncomes = allIncomes;
+    const net = form.netProfit + allIncomes - allExpenses;
     this.profitLossForm.controls['netProfit'].setValue(net);
     this.totalNetProfit = net;
   }
@@ -319,6 +379,18 @@ export class NonSpeculativeIncomeComponent implements OnInit {
       type.disabled = false;
       expenses.controls.forEach((element: FormGroup) => {
         if (element.controls['expenseType'].value == type.key) {
+          type.disabled = true;
+        }
+      });
+    });
+  }
+
+  changeIncomes() {
+    const incomes = this.incomes;
+    this.incomeTypeList.forEach((type) => {
+      type.disabled = false;
+      incomes.controls.forEach((element: FormGroup) => {
+        if (element.controls['type'].value == type.key) {
           type.disabled = true;
         }
       });
@@ -339,6 +411,7 @@ export class NonSpeculativeIncomeComponent implements OnInit {
         netProfitfromNonSpeculativeIncome: row.netProfit,
         incomes: this.nonspecIncomeFormArray.getRawValue(),
         expenses: row.expenses,
+        otherIncomes:row.incomes,
       });
       if (!this.Copy_ITR_JSON.business) {
         this.Copy_ITR_JSON.business = {
@@ -393,6 +466,14 @@ export class NonSpeculativeIncomeComponent implements OnInit {
     return (
       this.expenses.controls.filter(
         (element: FormGroup) => element.controls['hasExpense'].value === true
+      ).length > 0
+    );
+  }
+
+  incomeSelected() {
+    return (
+      this.incomes.controls.filter(
+        (element: FormGroup) => element.controls['hasIncome'].value === true
       ).length > 0
     );
   }
