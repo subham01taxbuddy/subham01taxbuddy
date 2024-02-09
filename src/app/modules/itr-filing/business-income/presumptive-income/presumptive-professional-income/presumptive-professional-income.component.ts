@@ -83,7 +83,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     });
 
     this.profIncomeFormArray.controls.forEach((formgroup, index) => {
-      this.calculatePresumptive(null, index, false);
+      this.calculatePresumptive();
     });
   }
 
@@ -132,10 +132,8 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
     if (this.profIncomeForm.valid) {
       this.submitted = false;
       let form = this.createProfIncomeForm(0, null);
-      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).insert(
-        0,
-        form
-      );
+      (this.profIncomeForm.controls['profIncomeFormArray'] as FormArray).insert(0, form);
+      this.percentage.unshift({ "natOfBusiness": "", "percentage": 0 });
     } else {
       this.submitted = true;
     }
@@ -158,7 +156,7 @@ export class PresumptiveProfessionalIncomeComponent implements OnInit {
 
   }
 
-  calculatePresumptive(event, index, setValue?) {
+  calculatePresumptive() {
     this.percentage = [];
     const profIncomeFormArray = <FormArray>(
       this.profIncomeForm.get('profIncomeFormArray')
