@@ -64,9 +64,9 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   sortBy: any = {};
   sortMenus = [
     { value: 'name', name: 'Name' },
-    { value: 'createdDate', name: 'Creation Date'},
-    {value: 'statusUpdatedDate', name: 'Status Updated Date'},
-    {value: 'userId', name: 'User Id '}
+    { value: 'createdDate', name: 'Creation Date' },
+    { value: 'statusUpdatedDate', name: 'Status Updated Date' },
+    { value: 'userId', name: 'User Id ' }
   ];
   searchBy: any = {};
   searchMenus = [];
@@ -340,6 +340,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
     this.userService.getMethod(param).subscribe(
       (response) => {
         if (response instanceof Array && response.length > 0) {
+          this.searchParam.statusId = null;
           this.itrStatus = response;
         } else {
           this.itrStatus = [];
@@ -624,12 +625,12 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
             'Not Interested': { background: '#DCDCDC', color: '#808080' },
             'Payment Received': { background: '#D3FBDA', color: '#43A352' },
             'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-            'Upgraded Invoice Sent' : {background : '#D3FBDA', color: '#43A352'},
-            'Follow Up':{ background: '#DCDCDC', color: '#808080' },
-            'Documents Uploaded' : { background: '#D3FBDA', color: '#43A352' },
+            'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+            'Follow Up': { background: '#DCDCDC', color: '#808080' },
+            'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
             'Backed Out': { background: '#DCDCDC', color: '#808080' },
           };
-          const statusStyle = statusColors[statusName] ||  { background: '#DCDCDC', color: '#808080' };
+          const statusStyle = statusColors[statusName] || { background: '#DCDCDC', color: '#808080' };
 
           return `<button class="status-chip" title="Update Status" data-action-type="updateStatus" style="padding: 0px 18px;  border-radius: 40px;
           cursor:pointer; background-color: ${statusStyle.background}; color: ${statusStyle.color};">
