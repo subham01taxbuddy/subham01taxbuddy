@@ -402,8 +402,8 @@ export class ItrAssignedUsersComponent implements OnInit {
     if (serviceType) {
       param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&serviceType=' + serviceType;
     } else {
-      // https://uat-api.taxbuddy.com/user/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&allItr=true
-      param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&allItr=true';
+      // https://uat-api.taxbuddy.com/user/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&allItrServiceType=true
+      param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&allItrServiceType=true';
     }
     this.userService.getMethod(param).subscribe(
       (response) => {
