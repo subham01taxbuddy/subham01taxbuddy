@@ -356,7 +356,7 @@
                                       <mat-select placeholder="Income Type" formControlName="type" name="type"
                                         (selectionChange)="changeIncomes()">
                                         <mat-option *ngFor="let type of incomeTypeList" [value]="type.key"
-                                          [disabled]="type.disabled">
+                                          [disabled]="(type.key != 'ANY_OTHER')?type.disabled:false">
                                           {{ type.value }}
                                         </mat-option>
                                       </mat-select>
@@ -432,7 +432,7 @@
                                       <mat-select placeholder="expense Type" formControlName="expenseType"
                                         name="expenseType" (selectionChange)="changed()">
                                         <mat-option *ngFor="let type of expenseTypeList" [value]="type.key"
-                                          [disabled]="type.disabled">
+                                          [disabled]="(type.key !='OTHER_EXPENSES')? type.disabled:false">
                                           {{ type.value }}
                                         </mat-option>
                                       </mat-select>
