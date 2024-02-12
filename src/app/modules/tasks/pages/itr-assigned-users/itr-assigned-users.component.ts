@@ -408,6 +408,7 @@ export class ItrAssignedUsersComponent implements OnInit {
     this.userService.getMethod(param).subscribe(
       (response) => {
         if (response instanceof Array && response.length > 0) {
+          this.searchParam.statusId=null;
           this.itrStatus = response;
         } else {
           this.itrStatus = [];
