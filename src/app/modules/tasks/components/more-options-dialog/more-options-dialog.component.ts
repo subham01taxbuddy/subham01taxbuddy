@@ -323,8 +323,8 @@ export class MoreOptionsDialogComponent implements OnInit {
   checkFilerAssignment(action) {
     // https://uat-api.taxbuddy.com/user/check-filer-assignment?userId=16387&assessmentYear=2023-2024&serviceType=ITR
     let hasFilerAssignment = false;
-    let serviceType='';
-    if(this.data.serviceType === 'ITRU'){
+    let serviceType = '';
+    if (this.data.serviceType === 'ITRU') {
       serviceType = `&serviceType=ITRU`
     }
     let param = `/check-filer-assignment?userId=${this.data.userId}${serviceType}`
@@ -367,7 +367,9 @@ export class MoreOptionsDialogComponent implements OnInit {
     });
 
     disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
+      if (result) {
+        this.dialogRef.close({ event: 'close', data: 'success' });
+      }
     });
   }
 
@@ -531,7 +533,7 @@ export class MoreOptionsDialogComponent implements OnInit {
     this.itrMsService.getMethod(param).subscribe(
       (res: any) => {
         if (res?.data?.itrInvoicepaymentStatus === 'Paid') {
-          if(this.data.statusId != 11){
+          if (this.data.statusId != 11) {
             let disposable = this.dialog.open(UpdateNoJsonFilingDialogComponent, {
               width: '50%',
               height: 'auto',
@@ -540,7 +542,7 @@ export class MoreOptionsDialogComponent implements OnInit {
 
             disposable.afterClosed().subscribe((result) => {
             });
-          }else{
+          } else {
             this.utilsService.showSnackBar(
               'Please complete e-verification before starting with revised return'
             );
