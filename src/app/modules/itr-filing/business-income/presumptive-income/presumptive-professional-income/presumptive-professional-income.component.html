@@ -101,7 +101,7 @@
                                     <mat-form-field appearance="outline">
                                       <input formControlName="receipts" maxlength="7" placeholder="₹ Enter Amount"
                                         matInput name="receipts[i]" class="input-field" required digitsOnly
-                                        (change)="calculatePresumptive($event, i, true)" />
+                                        (change)="calculatePresumptive()" />
                                     </mat-form-field>
                                     <mat-error *ngIf="
                                           (profIncomeFormArray.controls[i].get('receipts')
@@ -164,16 +164,17 @@
                                       <input formControlName="presumptiveIncome" placeholder="₹ Enter Amount" matInput
                                         name="presumptiveIncome[i]" class="input-field"
                                         maxlength="{{profIncomeFormArray.controls[i].get('receipts').value.length}}"
-                                        required digitsOnly (change)="calculatePresumptive($event, i)" />
-
+                                        required digitsOnly
+                                        (change)="calculatePresumptive()" />
                                       <div class="percentage-head" style="width: 50px;"
                                         *ngFor="let percentage of percentage; let id = index">
-                                        <span class="percentage" *ngIf="id === i">
-                                          {{ percentage?.natOfBusiness === profIncomeFormArray?.controls[i]?.get(
+                                        <span class="percentage" *ngIf="id === fieldGlobalIndex(i)">
+                                                           {{ percentage?.natOfBusiness === profIncomeFormArray?.controls[fieldGlobalIndex(i)]?.get(
                                           "natureOfBusiness" )?.value ? percentage?.percentage ? percentage?.percentage
                                           : 0 : 0 }}% </span>
-                                        <div class="bar" [ngStyle]="{'width':  (50/100)* (percentage?.natOfBusiness === profIncomeFormArray?.controls[i]?.get('natureOfBusiness')?.value ? percentage?.percentage ?
-                                          percentage?.percentage : 0 : 0)  +'px','background-color': '#2D8EF9' }">
+                                        <div class="bar" *ngIf="id === fieldGlobalIndex(i)" [ngStyle]="{'width':  (50/100)* (percentage?.natOfBusiness === profIncomeFormArray?.controls[fieldGlobalIndex(i)]?.
+                                        get('natureOfBusiness')?.value ? percentage?.percentage ?
+                                          percentage?.percentage : 0 : 0)  +'px','background-color': '#2D8EF9','z-index':'1' }">
                                         </div>
                                       </div>
                                     </mat-form-field>

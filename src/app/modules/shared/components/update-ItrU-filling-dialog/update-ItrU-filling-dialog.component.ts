@@ -11,6 +11,8 @@ import { ApiEndpoints } from '../../api-endpoint';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
+import { Location } from '@angular/common';
+
 
 export const MY_FORMATS = {
   parse: {
@@ -32,7 +34,7 @@ export const MY_FORMATS = {
   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
 })
 export class UpdateItrUFillingDialogComponent implements OnInit {
-  ackNumber = new FormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(15), Validators.minLength(15)]);
+  ackNumber = new FormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(16), Validators.minLength(16)]);
   eFillingDate = new FormControl('', Validators.required);
   itrType = new FormControl('', Validators.required);
   fy = new FormControl('');
@@ -49,6 +51,7 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
     private userMsService: UserMsService,
     public utilsService: UtilsService,
     private router: Router,
+    public location: Location,
     private dialogRef: MatDialogRef<UpdateItrUFillingDialogComponent>
   ) { }
 
@@ -151,7 +154,7 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
         this.loading = false;
         if (res.success) {
           this.utilsService.showSnackBar('ITR-U Filing Details updated successfully');
-          this.dialogRef.close();
+          this.dialogRef.close(true);
           // this.location.back();
         } else {
           this.utilsService.showSnackBar(res.message);

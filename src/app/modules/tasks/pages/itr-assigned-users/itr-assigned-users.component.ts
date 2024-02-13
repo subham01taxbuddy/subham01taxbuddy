@@ -65,8 +65,8 @@ export class ItrAssignedUsersComponent implements OnInit {
   sortMenus = [
     { value: 'name', name: 'Name' },
     { value: 'createdDate', name: 'Creation Date' },
-    {value: 'statusUpdatedDate', name: 'Status Updated Date'},
-    {value: 'userId', name: 'User Id '}
+    { value: 'statusUpdatedDate', name: 'Status Updated Date' },
+    { value: 'userId', name: 'User Id ' }
   ];
   searchBy: any = {};
   searchMenus = [];
@@ -74,7 +74,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   partnerType: any;
   unAssignedUsersView = new FormControl(false);
   disableCheckboxes = false;
-  serviceTypes =[
+  serviceTypes = [
     {
       label: 'ITR',
       value: 'ITR',
@@ -234,7 +234,7 @@ export class ItrAssignedUsersComponent implements OnInit {
           if (this.rowData.serviceType === 'ITRU') {
             objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, "2022-2023");
             objITR.isITRU = true;
-          }else{
+          } else {
             objITR = this.utilsService.createEmptyJson(profile, currentFyDetails[0].assessmentYear, currentFyDetails[0].financialYear);
           }
           objITR.filingTeamMemberId = this.rowData.callerAgentUserId;//loggedInId;
@@ -300,8 +300,8 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   checkFilerAssignment(data: any) {
     // https://uat-api.taxbuddy.com/user/check-filer-assignment?userId=16387&assessmentYear=2023-2024&serviceType=ITR
-    let serviceType='';
-    if(data.serviceType === 'ITRU'){
+    let serviceType = '';
+    if (data.serviceType === 'ITRU') {
       serviceType = `&serviceType=ITRU`
     }
     let param = `/check-filer-assignment?userId=${data.userId}${serviceType}`;
@@ -358,8 +358,8 @@ export class ItrAssignedUsersComponent implements OnInit {
           let smeSelectedPlan = item?.smeSelectedPlan;
           let userSelectedPlan = item?.userSelectedPlan;
           let item1 = item?.item;
-          console.log(data.serviceType )
-          if(data.serviceType === 'ITR'){
+          console.log(data.serviceType)
+          if (data.serviceType === 'ITR') {
             if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITR')) {
               itrSubscriptionFound = true;
               return;
@@ -369,7 +369,7 @@ export class ItrAssignedUsersComponent implements OnInit {
             }
           }
 
-          if(data.serviceType === 'ITRU'){
+          if (data.serviceType === 'ITRU') {
             if (smeSelectedPlan && (smeSelectedPlan.servicesType === 'ITRU' && ((item1.financialYear === "2022-2023" || item1.financialYear === "2022-23")))) {
               itrSubscriptionFound = true;
               return;
@@ -396,12 +396,19 @@ export class ItrAssignedUsersComponent implements OnInit {
     });
   }
 
-  getStatus() {
+  getStatus(serviceType?) {
     // 'https://dev-api.taxbuddy.com/user/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&serviceType=ITR'
-    let param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&serviceType=ITR';
+    let param;
+    if (serviceType) {
+      param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&serviceType=' + serviceType;
+    } else {
+      // https://uat-api.taxbuddy.com/user/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&allItrServiceType=true
+      param = '/itr-status-master/source/BACK_OFFICE?itrChatInitiated=true&allItrServiceType=true';
+    }
     this.userService.getMethod(param).subscribe(
       (response) => {
         if (response instanceof Array && response.length > 0) {
+          this.searchParam.statusId=null;
           this.itrStatus = response;
         } else {
           this.itrStatus = [];
@@ -411,6 +418,10 @@ export class ItrAssignedUsersComponent implements OnInit {
         console.log('Error during fetching status info.');
       }
     );
+
+
+
+
   }
 
 
@@ -828,11 +839,11 @@ export class ItrAssignedUsersComponent implements OnInit {
             'Not Interested': { background: '#DCDCDC', color: '#808080' },
             'Payment Received': { background: '#D3FBDA', color: '#43A352' },
             'Proforma Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
-            'Upgraded Invoice Sent' : {background : '#D3FBDA', color: '#43A352'},
-            'Follow Up':{ background: '#DCDCDC', color: '#808080' },
-            'Waiting for Confirmation' : { background: '#DCDCDC', color: '#808080' },
+            'Upgraded Invoice Sent': { background: '#D3FBDA', color: '#43A352' },
+            'Follow Up': { background: '#DCDCDC', color: '#808080' },
+            'Waiting for Confirmation': { background: '#DCDCDC', color: '#808080' },
             'Interested': { background: '#D3FBDA', color: '#43A352' },
-            'Documents Uploaded' : { background: '#D3FBDA', color: '#43A352' },
+            'Documents Uploaded': { background: '#D3FBDA', color: '#43A352' },
             'ITR Confirmation Received': { background: '#D3FBDA', color: '#43A352' },
             'ITR Filed - E Verification Pending': { background: '#DCDCDC', color: '#808080' },
             'Preparing ITR': { background: '#D3FBDA', color: '#43A352' },

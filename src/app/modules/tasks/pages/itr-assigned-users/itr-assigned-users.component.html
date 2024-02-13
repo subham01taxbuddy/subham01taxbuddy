@@ -19,7 +19,8 @@
                     <div class="col-sm-12">
                       <section class="example-section checkbox-right">
                         <div class="checkbox-group ">
-                          <mat-checkbox class="ft-18 mb-4" [formControl]="unAssignedUsersView" [disabled]="disableCheckboxes"
+                          <mat-checkbox class="ft-18 mb-4" [formControl]="unAssignedUsersView"
+                            [disabled]="disableCheckboxes"
                             *ngIf="loggedInUserRoles.includes('ROLE_ADMIN') || loggedInUserRoles.includes('ROLE_LEADER')"
                             (change)="onCheckBoxChange()">Unassigned Users</mat-checkbox>
                         </div>
@@ -35,7 +36,8 @@
                         <div class="col-sm-3 spsTp">
                           <label class="input__label" for="attr">Select Service </label>
                           <mat-form-field appearance="outline" class="custom-bg-new">
-                            <mat-select placeholder="" [(ngModel)]="searchParam.serviceType" >
+                            <mat-select placeholder="" [(ngModel)]="searchParam.serviceType"
+                              (selectionChange)="getStatus(searchParam.serviceType)">
                               <mat-option *ngFor="let service of serviceTypes" [value]="service.value">
                                 {{service.label}}
                               </mat-option>
@@ -67,7 +69,8 @@
 
                     <!-- Adding new content in filter ends -->
                     <div class="button-container">
-                      <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i> Search
+                      <button class="srch-btn-1" (click)="search()"><i class="fa fa-search" aria-hidden="true"></i>
+                        Search
                       </button>
                       <button class="clrLnk-1" (click)="this.resetFilters()">
                         Clear form
@@ -81,14 +84,14 @@
                       </div>
                     </div>
                     <div class="right"
-                    *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
-                    <button class="bulk-buttons bulk" style="float:right"
-                      (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk
-                        Re-Assignment to Filer</span></button>
-                    <button class="bulk-buttons bulk spRt" style="float:right"
-                      (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk
-                        Re-Assignment to Leader</span></button>
-                  </div>
+                      *ngIf="(loggedInUserRoles?.includes('ROLE_ADMIN') || loggedInUserRoles?.includes('ROLE_LEADER'))">
+                      <button class="bulk-buttons bulk" style="float:right"
+                        (click)="$event.stopPropagation(); reassignmentForFiler()"><span class="bulk-button-txt">Bulk
+                          Re-Assignment to Filer</span></button>
+                      <button class="bulk-buttons bulk spRt" style="float:right"
+                        (click)="$event.stopPropagation(); reassignmentForLeader()"><span class="bulk-button-txt">Bulk
+                          Re-Assignment to Leader</span></button>
+                    </div>
 
                   </div>
                 </div>

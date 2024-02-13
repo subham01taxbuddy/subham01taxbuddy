@@ -84,7 +84,8 @@
 
                         </div>
                         <div [ngClass]="getnatOfBusinessDtlsArray.controls.length?'addBtn':'byDefaultAddBtn'">
-                          <button type="button" [disabled]="natOfBusinessDtlForm.invalid" class="addAno" (click)="addNatOfBusinessForm()">
+                          <button type="button" [disabled]="natOfBusinessDtlForm.invalid" class="addAno"
+                            (click)="addNatOfBusinessForm()">
                             Add Another</button>
                         </div>
                       </form>
@@ -307,6 +308,83 @@
                           </div>
                         </div>
                         <form [formGroup]="profitLossForm">
+                          <!-- start other income -->
+                          <div class="div-6 mb-20">
+                            <div class="form-field">
+                              <div><span class="normal_text">Total Other Income</span>
+                              </div>
+                            </div>
+                            <div class="form-field">
+                              <mat-form-field appearance="outline">
+                                <input readonly type="text" matInput class="input-field" value="{{totalOtherIncomes}}"
+                                  id="exampleInputEmail1" aria-describedby="emailHelp">
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <div class="div-6 mb-20">
+                            <div class="form-field mt-3">
+                              <div><span class="normal_text">Other income</span>
+                              </div>
+                            </div>
+                            <div class="form-field buttons">
+                              <div class="flex">
+                                <div class="ml-20">
+                                  <button type="submit" (click)="deleteIncomeForm()" [disabled]="!incomeSelected()">
+                                    <i class="fa fa-trash-o delbt" aria-hidden="true"></i>
+                                  </button>
+                                  <button class="btn btn__add btn__default" (click)="addIncomeForm(this.newIncomes)">+
+                                    Add
+                                    Another</button>
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
+                          <div class="row gray_box" formArrayName="incomes">
+                            <div class="col-12 mb-2" *ngFor="let income of incomes?.controls; let i = index"
+                              [formGroupName]="i">
+                              <div class="div-6">
+                                <div class="col-sm-1">
+                                  <mat-checkbox name="hasIncome[i]" formControlName="hasIncome" class="chkSpc">
+                                  </mat-checkbox>
+                                </div>
+                                <div class="form-field">
+                                  <div><span class="normal_text">Income Type </span>
+                                  </div>
+                                  <div class="form-control-wrapper select_arrow">
+                                    <mat-form-field appearance="outline">
+                                      <mat-select placeholder="Income Type" formControlName="type" name="type"
+                                        (selectionChange)="changeIncomes()">
+                                        <mat-option *ngFor="let type of incomeTypeList" [value]="type.key"
+                                          [disabled]="(type.key != 'ANY_OTHER')?type.disabled:false">
+                                          {{ type.value }}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div>
+                                </div>
+                                <div class="form-field">
+                                  <div><span class="normal_text">Amount</span>
+                                  </div>
+                                  <mat-form-field appearance="outline">
+                                    <input matInput class="input-field" placeholder="₹ Enter Amount" digitsOnly
+                                      (change)="calculateNetProfit()" placeholder="Income Amount"
+                                      formControlName="amount" maxlength="14" />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <div class="form-field" *ngIf="income.get('type').value === 'ANY_OTHER'">
+                                <div><span class="normal_text">Description</span>
+                                </div>
+                                <mat-form-field class="input-field-width" appearance="outline">
+                                  <input matInput class="input-field" placeholder="description"
+                                    formControlName="description" [required]="
+                                      income.get('type').value === 'ANY_OTHER'" />
+                                </mat-form-field>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- end other income -->
                           <div class="div-6 mb-20">
                             <div class="form-field">
                               <div><span class="normal_text">Total Other Expenses</span>
@@ -354,7 +432,7 @@
                                       <mat-select placeholder="expense Type" formControlName="expenseType"
                                         name="expenseType" (selectionChange)="changed()">
                                         <mat-option *ngFor="let type of expenseTypeList" [value]="type.key"
-                                          [disabled]="type.disabled">
+                                          [disabled]="(type.key !='OTHER_EXPENSES')? type.disabled:false">
                                           {{ type.value }}
                                         </mat-option>
                                       </mat-select>

@@ -12,7 +12,7 @@ export interface ITR_JSON {
   contactNumber: string;
   panNumber: string;
   aadharNumber: string;
-  aadhaarEnrolmentId:any;
+  aadhaarEnrolmentId: any;
   residentialStatus: string;
   maritalStatus: string;
   assesseeType: string;
@@ -111,14 +111,14 @@ export interface ITR_JSON {
 
   liableSection44AAflag: string;
   incomeDeclaredUsFlag: string;
-	totalSalesExceedOneCr: string;
-	aggregateOfAllAmountsReceivedFlag: string;
-	aggregateOfAllPaymentsMadeFlag: string;
+  totalSalesExceedOneCr: string;
+  aggregateOfAllAmountsReceivedFlag: string;
+  aggregateOfAllPaymentsMadeFlag: string;
   liableSection44ABFlag: string;
 
   portugeseCC5AFlag: string;
   schedule5a: Schedule5A;
-  isITRU : boolean;
+  isITRU: boolean;
 
   agriculturalIncome: {
     grossAgriculturalReceipts: number;
@@ -154,15 +154,15 @@ export interface ScheduleESOP {
 }
 
 export interface ScheduleESOPDetail {
-	assessmentYear: string;
-	taxDeferredBFEarlierAY: string;
-	securityType: string;
-	ceasedEmployee: string;
-	dateOfCeasing: string;
-	scheduleESOPEventDetails: ScheduleESOPEventDetail[];
-	totalTaxAttributedAmount: number;
-	taxPayableCurrentAY: number;
-	balanceTaxCF: number;
+  assessmentYear: string;
+  taxDeferredBFEarlierAY: string;
+  securityType: string;
+  ceasedEmployee: string;
+  dateOfCeasing: string;
+  scheduleESOPEventDetails: ScheduleESOPEventDetail[];
+  totalTaxAttributedAmount: number;
+  taxPayableCurrentAY: number;
+  balanceTaxCF: number;
 }
 
 export interface ScheduleESOPEventDetail {
@@ -537,8 +537,8 @@ export interface HouseProperties {
   loans: Loans[];
   eligible80EEAAmount?: any;
   eligible80EEAmount?: any;
-  totalArrearsUnrealizedRentReceived?:any;
-  arrearsUnrealizedRentReceived?:any;
+  totalArrearsUnrealizedRentReceived?: any;
+  arrearsUnrealizedRentReceived?: any;
 }
 
 export interface PresumptiveIncomes {
@@ -1072,6 +1072,7 @@ export interface ProfitLossACIncomes {
   totalgrossProfitFromNonSpeculativeIncome?: number;
   netProfitfromNonSpeculativeIncome?: number;
   incomes: ProfitLossIncomes[];
+  otherIncomes?:NewIncome[];
   expenses?: NewExpenses[];
   totalgrossProfitFromSpeculativeIncome?: Number;
   netProfitfromSpeculativeIncome?: number;
@@ -1079,7 +1080,7 @@ export interface ProfitLossACIncomes {
 
 export interface ProfitLossIncomes {
   id: Number;
-  netIncome?:Number;
+  netIncome?: Number;
   brokerName: string;
   incomeType: string;
   turnOver: Number;
@@ -1097,10 +1098,16 @@ export interface NewExpenses {
   expenseAmount: number;
   description: any;
 }
+
+export interface NewIncome {
+  type: string;
+  amount: number;
+  description: any;
+}
 export interface NewFinancialParticulars {
   id: Number;
   membersOwnCapital: any;
-  reservesAndSurplus?:any;
+  reservesAndSurplus?: any;
   securedLoans: any;
   unSecuredLoans: any;
   totalLoans?: any;
@@ -1109,7 +1116,7 @@ export interface NewFinancialParticulars {
   sundryCreditorsAmount: Number;
   totalLiabilitiesProvision?: Number;
   totalCurrentAssetsLoansAdv?: Number;
-  netCurrentAsset?:Number;
+  netCurrentAsset?: Number;
   otherLiabilities: any;
   totalCapitalLiabilities: any;
   fixedAssets: any;
@@ -1119,8 +1126,8 @@ export interface NewFinancialParticulars {
   cashInHand: Number;
   loanAndAdvances: any;
   investment: any;
-  longTermInvestment?:any;
-  shortTermInvestment?:any;
+  longTermInvestment?: any;
+  shortTermInvestment?: any;
   totalCurrentAssets?: Number;
   otherAssets: any;
   totalAssets: any;
