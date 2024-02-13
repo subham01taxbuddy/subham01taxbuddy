@@ -1453,6 +1453,7 @@ export class ItrAssignedUsersComponent implements OnInit {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.getStatus();
     this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.searchParam.serviceType = null;
