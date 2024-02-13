@@ -1239,6 +1239,7 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   @ViewChild('smeDropDown') smeDropDown: SmeListDropDownComponent;
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   resetFilters() {
+    this.getStatus();
     this.cacheManager.clearCache();
     this.clearUserFilter = moment.now().valueOf();
     this.searchParam.serviceType = null;
