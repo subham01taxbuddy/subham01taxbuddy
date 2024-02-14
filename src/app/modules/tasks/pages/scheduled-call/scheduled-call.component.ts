@@ -793,7 +793,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
     this.subPaidScheduleCallList.setValue(false);
-    this.show ? (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('leader', false))) : (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('reg', false)));
+    this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
     this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
@@ -802,10 +802,9 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     this.searchParam.email = null;
     this.searchParam.statusId = null;
     this.statusId = null;
-
     this?.smeDropDown?.resetDropdown();
     this?.leaderDropDown?.resetDropdown();
-
+    this.show ? (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('leader', false))) : (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('reg', false)));
     if (this.coOwnerDropDown) {
       this.coOwnerDropDown.resetDropdown();
       this.search('', true);
