@@ -1,4 +1,4 @@
-import { formatDate } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,19 +22,40 @@ import { ScheduledCallReassignDialogComponent } from '../../components/scheduled
 import * as moment from 'moment';
 import { ReportService } from 'src/app/services/report-service';
 import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 declare function we_track(key: string, value: any);
-
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 @Component({
   selector: 'app-scheduled-call',
   templateUrl: './scheduled-call.component.html',
   styleUrls: ['./scheduled-call.component.css'],
+  providers: [
+    DatePipe,
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
 export class ScheduledCallComponent implements OnInit, OnDestroy {
   loading!: boolean;
   selectedAgent: any;
   searchMobNo: any;
   statusId: null;
-  statuslist: any = [
+  statusList: any = [
     { statusName: 'Open', statusId: '17' },
     { statusName: 'Done', statusId: '18' },
     { statusName: 'Follow-Up', statusId: '19' },
@@ -69,6 +90,15 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     { value: 'mobileNumber', name: 'Mobile No' },
   ];
   clearUserFilter: number;
+  loggedInUserRoles: any;
+  startDate = new FormControl('');
+  endDate = new FormControl('');
+  minStartDate: string = '2023-04-01';
+  maxStartDate = moment().toDate();
+  maxEndDate = moment().toDate();
+  minEndDate = new Date().toISOString().slice(0, 10);
+  show: boolean;
+
   constructor(
     private reviewService: ReviewService,
     private toastMsgService: ToastMessageService,
@@ -82,7 +112,12 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private genericCsvService: GenericCsvService,
     private reportService: ReportService,
+    public datePipe: DatePipe,
   ) {
+    this.startDate.setValue(new Date());
+    this.endDate.setValue(new Date());
+    this.setToDateValidation();
+    this.loggedInUserRoles = this.utilsService.getUserRoles();
     this.config = {
       itemsPerPage: this.searchParam.size,
       currentPage: 1,
@@ -90,13 +125,12 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       pageCount: null,
     };
     let roles = this.utilsService.getUserRoles();
-    let show: boolean;
     if (roles.includes('ROLE_ADMIN')) {
-      show = true;
+      this.show = true;
     }
     this.scheduleCallGridOptions = <GridOptions>{
       rowData: [],
-      columnDefs: show ? this.createColumnDef('leader') : this.createColumnDef('reg'),
+      columnDefs: this.show ? this.createColumnDef('leader') : this.createColumnDef('reg'),
       enableCellChangeFlash: true,
       enableCellTextSelection: true,
       onGridReady: (params) => { },
@@ -142,6 +176,11 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     })
   }
 
+  setToDateValidation() {
+    this.minEndDate = this.startDate.value;
+    this.maxStartDate = this.endDate.value;
+  }
+
   // async getMasterStatusList() {
   //   this.statuslist = await this.utilsService.getStoredMasterStatusList();
   // }
@@ -171,33 +210,16 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
   searchByObject(object) {
     this.searchBy = object;
-    console.log('object from search param ',this.searchBy);
+    console.log('object from search param ', this.searchBy);
   }
 
   ownerId: number;
   filerId: number;
   agentId = null;
   leaderId: number;
-  fromSme(event, isOwner) {
-    console.log('sme-drop-down', event, isOwner);
-    if (isOwner) {
-      this.leaderId = event ? event.userId : null;
-    } else {
-      this.filerId = event ? event.userId : null;
-    }
-    if (this.filerId) {
-      this.agentId = this.filerId;
-    } else if (this.leaderId) {
-      this.agentId = this.leaderId;
-      // this.search('agent');
-    } else {
-      let loggedInId = this.utilsService.getLoggedInUserID();
-      this.agentId = loggedInId;
-    }
-    // this.search('agent');
-  }
+  subPaidScheduleCallList = new FormControl(false);
 
-   fromSme1(event) {
+  fromSme(event) {
     console.log('sme-drop-down', event);
     if (event) {
       this.leaderId = event ? event.userId : null;
@@ -248,7 +270,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     return callDateTime.substring(firstPoint + 1, secondPoint - 1);
   }
 
-  createColumnDef(view) {
+  createColumnDef(view, subPaidScheduleCallList?) {
+    const that = this;
     return [
       {
         headerName: 'User Id',
@@ -290,16 +313,16 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
         // code to masking mobile no
-        cellRenderer: (params)=> {
+        cellRenderer: (params) => {
           const mobileNumber = params.value;
-          if(mobileNumber){
-            if(!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')){
+          if (mobileNumber) {
+            if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
               const maskedMobile = this.maskMobileNumber(mobileNumber);
               return maskedMobile;
-            }else{
+            } else {
               return mobileNumber;
             }
-          }else{
+          } else {
             return '-'
           }
         },
@@ -327,6 +350,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         suppressMovable: true,
         sortable: true,
         cellStyle: { textAlign: 'left', 'font-weight': 'bold' },
+        hide: subPaidScheduleCallList ? true : false,
         cellRenderer: (data) => {
           let firstPoint = data.value.indexOf('T');
           let myDate = data.value.substring(0, firstPoint);
@@ -346,6 +370,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         sortable: true,
         cellStyle: { textAlign: 'left' },
         filter: 'agTextColumnFilter',
+        hide: subPaidScheduleCallList ? true : false,
         filterParams: {
           filterOptions: ['contains', 'notContains'],
           debounceMs: 0,
@@ -418,7 +443,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         editable: false,
         suppressMenu: true,
         sortable: true,
-        hide: view === 'leader' ? false : true,
+        hide: subPaidScheduleCallList ? true : (view === 'leader') ? false : true,
         suppressMovable: true,
         cellRenderer: function (params: any) {
           if (params.data.statusId === 17 || params.data.statusId === 19) {
@@ -517,6 +542,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         sortable: true,
         suppressMovable: true,
         width: 150,
+        hide: subPaidScheduleCallList ? true : false,
         pinned: 'right',
         cellStyle: function (params: any) {
           return {
@@ -766,6 +792,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   @ViewChild('coOwnerDropDown') coOwnerDropDown: CoOwnerListDropDownComponent;
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
+    this.subPaidScheduleCallList.setValue(false);
+    this.show ? (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('leader', false))) : (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('reg', false)));
     this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
     this.searchParam.page = 0;
@@ -792,24 +820,54 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     }
   }
 
+  onCheckBoxChange() {
+    if (this.subPaidScheduleCallList.value) {
+      this.clearUserFilter = moment.now().valueOf();
+      this.statusList = [
+        { statusName: 'Open', statusId: '17' }
+      ];
+      this.cacheManager.clearCache();
+      this.searchParam.serviceType = null;
+      this.searchParam.statusId = null;
+      this.searchParam.page = 0;
+      this.searchParam.pageSize = 20;
+      this.searchParam.mobileNumber = null;
+      this.searchParam.emailId = null;
+      this.show ? (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('leader', true))) : (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('reg', true)));
+      if (!this.loggedInUserRoles.includes('ROLE_ADMIN') && !this.loggedInUserRoles.includes('ROLE_LEADER')) {
+        this.agentId = this.utilsService.getLoggedInUserID();
+      }
+      // this?.serviceDropDown?.resetService();
+      this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
+      this.config.totalItems = 0;
+    } else {
+      this.show ? (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('leader', false))) : (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('reg', false)));
+      this.statusList = [
+        { statusName: 'Open', statusId: '17' },
+        { statusName: 'Done', statusId: '18' },
+        { statusName: 'Follow-Up', statusId: '19' },
+      ];
+    }
+  }
+
   search(form?, isAgent?, pageChange?) {
-   // Admin -  'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20' \
-   //Leader - 'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20&leaderUserId=8712'
-   //
+    // Admin -  'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20' \
+    //Leader - 'https://dev-api.taxbuddy.com/report/bo/schedule-call-details?page=0&size=20&leaderUserId=8712'
+    //
     if (!pageChange) {
       this.cacheManager.clearCache();
       console.log('in clear cache')
     }
     let loggedInId = this.utilsService.getLoggedInUserID();
 
-    if(this.roles.includes('ROLE_LEADER')){
+    if (this.roles.includes('ROLE_LEADER')) {
       this.leaderId = loggedInId
     }
 
-    if(this.searchBy?.mobileNumber){
+    if (this.searchBy?.mobileNumber) {
       this.searchParam.mobileNumber = this.searchBy?.mobileNumber
     }
-    if(this.searchBy?.email){
+    if (this.searchBy?.email) {
       this.searchParam.email = this.searchBy?.email
     }
 
@@ -865,6 +923,14 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       param;
     }
 
+    // let fromDate = this.datePipe.transform(this.startDate.value, 'yyyy-MM-dd') || this.startDate.value;
+    // let toDate = this.datePipe.transform(this.endDate.value, 'yyyy-MM-dd') || this.endDate.value;
+
+    // param = param + `?fromDate=${fromDate}&toDate=${toDate}`
+    if (this.subPaidScheduleCallList.value) {
+      param = param + '&details=true'
+    }
+
     this.reportService.getMethod(param).subscribe((result: any) => {
       console.log('MOBsearchScheCALL:', result);
       this.loading = false;
@@ -895,7 +961,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         else { this.toastMsgService.alert('error', 'No Data Found'); }
       }
       this.loading = false;
-    },error =>{
+    }, error => {
       this.loading = false;
     });
   }
