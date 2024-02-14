@@ -249,8 +249,8 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         userEmail: scheduleCalls[i]['userEmail'],
         smeMobileNumber: scheduleCalls[i]['smeMobileNumber'],
         smeName: scheduleCalls[i]['smeName'],
-        scheduleCallTime: scheduleCalls[i]['scheduleCallTime'],
-        time: this.getCallTime(scheduleCalls[i]['scheduleCallTime']),
+        scheduleCallTime: (!this.subPaidScheduleCallList.value) ? scheduleCalls[i]['scheduleCallTime'] : '',
+        time: (!this.subPaidScheduleCallList.value) ? this.getCallTime(scheduleCalls[i]['scheduleCallTime']) : '',
         statusName: scheduleCalls[i]['statusName'],
         statusId: scheduleCalls[i]['statusId'],
         serviceType:
@@ -830,7 +830,6 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       this.searchParam.serviceType = null;
       this.searchParam.statusId = null;
       this.searchParam.page = 0;
-      this.searchParam.pageSize = 20;
       this.searchParam.mobileNumber = null;
       this.searchParam.emailId = null;
       this.show ? (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('leader', true))) : (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('reg', true)));
@@ -841,6 +840,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
       this.config.totalItems = 0;
     } else {
+      this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
       this.show ? (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('leader', false))) : (this.scheduleCallGridOptions.api?.setColumnDefs(this.createColumnDef('reg', false)));
       this.statusList = [
         { statusName: 'Open', statusId: '17' },
