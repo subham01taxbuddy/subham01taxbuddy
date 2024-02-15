@@ -438,7 +438,7 @@
                   <mat-select [(ngModel)]="service" (ngModelChange)="onNgModelChange()"
                     [ngModelOptions]="{ standalone: true }" matInput placeholder="Select Service" autocomplete="off"
                     (selectionChange)="changeService()" [disabled]="isButtonDisable">
-                  <mat-option *ngIf="false" value="ITR"> ITR Filing </mat-option>
+                    <mat-option value="ITR"> ITR Filing </mat-option>
                     <mat-option value="ITRU"> ITR U </mat-option>
                     <mat-option value="GST"> GST
                     </mat-option>
@@ -480,8 +480,8 @@
                   <input type="text" matInput placeholder="SAC Number" [formControl]="sacNumber" class="input-field" />
                 </mat-form-field>
               </div>
-              <div class="col-sm-6">
-                <mat-label> Financial Year</mat-label>
+              <div class="col-sm-6" *ngIf="service !== 'TPA'">
+                <mat-label> Financial Year</mat-label> 
                 <mat-form-field appearance="outline">
                   <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off">
                     <mat-option *ngFor="let year of filteredFinancialYears" [value]="year.financialYear" [disabled]="isYearDisabled(year.financialYear)">

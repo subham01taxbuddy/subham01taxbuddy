@@ -172,6 +172,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.getAllPlanInfo(this.serviceType);
     this.getLeaderFilerName();
     this.setFormValues(this.selectedUserInfo);
+
+    if(this.serviceType === 'ITR')
+      this.isButtonDisable = true;
   }
 
   addPromoMaxValidation(event) {
@@ -878,9 +881,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
         (year) => year.financialYear === '2020-2021' || year.financialYear === '2021-2022' || year.financialYear === '2022-2023'
       );
 
-    } else {
-      this.filteredFinancialYears = this.financialYear;
-    }
+    } else if(this.service === 'ITR')
+        this.filteredFinancialYears = this.financialYear.slice(0, 1);
+      else 
+        this.filteredFinancialYears = this.financialYear;
+    
     const serviceArray = [
       { service: 'GST', details: 'GST Registration' },
       { service: 'GST', details: 'GST Annual Subscription' },
@@ -930,7 +935,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     ];
 
     if (this.service === 'ITR' || this.service === 'ITRU') {
-      if (this.subType === 'edit') {
+      if (this.subType === 'edit' && this.service !== 'ITR') {
         this.isButtonDisable = false;
       }
       this.serviceDetails = this.allPlans.map((item) => {
