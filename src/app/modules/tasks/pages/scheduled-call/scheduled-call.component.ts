@@ -825,6 +825,9 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
       this.statusList = [
         { statusName: 'Open', statusId: '17' }
       ];
+      this.sortMenus = [
+        { value: 'userName', name: 'Name' },
+      ];
       this.cacheManager.clearCache();
       this.searchParam.serviceType = null;
       this.searchParam.statusId = null;
@@ -845,6 +848,10 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         { statusName: 'Open', statusId: '17' },
         { statusName: 'Done', statusId: '18' },
         { statusName: 'Follow-Up', statusId: '19' },
+      ];
+      this.sortMenus = [
+        { value: 'userName', name: 'Name' },
+        { value: 'scheduleCallTime', name: 'Schedule Call Date' },
       ];
     }
   }
