@@ -22,6 +22,9 @@ import { ReportService } from 'src/app/services/report-service';
 import { MobileEncryptDecryptService } from 'src/app/services/mobile-encr-decr.service';
 import { ServiceDropDownComponent } from 'src/app/modules/shared/components/service-drop-down/service-drop-down.component';
 import * as moment from 'moment';
+import { HttpClient } from '@angular/common/http';
+import { saveAs } from "file-saver/dist/FileSaver";
+
 declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
@@ -57,7 +60,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   loggedInSme: any;
   minDate = new Date(2023, 3, 1);
   minStartDate: string = '2023-04-01';
-  maxStartDate=moment().toDate();
+  maxStartDate = moment().toDate();
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
 
@@ -114,7 +117,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   sortMenus = [
     { value: 'invoiceDate', name: 'Invoice Date' },
     { value: 'paymentDate', name: 'Paid Date' },
-    {value: 'invoiceNo', name: ' Invoice number'},
+    { value: 'invoiceNo', name: ' Invoice number' },
     // { value: 'billTo', name: 'Name' },
     // { value: 'invoiceDate', name: 'Invoice Date' },
     // { value: 'paymentDate', name: 'Paid Date' },
@@ -143,6 +146,8 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private reportService: ReportService,
     private mobileEncryptDecryptService: MobileEncryptDecryptService,
+    public utilsService: UtilsService,
+    private httpClient: HttpClient,
   ) {
     this.allFilerList = JSON.parse(sessionStorage.getItem('SME_LIST'))
     console.log('new Filer List ', this.allFilerList)
@@ -169,7 +174,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
       currentPage: 1,
       totalItems: null,
     };
-    this.maxStartDate=this.endDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
   sortByObject(object) {
@@ -582,7 +587,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
         param = param + '&' + searchByKey[0] + '=' + searchByValue[0];
       }
       // location.href = environment.url + param;
-      this.reportService.invoiceDownload(param).subscribe((response:any) => {
+      this.reportService.invoiceDownload(param).subscribe((response: any) => {
         const blob = new Blob([response], { type: 'application/octet-stream' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -914,8 +919,20 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
     we_track('Tax Invoice Download', {
       'User number': data.phone,
     });
-    location.href =
-      environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
+    // location.href = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
+    let signedUrl = environment.url + `/itr/v1/invoice/download?txbdyInvoiceId=${data.txbdyInvoiceId}`;
+    this.loading = true;
+    this.httpClient.get(signedUrl, { responseType: "arraybuffer" }).subscribe(
+      pdf => {
+        this.loading = false;
+        const blob = new Blob([pdf], { type: "application/pdf" });
+        saveAs(blob,'tax_invoice');
+      },
+      err => {
+        this.loading = false;
+        this.utilsService.showSnackBar('Failed to download document');
+      }
+    );
   }
 
   showNotes(client) {
@@ -946,7 +963,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   }
   setToDateValidation() {
     this.minEndDate = this.startDate.value;
-    this.maxStartDate=this.endDate.value;
+    this.maxStartDate = this.endDate.value;
   }
 
 

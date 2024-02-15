@@ -12,9 +12,10 @@ import { CacheManager } from 'src/app/modules/shared/interfaces/cache-manager.in
 import { ItrMsService } from 'src/app/services/itr-ms.service';
 import { ReportService } from 'src/app/services/report-service';
 import { ToastMessageService } from 'src/app/services/toast-message.service';
-import { UserMsService } from 'src/app/services/user-ms.service';
+import { saveAs } from "file-saver/dist/FileSaver";
 import { UtilsService } from 'src/app/services/utils.service';
 import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
 declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
@@ -92,6 +93,7 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
     private itrService: ItrMsService,
     private dialog: MatDialog,
     private cacheManager: CacheManager,
+    private httpClient:HttpClient,
     @Inject(LOCALE_ID) private locale: string,
   ) {
     this.config = {
@@ -536,7 +538,20 @@ export class OldInvoicesComponent implements OnInit,OnDestroy {
   }
 
   downloadInvoice(data) {
-    location.href = environment.url + '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
+    // location.href = environment.url + '/itr/invoice/download?invoiceNo=' + data.invoiceNo;
+    let signedUrl = environment.url + `/itr/invoice/download?invoiceNo=${data.invoiceNo}`;
+    this.loading = true;
+    this.httpClient.get(signedUrl, { responseType: "arraybuffer" }).subscribe(
+      pdf => {
+        this.loading = false;
+        const blob = new Blob([pdf], { type: "application/pdf" });
+        saveAs(blob,'old_invoice');
+      },
+      err => {
+        this.loading = false;
+        this.utilService.showSnackBar('Failed to download document');
+      }
+    );
   }
   sendMailReminder(data) {
     this.loading = true
