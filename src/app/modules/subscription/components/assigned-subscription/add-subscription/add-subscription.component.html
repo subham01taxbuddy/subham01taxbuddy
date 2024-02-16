@@ -11,9 +11,13 @@
       <div class="container ">
         <div class="row">
           <!-- Below *ngIf="false" change is needed in April -->
-          <div class="col-lg-2 col-md-4 col-sm-6 " *ngIf="false">
+          <!-- <div class="col-lg-2 col-md-4 col-sm-6 ">
             <a class="serviceBtn" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false"
               [class.disabled]="service === 'ITR'" (click)="showSelectedServicePlans('ITR')">ITR</a>
+          </div> -->
+          <div class="col-lg-2 col-md-4 col-sm-6 ">
+            <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false"
+            [class.disabled]="service === 'ITR'" (click)="showSelectedServicePlans('ITR')">ITR</a>
           </div>
           <div class="col-lg-2 col-md-4 col-sm-6 ">
             <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'ITRU' ? true : false"
@@ -35,6 +39,8 @@
             <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'OTHER' ? true : false"
               (click)="showSelectedServicePlans('OTHER')">OTHER SERVICE</a>
           </div>
+        </div>
+        <div class="row mt-2">
           <div class="col-lg-2 col-md-4 col-sm-6 " *ngIf="isAllowed">
             <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'ALL' ? true : false"
               (click)="showSelectedServicePlans('ALL')">ALL</a>
