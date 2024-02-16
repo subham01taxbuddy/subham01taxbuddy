@@ -483,7 +483,7 @@
               <div class="col-sm-6" *ngIf="service !== 'TPA'">
                 <mat-label> Financial Year</mat-label> 
                 <mat-form-field appearance="outline">
-                  <mat-select matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off">
+                  <mat-select [(ngModel)]="defaultFinancialYear" matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off">
                     <mat-option *ngFor="let year of filteredFinancialYears" [value]="year.financialYear" [disabled]="isYearDisabled(year.financialYear)">
                       {{ year.financialYear }}
                     </mat-option>
