@@ -19,10 +19,10 @@
         required
         (blur)="setFilingDate()"
         maxlength="16"
-        minlength="16"
+        minlength="15"
       />
       <mat-error *ngIf="ackNumber.hasError('minlength')"
-        >Enter 16 digit valid ack number</mat-error
+        >Enter at least 15 digit valid ack number</mat-error
       >
       <mat-error *ngIf="ackNumber.hasError('pattern')"
         >Please enter only numbers</mat-error

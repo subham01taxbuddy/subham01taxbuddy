@@ -45,7 +45,7 @@ export class UpdateManualFilingDialogComponent implements OnInit {
     Validators.required,
     Validators.pattern(AppConstants.numericRegex),
     Validators.maxLength(16),
-    Validators.minLength(16),
+    Validators.minLength(15),
   ]);
   eFillingDate = new FormControl('', Validators.required);
   maxDate = new Date();
