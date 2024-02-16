@@ -24,6 +24,9 @@ import { ReportService } from 'src/app/services/report-service';
 import { LeaderListDropdownComponent } from 'src/app/modules/shared/components/leader-list-dropdown/leader-list-dropdown.component';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { AppConstants } from 'src/app/modules/shared/constants';
+import { RemoteConfigService } from 'src/app/services/remote-config-service';
+import { SchCallCalenderComponent } from './sch-call-calender/sch-call-calender.component';
 declare function we_track(key: string, value: any);
 export const MY_FORMATS = {
   parse: {
@@ -98,6 +101,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   maxEndDate = moment().toDate();
   minEndDate = new Date().toISOString().slice(0, 10);
   show: boolean;
+  scheduleCallRemoteConfig: any;
 
   constructor(
     private reviewService: ReviewService,
@@ -113,7 +117,9 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
     private genericCsvService: GenericCsvService,
     private reportService: ReportService,
     public datePipe: DatePipe,
+    private remoteConfigService: RemoteConfigService
   ) {
+    this.getRemoteConfigData();
     this.startDate.setValue(new Date());
     this.endDate.setValue(new Date());
     this.setToDateValidation();
@@ -174,6 +180,10 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         }
       }
     })
+  }
+
+  async getRemoteConfigData() {
+    this.scheduleCallRemoteConfig = await this.remoteConfigService.getRemoteConfigData(AppConstants.SCHEDULE_CALL_REMOTE_CONFIG);
   }
 
   setToDateValidation() {
@@ -246,6 +256,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         filerName: scheduleCalls[i]['filerName'],
         ownerMobileNumber: scheduleCalls[i]['ownerNumber'],
         leaderName: scheduleCalls[i]['leaderName'],
+        leaderUserId: scheduleCalls[i]['leaderUserId'],
         userEmail: scheduleCalls[i]['userEmail'],
         smeMobileNumber: scheduleCalls[i]['smeMobileNumber'],
         smeName: scheduleCalls[i]['smeName'],
@@ -568,6 +579,28 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           }
         },
       },
+      {
+        headerName: 'Action',
+        editable: false,
+        suppressMenu: true,
+        sortable: true,
+        suppressMovable: true,
+        width: 150,
+        hide: subPaidScheduleCallList ? false : true,
+        pinned: 'right',
+        cellStyle: function (params: any) {
+          return {
+            textAlign: 'center',
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+          };
+        },
+        cellRenderer: function (params: any) {
+          return `<button type="button" class="action_icon add_button" title="Create Calender"
+            style="font-size: 12px; padding:0px 5px; background-color:green;color: #fff; cursor:pointer;" data-action-type="create-calender">Create Calender</button>`;
+        },
+      },
     ];
   }
 
@@ -596,6 +629,10 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
           this.callStatusChange(params.data, 19, 'FOLLOW_UP');
           break;
         }
+        case 'create-calender': {
+          this.openCalender(params.data);
+          break;
+        }
         case 'call-done': {
           this.callStatusChange(params.data, 18, 'Done');
           break;
@@ -610,6 +647,23 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  openCalender(data) {
+    let disposable = this.dialog.open(SchCallCalenderComponent, {
+      width: '70%',
+      height: 'auto',
+      hasBackdrop: true,
+      data: {
+        allData: data,
+        scheduleCallsData: this.scheduleCallsData
+      },
+    });
+    disposable.afterClosed().subscribe((result) => {
+      if (result) {
+        this.search()
+      }
+    });
   }
 
   reAssignCall(data) {

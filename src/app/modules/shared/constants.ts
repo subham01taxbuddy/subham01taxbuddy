@@ -44,6 +44,7 @@ export class AppConstants {
     public static ALL_FILERS_LIST = environment.production ? 'ALL_FILERS_LIST' : 'ALL_FILERS_LIST';
     public static BANK_LIST = environment.production ? 'BANK_LIST' : 'BANK_LIST';
     public static ADMIN_GLOBAL_CONFIG = 'ADMIN_GLOBAL_CONFIG';
+    public static SCHEDULE_CALL_REMOTE_CONFIG = 'SCHEDULE_CALL_REMOTE_CONFIG';
     public static gstFyList = [
         { financialYear: '2023-24' },
         { financialYear: '2022-23' },

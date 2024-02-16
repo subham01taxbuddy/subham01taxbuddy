@@ -1,0 +1,137 @@
+.inpTx {
+    margin-bottom: 13px;
+    margin-top: -13px !important;
+}
+
+.btSav {
+    width: 150px;
+}
+
+.btSav :disabled {
+    color: gray;
+}
+
+.mat-error {
+    padding-top: 3px !important;
+}
+
+.mat-select-arrow {
+    margin-top: -27px !important;
+    color: #007bff !important;
+    margin-left: 5px !important;
+}
+
+
+
+.error {
+    color: #f00;
+    font-size: 13px;
+    line-break: auto;
+}
+
+
+
+.timepicker-overlay {
+    z-index: 10000000 !important;
+}
+
+.timepicker-backdrop-overlay {
+    z-index: 10000000 !important;
+}
+
+@media only screen and (max-width: 774px) and (min-width: 768px) {
+    .btSav {
+        float: left;
+        margin-top: -87px;
+        width: 254px;
+    }
+
+    .cancel {
+        margin-top: 40px;
+    }
+}
+
+
+
+@media only screen and (max-width: 767px) and (min-width: 378px) {
+    .btSav {
+        float: right;
+    }
+}
+
+
+@media only screen and (max-width: 377px) and (min-width: 0) {
+    .btSav {
+        float: right;
+        margin-top: -93px;
+        width: 100%;
+    }
+
+    .cancel {
+        margin-top: 20px;
+    }
+}
+
+.noSlots {
+    font-weight: 600;
+    margin: 20px;
+}
+
+.mat-dialog-content {
+    max-height: 75vh !important;
+}
+
+.slots {
+    display: inline-flex;
+    flex-wrap: wrap;
+
+    .slot {
+        width: 162px;
+        padding: 2px;
+        border: 1px solid #5592a9;
+        border-radius: 5px;
+        margin: 2px;
+        cursor: pointer;
+    }
+
+    .selected {
+        width: 162px;
+        padding: 2px;
+        border: 1px solid #5592a9;
+        border-radius: 5px;
+        margin: 2px;
+        background: #4684bd;
+        cursor: pointer;
+    }
+
+    .busy {
+        width: 162px;
+        padding: 2px;
+        border: 1px solid #5592a9;
+        border-radius: 5px;
+        margin: 2px;
+        background: #FF0000;
+        cursor: pointer;
+    }
+}
+
+.desc {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.btn-wrapper {
+    text-align: center;
+    .btnSave {
+        color: #fff;
+        display: inline-flex;
+        height: 48px;
+        padding: 12px 24px 12px 22px;
+        align-items: center;
+        gap: 9px;
+        flex-shrink: 0;
+        border-radius: 4px;
+        background: #2D8EF9;
+        margin-top: 72px;
+    }
+}
