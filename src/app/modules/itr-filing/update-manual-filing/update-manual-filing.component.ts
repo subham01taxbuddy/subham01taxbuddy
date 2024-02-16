@@ -14,7 +14,7 @@ import { AppConstants } from 'src/app/modules/shared/constants';
   styleUrls: ['./update-manual-filing.component.css']
 })
 export class UpdateManualFilingComponent implements OnInit {
-  ackNumber = new FormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(16), Validators.minLength(15)]);
+  ackNumber = new FormControl('', [Validators.required, Validators.pattern(AppConstants.numericRegex), Validators.maxLength(16), Validators.minLength(16)]);
   eFillingDate = new FormControl('', Validators.required);
   maxDate = new Date();
   loading = false;
