@@ -117,11 +117,11 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
       sessionStorage.getItem('subscriptionObject')
     )?.type);
 
-    if (this.subType !== 'edit') {
-      this.isButtonDisable = false;
-    } else {
-      this.isButtonDisable = true;
-    }
+    // if (this.subType !== 'edit') {
+    //   this.isButtonDisable = false;
+    // } else {
+    //   this.isButtonDisable = true;
+    // }
 
     if (this.roles?.includes('ROLE_FILER') || this.assignedFilerId) {
       this.getSmeDetail();
@@ -173,8 +173,7 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     this.getLeaderFilerName();
     this.setFormValues(this.selectedUserInfo);
 
-    if(this.serviceType === 'ITR')
-      this.isButtonDisable = true;
+    this.isButtonDisable = true;
   }
 
   addPromoMaxValidation(event) {
@@ -935,9 +934,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
     ];
 
     if (this.service === 'ITR' || this.service === 'ITRU') {
-      if (this.subType === 'edit' && this.service !== 'ITR') {
-        this.isButtonDisable = false;
-      }
+      // if (this.subType === 'edit' && this.service !== 'ITR') {
+      //   this.isButtonDisable = false;
+      // }
       this.serviceDetails = this.allPlans.map((item) => {
         return { service: this.service, details: item.name };
       });

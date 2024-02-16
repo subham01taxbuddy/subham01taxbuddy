@@ -17,7 +17,7 @@
           </div> -->
           <div class="col-lg-2 col-md-4 col-sm-6 ">
             <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'ITR' ? true : false"
-              (click)="showSelectedServicePlans('ITR')">ITR</a>
+            [class.disabled]="service === 'ITR'" (click)="showSelectedServicePlans('ITR')">ITR</a>
           </div>
           <div class="col-lg-2 col-md-4 col-sm-6 ">
             <a class="serviceBtn-1" [class.btnHeghlight]="this.selectedBtn === 'ITRU' ? true : false"
