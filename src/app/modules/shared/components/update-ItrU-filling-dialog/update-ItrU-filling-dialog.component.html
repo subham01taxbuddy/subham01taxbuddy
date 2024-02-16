@@ -53,8 +53,8 @@ font-weight: bold;">Update ITR-U Filing Details for : {{data.name}}</label>
       <mat-form-field appearance="outline" class="class1">
         <mat-label>Ack Number</mat-label>
         <input matInput placeholder="Ack Number" name="ackNumber" [formControl]="ackNumber" class="input-field" required
-          (blur)="setFilingDate()" maxlength="16" minlength="16">
-        <mat-error *ngIf="ackNumber.hasError('minlength')">Enter 16 digit valid ack number</mat-error>
+          (blur)="setFilingDate()" maxlength="16" minlength="15">
+        <mat-error *ngIf="ackNumber.hasError('minlength')">Enter at least 15 digit valid ack number</mat-error>
         <mat-error *ngIf="ackNumber.hasError('pattern')">Please enter only numbers</mat-error>
       </mat-form-field>
     </div>
