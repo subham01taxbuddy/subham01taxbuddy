@@ -1,0 +1,61 @@
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px', fullScreenBackdrop: true }"></ngx-loading>
+<!-- <div class="modal-header header-common-style">
+    <h4 class="modal-title">Schedule Call</h4>
+    <button type="button" class="close" style="cursor: pointer" (click)="dialogRef.close()">&times;</button>
+</div> -->
+<div class="row back">
+    <div class="col-sm-11">
+        <h4 class="modal-title">Schedule Call</h4>
+    </div>
+    <div class="col-sm-1">
+        <button type="button" class="tbd-btn-close close" style="cursor: pointer" (click)="dialogRef.close()">
+            <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>
+<ng-container>
+    <mat-dialog-content>
+        <form [formGroup]="scheduleForm">
+            <div class="dialog-min-height">
+                <div class="row">
+                    <mat-tab-group>
+                        <mat-tab *ngFor="let i of allSlots" label="{{i.date | date:'EEEE, MMMM d'}}">
+                            <ng-template matTabContent>
+                                <div class="slots" *ngIf="i.slots.length>0">
+                                    <div *ngFor="let element of i.slots"
+                                        (click)="element.busy?'':selectSlot(i.date,element.startDateTime, element.selected)"
+                                        [ngClass]="{'busy':element.busy, 'selected':element.selected, 'slot':!element.selected && !element.busy}">
+                                        {{element.startDateTime | date:'h:mm a'}} - {{element.endDateTime |
+                                        date:'h:mm a'}}</div>
+                                </div>
+                                <div class="slots noSlots" *ngIf="i.slots.length===0">
+                                    No slots are present
+                                </div>
+                            </ng-template>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+                <div class="mt-4 col-11">
+                    <mat-label class="desc">Add Description *</mat-label>
+                    <mat-form-field autocomplete="off">
+                        <textarea matInput formControlName="description" maxlength="100" placeholder=""></textarea>
+                        <mat-error class="mt-3"
+                            *ngIf="scheduleForm.controls['description'].invalid && (scheduleForm.controls['description'].dirty || scheduleForm.controls['description'].touched)">
+                            <div *ngIf="scheduleForm.controls['description'].errors?.['required']">
+                                Please enter the description.
+                            </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12 btn-wrapper">
+                        <button type="submit" [disabled]="loading || scheduleForm.invalid || !date || !time"
+                            class="btn btnSave" (click)="scheduleCall()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </mat-dialog-content>
+</ng-container>
