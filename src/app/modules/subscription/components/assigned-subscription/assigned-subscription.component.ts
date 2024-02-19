@@ -725,7 +725,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
       {
         headerName: 'Update/Revise Subscription',
         field: '',
-        width: 130,
+        width: 120,
         pinned: 'right',
         lockPosition: true,
         suppressMovable: false,
@@ -742,6 +742,29 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
             style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
             <i class="fa-sharp fa-solid fa-pen fa-xs" data-action-type="edit"> Edit</i>
              </button>`;
+          }
+        },
+      },
+      {
+        headerName: 'Create Coupon Code',
+        field: '',
+        width: 120,
+        pinned: 'right',
+        lockPosition: true,
+        suppressMovable: false,
+        cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
+        // filter: 'agTextColumnFilter',
+        cellRenderer: function (params: any) {
+          if (params.data.cancellationStatus === 'PENDING') {
+            return `<button type="button" disabled class="action_icon add_button"
+          style="border: none; background: transparent; font-size: 14px; cursor:no-drop; color:#2199e8;">
+          <i class="fa-sharp fa-solid fa-ticket fa-xs"> Coupon</i>
+           </button>`;
+          } else {
+            return `<button type="button" class="action_icon add_button" title="Click to Create Coupon Code" data-action-type="coupon"
+            style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
+            <i class="fa-sharp fa-solid fa-ticket fa-xs" data-action-type="coupon"> Coupon</i>
+            </button>`;
           }
         },
       },
@@ -832,6 +855,10 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
           this.deleteSubscription(params.data);
           break;
         }
+        case 'coupon': {
+          this.createSubscriptionCouponCode(params.data);
+          break;
+        }
       }
     }
   }
@@ -860,6 +887,40 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
             //   'User number ': subscription.mobileNumber,
             // });
             this._toastMessageService.alert('success', 'Subscription will be Canceled/Deleted onces your Leader Approves it.');
+            this.getAssignedSubscription(this.config.currentPage);
+          },
+          (error) => {
+            this.loading = false;
+            if (error.error.error === 'BAD_REQUEST') {
+              this._toastMessageService.alert('error', error.error.message);
+            } else {
+              this._toastMessageService.alert('error', 'failed to update.');
+            }
+          }
+        );
+      }
+    })
+  }
+
+  createSubscriptionCouponCode(subscription) {
+    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Create Coupon Code!',
+        message: 'Are you sure?',
+      },
+    });
+
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result === 'YES') {
+        this.loading = true;
+        let param = `/itr/subscription`;
+        let reqBody = {
+          "subscriptionId": subscription.subscriptionId,
+          "isCouponCode": true
+        };
+        this.userMsService.spamPutMethod(param, reqBody).subscribe(
+          (res: any) => {
+            this.loading = false;
             this.getAssignedSubscription(this.config.currentPage);
           },
           (error) => {

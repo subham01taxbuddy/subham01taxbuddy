@@ -173,3 +173,7 @@ font-style: normal;
 font-weight: 700;
 line-height: 36px; /* 225% */
 }
+
+::ng-deep.mat-dialog-container {
+  text-align: center !important;
+}
