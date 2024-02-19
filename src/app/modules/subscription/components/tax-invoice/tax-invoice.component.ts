@@ -530,6 +530,7 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
           razorpayReferenceId: this.utilService.isNonEmpty(userInvoices[i].razorpayReferenceId) ? userInvoices[i].razorpayReferenceId : '-',
           paymentId: this.utilService.isNonEmpty(userInvoices[i].paymentId) ? userInvoices[i].paymentId : '-',
           leaderName: userInvoices[i].leaderName,
+          couponCodeClaimedServiceType:userInvoices[i].couponCodeClaimedServiceType
         })
       invoices.push(updateInvoice)
     }
@@ -840,6 +841,13 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
 
       },
 
+      {
+        headerName: 'Subscription Adjusted',
+        field: 'couponCodeClaimedServiceType',
+        width: 120,
+        suppressMovable: true,
+        cellStyle: { textAlign: 'center' },
+      },
       {
         headerName: 'Payment ID',
         field: 'paymentId',

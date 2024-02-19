@@ -755,18 +755,26 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         cellStyle: { textAlign: 'center', 'font-weight': 'bold' },
         // filter: 'agTextColumnFilter',
         cellRenderer: function (params: any) {
-          if (params.data.cancellationStatus === 'PENDING') {
-            return `<button type="button" disabled class="action_icon add_button"
-          style="border: none; background: transparent; font-size: 14px; cursor:no-drop; color:#2199e8;">
-          <i class="fa-sharp fa-solid fa-ticket fa-xs"> Coupon</i>
-           </button>`;
-          } else {
+          // if (params.data.cancellationStatus === 'PENDING' || params.data?.invoiceDetail?.paymentStatus ==='Paid') {
+          //   return `<button type="button" disabled class="action_icon add_button"
+          // style="border: none; background: transparent; font-size: 14px; cursor:no-drop; color:#2199e8;">
+          // <i class="fa-sharp fa-solid fa-ticket fa-xs"> Coupon</i>
+          //  </button>`;
+          // } else {
+          //   return `<button type="button" class="action_icon add_button" title="Click to Create Coupon Code" data-action-type="coupon"
+          //   style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
+          //   <i class="fa-sharp fa-solid fa-ticket fa-xs" data-action-type="coupon"> Coupon</i>
+          //   </button>`;
+          // }
+          if(params.data?.paymentStatus ==='Paid'){
             return `<button type="button" class="action_icon add_button" title="Click to Create Coupon Code" data-action-type="coupon"
-            style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
-            <i class="fa-sharp fa-solid fa-ticket fa-xs" data-action-type="coupon"> Coupon</i>
-            </button>`;
+              style="border: none; background: transparent; font-size: 14px; cursor:pointer; color:#04a4bc;">
+              <i class="fa-sharp fa-solid fa-ticket fa-xs" data-action-type="coupon"> Coupon</i>
+              </button>`;
+          }else{
+            return '-'
           }
-        },
+        }
       },
     ];
   }
@@ -784,8 +792,10 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
     for (let i = 0; i < subscriptionData.length; i++) {
       // var invoiceNumber = '';
       const invoiceNumber = [];
+      const paymentStatuses = [];
       for (let x = 0; x < subscriptionData[i].invoiceDetail?.length; x++) {
         invoiceNumber.push(subscriptionData[i].invoiceDetail[x].invoiceNo);
+        paymentStatuses.push(subscriptionData[i].invoiceDetail[x].paymentStatus);
         // invoiceNumber =invoiceNumber + subscriptionData[i].invoiceDetail[x].invoiceNo + ',';
       }
       newData.push({
@@ -838,6 +848,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         // invoiceDetails: invoiceDetails,
         leaderName: subscriptionData[i].leaderName,
         createdDate:subscriptionData[i].createdDate,
+        paymentStatus: paymentStatuses.toString(),
       });
     }
     return newData;
@@ -921,6 +932,7 @@ export class AssignedSubscriptionComponent implements OnInit, OnDestroy {
         this.userMsService.spamPutMethod(param, reqBody).subscribe(
           (res: any) => {
             this.loading = false;
+            this._toastMessageService.alert('success', 'Coupon Code Generated Successfully');
             this.getAssignedSubscription(this.config.currentPage);
           },
           (error) => {

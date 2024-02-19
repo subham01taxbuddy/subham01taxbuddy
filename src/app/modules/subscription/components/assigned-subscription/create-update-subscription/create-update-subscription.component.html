@@ -253,7 +253,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="row  mt-3">
             <div class="col-sm-12 TxHd-12">
               <span class="header-text-1">Price Plan Breakup</span>
@@ -435,6 +435,18 @@
                     </tbody>
                   </table>
 
+                  <div class="mt-1" *ngIf="this?.availableCouponCodes">
+                    <div style="font-weight: bold; font-size: small; margin-bottom: 10px;">
+                      <span>Note: &bull; Available Coupons :-</span>
+                      <ul style="display: inline; padding-left: 10px; margin: 0;">
+                        <li *ngFor="let coupon of this?.availableCouponCodes" style="display: inline;">
+                          {{ coupon.name }} - {{ coupon.amount | currency : "INR" }}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+
                   <!-- start refund details -->
                   <table class="table pb-table" *ngIf="refundInvoiceDetails && refundInvoiceDetails?.length">
                     <tbody>
@@ -520,7 +532,7 @@
                 </mat-form-field>
               </div>
               <div class="col-sm-6" *ngIf="service !== 'TPA'">
-                <mat-label> Financial Year</mat-label> 
+                <mat-label> Financial Year</mat-label>
                 <mat-form-field appearance="outline">
                   <mat-select [(ngModel)]="defaultFinancialYear" matInput placeholder="Financial Year" [formControl]="assessmentYear" autocomplete="off">
                     <mat-option *ngFor="let year of filteredFinancialYears" [value]="year.financialYear" [disabled]="isYearDisabled(year.financialYear)">
