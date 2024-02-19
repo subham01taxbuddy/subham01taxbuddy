@@ -256,6 +256,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         filerName: scheduleCalls[i]['filerName'],
         ownerMobileNumber: scheduleCalls[i]['ownerNumber'],
         leaderName: scheduleCalls[i]['leaderName'],
+        markedDoneByName: scheduleCalls[i]['markedDoneByName'],
         leaderUserId: scheduleCalls[i]['leaderUserId'],
         userEmail: scheduleCalls[i]['userEmail'],
         smeMobileNumber: scheduleCalls[i]['smeMobileNumber'],
@@ -429,6 +430,20 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
         width: 110,
         suppressMovable: true,
         sortable: true,
+        cellStyle: { textAlign: 'center' },
+        filter: 'agTextColumnFilter',
+        filterParams: {
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
+        },
+      },
+      {
+        headerName: 'Mark Done By',
+        field: 'markedDoneByName',
+        width: 110,
+        suppressMovable: true,
+        sortable: true,
+        hide: subPaidScheduleCallList ? true : false,
         cellStyle: { textAlign: 'center' },
         filter: 'agTextColumnFilter',
         filterParams: {

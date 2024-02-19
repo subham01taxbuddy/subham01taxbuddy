@@ -251,6 +251,7 @@ export class SchCallCalenderComponent implements OnInit {
             if (response['data']['response'].toLocaleLowerCase() === 'sent') {
               this.utilService.showSnackBar('Your appointment with tax expert has been schedule for ' + (new Date(mainScheduleData)).toLocaleDateString() + ' date and '
                 + showScheduleTime + ' time');
+              this.markAsScheduleCallDone();
               setTimeout(() => {
                 this.dialogRef.close(true);
                 this.loading = false;
@@ -265,15 +266,32 @@ export class SchCallCalenderComponent implements OnInit {
         } else {
           this.utilService.showSnackBar(response['error']);
           this.loading = false;
-          this.dialogRef.close(false);
+          // this.dialogRef.close(false);
         }
       },
         error => {
           this.utilService.showSnackBar('Failed to set up meeting with tax expert');
           this.loading = false;
-          this.dialogRef.close(false);
+          // this.dialogRef.close(false);
         })
     }
+  }
+
+  markAsScheduleCallDone() {
+    // https://uat-api.taxbuddy.com/user/schedule-call-done?subscriptionId=12852
+    let param1 = '/schedule-call-done?subscriptionId=' + this.data.allData.subscriptionId;
+    this.loading = true;
+    this.userMsService.patchMethod(param1, '').subscribe((result: any) => {
+      this.loading = false;
+      if (result.success) {
+        // this.utilsService.showSnackBar(result.message)
+      } else {
+        // this.utilsService.showSnackBar(result.message)
+      }
+    }, err => {
+      this.loading = false;
+      // this.utilsService.showSnackBar('Failed to update the details.')
+    });
   }
 }
 
