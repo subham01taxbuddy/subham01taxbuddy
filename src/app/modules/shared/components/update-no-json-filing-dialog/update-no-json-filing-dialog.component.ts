@@ -158,41 +158,54 @@ export class UpdateNoJsonFilingDialogComponent implements OnInit {
   }
 
   serviceCall(itrObj: ITR_JSON) {
-    let req = {
-      userId: this.data.userId,
-      itrId: itrObj.itrId,
-      email: this.data.email,
-      contactNumber: this.data.mobileNumber,
-      panNumber: this.userProfile.panNumber,
-      "aadharNumber": "",
-      "assesseeType": "INDIVIDUAL",
-      assessmentYear: this.data.assessmentYear,
-      financialYear: "2022-2023",
-      isRevised: this.returnType.value,
-      "eFillingCompleted": true,
-      eFillingDate: this.eFillingDate.value,
-      ackNumber: this.ackNumber.value,
-      itrType: `${this.itrType.value}`,
-      itrTokenNumber: '',
-      "filingTeamMemberId": this.data.callerAgentUserId,
-      filingSource: "MANUALLY"
-    }
-    console.log('Updated Data:', req)
-    const param = `${ApiEndpoints.itrMs.itrManuallyData}`
-    this.itrMsService.putMethod(param, req).subscribe((res: any) => {
-      console.log(res);
-      this.loading = false;
-      if (res.success) {
-        this.updateStatus();
-        this.utilsService.showSnackBar('Manual Filing Details updated successfully');
-        this.location.back();
-      } else {
-        this.utilsService.showSnackBar(res.message);
-      }
-    }, error => {
-      this.utilsService.showSnackBar('Failed to update Manual Filing Details')
-      this.loading = false;
-    })
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          let req = {
+            userId: this.data.userId,
+            itrId: itrObj.itrId,
+            email: this.data.email,
+            contactNumber: this.data.mobileNumber,
+            panNumber: this.userProfile.panNumber,
+            "aadharNumber": "",
+            "assesseeType": "INDIVIDUAL",
+            assessmentYear: this.data.assessmentYear,
+            financialYear: "2022-2023",
+            isRevised: this.returnType.value,
+            "eFillingCompleted": true,
+            eFillingDate: this.eFillingDate.value,
+            ackNumber: this.ackNumber.value,
+            itrType: `${this.itrType.value}`,
+            itrTokenNumber: '',
+            "filingTeamMemberId": this.data.callerAgentUserId,
+            filingSource: "MANUALLY"
+          }
+          console.log('Updated Data:', req)
+          const param = `${ApiEndpoints.itrMs.itrManuallyData}`
+          this.itrMsService.putMethod(param, req).subscribe((res: any) => {
+            console.log(res);
+            this.loading = false;
+            if (res.success) {
+              this.updateStatus();
+              this.utilsService.showSnackBar('Manual Filing Details updated successfully');
+              this.location.back();
+            } else {
+              this.utilsService.showSnackBar(res.message);
+            }
+          }, error => {
+            this.utilsService.showSnackBar('Failed to update Manual Filing Details')
+            this.loading = false;
+          })
+        }
+      },error => {
+        this.loading = false;
+        this.utilsService.showSnackBar('error in api of user-reassignment-status');
+      });
+
   }
 
   async updateStatus() {

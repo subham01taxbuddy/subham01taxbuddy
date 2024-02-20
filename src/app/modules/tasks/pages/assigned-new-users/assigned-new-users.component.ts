@@ -1128,53 +1128,55 @@ export class AssignedNewUsersComponent implements OnInit, OnDestroy {
   async call(data) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     // let callInfo = data.customerNumber;
-    let agent_number
-    this.loading = true;
-    // const param = `/prod/call-support/call`;
-    // TODO check the caller agent number;
-    const param = `tts/outbound-call`;
-    const agentNumber = await this.utilsService.getMyCallingNumber();
-    console.log('agent number', agentNumber);
-    if (!agentNumber) {
-      this._toastMessageService.alert('error', "You don't have calling role.");
-      return;
-    }
-    if (this.coOwnerToggle.value == true) {
-      agent_number = agentNumber;
-    } else {
-      agent_number = agentNumber;
-      // agent_number = data.callerAgentNumber;
-    }
-    const reqBody = {
-      "agent_number": agent_number,
-      "userId": data.userId,
-    }
-    // this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
-    //   this.loading = false;
-    //   if (result.success.status) {
-    //     this._toastMessageService.alert("success", result.success.message)
-    //   }
-    // }, error => {
-    //   this.utilsService.showSnackBar('Error while making call, Please try again.');
-    //   this.loading = false;
-    // })
-
-    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
-      this.loading = false;
-      if (result.success) {
-        we_track('Call', {
-          'User Name': data?.name,
-          'User Phone number ': agent_number,
-        });
-        this._toastMessageService.alert("success", result.message)
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe(async (res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
       } else {
-        this.utilsService.showSnackBar('Error while making call, Please try again.');
+        let agent_number
+        this.loading = true;
+
+        const param = `tts/outbound-call`;
+        const agentNumber = await this.utilsService.getMyCallingNumber();
+        console.log('agent number', agentNumber);
+        if (!agentNumber) {
+          this._toastMessageService.alert('error', "You don't have calling role.");
+          return;
+        }
+        if (this.coOwnerToggle.value == true) {
+          agent_number = agentNumber;
+        } else {
+          agent_number = agentNumber;
+          // agent_number = data.callerAgentNumber;
+        }
+        const reqBody = {
+          "agent_number": agent_number,
+          "userId": data.userId,
+        }
+
+        this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
+          this.loading = false;
+          if (result.success) {
+            we_track('Call', {
+              'User Name': data?.name,
+              'User Phone number ': agent_number,
+            });
+            this._toastMessageService.alert("success", result.message)
+          } else {
+            this.utilsService.showSnackBar('Error while making call, Please try again.');
+          }
+        }, error => {
+          this.utilsService.showSnackBar('Error while making call, Please try again.');
+          this.loading = false;
+        })
       }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
+    },error => {
       this.loading = false;
-    })
-  }
+      this._toastMessageService.alert("error",'error in api of user-reassignment-status');
+    });
+}
+
 
   updateStatus(mode, client) {
     this.utilsService.getUserCurrentStatus(client.userId).subscribe((res: any) => {

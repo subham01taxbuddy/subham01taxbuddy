@@ -717,40 +717,56 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   call(data) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
     // let callInfo = data.customerNumber;
-    this.loading = true;
-    // const param = `/prod/call-support/call`;
-    // TODO check the caller agent number;
-    const param = `tts/outbound-call`;
-    const reqBody = {
-      "agent_number": data.callerAgentNumber,
-      "customer_number": data.mobileNumber
-    }
-    // this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
-    //   this.loading = false;
-    //   if (result.success.status) {
-    //     this._toastMessageService.alert("success", result.success.message)
-    //   }
-    // }, error => {
-    //   this.utilsService.showSnackBar('Error while making call, Please try again.');
-    //   this.loading = false;
-    // })
-    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
-      this.loading = false;
-      if (result.success == false) {
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe(
+      (res: any) => {
+       console.log(res);
+       if (res.error) {
+         this.utilsService.showSnackBar(res.error);
+         return;
+       } else {
+        this.loading = true;
+        const param = `tts/outbound-call`;
+        const reqBody = {
+          "agent_number": data.callerAgentNumber,
+          "customer_number": data.mobileNumber
+        }
+        // this.userMsService.postMethodAWSURL(param, reqBody).subscribe((result: any) => {
+        //   this.loading = false;
+        //   if (result.success.status) {
+        //     this._toastMessageService.alert("success", result.success.message)
+        //   }
+        // }, error => {
+        //   this.utilsService.showSnackBar('Error while making call, Please try again.');
+        //   this.loading = false;
+        // })
+        this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
+          this.loading = false;
+          if (result.success == false) {
+            this.loading = false;
+            this.utilsService.showSnackBar('Error while making call, Please try again.');
+          }
+          if (result.success) {
+            we_track('Call', {
+              'User Name': data?.name,
+              'User Phone number ': data.callerAgentNumber,
+            });
+            this._toastMessageService.alert("success", result.message)
+          }
+        }, error => {
+          this.utilsService.showSnackBar('Error while making call, Please try again.');
+          this.loading = false;
+        })
+       }
+      },
+      (error) => {
         this.loading = false;
-        this.utilsService.showSnackBar('Error while making call, Please try again.');
+        this.utilsService.showSnackBar(
+          'error in api of user-reassignment-status'
+        );
       }
-      if (result.success) {
-        we_track('Call', {
-          'User Name': data?.name,
-          'User Phone number ': data.callerAgentNumber,
-        });
-        this._toastMessageService.alert("success", result.message)
-      }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
-    })
+    );
+
+
   }
 
   openChat(client) {
@@ -769,43 +785,78 @@ export class PotentialUserComponent implements OnInit, OnDestroy {
   }
 
   showNotes(client) {
-    let disposable = this.dialog.open(UserNotesComponent, {
-      width: '75vw',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.name,
-        serviceType: client.serviceType,
-        clientMobileNumber: client.mobileNumber
-      }
-    })
+    this.utilsService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        let disposable = this.dialog.open(UserNotesComponent, {
+          width: '75vw',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.name,
+            serviceType: client.serviceType,
+            clientMobileNumber: client.mobileNumber
+          }
+        })
 
-    disposable.afterClosed().subscribe(result => {
+        disposable.afterClosed().subscribe(result => {
+        });
+      }
+    },error => {
+      this.loading = false;
+      this._toastMessageService.alert("error",'error in api of user-reassignment-status');
     });
+
   }
 
   active(data) {
     //'https://dev-api.taxbuddy.com/user/leader-assignment?userId=8729&serviceType=ITR&statusId=16' \
-    console.log('data to active user', data);
-    this.loading = true;
-    const param = `/leader-assignment?userId=${data.userId}&serviceType=${data.serviceType}&statusId=16`;
-    this.userMsService.getMethod(param).subscribe((result: any) => {
-      console.log('res after active ', result)
-      this.loading = false;
-      if (result.success == true) {
-        we_track('Active', {
-          'User number ': data.mobileNumber,
-        });
-        this.utilsService.showSnackBar('user activated successfully.');
-      } else {
-        this.utilsService.showSnackBar('Error while Activate User, Please try again.');
+
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          console.log('data to active user', data);
+          this.loading = true;
+          const param = `/leader-assignment?userId=${data.userId}&serviceType=${data.serviceType}&statusId=16`;
+          this.userMsService.getMethod(param).subscribe(
+            (result: any) => {
+              console.log('res after active ', result);
+              this.loading = false;
+              if (result.success == true) {
+                we_track('Active', {
+                  'User number ': data.mobileNumber,
+                });
+                this.utilsService.showSnackBar('user activated successfully.');
+              } else {
+                this.utilsService.showSnackBar(
+                  'Error while Activate User, Please try again.'
+                );
+              }
+            },
+            (error) => {
+              this.loading = false;
+              this.utilsService.showSnackBar(
+                'Error while Activate User, Please try again.'
+              );
+            }
+          );
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert(
+          'error',
+          'error in api of user-reassignment-status'
+        );
       }
-    }, error => {
-      this.loading = false;
-      this.utilsService.showSnackBar('Error while Activate User, Please try again.');
-
-    })
-
+    );
   }
 
   // pageChanged(event: any) {

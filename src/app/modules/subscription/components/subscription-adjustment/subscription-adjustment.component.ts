@@ -488,38 +488,49 @@ export class SubscriptionAdjustmentComponent implements OnInit {
   }
   dialogRef: any;
   revertCoupon(data){
-    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Revert Coupon Code!',
-        message: 'Are you sure?',
-      },
-    });
-
-    this.dialogRef.afterClosed().subscribe(result => {
-      if (result === 'YES') {
-        this.loading = true;
-        let param = `/itr/subscription`;
-        let reqBody = {
-          "subscriptionId": data.subscriptionId,
-          "isCouponCode": false
-        };
-        this.userMsService.spamPutMethod(param, reqBody).subscribe(
-          (res: any) => {
-            this.loading = false;
-            this._toastMessageService.alert('success', 'adjustment changes updated successfully');
-            this.search(this.config.currentPage);
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          data: {
+            title: 'Revert Coupon Code!',
+            message: 'Are you sure?',
           },
-          (error) => {
-            this.loading = false;
-            if (error.error.error === 'BAD_REQUEST') {
-              this._toastMessageService.alert('error', error.error.message);
-            } else {
-              this._toastMessageService.alert('error', 'failed to update.');
-            }
+        });
+
+        this.dialogRef.afterClosed().subscribe(result => {
+          if (result === 'YES') {
+            this.loading = true;
+            let param = `/itr/subscription`;
+            let reqBody = {
+              "subscriptionId": data.subscriptionId,
+              "isCouponCode": false
+            };
+            this.userMsService.spamPutMethod(param, reqBody).subscribe(
+              (res: any) => {
+                this.loading = false;
+                this._toastMessageService.alert('success', 'adjustment changes updated successfully');
+                this.search(this.config.currentPage);
+              },
+              (error) => {
+                this.loading = false;
+                if (error.error.error === 'BAD_REQUEST') {
+                  this._toastMessageService.alert('error', error.error.message);
+                } else {
+                  this._toastMessageService.alert('error', 'failed to update.');
+                }
+              }
+            );
           }
-        );
+        })
       }
-    })
+    },(error) => {
+      this.loading = false;
+      this.utilsService.showSnackBar('Error while Activate User, Please try again.');
+    });
   }
 
 

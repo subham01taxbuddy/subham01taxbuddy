@@ -944,18 +944,31 @@ export class TaxInvoiceComponent implements OnInit, OnDestroy {
   }
 
   showNotes(client) {
-    let disposable = this.dialog.open(UserNotesComponent, {
-      width: '50%',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.billTo,
-        clientMobileNumber: client.phone
-      },
-    });
+    this.utilService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilService.showSnackBar(res.error);
+        return;
+      } else {
+        let disposable = this.dialog.open(UserNotesComponent, {
+          width: '50%',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.billTo,
+            clientMobileNumber: client.phone
+          },
+        });
 
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
+        disposable.afterClosed().subscribe((result) => {
+          console.log('The dialog was closed');
+        });
+      }
+    },(error) => {
+      this.loading = false;
+      this.utilService.showSnackBar(
+        'Error while Activate User, Please try again.'
+      );
     });
   }
 
