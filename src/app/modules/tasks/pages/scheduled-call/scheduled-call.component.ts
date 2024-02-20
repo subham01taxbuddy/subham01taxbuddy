@@ -880,6 +880,11 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
     this.subPaidScheduleCallList.setValue(false);
+    this.statusList = [
+      { statusName: 'Open', statusId: '17' },
+      { statusName: 'Done', statusId: '18' },
+      { statusName: 'Follow-Up', statusId: '19' },
+    ];
     this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
     this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
