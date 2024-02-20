@@ -120,55 +120,85 @@ export class UpdateItrUFillingDialogComponent implements OnInit {
   }
 
   updateItrUDetails() {
-    const assessmentYearLastTwoDigits = this.data.assessmentYear.substr(2, 2);//2023-2024 //23
-    const ackNumberLastTwoDigits = this.ackNumber.value.substr(-2);//23 or 24
-    if ((ackNumberLastTwoDigits !== '24' && ackNumberLastTwoDigits !== '23')) {
-      this.utilsService.showSnackBar(`Ack Number must end with '23' or '24' for the Year ${this.data.assessmentYear}`);
-      return;
-    }
-    if (this.eFillingDate.valid && this.ackNumber.valid) {
-      this.loading = true;
-      let itrType = `ITRU-${this.itrType.value}`;
-      let req = {
-        userId: this.data.userId,
-        email: this.data.email,
-        contactNumber: this.data.mobileNumber,
-        panNumber: this.userProfile.panNumber,
-        "assesseeType": "INDIVIDUAL",
-        assessmentYear: this.data.assessmentYear,
-        financialYear: this.fy.value,
-        "isRevised": "N",
-        "eFillingCompleted": true,
-        eFillingDate: this.eFillingDate.value,
-        ackNumber: this.ackNumber.value,
-        itrType: `${itrType}`,
-        itrTokenNumber: '',
-        "filingTeamMemberId": this.data.callerAgentUserId,
-        filingSource: "MANUALLY",
-        "isITRU" : true
-      }
-      console.log('Updated Data:', req)
-      const param = `${ApiEndpoints.itrMs.itrManuallyData}`
-      this.itrMsService.putMethod(param, req).subscribe((res: any) => {
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe(
+      (res: any) => {
         console.log(res);
-        this.loading = false;
-        if (res.success) {
-          this.utilsService.showSnackBar('ITR-U Filing Details updated successfully');
-          this.dialogRef.close(true);
-          // this.location.back();
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
         } else {
-          this.utilsService.showSnackBar(res.message);
+          const assessmentYearLastTwoDigits = this.data.assessmentYear.substr(
+            2,
+            2
+          ); //2023-2024 //23
+          const ackNumberLastTwoDigits = this.ackNumber.value.substr(-2); //23 or 24
+          if (
+            ackNumberLastTwoDigits !== '24' &&
+            ackNumberLastTwoDigits !== '23'
+          ) {
+            this.utilsService.showSnackBar(
+              `Ack Number must end with '23' or '24' for the Year ${this.data.assessmentYear}`
+            );
+            return;
+          }
+          if (this.eFillingDate.valid && this.ackNumber.valid) {
+            this.loading = true;
+            let itrType = `ITRU-${this.itrType.value}`;
+            let req = {
+              userId: this.data.userId,
+              email: this.data.email,
+              contactNumber: this.data.mobileNumber,
+              panNumber: this.userProfile.panNumber,
+              assesseeType: 'INDIVIDUAL',
+              assessmentYear: this.data.assessmentYear,
+              financialYear: this.fy.value,
+              isRevised: 'N',
+              eFillingCompleted: true,
+              eFillingDate: this.eFillingDate.value,
+              ackNumber: this.ackNumber.value,
+              itrType: `${itrType}`,
+              itrTokenNumber: '',
+              filingTeamMemberId: this.data.callerAgentUserId,
+              filingSource: 'MANUALLY',
+              isITRU: true,
+            };
+            console.log('Updated Data:', req);
+            const param = `${ApiEndpoints.itrMs.itrManuallyData}`;
+            this.itrMsService.putMethod(param, req).subscribe(
+              (res: any) => {
+                console.log(res);
+                this.loading = false;
+                if (res.success) {
+                  this.utilsService.showSnackBar(
+                    'ITR-U Filing Details updated successfully'
+                  );
+                  this.dialogRef.close(true);
+                  // this.location.back();
+                } else {
+                  this.utilsService.showSnackBar(res.message);
+                }
+              },
+              (error) => {
+                this.utilsService.showSnackBar(
+                  'Failed to update ITR-U Filing Details'
+                );
+                this.loading = false;
+              }
+            );
+          } else {
+            this.utilsService.showSnackBar(
+              'Please give E-Filling-Date and Acknowledgment Number'
+            );
+          }
         }
-      }, error => {
-        this.utilsService.showSnackBar('Failed to update ITR-U Filing Details')
+      },
+      (error) => {
         this.loading = false;
-      })
-    } else {
-      this.utilsService.showSnackBar(
-        'Please give E-Filling-Date and Acknowledgment Number'
-      );
-    }
-
+        this.utilsService.showSnackBar(
+          'error in api of user-reassignment-status'
+        );
+      }
+    );
   }
 
   setFilingDate() {

@@ -85,7 +85,22 @@ export class UserNotesComponent implements OnInit, AfterViewInit {
     this.getNotes();
   }
 
-  async addNote() {
+   addNote() {
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
+      console.log(res);
+      if(res.error){
+        this.utilsService.showSnackBar(res.error);
+        return
+      }else{
+        this.note()
+      }
+    },error => {
+      this.utilsService.showSnackBar('error in api of user-reassignment-status');
+    });
+
+  }
+
+  async note(){
     if (this.serviceType.valid && this.noteDetails.valid) {
       const fyList = await this.utilsService.getStoredFyList();
       const currentFyDetails = fyList.filter(

@@ -123,27 +123,39 @@ export class MoreOptionsDialogComponent implements OnInit {
 
   deleteUser() {
     // this.isDisable = true;
-    const param =
-      `/user/account/delete/` + this.data.mobileNumber + `?reason=Test`;
-    this.userMsService.deleteMethod(param).subscribe(
-      (res: any) => {
-        if (res.success) {
-          this.utilsService.showSnackBar(`User deleted successfully!`);
-          // this.isDisable = true;
-          this.dialogRef.close(true);
-          we_track('Delete User', {
-            'User Number': this.data?.mobileNumber,
-          });
-        } else {
-          this.utilsService.showSnackBar(res.message);
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        const param =
+        `/user/account/delete/` + this.data.mobileNumber + `?reason=Test`;
+      this.userMsService.deleteMethod(param).subscribe(
+        (res: any) => {
+          if (res.success) {
+            this.utilsService.showSnackBar(`User deleted successfully!`);
+            // this.isDisable = true;
+            this.dialogRef.close(true);
+            we_track('Delete User', {
+              'User Number': this.data?.mobileNumber,
+            });
+          } else {
+            this.utilsService.showSnackBar(res.message);
+            // this.isDisable = false;
+          }
+        },
+        (error) => {
           // this.isDisable = false;
+          this.utilsService.showSnackBar(error.message);
         }
-      },
-      (error) => {
-        // this.isDisable = false;
-        this.utilsService.showSnackBar(error.message);
+      );
       }
-    );
+    },error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('error in api of user-reassignment-status');
+    });
+
   }
 
   goToInvoice() {
@@ -241,52 +253,76 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   optService() {
-    if (this.utilsService.isNonEmpty(this.selectedService)) {
-      this.loading = true;
-      const param = `/leader-assignment?userId=${this.data.userId}&serviceType=${this.selectedService}`;
-      this.userMsService.getMethod(param).subscribe(
-        (res: any) => {
-          this.optedServices();
-          if (res.success) {
-            this.utilsService.showSnackBar(
-              'Successfully opted the service type ' + this.selectedService
-            );
-            we_track('Other Service', {
-              'User Name': this.data?.name,
-              'User Number': this.data?.mobileNumber,
-              'Opt for which service ': this.selectedService,
-            });
-          } else {
-            this.utilsService.showSnackBar(res.message);
-          }
-        },
-        () => {
-          this.loading = false;
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        if (this.utilsService.isNonEmpty(this.selectedService)) {
+          this.loading = true;
+          const param = `/leader-assignment?userId=${this.data.userId}&serviceType=${this.selectedService}`;
+          this.userMsService.getMethod(param).subscribe(
+            (res: any) => {
+              this.optedServices();
+              if (res.success) {
+                this.utilsService.showSnackBar(
+                  'Successfully opted the service type ' + this.selectedService
+                );
+                we_track('Other Service', {
+                  'User Name': this.data?.name,
+                  'User Number': this.data?.mobileNumber,
+                  'Opt for which service ': this.selectedService,
+                });
+              } else {
+                this.utilsService.showSnackBar(res.message);
+              }
+            },
+            () => {
+              this.loading = false;
+            }
+          );
         }
-      );
-    }
+      }
+    },error => {
+        this.loading = false;
+        this.utilsService.showSnackBar('error in api of user-reassignment-status');
+    });
+
+
   }
 
   giveInsurance() {
-    this.loading = true;
-    const param = `/user-reward/insurance/purchase?userId=${this.data.userId}&source=BACKOFFICE`;
-    this.itrMsService.postMethod(param, {}).subscribe(
-      (res: any) => {
-        console.log(res);
-        this.loading = false;
-        if (!res.success) {
-          this.utilsService.showSnackBar(res.message);
-          return;
-        }
-        this.utilsService.showSnackBar('Insurance given successfully');
-      },
-      () => {
-        this.loading = false;
-        this.utilsService.showSnackBar(
-          'Failed to give insurance, please try again'
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        this.loading = true;
+        const param = `/user-reward/insurance/purchase?userId=${this.data.userId}&source=BACKOFFICE`;
+        this.itrMsService.postMethod(param, {}).subscribe(
+          (res: any) => {
+            console.log(res);
+            this.loading = false;
+            if (!res.success) {
+              this.utilsService.showSnackBar(res.message);
+              return;
+            }
+            this.utilsService.showSnackBar('Insurance given successfully');
+          },
+          () => {
+            this.loading = false;
+            this.utilsService.showSnackBar(
+              'Failed to give insurance, please try again'
+            );
+          }
         );
       }
-    );
+    },error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('error in api of user-reassignment-status');
+    });
   }
 
   checkSubscription(action: string) {
@@ -360,16 +396,27 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   itruUpdate() {
-    let disposable = this.dialog.open(UpdateItrUFillingDialogComponent, {
-      width: '60%',
-      height: 'auto',
-      data: this.data,
-    });
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        let disposable = this.dialog.open(UpdateItrUFillingDialogComponent, {
+          width: '60%',
+          height: 'auto',
+          data: this.data,
+        });
 
-    disposable.afterClosed().subscribe((result) => {
-      if (result) {
-        this.dialogRef.close({ event: 'close', data: 'success' });
+        disposable.afterClosed().subscribe((result) => {
+          if (result) {
+            this.dialogRef.close({ event: 'close', data: 'success' });
+          }
+        });
       }
+    },error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('error in api of user-reassignment-status');
     });
   }
 
@@ -565,7 +612,13 @@ export class MoreOptionsDialogComponent implements OnInit {
   }
 
   linkToFinbingo() {
-    const userId = this.data.userId;
+    this.utilsService.getUserCurrentStatus(this.data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        const userId = this.data.userId;
     const param = `/partner/create-user`;
     const request = {
       userId: userId
@@ -590,5 +643,11 @@ export class MoreOptionsDialogComponent implements OnInit {
       this.loading = false;
       this.utilsService.showSnackBar('There is some problem while linking user to Finbingo')
     })
+      }
+    },error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('error in api of user-reassignment-status');
+    });
+
   }
 }

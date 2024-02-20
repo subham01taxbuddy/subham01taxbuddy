@@ -1006,20 +1006,39 @@ export class ItrAssignedUsersComponent implements OnInit {
       return;
     }
 
-    let disposable = this.dialog.open(ReAssignActionDialogComponent, {
-      width: '65%',
-      height: 'auto',
-      data: {
-        data: selectedRows,
-        mode: 'leaderAssignment'
+    let userIdList = selectedRows.map(row => row.userId).join(',');
+
+    this.utilsService.getUserCurrentStatus(userIdList).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          let disposable = this.dialog.open(ReAssignActionDialogComponent, {
+            width: '65%',
+            height: 'auto',
+            data: {
+              data: selectedRows,
+              mode: 'leaderAssignment',
+            },
+          });
+          disposable.afterClosed().subscribe((result) => {
+            console.log('result of reassign user ', result);
+            if (result?.data === 'success') {
+              this.search();
+            }
+          });
+        }
       },
-    });
-    disposable.afterClosed().subscribe((result) => {
-      console.log('result of reassign user ', result);
-      if (result?.data === 'success') {
-        this.search();
+      (error) => {
+        this.loading = false;
+        this._toastMessageService.alert(
+          'error',
+          'error in api of user-reassignment-status'
+        );
       }
-    });
+    );
 
   }
 
@@ -1036,18 +1055,26 @@ export class ItrAssignedUsersComponent implements OnInit {
       this.utilsService.showSnackBar('Please select entries with the same Leader, Please Filter further for leader ');
       return;
     }
-
-    let disposable = this.dialog.open(ReAssignActionDialogComponent, {
-      width: '65%',
-      height: 'auto',
-      data: {
-        data: selectedRows
-      },
-    });
-    disposable.afterClosed().subscribe((result) => {
-      console.log('result of reassign user ', result);
-      if (result?.data === 'success') {
-        this.search();
+    let userIdList = selectedRows.map(row => row.userId).join(',');
+    this.utilsService.getUserCurrentStatus(userIdList).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        let disposable = this.dialog.open(ReAssignActionDialogComponent, {
+          width: '65%',
+          height: 'auto',
+          data: {
+            data: selectedRows,
+          },
+        });
+        disposable.afterClosed().subscribe((result) => {
+          console.log('result of reassign user ', result);
+          if (result?.data === 'success') {
+            this.search();
+          }
+        });
       }
     });
   }
@@ -1359,42 +1386,66 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   updateStatus(mode, client) {
-    let disposable = this.dialog.open(ChangeStatusComponent, {
-      width: '60%',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.name,
-        serviceType: client.serviceType,
-        mode: mode,
-        userInfo: client,
-        itrChatInitiated: true
-      }
-    })
+    this.utilsService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        let disposable = this.dialog.open(ChangeStatusComponent, {
+          width: '60%',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.name,
+            serviceType: client.serviceType,
+            mode: mode,
+            userInfo: client,
+            itrChatInitiated: true
+          }
+        })
 
-    disposable.afterClosed().subscribe(result => {
-      if (result) {
-        if (result.data === "statusChanged") {
-          // this.searchParam.page = 0;
-          this.search();
-        }
+        disposable.afterClosed().subscribe(result => {
+          if (result) {
+            if (result.data === "statusChanged") {
+              // this.searchParam.page = 0;
+              this.search();
+            }
+          }
+        });
       }
+    },error => {
+      this.loading = false;
+      this._toastMessageService.alert("error",'error in api of user-reassignment-status');
     });
+
   }
   showNotes(client) {
-    let disposable = this.dialog.open(UserNotesComponent, {
-      width: '75vw',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.name,
-        serviceType: client.serviceType,
-        clientMobileNumber: client.mobileNumber
-      }
-    })
+    this.utilsService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        let disposable = this.dialog.open(UserNotesComponent, {
+          width: '75vw',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.name,
+            serviceType: client.serviceType,
+            clientMobileNumber: client.mobileNumber
+          }
+        })
 
-    disposable.afterClosed().subscribe(result => {
+        disposable.afterClosed().subscribe(result => {
+        });
+      }
+    },error => {
+      this.loading = false;
+      this._toastMessageService.alert("error",'error in api of user-reassignment-status');
     });
+
   }
 
   isChatOpen = false;

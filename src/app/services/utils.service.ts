@@ -1373,6 +1373,13 @@ export class UtilsService {
     return this.userMsService.getMethodNew(param);
   }
 
+  getUserCurrentStatus(userIdList:any){
+    //API to get current status of the user -
+    //'https://uat-api.taxbuddy.com/user/lanretni/user-reassignment-status?status=IN_PROGRESS&userIdList=17803'
+    const param = `/lanretni/user-reassignment-status?status=IN_PROGRESS&userIdList=${userIdList}`
+    return this.userMsService.getMethod(param);
+  }
+
   /**
    * API call to get pan details with user id
    * @param panNumber PAN number for which details to be checked
