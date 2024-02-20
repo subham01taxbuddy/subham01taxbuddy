@@ -873,6 +873,7 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
                   'User Number': callInfo.userMobile,
                 });
               } else if (statusId === 18) {
+          this.markAsScheduleCallDone(callInfo);
                 we_track('Call Status - Done', {
                   'User Number': callInfo.userMobile,
                 });
@@ -903,6 +904,23 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
 
   }
 
+  markAsScheduleCallDone(callInfo) {
+    // https://uat-api.taxbuddy.com/user/schedule-call-done?subscriptionId=12852
+    let param1 = '/schedule-call-done?subscriptionId=' + callInfo.subscriptionId;
+    this.loading = true;
+    this.userMsService.patchMethod(param1, '').subscribe((result: any) => {
+      this.loading = false;
+      if (result.success) {
+        // this.utilsService.showSnackBar(result.message)
+      } else {
+        // this.utilsService.showSnackBar(result.message)
+      }
+    }, err => {
+      this.loading = false;
+      // this.utilsService.showSnackBar('Failed to update the details.')
+    });
+  }
+
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
@@ -924,6 +942,11 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   @ViewChild('leaderDropDown') leaderDropDown: LeaderListDropdownComponent;
   resetFilters() {
     this.subPaidScheduleCallList.setValue(false);
+    this.statusList = [
+      { statusName: 'Open', statusId: '17' },
+      { statusName: 'Done', statusId: '18' },
+      { statusName: 'Follow-Up', statusId: '19' },
+    ];
     this.scheduleCallGridOptions.api?.setRowData(this.createRowData([]));
     this.clearUserFilter = moment.now().valueOf();
     this.cacheManager.clearCache();
