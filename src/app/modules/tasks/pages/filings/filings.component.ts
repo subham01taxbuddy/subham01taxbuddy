@@ -77,10 +77,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
   searchMenus = [
     { value: 'mobileNumber', name: 'Mobile No' },
     { value: 'email', name: 'Email' },
-    { value: 'panNumber', name: 'PAN' }
+    { value: 'panNumber', name: 'PAN' },
   ];
   clearUserFilter: number;
-  searchAsPrinciple: boolean = false
+  searchAsPrinciple: boolean = false;
   partnerType: any;
   showCsvMessage: boolean;
   dataOnLoad = true;
@@ -89,14 +89,14 @@ export class FilingsComponent implements OnInit, OnDestroy {
     { value: '2,ITR-2', name: 'ITR-2' },
     { value: '3,ITR-3', name: 'ITR-3' },
     { value: '4,ITR-4', name: 'ITR-4' },
-  ]
+  ];
   itrType = new FormControl('');
   returnType = new FormControl('');
   returnTypes = [
     { value: 'N', name: 'Original' },
     { value: 'Y', name: 'Revised' },
     { value: 'Updated', name: 'Updated' },
-  ]
+  ];
 
   constructor(
     private reviewService: ReviewService,
@@ -112,7 +112,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     private cacheManager: CacheManager,
     private http: HttpClient,
     private reportService: ReportService,
-    private genericCsvService: GenericCsvService,
+    private genericCsvService: GenericCsvService
   ) {
     this.getAllFilerList();
     this.myItrsGridOptions = <GridOptions>{
@@ -145,42 +145,44 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loggedInSme = JSON.parse(sessionStorage.getItem('LOGGED_IN_SME_INFO'));
-    console.log('loggedIn Sme Details', this.loggedInSme)
-    this.roles = this.loggedInSme[0]?.roles
-    this.partnerType = this.loggedInSme[0]?.partnerType
+    console.log('loggedIn Sme Details', this.loggedInSme);
+    this.roles = this.loggedInSme[0]?.roles;
+    this.partnerType = this.loggedInSme[0]?.partnerType;
     if (this.roles.includes('ROLE_FILER')) {
       this.searchMenus = [
         { value: 'email', name: 'Email' },
-        { value: 'panNumber', name: 'PAN' }
-      ]
+        { value: 'panNumber', name: 'PAN' },
+      ];
     } else {
       this.searchMenus = [
         { value: 'mobileNumber', name: 'Mobile No' },
         { value: 'email', name: 'Email' },
-        { value: 'panNumber', name: 'PAN' }
-      ]
+        { value: 'panNumber', name: 'PAN' },
+      ];
     }
     this.selectedFilingTeamMemberId = this.utilsService.getLoggedInUserID();
     this.getAgentList();
     // this.getMasterStatusList();
-    this.activatedRoute.queryParams.subscribe(params => {
+    this.activatedRoute.queryParams.subscribe((params) => {
       this.searchVal = params['mobileNumber'];
       this.searchStatusId = params['statusId'];
 
       if (this.searchVal) {
-        console.log('q param', this.searchVal)
+        console.log('q param', this.searchVal);
         this.searchParams.mobileNumber = this.searchVal;
         this.myItrsList(0, '');
-      }
-      else if (this.searchStatusId) {
+      } else if (this.searchStatusId) {
         this.searchParams.selectedStatusId = this.searchStatusId;
         this.myItrsList(0, '');
       }
-    })
-    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+    });
+    if (
+      !this.roles.includes('ROLE_ADMIN') &&
+      !this.roles.includes('ROLE_LEADER')
+    ) {
       this.agentId = this.loggedInSme[0]?.userId;
       this.myItrsList(0, '');
-    }else {
+    } else {
       this.dataOnLoad = false;
     }
   }
@@ -193,22 +195,33 @@ export class FilingsComponent implements OnInit, OnDestroy {
         this.loading = false;
         if (res.success == false) {
           this.allFilerList = [];
-          this.toastMsgService.alert("error", res.message);
+          this.toastMsgService.alert('error', res.message);
         }
         console.log('filingTeamMemberId: ', res);
-        if (res?.data?.content instanceof Array && res?.data?.content?.length > 0) {
+        if (
+          res?.data?.content instanceof Array &&
+          res?.data?.content?.length > 0
+        ) {
           this.allFilerList = res?.data?.content;
-          sessionStorage.setItem(AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST, JSON.stringify(this.allFilerList));
-          this.myItrsGridOptions.api.setColumnDefs(this.columnDef(this.allFilerList));
+          sessionStorage.setItem(
+            AppConstants.ALL_RESIGNED_ACTIVE_SME_LIST,
+            JSON.stringify(this.allFilerList)
+          );
+          this.myItrsGridOptions.api.setColumnDefs(
+            this.columnDef(this.allFilerList)
+          );
         } else {
           this.allFilerList = [];
-          if (res.message) { this.toastMsgService.alert('error', res.message); }
-          else { this.toastMsgService.alert('error', 'No Data Found'); }
+          if (res.message) {
+            this.toastMsgService.alert('error', res.message);
+          } else {
+            this.toastMsgService.alert('error', 'No Data Found');
+          }
         }
       },
       (error) => {
         this.allFilerList = [];
-        this.toastMsgService.alert("error", 'No Data Found ');
+        this.toastMsgService.alert('error', 'No Data Found ');
         this.loading = false;
       }
     );
@@ -308,13 +321,11 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.searchBy = object;
   }
 
-
-
   myItrsList(pageNo, filingTeamMemberId, fromPageChange?) {
     // https://dev-api.taxbuddy.com/report/bo/itr-list?page=0&pageSize=20&financialYear=2022-2023&status=ITR_FILED
     if (!fromPageChange) {
       this.cacheManager.clearCache();
-      console.log('in clear cache')
+      console.log('in clear cache');
     }
 
     this.loading = true;
@@ -324,22 +335,30 @@ export class FilingsComponent implements OnInit, OnDestroy {
         this.leaderUserId = loggedInId;
       }
 
-      if (this.roles.includes('ROLE_FILER') && this.partnerType === "PRINCIPAL" && this.agentId === loggedInId) {
+      if (
+        this.roles.includes('ROLE_FILER') &&
+        this.partnerType === 'PRINCIPAL' &&
+        this.agentId === loggedInId
+      ) {
         this.filerUserId = loggedInId;
         this.searchAsPrinciple = true;
-      } else if (this.roles.includes('ROLE_FILER') && this.partnerType === "INDIVIDUAL" && this.agentId === loggedInId) {
+      } else if (
+        this.roles.includes('ROLE_FILER') &&
+        this.partnerType === 'INDIVIDUAL' &&
+        this.agentId === loggedInId
+      ) {
         this.filerUserId = loggedInId;
         this.searchAsPrinciple = false;
       }
 
       if (this.searchBy?.mobileNumber) {
-        this.searchParams.mobileNumber = this.searchBy?.mobileNumber
+        this.searchParams.mobileNumber = this.searchBy?.mobileNumber;
       }
       if (this.searchBy?.email) {
-        this.searchParams.email = this.searchBy?.email
+        this.searchParams.email = this.searchBy?.email;
       }
       if (this.searchBy?.panNumber) {
-        this.searchParams.panNumber = this.searchBy?.panNumber
+        this.searchParams.panNumber = this.searchBy?.panNumber;
       }
 
       let param = `/bo/itr-list?page=${pageNo}&pageSize=20`;
@@ -350,7 +369,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
       let userFilter = '';
 
-      if ((this.leaderUserId && !this.filerUserId)) {
+      if (this.leaderUserId && !this.filerUserId) {
         userFilter += `&leaderUserId=${this.leaderUserId}`;
       }
       if (this.filerUserId && this.searchAsPrinciple === true) {
@@ -370,32 +389,36 @@ export class FilingsComponent implements OnInit, OnDestroy {
         param = param + `&mobileNumber=${this.searchParams.mobileNumber}`;
       }
       if (this.utilsService.isNonEmpty(this.searchParams.email)) {
-
         this.searchParams.email = this.searchParams.email.toLocaleLowerCase();
         param = param + `&email=${this.searchParams.email}`;
       }
       if (this.utilsService.isNonEmpty(this.searchParams.panNumber)) {
         param = param + `&panNumber=${this.searchParams.panNumber}`;
       }
-      if(this.utilsService.isNonEmpty(this.itrType.value)){
-        param = param + `&itrType=${this.itrType.value}`
+      if (this.utilsService.isNonEmpty(this.itrType.value)) {
+        param = param + `&itrType=${this.itrType.value}`;
       }
-      if(this.utilsService.isNonEmpty(this.returnType.value)){
-        param = param + `&returnType=${this.returnType.value}`
+      if (this.utilsService.isNonEmpty(this.returnType.value)) {
+        param = param + `&returnType=${this.returnType.value}`;
       }
 
       console.log('My Params:', param);
-      param = param + `${userFilter}`
+      param = param + `${userFilter}`;
       this.reportService.getMethod(param).subscribe(
         (res: any) => {
           if (res.success == false) {
-            this.toastMsgService.alert("error", res.message);
-            this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
+            this.toastMsgService.alert('error', res.message);
+            this.myItrsGridOptions.api?.setRowData(
+              this.createOnSalaryRowData([])
+            );
             this.config.totalItems = 0;
           }
           console.log('filingTeamMemberId: ', res);
           // TODO Need to update the api here to get the proper data like user management
-          if (res?.data?.content instanceof Array && res?.data?.content?.length > 0) {
+          if (
+            res?.data?.content instanceof Array &&
+            res?.data?.content?.length > 0
+          ) {
             this.itrDataList = res?.data?.content;
             this.config.totalItems = res?.data?.totalElements;
             this.myItrsGridOptions.api?.setRowData(
@@ -404,22 +427,32 @@ export class FilingsComponent implements OnInit, OnDestroy {
             this.cacheManager.initializeCache(this?.itrDataList);
 
             const currentPageNumber = pageNo + 1;
-            this.cacheManager.cachePageContent(currentPageNumber, this?.itrDataList);
+            this.cacheManager.cachePageContent(
+              currentPageNumber,
+              this?.itrDataList
+            );
             this.config.currentPage = currentPageNumber;
           } else {
             this.itrDataList = [];
             this.config.totalItems = 0;
-            this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
-            if (res.message) { this.toastMsgService.alert('error', res.message); }
-            else { this.toastMsgService.alert('error', 'No Data Found'); }
+            this.myItrsGridOptions.api?.setRowData(
+              this.createOnSalaryRowData([])
+            );
+            if (res.message) {
+              this.toastMsgService.alert('error', res.message);
+            } else {
+              this.toastMsgService.alert('error', 'No Data Found');
+            }
           }
           this.loading = false;
           return resolve(true);
         },
         (error) => {
-          this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData([]));
+          this.myItrsGridOptions.api?.setRowData(
+            this.createOnSalaryRowData([])
+          );
           this.config.totalItems = 0;
-          this.toastMsgService.alert("error", 'No Data Found ');
+          this.toastMsgService.alert('error', 'No Data Found ');
           this.loading = false;
           return resolve(false);
         }
@@ -431,7 +464,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.showCsvMessage = true;
     let userFilter = '';
-    if ((this.leaderUserId && !this.filerUserId)) {
+    if (this.leaderUserId && !this.filerUserId) {
       userFilter += `&leaderUserId=${this.leaderUserId}`;
     }
     if (this.filerUserId && this.searchAsPrinciple === true) {
@@ -440,7 +473,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     if (this.filerUserId && this.searchAsPrinciple === false) {
       userFilter += `&filerUserId=${this.filerUserId}`;
     }
-    let status = ''
+    let status = '';
     if (this.utilsService.isNonEmpty(this.searchParams.selectedStatusId)) {
       status += `&status=${this.searchParams.selectedStatusId}`;
     }
@@ -448,9 +481,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
     if (this.utilsService.isNonEmpty(this.searchParams.selectedFyYear)) {
       financialYear += `?financialYear=${this.searchParams.selectedFyYear}`;
     }
-    let param = ''
+    let param = '';
 
-    param = `/bo/itr-list${financialYear}${status}${userFilter}`
+    param = `/bo/itr-list${financialYear}${status}${userFilter}`;
     if (Object.keys(this.sortBy).length) {
       let sortByJson = '&sortBy=' + encodeURI(JSON.stringify(this.sortBy));
       param = param + sortByJson;
@@ -472,9 +505,16 @@ export class FilingsComponent implements OnInit, OnDestroy {
       { key: 'leaderUserId', value: 'Leader Name' },
       { key: 'filingTeamMemberId', value: 'Filer Name' },
       { key: 'filerUserId', value: 'ITR Actually Filed' },
-      { key: 'itrId', value: 'ITR ID' }
-    ]
-    await this.genericCsvService.downloadReport(environment.url + '/report', param, 0, 'Filed-ITR', fieldName, {});
+      { key: 'itrId', value: 'ITR ID' },
+    ];
+    await this.genericCsvService.downloadReport(
+      environment.url + '/report',
+      param,
+      0,
+      'Filed-ITR',
+      fieldName,
+      {}
+    );
     this.loading = false;
     this.showCsvMessage = false;
   }
@@ -496,14 +536,14 @@ export class FilingsComponent implements OnInit, OnDestroy {
         userId: data[i].userId,
         fName:
           this.utilsService.isNonEmpty(data[i].family) &&
-            data[i].family instanceof Array &&
-            data[i].family.length > 0
+          data[i].family instanceof Array &&
+          data[i].family.length > 0
             ? data[i].family[0].fName
             : '',
         lName:
           this.utilsService.isNonEmpty(data[i].family) &&
-            data[i].family instanceof Array &&
-            data[i].family.length > 0
+          data[i].family instanceof Array &&
+          data[i].family.length > 0
             ? data[i].family[0].lName
             : '',
         panNumber: data[i].panNumber,
@@ -552,7 +592,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
         valueGetter: function (params) {
-          return params.data.fName ? params.data.fName : '' + ' ' + params.data.lName;
+          return params.data.fName
+            ? params.data.fName
+            : '' + ' ' + params.data.lName;
         },
       },
       /* {
@@ -579,14 +621,17 @@ export class FilingsComponent implements OnInit, OnDestroy {
         cellRenderer: (params) => {
           const mobileNumber = params.value;
           if (mobileNumber) {
-            if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+            if (
+              !this.roles.includes('ROLE_ADMIN') &&
+              !this.roles.includes('ROLE_LEADER')
+            ) {
               const maskedMobile = this.maskMobileNumber(mobileNumber);
               return maskedMobile;
             } else {
               return mobileNumber;
             }
           } else {
-            return '-'
+            return '-';
           }
         },
       },
@@ -631,7 +676,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
           } else {
             return params.data.filingSource;
           }
-        }
+        },
       },
       {
         headerName: 'Return Type',
@@ -672,8 +717,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
         cellRenderer: function (params) {
-          return `<a href="mailto:${params.value}">${params.value}</a>`
-        }
+          return `<a href="mailto:${params.value}">${params.value}</a>`;
+        },
       },
       {
         headerName: 'Leader Name',
@@ -681,22 +726,24 @@ export class FilingsComponent implements OnInit, OnDestroy {
         width: 200,
         suppressMovable: true,
         cellStyle: { textAlign: 'center' },
-        filter: "agTextColumnFilter",
+        filter: 'agTextColumnFilter',
         filterParams: {
-          filterOptions: ["contains", "notContains"],
-          debounceMs: 0
+          filterOptions: ['contains', 'notContains'],
+          debounceMs: 0,
         },
         valueGetter: function (params) {
-          let createdUserId = parseInt(params?.data?.leaderUserId)
+          let createdUserId = parseInt(params?.data?.leaderUserId);
           let filer1 = filerList;
-          let filer = filer1?.filter((item) => {
-            return item.userId === createdUserId;
-          }).map((item) => {
-            return item.name;
-          });
+          let filer = filer1
+            ?.filter((item) => {
+              return item.userId === createdUserId;
+            })
+            .map((item) => {
+              return item.name;
+            });
           console.log('filer', filer);
-          return filer
-        }
+          return filer;
+        },
       },
       {
         headerName: 'Filer',
@@ -709,15 +756,17 @@ export class FilingsComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
         valueGetter: function (params) {
-          let createdUserId = parseInt(params?.data?.filingTeamMemberId)
+          let createdUserId = parseInt(params?.data?.filingTeamMemberId);
           let filer1 = filerList;
-          let filer = filer1.filter((item) => {
-            return item.userId === createdUserId;
-          }).map((item) => {
-            return item.name;
-          });
-          return filer
-        }
+          let filer = filer1
+            .filter((item) => {
+              return item.userId === createdUserId;
+            })
+            .map((item) => {
+              return item.name;
+            });
+          return filer;
+        },
       },
       {
         headerName: 'ITR Actually Filed',
@@ -730,15 +779,17 @@ export class FilingsComponent implements OnInit, OnDestroy {
           debounceMs: 0,
         },
         valueGetter: function (params) {
-          let createdUserId = parseInt(params?.data?.filerUserId)
+          let createdUserId = parseInt(params?.data?.filerUserId);
           let filer1 = filerList;
-          let filer = filer1.filter((item) => {
-            return item.userId === createdUserId;
-          }).map((item) => {
-            return item.name;
-          });
-          return filer
-        }
+          let filer = filer1
+            .filter((item) => {
+              return item.userId === createdUserId;
+            })
+            .map((item) => {
+              return item.name;
+            });
+          return filer;
+        },
       },
       {
         headerName: 'ITR ID',
@@ -1034,57 +1085,81 @@ export class FilingsComponent implements OnInit, OnDestroy {
   }
 
   async startFiling(data) {
-    var workingItr = this.itrDataList.filter(
-      (item: any) => item.itrId === data.itrId
-    )[0];
-    Object.entries(workingItr).forEach((key, value) => {
-      if (key[1] === null) {
-        delete workingItr[key[0]];
-      }
-    });
-    const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
-    if (!(currentFyDetails instanceof Array && currentFyDetails.length > 0)) {
-      this.utilsService.showSnackBar(
-        'There is no any active filing year available'
-      );
-      return;
-    }
-    let obj = this.utilsService.createEmptyJson(
-      null,
-      currentFyDetails[0].assessmentYear,
-      currentFyDetails[0].financialYear
-    );
-    Object.assign(obj, workingItr);
-    console.log('obj:', obj);
-    workingItr = JSON.parse(JSON.stringify(obj));
-    sessionStorage.setItem(AppConstants.ITR_JSON, JSON.stringify(workingItr));
-    this.router.navigate(['/itr-filing/itr'], {
-      state: {
-        userId: data.userId,
-        panNumber: data.panNumber,
-        eriClientValidUpto: data?.eriClientValidUpto,
-        name: data?.fName + ' ' + data?.lName,
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe(
+      async (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          var workingItr = this.itrDataList.filter(
+            (item: any) => item.itrId === data.itrId
+          )[0];
+          Object.entries(workingItr).forEach((key, value) => {
+            if (key[1] === null) {
+              delete workingItr[key[0]];
+            }
+          });
+          const fyList = await this.utilsService.getStoredFyList();
+          const currentFyDetails = fyList.filter(
+            (item: any) => item.isFilingActive
+          );
+          if (
+            !(currentFyDetails instanceof Array && currentFyDetails.length > 0)
+          ) {
+            this.utilsService.showSnackBar(
+              'There is no any active filing year available'
+            );
+            return;
+          }
+          let obj = this.utilsService.createEmptyJson(
+            null,
+            currentFyDetails[0].assessmentYear,
+            currentFyDetails[0].financialYear
+          );
+          Object.assign(obj, workingItr);
+          console.log('obj:', obj);
+          workingItr = JSON.parse(JSON.stringify(obj));
+          sessionStorage.setItem(
+            AppConstants.ITR_JSON,
+            JSON.stringify(workingItr)
+          );
+          this.router.navigate(['/itr-filing/itr'], {
+            state: {
+              userId: data.userId,
+              panNumber: data.panNumber,
+              eriClientValidUpto: data?.eriClientValidUpto,
+              name: data?.fName + ' ' + data?.lName,
+            },
+          });
+          we_track('Actions', {
+            'User Number': data.contactNumber,
+          });
+          // if (data.statusId !== 11) {
+          //   this.router.navigate(['/eri'], {
+          //     state:
+          //     {
+          //       userId: data.userId,
+          //       panNumber: data.panNumber,
+          //       eriClientValidUpto: data?.eriClientValidUpto,
+          //       callerAgentUserId: this.selectedFilingTeamMemberId,
+          //       assessmentYear: data?.assessmentYear,
+          //       name: data?.fName + ' ' + data?.lName
+          //     }
+          //   });
+          // } else {
+          //   // this._toastMessageService.alert("success", 'This user ITR is filed');
+          // }
+        }
       },
-    });
-    we_track('Actions', {
-      'User Number': data.contactNumber,
-    });
-    // if (data.statusId !== 11) {
-    //   this.router.navigate(['/eri'], {
-    //     state:
-    //     {
-    //       userId: data.userId,
-    //       panNumber: data.panNumber,
-    //       eriClientValidUpto: data?.eriClientValidUpto,
-    //       callerAgentUserId: this.selectedFilingTeamMemberId,
-    //       assessmentYear: data?.assessmentYear,
-    //       name: data?.fName + ' ' + data?.lName
-    //     }
-    //   });
-    // } else {
-    //   // this._toastMessageService.alert("success", 'This user ITR is filed');
-    // }
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'error in api of user-reassignment-status'
+        );
+      }
+    );
+
   }
 
   openFilingStatusDialog(data) {
@@ -1098,102 +1173,152 @@ export class FilingsComponent implements OnInit, OnDestroy {
     });
   }
   openReviseReturnDialog(data) {
-    console.log('Data for revise return ', data);
-    we_track('Actions', {
-      'User Number': data.contactNumber,
-    });
-
-    if (data.isEverified) {
-      let disposable = this.dialog.open(ReviseReturnDialogComponent, {
-        width: '50%',
-        height: 'auto',
-        data: data,
-      });
-      disposable.afterClosed().subscribe((result) => {
-        if (result === 'reviseReturn') {
-          this.router.navigate(['/itr-filing/itr'], {
-            state: {
-              userId: data.userId,
-              panNumber: data.panNumber,
-              eriClientValidUpto: data?.eriClientValidUpto,
-              name: data?.fName + ' ' + data?.lName,
-            },
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          console.log('Data for revise return ', data);
+          we_track('Actions', {
+            'User Number': data.contactNumber,
           });
+
+          if (data.isEverified) {
+            let disposable = this.dialog.open(ReviseReturnDialogComponent, {
+              width: '50%',
+              height: 'auto',
+              data: data,
+            });
+            disposable.afterClosed().subscribe((result) => {
+              if (result === 'reviseReturn') {
+                this.router.navigate(['/itr-filing/itr'], {
+                  state: {
+                    userId: data.userId,
+                    panNumber: data.panNumber,
+                    eriClientValidUpto: data?.eriClientValidUpto,
+                    name: data?.fName + ' ' + data?.lName,
+                  },
+                });
+              }
+              console.log('The dialog was closed', result);
+            });
+          } else {
+            this.utilsService.showSnackBar(
+              'Please complete e-verification before starting with revised return'
+            );
+          }
         }
-        console.log('The dialog was closed', result);
-      });
-    } else {
-      this.utilsService.showSnackBar(
-        'Please complete e-verification before starting with revised return'
-      );
-    }
+      },
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'error in api of user-reassignment-status'
+        );
+      }
+    );
   }
 
   getAcknowledgeDetail(data) {
-    we_track('Actions', {
-      'User Number': data.contactNumber,
-    });
-    console.log(data);
-    let disposable = this.dialog.open(EVerificationDialogComponent, {
-      data: {
-        pan: data.panNumber,
-        ay: data.assessmentYear.substring(0, 4),
-        ackNum: data.ackNumber,
-        formCode: data.itrType,
-        name: data.fName + ' ' + data.lName,
-        userId: data.userId,
-        assessmentYear: data.assessmentYear,
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          we_track('Actions', {
+            'User Number': data.contactNumber,
+          });
+          console.log(data);
+          let disposable = this.dialog.open(EVerificationDialogComponent, {
+            data: {
+              pan: data.panNumber,
+              ay: data.assessmentYear.substring(0, 4),
+              ackNum: data.ackNumber,
+              formCode: data.itrType,
+              name: data.fName + ' ' + data.lName,
+              userId: data.userId,
+              assessmentYear: data.assessmentYear,
+            },
+          });
+          disposable.afterClosed().subscribe((result) => {
+            console.log('New Bank Dialog', result);
+            if (result?.data === 'ONLINE') {
+              this.utilsService.showSnackBar(
+                'E-Verification status updated successfully'
+              );
+              this.myItrsList(
+                // this.selectedFyYear,
+                this.selectedPageNo,
+                this.selectedFilingTeamMemberId
+              );
+            } else if (result?.data === 'MANUAL') {
+              this.markAsEverified(data);
+            }
+          });
+        }
       },
-    });
-    disposable.afterClosed().subscribe((result) => {
-      console.log('New Bank Dialog', result);
-      if (result?.data === 'ONLINE') {
+      (error) => {
+        this.loading = false;
         this.utilsService.showSnackBar(
-          'E-Verification status updated successfully'
+          'error in api of user-reassignment-status'
         );
-        this.myItrsList(
-          // this.selectedFyYear,
-          this.selectedPageNo,
-          this.selectedFilingTeamMemberId
-        );
-      } else if (result?.data === 'MANUAL') {
-        this.markAsEverified(data);
       }
-    });
+    );
+
   }
 
   getEriAcknowledgeDetail(data) {
-    we_track('E-verify ', {
-      'User Number': data.contactNumber,
-    });
-    console.log(data);
-    let disposable = this.dialog.open(EVerificationDialogComponent, {
-      data: {
-        title: "eVerify",
-        pan: data.panNumber,
-        ay: data.assessmentYear.substring(0, 4),
-        ackNum: data.ackNumber,
-        formCode: data.itrType,
-        name: data.fName + ' ' + data.lName,
-        userId: data.userId,
-        assessmentYear: data.assessmentYear,
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe(
+      (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          we_track('E-verify ', {
+            'User Number': data.contactNumber,
+          });
+          console.log(data);
+          let disposable = this.dialog.open(EVerificationDialogComponent, {
+            data: {
+              title: 'eVerify',
+              pan: data.panNumber,
+              ay: data.assessmentYear.substring(0, 4),
+              ackNum: data.ackNumber,
+              formCode: data.itrType,
+              name: data.fName + ' ' + data.lName,
+              userId: data.userId,
+              assessmentYear: data.assessmentYear,
+            },
+          });
+          disposable.afterClosed().subscribe((result) => {
+            console.log('New Bank Dialog', result);
+            if (result?.data === 'ONLINE') {
+              this.utilsService.showSnackBar(
+                'E-Verification status updated successfully'
+              );
+              this.myItrsList(
+                // this.selectedFyYear,
+                this.selectedPageNo,
+                this.selectedFilingTeamMemberId
+              );
+            } else if (result?.data === 'MANUAL') {
+              this.markAsEverified(data);
+            }
+          });
+        }
       },
-    });
-    disposable.afterClosed().subscribe((result) => {
-      console.log('New Bank Dialog', result);
-      if (result?.data === 'ONLINE') {
+      (error) => {
+        this.loading = false;
         this.utilsService.showSnackBar(
-          'E-Verification status updated successfully'
+          'error in api of user-reassignment-status'
         );
-        this.myItrsList(
-          // this.selectedFyYear,
-          this.selectedPageNo,
-          this.selectedFilingTeamMemberId
-        );
-      } else if (result?.data === 'MANUAL') {
-        this.markAsEverified(data);
       }
-    });
+    );
+
   }
   openChat(client) {
     console.log('client:', client);
@@ -1207,7 +1332,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
       },
     });
 
-    disposable.afterClosed().subscribe((result) => { });
+    disposable.afterClosed().subscribe((result) => {});
   }
   markAsEverified(data) {
     this.loading = true;
@@ -1253,7 +1378,7 @@ export class FilingsComponent implements OnInit, OnDestroy {
     let reqData = {
       userId: workingItr.userId,
       taskKeyName: 'itrProcessedSuccessfully',
-      uiAction: "NotRequired",
+      uiAction: 'NotRequired',
       taskStatus: 'Completed',
       assessmentYear: workingItr.assessmentYear,
     };
@@ -1264,7 +1389,8 @@ export class FilingsComponent implements OnInit, OnDestroy {
     headers = headers.append('environment', environment.lifecycleEnv);
     headers = headers.append('Authorization', 'Bearer ' + TOKEN);
 
-    this.http.put(environment.lifecycleUrl, reqData, { headers: headers })
+    this.http
+      .put(environment.lifecycleUrl, reqData, { headers: headers })
       .subscribe(
         (result: any) => {
           this.loading = false;
@@ -1272,7 +1398,9 @@ export class FilingsComponent implements OnInit, OnDestroy {
             this.utilsService.showSnackBar(
               'ITR Processed status updated successfully'
             );
-            this.myItrsList(this.selectedPageNo, this.selectedFilingTeamMemberId
+            this.myItrsList(
+              this.selectedPageNo,
+              this.selectedFilingTeamMemberId
             );
           } else {
             this.loading = false;
@@ -1342,38 +1470,62 @@ export class FilingsComponent implements OnInit, OnDestroy {
 
   async startCalling(user) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
-    const agentNumber = await this.utilsService.getMyCallingNumber();
-    if (!agentNumber) {
-      this.toastMsgService.alert('error', "You don't have calling role.");
-      return;
-    }
-    console.log('user: ', user);
-    this.loading = true;
-    let customerNumber = user.contactNumber;
-    // const param = `/prod/call-support/call`;
-    const param = `tts/outbound-call`;
-    const reqBody = {
-      agent_number: agentNumber,
-      userId: user.userId,
-    };
-    console.log('reqBody:', reqBody);
+    this.utilsService.getUserCurrentStatus(user.userId).subscribe(
+      async (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          const agentNumber = await this.utilsService.getMyCallingNumber();
+          if (!agentNumber) {
+            this.toastMsgService.alert('error', "You don't have calling role.");
+            return;
+          }
+          console.log('user: ', user);
+          this.loading = true;
+          let customerNumber = user.contactNumber;
+          // const param = `/prod/call-support/call`;
+          const param = `tts/outbound-call`;
+          const reqBody = {
+            agent_number: agentNumber,
+            userId: user.userId,
+          };
+          console.log('reqBody:', reqBody);
 
-    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
-      this.loading = false;
-      if (result.success == false) {
-        this.utilsService.showSnackBar('Error while making call, Please try again.');
+          this.reviewService.postMethod(param, reqBody).subscribe(
+            (result: any) => {
+              this.loading = false;
+              if (result.success == false) {
+                this.utilsService.showSnackBar(
+                  'Error while making call, Please try again.'
+                );
+              }
+              if (result.success) {
+                we_track('Call', {
+                  'User Name': user.fName + ' ' + user.lName,
+                  'User Phone number ': agentNumber,
+                });
+                this.toastMsgService.alert('success', result.message);
+              }
+            },
+            (error) => {
+              this.utilsService.showSnackBar(
+                'Error while making call, Please try again.'
+              );
+              this.loading = false;
+            }
+          );
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this.toastMsgService.alert(
+          'error',
+          'error in api of user-reassignment-status'
+        );
       }
-      if (result.success) {
-        we_track('Call', {
-          'User Name': user.fName + ' ' + user.lName,
-          'User Phone number ': agentNumber,
-        });
-        this.toastMsgService.alert("success", result.message)
-      }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
-    })
+    );
   }
 
   updateStatus(mode, client) {
@@ -1399,25 +1551,42 @@ export class FilingsComponent implements OnInit, OnDestroy {
   }
 
   showNotes(client) {
-    let disposable = this.dialog.open(UserNotesComponent, {
-      width: '75vw',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.fName + ' ' + client.lName,
-        clientMobileNumber: client.contactNumber
+    this.utilsService.getUserCurrentStatus(client.userId).subscribe(
+       (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          let disposable = this.dialog.open(UserNotesComponent, {
+            width: '75vw',
+            height: 'auto',
+            data: {
+              userId: client.userId,
+              clientName: client.fName + ' ' + client.lName,
+              clientMobileNumber: client.contactNumber,
+            },
+          });
+          disposable.afterClosed().subscribe((result) => {
+            console.log('The dialog was closed');
+          });
+        }
       },
-    });
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
+      (error) => {
+        this.loading = false;
+        this.utilsService.showSnackBar(
+          'error in api of user-reassignment-status'
+        );
+      }
+    );
   }
-
 
   pageChanged(event) {
     let pageContent = this.cacheManager.getPageContent(event);
     if (pageContent) {
-      this.myItrsGridOptions.api?.setRowData(this.createOnSalaryRowData(pageContent));
+      this.myItrsGridOptions.api?.setRowData(
+        this.createOnSalaryRowData(pageContent)
+      );
       this.config.currentPage = event;
     } else {
       this.config.currentPage = event;
@@ -1447,7 +1616,10 @@ export class FilingsComponent implements OnInit, OnDestroy {
     this?.smeDropDown?.resetDropdown();
     this?.serviceDropDown?.resetService();
 
-    if (!this.roles.includes('ROLE_ADMIN') && !this.roles.includes('ROLE_LEADER')) {
+    if (
+      !this.roles.includes('ROLE_ADMIN') &&
+      !this.roles.includes('ROLE_LEADER')
+    ) {
       this.agentId = this.utilsService.getLoggedInUserID();
       this.filerUserId = this.filerUserId = this.agentId;
       this.partnerType = this.utilsService.getPartnerType();
@@ -1461,95 +1633,119 @@ export class FilingsComponent implements OnInit, OnDestroy {
   }
 
   eriITRLifeCycleStatus(data) {
-    we_track('E-verify ', {
-      'User Number': data.contactNumber,
-    });
-    console.log(data);
-    const param = `/eri/v1/api`;
-    let headerObj = {
-      panNumber: data.panNumber,
-      assessmentYear: data.assessmentYear,
-      userId: data.userId.toString(),
-    };
-    sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
-    let req = {
-      serviceName: 'EriITRLifeCycleStatus',
-      pan: data.panNumber,
-      ay: data.assessmentYear.substring(0, 4),
-    };
-
-    this.itrMsService.postMethodForEri(param, req).subscribe((res: any) => {
-      console.log(res);
-      if ((res && res.successFlag) || res.httpStatus != 'REJECTED') {
-        if (res.hasOwnProperty('itrsFiled') && res.itrsFiled instanceof Array) {
-          let input = {
-            name: data.fName + ' ' + data.lName,
-            pan: data.panNumber,
-            itrsFiled: res.itrsFiled[0],
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe(
+      async (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          we_track('E-verify ', {
+            'User Number': data.contactNumber,
+          });
+          console.log(data);
+          const param = `/eri/v1/api`;
+          let headerObj = {
+            panNumber: data.panNumber,
+            assessmentYear: data.assessmentYear,
+            userId: data.userId.toString(),
           };
-          this.openLifeCycleDialog(input);
-        } else if (res.hasOwnProperty('messages')) {
-          if (res.messages instanceof Array && res.messages.length > 0)
-            this.utilsService.showSnackBar(res.messages[0].desc);
+          sessionStorage.setItem('ERI-Request-Header', JSON.stringify(headerObj));
+          let req = {
+            serviceName: 'EriITRLifeCycleStatus',
+            pan: data.panNumber,
+            ay: data.assessmentYear.substring(0, 4),
+          };
+
+          this.itrMsService.postMethodForEri(param, req).subscribe((res: any) => {
+            console.log(res);
+            if ((res && res.successFlag) || res.httpStatus != 'REJECTED') {
+              if (res.hasOwnProperty('itrsFiled') && res.itrsFiled instanceof Array) {
+                let input = {
+                  name: data.fName + ' ' + data.lName,
+                  pan: data.panNumber,
+                  itrsFiled: res.itrsFiled[0],
+                };
+                this.openLifeCycleDialog(input);
+              } else if (res.hasOwnProperty('messages')) {
+                if (res.messages instanceof Array && res.messages.length > 0)
+                  this.utilsService.showSnackBar(res.messages[0].desc);
+              }
+            } else {
+              if (res.hasOwnProperty('errors')) {
+                if (res.errors instanceof Array && res.errors.length > 0)
+                  this.utilsService.showSnackBar(res.errors[0].desc);
+                this.getItrLifeCycleStatus(data);
+              }
+            }
+          });
         }
-      } else {
-        if (res.hasOwnProperty('errors')) {
-          if (res.errors instanceof Array && res.errors.length > 0)
-            this.utilsService.showSnackBar(res.errors[0].desc);
-          this.getItrLifeCycleStatus(data)
-        }
+      },
+      (error) => {
+        this.loading = false;
+        this.toastMsgService.alert(
+          'error',
+          'error in api of user-reassignment-status'
+        );
       }
-    });
+    );
+
   }
 
   getItrLifeCycleStatus(data) {
     this.loading = true;
-    let param = '/life-cycle-status?userId=' + data.userId + '&assessmentYear=' + data.assessmentYear;
-    this.itrMsService.getItrLifeCycle(param).subscribe((response: any) => {
-      if (response.success) {
-        this.loading = false
-        console.log('res of itr status of non-eri', response)
-        if (response.data.itrProcessedSuccessfully.taskStatus === 'Completed') {
-          let input = {
-            title: 'itrLifecycleNonEri',
-            name: data.fName + ' ' + data.lName,
-            pan: data.panNumber,
-            itrsFiled: response.data.itrFiledStatus,
-            eVerification: response.data.eVerificationStatus,
-            itrProcessed: response.data.itrProcessedSuccessfully,
-          };
-          this.openLifeCycleDialog(input);
-        } else {
-          let disposable = this.dialog.open(EVerificationDialogComponent, {
-            data: {
-              title: "itrProcessed",
-              pan: data.panNumber,
-              ay: data.assessmentYear.substring(0, 4),
-              ackNum: data.ackNumber,
-              formCode: data.itrType,
+    let param =
+      '/life-cycle-status?userId=' +
+      data.userId +
+      '&assessmentYear=' +
+      data.assessmentYear;
+    this.itrMsService.getItrLifeCycle(param).subscribe(
+      (response: any) => {
+        if (response.success) {
+          this.loading = false;
+          console.log('res of itr status of non-eri', response);
+          if (
+            response.data.itrProcessedSuccessfully.taskStatus === 'Completed'
+          ) {
+            let input = {
+              title: 'itrLifecycleNonEri',
               name: data.fName + ' ' + data.lName,
-              userId: data.userId,
-              assessmentYear: data.assessmentYear,
-            },
-          });
-          disposable.afterClosed().subscribe((result) => {
-            if (result?.data === 'itrProcessed') {
-              this.markAsProcessed(data);
-            }
-          })
+              pan: data.panNumber,
+              itrsFiled: response.data.itrFiledStatus,
+              eVerification: response.data.eVerificationStatus,
+              itrProcessed: response.data.itrProcessedSuccessfully,
+            };
+            this.openLifeCycleDialog(input);
+          } else {
+            let disposable = this.dialog.open(EVerificationDialogComponent, {
+              data: {
+                title: 'itrProcessed',
+                pan: data.panNumber,
+                ay: data.assessmentYear.substring(0, 4),
+                ackNum: data.ackNumber,
+                formCode: data.itrType,
+                name: data.fName + ' ' + data.lName,
+                userId: data.userId,
+                assessmentYear: data.assessmentYear,
+              },
+            });
+            disposable.afterClosed().subscribe((result) => {
+              if (result?.data === 'itrProcessed') {
+                this.markAsProcessed(data);
+              }
+            });
+          }
+        } else {
+          this.loading = false;
+          this.utilsService.showSnackBar(response.message);
         }
-      } else {
-        this.loading = false
-        this.utilsService.showSnackBar(response.message);
-      }
-    },
-      error => {
-        console.log('error ==> ', error)
-        this.loading = false
+      },
+      (error) => {
+        console.log('error ==> ', error);
+        this.loading = false;
         this.utilsService.showSnackBar('Failed to Save the ITR Details');
-
-      });
-
+      }
+    );
   }
 
   openLifeCycleDialog(data) {
@@ -1564,15 +1760,14 @@ export class FilingsComponent implements OnInit, OnDestroy {
   }
 
   getToggleValue() {
-    console.log('co-owner toggle', this.coOwnerToggle.value)
+    console.log('co-owner toggle', this.coOwnerToggle.value);
     we_track('Co-Owner Toggle', '');
     if (this.coOwnerToggle.value == true) {
       this.coOwnerCheck = true;
-    }
-    else {
+    } else {
       this.coOwnerCheck = false;
     }
-    this.myItrsList(0, true)
+    this.myItrsList(0, true);
   }
   ngOnDestroy() {
     this.cacheManager.clearCache();

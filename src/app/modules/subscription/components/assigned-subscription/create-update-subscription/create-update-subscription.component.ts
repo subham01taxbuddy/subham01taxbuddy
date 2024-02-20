@@ -885,9 +885,9 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
 
     } else if(this.service === 'ITR')
         this.filteredFinancialYears = this.financialYear.slice(0, 1);
-      else 
+      else
         this.filteredFinancialYears = this.financialYear;
-    
+
     const serviceArray = [
       { service: 'GST', details: 'GST Registration' },
       { service: 'GST', details: 'GST Annual Subscription' },
@@ -1073,81 +1073,93 @@ export class CreateUpdateSubscriptionComponent implements OnInit, OnDestroy, Aft
   }
 
   updateSubscription() {
-    this.loading = true;
-    if (this.service === 'ITRU') {
-      if (this.assessmentYear.value === '') {
-        this.loading = false;
-        this.toastMessage.alert('error', 'Please select Financial Year For ITR-U subscription');
+    this.utilsService.getUserCurrentStatus(this.userSubscription.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
         return;
-      }
-    }
-    if (this.userSubscription.smeSelectedPlan != null && this.pin.value) {
-      console.log(
-        'selectedPlanInfo -> ',
-        this.userSubscription.smeSelectedPlan.planId
-      );
-      let param = '/subscription';
-      let reqBody = {
-        userId: this.userSubscription.userId,
-        planId: this.userSubscription.smeSelectedPlan.planId,
-        selectedBy: 'SME',
-        smeUserId: this?.loggedInSme[0]?.userId,
-        item: {
-          itemDescription: this.description?.value,
-          quantity: this.userSubscription?.item[0]?.quantity,
-          rate: this?.userSubscription?.payableSubscriptionAmount,
-          cgstPercent: this?.userSubscription?.cgstPercent,
-          cgstAmount: this?.userSubscription?.cgstAmount,
-          igstAmount: this?.userSubscription?.igstAmount,
-          igstPercent: this?.userSubscription?.igstPercent,
-          sgstPercent: this?.userSubscription?.sgstPercent,
-          sgstAmount: this?.userSubscription?.sgstAmount,
-          amount: this?.userSubscription?.payableSubscriptionAmount,
-          sacCode: this.sacNumber.value,
-          financialYear: this.assessmentYear.value,
-          service: this.service,
-          serviceDetail: this.serviceDetail,
-        },
-        reminderEmail: this.reminderEmail.value,
-        reminderMobileNumber: this.reminderMobileNumber.value,
-        subscriptionId: this.subscriptionObj.subscriptionId,
-        removePromoCode: this.selectedPromoCode ? this.isPromoRemoved : true,
-        promoCode: this.selectedPromoCode
-      };
-      console.log('Req Body: ', reqBody);
-      let requestData = JSON.parse(JSON.stringify(reqBody));
-      this.itrService.postMethod(param, requestData).subscribe(
-        (res: any) => {
-          this.loading = false;
-          let invoiceTypeDetails;
-          if (this.invoiceAmount > this.userSubscription?.payableSubscriptionAmount) {
-            invoiceTypeDetails = 'Downgrade'
-          } else {
-            invoiceTypeDetails = 'Upgrade'
-          }
-          we_track('Subscription Edit', {
-            'User Number': this.personalInfoForm.controls['mobileNumber'].value,
-            'Service': this.service,
-            'Plan': this.serviceDetail,
-            'Promo Code': this.searchedPromoCode.value,
-            'Downgrade or Upgrade': invoiceTypeDetails
-          });
-          this.toastMessage.alert('success', 'Subscription created successfully.');
-          this.location.back();
-        },
-        (error) => {
-          this.loading = false;
-          if (error.error.error === 'BAD_REQUEST') {
-            this.toastMessage.alert('error', error.error.message);
-          } else {
-            this.toastMessage.alert('error', this.utilsService.showErrorMsg(error.error.status));
+      } else {
+        this.loading = true;
+        if (this.service === 'ITRU') {
+          if (this.assessmentYear.value === '') {
+            this.loading = false;
+            this.toastMessage.alert('error', 'Please select Financial Year For ITR-U subscription');
+            return;
           }
         }
-      );
-    } else {
-      this.toastMessage.alert('error', 'Please select Plan & Pincode');
+        if (this.userSubscription.smeSelectedPlan != null && this.pin.value) {
+          console.log(
+            'selectedPlanInfo -> ',
+            this.userSubscription.smeSelectedPlan.planId
+          );
+          let param = '/subscription';
+          let reqBody = {
+            userId: this.userSubscription.userId,
+            planId: this.userSubscription.smeSelectedPlan.planId,
+            selectedBy: 'SME',
+            smeUserId: this?.loggedInSme[0]?.userId,
+            item: {
+              itemDescription: this.description?.value,
+              quantity: this.userSubscription?.item[0]?.quantity,
+              rate: this?.userSubscription?.payableSubscriptionAmount,
+              cgstPercent: this?.userSubscription?.cgstPercent,
+              cgstAmount: this?.userSubscription?.cgstAmount,
+              igstAmount: this?.userSubscription?.igstAmount,
+              igstPercent: this?.userSubscription?.igstPercent,
+              sgstPercent: this?.userSubscription?.sgstPercent,
+              sgstAmount: this?.userSubscription?.sgstAmount,
+              amount: this?.userSubscription?.payableSubscriptionAmount,
+              sacCode: this.sacNumber.value,
+              financialYear: this.assessmentYear.value,
+              service: this.service,
+              serviceDetail: this.serviceDetail,
+            },
+            reminderEmail: this.reminderEmail.value,
+            reminderMobileNumber: this.reminderMobileNumber.value,
+            subscriptionId: this.subscriptionObj.subscriptionId,
+            removePromoCode: this.selectedPromoCode ? this.isPromoRemoved : true,
+            promoCode: this.selectedPromoCode,
+            // couponCodeSubscriptionId: this.subscriptionCouponCodeDetail?.couponCodeSubscriptionId
+          };
+          console.log('Req Body: ', reqBody);
+          let requestData = JSON.parse(JSON.stringify(reqBody));
+          this.itrService.postMethod(param, requestData).subscribe(
+            (res: any) => {
+              this.loading = false;
+              let invoiceTypeDetails;
+              if (this.invoiceAmount > this.userSubscription?.payableSubscriptionAmount) {
+                invoiceTypeDetails = 'Downgrade'
+              } else {
+                invoiceTypeDetails = 'Upgrade'
+              }
+              we_track('Subscription Edit', {
+                'User Number': this.personalInfoForm.controls['mobileNumber'].value,
+                'Service': this.service,
+                'Plan': this.serviceDetail,
+                'Promo Code': this.searchedPromoCode.value,
+                'Downgrade or Upgrade': invoiceTypeDetails
+              });
+              this.toastMessage.alert('success', 'Subscription created successfully.');
+              this.location.back();
+            },
+            (error) => {
+              this.loading = false;
+              if (error.error.error === 'BAD_REQUEST') {
+                this.toastMessage.alert('error', error.error.message);
+              } else {
+                this.toastMessage.alert('error', this.utilsService.showErrorMsg(error.error.status));
+              }
+            }
+          );
+        } else {
+          this.toastMessage.alert('error', 'Please select Plan & Pincode');
+          this.loading = false;
+        }
+      }
+    },(error) => {
       this.loading = false;
-    }
+      this.utilsService.showSnackBar('Error while Activate User, Please try again.');
+    });
   }
 
   ngOnDestroy() {

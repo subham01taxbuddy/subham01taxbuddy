@@ -762,19 +762,34 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
 
   showNotes(client) {
-    let disposable = this.dialog.open(UserNotesComponent, {
-      width: '75vw',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.name,
-        serviceType: client.serviceType,
-        clientMobileNumber: client.mobile
-      }
-    })
+    this.utilService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilService.showSnackBar(res.error);
+        return;
+      } else {
+        let disposable = this.dialog.open(UserNotesComponent, {
+          width: '75vw',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.name,
+            serviceType: client.serviceType,
+            clientMobileNumber: client.mobile
+          }
+        })
 
-    disposable.afterClosed().subscribe(result => {
-    });
+        disposable.afterClosed().subscribe(result => {
+        });
+      }
+    },(error) => {
+      this.loading = false;
+      this.utilService.showSnackBar(
+        'Error while Activate User, Please try again.'
+      );
+    }
+  );
+
   }
   openChat(client) {
     let disposable = this.dialog.open(ChatOptionsDialogComponent, {
@@ -794,73 +809,97 @@ export class RefundRequestComponent implements OnInit, OnDestroy {
 
   revertRefund(data){
     // https://uat-api.taxnuddy.com/itr/refund-request?id=6581a4e07f576c4e8dcea4e8
-    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Revert/Undo Refund Request!',
-        message: 'Are you sure you want to Revert/Undo Refund Request for this invoice ?',
-      },
-    });
-    this.dialogRef.afterClosed().subscribe(result => {
-      if (result === 'YES') {
-        this.loading = true;
-        let id = data.id
-        let param = `/refund-request?id=${id}`;
-        this.itrService.deleteMethod(param).subscribe((response: any) => {
-          if (response.success) {
-            this.loading = false;
-            console.log('response', response);
-            this.utilsService.showSnackBar(response.message);
-            this.resetFilters();
-          } else {
-            this.utilsService.showSnackBar(response.message);
-            this.loading = false;
-          }
-        },(error) => {
-          this.loading = false;
-          this.utilsService.showSnackBar('Error in API of Revert/Undo Refund');
+    this.utilService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilService.showSnackBar(res.error);
+        return;
+      } else {
+        this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          data: {
+            title: 'Revert/Undo Refund Request!',
+            message: 'Are you sure you want to Revert/Undo Refund Request for this invoice ?',
+          },
         });
+        this.dialogRef.afterClosed().subscribe(result => {
+          if (result === 'YES') {
+            this.loading = true;
+            let id = data.id
+            let param = `/refund-request?id=${id}`;
+            this.itrService.deleteMethod(param).subscribe((response: any) => {
+              if (response.success) {
+                this.loading = false;
+                console.log('response', response);
+                this.utilsService.showSnackBar(response.message);
+                this.resetFilters();
+              } else {
+                this.utilsService.showSnackBar(response.message);
+                this.loading = false;
+              }
+            },(error) => {
+              this.loading = false;
+              this.utilsService.showSnackBar('Error in API of Revert/Undo Refund');
+            });
+          }
+        })
       }
-    })
-
+    },(error) => {
+        this.loading = false;
+        this.utilService.showSnackBar(
+          'Error while Activate User, Please try again.'
+        );
+    });
   }
 
   initiateRefund(data) {
     //https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/payment/razorpay/refund'
-
-    this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Initiate Refund Request!',
-        message: 'Are you sure you want to Initiate Refund Request for this invoice ?',
-      },
-    });
-    this.dialogRef.afterClosed().subscribe(result => {
-      if (result === 'YES') {
-        this.loading = true;
-        let param = `payment/razorpay/refund`;
-
-        const request = {
-          id: data.id,
-          // invoiceNo:data.invoiceNo
-        };
-        this.reviewService.postMethod(param, request).subscribe(
-          (response: any) => {
-            if (response.success) {
-              this.loading = false;
-              console.log('response', response);
-              this.utilsService.showSnackBar(response.message);
-            } else {
-              this.utilsService.showSnackBar(response.message);
-              this.loading = false;
-            }
+    this.utilService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilService.showSnackBar(res.error);
+        return;
+      } else {
+        this.dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          data: {
+            title: 'Initiate Refund Request!',
+            message: 'Are you sure you want to Initiate Refund Request for this invoice ?',
           },
-          (error) => {
-            this.loading = false;
-            this.utilsService.showSnackBar('Error in API of Initiate Refund ');
+        });
+        this.dialogRef.afterClosed().subscribe(result => {
+          if (result === 'YES') {
+            this.loading = true;
+            let param = `payment/razorpay/refund`;
+
+            const request = {
+              id: data.id,
+              // invoiceNo:data.invoiceNo
+            };
+            this.reviewService.postMethod(param, request).subscribe(
+              (response: any) => {
+                if (response.success) {
+                  this.loading = false;
+                  console.log('response', response);
+                  this.utilsService.showSnackBar(response.message);
+                } else {
+                  this.utilsService.showSnackBar(response.message);
+                  this.loading = false;
+                }
+              },
+              (error) => {
+                this.loading = false;
+                this.utilsService.showSnackBar('Error in API of Initiate Refund ');
+              }
+            );
           }
+        }
         );
       }
-    }
-    );
+    },(error) => {
+      this.loading = false;
+      this.utilService.showSnackBar(
+        'Error while Activate User, Please try again.'
+      );
+    });
   }
 
   ngOnDestroy() {

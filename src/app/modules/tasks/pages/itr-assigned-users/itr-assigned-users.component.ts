@@ -1201,31 +1201,43 @@ export class ItrAssignedUsersComponent implements OnInit {
   rowData: any;
 
   async startFiling(data) {
-    console.log(data);
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe(async (res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        // this.start(data);
+        console.log(data);
 
-    const fyList = await this.utilsService.getStoredFyList();
-    const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
+        const fyList = await this.utilsService.getStoredFyList();
+        const currentFyDetails = fyList.filter((item: any) => item.isFilingActive);
 
-    //update ITR lifecycle api for filing started state
-    let reqData = {
-      userId: data.userId,
-      assessmentYear: currentFyDetails[0].assessmentYear,
-      taskKeyName: 'itrFilingComences',
-      taskStatus: 'Completed'
-    };
-    const userData = JSON.parse(localStorage.getItem('UMD') || '');
-    const TOKEN = userData ? userData.id_token : null;
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-    headers = headers.append('environment', environment.lifecycleEnv);
-    headers = headers.append('Authorization', 'Bearer ' + TOKEN);
-    this.rowData = data;
-    this.loading = true;
-    this.requestManager.addRequest(this.LIFECYCLE,
-      this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
-    we_track('Start Filing', {
-      'User Name': data?.name,
-      'User Number': data?.mobileNumber
+        //update ITR lifecycle api for filing started state
+        let reqData = {
+          userId: data.userId,
+          assessmentYear: currentFyDetails[0].assessmentYear,
+          taskKeyName: 'itrFilingComences',
+          taskStatus: 'Completed'
+        };
+        const userData = JSON.parse(localStorage.getItem('UMD') || '');
+        const TOKEN = userData ? userData.id_token : null;
+        let headers = new HttpHeaders();
+        headers = headers.append('Content-Type', 'application/json');
+        headers = headers.append('environment', environment.lifecycleEnv);
+        headers = headers.append('Authorization', 'Bearer ' + TOKEN);
+        this.rowData = data;
+        this.loading = true;
+        this.requestManager.addRequest(this.LIFECYCLE,
+          this.http.post(environment.lifecycleUrl, reqData, { headers: headers }));
+        we_track('Start Filing', {
+          'User Name': data?.name,
+          'User Number': data?.mobileNumber
+        });
+      }
+    },error => {
+      this.loading = false;
+      this._toastMessageService.alert("error",'error in api of user-reassignment-status');
     });
   }
 
@@ -1276,31 +1288,43 @@ export class ItrAssignedUsersComponent implements OnInit {
   }
 
   openReviseReturnDialog(data) {
-    console.log('Data for revise return ', data);
-    if (data.statusId != 11) {
-      let disposable = this.dialog.open(ReviseReturnDialogComponent, {
-        width: '50%',
-        height: 'auto',
-        data: data
-      })
-      disposable.afterClosed().subscribe(result => {
-        if (result === 'reviseReturn') {
-          this.router.navigate(['/itr-filing/itr'], {
-            state: {
-              userId: data.userId,
-              panNumber: data.panNumber,
-              eriClientValidUpto: data.eriClientValidUpto,
-              name: data.name
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        console.log('Data for revise return ', data);
+        if (data.statusId != 11) {
+          let disposable = this.dialog.open(ReviseReturnDialogComponent, {
+            width: '50%',
+            height: 'auto',
+            data: data
+          })
+          disposable.afterClosed().subscribe(result => {
+            if (result === 'reviseReturn') {
+              this.router.navigate(['/itr-filing/itr'], {
+                state: {
+                  userId: data.userId,
+                  panNumber: data.panNumber,
+                  eriClientValidUpto: data.eriClientValidUpto,
+                  name: data.name
+                }
+              });
             }
+            console.log('The dialog was closed', result);
           });
+        } else {
+          this.utilsService.showSnackBar(
+            'Please complete e-verification before starting with revised return'
+          );
         }
-        console.log('The dialog was closed', result);
-      });
-    } else {
-      this.utilsService.showSnackBar(
-        'Please complete e-verification before starting with revised return'
-      );
-    }
+      }
+    },error => {
+      this.loading = false;
+      this._toastMessageService.alert("error",'error in api of user-reassignment-status');
+    });
+
   }
 
 
@@ -1351,38 +1375,60 @@ export class ItrAssignedUsersComponent implements OnInit {
 
   async call(data) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
-    let agent_number
-    this.loading = true;
-    const param = `tts/outbound-call`;
-    const agentNumber = await this.utilsService.getMyCallingNumber();
-    console.log('agent number', agentNumber);
-    if (!agentNumber) {
-      this._toastMessageService.alert('error', "You don't have calling role.");
-      return;
-    }
+    this.utilsService
+      .getUserCurrentStatus(data.userId)
+      .subscribe(async (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          let agent_number;
+          this.loading = true;
+          const param = `tts/outbound-call`;
+          const agentNumber = await this.utilsService.getMyCallingNumber();
+          console.log('agent number', agentNumber);
+          if (!agentNumber) {
+            this._toastMessageService.alert(
+              'error',
+              "You don't have calling role."
+            );
+            return;
+          }
 
-    agent_number = agentNumber;
-    const reqBody = {
-      "agent_number": agent_number,
-      "userId": data.userId,
-    }
+          agent_number = agentNumber;
+          const reqBody = {
+            agent_number: agent_number,
+            userId: data.userId,
+          };
 
-
-    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
-      this.loading = false;
-      if (result.success) {
-        we_track('Call', {
-          'User Name': data?.name,
-          'User Phone number ': agent_number,
-        });
-        this._toastMessageService.alert("success", result.message)
-      } else {
-        this.utilsService.showSnackBar('Error while making call, Please try again.');
-      }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
-    })
+          this.reviewService.postMethod(param, reqBody).subscribe(
+            (result: any) => {
+              this.loading = false;
+              if (result.success) {
+                we_track('Call', {
+                  'User Name': data?.name,
+                  'User Phone number ': agent_number,
+                });
+                this._toastMessageService.alert('success', result.message);
+              } else {
+                this.utilsService.showSnackBar(
+                  'Error while making call, Please try again.'
+                );
+              }
+            },
+            (error) => {
+              this.utilsService.showSnackBar(
+                'Error while making call, Please try again.'
+              );
+              this.loading = false;
+            }
+          );
+        }
+      },error => {
+        this.loading = false;
+        this._toastMessageService.alert("error",'error in api of user-reassignment-status');
+      });
   }
 
   updateStatus(mode, client) {

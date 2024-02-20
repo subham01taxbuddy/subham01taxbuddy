@@ -150,24 +150,35 @@ export class ScheduledCallReassignDialogComponent implements OnInit {
   reAssign(){
     //PUT 'https://uat-api.taxbuddy.com/gateway/reassign-meeting?userId=1244
     // &newSmeUserId=5334&updateRequestId=dgfbhdzgfbdagbdagdafbdf' \
-    this.loading=true;
-    let param = `/gateway/reassign-meeting?userId=${this.data.allData.userId}&newSmeUserId=${this.leaderId}&updateRequestId=${this.data.allData.id}`;
-    this.userMsService.spamPutMethod(param).subscribe((response: any) => {
-      if (response.success) {
-        this.loading=false;
-        this.utilsService.showSnackBar(response.message);
-        this.utilsService.showSnackBar("Call Reassigned Successfully");
-        this.dialogRef.close();
-      }else{
-        this.loading=false;
-        this.utilsService.showSnackBar(response.message);
-      }
-    },
-    error => {
-      this.loading=false;
-      this.utilsService.showSnackBar('Failed to Reassign Call ');
-    });
 
+    this.utilsService.getUserCurrentStatus(this.data.allData.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        this.loading=true;
+        let param = `/gateway/reassign-meeting?userId=${this.data.allData.userId}&newSmeUserId=${this.leaderId}&updateRequestId=${this.data.allData.id}`;
+        this.userMsService.spamPutMethod(param).subscribe((response: any) => {
+          if (response.success) {
+            this.loading=false;
+            this.utilsService.showSnackBar(response.message);
+            this.utilsService.showSnackBar("Call Reassigned Successfully");
+            this.dialogRef.close();
+          }else{
+            this.loading=false;
+            this.utilsService.showSnackBar(response.message);
+          }
+        },
+        error => {
+          this.loading=false;
+          this.utilsService.showSnackBar('Failed to Reassign Call ');
+        });
+      }
+    },error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('error in api of user-reassignment-status');
+    });
   }
 
 }

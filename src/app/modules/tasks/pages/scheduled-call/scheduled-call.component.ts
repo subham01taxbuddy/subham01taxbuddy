@@ -682,17 +682,29 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   }
 
   reAssignCall(data) {
-    let disposable = this.dialog.open(ScheduledCallReassignDialogComponent, {
-      width: '60%',
-      height: 'auto',
-      data: {
-        allData: data,
-      },
+    this.utilsService.getUserCurrentStatus(data.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        let disposable = this.dialog.open(ScheduledCallReassignDialogComponent, {
+          width: '60%',
+          height: 'auto',
+          data: {
+            allData: data,
+          },
+        });
+        disposable.afterClosed().subscribe((result) => {
+          this.search()
+          console.log('The dialog was closed');
+        });
+      }
+    },error => {
+      this.loading = false;
+      this.toastMsgService.alert("error",'error in api of user-reassignment-status');
     });
-    disposable.afterClosed().subscribe((result) => {
-      this.search()
-      console.log('The dialog was closed');
-    });
+
   }
 
   openWhatsappChat(client) {
@@ -722,55 +734,88 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   }
 
   showNotes(client) {
-    let disposable = this.dialog.open(UserNotesComponent, {
-      width: '75vw',
-      height: 'auto',
-      data: {
-        userId: client.userId,
-        clientName: client.userName,
-        clientMobileNumber: client.userMobile
-      },
-    });
-
-    disposable.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
+    this.utilsService.getUserCurrentStatus(client.userId).subscribe((res: any) => {
+      console.log(res);
+      if (res.error) {
+        this.utilsService.showSnackBar(res.error);
+        return;
+      } else {
+        let disposable = this.dialog.open(UserNotesComponent, {
+          width: '75vw',
+          height: 'auto',
+          data: {
+            userId: client.userId,
+            clientName: client.userName,
+            clientMobileNumber: client.userMobile
+          },
+        });
+        disposable.afterClosed().subscribe((result) => {
+          console.log('The dialog was closed');
+        });
+      }
+    },error => {
+      this.loading = false;
+      this.utilsService.showSnackBar('error in api of user-reassignment-status');
     });
   }
 
   async startCalling(user) {
     // https://9buh2b9cgl.execute-api.ap-south-1.amazonaws.com/prod/tts/outbound-call
-    const agentNumber = await this.utilsService.getMyCallingNumber();
-    console.log('agent number', agentNumber);
-    if (!agentNumber) {
-      this.toastMsgService.alert('error', "You don't have calling role.");
-      return;
-    }
-    this.loading = true;
-    const reqBody = {
-      agent_number: agentNumber,
-      userId: user.userId,
-    };
+    this.utilsService.getUserCurrentStatus(user.userId).subscribe(
+      async (res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          const agentNumber = await this.utilsService.getMyCallingNumber();
+          console.log('agent number', agentNumber);
+          if (!agentNumber) {
+            this.toastMsgService.alert('error', "You don't have calling role.");
+            return;
+          }
+          this.loading = true;
+          const reqBody = {
+            agent_number: agentNumber,
+            userId: user.userId,
+          };
 
-    // const param = `/prod/call-support/call`;
-    const param = `tts/outbound-call`;
-    this.reviewService.postMethod(param, reqBody).subscribe((result: any) => {
-      this.loading = false;
-      if (result.success == false) {
+          // const param = `/prod/call-support/call`;
+          const param = `tts/outbound-call`;
+          this.reviewService.postMethod(param, reqBody).subscribe(
+            (result: any) => {
+              this.loading = false;
+              if (result.success == false) {
+                this.loading = false;
+                this.utilsService.showSnackBar(
+                  'Error while making call, Please try again.'
+                );
+              }
+              if (result.success == true) {
+                we_track('Call', {
+                  'User Name': user.userName,
+                  'User Phone number ': agentNumber,
+                });
+                this.toastMsgService.alert('success', result.message);
+              }
+            },
+            (error) => {
+              this.utilsService.showSnackBar(
+                'Error while making call, Please try again.'
+              );
+              this.loading = false;
+            }
+          );
+        }
+      },
+      (error) => {
         this.loading = false;
-        this.utilsService.showSnackBar('Error while making call, Please try again.');
+        this.toastMsgService.alert(
+          'error',
+          'error in api of user-reassignment-status'
+        );
       }
-      if (result.success == true) {
-        we_track('Call', {
-          'User Name': user.userName,
-          'User Phone number ': agentNumber,
-        });
-        this.toastMsgService.alert("success", result.message)
-      }
-    }, error => {
-      this.utilsService.showSnackBar('Error while making call, Please try again.');
-      this.loading = false;
-    })
-
+    );
   }
 
 
@@ -799,47 +844,63 @@ export class ScheduledCallComponent implements OnInit, OnDestroy {
   }
 
   callStatusChange(callInfo, statusId, statusName) {
-    console.log('callInfo: ', callInfo);
-    this.loading = true;
-    let reqBody = {
-      scheduleCallTime: callInfo.scheduleCallTime,
-      userId: callInfo.userId,
-      statusId: statusId,
-      statusName: statusName,
-    };
-    let param = `/schedule-call-details`;
+    this.utilsService.getUserCurrentStatus(callInfo.userId).subscribe((res: any) => {
+        console.log(res);
+        if (res.error) {
+          this.utilsService.showSnackBar(res.error);
+          return;
+        } else {
+          console.log('callInfo: ', callInfo);
+          this.loading = true;
+          let reqBody = {
+            scheduleCallTime: callInfo.scheduleCallTime,
+            userId: callInfo.userId,
+            statusId: statusId,
+            statusName: statusName,
+          };
+          let param = `/schedule-call-details`;
 
-    this.userMsService.putMethod(param, reqBody).subscribe(
-      (response: any) => {
-        console.log('schedule-call Done response: ', response);
-        this.loading = false;
-        this.toastMsgService.alert(
-          'success',
-          'Call status update successfully.'
-        );
-        if (statusId === 19) {
-          we_track('Call Status - Follow Up', {
-            'User Number': callInfo.userMobile,
-          });
-        } else if (statusId === 18) {
-          this.markAsScheduleCallDone(callInfo);
-          we_track('Call Status - Done', {
-            'User Number': callInfo.userMobile,
-          });
+          this.userMsService.putMethod(param, reqBody).subscribe(
+            (response: any) => {
+              console.log('schedule-call Done response: ', response);
+              this.loading = false;
+              this.toastMsgService.alert(
+                'success',
+                'Call status update successfully.'
+              );
+              if (statusId === 19) {
+                we_track('Call Status - Follow Up', {
+                  'User Number': callInfo.userMobile,
+                });
+              } else if (statusId === 18) {
+                we_track('Call Status - Done', {
+                  'User Number': callInfo.userMobile,
+                });
+              }
+              setTimeout(() => {
+                this.search();
+                // this.showScheduleCallList();
+              }, 300);
+            },
+            (error) => {
+              this.toastMsgService.alert(
+                'error',
+                'Error during schedule-call status change.'
+              );
+              this.loading = false;
+            }
+          );
         }
-        setTimeout(() => {
-          this.search()
-          // this.showScheduleCallList();
-        }, 300);
       },
       (error) => {
+        this.loading = false;
         this.toastMsgService.alert(
           'error',
-          'Error during schedule-call status change.'
+          'error in api of user-reassignment-status'
         );
-        this.loading = false;
       }
     );
+
   }
 
   markAsScheduleCallDone(callInfo) {
